@@ -1,17 +1,17 @@
 import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { startWith, map, tap, shareReplay } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { Movie } from '@blockframes/model';
+import { Movie, Person, StoreStatus, storeStatus } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Intercom } from 'ng-intercom';
 import { App } from '@blockframes/utils/apps';
-import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { APP } from '@blockframes/utils/routes/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { storeStatus } from '@blockframes/utils/static-model';
+import { MatDialog } from '@angular/material/dialog';
+import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
+import { displayPerson } from '@blockframes/utils/pipes';
 
 @Component({
   selector: 'festival-dashboard-title-list',
@@ -52,18 +52,12 @@ export class ListComponent {
 
   constructor(
     private service: MovieService,
-    private router: Router,
-    private route: ActivatedRoute,
     private snackbar: MatSnackBar,
     private dynTitle: DynamicTitleService,
+    private dialog: MatDialog,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
   ) {}
-
-  /** Navigate to tunnel if status is draft, else go to page */
-  public goToTitle(title: Movie) {
-    this.router.navigate([title.id], { relativeTo: this.route });
-  }
 
   public openIntercom(): void {
     return this.intercom.show();
@@ -81,5 +75,17 @@ export class ListComponent {
   async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
     await this.service.updateStatus(movie.id, status);
     this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
+  }
+
+  //TODO #6507
+  openDetails(title: string, values: Person[]) {
+    this.dialog.open(CellModalComponent, {
+      data: { title, values: displayPerson(values) },
+      maxHeight: '80vh',
+      minWidth: '50vw',
+      maxWidth: '80vw',
+      minHeight: '50vh',
+      autoFocus: false,
+    });
   }
 }

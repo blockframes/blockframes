@@ -1,15 +1,9 @@
 import algoliasearch from 'algoliasearch';
 import { algolia as algoliaClient, centralOrgId } from '@env';
 import * as functions from 'firebase-functions';
-import { festival, Language } from '@blockframes/utils/static-model';
 import { App, app, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
-import {
-  AlgoliaOrganization,
-  AlgoliaMovie,
-  AlgoliaUser,
-  AlgoliaConfig,
-} from '@blockframes/utils/algolia';
-import { MovieDocument, OrganizationDocument, orgName, PublicUser } from '@blockframes/model';
+import { AlgoliaOrganization, AlgoliaMovie, AlgoliaUser, AlgoliaConfig } from '@blockframes/utils/algolia';
+import { MovieDocument, OrganizationDocument, orgName, PublicUser, festival, Language } from '@blockframes/model';
 import * as admin from 'firebase-admin';
 import { hasAcceptedMovies } from '../util';
 import { getMovieAppAccess } from '@blockframes/utils/apps';

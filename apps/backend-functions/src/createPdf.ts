@@ -1,8 +1,7 @@
-import { MovieDocument } from '@blockframes/model';
+import { festival, MovieDocument } from '@blockframes/model';
 import { toLanguageVersionString, toLabel } from '@blockframes/utils/utils';
 import { Response } from 'firebase-functions';
 import { db } from './internals/firebase';
-import { festival } from '@blockframes/utils/static-model';
 import { App, applicationUrl } from '@blockframes/utils/apps';
 import { PdfRequest } from '@blockframes/utils/pdf/pdf.interfaces';
 import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';

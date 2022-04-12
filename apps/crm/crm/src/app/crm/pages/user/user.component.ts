@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User, Organization, Invitation, UserRole } from '@blockframes/model';
+import { User, Organization, Invitation, UserRole, Scope } from '@blockframes/model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { CrmService } from '@blockframes/admin/crm/+state';
-import { Observable, Subscription } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { PermissionsService } from '@blockframes/permissions/+state';
@@ -18,7 +18,8 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { App, getOrgAppAccess } from '@blockframes/utils/apps';
-import { Scope } from '@blockframes/utils/static-model';
+import { joinWith } from '@blockframes/utils/operators';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'crm-user',
@@ -34,7 +35,7 @@ export class UserComponent implements OnInit {
   public userOrgRole: UserRole;
   public isUserBlockframesAdmin = false;
   public userForm: UserCrmForm;
-  public invitations: Invitation[];
+  public invitations: Observable<Invitation[]>;
   private originalOrgValue: string;
 
   public dashboardURL: SafeResourceUrl
@@ -71,9 +72,24 @@ export class UserComponent implements OnInit {
       this.cdRef.markForCheck();
     });
 
-    const invitationTo = await this.invitationService.getValue(ref => ref.where('toUser.uid', '==', this.userId));
-    const invitationFrom = await this.invitationService.getValue(ref => ref.where('fromUser.uid', '==', this.userId));
-    this.invitations = [...invitationFrom, ...invitationTo];
+    const toInvit = this.invitationService
+      .valueChanges(ref => ref.where('toUser.uid', '==', this.userId))
+      .pipe(
+        joinWith({ toOrg: invit => this.organizationService.valueChanges(invit.toUser.orgId) })
+      )
+    const fromInvit = this.invitationService
+      .valueChanges(ref => ref.where('fromUser.uid', '==', this.userId))
+      .pipe(
+        joinWith({ fromOrg: invit => this.organizationService.valueChanges(invit.fromUser.orgId) })
+      )
+
+    this.invitations = combineLatest([toInvit, fromInvit]).pipe(
+      map(([toInvit, fromInvit]) => [...toInvit, ...fromInvit]),
+      joinWith(
+        { event: (invit) => this.eventService.valueChanges(invit.eventId) },
+        { shouldAwait: true }
+      )
+    )
   }
 
   public async update() {
@@ -231,16 +247,16 @@ export class UserComponent implements OnInit {
     return output;
   }
 
-  goTo(invitation: Invitation) {
-    if (invitation.type === 'attendEvent') {
-      this.router.navigate(['/c/o/dashboard/crm/event', invitation.eventId]);
-    } else if (invitation.type === 'joinOrganization') {
-      const id = invitation.fromOrg ? invitation.fromOrg.id : invitation.toOrg?.id;
-      this.router.navigate(['/c/o/dashboard/crm/organization', id]);
-    }
-  }
-
   openDetails(terms: string[], scope: Scope) {
     this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
+  }
+
+  getLink(invitation: Invitation) {
+    if (invitation.type === 'attendEvent') {
+      return ['/c/o/dashboard/crm/event', invitation.eventId];
+    } else if (invitation.type === 'joinOrganization') {
+      const id = invitation.fromOrg ? invitation.fromOrg.id : invitation.toOrg?.id;
+      return ['/c/o/dashboard/crm/organization', id];
+    }
   }
 }

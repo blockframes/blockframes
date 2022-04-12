@@ -21,9 +21,7 @@ import {
   MovieStakeholders,
   User,
   createMovie,
-  Stakeholder
-} from '@blockframes/model';
-import {
+  Stakeholder,
   Certification,
   Color,
   ContentType,
@@ -42,8 +40,8 @@ import {
   SoundFormat,
   StakeholderRole,
   StoreStatus,
-  Territory,
-} from '@blockframes/utils/static-model';
+  Territory
+} from '@blockframes/model';
 
 interface FieldsConfig {
   title: {

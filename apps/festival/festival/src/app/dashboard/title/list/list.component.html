@@ -38,7 +38,9 @@
         </a>
       </ng-template>
       <ng-template colRef label="Director(s)" let-movie>
-        {{ movie.directors | displayName | maxLength:50 }}
+        <span (click)="openDetails('Director\'s', movie.directors)">
+          {{ movie.directors | displayName | maxLength:50 }}
+        </span>
       </ng-template>
       <ng-template colRef="productionStatus" label="Production Status" let-prod sort>
         {{ prod | toLabel: 'productionStatus' }}
@@ -48,22 +50,20 @@
       </ng-template>
 
       <ng-template colRef label="Actions" let-movie sticky>
-        <div class="action-buttons">
-          <a [routerLink]="movie.id" mat-icon-button matTooltip="View">
-            <mat-icon svgIcon="visibility"></mat-icon>
-          </a>
-          <a [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-icon-button matTooltip="Edit">
-            <mat-icon svgIcon="edit"></mat-icon>
-          </a>
-          <button *ngIf="movie.app[app].status === 'archived' else archive" type="button" mat-icon-button (click)="updateStatus(movie, 'draft', 'Title restored.')" matTooltip="Restore">
-            <mat-icon svgIcon="restore"></mat-icon>
-          </button>
-          <ng-template #archive>
-            <button type="button" mat-icon-button (click)="updateStatus(movie, 'archived')" matTooltip="Archive">
+        <a [routerLink]="movie.id" mat-icon-button matTooltip="View">
+          <mat-icon svgIcon="visibility"></mat-icon>
+        </a>
+        <a [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-icon-button matTooltip="Edit">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </a>
+        <button *ngIf="movie.app[app].status === 'archived' else archive" type="button" mat-icon-button (click)="updateStatus(movie, 'draft', 'Title restored.')" matTooltip="Restore">
+          <mat-icon svgIcon="restore"></mat-icon>
+        </button>
+        <ng-template #archive>
+          <button type="button" mat-icon-button (click)="updateStatus(movie, 'archived')" matTooltip="Archive">
             <mat-icon svgIcon="archive"></mat-icon>
           </button>
-          </ng-template>
-        </div>
+        </ng-template>
       </ng-template>
     </bf-table>
   </ng-container>
@@ -82,11 +82,11 @@
     <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
       <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
         <img asset="add_title.svg" alt="Add title image">
-        <a routerLink="lobby" mat-button color="primary">Add one title</a>
+        <a routerLink="lobby" mat-button color="primary">Add one Title</a>
       </mat-card>
       <mat-card class="no-title-card" fxLayout="column">
         <img asset="add_files.svg" alt="Upload files image">
-        <a routerLink="../import" mat-button color="primary">Import titles in bulk</a>
+        <a routerLink="../import" mat-button color="primary">Import Titles in bulk</a>
       </mat-card>
     </article>
     <h3>Or</h3>
@@ -94,5 +94,4 @@
       Contact the {{ app | appName }} team
     </button>
   </section>
-
 </ng-template>

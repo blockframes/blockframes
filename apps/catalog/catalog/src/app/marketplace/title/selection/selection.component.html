@@ -50,10 +50,10 @@
             <ng-container *ngIf="contract.titleId | getTitle | async as title">
               <div fxLayout fxLayoutAlign="space-between">
                 <button mat-button (click)="removeContract(i, title)" test-id="delete-contract">
-                  Delete all Rights for this Title
+                  Delete all Terms for this Title
                 </button>
                 <a mat-flat-button [routerLink]="['../title', title.id, 'avails']" color="primary">
-                  Add Rights
+                  Add Terms
                 </a>
               </div>
               <mat-divider></mat-divider>

@@ -21,8 +21,19 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Movie, Term } from '@blockframes/model';
-import { ContractStatus, ImportContractStatus, Language, Media, Territory } from '@blockframes/utils/static-model';
-import { createMandate, createSale, Mandate, MovieLanguageSpecification, Sale, User } from '@blockframes/model';
+import {
+  createMandate,
+  createSale,
+  Mandate,
+  MovieLanguageSpecification,
+  Sale,
+  User,
+  ContractStatus,
+  ImportContractStatus,
+  Language,
+  Media,
+  Territory
+} from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import {
   extract, ExtractConfig, getStaticList, SheetTab, getGroupedList
@@ -71,7 +82,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, fires
 
   const languages: Term['languages'] = {};
 
-  const updateLanguage = (key: keyof MovieLanguageSpecification, rawLanguages: Language[]) => {
+  const updateLanguage = (key: keyof MovieLanguageSpecification, rawLanguages: Language[] = []) => {
     for (const language of rawLanguages) {
       if (!languages[language])
         languages[language] = { caption: false, dubbed: false, subtitle: false };

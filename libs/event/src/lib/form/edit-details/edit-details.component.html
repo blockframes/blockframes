@@ -1,6 +1,6 @@
 ﻿<form [formGroup]="form" fxLayout="column">
   <mat-form-field appearance="outline">
-    <mat-label>Title</mat-label>
+    <mat-label>Event Title</mat-label>
     <input test-id="event-title-modal" matInput required formControlName="title" />
   </mat-form-field>
 
@@ -35,7 +35,7 @@
       </mat-radio-button>
       <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
         <mat-radio-button  color="primary" value="private" >
-          PRIVATE - Open to invited, identified Archipel Market users only
+          PRIVATE - Open to invite identified Archipel Market users only
         </mat-radio-button>
         <mat-icon svgIcon="info" matTooltip="Best for screenings"></mat-icon>
       </div>

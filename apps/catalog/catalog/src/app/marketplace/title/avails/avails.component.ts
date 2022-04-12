@@ -16,15 +16,12 @@ import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { BucketService } from '@blockframes/contract/bucket/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { Holdback, isMandate, isSale, Mandate, Sale } from '@blockframes/model';
+import { Holdback, isMandate, isSale, Mandate, Sale, BucketTerm, Term, Territory, territories } from '@blockframes/model';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { BucketTerm, Term } from '@blockframes/model';
-
 import { ExplanationComponent } from './explanation/explanation.component';
 import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';
-import { scrollIntoView } from '../../../../../../../../libs/utils/src/lib/browser/utils';
-import { territories, Territory } from '@blockframes/utils/static-model';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({
   selector: 'catalog-movie-avails',

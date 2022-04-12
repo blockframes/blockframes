@@ -1,11 +1,24 @@
+@import '~@angular/flex-layout/mq';
+
 movie-header-cta {
   width: 100%;
   margin-bottom: 16px;
 
-  section {
+  .orgs {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    grid-gap: 16px;
+  }
+
+  section {
+    gap: 16px;
+
+    wishlist-button {
+      margin: auto 0;
+    }
+
+    a {
+      margin-left: auto;
+    }
   }
   
   a, button {
@@ -37,4 +50,14 @@ movie-header-cta {
     }
   }
 }
+
+movie-header-actions {
+  width: 100%;
+}
  
+@include layout-bp(xs) {
+  org-chip {
+    display: flex;
+    justify-content: center;
+  }
+}

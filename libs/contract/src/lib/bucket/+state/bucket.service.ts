@@ -4,16 +4,29 @@ import { centralOrgId } from '@env';
 import { switchMap, take } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { createOfferId } from '@blockframes/utils/utils';
-import { MovieCurrency } from '@blockframes/utils/static-model';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { TermService } from '../../term/+state';
 import { OfferService } from '../../offer/+state';
 import { ContractService } from '../../contract/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { convertDuration, Bucket, createBucket, createBucketTerm, createBucketContract, createDocumentMeta } from '@blockframes/model';
+import {
+  convertDuration,
+  Bucket,
+  createBucket,
+  createBucketTerm,
+  createBucketContract,
+  createDocumentMeta,
+  MovieCurrency
+} from '@blockframes/model';
 
 interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
+interface AddTermConfig {
+  titleId: string,
+  parentTermId: string,
+  avail: AvailsFilter
+};
+
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'buckets' })
@@ -102,7 +115,7 @@ export class BucketService extends CollectionService<BucketState> {
       });
 
       // Add the default negotiation.
-       this.contractService.addNegotiation(contractId, {
+      this.contractService.addNegotiation(contractId, {
         ...contract,
         ...commonFields,
         initial: new Date(),
@@ -112,28 +125,22 @@ export class BucketService extends CollectionService<BucketState> {
     return Promise.all(promises);
   }
 
-
-  async addTerm(titleId: string, parentTermId: string, avails: AvailsFilter) {
-
+  async addBatchTerms(availsResults: AddTermConfig[]) {
     const orgId = this.orgService.org.id;
-    const rawBucket = await this.getActive();
-    const bucket = createBucket({ id: orgId, ...rawBucket });
-
-    const term = createBucketTerm(avails);
-
-    const sale = bucket.contracts.find(contract => contract.titleId === titleId && contract.parentTermId === parentTermId);
-
-    if (sale) {
-      sale.terms.push(term);
-    } else {
-      const contract = createBucketContract({ titleId, parentTermId, terms: [term] });
-      bucket.contracts.push(contract);
+    const bucket = await this.getActive();
+    const contracts = bucket?.contracts ?? [];
+    for (const { titleId, parentTermId, avail } of availsResults) {
+      const term = createBucketTerm(avail);
+      const sale = contracts.find(c => c.titleId === titleId && c.parentTermId === parentTermId);
+      if (sale) {
+        sale.terms.push(term);
+      } else {
+        const contract = createBucketContract({ titleId, parentTermId, terms: [term] });
+        contracts.push(contract);
+      }
     }
-
-    if (rawBucket) {
-      this.update(orgId, bucket);
-    } else {
-      this.add(bucket);
-    }
+    return bucket
+      ? this.update(orgId, { contracts })
+      : this.add({ ...bucket, contracts })
   }
 }
