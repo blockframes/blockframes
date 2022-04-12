@@ -160,7 +160,7 @@ export class AvailsCalendarComponent implements OnInit {
       const year = new Date().getFullYear();
       const from = new Date(year + newState.start.row, newState.start.column);
       const to = new Date(year + newState.end.row, newState.end.column);
-      const parentMarker = this._availableMarkers.find(marker => {
+      const parentMarkers = this._availableMarkers.filter(marker => {
         // From the calendar pov range starts at the first day of the month
         // but the avail term might not start at the first day of the month
         const markerFromYear = marker.from.getFullYear();
@@ -169,9 +169,16 @@ export class AvailsCalendarComponent implements OnInit {
         return startDate <= from.getTime() && marker.to >= to;
       });
 
-      if (!parentMarker) throw new Error('Calendar Invalid Selection: a selection must be included in a marker!');
+      if (!parentMarkers.length) throw new Error('Calendar Invalid Selection: a selection must be included in a marker!');
 
-      this.selected.emit({ from, to, term: parentMarker.term, contract: parentMarker.contract });
+      for (const parentMarker of parentMarkers){
+        this.selected.emit({
+          from, to,
+          term: parentMarker.term,
+          contract: parentMarker.contract,
+          avail: parentMarker.avail,
+        });
+      }
     }
   }
 }
