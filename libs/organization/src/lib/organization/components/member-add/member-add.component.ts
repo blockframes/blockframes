@@ -19,7 +19,6 @@ import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.
 export class MemberAddComponent {
   @Input() org: Organization;
   private _isSending = new BehaviorSubject<boolean>(false);
-  private multipleEmails: boolean
   public isSending$ = this._isSending.asObservable();
   public separatorKeysCodes = [ENTER, COMMA, SEMICOLON, SPACE];
   public emailForm = new FormControl('', Validators.email);
