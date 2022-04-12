@@ -11,7 +11,8 @@ import {
   latestAnonStorageDir,
   gsutilTransfer,
   awaitProcessExit,
-  endMaintenance
+  endMaintenance,
+  keepAlive
 } from '@blockframes/firebase-utils';
 import {
   shutdownEmulator,
@@ -214,7 +215,7 @@ export async function anonymizeLatestProdDb() {
       importPath: defaultEmulatorBackupPath,
       exportData: true,
     });
-    await anonDbProcess();
+    await keepAlive(anonDbProcess());
   } finally {
     await shutdownEmulator(proc, defaultEmulatorBackupPath, 30);
   }
