@@ -10,7 +10,6 @@ import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
-import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -22,8 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
     FlexLayoutModule,
     MatIconModule,
-    AppPipeModule
   ],
   exports: [PrivacyPolicyComponent]
 })
-export class PrivacyPolicyModule {}
+export class PrivacyPolicyModule { }

@@ -42,3 +42,19 @@ mat-card {
     margin-bottom: 30px;
   }
 }
+
+.table__wrapper{
+  overflow: auto;
+}
+table {
+  border-collapse: collapse;
+  border: 1px solid var(--foreground-divider);
+  td {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  @include layout-bp(lt-lg) {
+    min-width: 80%;
+  }
+}
