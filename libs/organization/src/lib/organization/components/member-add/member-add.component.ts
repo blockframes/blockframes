@@ -19,6 +19,7 @@ import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.
 export class MemberAddComponent {
   @Input() org: Organization;
   private _isSending = new BehaviorSubject<boolean>(false);
+  private multipleEmails: boolean
   public isSending$ = this._isSending.asObservable();
   public separatorKeysCodes = [ENTER, COMMA, SEMICOLON, SPACE];
   public emailForm = new FormControl('', Validators.email);
@@ -54,11 +55,11 @@ export class MemberAddComponent {
     try {
       this._isSending.next(true);
       const emails = Array.from(new Set(this.form.value.map(email => email.trim().toLowerCase())));
+      this.multipleEmails = this.form.value.length > 1;
       const invitationsExist = await this.invitationService.hasUserAnOrgOrIsAlreadyInvited(emails).toPromise<boolean>();
       if (invitationsExist) throw new Error('There is already an invitation existing for one or more of these users');
       await this.invitationService.invite(emails, this.org).to('joinOrganization');
-      const multipleEmails = this.form.value.length > 1;
-      this.snackBar.open(multipleEmails ? 'Your invitations were sent' : 'Your invitation was sent', 'close', { duration: 5000 });
+      this.snackBar.open(this.multipleEmails ? 'Your invitations were sent' : 'Your invitation was sent', 'close', { duration: 5000 });
       this._isSending.next(false);
       this.form.reset();
     } catch (err) {
@@ -66,7 +67,7 @@ export class MemberAddComponent {
       if (err.message === 'There is already an invitation existing for one or more of these users') {
         this.snackBar.open(err.message, 'close', { duration: 5000 });
       } else {
-        this.snackBar.openFromComponent(SnackbarErrorComponent, { data: (this.form.value.length > 1 ? 'There was a problem sending your invitations...' : 'There was a problem sending your invitation...'), duration: 5000 });
+        this.snackBar.openFromComponent(SnackbarErrorComponent, { data: (`There was a problem sending your invitation${this.multipleEmails ? 's' : ''}...`), duration: 5000 });
       }
     }
   }
