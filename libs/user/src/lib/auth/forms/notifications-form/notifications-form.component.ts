@@ -11,6 +11,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
 
 interface NotificationSetting { text: string, tooltip: boolean };
 const titleType: Record<NotificationTypesBase, NotificationSetting> = {
@@ -133,11 +134,14 @@ export class NotificationsFormComponent {
   }
 
   public async update() {
-    const notifications = this.form.getRawValue();
-    const uid = this.authService.uid;
-    await this.authService.update({ uid, settings: { notifications } });
-
-    this.snackBar.open('Notification Settings updated.', 'close', { duration: 4000 });
+    try {
+      const notifications = this.form.getRawValue();
+      const uid = this.authService.uid;
+      await this.authService.update({ uid, settings: { notifications } });
+      this.snackBar.open('Notification Settings updated. ', 'close', { duration: 4000 });
+    } catch (err) {
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
+    }
   }
 }
 
