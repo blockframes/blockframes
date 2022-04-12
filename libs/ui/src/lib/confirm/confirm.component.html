@@ -1,22 +1,21 @@
-
-<div fxLayout fxLayoutAlign="end">
+<mat-dialog-header fxLayout fxLayoutAlign="end">
   <button class="close" mat-icon-button (click)="close()">
     <mat-icon svgIcon="close"></mat-icon>
   </button>
-</div>
+</mat-dialog-header>
 
-<section fxLayout="column" fxLayoutGap="24px">
-  <div mat-dialog-content fxLayout="column" fxLayoutAlign="center center">
-    <h2>{{ data.title || "Confirm" }}</h2>
-    <p>{{ data.question || "Do you confirm ?" }}</p>
-    <p *ngIf="data.advice">{{ data.advice }}</p>
-  </div>
-  <div mat-dialog-actions fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+<mat-dialog-content class="mat-dialog-content" fxLayout="column" fxLayoutAlign="start center">
+  <h2>{{ data.title || 'Confirm' }}</h2>
+
+  <p class="mat-body-1">{{ data.question || 'Do you confirm ?' }}</p>
+  <p class="mat-body-1" *ngIf="data.advice">{{ data.advice }}</p>
+
+  <mat-dialog-actions fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="4px">
     <button test-id="confirm" mat-flat-button color="primary" (click)="confirm()">
-      {{ data.confirm || "Confirm" }}
+      {{ data.confirm || 'Confirm' }}
     </button>
     <button mat-button color="primary" (click)="close()">
-      {{ data.cancel || "Cancel" }}
+      {{ data.cancel || 'Cancel' }}
     </button>
-  </div>
-</section>
+  </mat-dialog-actions>
+</mat-dialog-content>

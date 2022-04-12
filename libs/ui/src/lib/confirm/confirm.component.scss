@@ -1,34 +1,14 @@
-@import "~@angular/flex-layout/mq";
-
-:host {
-  display: block;
-}
-
-section {
-  padding: 40px 80px 80px 80px;
-}
-
-div[mat-dialog-content] {
+mat-dialog-content {
   text-align: center;
-  h3, p {
-    padding: 0;
-  }
-}
-
-p {
-  max-width: 70%;
 }
 
 button {
   width: fit-content;
-}
 
-button.close {
-  aspect-ratio: 1;
-}
-
-@include layout-bp(xs) {
-  section {
-    padding: 0;
+  &.close {
+    aspect-ratio: 1;
   }
 }
+
+// TodoKevinD
+// Max width on Hx / p

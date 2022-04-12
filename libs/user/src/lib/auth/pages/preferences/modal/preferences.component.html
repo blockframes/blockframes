@@ -1,12 +1,18 @@
-<header fxLayout fxLayoutAlign="end">
-  <button mat-icon-button (click)="close()">
+<mat-dialog-header fxLayout fxLayoutAlign="end">
+  <button class="close" mat-icon-button (click)="close()">
     <mat-icon svgIcon="close"></mat-icon>
   </button>
-</header>
-<h1>What are you looking for?</h1>
-<p>For a more personalized and curated experience on Archipel, we offer you to specify your content preferences.</p>
-<auth-preferences-form [form]="form"></auth-preferences-form>
-<footer fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
-  <button mat-flat-button color="accent" (click)="update()">Save Preferences</button>
-  <button mat-button test-id="skip-preferences" (click)="close()">Maybe Later</button>
-</footer>
+</mat-dialog-header>
+
+<mat-dialog-content class="mat-dialog-content" fxLayout="column" fxLayoutAlign="start center">
+  <h2>What are you looking for?</h2>
+
+  <p class="mat-body-1">For a more personalized and curated experience on Archipel, we offer you to specify your content preferences.</p>
+  
+  <auth-preferences-form [form]="form"></auth-preferences-form>
+  
+  <footer fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
+    <button mat-flat-button color="accent" (click)="update()">Save Preferences</button>
+    <button mat-button test-id="skip-preferences" (click)="close()">Maybe Later</button>
+  </footer>
+</mat-dialog-content>

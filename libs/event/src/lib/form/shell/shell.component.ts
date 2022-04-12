@@ -114,11 +114,11 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   async remove() {
     this.dialog.open(ConfirmComponent, {
       data: {
-        title: 'Are you sure you want to delete this event ?',
+        title: 'Are you sure to delete this event?',
         question: 'If you\'ve already sent out invites, please note that the invitation emails were already sent and cannot be taken back.',
         advice: 'You might want to contact the people concerned to let them know that this event won\'t be happening.',
         confirm: 'Yes, delete',
-        cancel: 'No, come back',
+        cancel: 'Go back to editing',
         onConfirm: () => {
           this.eventService.remove(this.form.value.id);
           //Here we add an eventDeleted to inform the guard thatthere is no need to display the popup
