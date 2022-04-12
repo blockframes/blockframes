@@ -37,7 +37,7 @@ export class NotificationService extends CollectionService<NotificationState> {
     filter((user) => !!user?.uid),
     switchMap((user) =>
       this.valueChanges((ref) =>
-        ref.where('toUserId', '==', user.uid).where('app.isRead', '==', false)
+        ref.where('toUserId', '==', user.uid)
       )
     ),
     switchMap((notifications) => {
@@ -46,7 +46,7 @@ export class NotificationService extends CollectionService<NotificationState> {
     })
   );
 
-  myNotificationsCount$ = this.myNotifications$.pipe(map((notifs) => notifs.length));
+  myNotificationsCount$ = this.myNotifications$.pipe(map((notifs) => notifs.filter(notif => !notif.app.isRead).length));
 
   constructor(
     private authService: AuthService,

@@ -2,3 +2,15 @@
 button {
   margin-right: 16px;
 }
+
+bf-tag {
+  margin-right: 36px;
+  border-color: var(--foreground-disabled-text);
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+.disabled {
+  color: var(--foreground-disabled-text);
+}

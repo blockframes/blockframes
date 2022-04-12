@@ -1,16 +1,23 @@
 
 <mat-list-item>
   <img matListAvatar [asset]="notification.placeholderUrl" [ref]="notification.imgRef" alt="Notification picture">
-  <p *ngIf="(xs$ | async) === false" matLine class="mat-body-1" test-id="notification-message" [innerHtml]="notification.message"></p>
+  <p *ngIf="(xs$ | async) === false" matLine [class.disabled]="notification.app.isRead" class="mat-body-1" test-id="notification-message" [innerHtml]="notification.message"></p>
   <span matLine>
-    <small class="mat-caption">{{ notification._meta.createdAt | date: 'shortTime' }}</small>
+    <small [class.mat-caption]="notification.app.isRead">{{ notification._meta.createdAt | date: 'shortTime' }}</small>
   </span>
-  <button mat-button (click)="markAsRead(notification)">
+  <button *ngIf="!notification.app.isRead; else isRead" mat-button (click)="markAsRead(notification)">
     <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
       <mat-icon svgIcon="done_all"></mat-icon>
       Mark as read
     </div>
   </button>
+
+  <ng-template #isRead>
+    <bf-tag fxLayout>
+      <mat-icon svgIcon="check"></mat-icon>
+      READ
+    </bf-tag>
+  </ng-template>
 
   <button mat-icon-button test-id="more" [matMenuTriggerFor]="menu" aria-label="Trigger for a menu">
     <mat-icon svgIcon="more_vert"></mat-icon>

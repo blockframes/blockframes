@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ItemComponent } from './item.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,6 +19,7 @@ import { MatMenuModule } from '@angular/material/menu';
     RouterModule,
     FlexLayoutModule,
     ImageModule,
+    TagModule,
     MatListModule,
     MatButtonModule,
     MatIconModule,
