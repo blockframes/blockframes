@@ -7,6 +7,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 
 @Component({
   selector: 'festival-summary-tunnel',
@@ -53,11 +54,14 @@ export class TunnelSummaryComponent implements OnInit {
       if (this.form.valid) {
         await this.shell.layout.update({ publishing: true });
         const text = `${this.form.get('title').get('international').value} successfully published.`;
-        const ref = this.snackBar.open(text, 'SEE ON MARKETPLACE', { duration: 7000 });
-        ref.afterDismissed().subscribe(() => {
-          const movieId = this.route.snapshot.paramMap.get('movieId');
-          this.router.navigate(['c/o/marketplace/title', movieId]);
-        })
+        const movieId = this.route.snapshot.paramMap.get('movieId');
+        this.snackBar.openFromComponent(SnackbarLinkComponent, {
+          data: {
+            message: text, link: ['c/o/marketplace/title', movieId],
+            linkName: 'SEE ON MARKETPLACE'
+          },
+          duration: 7000
+        });
       } else {
         // Log the invalid forms
         let message: string;
