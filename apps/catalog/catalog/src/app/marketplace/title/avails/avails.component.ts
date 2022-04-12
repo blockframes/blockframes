@@ -20,7 +20,7 @@ import { Holdback, isMandate, isSale, Mandate, Sale, BucketTerm, Term, Territory
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { ExplanationComponent } from './explanation/explanation.component';
 import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';
-import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({

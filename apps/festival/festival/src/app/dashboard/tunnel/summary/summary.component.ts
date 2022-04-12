@@ -6,7 +6,7 @@ import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.compon
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 @Component({
   selector: 'festival-summary-tunnel',
