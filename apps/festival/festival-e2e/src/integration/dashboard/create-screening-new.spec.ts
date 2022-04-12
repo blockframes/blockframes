@@ -1,6 +1,7 @@
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { auth, get, getInList, getByClass, getAllStartingWith } from '@blockframes/testing/cypress/browser';
-import { User, Organization, Movie } from '@blockframes/model';
+import { User, Organization, Movie, UserRole } from '@blockframes/model';
+import { startOfWeek, add, isPast, isFuture } from 'date-fns';
 
 describe('Signup', () => {
   beforeEach(() => {
@@ -78,9 +79,7 @@ describe('Signup', () => {
       const randomIndex = Math.floor(Math.random() * movieTitles.length);
       getInList('title_', movieTitles[randomIndex]);
       get('title').should('contain', movieTitles[randomIndex]);
-      get('description').type(
-        `Description for admin test / day = ${futureSlot.day}, hours = ${futureSlot.hours}:${futureSlot.minutes}`
-      );
+      get('description').type(`Description for admin test / day = ${futureSlot.day}, hours = ${futureSlot.hours}:${futureSlot.minutes}`);
       get('event-save').click();
       get('arrow-back').click();
       getEventSlot(futureSlot).should('contain', movieTitles[randomIndex]);
@@ -90,7 +89,7 @@ describe('Signup', () => {
 
 //* CYPRESS FUNCTIONS *//
 
-function getScreeningDataAndLogin(options: { userType: 'admin' | 'member'; moviesWithScreener?: boolean }) {
+function getScreeningDataAndLogin(options: { userType: UserRole; moviesWithScreener?: boolean }) {
   const { userType, moviesWithScreener } = options;
   cy.task('getRandomScreeningData', {
     app: 'festival',
@@ -152,29 +151,13 @@ interface EventSlot {
   minutes: 0 | 30;
 }
 
-function isSlotInThePast(slot: EventSlot) {
-  const now = new Date();
-  if (slot.day < now.getDay()) return true;
-  if (slot.hours < now.getHours()) return true;
-  if (slot.hours == now.getHours() && slot.minutes < now.getMinutes()) return true;
-  return false;
-}
-
-function isSlotInTheFuture(slot: EventSlot) {
-  const now = new Date();
-  if (slot.day > now.getDay()) return true;
-  if (slot.hours > now.getHours()) return true;
-  if (slot.hours == now.getHours() && slot.minutes > now.getMinutes()) return true;
-  return false;
-}
-
 function createPastSlot() {
   const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
   do {
     slot.day = Math.floor(Math.random() * new Date().getDay());
     slot.hours = Math.floor(Math.random() * 24);
     slot.minutes = Math.random() < 0.5 ? 0 : 30;
-  } while (!isSlotInThePast(slot));
+  } while (!isPast(add(startOfWeek(new Date()), { days: slot.day, hours: slot.hours, minutes: slot.minutes })));
   return slot;
 }
 
@@ -184,6 +167,6 @@ function createFutureSlot() {
     slot.day = new Date().getDay() + Math.floor(Math.random() * (7 - new Date().getDay()));
     slot.hours = Math.floor(Math.random() * 24);
     slot.minutes = Math.random() < 0.5 ? 0 : 30;
-  } while (!isSlotInTheFuture(slot));
+  } while (!isFuture(add(startOfWeek(new Date()), { days: slot.day, hours: slot.hours, minutes: slot.minutes })));
   return slot;
 }
