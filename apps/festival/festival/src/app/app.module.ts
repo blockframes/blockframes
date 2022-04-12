@@ -29,6 +29,7 @@ import 'firebase/storage';
 
 // Material
 import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 
 // Blockframes
 import { SentryModule } from '@blockframes/utils/sentry.module';
@@ -83,6 +84,15 @@ import { APP } from '@blockframes/utils/routes/utils';
     PerformanceMonitoringService,
     { provide: REGION, useValue: firebaseRegion },
     { provide: APP, useValue: 'festival' },
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: {
+        minWidth: '50vw',
+        minHeight: '50vh',
+        maxWidth: '80vw',
+        maxHeight: '80vh'
+      }
+    },
     ...emulatorConfig
   ],
   bootstrap: [AppComponent],
