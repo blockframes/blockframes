@@ -21,7 +21,7 @@ export class PromotionalLinksComponent implements OnInit {
   }
 
   async scrollToFooter() {
-    if (document.getElementById('mat-menu-open')) await delay(250);
+    if (document.getElementById('mat-menu-open')) await delay(250); // wait for mat-menu to be closed
     scrollIntoView(document.getElementById('videoFooter'));
   }
 }

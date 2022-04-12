@@ -9,7 +9,7 @@
     </a>
   </ng-container>
 
-  <button mat-mini-fab color="primary" matTooltip="More" [matMenuTriggerFor]="more">
+  <button mat-mini-fab color="primary" matTooltip="More" [matMenuTriggerFor]="more" *ngIf="_links.length || videos">
     <mat-icon svgIcon="more_horiz"></mat-icon>
   </button>
 

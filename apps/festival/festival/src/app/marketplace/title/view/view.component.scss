@@ -26,6 +26,12 @@ movie-header-cta {
     height: fit-content;
   }
 }
+
+@include layout-bp(gt-sm) {
+  movie-header-actions {
+    margin-left: auto;
+  }
+}
  
 @include layout-bp(xs) {
   org-chip {

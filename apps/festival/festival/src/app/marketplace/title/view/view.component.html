@@ -8,7 +8,7 @@
             <org-chip [org]="org"></org-chip>
           </ng-container>
         </section>
-        <section fxLayout="row wrap" fxLayoutAlign.xs="center">
+        <section fxLayout="row wrap" fxLayoutAlign.lt-md="center">
           <ng-container *ngIf="(eventId$ | async) as eventId; else request">
             <button mat-button class="translucent" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
               <mat-icon svgIcon="local_offer"></mat-icon>
