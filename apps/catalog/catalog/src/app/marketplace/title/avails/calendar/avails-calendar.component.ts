@@ -12,18 +12,6 @@ import {
   filterContractsByTitle,
 } from '@blockframes/contract/avails/avails';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { Bucket, Movie, Mandate, Sale, Term } from '@blockframes/model';
-
-// TODO(#7820): remove with rxjs 7
-type AvailabilitiesInputs = [
-  CalendarAvailsFilter,
-  Mandate<Date>[],
-  Term<Date>[],
-  Sale<Date>[],
-  Term<Date>[],
-  Bucket<Date>,
-  Movie
-];
 
 @Component({
   selector: 'catalog-movie-avails-calendar',
@@ -55,28 +43,18 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     this.shell.bucketForm.value$,
     this.shell.movie$,
   ]).pipe(
-    map(
-      ([
-        avails,
+    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]) => {
+      if (this.availsForm.invalid) return { available: [], sold: [], inBucket: [], selected: undefined };
+      const res = filterContractsByTitle(
+        movie.id,
         mandates,
         mandateTerms,
         sales,
         salesTerms,
-        bucket,
-        movie,
-      ]: AvailabilitiesInputs) => {
-        if (this.availsForm.invalid)
-          return { available: [], sold: [], inBucket: [], selected: undefined };
-        const res = filterContractsByTitle(
-          movie.id,
-          mandates,
-          mandateTerms,
-          sales,
-          salesTerms,
-          bucket
-        );
-        return durationAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);
-      }
+        bucket
+      );
+      return durationAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);
+    }
     )
   );
 
@@ -85,7 +63,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     private shell: MarketplaceMovieAvailsComponent,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   clear() {
     this.availsForm.reset();
@@ -93,7 +71,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
 
   async selected(marker: DurationMarker) {
     const duration = { from: marker.from, to: marker.to };
-    const avails = { ...this.availsForm.value, duration };
+    const avails = { ...marker.avail, duration };
 
     const result = this.shell.bucketForm.getTermIndexForCalendar(avails, marker);
     if (result) {

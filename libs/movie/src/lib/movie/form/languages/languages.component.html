@@ -28,7 +28,7 @@
   </button>
 </div>
 <ng-template #noButtons>
-  <input-autocomplete scope="languages" [control]="languageCtrl" withoutValues="['all']">
+  <input-autocomplete scope="languages" [control]="languageCtrl">
     <mat-label>Languages</mat-label>
   </input-autocomplete>
   <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()"

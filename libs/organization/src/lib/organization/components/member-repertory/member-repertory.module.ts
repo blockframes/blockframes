@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 // Modules
 import { MemberPermissionsModule } from '../member-permissions/member-permissions.module';
@@ -27,6 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     RouterModule,
     MemberPermissionsModule,
     ImageModule,
+    ClipboardModule,
     // Material
     MatButtonModule,
     MatIconModule,

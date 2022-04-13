@@ -1,10 +1,10 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { CollectionReference } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { joinWith } from '@blockframes/utils/operators';
+import { where } from 'firebase/firestore';
 import { Intercom } from 'ng-intercom';
 import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 
@@ -17,7 +17,6 @@ import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 })
 export class OfferShellComponent {
   private offerId$ = this.route.params.pipe(pluck<Record<string, string>, string>('offerId'));
-
 
   offer$ = this.offerId$.pipe(
     switchMap((id: string) => this.offerService.valueChanges(id)),
@@ -37,7 +36,7 @@ export class OfferShellComponent {
   ) { }
 
   private declinedContracts(offerId: string) {
-    const declinedContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '==', 'declined')
+    const declinedContracts = [where('offerId', '==', offerId), where('status', '==', 'declined')];
     return this.contractService.valueChanges(declinedContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),
@@ -47,7 +46,7 @@ export class OfferShellComponent {
   }
 
   private getContracts(offerId: string) {
-    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '!=', 'declined');
+    const queryContracts = [where('offerId', '==', offerId), where('status', '!=', 'declined')];
     return this.contractService.valueChanges(queryContracts).pipe(
       joinWith({
         title: contract => this.titleService.valueChanges(contract.titleId),

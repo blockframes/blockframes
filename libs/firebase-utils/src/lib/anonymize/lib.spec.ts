@@ -1,6 +1,6 @@
 import { testVideoId } from '@env';
 import { DbRecord } from '../util';
-import { anonymizeDocument } from './lib'
+import { anonymizeDocument } from './lib';
 
 //@TODO #5543 unit-test runAnonymization and loadDb 
 describe('Test ORG anonymization function', () => {
@@ -211,7 +211,7 @@ describe('Test _META anonymization function', () => {
     };
 
     const doc = anonymizeDocument(titleRecord);
-    expect(doc.content.startedAt._seconds).toBeDefined();
+    expect(doc.content.startedAt.seconds).toBeDefined();
     expect(doc.content.endedAt).toBe(null)
   });
 });

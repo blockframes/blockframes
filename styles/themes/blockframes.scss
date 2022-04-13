@@ -1,4 +1,3 @@
-// @todo(#4650) remove 100, 400 & 700 as it's only used by light theme primary on background contrast
 $dark-theme: (
   is-dark: true,
   primary: (
@@ -22,7 +21,9 @@ $dark-theme: (
     ),
   ),
   warn: (
+    100: #ff3f33,
     500: #ff3f33,
+    700: #ff3f33,
     contrast: (
       500: #ffffff,
     ),
@@ -67,7 +68,9 @@ $light-theme: (
     ),
   ),
   warn: (
+    100: #ff3f33,
     500: #ff3f33,
+    700: #ff3f33,
     contrast: (
       500: #ffffff,
     ),
