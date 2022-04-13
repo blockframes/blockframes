@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import { IpService } from '@blockframes/utils/ip';
 import { ConsentType } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
 export class ConsentsService {
   constructor(
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private ipService: IpService,
   ) { }
 
@@ -16,7 +16,8 @@ export class ConsentsService {
     filePath?: string
   ): Promise<boolean> {
     const ip = await this.ipService.get();
-    const c = this.functions.httpsCallable('createConsent');
-    return await c({ consentType, ip, docId, filePath }).toPromise();
+    const f = httpsCallable<{ consentType: ConsentType, ip: string, docId: string, filePath?: string }, boolean>(this.functions, 'createConsent');
+    const r = await f({ consentType, ip, docId, filePath });
+    return r.data;
   }
 }

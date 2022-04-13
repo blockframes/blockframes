@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { AngularFireFunctions } from "@angular/fire/functions";
+import { Functions, httpsCallable } from "@angular/fire/functions";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { App } from "@blockframes/utils/apps";
@@ -21,7 +21,7 @@ export class ContactComponent implements OnInit {
   public markerLabel: Record<string, string>;
 
   constructor(
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService,
     @Inject(APP) private app: App
@@ -45,10 +45,10 @@ export class ContactComponent implements OnInit {
     const userMessage = this.form.get('message').value;
 
     if (this.form.valid) {
-      const callSendUserMail = this.functions.httpsCallable('sendUserContactMail');
+      const callSendUserMail = httpsCallable(this.functions, 'sendUserContactMail');
       this.snackBar.open('Message sent.', 'close', { duration: 2000 });
       this.form.reset();
-      return callSendUserMail({ subject: userSubject, message: userMessage, app: this.app }).toPromise();
+      return callSendUserMail({ subject: userSubject, message: userMessage, app: this.app });
     } else {
       this.snackBar.open('Subject and message are mandatory.', 'close', { duration: 2000 });
     }

@@ -1,0 +1,36 @@
+@import "~@angular/flex-layout/mq";
+
+:host {
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+}
+
+@include layout-bp(gt-sm) {
+  // don't show more than three promotional links
+  .mat-mini-fab:nth-child(n+4) {
+    display: none;
+  }
+
+  // never show menu-trigger if there are less than four promotional links
+  .mat-mini-fab:nth-child(-n+4) + .mat-menu-trigger {
+    display: none;
+  }
+
+  // show menu-trigger if there are more than 3 promotional links
+  .mat-mini-fab:nth-child(n+4) + .mat-menu-trigger {
+    display: block;
+  }
+
+  // don't show first three promotional links in more menu
+  .mat-menu-item:nth-child(-n+3) {
+    display: none;
+  }
+}
+
+@include layout-bp(lt-md) {
+  // only show menu-trigger
+  .mat-mini-fab:not(.mat-menu-trigger) {
+    display: none;
+  }
+}
