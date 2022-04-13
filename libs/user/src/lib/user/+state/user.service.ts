@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { EntityState } from '@datorama/akita';
 import { User } from '@blockframes/model';
+import { doc } from '@angular/fire/firestore';
+import { deleteDoc, getDoc, updateDoc } from 'firebase/firestore';
 
 type UserState = EntityState<User>;
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users' })
 export class UserService extends CollectionService<UserState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
 
   /**
    * Check if uid is exists in blockframesAdmin collection.
@@ -17,8 +19,9 @@ export class UserService extends CollectionService<UserState> {
    */
   public async isBlockframesAdmin(uid: string): Promise<boolean> {
     if (!uid) return false;
-    const snap = await this.db.collection('blockframesAdmin').doc(uid).get().toPromise();
-    return snap.exists;
+    const ref = doc(this.db, `blockframesAdmin/${uid}`);
+    const snap = await getDoc(ref);
+    return snap.exists();
   }
 
   /**
@@ -27,10 +30,11 @@ export class UserService extends CollectionService<UserState> {
    * @param uid
    */
   public async setBlockframesAdmin(state: boolean = true, uid: string): Promise<void> {
+    const ref = doc(this.db, `blockframesAdmin/${uid}`);
     if (state) {
-      await this.db.collection('blockframesAdmin').doc(uid).set({});
+      await updateDoc(ref, {});
     } else {
-      await this.db.collection('blockframesAdmin').doc(uid).delete();
+      await deleteDoc(ref);
     }
   }
 }

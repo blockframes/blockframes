@@ -1,12 +1,9 @@
-
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { delay, filter, pluck, skip, switchMap } from 'rxjs/operators';
 import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
-
 import { FormList } from '@blockframes/utils/form';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { TermService } from '@blockframes/contract/term/+state';
@@ -22,6 +19,7 @@ import { ExplanationComponent } from './explanation/explanation.component';
 import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -145,7 +143,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   private async init() {
 
     const movieId = this.route.snapshot.params.movieId;
-    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', movieId).where('status', '==', 'accepted'));
+    const contractsQuery = [where('titleId', '==', movieId), where('status', '==', 'accepted')];
+    const contracts = await this.contractService.getValue(contractsQuery);
 
     const mandates = contracts.filter(isMandate);
     const sales = contracts.filter(isSale);

@@ -4,7 +4,7 @@
   "license": "MIT",
   "main": "./main.js",
   "engines": {
-    "node": "12"
+    "node": "16"
   },
   "private": true,
   "dependencies": {
