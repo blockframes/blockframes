@@ -1,6 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Movie } from '@blockframes/model';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
+import { delay } from '@blockframes/utils/helpers';
 
 @Component({
   selector: '[movie] movie-promotional-links',
@@ -19,7 +20,8 @@ export class PromotionalLinksComponent implements OnInit {
     );
   }
 
-  scrollToFooter() {
+  async scrollToFooter() {
+    if (document.getElementById('mat-menu-open')) await delay(250); // wait for mat-menu to be closed
     scrollIntoView(document.getElementById('videoFooter'));
   }
 }
