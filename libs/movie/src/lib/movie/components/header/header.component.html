@@ -11,13 +11,13 @@
     <a mat-icon-button (click)="goBack()" *ngIf="showBackArrow">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
-    <div class="movie-info" fxLayout fxLayout.xs="column" fxLayoutAlign.xs="start center" fxLayoutGap="20px">
+    <div class="movie-info">
       <!-- Poster -->
       <a [routerLink]="['/c/o/marketplace/title/', movieView.id]">
         <img [ref]="movieView.poster" asset="empty_poster.svg" alt="Movie Poster" class="poster">
       </a>
       <!-- Descriptions -->
-      <div fxFlex fxLayout="column" fxLayoutAlign="space-between start">
+      <div fxLayout="column" fxLayoutAlign="space-between start">
         <div class="movie-details">
           <h4>{{ movieView.directors | displayName }}</h4>
           <h1 class="mat-display-2">{{ movieView.title.international }}</h1>
@@ -26,8 +26,8 @@
         </div>
         <ng-content select="movie-header-preferences"></ng-content>
         <ng-content select="movie-header-cta"></ng-content>
-        <ng-content select="movie-header-actions"></ng-content>
       </div>
+      <ng-content select="movie-header-actions"></ng-content>
     </div>
   </section>
 </header>

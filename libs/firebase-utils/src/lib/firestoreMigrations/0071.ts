@@ -1,5 +1,5 @@
 import { Timestamp, Term } from '@blockframes/model';
-import * as admin from 'firebase-admin';
+import firestore from 'firebase/firestore';
 import { runChunks } from '../firebase-utils';
 import { Firestore } from '../types';
 
@@ -17,12 +17,12 @@ export async function upgrade(db: Firestore) {
 
     const from = term.duration.from.toDate();
     from.setHours(0, 0, 0, 0);
-    term.duration.from = admin.firestore.Timestamp.fromDate(from)
+    term.duration.from = firestore.Timestamp.fromDate(from);
 
 
     const to = term.duration.to.toDate();
     to.setHours(0, 0, 0, 0);
-    term.duration.to = admin.firestore.Timestamp.fromDate(to);
+    term.duration.to = firestore.Timestamp.fromDate(to);
 
 
     await doc.ref.set(term);

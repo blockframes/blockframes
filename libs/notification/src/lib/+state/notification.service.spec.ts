@@ -1,20 +1,23 @@
-﻿import { TestBed } from '@angular/core/testing';
+﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
+import { TestBed } from '@angular/core/testing';
 import { NotificationService } from './notification.service';
 import { Notification } from '@blockframes/model';
-import { AngularFireModule } from '@angular/fire';
-import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
+import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { provideFirestore, initializeFirestore, connectFirestoreEmulator, doc, setDoc, getDoc, disableNetwork, Firestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-testing';
 import { readFileSync } from 'fs';
 import { HttpClient } from '@angular/common/http';
 import { HttpTestingController } from '@angular/common/http/testing';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { ContractService } from '@blockframes/contract/contract/+state';
 import { RouterTestingModule } from "@angular/router/testing";
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { APP } from '@blockframes/utils/routes/utils';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { connectFunctionsEmulator, getFunctions, provideFunctions } from '@angular/fire/functions';
+import { Auth } from '@angular/fire/auth';
 
 class InjectedAngularFireAuth {
   authState = new Observable();
@@ -28,28 +31,38 @@ class DummyService { }
 
 describe('Notifications Test Suite', () => {
   let service: NotificationService;
-  let db: AngularFirestore;
+  let db: Firestore;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFireModule.initializeApp({ projectId: 'test' }),
-        AngularFirestoreModule,
+        provideFirebaseApp(() => initializeApp({ projectId: 'test' })),
+        provideFirestore(() => {
+          if(db) return db;
+          db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
+          connectFirestoreEmulator(db, 'localhost', 8080);
+          return db;
+        }),
+        provideFunctions(() => {
+          const functions = getFunctions(getApp());
+          connectFunctionsEmulator(functions, 'localhost', 5001);
+          return functions;
+        }),
         RouterTestingModule,
       ],
       providers: [
         NotificationService,
         { provide: HttpClient, useClass: HttpTestingController },
-        { provide: AngularFireAuth, useClass: InjectedAngularFireAuth },
+        { provide: Auth, useClass: InjectedAngularFireAuth },
         { provide: UserService, useClass: DummyService },
         { provide: MovieService, useClass: DummyService },
+        { provide: AnalyticsService, useClass: DummyService },
         { provide: ContractService, useClass: DummyService },
         { provide: ModuleGuard, useClass: InjectedModuleGuard },
         { provide: APP, useValue: 'festival' },
-        { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
-    db = TestBed.inject(AngularFirestore);
+    db = TestBed.inject(Firestore);
     service = TestBed.inject(NotificationService);
 
     await loadFirestoreRules({
@@ -61,7 +74,7 @@ describe('Notifications Test Suite', () => {
   afterEach(() => clearFirestoreData({ projectId: 'test' }));
 
   // To prevent "This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue."
-  afterAll(() => db.firestore.disableNetwork());
+  afterAll(() => disableNetwork(db));
 
   it('Should check notif service is created', () => {
     expect(service).toBeTruthy();
@@ -72,10 +85,11 @@ describe('Notifications Test Suite', () => {
       id: '1',
       app: { isRead: false },
     };
-    await db.doc('notifications/1').set(notif);
+    const ref = doc(db, 'notifications/1');
+    await setDoc(ref, notif);
     await service.readNotification(notif);
-    const doc = await db.doc('notifications/1').ref.get();
-    const notification = doc.data() as Notification;
+    const document = await getDoc(ref);
+    const notification = document.data() as Notification;
     expect(notification.app.isRead).toBeTruthy();
   });
 

@@ -18,7 +18,7 @@ import { Queue } from '../queue';
 import { FirestoreEmulator } from '../firestore/emulator';
 import { firebase, testVideoId } from '@env';
 import { runChunks } from '../firebase-utils';
-import { firestore } from 'firebase-admin';
+import { Timestamp } from 'firebase/firestore';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
@@ -151,7 +151,7 @@ function processMovie(movie: Movie): Movie {
 
 function processMaintenanceDoc(doc: IMaintenanceDoc): IMaintenanceDoc {
   if (doc.startedAt && !doc.endedAt) return doc;
-  return { endedAt: null, startedAt: firestore.Timestamp.now() };
+  return { endedAt: null, startedAt: Timestamp.now() };
 }
 
 export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
