@@ -3,10 +3,8 @@
 <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
   <nav fxLayout="row" fxLayoutAlign="space-between center">
     <button app-logo (click)="scrollToTop()"></button>
-    <ng-container *ngIf="ltMd$ | async; else gtSm">
-      <a test-id="signup" mat-button color="primary" routerLink="/auth/identity">Join us</a>
-    </ng-container>
-    <ng-template #gtSm>
+    <a class="mobile-navbar" test-id="signup" mat-button color="primary" routerLink="/auth/identity">Join us</a>
+    <div class="desktop-navbar">
       <a mat-stroked-button color="primary" href="#demo" id="demo-link">Schedule a demo</a>
       <a test-id="login" mat-button color="primary" routerLink="/auth/connexion">Log in</a>
       <a test-id="signup" mat-button color="primary" routerLink="/auth/identity">Sign up</a>
@@ -14,7 +12,7 @@
         <mat-icon svgIcon="invitation"></mat-icon>
         <span>First invitation</span>
       </a>
-    </ng-template>
+    </div>
   </nav>
 </mat-toolbar>
 

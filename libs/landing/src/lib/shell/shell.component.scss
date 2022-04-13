@@ -27,6 +27,13 @@ landing-shell-page {
     nav {
       width: 100%;
 
+      .desktop-navbar {
+        display: flex;
+        width: 100%;
+      }
+      .mobile-navbar {
+        display: none;
+      }
       #demo-link {
         letter-spacing: 0.5px;
         line-height: 24px;
@@ -163,6 +170,17 @@ landing-shell-page {
   landing-shell-page {
     button[app-logo] {
       margin-right: 0;
+    }
+
+    mat-toolbar {
+      nav {
+        .desktop-navbar {
+          display: none;
+        }
+        .mobile-navbar {
+          display: block;
+        }
+      }
     }
 
     main {

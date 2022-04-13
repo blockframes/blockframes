@@ -11,6 +11,11 @@ catalog-landing {
 
   landing-header {
     header {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 32px;
       background-image: url("/assets/images/content_header_background.png");
       background-repeat: no-repeat;
       background-size: cover;
@@ -212,6 +217,10 @@ landing-app-link {
   catalog-landing {
     landing-header {
       text-align: center;
+      header {
+        height: calc(100vh - 80px);
+        align-items: center;
+      }
     }
     landing-content {
       .landing-presentation {

@@ -13,6 +13,11 @@ $banner-background: rgba(5, 7, 36);
 
 landing-header {
   header {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: flex-start;
+    gap: 32px;
     background-image: url("/assets/images/banner_landing_new.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -173,6 +178,7 @@ landing-app-link {
   landing-header {
     #header-to-scroll {
       height: calc(100vh - 80px);
+      align-items: center;
       text-align: center;
       padding-inline: 16px;
       a {
@@ -194,8 +200,12 @@ landing-app-link {
       padding: 16px;
       mat-tab-group {
         padding-inline: 0;
+        
         header {
           padding: 0;
+          img, .mat-title {
+            display: none;
+          }
         }
       }
     }

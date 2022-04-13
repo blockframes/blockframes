@@ -11,7 +11,6 @@ import { App } from '@blockframes/utils/apps';
 //TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { supportMailosaur } from '@blockframes/utils/constants';
-import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
@@ -54,7 +53,6 @@ export class LandingShellComponent implements OnDestroy {
   public submitted = false;
   public newslettersSubmitted = false;
   public buttonText = 'Submit Demo Request';
-  ltMd$ = this.breakpointsService.ltMd;
 
   @Input() roles: RequestDemoRole[] = [
     'buyer',
@@ -86,7 +84,6 @@ export class LandingShellComponent implements OnDestroy {
     private functions: AngularFireFunctions,
     private theme: ThemeService,
     private cdr: ChangeDetectorRef,
-    private breakpointsService: BreakpointsService,
     @Inject(APP) private app: App
   ) {
     theme.setTheme('light');
