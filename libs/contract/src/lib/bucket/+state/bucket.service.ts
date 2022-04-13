@@ -10,7 +10,7 @@ import { TermService } from '../../term/+state';
 import { OfferService } from '../../offer/+state';
 import { ContractService } from '../../contract/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { collection, doc } from '@angular/fire/firestore';
+import { collection, doc } from 'firebase/firestore';
 import {
   convertDuration,
   Bucket,

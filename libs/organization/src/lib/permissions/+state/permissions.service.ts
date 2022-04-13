@@ -7,7 +7,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { createDocPermissions, PermissionsDocument, UserRole, Permissions } from '@blockframes/model';
-import { doc, getDoc } from '@angular/fire/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 
 interface PermissionsState extends EntityState<Permissions>, ActiveState<string> { }
 

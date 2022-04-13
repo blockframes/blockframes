@@ -1,4 +1,4 @@
-import { collection, doc, Firestore } from '@angular/fire/firestore';
+import { collection, doc, Firestore } from 'firebase/firestore';
 import {
   getDate,
   getOrgId,

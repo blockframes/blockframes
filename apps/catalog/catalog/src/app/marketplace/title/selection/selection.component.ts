@@ -25,7 +25,7 @@ export class MarketplaceSelectionComponent {
 
   bucket$: Observable<Bucket>;
   private prices: number[] = [];
-  priceChanges = new Subject<number>();
+  priceChanges = new Subject<void>();
   total$: Observable<number>;
 
   constructor(
@@ -61,7 +61,7 @@ export class MarketplaceSelectionComponent {
 
   setPrice(index: number, price: string | null) {
     this.prices[index] = parseFloat(price || '0'); // if "", fallback to '0'
-    this.priceChanges.next(null);
+    this.priceChanges.next();
   }
 
   trackById(i: number, doc: { id: string }) {

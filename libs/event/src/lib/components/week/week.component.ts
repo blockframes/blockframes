@@ -17,7 +17,7 @@ import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { collection, doc } from '@angular/fire/firestore';
+import { collection, doc } from 'firebase/firestore';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;

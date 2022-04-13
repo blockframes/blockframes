@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
-import { Firestore } from '@angular/fire/firestore';
+import { Firestore } from 'firebase/firestore';
 import { MatTableDataSource } from '@angular/material/table';
 
 

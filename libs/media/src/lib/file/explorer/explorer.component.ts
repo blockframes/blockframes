@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit, OnInit, Inject } from '@angular/core';
-import { doc, Firestore, updateDoc } from '@angular/fire/firestore';
+import { doc, Firestore, updateDoc } from 'firebase/firestore';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state/movie.service';

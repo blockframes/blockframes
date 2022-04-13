@@ -12,8 +12,7 @@ import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
 import { createDocumentMeta } from '@blockframes/model';
-import { where } from 'firebase/firestore';
-import { doc, collection, Firestore } from '@angular/fire/firestore';
+import { where, doc, collection, Firestore } from 'firebase/firestore';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
