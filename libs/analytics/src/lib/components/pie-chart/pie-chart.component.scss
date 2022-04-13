@@ -1,7 +1,17 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
-img{
+apx-chart {
+  display: block;
+  margin-block: auto;
+}
+
+img {
   width: 100%;
+}
+
+button {
+  margin-left: auto;
 }

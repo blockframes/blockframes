@@ -1,6 +1,9 @@
-<header fxLayout fxLayoutGap="8px">
+<header fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
   <mat-icon svgIcon="business"></mat-icon>
   <h5>Split by Company Activity</h5>
+  <button mat-icon-button (click)="toggleSelect()" *ngIf="previousSelection" matTooltip="Remove selection">
+    <mat-icon svgIcon="refresh_filters"></mat-icon>
+  </button>
 </header>
 <ng-container *ngIf="pieChartOptions.series?.length; else noData">
   <apx-chart

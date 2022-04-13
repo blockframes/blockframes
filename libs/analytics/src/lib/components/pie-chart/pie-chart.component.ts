@@ -72,6 +72,13 @@ export class PieChartComponent {
     this.chart?.updateOptions(this.pieChartOptions);
   }
 
-  private previousSelection?: string;
+  previousSelection?: string;
   @Output() selection: EventEmitter<string> = new EventEmitter();
+
+  toggleSelect() {
+    const index = this.pieChartOptions.labels.findIndex(label => label === this.previousSelection);
+    if (index >= 0) {
+      this.chart.toggleDataPointSelection(index);
+    }
+  }
 }
