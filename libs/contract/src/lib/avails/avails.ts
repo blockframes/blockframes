@@ -97,6 +97,38 @@ interface SearchAvailsConfig<A extends BaseAvailsFilter> {
   saleFilterFn?: (term: Term<Date>, avail: A) => boolean
 };
 
+function combineAvailResults<A extends CalendarAvailsFilter | AvailsFilter>(results: AvailResult<A>[]) {
+  const availableResults = results
+    .map(({ available }) => available)
+    .filter(available => available.length)
+    .flat()
+
+  //combine all sub-avails with the same matching term.
+  const termIds = availableResults.map(({ mandate }) => mandate.terms[0].id)
+  const uniqueTermIds = Array.from(new Set(termIds).values());
+  const combinedAvailableResults: AvailSearchResult<A>[] = [];
+
+  for (const termId of uniqueTermIds) {
+    const correspondingResults = availableResults.filter(({ mandate }) => mandate.terms[0].id === termId)
+    const mandate = correspondingResults[0].mandate;
+    const subavailTerritories: Territory[] = [];
+    const subavailMedias: Media[] = [];
+    for (const result of correspondingResults) {
+      subavailMedias.push(...result.avail.medias)
+      subavailTerritories.push(...result.avail.territories)
+    }
+    const avail = {
+      ...correspondingResults[0].avail,
+      territories: subavailTerritories,
+      medias: subavailMedias
+    };
+    combinedAvailableResults.push({ mandate, avail });
+  }
+
+
+  return combinedAvailableResults;
+}
+
 function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter>(config: SearchAvailsConfig<A>) {
   const {
     avails,
@@ -180,15 +212,11 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
     }
   }
 
-  // Get non-empty available results
-  const available = results
-    .map(({ available }) => available)
-    .filter(available => available.length)
-    .flat()
+  const combinedAvailableResults = combineAvailResults(results)
 
   return {
     periodAvailable: { from, to },
-    available,
+    available: combinedAvailableResults,
     sales: salesToExclude
   }
 }
@@ -516,6 +544,7 @@ export interface DurationMarker {
   to: Date,
   contract?: Mandate,
   term?: Term<Date>,
+  avail?: CalendarAvailsFilter,
 }
 
 interface CalendarAvailabilities {
@@ -584,12 +613,14 @@ export function durationAvailabilities(
     ...rest
   } = getMatchingCalendarAvailabilities(avails, mandates, sales);
 
-  const available = rest.available.map(a => a.mandate).map(m => {
-    return m.terms.map((t): DurationMarker => ({
+  const available = rest.available.map(availability => {
+    const { mandate, avail } = availability;
+    return mandate.terms.map((t): DurationMarker => ({
       from: periodAvailable.from,
       to: periodAvailable.to,
-      contract: m,
-      term: t
+      contract: mandate,
+      term: t,
+      avail
     }));
   }).flat();
 

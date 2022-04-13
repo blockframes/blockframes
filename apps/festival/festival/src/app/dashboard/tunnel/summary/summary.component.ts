@@ -6,6 +6,7 @@ import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.compon
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
 
 @Component({
   selector: 'festival-summary-tunnel',
@@ -48,21 +49,29 @@ export class TunnelSummaryComponent implements OnInit {
   }
 
   public async submit() {
-    if (this.form.valid) {
-      await this.shell.layout.update({ publishing: true });
-      const text = `${this.form.get('title').get('international').value} successfully published.`;
-      const ref = this.snackBar.open(text, 'SEE ON MARKETPLACE', { duration: 7000 });
-      ref.afterDismissed().subscribe(() => {
-        const movieId = this.route.snapshot.paramMap.get('movieId');
-        this.router.navigate(['c/o/marketplace/title', movieId]);
-      })
-    } else {
-      // Log the invalid forms
-      if (this.invalidFields.length) {
-        this.snackBar.open('Some fields have invalid information.', '', { duration: 2000 });
-      } else if (this.missingFields.length) {
-        this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
+    try {
+      if (this.form.valid) {
+        await this.shell.layout.update({ publishing: true });
+        const text = `${this.form.get('title').get('international').value} successfully published.`;
+        const ref = this.snackBar.open(text, 'SEE ON MARKETPLACE', { duration: 7000 });
+        ref.afterDismissed().subscribe(() => {
+          const movieId = this.route.snapshot.paramMap.get('movieId');
+          this.router.navigate(['c/o/marketplace/title', movieId]);
+        })
+      } else {
+        // Log the invalid forms
+        let message: string;
+        if (this.invalidFields.length) {
+          message = 'Some fields have invalid information.';
+        } else if (this.missingFields.length) {
+          message = 'Mandatory information is missing.';
+        }
+        const section = document.getElementById('main-information');
+        const ref = this.snackBar.open(message, 'VERIFY FIELDS', { duration: 5000 });
+        ref.afterDismissed().subscribe(() => section.scrollIntoView({ behavior: 'smooth' }))
       }
+    } catch (_) {
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
     }
   }
 }

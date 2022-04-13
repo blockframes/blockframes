@@ -8,7 +8,7 @@ import { App } from '@blockframes/utils/apps';
 import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
-import { createPublicUser, PublicUser, User, createOrganization, createDocumentMeta} from '@blockframes/model';
+import { createPublicUser, PublicUser, User, createOrganization, createDocumentMeta } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
@@ -110,7 +110,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.form.patchValue(user);
 
     this.disableControls(['email', 'firstName', 'lastName', 'password', 'confirm', 'generatedPassword']);
-  }  
+  }
 
   private disableControls(keys: (keyof IdentityFormControl)[]) {
     for (const key of keys) {
@@ -160,6 +160,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
       switch (err.code) {
         case 'auth/email-already-in-use':
           this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: 6000 });
+          break;
+        case 'auth/invalid-email':
+          this.snackBar.open('Incorrect email address, please enter: text@example.com', 'close', { duration: 5000 });
           break;
         case 'auth/wrong-password':
           this.snackBar.open('Incorrect Invitation Pass. Please check your invitation email.', 'close', { duration: 8000 });

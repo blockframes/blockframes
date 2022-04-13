@@ -23,6 +23,7 @@ import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/s
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 import { FormDisplayNameModule } from '@blockframes/ui/form';
+import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
 
 // Component
 import { MovieFormMainComponent } from './main.component';
@@ -38,6 +39,7 @@ import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
+    CellModalModule,
 
     // Movie Form ModulesSTATUS
     // Other Modules
