@@ -1,0 +1,15 @@
+<mat-divider></mat-divider>
+<a mat-list-item routerLink="/c/o/account/profile" routerLinkActive="active">
+  <mat-icon matListIcon svgIcon="account_circle"></mat-icon>
+  <span matLine><b>Profile</b></span>
+</a>
+<ng-container *ngIf="org$ | async as org">
+  <a mat-list-item [routerLink]="['/c/o/organization', org.id]" routerLinkActive="active">
+    <mat-icon matListIcon svgIcon="business"></mat-icon>
+    <span matLine><b>Organization</b></span>
+  </a>
+</ng-container>
+<mat-list-item (click)="logout()">
+  <mat-icon matListIcon svgIcon="logout"></mat-icon>
+  <span matLine><b>Log out</b></span>
+</mat-list-item>

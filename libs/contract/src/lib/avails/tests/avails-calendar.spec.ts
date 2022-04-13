@@ -211,7 +211,7 @@ describe('Test terms out of movie mandates', () => {
     assertDate(soldTo, saleGermanyTo);
 
     //Available on mandate duration.
-    expect(markers.available.length).toBe(3);
+    expect(markers.available.length).toBe(1);
     const [{ from: availableFrom, to: availableTo }] = markers.available;
     assertDate(availableFrom, mandateFrom);
     assertDate(availableTo, mandateTo);
@@ -228,7 +228,7 @@ describe('Test terms out of movie mandates', () => {
     assertDate(soldTo, saleGermanyTo);
 
     //Available on mandate duration.
-    expect(markers.available.length).toBe(3);
+    expect(markers.available.length).toBe(1);
     const [{ from: availableFrom, to: availableTo }] = markers.available;
     assertDate(availableFrom, mandateFrom);
     assertDate(availableTo, mandateTo);
@@ -238,7 +238,7 @@ describe('Test terms out of movie mandates', () => {
 
   it('Check available non exclusive', () => {
     const markers = durationAvailabilities(availsTerritoryWithoutExclusivity, [mandateMovie1], sales, []);
-    expect(markers.available.length).toBe(3);
+    expect(markers.available.length).toBe(1);
     const [{ from, to }] = markers.available;
     assertDate(from, mandateFrom);
     assertDate(to, mandateTo);
@@ -254,7 +254,7 @@ describe('Test terms out of movie mandates', () => {
     assertDate(soldTo, saleGermanyTo);
 
     //Available on mandate duration
-    expect(markers.available.length).toBe(3);
+    expect(markers.available.length).toBe(1);
     const [{ from: availableFrom, to: availableTo }] = markers.available;
     assertDate(availableFrom, mandateFrom);
     assertDate(availableTo, mandateTo);
@@ -326,7 +326,7 @@ describe('Test terms out of movie mandates', () => {
     assertDate(soldTo, saleBelgiumFranceLuxembourgTo);
 
     //Available on mandate duration.
-    expect(markers.available.length).toBe(2);
+    expect(markers.available.length).toBe(1);
     const [{ from: availableFrom, to: availableTo }] = markers.available;
     assertDate(availableFrom, mandateFrom);
     assertDate(availableTo, mandateTo);
