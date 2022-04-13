@@ -5,11 +5,10 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { hasAppStatus } from '@blockframes/model';
+import { EventName, hasAppStatus } from '@blockframes/model';
 import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { joinWith } from '@blockframes/utils/operators';
 import { counter } from '@blockframes/analytics/+state/utils';
 
 // RxJs
@@ -67,6 +66,13 @@ export class HomeComponent {
   pageViewsOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
     map(analytics => analytics.filter(analytic => analytic.name === 'pageView'))
   );
+
+  interactions: EventName[] = [
+    'addedToWishlist',
+    'askingPriceRequested',
+    'promoReelOpened',
+    'screeningRequested',
+  ];
 
   constructor(
     private analyticsService: AnalyticsService,
