@@ -17,7 +17,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages.module';
-import { SnackbarErrorModule } from '@blockframes/ui/snackbar/snackbar-error.module';
+import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
 
 import { AvailsGuard } from './avails.guard';
 import { MarketplaceMovieAvailsComponent } from './avails.component';
