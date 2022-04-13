@@ -18,7 +18,6 @@ export class RequestScreeningComponent {
 
   @Input() movieId: string;
   @Input() @boolean iconOnly: boolean;
-  @Input() @boolean @HostBinding('class.animated') animated: boolean;
   
   requestStatus = new BehaviorSubject<RequestStatus>('available');
   screeningRequest: Record<RequestStatus, string> = {
@@ -35,7 +34,6 @@ export class RequestScreeningComponent {
   ) {}
 
   async requestScreening() {
-    this.animated = false;
     this.requestStatus.next('sending');
     const f = httpsCallable(this.functions,'requestScreening');
     await f({ movieId: this.movieId, uid: this.authService.uid });
