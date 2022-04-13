@@ -97,7 +97,7 @@ export class LineChartComponent {
     const end = new Date();
     const eachDay = eachDayOfInterval({ start, end });
 
-    const series: ApexAxisChartSeries = [];
+    this.lineChartOptions.series = [];
     const eventNames = getUniqueEventNames(analytics);
     for (const name of eventNames) {
       const data = eachDay.map(day => {
@@ -109,9 +109,9 @@ export class LineChartComponent {
         return [day.getTime(), analyticsOfDay.length] as [number, number];
       });
 
-      series.push({ name: eventNameLabel[name], data });
+      this.lineChartOptions.series.push({ name: eventNameLabel[name], data });
     }
 
-    this.chart?.updateSeries(series);
+    this.chart?.updateOptions(this.lineChartOptions);
   }
 }

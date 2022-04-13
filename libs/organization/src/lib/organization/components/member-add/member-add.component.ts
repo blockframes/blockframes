@@ -7,7 +7,7 @@ import { Movie, Organization } from '@blockframes/model';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
 import { FormList } from '@blockframes/utils/form';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
-import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 @Component({
   selector: '[org] member-add',

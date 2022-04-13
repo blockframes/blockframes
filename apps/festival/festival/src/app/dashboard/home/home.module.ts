@@ -8,6 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Pages
 import { HomeComponent } from './home.component';
@@ -41,6 +42,7 @@ import { HasAppStatusModule } from '@blockframes/movie/pipes/has-app-status.pipe
     // Material
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
     MatProgressSpinnerModule,
 
     // Routing

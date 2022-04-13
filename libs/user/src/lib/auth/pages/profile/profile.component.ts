@@ -8,7 +8,7 @@ import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { FileUploaderService } from '@blockframes/media/+state';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
-import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 @Component({
   selector: 'user-profile-edit',
