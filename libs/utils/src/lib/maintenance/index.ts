@@ -1,5 +1,4 @@
 import { IMaintenanceDoc } from '@blockframes/model';
-import firebase from 'firebase/app';
 
 /** Delay before considering the maintenance over */
 export const EIGHT_MINUTES_IN_MS = 8 * 60 * 1000; // 8 minutes in ms
@@ -26,8 +25,8 @@ export function _isInMaintenance(maintenanceDoc: IMaintenanceDoc, delay = EIGHT_
       // Wait `delay` minutes before allowing any operation on the db.
       // this prevents triggering firebase events.
       // NOTE: this is hack-ish but good enough for our needs! we'll revisit this later.
-      const now = firebase.firestore.Timestamp.now();
-      return maintenanceDoc.endedAt.toMillis() + delay > now.toMillis();
+      const now = Date.now(); // TODO #7273 re-use timestamp?
+      return maintenanceDoc.endedAt.toMillis() + delay > now;
     }
 
     // We shouldn't throw here else if this happen it create cache issues

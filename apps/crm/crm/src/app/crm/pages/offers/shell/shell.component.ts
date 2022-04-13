@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { QueryConstraint, where } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { OfferService } from '@blockframes/contract/offer/+state';
@@ -8,7 +9,6 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { joinWith } from '@blockframes/utils/operators';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { CollectionReference, QueryFn } from '@angular/fire/firestore';
 import { Contract, Offer, Organization } from '@blockframes/model';
 
 @Component({
@@ -36,12 +36,12 @@ export class OfferShellComponent {
   );
 
   public contracts$ = this.offerId$.pipe(
-    switchMap((offerId: string): Observable<Contract[]> => this.contractService.valueChanges(ref => ref.where('offerId', '==', offerId))),
+    switchMap((offerId: string): Observable<Contract[]> => this.contractService.valueChanges([where('offerId', '==', offerId)])),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   public incomes$ = this.offerId$.pipe(
-    switchMap((offerId: string): Observable<Income[]> => this.incomeService.valueChanges(ref => ref.where('offerId', '==', offerId))),
+    switchMap((offerId: string): Observable<Income[]> => this.incomeService.valueChanges([where('offerId', '==', offerId)])),
   );
 
   constructor(
@@ -53,7 +53,7 @@ export class OfferShellComponent {
     private titleService: MovieService,
   ) { }
 
-  getContracts(query: QueryFn) {
+  getContracts(query: QueryConstraint[]) {
     return this.contractService.valueChanges(query).pipe(
       joinWith({
         negotiation: contract => {
@@ -75,12 +75,12 @@ export class OfferShellComponent {
   }
 
   getNotDeclinedContracts(offerId: string) {
-    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '!=', 'declined');
+    const queryContracts = [where('offerId', '==', offerId), where('status', '!=', 'declined')];
     return this.getContracts(queryContracts);
   }
 
   getDeclinedContracts(offerId: string) {
-    const queryContracts = (ref: CollectionReference) => ref.where('offerId', '==', offerId).where('status', '==', 'declined');
+    const queryContracts = [where('offerId', '==', offerId), where('status', '==', 'declined')];
     return this.getContracts(queryContracts);
   }
 
