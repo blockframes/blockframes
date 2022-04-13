@@ -77,8 +77,6 @@ export class PieChartComponent {
 
   toggleSelect() {
     const index = this.pieChartOptions.labels.findIndex(label => label === this.previousSelection);
-    if (index >= 0) {
-      this.chart.toggleDataPointSelection(index);
-    }
+    if (index !== -1) this.chart.toggleDataPointSelection(index);
   }
 }

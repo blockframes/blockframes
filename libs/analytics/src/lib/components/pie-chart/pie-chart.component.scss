@@ -3,6 +3,12 @@
   flex-direction: column;
 }
 
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 apx-chart {
   display: block;
   margin-block: auto;
