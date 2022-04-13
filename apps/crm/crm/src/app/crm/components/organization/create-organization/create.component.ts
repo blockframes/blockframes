@@ -11,6 +11,7 @@ import { FormEntity } from '@blockframes/utils/form';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { getOrgAppAccess } from '@blockframes/utils/apps';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'organization-create',
@@ -37,7 +38,7 @@ export class OrganizationCreateComponent {
   ) { }
 
   async emailValidator(control: AbstractControl): Promise<{ [key: string]: unknown } | null> {
-    const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', control.value));
+    const [existingSuperAdmin] = await this.userService.getValue([where('email', '==', control.value)]);
     return (!!existingSuperAdmin && !!existingSuperAdmin.orgId) ? { taken: true } : null;
   }
 
@@ -54,7 +55,7 @@ export class OrganizationCreateComponent {
     }
 
     const superAdminEmail = this.superAdminForm.get('email').value;
-    const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', superAdminEmail));
+    const [existingSuperAdmin] = await this.userService.getValue([where('email', '==', superAdminEmail)]);
 
     if (!!existingSuperAdmin && !!existingSuperAdmin.orgId) {
       this.snackBar.open('User associated with this super admin email address already has an organization');

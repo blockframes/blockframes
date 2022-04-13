@@ -18,13 +18,13 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AppComponent } from './app.component';
 
 // Angular Fire
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFirePerformanceModule, PerformanceMonitoringService } from '@angular/fire/performance';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireStorageModule } from '@angular/fire/storage';
-import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
+import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
+import { provideFunctions, getFunctions, connectFunctionsEmulator } from '@angular/fire/functions';
+import { connectFirestoreEmulator, initializeFirestore, provideFirestore } from '@angular/fire/firestore';
+import { providePerformance, getPerformance } from '@angular/fire/performance';
+import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
+import { provideStorage, getStorage } from '@angular/fire/storage';
+import { provideAnalytics, getAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 import 'firebase/storage';
 
 // Material
@@ -60,14 +60,32 @@ import { APP } from '@blockframes/utils/routes/utils';
     IntercomModule.forRoot({ appId: intercomId }),
 
     // Firebase
-    AngularFireModule.initializeApp(firebase('festival')),
-    AngularFirestoreModule,
-    AngularFireFunctionsModule,
-    AngularFirePerformanceModule,
-    AngularFireAuthModule,
-    AngularFireStorageModule,
-    AngularFireAnalyticsModule,
-    // Analytics
+    provideFirebaseApp(() => initializeApp(firebase('festival'))),
+    provideFirestore(() => {
+      const db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
+      if (emulatorConfig.firestore) {
+        connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
+      }
+      return db;
+    }),
+    provideFunctions(() => {
+      const functions = getFunctions(getApp(), firebaseRegion);
+      if (emulatorConfig.functions) {
+        connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
+      }
+      return functions;
+    }),
+    providePerformance(() => getPerformance()),
+    provideAuth(() => {
+      const auth = getAuth();
+      if (emulatorConfig.auth) {
+        connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
+      }
+      return auth;
+    }),
+    provideStorage(() => getStorage()),
+    provideAnalytics(() => getAnalytics()),
+
     sentryDsn ? SentryModule : ErrorLoggerModule,
 
     // Akita
@@ -81,8 +99,6 @@ import { APP } from '@blockframes/utils/routes/utils';
   providers: [
     ScreenTrackingService,
     UserTrackingService,
-    PerformanceMonitoringService,
-    { provide: REGION, useValue: firebaseRegion },
     { provide: APP, useValue: 'festival' },
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,
@@ -92,8 +108,7 @@ import { APP } from '@blockframes/utils/routes/utils';
         maxWidth: '80vw',
         maxHeight: '80vh'
       }
-    },
-    ...emulatorConfig
+    }
   ],
   bootstrap: [AppComponent],
 })

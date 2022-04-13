@@ -5,7 +5,6 @@ import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
 import { backupBucket } from '@env'
 
 // Users for E2E tests
-import staticUsers from 'tools/static-users.json';
 import { EIGHT_MINUTES_IN_MS } from "@blockframes/utils/maintenance";
 import type { ChildProcess } from "child_process";
 import { CollectionData, DatabaseData, DocumentDescriptor, getAllDocumentCount, inspectDocumentRelations, loadAllCollections, printDatabaseInconsistencies } from "./internals/utils";
@@ -154,8 +153,7 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
 }
 
 function getOrgsAndUsersToKeep(dbData: DatabaseData) {
-  const e2eUsers = Object.values(staticUsers).concat(USERS);
-  const _usersLinked: string[] = e2eUsers;
+  const _usersLinked: string[] = USERS;
   const _orgsLinked: string[] = [];
 
   for (const movie of dbData.movies.documents) {
@@ -206,7 +204,7 @@ function getOrgsAndUsersToKeep(dbData: DatabaseData) {
 
   const getOrgSuperAdmin = (orgId: string) => {
     const permission = dbData.permissions.documents.find(p => p.id === orgId);
-    return Object.keys(permission.roles).find(userId => permission.roles[userId] === 'superAdmin')
+    return Object.keys(permission.roles).find(userId => permission.roles[userId] === 'superAdmin');
   }
 
   function getOrgIdOfUser(userId: string) {
@@ -214,10 +212,14 @@ function getOrgsAndUsersToKeep(dbData: DatabaseData) {
     return org?.id || undefined;
   }
 
-  const usersLinked = uniqueArray(_usersLinked).concat(uniqueArray(_orgsLinked).map(orgId => getOrgSuperAdmin(orgId)).filter(u => u));
+  const usersLinkedOrgIds = uniqueArray(_usersLinked).map(userId => getOrgIdOfUser(userId)).filter(o => o);
+  const orgSuperAdmins = uniqueArray(_orgsLinked.concat(usersLinkedOrgIds)).map(orgId => getOrgSuperAdmin(orgId)).filter(u => u);
+
+  const usersLinked = uniqueArray(_usersLinked).concat(orgSuperAdmins);
+
   const usersToKeep: string[] = uniqueArray(usersLinked).filter(uid => dbData.users.refs.docs.find(d => d.id === uid));
 
-  const orgsLinked = uniqueArray(_orgsLinked).concat(uniqueArray(_usersLinked).map(userId => getOrgIdOfUser(userId)).filter(o => o));
+  const orgsLinked = uniqueArray(_orgsLinked).concat(usersLinkedOrgIds);
   const orgsToKeep: string[] = uniqueArray(orgsLinked).filter(id => dbData.orgs.refs.docs.find(d => d.id === id));
 
   return { usersToKeep, orgsToKeep };

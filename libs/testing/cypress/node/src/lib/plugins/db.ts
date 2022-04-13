@@ -30,15 +30,8 @@ function getDashboardOrgs(app: App) {
 export async function getRandomOrg(data: { app: App; access: ModuleAccess }) {
   const { app, access } = data;
   const { docs } = access.dashboard ? await getDashboardOrgs(app) : await getMarketplaceOrgs(app);
-  // TODO : when issue #8093 is resolved, revert below function code like in PR #7773
-  let organization: Organization;
-  do {
-    const randomIndex = Math.floor(Math.random() * docs.length);
-    const tempOrg = createOrganization(docs[randomIndex].data());
-    const orgHasAdmin = await getRandomOrgAdmin(tempOrg.id);
-    if (orgHasAdmin?.email) organization = tempOrg;
-  } while (!organization)
-  return createOrganization(organization);
+  const ramdomIndex = Math.floor(Math.random() * docs.length);
+  return createOrganization(docs[ramdomIndex].data());
 }
 
 export async function validateOrg(orgName: string) {

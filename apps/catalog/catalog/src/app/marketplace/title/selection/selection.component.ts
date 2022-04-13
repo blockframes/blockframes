@@ -25,7 +25,7 @@ export class MarketplaceSelectionComponent {
 
   bucket$: Observable<Bucket>;
   private prices: number[] = [];
-  priceChanges = new Subject<number>();
+  priceChanges = new Subject<void>();
   total$: Observable<number>;
 
   constructor(

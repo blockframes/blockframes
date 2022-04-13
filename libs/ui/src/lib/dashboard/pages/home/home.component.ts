@@ -1,5 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
+import { where } from 'firebase/firestore';
 
 // Blockframes
 import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
@@ -37,10 +38,10 @@ export class HomeComponent {
   );
 
   public titlesAnalytics$: Observable<MovieAnalytics[]> = this.orgService.currentOrg$.pipe(
-    switchMap(({ id }) => this.analytics.valueChanges(ref => ref
-      .where('type', '==', 'title')
-      .where('meta.ownerOrgIds', 'array-contains', id)
-    )),
+    switchMap(({ id }) => this.analytics.valueChanges([
+      where('type', '==', 'title'),
+      where('meta.ownerOrgIds', 'array-contains', id)
+    ])),
     map(toMovieAnalytics)
   )
 
