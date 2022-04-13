@@ -1,9 +1,9 @@
 
 <mat-list-item>
   <img matListAvatar [asset]="notification.placeholderUrl" [ref]="notification.imgRef" alt="Notification picture">
-  <p *ngIf="(xs$ | async) === false" matLine [class.disabled]="notification.app.isRead" class="mat-body-1" test-id="notification-message" [innerHtml]="notification.message"></p>
+  <p *ngIf="(xs$ | async) === false" matLine [ngClass]="{ disabled: notification.app.isRead }" class="mat-body-1" test-id="notification-message" [innerHtml]="notification.message"></p>
   <span matLine>
-    <small [class.mat-caption]="notification.app.isRead">{{ notification._meta.createdAt | date: 'shortTime' }}</small>
+    <small [ngClass]="{ disabled: notification.app.isRead }">{{ notification._meta.createdAt | date: 'shortTime' }}</small>
   </span>
   <button *ngIf="!notification.app.isRead; else isRead" mat-button (click)="markAsRead(notification)">
     <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
@@ -27,5 +27,5 @@
   <a mat-menu-item [target]="targetLink" [href]="notification.url">{{ notification.actionText ?? 'More Details' }}</a>
 </mat-menu>
 <ng-container *ngIf="xs$ | async">
-  <p class="mat-body-1" test-id="notification-message" [innerHtml]="notification.message"></p>
+  <p [ngClass]="{ disabled: notification.app.isRead }" class="mat-body-1" test-id="notification-message" [innerHtml]="notification.message"></p>
 </ng-container>
