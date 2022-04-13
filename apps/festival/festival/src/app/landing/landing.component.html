@@ -11,7 +11,7 @@
         <span>Join now</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>
-      <button mat-icon-button fxHide.gt-sm (click)="scrollToPartners()">
+      <button mat-icon-button (click)="scrollToPartners()">
         <mat-icon svgIcon="arrow_downward"></mat-icon>
       </button>
     </header>
@@ -22,7 +22,7 @@
       <article class="max-width" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
         <h2 class="mat-display-1">They're using it</h2>
         <p class="mat-body-1">Over 1400 buyers are already using Archipel, from companies like:</p>
-        <div fxLayout="row wrap" fxLayoutAlign.xs="space-around center" fxLayoutGap="32px" fxLayoutGap.xs="16px">
+        <div fxLayout="row wrap">
           <img *ngFor="let partnerLogo of partnerLogoList" [asset]='partnerLogo' [alt]='partnerLogo'>
         </div>
       </article>
@@ -67,9 +67,9 @@
         
         <mat-tab [label]="tabNames[1]">
           <header fxLayout fxLayoutGap="48px" fxLayout.lt-lg="column">
-            <img fxHide.xs [asset]="tabTitle[1].imgAsset" alt="buyer image">
+            <img [asset]="tabTitle[1].imgAsset" alt="buyer image">
             <div fxLayout="column">
-              <h2 fxHide.xs>{{ tabTitle[1].title }}</h2>
+              <p class="mat-title">{{ tabTitle[1].title }}</p>
               <ng-container *ngIf="tabTitle[1].description as description">
                 <p class="mat-body-1">{{ description }}</p>
               </ng-container>

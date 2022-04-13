@@ -179,6 +179,7 @@ landing-app-link {
     #header-to-scroll {
       height: calc(100vh - 80px);
       align-items: center;
+      gap: 0;
       text-align: center;
       padding-inline: 16px;
       a {
@@ -194,6 +195,11 @@ landing-app-link {
     .landing-partners {
       article {
         padding: 16px;
+        div {
+          justify-content: space-around;
+          align-items: center;
+          gap: 16px;
+        }
       }
     }
     .landing-presentation {
@@ -234,6 +240,12 @@ landing-app-link {
       padding-inline: 16px;
       text-align: center;
     }
+  }
+}
+
+@include layout-bp(gt-sm) {
+  #header-to-scroll button {
+    display: none;
   }
 }
 

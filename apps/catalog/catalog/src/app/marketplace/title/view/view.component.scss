@@ -1,3 +1,5 @@
+@import "~@angular/flex-layout/mq";
+
 movie-header-cta {
   width: 100%;
   margin-bottom: 16px;
@@ -13,6 +15,19 @@ movie-header-cta {
   }
 }
 
+movie-header-actions {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 24px;
+}
+
 section.hero {
   padding: 40px;
+}
+
+@include layout-bp(lt-sm) {
+  movie-header-actions {
+    display: none;
+  }
 }

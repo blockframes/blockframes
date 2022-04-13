@@ -1,3 +1,5 @@
+@import "~@angular/flex-layout/mq";
+
 movie-header-cta {
   width: 100%;
   margin-bottom: 16px;
@@ -49,3 +51,14 @@ movie-header-cta {
   }
 }
  
+movie-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+@include layout-bp(xs) {
+  movie-header-actions {
+    display: none;
+  }
+}

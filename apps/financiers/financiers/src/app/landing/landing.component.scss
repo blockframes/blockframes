@@ -22,6 +22,9 @@ landing-header {
     background-image: url("/assets/images/banner_landing.png");
     background-repeat: no-repeat;
     background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     h4 {
       text-transform: uppercase;
     }
@@ -121,6 +124,10 @@ landing-content {
 @include layout-bp(lt-sm) {
   landing-header {
     text-align: center;
+    header {
+      justify-content: center;
+      align-items: center;
+    }
     .p-width {
       width: 90%;
     }

@@ -17,6 +17,9 @@
       margin-bottom: 0;
     }
     .links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
       margin-top: 24px;
 
       a {
@@ -115,5 +118,11 @@ movie-slide {
       margin-top: 24px;
       max-width: 80%;
     }
+  }
+}
+
+@include layout-bp(xs) {
+  .banner-details .links {
+    flex-direction: column;
   }
 }

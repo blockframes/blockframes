@@ -116,11 +116,9 @@
     <footer>
       <section class="max-width" fxLayout="column" fxLayoutAlign="start center" fxLayoutAlign.lt-md="center center"
         fxLayoutGap="32px">
-        <div fxLayout="row wrap">
-          <div fxLayout fxFlex fxLayoutAlign.xs="center">
-            <button app-logo (click)="scrollToTop()"></button>
-          </div>
-          <form fxFlex fxLayout.xs="column" fxLayoutAlign.xs="center" [formGroup]="newslettersForm" (ngSubmit)="subscribe(newslettersForm)">
+        <div class="footer-form">
+          <button app-logo (click)="scrollToTop()"></button>
+          <form [formGroup]="newslettersForm" (ngSubmit)="subscribe(newslettersForm)">
             <mat-form-field appearance="outline" hideRequiredMarker>
               <mat-label>Enter your email address</mat-label>
               <input test-id="email" matInput type="email" placeholder="Email address" formControlName="email" required />

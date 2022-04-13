@@ -104,6 +104,13 @@ landing-shell-page {
             gap: 20px;
           }
         }
+        .footer-form {
+          display: flex;
+          flex-flow: row wrap;
+          button[app-logo] {
+            margin-right: auto;
+          }
+        }
         form {
           display: flex;
           gap: 16px;
@@ -164,6 +171,14 @@ landing-shell-page {
       padding: 0;
     }
   }
+
+  .footer-form {
+    justify-content: center;
+    gap: 16px;
+    button[app-logo] {
+      margin-inline: auto;
+    }
+  }
 }
 
 @include layout-bp(lt-sm) {
@@ -189,8 +204,16 @@ landing-shell-page {
           text-align: center;
         }
       }
-      footer section {
-        padding: 16px;
+      footer {
+        section {
+          padding: 16px;
+        }
+        .footer-form {
+          form {
+            flex-direction: column;
+            align-items: center;
+          }
+        }
       }
     }
   }

@@ -11,7 +11,7 @@
       <h4 *ngIf="section.subtitle">{{ section.subtitle }}</h4>
       <h1 class="mat-display-2" *ngIf="section.title">{{ section.title }}</h1>
       <p *ngIf="section.description">{{ section.description }}</p>
-      <div class="links" fxLayout fxLayout.xs="column" fxLayoutAlign="start center" fxLayoutAlign.xs="start" fxLayoutGap="16px">
+      <div class="links">
         <ng-container *ngFor="let link of section.links">
           <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
         </ng-container>

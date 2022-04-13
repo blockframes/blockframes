@@ -1,3 +1,5 @@
+@import "~@angular/flex-layout/mq";
+
 org-chip {
   margin-bottom: 32px;
 }
@@ -10,4 +12,16 @@ org-chip {
 // Form
 h2 {
   text-align: center;
+}
+
+movie-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+@include layout-bp(lt-sm) {
+  movie-header-actions {
+    display: none;
+  }
 }
