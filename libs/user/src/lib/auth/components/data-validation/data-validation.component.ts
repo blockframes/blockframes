@@ -1,11 +1,11 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, Optional, Inject } from '@angular/core';
 import { AuthService } from '@blockframes/auth/+state';
-import { Movie, Organization } from '@blockframes/model';
+import { Organization } from '@blockframes/model';
 import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
 import { BehaviorSubject } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { delay, hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
 
@@ -32,7 +32,7 @@ export class AuthDataValidationComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private snackbar: MatSnackBar,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App,
@@ -73,8 +73,8 @@ export class AuthDataValidationComponent implements OnInit {
     const publicUser = this.authService.profile;
 
     try {
-      const sendVerifyEmail = this.functions.httpsCallable('sendVerifyEmailAddress');
-      await sendVerifyEmail({ email: publicUser.email, publicUser, app: this.app }).toPromise();
+      const sendVerifyEmail = httpsCallable(this.functions, 'sendVerifyEmailAddress');
+      await sendVerifyEmail({ email: publicUser.email, publicUser, app: this.app });
       snack.dismiss();
       this.snackbar.open('Verification email sent.', '', { duration: 3000 });
     } catch (err) {

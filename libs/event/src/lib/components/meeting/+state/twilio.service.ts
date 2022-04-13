@@ -1,6 +1,6 @@
 
 import { Injectable } from '@angular/core';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import { PublicUser } from '@blockframes/model';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { BehaviorSubject } from 'rxjs';
@@ -35,7 +35,7 @@ type GetAttendee<Id> = Id extends 'local' ? LocalAttendee : RemoteAttendee;
 export class TwilioService {
 
   private room: Room;
-  private getAccessToken = this.functions.httpsCallable('getAccessToken');
+  private getAccessToken = httpsCallable<{ eventId: string, credentials: Partial<PublicUser> }, ErrorResultResponse>(this.functions, 'getAccessToken');
 
   private preference: { [K in TrackKind]: boolean } = { 'video': true, 'audio': true };
 
@@ -48,10 +48,11 @@ export class TwilioService {
     return this._attendees.value['local'] as LocalAttendee;
   }
 
-  constructor(private functions: AngularFireFunctions) { }
+  constructor(private functions: Functions) { }
 
-  getToken(eventId: string, credentials: Partial<PublicUser>) {
-    return this.getAccessToken({ eventId, credentials }).toPromise<ErrorResultResponse>();
+  async getToken(eventId: string, credentials: Partial<PublicUser>) {
+    const r = await this.getAccessToken({ eventId, credentials });
+    return r.data;
   }
 
   togglePreference(kind: TrackKind) {
