@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
@@ -33,7 +33,6 @@ export class TunnelSummaryComponent implements OnInit {
 
   constructor(
     private shell: MovieFormShellComponent,
-    private router: Router,
     private route: ActivatedRoute,
     private movieService: MovieService,
     private snackBar: MatSnackBar,
@@ -53,11 +52,12 @@ export class TunnelSummaryComponent implements OnInit {
     try {
       if (this.form.valid) {
         await this.shell.layout.update({ publishing: true });
-        const text = `${this.form.get('title').get('international').value} successfully published.`;
+        const message = `${this.form.get('title').get('international').value} successfully published.`;
         const movieId = this.route.snapshot.paramMap.get('movieId');
         this.snackBar.openFromComponent(SnackbarLinkComponent, {
           data: {
-            message: text, link: ['c/o/marketplace/title', movieId],
+            message,
+            link: ['c/o/marketplace/title', movieId],
             linkName: 'SEE ON MARKETPLACE'
           },
           duration: 7000
