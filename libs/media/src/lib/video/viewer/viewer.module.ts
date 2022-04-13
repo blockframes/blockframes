@@ -1,4 +1,3 @@
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -9,11 +8,12 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { ImageModule } from '../../image/directives/image.module';
-
 import { VideoViewerComponent } from '../../video/viewer/viewer.component';
 
+import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
+
 @NgModule({
-  declarations: [ VideoViewerComponent ],
+  declarations: [VideoViewerComponent],
   imports: [
     CommonModule,
 
@@ -22,9 +22,10 @@ import { VideoViewerComponent } from '../../video/viewer/viewer.component';
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
+    SnackbarErrorModule,
 
     ImageModule,
   ],
-  exports: [ VideoViewerComponent ],
+  exports: [VideoViewerComponent],
 })
-export class VideoViewerModule {}
+export class VideoViewerModule { }

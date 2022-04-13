@@ -1,14 +1,15 @@
-import { DOCUMENT } from "@angular/common";
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from "@angular/core";
-import { Functions, httpsCallable } from "@angular/fire/functions";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { AuthService } from "@blockframes/auth/+state";
+import { DOCUMENT } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Functions, httpsCallable } from '@angular/fire/functions';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '@blockframes/auth/+state';
 import { StorageVideo, MeetingVideoControl } from '@blockframes/model';
-import { ErrorResultResponse, getWatermark, loadJWPlayerScript } from "@blockframes/utils/utils";
-import { BehaviorSubject } from "rxjs";
+import { ErrorResultResponse, getWatermark, loadJWPlayerScript } from '@blockframes/utils/utils';
+import { BehaviorSubject } from 'rxjs';
 import { toggleFullScreen } from '../../file/viewers/utils';
-import { EventService } from "@blockframes/event/+state";
-import { hasAnonymousIdentity } from "@blockframes/auth/+state/auth.model";
+import { EventService } from '@blockframes/event/+state';
+import { hasAnonymousIdentity } from '@blockframes/auth/+state/auth.model';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 declare const jwplayer: any;
 
@@ -163,10 +164,14 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         this.player.on('complete', () => this.stateChange.emit('complete'));
         this.updatePlayer();
       }
-    } catch (error) {
+    } catch (err) {
       this.loading$.next(false);
-      console.warn(error);
-      this.snackBar.open('Error while playing the video: ' + error, 'close', { duration: 8000 });
+      console.warn(err);
+      if (err.message === 'There was a problem loading this video...') {
+        this.snackBar.openFromComponent(SnackbarErrorComponent, { data: err.message, duration: 7000 });
+      } else {
+        this.snackBar.open(err.message, 'close', { duration: 8000 });
+      }
     }
   }
 
