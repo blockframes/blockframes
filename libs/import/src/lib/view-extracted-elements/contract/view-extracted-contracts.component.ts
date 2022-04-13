@@ -1,11 +1,8 @@
 
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
-
 import { BehaviorSubject } from 'rxjs';
-import { Firestore } from 'firebase/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { MatTableDataSource } from '@angular/material/table';
-
-
 import { AuthService } from '@blockframes/auth/+state';
 import { UserService } from '@blockframes/user/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
