@@ -1,11 +1,20 @@
+@import '~@angular/flex-layout/mq';
+
 movie-header-cta {
   width: 100%;
   margin-bottom: 16px;
 
-  section {
+  .orgs {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     grid-gap: 16px;
+  }
+  
+  section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
   }
   
   a {
@@ -15,4 +24,23 @@ movie-header-cta {
 
 section.hero {
   padding: 40px;
+}
+
+@include layout-bp(gt-sm) {
+  movie-header-actions {
+    margin-left: auto;
+  }
+}
+
+@include layout-bp(lt-md) {
+  movie-header-cta {
+    org-chip {
+      display: flex;
+      justify-content: center;
+    }
+
+    section {
+      justify-content: center;
+    }
+  }
 }

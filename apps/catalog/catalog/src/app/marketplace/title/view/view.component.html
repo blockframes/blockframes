@@ -2,18 +2,20 @@
   <title-marketplace-shell [routes]="navLinks">
     <movie-header [movie]="movie">
       <movie-header-cta fxLayout="column" fxLayoutGap="32px">
-        <section>
+        <section class="orgs">
           <ng-container *ngFor="let org of orgs$ | async">
             <org-chip [org]="org"></org-chip>
           </ng-container>
         </section>
-        <a mat-flat-button color="primary" routerLink="avails" fragment="avails">
-          <span>Search & Buy Terms</span>
-          <mat-icon svgIcon="arrow_forward"></mat-icon>
-        </a>
+        <section>
+          <a mat-flat-button color="primary" routerLink="avails" fragment="avails">
+            <span>Search & Buy Terms</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </a>
+          <wishlist-button small [movieId]="movie.id"></wishlist-button>
+        </section>
       </movie-header-cta>
-      <movie-header-actions fxHide.lt-sm fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
-        <wishlist-button [movieId]="movie.id"></wishlist-button>
+      <movie-header-actions fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>
     </movie-header>
