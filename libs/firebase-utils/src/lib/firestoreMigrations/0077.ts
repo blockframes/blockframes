@@ -22,7 +22,7 @@ export async function batchOperations(operations: batchOperations[]): Promise<vo
 }
 
 /**
- * Update mailchimp users list. Add non existing user, don't update existing ones.
+ * Update mailchimp users list, synchronizing their tags based on user preferences.
  * @param db
  */
 
