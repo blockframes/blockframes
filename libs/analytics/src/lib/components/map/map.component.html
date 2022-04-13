@@ -13,15 +13,15 @@
   </ng-container>
 
   <ng-container *ngFor="let isoA3 of lessThanFive">
-    <map-feature [tag]="isoA3" color="#d1dbff" (click)="toggleSelect(isoA3)"></map-feature>
+    <map-feature [tag]="isoA3" color="#dee5ff" (click)="toggleSelect(isoA3)"></map-feature>
   </ng-container>
 
   <ng-container *ngFor="let isoA3 of lessThanFifty">
-    <map-feature [tag]="isoA3" color="#a7baff" (click)="toggleSelect(isoA3)"></map-feature>
+    <map-feature [tag]="isoA3" color="#8da4fa" (click)="toggleSelect(isoA3)"></map-feature>
   </ng-container>
 
   <ng-container *ngFor="let isoA3 of moreThanFifty">
-    <map-feature [tag]="isoA3" color="#6183ff" (click)="toggleSelect(isoA3)"></map-feature>
+    <map-feature [tag]="isoA3" color="#001ec7" (click)="toggleSelect(isoA3)"></map-feature>
   </ng-container>
 
   <ng-container *ngIf="selected">
