@@ -1,4 +1,4 @@
-@import "~@angular/flex-layout/mq";
+@import "@angular/flex-layout/mq";
 
 :host {
   display: flex;
@@ -24,6 +24,12 @@
       }
     }
   }
+}
+
+//TODO #8228 remove when needed
+.privacy-banner {
+  text-align: center;
+  padding: 8px;
 }
 
 .hero {

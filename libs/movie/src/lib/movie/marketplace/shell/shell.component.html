@@ -85,7 +85,7 @@
 
     <article id="videoFooter" *ngIf="hasPublicVideos(movie)">
       <h2>Videos</h2>
-      <div gdColumns="1fr 1fr" gdGap="16px">
+      <div>
         <ng-container *ngFor="let video of movie.promotional.videos.otherVideos">
           <div class="video-container" *ngIf="video.privacy === 'public'">
             <video-viewer [ref]="video" *ngIf="video.jwPlayerId" (stateChange)="videoStateChanged(movie.id, $event)"></video-viewer>

@@ -9,6 +9,7 @@ import { map, pluck, switchMap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
 
 @Component({
   selector: 'financiers-summary-tunnel',
@@ -69,13 +70,19 @@ export class TunnelSummaryComponent implements OnInit {
             const text = `${this.form.get('title').get('international').value} was successfully submitted.`;
             const ref = this.snackBar.open(text, '', { duration: 4000 });
             ref.afterDismissed().subscribe(() => this.router.navigate(['../end'], { relativeTo: this.route }))
-          } catch (err) {
-            // Log the invalid forms
+          } catch (_) {
+            // Log the invalid forms   
+            let message: string;
             if (this.invalidFields.length) {
-              this.snackBar.open('Some fields have invalid information.', '', { duration: 2000 });
+              message = 'Some fields have invalid information.';
             } else if (this.missingFields.length) {
-              this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
+              message = 'Mandatory information is missing.';
+            } else {
+              this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
             }
+            const section = document.getElementById('main-information');
+            const ref = this.snackBar.open(message, 'VERIFY FIELDS', { duration: 5000 });
+            ref.afterDismissed().subscribe(() => section.scrollIntoView({ behavior: 'smooth' }));
           }
         }
       }

@@ -1,153 +1,52 @@
 {
   "version": 2,
-  "cli": {
-    "warnings": {
-      "versionMismatch": false
-    },
-    "defaultCollection": "@nrwl/angular",
-    "analytics": "af619e50-5007-4476-b488-ccf1b32d3440"
-  },
-  "defaultProject": "festival",
-  "generators": {
-    "@nrwl/angular:library": {
-      "unitTestRunner": "jest"
-    },
-    "@nrwl/angular:application": {
-      "unitTestRunner": "jest",
-      "e2eTestRunner": "cypress"
-    },
-    "@nrwl/schematics:node-application": {
-      "framework": "express"
-    },
-    "@nrwl/angular": {
-      "convert-tslint-to-eslint": {
-        "ignoreExistingTslintConfig": true,
-        "removeTSLintIfNoMoreTSLintTargets": true
-      }
-    },
-    "@nrwl/angular:component": {
-      "displayBlock": true,
-      "changeDetection": "OnPush",
-      "skipTests": true,
-      "style": "scss"
-    }
-  },
   "projects": {
-    "ui": {
-      "root": "libs/ui",
-      "sourceRoot": "libs/ui/src",
+    "admin": {
       "projectType": "library",
-      "prefix": "blockframes",
+      "root": "libs/admin",
+      "sourceRoot": "libs/admin/src",
+      "prefix": "admin",
       "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/ui/src/**/*.ts", "libs/ui/src/**/*.html"]
-          }
-        },
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/ui/jest.config.js",
+            "jestConfig": "libs/admin/jest.config.js",
             "passWithNoTests": true
           }
-        }
-      }
-    },
-    "movie": {
-      "root": "libs/movie",
-      "sourceRoot": "libs/movie/src",
-      "projectType": "library",
-      "prefix": "movie",
-      "targets": {
+        },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/movie/src/**/*.ts", "libs/movie/src/**/*.html"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/movie/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "organization": {
-      "root": "libs/organization",
-      "sourceRoot": "libs/organization/src",
-      "projectType": "library",
-      "prefix": "org",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/organization/src/**/*.ts", "libs/organization/src/**/*.html"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/organization/jest.config.js",
-            "passWithNoTests": true
-          }
+            "lintFilePatterns": ["libs/admin/src/**/*.ts", "libs/admin/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
         }
       },
-      "generators": {
-        "@nrwl/schematics:component": {
-          "styleext": "scss"
-        }
-      }
+      "tags": ["browser"]
     },
-    "notification": {
-      "root": "libs/notification",
-      "sourceRoot": "libs/notification/src",
+    "analytics": {
       "projectType": "library",
-      "prefix": "notification",
+      "root": "libs/analytics",
+      "sourceRoot": "libs/analytics/src",
+      "prefix": "analytics",
       "targets": {
         "test": {
           "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/analytics"],
           "options": {
-            "jestConfig": "libs/notification/jest.config.js",
+            "jestConfig": "libs/analytics/jest.config.js",
             "passWithNoTests": true
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/notification/src/**/*.ts", "libs/notification/src/**/*.html"]
-          }
+            "lintFilePatterns": ["libs/analytics/src/**/*.ts", "libs/analytics/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
         }
       },
-      "generators": {}
-    },
-    "utils": {
-      "root": "libs/utils",
-      "sourceRoot": "libs/utils/src",
-      "projectType": "library",
-      "prefix": "utils",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/utils/src/**/*.ts", "libs/utils/src/**/*.html"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/utils/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      },
-      "generators": {
-        "@nrwl/schematics:component": {
-          "styleext": "scss"
-        }
-      }
+      "tags": ["browser"]
     },
     "backend-functions": {
       "root": "apps/backend-functions",
@@ -157,7 +56,7 @@
       "generators": {},
       "targets": {
         "build": {
-          "executor": "@nrwl/node:build",
+          "executor": "@nrwl/node:webpack",
           "options": {
             "outputPath": "dist/apps/backend-functions",
             "main": "apps/backend-functions/src/main.ts",
@@ -221,7 +120,8 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/backend-functions/src/**/*.ts"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -253,7 +153,8 @@
             }
           }
         }
-      }
+      },
+      "tags": ["node"]
     },
     "backend-ops": {
       "root": "apps/backend-ops",
@@ -266,7 +167,8 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/backend-ops/src/**/*.ts", "apps/backend-ops/src/**/*.html"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -276,49 +178,32 @@
             "runInBand": true
           }
         }
-      }
+      },
+      "tags": ["node", "local"]
     },
-    "contract": {
+    "campaign": {
       "projectType": "library",
-      "root": "libs/contract",
-      "sourceRoot": "libs/contract/src",
-      "prefix": "contract",
+      "root": "libs/campaign",
+      "sourceRoot": "libs/campaign/src",
+      "prefix": "campaign",
       "targets": {
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/contract/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/contract/src/**/*.ts", "libs/contract/src/**/*.html"]
-          }
-        }
-      }
-    },
-    "admin": {
-      "projectType": "library",
-      "root": "libs/admin",
-      "sourceRoot": "libs/admin/src",
-      "prefix": "admin",
-      "targets": {
+            "lintFilePatterns": ["libs/campaign/src/**/*.ts", "libs/campaign/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/admin/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/admin/src/**/*.ts", "libs/admin/src/**/*.html"]
+            "jestConfig": "libs/campaign/jest.config.js",
+            "passWithNoTests": true,
+            "setupFile": "libs/campaign/src/test-setup.ts"
           }
         }
-      }
+      },
+      "tags": ["browser"]
     },
     "catalog": {
       "projectType": "application",
@@ -375,7 +260,6 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -404,7 +288,6 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -431,7 +314,6 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -475,7 +357,8 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/catalog/catalog/src/**/*.ts", "apps/catalog/catalog/src/**/*.html"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -504,7 +387,8 @@
             }
           }
         }
-      }
+      },
+      "tags": ["browser"]
     },
     "catalog-e2e": {
       "root": "apps/catalog/catalog-e2e",
@@ -565,9 +449,564 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/catalog/catalog-e2e/src/**/*.ts", "apps/catalog/catalog-e2e/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        }
+      },
+      "tags": ["browser"],
+      "implicitDependencies": ["catalog"]
+    },
+    "cms": {
+      "projectType": "application",
+      "root": "apps/cms",
+      "sourceRoot": "apps/cms/src",
+      "prefix": "cms",
+      "targets": {
+        "build": {
+          "executor": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/cms",
+            "index": "apps/cms/src/index.html",
+            "main": "apps/cms/src/main.ts",
+            "polyfills": "apps/cms/src/polyfills.ts",
+            "tsConfig": "apps/cms/tsconfig.app.json",
+            "assets": [
+              "apps/cms/src/favicon.ico",
+              "apps/cms/src/assets",
+              "apps/cms/src/robots.txt",
+              {
+                "glob": "**/*",
+                "input": "./assets",
+                "output": "./assets"
+              }
+            ],
+            "styles": ["apps/cms/src/styles.scss"],
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
+          },
+          "configurations": {
+            "emulator": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/cms/src/environment/environment.ts",
+                  "with": "apps/cms/src/environment/environment.emulator.ts"
+                }
+              ]
+            },
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.blockframes.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.blockframes-staging.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
+            "ci": {}
+          }
+        },
+        "serve": {
+          "executor": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "cms:build"
+          },
+          "configurations": {
+            "emulator": {
+              "browserTarget": "cms:build:emulator"
+            },
+            "production": {
+              "browserTarget": "cms:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "executor": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "cms:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/cms/src/**/*.ts", "apps/cms/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "deploy": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              "npx cross-env nx build cms --configuration=$NG_CONFIG",
+              "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:cms"
+            ],
+            "parallel": false,
+            "color": true
+          },
+          "configurations": {
+            "production": {},
+            "staging": {}
           }
         }
-      }
+      },
+      "tags": ["browser"]
+    },
+    "cms-e2e": {
+      "root": "apps/cms/cms-e2e",
+      "sourceRoot": "apps/cms/cms-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "serve": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/cms/cms-e2e/cypress.json",
+            "tsConfig": "apps/cms/cms-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "watch": true,
+            "headless": false,
+            "exit": false,
+            "record": false,
+            "browser": "chrome",
+            "devServerTarget": "cms:serve"
+          },
+          "configurations": {
+            "emulator": {
+              "devServerTarget": "cms:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            }
+          }
+        },
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/cms/cms-e2e/cypress.json",
+            "tsConfig": "apps/cms/cms-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "browser": "chrome",
+            "devServerTarget": "cms:serve"
+          },
+          "configurations": {
+            "emulator": {
+              "devServerTarget": "cms:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "cms:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/cms/cms-e2e/src/**/*.ts", "apps/cms/cms-e2e/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        }
+      },
+      "tags": ["browser"],
+      "implicitDependencies": ["cms"]
+    },
+    "consents": {
+      "projectType": "library",
+      "root": "libs/consents",
+      "sourceRoot": "libs/consents/src",
+      "prefix": "blockframes",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/consents/src/**/*.ts", "libs/consents/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/consents/jest.config.js",
+            "passWithNoTests": true,
+            "setupFile": "libs/consents/src/test-setup.ts"
+          }
+        }
+      },
+      "tags": ["browser"]
+    },
+    "contract": {
+      "projectType": "library",
+      "root": "libs/contract",
+      "sourceRoot": "libs/contract/src",
+      "prefix": "contract",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/contract/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/contract/src/**/*.ts", "libs/contract/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        }
+      },
+      "tags": ["browser"]
+    },
+    "crm": {
+      "projectType": "application",
+      "root": "apps/crm/crm",
+      "sourceRoot": "apps/crm/crm/src",
+      "prefix": "crm",
+      "targets": {
+        "build": {
+          "executor": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/crm",
+            "index": "apps/crm/crm/src/index.html",
+            "main": "apps/crm/crm/src/main.ts",
+            "polyfills": "apps/crm/crm/src/polyfills.ts",
+            "tsConfig": "apps/crm/crm/tsconfig.app.json",
+            "stylePreprocessorOptions": {
+              "includePaths": ["styles"]
+            },
+            "assets": [
+              "apps/crm/crm/src/favicon.ico",
+              "apps/crm/crm/src/assets",
+              "apps/crm/crm/src/robots.txt",
+              {
+                "glob": "**/*",
+                "input": "./assets",
+                "output": "./assets"
+              }
+            ],
+            "styles": ["apps/crm/crm/src/styles.scss"],
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
+          },
+          "configurations": {
+            "emulator": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/crm/crm/src/environment/environment.ts",
+                  "with": "apps/crm/crm/src/environment/environment.emulator.ts"
+                }
+              ]
+            },
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.blockframes.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
+            "ci": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.blockframes-ci.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "serviceWorker": false
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.blockframes-staging.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "serviceWorker": false
+            }
+          }
+        },
+        "serve": {
+          "executor": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "crm:build"
+          },
+          "configurations": {
+            "emulator": {
+              "browserTarget": "crm:build:emulator"
+            },
+            "production": {
+              "browserTarget": "crm:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "executor": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "crm:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/crm/crm/src/**/*.ts", "apps/crm/crm/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/crm/crm/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "deploy": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              "npx cross-env nx build crm --configuration=$NG_CONFIG",
+              "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:crm"
+            ],
+            "parallel": false,
+            "color": true
+          },
+          "configurations": {
+            "staging": {
+              "commands": [
+                "npx nx build crm --configuration=staging",
+                "npx firebase deploy --project=blockframes-staging --only hosting:crm"
+              ]
+            }
+          }
+        }
+      },
+      "tags": ["browser"]
+    },
+    "crm-e2e": {
+      "root": "apps/crm/crm-e2e",
+      "sourceRoot": "apps/crm/crm-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "serve": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/crm/crm-e2e/cypress.json",
+            "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "watch": true,
+            "headless": false,
+            "exit": false,
+            "record": false,
+            "browser": "chrome",
+            "devServerTarget": "crm:serve"
+          },
+          "configurations": {
+            "emulator": {
+              "devServerTarget": "crm:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            }
+          }
+        },
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/crm/crm-e2e/cypress.json",
+            "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "browser": "chrome",
+            "devServerTarget": "crm:serve"
+          },
+          "configurations": {
+            "emulator": {
+              "devServerTarget": "crm:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "crm:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/crm/crm-e2e/src/**/*.ts", "apps/crm/crm-e2e/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        }
+      },
+      "tags": ["browser"],
+      "implicitDependencies": ["crm"]
+    },
+    "e2e": {
+      "projectType": "library",
+      "root": "libs/e2e",
+      "sourceRoot": "libs/e2e/src",
+      "prefix": "blockframes",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/e2e/src/**/*.ts", "libs/e2e/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/e2e/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": ["browser"]
+    },
+    "event": {
+      "projectType": "library",
+      "root": "libs/event",
+      "sourceRoot": "libs/event/src",
+      "prefix": "event",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/event/src/**/*.ts", "libs/event/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/event/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": ["browser"]
     },
     "festival": {
       "projectType": "application",
@@ -633,7 +1072,6 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -660,7 +1098,6 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -687,7 +1124,6 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -731,7 +1167,8 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/festival/festival/src/**/*.ts", "apps/festival/festival/src/**/*.html"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -760,7 +1197,8 @@
             }
           }
         }
-      }
+      },
+      "tags": ["browser"]
     },
     "festival-e2e": {
       "root": "apps/festival/festival-e2e",
@@ -824,424 +1262,12 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/festival/festival-e2e/src/**/*.ts", "apps/festival/festival-e2e/src/**/*.html"]
-          }
-        }
-      }
-    },
-    "user": {
-      "projectType": "library",
-      "root": "libs/user",
-      "sourceRoot": "libs/user/src",
-      "prefix": "blockframes",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/user/src/**/*.ts", "libs/user/src/**/*.html"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/user/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "event": {
-      "projectType": "library",
-      "root": "libs/event",
-      "sourceRoot": "libs/event/src",
-      "prefix": "event",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/event/src/**/*.ts", "libs/event/src/**/*.html"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/event/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "e2e": {
-      "projectType": "library",
-      "root": "libs/e2e",
-      "sourceRoot": "libs/e2e/src",
-      "prefix": "blockframes",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/e2e/src/**/*.ts", "libs/e2e/src/**/*.html"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/e2e/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "landing": {
-      "projectType": "library",
-      "root": "libs/landing",
-      "sourceRoot": "libs/landing/src",
-      "prefix": "blockframes",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/landing/src/**/*.ts", "libs/landing/src/**/*.html"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/landing/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "import": {
-      "projectType": "library",
-      "root": "libs/import",
-      "sourceRoot": "libs/import/src",
-      "prefix": "blockframes",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/import/src/**/*.ts", "libs/import/src/**/*.html"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/import/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "media": {
-      "projectType": "library",
-      "root": "libs/media",
-      "sourceRoot": "libs/media/src",
-      "prefix": "blockframes",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/media/src/**/*.ts", "libs/media/src/**/*.html"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/media/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "crm": {
-      "projectType": "application",
-      "root": "apps/crm/crm",
-      "sourceRoot": "apps/crm/crm/src",
-      "prefix": "crm",
-      "targets": {
-        "build": {
-          "executor": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/crm",
-            "index": "apps/crm/crm/src/index.html",
-            "main": "apps/crm/crm/src/main.ts",
-            "polyfills": "apps/crm/crm/src/polyfills.ts",
-            "tsConfig": "apps/crm/crm/tsconfig.app.json",
-            "stylePreprocessorOptions": {
-              "includePaths": ["styles"]
-            },
-            "assets": [
-              "apps/crm/crm/src/favicon.ico",
-              "apps/crm/crm/src/assets",
-              "apps/crm/crm/src/robots.txt",
-              {
-                "glob": "**/*",
-                "input": "./assets",
-                "output": "./assets"
-              }
-            ],
-            "styles": ["apps/crm/crm/src/styles.scss"],
-            "scripts": [],
-            "vendorChunk": true,
-            "extractLicenses": false,
-            "buildOptimizer": false,
-            "sourceMap": true,
-            "optimization": false,
-            "namedChunks": true
           },
-          "configurations": {
-            "emulator": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/crm/crm/src/environment/environment.ts",
-                  "with": "apps/crm/crm/src/environment/environment.emulator.ts"
-                }
-              ]
-            },
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            },
-            "ci": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-ci.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "serviceWorker": false
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "serviceWorker": false
-            }
-          }
-        },
-        "serve": {
-          "executor": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "crm:build"
-          },
-          "configurations": {
-            "emulator": {
-              "browserTarget": "crm:build:emulator"
-            },
-            "production": {
-              "browserTarget": "crm:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "executor": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "crm:build"
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/crm/crm/src/**/*.ts", "apps/crm/crm/src/**/*.html"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/crm/crm/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "deploy": {
-          "executor": "@nrwl/workspace:run-commands",
-          "options": {
-            "envFile": ".env",
-            "commands": [
-              "npx cross-env nx build crm --configuration=$NG_CONFIG",
-              "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:crm"
-            ],
-            "parallel": false,
-            "color": true
-          },
-          "configurations": {
-            "staging": {
-              "commands": [
-                "npx nx build crm --configuration=staging",
-                "npx firebase deploy --project=blockframes-staging --only hosting:crm"
-              ]
-            }
-          }
+          "outputs": ["{options.outputFile}"]
         }
-      }
-    },
-    "crm-e2e": {
-      "root": "apps/crm/crm-e2e",
-      "sourceRoot": "apps/crm/crm-e2e/src",
-      "projectType": "application",
-      "targets": {
-        "serve": {
-          "executor": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/crm/crm-e2e/cypress.json",
-            "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
-            "baseUrl": "http://localhost:4200",
-            "watch": true,
-            "headless": false,
-            "exit": false,
-            "record": false,
-            "browser": "chrome",
-            "devServerTarget": "crm:serve"
-          },
-          "configurations": {
-            "emulator": {
-              "devServerTarget": "crm:serve:emulator",
-              "env": {
-                "notice": "Env is being read",
-                "emulator": true
-              }
-            }
-          }
-        },
-        "e2e": {
-          "executor": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/crm/crm-e2e/cypress.json",
-            "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
-            "baseUrl": "http://localhost:4200",
-            "browser": "chrome",
-            "devServerTarget": "crm:serve"
-          },
-          "configurations": {
-            "emulator": {
-              "devServerTarget": "crm:serve:emulator",
-              "env": {
-                "notice": "Env is being read",
-                "emulator": true
-              }
-            },
-            "emulator-incognito": {
-              "devServerTarget": "crm:serve:emulator",
-              "env": {
-                "notice": "Env is being read",
-                "emulator": true,
-                "incognito": true
-              }
-            }
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/crm/crm-e2e/src/**/*.ts", "apps/crm/crm-e2e/src/**/*.html"]
-          }
-        }
-      }
-    },
-    "invitation": {
-      "projectType": "library",
-      "root": "libs/invitation",
-      "sourceRoot": "libs/invitation/src",
-      "prefix": "blockframes",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/invitation/src/**/*.ts", "libs/invitation/src/**/*.html"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/invitation/jest.config.js",
-            "passWithNoTests": true,
-            "setupFile": "libs/invitation/src/test-setup.ts"
-          }
-        }
-      }
-    },
-    "firebase-utils": {
-      "root": "libs/firebase-utils",
-      "sourceRoot": "libs/firebase-utils/src",
-      "projectType": "library",
-      "generators": {},
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/firebase-utils/src/**/*.ts", "libs/firebase-utils/src/**/*.html"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/firebase-utils/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
+      },
+      "tags": ["browser"],
+      "implicitDependencies": ["festival"]
     },
     "financiers": {
       "projectType": "application",
@@ -1298,7 +1324,6 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -1330,7 +1355,6 @@
             "staging": {
               "optimization": true,
               "outputHashing": "all",
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -1368,7 +1392,8 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/financiers/financiers/src/**/*.ts", "apps/financiers/financiers/src/**/*.html"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -1398,7 +1423,8 @@
             }
           }
         }
-      }
+      },
+      "tags": ["browser"]
     },
     "financiers-e2e": {
       "root": "apps/financiers/financiers-e2e",
@@ -1459,239 +1485,226 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/financiers/financiers-e2e/src/**/*.ts", "apps/financiers/financiers-e2e/src/**/*.html"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         }
-      }
+      },
+      "tags": ["browser"],
+      "implicitDependencies": ["financiers"]
     },
-    "campaign": {
+    "firebase-utils": {
+      "root": "libs/firebase-utils",
+      "sourceRoot": "libs/firebase-utils/src",
       "projectType": "library",
-      "root": "libs/campaign",
-      "sourceRoot": "libs/campaign/src",
-      "prefix": "campaign",
+      "generators": {},
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/campaign/src/**/*.ts", "libs/campaign/src/**/*.html"]
-          }
+            "lintFilePatterns": ["libs/firebase-utils/src/**/*.ts", "libs/firebase-utils/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/campaign/jest.config.js",
+            "jestConfig": "libs/firebase-utils/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": ["node", "local"]
+    },
+    "import": {
+      "projectType": "library",
+      "root": "libs/import",
+      "sourceRoot": "libs/import/src",
+      "prefix": "blockframes",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/import/src/**/*.ts", "libs/import/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/import/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": ["browser"]
+    },
+    "invitation": {
+      "projectType": "library",
+      "root": "libs/invitation",
+      "sourceRoot": "libs/invitation/src",
+      "prefix": "blockframes",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/invitation/src/**/*.ts", "libs/invitation/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/invitation/jest.config.js",
             "passWithNoTests": true,
-            "setupFile": "libs/campaign/src/test-setup.ts"
+            "setupFile": "libs/invitation/src/test-setup.ts"
           }
         }
-      }
+      },
+      "tags": ["browser"]
     },
-    "cms": {
-      "projectType": "application",
-      "root": "apps/cms",
-      "sourceRoot": "apps/cms/src",
-      "prefix": "cms",
+    "landing": {
+      "projectType": "library",
+      "root": "libs/landing",
+      "sourceRoot": "libs/landing/src",
+      "prefix": "blockframes",
       "targets": {
-        "build": {
-          "executor": "@angular-devkit/build-angular:browser",
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
           "options": {
-            "outputPath": "dist/apps/cms",
-            "index": "apps/cms/src/index.html",
-            "main": "apps/cms/src/main.ts",
-            "polyfills": "apps/cms/src/polyfills.ts",
-            "tsConfig": "apps/cms/tsconfig.app.json",
-            "assets": [
-              "apps/cms/src/favicon.ico",
-              "apps/cms/src/assets",
-              "apps/cms/src/robots.txt",
-              {
-                "glob": "**/*",
-                "input": "./assets",
-                "output": "./assets"
-              }
-            ],
-            "styles": ["apps/cms/src/styles.scss"],
-            "scripts": [],
-            "vendorChunk": true,
-            "extractLicenses": false,
-            "buildOptimizer": false,
-            "sourceMap": true,
-            "optimization": false,
-            "namedChunks": true
+            "lintFilePatterns": ["libs/landing/src/**/*.ts", "libs/landing/src/**/*.html"]
           },
-          "configurations": {
-            "emulator": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/cms/src/environment/environment.ts",
-                  "with": "apps/cms/src/environment/environment.emulator.ts"
-                }
-              ]
-            },
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            },
-            "ci": {}
-          }
+          "outputs": ["{options.outputFile}"]
         },
-        "serve": {
-          "executor": "@angular-devkit/build-angular:dev-server",
+        "test": {
+          "executor": "@nrwl/jest:jest",
           "options": {
-            "browserTarget": "cms:build"
+            "jestConfig": "libs/landing/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": ["browser"]
+    },
+    "media": {
+      "projectType": "library",
+      "root": "libs/media",
+      "sourceRoot": "libs/media/src",
+      "prefix": "blockframes",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/media/src/**/*.ts", "libs/media/src/**/*.html"]
           },
-          "configurations": {
-            "emulator": {
-              "browserTarget": "cms:build:emulator"
-            },
-            "production": {
-              "browserTarget": "cms:build:production"
-            }
-          }
+          "outputs": ["{options.outputFile}"]
         },
-        "extract-i18n": {
-          "executor": "@angular-devkit/build-angular:extract-i18n",
+        "test": {
+          "executor": "@nrwl/jest:jest",
           "options": {
-            "browserTarget": "cms:build"
+            "jestConfig": "libs/media/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": ["browser"]
+    },
+    "model": {
+      "root": "libs/model",
+      "sourceRoot": "libs/model/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/model/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/model"],
+          "options": {
+            "jestConfig": "libs/model/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": ["shared"]
+    },
+    "movie": {
+      "root": "libs/movie",
+      "sourceRoot": "libs/movie/src",
+      "projectType": "library",
+      "prefix": "movie",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/movie/src/**/*.ts", "libs/movie/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/movie/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": ["browser"]
+    },
+    "notification": {
+      "root": "libs/notification",
+      "sourceRoot": "libs/notification/src",
+      "projectType": "library",
+      "prefix": "notification",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/notification/jest.config.js",
+            "passWithNoTests": true
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/cms/src/**/*.ts", "apps/cms/src/**/*.html"]
-          }
-        },
-        "deploy": {
-          "executor": "@nrwl/workspace:run-commands",
-          "options": {
-            "envFile": ".env",
-            "commands": [
-              "npx cross-env nx build cms --configuration=$NG_CONFIG",
-              "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:cms"
-            ],
-            "parallel": false,
-            "color": true
+            "lintFilePatterns": ["libs/notification/src/**/*.ts", "libs/notification/src/**/*.html"]
           },
-          "configurations": {
-            "production": {},
-            "staging": {}
-          }
+          "outputs": ["{options.outputFile}"]
         }
-      }
+      },
+      "generators": {},
+      "tags": ["browser"]
     },
-    "cms-e2e": {
-      "root": "apps/cms/cms-e2e",
-      "sourceRoot": "apps/cms/cms-e2e/src",
-      "projectType": "application",
+    "organization": {
+      "root": "libs/organization",
+      "sourceRoot": "libs/organization/src",
+      "projectType": "library",
+      "prefix": "org",
       "targets": {
-        "serve": {
-          "executor": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/cms/cms-e2e/cypress.json",
-            "tsConfig": "apps/cms/cms-e2e/tsconfig.e2e.json",
-            "baseUrl": "http://localhost:4200",
-            "watch": true,
-            "headless": false,
-            "exit": false,
-            "record": false,
-            "browser": "chrome",
-            "devServerTarget": "cms:serve"
-          },
-          "configurations": {
-            "emulator": {
-              "devServerTarget": "cms:serve:emulator",
-              "env": {
-                "notice": "Env is being read",
-                "emulator": true
-              }
-            }
-          }
-        },
-        "e2e": {
-          "executor": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/cms/cms-e2e/cypress.json",
-            "tsConfig": "apps/cms/cms-e2e/tsconfig.e2e.json",
-            "baseUrl": "http://localhost:4200",
-            "browser": "chrome",
-            "devServerTarget": "cms:serve"
-          },
-          "configurations": {
-            "emulator": {
-              "devServerTarget": "cms:serve:emulator",
-              "env": {
-                "notice": "Env is being read",
-                "emulator": true
-              }
-            },
-            "emulator-incognito": {
-              "devServerTarget": "cms:serve:emulator",
-              "env": {
-                "notice": "Env is being read",
-                "emulator": true,
-                "incognito": true
-              }
-            }
-          }
-        },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/cms/cms-e2e/src/**/*.ts", "apps/cms/cms-e2e/src/**/*.html"]
+            "lintFilePatterns": ["libs/organization/src/**/*.ts", "libs/organization/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/organization/jest.config.js",
+            "passWithNoTests": true
           }
         }
-      }
+      },
+      "generators": {
+        "@nrwl/schematics:component": {
+          "styleext": "scss"
+        }
+      },
+      "tags": ["browser"]
     },
     "rules": {
       "root": "apps/rules",
@@ -1701,7 +1714,7 @@
       "generators": {},
       "targets": {
         "serve": {
-          "executor": "@nrwl/node:execute",
+          "executor": "@nrwl/node:node",
           "options": {
             "buildTarget": "rules:build"
           }
@@ -1710,7 +1723,8 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/rules/src/**/*.ts", "apps/rules/src/**/*.html"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -1720,29 +1734,54 @@
             "runInBand": true
           }
         }
-      }
+      },
+      "tags": ["local", "node"]
     },
-    "consents": {
+    "testing-cypress-browser": {
+      "root": "libs/testing/cypress/browser",
+      "sourceRoot": "libs/testing/cypress/browser/src",
       "projectType": "library",
-      "root": "libs/consents",
-      "sourceRoot": "libs/consents/src",
-      "prefix": "blockframes",
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/consents/src/**/*.ts", "libs/consents/src/**/*.html"]
-          }
+            "lintFilePatterns": ["libs/testing/cypress/browser/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/testing/cypress/browser"],
           "options": {
-            "jestConfig": "libs/consents/jest.config.js",
-            "passWithNoTests": true,
-            "setupFile": "libs/consents/src/test-setup.ts"
+            "jestConfig": "libs/testing/cypress/browser/jest.config.js",
+            "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": ["browser", "e2e"]
+    },
+    "testing-cypress-node": {
+      "root": "libs/testing/cypress/node",
+      "sourceRoot": "libs/testing/cypress/node/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/testing/cypress/node/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/testing/cypress/node"],
+          "options": {
+            "jestConfig": "libs/testing/cypress/node/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": ["node", "e2e"]
     },
     "testing-unit-tests": {
       "root": "libs/testing/unit-tests",
@@ -1754,7 +1793,8 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/testing/unit-tests/src/**/*.ts", "libs/testing/unit-tests/src/**/*.html"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
@@ -1763,113 +1803,82 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": ["node", "local"]
     },
-    "analytics": {
+    "ui": {
+      "root": "libs/ui",
+      "sourceRoot": "libs/ui/src",
       "projectType": "library",
-      "root": "libs/analytics",
-      "sourceRoot": "libs/analytics/src",
-      "prefix": "analytics",
-      "targets": {
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/analytics"],
-          "options": {
-            "jestConfig": "libs/analytics/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/analytics/src/**/*.ts", "libs/analytics/src/**/*.html"]
-          }
-        }
-      }
-    },
-    "model": {
-      "root": "libs/model",
-      "sourceRoot": "libs/model/src",
-      "projectType": "library",
+      "prefix": "blockframes",
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/model/**/*.ts"]
-          }
+            "lintFilePatterns": ["libs/ui/src/**/*.ts", "libs/ui/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/model"],
           "options": {
-            "jestConfig": "libs/model/jest.config.js",
+            "jestConfig": "libs/ui/jest.config.js",
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": ["browser"]
     },
-    "testing-cypress-browser": {
-      "root": "libs/testing/cypress/browser",
-      "sourceRoot": "libs/testing/cypress/browser/src",
+    "user": {
       "projectType": "library",
+      "root": "libs/user",
+      "sourceRoot": "libs/user/src",
+      "prefix": "blockframes",
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/testing/cypress/browser/**/*.ts"]
-          }
+            "lintFilePatterns": ["libs/user/src/**/*.ts", "libs/user/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/testing/cypress/browser"],
           "options": {
-            "jestConfig": "libs/testing/cypress/browser/jest.config.js",
+            "jestConfig": "libs/user/jest.config.js",
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": ["browser"]
     },
-    "testing-cypress-node": {
-      "root": "libs/testing/cypress/node",
-      "sourceRoot": "libs/testing/cypress/node/src",
+    "utils": {
+      "root": "libs/utils",
+      "sourceRoot": "libs/utils/src",
       "projectType": "library",
+      "prefix": "utils",
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/testing/cypress/node/**/*.ts"]
-          }
+            "lintFilePatterns": ["libs/utils/src/**/*.ts", "libs/utils/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/testing/cypress/node"],
           "options": {
-            "jestConfig": "libs/testing/cypress/node/jest.config.js",
+            "jestConfig": "libs/utils/jest.config.js",
             "passWithNoTests": true
           }
         }
-      }
-    },
-    "devops": {
-      "root": "libs/devops",
-      "sourceRoot": "libs/devops/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/devops/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/devops"],
-          "options": {
-            "jestConfig": "libs/devops/jest.config.js",
-            "passWithNoTests": true
-          }
+      },
+      "generators": {
+        "@nrwl/schematics:component": {
+          "styleext": "scss"
         }
-      }
+      },
+      "tags": ["shared"]
     }
   }
 }

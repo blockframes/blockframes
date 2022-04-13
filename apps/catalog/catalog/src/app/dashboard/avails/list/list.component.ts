@@ -6,7 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { QueryFn } from '@angular/fire/firestore';
+import { QueryConstraint, where } from 'firebase/firestore';
 
 import { combineLatest, Subscription } from 'rxjs';
 import { map, throttleTime } from 'rxjs/operators';
@@ -45,18 +45,22 @@ type JoinSaleTitleType = {
   allSaleCount?: number;
 };
 
-const titleQuery = (orgId: string): QueryFn => (ref) =>
-  ref.where('orgIds', 'array-contains', orgId).where('app.catalog.access', '==', true);
-const mandateQuery = (title: Movie): QueryFn => (ref) =>
-  ref
-    .where('titleId', '==', title.id)
-    .where('type', '==', 'mandate')
-    .where('status', '==', 'accepted');
-const saleQuery = (title: Movie): QueryFn => (ref) =>
-  ref
-    .where('titleId', '==', title.id)
-    .where('type', '==', 'sale')
-    .where('status', '==', 'accepted');
+const titleQuery = (orgId: string): QueryConstraint[] => [
+  where('orgIds', 'array-contains', orgId),
+  where('app.catalog.access', '==', true)
+];
+
+const mandateQuery = (title: Movie): QueryConstraint[] => [
+  where('titleId', '==', title.id),
+  where('type', '==', 'mandate'),
+  where('status', '==', 'accepted')
+];
+
+const saleQuery = (title: Movie): QueryConstraint[] => [
+  where('titleId', '==', title.id),
+  where('type', '==', 'sale'),
+  where('status', '==', 'accepted')
+];
 
 const isCatalogSale = (sale: FullSaleWithIncome): boolean =>
   sale.sellerId === centralOrgId.catalog && sale.status === 'accepted';
@@ -141,7 +145,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     private router: Router,
     private termsService: TermService,
     private orgService: OrganizationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.dynTitleService.setPageTitle('My Avails');
