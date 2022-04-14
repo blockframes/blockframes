@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { Auth } from '@angular/fire/auth';
 
 @Injectable({ providedIn: 'root' })
 export class UserRedirectionGuard implements CanActivate {
   constructor(
     private router: Router,
-    private afAuth: AngularFireAuth
+    private afAuth: Auth
   ) { }
 
   async canActivate() {

@@ -164,7 +164,7 @@ orbs:
 executors:
   blockframes-ci:
     docker:
-      - image: blockframes/ci:latest
+      - image: blockframes/ci:node-16
         environment:
           NODE_OPTIONS="--max-old-space-size=8192"
     working_directory: ~/repo

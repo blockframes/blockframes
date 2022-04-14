@@ -1,12 +1,13 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 
 @Component({
   selector: 'festival-summary-tunnel',
@@ -32,7 +33,6 @@ export class TunnelSummaryComponent implements OnInit {
 
   constructor(
     private shell: MovieFormShellComponent,
-    private router: Router,
     private route: ActivatedRoute,
     private movieService: MovieService,
     private snackBar: MatSnackBar,
@@ -52,12 +52,16 @@ export class TunnelSummaryComponent implements OnInit {
     try {
       if (this.form.valid) {
         await this.shell.layout.update({ publishing: true });
-        const text = `${this.form.get('title').get('international').value} successfully published.`;
-        const ref = this.snackBar.open(text, 'SEE ON MARKETPLACE', { duration: 7000 });
-        ref.afterDismissed().subscribe(() => {
-          const movieId = this.route.snapshot.paramMap.get('movieId');
-          this.router.navigate(['c/o/marketplace/title', movieId]);
-        })
+        const message = `${this.form.get('title').get('international').value} successfully published.`;
+        const movieId = this.route.snapshot.paramMap.get('movieId');
+        this.snackBar.openFromComponent(SnackbarLinkComponent, {
+          data: {
+            message,
+            link: ['c/o/marketplace/title', movieId],
+            linkName: 'SEE ON MARKETPLACE'
+          },
+          duration: 7000
+        });
       } else {
         // Log the invalid forms
         let message: string;

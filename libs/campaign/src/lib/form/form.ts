@@ -28,7 +28,7 @@ export function comparePerkAmount(form: PerkForm): ValidationErrors | null {
 };
 
 function compareProfits(form: FormGroup): ValidationErrors | null {
-  const { low, medium, high } = form?.value;
+  const { low, medium, high } = form.value;
   const errors = {};
   if (low && medium && low > medium) errors['lowOverMedium'] = true;
   if (low && high && low > high) errors['lowOverHigh'] = true;

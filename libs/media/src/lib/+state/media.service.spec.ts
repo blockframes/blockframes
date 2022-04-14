@@ -1,11 +1,12 @@
-﻿import { TestBed } from '@angular/core/testing';
+﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
+import { TestBed } from '@angular/core/testing';
 import { MediaService } from './media.service';
-import { AngularFireModule } from '@angular/fire';
-import { SETTINGS, AngularFirestoreModule } from '@angular/fire/firestore';
 import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { ImageParameters, formatParameters } from '../image/directives/imgix-helpers';
 import { firebase } from '@env';
 import { createStorageFile, UploadData } from '@blockframes/model';
+import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app'
+import { connectFunctionsEmulator, getFunctions, provideFunctions } from '@angular/fire/functions';
 
 describe('Media Service Test Suite', () => {
   let service: MediaService;
@@ -25,12 +26,15 @@ describe('Media Service Test Suite', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
-        AngularFireModule.initializeApp({projectId: 'test'}),
-        AngularFirestoreModule
+        provideFirebaseApp(() => initializeApp({ projectId: 'test' })),
+        provideFunctions(() => {
+          const functions = getFunctions(getApp());
+          connectFunctionsEmulator(functions, 'localhost', 5001);
+          return functions;
+        }),
       ],
       providers: [
-        MediaService,
-        { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
+        MediaService
       ],
     });
     service = TestBed.inject(MediaService);

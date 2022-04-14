@@ -56,10 +56,3 @@
 <ng-template #loading>
   <mat-spinner diameter="24"></mat-spinner>
 </ng-template>
-
-<ng-template #viewDetails>
-  <div class="custom-snackbar-message" fxLayoutGap="50px">
-    <span>Screening added to your Calendar.</span>
-    <a [routerLink]="['/event/', event.id, 'r', 'i']">SEE DETAILS</a>
-  </div>
-</ng-template>

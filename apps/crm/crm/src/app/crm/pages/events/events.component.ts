@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toLabel } from '@blockframes/utils/pipes';
 import { orgName } from '@blockframes/model';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'crm-events',
@@ -28,7 +29,7 @@ export class EventsComponent implements OnInit {
   async ngOnInit() {
     const [events, invites] = await Promise.all([
       this.eventService.getValue(),
-      this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent'))
+      this.invitationService.getValue([where('type', '==', 'attendEvent')])
     ]);
 
     const ownerOrgIds = events.map(event => event.ownerOrgId);

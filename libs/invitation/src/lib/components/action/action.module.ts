@@ -10,7 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SnackbarErrorModule } from '@blockframes/ui/snackbar/snackbar-error.module';
+import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
+import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
 
 @NgModule({
   declarations: [ActionComponent],
@@ -27,7 +28,8 @@ import { SnackbarErrorModule } from '@blockframes/ui/snackbar/snackbar-error.mod
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    SnackbarErrorModule
+    SnackbarErrorModule,
+    SnackbarLinkModule,
   ]
 })
 export class InvitationActionModule { }
