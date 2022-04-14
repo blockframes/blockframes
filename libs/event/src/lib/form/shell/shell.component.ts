@@ -14,7 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
 
-const statisticsTab = { path: 'statistics', label: 'Statistics' };
+const statisticsTab = { path: 'statistics', label: 'Attendance' };
 
 const navTabs: NavTabs = {
   screening: [
