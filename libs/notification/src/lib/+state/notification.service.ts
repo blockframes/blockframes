@@ -45,7 +45,7 @@ export class NotificationService extends CollectionService<NotificationState> {
     })
   );
 
-  myNotificationsCount$ = this.myNotifications$.pipe(map((notifs) => notifs.filter(notif => !notif.app.isRead).length));
+  myNotificationsCount$ = this.myNotifications$.pipe(map((notifs) => notifs.filter(notif => !notif.app?.isRead).length));
 
   constructor(
     private authService: AuthService,
