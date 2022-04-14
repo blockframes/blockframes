@@ -1,0 +1,19 @@
+:host {
+  padding: 80px;
+}
+
+mat-dialog-content {
+  text-align: center;
+}
+
+button {
+  width: fit-content;
+
+  &.close {
+    aspect-ratio: 1;
+  }
+}
+
+p {
+  max-width: 70%;
+}
