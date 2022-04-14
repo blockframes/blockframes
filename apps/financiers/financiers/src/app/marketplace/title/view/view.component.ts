@@ -18,6 +18,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { supportMailosaur } from '@blockframes/utils/constants';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 interface EmailData {
   subject: string;
@@ -83,7 +84,7 @@ export class MarketplaceMovieViewComponent {
     private userService: UserService,
     private campaignService: CampaignService,
     private dialog: MatDialog,
-    private snackbar: MatSnackBar,
+    private snackBar: MatSnackBar,
     private sendgrid: SendgridService,
     public router: Router
   ) { }
@@ -103,68 +104,71 @@ export class MarketplaceMovieViewComponent {
   }
 
   async sendEmail(emailData: EmailData, title: string, orgs: Organization[]) {
-    const templateId = templateIds.financiers.invest;
-    const userSubject = getUserEmailData(this.authService.profile);
+    try {
+      const templateId = templateIds.financiers.invest;
+      const userSubject = getUserEmailData(this.authService.profile);
 
-    const org = this.orgService.org;
-    const orgUserSubject: OrgEmailData = {
-      denomination: org.denomination.full ?? org.denomination.public,
-      id: org.id || '',
-      email: org.email || ''
-    }
-
-    const promises: Promise<ErrorResultResponse>[] = [];
-
-    const cyCheck = 'Cypress' in window;
-    let emailReady = false;
-    let numEmails = 0;
-
-    for (const org of orgs) {
-      const users = await this.userService.getValue(org.userIds);
-      for (const user of users) {
-        let toUser = getUserEmailData(user);
-        const userEmail = toUser.email;
-        // For e2e test purpose
-        if (cyCheck) {
-          toUser = { ...toUser, email: supportMailosaur };
-        }
-
-        const data = {
-          ...emailData,
-          currency: getCurrencySymbol(this.currency, 'wide'),
-          userSubject,
-          user: toUser,
-          org: orgUserSubject,
-          title,
-        };
-
-        /*
-         * If running E2E, for user other than sender,
-         * store it for access in E2E test.
-         * A single email is sufficient to check the email template
-         */
-        if (cyCheck && (userEmail !== userSubject.email)) {
-          emailReady = true;
-          ++numEmails;
-          window['cyEmailData'] = data;
-        }
-
-        const promise = this.sendgrid.sendWithTemplate({
-          request: { templateId, data, to: toUser.email },
-          app: 'financiers'
-        });
-        promises.push(promise);
+      const org = this.orgService.org;
+      const orgUserSubject: OrgEmailData = {
+        denomination: org.denomination.full ?? org.denomination.public,
+        id: org.id || '',
+        email: org.email || ''
       }
-    }
 
-    if (cyCheck && emailReady) {
-      window['cyEmailData'].numEmails = numEmails;
+      const promises: Promise<ErrorResultResponse>[] = [];
+
+      const cyCheck = 'Cypress' in window;
+      let emailReady = false;
+      let numEmails = 0;
+
+      for (const org of orgs) {
+        const users = await this.userService.getValue(org.userIds);
+        for (const user of users) {
+          let toUser = getUserEmailData(user);
+          const userEmail = toUser.email;
+          // For e2e test purpose
+          if (cyCheck) {
+            toUser = { ...toUser, email: supportMailosaur };
+          }
+
+          const data = {
+            ...emailData,
+            currency: getCurrencySymbol(this.currency, 'wide'),
+            userSubject,
+            user: toUser,
+            org: orgUserSubject,
+            title,
+          };
+
+          /*
+           * If running E2E, for user other than sender,
+           * store it for access in E2E test.
+           * A single email is sufficient to check the email template
+           */
+          if (cyCheck && (userEmail !== userSubject.email)) {
+            emailReady = true;
+            ++numEmails;
+            window['cyEmailData'] = data;
+          }
+
+          const promise = this.sendgrid.sendWithTemplate({
+            request: { templateId, data, to: toUser.email },
+            app: 'financiers'
+          });
+          promises.push(promise);
+        }
+      }
+
+      if (cyCheck && emailReady) {
+        window['cyEmailData'].numEmails = numEmails;
+      }
+      const res = await Promise.all(promises);
+      const success = res.some(r => r.result);      
+      if (success) {
+        this.snackBar.open('Your email has been sent.', null, { duration: 3000 });
+      }
+    } catch (err) {
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
     }
-    const res = await Promise.all(promises);
-    const success = res.some(r => r.result);
-    const message = success
-      ? 'Your email has been sent.'
-      : 'An error occurred. Your email was not sent.';
-    this.snackbar.open(message, null, { duration: 3000 });
   }
 }
