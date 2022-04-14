@@ -12,7 +12,7 @@ header {
   }
 }
 
-mat-card {
+.surface {
   margin-top: 50px;
   margin-bottom: 50px;
   width: 60%;
@@ -26,7 +26,7 @@ mat-card {
   header {
     width: 80%;
   }
-  mat-card {
+  .surface {
     width: 80%;
     margin-top: 50px;
   }
@@ -36,7 +36,7 @@ mat-card {
   header {
     width: 100%;
   }
-  mat-card {
+  .surface {
     width: 100%;
     margin-top: 30px;
     margin-bottom: 30px;
