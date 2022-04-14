@@ -12,8 +12,7 @@ import { AnalyticsService } from '@blockframes/analytics/+state/analytics.servic
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { APP } from '@blockframes/utils/routes/utils';
-import { where } from 'firebase/firestore';
-import { doc, updateDoc } from 'firebase/firestore';
+import { where, doc, updateDoc } from 'firebase/firestore';
 
 export const fromOrg = (orgId: string) =>
   [where('orgIds', 'array-contains', orgId)];
