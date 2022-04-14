@@ -1,24 +1,27 @@
-<section fxLayout="column">
-  <h3 *ngIf="data.title"> {{ data.title }} </h3>
-  <p *ngIf="data.subtitle" [innerHTML]="data.subtitle"></p>
-  <span *ngIf="data.text">{{ data.text }}</span>
-  <span *ngIf="data.warning" class="mat-body-2 text-warn">{{ data.warning }}</span>
+<mat-dialog-content class="mat-dialog-content" fxLayout="column" fxLayoutAlign="center center">
+  <h2 *ngIf="data.formData.title"> {{ data.formData.title }} </h2>
+  <p *ngIf="data.formData.subtitle" [innerHTML]="data.formData.subtitle" class="mat-body-1"></p>
+  <span *ngIf="data.formData.text">{{ data.formData.text }}</span>
+  <span *ngIf="data.formData.warning" class="mat-body-2 text-warn">{{ data.formData.warning }}</span>
 
-  <ng-container *ngIf="data.simulation?.length">
+  <ng-container *ngIf="data.formData.simulation?.length">
     <strong>Simulation : </strong>
     <ul>
-      <li *ngFor="let item of data.simulation">{{ item }}</li>
+      <li *ngFor="let item of data.formData.simulation">{{ item }}</li>
     </ul>
   </ng-container>
 
   <mat-form-field appearance="outline">
     <mat-label>Confirm action</mat-label>
-    <input matInput type="text" [formControl]="actionConfirm" [placeholder]="data.placeholder??''">
+    <input matInput type="text" [formControl]="actionConfirm" [placeholder]="data.formData.placeholder??''">
   </mat-form-field>
 
-  <article fxLayout="row" fxLayoutAlign="space-evenly">
-    <button mat-stroked-button (click)="close()">{{ data.cancelButtonText | firstWordTitlecase }}</button>
-    <button [disabled]="!isValid" mat-flat-button color="warn" (click)="confirm()">{{ data.confirmButtonText |
-      firstWordTitlecase }}</button>
-  </article>
-</section>
+  <mat-dialog-actions fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="4px">
+    <button [disabled]="!isValid" mat-flat-button color="primary" (click)="confirm()">
+      {{ data.formData.confirmButtonText | firstWordTitlecase }}
+    </button>
+    <button mat-button color="primary" (click)="close()">
+      {{ data.formData.cancelButtonText | firstWordTitlecase }}
+    </button>
+  </mat-dialog-actions>
+</mat-dialog-content>

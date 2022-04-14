@@ -1,13 +1,9 @@
-section {
-  padding: 24px;
-  text-align: center;
-  margin: auto;
-
+mat-dialog-content {
   p, span {
     margin-bottom: 24px;
   }
 }
 
-article {
+mat-dialog-actions {
   margin-top: 16px;
 }
