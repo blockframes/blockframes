@@ -70,28 +70,27 @@ export function getContractConfig(
     contractCache
   } = caches;
 
-  // const getStakeholders =
+  const getContractTitleId = async (value: string) => {
+    if (!value) return mandatoryError('Title');
+    try {
+      const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, blockframesAdmin);
+
+      return titleId || unknownEntityError<string>('Title');
+    } catch (err) {
+      return {
+        value: undefined,
+        error: {
+          type: 'error',
+          name: 'Error on title name or ID',
+          reason: '',
+          hint: err.message,
+        }
+      };
+    }
+
+  };
 
   function getAdminConfig(): FieldsConfigType {
-    const getContractTitleId = async (value: string) => {
-      if (!value) return mandatoryError('Title');
-      try {
-        const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, blockframesAdmin);
-
-        return titleId || unknownEntityError<string>('Title');
-      } catch (err) {
-        return {
-          value: undefined,
-          error: {
-            type: 'error',
-            name: 'Error on title name or ID',
-            reason: '',
-            hint: err.message,
-          }
-        };
-      }
-
-    };
 
     // ! The order of the property should be the same as excel columns
     return {
@@ -290,6 +289,7 @@ export function getContractConfig(
 
     // ! The order of the property should be the same as excel columns
     return {
+      //@Continue from here
         /* a */ 'contract.titleId': getContractTitleId,
         /* b */ 'contract.sellerId': async (value: string) => {
         if (!value) return mandatoryError('Licensor');
