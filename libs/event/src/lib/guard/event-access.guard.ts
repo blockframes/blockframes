@@ -6,7 +6,7 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { combineLatest } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { EventService } from '../+state';
-import type firebase from 'firebase';
+import { User } from '@angular/fire/auth';
 import { Event } from '@blockframes/model';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
 import { createInvitation } from '@blockframes/model';
@@ -27,7 +27,7 @@ export class EventAccessGuard implements CanActivate {
 
   canActivate(next: ActivatedRouteSnapshot) {
     return combineLatest([
-      this.authService.user,
+      this.authService.user$,
       this.service.getValue(next.params.eventId as string),
       this.authService.anonymousCredentials$
     ]).pipe(
@@ -35,7 +35,7 @@ export class EventAccessGuard implements CanActivate {
     );
   }
 
-  private async guard(next: ActivatedRouteSnapshot, user: firebase.User, event: Event<unknown>, credentials: AnonymousCredentials) {
+  private async guard(next: ActivatedRouteSnapshot, user: User, event: Event<unknown>, credentials: AnonymousCredentials) {
     if (!user.isAnonymous) {
       const profile = await this.authService.profile$.pipe(take(1)).toPromise();
       const validUser = hasDisplayName(profile) && user.emailVerified && profile.orgId;

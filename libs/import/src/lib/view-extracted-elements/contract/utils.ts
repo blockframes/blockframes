@@ -1,5 +1,5 @@
-import { AngularFirestore } from '@angular/fire/firestore';
-
+import { Firestore } from '@angular/fire/firestore';
+import { collection, doc } from 'firebase/firestore';
 import {
   getDate,
   getOrgId,
@@ -75,7 +75,7 @@ interface FieldsConfig {
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
 
-function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, firestore: AngularFirestore): Term {
+function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, firestore: Firestore): Term {
 
   const { medias, duration, territories_excluded = [], territories_included = [], exclusive, licensedOriginal } = rawTerm;
 
@@ -96,7 +96,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, fires
 
   const territories = territories_included.filter(territory => !territories_excluded.includes(territory));
 
-  const id = firestore.createId();
+  const id = doc(collection(firestore, '_')).id;
 
   return {
     id,
@@ -117,7 +117,7 @@ export async function formatContract(
   titleService: MovieService,
   contractService: ContractService,
   userService: UserService,
-  firestore: AngularFirestore,
+  firestore: Firestore,
   blockframesAdmin: boolean,
   userOrgId: string
 ) {
@@ -267,8 +267,8 @@ export async function formatContract(
     /* o */'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
 
     /* p */'contract.id': async (value: string) => {
-      if (value && !blockframesAdmin) return adminOnlyWarning(firestore.createId(), 'Contract ID');
-      if (!value) return firestore.createId();
+      if (value && !blockframesAdmin) return adminOnlyWarning(doc(collection(firestore, '_')).id, 'Contract ID');
+      if (!value) return doc(collection(firestore, '_')).id;
       const exist = await getContract(value, contractService, contractCache);
       if (exist) return alreadyExistError('Contract ID');
       return value;

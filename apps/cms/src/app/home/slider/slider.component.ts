@@ -9,7 +9,7 @@ import { TextFormModule } from '../../forms/text';
 import { FirestoreFormModule } from '../../forms/firestore';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule } from '../../forms/select';
-import { getTitlesQueryFn, toMap } from '../pipes';
+import { getTitlesQueryConstraints, toMap } from '../pipes';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -26,8 +26,8 @@ export class SliderComponent implements OnInit {
 
   app$ = this.route.paramMap.pipe(map((p) => p.get('app')));
   titles$ = this.app$.pipe(
-    map((app) => getTitlesQueryFn(app)),
-    switchMap((queryFn) => this.service.valueChanges(queryFn)),
+    map((app) => getTitlesQueryConstraints(app)),
+    switchMap((queryConstraints) => this.service.valueChanges(queryConstraints)),
     map(toMap),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
@@ -35,7 +35,7 @@ export class SliderComponent implements OnInit {
   displayLabel = (title?: Movie) => title?.title.international;
   getValue = (title?: Movie) => title?.id;
 
-  constructor(private route: ActivatedRoute, private service: MovieService) {}
+  constructor(private route: ActivatedRoute, private service: MovieService) { }
 
   get queryMode() {
     return this.mode || (this.form?.get('titleIds').length ? 'titleIds' : 'query');
@@ -70,4 +70,4 @@ export class SliderComponent implements OnInit {
     MatRadioModule,
   ],
 })
-export class SliderModule {}
+export class SliderModule { }

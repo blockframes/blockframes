@@ -1,6 +1,9 @@
-<header fxLayout fxLayoutGap="8px">
-  <mat-icon matListIcon svgIcon="landscape"></mat-icon>
+<header>
+  <mat-icon svgIcon="landscape"></mat-icon>
   <h5>Split by Company Territory</h5>
+  <button mat-icon-button *ngIf="selected" (click)="toggleSelect(selected)" matTooltip="Remove selection">
+    <mat-icon svgIcon="refresh_filters"></mat-icon>
+  </button>
 </header>
 
 <world-map *ngIf="top3.length; else noData">
@@ -22,7 +25,7 @@
   </ng-container>
 
   <ng-container *ngIf="selected">
-    <map-feature [tag]="selected" color="#ff5145" (click)="toggleSelect(selected)"></map-feature>
+    <map-feature [tag]="selected" color="#3c64f7" (click)="toggleSelect(selected)"></map-feature>
   </ng-container>
 </world-map>
 

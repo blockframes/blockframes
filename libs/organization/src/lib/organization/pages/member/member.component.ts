@@ -43,11 +43,11 @@ export class MemberComponent implements OnInit {
     this.isSuperAdmin$ = this.permissionService.isSuperAdmin$;
 
     if (this.permissionService.isUserAdmin()) {
-      const queryFn1 = buildJoinOrgQuery(this.org.id, 'invitation');
-      const queryFn2 = buildJoinOrgQuery(this.org.id, 'request');
+      const queryConstraints1 = buildJoinOrgQuery(this.org.id, 'invitation');
+      const queryConstraints2 = buildJoinOrgQuery(this.org.id, 'request');
 
-      this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
-      this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
+      this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryConstraints1);
+      this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryConstraints2);
     }
   }
 

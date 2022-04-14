@@ -33,11 +33,14 @@
           <span matLine><b>My Dashboard</b></span>
         </a>
       </ng-container>
+      <auth-sidenav fxHide.gt-xs></auth-sidenav>
     </mat-nav-list>
+
+    <auth-sidenav-widget fxHide.gt-xs></auth-sidenav-widget>
   </aside>
-  ​
+  
   <header fxFlex fxLayout fxLayoutAlign="end center" fxLayoutGap="24px">
-    <a mat-button class="link-to-app" color="primary" [href]="applicationUrl.festival" target="_blank">        
+    <a fxHide.xs mat-button class="link-to-app" color="primary" [href]="applicationUrl.festival" target="_blank">        
       <mat-icon svgIcon="mini_logo_festival"></mat-icon>
       <span>Discover Events And Line-Ups</span>
     </a>

@@ -27,6 +27,13 @@ header {
 
   bf-carousel {
     margin-top: 24px;
+
+    analytics-pie-chart,
+    analytics-line-chart,
+    analytics-map {
+      width: calc(50% - 16px);
+      margin-right: 16px;
+    }
   }
 
   .see_titles {

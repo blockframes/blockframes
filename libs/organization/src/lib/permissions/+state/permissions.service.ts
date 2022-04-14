@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
-import type firebase from 'firebase';
+import type firestore from 'firebase/firestore';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { createDocPermissions, PermissionsDocument, UserRole, Permissions } from '@blockframes/model';
+import { doc, getDoc } from 'firebase/firestore';
 
 interface PermissionsState extends EntityState<Permissions>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'permissions' })
 export class PermissionsService extends CollectionService<PermissionsState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
 
   // The whole permissions document for organization of the current logged in user.
-  permissions: Permissions; // @TODO #7273 if this.permissions$ was not already called, this will be undefined
+  permissions: Permissions;
   permissions$: Observable<Permissions> = this.authService.profile$.pipe(
     switchMap(user => user?.orgId ? this.valueChanges(user.orgId) : of(undefined)),
     tap(permissions => this.permissions = permissions)
@@ -55,12 +56,13 @@ export class PermissionsService extends CollectionService<PermissionsState> {
    */
   public addDocumentPermissions(docId: string, write: AtomicWrite, organizationId: string) {
     const documentPermissions = createDocPermissions({ id: docId, ownerId: organizationId });
-    const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
-    (write as firebase.firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
+    const documentPermissionsRef = doc(this.db, `permissions/${organizationId}/documentPermissions/${documentPermissions.id}`);
+    (write as firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
   }
 
   public async getDocumentPermissions(docId: string, orgId: string) {
-    const permissions = await this.db.doc(`permissions/${orgId}/documentPermissions/${docId}`).ref.get();
+    const ref = doc(this.db, `permissions/${orgId}/documentPermissions/${docId}`);
+    const permissions = await getDoc(ref);
     return createDocPermissions(permissions.data());
   }
 

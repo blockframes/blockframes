@@ -10,6 +10,9 @@ header {
     background-image: linear-gradient(to right, black, transparent);
 
     .movie-info{
+      display: flex;
+      gap: 20px;
+
       .poster {
         height: 240px;
       }
@@ -49,8 +52,13 @@ header {
   }
 }
 
-@include layout-bp(xs) {
-  h2 {
+@include layout-bp(lt-md) {
+  .movie-info {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .movie-details {
     text-align: center;
   }
 }

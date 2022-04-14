@@ -12,17 +12,17 @@ import {
   isScreening,
   SlateEvent
 } from '@blockframes/model';
-import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { Observable, combineLatest, of } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import type firebase from 'firebase';
+import type firestore from 'firebase/firestore';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { production } from '@env';
+import { QueryConstraint, where } from 'firebase/firestore';
 
 interface EventState extends EntityState<Event>, ActiveState<string> { };
-type Timestamp = firebase.firestore.Timestamp;
+type Timestamp = firestore.Timestamp;
 
 const eventQuery = (id: string) => ({
   path: `events/${id}`,
@@ -42,9 +42,9 @@ const eventQuery = (id: string) => ({
 /** Hold all the different queries for an event */
 const eventQueries = {
   // Screening
-  screening: (queryFn: QueryFn = (ref) => ref): Query<ScreeningEvent> => ({
+  screening: (queryConstraints: QueryConstraint[]): Query<ScreeningEvent> => ({
     path: 'events',
-    queryFn: ref => queryFn(ref).where('type', '==', 'screening'),
+    queryConstraints: queryConstraints.concat([where('type', '==', 'screening')]),
     movie: ({ meta }: ScreeningEvent) => {
       return meta?.titleId ? { path: `movies/${meta.titleId}` } : undefined
     },
@@ -52,15 +52,15 @@ const eventQueries = {
   }),
 
   // Meeting
-  meeting: (queryFn: QueryFn = (ref) => ref): Query<MeetingEvent> => ({
+  meeting: (queryConstraints: QueryConstraint[]): Query<MeetingEvent> => ({
     path: 'events',
-    queryFn: ref => queryFn(ref).where('type', '==', 'meeting'),
+    queryConstraints: queryConstraints.concat([where('type', '==', 'meeting')]),
     org: ({ ownerOrgId }: MeetingEvent) => ({ path: `orgs/${ownerOrgId}` }),
   }),
 
-  slate: (queryFn: QueryFn = (ref) => ref): Query<SlateEvent> => ({
+  slate: (queryConstraints: QueryConstraint[]): Query<SlateEvent> => ({
     path: 'events',
-    queryFn: ref => queryFn(ref).where('type', '==', 'slate'),
+    queryConstraints: queryConstraints.concat([where('type', '==', 'slate')]),
     org: ({ ownerOrgId }: SlateEvent) => ({ path: `orgs/${ownerOrgId}` }),
   }),
 }
@@ -68,7 +68,7 @@ const eventQueries = {
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'events' })
 export class EventService extends CollectionService<EventState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
 
   constructor(
     private permissionsService: PermissionsService,
@@ -108,8 +108,8 @@ export class EventService extends CollectionService<EventState> {
   }
 
   /** Query events based on types */
-  queryByType(types: EventTypes[], queryFn?: QueryFn): Observable<Event[]> {
-    const queries = types.map(type => eventQueries[type](queryFn));
+  queryByType(types: EventTypes[], queryConstraints?: QueryConstraint[]): Observable<Event[]> {
+    const queries = types.map(type => eventQueries[type](queryConstraints));
     const queries$ = queries.map(query => queryChanges.call(this, query));
     return combineLatest(queries$).pipe(
       map((results) => results.flat()),

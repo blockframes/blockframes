@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { EventService } from '@blockframes/event/+state';
 import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
+import { where } from 'firebase/firestore';
 
 interface CrmMovie extends Movie {
   org: Organization;
@@ -35,7 +36,7 @@ export class MoviesComponent implements OnInit {
     this.movies$ = combineLatest([
       this.movieService.valueChanges(),
       this.orgService.valueChanges(),
-      this.eventService.valueChanges((ref) => ref.where('type', '==', 'screening')),
+      this.eventService.valueChanges([where('type', '==', 'screening')]),
     ]).pipe(
       map(([movies, orgs, events]) => {
         const screenings = events.filter(isScreening);

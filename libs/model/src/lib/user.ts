@@ -3,6 +3,7 @@ import type { DocumentMeta } from './meta';
 import type { Genre, Language, Media, Territory } from './static';
 import type { NotificationTypesBase } from './notification';
 import type { UserRole } from './permissions';
+import type { Timestamp } from './timestamp';
 
 export interface User extends PublicUser {
   financing: {
@@ -37,7 +38,7 @@ export type NotificationSettings = Record<NotificationTypesBase, NotificationSet
 
 /** A user interface with public information */
 export interface PublicUser {
-  _meta?: DocumentMeta<Date | FirebaseFirestore.Timestamp>;
+  _meta?: DocumentMeta<Date | Timestamp>;
   uid: string;
   email: string;
   avatar?: StorageFile;
