@@ -1,5 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
-import { staticModel, Scope, GetKeys, Movie, User, Organization } from '@blockframes/model';
+import { staticModel, Scope, GetKeys, Movie, User, Organization, Timestamp } from '@blockframes/model';
 
 /**
  * This method is used before pushing data on db

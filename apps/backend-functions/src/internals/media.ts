@@ -4,8 +4,8 @@ import { get } from 'lodash';
 import * as admin from 'firebase-admin';
 
 // Blockframes dependencies
-import { getDocument } from '@blockframes/firebase-utils';
-import { StorageFile, createPublicUser, MovieDocument, EventDocument, EventMeta, Meeting, Screening } from '@blockframes/model';
+import { getDocument } from '../data/internals';
+import { StorageFile, createPublicUser, MovieDocument, EventDocument, EventMeta, Meeting, Screening, Timestamp } from '@blockframes/model';
 
 // Internal dependencies
 import { isUserInvitedToEvent } from './invitations/events';
@@ -79,7 +79,7 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
   // but he might be invited to an event where the file is shared
   if (!canAccess && eventData?.id) {
 
-    const now = admin.firestore.Timestamp.now();
+    const now = Timestamp.now();
 
     // check if meeting is ongoing (not too early nor too late)
     if (now.seconds < eventData.start.seconds || now.seconds > eventData.end.seconds) {

@@ -1,9 +1,10 @@
 import { db } from './internals/firebase';
 import { triggerNotifications, createNotification } from './notification';
-import { createDocumentMeta, createPublicUserDocument, getOrganizationsOfMovie, Timestamp } from './data/internals';
+import { createDocumentMeta, createPublicUserDocument, getOrganizationsOfMovie } from './data/internals';
 import { cleanMovieMedias, moveMovieMedia } from './media';
 import { Change, EventContext } from 'firebase-functions';
-import { algolia, deleteObject, getDocument, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
+import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils/algolia/algolia';
+import { getDocument } from '@blockframes/firebase-utils/firebase-utils';
 import { App, getAllAppsExcept, getMovieAppAccess, getMailSender } from '@blockframes/utils/apps';
 import { sendMovieSubmittedEmail } from './templates/mail';
 import { sendMail } from './internals/email';
@@ -17,9 +18,9 @@ import {
   MovieAppConfig,
   PublicUser,
   MovieDocument,
-  createDocPermissions
+  createDocPermissions,
+  Timestamp
 } from '@blockframes/model';
-
 
 const apps: App[] = getAllAppsExcept(['crm']);
 

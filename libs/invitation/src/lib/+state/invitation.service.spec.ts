@@ -11,15 +11,15 @@ import {
   disableNetwork,
   doc,
   setDoc,
-  getDoc,
-  Timestamp
+  getDoc
 } from '@angular/fire/firestore';
-import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-testing';
+import { initializeTestEnvironment } from '@firebase/rules-unit-testing';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { readFileSync } from 'fs';
 import { Observable, of } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { createInvitation, createUser, InvitationDocument } from '@blockframes/model';
+import { createInvitation, createUser, InvitationDocument, Timestamp } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
 import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -86,9 +86,9 @@ describe('Invitations Test Suite', () => {
     db = TestBed.inject(Firestore);
     service = TestBed.inject(InvitationService);
 
-    await loadFirestoreRules({
-      projectId: 'test',
-      rules: readFileSync('./firestore.test.rules', "utf8")
+    await initializeTestEnvironment({
+      projectId : 'test',
+      firestore: { rules: readFileSync('./firestore.test.rules', 'utf8') }
     });
 
   });

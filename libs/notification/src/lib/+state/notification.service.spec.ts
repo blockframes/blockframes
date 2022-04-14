@@ -4,7 +4,8 @@ import { NotificationService } from './notification.service';
 import { Notification } from '@blockframes/model';
 import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { provideFirestore, initializeFirestore, connectFirestoreEmulator, doc, setDoc, getDoc, disableNetwork, Firestore } from '@angular/fire/firestore';
-import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-testing';
+import { initializeTestEnvironment } from '@firebase/rules-unit-testing';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { readFileSync } from 'fs';
 import { HttpClient } from '@angular/common/http';
 import { HttpTestingController } from '@angular/common/http/testing';
@@ -65,9 +66,9 @@ describe('Notifications Test Suite', () => {
     db = TestBed.inject(Firestore);
     service = TestBed.inject(NotificationService);
 
-    await loadFirestoreRules({
-      projectId: "test",
-      rules: readFileSync('./firestore.test.rules', "utf8")
+    await initializeTestEnvironment({
+      projectId : 'test',
+      firestore: { rules: readFileSync('./firestore.test.rules', 'utf8') }
     });
   });
 

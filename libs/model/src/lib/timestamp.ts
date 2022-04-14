@@ -1,3 +1,2 @@
-import type firestore from 'firebase/firestore';
-
-export type Timestamp = firestore.Timestamp;
+import { firestore } from 'firebase-admin';
+export class Timestamp extends firestore.Timestamp {};
