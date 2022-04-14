@@ -30,6 +30,7 @@ import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/
 import { OrganizationLiteFormModule } from '@blockframes/organization/forms/organization-lite-form/organization-lite-form.module';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
 
 // Guards
 import { IdentityGuard } from './guard/identity.guard';
@@ -71,6 +72,7 @@ export const AuthRoutes: Routes = [
     AlgoliaAutocompleteModule,
     OrganizationLiteFormModule,
     AppLogoModule,
+    SnackbarLinkModule,
 
     // Material
     MatSnackBarModule,

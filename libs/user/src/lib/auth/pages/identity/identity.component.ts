@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional, OnDestroy, Inject } from '@angular/core';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,6 +20,7 @@ import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@bloc
 import { filter } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
 import { where } from 'firebase/firestore';
+import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 
 @Component({
   selector: 'auth-identity',
@@ -29,7 +30,6 @@ import { where } from 'firebase/firestore';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IdentityComponent implements OnInit, OnDestroy {
-  @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
   public user$ = this.authService.profile$;
   public creating = false;
   public indexGroup = 'indexNameOrganizations';
@@ -160,7 +160,14 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.cdr.markForCheck();
       switch (err.code) {
         case 'auth/email-already-in-use':
-          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: 6000 });
+          this.snackBar.openFromComponent(SnackbarLinkComponent, {
+            data: {
+              message: 'User account already exists for this email.',
+              link: ['/auth/connexion'],
+              linkName: 'LOG IN'
+            },
+            duration: 6000
+          });
           break;
         case 'auth/invalid-email':
           this.snackBar.open('Incorrect email address, please enter: text@example.com', 'close', { duration: 5000 });
