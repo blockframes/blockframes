@@ -30,7 +30,7 @@ export class TunnelSummaryComponent implements OnInit {
   isPublished$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
-    map(movie => movie.app.catalog.status),
+    map(movie => movie.app.financiers.status),
     map(status => status === 'accepted' || status === 'submitted')
   );
 
