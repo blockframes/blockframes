@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatIconModule
   ],
-  declarations: [PreferencesComponent]
+  declarations: [PreferencesComponent],
+  exports: [PreferencesComponent]
 })
 export class PreferenceModule { }

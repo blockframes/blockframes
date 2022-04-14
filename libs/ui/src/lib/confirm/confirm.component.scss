@@ -1,3 +1,7 @@
+:host {
+  padding: 80px;
+}
+
 mat-dialog-content {
   text-align: center;
 }
@@ -10,5 +14,6 @@ button {
   }
 }
 
-// TodoKevinD
-// Max width on Hx / p
+p {
+  max-width: 70%;
+}
