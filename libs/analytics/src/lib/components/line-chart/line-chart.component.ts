@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Analytics, EventName } from "@blockframes/model";
-import { ThemeService } from "@blockframes/ui/theme";
 import { eachDayOfInterval, isSameDay } from "date-fns";
 import {
   ApexAxisChartSeries,
@@ -38,9 +37,10 @@ const eventNameLabel: Record<EventName, string> = {
   selector: '[data][eventNames] analytics-line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
-export class LineChartComponent implements OnDestroy {
+export class LineChartComponent {
   @ViewChild("chart") chart: ChartComponent;
 
   lineChartOptions: LineChartOptions = {
@@ -59,8 +59,7 @@ export class LineChartComponent implements OnDestroy {
     legend: {
       show: true,
       position: 'top',
-      horizontalAlign: 'left',
-      showForSingleSeries: true
+      horizontalAlign: 'left'
     },
     grid: {
       show: true,
@@ -110,16 +109,4 @@ export class LineChartComponent implements OnDestroy {
 
     this.chart?.updateOptions(this.lineChartOptions);
   }
-
-  private sub = this.theme.theme$.subscribe(theme => {
-    this.lineChartOptions.chart.foreColor = theme === 'dark' ? '#f9f8ff' : '#080b0f';
-    this.chart?.updateOptions(this.lineChartOptions);
-  });
-
-  constructor(private theme: ThemeService) {}
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-
 }
