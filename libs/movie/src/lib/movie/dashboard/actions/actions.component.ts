@@ -7,7 +7,7 @@ import { App, appName, getMovieAppAccess } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
-import { FormModalComponent } from '@blockframes/ui/modal/form/form.component';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 @Directive({ selector: 'movie-action-menu, [movieActionMenu]' })
 export class MovieActionMenuDirective {}
@@ -39,31 +39,28 @@ export class DashboardActionsShellComponent {
       ? `This Title will still be available on <i>${appsName.join(', ')}</i>.<br/>`
       : '';
 
-    this.dialog.open(FormModalComponent, {
+    this.dialog.open(ConfirmInputComponent, {
       data: {
-        formData: {
-          title: `You are about to delete ${this.movie.title.international} permanently.`,
-          subtitle: `${subtitle}If you wish to proceed, please type "DELETE" in the field below.`,
-          confirmationWord: 'delete',
-          confirmButtonText: 'delete Title',
-          cancelButtonText: 'keep Title',
-          onConfirm: async () => {
-            await this.movieService.update(this.movie.id, (movie) => ({
-              ...movie,
-              app: {
-                ...movie.app,
-                [this.app]: {
-                  ...movie.app[this.app],
-                  access: false,
-                },
+        title: `You are about to delete ${this.movie.title.international} permanently.`,
+        subtitle: `${subtitle}If you wish to proceed, please type "DELETE" in the field below.`,
+        confirmationWord: 'delete',
+        confirmButtonText: 'delete Title',
+        cancelButtonText: 'keep Title',
+        onConfirm: async () => {
+          await this.movieService.update(this.movie.id, (movie) => ({
+            ...movie,
+            app: {
+              ...movie.app,
+              [this.app]: {
+                ...movie.app[this.app],
+                access: false,
               },
-            } as any));
+            },
+          } as any));
 
-            const ref = this.snackbar.open('Title deleted.', '', { duration: 4000 });
-            ref.afterDismissed().subscribe(() => this.router.navigate(['/c/o/dashboard/title']));
-          },
+          const ref = this.snackbar.open('Title deleted.', '', { duration: 4000 });
+          ref.afterDismissed().subscribe(() => this.router.navigate(['/c/o/dashboard/title']));
         },
-        view: 'ConfirmInput'
       }
     });
   }
