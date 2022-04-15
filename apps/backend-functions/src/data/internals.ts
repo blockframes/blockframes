@@ -6,7 +6,7 @@
 import * as admin from 'firebase-admin';
 import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { getDocument } from '@blockframes/firebase-utils/firebase-utils';
-import { createStorageFile, createDenomination, OrganizationDocument, PublicUser, InvitationDocument, PublicInvitation, PermissionsDocument, DocumentMeta, Timestamp } from '@blockframes/model';
+import { createStorageFile, createDenomination, OrganizationDocument, PublicUser, InvitationDocument, PublicInvitation, PermissionsDocument, DocumentMeta } from '@blockframes/model';
 
 export { getDocument };
 
@@ -39,10 +39,10 @@ export function createPublicUserDocument(user: Partial<PublicUser> = {}) {
   }
 }
 
-export function createDocumentMeta(meta: Partial<DocumentMeta<Timestamp>> = {}): DocumentMeta<Timestamp> {
+export function createDocumentMeta(meta: Partial<DocumentMeta<any>> = {}): DocumentMeta<any> { // TODO #7273 #8006 any
   return {
     createdBy: 'internal',
-    createdAt: Timestamp.now(),
+    createdAt: admin.firestore.Timestamp.now(),
     ...meta
   }
 }

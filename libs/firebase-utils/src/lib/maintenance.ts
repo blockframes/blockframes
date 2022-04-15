@@ -5,7 +5,7 @@ import {
   _isInMaintenance
 } from '@blockframes/utils/maintenance';
 import { loadAdminServices } from './util';
-import { IMaintenanceDoc, Timestamp } from '@blockframes/model';
+import { IMaintenanceDoc } from '@blockframes/model';
 
 const maintenanceRef = (db?: FirebaseFirestore.Firestore) => {
   if (!db) db = loadAdminServices().db;
@@ -34,7 +34,7 @@ export function endMaintenance(db?: FirebaseFirestore.Firestore, ago?: number) {
   let endedAt = admin.firestore.FieldValue.serverTimestamp();
   if (ago) {
     const time = new Date(new Date().getTime() - ago);
-    endedAt = Timestamp.fromDate(time);
+    endedAt = admin.firestore.Timestamp.fromDate(time);
   }
   return maintenanceRef(db).set({ endedAt, startedAt: null }, { merge: false });
 }
