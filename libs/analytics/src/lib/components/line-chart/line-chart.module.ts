@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
@@ -12,7 +11,6 @@ import { MatButtonModule } from '@angular/material/button';
 @NgModule({
   imports: [
     CommonModule,
-    FlexLayoutModule,
     NgApexchartsModule,
     ImageModule,
 

@@ -2,7 +2,14 @@ analytics-line-chart {
   display: flex;
   flex-direction: column;
 
+  header {
+    display: flex;
+    gap: 8px;
+  }
+
   section {
+    display: flex;
+    gap: 16px;
     margin-bottom: 16px;
   }
 

@@ -46,6 +46,12 @@ const eventNameLabel: Record<EventName, string> = {
 
 type Period = 'day' | 'week' | 'month'; 
 
+const dateFunctions: Record<Period, Record<'interval' | 'isSame', any>> = {
+  day: { interval: eachDayOfInterval, isSame: isSameDay },
+  week: { interval: eachWeekOfInterval, isSame: isSameWeek },
+  month: { interval: eachMonthOfInterval, isSame: isSameMonth }
+};
+
 @Component({
   selector: '[data][eventNames] analytics-line-chart',
   templateUrl: './line-chart.component.html',
@@ -100,18 +106,16 @@ export class LineChartComponent {
       type: 'datetime',
       labels: {
         formatter: (value: string, timestamp: number) => {
-          if (this.period === 'month') {
-            return format(timestamp, "MMM yyy") 
-          } else {
-            return format(timestamp, 'dd MMM yyyy') 
-          }
+          return this.period === 'month'
+            ? format(timestamp, "MMM yyy")
+            : format(timestamp, 'dd MMM yyyy') 
         }
       }
     }
   };
 
   @Input() eventNames: EventName[] = [];
-  private analytics: Analytics[];
+  private analytics?: Analytics[];
   @Input() set data(data: Analytics[]) {
     if (!data?.length) {
       this.chart?.updateSeries([]);
@@ -142,21 +146,16 @@ export class LineChartComponent {
   private updateChart(analytics: Analytics[]) {
     const start = analytics[0]._meta.createdAt;
     const end = new Date();
-
-    const fn: Record<Period, Record<'interval' | 'same', any>> = {
-      day: { interval: eachDayOfInterval, same: isSameDay },
-      week: { interval: eachWeekOfInterval, same: isSameWeek },
-      month: { interval: eachMonthOfInterval, same: isSameMonth }
-    };
-
-    const eachUnit = fn[this.period].interval({ start, end });
+    const { interval, isSame } = dateFunctions[this.period];
+    
+    const eachUnit = interval({ start, end });
 
     this.lineChartOptions.series = [];
     for (const name of this.eventNames) {
       const data = eachUnit.map(unit => {
         const analyticsOfUnit = analytics
           .filter(analytic => analytic.name === name)
-          .filter(analytic => fn[this.period].same(unit, analytic._meta.createdAt)
+          .filter(analytic => isSame(unit, analytic._meta.createdAt)
         );
 
         return [unit.getTime(), analyticsOfUnit.length] as [number, number];
