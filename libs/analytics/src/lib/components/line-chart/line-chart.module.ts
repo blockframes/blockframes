@@ -7,14 +7,17 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { LineChartComponent } from './line-chart.component';
 
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [
     CommonModule,
     FlexLayoutModule,
     NgApexchartsModule,
-    MatIconModule,
     ImageModule,
+
+    MatIconModule,
+    MatButtonModule,
   ],
   declarations: [LineChartComponent],
   exports: [LineChartComponent]

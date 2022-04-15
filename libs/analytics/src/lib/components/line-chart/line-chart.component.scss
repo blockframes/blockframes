@@ -2,6 +2,10 @@ analytics-line-chart {
   display: flex;
   flex-direction: column;
 
+  section {
+    margin-bottom: 16px;
+  }
+
   apx-chart {
     display: block;
     margin-block: auto;
