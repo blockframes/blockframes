@@ -1,6 +1,15 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Analytics, EventName } from "@blockframes/model";
-import { eachDayOfInterval, isSameDay } from "date-fns";
+import { 
+  eachDayOfInterval,
+  eachMonthOfInterval,
+  eachWeekOfInterval,
+  format,
+  isSameDay,
+  isSameMonth,
+  isSameWeek,
+  differenceInMonths
+} from "date-fns";
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -10,6 +19,7 @@ import {
   ApexStroke,
   ApexTheme,
   ApexXAxis,
+  ApexYAxis,
   ChartComponent,
 } from "ng-apexcharts";
 
@@ -18,6 +28,7 @@ interface LineChartOptions {
   chart: ApexChart;
   theme: ApexTheme;
   legend: ApexLegend;
+  yaxis: ApexYAxis;
   xaxis: ApexXAxis;
   dataLabels: ApexDataLabels;
   grid: ApexGrid;
@@ -33,21 +44,25 @@ const eventNameLabel: Record<EventName, string> = {
   screeningRequested: 'Screening Requested'
 }
 
+type Period = 'day' | 'week' | 'month'; 
 
-const getUniqueEventNames = (analytics: Analytics[]) => {
-  const names = analytics.map(analytic => analytic.name);
-  return Array.from(new Set(names));
-}
+const dateFunctions: Record<Period, Record<'interval' | 'isSame', any>> = {
+  day: { interval: eachDayOfInterval, isSame: isSameDay },
+  week: { interval: eachWeekOfInterval, isSame: isSameWeek },
+  month: { interval: eachMonthOfInterval, isSame: isSameMonth }
+};
 
 @Component({
-  selector: '[data] analytics-line-chart',
+  selector: '[data][eventNames] analytics-line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class LineChartComponent {
   @ViewChild("chart") chart: ChartComponent;
 
+  period?: Period;
   lineChartOptions: LineChartOptions = {
     series: [],
     chart: {
@@ -58,13 +73,15 @@ export class LineChartComponent {
     theme: {
       monochrome: {
         enabled: true,
-        color: '#001ec7'
+        color: '#3c64f7'
       }
     },
     legend: {
       show: true,
-      position: 'top',
-      showForSingleSeries: true
+      showForSingleSeries: true,
+      position: 'bottom',
+      horizontalAlign: 'left',
+      offsetY: 8
     },
     grid: {
       show: true,
@@ -80,33 +97,68 @@ export class LineChartComponent {
     dataLabels: {
       enabled: false
     },
+    yaxis: {
+      labels: {
+        formatter: (value) => value.toFixed(0)
+      }
+    },
     xaxis: {
       type: 'datetime',
+      labels: {
+        formatter: (value: string, timestamp: number) => {
+          return this.period === 'month'
+            ? format(timestamp, "MMM yyy")
+            : format(timestamp, 'dd MMM yyyy') 
+        }
+      }
     }
   };
 
+  @Input() eventNames: EventName[] = [];
+  private analytics?: Analytics[];
   @Input() set data(data: Analytics[]) {
-    if (!data) return;
-    if (!data.length) {
+    if (!data?.length) {
       this.chart?.updateSeries([]);
       return;
     }
 
     const analytics = data.sort((a, b) => a._meta.createdAt.getTime() - b._meta.createdAt.getTime());
+    this.analytics = analytics;
+    
+    const first = analytics[0]._meta.createdAt;
+    const difference = differenceInMonths(new Date(), first);
+    if (difference >= 9) {
+      this.period = 'month';
+    } else if (difference >= 2) {
+      this.period = 'week';
+    } else {
+      this.period = 'day';
+    }
+
+    this.updateChart(data);
+  }
+
+  changePeriod(period: Period) {
+    this.period = period;
+    this.updateChart(this.analytics);
+  }
+
+  private updateChart(analytics: Analytics[]) {
     const start = analytics[0]._meta.createdAt;
     const end = new Date();
-    const eachDay = eachDayOfInterval({ start, end });
+    const { interval, isSame } = dateFunctions[this.period];
+    
+    const eachUnit = interval({ start, end });
 
     this.lineChartOptions.series = [];
-    const eventNames = getUniqueEventNames(analytics);
-    for (const name of eventNames) {
-      const data = eachDay.map(day => {
-        const analyticsOfDay = analytics
+    for (const name of this.eventNames) {
+      const data = eachUnit.map(unit => {
+        const analyticsOfUnit = analytics
           .filter(analytic => analytic.name === name)
-          .filter(analytic => isSameDay(day, analytic._meta.createdAt)
+          .filter(analytic => isSame(unit, analytic._meta.createdAt)
         );
 
-        return [day.getTime(), analyticsOfDay.length] as [number, number];
+        return [unit.getTime(), analyticsOfUnit.length] as [number, number];
       });
 
       this.lineChartOptions.series.push({ name: eventNameLabel[name], data });
