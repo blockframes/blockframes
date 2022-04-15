@@ -1,2 +1,3 @@
-import { Timestamp as FirebaseTimestamp} from 'firebase/firestore';
-export class Timestamp extends FirebaseTimestamp { }; // TODO #8250
+import type firestore from 'firebase/firestore';
+
+export type Timestamp = firestore.Timestamp;  // TODO #8250

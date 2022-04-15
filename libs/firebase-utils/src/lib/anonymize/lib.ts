@@ -11,7 +11,6 @@ import {
   PublicOrganization,
   Invitation,
   IMaintenanceDoc,
-  Timestamp
 } from '@blockframes/model';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
@@ -19,6 +18,7 @@ import { Queue } from '../queue';
 import { firebase, testVideoId } from '@env';
 import { runChunks } from '../firebase-utils';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
+import { Timestamp } from 'firebase/firestore';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
