@@ -1,7 +1,8 @@
 import { FormControl } from '@angular/forms';
-import { AlgoliaUser, MovieIndexFilters } from './algolia.interfaces';
+import { AlgoliaUser, MovieIndexFilters } from '@blockframes/model';
 import { FormList } from '../form/forms/list.form';
 import { Validator } from '../form/forms/types';
+import { algolia } from '@env';
 
 /**
  * Create a FormList that create user with mail if no user exist
@@ -52,3 +53,20 @@ export function parseFacets(facet: Record<string, any>, prefix?: string): string
     }
     return facets;
 }
+
+/** A simple map to access the index name */
+export const algoliaIndex = {
+    user: algolia.indexNameUsers,
+    org: {
+      financiers: algolia.indexNameOrganizations.financiers,
+      festival: algolia.indexNameOrganizations.festival,
+      catalog: algolia.indexNameOrganizations.catalog,
+    },
+    movie: {
+      financiers: algolia.indexNameMovies.financiers,
+      catalog: algolia.indexNameMovies.catalog,
+      festival: algolia.indexNameMovies.festival,
+    },
+  };
+  
+  export type AlgoliaIndex = keyof typeof algoliaIndex;
