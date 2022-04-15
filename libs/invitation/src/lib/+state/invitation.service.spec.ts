@@ -63,7 +63,7 @@ describe('Invitations Test Suite', () => {
       imports: [
         provideFirebaseApp(() => initializeApp({ projectId: 'test' })),
         provideFirestore(() => {
-          if(db) return db;
+          if (db) return db;
           db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
           connectFirestoreEmulator(db, 'localhost', 8080);
           return db;
@@ -87,7 +87,7 @@ describe('Invitations Test Suite', () => {
     service = TestBed.inject(InvitationService);
 
     await initializeTestEnvironment({
-      projectId : 'test',
+      projectId: 'test',
       firestore: { rules: readFileSync('./firestore.test.rules', 'utf8') }
     });
 
@@ -127,7 +127,7 @@ describe('Invitations Test Suite', () => {
 
   it('Should invitation status become accepted', async () => {
     const ref = doc(db, 'invitations/1');
-    await setDoc(ref, { status: 'pending'});
+    await setDoc(ref, { status: 'pending' });
     await service.acceptInvitation({
       id: '1',
       type: 'attendEvent',
@@ -141,7 +141,7 @@ describe('Invitations Test Suite', () => {
 
   it('Should invitation status become declined', async () => {
     const ref = doc(db, 'invitations/2');
-    await setDoc(ref, { status: 'pending'});
+    await setDoc(ref, { status: 'pending' });
     await service.declineInvitation({
       id: '2',
       type: 'attendEvent',

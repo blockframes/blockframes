@@ -39,7 +39,7 @@ describe('Notifications Test Suite', () => {
       imports: [
         provideFirebaseApp(() => initializeApp({ projectId: 'test' })),
         provideFirestore(() => {
-          if(db) return db;
+          if (db) return db;
           db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
           connectFirestoreEmulator(db, 'localhost', 8080);
           return db;
@@ -67,7 +67,7 @@ describe('Notifications Test Suite', () => {
     service = TestBed.inject(NotificationService);
 
     await initializeTestEnvironment({
-      projectId : 'test',
+      projectId: 'test',
       firestore: { rules: readFileSync('./firestore.test.rules', 'utf8') }
     });
   });

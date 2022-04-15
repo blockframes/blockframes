@@ -10,7 +10,7 @@ import {
   Organization,
   PublicOrganization,
   Invitation,
-  IMaintenanceDoc,
+  IMaintenanceDoc
 } from '@blockframes/model';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
