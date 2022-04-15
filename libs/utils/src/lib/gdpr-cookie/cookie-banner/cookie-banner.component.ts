@@ -46,7 +46,7 @@ export class CookieBannerComponent implements OnInit {
   }
 
   public changePreferences() {
-    const dialogRef = this.dialog.open(CookieDialogComponent, { maxHeight: '80vh', maxWidth: '80vw' });
+    const dialogRef = this.dialog.open(CookieDialogComponent);
     dialogRef.afterClosed().subscribe(settings => {
       if (settings) {
         this.confirmCookies();

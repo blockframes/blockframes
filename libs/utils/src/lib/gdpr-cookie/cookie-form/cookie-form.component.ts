@@ -15,7 +15,7 @@ import { MatRadioChange } from '@angular/material/radio';
   selector: '[form] cookie-form',
   templateUrl: './cookie-form.component.html',
   styleUrls: ['./cookie-form.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CookieFormComponent implements OnInit, OnDestroy {
 
