@@ -15,12 +15,12 @@
         </button>
       </ng-container>
       <ng-template #defaultButtons>
-        <button mat-button class="translucent" test-id="invitation-accept" (click)="accept(invit)"
+        <button mat-button [ngClass]="{ translucent: !small }" test-id="invitation-accept" (click)="accept(invit)"
           [matTooltip]="small ? 'Accept Invitation' : undefined">
           <mat-icon *ngIf="!accepting else loading" svgIcon="check_circle" title="Accept Invitation"></mat-icon>
           <span *ngIf="!small">Accept Invitation</span>
         </button>
-        <button mat-button class="translucent" test-id="invitation-refuse" (click)="decline(invit)"
+        <button mat-button [ngClass]="{ translucent: !small }" test-id="invitation-refuse" (click)="decline(invit)"
           [matTooltip]="small ? 'Decline Invitation' : undefined">
           <mat-icon *ngIf="!declining else loading" svgIcon="cancel" title="Decline Invitation"></mat-icon>
           <span *ngIf="!small">Decline Invitation</span>
