@@ -15,6 +15,8 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
+import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'movie-screening',
@@ -55,6 +57,7 @@ export class UpcomingScreeningsComponent {
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     private movieService: MovieService,
+    private snackBar: MatSnackBar,
     @Inject(APP) private app: App
   ) {
 
@@ -85,6 +88,14 @@ export class UpcomingScreeningsComponent {
   askForInvitation(events: Event[]) {
     const event = events[this.sessionCtrl.value];
     this.invitationService.request(event.ownerOrgId).to('attendEvent', event.id);
+    this.snackBar.openFromComponent(SnackbarLinkComponent, {
+      data: {
+        message: 'You are now registred for this session',
+        link: ['/event/', event.id, 'r', 'i'],
+        linkName: 'SEE DETAILS'
+      },
+      duration: 6000
+    });
   }
 
   private sortByDate(a: Event, b: Event): number {
