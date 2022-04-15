@@ -6,6 +6,7 @@ import { PreferencesComponent } from './preferences.component';
 
 // Blockframes
 import { PreferencesFormModule } from '@blockframes/auth/forms/preferences/preferences.module';
+import { GlobalModalModule } from '@blockframes/ui/modal/modal.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -17,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     FlexLayoutModule,
     PreferencesFormModule,
+    GlobalModalModule,
     MatButtonModule,
     MatIconModule
   ],
