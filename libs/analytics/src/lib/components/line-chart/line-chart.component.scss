@@ -1,9 +1,17 @@
-:host {
+analytics-line-chart {
   display: flex;
   flex-direction: column;
-}
 
-apx-chart {
-  display: block;
-  margin-block: auto;
+  apx-chart {
+    display: block;
+    margin-block: auto;
+  
+    .apexcharts-text {
+      fill: var(--foreground-text);
+    }
+    
+    .apexcharts-legend-text {
+      color: var(--foreground--text) !important; // overwrite default inline style
+    }
+  }
 }
