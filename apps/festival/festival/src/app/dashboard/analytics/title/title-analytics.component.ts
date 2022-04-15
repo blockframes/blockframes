@@ -70,7 +70,8 @@ export class TitleAnalyticsComponent {
   )
 
   filters = {
-    orgActivity: getFilter('orgActivity')
+    orgActivity: getFilter('orgActivity'),
+    territories: getFilter('territories')
   };
   filterValue?: string;
 
