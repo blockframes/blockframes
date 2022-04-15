@@ -143,7 +143,7 @@ export class LineChartComponent {
     const start = analytics[0]._meta.createdAt;
     const end = new Date();
 
-    const fn: Record<Period, Record<'interval' | 'same', Function>> = {
+    const fn: Record<Period, Record<'interval' | 'same', any>> = {
       day: { interval: eachDayOfInterval, same: isSameDay },
       week: { interval: eachWeekOfInterval, same: isSameWeek },
       month: { interval: eachMonthOfInterval, same: isSameMonth }
