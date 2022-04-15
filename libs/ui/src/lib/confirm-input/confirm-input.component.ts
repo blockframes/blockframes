@@ -3,8 +3,6 @@ import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import type { View } from '@blockframes/ui/modal/modal.component';
-
 interface Data {
   title?: string,
   subtitle?: string,
