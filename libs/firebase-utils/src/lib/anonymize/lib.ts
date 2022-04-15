@@ -10,20 +10,20 @@ import {
   Organization,
   PublicOrganization,
   Invitation,
-  IMaintenanceDoc
+  IMaintenanceDoc,
+  Timestamp
 } from '@blockframes/model';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import { Queue } from '../queue';
-import { FirestoreEmulator } from '../firestore/emulator';
 import { firebase, testVideoId } from '@env';
 import { runChunks } from '../firebase-utils';
-import { Timestamp } from 'firebase/firestore';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
 
-export function fakeEmail(name: string) {
+function fakeEmail(name: string) {
   const random = Math.random()
     .toString(36)
     .replace(/[^a-z]+/g, '')
@@ -194,8 +194,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     }
     if (docPath.includes('_META')) {
       // Always set maintenance
-      if (hasKeys<IMaintenanceDoc>(doc, 'endedAt'))
-        return { docPath, content: processMaintenanceDoc(doc) };
+      if (hasKeys<IMaintenanceDoc>(doc, 'endedAt')) return { docPath, content: processMaintenanceDoc(doc) };
       return { docPath, content: doc };
     }
   } catch (e) {
@@ -203,8 +202,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
   }
   const error = 'CRITICAL: could not clean a document, docPath not handled';
   const location = `Document path: ${docPath}`;
-  const solution =
-    'The collection name might be missing in the anonymisation script. Update file tools/scripts/anonymize-db.ts';
+  const solution = 'The collection name might be missing in the anonymisation script. Update file tools/scripts/anonymize-db.ts';
   throw new Error([error, location, solution].join('/n'));
 }
 
@@ -216,11 +214,11 @@ function getPathOrder(path: string): number {
   return 5;
 }
 
-export async function runAnonymization(db: FirestoreEmulator) {
+export async function runAnonymization(db: FirebaseFirestore.Firestore) {
   throwOnProduction();
   const dbArray = await loadDb(db);
   const orderedDbArray = dbArray.sort((a, b) => getPathOrder(a.docPath) - getPathOrder(b.docPath));
-  await db.clearFirestoreData({ projectId: firebase().projectId });
+  await clearFirestoreData({ projectId: firebase().projectId });
   const anonDb = orderedDbArray.map(anonymizeDocument);
   await runChunks(
     anonDb,

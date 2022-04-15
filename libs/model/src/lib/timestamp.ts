@@ -1,2 +1,2 @@
-import { firestore } from 'firebase-admin';
-export class Timestamp extends firestore.Timestamp {};
+import { Timestamp as FirebaseTimestamp} from 'firebase/firestore';
+export class Timestamp extends FirebaseTimestamp { }; // TODO #8250
