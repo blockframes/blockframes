@@ -7,14 +7,19 @@ import { ImageModule } from "@blockframes/media/image/directives/image.module";
 import { PieChartComponent } from './pie-chart.component';
 
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
     CommonModule,
     FlexLayoutModule,
     NgApexchartsModule,
-    MatIconModule,
     ImageModule,
+
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule
   ],
   declarations: [PieChartComponent],
   exports: [PieChartComponent]

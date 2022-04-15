@@ -12,7 +12,7 @@ import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
-import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 const statisticsTab = { path: 'statistics', label: 'Statistics' };
 

@@ -1,9 +1,10 @@
-import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { Event, Invitation, InvitationStatus } from '@blockframes/model';
-import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { InvitationService } from '../../+state';
 
@@ -14,8 +15,6 @@ import { InvitationService } from '../../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionComponent {
-
-  @ViewChild('viewDetails') viewDetailsTemplate: TemplateRef<unknown>;
 
   @Input() event: Event;
   public invit: Invitation;
@@ -77,7 +76,14 @@ export class ActionComponent {
       if (accessibility !== 'public') {
         this.snackBar.open('Request sent', 'close', { duration: 4000 });
       } else {
-        this.snackBar.openFromTemplate(this.viewDetailsTemplate, { duration: 6000 });
+        this.snackBar.openFromComponent(SnackbarLinkComponent, {
+          data: {
+            message: 'Screening added to your Calendar.',
+            link: ['/event/', event.id, 'r', 'i'],
+            linkName: 'SEE DETAILS'
+          },
+          duration: 6000
+        });
       }
       this.requestPending = true;
     } catch (_) {

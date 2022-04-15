@@ -6,7 +6,7 @@ import { map, pluck, switchMap } from 'rxjs/operators';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component'
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 @Component({
   selector: 'catalog-summary-tunnel',

@@ -3,7 +3,7 @@ import { OrganizationForm } from '@blockframes/organization/forms/organization.f
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FileUploaderService } from '@blockframes/media/+state';
-import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 @Component({
   selector: 'organization-edit',

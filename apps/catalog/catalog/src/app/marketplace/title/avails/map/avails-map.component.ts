@@ -14,18 +14,7 @@ import {
   territoryAvailabilities,
 } from '@blockframes/contract/avails/avails';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { Bucket, Movie, Mandate, Sale, Term, TerritoryValue } from '@blockframes/model';
-
-// TODO(#7820): remove with rxjs 7
-type AvailabilitiesInputs = [
-  MapAvailsFilter,
-  Mandate<Date>[],
-  Term<Date>[],
-  Sale<Date>[],
-  Term<Date>[],
-  Bucket<Date>,
-  Movie
-];
+import { TerritoryValue } from '@blockframes/model';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -55,33 +44,24 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     this.shell.bucketForm.value$,
     this.shell.movie$,
   ]).pipe(
-    map(
-      ([
-        avails,
+    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]) => {
+      if (this.availsForm.invalid) return emptyAvailabilities;
+      const res = filterContractsByTitle(
+        movie.id,
         mandates,
         mandateTerms,
         sales,
         salesTerms,
-        bucket,
-        movie,
-      ]: AvailabilitiesInputs) => {
-        if (this.availsForm.invalid) return emptyAvailabilities;
-        const res = filterContractsByTitle(
-          movie.id,
-          mandates,
-          mandateTerms,
-          sales,
-          salesTerms,
-          bucket
-        );
-        const data = {
-          avails,
-          mandates: res.mandates,
-          sales: res.sales,
-          bucketContracts: res.bucketContracts,
-        };
-        return territoryAvailabilities(data);
-      }
+        bucket
+      );
+      const data = {
+        avails,
+        mandates: res.mandates,
+        sales: res.sales,
+        bucketContracts: res.bucketContracts,
+      };
+      return territoryAvailabilities(data);
+    }
     ),
     shareReplay({ bufferSize: 1, refCount: true })
   );
