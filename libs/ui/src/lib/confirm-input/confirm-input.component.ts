@@ -3,9 +3,9 @@ import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import type { View } from '@blockframes/ui/modal/form/form.component';
+import type { View } from '@blockframes/ui/modal/modal.component';
 
-interface FormData {
+interface Data {
   title?: string,
   subtitle?: string,
   text?: string,
@@ -16,11 +16,6 @@ interface FormData {
   confirmButtonText: string,
   cancelButtonText?: string,
   onConfirm?: () => void
-}
-
-interface Data {
-  view?: View,
-  formData: FormData
 }
 
 @Component({
@@ -39,12 +34,12 @@ export class ConfirmInputComponent implements OnInit {
     public dialogRef: MatDialogRef<ConfirmInputComponent>,
     private snackbar: MatSnackBar
   ) {
-    if (!this.data.formData.cancelButtonText) { this.data.formData.cancelButtonText = 'Cancel'; }
+    if (!this.data.cancelButtonText) { this.data.cancelButtonText = 'Cancel'; }
   }
 
   ngOnInit() {
     this.actionConfirm.valueChanges.subscribe(value => {
-      if (this.data.formData.confirmationWord.toUpperCase() === value && this.actionConfirm.valid) {
+      if (this.data.confirmationWord.toUpperCase() === value && this.actionConfirm.valid) {
         this.isValid = true;
       } else {
         this.isValid = false;
@@ -54,7 +49,7 @@ export class ConfirmInputComponent implements OnInit {
 
   public confirm() {
     if (this.isValid) {
-      this.data.formData.onConfirm();
+      this.data.onConfirm();
       this.dialogRef.close(true);
     }
     else {

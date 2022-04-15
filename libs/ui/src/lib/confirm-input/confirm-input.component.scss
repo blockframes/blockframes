@@ -1,7 +1,9 @@
-mat-dialog-content {
-  p, span {
-    margin-bottom: 24px;
-  }
+:host {
+  text-align: center;
+}
+
+p, span {
+  margin-bottom: 24px;
 }
 
 mat-dialog-actions {
