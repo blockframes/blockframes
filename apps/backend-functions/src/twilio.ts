@@ -6,7 +6,7 @@ import { projectId, twilioAccountSid, twilioAccountSecret, twilioApiKeySecret, t
 import Twilio from 'twilio/lib/rest/Twilio';
 import AccessToken, { VideoGrant } from 'twilio/lib/jwt/AccessToken';
 import { firebaseRegion } from './internals/utils';
-import * as admin from 'firebase-admin';
+import { getFirestore } from 'firebase-admin/firestore';
 import { getUser } from './internals/utils';
 import { Request, Response } from 'firebase-functions';
 import { isUserInvitedToEvent } from './internals/invitations/events';
@@ -110,7 +110,7 @@ export const getTwilioAccessToken = async (
 
 /** This function will be called directly by the Twilio servers each time an event happens in a Video Room */
 export const twilioWebhook = async (req: Request, res: Response) => {
-  const db = admin.firestore();
+  const db = getFirestore();
   try {
 
     if (

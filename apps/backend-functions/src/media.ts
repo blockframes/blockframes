@@ -2,7 +2,7 @@
 // External dependencies
 import { createHash } from 'crypto';
 import { get, set } from 'lodash';
-import * as admin from 'firebase-admin';
+import { getStorage } from 'firebase-admin/storage';
 import { logger, storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
@@ -37,7 +37,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
   if (!data.name) return false;
 
-  const bucket = admin.storage().bucket(getStorageBucketName());
+  const bucket = getStorage().bucket(getStorageBucketName());
   const file = bucket.file(data.name);
 
   // metadata is composed of claims of where the user wants to upload the file:
@@ -259,7 +259,7 @@ export const getMediaToken = async (data: { file: StorageFile, parametersSet: Im
 
 export const deleteMedia = async (file: StorageFile) => {
 
-  const bucket = admin.storage().bucket(getStorageBucketName());
+  const bucket = getStorage().bucket(getStorageBucketName());
   const filePath = `${file.privacy}/${file.storagePath}`;
   const fileObject = bucket.file(filePath);
 
@@ -447,7 +447,7 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
 
 export const moveMedia = async (before: StorageFile, after: StorageFile) => {
 
-  const bucket = admin.storage().bucket(getStorageBucketName());
+  const bucket = getStorage().bucket(getStorageBucketName());
   const beforePath = `${before.privacy}/${before.storagePath}`;
   const afterPath = `${after.privacy}/${after.storagePath}`;
   const fileObject = bucket.file(beforePath);
@@ -478,8 +478,8 @@ export async function moveMovieMedia(before: MovieDocument, after: MovieDocument
   const containsFile = (file: StorageFile) => file && file.storagePath !== null;
   const needsToBeMoved = (beforeFile: StorageFile, afterFile: StorageFile) => {
     return containsFile(beforeFile)
-        && containsFile(afterFile)
-        && beforeFile.storagePath !== afterFile.storagePath;
+      && containsFile(afterFile)
+      && beforeFile.storagePath !== afterFile.storagePath;
   }
 
   for (const path of paths) {

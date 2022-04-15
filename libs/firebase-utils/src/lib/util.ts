@@ -1,4 +1,3 @@
-import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 import { config } from 'dotenv';
@@ -6,6 +5,11 @@ import requiredVars from 'tools/mandatory-env-vars.json';
 import { resolve } from 'path';
 import { App } from '@blockframes/utils/apps';
 import { OrganizationDocument } from '@blockframes/model';
+import { initializeApp, App as FirebaseApp, getApps } from 'firebase-admin/app';
+import { credential, ServiceAccount } from 'firebase-admin';
+import { CollectionReference, getFirestore, Firestore } from 'firebase-admin/firestore';
+import { getAuth, Auth } from 'firebase-admin/auth';
+import { getStorage, Storage } from 'firebase-admin/storage';
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -15,7 +19,7 @@ import { OrganizationDocument } from '@blockframes/model';
  * @param orderBy the unique key of the document object to order by
  * @param batchSize how many docs to fetch per iteration
  */
-export async function* getCollectionInBatches<K>(ref: admin.firestore.CollectionReference, orderBy: string, batchSize = 650) {
+export async function* getCollectionInBatches<K>(ref: CollectionReference, orderBy: string, batchSize = 650) {
   let querySnapshot = await ref.orderBy(orderBy).limit(batchSize).get();
   let lastSnapshot: FirebaseFirestore.QueryDocumentSnapshot | string = '';
 
@@ -73,40 +77,40 @@ export function catchErrors<T>(fn: (...args: any[]) => T): T | undefined {
 }
 
 export interface AdminServices {
-  auth: admin.auth.Auth;
-  db: admin.firestore.Firestore;
-  storage: admin.storage.Storage;
+  auth: Auth;
+  db: Firestore;
+  storage:Storage;
   firebaseConfig: ReturnType<typeof firebase>;
-  getCI: () => admin.app.App;
+  getCI: () => FirebaseApp;
 }
 
 export function loadAdminServices(): AdminServices {
   config();
 
-  if (!admin.apps.length) {
-    admin.initializeApp({
+  if (!getApps().length) {
+    initializeApp({
       ...firebase(),
-      credential: admin.credential.applicationDefault(),
+      credential: credential.applicationDefault(),
     });
   }
 
   return {
     getCI,
-    auth: admin.auth(),
-    db: admin.firestore(),
+    auth: getAuth(),
+    db: getFirestore(),
     firebaseConfig: firebase(),
-    storage: admin.storage(),
+    storage: getStorage(),
   };
 }
 
-let ci: admin.app.App;
+let ci: FirebaseApp;
 
 function getCI() {
   if (!ci) {
-    ci = admin.initializeApp(
+    ci = initializeApp(
       {
         projectId: firebaseCI().projectId,
-        credential: admin.credential.applicationDefault(),
+        credential: credential.applicationDefault(),
       },
       'CI-app'
     );
@@ -116,19 +120,19 @@ function getCI() {
 
 export const sleep = (ms: number) => new Promise<void>(res => setTimeout(res, ms));
 
-export function getServiceAccountObj(keyFile: string): admin.ServiceAccount {
+export function getServiceAccountObj(keyFile: string): ServiceAccount {
   try {
     // If service account is a stringified json object
-    return JSON.parse(keyFile) as admin.ServiceAccount;
+    return JSON.parse(keyFile) as ServiceAccount;
   } catch (err) {
     // If service account is a path
     // tslint:disable-next-line: no-eval
-    return eval('require')(resolve(keyFile)) as admin.ServiceAccount;
+    return eval('require')(resolve(keyFile)) as ServiceAccount;
   }
 }
 
 export async function hasAcceptedMovies(org: OrganizationDocument, appli: App) {
-  const moviesColRef = await admin.firestore().collection('movies')
+  const moviesColRef = await getFirestore().collection('movies')
     .where('orgIds', 'array-contains', org.id).get();
   const movies = moviesColRef.docs.map(doc => doc.data());
   return movies.some(movie => movie?.app?.[appli].status === 'accepted' && movie?.app?.[appli].access);
@@ -146,7 +150,7 @@ export function throwOnProduction(): never | void {
 export async function removeAllSubcollections(
   snapshot: FirebaseFirestore.DocumentSnapshot,
   batch: FirebaseFirestore.WriteBatch,
-  db = admin.firestore(),
+  db = getFirestore(),
   options = { verbose: true }
 ): Promise<FirebaseFirestore.WriteBatch> {
   if (options.verbose) console.log(`starting deletion of ${snapshot.ref.path} sub-collections`);

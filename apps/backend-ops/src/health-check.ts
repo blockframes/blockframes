@@ -1,9 +1,11 @@
-import { CI_STORAGE_BACKUP, getBackupBucket, latestAnonDbDir, loadAdminServices } from "@blockframes/firebase-utils";
-import { readFileSync, unlinkSync, writeFileSync } from "fs";
-import { resolve } from "path";
+import { CI_STORAGE_BACKUP, getBackupBucket, latestAnonDbDir, loadAdminServices } from '@blockframes/firebase-utils';
+import { readFileSync, unlinkSync, writeFileSync } from 'fs';
+import { resolve } from 'path';
 import { backupBucket } from 'env/env.blockframes-ci'
-import type { Bucket } from "@google-cloud/storage";
-import type { firestore, storage } from "firebase-admin";
+import type { Bucket } from '@google-cloud/storage';
+import { getStorage } from 'firebase-admin/storage';
+import type { Storage } from 'firebase-admin/storage';
+import type { Firestore } from 'firebase-admin/firestore';
 
 export async function healthCheck() {
   // tslint:disable-next-line: no-shadowed-variable
@@ -21,12 +23,12 @@ export async function healthCheck() {
   console.log(`Local tmp Folder - READ: ${fileAccess.read ? 'ALLOW' : 'DENY'}`)
 
   // * Do we have get access to CI storage db backups?
-  const CIAccess = await checkCIBucketAccess(getCI().storage())
+  const CIAccess = await checkCIBucketAccess(getStorage(getCI()))
   console.log(`CI Backup Bucket - GET FILE: ${CIAccess.get ? 'ALLOW' : 'DENY'}`)
   console.log(`CI Backup Bucket - LIST FILE: ${CIAccess.list ? 'ALLOW' : 'DENY'}`)
 
   // * Do we have get access to CI storage backups?
-  const CIStorageBackupAccess = await checkCIStorageBackupBucketAccess(getCI().storage())
+  const CIStorageBackupAccess = await checkCIStorageBackupBucketAccess(getStorage(getCI()))
   console.log(`CI Storage Backup Bucket - GET FILE: ${CIStorageBackupAccess.get ? 'ALLOW' : 'DENY'}`)
   console.log(`CI Storage Backup Bucket - LIST FILE: ${CIStorageBackupAccess.list ? 'ALLOW' : 'DENY'}`)
 
@@ -36,7 +38,7 @@ export async function healthCheck() {
 
 }
 
-async function checkFirestoreAccess(db: firestore.Firestore) {
+async function checkFirestoreAccess(db: Firestore) {
   try {
     await db.listCollections()
     return true;
@@ -45,7 +47,7 @@ async function checkFirestoreAccess(db: firestore.Firestore) {
   }
 }
 
-async function checkCIStorageBackupBucketAccess(gcs: storage.Storage) {
+async function checkCIStorageBackupBucketAccess(gcs: Storage) {
   const bucket = gcs.bucket(CI_STORAGE_BACKUP);
 
   let list = false;
@@ -66,7 +68,7 @@ async function checkCIStorageBackupBucketAccess(gcs: storage.Storage) {
   return { list, get }
 }
 
-async function checkBackupBucketAccess(gcs: storage.Storage) {
+async function checkBackupBucketAccess(gcs: Storage) {
   let create = false;
   let list = false;
   let del = false;
@@ -114,7 +116,7 @@ function checkDiskWriteAccess() {
   return { read, write }
 }
 
-async function checkCIBucketAccess(gcs: storage.Storage) {
+async function checkCIBucketAccess(gcs: Storage) {
   const bucket = gcs.bucket(backupBucket)
   let list = false;
   let get = false;

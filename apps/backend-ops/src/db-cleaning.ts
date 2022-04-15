@@ -10,7 +10,6 @@ import {
 } from '@blockframes/model';
 import { removeUnexpectedUsers } from './users';
 import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections, UserRecord, loadAdminServices } from '@blockframes/firebase-utils';
-import admin from 'firebase-admin';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
 import { deleteSelectedUsers } from 'libs/testing/unit-tests/src/lib/firebase';
@@ -23,7 +22,7 @@ let verbose = false;
 /** Reusable data cleaning script that can be updated along with data model */
 export async function cleanDeprecatedData(
   db: FirebaseFirestore.Firestore,
-  auth?: admin.auth.Auth,
+  auth?: Auth,
   options = { verbose: true }
 ) {
   verbose = options.verbose;
@@ -43,7 +42,7 @@ export async function cleanDeprecatedData(
   return true;
 }
 
-export async function auditUsers(db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
+export async function auditUsers(db: FirebaseFirestore.Firestore, auth?: Auth) {
   if (!auth) auth = loadAdminServices().auth;
 
   const { dbData } = await loadAllCollections(db);
@@ -57,7 +56,7 @@ export async function auditUsers(db: FirebaseFirestore.Firestore, auth?: admin.a
   return true;
 }
 
-async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
+async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth?: Auth) {
 
   // Getting existing document ids to compare
   const [movieIds, organizationIds, eventIds, invitationIds, offerIds, contractIds] = [

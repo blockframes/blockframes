@@ -1,4 +1,6 @@
-﻿import * as admin from 'firebase-admin';
+﻿import { initializeApp, App } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+import type { AppOptions } from 'firebase-admin/app';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { runChunks } from '@blockframes/firebase-utils';
 import { join, resolve } from 'path';
@@ -6,11 +8,10 @@ import { config } from 'dotenv';
 import { firebase as firebaseEnv } from '@env';
 import { TokenOptions, initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
 import type { FeaturesList } from 'firebase-functions-test/lib/features';
-import type { AppOptions } from 'firebase-admin'; // * Correct Import
 import fs from 'fs';
 
-export interface FirebaseTestConfig extends FeaturesList {
-  firebaseConfig?: { projectId: string, app: admin.app.App };
+interface FirebaseTestConfig extends FeaturesList {
+  firebaseConfig?: { projectId: string, app: App };
 }
 
 let testIndex = 0;
@@ -38,7 +39,7 @@ export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptio
     // initialize test database
     process.env.GCLOUD_PROJECT = projectId;
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-    const app = admin.initializeApp({ projectId });
+    const app = initializeApp({ projectId });
     firebaseTest.mockConfig(runtimeConfig);
     firebaseTest.firebaseConfig = { projectId, app };
     return firebaseTest;
@@ -97,7 +98,7 @@ function setData(testEnv: RulesTestEnvironment, dataDB: Record<string, unknown>)
 //////////////
 
 export function populate(collection: string, set: any[]) {
-  const db = admin.firestore();
+  const db = getFirestore();
   return runChunks(set, async (d) => {
     const docRef = db.collection(collection).doc(d.id || d.uid);
     if (d.date?._seconds) { d.date = new Date(d.date._seconds * 1000) };

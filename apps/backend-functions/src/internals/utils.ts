@@ -1,5 +1,5 @@
 import { PublicUser } from '@blockframes/model';
-import * as admin from 'firebase-admin';
+import { getFirestore } from 'firebase-admin/firestore';
 export { firebaseRegion } from '@env';
 
 /**
@@ -7,7 +7,7 @@ export { firebaseRegion } from '@env';
  * Throws if the user does not exists.
  */
 export async function getUser(userId: string): Promise<PublicUser> {
-  const db = admin.firestore();
+  const db = getFirestore();
   const user = await db.doc(`users/${userId}`).get();
   return user.data() as PublicUser;
 }

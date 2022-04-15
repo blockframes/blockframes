@@ -26,12 +26,14 @@ import {
 import { ChildProcess } from 'child_process';
 import { join, resolve } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
-import admin from 'firebase-admin'
 import { backupBucket, firebase } from '@env'
 import { migrate } from './migrations';
 import { syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
+import { initializeApp } from 'firebase-admin/app';
+import { getStorage } from 'firebase-admin/storage';
+import { credential } from 'firebase-admin';
 
 interface ImportEmulatorOptions {
   importFrom: string,
@@ -145,15 +147,15 @@ export async function downloadProdDbBackup(localPath?: string) {
   }
   const cert = getServiceAccountObj(process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUNT);
 
-  const prodApp = admin.initializeApp(
+  const prodApp = initializeApp(
     {
       storageBucket: prodBackupBucket,
       projectId: prodFirebase().projectId,
-      credential: admin.credential.cert(cert),
+      credential: credential.cert(cert),
     },
     'production'
   );
-  const prodStorage = prodApp.storage();
+  const prodStorage = getStorage(prodApp);
   console.log('Production projectId: ', prodFirebase().projectId);
   console.log('Production backup bucket name: ', prodBackupBucket);
   const prodBackupBucketObj = prodStorage.bucket(prodBackupBucket);

@@ -1,7 +1,7 @@
 import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from "./utils";
 import { createNotification, triggerNotifications } from "../../notification";
 import { createDocumentMeta, createPublicInvitationDocument, getAdminIds, getDocument } from "../../data/internals";
-import * as admin from 'firebase-admin';
+import { getFirestore } from "firebase-admin/firestore";
 import {
   OrganizationDocument,
   EventDocument,
@@ -18,7 +18,7 @@ import {
  * Handles notifications and emails when an invitation to an event is created.
  */
 async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
-  const db = admin.firestore();
+  const db = getFirestore();
   if (!invitation.eventId) {
     console.log('eventId is not defined');
     return;
@@ -198,7 +198,7 @@ export async function createNotificationsForEventsToStart() {
 
 /** Fetch event collection with a start and an end range search */
 async function fetchEventStartingIn(from: number, to: number) {
-  const db = admin.firestore();
+  const db = getFirestore();
   return await db.collection('events')
     .where('start', '>=', new Date(Date.now() + from))
     .where('start', '<', new Date(Date.now() + to))
@@ -211,7 +211,7 @@ async function fetchEventStartingIn(from: number, to: number) {
  * @param pendingInvites Set true for invitations that are pending invites (not requests)
  */
 async function fetchAttendeesToEvent(collectionDocs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[], pendingInvites = false) {
-  const db = admin.firestore();
+  const db = getFirestore();
   const invitations: InvitationDocument[] = [];
 
   const docsIds: string[] = collectionDocs.map(doc => doc.data().id);
@@ -230,7 +230,7 @@ async function fetchAttendeesToEvent(collectionDocs: FirebaseFirestore.QueryDocu
  */
 async function createNotificationIfNotExists(invitations: InvitationDocument[], notificationType: NotificationTypes) {
   const notifications = [];
-  const db = admin.firestore();
+  const db = getFirestore();
 
   for (const invitation of invitations) {
     const toUserId = invitation.mode === 'request' ? invitation.fromUser.uid : invitation.toUser.uid;
@@ -261,7 +261,7 @@ async function createNotificationIfNotExists(invitations: InvitationDocument[], 
  * @param email
  */
 export async function isUserInvitedToEvent(userId: string, event: EventDocument<EventMeta>, email?: string) {
-  const db = admin.firestore();
+  const db = getFirestore();
 
   if (event.accessibility === 'public') return true;
 

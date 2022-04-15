@@ -1,6 +1,7 @@
 import { firebase } from 'env/env';
 import { firebase as firebaseProd } from 'env/env.blockframes';
-import * as admin from 'firebase-admin';
+import { App } from 'firebase-admin/app';
+import { getStorage } from 'firebase-admin/storage';
 import { gsutilTransfer } from './commands';
 import { getLatestDirName } from './anonymize';
 
@@ -11,14 +12,14 @@ export const latestAnonStorageDir = 'LATEST-ANON-STORAGE';
  * This method is
  * @deprecated
  */
-export async function restoreStorageFromCi(ciApp: admin.app.App) {
+export async function restoreStorageFromCi(ciApp: App) {
   if (
     firebase().storageBucket === 'blockframes.appspot.com' ||
     firebase().storageBucket === firebaseProd().storageBucket
   )
     throw Error('ABORT: YOU ARE TRYING TO RUN SCRIPT AGAINST PROD - THIS WILL DELETE STORAGE!!');
 
-    const ciStorage = ciApp.storage();
+    const ciStorage = getStorage(ciApp);
     const folderName = await getLatestDirName(ciStorage.bucket(CI_STORAGE_BACKUP))
     console.log('Latest backup:', folderName);
 

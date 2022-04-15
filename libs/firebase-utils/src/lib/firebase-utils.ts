@@ -1,4 +1,5 @@
-import * as admin from 'firebase-admin';
+import { getStorage } from 'firebase-admin/storage';
+import { getFirestore } from 'firebase-admin/firestore';
 import * as functions from 'firebase-functions';
 import { chunk } from "lodash";
 import * as env from '@env'
@@ -7,7 +8,7 @@ import { deconstructFilePath } from "@blockframes/utils/file-sanitizer";
 import { RuntimeOptions } from 'firebase-functions';
 
 export function getDocumentRef(path: string): Promise<FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>> {
-  const db = admin.firestore();
+  const db = getFirestore();
   return db.doc(path).get();
 }
 
@@ -16,7 +17,7 @@ export function getDocument<T>(path: string): Promise<T> {
 }
 
 export function getCollectionRef(path: string): Promise<FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>> {
-  const db = admin.firestore();
+  const db = getFirestore();
   return db.collection(path).get();
 }
 
@@ -28,7 +29,7 @@ export function getCollection<T>(path: string): Promise<T[]> {
  * @param fullPath the storage path of the file
  */
 export async function getDocAndPath(fullPath: string | undefined) {
-  const db = admin.firestore();
+  const db = getFirestore();
 
   const { collection, docPath, isTmp, privacy, field, filePath } = deconstructFilePath(fullPath)
 
@@ -127,7 +128,7 @@ export const heavyConfig: RuntimeOptions = {
 };
 
 export async function storageFileExist(path: string) {
-  const storage = admin.storage();
+  const storage = getStorage();
   const file = await storage.bucket().file(path);
 
   // for more info check

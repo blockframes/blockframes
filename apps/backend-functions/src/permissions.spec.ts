@@ -3,7 +3,7 @@ import { initFirestoreApp, permissionsFixtures } from '@blockframes/testing/unit
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { onDocumentPermissionCreateEvent, onPermissionDeleteEvent } from './main';
 import firebaseTest = require('firebase-functions-test');
-import * as admin from 'firebase-admin';
+import { getFirestore } from 'firebase-admin/firestore';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
 import { endMaintenance } from '@blockframes/firebase-utils';
@@ -11,7 +11,7 @@ import { endMaintenance } from '@blockframes/firebase-utils';
 const testEnv = firebaseTest(firebase());
 
 describe('Permissions backend-function unit-tests', () => {
-  const db = admin.firestore();
+  const db = getFirestore();
 
   beforeAll(async () => {
     await initFirestoreApp(firebase().projectId, 'firestore.test.rules', permissionsFixtures);

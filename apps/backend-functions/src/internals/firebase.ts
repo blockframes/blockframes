@@ -1,5 +1,4 @@
 ﻿import { region } from 'firebase-functions';
-import * as admin from 'firebase-admin';
 import { firebaseRegion } from '@env';
 export const functions = (config = defaultConfig) => region(firebaseRegion).runWith(config);
 import { backupBucket, storageBucket } from '../environments/environment';
@@ -7,15 +6,17 @@ import { isInMaintenance } from '@blockframes/firebase-utils/maintenance';
 import { defaultConfig } from '@blockframes/firebase-utils/firebase-utils';
 import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
 import { IMaintenanceDoc } from '@blockframes/model';
+import { getApps, initializeApp } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+import { getStorage } from 'firebase-admin/storage';
+import { getAuth } from 'firebase-admin/auth';
 
-if (!admin.apps.length) {
-  admin.initializeApp();
+if (!getApps().length) {
+  initializeApp();
 }
-export const db = admin.firestore();
-export const auth = admin.auth();
-export const storage = admin.storage();
-
-export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
+export const db = getFirestore();
+export const auth = getAuth();
+export const storage = getStorage();
 
 // @deprecated import vars from env directly instead of using this.
 export const getBackupBucketName = (): string => backupBucket;
@@ -26,7 +27,7 @@ export const getStorageBucketName = (): string => storageBucket;
  * Throws if the user does not exists.
  */
 export async function getUserMail(userId: string): Promise<string | undefined> {
-  const user = await admin.auth().getUser(userId);
+  const user = await getAuth().getUser(userId);
   return user.email;
 }
 

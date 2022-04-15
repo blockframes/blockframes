@@ -1,7 +1,7 @@
 
 import { get } from 'https';
 import { sign } from 'jsonwebtoken';
-import * as admin from 'firebase-admin';
+import { getStorage } from 'firebase-admin/storage';
 import { Request, Response } from 'firebase-functions';
 import { getStorageBucketName } from './internals/firebase';
 import { sendRequest } from '@blockframes/firebase-utils/node-request';
@@ -23,7 +23,7 @@ function fetchRedirect(url: string): Promise<string> {
 
 function transferFile(url: string, remoteFilePath: string) {
   return new Promise<void>((resolve, reject) => {
-    const bucket = admin.storage().bucket(getStorageBucketName());
+    const bucket = getStorage().bucket(getStorageBucketName());
     const storageFile =  bucket.file(remoteFilePath);
     const storageStream = storageFile.createWriteStream();
     get(url, res => {

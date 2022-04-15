@@ -1,5 +1,4 @@
 import { firebase } from '@env';
-import * as admin from 'firebase-admin';
 import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
 import { join, resolve, sep } from 'path';
@@ -8,6 +7,9 @@ import { getFirestoreExportDirname } from './export';
 import { sleep, throwOnProduction } from '../util';
 import { promises } from 'fs';
 import { set, camelCase } from 'lodash';
+import { initializeApp } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+import { getAuth } from 'firebase-admin/auth';
 const { writeFile, rename } = promises;
 
 const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
@@ -230,8 +232,8 @@ export function connectFirestoreEmulator() {
     process.env['FIRESTORE_EMULATOR_HOST'] = 'localhost:8080';
   }
 
-  const app = admin.initializeApp({ projectId: firebase().projectId }, 'firestore');
-  db = app.firestore() as FirebaseFirestore.Firestore;
+  const app = initializeApp({ projectId: firebase().projectId }, 'firestore');
+  db = getFirestore(app) as FirebaseFirestore.Firestore;
 
   db.settings({
     // port: dbPort,
@@ -258,8 +260,8 @@ export function connectAuthEmulator() {
   }
 
 
-  const app = admin.initializeApp({ projectId: firebase().projectId }, 'auth');
-  auth = app.auth();
+  const app = initializeApp({ projectId: firebase().projectId }, 'auth');
+  auth = getAuth(app);
 
   return auth;
 }

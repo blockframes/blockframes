@@ -52,7 +52,7 @@ import {
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
 import { App, applicationUrl, appName } from '@blockframes/utils/apps';
-import * as admin from 'firebase-admin';
+import { getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { appUrl, supportEmails } from './environments/environment';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
@@ -65,7 +65,7 @@ const eventAppKey: App = 'festival';
 
 /** Takes one or more notifications and add them on the notifications collection */
 export async function triggerNotifications(notifications: NotificationDocument[]) {
-  const db = admin.firestore();
+  const db = getFirestore();
   const batch = db.batch();
 
   for (const n of notifications) {
@@ -112,11 +112,9 @@ async function appendNotificationSettings(notification: NotificationDocument) {
   return notification;
 }
 
-
-
 /** Create a Notification with required and generic information. */
 export function createNotification(notification: Partial<NotificationDocument> = {}): NotificationDocument {
-  const db = admin.firestore();
+  const db = getFirestore();
   return {
     _meta: createDocumentMeta(),
     type: 'movieAccepted', // We need a default value for backend-function strict mode
@@ -311,7 +309,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
     }
 
-    const db = admin.firestore();
+    const db = getFirestore();
     await db.collection('notifications').doc(notification.id).set({ email: notification.email }, { merge: true });
   }
 }
@@ -728,10 +726,10 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
 // #7946 this may be reactivated later
 // async function sendOfferAcceptedOrDeclinedConfirmation(recipient: User, notification: NotificationDocument) { //to check
 //   const offer = await getDocument<Offer>(`offers/${notification.docId}`);
-//   const contractsSnap = await admin.firestore().collection('contracts').where('offerId', '==', offer.id).get();
+//   const contractsSnap = await getFirestore().collection('contracts').where('offerId', '==', offer.id).get();
 //   const contracts = contractsSnap.docs.map(doc => doc.data() as ContractDocument);
 //   const negotiationPromises = contracts.map(async contract => {
-//     const ref = admin.firestore().collection(`contracts/${contract.id}/negotiations`)
+//     const ref = getFirestore().collection(`contracts/${contract.id}/negotiations`)
 //       .orderBy('_meta.createdAt', 'desc').limit(1);
 //     const negoSnap = await ref.get();
 //     return negoSnap.docs[0]?.data() as NegotiationDocument;
@@ -755,7 +753,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
 
 // async function sendOfferUnderSignatureConfirmation(recipient: User, notification: NotificationDocument) {
 //   const contract = await getDocument<ContractDocument>(`contracts/${notification.docId}`);
-//   const ref = admin.firestore().collection(`contracts/${contract.id}/negotiations`)
+//   const ref = getFirestore().collection(`contracts/${contract.id}/negotiations`)
 //     .orderBy('_meta.createdAt', 'desc').limit(1);
 //   const negotiation = await ref.get().then(snap => snap.docs[0]?.data() as NegotiationDocument);
 //   const movie = await getDocument<MovieDocument>(`movies/${contract.titleId}`);

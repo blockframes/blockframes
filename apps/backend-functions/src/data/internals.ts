@@ -4,6 +4,7 @@
  * This code deals directly with the low level parts of firebase,
  */
 import * as admin from 'firebase-admin';
+import { getFirestore } from 'firebase-admin/firestore';
 import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { getDocument } from '@blockframes/firebase-utils/firebase-utils';
 import { createStorageFile, createDenomination, OrganizationDocument, PublicUser, InvitationDocument, PublicInvitation, PermissionsDocument, DocumentMeta } from '@blockframes/model';
@@ -53,7 +54,7 @@ export function createDocumentMeta(meta: Partial<DocumentMeta<any>> = {}): Docum
  * @returns the organizations that have movie id in organization.movieIds
  */
 export async function getOrganizationsOfMovie(movieId: string) {
-  const db = admin.firestore();
+  const db = getFirestore();
   const movie = await db.doc(`movies/${movieId}`).get();
   const orgIds = movie.data().orgIds;
   const promises = orgIds.map(id => db.doc(`orgs/${id}`).get())

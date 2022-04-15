@@ -1,4 +1,4 @@
-import * as admin from 'firebase-admin';
+import { getAuth, UserRecord } from 'firebase-admin/auth';
 import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
@@ -18,7 +18,6 @@ import { registerToNewsletters, updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 import { ErrorResultResponse } from './utils';
 
-type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
 interface EmailFlowData { email: string, app: App, publicUser: PublicUser }
@@ -30,7 +29,7 @@ export const startVerifyEmailFlow = async (data: EmailFlowData) => {
     throw new Error('email is a mandatory parameter for the "sendVerifyEmailAddress()" function');
   }
 
-  const verifyLink = await admin.auth().generateEmailVerificationLink(email);
+  const verifyLink = await getAuth().generateEmailVerificationLink(email);
   try {
     const user = getUserEmailData(publicUser);
     const template = userVerifyEmail(email, user, verifyLink);
@@ -49,7 +48,7 @@ export const startAccountCreationEmailFlow = async (data: EmailFlowData) => {
   }
 
   try {
-    const verifyLink = await admin.auth().generateEmailVerificationLink(email);
+    const verifyLink = await getAuth().generateEmailVerificationLink(email);
     const template = accountCreationEmail(email, verifyLink, user);
     await sendMailFromTemplate(template, app);
   } catch (e) {
@@ -66,7 +65,7 @@ export const startResetPasswordEmail = async (data: EmailFlowData): Promise<Erro
   }
 
   try {
-    const resetLink = await admin.auth().generatePasswordResetLink(email);
+    const resetLink = await getAuth().generatePasswordResetLink(email);
     const template = userResetPassword(email, resetLink, app);
     await sendMailFromTemplate(template, app);
     return {
@@ -169,7 +168,7 @@ async function initUser(user: PublicUser) {
   const promises = [sendFirstConnexionEmail(user)];
 
   if (user._meta?.createdBy === 'anonymous' && user.email) {
-    const authUser = await admin.auth().getUser(user.uid);
+    const authUser = await getAuth().getUser(user.uid);
     if (!authUser.emailVerified) {
       promises.push(startAccountCreationEmailFlow({ email: user.email, publicUser: user, app: user._meta.createdFrom }));
     }
@@ -186,7 +185,7 @@ export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnaps
   deleteObject(algolia.indexNameUsers, userSnapshot.id);
 
   // delete user
-  admin.auth().deleteUser(user.uid);
+  getAuth().deleteUser(user.uid);
 
   await cleanUserMedias(user);
 
@@ -306,7 +305,7 @@ export const verifyEmail = async (data: { uid: string }, context: CallableContex
   }
 
   try {
-    await admin.auth().updateUser(uid, { emailVerified: true });
+    await getAuth().updateUser(uid, { emailVerified: true });
 
     const { _meta } = await getDocument<PublicUser>(`users/${uid}`);
     _meta.emailVerified = true;
