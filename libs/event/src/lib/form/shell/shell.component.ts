@@ -12,7 +12,7 @@ import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/snackbar-error.component';
-import { WarningModalComponent } from '@blockframes/ui/modal/warning/warning.component';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
 const statisticsTab = { path: 'statistics', label: 'Statistics' };
 
@@ -111,11 +111,11 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   }
 
   async remove() {
-    this.dialog.open(WarningModalComponent, {
+    this.dialog.open(ConfirmComponent, {
       data: {
         title: 'Are you sure to delete this event?',
-        text: 'If you\'ve already sent out invites, please note that the invitation emails were already sent and cannot be taken back.',
-        secondaryText: 'You might want to contact the people concerned to let them know that this event won\'t be happening.',
+        question: 'If you\'ve already sent out invites, please note that the invitation emails were already sent and cannot be taken back.',
+        advice: 'You might want to contact the people concerned to let them know that this event won\'t be happening.',
         confirm: 'Yes, delete',
         cancel: 'Go back to editing',
         onConfirm: () => {
@@ -133,11 +133,11 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       return true;
     }
 
-    const dialogRef = this.dialog.open(WarningModalComponent, {
+    const dialogRef = this.dialog.open(ConfirmComponent, {
       data: {
         title: 'You are about to leave the form.',
-        text: 'Some changes have not been saved.',
-        secondaryText: 'If you leave now, you will lose these changes.',
+        question: 'Some changes have not been saved.',
+        advice: 'If you leave now, you will lose these changes.',
         confirm: 'Save & Exit',
         cancel: 'Close without saving'
       },
