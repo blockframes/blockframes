@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WarningModalComponent } from './warning/warning.component';
-import { FormModalComponent } from './form/form.component';
-import { InformativeModalComponent } from './informative/informative.component';
+import { GlobalModalComponent } from './modal.component';
 import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,28 +9,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { FilePickerModule } from '@blockframes/media/file/picker/picker.module';
 import { PreferenceModule } from '@blockframes/auth/pages/preferences/modal/preferences.module';
 import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
+import { CookieFormModule } from '@blockframes/utils/gdpr-cookie/cookie-form/cookie-form.module';
 
 @NgModule({
   declarations: [
-    WarningModalComponent,
-    FormModalComponent,
-    InformativeModalComponent
+    GlobalModalComponent
   ],
   imports: [
     CommonModule,
     MatIconModule,
     MatButtonModule,
     FlexLayoutModule,
-
-    FilePickerModule,
-    PreferenceModule,
-    ConfirmInputModule
   ],
   exports: [
-    WarningModalComponent,
-    FormModalComponent,
-    InformativeModalComponent
+    GlobalModalComponent
   ]
 })
 
-export class ModalModule { }
+export class GlobalModalModule { }

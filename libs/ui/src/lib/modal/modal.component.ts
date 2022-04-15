@@ -14,7 +14,7 @@ interface FormData {
   onConfirm?: () => void
 }
 
-export type View = 'FilePicker' | 'AuthPreferences' | 'ConfirmInput';
+export type View = 'FilePicker' | 'AuthPreferences' | 'ConfirmInput' | 'CookieForm';
 
 interface Data {
   view: View,
@@ -23,17 +23,17 @@ interface Data {
 }
 
 @Component({
-  selector: 'form-modal',
-  templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss'],
+  selector: 'global-modal',
+  templateUrl: './modal.component.html',
+  styleUrls: ['./modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormModalComponent {
+export class GlobalModalComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: Data,
-    public dialogRef: MatDialogRef<FormModalComponent>,
+    public dialogRef: MatDialogRef<GlobalModalComponent>,
   ) { }
 
   public confirm() {
