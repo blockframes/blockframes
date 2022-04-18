@@ -11,7 +11,7 @@ import {
   unknownEntityError,
   getOptionalWarning,
 } from '@blockframes/import/utils';
-import { extract, ExtractConfig, ExtractConfigSimple, SheetTab } from '@blockframes/utils/spreadsheet';
+import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import {
   LanguageRecord,
@@ -135,7 +135,7 @@ interface FieldsConfig {
 }
 
 // type FieldsConfigType = ExtractConfig<FieldsConfig>;
-type FieldsConfigType = ExtractConfigSimple<FieldsConfig>;
+type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
 export async function formatTitle(
   sheetTab: SheetTab,

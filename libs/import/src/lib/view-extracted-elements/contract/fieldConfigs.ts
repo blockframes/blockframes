@@ -1,6 +1,6 @@
 import { ContractService } from "@blockframes/contract/contract/+state/contract.service";
 import { adminOnlyWarning, alreadyExistError, BaseImportError, checkParentTerm, exceptionCaughtError, getContract, getOrgId, getTitleId, getUser, ImportError, mandatoryError, unknownEntityError, unusedMandateIdWarning, wrongValueError } from "@blockframes/import/utils";
-import { ExtractConfig, getStaticList, getGroupedList, ExtractConfigSimple } from '@blockframes/utils/spreadsheet';
+import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import { ContractStatus, ImportContractStatus, Language, Mandate, Media, Movie, Sale, Territory, User } from "@blockframes/model";
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { OrganizationService } from "@blockframes/organization/+state";
@@ -42,7 +42,7 @@ export interface FieldsConfig {
   _titleId?: string;
 }
 
-export type FieldsConfigType = ExtractConfigSimple<FieldsConfig>;
+export type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
 export interface Caches {
   orgNameCache: Record<string, string>,

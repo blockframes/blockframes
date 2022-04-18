@@ -1,7 +1,7 @@
 
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 import { GetKeys, GroupScope, StaticGroup, staticGroups, parseToAll, Scope } from '@blockframes/model';
-import { exceptionCaughtError, ImportError, mandatoryError, SpreadsheetImportError, wrongValueWarning } from 'libs/import/src/lib/utils';
+import { mandatoryError, SpreadsheetImportError, wrongValueWarning } from 'libs/import/src/lib/utils';
 import { getKeyIfExists } from '../helpers';
 
 type Matrix = any[][]; // @todo find better type
@@ -35,24 +35,18 @@ type DeepValue<T, K> =
   : K extends `${infer I}[]` ? I extends keyof T ? T[I] extends Array<infer Y> ? Y : T[I] : never
   : K extends keyof T ? T[K] : never;
 
-type ValueOrError<T, K> = DeepValue<T, K> | ValueWithError<DeepValue<T, K>>;
-type ValueOrErrorSimple<T, K> = DeepValue<T, K>;
+type ValueOrError<T, K> = DeepValue<T, K>;
 
 export type ParseFieldFn<T, K> = (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
   ValueOrError<T, K> |
   Promise<ValueOrError<T, K>>
   ;
 
+
 export type ExtractConfig<T> = Partial<{
   [key in DeepKeys<T>]: (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
     ValueOrError<T, key> |
     Promise<ValueOrError<T, key>>;
-}>
-
-export type ExtractConfigSimple<T> = Partial<{
-  [key in DeepKeys<T>]: (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
-    ValueOrErrorSimple<T, key> |
-    Promise<ValueOrErrorSimple<T, key>>;
 }>
 
 export interface ExtractOutput<T> {
@@ -149,7 +143,7 @@ export async function parse<T>(
           }
         } catch (err) {
           //@continue from here: Importing seller warning file causes an uninformative titleError.
-          console.log({err})
+          console.log({ err })
           return errors.push(err);
         }
       } else {
