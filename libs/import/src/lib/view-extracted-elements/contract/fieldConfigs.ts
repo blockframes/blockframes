@@ -1,6 +1,6 @@
 import { ContractService } from "@blockframes/contract/contract/+state/contract.service";
-import { adminOnlyWarning, alreadyExistError, checkParentTerm, getContract, getOrgId, getTitleId, getUser, mandatoryError, unknownEntityError, wrongValueError } from "@blockframes/import/utils";
-import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
+import { adminOnlyWarning, alreadyExistError, BaseImportError, checkParentTerm, exceptionCaughtError, getContract, getOrgId, getTitleId, getUser, ImportError, mandatoryError, unknownEntityError, unusedMandateIdWarning, wrongValueError } from "@blockframes/import/utils";
+import { ExtractConfig, getStaticList, getGroupedList, ExtractConfigSimple } from '@blockframes/utils/spreadsheet';
 import { ContractStatus, ImportContractStatus, Language, Mandate, Media, Movie, Sale, Territory, User } from "@blockframes/model";
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { OrganizationService } from "@blockframes/organization/+state";
@@ -42,7 +42,7 @@ export interface FieldsConfig {
   _titleId?: string;
 }
 
-export type FieldsConfigType = ExtractConfig<FieldsConfig>;
+export type FieldsConfigType = ExtractConfigSimple<FieldsConfig>;
 
 export interface Caches {
   orgNameCache: Record<string, string>,
@@ -70,135 +70,109 @@ export function getContractConfig(
     contractCache
   } = caches;
 
-  const getContractTitleId = async (value: string) => {
-    if (!value) return mandatoryError('Title');
-    try {
-      const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, blockframesAdmin);
-
-      return titleId || unknownEntityError<string>('Title');
-    } catch (err) {
-      return {
-        value: undefined,
-        error: {
-          type: 'error',
-          name: 'Error on title name or ID',
-          reason: '',
-          hint: err.message,
-        }
-      };
-    }
-
-  };
 
   function getAdminConfig(): FieldsConfigType {
 
     // ! The order of the property should be the same as excel columns
     return {
-        /* a */ 'contract.titleId': getContractTitleId,
+        /* a */ 'contract.titleId': async (value: string) => {
+        if (!value) {
+          throw mandatoryError('Title');
+        }
+        const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, blockframesAdmin);
+        if (titleId) return titleId;
+        throw unknownEntityError<string>('name or ID');
+      },
         /* b */ 'contract.type': (value: string) => {
         const lower = value.toLowerCase();
-        if (!lower) return mandatoryError('Type');
+        if (!lower) throw mandatoryError('Type');
         const type = getKeyIfExists('contractType', lower[0].toUpperCase() + lower.substr(1));
-        if (!type) return wrongValueError('Type');
-        if (type === 'mandate' && !blockframesAdmin) return {
-          value: undefined,
-          error: {
-            type: 'error',
+        if (!type) throw wrongValueError('Type');
+        if (type === 'mandate' && !blockframesAdmin) {
+          const option = {
             name: 'Forbidden Type',
             reason: 'Only admin can import mandates.',
-            hint: 'Please ensure the corresponding sheet field value is "sale".'
-          }
+            message: 'Please ensure the corresponding sheet field value is "sale".',
+            value,
+          } as const;
+          throw ImportError.newError(option);
         };
         return lower.toLowerCase() as 'mandate' | 'sale';
       },
         /* c */ 'contract.sellerId': async (value: string) => {
-        if (!value) return mandatoryError('Licensor');
+        if (!value) throw mandatoryError('Licensor');
         if (value === 'Archipel Content' || value === centralOrgId.catalog) {
-          if (!blockframesAdmin)
-            return {
-              value: undefined,
-              error: {
-                type: 'error',
-                name: 'Forbidden Licensor',
-                reason:
-                  'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
-                hint:
-                  'Please ensure that the Licensor name is not "Archipel Content". Only admin can import internal sales.',
-              },
+          if (!blockframesAdmin) {
+            const option: BaseImportError<string> = {
+              name: 'Forbidden Licensor',
+              reason: 'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
+              message: 'Please ensure that the Licensor name is not "Archipel Content". Only admin can import internal sales.',
+              value,
             };
+            throw ImportError.newError(option)
+          };
           return centralOrgId.catalog;
         } else {
           let sellerId = await getOrgId(value, orgService, orgNameCache);
           if (!sellerId) {
             const seller = await orgService.getValue(value);
-            if (!seller) return unknownEntityError('Licensor Organization');
+            if (!seller) throw unknownEntityError('Licensor Organization');
             return sellerId = value;
           }
-          if (!blockframesAdmin && sellerId !== userOrgId) return {
-            value: undefined,
-            error: {
-              type: 'error',
+          if (!blockframesAdmin && sellerId !== userOrgId) {
+            const option = {
               name: 'Forbidden Licensor',
               reason: 'You should be the seller of this contract. The Licensor name should be your organization name.',
-              hint: 'Please edit the corresponding sheet field'
-            }
+              message: 'Please edit the corresponding sheet field',
+              value,
+            } as const;
+            throw ImportError.newError(option);
           };
           return sellerId;
         }
       },
         /* d */ 'contract.buyerId': async (value: string, data: FieldsConfig) => {
         if (data.contract.type === 'mandate') {
-          if (!value) return mandatoryError('Licensee');
-          if (value !== 'Archipel Content' && value !== centralOrgId.catalog) return {
-            value: undefined,
-            error: {
-              type: 'error',
+          if (!value) throw mandatoryError('Licensee');
+          if (value !== 'Archipel Content' && value !== centralOrgId.catalog) {
+            const option: BaseImportError<string> = {
               name: 'Forbidden Licensee',
               reason: 'The Licensee name of a mandate must be "Archipel Content".',
-              hint: 'Please edit the corresponding sheet field'
-            }
-          };
+              value,
+              message: 'Please edit the corresponding sheet field',
+            };
+            throw ImportError.newError(option)
+          }
           return centralOrgId.catalog;
-        } else {
-          /**
-          * @todo #8075
-          * if (!value) return '';
-          * const isInternal = data.contract.sellerId === centralOrgId.catalog;
-          * let buyerId = await getOrgId(value, orgService, orgNameCache);
-          * if (buyerId) return buyerId;
-          * const title = await titleService.getValue(value);
-          * if (!buyerId && title) buyerId = value;
-          * if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
-          */
-          return '';
         }
+        return '';
       },
         /* e */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
         /* f */ 'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
         /* g */ 'term[].medias': (value: string) => getGroupedList(value, 'medias', separator),
         /* h */ 'term[].exclusive': (value: string) => {
         const lower = value.toLowerCase();
-        if (!lower) return mandatoryError('Exclusive');
-        if (lower !== 'yes' && lower !== 'no') return wrongValueError('Exclusive');
+        if (!lower) throw mandatoryError('Exclusive');
+        if (lower !== 'yes' && lower !== 'no') throw wrongValueError('Exclusive');
         return lower === 'yes';
       },
         /* i */ 'term[].duration.from': (value: string) => {
-        if (!value) return mandatoryError('Duration From');
+        if (!value) throw mandatoryError('Duration From');
         return getDate(value, 'Start of Contract') as Date;
       },
         /* j */ 'term[].duration.to': (value: string) => {
-        if (!value) return mandatoryError('Duration To');
+        if (!value) throw mandatoryError('Duration To');
         return getDate(value, 'End of Contract') as Date;
       },
 
         /* k */ 'term[].licensedOriginal': (value: string) => {
         const lower = value.toLowerCase();
-        if (!lower) return mandatoryError('Licensed Original');
-        if (lower !== 'yes' && lower !== 'no') return wrongValueError('Licensed Original');
+        if (!lower) throw mandatoryError('Licensed Original');
+        if (lower !== 'yes' && lower !== 'no') throw wrongValueError('Licensed Original');
         return lower === 'yes';
       },
         /* l */ 'contract.status': (value: string) => {
-        if (!value) return mandatoryError('Status');
+        if (!value) throw mandatoryError('Status');
         const statusCorrespondences: Record<ImportContractStatus, ContractStatus> = {
           'In Negotiation': 'negotiating',
           'Accepted': 'accepted',
@@ -213,54 +187,27 @@ export function getContractConfig(
         /* o */ 'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
 
         /* p */ 'contract.id': async (value: string) => {
-        if (value && !blockframesAdmin) return adminOnlyWarning(doc(collection(firestore, '_')).id, 'Contract ID');
+        if (value && !blockframesAdmin) throw adminOnlyWarning(doc(collection(firestore, '_')).id, 'Contract ID');
         if (!value) return doc(collection(firestore, '_')).id;
         const exist = await getContract(value, contractService, contractCache);
-        if (exist) return alreadyExistError('Contract ID');
+        if (exist) throw alreadyExistError('Contract ID');
         return value;
       },
         /* q */ 'parentTerm': async (value: string, data: FieldsConfig) => {
-        if (value && !blockframesAdmin) return adminOnlyWarning('', 'Mandate ID/Row');
+        if (value && !blockframesAdmin) throw adminOnlyWarning('', 'Mandate ID/Row');
         if (value && data.contract.type === 'mandate')
-          return {
-            value: '',
-            error: {
-              type: 'warning',
-              field: 'parentTerm',
-              name: 'Unused Mandate ID/Row',
-              reason:
-                'Mandate ID is used only for sales contracts, here the value will be omitted because the contract is a mandate.',
-              hint: 'Remove the corresponding sheet field to silence this warning.',
-            },
-          };
+          throw unusedMandateIdWarning(value);
         if (
           !value &&
           data.contract.type === 'sale' &&
           data.contract.sellerId === centralOrgId.catalog
         ) {
-          return mandatoryError('Mandate ID/Row');
-        }
-        if (
-          value &&
-          data.contract.type === 'sale' &&
-          data.contract.sellerId !== centralOrgId.catalog
-        ) {
-          return {
-            value: '',
-            error: {
-              type: 'warning',
-              field: 'parentTerm',
-              name: 'Unused Mandate ID/Row',
-              reason:
-                'Mandate ID is used only for internal sales, here the value will be omitted because the sale is external.',
-              hint: 'Remove the corresponding sheet field to silence this warning.',
-            },
-          };
+          throw mandatoryError('Mandate ID/Row');
         }
         const isId = isNaN(Number(value));
         if (isId) {
           const exist = await checkParentTerm(value, contractService, contractCache);
-          if (!exist) return unknownEntityError('Mandate ID');
+          if (!exist) throw unknownEntityError('Mandate ID');
           return value;
         } else return Number(value);
       },
@@ -268,7 +215,7 @@ export function getContractConfig(
         const stakeholders = value.split(separator).filter(v => !!v).map(v => v.trim());
         const exists = await Promise.all(stakeholders.map(id => getUser({ id }, userService, userCache)));
         const unknownStakeholder = exists.some(e => !e);
-        if (unknownStakeholder) return unknownEntityError('Stakeholders');
+        if (unknownStakeholder) throw unknownEntityError('Stakeholders');
         if (data.contract.type === 'mandate') {
           return [data.contract.buyerId, data.contract.sellerId, ...stakeholders];
         } else {
@@ -290,95 +237,97 @@ export function getContractConfig(
     // ! The order of the property should be the same as excel columns
     return {
       //@Continue from here
-        /* a */ 'contract.titleId': getContractTitleId,
+        /* a */ 'contract.titleId': async (value: string) => {
+        if (!value) throw mandatoryError('Title');
+        try {
+          const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, blockframesAdmin);
+          if (!titleId) throw unknownEntityError<string>('Title');
+          return titleId;
+        } catch (err) {
+          const options = {
+            name: 'Error on title name or ID',
+            message: err.message,
+            type: 'error',
+            value,
+          } as const;
+          throw exceptionCaughtError(options);
+        }
+
+      },
         /* b */ 'contract.sellerId': async (value: string) => {
-        if (!value) return mandatoryError('Licensor');
+        if (!value) throw mandatoryError('Licensor');
         if (value === 'Archipel Content' || value === centralOrgId.catalog) {
-          if (!blockframesAdmin)
-            return {
-              value: undefined,
-              error: {
-                type: 'error',
-                name: 'Forbidden Licensor',
-                reason:
-                  'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
-                hint:
-                  'Please ensure that the Licensor name is not "Archipel Content". Only admin can import internal sales.',
-              },
+          if (!blockframesAdmin) {
+            const option: BaseImportError<string> = {
+              name: 'Forbidden Licensor',
+              reason: 'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
+              message: 'Please ensure that the Licensor name is not "Archipel Content". Only admin can import internal sales.',
+              value,
             };
+            throw ImportError.newError(option);
+          }
           return centralOrgId.catalog;
         } else {
           let sellerId = await getOrgId(value, orgService, orgNameCache);
           if (!sellerId) {
             const seller = await orgService.getValue(value);
-            if (!seller) return unknownEntityError('Licensor Organization');
+            if (!seller) throw unknownEntityError('Licensor Organization');
             return sellerId = value;
           }
-          if (!blockframesAdmin && sellerId !== userOrgId) return {
-            value: undefined,
-            error: {
-              type: 'error',
+          if (!blockframesAdmin && sellerId !== userOrgId) {
+            const option: BaseImportError<string> = {
               name: 'Forbidden Licensor',
               reason: 'You should be the seller of this contract. The Licensor name should be your organization name.',
-              hint: 'Please edit the corresponding sheet field'
-            }
+              message: 'Please edit the corresponding sheet field',
+              value,
+            };
+            throw ImportError.newError(option);
           };
           return sellerId;
         }
       },
         /* c */ 'contract.buyerId': async (value: string, data: FieldsConfig) => {
         if (data.contract.type === 'mandate') {
-          if (!value) return mandatoryError('Licensee');
-          if (value !== 'Archipel Content' && value !== centralOrgId.catalog) return {
-            value: undefined,
-            error: {
-              type: 'error',
+          if (!value) throw mandatoryError('Licensee');
+          if (value !== 'Archipel Content' && value !== centralOrgId.catalog) {
+            const option: BaseImportError<string> = {
               name: 'Forbidden Licensee',
               reason: 'The Licensee name of a mandate must be "Archipel Content".',
-              hint: 'Please edit the corresponding sheet field'
-            }
-          };
+              message: 'Please edit the corresponding sheet field',
+              value,
+            };
+            throw ImportError.newError(option);
+          }
           return centralOrgId.catalog;
-        } else {
-          /**
-          * @todo #8075
-          * if (!value) return '';
-          * const isInternal = data.contract.sellerId === centralOrgId.catalog;
-          * let buyerId = await getOrgId(value, orgService, orgNameCache);
-          * if (buyerId) return buyerId;
-          * const title = await titleService.getValue(value);
-          * if (!buyerId && title) buyerId = value;
-          * if (isInternal && !buyerId) return unknownEntityError('Licensee Organization');
-          */
-          return '';
         }
+        return '';
       },
         /* d */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
         /* e */ 'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
         /* f */ 'term[].medias': (value: string) => getGroupedList(value, 'medias', separator),
         /* g */ 'term[].exclusive': (value: string) => {
         const lower = value.toLowerCase();
-        if (!lower) return mandatoryError('Exclusive');
-        if (lower !== 'yes' && lower !== 'no') return wrongValueError('Exclusive');
+        if (!lower) throw mandatoryError('Exclusive');
+        if (lower !== 'yes' && lower !== 'no') throw wrongValueError('Exclusive');
         return lower === 'yes';
       },
         /* h */ 'term[].duration.from': (value: string) => {
-        if (!value) return mandatoryError('Duration From');
+        if (!value) throw mandatoryError('Duration From');
         return getDate(value, 'Start of Contract') as Date;
       },
         /* i */ 'term[].duration.to': (value: string) => {
-        if (!value) return mandatoryError('Duration To');
+        if (!value) throw mandatoryError('Duration To');
         return getDate(value, 'End of Contract') as Date;
       },
 
         /* j */ 'term[].licensedOriginal': (value: string) => {
         const lower = value.toLowerCase();
-        if (!lower) return mandatoryError('Licensed Original');
-        if (lower !== 'yes' && lower !== 'no') return wrongValueError('Licensed Original');
+        if (!lower) throw mandatoryError('Licensed Original');
+        if (lower !== 'yes' && lower !== 'no') throw wrongValueError('Licensed Original');
         return lower === 'yes';
       },
         /* k */ 'contract.status': (value: string) => {
-        if (!value) return mandatoryError('Status');
+        if (!value) throw mandatoryError('Status');
         const statusCorrespondences: Record<ImportContractStatus, ContractStatus> = {
           'In Negotiation': 'negotiating',
           'Accepted': 'accepted',
@@ -393,54 +342,25 @@ export function getContractConfig(
         /* n */ 'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
 
         /* o */ 'contract.id': async (value: string) => {
-        if (value && !blockframesAdmin) return adminOnlyWarning(doc(collection(firestore, '_')).id, 'Contract ID');
+        if (value && !blockframesAdmin) throw adminOnlyWarning(doc(collection(firestore, '_')).id, 'Contract ID');
         if (!value) return doc(collection(firestore, '_')).id;
         const exist = await getContract(value, contractService, contractCache);
-        if (exist) return alreadyExistError('Contract ID');
+        if (exist) throw alreadyExistError('Contract ID');
         return value;
       },
         /* p */ 'parentTerm': async (value: string, data: FieldsConfig) => {
-        if (value && !blockframesAdmin) return adminOnlyWarning('', 'Mandate ID/Row');
-        if (value && data.contract.type === 'mandate')
-          return {
-            value: '',
-            error: {
-              type: 'warning',
-              field: 'parentTerm',
-              name: 'Unused Mandate ID/Row',
-              reason:
-                'Mandate ID is used only for sales contracts, here the value will be omitted because the contract is a mandate.',
-              hint: 'Remove the corresponding sheet field to silence this warning.',
-            },
-          };
+        if (value && !blockframesAdmin) throw adminOnlyWarning('', 'Mandate ID/Row');
         if (
           !value &&
           data.contract.type === 'sale' &&
           data.contract.sellerId === centralOrgId.catalog
         ) {
-          return mandatoryError('Mandate ID/Row');
-        }
-        if (
-          value &&
-          data.contract.type === 'sale' &&
-          data.contract.sellerId !== centralOrgId.catalog
-        ) {
-          return {
-            value: '',
-            error: {
-              type: 'warning',
-              field: 'parentTerm',
-              name: 'Unused Mandate ID/Row',
-              reason:
-                'Mandate ID is used only for internal sales, here the value will be omitted because the sale is external.',
-              hint: 'Remove the corresponding sheet field to silence this warning.',
-            },
-          };
+          throw mandatoryError('Mandate ID/Row');
         }
         const isId = isNaN(Number(value));
         if (isId) {
           const exist = await checkParentTerm(value, contractService, contractCache);
-          if (!exist) return unknownEntityError('Mandate ID');
+          if (!exist) throw unknownEntityError('Mandate ID');
           return value;
         } else return Number(value);
       },
@@ -448,7 +368,7 @@ export function getContractConfig(
         const stakeholders = value.split(separator).filter(v => !!v).map(v => v.trim());
         const exists = await Promise.all(stakeholders.map(id => getUser({ id }, userService, userCache)));
         const unknownStakeholder = exists.some(e => !e);
-        if (unknownStakeholder) return unknownEntityError('Stakeholders');
+        if (unknownStakeholder) throw unknownEntityError('Stakeholders');
         if (data.contract.type === 'mandate') {
           return [data.contract.buyerId, data.contract.sellerId, ...stakeholders];
         } else {

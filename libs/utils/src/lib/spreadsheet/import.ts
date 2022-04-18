@@ -1,11 +1,12 @@
 
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 import { GetKeys, GroupScope, StaticGroup, staticGroups, parseToAll, Scope } from '@blockframes/model';
-import { mandatoryError, SpreadsheetImportError } from 'libs/import/src/lib/utils';
+import { exceptionCaughtError, ImportError, mandatoryError, SpreadsheetImportError, wrongValueWarning } from 'libs/import/src/lib/utils';
 import { getKeyIfExists } from '../helpers';
 
 type Matrix = any[][]; // @todo find better type
 
+export type FromStaticSimple<S extends Scope> = GetKeys<S>[];
 export type FromStatic<S extends Scope> = GetKeys<S>[] | ValueWithError<GetKeys<S>[]>;
 export interface SheetTab {
   name: string;
@@ -35,15 +36,23 @@ type DeepValue<T, K> =
   : K extends keyof T ? T[K] : never;
 
 type ValueOrError<T, K> = DeepValue<T, K> | ValueWithError<DeepValue<T, K>>;
+type ValueOrErrorSimple<T, K> = DeepValue<T, K>;
 
 export type ParseFieldFn<T, K> = (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
   ValueOrError<T, K> |
   Promise<ValueOrError<T, K>>
   ;
+
 export type ExtractConfig<T> = Partial<{
   [key in DeepKeys<T>]: (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
     ValueOrError<T, key> |
     Promise<ValueOrError<T, key>>;
+}>
+
+export type ExtractConfigSimple<T> = Partial<{
+  [key in DeepKeys<T>]: (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
+    ValueOrErrorSimple<T, key> |
+    Promise<ValueOrErrorSimple<T, key>>;
 }>
 
 export interface ExtractOutput<T> {
@@ -99,7 +108,13 @@ export async function parse<T>(
       const field = segment.replace('[]', '');
       const value = Array.isArray(values) ? values : [values];
       if (last) {
-        const promises = value.map(v => transform(v, entity, state, rowIndex));
+        const promises = value.map(v => {
+          try {
+            return transform(v, entity, state, rowIndex)
+          } catch (err) {
+            return Promise.resolve(err);
+          }
+        });
         const results = await Promise.all(promises);
 
         const validResults = results.filter(r => !isValueWithError(r));
@@ -114,18 +129,28 @@ export async function parse<T>(
         if (!item[field]) item[field] = new Array(value.length).fill(null).map(() => ({}));
         for (let index = 0; index < value.length; index++) {
           // Filling in objects into above created array
-          await parse(state, entity, item[field][index], value[index], segments.join('.'), transform, rowIndex, errors);
+          try {
+            await parse(state, entity, item[field][index], value[index], segments.join('.'), transform, rowIndex, errors);
+          } catch (err) {
+            return Promise.resolve(err);
+          }
         }
       }
     } else {
       const value = Array.isArray(values) ? values[0] : values;
       if (last) {
-        const result = await transform((`${value ?? ''}`).trim(), entity, state, rowIndex);
-        if (isValueWithError(result)) {
-          errors.push(result.error);
-          item[segment] = result.value;
-        } else {
-          item[segment] = result;
+        try {
+          const result = await transform((`${value ?? ''}`).trim(), entity, state, rowIndex);
+          if (isValueWithError(result)) {
+            errors.push(result.error);
+            item[segment] = result.value;
+          } else {
+            item[segment] = result;
+          }
+        } catch (err) {
+          //@continue from here: Importing seller warning file causes an uninformative titleError.
+          console.log({err})
+          return errors.push(err);
         }
       } else {
         if (!item[segment]) item[segment] = {};
@@ -133,11 +158,12 @@ export async function parse<T>(
       }
     }
   } catch (err) {
+    console.log({ err })
     errors.push({
       type: 'error',
       name: 'Unexpected Error',
-      reason: `An unexpected error as happened, please try again, and contact us if you keep seeing this. (${path})`,
-      hint: err,
+      reason: `An unexpected error has happened, please try again, and contact us if you keep seeing this. (${path})`,
+      message: err,
     });
   }
 }
@@ -145,6 +171,10 @@ export async function parse<T>(
 export interface ValueWithError<T = unknown> {
   value: T;
   error: SpreadsheetImportError;
+}
+
+export interface ValueWithErrorSimple<T = unknown> extends SpreadsheetImportError {
+  value: T;
 }
 
 function isValueWithError(o: unknown): o is ValueWithError {
@@ -213,7 +243,7 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
   return results;
 }
 
-export function getStatic<S extends Scope>(scope: S, value: string, separator: string, name: string, allKey = 'all'): FromStatic<S> {
+export function getStatic<S extends Scope>(scope: S, value: string, separator: string, name: string, allKey = 'all'): FromStaticSimple<S> {
   if (!value) return [] as GetKeys<S>[];
   if (value.toLowerCase() === allKey) return parseToAll(scope, allKey);
   const splitted = split(value, separator);
@@ -221,14 +251,7 @@ export function getStatic<S extends Scope>(scope: S, value: string, separator: s
   const values = keys.filter(v => !!v);
   if (values.length === keys.length) return values;
   const wrongData = splitted.filter(v => !v);
-  if (wrongData.length) return {
-    value: values, error: {
-      type: 'warning',
-      name: `Wrong ${name}`,
-      reason: `Be careful, ${wrongData.length} values were wrong and will be omitted.`,
-      hint: `${wrongData.slice(0, 3).join(', ')}...`
-    }
-  };
+  if (wrongData.length) throw wrongValueWarning(values, name, wrongData);
   return values as GetKeys<S>[];
 }
 
@@ -237,9 +260,9 @@ const isValueError = <S extends Scope>(values: FromStatic<S>): values is ValueWi
     || (values as ValueWithError<GetKeys<S>[]>).value?.length === 0
 }
 
-export function getStaticList<S extends Scope>(scope: S, value: string, separator: string, name: string, mandatory = true, allKey = 'all'): FromStatic<S> {
+export function getStaticList<S extends Scope>(scope: S, value: string, separator: string, name: string, mandatory = true, allKey = 'all'): FromStaticSimple<S> {
   const values = getStatic(scope, value, separator, name, allKey);
-  if (mandatory && isValueError(values)) return mandatoryError<GetKeys<S>[]>(name);
+  if (mandatory && isValueError(values)) throw mandatoryError<GetKeys<S>[]>(name);
   return values;
 }
 
@@ -248,8 +271,8 @@ const fromGroup = {
   medias: (medias, separator, required: boolean) => getStaticList('medias', medias, separator, 'Medias', required, 'all'),
 }
 
-export function getGroupedList(value: string, groupScope: 'territories', separator: string, options?: GroupedListOptions): FromStatic<'territories'>;
-export function getGroupedList(value: string, groupScope: 'medias', separator: string, options?: GroupedListOptions): FromStatic<'medias'>;
+export function getGroupedList(value: string, groupScope: 'territories', separator: string, options?: GroupedListOptions): FromStaticSimple<'territories'>;
+export function getGroupedList(value: string, groupScope: 'medias', separator: string, options?: GroupedListOptions): FromStaticSimple<'medias'>;
 export function getGroupedList<GS extends GroupScope>(value: string, groupScope: GS, separator: string, options = { required: true }) {
   const elements = split(value, separator);
   const groupLabels = staticGroups[groupScope].map(group => group.label);

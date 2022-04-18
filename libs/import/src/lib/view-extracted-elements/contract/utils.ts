@@ -1,23 +1,8 @@
 import { Firestore } from '@angular/fire/firestore';
 import { collection, doc } from 'firebase/firestore';
-import {
-  getDate,
-  getOrgId,
-  getTitleId,
-  getContract,
-  mandatoryError,
-  checkParentTerm,
-  wrongValueError,
-  adminOnlyWarning,
-  alreadyExistError,
-  unknownEntityError,
-  ContractsImportState,
-  getUser,
-  sheetHeaderLine,
-} from '@blockframes/import/utils';
+import { checkParentTerm, ContractsImportState, sheetHeaderLine, } from '@blockframes/import/utils';
 import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Movie, Term } from '@blockframes/model';
@@ -28,19 +13,11 @@ import {
   MovieLanguageSpecification,
   Sale,
   User,
-  ContractStatus,
-  ImportContractStatus,
   Language,
-  Media,
-  Territory
 } from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import {
-  extract, ExtractConfig, getStaticList, SheetTab, getGroupedList
-} from '@blockframes/utils/spreadsheet';
-import { FieldsConfig, FieldsConfigType, getContractConfig } from './fieldConfigs';
-
-const separator = ';';
+import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
+import { FieldsConfig, getContractConfig } from './fieldConfigs';
 
 
 function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, firestore: Firestore): Term {
@@ -118,7 +95,6 @@ export async function formatContract(
   for (const result of results) {
     const { data, errors } = result;
 
-    console.log({data})
     const contract = data.contract.type === 'mandate'
       ? createMandate(data.contract as Mandate)
       : createSale(data.contract as Sale);
@@ -131,7 +107,7 @@ export async function formatContract(
           type: 'error',
           name: 'Wrong Licensor.',
           reason: `The movie does not belong to the licensor.`,
-          hint: `Please ensure the movie is a movie owned by the licensor.`
+          message: `Please ensure the movie is a movie owned by the licensor.`
         });
       }
     }
@@ -148,7 +124,7 @@ export async function formatContract(
             type: 'error',
             name: 'Wrong Mandate Row',
             reason: 'Mandate Row point to a wrong sheet line.',
-            hint: 'Please check that the line number is correct and that the line is a mandate.',
+            message: 'Please check that the line number is correct and that the line is a mandate.',
           });
         contract.stakeholders.concat(mandate.contract.stakeholders);
       } else {
