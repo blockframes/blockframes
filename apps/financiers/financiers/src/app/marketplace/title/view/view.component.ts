@@ -166,7 +166,9 @@ export class MarketplaceMovieViewComponent {
       const success = res.some(r => r.result);      
       if (success) {
         this.snackBar.open('Your email has been sent.', null, { duration: 3000 });
-      }
+      } else {
+        throw new Error('An error occured');
+       }
     } catch (err) {
       this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
     }

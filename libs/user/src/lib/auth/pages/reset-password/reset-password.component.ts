@@ -32,6 +32,7 @@ export class ResetPasswordComponent implements OnInit {
         throw new Error('Incorrect email address');
       }
       const { data: res } = await this.service.resetPasswordInit(this.emailForm.value.email);
+      console.log(res.error)
       if (res.error === 'auth/email-not-found') {
         this.snackBar.openFromComponent(SnackbarLinkComponent, {
           data: {

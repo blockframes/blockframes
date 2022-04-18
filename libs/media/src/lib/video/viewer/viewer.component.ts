@@ -98,6 +98,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   ) { }
 
   async initPlayer() {
+    const errorMessage = 'There was a problem loading this video...';
     try {
       await this.waitForViewReady; // we need the container div to exists, so we wait for the ngAfterViewInit
 
@@ -112,8 +113,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
       const { error, result } = r.data;
 
       if (error) {
-        // if error is set, result will contain the error message
-        throw new Error(result);
+        throw new Error(errorMessage);
       } else {
 
         // Watermark
@@ -128,7 +128,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         }
 
         if (!watermark) {
-          throw new Error('We cannot load video without watermark.');
+          throw new Error(errorMessage);
         }
 
         // Auto refresh page when url expires
@@ -167,11 +167,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
     } catch (err) {
       this.loading$.next(false);
       console.warn(err);
-      if (err.message === 'There was a problem loading this video...') {
-        this.snackBar.openFromComponent(SnackbarErrorComponent, { data: err.message, duration: 7000 });
-      } else {
-        this.snackBar.open(err.message, 'close', { duration: 8000 });
-      }
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { data: err.message, duration: 7000 });
     }
   }
 
