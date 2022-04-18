@@ -13,11 +13,11 @@ import {
   OrganizationDocument,
   orgName,
   MovieDocument,
-  PublicUser
+  PublicUser,
+  AlgoliaConfig
 } from '@blockframes/model';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 import { Campaign } from '@blockframes/campaign/+state/campaign.model';
-import { AlgoliaConfig } from '@blockframes/utils/algolia';
 
 export async function upgradeAlgoliaOrgs(appConfig?: App, db = loadAdminServices().db) {
   if (!appConfig) {
