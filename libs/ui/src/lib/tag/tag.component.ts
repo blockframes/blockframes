@@ -1,6 +1,6 @@
 // Angular
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-
+import { Component, ChangeDetectionStrategy, Input, HostBinding } from '@angular/core';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: 'bf-tag',
@@ -14,7 +14,13 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
       font-size: 14px;
       white-space: nowrap;
     }
+    :host.disabled {
+      color: var(--foreground-disabled-text);
+      border-color: var(--foreground-disabled-text);
+    }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TagComponent { }
+export class TagComponent { 
+  @HostBinding('class.disabled') @Input() @boolean disabled: boolean;
+}

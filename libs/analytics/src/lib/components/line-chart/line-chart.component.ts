@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Analytics, EventName } from "@blockframes/model";
 import { eachDayOfInterval, isSameDay } from "date-fns";
 import {
@@ -33,17 +33,12 @@ const eventNameLabel: Record<EventName, string> = {
   screeningRequested: 'Screening Requested'
 }
 
-
-const getUniqueEventNames = (analytics: Analytics[]) => {
-  const names = analytics.map(analytic => analytic.name);
-  return Array.from(new Set(names));
-}
-
 @Component({
-  selector: '[data] analytics-line-chart',
+  selector: '[data][eventNames] analytics-line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class LineChartComponent {
   @ViewChild("chart") chart: ChartComponent;
@@ -58,13 +53,13 @@ export class LineChartComponent {
     theme: {
       monochrome: {
         enabled: true,
-        color: '#001ec7'
+        color: '#3c64f7'
       }
     },
     legend: {
       show: true,
       position: 'top',
-      showForSingleSeries: true
+      horizontalAlign: 'left'
     },
     grid: {
       show: true,
@@ -85,6 +80,7 @@ export class LineChartComponent {
     }
   };
 
+  @Input() eventNames: EventName[] = [];
   @Input() set data(data: Analytics[]) {
     if (!data) return;
     if (!data.length) {
@@ -98,8 +94,7 @@ export class LineChartComponent {
     const eachDay = eachDayOfInterval({ start, end });
 
     this.lineChartOptions.series = [];
-    const eventNames = getUniqueEventNames(analytics);
-    for (const name of eventNames) {
+    for (const name of this.eventNames) {
       const data = eachDay.map(day => {
         const analyticsOfDay = analytics
           .filter(analytic => analytic.name === name)
