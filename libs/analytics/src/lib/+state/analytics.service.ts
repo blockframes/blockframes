@@ -66,7 +66,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
 
     return this.valueChanges(query).pipe(
       // Filter out analytics from owners of title
-      map((analytics: AnalyticsWithOrg[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId) ))
+      map((analytics: Analytics<'title'>[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId) ))
     );
   }
 
