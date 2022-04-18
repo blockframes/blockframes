@@ -21,8 +21,8 @@ import { orderBy, startAt, where } from 'firebase/firestore';
 export class MarketplaceMovieViewComponent {
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
-    tap((movieId: string) => this.analytics.addPageView('title', movieId)),
     switchMap((movieId: string) => this.movieService.getValue(movieId)),
+    tap(title => this.analytics.addTitlePageView(title)),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
 
