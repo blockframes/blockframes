@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
-import { AggregatedAnalytic, createAggregatedAnalytic } from "@blockframes/model";
+import { aggregate } from "@blockframes/analytics/+state/utils";
+import { AggregatedAnalytic } from "@blockframes/model";
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { OrganizationService } from "@blockframes/organization/+state";
 import { UserService } from "@blockframes/user/+state";
@@ -40,14 +41,8 @@ export class BuyersAnalyticsComponent {
     map(({ users, orgs, analytics }) => {
       return users.map(user => {
         const org = orgs.find(o => o.id === user.orgId);
-        const aggregated = createAggregatedAnalytic({ user, org });
-
-        const events = analytics.filter(analytic => analytic.meta.uid === user.uid);
-        for (const analytic of events) {
-          aggregated[analytic.name]++;  
-        }
-
-        return aggregated;
+        const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === user.uid);
+        return aggregate(analyticsOfUser, { user, org });
       });
     })
   );
