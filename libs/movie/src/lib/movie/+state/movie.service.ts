@@ -7,8 +7,6 @@ import type firestore from 'firebase/firestore';
 import { App } from '@blockframes/utils/apps';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
-import { joinWith } from '@blockframes/utils/operators';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -33,7 +31,6 @@ export class MovieService extends CollectionService<MovieState> {
   constructor(
     private authService: AuthService,
     private permissionsService: PermissionsService,
-    private analyticService: AnalyticsService,
     private orgService: OrganizationService,
     @Inject(APP) public app: App
   ) {
@@ -119,9 +116,6 @@ export class MovieService extends CollectionService<MovieState> {
     ];
 
     return this.valueChanges(query).pipe(
-      joinWith({
-        analytics: movie => this.analyticService.getTitleAnalytics(movie.id)
-      }, { shouldAwait: true }),
       map(movies => movies.sort((a, b) => a.title.international < b.title.international ? -1 : 1))
     );
   }

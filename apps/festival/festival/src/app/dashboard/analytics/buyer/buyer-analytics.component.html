@@ -1,0 +1,24 @@
+<header class="dark-contrast-theme" bgAsset="background_header.png" bgTheme="dark">
+  <button mat-icon-button (click)="goBack()">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+  </button>
+
+  <ng-container *ngIf="user$ | async as user">
+    <section>
+      <a [routerLink]="['/c/o/marketplace/organization/', user.orgId]">
+        <img [ref]="user.org.logo" asset="empty_organization.svg" type="logo" alt="Organizaiton Logo">
+      </a>
+
+      <article>
+        <h4>{{ user | displayName }}</h4>
+        <h1>{{ user.org | orgName }}</h1>
+        <h5>{{ user.org.activity | toLabel:'orgActivity' }}</h5>
+
+        <a mat-button [href]="'mailto:' + user.email">
+          <mat-icon svgIcon="mail"></mat-icon>
+          <span>{{ user.email }}</span>
+        </a>
+      </article>
+    </section>
+  </ng-container>
+</header>

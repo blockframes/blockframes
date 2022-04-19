@@ -88,7 +88,7 @@
       <div>
         <ng-container *ngFor="let video of movie.promotional.videos.otherVideos">
           <div class="video-container" *ngIf="video.privacy === 'public'">
-            <video-viewer [ref]="video" *ngIf="video.jwPlayerId" (stateChange)="videoStateChanged(movie.id, $event)"></video-viewer>
+            <video-viewer [ref]="video" *ngIf="video.jwPlayerId" (stateChange)="videoStateChanged(movie, $event)"></video-viewer>
             <p>{{ video.title || (video.type | toLabel: 'hostedVideoTypes') }}</p>
           </div>
         </ng-container>
