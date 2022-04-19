@@ -31,6 +31,7 @@ import { OrganizationLiteFormModule } from '@blockframes/organization/forms/orga
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
+import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
 
 // Guards
 import { IdentityGuard } from './guard/identity.guard';
@@ -73,6 +74,7 @@ export const AuthRoutes: Routes = [
     OrganizationLiteFormModule,
     AppLogoModule,
     SnackbarLinkModule,
+    SnackbarErrorModule,
 
     // Material
     MatSnackBarModule,

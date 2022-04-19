@@ -166,7 +166,6 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
       }
     } catch (err) {
       this.loading$.next(false);
-      console.warn(err);
       this.snackBar.openFromComponent(SnackbarErrorComponent, { data: err.message, duration: 7000 });
     }
   }
