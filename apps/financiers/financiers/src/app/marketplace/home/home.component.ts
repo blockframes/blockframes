@@ -1,10 +1,12 @@
+// Algolia
+import { SearchResponse } from '@algolia/client-search';
+
 // Angular
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 
 // Blockframes
 import { AlgoliaService } from '@blockframes/utils/algolia';
 import { AlgoliaMovie, AlgoliaOrganization, createStorageFile } from '@blockframes/model';
-import { SearchResponse } from '@algolia/client-search';
 
 // env
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
