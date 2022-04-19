@@ -3,10 +3,11 @@
 <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
   <nav fxLayout="row" fxLayoutAlign="space-between center">
     <button app-logo (click)="scrollToTop()"></button>
-    <a fxHide.lt-md mat-stroked-button color="primary" href="#demo" id="demo-link">Schedule a demo</a>
+    <a class="mobile-navbar" test-id="signup" mat-button color="primary" routerLink="/auth/identity">Join us</a>
+    <a mat-stroked-button color="primary" href="#demo" id="demo-link">Schedule a demo</a>
     <a test-id="login" mat-button color="primary" routerLink="/auth/connexion">Log in</a>
     <a test-id="signup" mat-button color="primary" routerLink="/auth/identity">Sign up</a>
-    <a fxHide.lt-md mat-stroked-button color="primary" routerLink="/auth/identity">
+    <a mat-stroked-button color="primary" routerLink="/auth/identity">
       <mat-icon svgIcon="invitation"></mat-icon>
       <span>First invitation</span>
     </a>
@@ -113,11 +114,9 @@
     <footer>
       <section class="max-width" fxLayout="column" fxLayoutAlign="start center" fxLayoutAlign.lt-md="center center"
         fxLayoutGap="32px">
-        <div fxLayout="row wrap">
-          <div fxLayout fxFlex>
-            <button app-logo (click)="scrollToTop()"></button>
-          </div>
-          <form fxFlex fxLayout.lt-sm="column" [formGroup]="newslettersForm" (ngSubmit)="subscribe(newslettersForm)" >
+        <div class="footer-form">
+          <button app-logo (click)="scrollToTop()"></button>
+          <form [formGroup]="newslettersForm" (ngSubmit)="subscribe(newslettersForm)">
             <mat-form-field appearance="outline" hideRequiredMarker>
               <mat-label>Enter your email address</mat-label>
               <input test-id="email" matInput type="email" placeholder="Email address" formControlName="email" required />
