@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
 
@@ -24,6 +25,7 @@ import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
     MatButtonModule,
     MatPaginatorModule,
     DeepKeyPipeModule,
+    MatTooltipModule
   ]
 })
 export class TableModule { }

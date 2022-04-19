@@ -4,7 +4,7 @@ import { get } from 'lodash';
 import * as admin from 'firebase-admin';
 
 // Blockframes dependencies
-import { getDocument } from '@blockframes/firebase-utils';
+import { getDocument } from '../data/internals';
 import { StorageFile, createPublicUser, MovieDocument, EventDocument, EventMeta, Meeting, Screening } from '@blockframes/model';
 
 // Internal dependencies

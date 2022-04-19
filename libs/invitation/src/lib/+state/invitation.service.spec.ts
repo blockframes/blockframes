@@ -14,7 +14,8 @@ import {
   getDoc,
   Timestamp
 } from '@angular/fire/firestore';
-import { loadFirestoreRules, clearFirestoreData } from '@firebase/rules-unit-testing';
+import { initializeTestEnvironment } from '@firebase/rules-unit-testing';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { readFileSync } from 'fs';
 import { Observable, of } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
@@ -63,7 +64,7 @@ describe('Invitations Test Suite', () => {
       imports: [
         provideFirebaseApp(() => initializeApp({ projectId: 'test' })),
         provideFirestore(() => {
-          if(db) return db;
+          if (db) return db;
           db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
           connectFirestoreEmulator(db, 'localhost', 8080);
           return db;
@@ -86,9 +87,9 @@ describe('Invitations Test Suite', () => {
     db = TestBed.inject(Firestore);
     service = TestBed.inject(InvitationService);
 
-    await loadFirestoreRules({
+    await initializeTestEnvironment({
       projectId: 'test',
-      rules: readFileSync('./firestore.test.rules', "utf8")
+      firestore: { rules: readFileSync('./firestore.test.rules', 'utf8') }
     });
 
   });
@@ -127,7 +128,7 @@ describe('Invitations Test Suite', () => {
 
   it('Should invitation status become accepted', async () => {
     const ref = doc(db, 'invitations/1');
-    await setDoc(ref, { status: 'pending'});
+    await setDoc(ref, { status: 'pending' });
     await service.acceptInvitation({
       id: '1',
       type: 'attendEvent',
@@ -141,7 +142,7 @@ describe('Invitations Test Suite', () => {
 
   it('Should invitation status become declined', async () => {
     const ref = doc(db, 'invitations/2');
-    await setDoc(ref, { status: 'pending'});
+    await setDoc(ref, { status: 'pending' });
     await service.declineInvitation({
       id: '2',
       type: 'attendEvent',

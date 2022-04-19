@@ -5,12 +5,15 @@ import { BuyersAnalyticsComponent } from './buyers-analytics.component';
 
 // Blockframes
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   imports: [
     CommonModule,
     // Blockframes
     TableModule,
+    ToLabelModule,
+    DisplayNameModule,
     // Router
     RouterModule.forChild([
       {

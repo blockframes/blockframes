@@ -5,7 +5,8 @@ import {
   populate,
 } from '@blockframes/testing/unit-tests';
 import { loadAdminServices } from '@blockframes/firebase-utils';
-import { apps, clearFirestoreData } from '@firebase/rules-unit-testing';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
+import { getApps, deleteApp } from 'firebase/app';
 
 let db: FirebaseFirestore.Firestore;
 describe('Test util.ts generator function getCollectionInBatches', () => {
@@ -16,7 +17,7 @@ describe('Test util.ts generator function getCollectionInBatches', () => {
     await clearFirestoreData({ projectId: getTestingProjectId() });
   });
 
-  afterAll(() => Promise.all(apps().map((app) => app.delete())));
+  afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
   it('should return batches of the correct size', async () => {
     // Populate with 12 users
