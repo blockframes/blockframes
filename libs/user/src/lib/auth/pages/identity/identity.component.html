@@ -2,7 +2,7 @@
   <button app-logo (click)="logout()"></button>
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>Create your account</h1>
-    <p>Please fill in the form below to join the {{ app | appName }} platform</p>
+    <p>Please fill in the form below to join the {{ app | appName }} platform.</p>
     <ng-container *ngIf="(user$ | async) === undefined">
       <p class="mat-body-2 text-primary">
         Already have an account? <a routerLink="/auth/connexion">Log in here.</a>
@@ -14,9 +14,11 @@
         <!-- IDENTITY -->
         <mat-form-field class="email-input" appearance="outline" fxFlex>
           <mat-icon matPrefix svgIcon="mail"></mat-icon>
-          <mat-label>Email</mat-label>
-          <input matInput type="email" aria-label="email" formControlName="email" required email test-id="email">
-
+          <mat-label>Email Address</mat-label>
+          <input matInput type="email" aria-label="email" formControlName="email" email required test-id="email">
+          <mat-error *ngIf="form.get('email').hasError('required')">
+            Email Address is <strong>required</strong>.
+          </mat-error>
         </mat-form-field>
 
         <article fxFlex fxLayout="row" fxLayoutGap="24px" fxLayout.lt-md="column">
@@ -24,7 +26,7 @@
             <mat-label>First Name</mat-label>
             <input matInput type="text" placeholder="First Name" formControlName="firstName" required test-id="first-name"/>
             <mat-error *ngIf="form.get('firstName').hasError('required')">
-              First name is <strong>required</strong>
+              First name is <strong>required</strong>.
             </mat-error>
           </mat-form-field>
 
@@ -32,13 +34,12 @@
             <mat-label>Last Name</mat-label>
             <input matInput type="text" placeholder="Last Name" formControlName="lastName" required test-id="last-name"/>
             <mat-error *ngIf="form.get('lastName').hasError('required')">
-              Last name is <strong>required</strong>
+              Last name is <strong>required</strong>.
             </mat-error>
           </mat-form-field>
         </article>
 
         <!-- ORGANIZATION -->
-
         <ng-container *ngIf="useAlgolia else orgInput">
           <algolia-autocomplete [indexGroup]="indexGroup" keyToDisplay="name" (selectionChange)="setOrg($event)"
             required [control]="orgControl">
@@ -93,7 +94,7 @@
         </ng-container>
 
         <mat-form-field appearance="outline" *ngIf="form.get('password').enabled">
-          <mat-label>New Password</mat-label>
+          <mat-label>Password</mat-label>
           <input
             matInput
             type="password"
@@ -118,7 +119,7 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" *ngIf="form.get('confirm').enabled">
-          <mat-label>New Password Confirmation</mat-label>
+          <mat-label>Password Confirmation</mat-label>
           <input
             matInput
             type="password"
@@ -128,17 +129,16 @@
             required
             test-id="password-confirm"
           />
-          <mat-hint>Rewrite new password for confirmation.</mat-hint>
+          <mat-hint>Please rewrite your password for confirmation.</mat-hint>
           <mat-error *ngIf="form.get('confirm').hasError('required')">
             New password confirmation is <strong>required</strong>.
           </mat-error>
           <mat-error *ngIf="form.hasError('passwordsNotMatching')">
-            New password and New password confirmation do not <strong>match</strong>.
+            The confirmation password does not <strong>match your password</strong>.
           </mat-error>
         </mat-form-field>
 
         <!-- TERMS OF USE & PRIVACY POLICY -->
-
         <div class="privacy" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
           <mat-checkbox test-id="terms" color="primary" formControlName="termsOfUse">
             <span class="mat-caption">I hereby accept {{ app | appName }}&nbsp;
@@ -163,7 +163,7 @@
       </ng-container>
       <ng-template #creatingAccount>
         <button @slideUp mat-flat-button disabled>
-          Creating the account please wait a few seconds
+          Creating account...
         </button>
       </ng-template>
 

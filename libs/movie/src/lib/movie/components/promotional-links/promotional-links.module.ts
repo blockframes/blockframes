@@ -14,6 +14,7 @@ import { PromotionalLinksPipeModule } from './promotional-links.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [PromotionalLinksComponent],
@@ -22,11 +23,12 @@ import { MatButtonModule } from '@angular/material/button';
     RouterModule,
     FlexLayoutModule,
     PromotionalLinksPipeModule,
-    MatButtonModule,
 
     // Material
     MatIconModule,
-    MatMenuModule
+    MatMenuModule,
+    MatButtonModule,
+    MatTooltipModule
   ],
   exports: [PromotionalLinksComponent]
 })

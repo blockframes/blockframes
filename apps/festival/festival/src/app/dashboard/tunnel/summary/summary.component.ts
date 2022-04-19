@@ -1,11 +1,13 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 
 @Component({
   selector: 'festival-summary-tunnel',
@@ -25,13 +27,12 @@ export class TunnelSummaryComponent implements OnInit {
   isPublished$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
-    map(movie => movie.app.catalog.status),
+    map(movie => movie.app.festival.status),
     map(status => status === 'accepted' || status === 'submitted')
   );
 
   constructor(
     private shell: MovieFormShellComponent,
-    private router: Router,
     private route: ActivatedRoute,
     private movieService: MovieService,
     private snackBar: MatSnackBar,
@@ -48,21 +49,33 @@ export class TunnelSummaryComponent implements OnInit {
   }
 
   public async submit() {
-    if (this.form.valid) {
-      await this.shell.layout.update({ publishing: true });
-      const text = `${this.form.get('title').get('international').value} successfully published.`;
-      const ref = this.snackBar.open(text, 'SEE ON MARKETPLACE', { duration: 7000 });
-      ref.afterDismissed().subscribe(() => {
+    try {
+      if (this.form.valid) {
+        await this.shell.layout.update({ publishing: true });
+        const message = `${this.form.get('title').get('international').value} successfully published.`;
         const movieId = this.route.snapshot.paramMap.get('movieId');
-        this.router.navigate(['c/o/marketplace/title', movieId]);
-      })
-    } else {
-      // Log the invalid forms
-      if (this.invalidFields.length) {
-        this.snackBar.open('Some fields have invalid information.', '', { duration: 2000 });
-      } else if (this.missingFields.length) {
-        this.snackBar.open('Mandatory information is missing.', '', { duration: 2000 });
+        this.snackBar.openFromComponent(SnackbarLinkComponent, {
+          data: {
+            message,
+            link: ['c/o/marketplace/title', movieId],
+            linkName: 'SEE ON MARKETPLACE'
+          },
+          duration: 7000
+        });
+      } else {
+        // Log the invalid forms
+        let message: string;
+        if (this.invalidFields.length) {
+          message = 'Some fields have invalid information.';
+        } else if (this.missingFields.length) {
+          message = 'Mandatory information is missing.';
+        }
+        const section = document.getElementById('main-information');
+        const ref = this.snackBar.open(message, 'VERIFY FIELDS', { duration: 5000 });
+        ref.afterDismissed().subscribe(() => section.scrollIntoView({ behavior: 'smooth' }))
       }
+    } catch (_) {
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
     }
   }
 }

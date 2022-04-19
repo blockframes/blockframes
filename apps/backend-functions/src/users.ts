@@ -6,7 +6,7 @@ import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
 import { getDocument } from './data/internals';
-import { getMailSender, applicationUrl, App, appName } from '@blockframes/utils/apps';
+import { getMailSender, applicationUrl, App } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { production } from './environments/environment';
 import { cleanUserMedias } from './media';
@@ -19,7 +19,6 @@ import { ErrorResultResponse } from './utils';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
-
 
 interface EmailFlowData { email: string, app: App, publicUser: PublicUser }
 
@@ -131,7 +130,6 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
   }
 
   await cleanUserMedias(before, after);
-
 
   // Sync preferences with mailchimp
   const tags: MailchimpTag[] = []
@@ -246,7 +244,6 @@ export const sendUserMail = async (data: { subject: string, message: string, app
 
   await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from);
 }
-
 
 /**
  * Create an user.

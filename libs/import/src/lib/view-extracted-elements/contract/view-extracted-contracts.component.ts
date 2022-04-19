@@ -1,11 +1,8 @@
 
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
-
 import { BehaviorSubject } from 'rxjs';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { MatTableDataSource } from '@angular/material/table';
-
-
 import { AuthService } from '@blockframes/auth/+state';
 import { UserService } from '@blockframes/user/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
@@ -34,7 +31,7 @@ export class ViewExtractedContractsComponent implements OnInit {
     private userService: UserService,
     private authService: AuthService,
     private titleService: MovieService,
-    private firestore: AngularFirestore,
+    private firestore: Firestore,
     private dynTitle: DynamicTitleService,
     private orgService: OrganizationService,
     private contractService: ContractService,

@@ -4,6 +4,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { AuthService } from '../+state';
 import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
+import { where } from 'firebase/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class NotFullyVerifiedGuard implements CanActivate {
@@ -22,9 +23,12 @@ export class NotFullyVerifiedGuard implements CanActivate {
         if (!authState.emailVerified) return true;
 
         if (!authState.profile.orgId) {
-          const invitations = await this.orgService.getValue(ref => ref.where('mode', '==', 'invitation')
-            .where('type', '==', 'joinOrganization')
-            .where('toUser.uid', '==', authState.profile.uid));
+          const query = [
+            where('mode', '==', 'invitation'),
+            where('type', '==', 'joinOrganization'),
+            where('toUser.uid', '==', authState.profile.uid)
+          ];
+          const invitations = await this.orgService.getValue(query);
 
           if (invitations.find(invitation => invitation.status === 'pending')) return this.router.createUrlTree(['c/organization/join-congratulations']);
 

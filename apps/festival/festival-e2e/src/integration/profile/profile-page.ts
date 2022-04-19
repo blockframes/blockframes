@@ -10,15 +10,15 @@ describe('Basic Landing Page, Login and Profile Page Tests', () => {
   it('should load user and log into profile page', () => {
     auth.loginWithRandomUser();
     cy.visit('c/o/account/profile/view/settings');
-    cy.contains('Contact Information').should('exist');
+    cy.contains('Profile Information').should('exist');
   })
   it('should now show Accept Cookies after being accepted', () => {
     acceptCookies();
     cy.visit('/');
-    cy.contains('Accept cookies').should('not.exist');
+    cy.contains('Accept Cookies').should('not.exist');
   })
   it('should show the Accept Cookies banner', () => {
-    cy.contains('Accept cookies').should('exist');
+    cy.contains('Accept Cookies').should('exist');
   })
 
 })

@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 @use "../typography" as typography;
 @use '../components/anchor' as anchor;
 @use '../components/bf-calendar' as calendar;

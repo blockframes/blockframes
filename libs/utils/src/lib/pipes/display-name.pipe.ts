@@ -3,6 +3,15 @@ import { CommonModule } from '@angular/common';
 import { Person } from '@blockframes/model';
 import { displayName } from '../utils';
 
+export const displayPerson = (person: Person | Person[] | string[]) => {
+  if (Array.isArray(person)) {
+    return person
+      .map(person => typeof person === 'string' ? person : displayName(person))
+  } else {
+    return [displayName(person)];
+  }
+}
+
 /**
  * This pipe display the firstname and lastname of the person;
  * For an user, if you want to display organization name of the user also, use the displayUser pipe
@@ -17,13 +26,7 @@ export class DisplayNamePipe implements PipeTransform {
    */
   transform(value?: Person | Person[] | string[]): string {
     if (!value) return '';
-    if (Array.isArray(value)) {
-      return value
-        .map(person => typeof person === 'string' ? person : displayName(person))
-        .join(', ');
-    } else {
-      return displayName(value);
-    }
+    return displayPerson(value).join(', ');
   }
 }
 

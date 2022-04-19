@@ -1,11 +1,11 @@
 import * as admin from 'firebase-admin';
 import {
-  IMaintenanceDoc,
   MAINTENANCE_DOCUMENT_NAME,
   META_COLLECTION_NAME,
   _isInMaintenance
 } from '@blockframes/utils/maintenance';
 import { loadAdminServices } from './util';
+import { IMaintenanceDoc } from '@blockframes/model';
 
 const maintenanceRef = (db?: FirebaseFirestore.Firestore) => {
   if (!db) db = loadAdminServices().db;

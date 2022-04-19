@@ -9,6 +9,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent {
-  org$ = this.service.currentOrg$;
-  constructor(private service: OrganizationService) { }
+  org$ = this.orgService.currentOrg$;
+
+  constructor(private orgService: OrganizationService) { }
 }

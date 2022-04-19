@@ -9,9 +9,9 @@ import { OrgsSection, TemplateParams } from '@blockframes/admin/cms';
 import { TextFormModule, matText } from '../../forms/text';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { matMultiSelect } from '../../forms/select';
-import { getOrgsQueryFn, toMap } from '../pipes';
+import { getOrgsQueryConstraints, toMap } from '../pipes';
 import { FirestoreFormModule, firestoreQuery, orgsFromApp } from '../../forms/firestore';
-import { map,shareReplay,switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { Organization, orgName } from '@blockframes/model';
 
 export type OrgsSchema = FormGroupSchema<OrgsSection>;
@@ -45,8 +45,8 @@ export class OrgsComponent implements OnInit {
   @Input() form?: FormEntity<OrgsSchema>;
 
   orgs$ = this.params$.pipe(
-    map(params => getOrgsQueryFn(params.get('app'))),
-    switchMap(queryFn => this.service.valueChanges(queryFn)),
+    map(params => getOrgsQueryConstraints(params.get('app'))),
+    switchMap(queryConstraints => this.service.valueChanges(queryConstraints)),
     map(toMap),
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
@@ -57,7 +57,7 @@ export class OrgsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private service: OrganizationService
-  ) {}
+  ) { }
 
   get queryMode() {
     return this.mode || (this.form?.get('orgIds').length ? 'orgIds' : 'query');

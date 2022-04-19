@@ -14,7 +14,7 @@ export function awaitElementDeletion(selector: string, timeout?: number) {
 export function acceptCookies() {
   cy.get('body').then($body => {
     if ($body.children('cookie-banner')) {
-      cy.contains('Accept cookies').click();
+      cy.contains('Accept Cookies').click();
     }
   });
 }

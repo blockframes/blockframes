@@ -1,3 +1,5 @@
+@import "~@angular/flex-layout/mq";
+
 table {
   width: 100%;
 }
@@ -21,4 +23,10 @@ img {
 
 .ellipsis {
   width: 300px;
+}
+
+@include layout-bp(xs) {
+  section {
+    overflow-x: auto;
+  }
 }

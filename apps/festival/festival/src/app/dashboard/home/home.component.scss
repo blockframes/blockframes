@@ -1,3 +1,5 @@
+@import "~@angular/flex-layout/mq";
+
 :host {
   display: flex;
   flex-direction: column;
@@ -7,11 +9,8 @@
 
 header {
   display: flex;
-  gap: 24px;
-
-  h1 {
-    margin: auto auto auto 0;
-  }
+  justify-content: space-between;
+  align-items: center;
 }
 
 .carousel-container {
@@ -47,5 +46,27 @@ header {
   
   h3 {
     margin-top: 24px;
+  }
+}
+
+@include layout-bp(gt-xs) {
+  analytics-pie-chart,
+  analytics-line-chart,
+  analytics-map {
+    width: calc(50% - 16px);
+    margin-right: 16px;
+  }
+}
+
+@include layout-bp(xs) {
+  header {
+    flex-direction: column;
+  }
+
+  analytics-pie-chart,
+  analytics-line-chart,
+  analytics-map {
+    width: calc(100% - 8px);
+    margin-right: 8px;
   }
 }

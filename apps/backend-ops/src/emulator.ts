@@ -11,7 +11,7 @@ import {
   latestAnonStorageDir,
   gsutilTransfer,
   awaitProcessExit,
-  endMaintenance
+  endMaintenance,
 } from '@blockframes/firebase-utils';
 import {
   shutdownEmulator,

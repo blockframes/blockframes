@@ -13,6 +13,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 })
 export class LoginComponent implements OnInit {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
+  @ViewChild('wrongPasswordTemplate') wrongPasswordTemplate: TemplateRef<unknown>;
 
   public buttonText = 'Log in';
   public signinIn = false;
@@ -55,6 +56,8 @@ export class LoginComponent implements OnInit {
         this.snackBar.open('Network error. Please refresh this page.', 'close', { duration: 8000 });
       } else if (err.code === 'auth/user-not-found') {
         this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: 8000 });
+      } else if (err.code === 'auth/wrong-password') {
+        this.snackBar.openFromTemplate(this.wrongPasswordTemplate, { duration: 8000 });
       } else {
         this.snackBar.open(err.message, 'close', { duration: 8000 });
       }
