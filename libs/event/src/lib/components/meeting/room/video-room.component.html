@@ -50,11 +50,11 @@
       <mat-icon svgIcon="call_end"></mat-icon>
     </button>
 
-    <button *ngIf="!fullScreen" (click)="toggleFullScreen()" class="enter-fullscreen" mat-icon-button>
+    <button *ngIf="!fullScreen" (click)="toggleFullScreen()" class="enter-fullscreen" mat-icon-button matTooltip="Enter fullscreen">
       <mat-icon svgIcon="fullscreen"></mat-icon>
     </button>
     
-    <button *ngIf="fullScreen" (click)="toggleFullScreen()" class="fullscreen" mat-icon-button>
+    <button *ngIf="fullScreen" (click)="toggleFullScreen()" class="fullscreen" mat-icon-button matTooltip="Exit fullscreen">
       <mat-icon svgIcon="fullscreen_exit"></mat-icon>
     </button>
 
