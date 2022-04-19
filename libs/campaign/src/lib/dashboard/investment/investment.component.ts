@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Campaign, CampaignService } from '../../+state';
+import { CampaignService } from '../../+state';
 import { CampaignForm } from '../../form/form';
 import { map, pluck, switchMap, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Movie } from '@blockframes/model';
+import { Movie, Campaign } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -35,5 +35,5 @@ export class InvestmentComponent {
     private movieService: MovieService,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService
-  ) {}
+  ) { }
 }
