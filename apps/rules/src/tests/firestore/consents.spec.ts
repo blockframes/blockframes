@@ -1,7 +1,7 @@
 ﻿import { assertFails } from '@firebase/rules-unit-testing';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 import { Consents } from '@blockframes/model';
-import { deleteApp, getApps } from 'firebase/app'; // from import { deleteApp } from 'firebase-admin/app'; ?
+import { deleteApp, getApps } from 'firebase/app';
 
 describe('Consents Rules Tests', () => {
   const projectId = `consentrules-spec-${Date.now()}`;

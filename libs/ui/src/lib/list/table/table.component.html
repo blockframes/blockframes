@@ -54,16 +54,16 @@
 <!-- Pagination -->
 <footer *ngIf="paginator.shouldDisplay$ | async" class="mat-paginator">
   <span class="mat-caption">Page {{ paginator.pageIndex + 1 }} of {{ paginator.maxIndex + 1 }}</span>
-  <button mat-icon-button [disabled]="paginator.pageIndex === 0" (click)="paginator.first()">
+  <button mat-icon-button [disabled]="paginator.pageIndex === 0" (click)="paginator.first()" matTooltip="First page">
     <mat-icon svgIcon="first_page"></mat-icon>
   </button>
-  <button mat-icon-button [disabled]="paginator.pageIndex === 0" (click)="paginator.previous()">
+  <button mat-icon-button [disabled]="paginator.pageIndex === 0" (click)="paginator.previous()" matTooltip="Previous page" >
     <mat-icon svgIcon="chevron_left"></mat-icon>
   </button>
-  <button mat-icon-button [disabled]="paginator.pageIndex === paginator.maxIndex" (click)="paginator.next()">
+  <button mat-icon-button [disabled]="paginator.pageIndex === paginator.maxIndex" (click)="paginator.next()" matTooltip="Next page">
     <mat-icon svgIcon="chevron_right"></mat-icon>
   </button>
-  <button mat-icon-button [disabled]="paginator.pageIndex === paginator.maxIndex" (click)="paginator.last()">
+  <button mat-icon-button [disabled]="paginator.pageIndex === paginator.maxIndex" (click)="paginator.last()" matTooltip="Last page">
     <mat-icon svgIcon="last_page"></mat-icon>
   </button>
 </footer>

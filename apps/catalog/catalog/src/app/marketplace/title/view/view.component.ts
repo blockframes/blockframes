@@ -16,8 +16,8 @@ import { AnalyticsService } from '@blockframes/analytics/+state/analytics.servic
 export class MarketplaceMovieViewComponent {
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
-    tap((titleId: string) => this.analytics.addPageView('title', titleId)),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
+    tap(title => this.analytics.addTitlePageView(title)),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
 
