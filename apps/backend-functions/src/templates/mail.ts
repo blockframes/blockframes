@@ -20,7 +20,7 @@ import {
   Offer,
   staticModel
 } from '@blockframes/model';
-import { EventEmailData, OrgEmailData, UserEmailData, getMovieEmailData, getOfferEmailData } from '@blockframes/utils/emails/utils';
+import { EventEmailData, OrgEmailData, UserEmailData, getMovieEmailData, getOfferEmailData, MovieEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
 import { format } from "date-fns";
 import { Timestamp } from '../data/internals';
@@ -302,12 +302,14 @@ export function reminderEventToUser(
 /** Generate an email to seller mentioning a screening has been requested */
 export function screeningRequestedToSeller(
   toUser: UserEmailData,
-  buyer: PublicUser,
+  buyer: UserEmailData,
+  org: OrgEmailData,
   movie: MovieDocument,
 ): EmailTemplateRequest {
   const data = {
     user: toUser,
     buyer,
+    org,
     movie,
     pageURL: `${appUrl.market}/c/o/dashboard/event/new/edit?titleId=${movie.id}`
   };
@@ -320,22 +322,23 @@ export function movieAcceptedEmail(toUser: UserEmailData, movieTitle: string, mo
   return { to: toUser.email, templateId: templateIds.movie.accepted, data };
 }
 
-export function movieAskingPriceRequested(toUser: UserEmailData, fromBuyer: UserEmailData, movieTitle: string, territories: string, message: string): EmailTemplateRequest {
+export function movieAskingPriceRequested(toUser: UserEmailData, fromBuyer: UserEmailData, buyerOrg: OrgEmailData, movie: MovieEmailData, territories: string, message: string): EmailTemplateRequest {
   const data = {
     user: toUser,
-    buyer: displayName(fromBuyer),
-    movieTitle,
+    buyer: fromBuyer,
+    org: buyerOrg,
+    movie,
     territories,
     message,
-    pageURL: `mailto:${fromBuyer.email}?subject=Interest in ${movieTitle} via Archipel Market`
+    pageURL: `mailto:${fromBuyer.email}?subject=Interest in ${movie.title.international} via Archipel Market`
   };
   return { to: toUser.email, templateId: templateIds.movie.askingPriceRequested, data };
 }
 
-export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieDocument, orgNames: string, territories: string, message: string): EmailTemplateRequest {
+export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieEmailData, orgNames: string, territories: string, message: string): EmailTemplateRequest {
   const data = {
     user: toUser,
-    movieTitle: movie.title.international,
+    movie,
     orgNames,
     territories,
     message,
