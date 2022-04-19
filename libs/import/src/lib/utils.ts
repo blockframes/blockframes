@@ -219,9 +219,9 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
   return date;
 }
 
-export function mandatoryError<T = unknown>(name: string): BaseImportError<T> {
+export function mandatoryError<T = unknown>(value:T, name: string): BaseImportError<T> {
   const option: BaseImportError<T> = {
-    value: undefined,
+    value,
     name: `Missing ${name}`,
     reason: 'Mandatory field is missing.',
     message: 'Please fill in the corresponding sheet field.',

@@ -78,7 +78,7 @@ export async function formatContract(
   const contracts: ContractsImportState[] = [];
   const caches = { orgNameCache, titleCache, userCache, contractCache };
 
-  const fieldsConfig = getContractConfig(
+  const option = {
     orgService,
     titleService,
     contractService,
@@ -88,8 +88,10 @@ export async function formatContract(
     userOrgId,
     caches,
     config,
-    ';',
-  )
+    separator: ';'
+  };
+
+  const fieldsConfig = getContractConfig(option)
 
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig, 11);
   for (const result of results) {
