@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/model';
+import { PreviewFileModalComponent } from '../preview-file-modal/preview-file-modal.component';
 
 @Component({
   selector: '[ref] bf-preview-modal',
-  templateUrl: 'preview.component.html',
-  styleUrls: ['./preview.component.scss'],
+  templateUrl: 'open-review..component.html',
+  styleUrls: ['./open-review..component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PreviewModalComponent {
@@ -20,8 +21,7 @@ export class PreviewModalComponent {
   ) { }
 
   async openModal() {
-    this.dialogRef = this.dialog.open(this.dialogTemplate, {
-      height: '60vh',
+    this.dialogRef = this.dialog.open(PreviewFileModalComponent, {
       hasBackdrop: true,
       data: this.ref,
       autoFocus: false,
