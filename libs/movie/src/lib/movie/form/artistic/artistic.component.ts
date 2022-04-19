@@ -48,15 +48,10 @@ export class MovieFormArtisticComponent {
     return this.form.cast;
   }
 
-  //TODO #6507
   openDetails(title: string, values: string | Filmography[]) {
-    const arrayValues = Array.isArray(values) ? displayFilmographies(values) : values;
+    const arrayValues = Array.isArray(values) ? displayFilmographies(values) : [values];
     this.dialog.open(CellModalComponent, {
       data: { title, values: arrayValues },
-      maxHeight: '80vh',
-      minWidth: '50vw',
-      maxWidth: '80vw',
-      minHeight: '50vh',
       autoFocus: false,
     });
   }

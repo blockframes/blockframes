@@ -73,14 +73,9 @@ export class ListComponent {
     this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 
-  //TODO #6507
   openDetails(title: string, values: Person[]) {
     this.dialog.open(CellModalComponent, {
       data: { title, values: displayPerson(values) },
-      maxHeight: '80vh',
-      minWidth: '50vw',
-      maxWidth: '80vw',
-      minHeight: '50vh',
       autoFocus: false,
     });
   }

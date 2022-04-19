@@ -1,13 +1,11 @@
-<header fxLayout="column" fxLayoutGap="2">
-  <button mat-icon-button (click)="close()" fxFlexAlign="end">
-    <mat-icon svgIcon="close"></mat-icon>
-  </button>
+<global-modal>
+  <header fxLayout="column">
+    <h2 >{{ data.title }}</h2>
+  </header>
 
-  <h2 fxFlexAlign="start">{{ data.title }}</h2>
-</header>
-
-<mat-dialog-content>
-  <p class="mat-body-1" *ngFor="let value of data.values">
-    {{ value }}
-  </p>
-</mat-dialog-content>
+  <section fxLayout="column" fxLayoutAlign="start center">
+    <p class="mat-body-1" *ngFor="let value of data.values">
+      {{ value }}
+    </p>
+  </section>
+</global-modal>

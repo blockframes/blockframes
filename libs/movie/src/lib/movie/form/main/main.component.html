@@ -204,7 +204,7 @@
 
       <bf-form-table [columns]="displayedColumns" [form]="form.directors">
         <ng-template colRef="description" let-description>
-          <span (click)="openDetails('Description', [description])">
+          <span (click)="openDetails('Description', description)">
             {{ description | maxLength: 75 }}
           </span>
         </ng-template>
