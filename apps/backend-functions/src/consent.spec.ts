@@ -1,6 +1,6 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
 import { initFirestoreApp, consentFixtures } from '@blockframes/testing/unit-tests';
-import { clearFirestoreData } from '@firebase/rules-unit-testing';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { createConsent } from './main';
 import { ConsentData } from './consent';
 import firebaseTest = require('firebase-functions-test');

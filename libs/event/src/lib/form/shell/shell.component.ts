@@ -14,7 +14,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
-const statisticsTab = { path: 'statistics', label: 'Statistics' };
+const statisticsTab = { path: 'statistics', label: 'Attendance' };
 
 const navTabs: NavTabs = {
   screening: [

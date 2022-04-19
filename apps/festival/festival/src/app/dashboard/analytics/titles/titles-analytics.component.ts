@@ -46,7 +46,7 @@ export class TitlesAnalyticsComponent {
 
   titlesAnalytics$ = this.service.queryDashboard(this.app).pipe(
     joinWith({
-      analytics: title => this.analytics.getTitleAnalytics(title.id),
+      analytics: title => this.analytics.getTitleAnalytics({ titleId: title.id }),
       events: title => this.eventService.valueChanges([
         where('type', '==', 'screening'),
         where('meta.titleId', '==', title.id)
