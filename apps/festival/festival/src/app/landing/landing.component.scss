@@ -17,7 +17,6 @@ landing-header {
     flex-direction: column;
     justify-content: start;
     align-items: flex-start;
-    gap: 32px;
     background-image: url("/assets/images/banner_landing_new.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -36,6 +35,9 @@ landing-content {
       padding: 80px;
       div {
         margin-top: 24px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
       }
     }
   }
@@ -174,12 +176,12 @@ landing-app-link {
   }
 }
 
-@include layout-bp(lt-sm) {
+@include layout-bp(xs) {
   landing-header {
     #header-to-scroll {
       height: calc(100vh - 80px);
       align-items: center;
-      gap: 0;
+      gap: 16px;
       text-align: center;
       padding-inline: 16px;
       a {
@@ -244,8 +246,11 @@ landing-app-link {
 }
 
 @include layout-bp(gt-sm) {
-  #header-to-scroll button {
-    display: none;
+  #header-to-scroll {
+    gap: 32px;
+    button {
+      display: none;
+    }
   }
 }
 

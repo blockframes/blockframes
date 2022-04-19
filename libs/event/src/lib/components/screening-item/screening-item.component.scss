@@ -1,4 +1,4 @@
-@import "~@angular/flex-layout/mq";
+@import "@angular/flex-layout/mq";
 
 :host {
   display: flex;
@@ -40,7 +40,7 @@ footer {
   width: 100%;
 }
 
-@include layout-bp(lt-sm) {
+@include layout-bp(xs) {
   a img {
     display: none;
   }

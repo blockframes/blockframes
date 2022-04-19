@@ -1,4 +1,4 @@
-@import '~@angular/flex-layout/mq';
+@import '@angular/flex-layout/mq';
 
 movie-header-cta {
   width: 100%;
@@ -33,7 +33,7 @@ section.hero {
   padding: 40px;
 }
 
-@include layout-bp(lt-sm) {
+@include layout-bp(xs) {
   movie-header-actions {
     display: none;
   }

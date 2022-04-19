@@ -26,11 +26,8 @@ landing-shell-page {
 
     nav {
       width: 100%;
+      display: flex;
 
-      .desktop-navbar {
-        display: flex;
-        width: 100%;
-      }
       .mobile-navbar {
         display: none;
       }
@@ -181,7 +178,7 @@ landing-shell-page {
   }
 }
 
-@include layout-bp(lt-sm) {
+@include layout-bp(xs) {
   landing-shell-page {
     button[app-logo] {
       margin-right: 0;
@@ -189,11 +186,11 @@ landing-shell-page {
 
     mat-toolbar {
       nav {
-        .desktop-navbar {
-          display: none;
-        }
         .mobile-navbar {
           display: block;
+        }
+        a:not(.mobile-navbar) { 
+          display: none; 
         }
       }
     }

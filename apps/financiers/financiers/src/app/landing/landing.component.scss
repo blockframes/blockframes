@@ -121,7 +121,7 @@ landing-content {
   }
 }
 
-@include layout-bp(lt-sm) {
+@include layout-bp(xs) {
   landing-header {
     text-align: center;
     header {

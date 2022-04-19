@@ -1,4 +1,4 @@
-@import "~@angular/flex-layout/mq";
+@import "@angular/flex-layout/mq";
 
 org-chip {
   margin-bottom: 32px;
@@ -20,7 +20,7 @@ movie-header-actions {
   gap: 24px;
 }
 
-@include layout-bp(lt-sm) {
+@include layout-bp(xs) {
   movie-header-actions {
     display: none;
   }

@@ -1,4 +1,4 @@
-@import "~@angular/flex-layout/mq";
+@import "@angular/flex-layout/mq";
 
 :host {
   display: block;
@@ -19,7 +19,7 @@ pre {
   margin-top: 0;
 }
 
-@include layout-bp(lt-sm) {
+@include layout-bp(xs) {
   .title-image {
     display: none;
   }
