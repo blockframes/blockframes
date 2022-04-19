@@ -315,15 +315,6 @@ export function wrongValueWarning<T = unknown>(value: T, name: string, wrongData
   return new ImportWarning(value, option);
 }
 
-//@todo: harmonize ExceptionError with BaseImportError
-export interface ExceptionError<T> {
-  name: string,
-  message: any,
-  reason?: string
-  value?: T
-  type?: 'error' | 'warning'
-}
-
 export interface LogOption {
   name: string;
   reason: string;
@@ -344,17 +335,6 @@ export abstract class ImportLog<T> extends Error {
     this.reason = reason;
     this.field = field;
     this.message = message;
-  }
-
-  getValue() {
-    return {
-      name: this.name,
-      message: this.message,
-      field: this.field,
-      reason: this.reason,
-      type: this.type,
-      value: this.value
-    }
   }
 }
 

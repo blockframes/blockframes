@@ -142,8 +142,6 @@ export async function parse<T>(
             item[segment] = result;
           }
         } catch (err) {
-          //@continue from here: Importing seller warning file causes an uninformative titleError.
-          console.log({ err })
           return errors.push(err);
         }
       } else {
@@ -152,7 +150,6 @@ export async function parse<T>(
       }
     }
   } catch (err) {
-    console.log({ err })
     errors.push({
       type: 'error',
       name: 'Unexpected Error',
@@ -256,7 +253,7 @@ const isValueError = <S extends Scope>(values: FromStatic<S>): values is ValueWi
 
 export function getStaticList<S extends Scope>(scope: S, value: string, separator: string, name: string, mandatory = true, allKey = 'all'): FromStaticSimple<S> {
   const values = getStatic(scope, value, separator, name, allKey);
-  if (mandatory && isValueError(values)) throw mandatoryError<GetKeys<S>[]>(values,name);
+  if (mandatory && isValueError(values)) throw mandatoryError<GetKeys<S>[]>(values, name);
   return values;
 }
 
