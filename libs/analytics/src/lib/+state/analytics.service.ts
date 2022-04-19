@@ -51,7 +51,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     }
   }
 
-  getTitleAnalytics(titleId?: string) {
+  getTitleAnalytics(params?: { titleId?: string, uid?: string }) {
     const { orgId } = this.authService.profile;
 
     const query = [
@@ -60,9 +60,8 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
       where('_meta.createdFrom', '==', this.app)
     ];
 
-    if (titleId) {
-      query.push(where('meta.titleId', '==', titleId));
-    }
+    if (params?.titleId) query.push(where('meta.titleId', '==', params.titleId));
+    if (params?.uid) query.push(where('meta.uid', '==', params.uid));
 
     return this.valueChanges(query).pipe(
       // Filter out analytics from owners of title
