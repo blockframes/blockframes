@@ -256,7 +256,7 @@ const isValueError = <S extends Scope>(values: FromStatic<S>): values is ValueWi
 
 export function getStaticList<S extends Scope>(scope: S, value: string, separator: string, name: string, mandatory = true, allKey = 'all'): FromStaticSimple<S> {
   const values = getStatic(scope, value, separator, name, allKey);
-  if (mandatory && isValueError(values)) throw mandatoryError<GetKeys<S>[]>(name);
+  if (mandatory && isValueError(values)) throw mandatoryError<GetKeys<S>[]>(values,name);
   return values;
 }
 

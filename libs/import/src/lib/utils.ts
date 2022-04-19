@@ -199,7 +199,7 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
     date = new Date((excelNumberOfDays - unixNumberOfDays) * millisecondsInOneDay);
   }
 
-  if (isNaN(date.getTime())) throw wrongValueError(name);
+  if (isNaN(date.getTime())) throw wrongValueError(value, name);
 
   // if date seems strange we throw an Error
   const year = date.getFullYear();
@@ -219,56 +219,60 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
   return date;
 }
 
-export function mandatoryError<T = unknown>(value:T, name: string): BaseImportError<T> {
-  const option: BaseImportError<T> = {
-    value,
+export function mandatoryError<T = unknown>(value: T, name: string): ImportLog<T> {
+  const option: LogOption = {
     name: `Missing ${name}`,
     reason: 'Mandatory field is missing.',
     message: 'Please fill in the corresponding sheet field.',
   };
-  return ImportError.newError(option);
+  return new ImportError(value, option);
 }
 
-export function unknownEntityError<T = unknown>(name: string): BaseImportError<T> {
-  const option:BaseImportError<T>= {
-    value: undefined,
+export function unknownEntityError<T = unknown>(value: T, name: string): ImportLog<T> {
+  const option: LogOption = {
     name: `Unknown ${name}`,
     reason: `${name} should exist in the app but we couldn't find it.`,
     message: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`,
   };
-  return ImportError.newError(option);
+  return new ImportError(value, option);
 }
 
-export function wrongValueError<T = unknown>(name: string): BaseImportError<T> {
-  const option: BaseImportError<T> = {
-    value: undefined,
+export function titleDoesNotExistError<T = unknown>(value: T, name: string): ImportLog<T> {
+  const option: LogOption = {
+    name: 'Error on title name or ID',
+    reason: `${name} should exist in the app but we couldn't find it.`,
+    message: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`,
+  };
+  return new ImportError(value, option);
+}
+
+export function wrongValueError<T = unknown>(value: T, name: string): ImportLog<T> {
+  const option: LogOption = {
     name: `Wrong ${name}`,
     reason: `${name} should be a value of the given list.`,
     message: `Please check the corresponding sheet field for mistakes, be sure to select a value form the list.`,
   };
-  return ImportError.newError(option);
+  return new ImportError(value, option);
 }
 
-export function unusedMandateIdWarning<T extends string>(value: T): BaseImportError<T> {
-  const option: BaseImportError<T> = {
-    value,
+export function unusedMandateIdWarning<T extends string>(value: T): ImportLog<T> {
+  const option: LogOption = {
     field: 'parentTerm',
     name: 'Unused Mandate ID/Row',
     reason:
       'Mandate ID is used only for sales contracts, here the value will be omitted because the contract is a mandate.',
     message: 'Remove the corresponding sheet field to silence this warning.',
   };
-  return ImportError.newWarning(option);
+  return new ImportWarning(value, option);
 }
 
-export function alreadyExistError<T = unknown>(name: string): BaseImportError<T> {
+export function alreadyExistError<T = unknown>(value: T, name: string): ImportLog<T> {
   const option = {
-    value: undefined,
     name: `${name} already exist`,
     reason: `We could not create a ${name} because it already exist on the app.`,
     message: `Please edit the corresponding sheet field with a different value.`,
   };
-  return ImportError.newError(option);
+  return new ImportError(value, option);
 }
 
 export function getOptionalWarning(name: string) {
@@ -282,36 +286,33 @@ export function getOptionalWarning(name: string) {
   } as const;
 }
 
-export function optionalWarning<T = unknown>(name: string, value?: T): BaseImportError<T> {
-  const option: BaseImportError<T> = {
+export function optionalWarning<T = unknown>(name: string, value?: T): ImportLog<T> {
+  const option: LogOption = {
     // value is `undefined` by default because optional warning mean that the value is missing,
     // for other warning the value should passed as a parameter
-    value,
     name: `Missing ${name}`,
     reason: 'Optional field is missing.',
     message: 'Fill in the corresponding sheet field to add a value.',
   };
-  return ImportError.newWarning(option);
+  return new ImportWarning(value, option);
 }
 
-export function adminOnlyWarning<T = unknown>(value: T, name: string): BaseImportError<T> {
-  const option: BaseImportError<T> = {
-    value,
+export function adminOnlyWarning<T = unknown>(value: T, name: string): ImportLog<T> {
+  const option: LogOption = {
     reason: "This field is reserved for admins, it's value will be omitted.",
     message: 'Remove the corresponding sheet field to silence this warning.',
     name: 'Admin only warning'
   };
-  return ImportError.newWarning(option);
+  return new ImportWarning(value, option);
 }
 
-export function wrongValueWarning<T = unknown>(value: T, name: string, wrongData: string[]): BaseImportError<T> {
-  const option: BaseImportError<T> = {
-    value,
+export function wrongValueWarning<T = unknown>(value: T, name: string, wrongData: string[]): ImportLog<T> {
+  const option: LogOption = {
     name: `Wrong ${name}`,
     reason: `Be careful, ${wrongData.length} values were wrong and will be omitted.`,
     message: `${wrongData.slice(0, 3).join(', ')}...`
   };
-  return ImportError.newWarning(option);
+  return new ImportWarning(value, option);
 }
 
 //@todo: harmonize ExceptionError with BaseImportError
@@ -323,60 +324,44 @@ export interface ExceptionError<T> {
   type?: 'error' | 'warning'
 }
 
-export function exceptionCaughtError<T = unknown>(options: ExceptionError<T>): ValueWithError<T> {
-  const { name, message, value, type, reason } = options;
-  return {
-    value,
-    error: {
-      type,
-      name,
-      reason,
-      message
-    }
-  };
+export interface LogOption {
+  name: string;
+  reason: string;
+  message: string;
+  field?: string;
 }
 
-
-export class BaseImportError<T> extends Error {
-  value: T;
+export abstract class ImportLog<T> extends Error {
   reason: string;
   field?: string;
   message: string;
+  abstract type: 'warning' | 'error';
 
-  constructor(options: ValueWithErrorSimple<T>) {
+  constructor(private value: T, options: LogOption) {
     super(options.message);
-    const { value, message, name, reason, field = '' } = options;
+    const { message, name, reason, field = '' } = options;
     this.name = name;
-    this.value = value;
     this.reason = reason;
     this.field = field;
     this.message = message;
-  }
-}
-
-export class ImportError<T> extends BaseImportError<T> {
-  public type: 'error' | 'warning';
-
-  private constructor(options: ValueWithErrorSimple<T>) {
-    super(options);
-    this.type = options.type;
-  }
-
-  static newError<T>(options: BaseImportError<T>) {
-    return new ImportError({ ...options, type: 'error' });
-  }
-
-  static newWarning<T>(options: BaseImportError<T>) {
-    return new ImportError({ ...options, type: 'warning' });
   }
 
   getValue() {
     return {
       name: this.name,
-      hint: this.message,
+      message: this.message,
       field: this.field,
       reason: this.reason,
-      type: this.type
+      type: this.type,
+      value: this.value
     }
   }
+}
+
+export class ImportError<T> extends ImportLog<T> {
+  public type = 'error' as const;
+}
+
+export class ImportWarning<T> extends ImportLog<T> {
+  public type = 'warning' as const;
 }

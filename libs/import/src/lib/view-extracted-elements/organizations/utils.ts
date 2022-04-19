@@ -43,7 +43,7 @@ type ModuleOrUndefined = Module | '';
 function formatAccess(value: string, name: string) {
   const rawModules = value.split(separator).map(m => m.trim().toLowerCase()) as ModuleOrUndefined[];
   const wrongValue = rawModules.some(module => ![...modules, ''].includes(module));
-  if (wrongValue) throw wrongValueError<ModuleAccess>(name);
+  if (wrongValue) throw wrongValueError<string>(value, name);
   const access: Partial<ModuleAccess> = {};
   for (const module of modules) access[module] = false;
   for (const module of rawModules) if (module !== '') access[module] = true;
@@ -63,26 +63,26 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
     /* a */ 'org.denomination.full': async (value: string) => {
-      if (!value) throw mandatoryError('Organization Name');
+      if (!value) throw mandatoryError(value, 'Organization Name');
       const exist = await getOrgId(value, organizationService, orgNameCache);
-      if (exist) throw alreadyExistError('Organization Name');
+      if (exist) throw alreadyExistError(value, 'Organization Name');
       return value
     },
     /* b */ 'org.denomination.public': async (value: string, data: Partial<FieldsConfig>) => {
       if (!value) throw optionalWarning('Organization Public Name', data.org.denomination.full);
       const exist = await getOrgId(value, organizationService, orgNameCache);
-      if (exist) throw alreadyExistError('Organization Public Name');
+      if (exist) throw alreadyExistError(value, 'Organization Public Name');
       return value;
     },
     /* c */ 'org.email': async (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) throw mandatoryError('Contract Email');
+      if (!lower) throw mandatoryError(value, 'Contract Email');
       return lower;
     },
     /* d */ 'org.activity': (value: string) => {
       if (!value) throw optionalWarning('Activity');
       const activity = getKeyIfExists('orgActivity', value);
-      if (!activity) throw wrongValueError('Activity');
+      if (!activity) throw wrongValueError(value, 'Activity');
       return activity;
     },
     /* e */ 'org.fiscalNumber': (value: string) => {
@@ -108,7 +108,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
     /* j */ 'org.addresses.main.country': (value: string) => {
       if (!value) return optionalWarning('Country');
       const country = getKeyIfExists('territories', value) as Territory;
-      if (!country) throw wrongValueError('Country');
+      if (!country) throw wrongValueError(value, 'Country');
       return country as any;
     },
     /* k */ 'org.addresses.main.phoneNumber': (value: string) => {
@@ -117,10 +117,10 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
     },
     /* l */ 'superAdmin.email': async (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) throw mandatoryError('Admin Email');
+      if (!lower) throw mandatoryError(value, 'Admin Email');
 
       const exist = await getUser({ email: lower }, userService, userCache);
-      if (exist) throw alreadyExistError('Admin Email');
+      if (exist) throw alreadyExistError(value, 'Admin Email');
 
       return lower;
     },
