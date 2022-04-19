@@ -222,3 +222,8 @@ export function hasDenomination(organization: Organization): boolean {
 export function capitalize(text: string) {
   return `${text[0].toUpperCase()}${text.substring(1)}`;
 }
+
+/** Returns only unique values from array of strings */
+export function unique(array: string[]) {
+  return Array.from(new Set(array));
+}
