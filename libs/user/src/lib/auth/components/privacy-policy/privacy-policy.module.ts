@@ -12,7 +12,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
 // Blockframes
-import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 import { GlobalModalModule } from '@blockframes/ui/modal/modal.module';
 
 @NgModule({
@@ -23,9 +22,8 @@ import { GlobalModalModule } from '@blockframes/ui/modal/modal.module';
     MatButtonModule,
     FlexLayoutModule,
     MatIconModule,
-    AppPipeModule,
     GlobalModalModule
   ],
   exports: [PrivacyPolicyComponent]
 })
-export class PrivacyPolicyModule {}
+export class PrivacyPolicyModule { }

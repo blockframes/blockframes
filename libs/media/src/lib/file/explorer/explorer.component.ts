@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit, OnInit, Inject } from '@angular/core';
-import { doc, Firestore, updateDoc } from 'firebase/firestore';
+import { Firestore } from '@angular/fire/firestore';
+import { where, doc, updateDoc } from 'firebase/firestore';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -16,7 +17,6 @@ import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { where } from 'firebase/firestore';
 
 function getDir(root: Directory, path: string) {
   return path.split('/').reduce((parent, segment) => parent?.children[segment] ?? parent, root);
