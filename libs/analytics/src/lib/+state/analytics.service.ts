@@ -61,7 +61,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     ];
 
     if (params?.titleId) query.push(where('meta.titleId', '==', params.titleId));
-    if (params?.uid) query.push(where('meta.uid', '==', params?.uid));
+    if (params?.uid) query.push(where('meta.uid', '==', params.uid));
 
     return this.valueChanges(query).pipe(
       // Filter out analytics from owners of title
