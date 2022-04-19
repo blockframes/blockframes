@@ -1,6 +1,5 @@
 import { firebase } from '@env';
 import * as admin from 'firebase-admin';
-import { clearFirestoreData } from '@firebase/rules-unit-testing';
 import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
 import { join, resolve, sep } from 'path';
@@ -207,8 +206,6 @@ function forceEmulatorExport(exportDir = defaultEmulatorBackupPath) {
   return runShellCommand(cmd);
 }
 
-export type FirestoreEmulator = FirebaseFirestore.Firestore & { clearFirestoreData?: typeof clearFirestoreData; };
-
 let db;
 let auth;
 
@@ -234,7 +231,7 @@ export function connectFirestoreEmulator() {
   }
 
   const app = admin.initializeApp({ projectId: firebase().projectId }, 'firestore');
-  db = app.firestore() as FirestoreEmulator;
+  db = app.firestore() as FirebaseFirestore.Firestore;
 
   db.settings({
     // port: dbPort,
@@ -243,7 +240,6 @@ export function connectFirestoreEmulator() {
     host: 'localhost',
     ssl: false,
   });
-  db.clearFirestoreData = clearFirestoreData;
   return db;
 }
 

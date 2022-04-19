@@ -1,7 +1,7 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
 import { TestBed } from '@angular/core/testing';
 import { MediaService } from './media.service';
-import { clearFirestoreData } from '@firebase/rules-unit-testing';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { ImageParameters, formatParameters } from '../image/directives/imgix-helpers';
 import { firebase } from '@env';
 import { createStorageFile, UploadData } from '@blockframes/model';
