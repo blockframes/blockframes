@@ -66,7 +66,7 @@ export async function getOrgId(
   cache: Record<string, string>
 ) {
   if (!name) return '';
-  if (name === 'Archipel Content') return centralOrgId.catalog;
+  if (name === 'Archipel Content' || name === centralOrgId.catalog) return centralOrgId.catalog;
 
   if (cache[name]) return cache[name];
 
@@ -95,15 +95,15 @@ export async function getTitleId(
   if (title) {
     if (isBlockframesAdmin) return memo(nameOrId, title);
     if (title.orgIds.includes(userOrgId)) return memo(nameOrId, title);
-    throw new Error(`You don't have access to title with id: ${nameOrId}`);
+    throw orgDoesNotPossesTitleError(nameOrId);
   }
   // nameOrId is the international title name
   const queryFn = isBlockframesAdmin
     ? [where('title.international', '==', nameOrId)]
     : [where('title.international', '==', nameOrId), where('orgIds', 'array-contains', userOrgId)];
   const titles = await titleService.getValue(queryFn);
-  if (!titles.length) throw new Error(`No title found with name/id "${nameOrId}".`);
-  if (titles.length !== 1) throw new Error(`Multiple titles with name "${nameOrId}" found.`);
+  if (!titles.length) throw titleDoesNotExistError(nameOrId);
+  if (titles.length !== 1) throw duplicateTitlesWithSameNameError(nameOrId);
   return memo(nameOrId, titles[0]);
 }
 
@@ -203,20 +203,18 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
 
   // if date seems strange we throw an Error
   const year = date.getFullYear();
-  if (year < 1895 || year > 2200) {
-    return {
-      value: undefined,
-      error: {
-        type: 'error',
-        name: `Invalid ${name}`,
-        reason: 'The date seems too far away in the past or in the future.',
-        message:
-          'Date must be between 1895 and 2200, if the date seems to be correct please check that Excel format the cell as a Date.',
-      },
-    };
-  }
+  if (year < 1895 || year > 2200) throw outOfRangeDate(value)
   date.setHours(0, 0, 0, 0);
   return date;
+}
+
+export function outOfRangeDate(name: string): ImportLog<string> {
+  const option: LogOption = {
+    name: `Invalid ${name}`,
+    reason: 'The date seems too far away in the past or in the future.',
+    message: 'Date must be between 1895 and 2200, if the date seems to be correct please check that Excel format the cell as a Date.',
+  };
+  return new ImportError(name, option);
 }
 
 export function mandatoryError<T = unknown>(value: T, name: string): ImportLog<T> {
@@ -237,13 +235,31 @@ export function unknownEntityError<T = unknown>(value: T, name: string): ImportL
   return new ImportError(value, option);
 }
 
-export function titleDoesNotExistError<T = unknown>(value: T, name: string): ImportLog<T> {
+export function titleDoesNotExistError(name: string): ImportLog<string> {
   const option: LogOption = {
     name: 'Error on title name or ID',
-    reason: `${name} should exist in the app but we couldn't find it.`,
+    reason: `No title found with name/id "${name}".`,
     message: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`,
   };
-  return new ImportError(value, option);
+  return new ImportError(name, option);
+}
+
+export function duplicateTitlesWithSameNameError(name: string): ImportLog<string> {
+  const option: LogOption = {
+    name: 'Error on title name or ID',
+    reason: `Multiple titles with name "${name}" found.`,
+    message: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`,
+  };
+  return new ImportError(name, option);
+}
+
+export function orgDoesNotPossesTitleError(name: string): ImportLog<string> {
+  const option: LogOption = {
+    name: 'Error on title name or ID',
+    reason: `${name} does not belong to your org`,
+    message: `You don't have access to title with id: ${name}`,
+  };
+  return new ImportError(name, option);
 }
 
 export function wrongValueError<T = unknown>(value: T, name: string): ImportLog<T> {
