@@ -13,6 +13,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterModule } from '@angular/router';
+import { GlobalModalModule } from '@blockframes/ui/modal/modal.module';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { RouterModule } from '@angular/router';
     MatFormFieldModule,
     MatButtonModule,
     MatCheckboxModule,
+    GlobalModalModule,
     RouterModule.forChild([]),
   ],
   exports: [SpecificTermsComponent],
