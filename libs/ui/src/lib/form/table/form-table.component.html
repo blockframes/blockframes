@@ -17,10 +17,10 @@
 
       <ng-template colRef="action" let-index="index" sticky>
         <div class="action-buttons">
-          <button type="button" mat-icon-button (click)="edit(index)">
+          <button type="button" mat-icon-button (click)="edit(index)" matTooltip="Edit">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
-          <button type="button" mat-icon-button (click)="remove(index)">
+          <button type="button" mat-icon-button (click)="remove(index)" matTooltip="Delete">
             <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </div>

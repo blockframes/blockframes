@@ -33,16 +33,10 @@ export function endMaintenance(db?: FirebaseFirestore.Firestore, ago?: number) {
 
   let endedAt = admin.firestore.FieldValue.serverTimestamp();
   if (ago) {
-    const time = new Date(new Date().getTime() - ago)
+    const time = new Date(new Date().getTime() - ago);
     endedAt = admin.firestore.Timestamp.fromDate(time);
   }
-  return maintenanceRef(db).set(
-    {
-      endedAt,
-      startedAt: null,
-    },
-    { merge: false }
-  );
+  return maintenanceRef(db).set({ endedAt, startedAt: null }, { merge: false });
 }
 
 export async function isInMaintenance(db?: FirebaseFirestore.Firestore): Promise<boolean> {
@@ -52,9 +46,7 @@ export async function isInMaintenance(db?: FirebaseFirestore.Firestore): Promise
 
     // if document doesn't exist, it means that there is something not normal,
     // we force maintenance mode to true.
-    if (!doc.exists) {
-      return true;
-    }
+    if (!doc.exists) return true;
 
     return _isInMaintenance(doc.data() as IMaintenanceDoc, 0);
   } catch (e) {

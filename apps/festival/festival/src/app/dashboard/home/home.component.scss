@@ -1,4 +1,4 @@
-@import "~@angular/flex-layout/mq";
+@import "@angular/flex-layout/mq";
 
 :host {
   display: flex;
@@ -49,8 +49,24 @@ header {
   }
 }
 
+@include layout-bp(gt-xs) {
+  analytics-pie-chart,
+  analytics-line-chart,
+  analytics-map {
+    width: calc(50% - 16px);
+    margin-right: 16px;
+  }
+}
+
 @include layout-bp(xs) {
   header {
     flex-direction: column;
+  }
+
+  analytics-pie-chart,
+  analytics-line-chart,
+  analytics-map {
+    width: calc(100% - 8px);
+    margin-right: 8px;
   }
 }

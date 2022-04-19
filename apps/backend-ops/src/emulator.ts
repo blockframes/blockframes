@@ -33,7 +33,7 @@ import { syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 
-export interface ImportEmulatorOptions {
+interface ImportEmulatorOptions {
   importFrom: string,
 }
 
@@ -64,7 +64,7 @@ export async function importEmulatorFromBucket({ importFrom }: ImportEmulatorOpt
   }
 }
 
-export interface StartEmulatorOptions {
+interface StartEmulatorOptions {
   importFrom: 'defaultImport' | string,
 }
 
@@ -165,7 +165,7 @@ export async function downloadProdDbBackup(localPath?: string) {
 /**
  * This function will run db anonymization on a locally running Firestore emulator database
  */
-export async function anonDbProcess() {
+async function anonDbProcess() {
   const db = connectFirestoreEmulator();
   const { getCI, storage, auth } = loadAdminServices();
   const o = await db.listCollections();

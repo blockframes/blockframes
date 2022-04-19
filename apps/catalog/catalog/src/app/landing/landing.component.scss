@@ -11,6 +11,11 @@ catalog-landing {
 
   landing-header {
     header {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 32px;
       background-image: url("/assets/images/content_header_background.png");
       background-repeat: no-repeat;
       background-size: cover;
@@ -129,6 +134,7 @@ catalog-landing {
 landing-app-link {
   section {
     padding-block: 72px;
+    text-align: center;
   }
 }
 
@@ -207,18 +213,23 @@ landing-app-link {
   }
 }
 
-@include layout-bp(lt-sm) {
+@include layout-bp(xs) {
   catalog-landing {
     landing-header {
       text-align: center;
+      header {
+        height: calc(100vh - 80px);
+        align-items: center;
+      }
     }
     landing-content {
       .landing-presentation {
-        padding: 72px 32px;
+        padding: 32px 16px;
       }
       text-align: center;
 
       .expertise {
+        padding: 32px 16px;
         div {
           img {
             width: 80%;

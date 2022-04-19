@@ -18,12 +18,12 @@ import {
   ContractDocument, 
   NegotiationDocument, 
   Offer,
-  staticModel
+  staticModel,
+  Timestamp
 } from '@blockframes/model';
 import { EventEmailData, OrgEmailData, UserEmailData, getMovieEmailData, getOfferEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
 import { format } from "date-fns";
-import { Timestamp } from '../data/internals';
 import { displayName } from '@blockframes/utils/utils';
 import { supportMailosaur } from '@blockframes/utils/constants';
 

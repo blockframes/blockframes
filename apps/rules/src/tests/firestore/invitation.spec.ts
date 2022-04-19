@@ -1,4 +1,5 @@
-﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+﻿import { assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+import { deleteApp, getApps } from 'firebase/app';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 import { Invitation, InvitationStatus } from '@blockframes/model';
 
@@ -8,10 +9,10 @@ describe('Invitation Rules Tests', () => {
 
   describe('With User not in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-sAdmin', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should not allow user to delete', async () => {
       const inviteRef = db.doc('invitations/I011');
@@ -26,10 +27,10 @@ describe('Invitation Rules Tests', () => {
 
   describe('With User in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-user2', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should not allow user to create ', async () => {
       const inviteRef = db.doc('invitations/001');
@@ -86,10 +87,10 @@ describe('Invitation Rules Tests', () => {
 
   describe('With unintended user, respond to invitation', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-sAdmin', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-sAdmin', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     const statuses = ['accepted', 'declined'];
     test.each(statuses)("should not allow user to set invitation as '%s'", async (status) => {
@@ -100,10 +101,10 @@ describe('Invitation Rules Tests', () => {
 
   describe('With invited user, respond to invitation', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-user2', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     const statuses = ['accepted', 'declined'];
     test.each(statuses)("should allow user to set invitation as '%s'", async (status) => {
@@ -114,10 +115,10 @@ describe('Invitation Rules Tests', () => {
 
   describe('With Anonymous user', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8-anon', firebase: { sign_in_provider: 'anonymous' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-c8-anon', { firebase: { sign_in_provider: 'anonymous' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should not be able to list all invitations', async () => {
       const allDocs = db.collection('invitations');
