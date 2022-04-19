@@ -4,7 +4,7 @@ import { ConfirmComponent } from './confirm.component';
 import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
-import { GlobalModalModule } from '@blockframes/ui/modal/modal.module';
+import { GlobalModalModule } from '../modal/modal.module';
 
 @NgModule({
   declarations: [ConfirmComponent],
