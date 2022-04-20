@@ -14,11 +14,11 @@ header {
     border-radius: 50%;
   }
 
-  section {
+  article {
     display: flex;
     gap: 24px;
 
-    article {
+    div {
       display: flex;
       flex-direction: column;
 
@@ -26,6 +26,19 @@ header {
         margin-top: auto;
       }
     }
+  }
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+
+  .metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
   }
 }
 

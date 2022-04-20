@@ -1,0 +1,26 @@
+analytics-metric-card {
+  section {
+    display: flex;
+    width: 220px;
+    flex-direction: column;
+    text-align: center;
+
+    .icon-wrapper {
+      background-color: var(--primary-lighter);
+      border-radius: 4px;
+      height: 40px;
+    
+      .mat-icon {
+        path, g, polygon {
+          fill: #fff;
+        }
+      }
+    
+      mat-icon {
+        display: block;
+        height: 100%;
+        margin: auto;
+      }
+    }
+  }
+}

@@ -6,12 +6,15 @@ import { BuyerAnalyticsComponent } from './buyer-analytics.component';
 
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { DisplayNameModule, ToLabelModule, MaxLengthModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes';
+import { MetricCardModule } from '@blockframes/analytics/components/metric-card/metric-card.module';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [
@@ -21,9 +24,13 @@ import { MatIconModule } from '@angular/material/icon';
     DisplayNameModule,
     OrgNameModule,
     ToLabelModule,
+    MetricCardModule,
+    TableModule,
+    MaxLengthModule,
     // Material
-    MatButtonModule,
     MatIconModule,
+    MatCardModule,
+    MatButtonModule,
     // Router
     RouterModule.forChild([
       {
