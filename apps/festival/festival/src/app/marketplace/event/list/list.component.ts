@@ -6,10 +6,9 @@ import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { FormList } from '@blockframes/utils/form';
-import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { orderBy, startAt, where } from 'firebase/firestore';
-import { Event, Screening } from '@blockframes/model';
+import { Event, Screening, AlgoliaOrganization } from '@blockframes/model';
 
 @Component({
   selector: 'festival-event-list',
