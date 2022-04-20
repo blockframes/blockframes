@@ -11,7 +11,7 @@ import {
   cleanOrgsDir,
   cleanUsersDir,
 } from './storage-cleaning';
-import { clearFirestoreData } from '@firebase/rules-unit-testing';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';;
 import { getCollectionRef } from '@blockframes/firebase-utils';
 
 let bucket;

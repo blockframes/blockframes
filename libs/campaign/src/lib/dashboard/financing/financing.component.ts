@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Campaign, CampaignService } from '@blockframes/campaign/+state';
+import { CampaignService } from '@blockframes/campaign/+state';
 import { CampaignForm } from '@blockframes/campaign/form/form';
-import { Movie } from '@blockframes/model';
+import { Movie, Campaign } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map, pluck, switchMap, tap } from 'rxjs/operators';
@@ -35,5 +35,5 @@ export class FinancingComponent {
     private movieService: MovieService,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService
-  ) {}
+  ) { }
 }

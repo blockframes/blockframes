@@ -1,4 +1,5 @@
-﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+﻿import { assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+import { deleteApp, getApps } from 'firebase/app';
 import {
   Firestore,
   initFirestoreApp,
@@ -36,13 +37,10 @@ describe('Movies Rules Tests', () => {
     };
 
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-user2',
-        firebase: { sign_in_provider: 'password' },
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-user2', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     describe('Read Movie', () => {
       test('should be able to read movie with status draft', async () => {
@@ -142,13 +140,10 @@ describe('Movies Rules Tests', () => {
     const draftMovieId = 'MI-0d7';
 
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-admin',
-        firebase: { sign_in_provider: 'password' },
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-admin', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should not be able to delete movie', async () => {
       const movieRef = db.doc(`movies/${draftMovieId}`);
@@ -162,13 +157,10 @@ describe('Movies Rules Tests', () => {
     const newMovieDetails = { id: `${newMovieId}` };
 
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-peeptom',
-        firebase: { sign_in_provider: 'password' },
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-peeptom', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('user without valid org should be able to read movie title', async () => {
       const movieRef = db.doc('movies/M001');
@@ -196,13 +188,10 @@ describe('Movies Rules Tests', () => {
     const acceptedMovieId = 'M001';
 
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-user3',
-        firebase: { sign_in_provider: 'password' },
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-user3', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should not be able to fetch movie collection for org where current user is not member of', async () => {
       const orgId = 'O001';
@@ -242,13 +231,10 @@ describe('Movies Rules Tests', () => {
 
   describe('With Anonymous user', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-        uid: 'uid-c8-anon',
-        firebase: { sign_in_provider: 'anonymous' },
-      });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-c8-anon', { firebase: { sign_in_provider: 'anonymous' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should not be able to list all movies', async () => {
       const allDocs = db.collection('movies');

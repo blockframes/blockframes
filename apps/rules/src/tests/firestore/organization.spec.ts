@@ -1,4 +1,5 @@
-﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+﻿import { assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+import { deleteApp, getApps } from 'firebase/app';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 
 describe('Organization Rules Tests', () => {
@@ -10,7 +11,7 @@ describe('Organization Rules Tests', () => {
       db = await initFirestoreApp(projectId, 'firestore.rules', testFixture);
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should not be able to read document', async () => {
       const orgDocRef = db.doc('orgs/O001');
@@ -40,10 +41,10 @@ describe('Organization Rules Tests', () => {
 
   describe('With Anonymous user', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8-anon', firebase: { sign_in_provider: 'anonymous' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-c8-anon', { firebase: { sign_in_provider: 'anonymous' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should be able to read document', async () => {
       const orgDocRef = db.doc('orgs/A001');
@@ -65,7 +66,7 @@ describe('Organization Rules Tests', () => {
       await assertFails(orgDocRef.delete());
     });
 
-     // @TODO #6908 updated with userHasValidOrg() when a solution for this is found.
+    // @TODO #6908 updated with userHasValidOrg() when a solution for this is found.
     test.skip('should not be able to list all orgs', async () => {
       const allDocs = db.collection('orgs');
       await assertFails(allDocs.get());
@@ -79,10 +80,10 @@ describe('Organization Rules Tests', () => {
 
   describe('With User as Org non-Member', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-c8', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should be able to read document', async () => {
       const orgDocRef = db.doc('orgs/O001');
@@ -112,10 +113,10 @@ describe('Organization Rules Tests', () => {
 
   describe('With User as or going to be Org Member', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user5', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-user5', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should be able to read own Org document', async () => {
       const orgDocRef = db.doc('orgs/O005');
@@ -165,10 +166,10 @@ describe('Organization Rules Tests', () => {
 
   describe('With User as Org Admin', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin4', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-admin4', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should be able to read own Org document', async () => {
       const orgDocRef = db.doc('orgs/O004');
@@ -205,10 +206,10 @@ describe('Organization Rules Tests', () => {
 
   describe('With User as Org Admin', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin6', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-admin6', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     const existingOrg = 'O006';
 
