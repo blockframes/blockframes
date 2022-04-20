@@ -2,7 +2,7 @@
 <article>
   <h6>
     Reference
-    <a mat-icon-button [routerLink]="link" fragment="reference">
+    <a mat-icon-button [routerLink]="link" fragment="reference" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
@@ -45,7 +45,7 @@
 <article>
   <h6>
     Images
-    <a mat-icon-button [routerLink]="link" fragment="images" reference="images">
+    <a mat-icon-button [routerLink]="link" fragment="images" reference="images" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
@@ -75,7 +75,7 @@
 <article>
   <h6>
     General Information
-    <a mat-icon-button [routerLink]="link" fragment="general-information">
+    <a mat-icon-button [routerLink]="link" fragment="general-information" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
@@ -133,7 +133,7 @@
 <article>
   <h6>
     Director{ movie.directors.controls.length, plural, =0 {} =1 {} other {s}}
-    <a mat-icon-button [routerLink]="link" fragment="directors">
+    <a mat-icon-button [routerLink]="link" fragment="directors" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>

@@ -38,16 +38,11 @@ export function mergeDeep<T>(target: T, source: Partial<T>): T {
   return output;
 }
 
-/** A custom interface for group of dates. Used in notifications/invitations components. */
-export interface DateGroup<T> {
-  [date: string]: T[];
-}
-
 /** Checks if the date is a firestore Timestamp. */
 function isTimeStamp(
   date: Timestamp | Date
 ): date is Timestamp {
-  return date && date instanceof Timestamp;
+  return date && date instanceof Timestamp; // TODO #8250
 }
 
 /** Takes a Date, a string or a Timestamp and returns it as a Date. */
@@ -221,4 +216,9 @@ export function hasDenomination(organization: Organization): boolean {
 
 export function capitalize(text: string) {
   return `${text[0].toUpperCase()}${text.substring(1)}`;
+}
+
+/** Returns only unique values from array of strings */
+export function unique(array: string[]) {
+  return Array.from(new Set(array));
 }

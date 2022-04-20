@@ -15,7 +15,7 @@ import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
-import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils';
+import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils/algolia/algolia';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { User, NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser, PermissionsDocument } from '@blockframes/model';
 import { groupIds } from '@blockframes/utils/emails/ids';

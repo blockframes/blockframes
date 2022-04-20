@@ -17,6 +17,7 @@ import { combineLatest } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
+import { joinWith } from '@blockframes/utils/operators';
 
 @Component({
   selector: 'dashboard-home',
@@ -36,6 +37,9 @@ export class HomeComponent {
   );
 
   private titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
+    joinWith({
+      org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
+    }, { shouldAwait: true }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 

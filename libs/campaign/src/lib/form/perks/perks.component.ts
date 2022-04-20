@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { Perk } from '@blockframes/model';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CrossFieldErrorMatcher } from '@blockframes/utils/form/matchers';
-import { Perk } from '../../+state';
 import { PerkForm } from '../form';
 
 const columns = {
