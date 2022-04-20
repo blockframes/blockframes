@@ -1,6 +1,12 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 
+interface SnackBarData {
+  message: string,
+  link: string[],
+  linkName: string,
+  'test-id'?: string
+};
 @Component({
   selector: 'snackbar-link',
   templateUrl: './snackbar-link.component.html',
@@ -10,6 +16,6 @@ import { MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar'
 export class SnackbarLinkComponent {
   constructor(
     public snackBarRef: MatSnackBarRef<SnackbarLinkComponent>,
-    @Inject(MAT_SNACK_BAR_DATA) public data: { message: string, link: string[], linkName: string },
+    @Inject(MAT_SNACK_BAR_DATA) public data: SnackBarData
   ) { }
 }
