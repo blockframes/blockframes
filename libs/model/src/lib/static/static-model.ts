@@ -231,7 +231,7 @@ export const movieCurrencies = {
 export const movieCurrenciesSymbols = {
   USD: '$',
   EUR: '€'
-} as const
+} as const;
 
 export const movieFormat = {
   '1_33': '1.33',

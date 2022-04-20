@@ -22,7 +22,6 @@ import { sendMailFromTemplate } from './internals/email';
 import { 
   emailErrorCodes, 
   EventEmailData, 
-  getBucketEmailData, 
   getEventEmailData, 
   getMovieEmailData, 
   getOrgEmailData, 
@@ -620,9 +619,8 @@ async function sendOfferCreatedConfirmation(recipient: User, notification: Notif
   const buyerOrg = await getDocument<OrganizationDocument>(`orgs/${offer.buyerId}`);
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
-  const bucket = getBucketEmailData(notification.bucket);
-  const adminTemplate = adminOfferCreatedConfirmationEmail(toUser, org, bucket);
-  const buyerTemplate = buyerOfferCreatedConfirmationEmail(toUser, buyerOrg, offer, bucket);
+  const adminTemplate = adminOfferCreatedConfirmationEmail(toUser, org, notification.bucket);
+  const buyerTemplate = buyerOfferCreatedConfirmationEmail(toUser, buyerOrg, offer, notification.bucket);
   await Promise.all([
     sendMailFromTemplate(adminTemplate, app, groupIds.unsubscribeAll),
     sendMailFromTemplate(buyerTemplate, app, groupIds.unsubscribeAll)

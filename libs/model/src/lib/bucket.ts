@@ -1,5 +1,5 @@
 import type { MovieCurrency } from './static';
-import { createHoldback, Holdback, MailContract } from './contract';
+import { createHoldback, EmailContract, Holdback } from './contract';
 import { BucketTerm } from './terms';
 import { createLanguageKey } from './movie';
 import { Timestamp } from './timestamp';
@@ -34,7 +34,7 @@ export interface MailBucket {
   id: string;
   currency: string;
   /** One contract per orgId / titleId / parent terms Id */
-  contracts: MailContract[];
+  contracts: EmailContract[];
   specificity: string;
   delivery: string;
   /** Needed to show user in email to business team */

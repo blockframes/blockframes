@@ -12,13 +12,13 @@ import {
   OrganizationDocument, 
   PublicOrganization, 
   MovieDocument, 
-  createMailContract, 
-  MailBucket,
   createMailTerm, 
   ContractDocument, 
   NegotiationDocument, 
   Offer,
   staticModel,
+  Bucket,
+  Timestamp,
 } from '@blockframes/model';
 import { EventEmailData, OrgEmailData, UserEmailData, getMovieEmailData, getOfferEmailData, MovieEmailData, getBucketEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
@@ -352,7 +352,7 @@ export function contractCreatedEmail(
   negotiation: NegotiationDocument, buyerOrg: OrganizationDocument
 ): EmailTemplateRequest {
   const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
-  const currency = staticModel['movieCurrenciesSymbols'][negotiation.currency];
+  const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
   const data = {
     user: toUser,
     app: { name: appName.catalog },
@@ -366,20 +366,22 @@ export function contractCreatedEmail(
 }
 
 /** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
-export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: MailBucket): EmailTemplateRequest {
+export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket<Timestamp>): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMM, yyyy');
-  const contracts = bucket.contracts.map(contract => createMailContract(contract));
-  const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date };
+  const mailBucket = getBucketEmailData(bucket);
+  const data = { org, bucket: { ...mailBucket }, user: toUser, baseUrl: appUrl.content, date };
+
   return { to: supportEmails.catalog, templateId: templateIds.offer.toAdmin, data };
 }
 
 /**To inform buyer that his offer has been successfully created. */
-export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offer: Offer, bucket: MailBucket): EmailTemplateRequest {
-  const contracts = bucket.contracts.map(contract => createMailContract(contract));
+export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offer: Offer, bucket: Bucket<Timestamp>): EmailTemplateRequest {
+  const mailBucket = getBucketEmailData(bucket);
+
   const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
   const data = {
     app: { name: appName.catalog },
-    bucket: { ...bucket, contracts },
+    bucket: { ...mailBucket },
     user: toUser,
     pageURL,
     baseUrl: appUrl.content,
@@ -411,7 +413,7 @@ export function counterOfferSenderEmail(
   negotiation: NegotiationDocument, title: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const terms = createMailTerm(negotiation.terms);
-  const currency = staticModel['movieCurrenciesSymbols'][negotiation.currency];
+  const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
   const pageURL = options.isMailRecipientBuyer
     ? `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`
     : `${appUrl.content}/c/o/dashboard/sales/${contractId}/view`;

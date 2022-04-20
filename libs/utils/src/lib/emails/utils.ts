@@ -15,11 +15,13 @@ import {
   MailBucket,
   MovieDocument,
   Bucket,
-  Timestamp
+  Timestamp,
+  createMailContract
 } from '@blockframes/model';
 import { AccessibilityTypes, ContractDocument, Offer, movieCurrencies, movieCurrenciesSymbols } from '@blockframes/model';
 import { toIcsFile } from "../agenda/utils";
 import { IcsEvent } from "../agenda/agenda.interfaces";
+import { getKeyIfExists } from "../helpers";
 
 interface EmailData {
   to: string;
@@ -49,6 +51,10 @@ export interface EmailTemplateRequest {
     contractId?: string;
   };
 }
+
+// export interface EmailContract extends Contract {
+//   price: string;
+// }
 
 export interface EmailParameters {
   request: EmailRequest | EmailTemplateRequest;
@@ -229,9 +235,12 @@ export function getMovieEmailData(movie: Partial<MovieDocument>): MovieEmailData
 }
 
 export function getBucketEmailData(bucket: Bucket<Timestamp>): MailBucket {
-  const currencyKey = Object.keys(movieCurrencies).find(key => movieCurrencies[key] === bucket.currency);
+  const currencyKey = getKeyIfExists('movieCurrencies', bucket.currency);
+  const contracts = bucket.contracts.map(contract => createMailContract(contract));
+
   return {
     ...bucket,
+    contracts,
     currency: movieCurrenciesSymbols[currencyKey]
-  }
+  };
 }

@@ -8,13 +8,12 @@ import { BucketContract } from './bucket';
 export function createMailContract(contract: BucketContract<Timestamp>) {
   const formatter = new Intl.NumberFormat('en-US');
   const formattedPrice = formatter.format(contract.price);
-  const updatedContract = {...contract} as any;
 
-  updatedContract.price = formattedPrice;
   return ({
-    ...updatedContract,
+    ...contract,
+    price: formattedPrice,
     terms: createMailTerm(contract.terms)
-  })
+  });
 }
 
 export interface Holdback<D extends Timestamp | Date = Date> {
@@ -63,7 +62,7 @@ export interface Sale<D extends Timestamp | Date = Date> extends Contract<D> {
 
 export type ContractDocument = Mandate<Timestamp> | Sale<Timestamp>;
 
-export type MailContract = ReturnType<typeof createMailContract>
+export type EmailContract = ReturnType<typeof createMailContract>;
 
 export function createHoldback(params: Partial<Holdback<Date>> = {}): Holdback {
   return {
