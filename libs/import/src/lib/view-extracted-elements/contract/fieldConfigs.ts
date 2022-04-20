@@ -2,7 +2,7 @@ import { ContractService } from "@blockframes/contract/contract/+state/contract.
 import {
   adminOnlyWarning, alreadyExistError, ImportLog, checkParentTerm, getContract,
   getOrgId, getTitleId, getUser, ImportError, mandatoryError, titleDoesNotExistError,
-  unknownEntityError, unusedMandateIdWarning, wrongValueError, LogOption
+  unknownEntityError, unusedMandateIdWarning, wrongValueError, LogOption, wrongTemplateKindError
 } from "@blockframes/import/utils";
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
@@ -70,6 +70,7 @@ interface ContractConfig {
   config: FormatConfig,
   separator: string,
 }
+
 export function getContractConfig(option: ContractConfig) {
   const {
     orgService,
@@ -118,6 +119,12 @@ export function getContractConfig(option: ContractConfig) {
           } as const;
           throw new ImportError(value, option);
         };
+
+        if (type !== 'sale' && type !== 'mandate') {
+          /**This is a seller template being imported in lieu of an admin template. */
+          throw wrongTemplateKindError('seller');
+        }
+
         return lower.toLowerCase() as 'mandate' | 'sale';
       },
         /* c */ 'contract.sellerId': async (value: string) => {
@@ -264,6 +271,12 @@ export function getContractConfig(option: ContractConfig) {
       },
         /* b */ 'contract.sellerId': async (value: string) => {
         if (!value) throw mandatoryError(value, 'Licensor');
+        const lower = value.toLowerCase();
+        const type = getKeyIfExists('contractType', lower[0].toUpperCase() + lower.substr(1));
+        if (type === 'sale' || type === 'mandate') {
+          /**This is an admin template being imported in lieu of a seller template. */
+          throw wrongTemplateKindError('admin');
+        }
         if (value === 'Archipel Content' || value === centralOrgId.catalog) {
           if (!blockframesAdmin) {
             const option: LogOption = {

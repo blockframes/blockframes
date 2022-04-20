@@ -102,7 +102,7 @@ export async function formatContract(
       : createSale(data.contract as Sale);
 
     const { titleId, sellerId } = contract;
-    if (titleId) {
+    if (titleId && sellerId) {
       const movieBelongsToLicensor = await titleService.getValue(titleId).then(title => title.orgIds.includes(sellerId));
       if (!movieBelongsToLicensor) {
         errors.push({
@@ -113,7 +113,8 @@ export async function formatContract(
         });
       }
     }
-    const terms = data.term.map(term => toTerm(term, contract.id, firestore));
+
+    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, firestore));
 
     // for **internal** sales we should check the parentTerm
     const isInternalSale = contract.type === 'sale' && contract.sellerId === centralOrgId.catalog;

@@ -1,7 +1,7 @@
 
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 import { GetKeys, GroupScope, StaticGroup, staticGroups, parseToAll, Scope } from '@blockframes/model';
-import { mandatoryError, SpreadsheetImportError, wrongValueWarning } from 'libs/import/src/lib/utils';
+import { mandatoryError, SpreadsheetImportError, WrongTemplateError, wrongValueWarning } from 'libs/import/src/lib/utils';
 import { getKeyIfExists } from '../helpers';
 
 type Matrix = any[][]; // @todo find better type
@@ -141,6 +141,8 @@ export async function parse<T>(
             item[segment] = result;
           }
         } catch (err) {
+          if (err instanceof WrongTemplateError)
+            throw err; //stops the recursive looping of parse.
           return errors.push(err);
         }
       } else {
@@ -149,6 +151,8 @@ export async function parse<T>(
       }
     }
   } catch (err) {
+    if (err instanceof WrongTemplateError)
+      throw err;
     errors.push({
       type: 'error',
       name: 'Unexpected Error',
@@ -221,10 +225,17 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
     const item = {};
     const errors: SpreadsheetImportError[] = [];
     const entries = Object.entries(config);
-    for (let columnIndex = 0; columnIndex < entries.length; columnIndex++) {
+    excelColumnLoop: for (let columnIndex = 0; columnIndex < entries.length; columnIndex++) {
       const [key, transform] = entries[columnIndex];
       const value = flatRows[rowIndex][columnIndex];
-      await parse<T>(state, item, item, value, key, transform as ParseFieldFn<T, typeof key>, rowIndex, errors)
+      try {
+        await parse<T>(state, item, item, value, key, transform as ParseFieldFn<T, typeof key>, rowIndex, errors)
+      } catch (err) {
+        if (err instanceof WrongTemplateError) {
+          errors.push(err.toJson());
+          break excelColumnLoop;
+        }
+      }
     }
     const data = cleanUp(item) as T;
     state.push(data);
