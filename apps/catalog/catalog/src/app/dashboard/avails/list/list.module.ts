@@ -10,10 +10,7 @@ import { ImageModule } from "@blockframes/media/image/directives/image.module";
 import { TableModule } from "@blockframes/ui/list/table/table.module";
 import { MaxLengthModule } from "@blockframes/utils/pipes";
 import { CatalogAvailsListComponent } from "./list.component";
-
-
-
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -31,6 +28,7 @@ import { CatalogAvailsListComponent } from "./list.component";
     MatProgressSpinnerModule,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
 
     RouterModule.forChild([{ path: '', component: CatalogAvailsListComponent }]
     ),

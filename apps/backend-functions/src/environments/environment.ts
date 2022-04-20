@@ -21,7 +21,7 @@ export {
 } from '@env';
 
 import { firebase } from '@env';
-import { mockConfigIfNeeded } from '@blockframes/firebase-utils';
+import { mockConfigIfNeeded } from '@blockframes/firebase-utils/firebase-utils';
 export const { projectId, storageBucket } = firebase();
 
 export const sendgridAPIKey = mockConfigIfNeeded('sendgrid', 'api_key');

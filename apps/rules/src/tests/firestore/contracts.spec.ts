@@ -1,4 +1,5 @@
-﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+﻿import { assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+import { deleteApp, getApps } from 'firebase/app';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 
 describe('Contracts Rules Tests', () => {
@@ -7,13 +8,10 @@ describe('Contracts Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, {
-      uid: 'uid-sAdmin',
-      firebase: { sign_in_provider: 'password' },
-    });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-sAdmin', { firebase: { sign_in_provider: 'password' } });
   });
 
-  afterAll(() => Promise.all(apps().map((app) => app.delete())));
+  afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
   it('[READ] succeed for any org', async () => {
     const isStakeholder = db.doc('contracts/C001');
