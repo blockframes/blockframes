@@ -5,7 +5,7 @@ interface SnackBarData {
   message: string,
   link: string[],
   linkName: string,
-  'test-id'?: string
+  test?: string
 };
 @Component({
   selector: 'snackbar-link',
