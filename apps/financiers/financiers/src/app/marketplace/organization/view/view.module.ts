@@ -5,6 +5,7 @@ import { ViewComponent } from './view.component';
 
 import { OrganizationViewModule as OrganizationLayoutModule } from '@blockframes/organization/layout/view/view.module';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 
 const routes = [{
@@ -31,6 +32,7 @@ const routes = [{
     CommonModule,
     OrganizationLayoutModule,
     MatButtonModule,
+    MatIconModule,
     RouterModule.forChild(routes)
   ]
 })

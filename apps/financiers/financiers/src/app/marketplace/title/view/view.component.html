@@ -4,7 +4,7 @@
       <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
         <ng-container *ngFor="let org of orgs$ | async">
           <org-chip [org]="org"></org-chip>
-          <a mat-flat-button color="primary" [href]="'mailto:' + org.email">
+          <a mat-flat-button color="accent" [href]="'mailto:' + org.email">
             <span>Contact Partner</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
