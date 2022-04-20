@@ -1,6 +1,6 @@
 ﻿/// <reference types="cypress" />
 
-import { acceptCookie, clearDataAndPrepareTest, clickOnMenu, setForm } from '@blockframes/e2e/utils/functions';
+import { acceptCookie, clearDataAndPrepareTest, clickOnMenu } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { SEC } from '@blockframes/e2e/utils';
@@ -96,7 +96,7 @@ const Movie = {
     "boxoffice-territory": 'France',
     "release-date": '01/01/2020',
     "budget-range": '$10 - 20 millions',
-    "address-country": 'France',
+    "country": 'France',
     "boxoffice-earnings": '120000',
     "rating": 'Tous publics',
     "rating-country": 'France',
@@ -256,7 +256,8 @@ describe.skip('User can navigate to the movie tunnel pages start and main.', () 
         //Fill the form for this step..
         cy.log(`=> Step : [${step.title}]`);
         cy.get('h1', {timeout: 3 * SEC}).contains(step.title);
-        setForm(step.selector, {inputValue: Movie[step.input]});
+        // TODO : if test is kept, don't use setForm / issue #6820
+        //setForm(step.selector, {inputValue: Movie[step.input]});
 
         //If there are component saves, click them..
         step.comp_save.forEach(comp => {

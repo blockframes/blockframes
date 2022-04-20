@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { MovieService } from '../+state';
+import { MovieService } from '../+state/movie.service';
 
 @Injectable({ providedIn: 'root' })
 export class MovieTunnelGuard implements CanActivate {

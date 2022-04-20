@@ -1,19 +1,17 @@
-import { Injectable } from "@angular/core";
-import { RouterQuery } from "@datorama/akita-ng-router-store";
+import { Inject, Injectable } from '@angular/core';
 import { firebaseRegion, firebase, emulators } from '@env';
-import { appName, getCurrentApp } from "./../apps";
-import { PdfParams } from "./pdf.interfaces";
+import { APP } from '../routes/utils';
+import { App, appName } from './../apps';
+import { PdfParams } from './pdf.interfaces';
 export const { projectId } = firebase();
 
 @Injectable({ providedIn: 'root' })
 export class PdfService {
 
-  constructor(
-    private routerQuery: RouterQuery
-  ) { }
+  constructor(@Inject(APP) private app: App) { }
 
   async download(titleIds: string[]) {
-    const app = getCurrentApp(this.routerQuery);
+    const app = this.app;
     const data: PdfParams = {
       titleIds,
       app

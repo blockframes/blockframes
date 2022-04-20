@@ -1,15 +1,17 @@
-import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { Component, ChangeDetectionStrategy, Pipe, PipeTransform, Inject } from '@angular/core';
+
 // Blockframes
 import { NotificationsForm } from './notifications.form';
-import { App, getCurrentApp } from "@blockframes/utils/apps";
-import { NotificationTypesBase, notificationTypesBase } from '@blockframes/notification/types';
+import { App } from "@blockframes/utils/apps";
+import { NotificationTypesBase, notificationTypesBase } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
 
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { APP } from '@blockframes/utils/routes/utils';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 interface NotificationSetting { text: string, tooltip: boolean };
 const titleType: Record<NotificationTypesBase, NotificationSetting> = {
@@ -17,7 +19,7 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   movieAskingPriceRequested: { text: `A user requests the asking price for a title.`, tooltip: false },
   movieAskingPriceRequestSent: { text: `Your request for the asking price has been sent.`, tooltip: false },
   requestFromUserToJoinOrgCreate: { text: 'A user requests to join your organization.', tooltip: true },
-  requestFromUserToJoinOrgDeclined: { text: 'A user\'s request to join your organization was declined. ', tooltip: false },
+  requestFromUserToJoinOrgDeclined: { text: 'A user\'s request to join your organization was declined. ', tooltip: false }, // TODO 8026
   orgMemberUpdated: { text: 'A user joins or leaves your organization.', tooltip: false },
   requestToAttendEventSent: { text: 'Your request to join an event is successfully sent.', tooltip: false },
   eventIsAboutToStart: { text: 'REMINDER - An event you\'re attending will start in 1 hour. (RECOMMENDED)', tooltip: false },
@@ -28,7 +30,7 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   invitationToAttendMeetingCreated: { text: 'You are invited to a meeting. (RECOMMENDED)', tooltip: true },
   invitationToAttendScreeningCreated: { text: 'You are invited to a screening. (RECOMMENDED)', tooltip: true },
   screeningRequested: { text: 'A screening has been requested. (RECOMMENDED)', tooltip: false },
-  screeningRequestSent: { text: 'Your screening request for screening was successfully sent', tooltip: false },
+  screeningRequestSent: { text: 'Your screening request was successfully sent', tooltip: false },
   offerCreatedConfirmation: { text: 'Your offer is successfully sent', tooltip: false },
   contractCreated: { text: 'An offer has been made on one of your titles. (RECOMMENDED)', tooltip: true },
   createdCounterOffer: { text: 'You\'ve created a counter offer.', tooltip: true },
@@ -37,13 +39,14 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   myContractWasAccepted: { text: 'Your counter offer was accepted. (RECOMMENDED)', tooltip: true },
   myOrgDeclinedAContract: { text: 'You declined a counter offer. (RECOMMENDED)', tooltip: true },
   myContractWasDeclined: { text: 'Your counter offer was declined. (RECOMMENDED)', tooltip: true },
-  underSignature: { text: 'Your offer is now under signature. (RECOMMENDED)', tooltip: true },
+  // #7946 this may be reactivated later
+  // underSignature: { text: 'Your offer is now under signature. (RECOMMENDED)', tooltip: true },
 };
 
 const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
   {
     title: 'Company Management',
-    types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated', 'requestFromUserToJoinOrgDeclined'],
+    types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated'],
     appAuthorized: ['catalog', 'festival', 'financiers']
   },
   {
@@ -76,7 +79,8 @@ const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
     types: [
       'offerCreatedConfirmation',
       'contractCreated',
-      'underSignature',
+      // #7946 this may be reactivated later
+      // 'underSignature',
     ],
     appAuthorized: ['catalog']
   },
@@ -130,11 +134,14 @@ export class NotificationsFormComponent {
   }
 
   public async update() {
-    const notifications = this.form.getRawValue();
-    const uid = this.authService.uid;
-    await this.authService.update({ uid, settings: { notifications } });
-
-    this.snackBar.open('Notifications settings updated.', 'close', { duration: 2000 });
+    try {
+      const notifications = this.form.getRawValue();
+      const uid = this.authService.uid;
+      await this.authService.update({ uid, settings: { notifications } });
+      this.snackBar.open('Notification Settings updated. ', 'close', { duration: 4000 });
+    } catch (err) {
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
+    }
   }
 }
 
@@ -158,11 +165,9 @@ export class EveryCheckedPipe implements PipeTransform {
 
 @Pipe({ name: 'showNotification' })
 export class ShowNotificationPipe implements PipeTransform {
-  currentApp = getCurrentApp(this.routerQuery);
-  public tables = tables;
-  constructor(private routerQuery: RouterQuery) { }
+  constructor(@Inject(APP) private app: App) { }
 
   transform(index: number) {
-    return this.tables[index].appAuthorized.includes(this.currentApp);
+    return tables[index].appAuthorized.includes(this.app);
   }
 }

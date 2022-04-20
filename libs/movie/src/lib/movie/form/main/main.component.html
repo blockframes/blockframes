@@ -17,7 +17,7 @@
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Original Title</mat-label>
           <input test-id="original-title" matInput type="text" placeholder="Original title" [formControl]="original" />
-          <mat-hint>If different from International Title</mat-hint>
+          <mat-hint>If different from International Title.</mat-hint>
         </mat-form-field>
       </article>
 
@@ -31,8 +31,7 @@
           </mat-error>
         </mat-form-field>
 
-        <static-select test-id="content-type" scope="contentType" [control]="form.contentType" fxFlex
-          [withoutValues]="['volume', 'episode', 'collection']">
+        <static-select test-id="content-type" required scope="contentType" [control]="form.contentType" fxFlex>
           <mat-label>Format</mat-label>
           <mat-error *ngIf="form.contentType.hasError('required')">
             Please specify your project’s format.
@@ -40,7 +39,7 @@
         </static-select>
       </article>
 
-      <ng-container *ngIf="contentType | async | isType: 'series'">
+      <ng-container *ngIf="form.contentType.value === 'tv'">
         <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
 
           <mat-form-field appearance="outline" fxFlex>
@@ -64,11 +63,11 @@
 
         <ng-container *ngIf="form.get('runningTime').get('status').value !== 'tobedetermined' as timeRequired">
           <mat-form-field appearance="outline" fxFlex>
-            <mat-label>{{ (form.contentType.value | typeDictionary).runningTime }}</mat-label>
+            <mat-label>{{ runningTime[form.contentType.value].label }}</mat-label>
             <input test-id="run-time" matInput type="number" name="runningTime"
               [formControl]="form.runningTime.get('time')" [required]="timeRequired" />
             <mat-hint>In minutes.</mat-hint>
-            <mat-error>{{ (form.contentType.value | typeDictionary).runningTimeError }}</mat-error>
+            <mat-error>{{ runningTime[form.contentType.value].error }}</mat-error>
           </mat-form-field>
         </ng-container>
 
@@ -131,7 +130,8 @@
           <mat-label>Release Year</mat-label>
           <input test-id="release-year" matInput [formControl]="form.release.get('year')" required type="number"
             placeholder="YYYY" />
-          <mat-error *ngIf="form.hasError('invalidYear', 'release.year')">Please enter a 4 digit date (e.g. 2020)
+          <mat-error *ngIf="form.hasError('invalidYear', 'release.year') && form.release.get('year').value > (maxReleaseYear - 1)">Release date should not exceed {{ (maxReleaseYear - 1) }}</mat-error>
+          <mat-error *ngIf="form.hasError('invalidYear', 'release.year') && form.release.get('year').value < maxReleaseYear">Please enter a 4 digit date (e.g. 2020)
           </mat-error>
           <mat-error *ngIf="form.hasError('required', 'release.year')">
             Please specify your project's release year.
@@ -145,6 +145,9 @@
             <mat-hint>
               Please specify if the release date is estimated or confirmed.
             </mat-hint>
+            <mat-error>
+              Please specify if the release date is estimated or confirmed.
+            </mat-error>
           </static-select>
         </ng-container>
 
@@ -200,14 +203,19 @@
       <h3>Director(s)*</h3>
 
       <bf-form-table [columns]="displayedColumns" [form]="form.directors">
-        <ng-template colRef="description" let-description>{{ description | maxLength: 80 }}</ng-template>
+        <ng-template colRef="description" let-description>
+          <span (click)="openDetails('Description', [description])">
+            {{ description | maxLength: 75 }}
+          </span>
+        </ng-template>
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}
         </ng-template>
         <ng-template colRef="category" let-category>{{ category | toLabel: 'directorCategory' }}
         </ng-template>
         <ng-template colRef="filmography" let-filmography>
-          <ng-container *ngFor="let film of filmography">{{ film | filmography }}
-          </ng-container>
+          <span (click)="openDetails('Filmography', filmography)">
+            {{ filmography | filmography | maxLength: 50 }}
+          </span>
         </ng-template>
         <ng-template formView let-directorForm>
           <article [formGroup]="directorForm">

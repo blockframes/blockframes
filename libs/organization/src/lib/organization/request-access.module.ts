@@ -9,6 +9,7 @@ import { OrgRequestAccessComponent } from './pages/request-access/request-access
 import { OrgRequestAccessPendingComponent } from './pages/request-access-pending/request-access-pending.component';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { AppPipeModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -41,6 +42,7 @@ export const requestAccessRoutes: Routes = [
     RouterModule.forChild(requestAccessRoutes),
     MatButtonToggleModule,
     MatTooltipModule,
+    AppPipeModule
   ],
   declarations: [OrgRequestAccessComponent, OrgRequestAccessPendingComponent]
 })

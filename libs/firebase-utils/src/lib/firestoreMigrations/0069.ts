@@ -1,9 +1,8 @@
 import * as env from '@env';
 import { Firestore, Storage } from '../types';
 import { runChunks } from '../firebase-utils';
-import { User } from '@blockframes/user/types';
+import { StorageFile, User } from '@blockframes/model';
 import { privacies } from '@blockframes/utils/file-sanitizer';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
 
 export const { storageBucket } = env.firebase();
 

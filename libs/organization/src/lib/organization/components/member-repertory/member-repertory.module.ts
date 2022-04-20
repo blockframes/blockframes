@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 // Modules
 import { MemberPermissionsModule } from '../member-permissions/member-permissions.module';
@@ -15,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { RouterModule } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -26,11 +28,13 @@ import { RouterModule } from '@angular/router';
     RouterModule,
     MemberPermissionsModule,
     ImageModule,
+    ClipboardModule,
     // Material
     MatButtonModule,
     MatIconModule,
     MatCardModule,
     MatListModule,
+    MatTooltipModule,
   ],
   exports: [
     MemberRepertoryComponent

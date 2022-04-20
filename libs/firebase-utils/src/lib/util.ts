@@ -3,9 +3,9 @@ import { firebase } from '@env';
 import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 import { config } from 'dotenv';
 import requiredVars from 'tools/mandatory-env-vars.json';
-import { OrganizationDocument } from '@blockframes/organization/+state/organization.model';
 import { resolve } from 'path';
 import { App } from '@blockframes/utils/apps';
+import { OrganizationDocument } from '@blockframes/model';
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -54,7 +54,7 @@ export function warnMissingVars(): void | never {
   };
   // Use '||' instead of '??' to detect empty string
   if (!missingVarsMessageShown) requiredVars.map(
-    ({ key, msg }: { key: string; msg: string }) => process.env?.[key] || warn(key, msg) // Should check prefix blockframesCi_
+    ({ key, msg }: { key: string; msg: string }) => process.env?.[key] || warn(key, msg) // TODO #7858 warnMissingVars should check for prefixed env vars
   );
   missingVarsMessageShown = true;
 }

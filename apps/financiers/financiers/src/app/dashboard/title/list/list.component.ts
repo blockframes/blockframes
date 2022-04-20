@@ -1,25 +1,39 @@
-import { Component, ChangeDetectionStrategy, OnInit, Optional } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, ChangeDetectionStrategy, OnInit, Optional, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { fromOrg, Movie, MovieService } from '@blockframes/movie/+state';
+import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
+import { Movie, storeStatus, StoreStatus } from '@blockframes/model';
 import { CampaignService, MovieCampaign } from '@blockframes/campaign/+state/campaign.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { App } from '@blockframes/utils/apps';
+import { APP } from '@blockframes/utils/routes/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 
 function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
   switch (filter) {
-    case 'all': return movies.filter(movie => movie.app.financiers.status !== 'archived');
-    case 'draft': return movies.filter(movie => movie.app.financiers.status === 'draft');
-    case 'ongoing': return movies.filter(movie => movie.app.financiers.status === 'accepted' && movie.campaign?.cap > movie.campaign?.received);
-    case 'achieved': return movies.filter(movie => movie.app.financiers.status === 'accepted' && movie.campaign?.cap === movie.campaign?.received);
-    case 'archived': return movies.filter(movie => movie.app.financiers.status === 'archived');
+    case 'all':
+      return movies.filter((movie) => movie.app.financiers.status !== 'archived');
+    case 'draft':
+      return movies.filter((movie) => movie.app.financiers.status === 'draft');
+    case 'ongoing':
+      return movies.filter(
+        (movie) =>
+          movie.app.financiers.status === 'accepted' &&
+          movie.campaign?.cap > movie.campaign?.received
+      );
+    case 'achieved':
+      return movies.filter(
+        (movie) =>
+          movie.app.financiers.status === 'accepted' &&
+          movie.campaign?.cap === movie.campaign?.received
+      );
+    case 'archived':
+      return movies.filter((movie) => movie.app.financiers.status === 'archived');
   }
 }
 
@@ -27,11 +41,9 @@ function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
   selector: 'financiers-dashboard-title-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent implements OnInit {
-  public app = getCurrentApp(this.routerQuery);
-  public appName = appName[this.app];
   titles$: Observable<MovieCampaign[]>;
   titleCount$: Observable<Record<string, number>>;
   filter = new FormControl('all');
@@ -40,44 +52,52 @@ export class ListComponent implements OnInit {
   constructor(
     private campaignService: CampaignService,
     private orgService: OrganizationService,
-    private router: Router,
-    private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
+    private snackbar: MatSnackBar,
     private movieService: MovieService,
-    private routerQuery: RouterQuery,
-    @Optional() private intercom: Intercom
-  ) { }
+    @Optional() private intercom: Intercom,
+    @Inject(APP) public app: App
+  ) {}
 
   ngOnInit() {
     this.titles$ = this.orgService.currentOrg$.pipe(
-      switchMap(org => this.movieService.valueChanges(fromOrg(org.id)).pipe(map(movies => movies.map(m => m.id)))),
-      switchMap(movieIds => this.campaignService.queryMoviesCampaign(movieIds)),
-      map(movies => movies.filter(movie => movie.app.financiers.access)),
-      switchMap(movies => this.filter$.pipe(map(filter => filterMovieCampaign(movies, filter)))),
-      tap(movies => {
-        movies.length ?
-          this.dynTitle.setPageTitle('My titles') :
-          this.dynTitle.setPageTitle('My titles', 'Empty');
+      switchMap((org) =>
+        this.movieService
+          .valueChanges(fromOrg(org.id))
+          .pipe(map((movies) => movies.map((m) => m.id)))
+      ),
+      switchMap((movieIds) => this.campaignService.queryMoviesCampaign(movieIds)),
+      map((movies) => movies.filter((movie) => movie.app.financiers.access)),
+      switchMap((movies) =>
+        this.filter$.pipe(map((filter) => filterMovieCampaign(movies, filter)))
+      ),
+      tap((movies) => {
+        movies.length
+          ? this.dynTitle.setPageTitle('My titles')
+          : this.dynTitle.setPageTitle('My titles', 'Empty');
       })
     );
 
     this.titleCount$ = this.orgService.currentOrg$.pipe(
-      switchMap(org => this.movieService.valueChanges(fromOrg(org.id)).pipe(map(movies => movies.map(m => m.id)))),
-      switchMap(movieIds => this.campaignService.queryMoviesCampaign(movieIds)),
-      map(movies => movies.filter(movie => movie.app.financiers.access)),
-      map(m => ({
+      switchMap((org) =>
+        this.movieService
+          .valueChanges(fromOrg(org.id))
+          .pipe(map((movies) => movies.map((m) => m.id)))
+      ),
+      switchMap((movieIds) => this.campaignService.queryMoviesCampaign(movieIds)),
+      map((movies) => movies.filter((movie) => movie.app.financiers.access)),
+      map((m) => ({
         all: m.length,
-        draft: m.filter(m => m.app.financiers.status === 'draft').length,
-        ongoing: m.filter(m => m.app.financiers.status === 'submitted' && m.campaign?.cap > m.campaign?.received).length,
-        achieved: m.filter(m => m.app.financiers.status === 'accepted' && m.campaign?.cap === m.campaign?.received).length,
-        archived: m.filter(m => m.app.financiers.status === 'archived').length,
+        draft: m.filter((m) => m.app.financiers.status === 'draft').length,
+        ongoing: m.filter(
+          (m) => m.app.financiers.status === 'submitted' && m.campaign?.cap > m.campaign?.received
+        ).length,
+        achieved: m.filter(
+          (m) => m.app.financiers.status === 'accepted' && m.campaign?.cap === m.campaign?.received
+        ).length,
+        archived: m.filter((m) => m.app.financiers.status === 'archived').length,
       }))
     );
-  }
-
-  /** Navigate to tunnel if status is draft, else go to page */
-  public goToTitle(title: Movie) {
-    this.router.navigate([title.id], { relativeTo: this.route });
   }
 
   public applyFilter(filter: Filters) {
@@ -86,5 +106,10 @@ export class ListComponent implements OnInit {
 
   public openIntercom(): void {
     return this.intercom.show();
+  }
+
+  async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
+    await this.movieService.updateStatus(movie.id, status);
+    this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 }

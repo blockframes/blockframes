@@ -1,0 +1,31 @@
+@import '@angular/flex-layout/mq';
+
+.chart {
+  height: 215px;
+  margin-bottom: 16px;
+}
+
+mat-card-content {
+  height: 80%;
+}
+
+mat-card {
+  width: 30%;
+}
+
+img {
+  height: 120px;
+  margin-bottom: 16px;
+}
+
+@include layout-bp(lt-lg) {
+  mat-card {
+    width: 45%;
+  }
+}
+
+@include layout-bp(xs) {
+  mat-card {
+    width: 80%;
+  }
+}

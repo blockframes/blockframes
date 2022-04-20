@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Campaign, CampaignService } from '../../+state';
-import { switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CampaignService } from '../../+state';
+import { pluck, switchMap } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'campaign-marketplace-investment',
@@ -10,18 +9,15 @@ import { Observable } from 'rxjs';
   styleUrls: ['./investment.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceInvestmentComponent implements OnInit {
-  campaign$: Observable<Campaign>;
+export class MarketplaceInvestmentComponent {
+  campaign$ = this.route.params.pipe(
+    pluck('movieId'),
+    switchMap((id: string) => this.service.valueChanges(id)),
+  );
 
   constructor(
     private service: CampaignService,
-    private route: RouterQuery,
+    private route: ActivatedRoute,
   ) { }
-
-  ngOnInit(): void {
-    this.campaign$ = this.route.selectParams('movieId').pipe(
-      switchMap((id: string) => this.service.valueChanges(id))
-    )
-  }
 
 }

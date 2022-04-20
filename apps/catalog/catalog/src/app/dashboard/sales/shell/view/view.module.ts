@@ -7,6 +7,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ContractItemModule } from '@blockframes/contract/contract/components/item/contract-item.module';
 import { HoldbackListModule } from '@blockframes/contract/contract/holdback/list/list.module';
 import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
+import { ConfirmWithValidationModule } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.module';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +25,7 @@ import { SaleViewComponent } from './view.component';
     ContractItemModule,
     HoldbackListModule,
     NegotiationPipeModule,
+    ConfirmWithValidationModule,
     //Material
     MatButtonModule,
     MatSnackBarModule,

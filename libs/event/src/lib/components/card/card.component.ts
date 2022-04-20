@@ -1,15 +1,21 @@
-import { Component, ChangeDetectionStrategy, Input, Pipe, PipeTransform, HostBinding } from '@angular/core';
-import { Movie } from '@blockframes/movie/+state';
-import { ScreeningEvent, MeetingEvent } from '../../+state';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Pipe,
+  PipeTransform,
+  HostBinding,
+} from '@angular/core';
+import { Movie, ScreeningEvent, MeetingEvent, SlateEvent } from '@blockframes/model';
 
 @Component({
   selector: 'event-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {
-  @Input() event: ScreeningEvent | MeetingEvent;
+  @Input() event: ScreeningEvent | MeetingEvent | SlateEvent;
   @Input() size: 'small' | 'large';
 
   @HostBinding('class')

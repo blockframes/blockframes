@@ -1,9 +1,12 @@
+// Algolia
+import { SearchResponse } from '@algolia/client-search';
+
 // Angular
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { createStorageFile } from '@blockframes/media/+state/media.firestore';
 
 // Blockframes
-import { AlgoliaMovie, AlgoliaOrganization, AlgoliaService, SearchResponse } from '@blockframes/utils/algolia';
+import { AlgoliaService } from '@blockframes/utils/algolia';
+import { AlgoliaMovie, AlgoliaOrganization, createStorageFile } from '@blockframes/model';
 
 // env
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';

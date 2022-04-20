@@ -3,8 +3,8 @@
   <mat-form-field appearance="outline">
     <mat-label>Company Activity</mat-label>
     <mat-select test-id="activity" [formControl]="form.get('activity')" aria-label="Company Activity" required>
-      <ng-container *ngFor="let activity of activities | keyvalue">
-        <mat-option *ngIf="activity.key !== 'other'" [value]="activity.key">
+      <ng-container *ngFor="let activity of activities | keyvalue; let i = index">
+        <mat-option *ngIf="activity.key !== 'other'" [value]="activity.key" [attr.test-id]="'activity_' + i">
           {{ activity.value }}
         </mat-option>
       </ng-container>
@@ -14,8 +14,9 @@
 
   <static-select [withoutValues]="['world']" [control]="form.get('addresses').get('main').get('country')"
     required
-    test-id="address-country"
-    scope="territories">
+    scope="territories"
+    test-id="country"
+  >
     <mat-label>Company Country of Origin</mat-label>
   </static-select>
 
@@ -26,8 +27,12 @@
         <mat-icon svgIcon="info"
           matTooltip="Depending on your role, you might have access to different features of the platform."></mat-icon>
       </div>
-      <mat-button-toggle-group test-id="appAccessToggleGroup" [ngClass]="{ disabled: false }" name="appAccess"
-        [formControl]="form.get('appAccess')">
+      <mat-button-toggle-group
+        [ngClass]="{ disabled: false }"
+        name="appAccess"
+        [formControl]="form.get('appAccess')"
+        test-id="role"
+      >
         <mat-button-toggle value="marketplace">{{ roles[app].marketplace }}</mat-button-toggle>
         <mat-button-toggle value="dashboard">{{ roles[app].dashboard }}</mat-button-toggle>
       </mat-button-toggle-group>

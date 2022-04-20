@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BucketService } from '@blockframes/contract/bucket/+state';
-import { MovieCurrency } from '@blockframes/utils/static-model';
+import { MovieCurrency } from '@blockframes/model';
 
 @Component({
   selector: 'catalog-specific-terms',
@@ -17,7 +17,7 @@ export class SpecificTermsComponent implements OnInit {
     specificity: new FormControl(),
     delivery: new FormControl(),
     acceptTerms: new FormControl(false)
-  })
+  });
 
   constructor(
     private bucketService: BucketService,

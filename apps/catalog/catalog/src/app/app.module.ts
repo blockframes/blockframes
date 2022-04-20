@@ -1,4 +1,7 @@
 import { filter } from 'rxjs/operators';
+import { emulatorConfig } from '../environment/environment';
+import { production, firebase, firebaseRegion, sentryDsn, intercomId } from '@env';
+import { IntercomModule } from 'ng-intercom';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
@@ -11,45 +14,36 @@ import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { production, firebase, firebaseRegion } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
 
 // Angular Fire
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFirePerformanceModule, PerformanceMonitoringService } from '@angular/fire/performance';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireStorageModule } from '@angular/fire/storage';
-import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
+import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
+import { provideFunctions, getFunctions, connectFunctionsEmulator } from '@angular/fire/functions';
+import { connectFirestoreEmulator, initializeFirestore, provideFirestore } from '@angular/fire/firestore';
+import { providePerformance, getPerformance, } from '@angular/fire/performance';
+import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
+import { provideStorage, getStorage } from '@angular/fire/storage';
+import { provideAnalytics, getAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 import 'firebase/storage';
 
-// Sentry
-import { SentryModule } from '@blockframes/utils/sentry.module';
-import { sentryDsn } from '@env';
-
-// Yandex Metrika
-import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
-
-// Intercom
-import { IntercomModule } from 'ng-intercom';
-import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
-import { intercomId } from '@env';
-
-// Analytics
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
-
+// Material
 import { MatNativeDateModule } from '@angular/material/core';
 
+// Blockframes
+import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
+import { SentryModule } from '@blockframes/utils/sentry.module';
+// #7936 this may be reactivated later
+// import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
+import { HotjarService } from '@blockframes/utils/hotjar/hotjar.service';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
-
-import { emulatorConfig } from '../environment/environment';
 import { AuthService } from '@blockframes/auth/+state';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @NgModule({
   declarations: [AppComponent],
@@ -64,14 +58,32 @@ import { AuthService } from '@blockframes/auth/+state';
     IntercomModule.forRoot({ appId: intercomId }),
 
     // Firebase
-    AngularFireModule.initializeApp(firebase('catalog')),
-    AngularFirestoreModule,
-    AngularFireFunctionsModule,
-    AngularFirePerformanceModule,
-    AngularFireAuthModule,
-    AngularFireStorageModule,
-    AngularFireAnalyticsModule,
-    // Analytics
+    provideFirebaseApp(() => initializeApp(firebase('catalog'))),
+    provideFirestore(() => {
+      const db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
+      if (emulatorConfig.firestore) {
+        connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
+      }
+      return db;
+    }),
+    provideFunctions(() => {
+      const functions = getFunctions(getApp(), firebaseRegion);
+      if (emulatorConfig.functions) {
+        connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
+      }
+      return functions;
+    }),
+    providePerformance(() => getPerformance()),
+    provideAuth(() => {
+      const auth = getAuth();
+      if (emulatorConfig.auth) {
+        connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
+      }
+      return auth;
+    }),
+    provideStorage(() => getStorage()),
+    provideAnalytics(() => getAnalytics()),
+
     sentryDsn ? SentryModule : ErrorLoggerModule,
 
     // Akita
@@ -97,9 +109,8 @@ import { AuthService } from '@blockframes/auth/+state';
     CookieBannerModule
   ],
   providers: [
-    ScreenTrackingService, UserTrackingService, PerformanceMonitoringService,
-    { provide: REGION, useValue: firebaseRegion },
-    ...emulatorConfig
+    ScreenTrackingService, UserTrackingService,
+    { provide: APP, useValue: 'catalog' }
   ],
   bootstrap: [AppComponent]
 })
@@ -109,13 +120,15 @@ export class AppModule {
     router: Router,
     analytics: FireAnalytics,
     intercomService: IntercomService,
-    yandexService: YandexMetricaService,
+    // yandexService: YandexMetricaService, #7936 this may be reactivated later
+    hotjarService: HotjarService,
     gdprService: GDPRService,
     authService: AuthService,
   ) {
 
-    const { intercom, yandex } = gdprService.cookieConsent;
-    if (yandex) yandexService.insertMetrika('catalog');
+    const { intercom, yandex, hotjar } = gdprService.cookieConsent;
+    // if (yandex) yandexService.insertMetrika('catalog'); #7936 this may be reactivated later
+    if (hotjar) hotjarService.insertHotjar('catalog');
     intercom && intercomId ? intercomService.enable(authService.profile) : intercomService.disable();
 
     analytics.setUserProperties(getBrowserWithVersion());

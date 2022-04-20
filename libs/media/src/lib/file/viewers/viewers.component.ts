@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-
-import { MeetingMediaControl } from '@blockframes/event/+state/event.firestore';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { StorageFile, MeetingMediaControl } from '@blockframes/model';
 
 @Component({
   selector: '[ref] file-viewers',

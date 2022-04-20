@@ -1,6 +1,6 @@
 import { Injectable, Optional } from '@angular/core';
 import { Intercom } from 'ng-intercom';
-import { User } from '@blockframes/user/types';
+import { User } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
 export class IntercomService {

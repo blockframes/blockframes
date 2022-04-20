@@ -10,10 +10,13 @@ import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboar
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
 import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 import { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.config';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
+import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
+import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 
 // Tunnel routes
 import { titleTunnelRoutes } from './tunnel/routes';
@@ -28,7 +31,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
-import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 
 const routes: Routes = [{
   path: '',
@@ -107,6 +109,9 @@ const routes: Routes = [{
     ToLabelModule,
     OrgAccessModule,
     MovieFormShellModule,
+    SidenavAuthModule,
+    SidenavWidgetModule,
+
     // Material
     MatDividerModule,
     MatListModule,

@@ -9,7 +9,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ListComponent } from './list.component';
 
 // Blockframes
-import { ToLabelModule } from '@blockframes/utils/pipes';
+import { AppPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
@@ -17,6 +17,7 @@ import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { MaxLengthModule } from "@blockframes/utils/pipes";
+import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -40,6 +41,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FilterByModule,
     TagModule,
     MaxLengthModule,
+    AppPipeModule,
+    CellModalModule,
     // Material
     MatButtonModule,
     MatTabsModule,

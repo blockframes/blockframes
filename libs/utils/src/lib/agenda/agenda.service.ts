@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Event, isMeeting, isScreening } from '@blockframes/event/+state/event.model';
-import { OrganizationService, orgName } from "@blockframes/organization/+state";
+import { orgName, Event, isMeeting, isScreening, isSlate } from "@blockframes/model";
+import { OrganizationService } from "@blockframes/organization/+state";
 import { sendgridEmailsFrom } from "../apps";
 import { IcsEvent } from "./agenda.interfaces";
 import { downloadIcs, toGoogleLink } from "./utils";
@@ -31,7 +31,7 @@ export class AgendaService {
 }
 
 function createIcsFromEvent(e: Event, orgName?: string): IcsEvent {
-  const event = isScreening(e) || isMeeting(e) ? e : undefined;
+  const event = isScreening(e) || isMeeting(e) || isSlate(e) ? e : undefined;
   if (!event) return;
   return {
     id: event.id,

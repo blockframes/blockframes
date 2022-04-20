@@ -8,6 +8,7 @@ import { LandingComponent } from './landing.component';
 import { LandingShellModule } from '@blockframes/landing/shell/shell.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
+import { AppBridgeBannerModule } from '@blockframes/landing/appBridgeBanner/app-bridge-banner.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -24,6 +25,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     ReactiveFormsModule,
     ImageModule,
     AppLogoModule,
+    AppBridgeBannerModule,
 
     // Material
     MatButtonModule,

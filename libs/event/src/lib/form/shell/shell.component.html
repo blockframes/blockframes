@@ -4,7 +4,7 @@
       <mat-icon svgIcon="close"></mat-icon>
     </button>
     <h1>You are about to leave the form.</h1>
-    <p>Some changes have not been saved.<br/>If you leave now, you will lose these changes.</p>
+    <p>Some changes have not been saved.<br />If you leave now, you will lose these changes.</p>
     <div fxLayout="column" fxLayoutAlign="center">
       <button class="save" mat-flat-button color="primary" [mat-dialog-close]="true">
         Save & Exit</button>
@@ -23,9 +23,9 @@
           <mat-icon svgIcon="arrow_back"></mat-icon>
         </a>
         <mat-chip-list fxLayoutAlign="center center">
-          <mat-chip disableRipple *ngIf="screenerMissing || titleMissing">
+          <mat-chip disableRipple *ngIf="errorChipMessage">
             <mat-icon svgIcon="warning"></mat-icon>
-            <span>{{titleMissing ? 'No title selected' : 'Screening file missing'}}</span>
+            <span>{{errorChipMessage}}</span>
           </mat-chip>
         </mat-chip-list>
       </div>
@@ -51,19 +51,15 @@
     </mat-card>
 
     <nav mat-tab-nav-bar>
-      <ng-container *ngFor="let tab of (tabs$ |async)"> 
-        <a mat-tab-link 
-        [routerLink]="tab.path" 
-        routerLinkActive 
-        #rla="routerLinkActive"
-        [active]="rla.isActive">
-        {{ tab.label }}</a>
+      <ng-container *ngFor="let tab of (tabs$ |async)">
+        <a mat-tab-link [routerLink]="tab.path" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">
+          {{ tab.label }}</a>
       </ng-container>
     </nav>
   </form>
 
   <div class="routerContainer" [@routeAnimation]="animationOutlet(outlet)">
-    <router-outlet #outlet="outlet"></router-outlet> 
+    <router-outlet #outlet="outlet"></router-outlet>
   </div>
 
   <a class="goToEvent" mat-button mat-flat-button color="primary" [routerLink]="internalLink">Go to Event Page</a>

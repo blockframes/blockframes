@@ -6,22 +6,26 @@
 import { supportEmails, appUrl, e2eMode } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
-import { RequestDemoInformations, OrganizationDocument, PublicOrganization, MovieDocument } from '../data/types';
-import { PublicUser } from '@blockframes/user/+state/user.firestore';
-import { EventEmailData, OrgEmailData, UserEmailData } from '@blockframes/utils/emails/utils';
+import { RequestDemoInformations } from '@blockframes/utils/request-demo';
+import { 
+  PublicUser, 
+  OrganizationDocument, 
+  PublicOrganization, 
+  MovieDocument, 
+  createMailContract, 
+  Bucket, 
+  createMailTerm, 
+  ContractDocument, 
+  NegotiationDocument, 
+  Offer,
+  staticModel,
+  Timestamp
+} from '@blockframes/model';
+import { EventEmailData, OrgEmailData, UserEmailData, getMovieEmailData, getOfferEmailData, MovieEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
-import { Bucket } from '@blockframes/contract/bucket/+state/bucket.model';
 import { format } from "date-fns";
-import { testEmail } from "@blockframes/e2e/utils/env";
-import { Offer } from '@blockframes/contract/offer/+state';
-import type { ContractDocument } from '@blockframes/contract/contract/+state';
-import { createMailContract, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
-
-import { NegotiationDocument } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
-import { staticModel } from '@blockframes/utils/static-model';
-import { Timestamp } from '../data/internals';
-import { createMailTerm } from '@blockframes/contract/term/+state/term.firestore';
 import { displayName } from '@blockframes/utils/utils';
+import { supportMailosaur } from '@blockframes/utils/constants';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -33,6 +37,7 @@ const ADMIN_REVIEW_MOVIE_PATH = '/c/o/dashboard/crm/movie';
  * @param app
  */
 function getSupportEmail(app?: App) {
+  if (e2eMode) return supportMailosaur;
   if (app && !!supportEmails[app]) {
     return supportEmails[app]
   }
@@ -155,15 +160,6 @@ export function invitationToJoinOrgDeclined(toAdmin: UserEmailData, userSubject:
     userSubject,
   };
   return { to: toAdmin.email, templateId: templateIds.invitation.organization.declined, data };
-}
-
-/** Send email to users to inform them that organization has declined their request to join it */
-export function requestToJoinOrgDeclined(toUser: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
-  const data = {
-    user: toUser,
-    org
-  };
-  return { to: toUser.email, templateId: templateIds.request.joinOrganization.declined, data };
 }
 
 /** Send email to org admin to inform him that an user has left his org */
@@ -306,12 +302,14 @@ export function reminderEventToUser(
 /** Generate an email to seller mentioning a screening has been requested */
 export function screeningRequestedToSeller(
   toUser: UserEmailData,
-  buyer: PublicUser,
+  buyer: UserEmailData,
+  org: OrgEmailData,
   movie: MovieDocument,
 ): EmailTemplateRequest {
   const data = {
     user: toUser,
     buyer,
+    org,
     movie,
     pageURL: `${appUrl.market}/c/o/dashboard/event/new/edit?titleId=${movie.id}`
   };
@@ -324,22 +322,23 @@ export function movieAcceptedEmail(toUser: UserEmailData, movieTitle: string, mo
   return { to: toUser.email, templateId: templateIds.movie.accepted, data };
 }
 
-export function movieAskingPriceRequested(toUser: UserEmailData, fromBuyer: UserEmailData, movieTitle: string, territories: string, message: string): EmailTemplateRequest {
+export function movieAskingPriceRequested(toUser: UserEmailData, fromBuyer: UserEmailData, buyerOrg: OrgEmailData, movie: MovieEmailData, territories: string, message: string): EmailTemplateRequest {
   const data = {
     user: toUser,
-    buyer: displayName(fromBuyer),
-    movieTitle,
+    buyer: fromBuyer,
+    org: buyerOrg,
+    movie,
     territories,
     message,
-    pageURL: `mailto:${fromBuyer.email}?subject=Interest in ${movieTitle} via Archipel Market`
+    pageURL: `mailto:${fromBuyer.email}?subject=Interest in ${movie.title.international} via Archipel Market`
   };
   return { to: toUser.email, templateId: templateIds.movie.askingPriceRequested, data };
 }
 
-export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieDocument, orgNames: string, territories: string, message: string): EmailTemplateRequest {
+export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieEmailData, orgNames: string, territories: string, message: string): EmailTemplateRequest {
   const data = {
     user: toUser,
-    movieTitle: movie.title.international,
+    movie,
     orgNames,
     territories,
     message,
@@ -358,7 +357,7 @@ export function contractCreatedEmail(
   const data = {
     user: toUser,
     app: { name: appName.catalog },
-    title,
+    movie: getMovieEmailData(title),
     contract,
     negotiation,
     pageURL,
@@ -372,19 +371,20 @@ export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
   const date = format(new Date(), 'dd MMM, yyyy');
   const contracts = bucket.contracts.map(contract => createMailContract(contract));
   const data = { org, bucket: { ...bucket, contracts }, user: toUser, baseUrl: appUrl.content, date };
-  return { to: toUser.email, templateId: templateIds.offer.toAdmin, data };
+  return { to: supportEmails.catalog, templateId: templateIds.offer.toAdmin, data };
 }
 
 /**To inform buyer that his offer has been successfully created. */
-export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offerId: string, bucket: Bucket<Timestamp>): EmailTemplateRequest {
+export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offer: Offer, bucket: Bucket<Timestamp>): EmailTemplateRequest {
   const contracts = bucket.contracts.map(contract => createMailContract(contract));
-  const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offerId}`;
+  const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
   const data = {
     app: { name: appName.catalog },
     bucket: { ...bucket, contracts },
     user: toUser,
     pageURL,
-    offerId,
+    baseUrl: appUrl.content,
+    offer: getOfferEmailData(offer),
     org
   };
   return { to: toUser.email, templateId: templateIds.offer.toBuyer, data };
@@ -399,10 +399,9 @@ export function counterOfferRecipientEmail(
     : `${appUrl.content}/c/o/dashboard/sales/${contractId}/view`;
   const data = {
     user: toUser,
-    offerId,
     org: senderOrg,
     pageURL,
-    title,
+    movie: getMovieEmailData(title),
     app: { name: appName.catalog }
   };
   return { to: toUser.email, templateId: templateIds.negotiation.receivedCounterOffer, data };
@@ -426,43 +425,52 @@ export function counterOfferSenderEmail(
     contractId,
     app: { name: appName.catalog },
     negotiation: { ...negotiation, terms, currency },
-    title
+    movie: getMovieEmailData(title)
   };
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
 }
 
+export function toAdminCounterOfferEmail(title: MovieDocument, offerId: string): EmailTemplateRequest {
+  const pageURL = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
 
-//Sent when all the contracts of an offer have either been accepted or declined.
-export function offerAcceptedOrDeclined(
-  user: UserEmailData, offer: Offer, contracts: ContractDocument[]
-): EmailTemplateRequest {
-  const isOfferAccepted = offer.status === 'accepted';
-  const acceptedContracts = contracts.filter(contract => contract.status === 'accepted');
-  const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
   const data = {
-    contracts: isOfferAccepted ? acceptedContracts : contracts,
-    offer,
-    user,
-    pageURL,
-    app: { name: appName.catalog }
+    movie: getMovieEmailData(title),
+    pageURL
   };
-  const templateId = isOfferAccepted ? templateIds.offer.allContractsAccepted : templateIds.offer.allContractsDeclined;
-  return { to: user.email, templateId, data };
+  return { to: supportEmails.catalog, templateId: templateIds.negotiation.toAdminCounterOffer, data };
 }
 
+// #7946 this may be reactivated later
+// Sent when all the contracts of an offer have either been accepted or declined.
+// export function offerAcceptedOrDeclined(
+//   user: UserEmailData, offer: Offer, contracts: ContractDocument[]
+// ): EmailTemplateRequest {
+//   const isOfferAccepted = offer.status === 'accepted';
+//   const acceptedContracts = contracts.filter(contract => contract.status === 'accepted');
+//   const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
+//   const data = {
+//     contracts: isOfferAccepted ? acceptedContracts : contracts,
+//     offer,
+//     user,
+//     pageURL,
+//     app: { name: appName.catalog }
+//   };
+//   // const templateId = isOfferAccepted ? templateIds.offer.allContractsAccepted : templateIds.offer.allContractsDeclined;
+//   return { to: user.email, templateId, data };
+// }
 
-export function offerUnderSignature(
-  user: UserEmailData, offerId: string, contract: ContractDocument, negotiation: MailContract,
-  title: string
-): EmailTemplateRequest {
-  const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
-  const data = {
-    contract, offerId, user, negotiation,
-    title, pageURL, app: { name: appName.catalog }
-  };
-  const templateId = templateIds.offer.underSignature;
-  return { to: user.email, templateId, data };
-}
+// export function offerUnderSignature(
+//   user: UserEmailData, offerId: string, contract: ContractDocument, negotiation: MailContract,
+//   title: string
+// ): EmailTemplateRequest {
+//   const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
+//   const data = {
+//     contract, offerId, user, negotiation,
+//     title, pageURL, app: { name: appName.catalog }
+//   };
+//   const templateId = templateIds.offer.underSignature;
+//   return { to: user.email, templateId, data };
+// }
 
 
 // ------------------------- //
@@ -499,7 +507,7 @@ const userFirstConnexionTemplate = (user: PublicUser) =>
   `;
 
 /** Generates a transactional email request to let cascade8 admin know that a new org have been created. */
-export async function organizationCreated(org: OrganizationDocument): Promise<EmailRequest> {
+export function organizationCreated(org: OrganizationDocument): EmailRequest {
   const supportEmail = getSupportEmail(org._meta.createdFrom);
 
   return {
@@ -513,7 +521,7 @@ export async function organizationCreated(org: OrganizationDocument): Promise<Em
  * Generates a transactional email request to let cascade8 admin know that a new org is waiting for app access.
  * It sends an email to admin to accept or reject the request
  */
-export async function organizationRequestedAccessToApp(org: OrganizationDocument, app: App, module: Module): Promise<EmailRequest> {
+export function organizationRequestedAccessToApp(org: OrganizationDocument, app: App, module: Module): EmailRequest {
   return {
     to: getSupportEmail(org._meta.createdFrom),
     subject: 'An organization requested access to an app',
@@ -521,8 +529,8 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
   };
 }
 
-export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest> {
-  const supportEmail = e2eMode ? testEmail : getSupportEmail(user._meta.createdFrom);
+export function userFirstConnexion(user: PublicUser) {
+  const supportEmail = getSupportEmail(user._meta.createdFrom);
   return {
     to: supportEmail,
     subject: 'New user connexion',

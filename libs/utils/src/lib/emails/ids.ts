@@ -73,21 +73,25 @@ export const templateIds = {
   },
   offer: {
     toAdmin: 'd-94a20b20085842f68fb2d64fe325638a',
-    toBuyer: 'd-1d6a00bab6f448299e9fcdaec7c4c787',
-    allContractsAccepted: 'd-4f067ef3abca42cc9d8dc25b57935ccc',
-    allContractsDeclined: 'd-c92f8799273f497cb2256eb6ed8baa78',
-    underSignature: 'd-38ee6949f4724b1c8796b8df9229f21d'
+    toBuyer: 'd-a4ee1970187e4fd8bef47a4008a2267a',
+    // #7946 this may be reactivated later
+    // allContractsAccepted: 'd-4f067ef3abca42cc9d8dc25b57935ccc', 
+    // allContractsDeclined: 'd-c92f8799273f497cb2256eb6ed8baa78',
+    // underSignature: 'd-38ee6949f4724b1c8796b8df9229f21d'
   },
   contract: {
-    created: 'd-f7c2e13b7d6b427daf08bdfdf904d697'
+    created: 'd-268b02ed0eb9452ba3acb2a97457d172'
   },
   negotiation: {
-    receivedCounterOffer: 'd-eccc758b6e09492b8449dc218fa762db',
-    createdCounterOffer: 'd-ea33a9ce21534aaa99377590c52bf362',
-    myOrgAcceptedAContract: 'd-5f45ee1375c04ddba84e6dd60664a689',// send to org who accepted the contract
-    myContractWasAccepted: 'd-54c26ec9b0c54039b64bc40255513fba',// send to org whose contract was accepted
-    myOrgDeclinedAContract: 'd-8227446674064157991ffc8b00b70224',// send to org who declined the contract
-    myContractWasDeclined: 'd-5c4a64135974424592504a5409b35ad8',// send to org whose contract was declined
+    receivedCounterOffer: 'd-516fc0e2d4094fa9a2afa55e89f0f5a3',
+    createdCounterOffer: 'd-0b967db91fec4ef39f175e373953766c',
+    myOrgAcceptedAContract: 'd-e127e70b634347788d07cad355421999',// send to org who accepted the contract
+    myContractWasAccepted: 'd-df1f3b4ce57c4634961223fa309729dd',// send to org whose contract was accepted
+    myOrgDeclinedAContract: 'd-c32f642c1c2d45f285aa926322518957',// send to org who declined the contract
+    myContractWasDeclined: 'd-b928481ce938423dabb34e50c264d320',// send to org whose contract was declined
+    toAdminCounterOffer: 'd-ac1dfcbf692d4ef8888ccad9b6938c8e',
+    toAdminContractAccepted: 'd-6750c3d980834301a057403668deceed',
+    toAdminContractDeclined: 'd-fba5c684bdbc4187b27b82e2ba703a2a',
   }
 }
 

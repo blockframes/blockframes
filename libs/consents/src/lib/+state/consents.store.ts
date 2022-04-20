@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityStore, StoreConfig, EntityState, ActiveState } from '@datorama/akita';
-import { Access } from './consents.firestore';
+import { Access } from '@blockframes/model';
 
 export interface ConsentsState extends EntityState<Access<Date>, string>, ActiveState<string> {}
 

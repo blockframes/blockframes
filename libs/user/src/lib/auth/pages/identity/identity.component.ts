@@ -1,17 +1,14 @@
-import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy, Inject } from '@angular/core';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp, getAppName, App } from '@blockframes/utils/apps';
-import { createDocumentMeta } from '@blockframes/utils/models-meta';
-import { AlgoliaOrganization } from '@blockframes/utils/algolia';
+import { App } from '@blockframes/utils/apps';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
-import { createPublicUser, PublicUser, User } from '@blockframes/user/types';
-import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
+import { createPublicUser, PublicUser, User, createOrganization, createDocumentMeta, AlgoliaOrganization } from '@blockframes/model';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
 import { createLocation } from '@blockframes/utils/common-interfaces/utility';
@@ -20,6 +17,8 @@ import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
 import { filter } from 'rxjs/operators';
+import { APP } from '@blockframes/utils/routes/utils';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'auth-identity',
@@ -32,8 +31,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
   public user$ = this.authService.profile$;
   public creating = false;
-  public app: App;
-  public appName: string;
   public indexGroup = 'indexNameOrganizations';
   public form = new IdentityForm();
   public orgControl = new FormControl();
@@ -54,16 +51,14 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private router: Router,
     private invitationService: InvitationService,
     private orgService: OrganizationService,
-    private routerQuery: RouterQuery,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
-    @Optional() private intercom: Intercom
+    @Optional() private intercom: Intercom,
+    @Inject(APP) public app: App,
   ) { }
 
 
   async ngOnInit() {
-    this.app = getCurrentApp(this.routerQuery);
-    this.appName = getAppName(this.app).label;
 
     const existingUserWithDisplayName = !!this.authService.profile && !!hasDisplayName(this.authService.profile);
     const existingUserWithoutDisplayName = !!this.authService.profile && !hasDisplayName(this.authService.profile);
@@ -115,7 +110,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.form.patchValue(user);
 
     this.disableControls(['email', 'firstName', 'lastName', 'password', 'confirm', 'generatedPassword']);
-  }  
+  }
 
   private disableControls(keys: (keyof IdentityFormControl)[]) {
     for (const key of keys) {
@@ -164,7 +159,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.cdr.markForCheck();
       switch (err.code) {
         case 'auth/email-already-in-use':
-          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: 8000 });
+          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: 6000 });
+          break;
+        case 'auth/invalid-email':
+          this.snackBar.open('Incorrect email address, please enter: text@example.com', 'close', { duration: 5000 });
           break;
         case 'auth/wrong-password':
           this.snackBar.open('Incorrect Invitation Pass. Please check your invitation email.', 'close', { duration: 8000 });
@@ -298,9 +296,12 @@ export class IdentityComponent implements OnInit, OnDestroy {
       });
     }
 
-    const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
-      .where('type', '==', 'joinOrganization')
-      .where('toUser.uid', '==', this.authService.uid));
+    const query = [
+      where('mode', '==', 'invitation'),
+      where('type', '==', 'joinOrganization'),
+      where('toUser.uid', '==', this.authService.uid)
+    ];
+    const invitations = await this.invitationService.getValue(query);
     const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
     if (pendingInvitation) {
       // Accept the invitation from the organization.
@@ -339,7 +340,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   public async searchForInvitation() {
-    const event = await this.invitationService.getInvitationLinkedToEmail(this.form.get('email').value).toPromise<AlgoliaOrganization | boolean>();
+    const { data: event } = await this.invitationService.getInvitationLinkedToEmail(this.form.get('email').value);
     if (event) {
       this.existingUser = true;
       this.form.get('generatedPassword').enable();

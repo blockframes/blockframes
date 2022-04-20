@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationMember } from '@blockframes/user/+state/user.model';
-import { UserRole } from '@blockframes/permissions/+state/permissions.model';
+import { OrganizationMember, UserRole } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
@@ -13,29 +12,13 @@ export class MemberRepertoryComponent {
   @Input() members: OrganizationMember[];
   @Input() showFilter = false;
   @Input() isSuperAdmin: boolean;
-  @Input() @boolean showEdit = false;
+  @Input() @boolean showActions = false;
 
   @Output() memberRemoved = new EventEmitter<string>();
 
   @Output() updatedToSuperAdmin = new EventEmitter<string>();
   @Output() updatedToAdmin = new EventEmitter<string>();
   @Output() updatedToMember = new EventEmitter<string>();
-
-  @Input() memberColumns = {
-    uid: '',
-    firstName: 'First Name',
-    lastName: 'Last Name',
-    email: 'Email Address',
-    position: 'Position',
-    role: 'Permissions'
-  };
-
-  @Input() memberColumnsIndex = ['firstName', 'lastName', 'email', 'position', 'role'];
-
-
-  get variableColumns() {
-    return this.memberColumnsIndex.filter(col => !['firstName', 'lastName', 'role', 'uid', 'edit'].includes(col))
-  }
 
   public displayRole(role: UserRole) {
     switch (role) {

@@ -1,5 +1,5 @@
 import { AvailsFilter } from "../avails";
-import { allButSouthKorea } from "./mandatesAndSales";
+import { allButSouthKorea, Europe } from "./mandatesAndSales";
 
 export const availDetailsExclusive: AvailsFilter = {
   duration: {
@@ -272,4 +272,63 @@ export const availsListCanada: AvailsFilter = {
   medias: ['freeTv']
 };
 
+export const availsPayTV: AvailsFilter = {
+  duration: {
+    from: new Date('02/28/2022'),
+    to: new Date('02/23/2023'),
+  },
+  exclusive: true,
+  territories: [],
+  medias: ['payTv']
+};
 
+export const availsPlanes: AvailsFilter = {
+  duration: {
+    from: new Date('02/28/2022'),
+    to: new Date('02/23/2023'),
+  },
+  exclusive: true,
+  territories: [],
+  medias: ['planes']
+};
+
+
+export const availsBrewster1: AvailsFilter = {
+  duration: {
+    from: new Date(),
+    to: new Date(),
+  },
+  exclusive: true,
+  territories: ['france', 'china'],
+  medias: ['planes']
+};
+
+export const availsBrewster2: AvailsFilter = {
+  duration: {
+    from: new Date(),
+    to: new Date(),
+  },
+  exclusive: false,
+  territories: Europe,
+  medias: ['aVod', 'fVod', 'nVod', 'sVod']
+};
+
+export const availsBrewster3: AvailsFilter = {
+  duration: {
+    from: new Date(),
+    to: new Date(),
+  },
+  exclusive: true,
+  territories: Europe,
+  medias: ['aVod', 'fVod', 'nVod', 'sVod']
+};
+
+export const availsBrewster4: AvailsFilter = {
+  duration: {
+    from: new Date(),
+    to: new Date(),
+  },
+  exclusive: true,
+  territories: ['france', 'china'],
+  medias: ['planes', 'payTv']
+};

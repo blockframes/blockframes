@@ -1,16 +1,17 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef } from '@angular/core';
 import { EventService } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
-import { InvitationService, Invitation } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { combineLatest, of, Observable, BehaviorSubject } from 'rxjs';
 import { catchError, filter, switchMap, pluck, tap, startWith } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
 import { AuthService } from '@blockframes/auth/+state';
-import { Event } from '@blockframes/event/+state/event.model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
+import { Event, Invitation } from '@blockframes/model';
+import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Component({
   selector: 'festival-event-view',
@@ -26,6 +27,7 @@ export class EventViewComponent implements OnInit {
   user$ = this.authService.profile$;
   event$: Observable<Event>;
   requestSent = false;
+  ltMd$ = this.breakpointsService.ltMd;
   private statusChanged = new BehaviorSubject(false);
   public timerEnded = false;
   private preventBrowserEvent = false;
@@ -34,6 +36,7 @@ export class EventViewComponent implements OnInit {
     private route: ActivatedRoute,
     private service: EventService,
     private invitationService: InvitationService,
+    private breakpointsService: BreakpointsService,
     private location: Location,
     private authService: AuthService,
     private dynTitle: DynamicTitleService,

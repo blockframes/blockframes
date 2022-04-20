@@ -8,6 +8,7 @@ import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { FileUploaderService } from '@blockframes/media/+state';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 @Component({
   selector: 'user-profile-edit',
@@ -24,7 +25,7 @@ export class ProfileComponent implements OnInit {
     private authService: AuthService,
     private uploaderService: FileUploaderService,
     private snackBar: MatSnackBar,
-    ) { }
+  ) { }
 
   ngOnInit() {
     this.profileForm = new ProfileForm(this.authService.profile);
@@ -38,25 +39,34 @@ export class ProfileComponent implements OnInit {
           throw new Error('Your profile information are not valid.')
         } else {
           const uid = this.authService.uid;
-  
+
           this.uploaderService.upload();
           await this.authService.update({ uid, ...this.profileForm.value });
-  
+
           this.snackBar.open('Profile updated.', 'close', { duration: 2000 });
           this.profileForm.markAsPristine();
         }
       }
-    
+
       // update password
       if (this.passwordForm.dirty) {
         if (this.passwordForm.invalid) throw new Error('Your information to change your password are not valid.');
         const { current, next } = this.passwordForm.value;
         await this.authService.updatePassword(current, next);
         this.snackBar.open('Password changed.', 'close', { duration: 2000 });
+        this.passwordForm.reset();
         this.passwordForm.markAsPristine();
       }
-    } catch (error) {
-      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    } catch (err) {
+      switch (err.message) {
+        case 'Your profile information are not valid':
+        case 'Your information to change your password are not valid.':
+          this.snackBar.open(err.message, 'close', { duration: 2000 });
+          break;
+        default:
+          this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
+          break;
+      }
     }
   }
 }

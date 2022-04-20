@@ -1,10 +1,10 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { Organization, createOrganization } from '@blockframes/organization/+state/organization.model';
 import { ModuleAccessCrmForm } from './module-access-crm.form';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { OrganizationDenominationForm, OrganizationAddressesForm } from '@blockframes/organization/forms/organization.form';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { createOrganization, Organization } from '@blockframes/model';
 
 function createOrgCrmControls(entity: Partial<Organization>) {
   const org = createOrganization(entity);

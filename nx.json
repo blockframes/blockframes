@@ -2,7 +2,7 @@
   "implicitDependencies": {
     "angular.json": "*",
     "package.json": "*",
-    "tslint.json": "*",
+    ".eslintrc": "*",
     "nx.json": "*",
     "tsconfig.base.json": "*"
   },
@@ -14,117 +14,55 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"],
-        "cacheDirectory": ".cache/nx"
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ],
+        "cacheDirectory": ".cache/nx",
+        "parallel": 1
       }
     }
   },
-  "projects": {
-    "ui": {
-      "tags": ["ui"]
+  "targetDependencies": {
+    "build": [
+      {
+        "target": "build",
+        "projects": "dependencies"
+      }
+    ]
+  },
+  "cli": {
+    "warnings": {
+      "versionMismatch": false
     },
-    "utils": {
-      "tags": ["utils"]
+    "defaultCollection": "@nrwl/angular",
+    "analytics": "af619e50-5007-4476-b488-ccf1b32d3440"
+  },
+  "generators": {
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
     },
-    "contract": {
-      "tags": []
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
     },
-    "admin": {
-      "tags": []
+    "@nrwl/schematics:node-application": {
+      "framework": "express"
     },
-    "movie": {
-      "tags": ["movie"]
+    "@nrwl/angular": {
+      "convert-tslint-to-eslint": {
+        "ignoreExistingTslintConfig": true,
+        "removeTSLintIfNoMoreTSLintTargets": true
+      }
     },
-    "organization": {
-      "tags": []
-    },
-    "backend-functions": {
-      "tags": ["node"]
-    },
-    "backend-ops": {
-      "tags": ["backend-ops", "ops", "node", "local"]
-    },
-    "notification": {
-      "tags": ["notification"]
-    },
-    "catalog": {
-      "tags": ["catalog"]
-    },
-    "catalog-e2e": {
-      "tags": []
-    },
-    "festival": {
-      "tags": ["festival"]
-    },
-    "festival-e2e": {
-      "tags": [],
-      "implicitDependencies": ["festival"]
-    },
-    "user": {
-      "tags": ["user"]
-    },
-    "event": {
-      "tags": ["event"]
-    },
-    "e2e": {
-      "tags": []
-    },
-    "landing": {
-      "tags": []
-    },
-    "import": {
-      "tags": []
-    },
-    "media": {
-      "tags": []
-    },
-    "crm": {
-      "tags": ["crm"]
-    },
-    "crm-e2e": {
-      "tags": [],
-      "implicitDependencies": ["crm"]
-    },
-    "invitation": {
-      "tags": []
-    },
-    "firebase-utils": {
-      "tags": []
-    },
-    "financiers": {
-      "tags": []
-    },
-    "financiers-e2e": {
-      "tags": [],
-      "implicitDependencies": ["financiers"]
-    },
-    "campaign": {
-      "tags": []
-    },
-    "cms": {
-      "tags": []
-    },
-    "cms-e2e": {
-      "tags": [],
-      "implicitDependencies": ["cms"]
-    },
-    "consents": {
-      "tags": []
-    },
-    "rules": {
-      "tags": ["security rules", "local", "node"]
-    },
-    "testing-unit-tests": {
-      "tags": ["node", "local"]
-    },
-    "testing-cypress": {
-      "tags": ["node", "local"]
-    },
-    "testing-e2e": {
-      "tags": ["shared"]
-    },
-    "analytics": {
-      "tags": []
+    "@nrwl/angular:component": {
+      "displayBlock": true,
+      "changeDetection": "OnPush",
+      "skipTests": true,
+      "style": "scss"
     }
-  }
+  },
+  "defaultProject": "festival"
 }

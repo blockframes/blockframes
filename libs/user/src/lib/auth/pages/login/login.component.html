@@ -12,3 +12,10 @@
     <a routerLink="/auth/identity">CREATE ACCOUNT</a>
   </div>
 </ng-template>
+
+<ng-template #wrongPasswordTemplate>
+  <div class="custom-snackbar-message" fxLayoutGap="50px">
+    <span>Incorrect password</span>
+    <a routerLink="../reset-password">RESET PASSWORD</a>
+  </div>
+</ng-template>

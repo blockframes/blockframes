@@ -1,3 +1,7 @@
+import { emulatorConfig } from '../environment/environment';
+import { firebase, firebaseRegion, intercomId, sentryDsn } from '@env';
+import { IntercomModule } from 'ng-intercom';
+
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -8,33 +12,28 @@ import { OverlayModule } from '@angular/cdk/overlay';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { firebase, firebaseRegion, intercomId } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
 
 // Angular Fire
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFirePerformanceModule } from '@angular/fire/performance';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireStorageModule } from '@angular/fire/storage';
-import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
+import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
+import { provideFunctions, getFunctions, connectFunctionsEmulator } from '@angular/fire/functions';
+import { connectFirestoreEmulator, initializeFirestore, provideFirestore } from '@angular/fire/firestore';
+import { providePerformance, getPerformance } from '@angular/fire/performance';
+import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
+import { provideStorage, getStorage } from '@angular/fire/storage';
+import { provideAnalytics, getAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 import 'firebase/storage';
 
-// Sentry
+// Material
+import { MatNativeDateModule } from '@angular/material/core';
+
+// Blockframes
 import { SentryModule } from '@blockframes/utils/sentry.module';
-import { sentryDsn } from '@env';
-
-// Intercom
-import { IntercomModule } from 'ng-intercom';
-
 import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { CrmModule } from './crm.module';
-
-import { MatNativeDateModule } from '@angular/material/core';
-import { emulatorConfig } from '../environment/environment';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @NgModule({
   declarations: [AppComponent],
@@ -49,13 +48,31 @@ import { emulatorConfig } from '../environment/environment';
     OverlayModule,
 
     // Firebase
-    AngularFireModule.initializeApp(firebase('crm')),
-    AngularFirestoreModule,
-    AngularFireFunctionsModule,
-    AngularFirePerformanceModule,
-    AngularFireAuthModule,
-    AngularFireStorageModule,
-    AngularFireAnalyticsModule,
+    provideFirebaseApp(() => initializeApp(firebase('crm'))),
+    provideFirestore(() => {
+      const db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
+      if (emulatorConfig.firestore) {
+        connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
+      }
+      return db;
+    }),
+    provideFunctions(() => {
+      const functions = getFunctions(getApp(), firebaseRegion);
+      if (emulatorConfig.functions) {
+        connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
+      }
+      return functions;
+    }),
+    providePerformance(() => getPerformance()),
+    provideAuth(() => {
+      const auth = getAuth();
+      if (emulatorConfig.auth) {
+        connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
+      }
+      return auth;
+    }),
+    provideStorage(() => getStorage()),
+    provideAnalytics(() => getAnalytics()),
 
     // Sentry
     sentryDsn ? SentryModule : ErrorLoggerModule,
@@ -72,9 +89,8 @@ import { emulatorConfig } from '../environment/environment';
   ],
   providers: [
     ScreenTrackingService, UserTrackingService,
-    { provide: REGION, useValue: firebaseRegion },
-    ...emulatorConfig
+    { provide: APP, useValue: 'crm' }
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

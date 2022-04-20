@@ -4,7 +4,6 @@ import { createAdminRoutes } from '@blockframes/utils/routes/create-routes';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 const routes: Route[] = createAdminRoutes({
-  appName: 'cms',
   appsRoutes: [{
     path: '',
     loadChildren: () => import('./shell/shell.module').then(m => m.ShellModule)

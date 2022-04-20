@@ -1,33 +1,21 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, Directive, EventEmitter, Output, OnInit, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Blockframes
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { Observable } from 'rxjs';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
 
-@Directive({
-  selector: 'wishlist-add-text [wishlistAddText]',
-})
-export class WishlistAddTextDirective {
-  @HostBinding('host') class = 'wishlist-add-text';
-}
-
-@Directive({
-  selector: 'wishlist-remove-text [wishlistRemoveText]',
-})
-export class WishlistRemoveTextDirective {
-  @HostBinding('host') class = 'wishlist-remove-text';
-}
 
 @Component({
   selector: '[movieId] wishlist-button',
   templateUrl: './wishlist-button.component.html',
   styleUrls: ['./wishlist-button.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class WishlistButtonComponent implements OnInit {
 
@@ -57,7 +45,7 @@ export class WishlistButtonComponent implements OnInit {
     const movie = await this.movieService.getValue(this.movieId);
     const title = movie.title?.international ?? movie.title.original;
     this.orgService.updateWishlist(movie);
-    this.snackbar.open(`${title} was successfully to your Wishlist.`, 'GO TO WISHLIST', { duration: 4000 })
+    this.snackbar.open(`${title} was successfully added to your Wishlist.`, 'GO TO WISHLIST', { duration: 4000 })
       .onAction()
       .subscribe(() => this.router.navigate(['/c/o/marketplace/wishlist']));
     this.added.emit(this.movieId)

@@ -4,8 +4,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { SigninFormModule } from '../../components/signin-form/signin-form.module';
-
 // Material
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,6 +14,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Component
 import { IdentityComponent } from './identity.component';
+
+// Modules
+import { SigninFormModule } from '../../components/signin-form/signin-form.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { OrganizationLiteFormModule } from '@blockframes/organization/forms/organization-lite-form/organization-lite-form.module';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
@@ -25,6 +26,7 @@ import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/pas
 import { MatOptionModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AppPipeModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   declarations: [IdentityComponent],
@@ -39,6 +41,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     StorageFileModule,
     ImageModule,
     PasswordConfirmModule,
+    AppPipeModule,
 
     // Material
     MatSnackBarModule,

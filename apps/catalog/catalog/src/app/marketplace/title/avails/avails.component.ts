@@ -1,25 +1,25 @@
-
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { delay, filter, pluck, skip, switchMap } from 'rxjs/operators';
 import { combineLatest, of, ReplaySubject, Subscription } from 'rxjs';
-
 import { FormList } from '@blockframes/utils/form';
-import { MovieService } from '@blockframes/movie/+state';
-import { BucketTerm, Term, TermService } from '@blockframes/contract/term/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { TermService } from '@blockframes/contract/term/+state';
 import { CalendarAvailsForm, MapAvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { BucketForm, BucketTermForm } from '@blockframes/contract/bucket/form';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { BucketService } from '@blockframes/contract/bucket/+state';
-import { ContractService, Holdback, isMandate, isSale, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/+state';
+import { Holdback, isMandate, isSale, Mandate, Sale, BucketTerm, Term, Territory, territories } from '@blockframes/model';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-
 import { ExplanationComponent } from './explanation/explanation.component';
 import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';
-import { scrollIntoView } from '../../../../../../../../libs/utils/src/lib/browser/utils';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -38,6 +38,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   public orgId = this.orgService.org.id;
   public periods = ['days', 'weeks', 'months', 'years'];
   public maxTerritories = 30;
+  public maxExcludedTerritories = 20;
 
   public bucketForm = new BucketForm();
 
@@ -90,6 +91,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     private bucketService: BucketService,
     private orgService: OrganizationService,
     private contractService: ContractService,
+    private snackBar: MatSnackBar,
   ) {
     const sub = this.bucketService.active$.subscribe(bucket => {
       this.bucketForm.patchAllValue(bucket);
@@ -141,7 +143,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   private async init() {
 
     const movieId = this.route.snapshot.params.movieId;
-    const contracts = await this.contractService.getValue(ref => ref.where('titleId', '==', movieId).where('status', '==', 'accepted'));
+    const contractsQuery = [where('titleId', '==', movieId), where('status', '==', 'accepted')];
+    const contracts = await this.contractService.getValue(contractsQuery);
 
     const mandates = contracts.filter(isMandate);
     const sales = contracts.filter(isSale);
@@ -160,10 +163,14 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   public async addToSelection() {
-    const contracts = this.bucketForm.value.contracts;
-    await this.bucketService.upsert({ id: this.orgId, contracts });
-    this.bucketForm.markAsPristine();
-    this.router.navigate(['/c/o/marketplace/selection']);
+    try {
+      const contracts = this.bucketForm.value.contracts;
+      await this.bucketService.upsert({ id: this.orgId, contracts });
+      this.bucketForm.markAsPristine();
+      this.router.navigate(['/c/o/marketplace/selection']);
+    } catch (_) {
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
+    }
   }
 
   public explain() {
@@ -230,5 +237,15 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     scrollIntoView(document.querySelector('#avails'));
     this.avails.mapForm.reset();
     this.avails.calendarForm.reset();
+  }
+
+  excludedTerritories(currentTerritoryList: Territory[]) {
+    // List all keys of territories
+    // Remove the word 'world' from the array
+    const listKeys = Object.keys(territories).filter((t: Territory) => t !== 'world') as Territory[];
+    // Filter to include only current territories and get the value of each keys
+    return listKeys
+      .filter(territory => !currentTerritoryList.includes(territory))
+      .map(territory => territories[territory]);
   }
 }

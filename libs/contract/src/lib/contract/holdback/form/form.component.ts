@@ -1,18 +1,24 @@
-import { Component, ChangeDetectionStrategy, EventEmitter, TemplateRef, Input, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  EventEmitter,
+  TemplateRef,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { Movie } from '@blockframes/movie/+state';
+import { Holdback, Movie, Scope } from '@blockframes/model';
 import { FormTableComponent } from '@blockframes/ui/form/table/form-table.component';
 import { FormList } from '@blockframes/utils/form';
-import { Scope } from '@blockframes/utils/static-model';
-import { Holdback } from '../../+state/contract.model';
 import { HoldbackForm } from '../form';
 
 @Component({
   selector: 'holdbacks-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HolbackFormComponent {
   @Input() title: Movie;
@@ -28,18 +34,26 @@ export class HolbackFormComponent {
     medias: 'Media',
   };
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit() {
-    this.form = FormList.factory(this.holdbacks, holdback => new HoldbackForm(holdback), []);
+    this.form = FormList.factory(this.holdbacks, (holdback) => new HoldbackForm(holdback), []);
   }
 
   openHoldbacks(template: TemplateRef<any>) {
-    this.ref = this.dialog.open(template, { maxHeight: '80vh', width: '1000px', maxWidth: '100vw' });
+    this.ref = this.dialog.open(template, {
+      maxHeight: '80vh',
+      width: '1000px',
+      maxWidth: '100vw',
+    });
   }
 
   openDetails(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
+    this.dialog.open(DetailedTermsComponent, {
+      data: { terms, scope },
+      maxHeight: '80vh',
+      autoFocus: false,
+    });
   }
 
   save() {
@@ -57,4 +71,3 @@ export class HolbackFormComponent {
     this.ref.close();
   }
 }
-

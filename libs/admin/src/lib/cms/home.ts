@@ -1,7 +1,7 @@
-import { Section } from "./template";
+import { Section } from './template';
 import { FirestoreQuery, Link } from './utils';
 import { SortingOptions } from '@blockframes/utils/pipes/sort-array.pipe';
-import { StorageFile } from "@blockframes/media/+state/media.firestore";
+import { StorageFile } from '@blockframes/model';
 
 export interface BannerSection extends Section {
   _type: 'banner',

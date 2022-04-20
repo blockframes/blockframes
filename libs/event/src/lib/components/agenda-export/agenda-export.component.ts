@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Event } from '@blockframes/event/+state/event.model';
+import { Event } from '@blockframes/model';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 
 @Component({

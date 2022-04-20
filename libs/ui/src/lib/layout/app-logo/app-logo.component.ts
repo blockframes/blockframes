@@ -1,9 +1,9 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { App, getCurrentApp } from '@blockframes/utils/apps';
+import { Component, ChangeDetectionStrategy, Input, Inject } from '@angular/core';
+import { App } from '@blockframes/utils/apps';
 import { ThemeService } from '@blockframes/ui/theme/theme.service';
+import { APP } from '@blockframes/utils/routes/utils';
 
-const appLogos: Record<App | 'crm', string> = {
+const appLogos: Record<App, string> = {
   catalog: 'archipel_content.svg',
   festival: 'archipel_market.svg',
   financiers: 'media_financiers.svg',
@@ -17,11 +17,11 @@ const appLogos: Record<App | 'crm', string> = {
   styleUrls: ['./app-logo.component.scss']
 })
 export class AppLogoComponent {
-  @Input() app = getCurrentApp(this.routerQuery);
+  @Input() app = this.currentApp;
   public appLogos = appLogos;
 
   constructor(
-    private routerQuery: RouterQuery,
-    public theme: ThemeService
-  ) {}
+    public theme: ThemeService,
+    @Inject(APP) private currentApp: App
+  ) { }
 }

@@ -2,29 +2,28 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
-import { getValue } from '@blockframes/utils/helpers';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Organization } from '@blockframes/organization/+state/organization.model';
+import { Organization, Movie, Invitation, UserRole, createOrganizationMember } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { FormControl } from '@angular/forms';
-import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { Observable } from 'rxjs';
-import { Invitation, InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
-import { App, OrgAppAccess } from '@blockframes/utils/apps';
+import { App, getAllAppsExcept, OrgAppAccess } from '@blockframes/utils/apps';
 import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
+import { where } from 'firebase/firestore';
+import { PermissionsService } from '@blockframes/permissions/+state';
 
 @Component({
   selector: 'crm-organization',
   templateUrl: './organization.component.html',
   styleUrls: ['./organization.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizationComponent implements OnInit {
   public orgId = '';
@@ -34,21 +33,10 @@ export class OrganizationComponent implements OnInit {
   public members;
   public notifyCheckbox = new FormControl(true);
   public storagePath: string;
+  public apps = getAllAppsExcept(['crm']);
 
   public invitationsFromOrganization$: Observable<Invitation[]>;
   public invitationsToJoinOrganization$: Observable<Invitation[]>;
-
-  public memberColumns = {
-    uid: '',
-    firstName: 'First Name',
-    lastName: 'Last Name',
-    email: 'Email Address',
-    position: 'Position',
-    role: 'Permissions',
-    edit: 'Edit',
-  };
-
-  public memberColumnsIndex = ['firstName', 'lastName', 'email', 'position', 'role', 'edit'];
 
   constructor(
     private organizationService: OrganizationService,
@@ -63,7 +51,7 @@ export class OrganizationComponent implements OnInit {
     private contractService: ContractService,
     private dialog: MatDialog,
     private router: Router,
-    private bucketService: BucketService,
+    private bucketService: BucketService
   ) { }
 
   async ngOnInit() {
@@ -73,18 +61,17 @@ export class OrganizationComponent implements OnInit {
     this.orgForm = new OrganizationCrmForm();
     this.orgForm.reset(this.org);
 
-    const movies = await this.movieService.getValue(fromOrg(this.orgId))
-    this.movies = movies.filter(m => !!m);
+    const movies = await this.movieService.getValue(fromOrg(this.orgId));
+    this.movies = movies.filter((m) => !!m);
 
     this.members = await this.getMembers();
     this.cdRef.markForCheck();
 
-    const queryFn1 = buildJoinOrgQuery(this.orgId, 'invitation');
-    const queryFn2 = buildJoinOrgQuery(this.orgId, 'request');
+    const queryConstraints1 = buildJoinOrgQuery(this.orgId, 'invitation');
+    const queryConstraints2 = buildJoinOrgQuery(this.orgId, 'request');
 
-    this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
-    this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
-
+    this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryConstraints1);
+    this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryConstraints2);
   }
 
   public acceptInvitation(invitation: Invitation) {
@@ -100,14 +87,17 @@ export class OrganizationComponent implements OnInit {
   }
 
   private async getMembers() {
-    const members = await this.organizationService.getMembers(this.orgId);
-    return members.map(m => ({
-      ...m,
+    const [members, role] = await Promise.all([
+      this.organizationService.getMembers(this.orgId),
+      this.permissionService.getValue(this.orgId)
+    ]);
+    return members.map((m) => ({
+      ...createOrganizationMember(m, role.roles[m.uid] ? role.roles[m.uid] : undefined),
       userId: m.uid,
       edit: {
         id: m.uid,
         link: `/c/o/dashboard/crm/user/${m.uid}`,
-      }
+      },
     }));
   }
 
@@ -126,9 +116,11 @@ export class OrganizationComponent implements OnInit {
       const after = this.orgForm.value.appAccess as OrgAppAccess;
 
       for (const app in after) {
-        if (Object.keys(after[app]).every(module => before[app][module] === false)
-          && Object.keys(after[app]).some(module => after[app][module] === true)) {
-          this.organizationService.notifyAppAccessChange(this.orgId, app as App)
+        if (
+          Object.keys(after[app]).every((module) => before[app][module] === false) &&
+          Object.keys(after[app]).some((module) => after[app][module] === true)
+        ) {
+          this.organizationService.notifyAppAccessChange(this.orgId, app as App);
         }
       }
     }
@@ -137,7 +129,7 @@ export class OrganizationComponent implements OnInit {
   }
 
   public async uniqueOrgName() {
-    const orgName = this.orgForm.get('denomination').get('full').value
+    const orgName = this.orgForm.get('denomination').get('full').value;
     const unique = await this.organizationService.uniqueOrgName(orgName);
     if (!unique) {
       this.orgForm.get('denomination').get('full').setErrors({ notUnique: true });
@@ -168,7 +160,7 @@ export class OrganizationComponent implements OnInit {
     this.dialog.open(ConfirmInputComponent, {
       data: {
         title: 'You are currently deleting this organization from Archipel, are you sure?',
-        text: 'If yes, please write \'HARD DELETE\' inside the form below.',
+        text: "If yes, please write 'HARD DELETE' inside the form below.",
         warning: 'You will also delete everything regarding this organization',
         simulation,
         confirmationWord: 'hard delete',
@@ -177,8 +169,8 @@ export class OrganizationComponent implements OnInit {
           await this.organizationService.remove(this.orgId);
           this.snackBar.open('Organization deleted!', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/organizations']);
-        }
-      }
+        },
+      },
     });
   }
 
@@ -197,27 +189,27 @@ export class OrganizationComponent implements OnInit {
     }
 
     // Calculate how many movie will be removed
-    const movies = await this.movieService.getValue(ref => ref.where('orgIds', 'array-contains', organization.id));
+    const movies = await this.movieService.getValue([where('orgIds', 'array-contains', organization.id)]);
     if (movies.length) {
       output.push(`${movies.length} movie(s) will be deleted.`);
     }
 
     // Calculate how many events will be removed
-    const ownerEvent = await this.eventService.getValue(ref => ref.where('ownerOrgId', '==', organization.id));
+    const ownerEvent = await this.eventService.getValue([where('ownerOrgId', '==', organization.id)]);
     if (ownerEvent.length) {
-      output.push(`${ownerEvent.length} event(s) will be cancelled or deleted.`)
+      output.push(`${ownerEvent.length} event(s) will be cancelled or deleted.`);
     }
 
     // Calculate how many invitation will be removed
-    const invitFrom = await this.invitationService.getValue(ref => ref.where('fromOrg.id', '==', organization.id));
-    const invitTo = await this.invitationService.getValue(ref => ref.where('toOrg.id', '==', organization.id));
+    const invitFrom = await this.invitationService.getValue([where('fromOrg.id', '==', organization.id)]);
+    const invitTo = await this.invitationService.getValue([where('toOrg.id', '==', organization.id)]);
     const allInvit = [...invitFrom, ...invitTo];
     if (allInvit.length) {
       output.push(`${allInvit.length} invitation(s) will be removed.`);
     }
 
     // Calculate how many contracts will be updated
-    const contracts = await this.contractService.getValue(ref => ref.where('partyIds', 'array-contains', organization.id))
+    const contracts = await this.contractService.getValue([where('partyIds', 'array-contains', organization.id)]);
     if (contracts.length) {
       output.push(`${contracts.length} contract(s) will be updated.`);
     }

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Invitation } from '../+state';
+import { Invitation } from '@blockframes/model';
 
 type Guest<type> = type extends 'user' ? Invitation['toUser'] : Invitation['toOrg'];
 

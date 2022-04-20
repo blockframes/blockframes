@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { StorageFile } from '@blockframes/model';
 
 @Component({
   selector: '[ref] bf-preview-modal',

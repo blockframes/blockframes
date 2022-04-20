@@ -28,7 +28,7 @@
     <h3>Notes and Statements</h3>
     <article fxLayout="row wrap" fxLayoutGap="32px">
       <ng-container *ngFor="let note of movie.promotional.notes">
-        <div class="note" fxLayout fxLayoutAlign="space-between center" *ngIf="note.ref">
+        <div class="note" fxLayout fxLayoutAlign="space-between center" *ngIf="note.storagePath">
           <p>{{ note | noteName }}</p>
           <div fxLayout fxLayoutGap="24px">
             <a mat-icon-button [href]="note | getUrl | async" target="_blank">

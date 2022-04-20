@@ -1,6 +1,7 @@
-﻿import { apps, assertFails } from '@firebase/rules-unit-testing';
+﻿import { assertFails } from '@firebase/rules-unit-testing';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
-import { Consents } from '@blockframes/consents/+state/consents.firestore';
+import { Consents } from '@blockframes/model';
+import { deleteApp, getApps } from 'firebase/app';
 
 describe('Consents Rules Tests', () => {
   const projectId = `consentrules-spec-${Date.now()}`;
@@ -8,10 +9,10 @@ describe('Consents Rules Tests', () => {
 
   describe('Any user', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-user2', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should not be able to read consent collection', async () => {
       const consentRef = db.doc('consents/O001');
@@ -32,10 +33,10 @@ describe('Consents Rules Tests', () => {
 
   describe('With User not in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-consent', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-consent', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test("user without valid org shouldn't be able to read consent", async () => {
       const consentRef = db.doc('consents/O001');

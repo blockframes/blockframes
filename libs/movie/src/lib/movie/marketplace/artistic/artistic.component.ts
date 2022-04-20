@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, Pipe, PipeTransform } from '@angular/core';
-import { MovieNote } from '@blockframes/movie/+state/movie.firestore';
+import { MovieNote } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { TitleMarketplaceShellComponent } from '../shell/shell.component';
 
@@ -7,16 +7,15 @@ import { TitleMarketplaceShellComponent } from '../shell/shell.component';
   selector: 'movie-artistic',
   templateUrl: './artistic.component.html',
   styleUrls: ['./artistic.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArtisticComponent implements OnInit {
-
   public movie$ = this.shell.movie$;
 
   constructor(
     private shell: TitleMarketplaceShellComponent,
-    private dynTitle: DynamicTitleService,
-  ) { }
+    private dynTitle: DynamicTitleService
+  ) {}
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Film Page', 'Artistic Info');
@@ -27,6 +26,6 @@ export class ArtisticComponent implements OnInit {
 export class NoteNamePipe implements PipeTransform {
   transform(note: MovieNote) {
     const role = note.role ? `(${note.role})` : '';
-    return [note.firstName, note.lastName, role].filter(v => !!v).join(' ');
+    return [note.firstName, note.lastName, role].filter((v) => !!v).join(' ');
   }
 }

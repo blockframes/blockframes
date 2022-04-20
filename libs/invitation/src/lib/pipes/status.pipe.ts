@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { InvitationStatus, Invitation } from '../+state';
 import { CommonModule } from '@angular/common';
+import { Invitation, InvitationStatus } from '@blockframes/model';
 
 /** Return the right icon name depending on the status */
 @Pipe({ name: 'statusIcon', pure: true })

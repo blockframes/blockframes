@@ -15,7 +15,9 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
 import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
-import { OrgAccessModule } from '@blockframes/organization/pipes'
+import { OrgAccessModule } from '@blockframes/organization/pipes';
+import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
+import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 
 // Guards
 import { TunnelGuard } from '@blockframes/ui/tunnel/tunnel.guard';
@@ -24,7 +26,7 @@ import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 
 // Material
 import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon'
+import { MatIconModule } from '@angular/material/icon';
 
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
@@ -140,7 +142,7 @@ const routes: Routes = [
     }]
   },
   {
-    path:'standard-terms',
+    path: 'standard-terms',
     loadChildren: () => import('@blockframes/contract/contract/pages/standard-terms/standard-terms.module').then(m => m.StandardTermsModule)
   }
 ];
@@ -157,6 +159,8 @@ const routes: Routes = [
     MovieFormShellModule,
     OrgAccessModule,
     RouterModule.forChild(routes),
+    SidenavAuthModule,
+    SidenavWidgetModule,
 
     // Material
     MatListModule,

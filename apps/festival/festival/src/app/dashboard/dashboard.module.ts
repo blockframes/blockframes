@@ -18,6 +18,8 @@ import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.com
 import { EventFromShellModule } from '@blockframes/event/form/shell/shell.module';
 import { ReviewComponent } from '@blockframes/event/layout/review/review.component';
 import { LayoutEventReviewModule } from '@blockframes/event/layout/review/review.module';
+import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
+import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
@@ -46,8 +48,36 @@ const routes: Routes = [{
       redirectTo: 'home'
     },
     {
-      path: 'home',   // Home (dashboard if film, welcome if not)
-      loadChildren: () => import('@blockframes/ui/dashboard/pages/home/home.module').then(m => m.HomeModule),
+      path: 'home',
+      children: [
+        {
+          path: '',
+          loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+        }, {
+          path: 'title',
+          children: [
+            {
+              path: '',
+              loadChildren: () => import('./analytics/titles/titles-analytics.module').then(m => m.TitlesAnalyticsModule),
+            }, {
+              path: ':titleId',
+              loadChildren: () => import('./analytics/title/title-analytics.module').then(m => m.TitleAnalyticsModule)
+            }
+          ]
+        }, {
+          path: 'buyer',
+          children: [
+            {
+              path: '',
+              loadChildren: () => import('./analytics/buyers/buyers-analytics.module').then(m => m.BuyersAnalyticsModule)
+            },
+            {
+              path: ':userId',
+              loadChildren: () => import('./analytics/buyer/buyer-analytics.module').then(m => m.BuyerAnalyticsModule)
+            }
+          ]
+        }
+      ]
     },
     {
       path: 'notifications',
@@ -127,19 +157,24 @@ const routes: Routes = [{
                   data: { animation: 1 }
                 },
                 {
+                  path: 'slate',
+                  loadChildren: () => import('@blockframes/event/form/slate/slate.module').then(m => m.SlateModule),
+                  data: { animation: 2 }
+                },
+                {
                   path: 'invitations',
                   loadChildren: () => import('@blockframes/event/form/invitation/invitation.module').then(m => m.InvitationModule),
-                  data: { animation: 2 }
+                  data: { animation: 3 }
                 },
                 {
                   path: 'files',
                   loadChildren: () => import('@blockframes/event/form/meeting-files/meeting-files.module').then(m => m.MeetingFilesModule),
-                  data: { animation: 3 }
+                  data: { animation: 4 }
                 },
                 {
                   path: 'statistics',
                   loadChildren: () => import('@blockframes/event/pages/analytics/analytics.module').then(m => m.AnalyticsModule),
-                  data: { animation: 4 }
+                  data: { animation: 5 }
                 }
               ],
             },
@@ -195,6 +230,8 @@ const routes: Routes = [{
     MovieFormShellModule,
     EventFromShellModule,
     LayoutEventReviewModule,
+    SidenavAuthModule,
+    SidenavWidgetModule,
 
     // Material
     MatDividerModule,

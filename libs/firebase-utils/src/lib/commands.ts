@@ -1,4 +1,5 @@
 import { ChildProcess, spawn, SpawnOptions, exec } from 'child_process';
+import { sleep } from './util';
 
 export function runShellCommand(cmd: string) {
   process.env.FORCE_COLOR = 'true';
@@ -104,10 +105,26 @@ export function runShellCommandExec(cmd: string) {
  */
 export async function gsutilTransfer({ from, to, quiet, rsync = true, mirror, exclude }: { from: string; to: string; quiet?: boolean; rsync?: boolean; mirror?: boolean, exclude?: string }) {
   let cmd: string;
+
+  const run = quiet ? cmd => keepAlive(runShellCommandExec(cmd)) : runShellCommandExec;
+
   if (!rsync && mirror) {
     cmd = `gsutil -m ${quiet ? '-q ' : ''}rm -r "${to}"`;
-    await runShellCommandExec(cmd);
+    await run(cmd);
   }
   cmd = `gsutil -m ${quiet ? '-q ' : ''}${rsync ? 'rsync' : 'cp'} ${rsync && mirror ? '-d ' : ''}${exclude ? `-x "${exclude}" ` : ''}-r "${from}" "${to}"`;
-  return runShellCommandExec(cmd);
+  return run(cmd);
+}
+
+export async function keepAlive<T>(promise: Promise<T>) {
+  let running = true;
+  async function timer(s: number) {
+    while (running) {
+      console.log('Process is running quietly...');
+      await sleep(1000 * s);
+    }
+  }
+  await Promise.race([promise, timer(60)]);
+  running = false;
+  return promise;
 }

@@ -1,5 +1,5 @@
 <section fxLayout="column">
-  <header fxLayout="column">
+  <header fxLayout="column" bgAsset="header-dashboard-background.png">
     <a mat-icon-button (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
@@ -11,7 +11,7 @@
           <article fxLayout="column" fxFlex>
             <h4>{{ movie | movieFeature }}</h4>
             <h1>{{ movie.title.international }}</h1>
-            <bf-tag>{{ movie.app[appName].status }}</bf-tag>
+            <bf-tag>{{ movie.app[app].status }}</bf-tag>
 
             <h6>{{ movie.directors | displayName }}</h6>
             <p>

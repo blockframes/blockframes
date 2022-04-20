@@ -5,11 +5,9 @@ import { map, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class MaintenanceGuard implements CanActivate {
-
   constructor(private service: MaintenanceService, private router: Router) {}
 
-  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-
+  canActivate(_: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (state.url === '/maintenance') {
       return this.service.isInMaintenance$.pipe(
         map(isInMaintenance => isInMaintenance ? true : this.router.parseUrl('/'))

@@ -1,8 +1,7 @@
 import { runChunks } from '../firebase-utils';
 import { loadAdminServices } from '../util';
 import { Firestore, UserIdentifier, UserRecord } from '../types';
-import { DocumentMeta } from '@blockframes/utils/models-meta';
-import { PublicUser } from '@blockframes/user/+state';
+import { PublicUser, DocumentMeta, Timestamp } from '@blockframes/model';
 
 
 /**
@@ -32,7 +31,7 @@ import { PublicUser } from '@blockframes/user/+state';
 
   return runChunks(authUsers, authUser => {
     const user = users.find(user => user.uid === authUser.uid);
-    const _meta: DocumentMeta<Date | FirebaseFirestore.Timestamp> = {
+    const _meta: DocumentMeta<Date | Timestamp> = {
       emailVerified: authUser.emailVerified,
       createdAt: new Date(authUser.metadata.creationTime),
       ...user._meta

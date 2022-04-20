@@ -1,4 +1,4 @@
-import { Territory } from '../static-model';
+import { Territory } from '@blockframes/model';
 export interface Location {
   street: string;
   zipCode: string;

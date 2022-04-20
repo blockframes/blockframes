@@ -1,58 +1,59 @@
-import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { startWith, map, tap, shareReplay } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie, Person, StoreStatus, storeStatus } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Intercom } from 'ng-intercom';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { StoreStatus } from '@blockframes/utils/static-model/types';
-
+import { App } from '@blockframes/utils/apps';
+import { APP } from '@blockframes/utils/routes/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
+import { displayPerson } from '@blockframes/utils/pipes';
 
 @Component({
   selector: 'festival-dashboard-title-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent {
-  public app = getCurrentApp(this.routerQuery);
-  public appName = appName[this.app];
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
 
   titles$ = this.service.queryDashboard(this.app).pipe(
-    tap(movies => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
+    tap((movies) => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
 
-  result$ = combineLatest([ this.filter$, this.titles$ ]).pipe(
-    map(([status, titles]) => titles.filter(title => status ? title.app.festival.status === status : titles))
+  result$ = combineLatest([this.filter$, this.titles$]).pipe(
+    map(([status, titles]) =>
+      titles.filter((title) => {
+        if (status) return title.app.festival.status === status;
+        return title.app.festival.status !== 'archived';
+      })
+    )
   );
 
-  titleCount$: Observable<Record<string, number>> = this.titles$.pipe(map(m => ({
-    all: m.length,
-    draft: m.filter(m => m.app.festival.status === 'draft').length,
-    accepted: m.filter(m => m.app.festival.status === 'accepted').length,
-    archived: m.filter(m => m.app.festival.status === 'archived').length,
-  })));
+  titleCount$: Observable<Record<string, number>> = this.titles$.pipe(
+    map((m) => ({
+      all: m.filter((m) => m.app.festival.status !== 'archived').length,
+      draft: m.filter((m) => m.app.festival.status === 'draft').length,
+      accepted: m.filter((m) => m.app.festival.status === 'accepted').length,
+      archived: m.filter((m) => m.app.festival.status === 'archived').length,
+    }))
+  );
 
   constructor(
     private service: MovieService,
-    private router: Router,
-    private route: ActivatedRoute,
+    private snackbar: MatSnackBar,
     private dynTitle: DynamicTitleService,
-    private routerQuery: RouterQuery,
-    @Optional() private intercom: Intercom
-  ) { }
-
-  /** Navigate to tunnel if status is draft, else go to page */
-  public goToTitle(title: Movie) {
-    this.router.navigate([title.id], { relativeTo: this.route });
-  }
+    private dialog: MatDialog,
+    @Optional() private intercom: Intercom,
+    @Inject(APP) public app: App
+  ) {}
 
   public openIntercom(): void {
     return this.intercom.show();
@@ -65,5 +66,22 @@ export class ListComponent {
 
   resetFilter() {
     this.filter.reset();
+  }
+
+  async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
+    await this.service.updateStatus(movie.id, status);
+    this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
+  }
+
+  //TODO #6507
+  openDetails(title: string, values: Person[]) {
+    this.dialog.open(CellModalComponent, {
+      data: { title, values: displayPerson(values) },
+      maxHeight: '80vh',
+      minWidth: '50vw',
+      maxWidth: '80vw',
+      minHeight: '50vh',
+      autoFocus: false,
+    });
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { EventTypes } from '../../+state/event.firestore';
+import { EventTypes } from '@blockframes/model';
 
 @Component({
   selector: 'event-empty',

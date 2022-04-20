@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Invitation, InvitationDetailed } from '@blockframes/invitation/+state';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
+import { Invitation, InvitationDetailed } from '@blockframes/model';
 
 @Component({
   selector: 'invitation-guest-table',

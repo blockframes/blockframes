@@ -1,0 +1,72 @@
+@import "@angular/flex-layout/mq";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 24px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.carousel-container {
+  display: flex;
+  flex-direction: column;
+
+  article {
+    display: flex;
+
+    h3 {
+      margin: auto auto auto 0;
+    }
+  }
+
+  bf-carousel {
+    margin-top: 24px;
+  }
+
+  .see_titles {
+    margin: 24px auto auto auto;
+  }
+}
+
+.no-accepted-movies {
+  .surface {
+    width: 330px;
+
+    img {
+      width: 100px;
+      align-self: center;
+    }
+  }
+  
+  h3 {
+    margin-top: 24px;
+  }
+}
+
+@include layout-bp(gt-xs) {
+  analytics-pie-chart,
+  analytics-line-chart,
+  analytics-map {
+    width: calc(50% - 16px);
+    margin-right: 16px;
+  }
+}
+
+@include layout-bp(xs) {
+  header {
+    flex-direction: column;
+  }
+
+  analytics-pie-chart,
+  analytics-line-chart,
+  analytics-map {
+    width: calc(100% - 8px);
+    margin-right: 8px;
+  }
+}

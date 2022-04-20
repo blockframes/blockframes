@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
-
+import { StorageFile } from '@blockframes/model';
 
 @Pipe({ name: 'fileListIndex' })
 export class FileListIndexPipe implements PipeTransform {

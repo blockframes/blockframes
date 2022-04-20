@@ -1,0 +1,26 @@
+:host {
+  display: block;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+world-map {
+  height: 300px;
+  border-radius: 4px;
+}
+
+section {
+  width: 100%;
+}
+
+img {
+  width: 100%;
+}
+
+button {
+  margin-left: auto;
+}

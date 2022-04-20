@@ -2,7 +2,7 @@ import { LATEST_VERSION, loadAdminServices, startMaintenance } from "@blockframe
 import { resolve } from "path";
 import { loadDBVersion } from "./migrations";
 import { firebase } from '@env'
-import { IMaintenanceDoc } from "@blockframes/utils/maintenance";
+import { IMaintenanceDoc } from "@blockframes/model";
 
 export function showHelp() {
   console.log('TODO: write a documentation');

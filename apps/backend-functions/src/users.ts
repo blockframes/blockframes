@@ -3,8 +3,9 @@ import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
-import { RequestDemoInformations, PublicUser, PermissionsDocument, OrganizationDocument, InvitationDocument } from './data/types';
-import { getCollection, storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils';
+import { RequestDemoInformations } from '@blockframes/utils/request-demo';
+import { storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils/algolia/algolia';
+import { getCollection } from '@blockframes/firebase-utils/firebase-utils';
 import { getDocument } from './data/internals';
 import { getMailSender, applicationUrl, App } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
@@ -12,14 +13,13 @@ import { production } from './environments/environment';
 import { cleanUserMedias } from './media';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { User } from '@blockframes/user/+state/user.model';
-import { updateMemberTags } from './mailchimp';
+import { User, OrganizationDocument, PublicUser, InvitationDocument, PermissionsDocument } from '@blockframes/model';
+import { registerToNewsletters, updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 import { ErrorResultResponse } from './utils';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
-
 
 interface EmailFlowData { email: string, app: App, publicUser: PublicUser }
 
@@ -99,6 +99,8 @@ export const onUserCreate = async (user: UserRecord) => {
     if (userDoc.exists) {
       if (!user.emailVerified) {
         const u = userDoc.data() as PublicUser;
+        const tags = ['Firebase new user'];
+        registerToNewsletters({email, tags});
         await startAccountCreationEmailFlow({ email, publicUser: u, app: u._meta.createdFrom });
       }
       tx.update(userDocRef, { email, uid });
@@ -130,13 +132,12 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
 
   await cleanUserMedias(before, after);
 
-
   // Sync preferences with mailchimp
   const tags: MailchimpTag[] = []
   if (after?.preferences) {
     for (const key in after.preferences) {
       const activeTags = getPreferenceTag(key, after.preferences[key], 'active');
-      tags.push(...activeTags); 
+      tags.push(...activeTags);
     }
   }
 
@@ -150,7 +151,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
       tags.push(...removedTags);
     }
   }
-  if (tags.length) updateMemberTags(after.email, tags)
+  if (tags.length) updateMemberTags(after.email, tags);
 
   // if name, email, avatar or orgId has changed : update algolia record
   if (
@@ -244,7 +245,6 @@ export const sendUserMail = async (data: { subject: string, message: string, app
 
   await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message, app), from);
 }
-
 
 /**
  * Create an user.

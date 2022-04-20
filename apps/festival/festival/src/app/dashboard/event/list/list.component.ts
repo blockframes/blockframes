@@ -1,8 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Event, EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/+state';
 import { EventForm } from '@blockframes/event/form/event.form';
-import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Observable, combineLatest } from 'rxjs';
 import { filter, switchMap, startWith, tap } from 'rxjs/operators';
@@ -11,6 +10,8 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
 import { ActivatedRoute } from '@angular/router';
+import { where } from 'firebase/firestore';
+import { Event, EventTypes } from '@blockframes/model';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -25,7 +26,7 @@ const typesLabel = {
 })
 export class EventListComponent implements OnInit {
   typesLabel = typesLabel;
-  types: EventTypes[] = ['screening', 'meeting'];
+  types: EventTypes[] = ['screening', 'meeting', 'slate'];
   filter = new FormControl(this.types);
   editDialog: MatDialogRef<unknown>
   events$: Observable<Event[]>;
@@ -52,7 +53,7 @@ export class EventListComponent implements OnInit {
       this.orgService.currentOrg$,
       this.filter.valueChanges.pipe(startWith(this.filter.value))
     ]).pipe(
-      switchMap(([org, types]) => this.service.queryByType(types, ref => ref.where('ownerOrgId', '==', org.id))),
+      switchMap(([org, types]) => this.service.queryByType(types, [where('ownerOrgId', '==', org.id)])),
       tap(events => {
         events.length ?
           this.dynTitle.setPageTitle('My events') :

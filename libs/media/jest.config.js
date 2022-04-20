@@ -8,6 +8,10 @@
       tsconfig: '<rootDir>/tsconfig.spec.json',
     },
   },
+  transform: { 
+    '^.+.(ts|mjs|js|html)$': 'jest-preset-angular'
+  },
+  transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory: '../../coverage/libs/media',
   snapshotSerializers: [

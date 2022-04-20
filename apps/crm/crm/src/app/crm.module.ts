@@ -6,7 +6,6 @@ import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 const routes: Routes = createRoutes({
-  appName: 'crm',
   landing: {
     path: '',
     canActivate: [NoAuthGuard],

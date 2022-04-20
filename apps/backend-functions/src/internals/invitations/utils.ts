@@ -1,6 +1,5 @@
-import { InvitationDocument, InvitationOrUndefined } from "../../data/types";
+import { InvitationDocument, InvitationOrUndefined, invitationStatus } from '@blockframes/model';
 import * as admin from 'firebase-admin';
-import { invitationStatus } from '@blockframes/invitation/+state/invitation.firestore';
 
 /** Checks if an invitation just got accepted. */
 export function wasAccepted(before: InvitationDocument, after: InvitationDocument) {

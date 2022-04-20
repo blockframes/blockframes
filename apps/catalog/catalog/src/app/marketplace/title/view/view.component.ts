@@ -3,8 +3,9 @@ import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blo
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ActivatedRoute } from '@angular/router';
 import { Intercom } from 'ng-intercom';
-import { MovieService } from '@blockframes/movie/+state';
-import { pluck, switchMap } from 'rxjs/operators';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -15,7 +16,9 @@ import { pluck, switchMap } from 'rxjs/operators';
 export class MarketplaceMovieViewComponent {
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
-    switchMap((movieId: string) => this.movieService.valueChanges(movieId))
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
+    tap(title => this.analytics.addTitlePageView(title)),
+    shareReplay({ refCount: true, bufferSize: 1 })
   );
 
   public orgs$ = this.movie$.pipe(
@@ -42,6 +45,7 @@ export class MarketplaceMovieViewComponent {
     private route: ActivatedRoute,
     private movieService: MovieService,
     private orgService: OrganizationService,
+    private analytics: AnalyticsService,
     @Optional() private intercom: Intercom
   ) { }
 

@@ -1,7 +1,7 @@
 import 'tsconfig-paths/register';
 import { config } from 'dotenv';
 config(); // * Must be run here!
-import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
+import { endMaintenance, keepAlive, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
 import { prepareForTesting, upgrade, prepareEmulators, upgradeEmulators } from './firebaseSetup';
@@ -13,12 +13,23 @@ import { generateFixtures } from './generate-fixtures';
 import { exportFirestore, importFirestore } from './admin';
 import { selectEnvironment } from './select-environment';
 import { healthCheck } from './health-check';
-import { anonymizeLatestProdDb, downloadProdDbBackup, importEmulatorFromBucket, loadEmulator, enableMaintenanceInEmulator, uploadBackup, startEmulators, syncAuthEmulatorWithFirestoreEmulator } from './emulator';
-import { backupEnv, restoreEnv } from './backup';
+import {
+  anonymizeLatestProdDb,
+  downloadProdDbBackup,
+  importEmulatorFromBucket,
+  loadEmulator,
+  enableMaintenanceInEmulator,
+  uploadBackup,
+  startEmulators,
+  syncAuthEmulatorWithFirestoreEmulator,
+} from './emulator';
+import { backupLiveEnv, restoreLiveEnv } from './backup';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import { rescueJWP } from './rescueJWP';
 import { loadAndShrinkLatestAnonDbAndUpload } from './db-shrink';
 import { printDatabaseInconsistencies } from './internals/utils';
+import { cleanBackups } from './clean-backups';
+import { auditUsers } from './db-cleaning';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -48,8 +59,11 @@ async function runCommand() {
     case 'prepareEmulators':
       await prepareEmulators({ dbBackupURL: arg1 });
       break;
+    case 'cleanBackups':
+      await cleanBackups({ maxDays: arg1, bucketName: arg2 });
+      break;
     case 'anonProdDb':
-      await anonymizeLatestProdDb();
+      await keepAlive(anonymizeLatestProdDb());
       break;
     case 'shrinkDb':
       await loadAndShrinkLatestAnonDbAndUpload();
@@ -92,11 +106,11 @@ async function runCommand() {
       break;
     case 'restoreEnv':
       await startMaintenance(db);
-      await restoreEnv();
+      await restoreLiveEnv();
       await endMaintenance(db);
       break
     case 'backupEnv':
-      await backupEnv()
+      await backupLiveEnv()
       break
     case 'startMaintenance':
       await startMaintenance();
@@ -126,6 +140,9 @@ async function runCommand() {
       break;
     case 'printUsers':
       await printUsers();
+      break;
+    case 'auditUsers':
+      await auditUsers(db);
       break;
     case 'clearUsers':
       await startMaintenance(db);

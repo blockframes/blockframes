@@ -8,7 +8,6 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MatLayoutModule } from '../layout.module';
 
 // Widgets
-import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { AppLogoModule } from '../app-logo/app-logo.module';
@@ -54,7 +53,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     AppBarModule,
 
     // Widgets
-    SearchWidgetModule,
     AuthWidgetModule,
   ]
 })

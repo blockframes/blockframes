@@ -1,18 +1,6 @@
-<mat-form-field appearance="outline">
-  <mat-label>Content Type</mat-label>
-  <input type="text" matInput [formControl]="form" [matAutocomplete]="auto"
-    name="contentType">
-  <mat-error *ngIf="form.hasError('invalidValue')">
-    Please select one of suggested content types.
-  </mat-error>
-  <mat-hint>
-    <ng-content select="mat-hint"></ng-content>
-  </mat-hint>
-</mat-form-field>
+<mat-button-toggle-group name="contentType" [formControl]="form" fxLayout fxLayoutGap="8px" >
+  <mat-button-toggle *ngFor="let type of contentTypes" [value]="type">
+    {{contentType[type]}}
+  </mat-button-toggle>
+</mat-button-toggle-group>
 
-
-<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-  <mat-option *ngFor="let type of filteredTypes$ | async" [value]="type">
-    {{ contentType[type] }}
-  </mat-option>
-</mat-autocomplete>

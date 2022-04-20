@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, TemplateRef, ContentChild, Input } from '@angular/core';
-import { Notification } from '../../+state';
+import { Notification } from '@blockframes/model';
 import { descTimeFrames } from '@blockframes/utils/pipes/filter-by-date.pipe';
 
 @Component({

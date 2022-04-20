@@ -1,28 +1,25 @@
-import { Injectable } from "@angular/core";
-import { RouterQuery } from "@datorama/akita-ng-router-store";
+import { Inject, Injectable } from '@angular/core';
+import { AlgoliaObject, AlgoliaQueries } from '@blockframes/model';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
-import { App, getCurrentApp } from "../apps";
-import { algoliaIndex, AlgoliaObject, AlgoliaQueries, SearchResponse } from "./algolia.interfaces";
-import { parseFilters, parseFacets } from './helper.utils';
+import { App } from '../apps';
+import { APP } from '../routes/utils';
+import { parseFilters, parseFacets, algoliaIndex } from './helper.utils';
+import { SearchResponse } from '@algolia/client-search';
 
 @Injectable({ providedIn: 'root' })
 export class AlgoliaService {
 
   private indices: Record<string, SearchIndex> = {};
 
-  private appName: App;
-
-  constructor(private routerQuery: RouterQuery) {
-    this.appName = getCurrentApp(this.routerQuery);
-  }
+  constructor(@Inject(APP) private app: App) { }
 
   getIndex(name: 'movie' | 'org' | 'user'): SearchIndex {
     if (!this.indices[name]) {
       if (name === 'user') {
         this.indices[name] = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name]);
       } else {
-        this.indices[name] = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name][this.appName]);
+        this.indices[name] = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name][this.app]);
       }
     }
     return this.indices[name];

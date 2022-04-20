@@ -1,9 +1,9 @@
-import { Territory } from '@blockframes/utils/static-model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { createUser, User, UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/+state';
+import { createUser, User, createOrganization, Organization, Territory } from '@blockframes/model';
 import { Module, ModuleAccess, modules } from '@blockframes/utils/apps';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
-import { createOrganization, Organization, OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { alreadyExistError, getOrgId, getUser, mandatoryError, optionalWarning, OrganizationsImportState, wrongValueError } from '@blockframes/import/utils';
 
 const separator = ',';

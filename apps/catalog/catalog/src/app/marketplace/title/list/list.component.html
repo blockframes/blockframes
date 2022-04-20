@@ -4,7 +4,7 @@
   <list-page-app-bar>
     <form class="app-bar" [formGroup]="searchForm">
       <input type="text" formControlName="query" [value]="searchForm.query.value"
-        placeholder="Search for titles, directors, keywords, ...">
+        placeholder="Search for titles, directors, keywords...">
     </form>
   </list-page-app-bar>
 
@@ -18,7 +18,7 @@
   <list-page-search>
     <form [formGroup]="searchForm">
       <mat-form-field appearance="outline">
-        <mat-label>Search for titles, directors, keywords, ...</mat-label>
+        <mat-label>Search for titles, directors, keywords...</mat-label>
         <mat-icon matPrefix svgIcon="search"></mat-icon>
         <input test-id="search-input" matInput type="text" formControlName="query" [value]="searchForm.get('query').value">
       </mat-form-field>
@@ -77,14 +77,14 @@
   <pdf-export *ngIf="movies$ | async as movies">
     <button [disabled]="exporting" mat-button (click)="export(movies)" matTooltip="Export to PDF">
       <mat-icon svgIcon="pdf"></mat-icon>
-      <span>Export Titles</span>
+      <span>Export {movies.length, plural, =1 {title} other {titles}}</span>
     </button>
   </pdf-export>
 
   <!-- TITLE CARD -->
   <ng-template listPageCard let-title>
     <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.objectID]" size="poster">
-      <button mat-icon-button (click)="addAvail(title)" test-id="add-to-bucket">
+      <button mat-icon-button (click)="addAvail(title)" test-id="add-to-bucket" [matTooltip]= "availsForm.invalid ? 'Filter avails first' : 'Add to Selection' ">
         <mat-icon svgIcon="shopping_basket"></mat-icon>
       </button>
     </movie-card>

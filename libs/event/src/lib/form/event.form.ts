@@ -1,7 +1,18 @@
 import { compareDates, FormEntity, FormList } from '@blockframes/utils/form';
-import { Event, createEvent, isMeeting, createMeeting, createScreening, isScreening } from '../+state/event.model';
+import {
+  Event,
+  createEvent,
+  isMeeting,
+  createMeeting,
+  createScreening,
+  isScreening,
+  isSlate,
+  createSlate,
+  Meeting,
+  Screening,
+  Slate
+} from '@blockframes/model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Meeting, Screening } from '../+state/event.firestore';
 
 
 // Event
@@ -38,11 +49,13 @@ export class EventForm extends FormEntity<EventControl, Event> {
 }
 
 // Meta
-function createMetaControl(event: Event): MeetingForm | ScreeningForm | FormGroup {
+function createMetaControl(event: Event): MeetingForm | ScreeningForm | SlateForm | FormGroup {
   if (isMeeting(event)) {
     return new MeetingForm(event.meta)
   } else if (isScreening(event)) {
     return new ScreeningForm(event.meta);
+  } else if (isSlate(event)) {
+    return new SlateForm(event.meta);
   } else {
     return new FormGroup({});
   }
@@ -85,5 +98,24 @@ type ScreeningControl = ReturnType<typeof createScreeningControl>;
 export class ScreeningForm extends FormEntity<ScreeningControl, Screening> {
   constructor(screening?: Partial<Screening>) {
     super(createScreeningControl(screening), compareDates('start', 'end'))
+  }
+}
+
+// Slate Presentation
+export function createSlateControl(params?: Partial<Slate>) {
+  const slate = createSlate(params);
+  return {
+    description: new FormControl(slate.description, [Validators.maxLength(500)]),
+    organizerUid: new FormControl(slate.organizerUid),
+    titleIds: new FormControl(slate.titleIds),
+    videoId: new FormControl(slate.videoId)
+  }
+}
+
+type SlateControl = ReturnType<typeof createSlateControl>;
+
+export class SlateForm extends FormEntity<SlateControl, Slate> {
+  constructor(slate?: Partial<Slate>) {
+    super(createSlateControl(slate), compareDates('start', 'end'));
   }
 }

@@ -23,5 +23,7 @@
     "*google-analytics.com",
     "*googleapis.com",
     "*imgix.net"
-  ]
+  ],
+  "viewportWidth": 1920,
+  "viewportHeight": 1080
 }

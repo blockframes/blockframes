@@ -1,23 +1,22 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, Inject } from '@angular/core';
 import { NavigationEnd, Router, Event } from '@angular/router';
-import { Location } from '@angular/common';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 // blockframes
-import { Organization } from '@blockframes/organization/+state/organization.model';
+import { Organization, User } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { getCurrentApp } from '@blockframes/utils/apps';
 import { canHavePreferences } from '@blockframes/user/+state/user.utils';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
-import { User } from '@blockframes/user/+state/user.model';
+import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/utils/apps';
+import { NavigationService } from '@blockframes/ui/navigation.service';
 
 const navLinks = [
   {
     path: 'settings',
-    label: 'Profile'
+    label: 'My Profile'
   },
   {
     path: 'notifications',
@@ -40,16 +39,17 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
   public navLinks = navLinks;
   public user$: Observable<User>;
 
-  private countRouteEvents = 1;
+  private countRouteEvents = 0;
   private sub: Subscription;
 
   constructor(
     private dynTitle: DynamicTitleService,
-    private location: Location,
     private orgService: OrganizationService,
-    private routerQuery: RouterQuery,
+    private navService: NavigationService,
+
     private authService: AuthService,
-    router: Router
+    @Inject(APP) private app: App,
+    private router: Router
   ) {
 
     this.dynTitle.setPageTitle(`
@@ -57,7 +57,7 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
     ${this.authService.profile.firstName}`,
       `${this.orgService.org.denomination.full}`);
 
-    this.sub = router.events.pipe(
+    this.sub = this.router.events.pipe(
       filter((evt: Event) => evt instanceof NavigationEnd),
       distinctUntilChanged((a: NavigationEnd, b: NavigationEnd) => a.url === b.url),
     ).subscribe(() => this.countRouteEvents++);
@@ -71,8 +71,7 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
     if (hasPreferences) return;
 
     const org = this.orgService.org;
-    const app = getCurrentApp(this.routerQuery);
-    if (canHavePreferences(org, app)) {
+    if (canHavePreferences(org, this.app)) {
       this.navLinks.push({ path: 'preferences', label: 'Buying Preferences' })
     }
   }
@@ -82,6 +81,6 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
-    this.location.historyGo(-this.countRouteEvents);
+    this.navService.goBack(this.countRouteEvents);
   }
 }

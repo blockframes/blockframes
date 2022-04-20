@@ -1,6 +1,13 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
-import { MoviePictureCrmForm } from "@blockframes/admin/crm/forms/movie-crm.form";
-import { Movie, MovieService } from '@blockframes/movie/+state';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  OnInit,
+  ChangeDetectorRef,
+} from '@angular/core';
+import { MoviePictureCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { Movie } from '@blockframes/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { FileUploaderService } from '@blockframes/media/+state';
@@ -9,7 +16,7 @@ import { FileUploaderService } from '@blockframes/media/+state';
   selector: 'movie-picture-upload',
   templateUrl: './picture-upload.component.html',
   styleUrls: ['./picture-upload.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MoviePictureUploadComponent implements OnInit {
   @Input() movie: Movie;
@@ -19,7 +26,8 @@ export class MoviePictureUploadComponent implements OnInit {
     private snackBar: MatSnackBar,
     private movieService: MovieService,
     private uploaderService: FileUploaderService,
-    private cdr: ChangeDetectorRef) {}
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.moviePictureForm = new MoviePictureCrmForm(this.movie);

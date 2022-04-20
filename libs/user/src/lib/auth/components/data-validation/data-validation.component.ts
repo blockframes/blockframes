@@ -1,14 +1,13 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, Optional, Inject } from '@angular/core';
 import { AuthService } from '@blockframes/auth/+state';
-import { Organization } from '@blockframes/organization/+state';
-import { getCurrentApp, appName, getOrgModuleAccess } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Observable } from 'rxjs';
+import { Organization } from '@blockframes/model';
+import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
+import { BehaviorSubject } from 'rxjs';
 import { Intercom } from 'ng-intercom';
-import { hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { delay, hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { map } from 'rxjs/operators';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'auth-data-validation',
@@ -24,21 +23,20 @@ export class AuthDataValidationComponent implements OnInit {
     const orgHaveAccesToAtLeastOneModule = !!getOrgModuleAccess(org, this.app).length;
     this.orgApproval = isOrgAccepted && orgHaveAccesToAtLeastOneModule && isUserInOrg;
   };
-  public app = getCurrentApp(this.routerQuery);
-  public appName = appName[this.app];
+
   public profileData = false;
   public orgData = false;
-  public emailValidate$: Observable<boolean>;
+  public emailValidate$ = new BehaviorSubject(false);
   public orgApproval = false;
-
   public user = this.authService.profile;
 
   constructor(
     private authService: AuthService,
-    private routerQuery: RouterQuery,
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private snackbar: MatSnackBar,
-    @Optional() private intercom: Intercom) { }
+    @Optional() private intercom: Intercom,
+    @Inject(APP) public app: App,
+  ) { }
 
   ngOnInit() {
     // Filled checkbox
@@ -47,11 +45,23 @@ export class AuthDataValidationComponent implements OnInit {
       this.profileData = true;
     }
 
-    this.emailValidate$ = this.authService.user$.pipe(map(auth => auth?.emailVerified)); // TODO #7273 since authState is only triggered via sign-in/out data is not updated when emailVerified state change
+    this.listenOnEmailVerified();
   }
 
   openIntercom(): void {
     return this.intercom.show();
+  }
+
+  private async listenOnEmailVerified() {
+    let ms = 1000;
+    let emailVerified = false;
+    while (emailVerified === false) {
+      const firebaseUser = await this.authService.reloadUser();
+      emailVerified = firebaseUser.emailVerified;
+      if (!emailVerified) await delay(ms);
+      ms = ms * 2;
+    }
+    this.emailValidate$.next(emailVerified);
   }
 
   refresh() {
@@ -61,11 +71,10 @@ export class AuthDataValidationComponent implements OnInit {
   async resendEmailVerification() {
     const snack = this.snackbar.open('Sending verification email...');
     const publicUser = this.authService.profile;
-    const app = getCurrentApp(this.routerQuery);
 
     try {
-      const sendVerifyEmail = this.functions.httpsCallable('sendVerifyEmailAddress');
-      await sendVerifyEmail({ email: publicUser.email, publicUser, app }).toPromise();
+      const sendVerifyEmail = httpsCallable(this.functions, 'sendVerifyEmailAddress');
+      await sendVerifyEmail({ email: publicUser.email, publicUser, app: this.app });
       snack.dismiss();
       this.snackbar.open('Verification email sent.', '', { duration: 3000 });
     } catch (err) {

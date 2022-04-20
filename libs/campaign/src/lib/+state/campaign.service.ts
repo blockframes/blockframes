@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { OrganizationService } from "@blockframes/organization/+state";
+import { Injectable } from '@angular/core';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
-import { Campaign } from "./campaign.model";
 import { removeUndefined } from '@blockframes/utils/helpers';
-import { Movie, MovieService } from "@blockframes/movie/+state";
-import { combineLatest, of } from "rxjs";
-import { map } from "rxjs/operators";
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { Movie, Campaign } from '@blockframes/model';
+import { combineLatest, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ActiveState, EntityState } from '@datorama/akita';
 
-interface CampaignState extends EntityState<Campaign, string>, ActiveState<string> {}
+interface CampaignState extends EntityState<Campaign, string>, ActiveState<string> { }
 
 export interface MovieCampaign extends Movie {
   campaign: Campaign;
@@ -17,12 +17,9 @@ export interface MovieCampaign extends Movie {
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'campaigns' })
 export class CampaignService extends CollectionService<CampaignState> {
-  useMemorization = true;
+  useMemorization = false;
 
-  constructor(
-    private orgService: OrganizationService,
-    private movieService: MovieService
-  ) {
+  constructor(private orgService: OrganizationService, private movieService: MovieService) {
     super();
   }
 
@@ -34,11 +31,11 @@ export class CampaignService extends CollectionService<CampaignState> {
   /** Query movies with their campaign */
   queryMoviesCampaign(ids: string[]) {
     if (ids.length) {
-      const query = (id: string) => combineLatest([
-        this.movieService.valueChanges(id),
-        this.valueChanges(id),
-      ]).pipe(map(([movie, campaign]) => ({ ...movie, campaign })));
-      return combineLatest(ids.map(query))
+      const query = (id: string) =>
+        combineLatest([this.movieService.valueChanges(id), this.valueChanges(id)]).pipe(
+          map(([movie, campaign]) => ({ ...movie, campaign }))
+        );
+      return combineLatest(ids.map(query));
     } else {
       return of([]);
     }

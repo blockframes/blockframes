@@ -11,7 +11,5 @@ import { TunnelLayoutComponent } from '../layout/layout.component';
 export class TunnelPageComponent {
   constructor(private layout: TunnelLayoutComponent) { }
 
-  get page() {
-    return this.layout.currentStep;
-  }
+  page$ = this.layout.currentStep$;
 }

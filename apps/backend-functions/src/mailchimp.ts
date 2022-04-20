@@ -11,8 +11,8 @@ async function getMailChimp() {
   return _mailchimp
 }
 
-export const registerToNewsletters = async (data: {email: string, tags: string[]}) => {
-  const {email: email_address, tags} = data;
+export const registerToNewsletters = async (data: { email: string, tags: string[] }) => {
+  const { email: email_address, tags } = data;
   const mailchimp = await getMailChimp();
 
   mailchimp.setConfig({
@@ -20,10 +20,12 @@ export const registerToNewsletters = async (data: {email: string, tags: string[]
     server: mailchimpServer,
   });
 
-  return await mailchimp.lists.addListMember(mailchimpListId, 
-    {email_address, 
-    tags,
-    status: "subscribed"}
+  return await mailchimp.lists.addListMember(mailchimpListId,
+    {
+      email_address,
+      tags,
+      status: 'subscribed'
+    }
   );
 }
 

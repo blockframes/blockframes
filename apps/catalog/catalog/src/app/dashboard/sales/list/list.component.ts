@@ -1,26 +1,34 @@
-import { Component, ChangeDetectionStrategy, Optional, OnInit, } from '@angular/core';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { appName, getCurrentApp } from '@blockframes/utils/apps';
-import { ContractService, Sale } from '@blockframes/contract/contract/+state';
-import { Organization, OrganizationService } from '@blockframes/organization/+state';
+import { Component, ChangeDetectionStrategy, Optional, OnInit } from '@angular/core';
+import { ContractService } from '@blockframes/contract/contract/+state';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
 import { map } from 'rxjs/operators';
 import { combineLatest, of } from 'rxjs';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { CollectionReference } from '@angular/fire/firestore';
 import { getSeller } from '@blockframes/contract/contract/+state/utils'
+import { Organization, Sale } from '@blockframes/model';
+import { OrganizationService } from '@blockframes/organization/+state';
+import { orderBy, where } from 'firebase/firestore';
 
-function queryFn(ref: CollectionReference, orgId: string, options: { internal?: boolean }) {
-  const operator = options.internal ? '!=' : "==";
-  return ref
-    .where('buyerId', operator, '')
-    .where('type', '==', 'sale')
-    .orderBy('buyerId', 'desc')
-    .where('stakeholders', 'array-contains', orgId)
-    .orderBy('_meta.createdAt', 'desc')
+function queryConstraints(orgId: string, options: { internal?: boolean }) {
+  if (options.internal) {
+    return [
+      where('buyerId', '!=', ''),
+      where('type', '==', 'sale'),
+      orderBy('buyerId', 'desc'),
+      where('stakeholders', 'array-contains', orgId),
+      orderBy('_meta.createdAt', 'desc')
+    ]
+  }
+
+  return [
+    where('buyerId', '==', ''),
+    where('type', '==', 'sale'),
+    where('stakeholders', 'array-contains', orgId),
+    orderBy('_meta.createdAt', 'desc')
+  ]
 }
 
 function getFullName(seller: Organization) {
@@ -34,12 +42,9 @@ function getFullName(seller: Organization) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleListComponent implements OnInit {
-  public app = getCurrentApp(this.routerQuery);
-  public appName = appName[this.app];
-  public orgId = this.orgService.org.id;
+  private orgId = this.orgService.org.id;
 
-
-  public internalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId, { internal: true })).pipe(
+  public internalSales$ = this.contractService.valueChanges(queryConstraints(this.orgId, { internal: true })).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
       licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)),
@@ -48,7 +53,7 @@ export class SaleListComponent implements OnInit {
     }),
   );
 
-  public externalSales$ = this.contractService.valueChanges(ref => queryFn(ref, this.orgId, { internal: true })).pipe(
+  public externalSales$ = this.contractService.valueChanges(queryConstraints(this.orgId, { internal: false })).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
       licensee: () => of('External'),
@@ -61,17 +66,15 @@ export class SaleListComponent implements OnInit {
 
   constructor(
     private contractService: ContractService,
-    private routerQuery: RouterQuery,
     private orgService: OrganizationService,
     private titleService: MovieService,
     private incomeService: IncomeService,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
-
   ) { }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('My Sales (All)');
+    this.dynTitle.setPageTitle('My Deals (All)');
   }
 
   public openIntercom() {

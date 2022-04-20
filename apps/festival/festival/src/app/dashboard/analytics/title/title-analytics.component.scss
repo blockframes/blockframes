@@ -1,0 +1,28 @@
+:host {
+  display: block;
+}
+
+header {
+  padding: 24px;
+  background-size: cover;
+  background-position: center;
+
+  img {
+    height: 200px;
+  }
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 24px;
+
+  a {
+    margin-bottom: 16px;
+  }
+}
+
+.film-page-button {
+  height: fit-content;
+}

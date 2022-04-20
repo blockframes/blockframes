@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { add, startOfDay } from 'date-fns/fp'
-import { Event } from '@blockframes/event/+state';
+import { Event } from '@blockframes/model';
 import { getValue } from '../helpers';
 
 interface TimeFrame {
@@ -25,8 +25,7 @@ export const descTimeFrames: TimeFrame[] = [
   { type: 'weeks', from: -3, to: -2, way: 'desc' },
   { type: 'weeks', from: -4, to: -3, way: 'desc' },
   { type: 'months', from: -2, to: -1, label: 'Last Month', way: 'desc' },
-  { type: 'months', from: -3, to: -2, way: 'desc' },
-  { type: 'months', from: -4, to: -3, way: 'desc' },
+  { type: 'months', from: -4, to: -2, label: 'Older than two months', way: 'desc' },
 ];
 
 export const ascTimeFrames: TimeFrame[] = [

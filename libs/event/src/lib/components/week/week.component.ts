@@ -10,14 +10,14 @@ import { addDays, addMinutes, endOfWeek, startOfWeek } from 'date-fns';
 
 import { EventSmallDirective, EventLargeDirective } from '../event.directive';
 import { EventService } from '../../+state/event.service';
-import { createEvent } from '../../+state/event.model';
-import { EventTypes } from '../../+state/event.firestore';
+import { EventTypes, createEvent } from '@blockframes/model';
 import { EventCreateComponent } from '../../form/create/create.component';
 import { fromEvent } from 'rxjs';
 import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { collection, doc } from 'firebase/firestore';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;
@@ -53,7 +53,7 @@ export class CalendarWeekComponent {
   localEvents: CalendarEvent[];
   loading = false;
   @Input() viewDate: Date = new Date();
-  @Input() eventTypes: EventTypes[] = ['screening', 'meeting'];
+  @Input() eventTypes: EventTypes[] = ['screening', 'meeting', 'slate'];
   @Input()
   set events(events: CalendarEvent<unknown>[]) {
     this.loading = !events;
@@ -90,7 +90,7 @@ export class CalendarWeekComponent {
       return;
     }
     const localEvent: CalendarEvent = createEvent({
-      id: this.service['db'].createId(),
+      id: doc(collection(this.service['db'], '_')).id,
       ownerOrgId: this.orgService.org.id,
       title: 'New event',
       start: segment.date,

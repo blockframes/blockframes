@@ -1,6 +1,6 @@
 import { firebase } from '@env';
 import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { StorageFile } from '@blockframes/model';
 
 /**
  * Interface that hold the image options for imgix processing.

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Pipe, PipeTransform } from "@angular/core";
 import { AuthService } from '@blockframes/auth/+state';
-import { Invitation } from "@blockframes/invitation/+state/invitation.model";
+import { Invitation } from "@blockframes/model";
 
 @Pipe({ name: 'hasAction', pure: true })
 export class InvitationHasActionPipe implements PipeTransform {

@@ -12,7 +12,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { combineLatest } from 'rxjs';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { Negotiation } from '@blockframes/contract/negotiation/+state/negotiation.firestore';
+import { Negotiation } from '@blockframes/model';
 
 @Component({
   selector: 'catalog-contract-edit',
@@ -58,7 +58,10 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
 
   async decline() {
     const sale = await this.sale$.pipe(first()).toPromise();
-    const data: ConfirmDeclineData = { type: 'buyer' }
+    const data: ConfirmDeclineData = { 
+      type: 'buyer',
+      showAcceptTermsCheckbox: true
+    };
     const ref = this.dialog.open(ConfirmDeclineComponent, { data });
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {

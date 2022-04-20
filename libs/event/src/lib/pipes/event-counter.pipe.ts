@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Event } from '../+state/event.model';
+import { Event } from '@blockframes/model';
 
 @Pipe({name: 'eventCounter'})
 export class EventCounterPipe implements PipeTransform {

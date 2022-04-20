@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { Event, EventService } from '@blockframes/event/+state';
-import { Meeting, MeetingMediaControl } from '@blockframes/event/+state/event.firestore';
+import { EventService } from '@blockframes/event/+state';
+import { Event, Meeting, MeetingMediaControl } from '@blockframes/model';
 import { debounceFactory } from '@blockframes/utils/helpers';
 
 @Component({

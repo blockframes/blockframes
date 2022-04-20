@@ -14,8 +14,8 @@ export class TunnelGuard implements CanActivate, CanDeactivate<unknown> {
   }
   canDeactivate(
     component: TunnelRoot,
-    currentRoute: ActivatedRouteSnapshot,
-    currentState: RouterStateSnapshot,
+    _: ActivatedRouteSnapshot,
+    __: RouterStateSnapshot,
     nextState: RouterStateSnapshot
   ) {
     return component.layout.confirmExit().pipe(

@@ -4,6 +4,11 @@
     <span>{{ event.title }}</span>
   </ng-container>
 
+  <!-- Slate -->
+  <ng-container *ngSwitchCase="'slate'">
+    <span>{{ event.title }}</span>
+  </ng-container>
+
   <!-- Screening -->
   <ng-container *ngSwitchCase="'screening'">
     <ng-container *ngIf="event.movie as movie; else noMovie">

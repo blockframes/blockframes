@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { StorageFile } from '@blockframes/model';
 
 @Component({
   selector: 'file-preview',

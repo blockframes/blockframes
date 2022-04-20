@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { Invitation } from '@blockframes/invitation/+state/invitation.model';
+import { Invitation } from '@blockframes/model';
 
 @Component({
   selector: 'member-pending',

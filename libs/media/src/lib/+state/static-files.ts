@@ -1,6 +1,4 @@
-
-import { FileMetaData } from "./media.model";
-
+import { FileMetaData } from '@blockframes/model';
 
 export const collectionHoldingFiles = [
   'orgs',

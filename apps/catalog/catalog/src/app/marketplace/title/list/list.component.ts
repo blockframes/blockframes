@@ -1,4 +1,3 @@
-// Angular
 import {
   OnInit,
   OnDestroy,
@@ -8,6 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { where } from 'firebase/firestore';
 
 // RxJs
 import { SearchResponse } from '@algolia/client-search';
@@ -16,18 +16,16 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareRe
 
 // Blockframes
 import { centralOrgId } from '@env';
-import { AlgoliaMovie } from '@blockframes/utils/algolia';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import { Term } from '@blockframes/contract/term/+state/term.model';
-import { StoreStatus } from '@blockframes/utils/static-model/types';
+import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie } from '@blockframes/model';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
-import { Bucket, BucketService } from '@blockframes/contract/bucket/+state';
+import { BucketService } from '@blockframes/contract/bucket/+state';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
-import { ContractService, Mandate, Sale } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate } from '@blockframes/contract/avails/avails';
+import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -67,15 +65,20 @@ export class ListComponent implements OnDestroy, OnInit {
 
   async ngOnInit() {
     this.searchForm.hitsPerPage.setValue(1000);
+    const mandatesQuery = [
+      where('type', '==', 'mandate'),
+      where('buyerId', '==', centralOrgId.catalog),
+      where('status', '==', 'accepted')
+    ];
+
+    const salesQuery = [
+      where('type', '==', 'sale'),
+      where('status', '==', 'accepted')
+    ];
 
     this.queries$ = combineLatest([
-      this.contractService.valueChanges(ref => ref.where('type', '==', 'mandate')
-        .where('buyerId', '==', centralOrgId.catalog)
-        .where('status', '==', 'accepted')
-      ),
-      this.contractService.valueChanges(ref => ref.where('type', '==', 'sale')
-        .where('status', '==', 'accepted')
-      ),
+      this.contractService.valueChanges(mandatesQuery),
+      this.contractService.valueChanges(salesQuery),
     ]).pipe(
       switchMap(([mandates, sales]) => {
         const mandateTermIds = mandates.map(mandate => mandate.termIds).flat();
@@ -153,20 +156,24 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   async addAvail(title: (AlgoliaMovie & { mandates: FullMandate[] })) {
-
     if (this.availsForm.invalid) {
       this.snackbar.open('Fill in avails filter to add title to your Selection.', 'close', { duration: 5000 })
       return;
     }
 
-    const titleId = title.objectID;
-    const parentTermId = title.mandates[0]?.id;
-    if (!parentTermId) {
-      this.snackbar.open(`This title is not available`, 'close', { duration: 5000 });
+    const availResults = getMandateTerms(this.availsForm.value, title.mandates);
+    if (!availResults.length) {
+      this.snackbar.open('This title is not available', 'close', { duration: 5000 });
       return;
     }
 
-    this.bucketService.addTerm(titleId, parentTermId, this.availsForm.value);
+    const results = availResults.map(res => ({
+      titleId: title.objectID,
+      parentTermId: res.term.id,
+      avail: res.avail
+    }));
+
+    this.bucketService.addBatchTerms(results);
 
     this.snackbar.open(`${title.title.international} was added to your Selection`, 'GO TO SELECTION', { duration: 4000 })
       .onAction()

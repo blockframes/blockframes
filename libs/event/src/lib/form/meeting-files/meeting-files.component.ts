@@ -6,7 +6,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { MatDialog } from '@angular/material/dialog';
 import { FilePickerComponent } from '@blockframes/media/file/picker/picker.component';
 import { FilePreviewComponent } from '@blockframes/media/file/preview/preview.component';
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
+import { StorageFile } from '@blockframes/model';
 
 @Component({
   selector: 'event-meeting-files',

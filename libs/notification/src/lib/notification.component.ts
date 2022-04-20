@@ -1,11 +1,11 @@
-﻿import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+﻿import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
 import { NotificationService } from './+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Router } from '@angular/router';
-import { getCurrentApp, getOrgModuleAccess } from '@blockframes/utils/apps';
+import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
 import { take } from 'rxjs/operators';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'notification-view',
@@ -21,8 +21,8 @@ export class NotificationComponent implements OnInit {
     private service: NotificationService,
     private dynTitle: DynamicTitleService,
     private router: Router,
-    private routerQuery: RouterQuery,
     private orgService: OrganizationService,
+    @Inject(APP) private app: App
   ) { }
 
   ngOnInit() {
@@ -37,9 +37,8 @@ export class NotificationComponent implements OnInit {
   }
 
   leadToHomepage() {
-    const app = getCurrentApp(this.routerQuery);
     const org = this.orgService.org;
-    const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
+    const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, this.app);
     return this.router.navigate([`/c/o/${moduleAccess}/home`]);
   }
 

@@ -1,17 +1,15 @@
 
-import { Injectable } from '@angular/core';
-import { Observable } from "rxjs";
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { filter, startWith, switchMap, tap } from "rxjs/operators";
-import { mergeDeep } from "@blockframes/utils/helpers";
+import { Inject, Injectable } from '@angular/core';
+import { mergeDeep } from '@blockframes/utils/helpers';
 import { FileUploaderService } from '@blockframes/media/+state';
-import { ProductionStatus } from "@blockframes/utils/static-model";
-import { App, getCurrentApp, getMoviePublishStatus } from "@blockframes/utils/apps";
+import { App, getMoviePublishStatus } from '@blockframes/utils/apps';
 import { FormSaveOptions } from '@blockframes/utils/common-interfaces';
-import { MovieControl, MovieForm } from "./movie.form";
+import { MovieControl, MovieForm } from './movie.form';
 import type { FormShellConfig } from './movie.shell.interfaces'
-import { Movie, MoviePromotionalElements, MovieService } from "../+state";
+import { MovieService } from '../+state/movie.service';
+import { Movie, MoviePromotionalElements, ProductionStatus } from '@blockframes/model';
 import { MovieActiveGuard } from '../guards/movie-active.guard';
+import { APP } from '@blockframes/utils/routes/utils';
 
 const valueByProdStatus: Record<ProductionStatus, Record<string, string>> = {
   development: {
@@ -50,40 +48,27 @@ function cleanPromotionalMedia(promotional: MoviePromotionalElements): MovieProm
 
 @Injectable({ providedIn: 'root' })
 export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
-  form = new MovieForm(this.movieActiveGuard.movie); // TODO #7255
+  form: MovieForm;
   name = 'Title';
-  private currentApp = getCurrentApp(this.route);
 
   constructor(
-    private route: RouterQuery,
     private service: MovieService,
     private uploaderService: FileUploaderService,
     private movieActiveGuard: MovieActiveGuard,
+    @Inject(APP) private currentApp: App
   ) { }
 
-  onInit(): Observable<unknown>[] {
-    // Update form on change
-    const onMovieChanges = this.route.selectParams('movieId').pipe(
-      switchMap((id: string) => this.service.getValue(id)),
-      tap(movie => {
-        if (this.currentApp === 'catalog') movie.productionStatus = 'released';
-        this.form.reset();
-        this.form.setAllValue(movie);
-        if (movie.productionStatus) this.fillHiddenMovieInputs(movie.productionStatus);
-      })
-    );
-
-    // Update form on status change
-    const onStatusChanges = this.form.productionStatus.valueChanges.pipe(
-      startWith(this.form.productionStatus.value),
-      filter(status => !!status),
-      tap((status: ProductionStatus) => this.fillHiddenMovieInputs(status))
-    );
-    return [onMovieChanges, onStatusChanges];
+  onInit() {
+    // Fill Form
+    const movie = this.movieActiveGuard.movie;
+    if (this.currentApp === 'catalog') movie.productionStatus = 'released';
+    this.form = new MovieForm(movie);
+    this.fillHiddenMovieInputs(movie.productionStatus);
   }
 
   // Update form to fill inputs that might be hidden but that are mandatory to submit the movie
-  private fillHiddenMovieInputs(status: ProductionStatus) {
+  public fillHiddenMovieInputs(status: ProductionStatus) {
+    if (!status) return;
     for (const path in valueByProdStatus[status]) {
       const formHasValue = this.form.get(path as any).value;
       const configHasValue = valueByProdStatus[status][path];
@@ -93,7 +78,6 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     }
   }
 
-  // TODO issue#4002
   async onSave(options: FormSaveOptions): Promise<void> {
 
     const base = this.movieActiveGuard.movie;
@@ -107,9 +91,9 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     // Specific updates based on production status
     const prodStatus = ['finished', 'released'];
     if (prodStatus.includes(movie.productionStatus)) {
-      movie.directors.forEach(director => director.status = 'confirmed')
-      movie.cast.forEach(cast => cast.status = 'confirmed')
-      movie.crew.forEach(crew => crew.status = 'confirmed'); // TODO #7774 previous value was 'confiremd' =>  migration needed
+      movie.directors.forEach(director => director.status = 'confirmed');
+      movie.cast.forEach(cast => cast.status = 'confirmed');
+      movie.crew.forEach(crew => crew.status = 'confirmed');
     }
 
     // Update fields with dynamic keys
@@ -118,9 +102,8 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
 
     // Specific update if publishing
     if (options.publishing) {
-      const currentApp: App = this.route.getData('app');
-      movie.app[currentApp].status = getMoviePublishStatus(currentApp);
-      if (currentApp === 'festival') movie.app[currentApp].acceptedAt = new Date();
+      movie.app[this.currentApp].status = getMoviePublishStatus(this.currentApp);
+      if (this.currentApp === 'festival') movie.app[this.currentApp].acceptedAt = new Date();
     }
 
     // -- Update movie & media -- //

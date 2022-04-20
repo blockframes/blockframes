@@ -1,5 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { Bucket } from './+state/bucket.model';
+import { Bucket } from '@blockframes/model';
 
 @Pipe({ name: 'bucketTotalPrice' })
 export class BucketTotalPricePipe implements PipeTransform {

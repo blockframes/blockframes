@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgApexchartsModule } from "ng-apexcharts";
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MovieAnalyticsChartModule } from '@blockframes/movie/components/movie-analytics-chart/movie-analytics-chart.module';
+import { MovieAnalyticsChartModule } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics-chart.module';
 
 import { TitleActivityComponent } from './activity.component';
 

@@ -5,15 +5,13 @@ import { combineLatest, Subscription } from 'rxjs';
 import { map, startWith, throttleTime } from 'rxjs/operators';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
-import { CalendarAvailsFilter, durationAvailabilities, DurationMarker, filterContractsByTitle } from '@blockframes/contract/avails/avails';
+import {
+  CalendarAvailsFilter,
+  durationAvailabilities,
+  DurationMarker,
+  filterContractsByTitle,
+} from '@blockframes/contract/avails/avails';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { Mandate, Sale } from '@blockframes/contract/contract/+state/contract.firestore';
-import { Term } from '@blockframes/contract/term/+state/term.firestore';
-import { Bucket } from '@blockframes/contract/bucket/+state/bucket.firestore';
-import { Movie } from '@blockframes/movie/+state';
-
-// TODO(#7820): remove with rxjs 7 
-type AvailabilitiesInputs = [CalendarAvailsFilter, Mandate<Date>[], Term<Date>[], Sale<Date>[], Term<Date>[], Bucket<Date>, Movie];
 
 @Component({
   selector: 'catalog-movie-avails-calendar',
@@ -22,7 +20,6 @@ type AvailabilitiesInputs = [CalendarAvailsFilter, Mandate<Date>[], Term<Date>[]
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, OnDestroy {
-
   public availsForm = this.shell.avails.calendarForm;
 
   public org$ = this.shell.movieOrg$;
@@ -44,13 +41,21 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     this.sales$,
     this.salesTerms$,
     this.shell.bucketForm.value$,
-    this.shell.movie$
+    this.shell.movie$,
   ]).pipe(
-    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]: AvailabilitiesInputs) => {
+    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]) => {
       if (this.availsForm.invalid) return { available: [], sold: [], inBucket: [], selected: undefined };
-      const res = filterContractsByTitle(movie.id, mandates, mandateTerms, sales, salesTerms, bucket)
+      const res = filterContractsByTitle(
+        movie.id,
+        mandates,
+        mandateTerms,
+        sales,
+        salesTerms,
+        bucket
+      );
       return durationAvailabilities(avails, res.mandates, res.sales, res.bucketContracts);
-    }),
+    }
+    )
   );
 
   constructor(
@@ -66,7 +71,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
 
   async selected(marker: DurationMarker) {
     const duration = { from: marker.from, to: marker.to };
-    const avails = { ...this.availsForm.value, duration };
+    const avails = { ...marker.avail, duration };
 
     const result = this.shell.bucketForm.getTermIndexForCalendar(avails, marker);
     if (result) {
@@ -78,7 +83,8 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
       this.shell.bucketForm.addDuration(avails, marker);
     }
 
-    this.snackbar.open(`Rights ${result ? 'updated' : 'added'}`, 'Show ⇩', { duration: 5000 })
+    this.snackbar
+      .open(`Terms  ${result ? 'updated' : 'added'}`, 'SHOW ⇩', { duration: 5000 })
       .onAction()
       .subscribe(() => {
         scrollIntoView(document.querySelector('#rights'));
@@ -91,17 +97,15 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     if (!decodedData.territories) decodedData.territories = [];
 
     this.availsForm.patchValue(decodedData);
-    const subSearchUrl = this.availsForm.valueChanges.pipe(
-      throttleTime(1000)
-    ).subscribe(formState => {
-      encodeUrl<CalendarAvailsFilter>(
-        this.router, this.route, formState
-      );
-    });
+    const subSearchUrl = this.availsForm.valueChanges
+      .pipe(throttleTime(1000))
+      .subscribe((formState) => {
+        encodeUrl<CalendarAvailsFilter>(this.router, this.route, formState);
+      });
     this.subs.push(subSearchUrl);
   }
 
   ngOnDestroy() {
-    this.subs.forEach(s => s.unsubscribe())
+    this.subs.forEach((s) => s.unsubscribe());
   }
 }

@@ -16,7 +16,6 @@ import { AppLogoModule } from '../app-logo/app-logo.module';
 import { FooterModule } from '../footer/footer.module';
 
 // Widgets
-import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 
 // Material
@@ -38,7 +37,6 @@ import { MatBadgeModule } from '@angular/material/badge';
     FlexLayoutModule,
     RouterModule,
     ReactiveFormsModule,
-    SearchWidgetModule,
     AuthWidgetModule,
     AlgoliaAutocompleteModule,
     ImageModule,

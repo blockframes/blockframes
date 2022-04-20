@@ -10,7 +10,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 // Guards
-import { BlockframesAdminGuard } from '@blockframes/admin/guard/blockframes-admin.guard';;
+import { BlockframesAdminGuard } from '@blockframes/admin/guard/blockframes-admin.guard';
 
 // Mobules
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';

@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 // Component
 import { MovieFormShellComponent } from '../shell/shell.component';
+import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 
 // RxJs
 import { Subscription, Observable } from 'rxjs';
@@ -15,7 +16,10 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-
+import { maxYear } from '@blockframes/utils/form/validators/validators';
+import { MatDialog } from '@angular/material/dialog';
+import { Filmography } from '@blockframes/model';
+import { displayFilmographies } from '@blockframes/movie/pipes/filmography.pipe';
 @Component({
   selector: 'movie-form-main',
   templateUrl: './main.component.html',
@@ -25,10 +29,10 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class MovieFormMainComponent implements OnInit, OnDestroy {
   form = this.shell.getForm('movie');
   public movieId = this.route.snapshot.params.movieId;
-  contentType = this.form.contentType.valueChanges.pipe(startWith(this.form.contentType.value))
   valuesCustomGenres$: Observable<string[]>;
   customGenreCtrl = new FormControl();
   public separatorKeysCodes: number[] = [ENTER, COMMA];
+  public maxReleaseYear = maxYear;
 
   public displayedColumns = {
     firstName: 'First Name',
@@ -37,14 +41,29 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
     category: 'Category',
     description: 'Description',
     filmography: 'Filmography'
-  }
+  };
 
+  public runningTime = {
+    tv: {
+      label: 'Average Episode Running Time',
+      error: 'Please fill in a valid runtime.'
+    },
+    movie: {
+      label: 'Running Time',
+      error: 'Please specify your project\'s runtime.'
+    }
+  };
 
   private sub: Subscription;
-  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute, private dynTitle: DynamicTitleService) { }
+  constructor(
+    private shell: MovieFormShellComponent,
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private dynTitle: DynamicTitleService
+  ) { }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Main Information')
+    this.dynTitle.setPageTitle('Main Information');
     this.valuesCustomGenres$ = this.form.customGenres.valueChanges.pipe(startWith(this.form.customGenres.value));
 
     this.validateRunningTime(this.form.runningTime.value);
@@ -59,7 +78,7 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
   public addCustomGenre(event: MatChipInputEvent): void {
     const { value = '' } = event;
 
-    this.form.customGenres.add(value)
+    this.form.customGenres.add(value);
     this.customGenreCtrl.reset();
   }
 
@@ -81,5 +100,18 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
     } else {
       this.form.runningTime.get('time').setErrors(null);
     }
+  }
+
+  //TODO #6507
+  openDetails(title: string, values: string | Filmography[]) {
+    const arrayValues = Array.isArray(values) ? displayFilmographies(values) : values;
+    this.dialog.open(CellModalComponent, {
+      data: { title, values: arrayValues },
+      maxHeight: '80vh',
+      minWidth: '50vw',
+      maxWidth: '80vw',
+      minHeight: '50vh',
+      autoFocus: false,
+    });
   }
 }

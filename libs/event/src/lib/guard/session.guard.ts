@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { EventService } from '../+state';
-import { Meeting } from '../+state/event.firestore';
+import { Meeting } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
 export class SessionGuard implements CanActivate {

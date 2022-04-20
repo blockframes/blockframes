@@ -2,8 +2,8 @@ import { getPrivateVideoUrl, ReadVideoParams } from './player';
 import { CallableContextOptions } from 'firebase-functions-test/lib/main';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { getTestingProjectId, initFunctionsTestMock, populate } from '@blockframes/testing/unit-tests';
-import { clearFirestoreData } from '@firebase/rules-unit-testing';
-import { StorageVideo } from '@blockframes/media/+state/media.firestore';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
+import { StorageVideo } from '@blockframes/model';
 import { testVideoId } from '@env';
 
 const testInvitations = [

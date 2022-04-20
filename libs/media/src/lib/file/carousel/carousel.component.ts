@@ -1,9 +1,7 @@
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-
-import { StorageFile } from '@blockframes/media/+state/media.firestore';
-
+import { StorageFile } from '@blockframes/model';
 import { FilePickerComponent } from '../picker/picker.component';
 
 @Component({

@@ -3,14 +3,16 @@
 import screeningEvents from '../../fixtures/screening-events';
 import USERS from 'tools/fixtures/users.json'
 import ORGS from 'tools/fixtures/orgs.json'
-import { auth, awaitElementDeletion, events, festival } from '@blockframes/testing/e2e';
+//TODO define proper way to import next line #8071
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { auth, events, festival, awaitElementDeletion } from '@blockframes/testing/cypress/browser';
 
 const screeningEvent = screeningEvents[0];
 const org = ORGS.find((org) => org.id === screeningEvent.org.id);
 const userOrganiser = USERS.find((user) => user.uid === screeningEvent.by.uid);
 const userInvited1 = USERS.find((user) => user.uid === screeningEvent.invitees[0].uid);
 const userInvited2 = USERS.find((user) => user.uid === screeningEvent.invitees[1].uid);
-const userUninvited = USERS.find((user) => user.uid === 'K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2');
+const userUninvited = USERS.find((user) => user.uid === 'EA9wRJgQ18McSyTPG6BKyPZUYxW2');
 const userAdmin = USERS.find((user) => user.uid === 'B8UsXliuxwY6ztjtLuh6f7UD1GV2');
 
 describe('Organiser invites other users to private screening', () => {
@@ -32,8 +34,8 @@ describe('Organiser invites other users to private screening', () => {
     cy.visit('/');
 
     cy.clearLocalStorage(); // ! If event is deleted manually, it will be stuck in localStorage cache
-    cy.contains('Accept cookies').click();
-    cy.task('log', userOrganiser.uid);
+    cy.contains('Accept Cookies').click();
+    cy.log('user uid', userOrganiser.uid);
     auth.loginWithEmailAndPassword(userOrganiser.email);
     cy.visit('/c/o/dashboard/event');
     cy.log(`Create screening {${screeningEvent.event}}`);
@@ -71,7 +73,7 @@ describe('Organiser invites other users to private screening', () => {
       cy.get('.jw-display-icon-display > .jw-icon').click();
       awaitElementDeletion('[aria-label=Loading]');
 
-      cy.get('video.jw-video').should('have.prop', 'paused', false).then(($video : any) => $video[0].pause())
+      cy.get('video.jw-video').should('have.prop', 'paused', false).then(($video: any) => $video[0].pause())
       cy.get('video.jw-video').should('have.prop', 'paused', true);
       cy.get('video').should(($video) => expect($video[0].duration).to.be.gt(0));
 
@@ -107,15 +109,11 @@ describe('Organiser invites other users to private screening', () => {
       cy.log('Reach Market Home & navigate to Screening Page from Screening Schedule');
       cy.visit('/c/o/marketplace/home');
 
-      // Discard the preferences modale
-      cy.wait(5000);
-      cy.get('button[test-id=skip-preferences]', { timeout: 3000 }).first().click();
-      
-      // Click on left menu 
-      cy.get('festival-marketplace button[test-id=menu]', { timeout: 3000 }).first().click();
+      // Click on left menu
+      cy.get('festival-marketplace button[test-id=menu]').first().click();
 
       festival.selectSalesAgents();
-      
+
       festival.clickOnOrganization(org.denomination.public);
 
       festival.clickOnScreeningSchedule();

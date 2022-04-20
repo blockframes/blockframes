@@ -1,19 +1,16 @@
 
-import { CallableContext } from "firebase-functions/lib/providers/https";
-
-import { getDocument } from "@blockframes/firebase-utils";
-import { EventDocument, Meeting } from "@blockframes/event/+state/event.firestore";
-import { ErrorResultResponse, displayName } from "@blockframes/utils/utils";
-
+import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { getDocument } from './data/internals';
+import { ErrorResultResponse, displayName } from '@blockframes/utils/utils';
 import { projectId, twilioAccountSid, twilioAccountSecret, twilioApiKeySecret, twilioApiKeySid } from './environments/environment';
-import Twilio from "twilio/lib/rest/Twilio";
-import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
-import { firebaseRegion } from "./internals/utils";
+import Twilio from 'twilio/lib/rest/Twilio';
+import AccessToken, { VideoGrant } from 'twilio/lib/jwt/AccessToken';
+import { firebaseRegion } from './internals/utils';
 import * as admin from 'firebase-admin';
-import { getUser } from "./internals/utils";
-import { Request, Response } from "firebase-functions";
-import { isUserInvitedToEvent } from "./internals/invitations/events";
-import { PublicUser } from "@blockframes/user/types";
+import { getUser } from './internals/utils';
+import { Request, Response } from 'firebase-functions';
+import { isUserInvitedToEvent } from './internals/invitations/events';
+import { PublicUser, EventDocument, Meeting } from '@blockframes/model';
 
 export interface RequestAccessToken {
   eventId: string,

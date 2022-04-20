@@ -7,9 +7,9 @@
         <bf-tag *ngIf="sale.negotiation">
           {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
         </bf-tag>
-        <a mat-button routerLink="/c/o/dashboard/standard-terms" target="_blank">
+        <a mat-button routerLink="/c/o/dashboard/terms" target="_blank">
           <mat-icon svgIcon="file"></mat-icon>
-          <span>See Standard Terms</span>
+          <span>See Terms & Conditions</span>
         </a>
       </div>
       <ng-container *ngIf="sale.buyerId | getOrg | async as org">

@@ -41,7 +41,8 @@ export class CookieBannerComponent implements OnInit {
   public acceptCookies() {
     this.confirmCookies();
     this.gdpr.enableIntercom(this.authService.profile, true);
-    this.gdpr.enableYandex(true);
+    // this.gdpr.enableYandex(true); #7936 this may be reactivated later
+    this.gdpr.enableHotjar(true);
   }
 
   public changePreferences() {
@@ -50,7 +51,8 @@ export class CookieBannerComponent implements OnInit {
       if (settings) {
         this.confirmCookies();
         this.gdpr.enableIntercom(this.authService.profile, settings.intercom);
-        this.gdpr.enableYandex(settings.yandex);
+        // this.gdpr.enableYandex(settings.yandex); #7936 this may be reactivated later
+        this.gdpr.enableHotjar(settings.hotjar);
       }
     })
   }

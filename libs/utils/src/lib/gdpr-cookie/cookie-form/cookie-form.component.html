@@ -1,10 +1,10 @@
 <section>
-  <h1>CASCADE 8, publisher of {{ appName | uppercase }}</h1>
+  <h1>CASCADE8, publisher of {{ app | appName | uppercase }}</h1>
   <p class="mat-body-1">We value your privacy.</p>
 
   <p class="mat-body-1">You can set your consent preferences and determine how you want your data to be used based on the purposes below.
     You may set your preferences for us independently from those of third-party partners.
-    Each purpose has a description so that you know how we and partners use your data.</p>
+    Each purpose has a description so that you know how your data are used.</p>
 </section>
 
 <section class="divider">
@@ -15,7 +15,7 @@
   <h2>Essential cookies</h2>
   <p class="mat-body-1">These are essential to the operation of the platform's services.</p>
 
-  <h3>CASCADE 8</h3>
+  <h3>CASCADE8</h3>
   <div fxLayout fxLayoutAlign="space-between">
     <mat-slide-toggle checked disabled></mat-slide-toggle>
   </div>
@@ -38,6 +38,7 @@
   <h2>Optional cookies</h2>
   <p class="mat-body-1">These are optional but very useful for us to provide you with optimal services.</p>
 
+  
   <h3>THIRD PARTY PARTNERS</h3>
 
   <mat-radio-group (change)="masterToggle($event)">
@@ -52,11 +53,20 @@
     </mat-slide-toggle>
   </div>
 
-  <h3>YANDEX</h3>
+  <h3>HOTJAR</h3>
+  <div fxLayout fxLayoutAlign="space-between">
+    <p class="mat-body-1">Audience analysis to design better experience.</p>
+    <mat-slide-toggle [checked]="form.get('hotjar').value" name="hotjar" (change)="toggleCookie($event)">
+    </mat-slide-toggle>
+  </div>
+
+  <!-- 
+  #7936 this may be reactivated later  
+  <h3>YANDEX</h3> 
   <div fxLayout fxLayoutAlign="space-between">
     <p class="mat-body-1">Yandex is used to monitor users’ behavior on our services. It enables us to understand how our services are used
       and craft better experiences.</p>
     <mat-slide-toggle [checked]="form.get('yandex').value" name="yandex" (change)="toggleCookie($event)">
     </mat-slide-toggle>
-  </div>
+  </div> -->
 </section>

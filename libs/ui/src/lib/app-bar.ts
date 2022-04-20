@@ -20,7 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
     trigger('isApp', [
       transition('true => false', [
         style({ position: 'relative', overflow: 'hidden' }),
-        query(':leave', style({ position: 'absolute', left: 0, padding: '0 16px'  }), { optional: true }),  // padding 16px to match mat-toolbar inner margin
+        query(':leave', style({ position: 'absolute', left: 0, padding: '0 16px' }), { optional: true }),  // padding 16px to match mat-toolbar inner margin
         query(':enter', style({ opacity: 0, transform: 'translateY(80px) scale(0.95)' })),
         query(':leave', animate(`300ms ${Easing.easeInCirc}`, style({ opacity: 0, transform: 'translateY(-80px) scale(0.95)' })), { optional: true }),
         query(':enter', animate(`300ms ${Easing.easeOutCirc}`, style({ opacity: 1, transform: 'translateY(0)' })))
@@ -52,7 +52,7 @@ export class AppBarComponent {
   constructor(
     private containerRef: ViewContainerRef,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   attach(pageTemplate: TemplateRef<unknown>) {
     this.pageView = new TemplatePortal(pageTemplate, this.containerRef);
@@ -67,7 +67,7 @@ export class AppBarComponent {
 }
 
 
-@Directive({ selector: '[appContainer] '})
+@Directive({ selector: '[appContainer] ' })
 export class AppContainerDirective {
   private observer: IntersectionObserver;
   container: HTMLElement;
@@ -93,7 +93,7 @@ export class AppContainerDirective {
 
       this.observer = new IntersectionObserver(([entry]) => {
         // First entry artifact (not sure what happens)
-        const {x, y, width, height} = entry.rootBounds;
+        const { x, y, width, height } = entry.rootBounds;
         if (x === 0 && y === 0 && width === 0 && height === 0) {
           return;
         }
@@ -114,7 +114,7 @@ export class AppContainerDirective {
     // Running inside Angular or removing animations didn't solve the issue.
     setTimeout(() => {
       const el = this.document.getElementById(targetId);
-      this.observer.observe(el);
+      if (el) this.observer.observe(el);
     }, 800); // 800 gives most consistent result (for me) plus UX is minimally impacted
   }
 
@@ -133,13 +133,13 @@ export class PageBarDirective implements AfterViewInit, OnDestroy {
   constructor(
     private appContainer: AppContainerDirective,
     private template: TemplateRef<unknown>,
-  ) {}
+  ) { }
 
   async ngAfterViewInit() {
     this.appContainer.appBar.attach(this.template)
 
     if (this.targetId) {
-        this.appContainer.observe(this.targetId);
+      this.appContainer.observe(this.targetId);
     } else {
       this.appContainer.appBar.isApp = false;
     }
@@ -164,7 +164,7 @@ export class PageBarDirective implements AfterViewInit, OnDestroy {
   `
 })
 export class AppMenuComponent {
-  constructor(private appContainer: AppContainerDirective) {}
+  constructor(private appContainer: AppContainerDirective) { }
   toggle() {
     this.appContainer.toggle.emit();
   }
@@ -175,4 +175,4 @@ export class AppMenuComponent {
   declarations: [AppBarComponent, AppContainerDirective, PageBarDirective, AppMenuComponent],
   exports: [AppBarComponent, AppContainerDirective, PageBarDirective, AppMenuComponent],
 })
-export class AppBarModule {}
+export class AppBarModule { }

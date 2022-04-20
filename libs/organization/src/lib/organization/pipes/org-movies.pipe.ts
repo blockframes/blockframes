@@ -1,21 +1,22 @@
-import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { MovieService } from '@blockframes/movie/+state';
-import { QueryFn } from '@angular/fire/firestore';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { Pipe, PipeTransform, NgModule, Inject } from '@angular/core';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/utils/apps';
+import { where, limit } from 'firebase/firestore';
 
 @Pipe({ name: 'orgMovies', pure: true })
 export class OrgMoviesPipe implements PipeTransform {
-  constructor(private routerQuery: RouterQuery, private movieService: MovieService) { }
+  constructor(@Inject(APP) private app: App, private movieService: MovieService) { }
 
-  transform(orgId: string, limit?: number) {
-    const appName = getCurrentApp(this.routerQuery);
-    const query: QueryFn = ref => ref
-      .where(`app.${appName}.access`, '==', true)
-      .where(`app.${appName}.status`, '==', 'accepted')
-      .where('orgIds', 'array-contains', orgId);
-    if (limit) {
-      return this.movieService.valueChanges(ref => query(ref).limit(limit));
+  transform(orgId: string, length?: number) {
+    const query = [
+      where(`app.${this.app}.access`, '==', true),
+      where(`app.${this.app}.status`, '==', 'accepted'),
+      where('orgIds', 'array-contains', orgId)
+    ];
+    if (length) {
+      query.push(limit(length));
+      return this.movieService.valueChanges(query);
     } else {
       return this.movieService.valueChanges(query);
     }

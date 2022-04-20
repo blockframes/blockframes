@@ -4,7 +4,7 @@
   <article>
     <h6>
       Release
-      <a mat-icon-button [routerLink]="link" fragment="release">
+      <a mat-icon-button [routerLink]="link" fragment="release" matTooltip="Edit">
         <mat-icon svgIcon="edit" color="primary"></mat-icon>
       </a>
     </h6>
@@ -34,7 +34,7 @@
   <article>
     <h6>
       Box Office
-      <a mat-icon-button [routerLink]="link" fragment="box-office">
+      <a mat-icon-button [routerLink]="link" fragment="box-office" matTooltip="Edit">
         <mat-icon svgIcon="edit" color="primary"></mat-icon>
       </a>
     </h6>
@@ -44,22 +44,23 @@
           <ng-container *ngFor="let office of boxOffice.controls">
             <li>
               <strong>
-                <missing-control [control]="office.get('territory')" [link]="link" scope="territories"></missing-control>
+                <missing-control [control]="office.get('territory')" [link]="link" scope="territories"></missing-control> -
               </strong>
-              <span>&nbsp;</span>
+              
               <missing-control [control]="office.get('unit')" [link]="link">
                 <ng-template let-unit>
-                  <ng-container *ngIf="unit === ('eur' || 'usd'); else admissions">
-                    <mat-icon [svgIcon]="unit | uppercase" id="currency-icon"></mat-icon>
+                  <ng-container *ngIf="unit !== 'admissions'">
+                    {{ unit === 'eur' ? '€' : '$'}}
                   </ng-container>
-                  <ng-template #admissions>
-                    <span>Admissions</span>
-                  </ng-template>
                 </ng-template>
               </missing-control>
-              <span>&nbsp;</span>
               <missing-control [control]="office.get('value')">
                 <ng-template let-value>{{ value | number }}</ng-template>
+              </missing-control>
+              <missing-control [control]="office.get('unit')">
+                <ng-template let-unit>
+                  <ng-container *ngIf="unit === 'admissions'"> Admissions</ng-container>
+                </ng-template>
               </missing-control>
             </li>
           </ng-container>
@@ -75,7 +76,7 @@
   <article>
     <h6>
       Rating
-      <a mat-icon-button [routerLink]="link" fragment="rating">
+      <a mat-icon-button [routerLink]="link" fragment="rating" matTooltip="Edit">
         <mat-icon svgIcon="edit" color="primary"></mat-icon>
       </a>
     </h6>
@@ -102,7 +103,7 @@
 <article fxLayout="column" fxLayoutGap="16px">
   <h6>
     Budget Range
-    <a mat-icon-button [routerLink]="link" fragment="budget-range">
+    <a mat-icon-button [routerLink]="link" fragment="budget-range" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
@@ -112,10 +113,10 @@
 </article>
 
 <!-- CERTIFICATION -->
-<article fxLayout="column" fxLayoutGap="16px">
+<article *ngIf="movie | hasStatus: ['shooting', 'post_production', 'finished', 'released']" fxLayout="column" fxLayoutGap="16px">
   <h6>
     Qualification{ movie.certifications.value.length, plural, =1 {} other {s}}
-    <a mat-icon-button [routerLink]="link" fragment="qualifications">
+    <a mat-icon-button [routerLink]="link" fragment="qualifications" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
@@ -124,12 +125,11 @@
   </missing-control>
 </article>
 
-
 <!-- AUDIENCE AND GOALS -->
 <article>
   <h6>
     Positioning
-    <a mat-icon-button [routerLink]="link" fragment="audience-goals">
+    <a mat-icon-button [routerLink]="link" fragment="audience-goals" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>

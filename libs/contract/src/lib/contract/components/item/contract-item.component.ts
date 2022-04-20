@@ -1,15 +1,11 @@
 import {
   Component, Input, TemplateRef, ContentChild, ChangeDetectionStrategy
 } from '@angular/core';
-import { BucketContract } from '@blockframes/contract/bucket/+state/bucket.model';
-import { Scope, mediaGroup, territoriesGroup } from '@blockframes/utils/static-model';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { HoldbackModalComponent } from '../../holdback/modal/holdback-modal.component';
-import { Holdback, Sale } from '../../+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-
-
+import { BucketContract, Holdback, Sale, Scope, mediaGroup, territoriesGroup } from '@blockframes/model';
 
 @Component({
   selector: 'contract-item',

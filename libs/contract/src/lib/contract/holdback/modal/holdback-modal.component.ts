@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-
-import { Holdback } from '../../+state';
+import { Holdback } from '@blockframes/model';
 
 @Component({
   selector: 'holdback-modal',

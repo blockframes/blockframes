@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Pipe, PipeTransform, Input } from '@angular/core';
 import { TunnelStep } from '../../tunnel.model';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { map } from 'rxjs/operators';
+import { TunnelLayoutComponent } from '../layout.component';
 
 @Component({
   selector: '[steps]tunnel-nav',
@@ -15,15 +15,14 @@ export class TunnelNavComponent {
 
 @Pipe({ name: 'stepActive' })
 export class StepActivePipe implements PipeTransform {
-  constructor(private route: RouterQuery) { }
+  constructor(private layout: TunnelLayoutComponent) { }
 
   /**
    *  This pipe is used to open and keep open the good expansion panel when we are on a page inside the expansion panel.
    */
   transform(step: TunnelStep) {
-    return this.route.select(state => state.state.url).pipe(
-      map(url => url.split('/').pop()),
-      map(suffix => step.routes.some(route => route.path === suffix)),
+    return this.layout.currentStep$.pipe(
+      map(suffix => step.routes.some(route => route.path === suffix.route.path)),
     );
   }
 }

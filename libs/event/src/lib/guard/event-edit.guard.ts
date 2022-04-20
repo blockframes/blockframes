@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { addHours } from 'date-fns'
 import { take } from 'rxjs/operators';
 import { EventService } from '../+state';
-import { createEvent, createScreening } from '../+state/event.model';
+import { createEvent, createScreening } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
 export class EventEditGuard implements CanActivate {

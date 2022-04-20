@@ -1,4 +1,4 @@
-import { OrganizationDocument } from '@blockframes/organization/+state';
+import { OrganizationDocument } from '@blockframes/model';
 import { runChunks } from '../firebase-utils';
 import { Firestore } from '../types';
 

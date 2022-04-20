@@ -2,14 +2,14 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { createMeetingAttendee, Event, EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/+state';
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { LocalAttendee, TrackKind } from '@blockframes/event/components/meeting/+state/twilio.model';
 import { displayName } from '@blockframes/utils/utils';
-import { AttendeeStatus, Meeting } from '@blockframes/event/+state/event.firestore';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { pluck, switchMap } from 'rxjs/operators';
+import { createMeetingAttendee, Event, AttendeeStatus, Meeting } from '@blockframes/model';
 
 @Component({
   selector: 'festival-event-lobby',

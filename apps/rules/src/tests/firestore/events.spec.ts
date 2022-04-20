@@ -1,10 +1,7 @@
-﻿import {
-  apps,
-  assertFails,
-  assertSucceeds,
-} from '@firebase/rules-unit-testing';
+﻿import { assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+import { deleteApp, getApps } from 'firebase/app';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
-import { EventDocument, Meeting, MeetingAttendee } from '@blockframes/event/+state/event.firestore';
+import { EventDocument, Meeting, MeetingAttendee } from '@blockframes/model';
 
 describe('Events Rules Tests', () => {
   const projectId = `evrules-spec-${Date.now()}`;
@@ -12,10 +9,10 @@ describe('Events Rules Tests', () => {
 
   describe('With User in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-user2', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('user with valid org should be able to read event', async () => {
       const eventRef = db.doc('events/E001');
@@ -112,10 +109,10 @@ describe('Events Rules Tests', () => {
 
   describe('With Anonymous user', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8-anon', firebase: { sign_in_provider: 'anonymous' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-c8-anon', { firebase: { sign_in_provider: 'anonymous' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should not be able to list all events', async () => {
       const allDocs = db.collection('events');
@@ -182,10 +179,10 @@ describe('Events Rules Tests', () => {
 
   describe('With User not in org', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-peeptom', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-peeptom', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test("user without valid org shouldn't be able to list all event", async () => {
       const allEvents = db.collection('events');
