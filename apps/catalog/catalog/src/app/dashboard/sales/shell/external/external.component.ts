@@ -17,7 +17,7 @@ export class ExternalSaleComponent {
 
   centralOrgId = this.shell.centralOrgId;
   sale$ = this.shell.sale$;
-  contractStatus = this.shell.contractStatus;
+  contractStatus = Object.entries(this.shell.contractStatus);
   activeOrgId = this.orgService.org.id;
 
 
