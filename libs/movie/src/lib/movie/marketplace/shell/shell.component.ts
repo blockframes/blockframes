@@ -80,9 +80,9 @@ export class TitleMarketplaceShellComponent implements OnInit {
     return movie.promotional.videos.otherVideos.some((video) => video.privacy === 'public');
   }
 
-  videoStateChanged(movieId: string, event: string) {
+  videoStateChanged(title: Movie, event: string) {
     if (event === 'play' && !this.alreadyPlayed) {
-      this.analytics.addTitle('promoReelOpened', movieId);
+      this.analytics.addTitle('promoReelOpened', title);
       this.alreadyPlayed = true;
     }
   }

@@ -1,6 +1,6 @@
 import { NgModule, Pipe, PipeTransform, Inject, LOCALE_ID } from '@angular/core';
 import { getCurrencySymbol, formatCurrency } from '@angular/common';
-import { Funding } from '../+state';
+import { Funding } from '@blockframes/model';
 
 export function getTotalFundings(fundings: Funding[]) {
   return fundings.reduce((sum, funding) => sum + funding.amount, 0)
@@ -10,13 +10,13 @@ export function getTotalFundings(fundings: Funding[]) {
 export class TotalFundingsPipe implements PipeTransform {
   constructor(
     @Inject(LOCALE_ID) private locale: string,
-  ) {}
+  ) { }
 
   transform(fundings: Funding[], currency: string) {
     const total = getTotalFundings(fundings);
     const currencySymbol = getCurrencySymbol(currency, 'narrow');
 
-    if(total === 0) return 'N/C';
+    if (total === 0) return 'N/C';
     return formatCurrency(total, this.locale, currencySymbol, 'symbol', '1.0-0');
   }
 }
@@ -25,4 +25,4 @@ export class TotalFundingsPipe implements PipeTransform {
   declarations: [TotalFundingsPipe],
   exports: [TotalFundingsPipe],
 })
-export class FundingsPipeModule {}
+export class FundingsPipeModule { }

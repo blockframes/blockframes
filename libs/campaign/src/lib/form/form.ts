@@ -1,7 +1,7 @@
 import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { FormEntity, FormList, FormStaticValue } from '@blockframes/utils/form';
-import { Campaign, createCampaign, Perk, createPerk, Funding, Budget } from '../+state/campaign.model';
+import { Campaign, createCampaign, Perk, createPerk, Funding, Budget } from '@blockframes/model';
 
 ///////////////
 // VALIDATOR //

@@ -17,7 +17,7 @@
     <mat-list-item *ngFor="let file of files.value; let i = index" (click)="previewFile(file)">
       <mat-icon mat-list-icon [svgIcon]="file.storagePath | fileTypeImage: 'icon'"></mat-icon>
       <div mat-line>{{file | filePath: ' > ' | async}}</div>
-      <button mat-icon-button (click)="removeSelectedFile(i, $event)">
+      <button mat-icon-button (click)="removeSelectedFile(i, $event)" matTooltip="Delete file">
         <mat-icon svgIcon="delete" color="primary"></mat-icon>
       </button>
     </mat-list-item>

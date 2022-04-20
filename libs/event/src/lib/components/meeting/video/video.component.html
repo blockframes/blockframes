@@ -11,8 +11,8 @@
 
 <div class="controls" *ngIf="!local">
   <button mat-icon-button (click)="toggleLocalState('audio')" [disabled]="(remoteTrackState$.audio | async) === false">
-    <mat-icon *ngIf="localTrackState$.audio | async" svgIcon="volume_up"></mat-icon>
-    <mat-icon *ngIf="(localTrackState$.audio | async) === false" svgIcon="volume_off"></mat-icon>
+    <mat-icon *ngIf="localTrackState$.audio | async" svgIcon="volume_up" matTooltip="Mute video"></mat-icon>
+    <mat-icon *ngIf="(localTrackState$.audio | async) === false" svgIcon="volume_off" matTooltip="Unmute video"></mat-icon>
   </button>
   <button mat-icon-button (click)="toggleLocalState('video')" [disabled]="(remoteTrackState$.video | async) === false">
     <mat-icon *ngIf="localTrackState$.video | async" svgIcon="visibility"></mat-icon>
