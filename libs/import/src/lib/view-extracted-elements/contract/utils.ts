@@ -129,7 +129,8 @@ export async function formatContract(
             reason: 'Mandate Row point to a wrong sheet line.',
             message: 'Please check that the line number is correct and that the line is a mandate.',
           });
-        contract.stakeholders.concat(mandate.contract.stakeholders);
+        if (mandate?.contract)
+          contract.stakeholders.concat(mandate.contract.stakeholders);
       } else {
         // here we are sure that the term exist because we already tested it above (~line 210, column o: contract.parentTerm)
         contract.parentTermId = data.parentTerm;

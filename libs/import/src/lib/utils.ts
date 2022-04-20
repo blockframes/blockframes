@@ -226,13 +226,17 @@ export function mandatoryError<T = unknown>(value: T, name: string): ImportLog<T
   return new ImportError(value, option);
 }
 
-export function wrongTemplateKindError(value: string): ImportLog<string> {
+export function wrongTemplateKindError(templateImported: 'seller' | 'admin'): ImportLog<string> {
+  const messages = {
+    admin: 'Please contact team@archipelcontent.com or delete column `b` to import as an external sale.',
+    seller: 'Please contact team@archipelcontent.com or add a `contract-type` column at column `b`.',
+  }
   const option: LogOption = {
     name: `Wrong Template`,
-    reason: `You are not permitted to import mandates.`,
-    message: 'Please contact team@archipelcontent.com or delete column `b` to import as an external sale.',
+    reason: `You are not permitted to import a ${templateImported} template.`,
+    message: messages[templateImported],
   };
-  return new WrongTemplateError(value, option);
+  return new WrongTemplateError(templateImported, option);
 }
 
 export function unknownEntityError<T = unknown>(value: T, name: string): ImportLog<T> {

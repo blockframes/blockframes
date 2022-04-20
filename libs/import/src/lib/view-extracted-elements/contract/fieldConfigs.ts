@@ -109,7 +109,10 @@ export function getContractConfig(option: ContractConfig) {
         const lower = value.toLowerCase();
         if (!lower) throw mandatoryError(value, 'Type');
         const type = getKeyIfExists('contractType', lower[0].toUpperCase() + lower.substr(1));
-        if (!type) throw wrongValueError(value, 'Type');
+        if (type !== 'sale' && type !== 'mandate') {
+          /**This is a seller template being imported in lieu of an admin template. */
+          throw wrongTemplateKindError('seller');
+        }
         if (type === 'mandate' && !blockframesAdmin) {
           const option = {
             name: 'Forbidden Type',
@@ -120,10 +123,6 @@ export function getContractConfig(option: ContractConfig) {
           throw new ImportError(value, option);
         };
 
-        if (type !== 'sale' && type !== 'mandate') {
-          /**This is a seller template being imported in lieu of an admin template. */
-          throw wrongTemplateKindError('seller');
-        }
 
         return lower.toLowerCase() as 'mandate' | 'sale';
       },
