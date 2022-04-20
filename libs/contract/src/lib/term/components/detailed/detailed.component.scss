@@ -1,17 +1,18 @@
-:host {
-  display: block;
-}
-
 header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   overflow: hidden;
-  h1 {
+  h2 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+}
+
+section {
+  width: 70%;
+  max-width: 70%;
 }
 
 article {
