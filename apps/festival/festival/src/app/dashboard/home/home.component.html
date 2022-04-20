@@ -15,21 +15,21 @@
       </div>   
     </header>
     <section class="surface carousel-container">
-      <article *ngIf="popularTitle$ | async as title">
+      <header *ngIf="popularTitle$ | async as title">
         <h3>{{ title.title.international }}</h3>
         <a mat-flat-button [routerLink]="['title', title.id]">
           <span>See Analytics details</span>
           <mat-icon svgIcon="arrow_forward"></mat-icon>
         </a>
-      </article>
+      </header>
       <bf-carousel flex layout>
         <analytics-pie-chart class="surface" carouselItem [data]="orgActivityOfPopularTitle$ | async"></analytics-pie-chart>
         <analytics-map class="surface" carouselItem [data]="territoryActivityOfPopularTitle$ | async"></analytics-map>
-        <analytics-line-chart class="surface" carouselItem [data]="interactionsOfPopularTitle$ | async">
+        <analytics-line-chart class="surface" carouselItem [eventNames]="interactions" [data]="interactionsOfPopularTitle$ | async">
           <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
           <h5>Interactions</h5>
         </analytics-line-chart>
-        <analytics-line-chart class="surface" carouselItem [data]="pageViewsOfPopularTitle$ | async">
+        <analytics-line-chart class="surface" carouselItem [eventNames]="['pageView']" [data]="pageViewsOfPopularTitle$ | async">
           <mat-icon svgIcon="visibility"></mat-icon>
           <h5>Film Page Views</h5>
         </analytics-line-chart>

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, LOCALE_ID, Pipe, PipeTransform } from '@angular/core';
 import { formatCurrency, formatPercent } from '@angular/common';
-import { Budget, Campaign, CampaignService, Funding } from '../../+state';
+import { CampaignService } from '../../+state';
 import { Observable } from 'rxjs';
 import { pluck, switchMap, tap } from 'rxjs/operators';
 import { getTotalFundings } from '@blockframes/campaign/pipes/fundings.pipe';
@@ -8,7 +8,7 @@ import { ThemeService } from '@blockframes/ui/theme';
 import { ConsentsService } from '@blockframes/consents/+state/consents.service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Access, StorageFile } from '@blockframes/model';
+import { Access, StorageFile, Budget, Campaign, Funding } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 
 const budgetData: { serie: keyof Budget, label: string }[] = [{

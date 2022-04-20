@@ -1,0 +1,36 @@
+@import "@angular/flex-layout/mq";
+
+
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  background-size: cover;
+  background-position: center;
+
+  img {
+    height: 180px;
+    border-radius: 50%;
+  }
+
+  section {
+    display: flex;
+    gap: 24px;
+
+    article {
+      display: flex;
+      flex-direction: column;
+
+      a {
+        margin-top: auto;
+      }
+    }
+  }
+}
+
+@include layout-bp(xs) {
+  img {
+    display: none;
+  }
+}

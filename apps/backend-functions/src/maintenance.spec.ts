@@ -1,5 +1,5 @@
 ﻿import { getTestingProjectId, initFunctionsTestMock } from '@blockframes/testing/unit-tests';
-import { clearFirestoreData } from '@firebase/rules-unit-testing';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { endMaintenance, isInMaintenance, startMaintenance } from '@blockframes/firebase-utils';
 
 describe('Check if maintenance mode is working', () => {

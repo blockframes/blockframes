@@ -77,14 +77,14 @@
   <pdf-export *ngIf="movies$ | async as movies">
     <button [disabled]="exporting" mat-button (click)="export(movies)" matTooltip="Export to PDF">
       <mat-icon svgIcon="pdf"></mat-icon>
-      <span>Export Titles</span>
+      <span>Export {movies.length, plural, =1 {title} other {titles}}</span>
     </button>
   </pdf-export>
 
   <!-- TITLE CARD -->
   <ng-template listPageCard let-title>
     <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.objectID]" size="poster">
-      <button mat-icon-button (click)="addAvail(title)" test-id="add-to-bucket">
+      <button mat-icon-button (click)="addAvail(title)" test-id="add-to-bucket" [matTooltip]= "availsForm.invalid ? 'Filter avails first' : 'Add to Selection' ">
         <mat-icon svgIcon="shopping_basket"></mat-icon>
       </button>
     </movie-card>

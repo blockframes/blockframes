@@ -4,11 +4,10 @@ import { runChunks } from '@blockframes/firebase-utils';
 import { join, resolve } from 'path';
 import { config } from 'dotenv';
 import { firebase as firebaseEnv } from '@env';
-import { initializeTestApp, loadFirestoreRules, initializeAdminApp } from '@firebase/rules-unit-testing';
+import { TokenOptions, initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
 import type { FeaturesList } from 'firebase-functions-test/lib/features';
 import type { AppOptions } from 'firebase-admin'; // * Correct Import
 import fs from 'fs';
-import { TokenOptions } from '@firebase/rules-unit-testing/dist/src/api';
 
 export interface FirebaseTestConfig extends FeaturesList {
   firebaseConfig?: { projectId: string, app: admin.app.App };
@@ -64,24 +63,33 @@ export async function initFirestoreApp(
   projectId: string,
   rulePath: string,
   data: Record<string, unknown> = {},
+  uid?: string,
   auth?: TokenOptions
 ) {
   //Define these env vars to avoid getting console warnings
   process.env.GCLOUD_PROJECT = projectId;
   process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-  await setData(projectId, data);
-  const app = initializeTestApp({ projectId, auth });
-  await loadFirestoreRules({ projectId, rules: fs.readFileSync(rulePath, 'utf8') });
 
-  return app.firestore();
+  const testEnv = await initializeTestEnvironment({
+    projectId,
+    firestore: { rules: fs.readFileSync(rulePath, 'utf8') }
+  });
+
+  const db = uid ? testEnv.authenticatedContext(uid, auth) : testEnv.unauthenticatedContext();
+  await setData(testEnv, data);
+  return db.firestore();
 }
 
-function setData(projectId: string, dataDB: Record<string, unknown>) {
-  const app = initializeAdminApp({ projectId });
-  const db = app.firestore();
-  // Write data to firestore app
-  const promises = Object.entries(dataDB).map(([key, doc]) => db.doc(key).set(doc));
-  return Promise.all(promises);
+function setData(testEnv: RulesTestEnvironment, dataDB: Record<string, unknown>) {
+  return new Promise<void>(resolve => {
+    testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      // Write data to firestore app
+      const promises = Object.entries(dataDB).map(([key, doc]) => db.doc(key).set(doc));
+      await Promise.all(promises);
+      resolve();
+    });
+  });
 }
 
 //////////////

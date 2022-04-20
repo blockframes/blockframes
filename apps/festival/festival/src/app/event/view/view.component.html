@@ -13,7 +13,7 @@
               <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</span>
               <event-agenda-export [event]="event" color="primary"></event-agenda-export>
             </h6>
-            <pre class="mat-body-1">{{ event | eventRange }}</pre>
+            <pre class="mat-body-1" matTooltip="Your Greenwich Mean Time" >{{ event | eventRange }}</pre>
             <p class="mat-body-2">{{ event.meta.description }}</p>
             <countdown-timer [title]="'Event will start in:'" [date]="event.start" [timeUnits]="['days', 'hours', 'minutes']" (timerEnded)="timerEnded = $event"></countdown-timer>
             <ng-container *ngIf="event.isOwner; else notOwner">
