@@ -7,7 +7,7 @@ import { EventFormShellComponent } from './shell.component';
 import { EditDetailsModule } from '../../form/edit-details/edit-details.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { AgendaExportModule } from '@blockframes/event/components/agenda-export/agenda-export.module';
-import { GlobalModalModule } from '@blockframes/ui/modal/modal.module';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
 
 // Material

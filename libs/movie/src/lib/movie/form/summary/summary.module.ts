@@ -15,7 +15,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
-import { PreviewModalModule } from '@blockframes/ui/open-preview/open-preview.module'
+import { OpenPreviewModalModule } from '@blockframes/ui/open-preview/open-preview.module'
 
 // Blockframes Utils
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
@@ -83,7 +83,7 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
     HasStatusModule,
     MaxLengthModule,
     FilmographyPipeModule,
-    PreviewModalModule,
+    OpenPreviewModalModule,
     JoinPipeModule,
 
     // Materials

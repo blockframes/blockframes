@@ -142,7 +142,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
         cancel: 'Close without saving'
       },
       autoFocus: false,
-    })
+    });
 
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {
