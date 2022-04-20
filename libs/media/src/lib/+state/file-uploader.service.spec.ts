@@ -1,7 +1,7 @@
 process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
 import { TestBed } from '@angular/core/testing';
 import { Overlay } from '@angular/cdk/overlay';
-import { clearFirestoreData } from '@firebase/rules-unit-testing';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { FileUploaderService } from './file-uploader.service';
 import { UploadData } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
