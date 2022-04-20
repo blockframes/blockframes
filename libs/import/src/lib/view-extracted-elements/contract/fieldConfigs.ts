@@ -213,8 +213,9 @@ export function getContractConfig(option: ContractConfig) {
         /* o */ 'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
 
         /* p */ 'contract.id': async (value: string) => {
-        if (value && !blockframesAdmin) throw adminOnlyWarning(doc(collection(firestore, '_')).id, 'Contract ID');
-        if (!value) return doc(collection(firestore, '_')).id;
+        const dummyId = doc(collection(firestore, '_')).id;
+        if (value && !blockframesAdmin) throw adminOnlyWarning(dummyId, 'Contract ID');
+        if (!value) return dummyId;
         const exist = await getContract(value, contractService, contractCache);
         if (exist) throw alreadyExistError(value, 'Contract ID');
         return value;
@@ -365,41 +366,7 @@ export function getContractConfig(option: ContractConfig) {
         const exist = await getContract(value, contractService, contractCache);
         if (exist) throw alreadyExistError(value, 'Contract ID');
         return value;
-      },
-        /* p */ 'parentTerm': async (value: string, data: FieldsConfig) => {
-        if (value && !blockframesAdmin) throw adminOnlyWarning('', 'Mandate ID/Row');
-        if (
-          !value &&
-          data.contract.type === 'sale' &&
-          data.contract.sellerId === centralOrgId.catalog
-        ) {
-          throw mandatoryError(value, 'Mandate ID/Row');
-        }
-        const isId = isNaN(Number(value));
-        if (isId) {
-          const exist = await checkParentTerm(value, contractService, contractCache);
-          if (!exist) throw unknownEntityError(value, 'Mandate ID');
-          return value;
-        } else return Number(value);
-      },
-        /* q */ 'contract.stakeholders': async (value: string, data: FieldsConfig) => {
-        const stakeholders = value.split(separator).filter(v => !!v).map(v => v.trim());
-        const exists = await Promise.all(stakeholders.map(id => getUser({ id }, userService, userCache)));
-        const unknownStakeholder = exists.some(e => !e);
-        if (unknownStakeholder) throw unknownEntityError(value, 'Stakeholders');
-        if (data.contract.type === 'mandate') {
-          return [data.contract.buyerId, data.contract.sellerId, ...stakeholders];
-        } else {
-          if (data.contract.sellerId === centralOrgId.catalog) {
-            // internal sale
-            // seller ID is archipel, we don't need to add it, as mandate stakeholders will be copied here (copy is done bellow ~line 290)
-            return [data.contract.buyerId, ...stakeholders];
-          } else { // external sale
-            // if the sale is external the seller is not archipel (it's the owner org), and the buyer is unknown by definition
-            return [data.contract.sellerId, ...stakeholders]
-          }
-        }
-      },
+      }
     };
   }
 
