@@ -19,7 +19,15 @@ import {
   Offer
 } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
-import { emailErrorCodes, EventEmailData, getEventEmailData, getMovieEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
+import { 
+  emailErrorCodes, 
+  EventEmailData, 
+  getBucketEmailData, 
+  getEventEmailData, 
+  getMovieEmailData, 
+  getOrgEmailData, 
+  getUserEmailData 
+} from '@blockframes/utils/emails/utils';
 import {
   reminderEventToUser,
   userJoinedYourOrganization,
@@ -612,8 +620,9 @@ async function sendOfferCreatedConfirmation(recipient: User, notification: Notif
   const buyerOrg = await getDocument<OrganizationDocument>(`orgs/${offer.buyerId}`);
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
-  const adminTemplate = adminOfferCreatedConfirmationEmail(toUser, org, notification.bucket);
-  const buyerTemplate = buyerOfferCreatedConfirmationEmail(toUser, buyerOrg, offer, notification.bucket);
+  const bucket = getBucketEmailData(notification.bucket);
+  const adminTemplate = adminOfferCreatedConfirmationEmail(toUser, org, bucket);
+  const buyerTemplate = buyerOfferCreatedConfirmationEmail(toUser, buyerOrg, offer, bucket);
   await Promise.all([
     sendMailFromTemplate(adminTemplate, app, groupIds.unsubscribeAll),
     sendMailFromTemplate(buyerTemplate, app, groupIds.unsubscribeAll)
