@@ -60,8 +60,4 @@ export class SelectionModalComponent implements OnInit {
   shouldDisable() {
     return this.formTable?.formItem?.dirty;
   }
-
-  console(any?: any) {
-    console.log(this.formTable)
-  }
 }

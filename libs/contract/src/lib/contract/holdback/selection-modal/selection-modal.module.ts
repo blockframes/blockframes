@@ -8,6 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 import { HoldbackListModule } from '../list/list.module';
 import { SelectionModalComponent } from './selection-modal.component';
@@ -29,6 +30,7 @@ import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/gro
     ReactiveFormsModule,
     MatDatepickerModule,
     MatDividerModule,
+    MatInputModule,
     MatFormFieldModule,
     JoinPipeModule,
     MaxLengthModule,
