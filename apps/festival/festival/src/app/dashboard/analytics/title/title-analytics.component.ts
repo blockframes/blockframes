@@ -51,7 +51,7 @@ export class TitleAnalyticsComponent {
   );
 
   titleAnalytics$ = this.titleId$.pipe(
-    switchMap((titleId: string) => this.analyticsService.getTitleAnalytics(titleId)),
+    switchMap((titleId: string) => this.analyticsService.getTitleAnalytics({ titleId })),
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId),
       user: analytic => this.userService.valueChanges(analytic.meta.uid)
@@ -69,7 +69,7 @@ export class TitleAnalyticsComponent {
 
   buyerAnalytics$ = this.titleAnalytics$.pipe(
     map(aggregatePerUser)
-  )
+  );
 
   filters = {
     orgActivity: getFilter('orgActivity'),

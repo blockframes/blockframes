@@ -1,4 +1,5 @@
-﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+﻿import { assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+import { getApps, deleteApp } from 'firebase/app';
 import { metaDoc } from '@blockframes/utils/maintenance';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 
@@ -8,11 +9,11 @@ describe('Blockframe In Maintenance', () => {
 
   beforeAll(async () => {
     testFixture[metaDoc].endedAt = null;
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-bfAdmin' });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-bfAdmin');
   });
 
   afterAll(() => {
-    Promise.all(apps().map((app) => app.delete()));
+    Promise.all(getApps().map((app) => deleteApp(app)));
     testFixture[metaDoc].endedAt = true;
   });
 
@@ -42,10 +43,10 @@ describe('Blockframe Not In Maintenance', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-bfAdmin' });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-bfAdmin');
   });
 
-  afterAll(() => Promise.all(apps().map((app) => app.delete())));
+  afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
   test('Blockframe admin should be able to read admin user', async () => {
     const adminRef = db.doc('blockframesAdmin/uid-bfAdmin');

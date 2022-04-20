@@ -433,8 +433,15 @@ async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notifica
 async function sendScreeningRequested(recipient: User, notification: NotificationDocument) {
   const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
   const requestor = await getDocument<User>(`users/${notification.user.uid}`);
+  const buyerOrg = await getDocument<OrganizationDocument>(`orgs/${requestor.orgId}`);
   const toUser = getUserEmailData(recipient);
-  const template = screeningRequestedToSeller(toUser, requestor, movie);
+
+  const template = screeningRequestedToSeller(
+    toUser, 
+    getUserEmailData(requestor), 
+    getOrgEmailData(buyerOrg), 
+    movie
+  );
   await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
 }
 
@@ -526,10 +533,18 @@ async function sendMovieAskingPriceRequested(recipient: User, notification: Noti
   const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
   const toUser = getUserEmailData(recipient);
   const buyer = getUserEmailData(notification.user);
+  const buyerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.user.orgId}`);
   const { territories, message } = notification.data;
 
   const app = notification._meta.createdFrom;
-  const template = movieAskingPriceRequested(toUser, buyer, movie.title.international, territories, message);
+  const template = movieAskingPriceRequested(
+    toUser, 
+    buyer, 
+    getOrgEmailData(buyerOrg), 
+    getMovieEmailData(movie), 
+    territories, 
+    message
+  );
   await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
@@ -545,7 +560,7 @@ async function sendMovieAskingPriceRequestSent(recipient: User, notification: No
   const orgNames = orgs.map(org => orgName(org)).join(', ');
 
   const app = notification._meta.createdFrom;
-  const template = movieAskingPriceRequestSent(toUser, movie, orgNames, territories, message);
+  const template = movieAskingPriceRequestSent(toUser, getMovieEmailData(movie), orgNames, territories, message);
   await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
