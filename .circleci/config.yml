@@ -307,8 +307,8 @@ jobs:
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run:
-        command: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e,cms-e2e
-        no_output_timeout: 30m
+          command: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e,cms-e2e
+          no_output_timeout: 30m
       - store_artifacts:
           path: dist/cypress/apps
   financiers-e2e:
