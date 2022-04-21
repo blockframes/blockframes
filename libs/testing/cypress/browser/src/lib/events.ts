@@ -10,7 +10,7 @@ export function deleteEvent(id: string) {
 export function deleteAllSellerEvents(sellerUid: string) {
   let uidArray: string[];
   return cy
-    .task('getAllSellerEvents', sellerUid)
+    .task('getAllSellerEventIds', sellerUid)
     .then((uids: string[]) => {
       uidArray = uids;
     })

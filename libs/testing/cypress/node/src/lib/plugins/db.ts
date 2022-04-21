@@ -16,6 +16,12 @@ export async function getRandomUser() {
   return createUser(docs[randomIndex].data());
 }
 
+export async function getRandomMember(data: { app: App; access: ModuleAccess, userType: UserRole}) {
+  const { userType } = data;
+  const org = await getRandomOrg(data);
+  return getRandomOrgMember({ orgId: org.id, userType })
+}
+
 export function deleteUser(userId: string) {
   return db.doc(`users/${userId}`).delete();
 }
@@ -121,4 +127,28 @@ export async function getRandomScreeningDataArray(data: { app: App; access: Modu
     promises.push(getRandomScreeningData({app, access, userType, moviesWithScreener}));
   }
   return Promise.all(promises);
+}
+
+//* EVENTS
+
+export function deleteEvent(eventId: string) {
+  return db.doc(`events/${eventId}`).delete();
+}
+
+export async function getAllSellerEventIds(sellerUid: string) {
+  const sellerOrgSnap = await db.collection('users').doc(sellerUid).get();
+  const sellerOrgUid = sellerOrgSnap.get('orgId') as string;
+  console.log(`This seller's OrgId is: ${sellerOrgUid}`);
+  const eventsSnap = await db.collection('events').where('ownerOrgId', '==', sellerOrgUid).get();
+  console.log(`There were ${eventsSnap.size} events found for this org`);
+  return eventsSnap.docs.map(doc => doc.id);
+}
+
+export async function deleteAllSellerEvents(sellerUid: string) {
+  const eventIds = await getAllSellerEventIds(sellerUid);
+  const promises = [];
+  for(const eventId of eventIds) {
+    promises.push(deleteEvent(eventId))
+  }
+  return Promise.all(promises)
 }
