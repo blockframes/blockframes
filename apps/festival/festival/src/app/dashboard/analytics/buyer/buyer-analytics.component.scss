@@ -36,9 +36,9 @@ section {
   padding: 24px;
 
   .metrics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 24px;
   }
 }
 

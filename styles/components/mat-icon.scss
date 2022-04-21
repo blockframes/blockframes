@@ -11,7 +11,7 @@
 
   mat-icon {
     path, g, polygon {
-      fill: mat.get-color-from-palette($foreground, icon);
+      fill: currentColor;
     }
     &.mat-primary {
       color: mat.get-color-from-palette($primary, 500);
