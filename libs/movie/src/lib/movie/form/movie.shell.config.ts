@@ -91,9 +91,9 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     // Specific updates based on production status
     const prodStatus = ['finished', 'released'];
     if (prodStatus.includes(movie.productionStatus)) {
-      movie.directors.forEach(director => director.status = 'confirmed')
-      movie.cast.forEach(cast => cast.status = 'confirmed')
-      movie.crew.forEach(crew => crew.status = 'confirmed'); // TODO #7774 previous value was 'confiremd' =>  migration needed
+      movie.directors.forEach(director => director.status = 'confirmed');
+      movie.cast.forEach(cast => cast.status = 'confirmed');
+      movie.crew.forEach(crew => crew.status = 'confirmed');
     }
 
     // Update fields with dynamic keys

@@ -1,22 +1,15 @@
 <button app-logo (click)="logout()"></button>
 
 <section fxLayout="column" fxLayoutAlign="space-around center">
-  <h1>Thank you for joining us!</h1>
-
+  <h1>Last Step</h1>
   <mat-card>
     <mat-card-content fxLayout="column" fxLayoutAlign="space-around center">
       <ng-container *ngIf="orgActive$ | async as active">
         <p class="mat-body-2">
-          We care about security on the Cascade8 applications.
-          Please validate your email to help us authenticate you.
-          <br>
-          The {{ app | appName }} team will come back to you shortly concerning your Company Account creation request.
+          The {{ app | appName }} team <br> will come back to you within <b>48 hours</b>.
         </p>
-        <p class="mat-body-2">Feel free to <a [routerLink]="['./']" (click)="openIntercom()"
-            class="text-primary">contact us</a> if you have any questions.</p>
         <auth-data-validation [organization]="active"></auth-data-validation>
       </ng-container>
-
     </mat-card-content>
   </mat-card>
 </section>

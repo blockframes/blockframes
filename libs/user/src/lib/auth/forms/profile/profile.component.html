@@ -1,20 +1,20 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Contact Information</mat-card-title>
+    <mat-card-title>Profile Information</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <mat-form-field appearance="outline">
-      <mat-label>First name</mat-label>
+      <mat-label>First Name</mat-label>
       <input matInput test-id="name-form" placeholder="First name" type="text" [formControl]="form.get('firstName')" required />
       <mat-error *ngIf="form.get('firstName').hasError('required')">
-        First name is <strong>required</strong>
+        First name is <strong>required</strong>.
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Last name</mat-label>
+      <mat-label>Last Name</mat-label>
       <input matInput test-id="surname-form" placeholder="Last name" type="text" [formControl]="form.get('lastName')" required />
       <mat-error *ngIf="form.get('lastName').hasError('required')">
-        Last name is <strong>required</strong>
+        Last name is <strong>required</strong>.
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
@@ -26,15 +26,15 @@
       <input matInput test-id="phone-form" placeholder="Email Address" type="tel" [formControl]="form.get('email')" />
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Phone number</mat-label>
-      <input matInput test-id="phone-form" placeholder="Phone number" type="tel" [formControl]="form.get('phoneNumber')" />
+      <mat-label>Phone Number</mat-label>
+      <input matInput test-id="phone-form" placeholder="Phone Number" type="tel" [formControl]="form.get('phoneNumber')" />
     </mat-form-field>
   </mat-card-content>
 </mat-card>
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Profile Image</mat-card-title>
-    <mat-card-subtitle>Choose your avatar</mat-card-subtitle>
+    <mat-card-title>Profile Picture</mat-card-title>
+    <mat-card-subtitle>Please upload an image to your profile.</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <image-uploader ratio="square" [meta]="['users', 'avatar', uid]" [form]="form.avatar" listenToChanges>

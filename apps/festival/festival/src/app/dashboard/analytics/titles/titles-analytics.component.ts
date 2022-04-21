@@ -9,6 +9,8 @@ import { APP } from "@blockframes/utils/routes/utils";
 import { joinWith } from "@blockframes/utils/operators";
 import { EventService } from "@blockframes/event/+state";
 import { Event } from '@blockframes/model'
+import { where } from "firebase/firestore";
+import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
 
 interface AggregatedPerTitle extends AggregatedAnalytic {
   screenings: number;
@@ -44,14 +46,17 @@ export class TitlesAnalyticsComponent {
 
   titlesAnalytics$ = this.service.queryDashboard(this.app).pipe(
     joinWith({
-      events: title => this.eventService.valueChanges(ref => ref
-        .where('type', '==', 'screening')
-        .where('meta.titleId', '==', title.id))
+      analytics: title => this.analytics.getTitleAnalytics({ titleId: title.id }),
+      events: title => this.eventService.valueChanges([
+        where('type', '==', 'screening'),
+        where('meta.titleId', '==', title.id)
+      ])
     }, { shouldAwait: true }),
     map(titles => titles.map(countAnalytics))
   );
 
   constructor(
+    private analytics: AnalyticsService,
     private route: ActivatedRoute,
     private router: Router,
     private service: MovieService,

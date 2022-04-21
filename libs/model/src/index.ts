@@ -17,3 +17,6 @@ export * from './lib/analytics';
 export * from './lib/meta';
 export * from './lib/offer';
 export * from './lib/static';
+export * from './lib/maintenance';
+export * from './lib/algolia';
+export * from './lib/campaign';

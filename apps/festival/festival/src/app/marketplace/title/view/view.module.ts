@@ -18,6 +18,7 @@ import { RequestAskingPriceModule } from '@blockframes/movie/components/request-
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const routes = [
   {
@@ -75,6 +76,7 @@ const routes = [
     // Material
     MatIconModule,
     MatButtonModule,
+    MatTooltipModule,
     RouterModule.forChild(routes)
   ]
 })

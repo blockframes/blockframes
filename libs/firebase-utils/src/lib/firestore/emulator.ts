@@ -1,6 +1,5 @@
-import { firebase } from '@env'
-import { initializeApp } from 'firebase-admin'
-import { clearFirestoreData } from '@firebase/rules-unit-testing';
+import { firebase } from '@env';
+import * as admin from 'firebase-admin';
 import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
 import { join, resolve, sep } from 'path';
@@ -8,7 +7,7 @@ import { runShellCommand, runShellCommandUntil, awaitProcOutput, gsutilTransfer 
 import { getFirestoreExportDirname } from './export';
 import { sleep, throwOnProduction } from '../util';
 import { promises } from 'fs';
-import _, { camelCase } from 'lodash';
+import { set, camelCase } from 'lodash';
 const { writeFile, rename } = promises;
 import type { auth as authType, } from 'firebase-admin'
 
@@ -208,9 +207,7 @@ function forceEmulatorExport(exportDir = defaultEmulatorBackupPath) {
   return runShellCommand(cmd);
 }
 
-export type FirestoreEmulator = FirebaseFirestore.Firestore & { clearFirestoreData?: typeof clearFirestoreData; };
-
-let db: FirestoreEmulator;
+let db: FirebaseFirestore.Firestore;
 let auth: authType.Auth;
 
 export function connectFirestoreEmulator() {
@@ -231,11 +228,11 @@ export function connectFirestoreEmulator() {
 
     process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`;
   } catch (e) {
-    process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:8080`;
+    process.env['FIRESTORE_EMULATOR_HOST'] = 'localhost:8080';
   }
 
-  const app = initializeApp({ projectId: firebase().projectId }, 'firestore');
-  db = app.firestore() as FirestoreEmulator;
+  const app = admin.initializeApp({ projectId: firebase().projectId }, 'firestore');
+  db = app.firestore() as FirebaseFirestore.Firestore;
 
   db.settings({
     // port: dbPort,
@@ -244,7 +241,6 @@ export function connectFirestoreEmulator() {
     host: 'localhost',
     ssl: false,
   });
-  db.clearFirestoreData = clearFirestoreData;
   return db;
 }
 
@@ -259,11 +255,11 @@ export function connectAuthEmulator() {
     } = eval('require')(firebaseJsonPath);
     process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
   } catch (e) {
-    process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:9099`;
+    process.env['FIREBASE_AUTH_EMULATOR_HOST'] = 'localhost:9099';
   }
 
 
-  const app = initializeApp({ projectId: firebase().projectId }, 'auth');
+  const app = admin.initializeApp({ projectId: firebase().projectId }, 'auth');
   auth = app.auth();
 
   return auth;
@@ -399,7 +395,7 @@ export function writeRuntimeConfig(values: { [key: string]: string }, path: stri
     return key;
   }
 
-  Object.entries(values).forEach(([key, value]) => _.set(runtimeObj, key, process.env[getKeyName(value)] || 'missing-env-value'));
+  Object.entries(values).forEach(([key, value]) => set(runtimeObj, key, process.env[getKeyName(value)] || 'missing-env-value'));
   return writeFile(path, JSON.stringify(runtimeObj, null, 4));
 }
 

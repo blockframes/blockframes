@@ -38,9 +38,9 @@ export class MainComponent implements OnInit {
     return privacy === 'public' && (jwPlayerId || description);
   }
 
-  videoStateChanged(movieId: string, event: string) {
+  videoStateChanged(title: Movie, event: string) {
     if (event === 'play' && !this.alreadyPlayed) {
-      this.analytics.addTitle('promoReelOpened', movieId);
+      this.analytics.addTitle('promoReelOpened', title);
       this.alreadyPlayed = true;
     }
   }

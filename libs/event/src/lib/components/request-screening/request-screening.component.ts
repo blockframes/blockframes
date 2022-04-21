@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/+state';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 type RequestStatus = 'available' | 'sending' | 'sent';
 
@@ -18,7 +19,6 @@ export class RequestScreeningComponent {
 
   @Input() movieId: string;
   @Input() @boolean iconOnly: boolean;
-  @Input() @boolean @HostBinding('class.animated') animated: boolean;
   
   requestStatus = new BehaviorSubject<RequestStatus>('available');
   screeningRequest: Record<RequestStatus, string> = {
@@ -29,18 +29,19 @@ export class RequestScreeningComponent {
 
   constructor(
     private authService: AuthService,
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private analytics: AnalyticsService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private titleService: MovieService
   ) {}
 
   async requestScreening() {
-    this.animated = false;
     this.requestStatus.next('sending');
-    const f = this.functions.httpsCallable('requestScreening');
-    await f({ movieId: this.movieId, uid: this.authService.uid }).toPromise();
+    const f = httpsCallable(this.functions,'requestScreening');
+    await f({ movieId: this.movieId, uid: this.authService.uid });
     this.requestStatus.next('sent');
-    this.analytics.addTitle('screeningRequested', this.movieId);
+    const title = await this.titleService.valueChanges(this.movieId).pipe(take(1)).toPromise();
+    this.analytics.addTitle('screeningRequested', title);
     this.snackbar.open('Screening request successfully sent', '', { duration: 3000 });
   }
 }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { AnalyticData } from '@blockframes/analytics/+state/utils';
 import { Territory, TerritoryISOA3Value, parseToAll, territoriesISOA3, staticModel } from '@blockframes/model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 const territories = parseToAll('territories', 'world') as Territory[];
 
@@ -46,12 +47,14 @@ export class AnalyticsMapComponent {
     this.top3 = sorted.splice(0, 3);
   }
 
+  @Input() @boolean selectable = false;
   @Output() selection: EventEmitter<string> = new EventEmitter();
 
   toggleSelect(isoA3: TerritoryISOA3Value) {
+    if (!this.selectable) return;
     this.selected = this.selected === isoA3 ? '' : isoA3;
     const key = getKeyIfExists('territoriesISOA3', this.selected);
     const selection = key === 'world' ? '' : staticModel.territories[key];
     this.selection.next(selection);
   }
-}
+ }

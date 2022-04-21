@@ -1,14 +1,15 @@
-import { DOCUMENT } from "@angular/common";
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from "@angular/core";
-import { AngularFireFunctions } from "@angular/fire/functions";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { AuthService } from "@blockframes/auth/+state";
+import { DOCUMENT } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Functions, httpsCallable } from '@angular/fire/functions';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '@blockframes/auth/+state';
 import { StorageVideo, MeetingVideoControl } from '@blockframes/model';
-import { getWatermark, loadJWPlayerScript } from "@blockframes/utils/utils";
-import { BehaviorSubject } from "rxjs";
+import { ErrorResultResponse, getWatermark, loadJWPlayerScript } from '@blockframes/utils/utils';
+import { BehaviorSubject } from 'rxjs';
 import { toggleFullScreen } from '../../file/viewers/utils';
-import { EventService } from "@blockframes/event/+state";
-import { hasAnonymousIdentity } from "@blockframes/auth/+state/auth.model";
+import { EventService } from '@blockframes/event/+state';
+import { hasAnonymousIdentity } from '@blockframes/auth/+state/auth.model';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 declare const jwplayer: any;
 
@@ -91,27 +92,28 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private authService: AuthService,
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private snackBar: MatSnackBar,
     private eventService: EventService,
   ) { }
 
   async initPlayer() {
+    const errorMessage = 'There was a problem loading this video...';
     try {
       await this.waitForViewReady; // we need the container div to exists, so we wait for the ngAfterViewInit
 
-      const playerUrl = this.functions.httpsCallable('playerUrl');
-      const url = await playerUrl({}).toPromise<string>();
+      const playerUrl = httpsCallable<unknown, string>(this.functions, 'playerUrl');
+      const { data: url } = await playerUrl({});
       await loadJWPlayerScript(this.document, url);
 
       const anonymousCredentials = this.authService.anonymousCredentials;
 
-      const privateVideo = this.functions.httpsCallable('privateVideo');
-      const { error, result } = await privateVideo({ eventId: this.eventId, video: this.ref, email: anonymousCredentials?.email }).toPromise();
+      const privateVideo = httpsCallable<{ eventId: string, video: StorageVideo, email?: string }, ErrorResultResponse>(this.functions, 'privateVideo');
+      const r = await privateVideo({ eventId: this.eventId, video: this.ref, email: anonymousCredentials?.email });
+      const { error, result } = r.data;
 
       if (error) {
-        // if error is set, result will contain the error message
-        throw new Error(result);
+        throw new Error(errorMessage);
       } else {
 
         // Watermark
@@ -126,7 +128,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         }
 
         if (!watermark) {
-          throw new Error('We cannot load video without watermark.');
+          throw new Error(errorMessage);
         }
 
         // Auto refresh page when url expires
@@ -162,10 +164,9 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         this.player.on('complete', () => this.stateChange.emit('complete'));
         this.updatePlayer();
       }
-    } catch (error) {
+    } catch (err) {
       this.loading$.next(false);
-      console.warn(error);
-      this.snackBar.open('Error while playing the video: ' + error, 'close', { duration: 8000 });
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { data: err.message, duration: 7000 });
     }
   }
 

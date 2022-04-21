@@ -8,5 +8,5 @@ interface IncomeState extends EntityState<Income>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'incomes' })
 export class IncomeService extends CollectionService<IncomeState> {
-  useMemorization = true;
+  useMemorization = false;
 }

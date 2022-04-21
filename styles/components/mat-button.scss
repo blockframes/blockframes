@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @mixin color($theme) {
   $config: mat.get-color-config($theme);
@@ -179,6 +179,10 @@
   // For example, see available versions page.
   tunnel-page section article button[mat-mini-fab] .mat-button-wrapper {
     padding: 0;
+  }
+
+  button.translucent, a.translucent {
+    background: rgba(mat.get-color-from-palette($primary), .16);
   }
 }
 

@@ -14,7 +14,7 @@ import { TextFormModule, matText } from '../../forms/text';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule, matMultiSelect, matSelect } from '../../forms/select';
 import { FirestoreFormModule, firestoreQuery, titlesFromApp } from '../../forms/firestore';
-import { getTitlesQueryFn, toMap } from '../pipes';
+import { getTitlesQueryConstraints, toMap } from '../pipes';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { sortingOptions } from '@blockframes/utils/pipes/sort-array.pipe';
 
@@ -51,8 +51,8 @@ export class TitlesComponent implements OnInit {
 
   app$ = this.route.paramMap.pipe(map((p) => p.get('app')));
   titles$ = this.app$.pipe(
-    map((app) => getTitlesQueryFn(app)),
-    switchMap((queryFn) => this.service.valueChanges(queryFn)),
+    map((app) => getTitlesQueryConstraints(app)),
+    switchMap((queryConstraints) => this.service.valueChanges(queryConstraints)),
     map(toMap),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
@@ -60,7 +60,7 @@ export class TitlesComponent implements OnInit {
   displayLabel = (title?: Movie) => title?.title.international;
   getValue = (title?: Movie) => title?.id;
 
-  constructor(private route: ActivatedRoute, private service: MovieService) {}
+  constructor(private route: ActivatedRoute, private service: MovieService) { }
 
   get queryMode() {
     return this.mode || (this.form?.get('titleIds').length ? 'titleIds' : 'query');
@@ -96,4 +96,4 @@ export class TitlesComponent implements OnInit {
     FirestoreFormModule,
   ],
 })
-export class TitlesModule {}
+export class TitlesModule { }

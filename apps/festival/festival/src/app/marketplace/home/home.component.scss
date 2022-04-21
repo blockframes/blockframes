@@ -1,4 +1,4 @@
-@import "~@angular/flex-layout/mq";
+@import "@angular/flex-layout/mq";
 
 :host {
   display: flex;
@@ -17,6 +17,9 @@
       margin-bottom: 0;
     }
     .links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
       margin-top: 24px;
 
       a {
@@ -24,6 +27,12 @@
       }
     }
   }
+}
+
+//TODO #8228 remove when needed
+.privacy-banner {
+  text-align: center;
+  padding: 8px;
 }
 
 .hero {
@@ -115,5 +124,11 @@ movie-slide {
       margin-top: 24px;
       max-width: 80%;
     }
+  }
+}
+
+@include layout-bp(xs) {
+  .banner-details .links {
+    flex-direction: column;
   }
 }

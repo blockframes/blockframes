@@ -1,4 +1,4 @@
-@import "~@angular/flex-layout/mq";
+@import "@angular/flex-layout/mq";
 
 :host {
   min-height: 100vh;
@@ -24,8 +24,11 @@ h1 {
   margin-bottom: 32px;
 }
 
+mat-card-content {
+  padding: 40px 72px 10px;
+}
+
 mat-card {
-  width: 50%;
   text-align: center;
 }
 

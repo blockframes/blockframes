@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SigninForm } from '../../forms/signin.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 
 @Component({
   selector: 'auth-login-view',
@@ -12,7 +13,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
 
   public buttonText = 'Log in';
   public signinIn = false;
@@ -54,7 +54,23 @@ export class LoginComponent implements OnInit {
       if (err.message.includes('INTERNAL ASSERTION FAILED')) {
         this.snackBar.open('Network error. Please refresh this page.', 'close', { duration: 8000 });
       } else if (err.code === 'auth/user-not-found') {
-        this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: 8000 });
+        this.snackBar.openFromComponent(SnackbarLinkComponent, {
+          data: {
+            message: 'This account does not exist.',
+            link: ['/auth/identity'],
+            linkName: 'CREATE ACCOUNT'
+          },
+          duration: 8000
+        });
+      } else if (err.code === 'auth/wrong-password') {
+        this.snackBar.openFromComponent(SnackbarLinkComponent, {
+          data: {
+            message: 'Incorrect password',
+            link: ['auth/reset-password'],
+            linkName: 'RESET PASSWORD'
+          },
+          duration: 8000
+        });
       } else {
         this.snackBar.open(err.message, 'close', { duration: 8000 });
       }

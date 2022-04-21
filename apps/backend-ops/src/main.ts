@@ -1,7 +1,7 @@
 import 'tsconfig-paths/register';
 import { config } from 'dotenv';
 config(); // * Must be run here!
-import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
+import { endMaintenance, keepAlive, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
 import { prepareForTesting, upgrade, prepareEmulators, upgradeEmulators } from './firebaseSetup';
@@ -28,6 +28,7 @@ import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import { rescueJWP } from './rescueJWP';
 import { loadAndShrinkLatestAnonDbAndUpload } from './db-shrink';
 import { printDatabaseInconsistencies } from './internals/utils';
+import { cleanBackups } from './clean-backups';
 import { auditUsers } from './db-cleaning';
 
 const args = process.argv.slice(2);
@@ -58,8 +59,11 @@ async function runCommand() {
     case 'prepareEmulators':
       await prepareEmulators({ dbBackupURL: arg1 });
       break;
+    case 'cleanBackups':
+      await cleanBackups({ maxDays: arg1, bucketName: arg2 });
+      break;
     case 'anonProdDb':
-      await anonymizeLatestProdDb();
+      await keepAlive(anonymizeLatestProdDb());
       break;
     case 'shrinkDb':
       await loadAndShrinkLatestAnonDbAndUpload();

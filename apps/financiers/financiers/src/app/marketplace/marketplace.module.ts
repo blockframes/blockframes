@@ -1,19 +1,20 @@
 ﻿import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
-
-// Routes
 import { RouterModule, Routes } from '@angular/router';
+
+// Blockframes
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MarketplaceComponent } from './marketplace.component';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
+import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
+import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 
 // Material
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
 
 const routes: Routes = [{
   path: '',
@@ -86,12 +87,13 @@ const routes: Routes = [{
     FlexLayoutModule,
     MarketplaceLayoutModule,
     OrgAccessModule,
+    SidenavAuthModule,
+    SidenavWidgetModule,
 
     // Material
     MatListModule,
     MatIconModule,
     MatToolbarModule,
-    MatButtonModule,
   ]
 })
 export class MarketplaceModule { }

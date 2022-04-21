@@ -15,7 +15,8 @@ import {
   InvitationOrUndefined,
   createInvitation,
   InvitationStatus,
-  InvitationBase
+  InvitationBase,
+  AlgoliaOrganization
 } from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
@@ -23,8 +24,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { App } from '@blockframes/utils/apps';
 import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
-import { AlgoliaOrganization } from '@blockframes/utils/algolia';
-import { createAlgoliaOrganization } from '@blockframes/firebase-utils';
+import { createAlgoliaOrganization } from '@blockframes/firebase-utils/algolia/algolia';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
 /**

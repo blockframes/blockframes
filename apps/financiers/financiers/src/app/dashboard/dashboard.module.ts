@@ -15,6 +15,8 @@ import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module
 import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 import { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.config';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
+import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
+import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 
 // Tunnel routes
 import { titleTunnelRoutes } from './tunnel/routes';
@@ -107,6 +109,9 @@ const routes: Routes = [{
     ToLabelModule,
     OrgAccessModule,
     MovieFormShellModule,
+    SidenavAuthModule,
+    SidenavWidgetModule,
+
     // Material
     MatDividerModule,
     MatListModule,
