@@ -38,8 +38,6 @@ export class ContractViewComponent {
     private negotiationService: NegotiationService,
   ) { }
 
-
-
   async accept() {
     const onConfirm = async () => {
       const sale = await this.contract$.pipe(first()).toPromise();
@@ -52,12 +50,11 @@ export class ContractViewComponent {
 
     const data = {
       onConfirm,
-      title: 'Are you sure to accept this contract?',
+      title: 'Are you sure you wish to accept this contract?',
       question: 'Please verify if all the contract elements are convenient for you.',
-      confirm: 'Yes, accept contract',
-      cancel: 'Come back & verify contract'
+      confirm: 'Yes, accept Contract',
+      cancel: 'Come back & Verify Contract'
     };
     this.dialog.open(ConfirmWithValidationComponent, { data });
   }
-
 }
