@@ -9,15 +9,22 @@ import {
   MeetingEventDocument,
   ScreeningEventDocument,
   User,
-  PublicUser,
   OrganizationDocument,
   orgName,
   MailBucket,
-  MovieDocument
+  MovieDocument,
+  Bucket,
+  Timestamp,
+  createMailContract,
+  MailTerm,
+  staticModel,
+  NegotiationDocument,
+  createMailTerm
 } from '@blockframes/model';
-import type { AccessibilityTypes, ContractDocument, Offer } from '@blockframes/model';
+import { AccessibilityTypes, ContractDocument, Offer, movieCurrencies, movieCurrenciesSymbols } from '@blockframes/model';
 import { toIcsFile } from "../agenda/utils";
 import { IcsEvent } from "../agenda/agenda.interfaces";
+import { getKeyIfExists } from "../helpers";
 
 interface EmailData {
   to: string;
@@ -30,51 +37,53 @@ export interface EmailTemplateRequest {
   to: string;
   templateId: string;
   data: {
-    org?: OrgEmailData | OrganizationDocument, // @TODO #7491 template d-94a20b20085842f68fb2d64fe325638a uses OrganizationDocument but it should use OrgEmailData instead
-    user?: UserEmailData,
-    userSubject?: UserEmailData,
-    event?: EventEmailData,
-    eventUrl?: string,
-    pageURL?: string,
-    bucket?: MailBucket,
-    baseUrl?: string,
-    date?: string,
-    movie?: MovieEmailData | MovieDocument,
-    offer?: OfferEmailData,
-    buyer?: UserEmailData,
-    contract?: ContractDocument,
-    territories?: string,
-    contractId?: string,
+    org?: OrgEmailData | OrganizationDocument; // @TODO #7491 template d-94a20b20085842f68fb2d64fe325638a uses OrganizationDocument but it should use OrgEmailData instead
+    user?: UserEmailData;
+    userSubject?: UserEmailData;
+    event?: EventEmailData;
+    eventUrl?: string;
+    pageURL?: string;
+    bucket?: MailBucket;
+    baseUrl?: string;
+    date?: string;
+    movie?: MovieEmailData | MovieDocument;
+    offer?: OfferEmailData;
+    buyer?: UserEmailData;
+    contract?: ContractDocument;
+    territories?: string;
+    contractId?: string;
+    negotiation?: NegotiationEmailData;
   };
 }
 
+
 export interface EmailParameters {
-  request: EmailRequest | EmailTemplateRequest,
-  app?: App,
+  request: EmailRequest | EmailTemplateRequest;
+  app?: App;
 }
 
 export interface EmailAdminParameters {
-  request: EmailRequest | EmailTemplateRequest,
-  from?: EmailJSON,
+  request: EmailRequest | EmailTemplateRequest;
+  from?: EmailJSON;
 }
 
 export interface EventEmailData {
-  id: string,
-  title: string,
-  start: string,
-  end: string,
-  type: EventTypes,
-  viewUrl: string,
-  sessionUrl: string,
-  accessibility: AccessibilityTypes,
-  calendar: AttachmentData
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  type: EventTypes;
+  viewUrl: string;
+  sessionUrl: string;
+  accessibility: AccessibilityTypes;
+  calendar: AttachmentData;
 }
 
 export interface OrgEmailData {
-  denomination: string,
-  email: string,
-  id: string,
-  country?: string
+  denomination: string;
+  email: string;
+  id: string;
+  country?: string;
 }
 
 /**
@@ -85,22 +94,28 @@ export interface OrgEmailData {
  * `hi user.firstName, we let you know that userSubject.firstName has joined your org today`
  */
 export interface UserEmailData {
-  firstName?: string,
-  lastName?: string,
-  email: string,
-  password?: string,
-  isRegistered?: boolean
+  firstName?: string;
+  lastName?: string;
+  email: string;
+  password?: string;
+  isRegistered?: boolean;
 }
 
 export interface OfferEmailData {
-  id: string
+  id: string;
 }
 
 export interface MovieEmailData {
   id: string;
   title: {
-    international: string
-  }
+    international: string;
+  };
+}
+
+export interface NegotiationEmailData {
+  price: string;
+  currency: string;
+  terms: MailTerm[];
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
@@ -134,11 +149,11 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
 }
 
 interface EventEmailParameters {
-  event: EventDocument<EventMeta>,
-  orgName: string,
-  attachment?: boolean,
-  email?: string,
-  invitationId?: string
+  event: EventDocument<EventMeta>;
+  orgName: string;
+  attachment?: boolean;
+  email?: string;
+  invitationId?: string;
 }
 
 export function getEventEmailData({ event, orgName, attachment = true, email, invitationId }: EventEmailParameters): EventEmailData {
@@ -224,4 +239,28 @@ export function getMovieEmailData(movie: Partial<MovieDocument>): MovieEmailData
       international: movie.title.international,
     }
   }
+}
+
+export function getNegotiationEmailData(negotiation: Partial<NegotiationDocument>): NegotiationEmailData {
+  const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
+  const formatter = new Intl.NumberFormat('en-US');
+  const price = formatter.format(negotiation.price);
+  const terms = createMailTerm(negotiation.terms);
+
+  return {
+    price,
+    currency,
+    terms
+  };
+}
+
+export function getBucketEmailData(bucket: Bucket<Timestamp>): MailBucket {
+  const currencyKey = getKeyIfExists('movieCurrencies', bucket.currency);
+  const contracts = bucket.contracts.map(contract => createMailContract(contract));
+
+  return {
+    ...bucket,
+    contracts,
+    currency: movieCurrenciesSymbols[currencyKey]
+  };
 }
