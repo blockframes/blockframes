@@ -13,6 +13,7 @@ const territories = parseToAll('territories', 'world') as Territory[];
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AnalyticsMapComponent {
+  isLoading = true;
 
   zero: TerritoryISOA3Value[] = [];
   lessThanFive: TerritoryISOA3Value[] = [];
@@ -24,6 +25,7 @@ export class AnalyticsMapComponent {
 
   @Input() set data(data: AnalyticData[]) {
     if (!data) return;
+    this.isLoading = false;
 
     for (const territory of territories) {
       const isoA3 = territoriesISOA3[territory];
