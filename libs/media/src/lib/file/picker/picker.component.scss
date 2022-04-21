@@ -14,8 +14,9 @@
   }
 
   section {
-      width: 100%;
-      height: calc(100% - 50px);
+    width: 100%;
+    height: calc(100% - 50px);
+    min-height: calc(50vh - 40px);
 
     mat-tab-group {
       width: 60%;
