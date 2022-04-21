@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Holdback, Movie, Scope } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
@@ -19,7 +19,7 @@ export class SelectionModalComponent implements OnInit {
   columns = {
     duration: 'Duration',
     territories: 'Territories',
-    medias: 'Media',
+    medias: 'Media'
   };
 
   constructor(
@@ -27,7 +27,7 @@ export class SelectionModalComponent implements OnInit {
     public data: {
       title: Movie;
       holdbacks: Holdback[];
-      save: (form: FormList<Holdback, HoldbackForm>) => void;
+      holdbacksChange: EventEmitter<Holdback[]>;
     },
     public dialogRef: MatDialogRef<SelectionModalComponent>,
     private dialog: MatDialog
@@ -48,12 +48,10 @@ export class SelectionModalComponent implements OnInit {
     });
   }
 
-  saveAndClose(
-    callback: (data: FormList<Holdback, HoldbackForm>) => void
-  ) {
+  saveAndClose() {
     if (this.form.valid) {
-      close(); //The position of the close before the emit is important.
-      callback(this.form);
+      this.dialog.closeAll();
+      this.data.holdbacksChange.emit(this.form.value);
     }
   }
 

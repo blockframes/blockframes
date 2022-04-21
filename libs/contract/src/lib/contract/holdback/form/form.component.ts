@@ -29,12 +29,8 @@ export class HolbackFormComponent {
       data: {
         title: this.title,
         holdbacks: this.holdbacks,
-        save: this.save
+        holdbacksChange: this.holdbacksChange
       }
     });
-  }
-
-  save(form: FormList<Holdback, HoldbackForm>) {
-    this.holdbacksChange.emit(form.value);
   }
 }

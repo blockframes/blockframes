@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { LanguagesFormModule } from "@blockframes/movie/form/languages/languages.module";
 import { MaxLengthModule } from '@blockframes/utils/pipes';
@@ -29,7 +30,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatButtonModule,
     MatIconModule,
     SelectionModalModule,
-    MaxLengthModule
+    MaxLengthModule,
+    ReactiveFormsModule
   ]
 })
 export class HoldbackFormModule { }
