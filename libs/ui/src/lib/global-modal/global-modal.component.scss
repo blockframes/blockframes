@@ -1,9 +1,3 @@
 :host {
   display: block;
 }
-
-.mat-dialog-content {
-  // 40px is the width/height of the mat-icon "close"
-  // Not centered if we remove the 40px
-  min-height: calc(50vh - 40px);
-}
