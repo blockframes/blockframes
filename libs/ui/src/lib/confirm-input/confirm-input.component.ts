@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-interface Data {
+interface ConfirmationData {
   title?: string,
   subtitle?: string,
   text?: string,
@@ -28,7 +28,7 @@ export class ConfirmInputComponent implements OnInit {
   public isValid = false;
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: Data,
+    public data: ConfirmationData,
     public dialogRef: MatDialogRef<ConfirmInputComponent>,
     private snackbar: MatSnackBar
   ) {

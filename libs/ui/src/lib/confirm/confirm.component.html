@@ -1,15 +1,17 @@
 <global-modal>
-  <h2>{{ data.title || 'Confirm' }}</h2>
-  
-  <p class="mat-body-1">{{ data.question || 'Do you confirm ?' }}</p>
-  <p class="mat-body-1" *ngIf="data.advice">{{ data.advice }}</p>
-  
-  <mat-dialog-actions fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="4px">
-    <button test-id="confirm" mat-flat-button color="primary" (click)="confirm()">
-      {{ data.confirm || 'Confirm' }}
-    </button>
-    <button mat-button color="primary" (click)="close()">
-      {{ data.cancel || 'Cancel' }}
-    </button>
-  </mat-dialog-actions>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <h2>{{ data.title || 'Confirm' }}</h2>
+    
+    <p class="mat-body-1">{{ data.question || 'Do you confirm ?' }}</p>
+    <p class="mat-body-1" *ngIf="data.advice">{{ data.advice }}</p>
+    
+    <mat-dialog-actions fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="4px">
+      <button test-id="confirm" mat-flat-button color="primary" (click)="confirm()">
+        {{ data.confirm || 'Confirm' }}
+      </button>
+      <button mat-button color="primary" (click)="close()">
+        {{ data.cancel || 'Cancel' }}
+      </button>
+    </mat-dialog-actions>
+  </section>
 </global-modal>

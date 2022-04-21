@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, HostListener } from '@angular/core';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 
 @Component({
   selector: 'festival-event-login',
@@ -11,7 +12,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventLoginComponent implements OnInit {
-  @ViewChild('noAccount') noAccountTemplate: TemplateRef<unknown>;
   public form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(24)])
@@ -57,7 +57,14 @@ export class EventLoginComponent implements OnInit {
       if (err.message.includes('INTERNAL ASSERTION FAILED')) {
         this.snackBar.open('Network error. Please refresh this page.', 'close', { duration: 8000 });
       } else if (err.code === 'auth/user-not-found') {
-        this.snackBar.openFromTemplate(this.noAccountTemplate, { duration: 8000 });
+        this.snackBar.openFromComponent(SnackbarLinkComponent, {
+          data: {
+            message: 'This account does not exist.',
+            link: ['/auth/identity'],
+            linkName: 'CREATE ACCOUNT'
+          },
+          duration: 8000
+        });
       } else {
         this.snackBar.open(err.message, 'close', { duration: 8000 });
       }

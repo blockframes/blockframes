@@ -16,9 +16,8 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareRe
 
 // Blockframes
 import { centralOrgId } from '@env';
-import { AlgoliaMovie } from '@blockframes/utils/algolia';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import { Term, StoreStatus, Mandate, Sale, Bucket } from '@blockframes/model';
+import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie } from '@blockframes/model';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/+state';
 import { TermService } from '@blockframes/contract/term/+state/term.service';

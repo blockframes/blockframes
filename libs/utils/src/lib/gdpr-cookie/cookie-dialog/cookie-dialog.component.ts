@@ -25,6 +25,12 @@ export class CookieDialogComponent {
 
   /** Opens a dialog with terms of use and privacy policy given by the parent. */
   public openPrivacyPolicy() {
-    this.dialog.open(PrivacyPolicyComponent);
+    this.dialog.open(PrivacyPolicyComponent, {
+      minWidth: '80vw',
+      minHeight: '80vh',
+      data: {
+        modelExit: () => this.dialog.closeAll()
+      }
+    });
   }
 }

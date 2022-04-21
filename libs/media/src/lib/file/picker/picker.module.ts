@@ -7,7 +7,7 @@ import { FilePreviewModule } from '../preview/preview.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { FilePickerComponent } from './picker.component';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
-import { GlobalModalModule } from '@blockframes/ui/modal/modal.module';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 // Material
 import { MatExpansionModule } from '@angular/material/expansion';

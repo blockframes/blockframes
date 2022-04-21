@@ -1,29 +1,29 @@
 <global-modal>
   <article fxLayout="column" fxLayoutAlign="center center">
     <ng-container [ngSwitch]="ref.storagePath | fileType">
-  
+
       <ng-container *ngSwitchCase="'image'">
         <img [ref]="ref" asset="empty_banner.png"/>
       </ng-container>
-  
+
       <ng-container *ngSwitchCase="'pdf'">
         <pdf-viewer [ref]="ref"></pdf-viewer>
       </ng-container>
-  
+
       <ng-container *ngSwitchCase="'video'">
         <!-- The player component has no size, we use a container div to set a size that the player will fill -->
         <div class="video-container">
           <video-viewer [ref]="ref"></video-viewer>
         </div>
       </ng-container>
-  
+
       <ng-container *ngSwitchDefault>
-  
+
         <h3>Sorry</h3>
         <img class="unknown-type" asset="no_titles.svg" alt="Flying saucer">
         <p>We don't know how to display this file. 4</p>
         <p class="mat-caption">Supported files are: pdfs, images, and videos</p>
-  
+
       </ng-container>
     </ng-container>
   </article>

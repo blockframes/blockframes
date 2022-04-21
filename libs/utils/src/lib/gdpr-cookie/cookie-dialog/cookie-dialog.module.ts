@@ -10,7 +10,7 @@ import { CookieDialogComponent } from './cookie-dialog.component';
 import { CookieFormModule } from '../cookie-form/cookie-form.module';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
-import { GlobalModalModule } from '@blockframes/ui/modal/modal.module';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 @NgModule({
   imports: [

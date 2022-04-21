@@ -6,7 +6,7 @@ import { PreferencesComponent } from './preferences.component';
 
 // Blockframes
 import { PreferencesFormModule } from '@blockframes/auth/forms/preferences/preferences.module';
-import { GlobalModalModule } from '@blockframes/ui/modal/modal.module';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';

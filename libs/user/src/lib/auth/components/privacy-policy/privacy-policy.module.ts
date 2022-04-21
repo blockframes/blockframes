@@ -12,7 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
 // Blockframes
-import { GlobalModalModule } from '@blockframes/ui/modal/modal.module';
+import { PrivacyPolicyTextModule } from '../privacy-policy-text/privacy-policy-text.module';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 @NgModule({
   declarations: [PrivacyPolicyComponent],
@@ -22,6 +23,7 @@ import { GlobalModalModule } from '@blockframes/ui/modal/modal.module';
     MatButtonModule,
     FlexLayoutModule,
     MatIconModule,
+    PrivacyPolicyTextModule,
     GlobalModalModule
   ],
   exports: [PrivacyPolicyComponent]
