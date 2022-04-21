@@ -88,16 +88,17 @@ export async function selectEnvironment(projectId: string) {
 
   console.log('Selecting project ID:', projectId);
 
-  if (isDemo) console.log('DETECTED DEMO PROJECT NAME!')
+  if (isDemo) console.log('DETECTED DEMO PROJECT NAME!');
 
   await updateDotenv('PROJECT_ID', projectId);
 
-  if (!isDemo) await updateSAKPathInDotenv(projectId)
+  if (!isDemo) await updateSAKPathInDotenv(projectId);
   else updateDotenv('GOOGLE_APPLICATION_CREDENTIALS', '');
 
-  if (!isDemo) await setFirebaseToolsProject();
-
-  if (!isDemo) await setGcloudProject();
+  if (!isDemo) {
+    await setFirebaseToolsProject();
+    await setGcloudProject();
+  }
 
   await updateEnvFile();
 
@@ -106,11 +107,11 @@ export async function selectEnvironment(projectId: string) {
     const envLine = `export * from 'env/${fileName}'`;
     const localEnvFile = join(process.cwd(), 'env', 'env.ts');
     await writeFile(localEnvFile, envLine);
-    console.log(`env.ts file now contains: ${envLine} `);
+    console.log(`env.ts file now contains: ${envLine}`);
   }
 
   async function setGcloudProject() {
-    cmd = `gcloud config set pass_credentials_to_gsutil true`;
+    cmd = 'gcloud config set pass_credentials_to_gsutil true';
     console.log('Run:', cmd);
     await runShellCommand(cmd);
 
@@ -125,10 +126,10 @@ export async function selectEnvironment(projectId: string) {
     console.log(output);
   }
 
-  async function setFirebaseToolsProject() {
+  function setFirebaseToolsProject() {
     cmd = `firebase use ${projectId}`;
     console.log('Run:', cmd);
-    await runShellCommand(cmd);
+    return runShellCommand(cmd);
   }
 }
 
