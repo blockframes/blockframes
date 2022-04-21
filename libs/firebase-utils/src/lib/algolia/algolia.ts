@@ -2,8 +2,18 @@ import algoliasearch from 'algoliasearch';
 import { algolia as algoliaClient, centralOrgId } from '@env';
 import * as functions from 'firebase-functions';
 import { App, app, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
-import { AlgoliaOrganization, AlgoliaMovie, AlgoliaUser, AlgoliaConfig } from '@blockframes/utils/algolia';
-import { MovieDocument, OrganizationDocument, orgName, PublicUser, festival, Language } from '@blockframes/model';
+import {
+  MovieDocument,
+  OrganizationDocument,
+  orgName,
+  PublicUser,
+  festival,
+  Language,
+  AlgoliaOrganization,
+  AlgoliaMovie,
+  AlgoliaUser,
+  AlgoliaConfig
+} from '@blockframes/model';
 import * as admin from 'firebase-admin';
 import { hasAcceptedMovies } from '../util';
 import { getMovieAppAccess } from '@blockframes/utils/apps';
@@ -129,18 +139,18 @@ export function storeSearchableMovie(
         original: movie.originalLanguages ? movie.originalLanguages : [],
         dubbed: movie.languages
           ? (Object.keys(movie.languages).filter(
-              (lang) => movie.languages[lang]?.dubbed
-            ) as Language[])
+            (lang) => movie.languages[lang]?.dubbed
+          ) as Language[])
           : [],
         subtitle: movie.languages
           ? (Object.keys(movie.languages).filter(
-              (lang) => movie.languages[lang]?.subtitle
-            ) as Language[])
+            (lang) => movie.languages[lang]?.subtitle
+          ) as Language[])
           : [],
         caption: movie.languages
           ? (Object.keys(movie.languages).filter(
-              (lang) => movie.languages[lang]?.caption
-            ) as Language[])
+            (lang) => movie.languages[lang]?.caption
+          ) as Language[])
           : [],
       },
       status: movie.productionStatus ? movie.productionStatus : '',

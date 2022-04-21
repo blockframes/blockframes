@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
 
 @NgModule({
   declarations: [EventLoginComponent],
@@ -22,6 +22,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    SnackbarLinkModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
