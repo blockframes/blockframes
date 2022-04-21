@@ -12,15 +12,13 @@ import {
   OrganizationDocument, 
   PublicOrganization, 
   MovieDocument, 
-  createMailTerm, 
   ContractDocument, 
   NegotiationDocument, 
   Offer,
-  staticModel,
   Bucket,
   Timestamp,
 } from '@blockframes/model';
-import { EventEmailData, OrgEmailData, UserEmailData, getMovieEmailData, getOfferEmailData, MovieEmailData, getBucketEmailData } from '@blockframes/utils/emails/utils';
+import { EventEmailData, OrgEmailData, UserEmailData, getMovieEmailData, getOfferEmailData, MovieEmailData, getBucketEmailData, getNegotiationEmailData } from '@blockframes/utils/emails/utils';
 import { App, appName, Module } from '@blockframes/utils/apps';
 import { format } from "date-fns";
 import { supportMailosaur } from '@blockframes/utils/constants';
@@ -352,13 +350,12 @@ export function contractCreatedEmail(
   negotiation: NegotiationDocument, buyerOrg: OrganizationDocument
 ): EmailTemplateRequest {
   const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
-  const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
   const data = {
     user: toUser,
     app: { name: appName.catalog },
     movie: getMovieEmailData(title),
     contract,
-    negotiation: {...negotiation, currency},
+    negotiation: getNegotiationEmailData(negotiation),
     pageURL,
     buyerOrg,
   };
@@ -369,7 +366,7 @@ export function contractCreatedEmail(
 export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket<Timestamp>): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMM, yyyy');
   const mailBucket = getBucketEmailData(bucket);
-  const data = { org, bucket: { ...mailBucket }, user: toUser, baseUrl: appUrl.content, date };
+  const data = { org, bucket: mailBucket, user: toUser, baseUrl: appUrl.content, date };
 
   return { to: supportEmails.catalog, templateId: templateIds.offer.toAdmin, data };
 }
@@ -381,7 +378,7 @@ export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
   const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
   const data = {
     app: { name: appName.catalog },
-    bucket: { ...mailBucket },
+    bucket: mailBucket,
     user: toUser,
     pageURL,
     baseUrl: appUrl.content,
@@ -412,8 +409,6 @@ export function counterOfferSenderEmail(
   toUser: UserEmailData, org: OrganizationDocument, offerId: string,
   negotiation: NegotiationDocument, title: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
-  const terms = createMailTerm(negotiation.terms);
-  const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
   const pageURL = options.isMailRecipientBuyer
     ? `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`
     : `${appUrl.content}/c/o/dashboard/sales/${contractId}/view`;
@@ -425,7 +420,7 @@ export function counterOfferSenderEmail(
     org,
     contractId,
     app: { name: appName.catalog },
-    negotiation: { ...negotiation, terms, currency },
+    negotiation: getNegotiationEmailData(negotiation),
     movie: getMovieEmailData(title)
   };
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };

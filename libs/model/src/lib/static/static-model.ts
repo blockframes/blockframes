@@ -230,7 +230,15 @@ export const movieCurrencies = {
 
 export const movieCurrenciesSymbols = {
   USD: '$',
-  EUR: '€'
+  EUR: '€',
+  JPY: '¥',
+  GBP: '£',
+  AUD: 'A$',
+  CAD: 'C$',
+  CHF: 'F',
+  CNY: '¥',
+  SEK: 'kr',
+  NZD: 'NZ$'
 } as const;
 
 export const movieFormat = {

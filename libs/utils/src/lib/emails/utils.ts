@@ -9,14 +9,17 @@ import {
   MeetingEventDocument,
   ScreeningEventDocument,
   User,
-  PublicUser,
   OrganizationDocument,
   orgName,
   MailBucket,
   MovieDocument,
   Bucket,
   Timestamp,
-  createMailContract
+  createMailContract,
+  MailTerm,
+  staticModel,
+  NegotiationDocument,
+  createMailTerm
 } from '@blockframes/model';
 import { AccessibilityTypes, ContractDocument, Offer, movieCurrencies, movieCurrenciesSymbols } from '@blockframes/model';
 import { toIcsFile } from "../agenda/utils";
@@ -49,12 +52,10 @@ export interface EmailTemplateRequest {
     contract?: ContractDocument;
     territories?: string;
     contractId?: string;
+    negotiation?: NegotiationEmailData;
   };
 }
 
-// export interface EmailContract extends Contract {
-//   price: string;
-// }
 
 export interface EmailParameters {
   request: EmailRequest | EmailTemplateRequest;
@@ -109,6 +110,12 @@ export interface MovieEmailData {
   title: {
     international: string;
   };
+}
+
+export interface NegotiationEmailData {
+  price: string;
+  currency: string;
+  terms: MailTerm[];
 }
 
 export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
@@ -232,6 +239,19 @@ export function getMovieEmailData(movie: Partial<MovieDocument>): MovieEmailData
       international: movie.title.international,
     }
   }
+}
+
+export function getNegotiationEmailData(negotiation: Partial<NegotiationDocument>): NegotiationEmailData {
+  const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
+  const formatter = new Intl.NumberFormat('en-US');
+  const price = formatter.format(negotiation.price);
+  const terms = createMailTerm(negotiation.terms);
+
+  return {
+    price,
+    currency,
+    terms
+  };
 }
 
 export function getBucketEmailData(bucket: Bucket<Timestamp>): MailBucket {
