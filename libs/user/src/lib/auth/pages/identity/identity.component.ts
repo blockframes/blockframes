@@ -165,7 +165,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
               message: 'User account already exists for this email.',
               link: ['/auth/connexion'],
               linkName: 'LOG IN',
-              test: 'existing-email'
+              testId: 'existing-email'
             },
             duration: 6000
           });
