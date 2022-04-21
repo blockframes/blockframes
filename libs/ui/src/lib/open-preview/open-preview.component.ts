@@ -9,7 +9,7 @@ import { PreviewFileModalComponent } from '../preview-file-modal/preview-file-mo
   styleUrls: ['./open-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OpenPreviewModalComponent {
+export class OpenPreviewComponent {
 
   @Input() ref: StorageFile;
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
