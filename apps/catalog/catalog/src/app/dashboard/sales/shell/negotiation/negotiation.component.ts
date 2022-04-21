@@ -86,10 +86,10 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
     };
     const data = {
       onConfirm,
-      title: 'Are you sure to submit this contract?',
+      title: 'Are you sure you wish to submit this contract?',
       question: 'Please verify if all the contract elements are convenient for you.',
-      confirm: 'Yes, submit',
-      cancel: 'Come back & verify contract'
+      confirm: 'Yes, submit Contract',
+      cancel: 'Come back & Verify Contract'
     };
     this.dialog.open(ConfirmComponent, { data });
   }
