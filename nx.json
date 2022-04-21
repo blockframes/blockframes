@@ -2,9 +2,9 @@
   "implicitDependencies": {
     "angular.json": "*",
     "package.json": "*",
-    ".eslintrc": "*",
     "nx.json": "*",
-    "tsconfig.base.json": "*"
+    "tsconfig.base.json": "*",
+    ".eslintrc.json": "*"
   },
   "affected": {
     "defaultBase": "origin/develop"
