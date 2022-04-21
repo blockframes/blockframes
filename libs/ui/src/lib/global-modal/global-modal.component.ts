@@ -13,9 +13,7 @@ export class GlobalModalComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: { selectedFiles?: StorageFile[], modelExit?: () => void },
     public dialogRef: MatDialogRef<GlobalModalComponent>,
-  ) {
-    console.log(this.data)
-  }
+  ) { }
 
   public close(): void {
     if (this.data?.selectedFiles) return this.dialogRef.close(this.data.selectedFiles);
