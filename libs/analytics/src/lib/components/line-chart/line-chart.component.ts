@@ -61,6 +61,7 @@ const dateFunctions: Record<Period, Record<'interval' | 'isSame', any>> = {
 })
 export class LineChartComponent {
   @ViewChild("chart") chart: ChartComponent;
+  isLoading = true;
 
   period?: Period;
   lineChartOptions: LineChartOptions = {
@@ -117,6 +118,7 @@ export class LineChartComponent {
   @Input() eventNames: EventName[] = [];
   private analytics?: Analytics[];
   @Input() set data(data: Analytics[]) {
+    if (data) this.isLoading = false;
     if (!data?.length) {
       this.chart?.updateSeries([]);
       return;

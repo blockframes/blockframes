@@ -1,22 +1,36 @@
 <header>
   <mat-icon svgIcon="business"></mat-icon>
-  <h5>Split by Company Activity</h5>
+  <article>
+    <h5>Split by Company Activity</h5>
+    <p class="mat-caption">Learn who are the users who were interested in this Title.</p>
+  </article>
+
   <button mat-icon-button (click)="toggleSelect()" *ngIf="previousSelection" matTooltip="Remove selection">
     <mat-icon svgIcon="refresh_filters"></mat-icon>
   </button>
 </header>
-<ng-container *ngIf="pieChartOptions.series?.length; else noData">
-  <apx-chart
-    #chart
-    [series]="pieChartOptions.series"
-    [chart]="pieChartOptions.chart"
-    [labels]="pieChartOptions.labels"
-    [dataLabels]="pieChartOptions.dataLabels"
-    [theme]="pieChartOptions.theme"
-    [stroke]="pieChartOptions.stroke"
-    [legend]="pieChartOptions.legend"
-  ></apx-chart>
+
+<ng-container *ngIf="!isLoading else loading">
+  <ng-container *ngIf="pieChartOptions.series?.length; else empty">
+    <apx-chart
+      #chart
+      [series]="pieChartOptions.series"
+      [chart]="pieChartOptions.chart"
+      [labels]="pieChartOptions.labels"
+      [dataLabels]="pieChartOptions.dataLabels"
+      [theme]="pieChartOptions.theme"
+      [stroke]="pieChartOptions.stroke"
+      [legend]="pieChartOptions.legend"
+    ></apx-chart>
+  </ng-container>
 </ng-container>
-<ng-template #noData>
+
+<ng-template #empty>
   <img asset="empty_state_analytics_pie_chart.svg" alt="Image, you have no movies yet">
+</ng-template>
+
+<ng-template #loading>
+  <article class="loading">
+    <mat-spinner color="primary"></mat-spinner>
+  </article>
 </ng-template>
