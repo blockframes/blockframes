@@ -437,7 +437,7 @@
           },
           "configurations": {
             "emulator": {
-              "browserTarget": "festival:build:emulator"
+              "browserTarget": "cms:build:emulator"
             }
           }
         },
@@ -893,7 +893,7 @@
           },
           "configurations": {
             "emulator": {
-              "browserTarget": "financiers:build:emulator"
+              "browserTarget": "festival:build:emulator"
             }
           }
         },
@@ -1070,7 +1070,7 @@
           },
           "configurations": {
             "emulator": {
-              "browserTarget": "cms:build:emulator"
+              "browserTarget": "financiers:build:emulator"
             }
           }
         },
