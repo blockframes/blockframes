@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Campaign } from '../../+state';
+import { Campaign } from '@blockframes/model';
 
 @Component({
   selector: 'campaign-progress',

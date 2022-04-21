@@ -1,7 +1,7 @@
 <article>
   <h6>
     Financing Plan
-    <a mat-icon-button [routerLink]="link">
+    <a mat-icon-button [routerLink]="link" matTooltip="Edit">
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
@@ -21,7 +21,7 @@
         </ng-template>
         <ng-template colRef="status" label="Status" let-status sort>{{ status | titlecase }}</ng-template>
         <ng-template colRef="edit">
-          <a mat-icon-button [routerLink]="link">
+          <a mat-icon-button [routerLink]="link" matTooltip="Edit">
             <mat-icon svgIcon="edit"></mat-icon>
           </a>
         </ng-template>

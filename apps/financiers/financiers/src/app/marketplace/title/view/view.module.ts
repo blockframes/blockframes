@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { MarketplaceMovieViewComponent } from './view.component';
+import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
 
 // Custom Modules
 import { MovieShellModule } from '@blockframes/movie/marketplace/shell/shell.module';
@@ -90,6 +91,7 @@ const routes = [
     MatInputModule,
     MatSelectModule,
     MatSnackBarModule,
+    SnackbarErrorModule,
     // Routes
     RouterModule.forChild(routes)
   ]

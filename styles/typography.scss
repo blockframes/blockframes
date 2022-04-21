@@ -10,13 +10,28 @@ mat.define-typography-level(
   $letter-spacing: normal
 )*/
 
+:root {
+  --display-1-size: 48px;
+  --display-1-lineHeight: 58px;
+  --display-2-size: 60px;
+  --display-2-lineHeight: 64px;
+}
+
+@media (max-width: 600px) {
+  :root {
+    --display-1-size: 46px;
+    --display-1-lineHeight: 53px;
+    --display-2-size: 48px;
+    --display-2-lineHeight: 53px;
+  }
+}
 
 $bf-typography: mat.define-typography-config(
   $font-family: 'Montserrat, Helvetica Neue, sans-serif',
   $display-4: mat.define-typography-level(96px, 113px, 500, $letter-spacing: -1.5px),
   $display-3: mat.define-typography-level(80px, 100px, 700, $letter-spacing: -0.5px),
-  $display-2: mat.define-typography-level(60px, 64px, 800),
-  $display-1: mat.define-typography-level(48px, 58px, 700, $letter-spacing: -0.15px),
+  $display-2: mat.define-typography-level(var(--display-2-size), var(--display-2-lineHeight), 800),
+  $display-1: mat.define-typography-level(var(--display-1-size), var(--display-1-lineHeight), 700, $letter-spacing: -0.15px),
   $headline: mat.define-typography-level(36px, 52px, 800, $letter-spacing: -0.5px),
   $title: mat.define-typography-level(26px, 36px, 700, $letter-spacing: -1px),
   $subheading-2: mat.define-typography-level(20px, 28px, 700),
