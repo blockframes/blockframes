@@ -69,7 +69,7 @@ export class AuthService extends FireAuthService<AuthState> {
       if (!authState || authState.isAnonymous) return of(undefined).pipe(map(() => [undefined, authState]));
       return this.userService.valueChanges(authState.uid).pipe(map(profile => [profile, authState]));
     }),
-    runInZone(this.ngZone),
+    runInZone(this.ngZone), // TODO #7595 #7273
     map(([profile, userAuth]: [User, FireUser]) => {
       if (!userAuth) return;
 

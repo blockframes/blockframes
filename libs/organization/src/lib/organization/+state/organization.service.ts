@@ -38,7 +38,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   org: Organization; // For this to be defined, one of the observable below must be called before
   org$: Observable<Organization> = this.authService.profile$.pipe(
     switchMap((user) => (user?.orgId ? this.valueChanges(user.orgId) : of(undefined))),
-    runInZone(this.ngZone),
+    runInZone(this.ngZone), // TODO #7595 #7273
     tap((org) => (this.org = org))
   );
 
