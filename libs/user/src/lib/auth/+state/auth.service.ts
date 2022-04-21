@@ -1,4 +1,4 @@
-import { Inject, Injectable, Optional } from '@angular/core';
+import { Inject, Injectable, NgZone, Optional } from '@angular/core';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { FireAuthService, CollectionConfig, FireAuthState, RoleState, initialAuthState } from 'akita-ng-fire';
 import { map, switchMap, take, tap } from 'rxjs/operators';
@@ -32,6 +32,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { APP } from '@blockframes/utils/routes/utils';
 import { doc, docData, getDoc, DocumentReference, writeBatch } from '@angular/fire/firestore';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
+import { runInZone } from '@blockframes/utils/zone';
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'auth' })
@@ -68,6 +69,7 @@ export class AuthService extends FireAuthService<AuthState> {
       if (!authState || authState.isAnonymous) return of(undefined).pipe(map(() => [undefined, authState]));
       return this.userService.valueChanges(authState.uid).pipe(map(profile => [profile, authState]));
     }),
+    runInZone(this.ngZone),
     map(([profile, userAuth]: [User, FireUser]) => {
       if (!userAuth) return;
 
@@ -114,6 +116,7 @@ export class AuthService extends FireAuthService<AuthState> {
     private ipService: IpService,
     private afAuth: Auth,
     private userService: UserService,
+    private ngZone: NgZone,
     @Inject(APP) private app: App,
     @Optional() public ngIntercom?: Intercom,
   ) {

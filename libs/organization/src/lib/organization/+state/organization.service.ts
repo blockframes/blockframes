@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
@@ -25,6 +25,7 @@ import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { httpsCallable } from 'firebase/functions';
 import { where } from 'firebase/firestore';
+import { runInZone } from '@blockframes/utils/zone';
 
 interface OrganizationState extends EntityState<Organization>, ActiveState<string> { }
 
@@ -37,6 +38,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   org: Organization; // For this to be defined, one of the observable below must be called before
   org$: Observable<Organization> = this.authService.profile$.pipe(
     switchMap((user) => (user?.orgId ? this.valueChanges(user.orgId) : of(undefined))),
+    runInZone(this.ngZone),
     tap((org) => (this.org = org))
   );
 
@@ -73,6 +75,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private permissionsService: PermissionsService,
     private analytics: AnalyticsService,
     private authService: AuthService,
+    private ngZone: NgZone,
   ) {
     super();
   }
