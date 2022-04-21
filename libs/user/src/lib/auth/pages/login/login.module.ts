@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { SigninFormModule } from '../../components/signin-form/signin-form.module';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
+import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
 
 // Material
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -20,6 +21,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     FlexLayoutModule,
     SigninFormModule,
     AppLogoModule,
+    SnackbarLinkModule,
 
     // Material
     MatSnackBarModule,
@@ -28,4 +30,4 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     RouterModule.forChild([{ path: '', component: LoginComponent }]),
   ],
 })
-export class LoginModule {}
+export class LoginModule { }

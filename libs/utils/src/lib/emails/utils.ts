@@ -41,7 +41,7 @@ export interface EmailTemplateRequest {
     date?: string,
     movie?: MovieEmailData | MovieDocument,
     offer?: OfferEmailData,
-    buyer?: PublicUser | string,
+    buyer?: UserEmailData,
     contract?: ContractDocument,
     territories?: string,
     contractId?: string,
@@ -73,7 +73,8 @@ export interface EventEmailData {
 export interface OrgEmailData {
   denomination: string,
   email: string,
-  id: string
+  id: string,
+  country?: string
 }
 
 /**
@@ -96,6 +97,7 @@ export interface OfferEmailData {
 }
 
 export interface MovieEmailData {
+  id: string;
   title: {
     international: string
   }
@@ -194,7 +196,8 @@ export function getOrgEmailData(org: Partial<OrganizationDocument>): OrgEmailDat
   return {
     id: org.id,
     denomination: orgName(org, 'full'),
-    email: org.email || ''
+    email: org.email || '',
+    country: org.addresses?.main?.country
   }
 }
 
@@ -216,8 +219,9 @@ export function getOfferEmailData(offer: Partial<Offer>): OfferEmailData {
 
 export function getMovieEmailData(movie: Partial<MovieDocument>): MovieEmailData {
   return {
+    id: movie.id,
     title: {
-      international: movie.title.international
+      international: movie.title.international,
     }
   }
 }

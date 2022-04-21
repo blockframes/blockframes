@@ -27,6 +27,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AppPipeModule } from '@blockframes/utils/pipes';
+import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
 
 @NgModule({
   declarations: [IdentityComponent],
@@ -42,6 +43,7 @@ import { AppPipeModule } from '@blockframes/utils/pipes';
     ImageModule,
     PasswordConfirmModule,
     AppPipeModule,
+    SnackbarLinkModule,
 
     // Material
     MatSnackBarModule,
@@ -57,4 +59,4 @@ import { AppPipeModule } from '@blockframes/utils/pipes';
     RouterModule.forChild([{ path: '', component: IdentityComponent }]),
   ],
 })
-export class IdentityModule {}
+export class IdentityModule { }

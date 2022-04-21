@@ -3,7 +3,8 @@ import * as admin from 'firebase-admin';
 import { firebaseRegion } from '@env';
 export const functions = (config = defaultConfig) => region(firebaseRegion).runWith(config);
 import { backupBucket, storageBucket } from '../environments/environment';
-import { defaultConfig, isInMaintenance } from '@blockframes/firebase-utils';
+import { isInMaintenance } from '@blockframes/firebase-utils/maintenance';
+import { defaultConfig } from '@blockframes/firebase-utils/firebase-utils';
 import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
 import { IMaintenanceDoc } from '@blockframes/model';
 

@@ -1,6 +1,6 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
 import { initFirestoreApp, eventFixtures } from '@blockframes/testing/unit-tests';
-import { clearFirestoreData } from '@firebase/rules-unit-testing';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { onEventDeleteEvent } from './main';
 import firebaseTest = require('firebase-functions-test');
 import * as admin from 'firebase-admin';
