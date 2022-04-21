@@ -1,3 +1,7 @@
+.align-icon ::ng-deep .mat-list-item-content { 
+  padding: 0 4px !important; 
+}
+
 .mat-expansion-panel-header-title {
   font-size: 14px;
 }
@@ -12,4 +16,3 @@
     }
   }
 }
-
