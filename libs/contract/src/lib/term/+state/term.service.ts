@@ -7,7 +7,7 @@ import { Term } from '@blockframes/model';
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'terms' })
 export class TermService extends CollectionService<TermState> {
-  useMemorization = true;
+  useMemorization = false;
 
   constructor(store: TermStore) {
     super(store)

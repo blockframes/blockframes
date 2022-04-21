@@ -6,9 +6,9 @@ import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { FormList } from '@blockframes/utils/form';
-import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
-import { Event, Screening } from '@blockframes/model';
+import { orderBy, startAt, where } from 'firebase/firestore';
+import { Event, Screening, AlgoliaOrganization } from '@blockframes/model';
 
 @Component({
   selector: 'festival-event-list',
@@ -32,7 +32,12 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     const orgIds$ = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value));
-    const query = ref => ref.where('type', '==', 'screening').where('isSecret', '==', false).orderBy('end').startAt(new Date());
+    const query = [
+      where('type', '==', 'screening'),
+      where('isSecret', '==', false),
+      orderBy('end'),
+      startAt(new Date())
+    ];
     const events$ = this.service.valueChanges(query) as Observable<Event<Screening>[]>;
 
     this.events$ = combineLatest([events$, orgIds$]).pipe(

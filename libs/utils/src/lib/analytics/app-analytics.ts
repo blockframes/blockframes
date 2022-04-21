@@ -1,4 +1,4 @@
-import { AngularFireAnalytics } from '@angular/fire/analytics';
+import { getAnalytics, logEvent, setUserProperties } from '@angular/fire/analytics';
 import { Injectable } from '@angular/core';
 import { EventName, AnalyticsUserProperties } from '@blockframes/model';
 import { centralOrgId } from '@env';
@@ -7,8 +7,8 @@ import { take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class FireAnalytics {
+  private analytics = getAnalytics();
   constructor(
-    public analytics: AngularFireAnalytics,
     private authService: AuthService,
   ) { }
 
@@ -22,10 +22,10 @@ export class FireAnalytics {
      * admins actions on the platform.
      */
     if (profile?.uid && profile?.orgId && isOperator) return false;
-    this.analytics.logEvent(name, { ...params, uid: profile?.uid });
+    logEvent(this.analytics, name, { ...params, uid: profile?.uid });
   }
 
   public setUserProperties(properties: Partial<AnalyticsUserProperties>) {
-    this.analytics.setUserProperties(properties);
+    setUserProperties(this.analytics, properties);
   }
 }

@@ -20,7 +20,7 @@ import { every } from 'lodash';
 import { loadAdminServices } from '@blockframes/firebase-utils';
 import { removeUnexpectedUsers } from './users';
 import { getCollectionRef } from '@blockframes/firebase-utils';
-import { clearFirestoreData } from '@firebase/rules-unit-testing';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { createPermissions, PermissionsDocument, PublicUser } from '@blockframes/model';
 import { addDays, subDays, subMonths, subYears } from 'date-fns';

@@ -37,7 +37,6 @@ export class GDPRService {
     this.enable('hotjar', enable);
     if (enable) this.hotjar.insertHotjar(this.app);
   }
-
   /*
   #7936 this may be reactivated later
   enableYandex(enable: boolean) {

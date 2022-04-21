@@ -1,19 +1,16 @@
-﻿import {
-  apps,
-  assertFails,
-  assertSucceeds,
-} from '@firebase/rules-unit-testing';
+﻿import { assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+import { deleteApp, getApps } from 'firebase/app';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 
 describe('Org Admin', () => {
-  const projectId = `usrules-spec-${Date.now()}`;
+  const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 
   beforeAll(async () => {
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-admin', firebase: { sign_in_provider: 'password' } });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-admin', { firebase: { sign_in_provider: 'password' } });
   });
 
-  afterAll(() => Promise.all(apps().map((app) => app.delete())));
+  afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
   test('should allow org admin to read', async () => {
     const usersRef = db.collection('users');
@@ -26,10 +23,10 @@ describe('General User', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-user2', { firebase: { sign_in_provider: 'password' } });
   });
 
-  afterAll(() => Promise.all(apps().map((app) => app.delete())));
+  afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
   test('should not allow user to write /blockframesAdmin/user', async () => {
     const usersRef = db.doc('blockframesAdmin/007');
@@ -44,10 +41,10 @@ describe('Users Collection Rules Tests', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-user2', { firebase: { sign_in_provider: 'password' } });
   });
 
-  afterAll(() => Promise.all(apps().map((app) => app.delete())));
+  afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
   test('should allow user to read own user doc (own uid)', async () => {
     const usersRef = db.doc('users/uid-user2');
@@ -87,10 +84,10 @@ describe('With Anonymous user', () => {
   let db: Firestore;
 
   beforeAll(async () => {
-     db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8-anon', firebase: { sign_in_provider: 'anonymous' } });
+    db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-c8-anon', { firebase: { sign_in_provider: 'anonymous' } });
   });
 
-  afterAll(() => Promise.all(apps().map((app) => app.delete())));
+  afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
   test('should not be able to list all users', async () => {
     const allDocs = db.collection('users');

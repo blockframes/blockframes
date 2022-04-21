@@ -1,12 +1,10 @@
-
-import { GetKeys } from '@blockframes/model';
+import { GetKeys, AlgoliaMovie, AlgoliaOrganization, AlgoliaSearch } from '@blockframes/model';
 import type { StoreStatus, ProductionStatus, Territory, Genre, SocialGoal, ContentType } from '@blockframes/model';
 import { FormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { App } from "@blockframes/utils/apps";
-import { AlgoliaMovie, AlgoliaOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 import { max } from './filters/budget/budget.component';
 
 export const runningTimeFilters = {
@@ -79,14 +77,14 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
   };
 }
 
-export type Versions = {
+interface Versions {
   original: boolean,
   dubbed: boolean,
   subtitle: boolean,
   caption: boolean,
 }
 
-export type LanguageVersion = {
+interface LanguageVersion {
   languages: GetKeys<'languages'>[],
   versions: Versions
 }
@@ -125,7 +123,7 @@ function createMovieSearchControl(search: MovieSearch) {
   };
 }
 
-export type MovieSearchControl = ReturnType<typeof createMovieSearchControl>;
+type MovieSearchControl = ReturnType<typeof createMovieSearchControl>;
 
 export class MovieSearchForm extends FormEntity<MovieSearchControl> {
 

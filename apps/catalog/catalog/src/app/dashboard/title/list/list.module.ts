@@ -15,6 +15,7 @@ import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { IncomePipeModule } from '@blockframes/contract/income/pipe';
+import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -41,7 +42,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     NumberPipeModule,
     IncomePipeModule,
     AppPipeModule,
-
+    CellModalModule,
     // Material
     MatButtonModule,
     MatTabsModule,

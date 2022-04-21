@@ -5,7 +5,7 @@ import {
   populate,
   eventFixtures,
 } from '@blockframes/testing/unit-tests';
-import { clearFirestoreData } from '@firebase/rules-unit-testing';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { createNotificationsForEventsToStart } from './events';
 
 describe('Events tests', () => {

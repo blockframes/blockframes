@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Perk } from '@blockframes/campaign/+state';
+import { Perk } from '@blockframes/model';
 
 @Component({
   selector: 'campaign-perk-card',

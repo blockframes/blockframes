@@ -1,14 +1,13 @@
-import { Component, ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, Optional, OnDestroy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional, OnDestroy, Inject } from '@angular/core';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { App } from '@blockframes/utils/apps';
-import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
-import { createPublicUser, PublicUser, User, createOrganization, createDocumentMeta} from '@blockframes/model';
+import { createPublicUser, PublicUser, User, createOrganization, createDocumentMeta, AlgoliaOrganization } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
@@ -19,6 +18,8 @@ import { Subscription } from 'rxjs';
 import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
 import { filter } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
+import { where } from 'firebase/firestore';
+import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 
 @Component({
   selector: 'auth-identity',
@@ -28,7 +29,6 @@ import { APP } from '@blockframes/utils/routes/utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IdentityComponent implements OnInit, OnDestroy {
-  @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<unknown>;
   public user$ = this.authService.profile$;
   public creating = false;
   public indexGroup = 'indexNameOrganizations';
@@ -110,7 +110,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.form.patchValue(user);
 
     this.disableControls(['email', 'firstName', 'lastName', 'password', 'confirm', 'generatedPassword']);
-  }  
+  }
 
   private disableControls(keys: (keyof IdentityFormControl)[]) {
     for (const key of keys) {
@@ -159,7 +159,18 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.cdr.markForCheck();
       switch (err.code) {
         case 'auth/email-already-in-use':
-          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: 6000 });
+          this.snackBar.openFromComponent(SnackbarLinkComponent, {
+            data: {
+              message: 'User account already exists for this email.',
+              link: ['/auth/connexion'],
+              linkName: 'LOG IN',
+              testId: 'existing-email'
+            },
+            duration: 6000
+          });
+          break;
+        case 'auth/invalid-email':
+          this.snackBar.open('Incorrect email address, please enter: text@example.com', 'close', { duration: 5000 });
           break;
         case 'auth/wrong-password':
           this.snackBar.open('Incorrect Invitation Pass. Please check your invitation email.', 'close', { duration: 8000 });
@@ -293,9 +304,12 @@ export class IdentityComponent implements OnInit, OnDestroy {
       });
     }
 
-    const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation')
-      .where('type', '==', 'joinOrganization')
-      .where('toUser.uid', '==', this.authService.uid));
+    const query = [
+      where('mode', '==', 'invitation'),
+      where('type', '==', 'joinOrganization'),
+      where('toUser.uid', '==', this.authService.uid)
+    ];
+    const invitations = await this.invitationService.getValue(query);
     const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
     if (pendingInvitation) {
       // Accept the invitation from the organization.
@@ -334,7 +348,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   public async searchForInvitation() {
-    const event = await this.invitationService.getInvitationLinkedToEmail(this.form.get('email').value).toPromise<AlgoliaOrganization | boolean>();
+    const { data: event } = await this.invitationService.getInvitationLinkedToEmail(this.form.get('email').value);
     if (event) {
       this.existingUser = true;
       this.form.get('generatedPassword').enable();

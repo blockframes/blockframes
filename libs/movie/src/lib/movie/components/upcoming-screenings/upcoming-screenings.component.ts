@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
+import { orderBy, startAt, where } from 'firebase/firestore';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -14,6 +15,8 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/utils/apps';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
+import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'movie-screening',
@@ -54,17 +57,18 @@ export class UpcomingScreeningsComponent {
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     private movieService: MovieService,
+    private snackBar: MatSnackBar,
     @Inject(APP) private app: App
   ) {
 
     const now = new Date();
     const screenings$ = this.movie$.pipe(
-      map(movie => ref => ref
-        .where('isSecret', '==', false)
-        .where('meta.titleId', '==', movie.id)
-        .orderBy('end')
-        .startAt(now)
-      ),
+      map(movie => [
+        where('isSecret', '==', false),
+        where('meta.titleId', '==', movie.id),
+        orderBy('end'),
+        startAt(now)
+      ]),
       switchMap(q => this.eventService.queryByType(['screening'], q)),
       map((screenings: Event<Screening>[]) => screenings.sort(this.sortByDate).slice(0, 5)),
       shareReplay({ refCount: true, bufferSize: 1 })
@@ -84,6 +88,14 @@ export class UpcomingScreeningsComponent {
   askForInvitation(events: Event[]) {
     const event = events[this.sessionCtrl.value];
     this.invitationService.request(event.ownerOrgId).to('attendEvent', event.id);
+    this.snackBar.openFromComponent(SnackbarLinkComponent, {
+      data: {
+        message: 'You are now registred for this session',
+        link: ['/event/', event.id, 'r', 'i'],
+        linkName: 'SEE DETAILS'
+      },
+      duration: 6000
+    });
   }
 
   private sortByDate(a: Event, b: Event): number {

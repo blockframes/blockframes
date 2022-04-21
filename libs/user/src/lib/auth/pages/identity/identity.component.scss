@@ -1,4 +1,4 @@
-@import "~@angular/flex-layout/mq";
+@import "@angular/flex-layout/mq";
 
 :host {
   min-height: 100vh;
@@ -30,6 +30,7 @@ section {
   margin: auto;
   width: 50%;
   h1 {
+    margin-top: 24px;
     margin-bottom: 8px;
   }
 
@@ -103,10 +104,6 @@ button[app-logo] {
   left: 24px;
   background: none;
   border: none;
-}
-
-.custom-snackbar-message a {
-  font-weight: bold;
 }
 
 span {

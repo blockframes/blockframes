@@ -1,4 +1,4 @@
-@import '~@angular/flex-layout/mq';
+@import '@angular/flex-layout/mq';
 
 :host {
   display: block;
@@ -30,7 +30,6 @@ header {
     }
     article {
       max-width: 50%;
-      margin-left: 24px;
       h4 {
         margin-bottom: 0;
         text-transform: uppercase;
@@ -48,24 +47,34 @@ header {
   }
 }
 
-nav {
-  margin: 0 24px;
-}
-
-.org-info {
-  margin-left: 25px;
-}
-
-
 @include layout-bp(sm) {
   header, section {
     padding: 0 100px
   }
 }
 
+@include layout-bp(gt-xs) {
+  .org-info {
+    margin-left: 24px;
+    article{
+      margin-left: 24px;
+    }
+  }
+  nav {
+    margin: 0 24px;
+  }
+}
+
 @include layout-bp(xs) {
   header, section {
     padding: 0px;
+  }
+  header {
+    text-align: center;
+    padding-bottom: 24px;
+    img {
+      width: 40%;
+    }
   }
 }
 

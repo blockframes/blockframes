@@ -17,11 +17,11 @@
     </ng-container>
 
     <ng-container *ngSwitchCase="'request'">
-      <h1>What access are your looking for ?</h1>
+      <h1>You need to specify your access.</h1>
       <p class="mat-body-1">
         To access {{ currentApp | appName }}, please select a "role". It will determine the features you can acccess once you've joined the platform.
       </p>
-      <p class="mat-body-2">N.B.: All members from your company will be granted the same access.</p>
+      <p class="mat-body-2">N.B.: All members from your company will also get granted access to {{ currentApp | appName }}.</p>
 
       <article fxLayout fxLayoutAlign="space-between center" fxLayout.lt-md="column">
         <label fxLayout>

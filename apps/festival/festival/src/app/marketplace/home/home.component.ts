@@ -6,7 +6,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
 
 // env
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { doc, docData, DocumentReference, Firestore } from '@angular/fire/firestore';
 import { CmsPage } from '@blockframes/admin/cms/template';
 import { AuthService } from '@blockframes/auth/+state';
 import { createPreferences } from '@blockframes/model';
@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   constructor(
     private dynTitle: DynamicTitleService,
-    private db: AngularFirestore,
+    private db: Firestore,
     private dialog: MatDialog,
     private authService: AuthService,
     private orgService: OrganizationService
@@ -47,7 +47,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     this.dynTitle.setPageTitle('Home');
-    this.page$ = this.db.doc<CmsPage>('cms/festival/home/live').valueChanges().pipe(
+    const ref = doc(this.db, 'cms/festival/home/live') as DocumentReference<CmsPage>;
+    this.page$ = docData<CmsPage>(ref).pipe(
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
 

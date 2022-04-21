@@ -35,7 +35,7 @@
     <mat-card *ngIf="!disableCropper">
       <mat-card-header>
         <mat-card-title class="title">Company Logo</mat-card-title>
-        <mat-card-subtitle class="mat-caption">Upload your Logo</mat-card-subtitle>
+        <mat-card-subtitle class="mat-caption">Please upload your company logo.</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content fxLayout="column">
         <image-uploader ratio="square" [meta]="['orgs', 'logo', orgId]" [form]="form.logo" (selectionChange)="change()" listenToChanges>

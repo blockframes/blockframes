@@ -1,13 +1,17 @@
 ﻿module.exports = {
   name: 'consents',
   preset: '../../jest.preset.js',
-
   globals: {
     'ts-jest': {
       stringifyContentPathRegex: '\\.(html|svg)$',
       tsconfig: '<rootDir>/tsconfig.spec.json',
     },
   },
+  transform: {
+    '^.+.(ts|mjs|js|html)$': 'jest-preset-angular'
+  },
+  testEnvironment: '<rootDir>/jest-environment.js',
+  transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory: '../../coverage/libs/consents',
   snapshotSerializers: [

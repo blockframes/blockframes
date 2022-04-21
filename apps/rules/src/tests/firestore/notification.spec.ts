@@ -1,4 +1,5 @@
-﻿import { apps, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+﻿import { assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
+import { deleteApp, getApps } from 'firebase/app';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 
 describe('Notification Rules Tests', () => {
@@ -8,10 +9,10 @@ describe('Notification Rules Tests', () => {
 
   describe('With User not in TO field', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-user2', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-user2', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should not allow user to read notification if not marked to', async () => {
       const notifRef = db.doc(existingNotif);
@@ -41,10 +42,10 @@ describe('Notification Rules Tests', () => {
 
   describe('With User in TO field', () => {
     beforeAll(async () => {
-      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, { uid: 'uid-c8', firebase: { sign_in_provider: 'password' } });
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-c8', { firebase: { sign_in_provider: 'password' } });
     });
 
-    afterAll(() => Promise.all(apps().map((app) => app.delete())));
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should allow user to read notification', async () => {
       const notifRef = db.doc('notifications/001');
