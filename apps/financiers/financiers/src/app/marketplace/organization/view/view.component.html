@@ -1,9 +1,10 @@
 <ng-container *ngIf="org$ | async as org">
   <org-view [org]="org" [navLinks]="navLinks">
     <ng-container *ngIf="org.email">
-      <a mat-stroked-button color="primary"
+      <a mat-stroked-button color="accent"
         [href]="'mailto:' + org.email + '?subject=Contact%20request%20via%20Media%20Financiers'">
         <span>Contact Partner</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>
     </ng-container>
   </org-view>
