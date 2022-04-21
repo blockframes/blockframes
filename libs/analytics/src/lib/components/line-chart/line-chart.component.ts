@@ -121,7 +121,7 @@ export class LineChartComponent {
     if (!data?.length) {
       this.chart?.updateSeries([]);
       this.isLoading = false;
-    return;
+      return; 
     }
 
     const analytics = data.sort((a, b) => a._meta.createdAt.getTime() - b._meta.createdAt.getTime());
