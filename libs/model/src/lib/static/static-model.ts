@@ -228,6 +228,19 @@ export const movieCurrencies = {
   NZD: 'New Zealand Dollar'
 } as const
 
+export const movieCurrenciesSymbols = {
+  USD: '$',
+  EUR: '€',
+  JPY: '¥',
+  GBP: '£',
+  AUD: 'A$',
+  CAD: 'C$',
+  CHF: 'F',
+  CNY: '¥',
+  SEK: 'kr',
+  NZD: 'NZ$'
+} as const;
+
 export const movieFormat = {
   '1_33': '1.33',
   '1_37': '1.37',
@@ -1250,6 +1263,7 @@ export const staticModel = {
   medias,
   memberStatus,
   movieCurrencies,
+  movieCurrenciesSymbols,
   movieFormat,
   movieFormatQuality,
   movieLanguageTypes,
