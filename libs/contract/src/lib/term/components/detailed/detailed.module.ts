@@ -4,7 +4,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { DetailedTermsComponent } from './detailed.component';
 import { ToLabelModule } from '@blockframes/utils/pipes';
-import { GlobalModalModule } from '@blockframes/ui/modal/modal.module';
+import { MediaToRightsModule } from './mediaToRights.pipe';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,7 +21,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
-    MatDialogModule
+    MatDialogModule,
+    MediaToRightsModule
   ],
   exports: [DetailedTermsComponent],
   declarations: [DetailedTermsComponent]
