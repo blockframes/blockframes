@@ -15,7 +15,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
-import { OpenPreviewModule } from '@blockframes/ui/open-preview/open-preview.module'
+import { OpenPreviewModule } from '@blockframes/ui/open-preview/open-preview.module';
 
 // Blockframes Utils
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
@@ -47,7 +47,6 @@ import { SummaryShootingInformationComponent } from './shooting-information/shoo
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
 
-
 @NgModule({
   declarations: [
     SummaryMainComponent,
@@ -71,7 +70,6 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
     TunnelPageModule,
     DownloadPipeModule,
     StorageFileModule,
-
 
     MissingControlModule,
     ToLabelModule,
