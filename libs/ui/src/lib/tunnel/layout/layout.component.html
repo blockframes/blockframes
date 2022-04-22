@@ -34,13 +34,13 @@
     <!-- Previous / Next -->
     <footer fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="center center" class="footnote">
       <ng-container *ngIf="previous$ | async as previous">
-        <a test-id="back" mat-button color="accent" [routerLink]="previous.path" fxLayoutAlign="center center">
+        <a test-id="back" mat-button color="primary" [routerLink]="previous.path" fxLayoutAlign="center center">
           <mat-icon svgIcon="arrow_back"></mat-icon>
           <span>Back</span>
         </a>
       </ng-container>
       <ng-container *ngIf="next$ | async as next">
-        <a test-id="next" mat-flat-button color="accent" [routerLink]="next.path" fxLayoutAlign="center center">
+        <a test-id="next" mat-flat-button color="primary" [routerLink]="next.path" fxLayoutAlign="center center">
           <span>Next</span>
           <mat-icon svgIcon="arrow_forward"></mat-icon>
         </a>
