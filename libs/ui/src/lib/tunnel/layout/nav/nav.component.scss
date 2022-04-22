@@ -1,5 +1,5 @@
-.align-icon ::ng-deep .mat-list-item-content { 
-  padding: 0 4px !important; 
+.mat-list-base mat-icon { 
+  margin-left: 0; 
 }
 
 .mat-expansion-panel-header-title {
@@ -12,6 +12,7 @@
     mat-panel-title {
       mat-icon.margin-override {
         margin-right: 8px;
+        margin-left: 4px
       }
     }
   }
