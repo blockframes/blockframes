@@ -132,7 +132,7 @@
           }
         }
       },
-      "tags": ["node"]
+      "tags": ["node", "cloud"]
     },
     "backend-ops": {
       "root": "apps/backend-ops",
@@ -362,7 +362,7 @@
           "outputs": ["{options.outputFile}"]
         }
       },
-      "tags": ["browser"],
+      "tags": ["browser", "e2e"],
       "implicitDependencies": ["catalog"]
     },
     "cms": {
@@ -532,7 +532,7 @@
           "outputs": ["{options.outputFile}"]
         }
       },
-      "tags": ["browser"],
+      "tags": ["browser", "e2e"],
       "implicitDependencies": ["cms"]
     },
     "consents": {
@@ -758,7 +758,7 @@
           "outputs": ["{options.outputFile}"]
         }
       },
-      "tags": ["browser"],
+      "tags": ["browser", "e2e"],
       "implicitDependencies": ["crm"]
     },
     "e2e": {
@@ -782,7 +782,7 @@
           }
         }
       },
-      "tags": ["browser"]
+      "tags": ["browser", "e2e", "deprecated"]
     },
     "event": {
       "projectType": "library",
@@ -998,7 +998,7 @@
           "outputs": ["{options.outputFile}"]
         }
       },
-      "tags": ["browser"],
+      "tags": ["browser", "e2e"],
       "implicitDependencies": ["festival"]
     },
     "financiers": {
@@ -1173,7 +1173,7 @@
           "outputs": ["{options.outputFile}"]
         }
       },
-      "tags": ["browser"],
+      "tags": ["browser", "e2e"],
       "implicitDependencies": ["financiers"]
     },
     "firebase-utils": {
@@ -1562,7 +1562,7 @@
           "styleext": "scss"
         }
       },
-      "tags": ["shared"]
+      "tags": ["browser", "deprecated"]
     }
   }
 }
