@@ -29,7 +29,7 @@ export class CookieDialogComponent {
       minWidth: '80vw',
       minHeight: '80vh',
       data: {
-        modelExit: () => this.dialog.closeAll()
+        onClose: () => this.dialog.closeAll()
       }
     });
   }

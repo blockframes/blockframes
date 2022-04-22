@@ -11,15 +11,13 @@ import { StorageFile } from '@blockframes/model';
 export class GlobalModalComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: { selectedFiles?: StorageFile[], modelExit?: () => void },
+    @Inject(MAT_DIALOG_DATA) private data: { selectedFiles?: StorageFile[], onClose?: () => void },
     public dialogRef: MatDialogRef<GlobalModalComponent>,
   ) { }
 
   public close(): void {
     if (this.data?.selectedFiles) return this.dialogRef.close(this.data.selectedFiles);
-    if (this.data?.modelExit) {
-      this.data.modelExit();
-    }
-    this.dialogRef.close(false);
+    if (this.data?.onClose) return this.data.onClose();
+    return this.dialogRef.close(false);
   }
 }

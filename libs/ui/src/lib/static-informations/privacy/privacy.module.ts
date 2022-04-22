@@ -4,8 +4,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -17,8 +15,6 @@ import { PrivacyPolicyTextModule } from '@blockframes/auth/components/privacy-po
   declarations: [PrivacyComponent],
   imports: [
     CommonModule,
-    MatCardModule,
-    FlexLayoutModule,
     MatIconModule,
     MatButtonModule,
     PrivacyPolicyTextModule,

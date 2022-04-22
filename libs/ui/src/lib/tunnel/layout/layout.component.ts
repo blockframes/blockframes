@@ -99,8 +99,6 @@ export class TunnelLayoutComponent implements OnInit {
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
   @ViewChild(MatSidenav) sidenav: MatSidenav;
 
-  @ContentChild('confirmExit') confirmExitTemplate: TemplateRef<unknown>
-
   @Input() steps: TunnelStep[];
 
   /** Fallback link to redirect on exit */
