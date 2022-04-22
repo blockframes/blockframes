@@ -19,7 +19,8 @@ import {
   MailTerm,
   staticModel,
   NegotiationDocument,
-  createMailTerm
+  createMailTerm,
+  SlateEventDocument
 } from '@blockframes/model';
 import { AccessibilityTypes, ContractDocument, Offer, movieCurrencies, movieCurrenciesSymbols } from '@blockframes/model';
 import { toIcsFile } from "../agenda/utils";
@@ -191,8 +192,9 @@ function getEventEmailAttachment(event: EventDocument<EventMeta>, orgName: strin
 }
 
 function createIcsFromEventDocument(e: EventDocument<EventMeta>, orgName: string): IcsEvent {
-  if (!['meeting', 'screening'].includes(e.type)) return;
-  const event = e.type == 'meeting' ? e as MeetingEventDocument : e as ScreeningEventDocument;
+  if (!['meeting', 'screening', 'slate'].includes(e.type)) return;
+  const event = e.type == 'meeting' ? e as MeetingEventDocument : 
+    e.type == 'screening' ? e as ScreeningEventDocument : e as SlateEventDocument;
 
   return {
     id: event.id,

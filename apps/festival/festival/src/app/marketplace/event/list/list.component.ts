@@ -8,7 +8,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { FormList } from '@blockframes/utils/form';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { orderBy, startAt, where } from 'firebase/firestore';
-import { Event, Screening, AlgoliaOrganization } from '@blockframes/model';
+import { Event, Screening, AlgoliaOrganization, isSlate, isScreening, Slate } from '@blockframes/model';
 
 @Component({
   selector: 'festival-event-list',
@@ -18,7 +18,7 @@ import { Event, Screening, AlgoliaOrganization } from '@blockframes/model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
-  public events$: Observable<Event<Screening>[]>;
+  public events$: Observable<Event<Screening | Slate>[]>;
   public searchForm = FormList.factory<AlgoliaOrganization>([]);
 
   trackById = (i: number, doc: { id: string }) => doc.id;
@@ -33,23 +33,26 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     const orgIds$ = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value));
     const query = [
-      where('type', '==', 'screening'),
+      where('type', 'in', ['screening', 'slate']),
       where('isSecret', '==', false),
       orderBy('end'),
       startAt(new Date())
     ];
-    const events$ = this.service.valueChanges(query) as Observable<Event<Screening>[]>;
+    const events$ = this.service.valueChanges(query) as Observable<Event<Screening | Slate>[]>;
 
     this.events$ = combineLatest([events$, orgIds$]).pipe(
       map(([events, orgs]) => this.filterByOrgIds(events, orgs.map(org => org.objectID))),
       // We can't filter by meta.titleId directly in the query because range and not equals comparisons must all filter on the same field
-      map(events => events.filter(event => !!event.meta.titleId)),
+      map(events => events.filter(event => 
+        (isScreening(event) && event.meta.titleId) || 
+        (isSlate(event) && event.meta.videoId)
+      )),
       tap(events => this.setTitle(events.length)),
       shareReplay({ bufferSize: 1, refCount: true })
     )
   }
 
-  filterByOrgIds(events: Event<Screening>[], orgIds: string[]) {
+  filterByOrgIds(events: Event<Screening | Slate>[], orgIds: string[]) {
     if (!orgIds.length) return events;
     return events.filter(event => orgIds.includes(event.ownerOrgId));
   }

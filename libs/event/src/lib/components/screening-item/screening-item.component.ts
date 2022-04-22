@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef, OnInit } from '@angular/core';
 import { InvitationService } from '@blockframes/invitation/+state';
-import { Invitation, ScreeningEvent } from '@blockframes/model';
+import { EventTypesToDisplay, Invitation, ScreeningEvent } from '@blockframes/model';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { fade } from '@blockframes/utils/animations/fade';
@@ -21,7 +21,7 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
 
   public invitation: Invitation;
   public requestSent = false;
-
+  public typesToDisplay = EventTypesToDisplay;
   @Input() set event(screening: ScreeningEvent) {
     this._event.next(screening);
   }

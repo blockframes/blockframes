@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService } from '@blockframes/auth/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { EventForm } from '../event.form';
-import { Event, Meeting, Screening, Slate, AccessibilityTypes } from '@blockframes/model';
+import { Event, Meeting, Screening, Slate, AccessibilityTypes, EventTypesToDisplay } from '@blockframes/model';
 
 @Component({
   selector: 'event-create',
@@ -15,6 +15,7 @@ export class EventCreateComponent {
   types: string[];
   form: EventForm;
   accessibility: AccessibilityTypes;
+  typesToDisplay = EventTypesToDisplay;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) data: { event: Event, types: string[] },

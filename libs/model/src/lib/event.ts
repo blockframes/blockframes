@@ -11,6 +11,13 @@ import { Timestamp } from './timestamp';
 
 // Event types
 export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local' | 'slate';
+export const EventTypesToDisplay = {
+  meeting: 'Meeting',
+  screening: 'Screening',
+  slate: 'Slate Presentation',
+  standard: 'Standard',
+  local: 'Local'
+};
 export type EventMeta = Meeting | Screening | unknown;
 
 export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended';

@@ -16,7 +16,7 @@
         </ng-container>
       </div>
       <h5>
-        <span>{{ event.accessibility | toLabel:'accessibility' }} Screening</span>
+        <span>{{ event.accessibility | toLabel:'accessibility' }} {{ typesToDisplay[event.type] }}</span>
         <event-agenda-export [event]="event"></event-agenda-export>
       </h5>
       <pre class="mat-body-1">{{ event | eventRange }}</pre>
