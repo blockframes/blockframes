@@ -6,8 +6,12 @@
 .row {
   display: flex;
   width: 100%;
-  overflow: hidden;
+  overflow: overlay; // Cannot scroll if overflow hidden on Safari
   scroll-behavior: smooth;
+}
+
+.row::-webkit-scrollbar {
+  height: 0; // Hide scrollbar this way instead of overflow hidden
 }
 
 .direction {
