@@ -2,6 +2,20 @@ import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/cor
 import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+interface ConfirmationData {
+  title?: string,
+  subtitle?: string,
+  text?: string,
+  warning?: string,
+  simulation?: string[],
+  placeholder?: string,
+  confirmationWord: string,
+  confirmButtonText: string,
+  cancelButtonText?: string,
+  onConfirm?: () => void
+}
+
 @Component({
   selector: 'blockframes-confirm-input',
   templateUrl: './confirm-input.component.html',
@@ -14,18 +28,7 @@ export class ConfirmInputComponent implements OnInit {
   public isValid = false;
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: {
-      title?: string,
-      subtitle?: string,
-      text?: string,
-      warning?: string,
-      simulation?: string[],
-      placeholder?: string,
-      confirmationWord: string,
-      confirmButtonText: string,
-      cancelButtonText?: string,
-      onConfirm?: () => void
-    },
+    public data: ConfirmationData,
     public dialogRef: MatDialogRef<ConfirmInputComponent>,
     private snackbar: MatSnackBar
   ) {

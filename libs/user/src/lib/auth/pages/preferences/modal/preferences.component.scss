@@ -1,8 +1,7 @@
-:host {
-  display: block;
-  max-width: 560px;
+mat-dialog-content {
+  text-align: center;
 }
 
-h1, p {
-  text-align: center;
+p {
+  max-width: 70%;
 }
