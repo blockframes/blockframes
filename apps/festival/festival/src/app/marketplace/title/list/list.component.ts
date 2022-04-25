@@ -12,7 +12,7 @@ import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } 
 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
 import type { StoreStatus } from '@blockframes/model';
-import { AlgoliaMovie } from '@blockframes/utils/algolia/algolia.interfaces';
+import { AlgoliaMovie } from '@blockframes/model';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';

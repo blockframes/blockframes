@@ -13,7 +13,8 @@ import {
   createInvitation,
   Invitation,
   InvitationDocument,
-  InvitationStatus
+  InvitationStatus,
+  AlgoliaOrganization
 } from '@blockframes/model';
 import { toDate } from '@blockframes/utils/helpers';
 import { cleanInvitation } from '../invitation-utils';
@@ -26,7 +27,6 @@ import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { APP } from '@blockframes/utils/routes/utils';
-import { AlgoliaOrganization } from '@blockframes/utils/algolia/algolia.interfaces';
 import { subMonths } from 'date-fns';
 
 interface InvitationState extends EntityState<Invitation>, ActiveState<string> { }
@@ -44,7 +44,7 @@ export class InvitationService extends CollectionService<InvitationState> {
    * Return a boolean or a PublicOrganization doc if there is an invitation linked to the email.
    * Return false if there is no invitation at all.
    */
-  public getInvitationLinkedToEmail = httpsCallable<string, boolean | AlgoliaOrganization> (this.functions, 'getInvitationLinkedToEmail'); 
+  public getInvitationLinkedToEmail = httpsCallable<string, boolean | AlgoliaOrganization>(this.functions, 'getInvitationLinkedToEmail');
 
   /**
    * Used to accept or decline invitation if user is logged in as anonymous

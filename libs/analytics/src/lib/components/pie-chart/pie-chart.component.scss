@@ -5,7 +5,6 @@
 
 header {
   display: flex;
-  align-items: center;
   gap: 8px;
 }
 
@@ -20,4 +19,8 @@ img {
 
 button {
   margin-left: auto;
+}
+
+mat-spinner {
+  margin: auto;
 }

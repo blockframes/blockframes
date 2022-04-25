@@ -257,7 +257,7 @@ async function loadDb(db: FirebaseFirestore.Firestore) {
     }
 
     // Go through each document of the collection for backup
-    const promises = q.docs.map(async (doc: QueryDocumentSnapshot) => {
+    await runChunks(q.docs, async (doc: QueryDocumentSnapshot) => {
       // Store the data
       const docPath: string = doc.ref.path;
       const content: any = doc.data();
@@ -268,10 +268,8 @@ async function loadDb(db: FirebaseFirestore.Firestore) {
       // Adding the current path to the subcollections to backup
       const subCollections = await doc.ref.listCollections();
       subCollections.forEach((x) => processingQueue.push(x.path));
-    });
+    }, 1000);
 
-    // Wait for this backup to complete
-    await Promise.all(promises);
     // This console.log is here to avoid "Too long with no output (exceeded 10m0s): context deadline exceeded" error from CircleCi
     console.log('Loading Firestore. Please wait ...');
   }

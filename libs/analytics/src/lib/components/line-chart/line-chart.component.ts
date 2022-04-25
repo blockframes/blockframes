@@ -61,6 +61,7 @@ const dateFunctions: Record<Period, Record<'interval' | 'isSame', any>> = {
 })
 export class LineChartComponent {
   @ViewChild("chart") chart: ChartComponent;
+  isLoading = true;
 
   period?: Period;
   lineChartOptions: LineChartOptions = {
@@ -119,7 +120,8 @@ export class LineChartComponent {
   @Input() set data(data: Analytics[]) {
     if (!data?.length) {
       this.chart?.updateSeries([]);
-      return;
+      this.isLoading = false;
+      return; 
     }
 
     const analytics = data.sort((a, b) => a._meta.createdAt.getTime() - b._meta.createdAt.getTime());
