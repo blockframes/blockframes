@@ -98,17 +98,18 @@ export class TunnelLayoutComponent implements OnInit {
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
   @ViewChild(MatSidenav) sidenav: MatSidenav;
-  @ContentChild('confirmExit') confirmExitTemplate: TemplateRef<unknown>
-  @Input() exitRedirect: string;
+  
   @Input() set steps(steps: TunnelStep[]) {
     this._steps = steps;
     this.steps$.next(steps);
   }
-
-  private routeBeforeTunnel: string;
+  
   private _steps: TunnelStep[] = [];
-  /** Fallback link to redirect on exit */
+  
+  private routeBeforeTunnel: string;
 
+  /** Fallback link to redirect on exit */
+  @Input() exitRedirect: string;
 
   redirect() {
     this.router.navigate([this.routeBeforeTunnel], { relativeTo: this.route });
