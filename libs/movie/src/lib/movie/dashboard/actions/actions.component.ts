@@ -6,8 +6,8 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { App, appName, getMovieAppAccess } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { APP } from '@blockframes/utils/routes/utils';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 @Directive({ selector: 'movie-action-menu, [movieActionMenu]' })
 export class MovieActionMenuDirective {}
@@ -61,7 +61,7 @@ export class DashboardActionsShellComponent {
           const ref = this.snackbar.open('Title deleted.', '', { duration: 4000 });
           ref.afterDismissed().subscribe(() => this.router.navigate(['/c/o/dashboard/title']));
         },
-      },
+      }
     });
   }
 

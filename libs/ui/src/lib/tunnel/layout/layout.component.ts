@@ -24,6 +24,7 @@ import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import type { ShellConfig } from '@blockframes/movie/form/movie.shell.interfaces';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { FormSaveOptions } from "@blockframes/utils/common-interfaces";
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
 /**
  * @description returns the next or previous page where the router should go to
@@ -97,8 +98,8 @@ export class TunnelLayoutComponent implements OnInit {
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
   @ViewChild(MatSidenav) sidenav: MatSidenav;
-
   @ContentChild('confirmExit') confirmExitTemplate: TemplateRef<unknown>
+  @Input() exitRedirect: string;
   @Input() set steps(steps: TunnelStep[]) {
     this._steps = steps;
     this.steps$.next(steps);
@@ -107,7 +108,6 @@ export class TunnelLayoutComponent implements OnInit {
   private routeBeforeTunnel: string;
   private _steps: TunnelStep[] = [];
   /** Fallback link to redirect on exit */
-  @Input() exitRedirect: string;
 
 
   redirect() {
@@ -147,9 +147,16 @@ export class TunnelLayoutComponent implements OnInit {
     if (isPristine) {
       return of(true);
     }
-    const dialogRef = this.dialog.open(this.confirmExitTemplate, {
-      width: '80%'
-    });
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      data: {
+        title: 'You are about to leave the form.',
+        question: 'Some changes have not been saved.',
+        advice: 'If you leave now, you will lose these changes.',
+        confirm: 'Save & Exit',
+        cancel: 'Close without saving'
+      },
+      autoFocus: false,
+    })
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {
         /* Undefined means user clicked on the backdrop, meaning just close the modal */

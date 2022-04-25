@@ -7,6 +7,7 @@ import { TunnelLayoutComponent } from './layout.component';
 import { TunnelNavComponent, StepActivePipe } from './nav/nav.component';
 import { TunnelStepStatComponent } from './step-stat/step-stat.component';
 import { UploadWidgetModule } from '@blockframes/media/file/upload-widget/upload-widget.module';
+import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -36,6 +37,7 @@ import { MatDividerModule } from '@angular/material/divider';
     RouterModule,
     FlexLayoutModule,
     UploadWidgetModule,
+    ConfirmModule,
     // Material
     MatToolbarModule,
     MatIconModule,
