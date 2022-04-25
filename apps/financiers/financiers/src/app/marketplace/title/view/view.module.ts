@@ -2,11 +2,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { MarketplaceMovieViewComponent } from './view.component';
-import { MovieModalModule } from '../modal/modal.module';
+import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
 
 // Custom Modules
 import { MovieShellModule } from '@blockframes/movie/marketplace/shell/shell.module';
@@ -16,7 +17,6 @@ import { OrgChipModule } from '@blockframes/organization/components/chip/chip.mo
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { CampaignProgressModule } from '@blockframes/campaign/components/progress/progress.module';
-
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -74,6 +74,7 @@ const routes = [
   declarations: [MarketplaceMovieViewComponent],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     MovieShellModule,
     ImageModule,
@@ -82,7 +83,6 @@ const routes = [
     WishlistButtonModule,
     PromotionalLinksModule,
     CampaignProgressModule,
-    MovieModalModule,
     // Material
     MatDialogModule,
     MatButtonModule,
@@ -91,6 +91,7 @@ const routes = [
     MatInputModule,
     MatSelectModule,
     MatSnackBarModule,
+    SnackbarErrorModule,
     // Routes
     RouterModule.forChild(routes)
   ]
