@@ -761,6 +761,29 @@
       "tags": ["browser", "e2e"],
       "implicitDependencies": ["crm"]
     },
+    "devops": {
+      "root": "libs/devops",
+      "sourceRoot": "libs/devops/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/devops/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/devops"],
+          "options": {
+            "jestConfig": "libs/devops/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": ["node", "local"]
+    },
     "e2e": {
       "projectType": "library",
       "root": "libs/e2e",
