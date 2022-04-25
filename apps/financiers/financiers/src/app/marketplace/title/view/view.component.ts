@@ -3,7 +3,7 @@ import { getCurrencySymbol } from '@angular/common';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
-import { Organization } from '@blockframes/model';
+import { Campaign, Movie, Organization } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { CampaignService } from '@blockframes/campaign/+state';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
@@ -19,6 +19,7 @@ import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils'
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { supportMailosaur } from '@blockframes/utils/constants';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { MarketplaceMovieModalComponent } from '../modal/modal.component';
 
 interface EmailData {
   subject: string;
@@ -47,8 +48,7 @@ export class MarketplaceMovieViewComponent {
   );
 
   public campaign$ = this.movie$.pipe(
-    switchMap(movie => this.campaignService.valueChanges(movie.id)),
-    tap(campaign => this.currency = campaign.currency)
+    switchMap(movie => this.campaignService.valueChanges(movie.id))
   );
 
   public currency: string;
@@ -89,7 +89,7 @@ export class MarketplaceMovieViewComponent {
     public router: Router
   ) { }
 
-  openForm(orgs: Organization[]) {
+  openForm(orgs: Organization[], movie: Movie) {
     const form = new FormGroup({
       subject: new FormControl('', Validators.required),
       scope: new FormGroup({
@@ -98,8 +98,16 @@ export class MarketplaceMovieViewComponent {
       }),
       message: new FormControl(),
     });
-    this.dialog.open(this.dialogTemplate, {
-      data: { orgs, form }
+    this.dialog.open(MarketplaceMovieModalComponent, {
+      data: {
+        orgs,
+        form,
+        movie,
+        campaign: this.movie$.pipe(
+          switchMap(movie => this.campaignService.valueChanges(movie.id))
+        ),
+        onSend: this.sendEmail
+      }
     });
   }
 
