@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { map } from "rxjs/operators";
 // Blockframes
 import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie } from "@blockframes/model";
-import { MovieService } from "@blockframes/movie/+state/movie.service";
+import { fromOrgAndAccepted, MovieService } from "@blockframes/movie/+state/movie.service";
 import { App } from "@blockframes/utils/apps";
 import { APP } from "@blockframes/utils/routes/utils";
 import { joinWith } from "@blockframes/utils/operators";
@@ -11,6 +11,7 @@ import { EventService } from "@blockframes/event/+state";
 import { Event } from '@blockframes/model'
 import { where } from "firebase/firestore";
 import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
+import { OrganizationService } from "@blockframes/organization/+state";
 
 interface AggregatedPerTitle extends AggregatedAnalytic {
   screenings: number;
@@ -44,7 +45,7 @@ function countAnalytics(title: Movie & { analytics?: Analytics[], events?: Event
 })
 export class TitlesAnalyticsComponent {
 
-  titlesAnalytics$ = this.service.queryDashboard(this.app).pipe(
+  titlesAnalytics$ = this.service.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
     joinWith({
       analytics: title => this.analytics.getTitleAnalytics({ titleId: title.id }),
       events: title => this.eventService.valueChanges([
@@ -61,6 +62,7 @@ export class TitlesAnalyticsComponent {
     private router: Router,
     private service: MovieService,
     private eventService: EventService,
+    private orgService: OrganizationService,
     @Inject(APP) public app: App
   ) {}
 

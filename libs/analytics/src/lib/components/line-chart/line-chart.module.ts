@@ -7,6 +7,7 @@ import { LineChartComponent } from './line-chart.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
 
     MatIconModule,
     MatButtonModule,
+    MatProgressSpinnerModule
   ],
   declarations: [LineChartComponent],
   exports: [LineChartComponent]

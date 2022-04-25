@@ -1,18 +1,6 @@
-import { algolia } from '@env';
-import {
-  Territory,
-  Genre,
-  Language,
-  StoreStatus,
-  ProductionStatus,
-  OrgActivity,
-  ContentType,
-  MovieRunningTime,
-  MovieRelease,
-  MovieLanguageSpecification
-} from '@blockframes/model';
-import { Module, ModuleAccess } from '../apps';
-export { SearchResponse } from '@algolia/client-search';
+import { Module, ModuleAccess } from '@blockframes/utils/apps';
+import { MovieLanguageSpecification, MovieRunningTime, MovieRelease } from './movie';
+import { Genre, Language, Territory, ProductionStatus, StoreStatus, OrgActivity, ContentType } from './static';
 
 export interface AlgoliaConfig {
   searchableAttributes: string[];
@@ -65,23 +53,6 @@ export interface MovieIndexFilters {
   budget?: number;
   minPledge?: number;
 }
-
-/** A simple map to access the index name */
-export const algoliaIndex = {
-  user: algolia.indexNameUsers,
-  org: {
-    financiers: algolia.indexNameOrganizations.financiers,
-    festival: algolia.indexNameOrganizations.festival,
-    catalog: algolia.indexNameOrganizations.catalog,
-  },
-  movie: {
-    financiers: algolia.indexNameMovies.financiers,
-    catalog: algolia.indexNameMovies.catalog,
-    festival: algolia.indexNameMovies.festival,
-  },
-};
-
-export type AlgoliaIndex = keyof typeof algoliaIndex;
 
 ///// TYPES //////
 

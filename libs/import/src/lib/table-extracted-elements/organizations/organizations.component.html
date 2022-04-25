@@ -99,7 +99,7 @@
     <th mat-header-cell *matHeaderCellDef> Actions </th>
     <td mat-cell *matCellDef="let element">
       <ng-container *ngIf="mode === 'update' else create">
-        <button mat-flat-button color="accent" [disabled]="errorCount(element) > 0"
+        <button mat-flat-button color="primary" [disabled]="errorCount(element) > 0"
         (click)="updateOrg(element)">Update<mat-icon svgIcon="access_time"></mat-icon></button>
       </ng-container>
       <ng-template #create>
