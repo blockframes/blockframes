@@ -1,7 +1,7 @@
 import { ContractService } from "@blockframes/contract/contract/+state/contract.service";
 import {
   adminOnlyWarning, alreadyExistError, ImportLog, checkParentTerm, getContract,
-  getOrgId, getTitleId, getUser, ImportError, mandatoryError, titleDoesNotExistError,
+  getOrgId, getTitleId, getUser, ImportError, mandatoryError, noTitleError,
   unknownEntityError, unusedMandateIdWarning, wrongValueError, LogOption, wrongTemplateKindError
 } from "@blockframes/import/utils";
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
@@ -266,7 +266,7 @@ export function getContractConfig(option: ContractConfig) {
         /* a */ 'contract.titleId': async (value: string) => {
         if (!value) throw mandatoryError(value, 'Title');
         const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, blockframesAdmin);
-        if (!titleId) throw titleDoesNotExistError(value);
+        if (!titleId) throw noTitleError(value);
         return titleId;
       },
         /* b */ 'contract.sellerId': async (value: string) => {

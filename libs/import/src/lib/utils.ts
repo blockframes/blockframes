@@ -95,15 +95,15 @@ export async function getTitleId(
   if (title) {
     if (isBlockframesAdmin) return memo(nameOrId, title);
     if (title.orgIds.includes(userOrgId)) return memo(nameOrId, title);
-    throw orgDoesNotPossesTitleError(nameOrId);
+    throw orgWithNoTitleError(nameOrId);
   }
   // nameOrId is the international title name
   const queryFn = isBlockframesAdmin
     ? [where('title.international', '==', nameOrId)]
     : [where('title.international', '==', nameOrId), where('orgIds', 'array-contains', userOrgId)];
   const titles = await titleService.getValue(queryFn);
-  if (!titles.length) throw titleDoesNotExistError(nameOrId);
-  if (titles.length !== 1) throw duplicateTitlesWithSameNameError(nameOrId);
+  if (!titles.length) throw noTitleError(nameOrId);
+  if (titles.length !== 1) throw sameTitleNameError(nameOrId);
   return memo(nameOrId, titles[0]);
 }
 
@@ -248,7 +248,7 @@ export function unknownEntityError<T = unknown>(value: T, name: string): ImportL
   return new ImportError(value, option);
 }
 
-export function titleDoesNotExistError(name: string): ImportLog<string> {
+export function noTitleError(name: string): ImportLog<string> {
   const option: LogOption = {
     name: 'Error on title name or ID',
     reason: `No title found with name/id "${name}".`,
@@ -257,7 +257,7 @@ export function titleDoesNotExistError(name: string): ImportLog<string> {
   return new ImportError(name, option);
 }
 
-export function duplicateTitlesWithSameNameError(name: string): ImportLog<string> {
+export function sameTitleNameError(name: string): ImportLog<string> {
   const option: LogOption = {
     name: 'Error on title name or ID',
     reason: `Multiple titles with name "${name}" found.`,
@@ -266,7 +266,7 @@ export function duplicateTitlesWithSameNameError(name: string): ImportLog<string
   return new ImportError(name, option);
 }
 
-export function orgDoesNotPossesTitleError(name: string): ImportLog<string> {
+export function orgWithNoTitleError(name: string): ImportLog<string> {
   const option: LogOption = {
     name: 'Error on title name or ID',
     reason: `${name} does not belong to your org`,
@@ -365,23 +365,6 @@ export abstract class ImportLog<T> extends Error {
     this.field = field;
     this.message = message;
   }
-}
-
-export class ImportError<T> extends ImportLog<T> {
-  public type = 'error' as const;
-}
-
-export class ImportWarning<T> extends ImportLog<T> {
-  public type = 'warning' as const;
-}
-
-export class WrongTemplateError<T> extends ImportLog<T> {
-  public type = 'error' as const;
-  /**
- * Should be used to indicate errors that should be shown
- * as the only error irrespective of the total number of errors.
- */
-  public onlyErrorShown = true;
 
   toJson() {
     return {
@@ -392,4 +375,21 @@ export class WrongTemplateError<T> extends ImportLog<T> {
       message: this.message,
     }
   }
+}
+
+export class ImportError<T> extends ImportLog<T> {
+  public readonly type = 'error';
+}
+
+export class ImportWarning<T> extends ImportLog<T> {
+  public readonly type = 'warning';
+}
+
+export class WrongTemplateError<T> extends ImportLog<T> {
+  public readonly type = 'error';
+  /**
+ * Should be used to indicate errors that should be shown
+ * as the only error irrespective of the total number of errors.
+ */
+  public onlyErrorShown = true;
 }
