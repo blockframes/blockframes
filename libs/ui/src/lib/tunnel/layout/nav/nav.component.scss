@@ -1,3 +1,7 @@
+.mat-list-base mat-icon { 
+  margin-left: 0; 
+}
+
 .mat-expansion-panel-header-title {
   font-size: 14px;
 }
@@ -8,8 +12,8 @@
     mat-panel-title {
       mat-icon.margin-override {
         margin-right: 8px;
+        margin-left: 4px
       }
     }
   }
 }
-

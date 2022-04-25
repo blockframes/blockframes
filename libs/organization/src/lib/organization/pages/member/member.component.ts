@@ -76,8 +76,8 @@ export class MemberComponent implements OnInit {
     try {
       this.dialog.open(ConfirmComponent, {
         data: {
-          title: `Are you sure?`,
-          question: `If you remove a member from you company, you will be able to invite this person again.`,
+          title: 'Are you sure?',
+          question: 'If you remove a member from you company, you will be able to invite this person again.',
           confirm: 'Yes, remove member.',
           cancel: 'No, keep member.',
           onConfirm: async () => {
