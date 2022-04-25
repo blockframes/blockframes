@@ -5,9 +5,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
   ViewChild,
-  ContentChild,
   Inject,
-  TemplateRef
 } from '@angular/core';
 import { fade } from '@blockframes/utils/animations/fade';
 import { TunnelStep, TunnelStepSnapshot } from '../tunnel.model';
