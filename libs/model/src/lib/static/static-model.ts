@@ -47,7 +47,7 @@ export const contentType = {
   tv: 'TV'
 }
 
-export const EventTypesToDisplay: Record<EventTypes, string> = {
+export const eventTypes: Record<EventTypes, string> = {
   meeting: 'Meeting',
   screening: 'Screening',
   slate: 'Slate Presentation',
@@ -1264,6 +1264,7 @@ export const staticModel = {
   contentType,
   crewRoles,
   directorCategory,
+  eventTypes,
   genres,
   hostedVideoTypes,
   invitationType,

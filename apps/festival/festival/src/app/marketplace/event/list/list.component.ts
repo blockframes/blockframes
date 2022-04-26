@@ -43,7 +43,7 @@ export class ListComponent implements OnInit {
     this.events$ = combineLatest([events$, orgIds$]).pipe(
       map(([events, orgs]) => this.filterByOrgIds(events, orgs.map(org => org.objectID))),
       // We can't filter by meta.titleId directly in the query because range and not equals comparisons must all filter on the same field
-      map(events => events.filter(event => hasMedia(event))),
+      map(events => events.filter(hasMedia)),
       tap(events => this.setTitle(events.length)),
       shareReplay({ bufferSize: 1, refCount: true })
     )

@@ -9,7 +9,7 @@
     <mat-label>Select Event Type</mat-label>
     <mat-select test-id="event-type" required formControlName="type" (selectionChange)="onTypeSelected($event)">
       <ng-container *ngFor="let type of types">
-        <mat-option [value]="type">{{ typesToDisplay[type] }}</mat-option>
+        <mat-option [value]="type">{{ type | toLabel: 'eventTypes' }}</mat-option>
       </ng-container>
     </mat-select>
   </mat-form-field>
