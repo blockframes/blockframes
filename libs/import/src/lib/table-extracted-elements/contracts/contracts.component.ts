@@ -156,7 +156,7 @@ export class TableExtractedContractsComponent implements OnInit {
           type: 'error',
           name: 'Contract',
           reason: 'The Terms of a Contract overlap with that of an already existing Mandate.',
-          hint: 'The Terms of a Contract overlap with that of an already existing Mandate.'
+          message: 'The Terms of a Contract overlap with that of an already existing Mandate.'
         });
         return false;
       }
@@ -165,7 +165,7 @@ export class TableExtractedContractsComponent implements OnInit {
           type: 'error',
           name: 'Contract',
           reason: 'The terms of the imported sale have been sold already.',
-          hint: 'The terms of the imported sale have been sold already.'
+          message: 'The terms of the imported sale have been sold already.'
         });
         return false;
       }
@@ -182,7 +182,7 @@ export class TableExtractedContractsComponent implements OnInit {
       type: 'error',
       name: 'Contract',
       reason: 'Contract already added',
-      hint: 'Contract already added'
+      message: 'Contract already added'
     });
     return true;
   }
