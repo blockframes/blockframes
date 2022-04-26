@@ -4,7 +4,7 @@
     <a app-logo [routerLink]="['/c/o', module]"></a>
     <!-- ATM there is no about page for festival and financiers -->
     <ng-container *ngIf="app === 'catalog'">
-      <a mat-button [routerLink]="['/c/o/'+module+'/about']">About Us</a>
+      <a mat-button [routerLink]="['/c/o/'+module+'/about']">About us</a>
     </ng-container>
 
     <a mat-button [routerLink]="['/c/o', module, 'contact']">Contact us</a>
