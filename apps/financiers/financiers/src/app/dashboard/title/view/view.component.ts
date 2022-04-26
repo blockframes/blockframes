@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CrossFieldErrorMatcher } from '@blockframes/utils/form/matchers';
@@ -8,6 +8,7 @@ import { pluck, switchMap } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { ActivatedRoute } from '@angular/router';
+import { TitleModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'financiers-dashboard-title-view',
@@ -16,7 +17,6 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleViewComponent {
-  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
   @ViewChild(DashboardTitleShellComponent) shell: DashboardTitleShellComponent;
 
   private dialogRef: MatDialogRef<unknown, unknown>;
@@ -69,13 +69,17 @@ export class TitleViewComponent {
   async openDialog() {
     const form = this.shell.getForm('campaign');
     const errorMatcher = new CrossFieldErrorMatcher();
-    this.dialogRef = this.dialog.open(this.dialogTemplate, {
+    this.dialogRef = this.dialog.open(TitleModalComponent, {
       minWidth: '50vw',
-      data: { form, errorMatcher }
+      data: {
+        form,
+        errorMatcher,
+        onSave: this.save
+      }
     });
   }
 
-  async save() {
+  save = async () => {
     this.dialogRef.close();
     await this.shell.getConfig('campaign').onSave();
     this.snackbar.open('The funding status has been updated.', null, { duration: 1000 });
