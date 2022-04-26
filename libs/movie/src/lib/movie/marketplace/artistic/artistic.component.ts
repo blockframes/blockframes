@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit, Pipe, PipeTransform } from 
 import { MovieNote } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { TitleMarketplaceShellComponent } from '../shell/shell.component';
+import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Component({
   selector: 'movie-artistic',
@@ -11,10 +12,12 @@ import { TitleMarketplaceShellComponent } from '../shell/shell.component';
 })
 export class ArtisticComponent implements OnInit {
   public movie$ = this.shell.movie$;
-
+  public ltMd$ = this.breakpointsService.ltMd;
+  
   constructor(
     private shell: TitleMarketplaceShellComponent,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    private breakpointsService: BreakpointsService,
   ) {}
 
   ngOnInit() {

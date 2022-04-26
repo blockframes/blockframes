@@ -5,19 +5,18 @@
     <h3>Cast Members</h3>
     <article grid>
       <ng-container *ngFor="let cast of movie.cast">
-        <title-credit-card [col]="3" [credit]="cast" type="cast"></title-credit-card>
+        <title-credit-card [col]="(ltMd$ | async) ? 4 : 3" [credit]="cast" type="cast"></title-credit-card>
       </ng-container>
     </article>
     
     <mat-divider></mat-divider>
   </section>
 
-
   <section *ngIf="movie.crew.length">
     <h3>Crew Members</h3>
     <article grid>
       <ng-container *ngFor="let crew of movie.crew">
-        <title-credit-card [col]="3" [credit]="crew" type="crew"></title-credit-card>
+        <title-credit-card [col]="(ltMd$ | async) ? 4 : 3" [credit]="crew" type="crew"></title-credit-card>
       </ng-container>
     </article>
 
