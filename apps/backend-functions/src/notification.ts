@@ -16,16 +16,18 @@ import {
   ContractDocument,
   Screening,
   NegotiationDocument,
-  Offer
+  Offer,
+  App,
+  appName
 } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
-import { 
-  emailErrorCodes, 
-  EventEmailData, 
-  getEventEmailData, 
-  getMovieEmailData, 
-  getOrgEmailData, 
-  getUserEmailData 
+import {
+  emailErrorCodes,
+  EventEmailData,
+  getEventEmailData,
+  getMovieEmailData,
+  getOrgEmailData,
+  getUserEmailData
 } from '@blockframes/utils/emails/utils';
 import {
   reminderEventToUser,
@@ -58,7 +60,7 @@ import {
   // offerAcceptedOrDeclined,
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
-import { App, applicationUrl, appName } from '@blockframes/utils/apps';
+import { applicationUrl } from '@blockframes/utils/apps';
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
 import { appUrl, supportEmails } from './environments/environment';
@@ -444,9 +446,9 @@ async function sendScreeningRequested(recipient: User, notification: Notificatio
   const toUser = getUserEmailData(recipient);
 
   const template = screeningRequestedToSeller(
-    toUser, 
-    getUserEmailData(requestor), 
-    getOrgEmailData(buyerOrg), 
+    toUser,
+    getUserEmailData(requestor),
+    getOrgEmailData(buyerOrg),
     movie
   );
   await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
@@ -545,11 +547,11 @@ async function sendMovieAskingPriceRequested(recipient: User, notification: Noti
 
   const app = notification._meta.createdFrom;
   const template = movieAskingPriceRequested(
-    toUser, 
-    buyer, 
-    getOrgEmailData(buyerOrg), 
-    getMovieEmailData(movie), 
-    territories, 
+    toUser,
+    buyer,
+    getOrgEmailData(buyerOrg),
+    getMovieEmailData(movie),
+    territories,
     message
   );
   await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
@@ -706,7 +708,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
     : `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
 
   const crmPageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${contract.offerId}/view`;
-  
+
   const termsUrl = isRecipientBuyer
     ? `${appUrl.content}/c/o/marketplace/terms`
     : `${appUrl.content}/c/o/dashboard/terms`;
