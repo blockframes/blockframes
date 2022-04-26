@@ -18,7 +18,10 @@ function SAKIsCorrect(projectId: string) {
   try {
     key = getServiceAccountObj(process.env[SAKKeyName]);
     console.log('Current SAK projectId:', key.project_id);
-  } catch (e) { void 0; }
+  } catch (e) {
+    console.log('Was unable to detect previously set SAK');
+    return false;
+  }
   return projectId === key.project_id;
 }
 
