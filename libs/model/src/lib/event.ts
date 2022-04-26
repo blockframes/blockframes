@@ -1,5 +1,4 @@
 import { AccessibilityTypes } from './static';
-import { toDate } from '@blockframes/utils/helpers';
 import { CalendarEvent } from 'angular-calendar';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
 import { Organization } from './organisation';
@@ -92,7 +91,7 @@ export interface Event<Meta extends EventMeta = unknown>
 }
 
 export function createEvent<Meta extends EventMeta>(
-  params: Partial<EventBase<Date | Timestamp, Meta>> = {}
+  params: Partial<EventBase<Date, Meta>> = {}
 ): Event<Meta> {
   const meta: EventMeta = isMeeting(params as Event)
     ? createMeeting(params.meta)
@@ -112,8 +111,8 @@ export function createEvent<Meta extends EventMeta>(
     allDay: false,
     isOwner: false,
     ...params,
-    start: toDate(params.start || new Date()),
-    end: toDate(params.end || new Date()),
+    start: params.start || new Date(),
+    end: params.end || new Date(),
     meta: meta as Meta,
   };
 }
@@ -182,7 +181,7 @@ export function createSlate(slate: Partial<Slate>): Slate {
 
 // Calendar Event
 export function createCalendarEvent<M>(
-  event: Partial<EventBase<Date | Timestamp, M>>,
+  event: Partial<EventBase<Date, M>>,
   isOwner: boolean
 ): Event<M> {
   return {

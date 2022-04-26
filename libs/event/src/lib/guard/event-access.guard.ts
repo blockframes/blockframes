@@ -5,7 +5,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { combineLatest } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
-import { EventService } from '../+state';
+import { EventService } from '../service';
 import { User } from '@angular/fire/auth';
 import { Event } from '@blockframes/model';
 import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';

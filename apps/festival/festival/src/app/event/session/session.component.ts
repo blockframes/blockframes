@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'

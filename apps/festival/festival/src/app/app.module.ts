@@ -2,6 +2,7 @@
 import { emulatorConfig } from '../environment/environment';
 import { firebase, firebaseRegion, intercomId, sentryDsn } from '@env';
 import { IntercomModule } from 'ng-intercom';
+import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
@@ -59,31 +60,31 @@ import { APP } from '@blockframes/utils/routes/utils';
     IntercomModule.forRoot({ appId: intercomId }),
 
     // Firebase
-    provideFirebaseApp(() => initializeApp(firebase('festival'))),
-    provideFirestore(() => {
-      const db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
+    provideFirebaseApp(() => initializeApp(firebase('festival'))), // TODO #8208 to remove
+    provideFirestore(() => { // TODO #8208 to remove
+      const db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true, ignoreUndefinedProperties: true });
       if (emulatorConfig.firestore) {
         connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
       }
       return db;
     }),
-    provideFunctions(() => {
+    provideFunctions(() => { // TODO #8208 to remove
       const functions = getFunctions(getApp(), firebaseRegion);
       if (emulatorConfig.functions) {
         connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
       }
       return functions;
     }),
-    providePerformance(() => getPerformance()),
-    provideAuth(() => {
+    //providePerformance(() => getPerformance()), // TODO #8208 to keep ?
+    provideAuth(() => {  // TODO #8208 to remove
       const auth = getAuth();
       if (emulatorConfig.auth) {
         connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
       }
       return auth;
     }),
-    provideStorage(() => getStorage()),
-    provideAnalytics(() => getAnalytics()),
+    provideStorage(() => getStorage()), // TODO #8208 to remove
+    //provideAnalytics(() => getAnalytics()), // TODO #8208 to keep ?
 
     sentryDsn ? SentryModule : ErrorLoggerModule,
 
@@ -98,7 +99,9 @@ import { APP } from '@blockframes/utils/routes/utils';
   providers: [
     ScreenTrackingService,
     UserTrackingService,
-    { provide: APP, useValue: 'festival' }
+    { provide: APP, useValue: 'festival' },
+    { provide: FIREBASE_CONFIG, useValue: { options: firebase('festival') } },
+    { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
   ],
   bootstrap: [AppComponent],
 })

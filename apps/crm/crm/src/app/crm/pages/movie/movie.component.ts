@@ -8,11 +8,11 @@ import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { CampaignService } from '@blockframes/campaign/+state';
+import { CampaignService } from '@blockframes/campaign/service';
 import { MovieAppConfigForm } from '@blockframes/movie/form/movie.form';
 import { where } from 'firebase/firestore';
 

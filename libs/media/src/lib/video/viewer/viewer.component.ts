@@ -7,7 +7,7 @@ import { StorageVideo, MeetingVideoControl } from '@blockframes/model';
 import { ErrorResultResponse, getWatermark, loadJWPlayerScript } from '@blockframes/utils/utils';
 import { BehaviorSubject } from 'rxjs';
 import { toggleFullScreen } from '../../file/viewers/utils';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { hasAnonymousIdentity } from '@blockframes/auth/+state/auth.model';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 

@@ -2,6 +2,7 @@ import { StorageFile, MovieCurrency } from '@blockframes/model';
 
 export interface Campaign {
   id: string;
+  orgId: string;
   currency: MovieCurrency;
   cap?: number;
   minPledge?: number;
@@ -50,6 +51,7 @@ export interface Perk {
 export function createCampaign(params: Partial<Campaign> = {}): Campaign {
   return {
     id: '',
+    orgId: '',
     currency: 'USD',
     perks: [],
     fundings: [],

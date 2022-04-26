@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit, Optional, Inject } from '@a
 import { FormControl } from '@angular/forms';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { Movie, storeStatus, StoreStatus } from '@blockframes/model';
-import { CampaignService, MovieCampaign } from '@blockframes/campaign/+state/campaign.service';
+import { CampaignService, MovieCampaign } from '@blockframes/campaign/service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';

@@ -4,7 +4,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { addHours } from 'date-fns'
 import { take } from 'rxjs/operators';
-import { EventService } from '../+state';
+import { EventService } from '../service';
 import { createEvent, createScreening } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })

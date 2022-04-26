@@ -1,5 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { CampaignService } from '../+state';
+import { CampaignService } from '../service';
 
 @Pipe({ name: 'getCampaign' })
 export class GetCampaignPipe implements PipeTransform {

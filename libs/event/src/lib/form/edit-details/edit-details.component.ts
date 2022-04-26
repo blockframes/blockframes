@@ -5,7 +5,7 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { Intercom } from 'ng-intercom';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { where } from 'firebase/firestore';
 import { AccessibilityTypes } from '@blockframes/model';
 

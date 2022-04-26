@@ -16,7 +16,7 @@ import { NegotiationForm } from '@blockframes/contract/negotiation/form';
 // Material
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter, first } from 'rxjs/operators';
-import { joinWith } from '@blockframes/utils/operators';
+import { joinWith } from 'ngfire';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 
 @Component({

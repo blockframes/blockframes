@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { EventService } from "../+state/event.service";
+import { EventService } from '../service';
 import { ActivatedRouteSnapshot, CanActivate, Router } from "@angular/router";
 import { map } from "rxjs/operators";
 import { AuthService } from "@blockframes/auth/+state";

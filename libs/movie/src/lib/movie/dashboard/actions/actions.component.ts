@@ -56,7 +56,7 @@ export class DashboardActionsShellComponent {
                 access: false,
               },
             },
-          } as any));
+          } as any)); // TODO #8280
 
           const ref = this.snackbar.open('Title deleted.', '', { duration: 4000 });
           ref.afterDismissed().subscribe(() => this.router.navigate(['/c/o/dashboard/title']));

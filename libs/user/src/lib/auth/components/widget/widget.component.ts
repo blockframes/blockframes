@@ -33,7 +33,7 @@ export class AuthWidgetComponent {
   ) { }
 
   public async logout() {
-    await this.authService.signOut();
+    await this.authService.signout();
   }
 
   setTheme({ checked }: MatSlideToggleChange) {

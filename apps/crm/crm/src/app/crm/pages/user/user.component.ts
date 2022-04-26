@@ -11,11 +11,11 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { App, getOrgAppAccess } from '@blockframes/utils/apps';
-import { EventService } from '@blockframes/event/+state/event.service';
+import { EventService } from '@blockframes/event/service';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { where } from 'firebase/firestore';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { joinWith } from '@blockframes/utils/operators';
+import { joinWith } from 'ngfire';
 import { map } from 'rxjs/operators';
 
 // Material

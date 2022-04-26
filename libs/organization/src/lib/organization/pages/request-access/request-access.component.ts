@@ -60,6 +60,6 @@ export class OrgRequestAccessComponent implements OnInit {
   }
 
   public logout() {
-    this.authService.signOut();
+    this.authService.signout();
   }
 }

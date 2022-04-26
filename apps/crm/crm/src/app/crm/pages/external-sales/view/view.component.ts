@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { joinWith } from '@blockframes/utils/operators';
+import { joinWith } from 'ngfire';
 import { getSeller } from '@blockframes/contract/contract/+state/utils'
 import { of } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';

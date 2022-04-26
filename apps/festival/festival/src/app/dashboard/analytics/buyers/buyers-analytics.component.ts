@@ -8,7 +8,7 @@ import { OrganizationService } from "@blockframes/organization/+state";
 import { UserService } from "@blockframes/user/+state";
 import { App } from "@blockframes/utils/apps";
 import { unique } from "@blockframes/utils/helpers";
-import { joinWith } from "@blockframes/utils/operators";
+import { joinWith } from 'ngfire';
 import { APP } from "@blockframes/utils/routes/utils";
 import { map } from "rxjs/operators";
 
