@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
 import { Movie, storeStatus, productionStatus } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/+state';

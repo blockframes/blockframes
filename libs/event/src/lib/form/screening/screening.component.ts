@@ -5,7 +5,7 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef,
 } from '@angular/core';
-import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movie.service';
+import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { Movie } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Observable } from 'rxjs';

@@ -1,4 +1,4 @@
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { Movie, Organization, User, Mandate, Sale, Term } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';

@@ -12,7 +12,7 @@ import { routeAnimation } from '@blockframes/utils/animations/router-animations'
 import { Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { Movie } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
 import { filter, pluck, switchMap, tap } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';

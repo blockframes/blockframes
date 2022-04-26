@@ -6,7 +6,7 @@ import { App, getMoviePublishStatus } from '@blockframes/utils/apps';
 import { FormSaveOptions } from '@blockframes/utils/common-interfaces';
 import { MovieControl, MovieForm } from './movie.form';
 import type { FormShellConfig } from './movie.shell.interfaces'
-import { MovieService } from '../+state/movie.service';
+import { MovieService } from '../service';
 import { Movie, MoviePromotionalElements, ProductionStatus } from '@blockframes/model';
 import { MovieActiveGuard } from '../guards/movie-active.guard';
 import { APP } from '@blockframes/utils/routes/utils';

@@ -16,7 +16,7 @@ import { UserService } from '@blockframes/user/+state';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { supportMailosaur } from '@blockframes/utils/constants';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 

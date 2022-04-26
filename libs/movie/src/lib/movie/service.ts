@@ -1,5 +1,4 @@
 import { Injectable, Inject } from '@angular/core';
-import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createMovie, Movie, createMovieAppConfig, createDocumentMeta, StoreStatus } from '@blockframes/model';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
@@ -8,9 +7,9 @@ import { App } from '@blockframes/utils/apps';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
-import { ActiveState, EntityState } from '@datorama/akita';
 import { APP } from '@blockframes/utils/routes/utils';
-import { where, doc, updateDoc } from 'firebase/firestore';
+import { where, doc, updateDoc, DocumentSnapshot } from 'firebase/firestore';
+import { FireCollection, WriteOptions } from 'ngfire';
 
 export const fromOrg = (orgId: string) =>
   [where('orgIds', 'array-contains', orgId)];
@@ -21,12 +20,14 @@ export const fromOrgAndInternalRef = (orgId: string, internalRef: string) =>
 export const fromInternalRef = (internalRef: string) =>
   [where('internalRef', '==', internalRef)];
 
-interface MovieState extends EntityState<Movie, string>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'movies' })
-export class MovieService extends CollectionService<MovieState> {
-  readonly useMemorization = false;
+export class MovieService extends FireCollection<Movie> {
+  // Collection path
+  readonly path = 'movies';
+
+  // Memorize all requests that has been done
+  memorize = true;
 
   constructor(
     private authService: AuthService,
@@ -37,7 +38,8 @@ export class MovieService extends CollectionService<MovieState> {
     super();
   }
 
-  formatFromFirestore(movie) {
+  protected fromFirestore(snapshot: DocumentSnapshot<Movie>) {
+    const movie = super.fromFirestore(snapshot);
     return createMovie(movie);
   }
 

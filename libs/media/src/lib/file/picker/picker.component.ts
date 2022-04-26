@@ -7,7 +7,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
+import { fromOrg, MovieService } from '@blockframes/movie/service';
 import { StorageFile, recursivelyListFiles, Movie } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';

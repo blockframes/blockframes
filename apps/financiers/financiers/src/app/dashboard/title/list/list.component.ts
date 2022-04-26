@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, Optional, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
+import { fromOrg, MovieService } from '@blockframes/movie/service';
 import { Movie, storeStatus, StoreStatus } from '@blockframes/model';
 import { CampaignService, MovieCampaign } from '@blockframes/campaign/service';
 import { OrganizationService } from '@blockframes/organization/+state';

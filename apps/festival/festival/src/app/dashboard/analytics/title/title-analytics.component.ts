@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Organization, User, Scope, staticModel } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { MovieService } from "@blockframes/movie/+state/movie.service";
+import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { counter } from '@blockframes/analytics/+state/utils';

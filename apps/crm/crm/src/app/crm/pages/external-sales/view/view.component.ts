@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { getSeller } from '@blockframes/contract/contract/+state/utils'
 import { of } from 'rxjs';

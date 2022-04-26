@@ -5,7 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
 import { AuthService } from "@blockframes/auth/+state";
-import { MovieService } from "@blockframes/movie/+state/movie.service";
+import { MovieService } from '@blockframes/movie/service';
 import { FormStaticValueArray } from "@blockframes/utils/form";
 import { toLabel } from "@blockframes/utils/pipes/to-label.pipe";
 import { take } from "rxjs";

@@ -14,7 +14,7 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { NotificationService } from '@blockframes/notification/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Movie } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { App } from '@blockframes/utils/apps';
 import { AuthService } from '@blockframes/auth/+state';
 import { APP } from '@blockframes/utils/routes/utils';

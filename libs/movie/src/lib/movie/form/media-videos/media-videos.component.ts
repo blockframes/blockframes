@@ -2,7 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieFormShellComponent } from '../shell/shell.component';
-import { MovieService } from '../../+state/movie.service';
+import { MovieService } from '../../service';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { Subscription } from 'rxjs';

@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { orderBy, startAt, where } from 'firebase/firestore';
 
 // Blockframes
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { EventService } from '@blockframes/event/service';
 import { Screening, Event } from '@blockframes/model';
 import { InvitationService } from '@blockframes/invitation/+state';

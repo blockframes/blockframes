@@ -16,7 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 
 @Component({
   selector: 'title-marketplace-shell',

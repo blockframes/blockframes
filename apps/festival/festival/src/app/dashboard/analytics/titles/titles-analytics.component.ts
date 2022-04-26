@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { map } from "rxjs/operators";
 // Blockframes
 import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie } from "@blockframes/model";
-import { fromOrgAndAccepted, MovieService } from "@blockframes/movie/+state/movie.service";
+import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { App } from "@blockframes/utils/apps";
 import { APP } from "@blockframes/utils/routes/utils";
 import { joinWith } from 'ngfire';

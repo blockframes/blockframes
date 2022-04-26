@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { where } from 'firebase/firestore';
 
 // Services
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { Contract, Movie, Negotiation } from '@blockframes/model';
 import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';

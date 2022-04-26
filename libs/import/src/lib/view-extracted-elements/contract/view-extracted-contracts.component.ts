@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AuthService } from '@blockframes/auth/+state';
 import { UserService } from '@blockframes/user/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';

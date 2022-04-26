@@ -6,7 +6,7 @@ import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { getHost } from '@blockframes/invitation/pipes/host.pipe';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
 import { Movie, Organization, orgName, Event, isScreening, InvitationDetailed } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
 
 @Component({

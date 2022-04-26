@@ -3,7 +3,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { IncomeService } from '@blockframes/contract/income/+state';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';

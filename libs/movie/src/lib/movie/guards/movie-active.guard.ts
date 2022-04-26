@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { CollectionGuardConfig } from 'akita-ng-fire';
-import { MovieService } from '../+state/movie.service';
+import { MovieService } from '../service';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { Movie } from '@blockframes/model';
 import { App } from '@blockframes/utils/apps';

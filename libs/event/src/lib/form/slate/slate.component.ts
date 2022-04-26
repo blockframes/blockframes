@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
-import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movie.service';
+import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { switchMap, map } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';

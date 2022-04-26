@@ -3,7 +3,7 @@ import { Router, ActivatedRoute, RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../service';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { App, applicationUrl } from '@blockframes/utils/apps';

@@ -13,7 +13,7 @@ import { map, throttleTime } from 'rxjs/operators';
 
 import { centralOrgId } from '@env';
 import { joinWith } from 'ngfire';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { Movie } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';

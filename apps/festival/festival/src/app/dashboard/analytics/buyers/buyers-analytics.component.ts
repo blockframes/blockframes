@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
 import { aggregate } from "@blockframes/analytics/+state/utils";
 import { AggregatedAnalytic } from "@blockframes/model";
-import { fromOrgAndAccepted, MovieService } from "@blockframes/movie/+state/movie.service";
+import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from "@blockframes/organization/+state";
 import { UserService } from "@blockframes/user/+state";
 import { App } from "@blockframes/utils/apps";

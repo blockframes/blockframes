@@ -5,7 +5,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { BehaviorSubject, take } from 'rxjs';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 
 type RequestStatus = 'available' | 'sending' | 'sent';
 
