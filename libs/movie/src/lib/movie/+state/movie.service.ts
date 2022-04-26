@@ -1,10 +1,9 @@
 import { Injectable, Inject } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { createMovie, Movie, createMovieAppConfig, createDocumentMeta, StoreStatus } from '@blockframes/model';
+import { createMovie, Movie, createMovieAppConfig, createDocumentMeta, StoreStatus, App } from '@blockframes/model';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import type firestore from 'firebase/firestore';
-import { App } from '@blockframes/utils/apps';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
