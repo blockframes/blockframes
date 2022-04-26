@@ -2,7 +2,7 @@ import { ContractService } from "@blockframes/contract/contract/+state/contract.
 import {
   adminOnlyWarning, alreadyExistError, ImportLog, checkParentTerm, getContract,
   getOrgId, getTitleId, getUser, ImportError, mandatoryError, noTitleError,
-  unknownEntityError, unusedMandateIdWarning, wrongValueError, LogOption, wrongTemplateKindError
+  unknownEntityError, unusedMandateIdWarning, wrongValueError, LogOption, wrongTemplateError
 } from "@blockframes/import/utils";
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
@@ -111,7 +111,7 @@ export function getContractConfig(option: ContractConfig) {
         const type = getKeyIfExists('contractType', lower[0].toUpperCase() + lower.substr(1));
         if (type !== 'sale' && type !== 'mandate') {
           /**This is a seller template being imported in lieu of an admin template. */
-          throw wrongTemplateKindError('seller');
+          throw wrongTemplateError('seller');
         }
         if (type === 'mandate' && !blockframesAdmin) {
           const option = {
@@ -274,7 +274,7 @@ export function getContractConfig(option: ContractConfig) {
         const type = getKeyIfExists('contractType', lower[0].toUpperCase() + lower.substr(1));
         if (type === 'sale' || type === 'mandate') {
           /**This is an admin template being imported in lieu of a seller template. */
-          throw wrongTemplateKindError('admin');
+          throw wrongTemplateError('admin');
         }
         if (value === 'Archipel Content' || value === centralOrgId.catalog) {
           if (!blockframesAdmin) {

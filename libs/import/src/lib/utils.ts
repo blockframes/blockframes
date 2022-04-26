@@ -230,7 +230,7 @@ export function mandatoryError<T = unknown>(value: T, name: string): ImportLog<T
   return new ImportError(value, option);
 }
 
-export function wrongTemplateKindError(templateImported: 'seller' | 'admin'): ImportLog<string> {
+export function wrongTemplateError(templateImported: 'seller' | 'admin'): ImportLog<string> {
   const messages = {
     admin: 'Please contact team@archipelcontent.com or delete column `b` to import as an external sale.',
     seller: 'Please contact team@archipelcontent.com or add a `contract-type` column at column `b`.',
@@ -392,8 +392,8 @@ export class ImportWarning<T> extends ImportLog<T> {
 export class WrongTemplateError<T> extends ImportLog<T> {
   public readonly type = 'error';
   /**
- * Should be used to indicate errors that should be shown
- * as the only error irrespective of the total number of errors.
- */
+   * When present, should be shown as the only error even
+   * when there are many other errors.
+   */
   public onlyErrorShown = true;
 }
