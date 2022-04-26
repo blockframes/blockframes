@@ -8,6 +8,7 @@ import { MemberPendingModule } from '@blockframes/organization/components/member
 import { MemberRequestModule } from '@blockframes/organization/components/member-request/member-request.module';
 import { MemberAddModule } from '@blockframes/organization/components/member-add/member-add.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 // Components
 import { MemberComponent } from './member.component';
@@ -22,6 +23,7 @@ import { MemberComponent } from './member.component';
     MemberPendingModule,
     MemberRequestModule,
     MemberAddModule,
+    ConfirmModule,
     FlexLayoutModule,
     RouterModule.forChild([{ path: '', component: MemberComponent }])
   ]

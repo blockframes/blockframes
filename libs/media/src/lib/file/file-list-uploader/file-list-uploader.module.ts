@@ -11,7 +11,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-import { PreviewModalModule } from '@blockframes/ui/preview-modal/preview.module'
+import { OpenPreviewModule } from '@blockframes/ui/open-preview/open-preview.module'
 
 import { FileUploaderModule } from '../file-uploader/file-uploader.module';
 
@@ -33,7 +33,7 @@ import { FileListUploaderComponent } from './file-list-uploader.component';
 
     FileNameModule,
     FileUploaderModule,
-    PreviewModalModule,
+    OpenPreviewModule,
   ],
   declarations: [ FileListUploaderComponent ],
   exports: [ FileListUploaderComponent ],

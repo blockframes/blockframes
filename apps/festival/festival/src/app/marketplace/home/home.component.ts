@@ -58,8 +58,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       const preferences = createPreferences();
       this.authService.update({ preferences });
       this.dialog.open(PreferencesComponent, {
-        maxHeight: '80vh',
-        maxWidth: '650px',
         autoFocus: false
       });
     }
