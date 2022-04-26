@@ -5,7 +5,7 @@
 
   <section *ngIf="data.form as form">
     <form [formGroup]="form" fxLayout="column"
-      (ngSubmit)="data.onSend(form.value, data.movie.title.international, data.orgs)">
+      (ngSubmit)="sendEmail(form.value, data.movie.title.international, data.orgs)">
       <mat-form-field appearance="outline">
         <mat-label>Subject</mat-label>
         <mat-select formControlName="subject" required>
@@ -39,8 +39,11 @@
           placeholder="Questions about cast, financing, investment conditions..."></textarea>
       </mat-form-field>
       <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="32px">
-        <button type="submit" mat-flat-button color="primary" [disabled]="form.invalid">
+        <button type="submit" mat-flat-button color="primary" [disabled]="sending || form.invalid">
           <span>Send your message</span>
+          <ng-container *ngIf="sending">
+            <mat-spinner diameter="16"></mat-spinner>
+          </ng-container>
         </button>
         <button type="reset" mat-dialog-close mat-button>Cancel</button>
       </div>
