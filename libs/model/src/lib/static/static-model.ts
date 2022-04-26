@@ -1,5 +1,35 @@
-import { appName } from '@blockframes/utils/apps';
 import { Territory } from './types';
+
+export const app = ['catalog', 'festival', 'financiers', 'crm'] as const;
+
+export const modules = ['dashboard', 'marketplace'] as const;
+
+export const appShortName = {
+  catalog: 'AC',
+  festival: 'AM',
+  financiers: 'MF',
+  blockframes: 'BF',
+  crm: 'CRM',
+  cms: 'CMS',
+};
+
+export const appName = {
+  catalog: 'Archipel Content',
+  festival: 'Archipel Market',
+  financiers: 'Media Financiers',
+  blockframes: 'Blockframes',
+  crm: 'Blockframes CRM',
+  cms: 'Blockframes CMS',
+};
+
+export const appDescription = {
+  catalog:
+    'Archipel Content is an ongoing digital marketplace for TV, VOD and ancillary rights. Let’s make content buying simple : One massive library, One package offer, One negotiation, One contract.',
+  festival:
+    'Archipel Market is an ongoing film market platform, one tool for your year-round promotion and acquisitions.',
+  financiers:
+    'Media Financiers enables private investors to co-produce exclusive films and TV series on the same conditions as top professional content financiers.',
+};
 
 export const contractStatus = {
   accepted: 'Accepted',
