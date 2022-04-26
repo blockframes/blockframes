@@ -8,8 +8,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { PdfViewerModule } from '@blockframes/media/pdf/viewer/viewer.module';
 import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
-import { PreviewModalComponent } from './preview.component';
+import { PreviewFileModalComponent } from './preview-file-modal.component';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 
 @NgModule({
@@ -24,8 +25,9 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     FileNameModule,
     PdfViewerModule,
     VideoViewerModule,
+    GlobalModalModule
   ],
-  exports: [PreviewModalComponent],
-  declarations: [PreviewModalComponent],
+  exports: [PreviewFileModalComponent],
+  declarations: [PreviewFileModalComponent],
 })
-export class PreviewModalModule { }
+export class PreviewFileModalModule { }

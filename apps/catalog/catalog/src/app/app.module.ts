@@ -30,6 +30,7 @@ import 'firebase/storage';
 
 // Material
 import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 
 // Blockframes
 import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
@@ -110,7 +111,16 @@ import { APP } from '@blockframes/utils/routes/utils';
   ],
   providers: [
     ScreenTrackingService, UserTrackingService,
-    { provide: APP, useValue: 'catalog' }
+    { provide: APP, useValue: 'catalog' },
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: {
+        minWidth: '50vw',
+        minHeight: '50vh',
+        maxWidth: '80vw',
+        maxHeight: '80vh'
+      }
+    }
   ],
   bootstrap: [AppComponent]
 })
