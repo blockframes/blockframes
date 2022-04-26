@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
+import { App, appName } from '@blockframes/model';
 import { firebaseRegion, firebase, emulators } from '@env';
 import { APP } from '../routes/utils';
-import { App, appName } from './../apps';
 import { PdfParams } from './pdf.interfaces';
+
 export const { projectId } = firebase();
 
 @Injectable({ providedIn: 'root' })

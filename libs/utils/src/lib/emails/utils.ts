@@ -1,7 +1,7 @@
-import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
+import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { AttachmentData } from '@sendgrid/helpers/classes/attachment';
-import { App, sendgridEmailsFrom } from "../apps";
-import { format } from "date-fns";
+import { sendgridEmailsFrom } from '../apps';
+import { format } from 'date-fns';
 import {
   EventDocument,
   EventMeta,
@@ -19,12 +19,16 @@ import {
   MailTerm,
   staticModel,
   NegotiationDocument,
-  createMailTerm
+  createMailTerm,
+  App,
+  AccessibilityTypes,
+  ContractDocument,
+  Offer,
+  movieCurrenciesSymbols
 } from '@blockframes/model';
-import { AccessibilityTypes, ContractDocument, Offer, movieCurrencies, movieCurrenciesSymbols } from '@blockframes/model';
-import { toIcsFile } from "../agenda/utils";
-import { IcsEvent } from "../agenda/agenda.interfaces";
-import { getKeyIfExists } from "../helpers";
+import { toIcsFile } from '../agenda/utils';
+import { IcsEvent } from '../agenda/agenda.interfaces';
+import { getKeyIfExists } from '../helpers';
 
 interface EmailData {
   to: string;
