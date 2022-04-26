@@ -1,15 +1,4 @@
-<button mat-icon-button (click)="openModal()" [disabled]="!ref" matTooltip="Click to see preview"
-  [matTooltipDisabled]="!ref">
-  <mat-icon svgIcon="visibility" color="primary"></mat-icon>
-</button>
-<ng-content></ng-content>
-
-<ng-template #dialogTemplate let-ref>
-  <div fxLayout fxLayoutAlign="end">
-    <button class="close" mat-icon-button (click)="closeModal()">
-      <mat-icon svgIcon="close"></mat-icon>
-    </button>
-  </div>
+<global-modal>
   <article fxLayout="column" fxLayoutAlign="center center">
     <ng-container [ngSwitch]="ref.storagePath | fileType">
 
@@ -38,4 +27,4 @@
       </ng-container>
     </ng-container>
   </article>
-</ng-template>
+</global-modal>
