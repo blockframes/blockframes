@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
-import { AnonymousRole } from '@blockframes/auth/+state/auth.model';
+import { AnonymousRole } from '@blockframes/model';
 import { EventService } from '@blockframes/event/+state';
 @Component({
   selector: 'festival-event-role',
