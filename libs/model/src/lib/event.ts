@@ -204,3 +204,9 @@ export function createMeetingAttendee(
     status,
   };
 }
+
+export function hasMedia(event: Event<Screening | Slate>) {
+  const hasScreener = isScreening(event) && event.meta.titleId;
+  const hasSlate = isSlate(event) && event.meta.videoId;
+  return hasScreener || hasSlate;
+}
