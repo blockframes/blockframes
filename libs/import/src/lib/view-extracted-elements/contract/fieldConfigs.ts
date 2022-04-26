@@ -1,7 +1,7 @@
 import { ContractService } from "@blockframes/contract/contract/+state/contract.service";
 import {
   adminOnlyWarning, alreadyExistError, ImportLog, checkParentTerm, getContract,
-  getOrgId, getTitleId, getUser, ImportError, mandatoryError, noTitleError,
+  getOrgId, getTitleId, getUser, ImportError, mandatoryError,
   unknownEntityError, unusedMandateIdWarning, wrongValueError, LogOption, wrongTemplateError
 } from "@blockframes/import/utils";
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
