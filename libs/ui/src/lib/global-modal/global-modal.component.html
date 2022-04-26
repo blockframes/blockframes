@@ -1,9 +1,11 @@
-<mat-dialog-header fxLayout fxLayoutAlign="end">
-  <button mat-icon-button (click)="close()">
-    <mat-icon svgIcon="close"></mat-icon>
-  </button>
-</mat-dialog-header>
-
-<mat-dialog-content class="mat-dialog-content" fxLayout="column">
-  <ng-content></ng-content>
-</mat-dialog-content>
+<section [class]="setModalType()">
+  <mat-dialog-header fxLayout fxLayoutAlign="end">
+    <button mat-icon-button (click)="close()">
+      <mat-icon svgIcon="close"></mat-icon>
+    </button>
+  </mat-dialog-header>
+  
+  <mat-dialog-content class="mat-dialog-content" fxLayout="column">
+    <ng-content></ng-content>
+  </mat-dialog-content>
+</section>

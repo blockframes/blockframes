@@ -1,3 +1,29 @@
 :host {
   display: block;
 }
+
+ // All padding have +24px on the base component
+ // So, in exemple, count 48 as 72px
+.sizeL {
+  padding: 48px;
+  width: 80vw;
+  height: 80vh;
+
+  .mat-dialog-content {
+    max-height: calc(80vh - (72px * 2));
+  }
+}
+
+.sizeM {
+  padding: 24px;
+  width: 60vw;
+  height: 60vh;
+
+  .mat-dialog-content {
+    max-height: calc(60vh - (48px * 2));
+  }
+}
+
+.sizeS {
+  width: 30vw;
+}
