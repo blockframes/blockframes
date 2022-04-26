@@ -1,7 +1,7 @@
-import { Inject, Injectable } from "@angular/core";
-import { CookiesConsent } from "../cookie-form/cookie.form";
+import { Inject, Injectable } from '@angular/core';
+import { CookiesConsent } from '../cookie-form/cookie.form';
 import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
-import { App, User } from "@blockframes/model";
+import { App, User } from '@blockframes/model';
 // #7936 this may be reactivated later
 // import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 import { APP } from '@blockframes/utils/routes/utils';

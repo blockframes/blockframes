@@ -1,5 +1,5 @@
-import { AppLogoValue, } from "@blockframes/utils/apps";
-import { app, App, AppNameValue } from "./static";
+import { AppLogoValue, } from '@blockframes/utils/apps';
+import { app, App, AppNameValue } from './static';
 
 export interface AppMailSetting {
   description: string;
