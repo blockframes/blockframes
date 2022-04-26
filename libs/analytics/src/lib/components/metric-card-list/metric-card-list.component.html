@@ -1,0 +1,5 @@
+<ul>
+  <li *ngFor="let card of cards" class="surface">
+    <ng-template [ngTemplateOutlet]="card.templateRef"></ng-template>
+  </li>
+</ul>

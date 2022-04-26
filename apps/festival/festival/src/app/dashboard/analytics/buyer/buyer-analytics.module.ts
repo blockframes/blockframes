@@ -8,7 +8,7 @@ import { BuyerAnalyticsComponent } from './buyer-analytics.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DisplayNameModule, ToLabelModule, MaxLengthModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes';
-import { MetricCardModule } from '@blockframes/analytics/components/metric-card/metric-card.module';
+import { MetricCardListModule } from '@blockframes/analytics/components/metric-card-list/metric-card-list.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 // Material
@@ -24,7 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
     DisplayNameModule,
     OrgNameModule,
     ToLabelModule,
-    MetricCardModule,
+    MetricCardListModule,
     TableModule,
     MaxLengthModule,
     // Material

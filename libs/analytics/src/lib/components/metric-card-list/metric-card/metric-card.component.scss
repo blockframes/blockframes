@@ -1,10 +1,4 @@
-:host {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-
-div {
+header {
   background-color: var(--primary-lighter);
   border-radius: 4px;
   padding: 8px 0;
@@ -16,7 +10,8 @@ div {
   }
 }
 
-span {
+p {
   white-space: nowrap;
   text-overflow: ellipsis;
+  margin-bottom: 0px;
 }

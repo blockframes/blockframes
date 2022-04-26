@@ -1,0 +1,11 @@
+ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 24px;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+}

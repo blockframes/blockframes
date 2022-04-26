@@ -24,11 +24,11 @@
 </header>
 
 <section>
-  <div class="metrics" *ngIf="aggregated$ | async as analytics">
+  <analytics-metric-card-list *ngIf="aggregated$ | async as analytics">
     <ng-container *ngFor="let event of events">
       <analytics-metric-card [title]="event.title" [value]="analytics[event.name]" [icon]="event.icon"></analytics-metric-card>
     </ng-container>
-  </div>
+  </analytics-metric-card-list>
 
   <article>
     <h3>Buyer was interested in these titles</h3>
