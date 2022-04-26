@@ -78,7 +78,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       if (type === 'screening') {
         this.checkTitleAndScreener(this.form.meta.value.titleId);
       } else if (type === 'slate') {
-        this.checkSlateVideoMissing(this.form.meta.value.video);
+        this.checkSlateVideoMissing(this.form.meta.value.videoId);
       }
 
       this.cdr.markForCheck();
