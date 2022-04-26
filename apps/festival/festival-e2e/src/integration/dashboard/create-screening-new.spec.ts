@@ -1,4 +1,3 @@
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { auth, get, getInList, getByClass, getAllStartingWith, assertUrlIncludes } from '@blockframes/testing/cypress/browser';
 import { Organization, User, Movie, UserRole } from '@blockframes/model';
 import { App, ModuleAccess } from '@blockframes/utils/apps';
@@ -30,7 +29,7 @@ describe('Create an event as admin', () => {
     cy.log('futureSlot', JSON.stringify(futureSlot));
   });
 
-  it.skip('The calendar shows current week', () => {
+  it('The calendar shows current week', () => {
     const currentWeekDays = getCurrentWeekDays();
     getByClass('cal-header').each((header, index) => {
       expect(header).to.contain(currentWeekDays[index].day);
@@ -49,7 +48,7 @@ describe('Create an event as admin', () => {
       const eventTitle = `Admin public screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${movieTitle}`;
       cypress.selectSlot(futureSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
-      cypress.fillEventForm({
+      cypress.fillScreeningForm({
         eventPrivacy: 'public',
         isSecret: false,
         eventTitle,
@@ -81,7 +80,7 @@ describe('Create an event as admin', () => {
       const eventTitle = `Admin protected screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${movieTitle}`;
       cypress.selectSlot(futureSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
-      cypress.fillEventForm({
+      cypress.fillScreeningForm({
         eventPrivacy: 'protected',
         isSecret: false,
         eventTitle,
@@ -113,7 +112,7 @@ describe('Create an event as admin', () => {
       const eventTitle = `Admin private screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${movieTitle}`;
       cypress.selectSlot(futureSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
-      cypress.fillEventForm({
+      cypress.fillScreeningForm({
         eventPrivacy: 'private',
         isSecret: false,
         eventTitle,
@@ -135,7 +134,7 @@ describe('Create an event as admin', () => {
     });
   });
 
-  it.only('An admin can add a future public and secret screening event', function () {
+  it('An admin can add a future public and secret screening event', function () {
     cy.then(function () {
       const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
       const randomIndex = Math.floor(Math.random() * movieTitles.length);
@@ -146,7 +145,7 @@ describe('Create an event as admin', () => {
       const dummyEventTitle = `Dummy event`;
       cypress.selectSlot(dummySlot);
       cypress.fillPopinForm({ eventType, eventTitle: dummyEventTitle });
-      cypress.fillEventForm({
+      cypress.fillScreeningForm({
         eventPrivacy: 'public',
         isSecret: false,
         eventTitle: dummyEventTitle,
@@ -164,7 +163,7 @@ describe('Create an event as admin', () => {
       const eventTitle = `Admin public and secret screening / d${secretSlot.day}, h${secretSlot.hours}:${secretSlot.minutes} - ${movieTitle}`;
       cypress.selectSlot(secretSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
-      cypress.fillEventForm({
+      cypress.fillScreeningForm({
         eventPrivacy: 'public',
         isSecret: true,
         eventTitle,
@@ -186,193 +185,222 @@ describe('Create an event as admin', () => {
     });
   });
 
-  /*
-
-  it('A member can add a future public screening event', function () {
-    getScreeningDataAndLogin({ userType: 'member' });
-    // below line allow us to use 'this' instead of calling object with 'get('@alias')'
-    cy.then(function () {
-      const futureSlot = createFutureSlot();
-      const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
-      const randomIndex = Math.floor(Math.random() * movieTitles.length);
-      const movieTitle = movieTitles[randomIndex];
-      const eventTitle = `Member public screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${movieTitle}`;
-      selectSlot(futureSlot);
-      get('event-type').click();
-      getInList('type_', 'Screening');
-      get('event-title-modal').clear().type(eventTitle);
-      get('more-details').click();
-      get('warning-chip').should('exist');
-      get('title').click();
-      getInList('title_', movieTitles[randomIndex]);
-      get('description').type(`Description : ${eventTitle}`);
-      get('public').click();
-      get('event-save').click();
-      get('arrow-back').click();
-      getEventSlot(futureSlot).should('contain', movieTitle);
-      get('dashboard').click();
-      get('auth-user').click();
-      get('auth-logout').click();
-      cy.task('getRandomMember', { app: 'festival', access: { marketplace: true, dashboard: false }, userType: 'member' })
-      .then((user: User) => {
-        get('login').click();
-        assertUrlIncludes('auth/connexion');
-        get('email').type(user.email);
-        get('password').type(USER_FIXTURES_PASSWORD);
-        get('submit').click();
-        get('Screenings').click();
-        searchInEvents({ title: eventTitle, type: 'public screening', expected: true});
-      })
-      cy.task('deleteAllSellerEvents', this.user.uid);
-    });
-  });
-
   it('An admin can add a future public meeting event', function () {
-    getScreeningDataAndLogin({ userType: 'admin' });
-    // below line allow us to use 'this' instead of calling object with 'get('@alias')'
     cy.then(function () {
       const futureSlot = createFutureSlot();
-      const eventTitle = `Admin public meeting / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`
-      selectSlot(futureSlot);
-      get('event-type').click();
-      getInList('type_', 'Meeting');
-      get('event-title-modal').clear().type(eventTitle);
-      get('more-details').click();
-      get('description').type(`Description : ${eventTitle}`);
-      get('public').click();
-      get('event-save').click();
-      get('arrow-back').click();
-      getEventSlot(futureSlot).should('contain', eventTitle);
-      cy.pause();
-      cy.task('deleteAllSellerEvents', this.user.uid);
+      const eventType = 'Meeting';
+      const eventTitle = `Admin public Meeting / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
+      cypress.selectSlot(futureSlot);
+      cypress.fillPopinForm({ eventType, eventTitle });
+      cypress.fillMeetingForm({
+        eventPrivacy: 'public',
+        isSecret: false,
+        eventTitle,
+        dataToCheck: {
+          calendarSlot: futureSlot,
+        },
+      });
+      firebase.deleteAllSellerEvents(this.user.uid);
     });
   });
 
   it('An admin can add a future private meeting event', function () {
-    getScreeningDataAndLogin({ userType: 'admin' });
-    // below line allow us to use 'this' instead of calling object with 'get('@alias')'
     cy.then(function () {
       const futureSlot = createFutureSlot();
-      const eventTitle = `Admin private meeting / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`
-      selectSlot(futureSlot);
-      get('event-type').click();
-      getInList('type_', 'Meeting');
-      get('event-title-modal').clear().type(eventTitle);
-      get('more-details').click();
-      get('description').type(`Description : ${eventTitle}`);
-      get('private').click();
-      get('event-save').click();
-      get('arrow-back').click();
-      getEventSlot(futureSlot).should('contain', eventTitle);
-      cy.task('deleteAllSellerEvents', this.user.uid);
+      const eventType = 'Meeting';
+      const eventTitle = `Admin private Meeting / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
+      cypress.selectSlot(futureSlot);
+      cypress.fillPopinForm({ eventType, eventTitle });
+      cypress.fillMeetingForm({
+        eventPrivacy: 'private',
+        isSecret: false,
+        eventTitle,
+        dataToCheck: {
+          calendarSlot: futureSlot,
+        },
+      });
+      firebase.deleteAllSellerEvents(this.user.uid);
     });
   });
 
   it('An admin can add a future protected meeting event', function () {
-    getScreeningDataAndLogin({ userType: 'admin' });
-    // below line allow us to use 'this' instead of calling object with 'get('@alias')'
     cy.then(function () {
       const futureSlot = createFutureSlot();
-      const eventTitle = `Admin protected meeting / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`
-      selectSlot(futureSlot);
-      get('event-type').click();
-      getInList('type_', 'Meeting');
-      get('event-title-modal').clear().type(eventTitle);
-      get('more-details').click();
-      get('description').type(`Description : ${eventTitle}`);
-      get('protected').click();
-      get('event-save').click();
-      get('arrow-back').click();
-      getEventSlot(futureSlot).should('contain', eventTitle);
-      cy.task('deleteAllSellerEvents', this.user.uid);
+      const eventType = 'Meeting';
+      const eventTitle = `Admin protected Meeting / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
+      cypress.selectSlot(futureSlot);
+      cypress.fillPopinForm({ eventType, eventTitle });
+      cypress.fillMeetingForm({
+        eventPrivacy: 'protected',
+        isSecret: false,
+        eventTitle,
+        dataToCheck: {
+          calendarSlot: futureSlot,
+        },
+      });
+      firebase.deleteAllSellerEvents(this.user.uid);
     });
   });
 
   it('An admin can add a future public slate event', function () {
-    getScreeningDataAndLogin({ userType: 'admin' });
     cy.then(function () {
       const futureSlot = createFutureSlot();
+      const eventType = 'Slate';
       const eventTitle = `Admin public slate / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
       const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
       const shuffledTitles = [...movieTitles].sort(() => 0.5 - Math.random());
       const randomSelection = Math.floor(Math.random() * (movieTitles.length - 1)) + 1;
       const selectedTitles = shuffledTitles.slice(0, randomSelection);
-      selectSlot(futureSlot);
-      get('event-type').click();
-      getInList('type_', 'Slate');
-      get('event-title-modal').clear().type(eventTitle);
-      get('more-details').click();
-      get('description').type(`Description : ${eventTitle}`);
-      get('public').click();
-      get('titles').click();
-      for(const title of selectedTitles) {
-        getInList('titles_', title);
-      }
-      cy.get('body').type('{esc}');
-      get('event-save').click();
-      get('arrow-back').click();
-      getEventSlot(futureSlot).should('contain', eventTitle);
-      cy.task('deleteAllSellerEvents', this.user.uid);
-    });
-  });
+      cypress.selectSlot(futureSlot);
+      cypress.fillPopinForm({ eventType, eventTitle });
+      cypress.fillSlateForm({
+        eventPrivacy: 'public',
+        isSecret: false,
+        eventTitle,
+        selectedTitles,
+        dataToCheck: {
+          calendarSlot: futureSlot,
+        },
+      });
 
-  it('An admin can add a future protected slate event', function () {
-    getScreeningDataAndLogin({ userType: 'admin' });
-    cy.then(function () {
-      const futureSlot = createFutureSlot();
-      const eventTitle = `Admin protected slate / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
-      const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
-      const shuffledTitles = [...movieTitles].sort(() => 0.5 - Math.random());
-      const randomSelection = Math.floor(Math.random() * (movieTitles.length - 1)) + 1;
-      const selectedTitles = shuffledTitles.slice(0, randomSelection)
-      selectSlot(futureSlot);
-      get('event-type').click();
-      getInList('type_', 'Slate');
-      get('event-title-modal').clear().type(eventTitle);
-      get('more-details').click();
-      get('description').type(`Description : ${eventTitle}`);
-      get('protected').click();
-      get('titles').click();
-      for(const title of selectedTitles) {
-        getInList('titles_', title);
-      }
-      cy.get('body').type('{esc}');
-      get('event-save').click();
-      get('arrow-back').click();
-      getEventSlot(futureSlot).should('contain', eventTitle);
-      cy.task('deleteAllSellerEvents', this.user.uid);
+      //TODO : after May release, slates should be visible with the screenings => add the adequate check (#8220)
+
+      firebase.deleteAllSellerEvents(this.user.uid);
     });
   });
 
   it('An admin can add a future private slate event', function () {
-    getScreeningDataAndLogin({ userType: 'admin' });
     cy.then(function () {
       const futureSlot = createFutureSlot();
+      const eventType = 'Slate';
       const eventTitle = `Admin private slate / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
       const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
       const shuffledTitles = [...movieTitles].sort(() => 0.5 - Math.random());
       const randomSelection = Math.floor(Math.random() * (movieTitles.length - 1)) + 1;
-      const selectedTitles = shuffledTitles.slice(0, randomSelection)
-      selectSlot(futureSlot);
-      get('event-type').click();
-      getInList('type_', 'Slate');
-      get('event-title-modal').clear().type(eventTitle);
-      get('more-details').click();
-      get('description').type(`Description : ${eventTitle}`);
-      get('private').click();
-      get('titles').click();
-      for(const title of selectedTitles) {
-        getInList('titles_', title);
-      }
-      cy.get('body').type('{esc}');
-      get('event-save').click();
-      get('arrow-back').click();
-      getEventSlot(futureSlot).should('contain', eventTitle);
-      cy.task('deleteAllSellerEvents', this.user.uid);
+      const selectedTitles = shuffledTitles.slice(0, randomSelection);
+      cypress.selectSlot(futureSlot);
+      cypress.fillPopinForm({ eventType, eventTitle });
+      cypress.fillSlateForm({
+        eventPrivacy: 'private',
+        isSecret: false,
+        eventTitle,
+        selectedTitles,
+        dataToCheck: {
+          calendarSlot: futureSlot,
+        },
+      });
+
+      //TODO : after May release, slates should be visible with the screenings => add the adequate check (#8220)
+
+      firebase.deleteAllSellerEvents(this.user.uid);
     });
   });
-  */
+
+  it('An admin can add a future protected slate event', function () {
+    cy.then(function () {
+      const futureSlot = createFutureSlot();
+      const eventType = 'Slate';
+      const eventTitle = `Admin protected slate / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
+      const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
+      const shuffledTitles = [...movieTitles].sort(() => 0.5 - Math.random());
+      const randomSelection = Math.floor(Math.random() * (movieTitles.length - 1)) + 1;
+      const selectedTitles = shuffledTitles.slice(0, randomSelection);
+      cypress.selectSlot(futureSlot);
+      cypress.fillPopinForm({ eventType, eventTitle });
+      cypress.fillSlateForm({
+        eventPrivacy: 'protected',
+        isSecret: false,
+        eventTitle,
+        selectedTitles,
+        dataToCheck: {
+          calendarSlot: futureSlot,
+        },
+      });
+
+      //TODO : after May release, slates should be visible with the screenings => add the adequate check (#8220)
+
+      firebase.deleteAllSellerEvents(this.user.uid);
+    });
+  });
+
+  it('An admin can add a future public and secret slate event', function () {
+    cy.then(function () {
+      const futureSlot = createFutureSlot();
+      const eventType = 'Slate';
+      const eventTitle = `Admin public and secret slate / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
+      const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
+      const shuffledTitles = [...movieTitles].sort(() => 0.5 - Math.random());
+      const randomSelection = Math.floor(Math.random() * (movieTitles.length - 1)) + 1;
+      const selectedTitles = shuffledTitles.slice(0, randomSelection);
+      cypress.selectSlot(futureSlot);
+      cypress.fillPopinForm({ eventType, eventTitle });
+      cypress.fillSlateForm({
+        eventPrivacy: 'public',
+        isSecret: true,
+        eventTitle,
+        selectedTitles,
+        dataToCheck: {
+          calendarSlot: futureSlot,
+        },
+      });
+
+      //TODO : after May release, slates should be visible with the screenings => add the adequate check (#8220)
+
+      firebase.deleteAllSellerEvents(this.user.uid);
+    });
+  });
+
 });
+
+describe('Create an event as member', () => {
+  beforeEach(() => {
+    cy.visit('');
+    auth.clearBrowserAuth();
+    firebase.getScreeningData({ userType: 'member' })
+      .then((data: { org: Organization; user: User; movies: Movie[] }) => {
+        firebase.deleteAllSellerEvents(data.user.uid);
+        cypress.wrapFeedbackData(data);
+        cy.visit('');
+        cy.contains('Accept cookies').click();
+        auth.loginWithEmailAndPassword(data.user.email);
+        cy.visit('');
+      });
+    get('my-events').click();
+  });
+
+  it('A member can add a future public screening event', function () {
+    cy.then(function () {
+      const futureSlot = createFutureSlot();
+      const eventType = 'Screening';
+      const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
+      const randomIndex = Math.floor(Math.random() * movieTitles.length);
+      const movieTitle = movieTitles[randomIndex];
+      const eventTitle = `Member public screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${movieTitle}`;
+      cypress.selectSlot(futureSlot);
+      cypress.fillPopinForm({ eventType, eventTitle });
+      cypress.fillScreeningForm({
+        eventPrivacy: 'public',
+        isSecret: false,
+        eventTitle,
+        movieTitle,
+        dataToCheck: {
+          movieTitles,
+          calendarSlot: futureSlot,
+        },
+      });
+      firebase.getRandomUser({ app: 'festival', access: { marketplace: true, dashboard: false }, userType: 'member' })
+        .then((user: User) => {
+          auth.clearBrowserAuth();
+          cypress.connectUser(user.email);
+          get('Screenings').click();
+          assertUrlIncludes('c/o/marketplace/event');
+          cypress.searchInEvents({ title: eventTitle, type: 'public screening', expected: true });
+        });
+      firebase.deleteAllSellerEvents(this.user.uid);
+    });
+  });
+});
+
 //* CYPRESS FUNCTIONS *//
 
 const cypress = {
@@ -439,8 +467,8 @@ const cypress = {
     get('more-details').click();
   },
 
-  fillEventForm(data: {
-    eventPrivacy: 'public' | 'protected' | 'private' | 'secret';
+  fillScreeningForm(data: {
+    eventPrivacy: 'public' | 'protected' | 'private';
     isSecret: boolean;
     eventTitle: string;
     movieTitle: string;
@@ -464,6 +492,43 @@ const cypress = {
     get('event-save-disabled').should('be.disabled');
     get('arrow-back').click();
     cypress.getEventSlot(dataToCheck.calendarSlot).should('contain', movieTitle);
+  },
+
+  fillMeetingForm(data: {
+    eventPrivacy: 'public' | 'protected' | 'private';
+    isSecret: boolean;
+    eventTitle: string;
+    dataToCheck: { calendarSlot: EventSlot };
+  }) {
+    const { eventPrivacy, eventTitle, dataToCheck } = data;
+    get('description').type(`Description : ${eventTitle}`);
+    get(eventPrivacy).click();
+    get('event-save').should('be.enabled');
+    get('event-save').click();
+    get('event-save-disabled').should('be.disabled');
+    get('arrow-back').click();
+    cypress.getEventSlot(dataToCheck.calendarSlot).should('contain', eventTitle);
+  },
+
+  fillSlateForm(data: {
+    eventPrivacy: 'public' | 'protected' | 'private';
+    isSecret: boolean;
+    eventTitle: string;
+    selectedTitles: string[];
+    dataToCheck: { calendarSlot: EventSlot };
+  }) {
+    const { eventPrivacy, isSecret, eventTitle, selectedTitles, dataToCheck } = data;
+    get('description').type(`Description : ${eventTitle}`);
+    get(eventPrivacy).click();
+    if (isSecret) get('secret').click();
+    get('titles').click();
+    for(const title of selectedTitles) {
+      getInList('titles_', title);
+    }
+    cy.get('body').type('{esc}');
+    get('event-save').click();
+    get('arrow-back').click();
+    cypress.getEventSlot(dataToCheck.calendarSlot).should('contain', eventTitle);
   },
 
   wrapFeedbackData(data: { org: Organization; user: User; movies: Movie[] }) {

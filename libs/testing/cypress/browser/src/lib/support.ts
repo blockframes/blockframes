@@ -34,7 +34,7 @@ export function getAllStartingWith(selector: string) {
 export function getInList(selectorStart: string, option: string) {
   getAllStartingWith(selectorStart).each($el => {
     // loops between all options
-    if ($el[0].innerText === option) $el.trigger('click');
+    if ($el[0].innerText.includes(option)) $el.trigger('click');
   });
 }
 
