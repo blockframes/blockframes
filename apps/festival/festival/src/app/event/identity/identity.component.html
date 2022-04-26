@@ -13,17 +13,17 @@
 
     <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
       <mat-form-field appearance="outline" fxFlex="0 1">
-        <mat-label>First name</mat-label>
-        <input test-id="firstName" matInput type="text" placeholder="First name" formControlName="firstName" required />
+        <mat-label>First Name</mat-label>
+        <input test-id="firstName" matInput type="text" placeholder="First Name" formControlName="firstName" required />
         <mat-error *ngIf="form.get('firstName').hasError('required')">
-          First name is <strong>required</strong>
+          First Name is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="0 1">
         <mat-label>Last name</mat-label>
-        <input test-id="lastName" matInput type="text" placeholder="Last name" formControlName="lastName" required />
+        <input test-id="lastName" matInput type="text" placeholder="Last Name" formControlName="lastName" required />
         <mat-error *ngIf="form.get('lastName').hasError('required')">
-          Last name is <strong>required</strong>
+          Last Name is <strong>required</strong>
         </mat-error>
       </mat-form-field>
     </div>
