@@ -11,7 +11,7 @@ import { MovieImportState } from '../../utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { take } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
-import { App } from '@blockframes/utils/apps';
+import { App } from '@blockframes/model';
 
 @Component({
   selector: 'import-view-extracted-titles[sheetTab]',

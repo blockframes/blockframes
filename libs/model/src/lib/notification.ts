@@ -1,6 +1,6 @@
 import { DocumentMeta } from './meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
-import { App } from '@blockframes/utils/apps';
+import { App } from '@blockframes/model';
 import { PublicUser } from './user';
 import { PublicOrganization } from './organisation';
 import { PublicInvitation } from './invitation';

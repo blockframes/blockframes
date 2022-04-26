@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CrmStore } from './crm.store';
 import { Functions, httpsCallable, HttpsCallableResult } from '@angular/fire/functions';
 import { AuthService } from '@blockframes/auth/+state';
-import { App } from '@blockframes/utils/apps';
+import { App } from '@blockframes/model';
 
 interface AnalyticsActiveUser {
   user_id: string,
