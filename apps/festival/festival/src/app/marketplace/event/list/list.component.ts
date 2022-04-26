@@ -8,8 +8,8 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { FormList } from '@blockframes/utils/form';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { orderBy, startAt, where } from 'firebase/firestore';
-import { Event, Screening, AlgoliaOrganization, isSlate, isScreening, Slate } from '@blockframes/model';
-
+import { Event, Screening, AlgoliaOrganization, Slate } from '@blockframes/model';
+import { hasMedia } from '@blockframes/model';
 @Component({
   selector: 'festival-event-list',
   templateUrl: './list.component.html',
@@ -43,10 +43,7 @@ export class ListComponent implements OnInit {
     this.events$ = combineLatest([events$, orgIds$]).pipe(
       map(([events, orgs]) => this.filterByOrgIds(events, orgs.map(org => org.objectID))),
       // We can't filter by meta.titleId directly in the query because range and not equals comparisons must all filter on the same field
-      map(events => events.filter(event => 
-        (isScreening(event) && event.meta.titleId) || 
-        (isSlate(event) && event.meta.videoId)
-      )),
+      map(events => events.filter(event => hasMedia(event))),
       tap(events => this.setTitle(events.length)),
       shareReplay({ bufferSize: 1, refCount: true })
     )

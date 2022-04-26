@@ -11,13 +11,6 @@ import { Timestamp } from './timestamp';
 
 // Event types
 export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local' | 'slate';
-export const EventTypesToDisplay = {
-  meeting: 'Meeting',
-  screening: 'Screening',
-  slate: 'Slate Presentation',
-  standard: 'Standard',
-  local: 'Local'
-};
 export type EventMeta = Meeting | Screening | unknown;
 
 export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended';
@@ -210,4 +203,10 @@ export function createMeetingAttendee(
     lastName: user.lastName,
     status,
   };
+}
+
+export function hasMedia(event: Event<Screening | Slate>) {
+  const hasScreener = isScreening(event) && event.meta.titleId;
+  const hasSlate = isSlate(event) && event.meta.videoId;
+  return hasScreener || hasSlate;
 }
