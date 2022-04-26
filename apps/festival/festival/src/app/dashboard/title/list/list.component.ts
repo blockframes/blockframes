@@ -6,7 +6,6 @@ import { Movie, Person, StoreStatus, storeStatus, App } from '@blockframes/model
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Intercom } from 'ng-intercom';
-import { App } from '@/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';

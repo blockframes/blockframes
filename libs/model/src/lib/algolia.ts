@@ -1,4 +1,4 @@
-import { Module, ModuleAccess } from '@blockframes/utils/apps';
+import { Module, ModuleAccess } from '@blockframes/model';
 import { MovieLanguageSpecification, MovieRunningTime, MovieRelease } from './movie';
 import { Genre, Language, Territory, ProductionStatus, StoreStatus, OrgActivity, ContentType } from './static';
 

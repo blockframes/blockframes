@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, HostBinding, Inject } from '@angular/core';
-import { App, applicationUrl } from '@blockframes/utils/apps';
+import { App } from '@blockframes/model';
+import { applicationUrl } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 
 interface AppBridge {
@@ -39,9 +40,9 @@ export class AppBridgeBannerComponent {
 
   constructor(
     @Inject(APP) private app: App,
-  ) {}
+  ) { }
 
   scrollToHeader() {
-    document.getElementById("header-to-scroll").scrollIntoView({behavior: "smooth"});
+    document.getElementById("header-to-scroll").scrollIntoView({ behavior: "smooth" });
   }
 }

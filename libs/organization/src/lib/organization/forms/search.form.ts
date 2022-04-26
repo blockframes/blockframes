@@ -1,7 +1,6 @@
 // Blockframes
 import { FormEntity, FormList } from '@blockframes/utils/form';
-import { Organization, Territory, AlgoliaSearch } from '@blockframes/model';
-import { App, Module } from '@blockframes/utils/apps';
+import { Organization, Territory, AlgoliaSearch, App, Module } from '@blockframes/model';
 
 // Utils
 import algoliasearch, { SearchIndex } from 'algoliasearch';

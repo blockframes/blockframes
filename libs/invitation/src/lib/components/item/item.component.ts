@@ -2,9 +2,9 @@ import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Inject } 
 import { InvitationService } from '../../+state';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { PublicOrganization, PublicUser, isMeeting, Event, Invitation } from '@blockframes/model';
+import { PublicOrganization, PublicUser, isMeeting, Event, Invitation, App } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { App, applicationUrl } from '@blockframes/utils/apps';
+import { applicationUrl } from '@blockframes/utils/apps';
 import { isSafari } from '@blockframes/utils/browser/utils';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { APP } from '@blockframes/utils/routes/utils';

@@ -5,7 +5,7 @@ import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatDialog } from '@angular/material/dialog';
-import { App, applicationUrl } from '@blockframes/utils/apps';
+import { applicationUrl } from '@blockframes/utils/apps';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { App } from '@blockframes/model';
 
 const statisticsTab = { path: 'statistics', label: 'Attendance' };
 

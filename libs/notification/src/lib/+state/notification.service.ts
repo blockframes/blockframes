@@ -10,12 +10,15 @@ import {
   isScreening,
   Notification,
   Contract,
-  createStorageFile
+  createStorageFile,
+  appName,
+  getMovieAppAccess,
+  App
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/utils/utils';
-import { App, applicationUrl, appName, getMovieAppAccess } from '@blockframes/utils/apps';
+import { applicationUrl } from '@blockframes/utils/apps';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { format } from 'date-fns';
 import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
