@@ -1,22 +1,4 @@
-:host {
-  display: flex;
-  flex-direction: column;
-}
-
-h4 {
-  text-transform: uppercase;
-  margin: 0;
-}
-
-h2 {
-  margin-bottom: 8px;
-}
-
-p {
-  max-width: 60%;
-  margin-top: 8px;
-  margin-bottom: 28px;
-}
+@import "@angular/flex-layout/mq";
 
 :host {
   display: flex;
@@ -24,8 +6,26 @@ p {
   justify-content: space-between;
 }
 
-@media only screen and (max-width: 1000px) {
-  .overlay {
-    padding: 0;
+h2 {
+  margin-bottom: 8px;
+}
+
+p {
+  margin-top: 8px;
+  margin-bottom: 28px;
+  max-height: 400px;
+  text-overflow: ellipsis;
+}
+
+footer {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+@include layout-bp(gt-xs) {
+  p {
+    max-width: 60%;
   }
 }
