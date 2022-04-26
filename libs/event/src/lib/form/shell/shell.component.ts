@@ -5,13 +5,13 @@ import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { App, applicationUrl } from '@blockframes/utils/apps';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 const statisticsTab = { path: 'statistics', label: 'Attendance' };
@@ -42,7 +42,6 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   tabs$: Observable<TabConfig[]>;
   private sub: Subscription;
   form: EventForm;
-  @ViewChild('confirmExit') confirmExitTemplate: TemplateRef<any>;
   internalLink: string;
   link: string;
   errorChipMessage = '';
@@ -114,16 +113,16 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   async remove() {
     this.dialog.open(ConfirmComponent, {
       data: {
-        title: 'Are you sure you want to delete this event ?',
+        title: 'Are you sure to delete this event?',
         question: 'If you\'ve already sent out invites, please note that the invitation emails were already sent and cannot be taken back.',
         advice: 'You might want to contact the people concerned to let them know that this event won\'t be happening.',
         confirm: 'Yes, delete',
-        cancel: 'No, come back',
+        cancel: 'Go back to editing',
         onConfirm: () => {
           this.eventService.remove(this.form.value.id);
           //Here we add an eventDeleted to inform the guard thatthere is no need to display the popup
           this.router.navigate(['../..'], { relativeTo: this.route, state: { eventDeleted: true } });
-        },
+        }
       },
       autoFocus: false,
     })
@@ -134,11 +133,17 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       return true;
     }
 
-    const dialogRef = this.dialog.open(this.confirmExitTemplate, {
-      width: '80%',
-      minWidth: '50vw',
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      data: {
+        title: 'You are about to leave the form.',
+        question: 'Some changes have not been saved.',
+        advice: 'If you leave now, you will lose these changes.',
+        confirm: 'Save & Exit',
+        cancel: 'Close without saving'
+      },
       autoFocus: false,
     });
+
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {
         console.log("shouldSave", shouldSave)
