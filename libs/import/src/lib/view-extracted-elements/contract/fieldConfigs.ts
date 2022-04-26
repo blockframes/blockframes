@@ -262,12 +262,11 @@ export function getContractConfig(option: ContractConfig) {
 
     // ! The order of the property should be the same as excel columns
     return {
-      //@Continue from here
         /* a */ 'contract.titleId': async (value: string) => {
         if (!value) throw mandatoryError(value, 'Title');
         const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, blockframesAdmin);
-        if (!titleId) throw noTitleError(value);
-        return titleId;
+        if (titleId) return titleId;
+        throw unknownEntityError<string>(value, 'name or ID');
       },
         /* b */ 'contract.sellerId': async (value: string) => {
         if (!value) throw mandatoryError(value, 'Licensor');
@@ -365,7 +364,15 @@ export function getContractConfig(option: ContractConfig) {
         const exist = await getContract(value, contractService, contractCache);
         if (exist) throw alreadyExistError(value, 'Contract ID');
         return value;
-      }
+      },
+        /* p */ 'contract.stakeholders': async (value: string, data: FieldsConfig) => {
+        const stakeholders = value.split(separator).filter(v => !!v).map(v => v.trim());
+        const exists = await Promise.all(stakeholders.map(id => getUser({ id }, userService, userCache)));
+        const unknownStakeholder = exists.some(e => !e);
+        if (unknownStakeholder) throw unknownEntityError(value, 'Stakeholders');
+        // The sale is external the seller is not archipel (it's the owner org), and the buyer is unknown by definition
+        return [data.contract.sellerId, ...stakeholders]
+      },
     };
   }
 

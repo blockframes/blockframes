@@ -90,7 +90,11 @@ export async function getTitleId(
   }
 
   if (cache[nameOrId]) return cache[nameOrId].id;
-  const title = await titleService.getValue(nameOrId);
+  let title: Movie;
+  try {
+    title = await titleService.getValue(nameOrId);
+  } catch (err) {/**do nothing, nameOrId isn't an id */ }
+
   // Try if nameOrId is an id
   if (title) {
     if (isBlockframesAdmin) return memo(nameOrId, title);
