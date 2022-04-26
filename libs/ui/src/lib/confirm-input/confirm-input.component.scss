@@ -1,13 +1,11 @@
-section {
-  padding: 24px;
+:host {
   text-align: center;
-  margin: auto;
-
-  p, span {
-    margin-bottom: 24px;
-  }
 }
 
-article {
+p, span {
+  margin-bottom: 24px;
+}
+
+mat-dialog-actions {
   margin-top: 16px;
 }

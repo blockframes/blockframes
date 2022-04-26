@@ -1,6 +1,6 @@
-<section fxLayout="column">
-  <h3 *ngIf="data.title"> {{ data.title }} </h3>
-  <p *ngIf="data.subtitle" [innerHTML]="data.subtitle"></p>
+<global-modal>
+  <h2 *ngIf="data.title"> {{ data.title }} </h2>
+  <p *ngIf="data.subtitle" [innerHTML]="data.subtitle" class="mat-body-1"></p>
   <span *ngIf="data.text">{{ data.text }}</span>
   <span *ngIf="data.warning" class="mat-body-2 text-warn">{{ data.warning }}</span>
 
@@ -16,9 +16,12 @@
     <input matInput type="text" [formControl]="actionConfirm" [placeholder]="data.placeholder??''">
   </mat-form-field>
 
-  <article fxLayout="row" fxLayoutAlign="space-evenly">
-    <button mat-stroked-button (click)="close()">{{ data.cancelButtonText | firstWordTitlecase }}</button>
-    <button [disabled]="!isValid" mat-flat-button color="warn" (click)="confirm()">{{ data.confirmButtonText |
-      firstWordTitlecase }}</button>
-  </article>
-</section>
+  <mat-dialog-actions fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="4px">
+    <button [disabled]="!isValid" mat-flat-button color="primary" (click)="confirm()">
+      {{ data.confirmButtonText | firstWordTitlecase }}
+    </button>
+    <button mat-button color="primary" (click)="close()">
+      {{ data.cancelButtonText | firstWordTitlecase }}
+    </button>
+  </mat-dialog-actions>
+</global-modal>

@@ -4,21 +4,13 @@ header {
   padding: 100px 0;
   margin: 0 auto;
   width: 60%;
+
   h1 {
     text-align: center;
   }
+
   mat-icon {
     cursor: pointer;
-  }
-}
-
-.surface {
-  margin-top: 50px;
-  margin-bottom: 50px;
-  width: 60%;
-  ul {
-    list-style-type: disc;
-    margin-left: 16px;
   }
 }
 
@@ -26,31 +18,10 @@ header {
   header {
     width: 80%;
   }
-  .surface {
-    width: 80%;
-    margin-top: 50px;
-  }
 }
 
 @include layout-bp(xs) {
   header {
     width: 100%;
-  }
-  .surface {
-    width: 100%;
-    margin-top: 30px;
-    margin-bottom: 30px;
-  }
-}
-
-.table_wrapper{
-  overflow: auto;
-}
-table {
-  border-collapse: collapse;
-  border: 1px solid var(--foreground-divider);
-  td {
-    vertical-align: middle;
-    text-align: center;
   }
 }

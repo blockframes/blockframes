@@ -5,9 +5,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
   ViewChild,
-  ContentChild,
   Inject,
-  TemplateRef
 } from '@angular/core';
 import { fade } from '@blockframes/utils/animations/fade';
 import { TunnelStep, TunnelStepSnapshot } from '../tunnel.model';
@@ -24,6 +22,7 @@ import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import type { ShellConfig } from '@blockframes/movie/form/movie.shell.interfaces';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { FormSaveOptions } from "@blockframes/utils/common-interfaces";
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
 /**
  * @description returns the next or previous page where the router should go to
@@ -76,18 +75,18 @@ export class TunnelLayoutComponent implements OnInit {
     startWith(this.router),
     map((event: NavigationEnd) => event.url)
   );
-
+  private steps$ = new BehaviorSubject(undefined);
   public urlBynav$: Observable<[string, TunnelStep[]]>;
   public currentStep$ = this.url$.pipe(
-    map(url => getStepSnapshot(this.steps, url))
+    map(url => getStepSnapshot(this._steps, url))
   );
 
   public next$ = this.url$.pipe(
-    map(url => getPage(this.steps, url, 1))
+    map(url => getPage(this._steps, url, 1))
   );
 
   public previous$ = this.url$.pipe(
-    map(url => getPage(this.steps, url, -1))
+    map(url => getPage(this._steps, url, -1))
   );
 
   public mode$ = this.breakpointsService.ltMd.pipe(
@@ -97,15 +96,18 @@ export class TunnelLayoutComponent implements OnInit {
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
   @ViewChild(MatSidenav) sidenav: MatSidenav;
-
-  @ContentChild('confirmExit') confirmExitTemplate: TemplateRef<unknown>
-
-  @Input() steps: TunnelStep[];
+  
+  @Input() set steps(steps: TunnelStep[]) {
+    this._steps = steps;
+    this.steps$.next(steps);
+  }
+  
+  private _steps: TunnelStep[] = [];
+  
+  private routeBeforeTunnel: string;
 
   /** Fallback link to redirect on exit */
   @Input() exitRedirect: string;
-
-  private routeBeforeTunnel: string;
 
   redirect() {
     this.router.navigate([this.routeBeforeTunnel], { relativeTo: this.route });
@@ -122,8 +124,7 @@ export class TunnelLayoutComponent implements OnInit {
 
   ngOnInit() {
     this.routeBeforeTunnel = this.exitRedirect || '/c/o/';
-    const steps$ = new BehaviorSubject(this.steps).asObservable();
-    this.urlBynav$ = combineLatest([this.url$, steps$])
+    this.urlBynav$ = combineLatest([this.url$, this.steps$])
       .pipe(shareReplay({ refCount: true, bufferSize: 1 }));
   }
 
@@ -145,9 +146,16 @@ export class TunnelLayoutComponent implements OnInit {
     if (isPristine) {
       return of(true);
     }
-    const dialogRef = this.dialog.open(this.confirmExitTemplate, {
-      width: '80%'
-    });
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      data: {
+        title: 'You are about to leave the form.',
+        question: 'Some changes have not been saved.',
+        advice: 'If you leave now, you will lose these changes.',
+        confirm: 'Save & Exit',
+        cancel: 'Close without saving'
+      },
+      autoFocus: false,
+    })
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {
         /* Undefined means user clicked on the backdrop, meaning just close the modal */
