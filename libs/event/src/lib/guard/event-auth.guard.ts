@@ -40,7 +40,7 @@ export class EventAuthGuard implements CanActivate, CanDeactivate<unknown> {
   }
 
   redirectOnSignout() {
-    this.sub = this.authService.user$.pipe(
+    this.sub = this.authService._user$.pipe(
       filter(user => !user)
     ).subscribe(() => this.router.navigate(['/']));
   }

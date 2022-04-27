@@ -103,17 +103,6 @@ describe('Invitations Test Suite', () => {
     expect(service).toBeTruthy();
   })
 
-  it('Formats invitation from firestore', () => {
-    const invitationService = TestBed.inject(InvitationService);
-    const timestamp = Timestamp.fromDate(today);
-    const formattedDate = toDate(timestamp);
-
-    //Create an Invitation Document
-    const newInvite = createInvitation();
-    const invite: InvitationDocument = { ...newInvite, ...{ date: timestamp } }
-    const formattedInvite = invitationService.formatFromFirestore(invite);
-    expect(formattedInvite.date).toEqual(formattedDate);
-  });
 
   it('Formats invitation to firestore', () => {
     const invitationService = TestBed.inject(InvitationService);
@@ -122,7 +111,7 @@ describe('Invitations Test Suite', () => {
     const inviteData = { ...invitationParamsOrg, ...invitationParamsUser };
     const inviteParams = { ...inviteData, ...{ message: 'Clean it', watchTime: undefined } };
     const newInvite = createInvitation(inviteParams);
-    const formattedInvite = invitationService.formatToFirestore(newInvite);
+    const formattedInvite = invitationService.toFirestore(newInvite);
     expect(formattedInvite).toMatchObject(inviteData);
   });
 

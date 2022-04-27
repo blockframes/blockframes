@@ -92,7 +92,6 @@
     "@sendgrid/mail": "^7.6.2",
     "@sentry/browser": "^6.19.6",
     "@sentry/node": "^6.19.6",
-    "akita-ng-fire": "^7.0.1-beta.1",
     "algoliasearch": "^4.13.0",
     "angular-calendar": "^0.28.5",
     "angular-idle-preload": "^3.0.0",

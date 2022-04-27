@@ -141,7 +141,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
         privacy: null,
         storagePath: null
       })
-      const ref = doc(this.db, `${metadata.collection}/${metadata.docId}`);
+      const ref = doc(this.movieService._db, `${metadata.collection}/${metadata.docId}`); // TODO #8280
       updateDoc(ref, emptyStorageFile);
     }
   }

@@ -1,15 +1,15 @@
 import { Injectable, Inject } from '@angular/core';
-import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createMovie, Movie, createMovieAppConfig, createDocumentMeta, StoreStatus, App } from '@blockframes/model';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import type firestore from 'firebase/firestore';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { map } from 'rxjs/operators';
-import { AuthService } from '@blockframes/auth/+state';
-import { ActiveState, EntityState } from '@datorama/akita';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { APP } from '@blockframes/utils/routes/utils';
-import { where, doc, updateDoc } from 'firebase/firestore';
+import { where, doc, updateDoc, DocumentSnapshot } from 'firebase/firestore';
+import { WriteOptions } from 'ngfire';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 export const fromOrg = (orgId: string) =>
   [where('orgIds', 'array-contains', orgId)];
@@ -20,12 +20,10 @@ export const fromOrgAndInternalRef = (orgId: string, internalRef: string) =>
 export const fromInternalRef = (internalRef: string) =>
   [where('internalRef', '==', internalRef)];
 
-interface MovieState extends EntityState<Movie, string>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'movies' })
-export class MovieService extends CollectionService<MovieState> {
-  readonly useMemorization = false;
+export class MovieService extends BlockframesCollection<Movie> {
+  readonly path = 'movies';
 
   constructor(
     private authService: AuthService,
@@ -36,7 +34,8 @@ export class MovieService extends CollectionService<MovieState> {
     super();
   }
 
-  formatFromFirestore(movie) {
+  protected fromFirestore(snapshot: DocumentSnapshot<Movie>) {
+    const movie = super.fromFirestore(snapshot);
     return createMovie(movie);
   }
 
@@ -129,6 +128,6 @@ export class MovieService extends CollectionService<MovieState> {
           status,
         },
       },
-    } as any));
+    }));
   }
 }

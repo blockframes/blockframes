@@ -1,19 +1,7 @@
-import { Inject, Injectable, NgZone, Optional } from '@angular/core';
+import { Injectable, NgZone, Optional } from '@angular/core';
 import { Functions, httpsCallable } from '@angular/fire/functions';
-import { FireAuthService, CollectionConfig, FireAuthState, RoleState, initialAuthState } from 'akita-ng-fire';
 import { map, switchMap, take, tap } from 'rxjs/operators';
-import {
-  createUser,
-  PublicUser,
-  User,
-  PrivacyPolicy,
-  createDocumentMeta,
-  DocumentMeta,
-  Timestamp,
-  App,
-  AnonymousCredentials,
-  AnonymousRole,
-} from '@blockframes/model';
+import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta, Timestamp, AnonymousCredentials, AnonymousRole, App } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
@@ -24,7 +12,6 @@ import { IpService } from '@blockframes/utils/ip';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
 import { getAnalytics, setUserProperties } from '@angular/fire/analytics';
 import {
-  Auth,
   confirmPasswordReset,
   EmailAuthProvider,
   getAuth,
@@ -32,53 +19,42 @@ import {
   signInAnonymously,
   updatePassword,
   User as FireUser,
-  user,
   UserCredential,
   verifyPasswordResetCode
 } from '@angular/fire/auth';
-import { UserService } from '@blockframes/user/+state';
-import { Store, StoreConfig } from '@datorama/akita';
-import { APP } from '@blockframes/utils/routes/utils';
+import { UserService } from '@blockframes/user/+state/user.service';
 import { doc, docData, getDoc, DocumentReference, writeBatch } from '@angular/fire/firestore';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { runInZone } from '@blockframes/utils/zone';
+import { BlockframesAuth } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'auth' })
-class AuthStore extends Store<AuthState> {
-  constructor() {
-    super(initialAuthState);
-  }
+export class AuthService extends BlockframesAuth<User> {
+  readonly path = 'users';
 
-}
+  readonly idKey: 'uid';
 
-interface Roles { blockframesAdmin: boolean }
-
-interface AuthState extends FireAuthState<User>, RoleState<Roles> { }
-
-@Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'users', idKey: 'uid' })
-export class AuthService extends FireAuthService<AuthState> {
   signedOut = new Subject<void>();
   anonymousCredentials$ = new BehaviorSubject<AnonymousCredentials>(this.anonymousCredentials);
 
   // For these to be defined, one of the observable below must be called before
-  profile: User; // User object in Firestore DB
+  profile: User; // User object in Firestore DB // rework
   uid: string; // Will be defined for regular and anonymous users
 
+  // TODO #8280 rename to user$ (using defer ?)
   // Firebase Auth User Object
-  user$ = user(this.afAuth).pipe(tap(auth => {
+  _user$ = this.user$.pipe(tap(auth => {
     this.uid = auth?.uid;
     if (!auth?.uid) this.profile = undefined;
   }));
 
   // Firebase Auth User Object and User object in Firestore DB (profile)
-  auth$: Observable<{ uid: string, isAnonymous: boolean, emailVerified: boolean, profile?: User }> = this.user$.pipe(
+  auth$: Observable<{ uid: string, isAnonymous: boolean, emailVerified: boolean, profile?: User }> = this._user$.pipe(
     switchMap(authState => {
       if (!authState || authState.isAnonymous) return of(undefined).pipe(map(() => [undefined, authState]));
       return this.userService.valueChanges(authState.uid).pipe(map(profile => [profile, authState]));
     }),
-    runInZone(this.ngZone), // TODO #7595 #7273
+    runInZone(this.ngZone), // TODO #7595 #7273 #8280
     map(([profile, userAuth]: [User, FireUser]) => {
       if (!userAuth) return;
 
@@ -113,23 +89,18 @@ export class AuthService extends FireAuthService<AuthState> {
     })
   );
 
-  // User object in Firestore DB
-  profile$ = this.auth$.pipe(map(auth => auth?.profile));
 
   get anonymouseOrRegularProfile() { return this.profile || this.anonymousCredentials };
 
   constructor(
-    protected store: AuthStore,
     private functions: Functions,
     private gdprService: GDPRService,
     private ipService: IpService,
-    private afAuth: Auth,
     private userService: UserService,
     private ngZone: NgZone,
-    @Inject(APP) private app: App,
     @Optional() public ngIntercom?: Intercom,
   ) {
-    super(store);
+    super();
     if (!production && window['Cypress']) window['LoginService'] = this;    // instrument Cypress only out of PROD
   }
 
@@ -165,14 +136,14 @@ export class AuthService extends FireAuthService<AuthState> {
    * @returns firebase.User
    */
   async reloadUser() {
-    const currentUser = await this.afAuth.currentUser;
+    const currentUser = await this.auth.currentUser;
     await currentUser.reload();
-    return this.afAuth.currentUser;
+    return this.auth.currentUser;
   }
 
   /**
    * @description function that gets triggered when
-   * AuthService.signOut is called
+   * AuthService.signout is called
    */
   async onSignout() {
     // Keep cookieConsent in localStorage
@@ -195,7 +166,7 @@ export class AuthService extends FireAuthService<AuthState> {
    */
   public async updatePassword(currentPassword: string, newPassword: string, email = this.profile.email) {
     await this.signin(email, currentPassword);
-    const user = await this.afAuth.currentUser;
+    const user = await this.auth.currentUser;
     return updatePassword(user, newPassword);
   }
 
@@ -205,11 +176,11 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param newPassword new password set by the owned of email
    */
   public handleResetPassword(actionCode: string, newPassword: string) {
-    confirmPasswordReset(this.afAuth, actionCode, newPassword);
+    confirmPasswordReset(this.auth, actionCode, newPassword);
   }
 
   /** Create the user in users collection on firestore. */
-  public createProfile(user: Partial<User>, ctx: {
+  override createProfile(user: Partial<User>, ctx: {
     firstName: string,
     lastName: string,
     _meta: DocumentMeta<Date>,
@@ -265,12 +236,12 @@ export class AuthService extends FireAuthService<AuthState> {
    * @returns Promise<AnonymousCredentials>
    */
   async signInAnonymously() {
-    const currentUser = await this.afAuth.currentUser;
+    const currentUser = await this.auth.currentUser;
     if (currentUser) {
       return this.updateAnonymousCredentials({ uid: currentUser.uid });
     }
 
-    const creds = await signInAnonymously(this.afAuth);
+    const creds = await signInAnonymously(this.auth);
     return this.updateAnonymousCredentials({ uid: creds.user.uid }, { reset: true });
   }
 
@@ -315,7 +286,7 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   /**
-   * Deletes anonymous user (+ signOut) or performs a regular signOut
+   * Deletes anonymous user (+ signout) or performs a regular signout
    * @returns Promise<void>
    */
   async deleteAnonymousUserOrSignOut() {
@@ -323,12 +294,12 @@ export class AuthService extends FireAuthService<AuthState> {
     if (isAnonymous) {
       return this.deleteAnonymousUser();
     } else {
-      return this.signOut();
+      return this.signout();
     }
   }
 
   /**
-   * Deletes and signOut an anonymous user
+   * Deletes and signout an anonymous user
    * @returns Promise<void>
    */
   async deleteAnonymousUser() {

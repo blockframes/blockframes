@@ -50,7 +50,7 @@ describe('Media Service Test Suite', () => {
     jest.spyOn(storage, 'ref').mockImplementation(() => ({} as any));
 
     // Mock uploadBytesResumable function
-    jest.spyOn(storage, 'uploadBytesResumable').mockImplementation(() => ({
+    jest.spyOn(storage, 'uploadBytesResumable').mockImplementation(() => ({ // TODO #8280 rework
       then: () => { true },
       on: () => { true }
     } as any));

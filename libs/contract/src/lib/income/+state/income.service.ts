@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { ActiveState, EntityState } from '@datorama/akita';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 import { Income } from './income.model';
 
-interface IncomeState extends EntityState<Income>, ActiveState<string> { }
-
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'incomes' })
-export class IncomeService extends CollectionService<IncomeState> {
-  useMemorization = false;
+export class IncomeService extends BlockframesCollection<Income> {
+  readonly path = 'incomes';
 }

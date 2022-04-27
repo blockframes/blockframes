@@ -1,7 +1,5 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { getAnalytics, logEvent } from '@angular/fire/analytics';
-import { ActiveState, EntityState } from '@datorama/akita';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { where } from '@angular/fire/firestore';
 
 import { map, take } from 'rxjs/operators';
@@ -9,38 +7,27 @@ import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';
 
 // Blockframes
-import { Analytics, AnalyticsTypes, EventName, createTitleMeta, createDocumentMeta, formatDocumentMetaFromFirestore  } from '@blockframes/model';
-import type { Organization, Movie, App } from '@blockframes/model';
-import { AuthService } from '@blockframes/auth/+state';
-import { APP } from '@blockframes/utils/routes/utils';
-
-interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> { };
-export interface AnalyticsWithOrg extends Analytics<'title'> {
-  org: Organization;
-}
+import { Analytics, AnalyticsTypes, EventName, createTitleMeta, Movie } from '@blockframes/model';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { createDocumentMeta } from '@blockframes/model';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'analytics' })
-export class AnalyticsService extends CollectionService<AnalyticsState> {
-  readonly useMemorization = false;
+export class AnalyticsService extends BlockframesCollection<Analytics> {
+  readonly path = 'analytics';
+
   private analytics = getAnalytics();
 
   constructor(
     private authService: AuthService,
-    @Inject(APP) private app: App
   ) {
     super();
   }
 
-  formatFromFirestore(analytic): Analytics<AnalyticsTypes> {
-    return {
-      ...analytic,
-      _meta: formatDocumentMetaFromFirestore(analytic._meta)
-    };
-  }
-
-  formatToFirestore(analytic: Partial<Analytics<AnalyticsTypes>>) {
+  toFirestore(analytic: Partial<Analytics<AnalyticsTypes>>, actionType: 'add' | 'update') {
     const profile = this.authService.profile;
+    if (actionType === 'update') return analytic;
+
     return {
       ...analytic,
       _meta: createDocumentMeta({
@@ -64,7 +51,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
 
     return this.valueChanges(query).pipe(
       // Filter out analytics from owners of title
-      map((analytics: Analytics<'title'>[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId) ))
+      map((analytics: Analytics<'title'>[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId)))
     );
   }
 
