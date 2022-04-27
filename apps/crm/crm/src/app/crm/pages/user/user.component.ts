@@ -14,7 +14,7 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { where } from 'firebase/firestore';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { joinWith } from '@blockframes/utils/operators';
+import { joinWith } from 'ngfire';
 import { map } from 'rxjs/operators';
 
 // Material

@@ -3,7 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Organization, User, Scope, staticModel } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { MovieService } from "@blockframes/movie/+state/movie.service";
-import { joinWith } from "@blockframes/utils/operators";
+import { joinWith } from 'ngfire';
 import { map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { counter } from '@blockframes/analytics/+state/utils';
 import { UserService } from "@blockframes/user/+state";

@@ -3,7 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { OrganizationService } from "@blockframes/organization/+state";
 import { NavigationService } from "@blockframes/ui/navigation.service";
 import { UserService } from "@blockframes/user/+state";
-import { joinWith } from "@blockframes/utils/operators";
+import { joinWith } from 'ngfire';
 import { pluck, switchMap } from "rxjs";
 
 @Component({

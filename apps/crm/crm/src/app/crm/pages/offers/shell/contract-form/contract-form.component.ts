@@ -1,6 +1,8 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { where } from 'firebase/firestore';
+import { joinWith } from 'ngfire';
+import { filter, first } from 'rxjs/operators';
 
 // Services
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -9,15 +11,14 @@ import { Income, IncomeService } from '@blockframes/contract/income/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { TermService } from '@blockframes/contract/term/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
+import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+
 
 // Forms
 import { NegotiationForm } from '@blockframes/contract/negotiation/form';
 
 // Material
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { filter, first } from 'rxjs/operators';
-import { joinWith } from '@blockframes/utils/operators';
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 
 @Component({
   selector: 'contract-form',
