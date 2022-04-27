@@ -152,7 +152,8 @@ export class TunnelLayoutComponent implements OnInit {
         question: 'Some changes have not been saved.',
         advice: 'If you leave now, you will lose these changes.',
         confirm: 'Save & Exit',
-        cancel: 'Close without saving'
+        cancel: 'Close without saving',
+        style: 'medium'
       },
       autoFocus: false,
     })

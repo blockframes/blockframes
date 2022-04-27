@@ -119,6 +119,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
           question: `You might not be able to come back as the access to the ${this.event.type} is time-limited.`,
           confirm: 'Leave anyway',
           cancel: 'Stay',
+          style: 'medium'
         },
         autoFocus: false,
       })

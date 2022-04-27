@@ -151,7 +151,7 @@ export class MarketplaceSelectionComponent {
         { duration: 2000 }
       );
     } else {
-      this.dialog.open(SpecificTermsComponent, { data: { currency: this.currencyForm.value } });
+      this.dialog.open(SpecificTermsComponent, { data: { currency: this.currencyForm.value, style: 'large' } });
     }
   }
 

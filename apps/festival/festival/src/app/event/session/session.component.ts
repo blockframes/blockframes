@@ -129,6 +129,7 @@ export class SessionComponent implements OnInit, OnDestroy {
                   this.autoPlayTester.nativeElement.play();
                   this.autoPlayTester.nativeElement.pause();
                 },
+                style: 'medium'
               },
               autoFocus: false,
             });

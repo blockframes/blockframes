@@ -175,20 +175,21 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   public explain() {
     this.dialog.open(ExplanationComponent, {
-      height: '80vh',
-      width: '80vw',
+      data: {
+        style: 'large'
+      },
       autoFocus: false
     });
   }
 
   /** Open a modal to display the entire list of territories when this one is too long */
   public openTerritoryModal(term: BucketTerm) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms: term.territories, scope: 'territories' }, maxHeight: '80vh', autoFocus: false });
+    this.dialog.open(DetailedTermsComponent, { data: { terms: term.territories, scope: 'territories', style: 'large' }, autoFocus: false });
   }
 
   /** Open a modal to display holdback warnings */
   openHoldbackModal(holdbacks: Holdback[]) {
-    this.dialog.open(HoldbackModalComponent, { data: { holdbacks, withWarning: true }, maxHeight: '80vh' });
+    this.dialog.open(HoldbackModalComponent, { data: { holdbacks, withWarning: true, style: 'large' } });
   }
 
   confirmExit() {
@@ -202,6 +203,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
         question: 'Some changes have not been added to Selection. If you leave now, you will lose these changes.',
         confirm: 'Leave anyway',
         cancel: 'Stay',
+        style: 'small'
       },
       autoFocus: false,
     });

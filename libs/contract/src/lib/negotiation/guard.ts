@@ -44,6 +44,7 @@ export class NegotiationGuard<T extends NegotiationGuardedComponent> implements 
         question: `Please pay attention that unless you submit an offer the changes remain not saved.`,
         cancel: 'Come back & Submit Offer',
         confirm: 'Leave anyway',
+        style: 'small'
       },
       autoFocus: false,
     });

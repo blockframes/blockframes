@@ -122,7 +122,8 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
           this.eventService.remove(this.form.value.id);
           //Here we add an eventDeleted to inform the guard thatthere is no need to display the popup
           this.router.navigate(['../..'], { relativeTo: this.route, state: { eventDeleted: true } });
-        }
+        },
+        style: 'medium'
       },
       autoFocus: false,
     })
@@ -139,7 +140,8 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
         question: 'Some changes have not been saved.',
         advice: 'If you leave now, you will lose these changes.',
         confirm: 'Save & Exit',
-        cancel: 'Close without saving'
+        cancel: 'Close without saving',
+        style: 'small'
       },
       autoFocus: false,
     });

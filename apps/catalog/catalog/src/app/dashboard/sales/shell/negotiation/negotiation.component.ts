@@ -102,7 +102,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
       question: 'Please verify if all the contract elements are convenient for you.',
       confirm: 'Yes, submit Contract',
       cancel: 'Come back & Verify Contract',
-      style: 'medium'
+      style: 'small'
     };
     this.dialog.open(ConfirmComponent, { data });
   }

@@ -108,7 +108,7 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
       question: 'Please verify if all the contract elements are convenient for you.',
       confirm: 'Yes, submit',
       cancel: 'Come back & verify contract',
-      style: 'medium'
+      style: 'small'
     };
     this.dialog.open(ConfirmComponent, { data });
   }
