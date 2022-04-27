@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { ListFilterComponent, FilterDirective } from './list-filter.component';
+import { FilterButtonModule } from '@blockframes/ui/filter-button/filter-button.module';
 
 // Material
 import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
@@ -17,6 +18,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
   imports: [
     CommonModule,
     FlexLayoutModule,
+    FilterButtonModule,
     // Material
     MatButtonModule,
     MatIconModule,

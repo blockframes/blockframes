@@ -1,0 +1,18 @@
+button {
+  background: none;
+  cursor: pointer;
+  border: solid 1px var(--primary-contrast);
+  border-width: 1.5px;
+  border-radius: 26px;
+  padding: 8px 16px;
+  white-space: nowrap;
+  &:hover {
+    background-color: var(--background-hover);
+  }
+  &.primary {
+    border-color: var(--primary);
+    span {
+      color: var(--primary);
+    }
+  }
+}
