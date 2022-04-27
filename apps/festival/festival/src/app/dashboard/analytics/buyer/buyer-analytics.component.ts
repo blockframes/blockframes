@@ -14,7 +14,13 @@ import { joinWith } from "@blockframes/utils/operators";
 import { APP } from "@blockframes/utils/routes/utils";
 import { map, Observable, pluck, shareReplay, switchMap } from "rxjs";
 
-const events: { name: EventName, title: string, icon: IconSvg }[] = [
+interface VanityMetricEvent {
+  name: EventName;
+  title: string;
+  icon: IconSvg;
+};
+
+const events: VanityMetricEvent[] = [
   {
     name: 'pageView',
     title: 'Views',
