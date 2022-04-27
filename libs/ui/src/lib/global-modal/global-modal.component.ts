@@ -1,18 +1,22 @@
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/model';
 
-type Data = {
+export interface GlobalModalStyle {
+  style?: 'large' | 'medium' | 'small';
+}
+
+interface Data extends GlobalModalStyle {
   selectedFiles?: StorageFile[],
   onClose?: () => void
-  style?: 'large' | 'medium' | 'small';
 }
 
 @Component({
   selector: 'global-modal',
   templateUrl: './global-modal.component.html',
   styleUrls: ['./global-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class GlobalModalComponent {
 
@@ -28,7 +32,7 @@ export class GlobalModalComponent {
   }
 
   public setModalType() {
-    switch(this.data.style) {
+    switch(this.data?.style) {
       case 'large':
         return 'sizeL';
       case 'medium':
