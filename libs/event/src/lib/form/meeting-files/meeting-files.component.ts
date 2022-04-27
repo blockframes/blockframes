@@ -41,7 +41,7 @@ export class MeetingFilesComponent implements OnInit {
   }
 
   previewFile(ref: StorageFile) {
-    this.dialog.open(FilePreviewComponent, { data: { ref }, width: '80vw', height: '80vh', autoFocus: false })
+    this.dialog.open(FilePreviewComponent, { data: { ref, style: 'large' }, autoFocus: false })
   }
 
   openFileSelector() {

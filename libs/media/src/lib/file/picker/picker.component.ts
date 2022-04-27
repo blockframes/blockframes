@@ -119,9 +119,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
 
   previewFile(ref: StorageFile) {
     this.dialog.open(FilePreviewComponent, {
-      data: { ref },
-      width: '70vw',
-      height: '70vh',
+      data: { ref, style: 'large' },
       autoFocus: false,
     });
   }
