@@ -53,10 +53,7 @@ export class OrganizationsComponent {
   }
 
   createOrg() {
-    this.dialog.open(OrganizationCreateComponent, {
-      height: '80vh',
-      width: '60vw',
-    });
+    this.dialog.open(OrganizationCreateComponent, { data: { style: 'large' } });
   }
 
 }
