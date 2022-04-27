@@ -7,12 +7,12 @@
 .sizeL {
   padding: 48px;
   width: calc(80vw - 96px);
-  min-height: 350px;
-  max-height: 750px;
+  min-height: 450px;
+  max-height: min(calc(80vh - 96px), 750px);
   max-width: 1500px;
 
   .mat-dialog-content {
-    max-height: none;
+    max-height: min(calc(80vh - 240px), 510px);
   }
 }
 
@@ -20,11 +20,11 @@
   padding: 24px;
   width: 60vw;
   min-height: 350px;
-  max-height: 550px;
+  max-height: min(550px, 60vh);
   max-width: 1000px;
 
   .mat-dialog-content {
-    max-height: none;
+    max-height: min(calc(60vh - 96px), 454px);
   }
 }
 
