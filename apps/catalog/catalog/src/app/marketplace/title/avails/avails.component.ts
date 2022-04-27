@@ -175,9 +175,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   public explain() {
     this.dialog.open(ExplanationComponent, {
-      data: {
-        style: 'large'
-      },
+      data: { style: 'large' },
       autoFocus: false
     });
   }
