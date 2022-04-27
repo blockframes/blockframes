@@ -13,6 +13,17 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { combineLatest } from 'rxjs';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Negotiation } from '@blockframes/model';
+import { GlobalModalStyle } from '@blockframes/ui/global-modal/global-modal.component';
+
+interface DeclineData extends ConfirmDeclineData, GlobalModalStyle {}
+
+interface Data extends GlobalModalStyle {
+  onConfirm: () => void;
+  title: string;
+  question: string;
+  confirm: string;
+  cancel: string;
+}
 
 @Component({
   selector: 'catalog-contract-edit',
@@ -58,9 +69,10 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
 
   async decline() {
     const sale = await this.sale$.pipe(first()).toPromise();
-    const data: ConfirmDeclineData = { 
+    const data: DeclineData = { 
       type: 'buyer',
-      showAcceptTermsCheckbox: true
+      showAcceptTermsCheckbox: true,
+      style: 'medium'
     };
     const ref = this.dialog.open(ConfirmDeclineComponent, { data });
     const options = { params: { contractId: sale.id } };
@@ -90,12 +102,13 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
       this.router.navigate(['..'], { relativeTo: this.route });
     }
 
-    const data = {
+    const data: Data = {
       onConfirm,
       title: 'Are you sure to submit this contract?',
       question: 'Please verify if all the contract elements are convenient for you.',
       confirm: 'Yes, submit',
-      cancel: 'Come back & verify contract'
+      cancel: 'Come back & verify contract',
+      style: 'medium'
     };
     this.dialog.open(ConfirmComponent, { data });
   }

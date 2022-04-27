@@ -12,6 +12,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { filter, first, pluck } from 'rxjs/operators'
 import { Negotiation } from '@blockframes/model';
+import { GlobalModalStyle } from '@blockframes/ui/global-modal/global-modal.component';
+
+interface DeclineData extends ConfirmDeclineData, GlobalModalStyle {}
+
+interface Data extends GlobalModalStyle {
+  onConfirm: () => void;
+  title: string;
+  question: string;
+  confirm: string;
+  cancel: string;
+}
 
 @Component({
   selector: 'sale-negotiation',
@@ -54,9 +65,10 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   async decline() {
     this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
     const sale = await this.sale$.pipe(first()).toPromise();
-    const data: ConfirmDeclineData = { 
+    const data: DeclineData = { 
       type: 'seller',
-      showAcceptTermsCheckbox: true 
+      showAcceptTermsCheckbox: true,
+      style: "medium"
     };
     const ref = this.dialog.open(ConfirmDeclineComponent, { data });
     const options = { params: { contractId: sale.id } };
@@ -84,12 +96,13 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
       this.snackBar.open('Your counter offer has been sent', null, config);
       this.router.navigate(['..', 'view'], { relativeTo: this.route });
     };
-    const data = {
+    const data: Data = {
       onConfirm,
       title: 'Are you sure you wish to submit this contract?',
       question: 'Please verify if all the contract elements are convenient for you.',
       confirm: 'Yes, submit Contract',
-      cancel: 'Come back & Verify Contract'
+      cancel: 'Come back & Verify Contract',
+      style: 'medium'
     };
     this.dialog.open(ConfirmComponent, { data });
   }
