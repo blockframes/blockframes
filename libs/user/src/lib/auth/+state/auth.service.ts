@@ -11,6 +11,8 @@ import {
   DocumentMeta,
   Timestamp,
   App,
+  AnonymousCredentials,
+  AnonymousRole,
 } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
@@ -40,7 +42,6 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { doc, docData, getDoc, DocumentReference, writeBatch } from '@angular/fire/firestore';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { runInZone } from '@blockframes/utils/zone';
-import { AnonymousCredentials, AnonymousRole } from './auth.model';
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'auth' })
