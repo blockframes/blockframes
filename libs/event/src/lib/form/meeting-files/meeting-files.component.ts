@@ -46,11 +46,10 @@ export class MeetingFilesComponent implements OnInit {
 
   openFileSelector() {
     this.dialog.open(FilePickerComponent, {
-      width: '80%',
-      height: '80%',
       disableClose: true,
       data: {
         selectedFiles: this.files.value,
+        style: 'large'
       }
     }).afterClosed().pipe(take(1)).subscribe(result => {
       this.files.patchAllValue(result);

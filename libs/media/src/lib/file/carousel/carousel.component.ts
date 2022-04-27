@@ -38,11 +38,10 @@ export class FileCarouselComponent {
 
   openFileSelector() {
     this.dialog.open(FilePickerComponent, {
-      width: '80%',
-      height: '80%',
       disableClose: true,
       data: {
         selectedFiles: this.files,
+        style: 'large'
       }
     }).afterClosed().subscribe((result: string[]) => {
       this.picked.emit(result);
