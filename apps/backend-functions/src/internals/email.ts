@@ -7,10 +7,17 @@ import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import * as admin from 'firebase-admin';
-import { getMailSender, appLogo, applicationUrl } from '@blockframes/utils/apps';
+import { getMailSender, appLogo, applicationUrl, AppLogoValue } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { logger } from 'firebase-functions';
-import { App, appDescription, AppMailSetting, appName } from '@blockframes/model';
+import { App, appDescription, appName, AppNameValue } from '@blockframes/model';
+
+interface AppMailSetting {
+  description: string;
+  logo: AppLogoValue;
+  name: AppNameValue;
+  url?: string;
+}
 
 // Substitutions used in Sendgrid templates
 const substitutions = {
