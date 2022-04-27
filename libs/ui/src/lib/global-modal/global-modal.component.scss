@@ -7,26 +7,24 @@
 .sizeL {
   padding: 48px;
   width: calc(80vw - 96px);
-  height: calc(80vh - 96px);
+  min-height: 550px;
   max-height: 750px;
   max-width: 1500px;
 
   .mat-dialog-content {
-    height: calc(80vh - 240px);
-    max-height: calc(750px - 144px);
+    max-height: none;
   }
 }
 
 .sizeM {
   padding: 24px;
   width: 60vw;
-  height: 60vh;
+  min-height: 350px;
   max-height: 550px;
   max-width: 1000px;
 
   .mat-dialog-content {
-    height: calc(60vh - 96px);
-    max-height: calc(550px - 96px);
+    max-height: none;
   }
 }
 
