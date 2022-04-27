@@ -1,6 +1,15 @@
-import { Module, ModuleAccess } from '@blockframes/model';
 import { MovieLanguageSpecification, MovieRunningTime, MovieRelease } from './movie';
-import { Genre, Language, Territory, ProductionStatus, StoreStatus, OrgActivity, ContentType } from './static';
+import {
+  Genre,
+  Language,
+  Territory,
+  ProductionStatus,
+  StoreStatus,
+  OrgActivity,
+  ContentType,
+  Module,
+  ModuleAccess
+} from './static';
 
 export interface AlgoliaConfig {
   searchableAttributes: string[];
