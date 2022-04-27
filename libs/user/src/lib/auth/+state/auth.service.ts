@@ -2,7 +2,16 @@ import { Inject, Injectable, NgZone, Optional } from '@angular/core';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { FireAuthService, CollectionConfig, FireAuthState, RoleState, initialAuthState } from 'akita-ng-fire';
 import { map, switchMap, take, tap } from 'rxjs/operators';
-import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta, Timestamp, App } from '@blockframes/model';
+import {
+  createUser,
+  PublicUser,
+  User,
+  PrivacyPolicy,
+  createDocumentMeta,
+  DocumentMeta,
+  Timestamp,
+  App,
+} from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
@@ -11,7 +20,6 @@ import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { IpService } from '@blockframes/utils/ip';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
-import { AnonymousCredentials, AnonymousRole } from './auth.model';
 import { getAnalytics, setUserProperties } from '@angular/fire/analytics';
 import {
   Auth,
@@ -32,6 +40,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { doc, docData, getDoc, DocumentReference, writeBatch } from '@angular/fire/firestore';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { runInZone } from '@blockframes/utils/zone';
+import { AnonymousCredentials, AnonymousRole } from './auth.model';
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'auth' })
