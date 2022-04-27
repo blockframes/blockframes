@@ -3,7 +3,17 @@ import { Functions, httpsCallable } from '@angular/fire/functions';
 import { FireAuthService, CollectionConfig, FireAuthState, RoleState, initialAuthState } from 'akita-ng-fire';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { App } from '@blockframes/utils/apps';
-import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta, Timestamp } from '@blockframes/model';
+import {
+  createUser,
+  PublicUser,
+  User,
+  PrivacyPolicy,
+  createDocumentMeta,
+  DocumentMeta,
+  Timestamp,
+  AnonymousCredentials,
+  AnonymousRole
+} from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
@@ -12,7 +22,6 @@ import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { IpService } from '@blockframes/utils/ip';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
-import { AnonymousCredentials, AnonymousRole } from './auth.model';
 import { getAnalytics, setUserProperties } from '@angular/fire/analytics';
 import {
   Auth,

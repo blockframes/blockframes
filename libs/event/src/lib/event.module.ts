@@ -10,6 +10,8 @@ import { CalendarHeaderComponent } from './components/header/header.component';
 import { CalendarWeekComponent } from './components/week/week.component';
 import { EventSmallDirective, EventLargeDirective } from './components/event.directive';
 import { EventSizePipe } from './components/event.pipe';
+import { ToLabelModule } from '@blockframes/utils/pipes';
+
 // Forms
 import { EventCreateComponent } from './form/create/create.component';
 import { EditDetailsModule } from './form/edit-details/edit-details.module';
@@ -51,6 +53,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
       provide: DateAdapter,
       useFactory: adapterFactory
     }),
+    ToLabelModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,

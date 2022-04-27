@@ -1,7 +1,7 @@
 import { AccessibilityTypes } from './static';
 import { toDate } from '@blockframes/utils/helpers';
 import { CalendarEvent } from 'angular-calendar';
-import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
+import { AnonymousCredentials } from '@blockframes/model';
 import { Organization } from './organisation';
 import { Movie } from './movie';
 import { User } from './user';
@@ -203,4 +203,10 @@ export function createMeetingAttendee(
     lastName: user.lastName,
     status,
   };
+}
+
+export function hasMedia(event: Event<Screening | Slate>) {
+  const hasScreener = isScreening(event) && event.meta.titleId;
+  const hasSlate = isSlate(event) && event.meta.videoId;
+  return hasScreener || hasSlate;
 }

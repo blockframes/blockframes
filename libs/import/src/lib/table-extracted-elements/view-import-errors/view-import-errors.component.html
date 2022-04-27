@@ -12,7 +12,7 @@
           <mat-icon [svgIcon]="error.type === 'error' ? 'cancel' : 'block' "></mat-icon>
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <p>{{ error.hint }}</p>
+      <p>{{ error.message }}</p>
       <mat-action-row>
         <button *ngIf="i > 0" mat-button color="warn" (click)="prevStep()">Previous</button>
         <ng-container *ngIf="element.errors.length">

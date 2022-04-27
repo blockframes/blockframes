@@ -89,6 +89,8 @@ export type OrganizationStatus = keyof typeof organizationStatus;
 
 export type InvitationStatus = keyof typeof invitationStatus;
 
+export type AnonymousRole = 'guest' | 'organizer';
+
 export type PremiereType = keyof typeof premiereType;
 
 export type ProducerRole = keyof typeof producerRoles;

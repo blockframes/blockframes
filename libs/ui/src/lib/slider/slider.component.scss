@@ -1,3 +1,5 @@
+@import "@angular/flex-layout/mq";
+
 :host {
   display: block;
   position: relative;
@@ -28,6 +30,7 @@ img {
   bottom: 40px;
   z-index: 1;
   left: 50%;
+  transform: translate(-50%);
   outline: none;
   button {
     width: 16px;
@@ -46,4 +49,10 @@ img {
 // style scss there is a default margin setted
 span {
     margin: 0;
+}
+
+@include layout-bp(xs) {
+  .indicator {
+    bottom: 20px;
+  }
 }

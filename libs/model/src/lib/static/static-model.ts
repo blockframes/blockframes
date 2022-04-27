@@ -1,4 +1,5 @@
 import { appName } from '@blockframes/utils/apps';
+import { EventTypes } from '../event';
 import { Territory } from './types';
 
 export const contractStatus = {
@@ -45,6 +46,14 @@ export const contentType = {
   movie: 'Movie',
   tv: 'TV'
 }
+
+export const eventTypes: Record<EventTypes, string> = {
+  meeting: 'Meeting',
+  screening: 'Screening',
+  slate: 'Slate Presentation',
+  standard: 'Standard',
+  local: 'Local'
+};
 
 export const crewRoles = {
   writer: 'Writer',
@@ -1255,6 +1264,7 @@ export const staticModel = {
   contentType,
   crewRoles,
   directorCategory,
+  eventTypes,
   genres,
   hostedVideoTypes,
   invitationType,
