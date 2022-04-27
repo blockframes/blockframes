@@ -247,7 +247,7 @@ export class UserComponent implements OnInit {
   }
 
   openDetails(terms: string[], scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope, style: 'medium' }, autoFocus: false });
   }
 
   getLink(invitation: Invitation) {

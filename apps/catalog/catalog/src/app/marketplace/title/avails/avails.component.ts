@@ -182,12 +182,12 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   /** Open a modal to display the entire list of territories when this one is too long */
   public openTerritoryModal(term: BucketTerm) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms: term.territories, scope: 'territories', style: 'large' }, autoFocus: false });
+    this.dialog.open(DetailedTermsComponent, { data: { terms: term.territories, scope: 'territories', style: 'medium' }, autoFocus: false });
   }
 
   /** Open a modal to display holdback warnings */
   openHoldbackModal(holdbacks: Holdback[]) {
-    this.dialog.open(HoldbackModalComponent, { data: { holdbacks, withWarning: true, style: 'large' } });
+    this.dialog.open(HoldbackModalComponent, { data: { holdbacks, withWarning: true, style: 'medium' } });
   }
 
   confirmExit() {

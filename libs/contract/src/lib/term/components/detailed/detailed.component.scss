@@ -1,13 +1,5 @@
-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  overflow: hidden;
-  h2 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+h2 {
+  text-align: center;
 }
 
 section {
