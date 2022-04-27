@@ -7,8 +7,6 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Holdback, Movie } from '@blockframes/model';
-import { FormList } from '@blockframes/utils/form';
-import { HoldbackForm } from '../form';
 import { SelectionModalComponent } from '../selection-modal/selection-modal.component';
 
 @Component({
@@ -29,7 +27,8 @@ export class HolbackFormComponent {
       data: {
         title: this.title,
         holdbacks: this.holdbacks,
-        holdbacksChange: this.holdbacksChange
+        holdbacksChange: this.holdbacksChange,
+        style: 'large'
       }
     });
   }
