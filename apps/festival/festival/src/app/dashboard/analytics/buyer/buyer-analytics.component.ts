@@ -4,7 +4,7 @@ import { AnalyticsService } from "@blockframes/analytics/+state/analytics.servic
 import { aggregate } from "@blockframes/analytics/+state/utils";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
 import { AggregatedAnalytic, EventName } from "@blockframes/model";
-import { MovieService } from "@blockframes/movie/+state/movie.service";
+import { fromOrgAndAccepted, MovieService } from "@blockframes/movie/+state/movie.service";
 import { OrganizationService } from "@blockframes/organization/+state";
 import { IconSvg } from "@blockframes/ui/icon.service";
 import { NavigationService } from "@blockframes/ui/navigation.service";
@@ -70,7 +70,7 @@ export class BuyerAnalyticsComponent {
     }, { shouldAwait: true })
   );
 
-  buyerAnalytics$ = this.titleService.queryDashboard(this.app).pipe(
+  buyerAnalytics$ = this.titleService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
     joinWith({
       analytics: title => {
         const { userId } = this.route.snapshot.params;
