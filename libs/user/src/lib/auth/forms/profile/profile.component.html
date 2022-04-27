@@ -5,16 +5,16 @@
   <mat-card-content>
     <mat-form-field appearance="outline">
       <mat-label>First Name</mat-label>
-      <input matInput test-id="name-form" placeholder="First name" type="text" [formControl]="form.get('firstName')" required />
+      <input matInput test-id="name-form" placeholder="First Name" type="text" [formControl]="form.get('firstName')" required />
       <mat-error *ngIf="form.get('firstName').hasError('required')">
-        First name is <strong>required</strong>.
+        First Name is <strong>required</strong>.
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Last Name</mat-label>
-      <input matInput test-id="surname-form" placeholder="Last name" type="text" [formControl]="form.get('lastName')" required />
+      <input matInput test-id="surname-form" placeholder="Last Name" type="text" [formControl]="form.get('lastName')" required />
       <mat-error *ngIf="form.get('lastName').hasError('required')">
-        Last name is <strong>required</strong>.
+        Last Name is <strong>required</strong>.
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
