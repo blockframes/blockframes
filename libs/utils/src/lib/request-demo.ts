@@ -1,4 +1,4 @@
-import { App } from "./apps";
+import { App } from '@blockframes/model';
 
 /** Custom object used to build a demo request email. */
 export interface RequestDemoInformations {

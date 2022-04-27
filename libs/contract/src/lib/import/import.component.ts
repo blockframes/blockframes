@@ -2,7 +2,7 @@ import { Inject, Component, ChangeDetectionStrategy, Optional } from '@angular/c
 import { Intercom } from 'ng-intercom';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { APP } from '@blockframes/utils/routes/utils';
-import { App } from '@blockframes/utils/apps';
+import { App } from '@blockframes/model';
 
 @Component({
   selector: 'contract-import',

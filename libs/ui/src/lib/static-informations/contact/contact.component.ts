@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { Functions, httpsCallable } from "@angular/fire/functions";
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { App } from "@blockframes/utils/apps";
 import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/model';
 
 @Component({
   selector: 'bf-contact',

@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { App, Module, applicationUrl } from '@blockframes/utils/apps';
+import { App, Module } from '@blockframes/model';
+import { applicationUrl } from '@blockframes/utils/apps';
 
 @Pipe({ name: 'goToApp', pure: true })
 export class GoToAppPipe implements PipeTransform {
