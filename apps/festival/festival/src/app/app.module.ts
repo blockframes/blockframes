@@ -61,31 +61,31 @@ import { APP } from '@blockframes/utils/routes/utils';
     IntercomModule.forRoot({ appId: intercomId }),
 
     // Firebase
-    provideFirebaseApp(() => initializeApp(firebase('festival'))),
-    provideFirestore(() => {
+    provideFirebaseApp(() => initializeApp(firebase('festival'))), // TODO #8280 remove
+    provideFirestore(() => { // TODO #8280 put on emulator env.ts
       const db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
       if (emulatorConfig.firestore) {
         connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
       }
       return db;
     }),
-    provideFunctions(() => {
+    provideFunctions(() => {  // TODO #8280 put on emulator env.ts
       const functions = getFunctions(getApp(), firebaseRegion);
       if (emulatorConfig.functions) {
         connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
       }
       return functions;
     }),
-    providePerformance(() => getPerformance()),
-    provideAuth(() => {
+    providePerformance(() => getPerformance()), // TODO #8280 remove ?
+    provideAuth(() => {  // TODO #8280 put on emulator env.ts
       const auth = getAuth();
       if (emulatorConfig.auth) {
         connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
       }
       return auth;
     }),
-    provideStorage(() => getStorage()),
-    provideAnalytics(() => getAnalytics()),
+    provideStorage(() => getStorage()), // TODO #8280 remove
+    provideAnalytics(() => getAnalytics()), // TODO #8280 remove ?
 
     sentryDsn ? SentryModule : ErrorLoggerModule,
 

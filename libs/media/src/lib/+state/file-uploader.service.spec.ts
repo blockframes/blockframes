@@ -7,11 +7,12 @@ import { UploadData } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { initializeFirestore, provideFirestore } from '@angular/fire/firestore';
-import * as storage from '@angular/fire/storage';
+import { FIREBASE_CONFIG, FireStorage, FIRESTORE_SETTINGS } from 'ngfire';
 
 class DummyService { }
 
 describe('Media Service Test Suite', () => {
+  let storage: FireStorage;
   let service: FileUploaderService;
 
   const TESTDATA: UploadData = {
@@ -29,12 +30,16 @@ describe('Media Service Test Suite', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
-        provideFirebaseApp(() => initializeApp({ projectId: 'test' })),
-        provideFirestore(() => initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true })),
-        storage.provideStorage(() => storage.getStorage()),
+        provideFirebaseApp(() => initializeApp({ projectId: 'test' })), // TODO #8280 remove
+        provideFirestore(() => initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true })), // TODO #8280 remove
       ],
       providers: [
         FileUploaderService,
+        {
+          provide: FireStorage, useFactory: () => ({
+            upload: jest.fn()
+          })
+        },
         {
           provide: Overlay, useFactory: () => ({
             create: () => ({ attach: () => ({}), detach: () => ({}) }),
@@ -42,18 +47,12 @@ describe('Media Service Test Suite', () => {
           })
         },
         { provide: AuthService, useClass: DummyService },
+        { provide: FIREBASE_CONFIG, useValue: { options: { projectId: 'test' } } },
+        { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
       ],
     });
+    storage = TestBed.inject(FireStorage);
     service = TestBed.inject(FileUploaderService);
-
-    // Mock ref function
-    jest.spyOn(storage, 'ref').mockImplementation(() => ({} as any));
-
-    // Mock uploadBytesResumable function
-    jest.spyOn(storage, 'uploadBytesResumable').mockImplementation(() => ({ // TODO #8280 rework
-      then: () => { true },
-      on: () => { true }
-    } as any));
   });
 
   afterEach(() => clearFirestoreData({ projectId: 'test' }))
@@ -85,7 +84,7 @@ describe('Media Service Test Suite', () => {
     const storagePath = 'unit-test/testFile.tst';
     service.addToQueue(storagePath, TESTDATA);
     service.upload();
-    expect(storage.uploadBytesResumable).not.toHaveBeenCalled();
+    expect(storage.upload).not.toHaveBeenCalled()
   })
 
   it('Upload a file with valid metadata & verify storage upload is invoked', async () => {
@@ -95,6 +94,6 @@ describe('Media Service Test Suite', () => {
     const storagePath = 'unit-test/testFile.tst';
     service.addToQueue(storagePath, TESTDATA);
     service.upload();
-    expect(storage.uploadBytesResumable).toHaveBeenCalled();
+    expect(storage.upload).toHaveBeenCalled();
   });
 });
