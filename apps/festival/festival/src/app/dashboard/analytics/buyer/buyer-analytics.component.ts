@@ -9,7 +9,7 @@ import { OrganizationService } from "@blockframes/organization/+state";
 import { IconSvg } from "@blockframes/ui/icon.service";
 import { NavigationService } from "@blockframes/ui/navigation.service";
 import { UserService } from "@blockframes/user/+state";
-import { App } from "@blockframes/utils/apps";
+import { App } from "@blockframes/model";
 import { joinWith } from "@blockframes/utils/operators";
 import { APP } from "@blockframes/utils/routes/utils";
 import { map, Observable, pluck, shareReplay, switchMap } from "rxjs";
