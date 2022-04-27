@@ -10,6 +10,7 @@ import { CalendarHeaderComponent } from './components/header/header.component';
 import { CalendarWeekComponent } from './components/week/week.component';
 import { EventSmallDirective, EventLargeDirective } from './components/event.directive';
 import { EventSizePipe } from './components/event.pipe';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 // Forms
 import { EventCreateComponent } from './form/create/create.component';
 import { EditDetailsModule } from './form/edit-details/edit-details.module';
@@ -47,6 +48,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ReactiveFormsModule,
     FlexLayoutModule,
     EditDetailsModule,
+    GlobalModalModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
