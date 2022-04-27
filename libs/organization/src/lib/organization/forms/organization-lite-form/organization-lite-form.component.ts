@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, Inject } from '@angular/core';
-import { organizationRoles, orgActivity } from '@blockframes/model';
-import { App } from '@blockframes/utils/apps';
+import { organizationRoles, orgActivity, App } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { OrganizationLiteForm } from '../organization-lite.form';
 

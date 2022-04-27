@@ -4,7 +4,7 @@
  * This code deals directly with the low level parts of firebase,
  */
 import * as admin from 'firebase-admin';
-import { App, getOrgAppAccess } from '@blockframes/utils/apps';
+import { App, getOrgAppAccess } from '@blockframes/model';
 import { getDocument } from '@blockframes/firebase-utils/firebase-utils';
 import { createStorageFile, createDenomination, OrganizationDocument, PublicUser, InvitationDocument, PublicInvitation, PermissionsDocument, DocumentMeta } from '@blockframes/model';
 

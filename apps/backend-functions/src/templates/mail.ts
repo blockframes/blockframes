@@ -7,19 +7,30 @@ import { supportEmails, appUrl, e2eMode } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
-import { 
-  PublicUser, 
-  OrganizationDocument, 
-  PublicOrganization, 
-  MovieDocument, 
-  ContractDocument, 
-  NegotiationDocument, 
+import {
+  PublicUser,
+  OrganizationDocument,
+  PublicOrganization,
+  MovieDocument,
+  ContractDocument,
+  NegotiationDocument,
   Offer,
   Bucket,
   Timestamp,
+  App,
+  appName,
+  Module
 } from '@blockframes/model';
-import { EventEmailData, OrgEmailData, UserEmailData, getMovieEmailData, getOfferEmailData, MovieEmailData, getBucketEmailData, getNegotiationEmailData } from '@blockframes/utils/emails/utils';
-import { App, appName, Module } from '@blockframes/utils/apps';
+import {
+  EventEmailData,
+  OrgEmailData,
+  UserEmailData,
+  getMovieEmailData,
+  getOfferEmailData,
+  MovieEmailData,
+  getBucketEmailData,
+  getNegotiationEmailData
+} from '@blockframes/utils/emails/utils';
 import { format } from "date-fns";
 import { supportMailosaur } from '@blockframes/utils/constants';
 

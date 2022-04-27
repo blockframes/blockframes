@@ -1,5 +1,4 @@
-import { Organization } from "@blockframes/model";
-import { App } from "@blockframes/utils/apps";
+import { Organization, App } from '@blockframes/model';
 
 export function canHavePreferences(org: Organization, app: App) {
   if (app !== 'catalog' && app !== 'festival') return;

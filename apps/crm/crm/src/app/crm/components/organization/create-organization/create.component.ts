@@ -3,13 +3,12 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
-import { createPublicUser } from '@blockframes/model';
+import { createPublicUser, getOrgAppAccess } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from '@blockframes/user/+state';
 import { FormEntity } from '@blockframes/utils/form';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
-import { getOrgAppAccess } from '@blockframes/utils/apps';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
 import { where } from 'firebase/firestore';
 

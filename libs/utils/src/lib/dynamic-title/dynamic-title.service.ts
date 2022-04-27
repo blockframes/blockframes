@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { App, appName } from '../apps';
+import { App, appName } from '@blockframes/model';
 import { APP } from '../routes/utils';
 
 function displaySection(section: string, showAppName: boolean, _appName: string) {

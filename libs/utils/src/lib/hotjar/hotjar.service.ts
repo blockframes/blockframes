@@ -1,15 +1,14 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-
+import { App } from '@blockframes/model';
 import { hotjar } from '@env';
-import { App } from '../apps';
 
 @Injectable({ providedIn: 'root' })
 export class HotjarService {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: unknown
-  ) {}
+  ) { }
 
   public insertHotjar(app: App) {
     const hotjarId = hotjar[app];
