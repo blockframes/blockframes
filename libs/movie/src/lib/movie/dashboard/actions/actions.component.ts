@@ -61,6 +61,7 @@ export class DashboardActionsShellComponent {
           const ref = this.snackbar.open('Title deleted.', '', { duration: 4000 });
           ref.afterDismissed().subscribe(() => this.router.navigate(['/c/o/dashboard/title']));
         },
+        style: 'medium'
       }
     });
   }

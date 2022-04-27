@@ -170,6 +170,7 @@ export class OrganizationComponent implements OnInit {
           this.snackBar.open('Organization deleted!', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/organizations']);
         },
+        style: 'medium'
       },
     });
   }

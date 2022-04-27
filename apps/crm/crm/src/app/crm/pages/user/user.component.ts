@@ -208,7 +208,8 @@ export class UserComponent implements OnInit {
           await this.userService.remove(this.userId);
           this.snackBar.open('User deleted !', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/users']);
-        }
+        },
+        style: 'medium'
       }
     });
   }

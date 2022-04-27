@@ -125,6 +125,7 @@ export class MovieComponent implements OnInit {
           this.snackBar.open('Movie deleted !', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/movies']);
         },
+        style: 'medium'
       },
     });
   }
