@@ -8,6 +8,7 @@ import {
   latestAnonDbDir,
   loadAdminServices,
   restoreAnonStorageFromCI,
+  startMaintenance,
 } from '@blockframes/firebase-utils';
 import {
   connectAuthEmulator,
@@ -27,7 +28,11 @@ import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 const { storageBucket } = firebase();
 
 export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string } = {}) {
+
   const { storage, db, auth } = loadAdminServices();
+
+  await startMaintenance(db)
+
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.log('Copying AnonDb from CI...');
@@ -67,6 +72,9 @@ export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string 
   console.info('Algolia ready for testing!');
 
   insurance(); // Switch off maintenance insurance
+
+  await endMaintenance(db, EIGHT_MINUTES_IN_MS);
+
 }
 
 export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string } = {}) {

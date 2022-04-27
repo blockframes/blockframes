@@ -24,7 +24,6 @@ import {
   syncAuthEmulatorWithFirestoreEmulator,
 } from './emulator';
 import { backupLiveEnv, restoreLiveEnv } from './backup';
-import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import { rescueJWP } from './rescueJWP';
 import { loadAndShrinkLatestAnonDbAndUpload } from './db-shrink';
 import { printDatabaseInconsistencies } from './internals/utils';
@@ -39,9 +38,7 @@ async function runCommand() {
   const { db } = loadAdminServices();
   switch (cmd) {
     case 'prepareForTesting':
-      await startMaintenance(db);
       await prepareForTesting({ dbBackupURL: arg1 });
-      await endMaintenance(db, EIGHT_MINUTES_IN_MS);
       break;
     case 'displayCredentials':
       await displayCredentials();
