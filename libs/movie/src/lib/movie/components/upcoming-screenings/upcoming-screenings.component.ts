@@ -116,9 +116,7 @@ export class UpcomingScreeningsComponent {
 
   requestAskingPrice() {
     const ref = this.dialog.open(RequestAskingPriceComponent, {
-      data: { movieId: this.movieId },
-      maxHeight: '80vh',
-      maxWidth: '650px',
+      data: { movieId: this.movieId, style: 'large' },
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {

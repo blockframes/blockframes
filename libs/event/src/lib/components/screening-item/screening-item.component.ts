@@ -53,9 +53,7 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
 
   requestAskingPrice(movieId: string) {
     const ref = this.dialog.open(RequestAskingPriceComponent, {
-      data: { movieId },
-      maxHeight: '80vh',
-      maxWidth: '650px',
+      data: { movieId, style: 'large' },
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {
