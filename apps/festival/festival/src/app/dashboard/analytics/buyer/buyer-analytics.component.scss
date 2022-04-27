@@ -34,12 +34,6 @@ section {
   flex-direction: column;
   gap: 24px;
   padding: 24px;
-
-  .metrics {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    grid-gap: 24px;
-  }
 }
 
 @include layout-bp(xs) {
