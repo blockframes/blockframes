@@ -1,7 +1,3 @@
-wishlist-button {
-  .mat-icon {
-    path, g, polygon {
-      fill: var(--primary-contrast);
-    }
-  }
+mat-icon {
+  color: var(--primary-contrast);
 }

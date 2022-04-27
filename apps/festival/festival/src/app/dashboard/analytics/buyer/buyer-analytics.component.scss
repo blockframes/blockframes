@@ -14,11 +14,11 @@ header {
     border-radius: 50%;
   }
 
-  section {
+  article {
     display: flex;
     gap: 24px;
 
-    article {
+    div {
       display: flex;
       flex-direction: column;
 
@@ -27,6 +27,13 @@ header {
       }
     }
   }
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
 }
 
 @include layout-bp(xs) {
