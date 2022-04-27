@@ -1,4 +1,4 @@
-import { App } from '@blockframes/model';
+import { App } from './static';
 import { Timestamp } from './timestamp';
 
 export interface DocumentMeta<D> {
