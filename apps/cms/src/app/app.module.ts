@@ -2,6 +2,7 @@
 import { emulatorConfig } from '../environment/environment';
 import { firebase, firebaseRegion } from '@env';
 import { FormFactoryModule } from 'ng-form-factory';
+import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
@@ -61,7 +62,9 @@ import { APP } from '@blockframes/utils/routes/utils';
     FormFactoryModule,
   ],
   providers: [
-    { provide: APP, useValue: 'cms' }
+    { provide: APP, useValue: 'cms' },
+    { provide: FIREBASE_CONFIG, useValue: { options: firebase('cms') } },
+    { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
   ],
   bootstrap: [AppComponent],
 })

@@ -2,6 +2,7 @@ import { filter } from 'rxjs/operators';
 import { emulatorConfig } from '../environment/environment';
 import { firebase, production, intercomId, firebaseRegion, sentryDsn } from '@env';
 import { IntercomModule } from 'ng-intercom';
+import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
@@ -110,6 +111,8 @@ import { APP } from '@blockframes/utils/routes/utils';
         maxHeight: '80vh'
       }
     },
+    { provide: FIREBASE_CONFIG, useValue: { options: firebase('financiers') } },
+    { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
   ],
   bootstrap: [AppComponent]
 })

@@ -71,7 +71,7 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   }
 
   updateHoldbacks(contractId: string, holdbacks: Holdback[]) {
-    this.contractService.update(contractId, { holdbacks });
+    this.contractService.update(contractId, { holdbacks } as any); // TODO #8280 any
   }
 
   confirm(term: Term) {

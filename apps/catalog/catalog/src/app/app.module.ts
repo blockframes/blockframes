@@ -2,6 +2,7 @@ import { filter } from 'rxjs/operators';
 import { emulatorConfig } from '../environment/environment';
 import { production, firebase, firebaseRegion, sentryDsn, intercomId } from '@env';
 import { IntercomModule } from 'ng-intercom';
+import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
@@ -120,7 +121,9 @@ import { APP } from '@blockframes/utils/routes/utils';
         maxWidth: '80vw',
         maxHeight: '80vh'
       }
-    }
+    },
+    { provide: FIREBASE_CONFIG, useValue: { options: firebase('catalog') } },
+    { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
   ],
   bootstrap: [AppComponent]
 })
