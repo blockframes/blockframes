@@ -1,9 +1,8 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { where } from 'firebase/firestore';
 import { Functions, httpsCallable } from '@angular/fire/functions';
-import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { AuthService } from '@blockframes/auth/+state';
+import { OrganizationService } from '@blockframes/organization/service';
+import { AuthService } from '@blockframes/auth/service';
 import {
   createPublicUser,
   PublicUser,
@@ -12,29 +11,21 @@ import {
   Organization,
   createInvitation,
   Invitation,
-  InvitationDocument,
   InvitationStatus,
   AlgoliaOrganization
 } from '@blockframes/model';
-import { toDate } from '@blockframes/utils/helpers';
-import { cleanInvitation } from '../invitation-utils';
-import {
-  App,
-  getOrgAppAccess
-} from '@blockframes/utils/apps';
+import { getOrgAppAccess } from '@blockframes/utils/apps';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { PermissionsService } from '@blockframes/permissions/+state';
-import { ActiveState, EntityState } from '@datorama/akita';
-import { APP } from '@blockframes/utils/routes/utils';
+import { PermissionsService } from '@blockframes/permissions/service';
 import { subMonths } from 'date-fns';
-
-interface InvitationState extends EntityState<Invitation>, ActiveState<string> { }
+import { AtomicWrite } from 'ngfire';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'invitations' })
-export class InvitationService extends CollectionService<InvitationState> {
-  readonly useMemorization = false;
+export class InvitationService extends BlockframesCollection<Invitation> {
+  readonly path = 'invitations';
+
   /**
    * Return true if there is already a pending invitation for a list of users
    */
@@ -113,24 +104,15 @@ export class InvitationService extends CollectionService<InvitationState> {
     private orgService: OrganizationService,
     private authService: AuthService,
     private permissionsService: PermissionsService,
-    private functions: Functions,
-    @Inject(APP) private app: App
+    private functions: Functions
   ) {
     super();
   }
 
-  formatFromFirestore(_invitation: InvitationDocument): Invitation {
-    const invitation = {
-      ..._invitation,
-      date: toDate(_invitation.date)
-    }
+  toFirestore(invitation: Invitation) {
+    delete invitation.message;
     return invitation;
   }
-
-  formatToFirestore(invitation: Invitation): Invitation {
-    return cleanInvitation(invitation);
-  }
-
   /////////////
   // QUERIES //
   /////////////

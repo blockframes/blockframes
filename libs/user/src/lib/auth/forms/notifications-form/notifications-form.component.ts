@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, Pipe, PipeTransform, Inject } from 
 import { NotificationsForm } from './notifications.form';
 import { App } from "@blockframes/utils/apps";
 import { NotificationTypesBase, notificationTypesBase } from '@blockframes/model';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';

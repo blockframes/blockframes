@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '@blockframes/auth/+state';
-import { AnonymousRole } from '@blockframes/auth/+state/auth.model';
+import { AuthService } from '@blockframes/auth/service';
+import { AnonymousRole } from '@blockframes/auth/model';
 import { EventService } from '@blockframes/event/service';
 
 @Component({

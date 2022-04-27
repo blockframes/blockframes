@@ -12,13 +12,13 @@ import { TwilioService } from '@blockframes/event/components/meeting/+state/twil
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 import { ErrorResultResponse, extensionToType } from '@blockframes/utils/utils';
-import { MediaService } from '@blockframes/media/+state';
+import { MediaService } from '@blockframes/media/service';
 import { Functions, httpsCallable } from '@angular/fire/functions';
-import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
+import { InvitationService } from '@blockframes/invitation/service';
 import { filter, pluck, scan, switchMap, take } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
-import { AuthService } from '@blockframes/auth/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { AuthService } from '@blockframes/auth/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 import {
   Event,

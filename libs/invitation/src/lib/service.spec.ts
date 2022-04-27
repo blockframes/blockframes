@@ -1,7 +1,7 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
 import { TestBed } from '@angular/core/testing';
-import { InvitationService } from './invitation.service';
-import { AuthService } from '@blockframes/auth/+state';
+import { InvitationService } from './service';
+import { AuthService } from '@blockframes/auth/service';
 import { toDate } from '@blockframes/utils/helpers';
 import {
   Firestore,
@@ -18,8 +18,8 @@ import { initializeTestEnvironment } from '@firebase/rules-unit-testing';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { readFileSync } from 'fs';
 import { Observable, of } from 'rxjs';
-import { UserService } from '@blockframes/user/+state/user.service';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { UserService } from '@blockframes/user/service';
+import { AnalyticsService } from '@blockframes/analytics/service';
 import { createInvitation, createUser, InvitationDocument } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -111,7 +111,7 @@ describe('Invitations Test Suite', () => {
     //Create an Invitation Document
     const newInvite = createInvitation();
     const invite: InvitationDocument = { ...newInvite, ...{ date: timestamp } }
-    const formattedInvite = invitationService.formatFromFirestore(invite);
+    const formattedInvite = invitationService.fromFirestore(invite);
     expect(formattedInvite.date).toEqual(formattedDate);
   });
 
@@ -122,7 +122,7 @@ describe('Invitations Test Suite', () => {
     const inviteData = { ...invitationParamsOrg, ...invitationParamsUser };
     const inviteParams = { ...inviteData, ...{ message: 'Clean it', watchTime: undefined } };
     const newInvite = createInvitation(inviteParams);
-    const formattedInvite = invitationService.formatToFirestore(newInvite);
+    const formattedInvite = invitationService.toFirestore(newInvite);
     expect(formattedInvite).toMatchObject(inviteData);
   });
 

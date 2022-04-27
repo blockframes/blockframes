@@ -1,12 +1,12 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SaleShellComponent } from '../shell.component';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/model';
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { AuthService } from '@blockframes/auth/+state';
+import { NegotiationService } from '@blockframes/contract/negotiation/service';
+import { AuthService } from '@blockframes/auth/service';
 
 @Component({
   selector: 'sale-view',

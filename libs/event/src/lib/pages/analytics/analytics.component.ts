@@ -4,11 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { pluck, switchMap, take, tap } from 'rxjs/operators';
 import { EventService } from '@blockframes/event/service';
 import { Observable } from 'rxjs';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/service';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { toLabel } from '@blockframes/utils/pipes';
 import { orgName } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { Event, EventMeta, EventTypes } from '@blockframes/model';
 
 interface WatchTimeInfo {

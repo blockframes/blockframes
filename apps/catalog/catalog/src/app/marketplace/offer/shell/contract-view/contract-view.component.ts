@@ -3,11 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { OfferShellComponent } from '../shell.component';
 import { combineLatest } from 'rxjs';
 import { first, map, pluck } from 'rxjs/operators';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { NegotiationService } from '@blockframes/contract/negotiation/service';
 
 @Component({
   selector: 'catalog-contract-view',

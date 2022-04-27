@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
+import { AnalyticsService } from "@blockframes/analytics/service";
 import { aggregate } from "@blockframes/analytics/+state/utils";
 import { AggregatedAnalytic } from "@blockframes/model";
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
-import { OrganizationService } from "@blockframes/organization/+state";
-import { UserService } from "@blockframes/user/+state";
+import { OrganizationService } from "@blockframes/organization/service";
+import { UserService } from "@blockframes/user/service";
 import { App } from "@blockframes/utils/apps";
 import { unique } from "@blockframes/utils/helpers";
 import { joinWith } from 'ngfire';

@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { InvitationService } from './+state';
+import { InvitationService } from './service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Router } from '@angular/router';
 import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { map, startWith, tap } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';

@@ -64,7 +64,7 @@ import { logger } from 'firebase-functions';
 import { appUrl, supportEmails } from './environments/environment';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
 // #7946 this may be reactivated later
-// import { createMailContract, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
+// import { createMailContract, MailContract } from '@blockframes/contract/contract/firestore';
 // import { movieCurrencies } from '@blockframes/model';
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one

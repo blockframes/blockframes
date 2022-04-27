@@ -8,14 +8,14 @@ import { distinctUntilChanged } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { doc, docData, DocumentReference, Firestore } from '@angular/fire/firestore';
 import { CmsPage } from '@blockframes/admin/cms/template';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { createPreferences } from '@blockframes/model';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { canHavePreferences } from '@blockframes/user/+state/user.utils';
+import { OrganizationService } from '@blockframes/organization/service';
+import { canHavePreferences } from '@blockframes/user/utils';
 
 @Component({
   selector: 'festival-marketplace-home',

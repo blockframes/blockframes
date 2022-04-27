@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
-import { AuthService } from '../+state';
+import { AuthService } from '../service';
 
 @Injectable({ providedIn: 'root' })
 export class UserRedirectionGuard implements CanActivate {

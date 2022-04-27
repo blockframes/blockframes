@@ -5,9 +5,9 @@ import { docData, Firestore, doc, DocumentReference } from '@angular/fire/firest
 import { CmsPage } from '@blockframes/admin/cms/template';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { AuthService } from '@blockframes/auth/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { canHavePreferences } from '@blockframes/user/+state/user.utils';
+import { AuthService } from '@blockframes/auth/service';
+import { OrganizationService } from '@blockframes/organization/service';
+import { canHavePreferences } from '@blockframes/user/utils';
 import { createPreferences } from '@blockframes/model';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
 

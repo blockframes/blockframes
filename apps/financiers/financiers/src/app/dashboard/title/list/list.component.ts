@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { fromOrg, MovieService } from '@blockframes/movie/service';
 import { Movie, storeStatus, StoreStatus } from '@blockframes/model';
 import { CampaignService, MovieCampaign } from '@blockframes/campaign/service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';

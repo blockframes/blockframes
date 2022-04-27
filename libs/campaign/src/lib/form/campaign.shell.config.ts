@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import type { FormShellConfig } from '@blockframes/movie/form/movie.shell.interfaces';
 import { CampaignControls, CampaignForm } from './form';
 import { CampaignService } from '../service';
-import { FileUploaderService } from "@blockframes/media/+state";
+import { FileUploaderService } from "@blockframes/media/service";
 import { MovieActiveGuard } from "@blockframes/movie/guards/movie-active.guard";
 import { Campaign } from "@blockframes/model";
 

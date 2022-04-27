@@ -5,10 +5,10 @@ import { where } from 'firebase/firestore';
 // Services
 import { MovieService } from '@blockframes/movie/service';
 import { Contract, Movie, Negotiation } from '@blockframes/model';
-import { Income, IncomeService } from '@blockframes/contract/income/+state';
-import { ContractService } from '@blockframes/contract/contract/+state';
-import { TermService } from '@blockframes/contract/term/+state';
-import { OfferService } from '@blockframes/contract/offer/+state';
+import { Income, IncomeService } from '@blockframes/contract/income/service';
+import { ContractService } from '@blockframes/contract/contract/service';
+import { TermService } from '@blockframes/contract/term/service';
+import { OfferService } from '@blockframes/contract/offer/service';
 
 // Forms
 import { NegotiationForm } from '@blockframes/contract/negotiation/form';
@@ -17,7 +17,7 @@ import { NegotiationForm } from '@blockframes/contract/negotiation/form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter, first } from 'rxjs/operators';
 import { joinWith } from 'ngfire';
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { NegotiationService } from '@blockframes/contract/negotiation/service';
 
 @Component({
   selector: 'contract-form',

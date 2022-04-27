@@ -17,7 +17,7 @@ import {
   getMimeType,
   sanitizeFileName,
 } from '@blockframes/utils/file-sanitizer';
-import { FileUploaderService } from '@blockframes/media/+state';
+import { FileUploaderService } from '@blockframes/media/service';
 import { FileMetaData } from '@blockframes/model';
 import { allowedFiles, AllowedFileType, fileSizeToString, maxAllowedFileSize } from '@blockframes/utils/utils';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';

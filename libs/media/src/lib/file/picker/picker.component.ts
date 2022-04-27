@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { fromOrg, MovieService } from '@blockframes/movie/service';
 import { StorageFile, recursivelyListFiles, Movie } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { FilePreviewComponent } from '../preview/preview.component';

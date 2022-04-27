@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { switchMap, catchError, take, filter, tap } from 'rxjs/operators';
 import { hasDisplayName } from '@blockframes/utils/helpers';
-import { AuthService } from '@blockframes/auth/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { AuthService } from '@blockframes/auth/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { CanActivate, CanDeactivate, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 

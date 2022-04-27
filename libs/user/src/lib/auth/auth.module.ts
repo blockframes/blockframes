@@ -90,7 +90,7 @@ export const AuthRoutes: Routes = [
 
     // Fire
     provideAuth(() => getAuth()),
-    providePerformance(() => getPerformance()),
+    //providePerformance(() => getPerformance()),
     RouterModule.forChild(AuthRoutes),
   ],
   declarations: [

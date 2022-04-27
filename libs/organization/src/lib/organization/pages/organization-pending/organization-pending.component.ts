@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, Inject, Optional } from '@angular/core';
-import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
+import { InvitationService } from '@blockframes/invitation/service';
 import { App } from '@blockframes/utils/apps';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { User, Organization, Invitation } from '@blockframes/model';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { where } from 'firebase/firestore';
 

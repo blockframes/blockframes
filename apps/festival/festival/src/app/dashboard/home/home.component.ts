@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 
 // Blockframes
 import { MovieService, fromOrg } from '@blockframes/movie/service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { EventName, hasAppStatus } from '@blockframes/model';
 import { App } from '@blockframes/utils/apps';

@@ -5,7 +5,7 @@ import { CrossFieldErrorMatcher } from '@blockframes/utils/form/matchers';
 import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell/shell.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { pluck, switchMap } from 'rxjs/operators';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { MovieService } from '@blockframes/movie/service';
 import { ActivatedRoute } from '@angular/router';
 

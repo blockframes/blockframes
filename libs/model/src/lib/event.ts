@@ -1,6 +1,6 @@
 import { AccessibilityTypes } from './static';
 import { CalendarEvent } from 'angular-calendar';
-import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
+import { AnonymousCredentials } from '@blockframes/auth/model';
 import { Organization } from './organisation';
 import { Movie } from './movie';
 import { User } from './user';

@@ -4,12 +4,13 @@ import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import type firestore from 'firebase/firestore';
 import { App } from '@blockframes/utils/apps';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { map } from 'rxjs/operators';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { where, doc, updateDoc, DocumentSnapshot } from 'firebase/firestore';
-import { FireCollection, WriteOptions } from 'ngfire';
+import { WriteOptions } from 'ngfire';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 export const fromOrg = (orgId: string) =>
   [where('orgIds', 'array-contains', orgId)];
@@ -22,12 +23,8 @@ export const fromInternalRef = (internalRef: string) =>
 
 
 @Injectable({ providedIn: 'root' })
-export class MovieService extends FireCollection<Movie> {
-  // Collection path
+export class MovieService extends BlockframesCollection<Movie> {
   readonly path = 'movies';
-
-  // Memorize all requests that has been done
-  memorize = true;
 
   constructor(
     private authService: AuthService,

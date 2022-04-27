@@ -2,7 +2,7 @@ import { getAnalytics, logEvent, setUserProperties } from '@angular/fire/analyti
 import { Injectable } from '@angular/core';
 import { EventName, AnalyticsUserProperties } from '@blockframes/model';
 import { centralOrgId } from '@env';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })

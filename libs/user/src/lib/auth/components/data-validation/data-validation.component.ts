@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, Optional, Inject } from '@angular/core';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { Organization } from '@blockframes/model';
 import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
 import { BehaviorSubject } from 'rxjs';

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CrmStore } from './crm.store';
-import { Functions, httpsCallable, HttpsCallableResult } from '@angular/fire/functions';
-import { AuthService } from '@blockframes/auth/+state';
+import { Functions, httpsCallable } from '@angular/fire/functions';
+import { AuthService } from '@blockframes/auth/service';
 import { App } from '@blockframes/utils/apps';
+import { ErrorResultResponse } from '@blockframes/utils/utils';
 
 interface AnalyticsActiveUser {
   user_id: string,
@@ -19,7 +20,7 @@ interface AnalyticsActiveUser {
 @Injectable({ providedIn: 'root' })
 export class CrmService {
   constructor(
-    protected store: CrmStore,
+    protected store: CrmStore, // TODO #8280 clean
     private functions: Functions,
     private service: AuthService,
   ) { }
@@ -46,7 +47,7 @@ export class CrmService {
     return r.data;
   }
 
-  public sendPasswordResetEmail(email: string, app: App): Promise<HttpsCallableResult<unknown>> {
+  public sendPasswordResetEmail(email: string, app: App): Promise<ErrorResultResponse> {
     return this.service.resetPasswordInit(email, app);
   }
 }

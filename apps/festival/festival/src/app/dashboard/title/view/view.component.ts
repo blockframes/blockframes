@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { ActivatedRoute } from '@angular/router';
 import { MovieService } from '@blockframes/movie/service';
 import { pluck, switchMap } from 'rxjs/operators';

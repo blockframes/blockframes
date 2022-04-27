@@ -1,9 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { AuthService } from '@blockframes/auth/+state';
-import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
+import { AuthService } from '@blockframes/auth/service';
 import { Functions } from '@angular/fire/functions';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 import {
   OrganizationMember,
   PublicUser,
@@ -11,28 +10,24 @@ import {
   Movie,
   Organization,
   createOrganization,
-  OrganizationDocument,
   createPermissions,
   UserRole,
   createPublicUser,
   createDocumentMeta,
-  formatDocumentMetaFromFirestore,
 } from '@blockframes/model';
-import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
+import { PermissionsService } from '@blockframes/permissions/service';
 import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { AnalyticsService } from '@blockframes/analytics/service';
 import { combineLatest, Observable, of } from 'rxjs';
-import { ActiveState, EntityState } from '@datorama/akita';
 import { httpsCallable } from 'firebase/functions';
-import { where } from 'firebase/firestore';
+import { DocumentSnapshot, where } from 'firebase/firestore';
 import { runInZone } from '@blockframes/utils/zone';
-
-interface OrganizationState extends EntityState<Organization>, ActiveState<string> { }
+import { WriteOptions } from 'ngfire';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'orgs' })
-export class OrganizationService extends CollectionService<OrganizationState> {
-  readonly useMemorization = false;
+export class OrganizationService extends BlockframesCollection<Organization> {
+  readonly path = 'orgs';
 
   // Organization of the current logged in user or undefined if user have no org
   org: Organization; // For this to be defined, one of the observable below must be called before
@@ -87,14 +82,14 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   /**
-   * This converts the OrganizationDocument into an Organization
+   * Add possible missing appAccess on org document
    * @param org
    */
-  formatFromFirestore(org: OrganizationDocument): Organization {
+  protected fromFirestore(snapshot: DocumentSnapshot<Organization>): Organization {
+    const org = super.fromFirestore(snapshot);
     return {
       ...org,
       appAccess: createOrgAppAccess(org.appAccess),
-      _meta: formatDocumentMetaFromFirestore(org?._meta),
     };
   }
 

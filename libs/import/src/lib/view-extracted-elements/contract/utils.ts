@@ -18,8 +18,8 @@ import {
 import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { UserService } from '@blockframes/user/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { UserService } from '@blockframes/user/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { Movie, Term } from '@blockframes/model';
 import {
   createMandate,
@@ -34,7 +34,7 @@ import {
   Media,
   Territory
 } from '@blockframes/model';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { ContractService } from '@blockframes/contract/contract/service';
 import {
   extract, ExtractConfig, getStaticList, SheetTab, getGroupedList
 } from '@blockframes/utils/spreadsheet';

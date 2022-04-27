@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Pipe, Pi
 import { Observable, combineLatest, of } from 'rxjs';
 import { EventService } from '@blockframes/event/service';
 import { Event, EventTypes, Invitation } from '@blockframes/model';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/service';
 import { map, switchMap, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';

@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Organization, User, Scope, staticModel } from '@blockframes/model';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
-import { map, pluck, shareReplay, switchMap } from "rxjs/operators";
-import { counter } from '@blockframes/analytics/+state/utils';
-import { UserService } from "@blockframes/user/+state";
-import { NavigationService } from "@blockframes/ui/navigation.service";
-import { OrganizationService } from "@blockframes/organization/+state";
+import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
+import { counter } from '@blockframes/analytics/utils';
+import { UserService } from '@blockframes/user/service';
+import { NavigationService } from '@blockframes/ui/navigation.service';
+import { OrganizationService } from '@blockframes/organization/service';
 
 function getFilter(scope: Scope) {
   return (input: string, value: any) => {
@@ -18,7 +18,7 @@ function getFilter(scope: Scope) {
   };
 }
 
-function aggregatePerUser(analytics: (Analytics<"title"> & { user: User, org: Organization})[]) {
+function aggregatePerUser(analytics: (Analytics<'title'> & { user: User, org: Organization})[]) {
   const aggregator: Record<string, AggregatedAnalytic> = {};
   for (const analytic of analytics) {
     if (!analytic.user?.uid) continue;

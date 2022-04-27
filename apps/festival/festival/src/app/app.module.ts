@@ -43,7 +43,7 @@ import { FestivalModule } from './festival.module';
 import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @NgModule({
@@ -84,7 +84,7 @@ import { APP } from '@blockframes/utils/routes/utils';
       return auth;
     }),
     provideStorage(() => getStorage()), // TODO #8208 to remove
-    //provideAnalytics(() => getAnalytics()), // TODO #8208 to keep ?
+    provideAnalytics(() => getAnalytics()), // TODO #8208 to keep ?
 
     sentryDsn ? SentryModule : ErrorLoggerModule,
 

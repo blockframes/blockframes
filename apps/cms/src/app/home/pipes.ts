@@ -2,7 +2,7 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { where, orderBy } from 'firebase/firestore';
 import { ParamMap } from '@angular/router';
 import { MovieService } from '@blockframes/movie/service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { map } from 'rxjs/operators';
 
 

@@ -10,13 +10,13 @@ import { map, switchMap } from 'rxjs/operators';
 
 // Blockframes
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { InvitationService } from '@blockframes/invitation/+state';
-import { NotificationService } from '@blockframes/notification/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { InvitationService } from '@blockframes/invitation/service';
+import { NotificationService } from '@blockframes/notification/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { App } from '@blockframes/utils/apps';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({

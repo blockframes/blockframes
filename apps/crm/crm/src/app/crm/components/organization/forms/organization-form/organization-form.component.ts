@@ -4,7 +4,7 @@ import { organizationStatus } from '@blockframes/model';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({

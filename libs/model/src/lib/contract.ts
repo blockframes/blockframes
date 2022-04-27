@@ -118,7 +118,7 @@ export function isSale(contract: Contract): contract is Sale {
   return contract.type === 'sale';
 }
 
-export function convertDuration(duration: Duration<Date | Timestamp>): Duration<Date> {
+export function convertDuration(duration: Duration<Date | Timestamp>): Duration<Date> { // TODO #8280 remove
   return {
     from: toDate(duration.from),
     to: toDate(duration.to),

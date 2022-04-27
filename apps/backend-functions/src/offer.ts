@@ -6,7 +6,7 @@ import { createNotification, triggerNotifications } from './notification';
 // import { templateIds } from '@blockframes/utils/emails/ids';
 // import { Change } from 'firebase-functions';
 // import { createDocumentMeta } from './data/internals';
-// import { Sale } from '@blockframes/contract/contract/+state/contract.model';
+// import { Sale } from '@blockframes/contract/contract/model';
 // import { getSeller } from '@blockframes/contract/contract/+state/utils';
 // import { NotificationTypes } from './data/types';
 // import { EmailTemplateRequest, sendMailFromTemplate } from './internals/email';

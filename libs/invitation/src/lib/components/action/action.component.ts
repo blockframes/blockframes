@@ -1,12 +1,12 @@
 import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { Event, Invitation, InvitationStatus } from '@blockframes/model';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { InvitationService } from '../../+state';
+import { InvitationService } from '../../service';
 
 @Component({
   selector: 'invitation-action',

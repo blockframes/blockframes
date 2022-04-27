@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef, Cha
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/service';
 import { EventForm } from '@blockframes/event/form/event.form';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { Observable, combineLatest } from 'rxjs';
 import { filter, switchMap, startWith, tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';

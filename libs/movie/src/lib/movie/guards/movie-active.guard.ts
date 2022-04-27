@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@angular/core';
-import { CollectionGuardConfig } from 'akita-ng-fire';
 import { MovieService } from '../service';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { Movie } from '@blockframes/model';
@@ -7,7 +6,6 @@ import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: true })
 export class MovieActiveGuard implements CanActivate {
   public movie: Movie;
 

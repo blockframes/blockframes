@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { ActivatedRoute } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { MovieService } from '@blockframes/movie/service';

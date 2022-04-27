@@ -1,4 +1,4 @@
-import type { EventService } from '@blockframes/event/+state';
+import type { EventService } from '@blockframes/event/service';
 
 export function deleteEvent(id: string) {
   return cy.window().then(async w => {

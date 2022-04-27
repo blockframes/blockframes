@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { AuthService } from '../../+state';
+import { AuthService } from '../../service';
 import { ThemeService } from '@blockframes/ui/theme';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 import { doc, docData, DocumentReference, Firestore } from '@angular/fire/firestore';
 import { dbVersionDoc } from '@blockframes/utils/maintenance';
 import { emulators } from '@env';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { IVersionDoc } from '@blockframes/model';
 
 @Component({

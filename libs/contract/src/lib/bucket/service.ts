@@ -1,18 +1,15 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { centralOrgId } from '@env';
 import { switchMap, take } from 'rxjs/operators';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { createOfferId } from '@blockframes/utils/utils';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { TermService } from '../../term/+state';
-import { OfferService } from '../../offer/+state';
-import { ContractService } from '../../contract/+state';
-import { ActiveState, EntityState } from '@datorama/akita';
-import { collection, doc } from 'firebase/firestore';
+import { OrganizationService } from '@blockframes/organization/service';
+import { TermService } from '../term/service';
+import { OfferService } from '../offer/service';
+import { ContractService } from '../contract/service';
+import { collection, doc, DocumentSnapshot } from 'firebase/firestore';
 import {
-  convertDuration,
   Bucket,
   createBucket,
   createBucketTerm,
@@ -20,8 +17,8 @@ import {
   createDocumentMeta,
   MovieCurrency
 } from '@blockframes/model';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
-interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
 interface AddTermConfig {
   titleId: string,
   parentTermId: string,
@@ -30,9 +27,9 @@ interface AddTermConfig {
 
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'buckets' })
-export class BucketService extends CollectionService<BucketState> {
-  useMemorization = false;
+export class BucketService extends BlockframesCollection<Bucket> {
+  readonly path = 'buckets';
+
   active$ = this.orgService.currentOrg$.pipe(
     switchMap(org => this.valueChanges(org.id)),
   );
@@ -47,18 +44,9 @@ export class BucketService extends CollectionService<BucketState> {
     super();
   }
 
-  formatFromFirestore(document): Bucket {
-    if (!document) return;
-    const bucket = createBucket(document);
-    for (const contract of bucket.contracts) {
-      for (const term of contract.terms) {
-        term.duration = convertDuration(term.duration);
-      }
-      for (const holdback of contract.holdbacks) {
-        holdback.duration = convertDuration(holdback.duration);
-      }
-    }
-    return bucket;
+  protected fromFirestore(document: DocumentSnapshot<Bucket>): Bucket {
+    const bucket = super.fromFirestore(document);
+    return createBucket(bucket);
   }
 
   getActive() {
@@ -113,7 +101,7 @@ export class BucketService extends CollectionService<BucketState> {
         specificity,
         delivery,
         ...commonFields
-      });
+      } as any); // TODO #8280
 
       // Add the default negotiation.
       this.contractService.addNegotiation(contractId, {

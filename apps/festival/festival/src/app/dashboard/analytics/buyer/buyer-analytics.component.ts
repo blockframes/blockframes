@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { OrganizationService } from "@blockframes/organization/+state";
+import { OrganizationService } from "@blockframes/organization/service";
 import { NavigationService } from "@blockframes/ui/navigation.service";
-import { UserService } from "@blockframes/user/+state";
+import { UserService } from "@blockframes/user/service";
 import { joinWith } from 'ngfire';
 import { pluck, switchMap } from "rxjs";
 

@@ -1,7 +1,7 @@
 import { Firestore } from '../types';
 import { runChunks } from '../firebase-utils';
-// import { createUser } from '@blockframes/auth/+state';
-// import { createOrganization } from '@blockframes/organization/+state';
+// import { createUser } from '@blockframes/auth/service';
+// import { createOrganization } from '@blockframes/organization/service';
 
 /**
  * Remove territories that are not in the geojson

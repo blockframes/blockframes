@@ -3,12 +3,12 @@ import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core
 import { BehaviorSubject } from 'rxjs';
 import { Firestore } from '@angular/fire/firestore';
 import { MatTableDataSource } from '@angular/material/table';
-import { AuthService } from '@blockframes/auth/+state';
-import { UserService } from '@blockframes/user/+state';
+import { AuthService } from '@blockframes/auth/service';
+import { UserService } from '@blockframes/user/service';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { MovieService } from '@blockframes/movie/service';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { OrganizationService } from '@blockframes/organization/service';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 import { formatContract } from './utils';

@@ -1,7 +1,7 @@
 
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { FileUploaderService } from '@blockframes/media/+state';
+import { FileUploaderService } from '@blockframes/media/service';
 import { StorageFile } from '@blockframes/model';
 import { CollectionHoldingFile, FileLabel } from '@blockframes/media/+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';

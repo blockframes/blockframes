@@ -10,8 +10,8 @@ import { joinWith } from 'ngfire';
 import { EventService } from '@blockframes/event/service';
 import { Event } from '@blockframes/model';
 import { where } from "firebase/firestore";
-import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
-import { OrganizationService } from "@blockframes/organization/+state";
+import { AnalyticsService } from "@blockframes/analytics/service";
+import { OrganizationService } from "@blockframes/organization/service";
 
 interface AggregatedPerTitle extends AggregatedAnalytic {
   screenings: number;

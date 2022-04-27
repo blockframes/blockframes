@@ -1,6 +1,5 @@
-import { Inject, Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { AuthService } from '@blockframes/auth/+state';
+import { Injectable } from '@angular/core';
+import { AuthService } from '@blockframes/auth/service';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import {
   orgName,
@@ -12,26 +11,24 @@ import {
   Contract,
   createStorageFile
 } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/utils/utils';
-import { App, applicationUrl, appName, getMovieAppAccess } from '@blockframes/utils/apps';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { applicationUrl, appName, getMovieAppAccess } from '@blockframes/utils/apps';
+import { MovieService } from '@blockframes/movie/service';
 import { format } from 'date-fns';
 import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
-import { ActiveState, EntityState } from '@datorama/akita';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 import { EventService } from '@blockframes/event/service';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
-import { APP } from '@blockframes/utils/routes/utils';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { where } from 'firebase/firestore';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
-interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'notifications' })
-export class NotificationService extends CollectionService<NotificationState> {
-  readonly useMemorization = false;
+export class NotificationService extends BlockframesCollection<Notification> {
+  readonly path = 'notifications';
+
   private appName = appName[this.app];
 
   myNotifications$ = this.authService.profile$.pipe(
@@ -54,8 +51,7 @@ export class NotificationService extends CollectionService<NotificationState> {
     private movieService: MovieService,
     private contractService: ContractService,
     private userService: UserService,
-    private eventService: EventService,
-    @Inject(APP) private app: App
+    private eventService: EventService
   ) {
     super();
   }

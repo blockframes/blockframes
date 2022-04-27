@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { Movie } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';

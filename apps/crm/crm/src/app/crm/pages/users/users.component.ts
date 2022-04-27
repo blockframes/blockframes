@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 import { User, Organization, orgName } from '@blockframes/model';
 import { CrmService } from '@blockframes/admin/crm/+state/crm.service';
 import { CrmQuery } from '@blockframes/admin/crm/+state/crm.query';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { getAllAppsExcept, appName, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
 import { map } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';

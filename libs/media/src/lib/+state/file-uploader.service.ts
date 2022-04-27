@@ -4,7 +4,7 @@ import { ComponentPortal } from "@angular/cdk/portal";
 import { Overlay, OverlayRef } from "@angular/cdk/overlay";
 import { Firestore } from "@angular/fire/firestore";
 import { Storage, UploadTask, uploadBytesResumable, ref } from '@angular/fire/storage';
-import { AuthService } from "@blockframes/auth/+state";
+import { AuthService } from "@blockframes/auth/service";
 import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
 import { BehaviorStore } from "@blockframes/utils/observable-helpers";
 import { delay } from '@blockframes/utils/helpers';

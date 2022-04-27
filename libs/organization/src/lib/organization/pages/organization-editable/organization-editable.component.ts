@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { OrganizationService, Organization } from '../../+state';
-import { PermissionsService } from '@blockframes/permissions/+state';
+import { OrganizationService, Organization } from '../../service';
+import { PermissionsService } from '@blockframes/permissions/service';
 import { OrganizationForm } from '../../forms/organization.form';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';

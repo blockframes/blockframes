@@ -46,7 +46,7 @@ function isTimeStamp(
 }
 
 /** Takes a Date, a string or a Timestamp and returns it as a Date. */
-export function toDate(date: Timestamp | Date): Date {
+export function toDate(date: Timestamp | Date): Date { // TODO #8280 remove 
   if (isTimeStamp(date)) {
     return date.toDate();
   }
@@ -161,28 +161,6 @@ export function debounceFactory(func: (...params) => unknown, wait: number) {
     window.clearTimeout(timeout);
     timeout = window.setTimeout(later, wait);
   };
-}
-
-/**
- * Remove all undefined fields
- * @param value anything
- */
-export function removeUndefined(value: unknown) {
-  if (Array.isArray(value)) {
-    return value.map(removeUndefined);
-  } else if (value === null) {
-    return null;
-  } else if (typeof value === 'object') {
-    const result = {};
-    for (const key in value) {
-      if (value[key] !== undefined) {
-        result[key] = removeUndefined(value[key]);
-      }
-    }
-    return result;
-  } else {
-    return value;
-  }
 }
 
 export function sortMovieBy(a: Movie, b: Movie, sortIdentifier: string) {

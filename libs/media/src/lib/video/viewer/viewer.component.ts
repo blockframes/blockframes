@@ -2,13 +2,13 @@ import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { StorageVideo, MeetingVideoControl } from '@blockframes/model';
 import { ErrorResultResponse, getWatermark, loadJWPlayerScript } from '@blockframes/utils/utils';
 import { BehaviorSubject } from 'rxjs';
 import { toggleFullScreen } from '../../file/viewers/utils';
 import { EventService } from '@blockframes/event/service';
-import { hasAnonymousIdentity } from '@blockframes/auth/+state/auth.model';
+import { hasAnonymousIdentity } from '@blockframes/auth/model';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 declare const jwplayer: any;

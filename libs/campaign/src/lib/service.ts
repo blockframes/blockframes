@@ -1,22 +1,18 @@
 import { Injectable } from '@angular/core';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { MovieService } from '@blockframes/movie/service';
 import { Movie, Campaign } from '@blockframes/model';
 import { combineLatest, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FireCollection } from 'ngfire';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 export interface MovieCampaign extends Movie {
   campaign: Campaign;
 }
 
 @Injectable({ providedIn: 'root' })
-export class CampaignService extends FireCollection<Campaign> {
-  // Collection path
+export class CampaignService extends BlockframesCollection<Campaign> {
   readonly path = 'campaigns';
-
-  // Memorize all requests that has been done
-  memorize = true;
 
   constructor(private orgService: OrganizationService, private movieService: MovieService) {
     super();

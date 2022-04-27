@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
-import { AnalyticData } from "@blockframes/analytics/+state/utils";
+import { AnalyticData } from "@blockframes/analytics/service";
 import {
   ApexChart,
   ApexDataLabels,

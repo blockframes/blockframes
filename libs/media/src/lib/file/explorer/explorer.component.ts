@@ -6,7 +6,7 @@ import { where, doc, updateDoc } from 'firebase/firestore';
 import { MovieService } from '@blockframes/movie/service';
 import { App } from '@blockframes/utils/apps';
 import { createStorageFile, StorageFile, Organization } from '@blockframes/model';
-import { FileUploaderService, MediaService } from '@blockframes/media/+state';
+import { FileUploaderService, MediaService } from '@blockframes/media/service';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';
 import { APP } from '@blockframes/utils/routes/utils';
 
