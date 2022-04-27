@@ -1,5 +1,9 @@
 <ul>
   <li *ngFor="let card of cards" class="surface">
-    <ng-template [ngTemplateOutlet]="card.templateRef"></ng-template>
+    <header>
+      <mat-icon [svgIcon]="card.icon"></mat-icon>
+    </header>
+    <p><b>{{ card.value }}</b></p>
+    <p class="mat-caption">{{ card.title }}</p>
   </li>
 </ul>

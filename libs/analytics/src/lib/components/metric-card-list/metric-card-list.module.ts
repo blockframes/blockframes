@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { MetricCardListComponent } from './metric-card-list.component';
+
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MetricCardListComponent } from './metric-card-list.component';
-import { MetricCardComponent } from './metric-card/metric-card.component';
 
 @NgModule({
   imports: [
@@ -12,13 +12,7 @@ import { MetricCardComponent } from './metric-card/metric-card.component';
     // Material
     MatIconModule
   ],
-  declarations: [
-    MetricCardListComponent,
-    MetricCardComponent
-  ],
-  exports: [
-    MetricCardListComponent,
-    MetricCardComponent
-  ]
+  declarations: [MetricCardListComponent],
+  exports: [MetricCardListComponent]
 })
 export class MetricCardListModule {}
