@@ -79,7 +79,7 @@ export class TitleListComponent {
 
   openDetails(title: string, values: Person[]) {
     this.dialog.open(CellModalComponent, {
-      data: { title, values: displayPerson(values) },
+      data: { title, values: displayPerson(values), style: 'medium' },
       autoFocus: false,
     });
   }
