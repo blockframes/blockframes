@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 // Blockframes
-import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie, App } from '@blockframes/model';
+import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie, App, Event } from '@blockframes/model';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movie.service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { joinWith } from '@blockframes/utils/operators';
 import { EventService } from '@blockframes/event/+state';
-import { Event } from '@blockframes/model'
 import { where } from 'firebase/firestore';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { OrganizationService } from '@blockframes/organization/+state';
