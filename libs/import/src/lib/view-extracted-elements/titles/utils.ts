@@ -9,6 +9,7 @@ import {
   getUser,
   unknownEntityError,
   getOptionalWarning,
+  getTitleId,
 } from '@blockframes/import/utils';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
@@ -43,8 +44,10 @@ import {
   Territory,
   App
 } from '@blockframes/model';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 interface FieldsConfig {
+  id: string;
   title: {
     international: string;
     original: string;
@@ -140,6 +143,7 @@ type FieldsConfigType = ExtractConfig<FieldsConfig>;
 export async function formatTitle(
   sheetTab: SheetTab,
   userService: UserService,
+  titleService: MovieService,
   blockframesAdmin: boolean,
   userOrgId: string,
   currentApp: App
@@ -554,7 +558,7 @@ export async function formatTitle(
       const user = await getUser({ id: value }, userService, userCache);
       if (!user) throw unknownEntityError(value, 'Owner Id');
       return [user.orgId];
-    },
+    }
   };
 
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig, 10);
@@ -589,9 +593,20 @@ export async function formatTitle(
       }
     }
 
-    const title = createMovie({ ...data, languages, stakeholders });
+    //verify if we are updating or creating the movie
+    if (data.title.international === data.title.original) {
+      try {
+        const title = await titleService.getValue(data.title.international);
+        if (title) {
+          data.id = data.title.international;
+          data.title.international = title.title.international;
+          data.title.original = title.title.original;
+        }
+      } catch (err) { /**do nothing */ }
+    }
 
-    if (!title.directors || !title.directors.length)
+    const title = createMovie({ ...data, languages, stakeholders });
+    if (!title.directors?.length)
       errors.push({
         type: 'error',
         name: 'Missing Director(s)',
