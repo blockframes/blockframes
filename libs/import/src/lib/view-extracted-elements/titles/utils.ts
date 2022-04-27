@@ -1,4 +1,3 @@
-import { App } from '@blockframes/utils/apps';
 import { UserService } from '@blockframes/user/+state';
 import {
   mandatoryError,
@@ -41,7 +40,8 @@ import {
   SoundFormat,
   StakeholderRole,
   StoreStatus,
-  Territory
+  Territory,
+  App
 } from '@blockframes/model';
 
 interface FieldsConfig {

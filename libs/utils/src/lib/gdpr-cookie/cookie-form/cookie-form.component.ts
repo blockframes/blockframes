@@ -4,8 +4,8 @@ import { startWith } from 'rxjs/operators';
 
 // Blockframes
 import { CookiesConsent, CookiesConsentForm } from './cookie.form';
-import { App } from '../../apps';
 import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/model';
 
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';

@@ -2,9 +2,8 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
-import { Movie, storeStatus, productionStatus } from '@blockframes/model';
+import { Movie, storeStatus, productionStatus, getAllAppsExcept } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';

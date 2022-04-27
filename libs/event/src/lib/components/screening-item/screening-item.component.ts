@@ -21,7 +21,6 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
 
   public invitation: Invitation;
   public requestSent = false;
-
   @Input() set event(screening: ScreeningEvent) {
     this._event.next(screening);
   }

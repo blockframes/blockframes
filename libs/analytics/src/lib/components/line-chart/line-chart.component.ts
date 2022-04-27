@@ -16,6 +16,7 @@ import {
   ApexDataLabels,
   ApexGrid,
   ApexLegend,
+  ApexMarkers,
   ApexStroke,
   ApexTheme,
   ApexXAxis,
@@ -33,6 +34,7 @@ interface LineChartOptions {
   dataLabels: ApexDataLabels;
   grid: ApexGrid;
   stroke: ApexStroke;
+  markers: ApexMarkers;
 };
 
 const eventNameLabel: Record<EventName, string> = {
@@ -112,6 +114,9 @@ export class LineChartComponent {
             : format(timestamp, 'dd MMM yyyy') 
         }
       }
+    },
+    markers: {
+      size: 3
     }
   };
 

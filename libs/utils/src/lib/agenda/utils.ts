@@ -1,4 +1,5 @@
-import { applicationUrl, appName } from './../apps';
+import { appName } from '@blockframes/model';
+import { applicationUrl } from './../apps';
 import { IcsEvent } from './agenda.interfaces';
 
 const header = `BEGIN:VCALENDAR\nVERSION:2.0\nCALSCALE:GREGORIAN\nX-WR-CALNAME:${appName.festival}`;

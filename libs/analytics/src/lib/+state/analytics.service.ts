@@ -9,11 +9,10 @@ import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';
 
 // Blockframes
-import { Analytics, AnalyticsTypes, EventName, createTitleMeta, Organization, Movie } from '@blockframes/model';
+import { Analytics, AnalyticsTypes, EventName, createTitleMeta, createDocumentMeta, formatDocumentMetaFromFirestore  } from '@blockframes/model';
+import type { Organization, Movie, App } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
-import { createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
-import { App } from '@blockframes/utils/apps';
 
 interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> { };
 export interface AnalyticsWithOrg extends Analytics<'title'> {

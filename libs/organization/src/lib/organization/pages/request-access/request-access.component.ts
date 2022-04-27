@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -8,7 +7,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
-import { organizationRoles } from '@blockframes/model';
+import { organizationRoles, App, getOrgAppAccess } from '@blockframes/model';
 
 type Steps = 'initial' | 'request';
 

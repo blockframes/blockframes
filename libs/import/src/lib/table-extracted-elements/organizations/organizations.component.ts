@@ -10,8 +10,7 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { OrganizationsImportState, SpreadsheetImportError } from '../../utils';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
-import { PublicUser } from '@blockframes/model';
-import { getOrgAppAccess } from '@blockframes/utils/apps';
+import { PublicUser, getOrgAppAccess } from '@blockframes/model';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
 
 const hasImportErrors = (importState: OrganizationsImportState, type: string = 'error'): boolean => {

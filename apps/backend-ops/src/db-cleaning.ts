@@ -6,12 +6,12 @@ import {
   MovieDocument,
   PermissionsDocument,
   InvitationDocument,
-  createStorageFile
+  createStorageFile,
+  getAllAppsExcept
 } from '@blockframes/model';
 import { removeUnexpectedUsers } from './users';
 import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections, UserRecord, loadAdminServices } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
-import { getAllAppsExcept } from '@blockframes/utils/apps';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
 import { deleteSelectedUsers } from 'libs/testing/unit-tests/src/lib/firebase';
 import { subDays, subYears } from 'date-fns';
