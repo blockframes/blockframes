@@ -9,7 +9,7 @@
           </ng-container>
         </section>
         <section fxLayout="row wrap" fxLayoutAlign.lt-md="center">
-          <ng-container *ngIf="(eventId$ | async) === undefined">
+          <ng-container *ngIf="(eventId$ | async) === null">
             <event-request-screening [movieId]="movie.id"></event-request-screening>
           </ng-container>
           <button mat-button class="translucent" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
