@@ -200,8 +200,12 @@ export class TableExtractedContractsComponent implements OnInit {
   ///////////////////
 
   displayErrors(importState: ContractsImportState) {
-    const data = { title: `Contract id ${importState.contract.id}`, errors: importState.errors };
-    this.dialog.open(ViewImportErrorsComponent, { data, width: '50%' });
+    const data = {
+      title: `Contract id ${importState.contract.id}`,
+      errors: importState.errors,
+      style: 'medium'
+    };
+    this.dialog.open(ViewImportErrorsComponent, { data });
   }
 
   ///////////////////

@@ -10,8 +10,9 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { OrganizationsImportState, SpreadsheetImportError } from '../../utils';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
-import { PublicUser, getOrgAppAccess } from '@blockframes/model';
+import { PublicUser } from '@blockframes/model';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
+import { getOrgAppAccess } from '@blockframes/utils/apps';
 
 const hasImportErrors = (importState: OrganizationsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -151,8 +152,12 @@ export class TableExtractedOrganizationsComponent implements OnInit {
   ///////////////////
 
   displayErrors(importState: OrganizationsImportState) {
-    const data = { title: `Organization id ${importState.org.id}`, errors: importState.errors };
-    this.dialog.open(ViewImportErrorsComponent, { data, width: '50%' });
+    const data = {
+      title: `Organization id ${importState.org.id}`,
+      errors: importState.errors,
+      style: 'medium'
+    };
+    this.dialog.open(ViewImportErrorsComponent, { data });
   }
 
   ///////////////////
