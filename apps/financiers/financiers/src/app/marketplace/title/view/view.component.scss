@@ -16,12 +16,11 @@ h2 {
 
 movie-header-actions {
   display: flex;
-  align-items: center;
   gap: 24px;
 }
 
-@include layout-bp(xs) {
+@include layout-bp(gt-sm) {
   movie-header-actions {
-    display: none;
+    margin-left: auto;
   }
 }
