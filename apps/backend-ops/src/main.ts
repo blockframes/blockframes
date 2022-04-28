@@ -4,16 +4,25 @@ config(); // * Must be run here!
 import { endMaintenance, keepAlive, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
-import { prepareForTesting, upgrade, prepareEmulators, upgradeEmulators } from './firebaseSetup';
-import { migrate } from './migrations';
-import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHelp } from './tools';
-import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
-import { clearUsers, createUsers, printUsers, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
-import { exportFirestore, importFirestore } from './admin';
-import { selectEnvironment } from './select-environment';
-import { healthCheck } from './health-check';
+import { exportFirestore } from './admin';
+import { printDatabaseInconsistencies } from './internals/utils';
 import {
+  healthCheck,
+  migrate,
+  disableMaintenanceMode,
+  displayCredentials,
+  isMigrationRequired,
+  showHelp,
+  upgradeAlgoliaMovies,
+  upgradeAlgoliaOrgs,
+  upgradeAlgoliaUsers,
+  clearUsers,
+  createUsers,
+  printUsers,
+  syncUsers,
+  importFirestore,
+  selectEnvironment,
   anonymizeLatestProdDb,
   downloadProdDbBackup,
   importEmulatorFromBucket,
@@ -22,13 +31,17 @@ import {
   uploadBackup,
   startEmulators,
   syncAuthEmulatorWithFirestoreEmulator,
-} from './emulator';
-import { backupLiveEnv, restoreLiveEnv } from './backup';
-import { rescueJWP } from './rescueJWP';
-import { loadAndShrinkLatestAnonDbAndUpload } from './db-shrink';
-import { printDatabaseInconsistencies } from './internals/utils';
-import { cleanBackups } from './clean-backups';
-import { auditUsers } from './db-cleaning';
+  backupLiveEnv,
+  restoreLiveEnv,
+  rescueJWP,
+  loadAndShrinkLatestAnonDbAndUpload,
+  cleanBackups,
+  auditUsers,
+  prepareForTesting,
+  upgrade,
+  prepareEmulators,
+  upgradeEmulators
+} from '@blockframes/devops';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
