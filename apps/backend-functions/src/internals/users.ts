@@ -1,12 +1,12 @@
 
-import { App, getMailSender, applicationUrl } from '@blockframes/utils/apps';
+import { getMailSender, applicationUrl } from '@blockframes/utils/apps';
 import { generate as passwordGenerator } from 'generate-password';
 import { createDocumentMeta, createPublicUserDocument, getDocument } from '../data/internals';
 import { userInvite, userFirstConnexion } from '../templates/mail';
 import { groupIds, templateIds } from '@blockframes/utils/emails/ids';
 import { auth, db } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
-import { OrganizationDocument, PublicOrganization, InvitationMode, InvitationStatus, InvitationType, PublicUser } from '@blockframes/model';
+import { OrganizationDocument, PublicOrganization, InvitationMode, InvitationStatus, InvitationType, PublicUser, App } from '@blockframes/model';
 import { EventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { logger } from 'firebase-functions';
 import { hasUserAnOrgOrIsAlreadyInvited } from '../invitation';

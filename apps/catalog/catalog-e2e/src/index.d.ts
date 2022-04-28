@@ -1,4 +1,4 @@
-import { App } from '@blockframes/utils/apps';
+import { App } from '@blockframes/model';
 import type firebase from 'firebase/app';
 
 declare namespace Cypress {

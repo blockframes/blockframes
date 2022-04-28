@@ -1,7 +1,6 @@
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
-import { createUser, User, createOrganization, Organization, Territory } from '@blockframes/model';
-import { Module, ModuleAccess, modules } from '@blockframes/utils/apps';
+import { createUser, User, createOrganization, Organization, Territory, Module, ModuleAccess, modules } from '@blockframes/model';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { alreadyExistError, getOrgId, getUser, mandatoryError, optionalWarning, OrganizationsImportState, wrongValueError } from '@blockframes/import/utils';

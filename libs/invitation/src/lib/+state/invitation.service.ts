@@ -14,14 +14,12 @@ import {
   Invitation,
   InvitationDocument,
   InvitationStatus,
-  AlgoliaOrganization
+  AlgoliaOrganization,
+  App,
+  getOrgAppAccess
 } from '@blockframes/model';
 import { toDate } from '@blockframes/utils/helpers';
 import { cleanInvitation } from '../invitation-utils';
-import {
-  App,
-  getOrgAppAccess
-} from '@blockframes/utils/apps';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { PermissionsService } from '@blockframes/permissions/+state';

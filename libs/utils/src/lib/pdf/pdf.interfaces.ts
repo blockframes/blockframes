@@ -1,4 +1,4 @@
-import { App } from "../apps";
+import { App } from '@blockframes/model';
 
 export interface PdfParams {
   titleIds: string[],

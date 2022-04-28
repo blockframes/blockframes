@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import { AlgoliaObject, AlgoliaQueries } from '@blockframes/model';
+import { AlgoliaObject, AlgoliaQueries, App } from '@blockframes/model';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
-import { App } from '../apps';
 import { APP } from '../routes/utils';
 import { parseFilters, parseFacets, algoliaIndex } from './helper.utils';
 import { SearchResponse } from '@algolia/client-search';

@@ -1,7 +1,6 @@
 import algoliasearch from 'algoliasearch';
 import { algolia as algoliaClient, centralOrgId } from '@env';
 import * as functions from 'firebase-functions';
-import { App, app, getOrgModuleAccess, modules } from '@blockframes/utils/apps';
 import {
   MovieDocument,
   OrganizationDocument,
@@ -12,11 +11,15 @@ import {
   AlgoliaOrganization,
   AlgoliaMovie,
   AlgoliaUser,
-  AlgoliaConfig
+  AlgoliaConfig,
+  App,
+  app,
+  getOrgModuleAccess,
+  modules,
+  getMovieAppAccess
 } from '@blockframes/model';
 import * as admin from 'firebase-admin';
 import { hasAcceptedMovies } from '../util';
-import { getMovieAppAccess } from '@blockframes/utils/apps';
 
 export const algolia = {
   ...algoliaClient,

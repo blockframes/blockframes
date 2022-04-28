@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { canAccessModule, Organization } from '@blockframes/model';
-import { App } from '@blockframes/utils/apps';
+import { canAccessModule, Organization, App } from '@blockframes/model';
 
 @Pipe({
   name: 'canAccess',
@@ -18,4 +17,4 @@ export class OrgAccessPipe implements PipeTransform {
   declarations: [OrgAccessPipe],
   exports: [OrgAccessPipe]
 })
-export class OrgAccessModule {}
+export class OrgAccessModule { }
