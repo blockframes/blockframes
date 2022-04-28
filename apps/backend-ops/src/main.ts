@@ -6,7 +6,6 @@ warnMissingVars()
 
 import { generateFixtures } from './generate-fixtures';
 import { exportFirestore } from './admin';
-import { printDatabaseInconsistencies } from './internals/utils';
 import {
   healthCheck,
   migrate,
@@ -40,7 +39,8 @@ import {
   prepareForTesting,
   upgrade,
   prepareEmulators,
-  upgradeEmulators
+  upgradeEmulators,
+  printDatabaseInconsistencies
 } from '@blockframes/devops';
 
 const args = process.argv.slice(2);

@@ -14,3 +14,4 @@ export * from './lib/select-environment';
 export * from './lib/storage-cleaning';
 export * from './lib/tools';
 export * from './lib/users';
+export * from './lib/internals/utils';
