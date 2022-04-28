@@ -9,9 +9,9 @@
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
         </ng-container>
+        <wishlist-button small [movieId]="movie.id"></wishlist-button>
       </movie-header-cta>
       <movie-header-actions>
-        <wishlist-button [movieId]="movie.id"></wishlist-button>
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>
     </movie-header>

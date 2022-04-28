@@ -9,27 +9,25 @@
           </ng-container>
         </section>
         <section fxLayout="row wrap" fxLayoutAlign.lt-md="center">
-          <ng-container *ngIf="(eventId$ | async) as eventId; else request">
-            <button mat-button class="translucent" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
-              <mat-icon svgIcon="local_offer"></mat-icon>
-              <span fxHide.lt-md>Request Asking Price</span>
-            </button>
-            <wishlist-button small [movieId]="movie.id"></wishlist-button>
-            <a ongoing-event-button [routerLink]="['/event', eventId, 'r', 'i']">Ongoing Screening</a>
-          </ng-container>
-          <ng-template #request>
+          <ng-container *ngIf="(eventId$ | async) === undefined">
             <event-request-screening [movieId]="movie.id"></event-request-screening>
-            <button mat-button class="translucent" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
-              <mat-icon svgIcon="local_offer"></mat-icon>
-              <span fxHide.lt-md>Request Asking Price</span>
-            </button>
-            <wishlist-button small [movieId]="movie.id"></wishlist-button>
-          </ng-template>
+          </ng-container>
+          <button mat-button class="translucent" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)">
+            <mat-icon svgIcon="local_offer"></mat-icon>
+            <span fxHide.lt-md>Request Asking Price</span>
+          </button>
+          <wishlist-button small [movieId]="movie.id"></wishlist-button>
         </section>
       </movie-header-cta>
 
       <movie-header-actions>
-        <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
+        <section>
+          <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
+
+          <ng-container *ngIf="(eventId$ | async) as eventId">
+            <a ongoing-event-button [routerLink]="['/event', eventId, 'r', 'i']">Ongoing Screening</a>
+          </ng-container>
+        </section>
       </movie-header-actions>
     </movie-header>
 
