@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef, ChangeDetectorRef, OnDestroy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, OnDestroy, Inject } from '@angular/core';
 import { Router, ActivatedRoute, RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { EventForm } from '../../form/event.form';

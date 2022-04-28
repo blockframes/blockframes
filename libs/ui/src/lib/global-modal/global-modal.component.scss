@@ -2,17 +2,17 @@
   display: block;
 }
 
- // All padding have +24px on the base component
- // So, in exemple, count 48 as 72px
+// All padding have +24px on the base component
+// So, in exemple, count 48 as 72px
 .sizeL {
   padding: 48px;
-  width: calc(80vw - 96px);
+  width: calc(80vw - 48px);
   min-height: 450px;
-  max-height: min(calc(80vh - 96px), 750px);
+  max-height: min(calc(80vh - 48px), 750px);
   max-width: 1500px;
 
   .mat-dialog-content {
-    max-height: min(calc(80vh - 184px), 510px);
+    max-height: min(calc(80vh - 232px), 518px);
   }
 }
 
@@ -20,11 +20,11 @@
   padding: 24px;
   width: 60vw;
   min-height: 350px;
-  max-height: min(550px, 60vh);
+  max-height: min(60vh, 550px);
   max-width: 1000px;
 
   .mat-dialog-content {
-    max-height: min(calc(60vh - 96px), 454px);
+    max-height: min(calc(60vh - 56px), 494px);
   }
 }
 
