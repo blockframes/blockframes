@@ -7,37 +7,12 @@ import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@a
 import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { sortingDataAccessor } from '@blockframes/utils/table';
-import { ImportWarning, MovieImportState, SpreadsheetImportError } from '../../utils';
+import { MovieImportState, SpreadsheetImportError } from '../../utils';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie } from '@blockframes/model';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
-
-function getUpdatableFields(movie: Movie) {
-  const obj = {
-    id: movie['id'],
-    logline: movie['logline'],
-    synopsis: movie['synopsis'],
-    keyAssets: movie['keyAssets'],
-    color: movie['color'],
-    format: movie['format'],
-    formatQuality: movie['formatQuality'],
-    soundFormat: movie['soundFormat'],
-    isOriginalVersionAvailable: movie['isOriginalVersionAvailable'],
-  }
-  const movieToUpdate = { app: {} } as Partial<Movie>;
-  for (const [field, value] of Object.entries(obj)) {
-    if (<any>value instanceof ImportWarning) continue;
-    movieToUpdate[field] = value
-  }
-  for (const [field, value] of Object.entries(movie['app'])) {
-    if (value instanceof ImportWarning) continue;
-    movieToUpdate['app'][field] = value;
-  }
-  return movieToUpdate as Movie;
-}
 
 @Component({
   selector: 'import-table-extracted-movies',
@@ -118,9 +93,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   async updateMovie(importState: MovieImportState) {
-    const movie: Movie = getUpdatableFields(importState.movie);
-    //upsert movies here
-    await this.movieService.update(movie.id, movie)
+    await this.movieService.upsert(importState.movie);
     this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
     return true;
   }
