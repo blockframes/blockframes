@@ -115,7 +115,6 @@ export async function parse<T>(
         item[field] = validResults;
 
         const errorResults = results.filter(r => isValueWithError(r)) as ValueWithError[];
-        console.log({ errorResults: errorResults.map(e => e.error) })
         errors.push(...errorResults.map(e => e.error));
         item[field].push(...errorResults.map(e => e.value));
 
@@ -226,7 +225,7 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
 
   for (let rowIndex = 0; rowIndex < flatRows.length; rowIndex++) {
     const item = {};
-    const errors: SpreadsheetImportError[] = [];
+    let errors: SpreadsheetImportError[] = [];
     const entries = Object.entries(config);
     excelColumnLoop: for (let columnIndex = 0; columnIndex < entries.length; columnIndex++) {
       const [key, transform] = entries[columnIndex];
@@ -241,6 +240,7 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
       }
     }
     const data = cleanUp(item) as T;
+    errors = errors.filter(err => err);
     state.push(data);
     results.push({ data, errors });
   }

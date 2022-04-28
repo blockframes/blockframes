@@ -142,7 +142,6 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   errorCount(data: MovieImportState, type: string = 'error') {
-    console.log({ data })
     return data.errors.filter(err => err).filter((error: SpreadsheetImportError) => error.type === type).length;
   }
 

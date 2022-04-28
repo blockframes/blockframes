@@ -75,6 +75,5 @@ export async function formatTitle(
 
     titles.push({ errors, movie: title });
   }
-  console.log({ titles })
   return titles;
 }
