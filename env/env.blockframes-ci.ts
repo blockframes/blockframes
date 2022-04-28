@@ -15,7 +15,7 @@ const firebaseConfig = {
   authDomain: 'blockframes-ci.firebaseapp.com',
   databaseURL: 'https://blockframes-ci.firebaseio.com',
   projectId: 'blockframes-ci',
-  storageBucket: 'blockframes-ci.appspot.com',
+  storageBucket: 'blockframes-ci',
   messagingSenderId: '973979650792',
   appId: "1:973979650792:web:8b3ec4caab8dd5ef",
   measurementId: "G-GE7LPQ7MBX"
