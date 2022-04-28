@@ -68,7 +68,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
     const data: DeclineData = { 
       type: 'seller',
       showAcceptTermsCheckbox: true,
-      style: "medium"
+      style: 'medium'
     };
     const ref = this.dialog.open(ConfirmDeclineComponent, { data });
     const options = { params: { contractId: sale.id } };
