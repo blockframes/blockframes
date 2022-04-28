@@ -1,8 +1,9 @@
 import { join, resolve } from 'path';
-import { runShellCommand, getServiceAccountObj } from '@blockframes/firebase-utils';
+import { getServiceAccountObj } from '@blockframes/firebase-utils';
 import { promises as fsPromises } from 'fs';
 import { execSync } from 'child_process';
 import camelcase from 'camelcase';
+import { runShellCommand } from './firebase-utils';
 
 const { readdir, readFile, writeFile } = fsPromises;
 

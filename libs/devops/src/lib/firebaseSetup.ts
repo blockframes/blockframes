@@ -3,9 +3,7 @@ import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from '.
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
 import {
-  copyFirestoreExportFromCiBucket,
   endMaintenance,
-  latestAnonDbDir,
   loadAdminServices,
   restoreAnonStorageFromCI,
   startMaintenance,
@@ -25,6 +23,8 @@ import { generateFixtures } from './generate-fixtures';
 import { ensureMaintenanceMode, isMigrationRequired } from './tools';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
+import { copyFirestoreExportFromCiBucket, latestAnonDbDir } from './firebase-utils/copy-db-from-ci';
+
 const { storageBucket } = firebase();
 
 export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string } = {}) {
