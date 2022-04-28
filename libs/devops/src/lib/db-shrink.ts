@@ -268,4 +268,3 @@ function getDocumentsToKeepOrDelete(dbData: DatabaseData, collectionData: Collec
 function uniqueArray(arr: string[]) {
   return Array.from(new Set(arr))
 }
-
