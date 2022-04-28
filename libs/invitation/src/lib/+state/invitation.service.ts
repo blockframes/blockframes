@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { where } from 'firebase/firestore';
-import { Functions, httpsCallable } from '@angular/fire/functions';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 import {
@@ -13,34 +12,19 @@ import {
   Invitation,
   InvitationStatus,
   AlgoliaOrganization,
-  getOrgAppAccess
+  getOrgAppAccess,
+  App
 } from '@blockframes/model';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { subMonths } from 'date-fns';
-import { AtomicWrite } from 'ngfire';
+import { AtomicWrite, CallableFunctions } from 'ngfire';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
 export class InvitationService extends BlockframesCollection<Invitation> {
   readonly path = 'invitations';
-
-  /**
-   * Return true if there is already a pending invitation for a list of users
-   */
-  public hasUserAnOrgOrIsAlreadyInvited = httpsCallable<string[], boolean>(this.functions, 'hasUserAnOrgOrIsAlreadyInvited');
-
-  /**
-   * Return a boolean or a PublicOrganization doc if there is an invitation linked to the email.
-   * Return false if there is no invitation at all.
-   */
-  public getInvitationLinkedToEmail = httpsCallable<string, boolean | AlgoliaOrganization>(this.functions, 'getInvitationLinkedToEmail');
-
-  /**
-   * Used to accept or decline invitation if user is logged in as anonymous
-   */
-  public acceptOrDeclineInvitationAsAnonymous = httpsCallable<{ invitationId: string, email: string, status: InvitationStatus }>(this.functions, 'acceptOrDeclineInvitationAsAnonymous');
 
   /** All Invitations related to current user or org */
   allInvitations$: Observable<Invitation[]> = combineLatest([
@@ -104,7 +88,7 @@ export class InvitationService extends BlockframesCollection<Invitation> {
     private orgService: OrganizationService,
     private authService: AuthService,
     private permissionsService: PermissionsService,
-    private functions: Functions
+    private functions: CallableFunctions
   ) {
     super();
   }
@@ -113,6 +97,29 @@ export class InvitationService extends BlockframesCollection<Invitation> {
     delete invitation.message;
     return invitation;
   }
+
+  /**
+   * Return true if there is already a pending invitation for a list of users
+   */
+  public hasUserAnOrgOrIsAlreadyInvited(emails: string[]) {
+    return this.functions.call<string[], boolean>('hasUserAnOrgOrIsAlreadyInvited', emails);
+  }
+
+  /**
+   * Return a boolean or a PublicOrganization doc if there is an invitation linked to the email.
+   * Return false if there is no invitation at all.
+   */
+  public getInvitationLinkedToEmail(email: string) {
+    return this.functions.call<string, boolean | AlgoliaOrganization>('getInvitationLinkedToEmail', email);
+  }
+
+  /**
+   * Used to accept or decline invitation if user is logged in as anonymous
+   */
+  public acceptOrDeclineInvitationAsAnonymous({ invitationId, email, status }: { invitationId: string, email: string, status: InvitationStatus }) {
+    return this.functions.call<{ invitationId: string, email: string, status: InvitationStatus }, unknown>('acceptOrDeclineInvitationAsAnonymous', { invitationId, email, status });
+  }
+
   /////////////
   // QUERIES //
   /////////////
@@ -162,13 +169,12 @@ export class InvitationService extends BlockframesCollection<Invitation> {
         invitation.fromOrg = createPublicOrganization(fromOrg);
         const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
 
-        const f = httpsCallable(this.functions, 'inviteUsers');
         let app = this.app;
         if (app === 'crm') {
           // Instead use first found app where org has access to
           app = getOrgAppAccess(fromOrg)[0];
         }
-        return f({ emails: recipients, invitation, app });
+        return this.functions.call<{ emails: string[], invitation: Partial<Invitation>, app: App }, unknown>('inviteUsers', { emails: recipients, invitation, app });
       }
     }
   }

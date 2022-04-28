@@ -13,7 +13,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 import { ErrorResultResponse, extensionToType } from '@blockframes/utils/utils';
 import { MediaService } from '@blockframes/media/+state';
-import { Functions, httpsCallable } from '@angular/fire/functions';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { filter, pluck, scan, switchMap, take } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
@@ -34,6 +33,7 @@ import {
   StorageFile, 
   StorageVideo
 } from '@blockframes/model';
+import { CallableFunctions } from 'ngfire';
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
   return meetingEvent.type === 'meeting';
@@ -69,7 +69,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   public requestSent = false;
 
   constructor(
-    private functions: Functions,
+    private functions: CallableFunctions,
     private route: ActivatedRoute,
     private service: EventService,
     private invitationService: InvitationService,
@@ -314,10 +314,8 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   async createVideoControl(video: StorageVideo, eventId: string): Promise<MeetingVideoControl> {
-    const getVideoInfo = httpsCallable<{ video: StorageVideo, eventId: string }, ErrorResultResponse>(this.functions, 'privateVideo');
-
-    const r = await getVideoInfo({ video, eventId });
-    const { error, result } = r.data;
+    const r = await this.functions.call<{ video: StorageVideo, eventId: string }, ErrorResultResponse>('privateVideo', { video, eventId });
+    const { error, result } = r;
     if (error) {
       // if error is set, result will contain the error message
       throw new Error(result);

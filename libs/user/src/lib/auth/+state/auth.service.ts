@@ -1,5 +1,4 @@
 import { Injectable, NgZone, Optional } from '@angular/core';
-import { Functions, httpsCallable } from '@angular/fire/functions';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta, Timestamp, AnonymousCredentials, AnonymousRole, App } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
@@ -26,6 +25,7 @@ import { doc, docData, getDoc, DocumentReference, writeBatch } from '@angular/fi
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { runInZone } from '@blockframes/utils/zone';
 import { BlockframesAuth } from '@blockframes/utils/abstract-service';
+import { CallableFunctions } from 'ngfire';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService extends BlockframesAuth<User> {
@@ -92,7 +92,7 @@ export class AuthService extends BlockframesAuth<User> {
   get anonymouseOrRegularProfile() { return this.profile || this.anonymousCredentials };
 
   constructor(
-    private functions: Functions,
+    private functions: CallableFunctions,
     private gdprService: GDPRService,
     private ipService: IpService,
     private userService: UserService,
@@ -112,8 +112,7 @@ export class AuthService extends BlockframesAuth<User> {
    * @param email email of the user
   */
   public resetPasswordInit(email: string, app: App = this.app) {
-    const callSendReset = httpsCallable<{ email: string, app: App }, ErrorResultResponse>(this.functions, 'sendResetPasswordEmail');
-    return callSendReset({ email, app });
+    return this.functions.call<{ email: string, app: App }, ErrorResultResponse>('sendResetPasswordEmail', { email, app });
   }
 
   public checkResetCode(actionCode: string) {
@@ -203,8 +202,7 @@ export class AuthService extends BlockframesAuth<User> {
    * @param app
    */
   public async createUser(email: string, orgEmailData: OrgEmailData, app: App = this.app): Promise<PublicUser> {
-    const f = httpsCallable(this.functions, 'createUser');
-    const user = await f({ email, orgEmailData, app }) as unknown;
+   const user = await this.functions.call<{ email: string, orgEmailData: OrgEmailData, app: App }, PublicUser>('createUser', { email, orgEmailData, app });
     return createUser(user);
   }
 

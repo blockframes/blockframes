@@ -26,10 +26,9 @@ import { AppComponent } from './app.component';
 // Angular Fire
 import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
 import { provideFunctions, getFunctions, connectFunctionsEmulator } from '@angular/fire/functions';
-import { connectFirestoreEmulator, initializeFirestore, provideFirestore } from '@angular/fire/firestore';
+import { connectFirestoreEmulator } from '@angular/fire/firestore';
 import { providePerformance, getPerformance } from '@angular/fire/performance';
 import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
-import { provideStorage, getStorage } from '@angular/fire/storage';
 import { provideAnalytics, getAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 import 'firebase/storage';
 
@@ -66,14 +65,8 @@ import { APP } from '@blockframes/utils/routes/utils';
     IntercomModule.forRoot({ appId: intercomId }),
 
     // Firebase
-    provideFirebaseApp(() => initializeApp(firebase('festival'))), // TODO #8280 remove
-    provideFirestore(() => { // TODO #8280 put on emulator env.ts
-      const db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
-      if (emulatorConfig.firestore) {
-        connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
-      }
-      return db;
-    }),
+    provideFirebaseApp(() => initializeApp(firebase('festival'))), // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
+
     provideFunctions(() => {  // TODO #8280 put on emulator env.ts
       const functions = getFunctions(getApp(), firebaseRegion);
       if (emulatorConfig.functions) {
@@ -81,16 +74,17 @@ import { APP } from '@blockframes/utils/routes/utils';
       }
       return functions;
     }),
-    providePerformance(() => getPerformance()), // TODO #8280 remove ?
-    provideAuth(() => {  // TODO #8280 put on emulator env.ts
+    provideAuth(() => {  // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
       const auth = getAuth();
       if (emulatorConfig.auth) {
         connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
       }
       return auth;
     }),
-    provideStorage(() => getStorage()), // TODO #8280 remove
-    provideAnalytics(() => getAnalytics()), // TODO #8280 remove ?
+
+    
+    providePerformance(() => getPerformance()), // TODO #8280 remove ?
+    provideAnalytics(() => getAnalytics()), // TODO #8280 remove (test if data is saved on bigQuery)?
 
     sentryDsn ? SentryModule : ErrorLoggerModule,
 
@@ -118,6 +112,7 @@ import { APP } from '@blockframes/utils/routes/utils';
     {
       provide: FIREBASE_CONFIG, useValue: {
         options: firebase('festival'),
+        // TODO #8280 move on xxx-env.ts ?
         firestore: (firestore: Firestore) => {
           if (emulatorConfig.firestore) {
             connectFirestoreEmulator(firestore, emulatorConfig.firestore.host, emulatorConfig.firestore.port);

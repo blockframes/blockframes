@@ -35,7 +35,7 @@ function isTimeStamp(
 }
 
 /** Takes a Date, a string or a Timestamp and returns it as a Date. */
-export function toDate(date: Timestamp | Date): Date {
+export function toDate(date: Timestamp | Date): Date { // TODO #8280 remove
   if (isTimeStamp(date)) {
     return date.toDate();
   }
