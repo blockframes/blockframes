@@ -20,15 +20,6 @@ describe('Create an event as admin', () => {
     get('my-events').click();
   });
 
-  //temporary it, used for testing functions
-  it.skip('For testing purpose', () => {
-    const pastSlot = createPastSlot();
-    const futureSlot = createFutureSlot();
-    cy.log('now', new Date().getDay(), new Date().getHours(), new Date().getMinutes());
-    cy.log('pastSlot' + JSON.stringify(pastSlot));
-    cy.log('futureSlot', JSON.stringify(futureSlot));
-  });
-
   it('The calendar shows current week', () => {
     const currentWeekDays = getCurrentWeekDays();
     getByClass('cal-header').each((header, index) => {
@@ -350,6 +341,126 @@ describe('Create an event as admin', () => {
     });
   });
 
+  it('An admin can add a future all day public screening event', function () {
+    cy.then(function () {
+      const randomDay =  Math.floor(Math.random() * 7)
+      const randomSlot: EventSlot = { day: randomDay, hours: 12, minutes: 0 };
+      const eventType = 'Screening';
+      const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
+      const randomIndex = Math.floor(Math.random() * movieTitles.length);
+      const movieTitle = movieTitles[randomIndex];
+      const eventTitle = `Admin all day public screening - ${movieTitle}`;
+      cypress.goToNextWeek();
+      cypress.selectSlot(randomSlot);
+      get('all-day').click();
+      cypress.fillPopinForm({ eventType, eventTitle });
+      cypress.fillScreeningForm({
+        eventPrivacy: 'public',
+        isSecret: false,
+        eventTitle,
+        movieTitle,
+        dataToCheck: {
+          movieTitles,
+          calendarSlot: randomSlot.day,
+        },
+      });
+      firebase.deleteAllSellerEvents(this.user.uid);
+    });
+  });
+
+  it('An admin can visualize multiple future screening events taking place at the same time', function () {
+    cy.then(function () {
+      const randomDay =  Math.floor(Math.random() * 7)
+      const eventType = 'Screening';
+      const eventTitle = `Multiple`;
+      cypress.goToNextWeek();
+      cypress.createMultipeEvents({ day: randomDay, eventType: eventType, eventTitle, multiple: 3 });
+      // check if the events divide the column width adequately
+      cy.get('.cal-event-container')
+        .then(eventSlots => {
+          eventSlots.each(index => {
+            const style = eventSlots[index].getAttribute('style');
+            if(!index) expect(style).to.include('left: 0%; width: 33.3333%');
+            if(index === 1) expect(style).to.include('left: 33.3333%; width: 33.3333%')
+            if(index === 2) expect(style).to.include('left: 66.6667%; width: 33.3333%')
+          })
+        })
+      firebase.deleteAllSellerEvents(this.user.uid);
+    });
+  });
+
+  it('An admin can delete an upcoming event', function () {
+    const futureSlot = createFutureSlot();
+    const eventType = 'Screening';
+    const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
+    const randomIndex = Math.floor(Math.random() * movieTitles.length);
+    const movieTitle = movieTitles[randomIndex];
+    const eventTitle = `Event to delete`;
+    cypress.selectSlot(futureSlot);
+    cypress.fillPopinForm({ eventType, eventTitle });
+    cypress.fillScreeningForm({
+      eventPrivacy: 'public',
+      isSecret: false,
+      eventTitle,
+      movieTitle,
+      dataToCheck: {
+        movieTitles,
+        calendarSlot: futureSlot,
+      },
+    });
+    get('movie-title').click();
+    get('event-delete').click();
+    get('confirm').click();
+    get('movie-title').should('not.exist');
+    firebase.deleteAllSellerEvents(this.user.uid);
+  });
+
+  it('An admin can edit an upcoming event', function () {
+    const futureSlot = createFutureSlot();
+    const editHour = futureSlot.hours === 23 ? 22 : 23;
+    const eventType = 'Screening';
+    const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
+    const randomIndex = Math.floor(Math.random() * movieTitles.length);
+    const movieTitle = movieTitles[randomIndex];
+    const eventTitle = `Event to edit`;
+    cypress.selectSlot(futureSlot);
+    cypress.fillPopinForm({ eventType, eventTitle });
+    cypress.fillScreeningForm({
+      eventPrivacy: 'public',
+      isSecret: false,
+      eventTitle,
+      movieTitle,
+      dataToCheck: {
+        movieTitles,
+        calendarSlot: futureSlot,
+      },
+    });
+    get('movie-title').click();
+    get('event-title-modal').clear();
+    get('event-title-modal').type('Event modified');
+    get('event-start').find('[type=time]').click();
+    cy.contains(`${editHour}:00`).click();
+    get('event-end').find('[type=time]').click();
+    cy.contains(`${editHour}:30`).click();
+    get('event-save').click();
+    get('arrow-back').click();
+    cypress.getEventSlot({ day: futureSlot.day, hours: editHour, minutes: 0 }).should('contain', movieTitle);
+    firebase.deleteAllSellerEvents(this.user.uid);
+  });
+
+  it('The ending time of a meeting cannot precede the starting time', function () {
+    cy.then(function () {
+      const randomDay =  Math.floor(Math.random() * 7)
+      cypress.goToNextWeek();
+      cypress.selectFirstSlotOfDay(randomDay);
+      get('event-start').find('[type=time]').click();
+      cy.contains('12:00').click();
+      get('event-end').find('[type=time]').click();
+      cy.contains('11:30').click();
+      getByClass('mat-error').should('have.length', 2);
+    });
+  });
+
 });
 
 describe('Create an event as member', () => {
@@ -401,98 +512,88 @@ describe('Create an event as member', () => {
   });
 });
 
+describe('Testing warning chip', () => {
+  beforeEach(() => {
+    cy.visit('');
+    auth.clearBrowserAuth();
+  });
+
+  it('A warning chip warns in case of a screening for a movie without screener', function () {
+    firebase.getScreeningData({ userType: 'member', moviesWithScreener: false })
+      .then((data: { org: Organization; user: User; movies: Movie[] }) => {
+        firebase.deleteAllSellerEvents(data.user.uid);
+        cypress.wrapFeedbackData(data);
+        cy.visit('');
+        cy.contains('Accept cookies').click();
+        auth.loginWithEmailAndPassword(data.user.email);
+        cy.visit('');
+      });
+    get('my-events').click();
+    cy.then(function () {
+      const futureSlot = createFutureSlot();
+      const eventType = 'Screening';
+      const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
+      const randomIndex = Math.floor(Math.random() * movieTitles.length);
+      const movieTitle = movieTitles[randomIndex];
+      const eventTitle = `Admin public screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${movieTitle}`;
+      cypress.selectSlot(futureSlot);
+      cypress.fillPopinForm({ eventType, eventTitle });
+      cypress.fillScreeningForm({
+        eventPrivacy: 'public',
+        isSecret: false,
+        eventTitle,
+        movieTitle,
+        dataToCheck: {
+          calendarSlot: futureSlot,
+        },
+      });
+      get('movie-title').click();
+      get('warning-chip').should('exist');
+      firebase.deleteAllSellerEvents(this.user.uid);
+    });
+  });
+
+  it('No warning chip is present in case of a screening for a movie with screener', function () {
+    firebase.getScreeningData({ userType: 'member', moviesWithScreener: true })
+      .then((data: { org: Organization; user: User; movies: Movie[] }) => {
+        firebase.deleteAllSellerEvents(data.user.uid);
+        cypress.wrapFeedbackData(data);
+        cy.visit('');
+        cy.contains('Accept cookies').click();
+        auth.loginWithEmailAndPassword(data.user.email);
+        cy.visit('');
+      });
+    get('my-events').click();
+    cy.then(function () {
+      const futureSlot = createFutureSlot();
+      const eventType = 'Screening';
+      const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
+      const randomIndex = Math.floor(Math.random() * movieTitles.length);
+      const movieTitle = movieTitles[randomIndex];
+      const eventTitle = `Admin public screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${movieTitle}`;
+      cypress.selectSlot(futureSlot);
+      cypress.fillPopinForm({ eventType, eventTitle });
+      cypress.fillScreeningForm({
+        eventPrivacy: 'public',
+        isSecret: false,
+        eventTitle,
+        movieTitle,
+        dataToCheck: {
+          calendarSlot: futureSlot,
+        },
+      });
+      get('movie-title').click();
+      get('warning-chip').should('not.exist');
+      firebase.deleteAllSellerEvents(this.user.uid);
+    });
+  });
+});
+
 //* CYPRESS FUNCTIONS *//
 
 const cypress = {
-  getScreeningDataAndLogin(options: { userType: UserRole; moviesWithScreener?: boolean }) {
-    const { userType, moviesWithScreener } = options;
-    cy.task('getRandomScreeningData', {
-      app: 'festival',
-      access: { marketplace: true, dashboard: true },
-      userType: userType,
-      moviesWithScreener: moviesWithScreener,
-    }).then((data: { org: Organization; user: User; movies: Movie[] }) => {
-      cy.task('deleteAllSellerEvents', data.user.uid);
-      cy.wrap(data.org).as('org');
-      cy.wrap(data.user).as('user');
-      cy.wrap(data.movies).as('movies');
-      cy.visit('');
-      cy.contains('Accept cookies').click();
-      auth.loginWithEmailAndPassword(data.user.email);
-      cy.visit('');
-    });
-    get('my-events').click();
-  },
 
-  //angular calendar being a module, we can only use its created classes and styles to target its elements
-  selectSlot(time: EventSlot) {
-    const { day, hours, minutes } = time;
-    cy.get('.cal-day-column')
-      .eq(day)
-      .find('.cal-hour')
-      .eq(hours)
-      .children()
-      .eq(!minutes ? 0 : 1)
-      .click();
-  },
-
-  getEventSlot(time: EventSlot) {
-    const { day, hours, minutes } = time;
-    //30 minutes are 30px high, an hour 60px
-    let topOffset = hours * 60;
-    if (minutes === 30) topOffset += 30;
-    return cy.get('.cal-day-column').eq(day).find('.cal-events-container').find(`[style^="top: ${topOffset}px"]`);
-  },
-
-  searchInEvents(data: { title: string; type?: string; expected: boolean }) {
-    const { title, type, expected } = data;
-    let eventFound = false;
-    return getAllStartingWith('event_')
-      .then(events => {
-        events.toArray().map(event => {
-          if (event.textContent.includes(title)) {
-            expect(event.textContent).to.include(type);
-            eventFound = true;
-          }
-        });
-      })
-      .then(() => (expected ? expect(eventFound).to.be.true : expect(eventFound).to.be.false));
-  },
-
-  fillPopinForm(data: { eventType: 'Screening' | 'Meeting' | 'Slate'; eventTitle: string }) {
-    const { eventType, eventTitle } = data;
-    get('event-type').click();
-    getInList('type_', eventType);
-    get('event-title-modal').clear().type(eventTitle);
-    get('more-details').click();
-  },
-
-  fillScreeningForm(data: {
-    eventPrivacy: 'public' | 'protected' | 'private';
-    isSecret: boolean;
-    eventTitle: string;
-    movieTitle: string;
-    dataToCheck: { movieTitles: string[]; calendarSlot: EventSlot };
-  }) {
-    const { eventPrivacy, isSecret, eventTitle, movieTitle, dataToCheck } = data;
-    get('warning-chip').should('exist');
-    get('title').click();
-    getAllStartingWith('title_').then(options => {
-      // check if all titles are availables
-      options.toArray().forEach(option => expect(dataToCheck.movieTitles).to.include(option.children[0].textContent.trim()));
-    });
-    cy.get('body').type('{esc}');
-    cypress.selectTitle(movieTitle);
-    get('title').should('contain', movieTitle);
-    get('description').type(`Description : ${eventTitle}`);
-    get(eventPrivacy).click();
-    if (isSecret) get('secret').click();
-    get('event-save').should('be.enabled');
-    get('event-save').click();
-    get('event-save-disabled').should('be.disabled');
-    get('arrow-back').click();
-    cypress.getEventSlot(dataToCheck.calendarSlot).should('contain', movieTitle);
-  },
+  //* Form functions
 
   fillMeetingForm(data: {
     eventPrivacy: 'public' | 'protected' | 'private';
@@ -508,6 +609,64 @@ const cypress = {
     get('event-save-disabled').should('be.disabled');
     get('arrow-back').click();
     cypress.getEventSlot(dataToCheck.calendarSlot).should('contain', eventTitle);
+  },
+
+  fillPopinForm(data: { eventType: 'Screening' | 'Meeting' | 'Slate'; eventTitle: string }) {
+    const { eventType, eventTitle } = data;
+    get('event-type').click();
+    getInList('type_', eventType);
+    get('event-title-modal').clear().type(eventTitle);
+    get('more-details').click();
+  },
+
+  fillScreeningForm(data: {
+    eventPrivacy: 'public' | 'protected' | 'private';
+    isSecret: boolean;
+    eventTitle: string;
+    movieTitle: string;
+    dataToCheck: { movieTitles?: string[]; calendarSlot: EventSlot | number};
+  }) {
+    const { eventPrivacy, isSecret, eventTitle, movieTitle, dataToCheck } = data;
+    get('warning-chip').should('exist');
+    if(dataToCheck.movieTitles) {
+      get('title').click();
+      getAllStartingWith('title_').then(options => {
+        // check if all titles are availables
+        options.toArray().forEach(option => expect(dataToCheck.movieTitles).to.include(option.children[0].textContent.trim()));
+      });
+      cy.get('body').type('{esc}');
+    }
+    cypress.selectTitle(movieTitle);
+    get('title').should('contain', movieTitle);
+    get('description').type(`Description : ${eventTitle}`);
+    get(eventPrivacy).click();
+    if (isSecret) get('secret').click();
+    get('event-save').should('be.enabled');
+    get('event-save').click();
+    get('event-save-disabled').should('be.disabled');
+    get('arrow-back').click();
+    // check for non all-day events
+    if(typeof(dataToCheck.calendarSlot) !== 'number') return cypress.getEventSlot(dataToCheck.calendarSlot).should('contain', movieTitle);
+    // check for all-day events
+    cy.get('.cal-all-day-events > .cal-day-columns > .cal-day-column')
+      .then(columns => {
+        const columnsLeftCoordinates: number[] = [];
+        columns.each(index => {
+          columnsLeftCoordinates.push(columns[index].getBoundingClientRect().x);
+        });
+        get('movie-title').then(eventCard => {
+          const eventCardLeftCoordinate = eventCard[0].getBoundingClientRect().x;
+          for (let i = 0; i < columnsLeftCoordinates.length - 1; i++) {
+            const currentColumnLeft = columnsLeftCoordinates[i];
+            const nextColumnLeft = columnsLeftCoordinates[i+1]
+            if (eventCardLeftCoordinate > currentColumnLeft && eventCardLeftCoordinate < nextColumnLeft) {
+              return expect(dataToCheck.calendarSlot).to.be.equal(i);
+            }
+          }
+          // if meeting takes place on sunday
+          return expect(dataToCheck.calendarSlot).to.be.equal(6);
+        });
+      })
   },
 
   fillSlateForm(data: {
@@ -531,16 +690,84 @@ const cypress = {
     cypress.getEventSlot(dataToCheck.calendarSlot).should('contain', eventTitle);
   },
 
-  wrapFeedbackData(data: { org: Organization; user: User; movies: Movie[] }) {
-    cy.wrap(data.org).as('org');
-    cy.wrap(data.user).as('user');
-    cy.wrap(data.movies).as('movies');
-  },
-
   selectTitle(movieTitle: string) {
     get('title').click();
     getInList('title_', movieTitle);
   },
+
+  //* Slots functions
+
+  //angular calendar being a module, we can only use its created classes and styles to target its elements
+  getEventSlot(time: EventSlot) {
+    const { day, hours, minutes } = time;
+    //30 minutes are 30px high, an hour 60px
+    let topOffset = hours * 60;
+    if (minutes === 30) topOffset += 30;
+    return cy.get('.cal-day-column').eq(day).find('.cal-events-container').find(`[style^="top: ${topOffset}px"]`);
+  },
+
+  selectFirstSlotOfDay(day: number) {
+    return cy.get('.cal-day-column')
+      .eq(day)
+      .find('.cal-hour')
+      .eq(0)
+      .children()
+      .eq(0)
+      .click();
+  },
+  
+  selectSlot(time: EventSlot) {
+    const { day, hours, minutes } = time;
+    return cy.get('.cal-day-column')
+      .eq(day)
+      .find('.cal-hour')
+      .eq(hours)
+      .children()
+      .eq(!minutes ? 0 : 1)
+      .click();
+  },
+
+  getColumnsSpread() {
+    console.log('column spread')
+    return cy.get('.cal-all-day-events').find('.cal-day-column').eq(6).contains('')
+  },
+
+  //* Events functions
+
+  createMultipeEvents(data: {
+    day: number,
+    eventType: 'Screening' | 'Meeting' | 'Slate',
+    eventTitle: string,
+    multiple: number
+  }) {
+    const { day, eventType, eventTitle, multiple } = data;
+    for(let i = 0; i < multiple; i++) {
+      cypress.selectFirstSlotOfDay(day);
+      get('event-start').find('[type=time]').click();
+      cy.contains('12:00').click();
+      get('event-end').find('[type=time]').click();
+      cy.contains('12:30').click();
+      cypress.fillPopinForm({ eventType, eventTitle });
+      get('arrow-back').click();
+    }
+  },
+
+  searchInEvents(data: { title: string; type?: string; expected: boolean }) {
+    const { title, type, expected } = data;
+    let eventFound = false;
+    return getAllStartingWith('event_')
+      .then(events => {
+        events.toArray().map(event => {
+          if (event.textContent.includes(title)) {
+            expect(event.textContent).to.include(type);
+            eventFound = true;
+          }
+        });
+      })
+      .then(() => (expected ? expect(eventFound).to.be.true : expect(eventFound).to.be.false));
+  },
+
+  //* Miscellaneous functions
 
   connectUser(email: string) {
     get('login').click();
@@ -549,11 +776,27 @@ const cypress = {
     get('password').type(USER_FIXTURES_PASSWORD);
     get('submit').click();
   },
+
+  goToNextWeek() {
+    return get('arrow_forward').click();
+  },
+
+  wrapFeedbackData(data: { org: Organization; user: User; movies: Movie[] }) {
+    cy.wrap(data.org).as('org');
+    cy.wrap(data.user).as('user');
+    cy.wrap(data.movies).as('movies');
+  },
+
 };
 
-//* Firebase functions
+//* FIREBASE FUNCTIONS *//
 
 const firebase = {
+
+  deleteAllSellerEvents(userId: string) {
+    return cy.task('deleteAllSellerEvents', userId);
+  },
+
   getScreeningData(options: { userType: UserRole; moviesWithScreener?: boolean }) {
     const { userType, moviesWithScreener } = options;
     return cy.task('getRandomScreeningData', {
@@ -564,17 +807,40 @@ const firebase = {
     });
   },
 
-  deleteAllSellerEvents(userId: string) {
-    return cy.task('deleteAllSellerEvents', userId);
-  },
-
   getRandomUser(data: { app: App; access: ModuleAccess; userType: UserRole }) {
     const { app, access, userType } = data;
     return cy.task('getRandomMember', { app, access, userType });
   },
+
 };
 
 //* JS FUNCTIONS *//
+interface EventSlot {
+  day: number;
+  hours: number;
+  minutes: 0 | 30;
+}
+
+function createFutureSlot() {
+  const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
+  do {
+    slot.day = new Date().getDay() + Math.floor(Math.random() * (7 - new Date().getDay()));
+    slot.hours = Math.floor(Math.random() * 24);
+    slot.minutes = Math.random() < 0.5 ? 0 : 30;
+  } while (!isFuture(add(startOfWeek(new Date()), { days: slot.day, hours: slot.hours, minutes: slot.minutes })));
+  return slot;
+}
+
+// not used yet, need to wait for issue #8203 to be resolved
+function createPastSlot() {
+  const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
+  do {
+    slot.day = Math.floor(Math.random() * new Date().getDay());
+    slot.hours = Math.floor(Math.random() * 24);
+    slot.minutes = Math.random() < 0.5 ? 0 : 30;
+  } while (!isPast(add(startOfWeek(new Date()), { days: slot.day, hours: slot.hours, minutes: slot.minutes })));
+  return slot;
+}
 
 function getCurrentWeekDays() {
   const d = new Date();
@@ -588,30 +854,4 @@ function getCurrentWeekDays() {
     d.setDate(d.getDate() + 1);
   }
   return weekDays;
-}
-
-interface EventSlot {
-  day: number;
-  hours: number;
-  minutes: 0 | 30;
-}
-
-function createPastSlot() {
-  const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
-  do {
-    slot.day = Math.floor(Math.random() * new Date().getDay());
-    slot.hours = Math.floor(Math.random() * 24);
-    slot.minutes = Math.random() < 0.5 ? 0 : 30;
-  } while (!isPast(add(startOfWeek(new Date()), { days: slot.day, hours: slot.hours, minutes: slot.minutes })));
-  return slot;
-}
-
-function createFutureSlot() {
-  const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
-  do {
-    slot.day = new Date().getDay() + Math.floor(Math.random() * (7 - new Date().getDay()));
-    slot.hours = Math.floor(Math.random() * 24);
-    slot.minutes = Math.random() < 0.5 ? 0 : 30;
-  } while (!isFuture(add(startOfWeek(new Date()), { days: slot.day, hours: slot.hours, minutes: slot.minutes })));
-  return slot;
 }
