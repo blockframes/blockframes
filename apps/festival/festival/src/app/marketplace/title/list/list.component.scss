@@ -1,5 +1,3 @@
-@import "@angular/flex-layout/mq";
-
 mat-form-field {
   width: 100%;
 }
@@ -43,8 +41,3 @@ list-page-description, pdf-export button {
   margin: 24px;
 }
 
-@include layout-bp(lt-md) {
-  movie-card {
-    margin-bottom: 24px;
-  }
-}

@@ -51,7 +51,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private router: Router, 
     private navService: NavigationService,
     private breakpointsService: BreakpointsService
-    ) { }
+  ) { }
 
   @Input() showBackArrow = true;
   @Input() set movie(movie: Movie) {

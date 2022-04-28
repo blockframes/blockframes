@@ -53,6 +53,12 @@ span.mat-body-2 {
   margin-bottom: 28px;
 }
 
+@include layout-bp(lt-md) {
+  .grid-item {
+    margin-bottom: 24px;
+  }
+}
+
 @include layout-bp(xs) {
   .export-section {
     flex-direction: column;

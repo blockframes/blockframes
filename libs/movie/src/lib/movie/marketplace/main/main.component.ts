@@ -3,7 +3,6 @@ import { TitleMarketplaceShellComponent } from '../shell/shell.component';
 import { Movie } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Component({
   selector: 'movie-main',
@@ -22,13 +21,11 @@ export class MainComponent implements OnInit {
     prizes: ['prizes', 'review'],
   };
   private alreadyPlayed = false;
-  public ltMd$ = this.breakpointsService.ltMd;
 
   constructor(
     private shell: TitleMarketplaceShellComponent,
     private dynTitle: DynamicTitleService,
     private analytics: AnalyticsService,
-    private breakpointsService: BreakpointsService,
   ) { }
 
   ngOnInit() {
