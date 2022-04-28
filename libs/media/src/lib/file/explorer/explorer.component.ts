@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit, OnInit, Inject } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
 import { where, doc, updateDoc } from 'firebase/firestore';
 
 // Blockframes
@@ -63,7 +62,6 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   @ViewChild('directory') directory?: TemplateRef<unknown>;
 
   constructor(
-    private db: Firestore,
     private movieService: MovieService,
     private mediaService: MediaService,
     private service: FileUploaderService,

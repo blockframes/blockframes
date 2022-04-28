@@ -2,7 +2,6 @@
 import { Injectable, Injector } from "@angular/core";
 import { ComponentPortal } from "@angular/cdk/portal";
 import { Overlay, OverlayRef } from "@angular/cdk/overlay";
-import { Firestore } from "@angular/fire/firestore";
 import { UploadTask } from 'firebase/storage';
 import { AuthService } from "@blockframes/auth/+state";
 import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
@@ -30,7 +29,6 @@ export class FileUploaderService {
 
   constructor(
     private overlay: Overlay,
-    private db: Firestore,
     private authService: AuthService,
     private storage: FireStorage,
   ) { }
@@ -160,7 +158,7 @@ export class FileUploaderService {
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create(this.overlayOptions);
       const instance = new ComponentPortal(UploadWidgetComponent);
-      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this.tasks }, { provide: 'db', useValue: this.db }] });
+      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this.tasks }, { provide: 'db', useValue: this.authService._db }] });
       this.overlayRef.attach(instance);
     }
   }

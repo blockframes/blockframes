@@ -32,7 +32,6 @@ export class MarketplaceHomeComponent implements OnInit, AfterViewInit {
 
   constructor(
     private dynTitle: DynamicTitleService,
-    private db: Firestore,
     private dialog: MatDialog,
     private authService: AuthService,
     private orgService: OrganizationService
@@ -40,7 +39,7 @@ export class MarketplaceHomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Home');
-    const ref = doc(this.db, 'cms/catalog/home/live') as DocumentReference<CmsPage>;
+    const ref = doc(this.orgService._db, 'cms/catalog/home/live') as DocumentReference<CmsPage>;
     this.page$ = docData<CmsPage>(ref).pipe(
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );

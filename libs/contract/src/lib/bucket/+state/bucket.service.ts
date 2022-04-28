@@ -8,7 +8,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { TermService } from '../../term/+state/term.service';
 import { OfferService } from '../../offer/+state/offer.service';
 import { ContractService } from '../../contract/+state/contract.service';
-import { collection, doc, DocumentSnapshot } from 'firebase/firestore';
+import { DocumentSnapshot } from 'firebase/firestore';
 import {
   Bucket,
   createBucket,
@@ -77,7 +77,7 @@ export class BucketService extends BlockframesCollection<Bucket> {
     });
 
     const promises = bucket.contracts.map(async (contract) => {
-      const contractId = doc(collection(this.db, '_')).id;
+      const contractId = this.contractService.createId();
       const parentTerms = await this.termService.getValue(contract.parentTermId);
       const parentContract = await this.contractService.getValue(parentTerms.contractId);
 
