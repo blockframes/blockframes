@@ -1,13 +1,13 @@
 :host {
-  text-transform: uppercase;
   display: flex;
-  padding: 12px 16px;
-  border-radius: 4px;
+  padding: 8px 12px;
+  border-radius: 80px;
   color: #FFF;
   background-color: #8da4fa;
   transition: background-color 1s;
   animation: pulse 2s infinite cubic-bezier(0.20, 0, 0, 0.5);
   cursor: pointer;
+  white-space: nowrap;
 
   svg {
     margin-right: 8px;
