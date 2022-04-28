@@ -1,11 +1,11 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef, ChangeDetectorRef, OnDestroy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, OnDestroy, Inject } from '@angular/core';
 import { Router, ActivatedRoute, RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatDialog } from '@angular/material/dialog';
-import { App, applicationUrl } from '@blockframes/utils/apps';
+import { applicationUrl } from '@blockframes/utils/apps';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { App } from '@blockframes/model';
 
 const statisticsTab = { path: 'statistics', label: 'Attendance' };
 
@@ -77,7 +78,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       if (type === 'screening') {
         this.checkTitleAndScreener(this.form.meta.value.titleId);
       } else if (type === 'slate') {
-        this.checkSlateVideoMissing(this.form.meta.value.video);
+        this.checkSlateVideoMissing(this.form.meta.value.videoId);
       }
 
       this.cdr.markForCheck();
@@ -122,7 +123,8 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
           this.eventService.remove(this.form.value.id);
           //Here we add an eventDeleted to inform the guard thatthere is no need to display the popup
           this.router.navigate(['../..'], { relativeTo: this.route, state: { eventDeleted: true } });
-        }
+        },
+        style: 'medium'
       },
       autoFocus: false,
     })
@@ -139,7 +141,8 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
         question: 'Some changes have not been saved.',
         advice: 'If you leave now, you will lose these changes.',
         confirm: 'Save & Exit',
-        cancel: 'Close without saving'
+        cancel: 'Close without saving',
+        style: 'small'
       },
       autoFocus: false,
     });

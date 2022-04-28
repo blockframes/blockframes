@@ -11,12 +11,11 @@ import { NavigationEnd, Router, RouterOutlet, Event, ActivatedRoute } from '@ang
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
-import { Movie } from '@blockframes/model';
+import { Movie, App } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
 import { filter, pluck, switchMap, tap } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
-import { App } from '@blockframes/utils/apps';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 
 @Directive({ selector: 'movie-cta, [movieCta]' })

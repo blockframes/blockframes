@@ -4,8 +4,7 @@ import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 import { config } from 'dotenv';
 import requiredVars from 'tools/mandatory-env-vars.json';
 import { resolve } from 'path';
-import { App } from '@blockframes/utils/apps';
-import { OrganizationDocument } from '@blockframes/model';
+import { OrganizationDocument, App } from '@blockframes/model';
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks

@@ -33,11 +33,11 @@ export class ContractItemComponent {
   ) { }
 
   openDetails(terms: string[], scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope, style: 'medium' }, autoFocus: false });
   }
 
   openHoldbackModal(existingHoldbacks: Holdback[]) {
-    this.dialog.open(HoldbackModalComponent, { data: { holdbacks: existingHoldbacks }, maxHeight: '80vh' });
+    this.dialog.open(HoldbackModalComponent, { data: { holdbacks: existingHoldbacks, style: 'medium' } });
   }
 
 }

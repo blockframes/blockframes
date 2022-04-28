@@ -23,7 +23,7 @@ export class OpenPreviewComponent {
   async openModal() {
     this.dialogRef = this.dialog.open(PreviewFileModalComponent, {
       hasBackdrop: true,
-      data: this.ref,
+      data: { ...this.ref, style: 'medium' },
       autoFocus: false,
     });
   }

@@ -83,6 +83,7 @@ export class ContractViewComponent implements OnInit, OnDestroy {
         confirmationWord: 'DELETE',
         confirmButtonText: 'Delete term',
         onConfirm: this.delete(term),
+        style: 'medium'
       }
     });
   }

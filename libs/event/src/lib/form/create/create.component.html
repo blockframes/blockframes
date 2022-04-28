@@ -1,25 +1,24 @@
-﻿<button mat-icon-button class="mat-dialog-close" mat-dialog-close>
-  <mat-icon svgIcon="close"></mat-icon>
-</button>
+﻿<global-modal>
+  <header>
+    <h2>Add a New Event</h2>
+  </header>
 
-<h3>Add a New Event</h3>
+  <form [formGroup]="form" fxLayout="column">
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>Select Event Type</mat-label>
+      <mat-select test-id="event-type" required formControlName="type" (selectionChange)="onTypeSelected($event)">
+        <ng-container *ngFor="let type of types">
+          <mat-option [value]="type">{{ type | titlecase }}</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
 
-<form [formGroup]="form" fxLayout="column">
-  <mat-form-field fxFlex appearance="outline">
-    <mat-label>Select Event Type</mat-label>
-    <mat-select test-id="event-type" required formControlName="type" (selectionChange)="onTypeSelected($event)">
-      <ng-container *ngFor="let type of types">
-        <mat-option [value]="type">{{ type | titlecase }}</mat-option>
-      </ng-container>
-    </mat-select>
-  </mat-form-field>
+    <event-details-edit [form]="form"></event-details-edit>
+  </form>
 
-  <event-details-edit [form]="form"></event-details-edit>
-
-</form>
-
-<footer fxLayout fxLayoutAlign="end center"  fxLayoutGap="16px">
-  <button type="button" mat-flat-button color="primary" (click)="createAndRedirect()" test-id="more-details" [disabled]="form.invalid">
-    More Details
-  </button>
-</footer>
+  <footer fxLayout fxLayoutAlign="end center"  fxLayoutGap="16px">
+    <button type="button" mat-flat-button color="primary" (click)="createAndRedirect()" test-id="more-details" [disabled]="form.invalid">
+      More Details
+    </button>
+  </footer>
+</global-modal>

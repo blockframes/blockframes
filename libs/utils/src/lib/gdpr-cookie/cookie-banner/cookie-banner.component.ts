@@ -35,7 +35,7 @@ export class CookieBannerComponent implements OnInit {
 
   /** Opens a dialog with terms of use and privacy policy given by the parent. */
   public openPrivacyPolicy() {
-    this.dialog.open(PrivacyPolicyComponent, { maxHeight: '80vh' })
+    this.dialog.open(PrivacyPolicyComponent, { data: { style: 'large' } })
   }
 
   public acceptCookies() {
@@ -47,8 +47,7 @@ export class CookieBannerComponent implements OnInit {
 
   public changePreferences() {
     const dialogRef = this.dialog.open(CookieDialogComponent, {
-      minHeight: '80vh',
-      minWidth: '80vw'
+      data: { style: 'large' }
     });
     dialogRef.afterClosed().subscribe(settings => {
       if (settings) {

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { App, applicationUrl } from '@blockframes/utils/apps';
 import { Location } from '@angular/common';
 import { APP } from '@blockframes/utils/routes/utils';

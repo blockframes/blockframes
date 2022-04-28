@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { ModuleAccess, createModuleAccess } from '@blockframes/utils/apps';
+import { ModuleAccess, createModuleAccess } from '@blockframes/model';
 
 function createModuleAccessCrmControls(entity: Partial<ModuleAccess>) {
   const moduleAccess = createModuleAccess(entity);

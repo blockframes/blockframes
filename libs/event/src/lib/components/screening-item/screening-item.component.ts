@@ -21,7 +21,6 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
 
   public invitation: Invitation;
   public requestSent = false;
-
   @Input() set event(screening: ScreeningEvent) {
     this._event.next(screening);
   }
@@ -53,9 +52,7 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
 
   requestAskingPrice(movieId: string) {
     const ref = this.dialog.open(RequestAskingPriceComponent, {
-      data: { movieId },
-      maxHeight: '80vh',
-      maxWidth: '650px',
+      data: { movieId, style: 'large' },
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {

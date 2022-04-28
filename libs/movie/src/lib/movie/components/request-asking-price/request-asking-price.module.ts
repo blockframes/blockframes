@@ -8,6 +8,7 @@ import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.mod
 
 // Blockframes
 import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { GlobalModalModule } from "@blockframes/ui/global-modal/global-modal.module";
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';

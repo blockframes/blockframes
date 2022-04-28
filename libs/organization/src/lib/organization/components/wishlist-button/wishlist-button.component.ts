@@ -14,8 +14,7 @@ import { Router } from '@angular/router';
   selector: '[movieId] wishlist-button',
   templateUrl: './wishlist-button.component.html',
   styleUrls: ['./wishlist-button.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WishlistButtonComponent implements OnInit {
 

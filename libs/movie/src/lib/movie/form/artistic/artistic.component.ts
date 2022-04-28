@@ -51,7 +51,7 @@ export class MovieFormArtisticComponent {
   openDetails(title: string, values: string | Filmography[]) {
     const arrayValues = Array.isArray(values) ? displayFilmographies(values) : [values];
     this.dialog.open(CellModalComponent, {
-      data: { title, values: arrayValues },
+      data: { title, values: arrayValues, style: 'medium' },
       autoFocus: false,
     });
   }

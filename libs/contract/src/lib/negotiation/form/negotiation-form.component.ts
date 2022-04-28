@@ -40,8 +40,7 @@ export class NegotiationFormComponent {
 
   openDetails(terms: string, scope: Scope) {
     this.dialog.open(DetailedTermsComponent, {
-      data: { terms, scope },
-      maxHeight: '80vh',
+      data: { terms, scope, style: 'medium' },
       autoFocus: false,
     });
   }

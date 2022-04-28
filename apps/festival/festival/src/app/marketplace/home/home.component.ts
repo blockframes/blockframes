@@ -58,7 +58,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       const preferences = createPreferences();
       this.authService.update({ preferences });
       this.dialog.open(PreferencesComponent, {
-        autoFocus: false
+        autoFocus: false,
+        data: { style: 'large' }
       });
     }
   }

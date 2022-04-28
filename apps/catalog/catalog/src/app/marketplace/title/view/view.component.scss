@@ -24,8 +24,6 @@ movie-header-cta {
 
 movie-header-actions {
   display: flex;
-  justify-content: start;
-  align-items: center;
   gap: 24px;
 }
 
@@ -33,11 +31,6 @@ section.hero {
   padding: 40px;
 }
 
-@include layout-bp(xs) {
-  movie-header-actions {
-    display: none;
-  }
-}
 @include layout-bp(gt-sm) {
   movie-header-actions {
     margin-left: auto;

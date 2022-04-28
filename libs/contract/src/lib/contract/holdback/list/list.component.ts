@@ -15,6 +15,6 @@ export class ListComponent {
   constructor(private dialog: MatDialog) { }
 
   openDetails(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
+    this.dialog.open(DetailedTermsComponent, { data: { terms, scope, style: 'medium' }, autoFocus: false });
   }
 }

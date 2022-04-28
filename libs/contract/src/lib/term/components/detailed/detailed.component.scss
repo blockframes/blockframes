@@ -1,18 +1,5 @@
-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  overflow: hidden;
-  h2 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-
-section {
-  width: 70%;
-  max-width: 70%;
+h2 {
+  text-align: center;
 }
 
 article {

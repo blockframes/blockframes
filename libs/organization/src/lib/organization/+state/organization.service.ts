@@ -17,9 +17,11 @@ import {
   createPublicUser,
   createDocumentMeta,
   formatDocumentMetaFromFirestore,
+  App,
+  Module,
+  createOrgAppAccess
 } from '@blockframes/model';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
-import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';

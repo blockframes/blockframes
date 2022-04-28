@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
-import { EventService } from "../+state/event.service";
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
-import { map } from "rxjs/operators";
-import { AuthService } from "@blockframes/auth/+state";
-import { combineLatest } from "rxjs";
-import { hasAnonymousIdentity } from "@blockframes/auth/+state/auth.model";
+import { Injectable } from '@angular/core';
+import { EventService } from '../+state/event.service';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { AuthService } from '@blockframes/auth/+state';
+import { combineLatest } from 'rxjs';
+import { hasAnonymousIdentity } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
 export class NoEventIdentityGuard implements CanActivate {

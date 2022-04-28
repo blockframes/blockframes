@@ -69,9 +69,7 @@ export class TitleMarketplaceShellComponent implements OnInit {
 
   fullscreen(refs: StorageFile[], index: number) {
     this.dialog.open(FileListPreviewComponent, {
-      data: { refs, index },
-      width: '80vw',
-      height: '80vh',
+      data: { refs, index, style: 'large' },
       autoFocus: false,
     });
   }

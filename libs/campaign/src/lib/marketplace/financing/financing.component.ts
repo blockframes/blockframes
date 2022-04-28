@@ -73,7 +73,8 @@ export class MarketplaceFinancingComponent {
         onConfirm: async () => {
           await this.consentsService.createConsent('access', campaignId, file);
           window.open(file, '_blank');
-        }
+        },
+        style: 'medium'
       }
     });
   }

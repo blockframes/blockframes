@@ -18,6 +18,7 @@ const navTabs: NavTabs = {
   ],
   slate: [
     { path: 'invitations', label: 'Invitations' },
+    { path: 'statistics', label: 'Statistics' }
   ]
 }
 

@@ -4,11 +4,11 @@ import { where, doc, updateDoc } from 'firebase/firestore';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { App } from '@blockframes/utils/apps';
-import { createStorageFile, StorageFile, Organization } from '@blockframes/model';
+import { createStorageFile, StorageFile, Organization, App } from '@blockframes/model';
 import { FileUploaderService, MediaService } from '@blockframes/media/+state';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';
 import { APP } from '@blockframes/utils/routes/utils';
+import { ActivatedRoute } from "@angular/router";
 
 // File Explorer
 import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
@@ -67,6 +67,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     private movieService: MovieService,
     private mediaService: MediaService,
     private service: FileUploaderService,
+    private route: ActivatedRoute,
     @Inject(APP) private app: App
   ) { }
 
@@ -75,6 +76,9 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
       where('orgIds', 'array-contains', this.org.id),
       where(`app.${this.app}.access`, '==', true)
     ]
+
+    const { directory } = this.route.snapshot.queryParams;
+    if (directory) this.next(directory);
 
     const titles$ = this.movieService.valueChanges(query).pipe(
       map(titles => titles.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Organization, Movie, Invitation, UserRole, createOrganizationMember } from '@blockframes/model';
+import { Organization, Movie, Invitation, UserRole, createOrganizationMember, App, getAllAppsExcept, OrgAppAccess } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -14,7 +14,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
-import { App, getAllAppsExcept, OrgAppAccess } from '@blockframes/utils/apps';
 import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
 import { where } from 'firebase/firestore';
 import { PermissionsService } from '@blockframes/permissions/+state';
@@ -170,6 +169,7 @@ export class OrganizationComponent implements OnInit {
           this.snackBar.open('Organization deleted!', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/organizations']);
         },
+        style: 'medium'
       },
     });
   }

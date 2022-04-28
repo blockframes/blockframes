@@ -38,6 +38,7 @@ export class SaleViewComponent {
       question: 'Please verify if all the contract elements are convenient for you.',
       confirm: 'Yes, accept Contract',
       cancel: 'Come back & verify Contract',
+      style: 'medium'
     };
     const ref = this.dialog.open(ConfirmWithValidationComponent, { data });
     ref.afterClosed().subscribe((acceptSuccessful) => {

@@ -67,6 +67,7 @@ export class ContractViewComponent {
         confirmationWord: 'DELETE',
         confirmButtonText: 'Delete term',
         onConfirm: this.delete(term),
+        style: 'medium'
       }
     });
   }

@@ -2,11 +2,10 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { FormControl } from '@angular/forms';
 import { startWith, map, tap, shareReplay } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { Movie, Person, StoreStatus, storeStatus } from '@blockframes/model';
+import { Movie, Person, StoreStatus, storeStatus, App } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Intercom } from 'ng-intercom';
-import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
@@ -53,7 +52,7 @@ export class ListComponent {
     private dialog: MatDialog,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
-  ) {}
+  ) { }
 
   public openIntercom(): void {
     return this.intercom.show();
@@ -75,7 +74,7 @@ export class ListComponent {
 
   openDetails(title: string, values: Person[]) {
     this.dialog.open(CellModalComponent, {
-      data: { title, values: displayPerson(values) },
+      data: { title, values: displayPerson(values), style: 'medium' },
       autoFocus: false,
     });
   }

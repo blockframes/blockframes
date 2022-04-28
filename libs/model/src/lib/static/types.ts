@@ -37,8 +37,19 @@ import {
   directorCategory,
   importContractStatus,
   offerStatus,
-  negotiationStatus
+  negotiationStatus,
+  app,
+  modules,
+  appName
 } from './static-model';
+
+export type App = typeof app[number];
+export type AppNameValue = typeof appName[App];
+
+export type Module = typeof modules[number];
+export type ModuleAccess = Record<Module, boolean>;
+
+export type OrgAppAccess = Record<App, ModuleAccess>;
 
 export type NumberRange = keyof typeof budgetRange;
 
@@ -88,6 +99,8 @@ export type OrgActivity = keyof typeof orgActivity;
 export type OrganizationStatus = keyof typeof organizationStatus;
 
 export type InvitationStatus = keyof typeof invitationStatus;
+
+export type AnonymousRole = 'guest' | 'organizer';
 
 export type PremiereType = keyof typeof premiereType;
 
