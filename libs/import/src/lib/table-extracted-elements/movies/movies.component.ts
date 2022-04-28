@@ -15,8 +15,7 @@ const hasImportErrors = (importState: MovieImportState, type: string = 'error'):
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 
-//
-function getUpdatableFields(movie: unknown) {
+function getUpdatableFields(movie: Movie) {
   const obj = {
     id: movie['id'],
     logline: movie['logline'],
@@ -28,16 +27,16 @@ function getUpdatableFields(movie: unknown) {
     soundFormat: movie['soundFormat'],
     isOriginalVersionAvailable: movie['isOriginalVersionAvailable'],
   }
-  const movieToUpdate = { app: {} } as Movie;
+  const movieToUpdate = { app: {} } as Partial<Movie>;
   for (const [field, value] of Object.entries(obj)) {
-    if (value instanceof ImportWarning) continue;
+    if (<any>value instanceof ImportWarning) continue;
     movieToUpdate[field] = value
   }
   for (const [field, value] of Object.entries(movie['app'])) {
     if (value instanceof ImportWarning) continue;
     movieToUpdate['app'][field] = value;
   }
-  return movieToUpdate;
+  return movieToUpdate as Movie;
 }
 
 @Component({
@@ -120,6 +119,7 @@ export class TableExtractedMoviesComponent implements OnInit {
 
   async updateMovie(importState: MovieImportState) {
     const movie: Movie = getUpdatableFields(importState.movie);
+    //upsert movies here
     await this.movieService.update(movie.id, movie)
     this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
     return true;
@@ -142,7 +142,8 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   errorCount(data: MovieImportState, type: string = 'error') {
-    return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
+    console.log({ data })
+    return data.errors.filter(err => err).filter((error: SpreadsheetImportError) => error.type === type).length;
   }
 
   isSaveOrUpdateDisabledForTitle(element) {

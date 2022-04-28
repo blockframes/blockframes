@@ -1,4 +1,3 @@
-
 <ng-container *ngIf="(moviesToCreate$ | async) || (moviesToUpdate$ | async); else isLoading">
 
   <ng-container *ngIf="moviesToCreate$ | async as moviesToCreate">
@@ -10,6 +9,7 @@
   <ng-container *ngIf="moviesToUpdate$ | async as moviesToUpdate">
     <ng-container *ngIf="moviesToUpdate.data.length">
       <h3>Titles to Update & Submit</h3>
+      <p>These movies will be updated should they already exist otherwise, they'll be created.</p>
       <import-table-extracted-movies [rows]="moviesToUpdate" mode="update"></import-table-extracted-movies>
     </ng-container>
   </ng-container>

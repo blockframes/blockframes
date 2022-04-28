@@ -11,7 +11,7 @@ import { MovieImportState } from '../../utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { take } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
-import { App } from '@blockframes/utils/apps';
+import { App } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 @Component({
@@ -44,13 +44,11 @@ export class ViewExtractedTitlesComponent implements OnInit {
       this.authService.profile.orgId,
       this.app
     );
+
     if (isBlockframesAdmin) {
-      const moviesToCreate: MovieImportState[] = [];
-      const moviesToUpdate: MovieImportState[] = [];
-      for (const title of titles) {
-        if (title.movie.id) moviesToUpdate.push(title);
-        else moviesToCreate.push(title);
-      }
+      //title with id might create or update.
+      const moviesToCreate = titles.filter(title => !title.movie.id);
+      const moviesToUpdate = titles.filter(title => title.movie.id);
       this.moviesToUpdate$.next(new MatTableDataSource(moviesToUpdate));
       this.moviesToCreate$.next(new MatTableDataSource(moviesToCreate));
     } else

@@ -1,7 +1,7 @@
 
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 import { GetKeys, GroupScope, StaticGroup, staticGroups, parseToAll, Scope } from '@blockframes/model';
-import { mandatoryError, SpreadsheetImportError, WrongTemplateError, wrongValueWarning } from 'libs/import/src/lib/utils';
+import { ImportLog, mandatoryError, SpreadsheetImportError, WrongTemplateError, wrongValueWarning } from 'libs/import/src/lib/utils';
 import { getKeyIfExists } from '../helpers';
 
 type Matrix = any[][]; // @todo find better type
@@ -80,6 +80,7 @@ export function importSpreadsheet(bytes: Uint8Array, range?: string): SheetTab[]
 /**
  * @param state all previous entities
  * @param item current entity (Title, Org, Contract, ...)
+ * @continue from here: find out where undefined is pushed into the error array.
  */
 export async function parse<T>(
   state: any[],
@@ -114,6 +115,7 @@ export async function parse<T>(
         item[field] = validResults;
 
         const errorResults = results.filter(r => isValueWithError(r)) as ValueWithError[];
+        console.log({ errorResults: errorResults.map(e => e.error) })
         errors.push(...errorResults.map(e => e.error));
         item[field].push(...errorResults.map(e => e.value));
 
@@ -135,6 +137,7 @@ export async function parse<T>(
         try {
           const result = await transform((`${value ?? ''}`).trim(), entity, state, rowIndex);
           if (isValueWithError(result)) {
+            console.log({ result })
             errors.push(result.error);
             item[segment] = result.value;
           } else {
@@ -143,7 +146,7 @@ export async function parse<T>(
         } catch (err) {
           if (err instanceof WrongTemplateError)
             throw err; //stops the recursive looping of parse.
-          return errors.push(err);
+          errors.push(err);
         }
       } else {
         if (!item[segment]) item[segment] = {};
@@ -172,7 +175,7 @@ export interface ValueWithErrorSimple<T = unknown> extends SpreadsheetImportErro
 }
 
 function isValueWithError(o: unknown): o is ValueWithError {
-  return typeof o === 'object' && ('value' in o) && ('error' in o);
+  return o && o instanceof ImportLog;
 }
 
 /**
