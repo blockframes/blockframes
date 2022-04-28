@@ -115,7 +115,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   errorCount(data: MovieImportState, type: string = 'error') {
-    return data.errors.filter(err => err).filter((error: SpreadsheetImportError) => error.type === type).length;
+    return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
   }
 
   isSaveOrUpdateDisabledForTitle(element) {

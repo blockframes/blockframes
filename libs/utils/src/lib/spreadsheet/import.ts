@@ -136,7 +136,6 @@ export async function parse<T>(
         try {
           const result = await transform((`${value ?? ''}`).trim(), entity, state, rowIndex);
           if (isValueWithError(result)) {
-            console.log({ result })
             errors.push(result.error);
             item[segment] = result.value;
           } else {
