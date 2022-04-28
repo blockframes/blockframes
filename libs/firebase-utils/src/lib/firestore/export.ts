@@ -2,7 +2,7 @@ import { backupBucket, firebase } from '@env';
 import { loadAdminServices } from '../util';
 import type { Bucket } from "@google-cloud/storage";
 import type { storage } from 'firebase-admin';
-import { runShellCommandExec } from '../commands';
+import { runShellCommandExec } from '@blockframes/devops';
 
 export async function getBackupBucket(gcs?: storage.Storage): Promise<Bucket> {
   const bucket: Bucket = (gcs || loadAdminServices().storage).bucket(backupBucket);

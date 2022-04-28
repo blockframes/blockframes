@@ -1,7 +1,7 @@
 import { firebase } from 'env/env';
 import { firebase as firebaseProd } from 'env/env.blockframes';
 import * as admin from 'firebase-admin';
-import { gsutilTransfer } from './commands';
+import { gsutilTransfer } from '@blockframes/devops';
 import { getLatestDirName } from './anonymize';
 
 export const CI_STORAGE_BACKUP = 'blockframes-ci-storage-backup';

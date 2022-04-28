@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
 import { join, resolve, sep } from 'path';
-import { runShellCommand, runShellCommandUntil, awaitProcOutput, gsutilTransfer } from '../commands';
+import { runShellCommand, runShellCommandUntil, awaitProcOutput, gsutilTransfer } from '@blockframes/devops';
 import { getFirestoreExportDirname } from './export';
 import { sleep, throwOnProduction } from '../util';
 import { promises } from 'fs';

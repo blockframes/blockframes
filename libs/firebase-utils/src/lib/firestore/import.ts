@@ -1,7 +1,7 @@
 import { loadAdminServices } from '../util';
 import { clearDb } from './clear';
 import { backupBucket, firebase } from '@env';
-import { runShellCommandExec } from '../commands';
+import { runShellCommandExec } from '@blockframes/devops';
 
 
 /**
