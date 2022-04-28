@@ -195,44 +195,6 @@ describe('Create an event as admin', () => {
     });
   });
 
-  it('An admin can add a future private meeting event', function () {
-    cy.then(function () {
-      const futureSlot = createFutureSlot();
-      const eventType = 'Meeting';
-      const eventTitle = `Admin private Meeting / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
-      cypress.selectSlot(futureSlot);
-      cypress.fillPopinForm({ eventType, eventTitle });
-      cypress.fillMeetingForm({
-        eventPrivacy: 'private',
-        isSecret: false,
-        eventTitle,
-        dataToCheck: {
-          calendarSlot: futureSlot,
-        },
-      });
-      firebase.deleteAllSellerEvents(this.user.uid);
-    });
-  });
-
-  it('An admin can add a future protected meeting event', function () {
-    cy.then(function () {
-      const futureSlot = createFutureSlot();
-      const eventType = 'Meeting';
-      const eventTitle = `Admin protected Meeting / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
-      cypress.selectSlot(futureSlot);
-      cypress.fillPopinForm({ eventType, eventTitle });
-      cypress.fillMeetingForm({
-        eventPrivacy: 'protected',
-        isSecret: false,
-        eventTitle,
-        dataToCheck: {
-          calendarSlot: futureSlot,
-        },
-      });
-      firebase.deleteAllSellerEvents(this.user.uid);
-    });
-  });
-
   it('An admin can add a future public slate event', function () {
     cy.then(function () {
       const futureSlot = createFutureSlot();
@@ -246,60 +208,6 @@ describe('Create an event as admin', () => {
       cypress.fillPopinForm({ eventType, eventTitle });
       cypress.fillSlateForm({
         eventPrivacy: 'public',
-        isSecret: false,
-        eventTitle,
-        selectedTitles,
-        dataToCheck: {
-          calendarSlot: futureSlot,
-        },
-      });
-
-      //TODO : after May release, slates should be visible with the screenings => add the adequate check (#8220)
-
-      firebase.deleteAllSellerEvents(this.user.uid);
-    });
-  });
-
-  it('An admin can add a future private slate event', function () {
-    cy.then(function () {
-      const futureSlot = createFutureSlot();
-      const eventType = 'Slate';
-      const eventTitle = `Admin private slate / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
-      const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
-      const shuffledTitles = [...movieTitles].sort(() => 0.5 - Math.random());
-      const randomSelection = Math.floor(Math.random() * (movieTitles.length - 1)) + 1;
-      const selectedTitles = shuffledTitles.slice(0, randomSelection);
-      cypress.selectSlot(futureSlot);
-      cypress.fillPopinForm({ eventType, eventTitle });
-      cypress.fillSlateForm({
-        eventPrivacy: 'private',
-        isSecret: false,
-        eventTitle,
-        selectedTitles,
-        dataToCheck: {
-          calendarSlot: futureSlot,
-        },
-      });
-
-      //TODO : after May release, slates should be visible with the screenings => add the adequate check (#8220)
-
-      firebase.deleteAllSellerEvents(this.user.uid);
-    });
-  });
-
-  it('An admin can add a future protected slate event', function () {
-    cy.then(function () {
-      const futureSlot = createFutureSlot();
-      const eventType = 'Slate';
-      const eventTitle = `Admin protected slate / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
-      const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
-      const shuffledTitles = [...movieTitles].sort(() => 0.5 - Math.random());
-      const randomSelection = Math.floor(Math.random() * (movieTitles.length - 1)) + 1;
-      const selectedTitles = shuffledTitles.slice(0, randomSelection);
-      cypress.selectSlot(futureSlot);
-      cypress.fillPopinForm({ eventType, eventTitle });
-      cypress.fillSlateForm({
-        eventPrivacy: 'protected',
         isSecret: false,
         eventTitle,
         selectedTitles,
