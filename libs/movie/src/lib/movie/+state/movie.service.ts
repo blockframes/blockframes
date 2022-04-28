@@ -1,6 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
 import { createMovie, Movie, createMovieAppConfig, createDocumentMeta, StoreStatus, App } from '@blockframes/model';
-import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import type firestore from 'firebase/firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
@@ -58,7 +57,7 @@ export class MovieService extends BlockframesCollection<Movie> {
       ...createMovieAppConfig(movieImported?.app),
     };
     await this.runTransaction(async (tx) => {
-      movie.id = await this.add(cleanModel(movie), { write: tx });
+      movie.id = await this.add(movie, { write: tx });
     });
     return movie;
   }

@@ -2,7 +2,12 @@
 import { emulatorConfig } from '../environment/environment';
 import { firebase, firebaseRegion, intercomId, sentryDsn } from '@env';
 import { IntercomModule } from 'ng-intercom';
+
+// NgFire
 import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
+import { Auth } from 'firebase/auth';
+import { Firestore } from 'firebase/firestore';
+import { Functions } from 'firebase/functions';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
@@ -110,7 +115,26 @@ import { APP } from '@blockframes/utils/routes/utils';
         maxHeight: '80vh'
       }
     },
-    { provide: FIREBASE_CONFIG, useValue: { options: firebase('festival') } },
+    {
+      provide: FIREBASE_CONFIG, useValue: {
+        options: firebase('festival'),
+        firestore: (firestore: Firestore) => {
+          if (emulatorConfig.firestore) {
+            connectFirestoreEmulator(firestore, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
+          }
+        },
+        auth: (auth: Auth) => {
+          if (emulatorConfig.auth) {
+            connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`, { disableWarnings: true });
+          }
+        },
+        functions: (functions: Functions) => {
+          if (emulatorConfig.functions) {
+            connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
+          }
+        }
+      }
+    },
     { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
   ],
   bootstrap: [AppComponent],

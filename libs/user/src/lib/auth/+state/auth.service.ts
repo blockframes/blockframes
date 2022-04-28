@@ -14,7 +14,6 @@ import { getAnalytics, setUserProperties } from '@angular/fire/analytics';
 import {
   confirmPasswordReset,
   EmailAuthProvider,
-  getAuth,
   linkWithCredential,
   signInAnonymously,
   updatePassword,
@@ -260,7 +259,7 @@ export class AuthService extends BlockframesAuth<User> {
     if (!isAnonymous) {
       throw new Error('Current user is not anonymous');
     }
-    const cred = await linkWithCredential(getAuth().currentUser, credentials);
+    const cred = await linkWithCredential(this.auth.currentUser, credentials);
 
     const { write = writeBatch(this.db), ctx } = options;
     await this.onSignup(cred);
@@ -279,7 +278,7 @@ export class AuthService extends BlockframesAuth<User> {
    * @returns Promise<boolean>
    */
   async isSignedInAnonymously() {
-    const currentUser = getAuth().currentUser;
+    const currentUser = this.auth.currentUser;
     if (!currentUser) return false;
     const { signInProvider } = await currentUser.getIdTokenResult();
     return signInProvider === 'anonymous';
@@ -308,7 +307,7 @@ export class AuthService extends BlockframesAuth<User> {
     // Clean anonymousCredentials
     await this.onSignout();
     // Delete (and logout) user
-    return getAuth().currentUser.delete();
+    return this.auth.currentUser.delete();
   }
 
   private resetAnonymousCredentials() {

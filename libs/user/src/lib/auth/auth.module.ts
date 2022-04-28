@@ -89,8 +89,6 @@ export const AuthRoutes: Routes = [
     MatCardModule,
 
     // Fire
-    provideAuth(() => getAuth()),
-    providePerformance(() => getPerformance()),
     RouterModule.forChild(AuthRoutes),
   ],
   declarations: [

@@ -4,9 +4,11 @@ import { App } from '@blockframes/model';
 import { APP } from './routes/utils';
 
 export abstract class BlockframesCollection<T> extends FireCollection<T> {
-  protected app : App = inject(APP);
+  protected app: App = inject(APP);
 
   memorize = true;
+
+  storeId = true;
 
   _db = this.db; // TODO #8280
 
@@ -17,9 +19,11 @@ export abstract class BlockframesCollection<T> extends FireCollection<T> {
 }
 
 export abstract class BlockframesSubCollection<T> extends FireSubCollection<T> {
-  protected app : App = inject(APP);
+  protected app: App = inject(APP);
 
   memorize = true;
+
+  storeId = true;
 
   _db = this.db; // TODO #8280
 
@@ -29,7 +33,7 @@ export abstract class BlockframesSubCollection<T> extends FireSubCollection<T> {
 }
 
 export abstract class BlockframesAuth<T> extends FireAuth<T> {
-  protected app : App = inject(APP);
+  protected app: App = inject(APP);
 
   _db = this.db; // TODO #8280
 
