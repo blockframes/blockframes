@@ -1,6 +1,6 @@
 import { backupBucket } from '@env';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
-import { gsutilTransfer } from './commands';
+import { gsutilTransfer } from '@blockframes/devops';
 
 export const latestAnonDbDir = 'LATEST-ANON-DB';
 
