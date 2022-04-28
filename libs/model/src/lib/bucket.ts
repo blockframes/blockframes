@@ -1,5 +1,5 @@
-import type { MovieCurrency } from '@blockframes/utils/static-model';
-import { createHoldback, Holdback, MailContract } from './contract';
+import type { MovieCurrency } from './static';
+import { createHoldback, MailContract, Holdback } from './contract';
 import { BucketTerm } from './terms';
 import { createLanguageKey } from './movie';
 import { Timestamp } from './timestamp';
@@ -32,7 +32,7 @@ export interface BucketContract<T extends Date | Timestamp = Date> {
 //To be used for sending mails.
 export interface MailBucket {
   id: string;
-  currency: MovieCurrency;
+  currency: string;
   /** One contract per orgId / titleId / parent terms Id */
   contracts: MailContract[];
   specificity: string;

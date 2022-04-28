@@ -164,12 +164,21 @@ orbs:
 executors:
   blockframes-ci:
     docker:
-      - image: blockframes/ci:latest
+      - image: blockframes/ci:node-16
         environment:
           NODE_OPTIONS="--max-old-space-size=8192"
     working_directory: ~/repo
     resource_class: large
 jobs:
+  clean-backups:
+    executor: blockframes-ci
+    environment:
+      PROJECT_ID: blockframes-ci
+    steps:
+      - prepare_environment
+      - run: npm start cleanBackups 45 gs://blockframes-ci-storage-backup
+      - run: npm start use blockframes
+      - run: npm start cleanBackups 45 gs://blockframes-backups
   build-deploy-prepare-branch-against-selected-env:
     executor: blockframes-ci
     environment:
@@ -297,7 +306,9 @@ jobs:
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
-      - run: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e,cms-e2e
+      - run:
+          command: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e,cms-e2e
+          no_output_timeout: 30m
       - store_artifacts:
           path: dist/cypress/apps
   financiers-e2e:
@@ -405,6 +416,7 @@ workflows:
               only:
                 - develop
     jobs:
+      - clean-backups
       - copy-storage-from-prod
       - push-anon-db-to-ci:
           requires:

@@ -14,10 +14,10 @@
         <ng-container *ngFor="let task$ of tasks.$ | async; let i = index">
           <ng-container [ngSwitch]="task$ | state | async">
             <div fxLayout="row" fxLayoutGap="8px">
-              <img [asset]="task$.task.snapshot.ref.name | fileTypeImage">
+              <img [asset]="task$.snapshot.ref.name | fileTypeImage">
 
               <div fxLayout="column" fxLayoutAlign="start start">
-                <caption class="caption">{{task$.task.snapshot.ref.name | maxLength: 25}}</caption>
+                <caption class="caption">{{ task$.snapshot.ref.name | maxLength: 25 }}</caption>
                 <mat-progress-bar [value]="task$ | progress | async" *ngIf="(task$ | state | async) !== 'canceled'">
                 </mat-progress-bar>
 

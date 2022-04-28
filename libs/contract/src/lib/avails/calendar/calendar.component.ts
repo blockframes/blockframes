@@ -99,10 +99,10 @@ export class AvailsCalendarComponent implements OnInit {
 
     // set available/sold/selected blocks into the stateMatrix (this will display the colored rectangles)
     let matrix: CellState[][] = this.rows.map(() => this.columns.map(() => 'empty'));
-    if (this._availableMarkers.length) matrix = markersToMatrix(this._availableMarkers, this.stateMatrix, 'available');
-    if (this._soldMarkers.length) matrix = markersToMatrix(this._soldMarkers, this.stateMatrix, 'sold');
-    if (this._inSelectionMarkers.length) matrix = markersToMatrix(this._inSelectionMarkers, this.stateMatrix, 'selected');
-    if (this._expiredMarkers.length) matrix = markersToMatrix(this._expiredMarkers, this.stateMatrix, 'expired');
+    if (this._availableMarkers.length) matrix = markersToMatrix(this._availableMarkers, matrix, 'available');
+    if (this._soldMarkers.length) matrix = markersToMatrix(this._soldMarkers, matrix, 'sold');
+    if (this._inSelectionMarkers.length) matrix = markersToMatrix(this._inSelectionMarkers, matrix, 'selected');
+    if (this._expiredMarkers.length) matrix = markersToMatrix(this._expiredMarkers, matrix, 'expired');
     this.stateMatrix = matrix;
 
     const currentState = this.state$.getValue();
@@ -160,7 +160,7 @@ export class AvailsCalendarComponent implements OnInit {
       const year = new Date().getFullYear();
       const from = new Date(year + newState.start.row, newState.start.column);
       const to = new Date(year + newState.end.row, newState.end.column);
-      const parentMarker = this._availableMarkers.find(marker => {
+      const parentMarkers = this._availableMarkers.filter(marker => {
         // From the calendar pov range starts at the first day of the month
         // but the avail term might not start at the first day of the month
         const markerFromYear = marker.from.getFullYear();
@@ -169,9 +169,16 @@ export class AvailsCalendarComponent implements OnInit {
         return startDate <= from.getTime() && marker.to >= to;
       });
 
-      if (!parentMarker) throw new Error('Calendar Invalid Selection: a selection must be included in a marker!');
+      if (!parentMarkers.length) throw new Error('Calendar Invalid Selection: a selection must be included in a marker!');
 
-      this.selected.emit({ from, to, term: parentMarker.term, contract: parentMarker.contract });
+      for (const parentMarker of parentMarkers){
+        this.selected.emit({
+          from, to,
+          term: parentMarker.term,
+          contract: parentMarker.contract,
+          avail: parentMarker.avail,
+        });
+      }
     }
   }
 }

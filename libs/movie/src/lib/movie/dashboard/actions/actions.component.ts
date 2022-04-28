@@ -1,17 +1,15 @@
 import { Component, ChangeDetectionStrategy, Directive, Input, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { Movie } from '@blockframes/model';
+import { Movie, storeStatus, StoreStatus, App, appName, getMovieAppAccess } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { App, appName, getMovieAppAccess } from '@blockframes/utils/apps';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { storeStatus, StoreStatus } from '@blockframes/utils/static-model';
 import { APP } from '@blockframes/utils/routes/utils';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 @Directive({ selector: 'movie-action-menu, [movieActionMenu]' })
-export class MovieActionMenuDirective {}
+export class MovieActionMenuDirective { }
 
 @Component({
   selector: 'actions-dashboard-shell',
@@ -30,7 +28,7 @@ export class DashboardActionsShellComponent {
     private movieService: MovieService,
     private router: Router,
     @Inject(APP) public app: App
-  ) {}
+  ) { }
 
   removeAppAccess() {
     const appsName = getMovieAppAccess(this.movie)
@@ -57,31 +55,17 @@ export class DashboardActionsShellComponent {
                 access: false,
               },
             },
-          }));
+          } as any));
 
           const ref = this.snackbar.open('Title deleted.', '', { duration: 4000 });
           ref.afterDismissed().subscribe(() => this.router.navigate(['/c/o/dashboard/title']));
         },
-      },
+      }
     });
   }
 
   async updateStatus(status: StoreStatus, message?: string) {
-    await this.movieService.update(this.movie.id, (movie) => ({
-      ...movie,
-      app: {
-        ...movie.app,
-        [this.app]: {
-          ...movie.app[this.app],
-          status: status,
-        },
-      },
-    }));
-
-    if (message) {
-      this.snackbar.open(message, '', { duration: 4000 });
-    } else {
-      this.snackbar.open(`Title ${storeStatus[status]}.`, '', { duration: 4000 });
-    }
+    await this.movieService.updateStatus(this.movie.id, status);
+    this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 }

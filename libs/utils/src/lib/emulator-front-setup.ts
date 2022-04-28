@@ -1,7 +1,3 @@
-import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
-import { USE_EMULATOR as USE_FIRESTORE_EMULATOR , SETTINGS as FIRESTORE_SETTINGS } from '@angular/fire/firestore';
-import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
-
 /**
  * @see firebase.json for ports
  */
@@ -10,19 +6,18 @@ export function getEmulatorsConfig(emulators: {
   firestore: boolean;
   functions: boolean;
 }) {
-  const enabledEmulators = [];
+  const enabledEmulators: Partial<Record<'auth' | 'firestore' | 'functions', { host: string, port: number }>> = {};
 
   if (emulators.auth) {
-    enabledEmulators.push({ provide: USE_AUTH_EMULATOR, useValue: ['localhost', 9099] });
+    enabledEmulators.auth = { host: 'localhost', port: 9099 };
   }
 
   if (emulators.firestore) {
-    enabledEmulators.push({ provide: USE_FIRESTORE_EMULATOR, useValue: ['localhost', 8080] });
-    enabledEmulators.push({ provide: FIRESTORE_SETTINGS, useValue: { experimentalForceLongPolling: true } });
+    enabledEmulators.firestore = { host: 'localhost', port: 8080 };
   }
 
   if (emulators.functions) {
-    enabledEmulators.push({ provide: USE_FUNCTIONS_EMULATOR, useValue: ['localhost', 5001] });
+    enabledEmulators.functions = { host: 'localhost', port: 5001 };
   }
 
   return enabledEmulators;

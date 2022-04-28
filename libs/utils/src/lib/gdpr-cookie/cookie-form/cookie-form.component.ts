@@ -4,8 +4,8 @@ import { startWith } from 'rxjs/operators';
 
 // Blockframes
 import { CookiesConsent, CookiesConsentForm } from './cookie.form';
-import { App } from '../../apps';
 import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/model';
 
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -15,7 +15,7 @@ import { MatRadioChange } from '@angular/material/radio';
   selector: '[form] cookie-form',
   templateUrl: './cookie-form.component.html',
   styleUrls: ['./cookie-form.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CookieFormComponent implements OnInit, OnDestroy {
 

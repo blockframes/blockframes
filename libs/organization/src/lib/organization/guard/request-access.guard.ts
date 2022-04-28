@@ -4,8 +4,8 @@ import { CanActivate, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { AuthService } from '@blockframes/auth/+state';
-import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
 export class RequestAccessGuard implements CanActivate {

@@ -3,7 +3,6 @@ import { combineLatest } from 'rxjs';
 import { map, shareReplay, take, throttleTime } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TerritoryValue } from '@blockframes/utils/static-model';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import {
@@ -15,18 +14,7 @@ import {
   territoryAvailabilities,
 } from '@blockframes/contract/avails/avails';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { Bucket, Movie, Mandate, Sale, Term } from '@blockframes/model';
-
-// TODO(#7820): remove with rxjs 7
-type AvailabilitiesInputs = [
-  MapAvailsFilter,
-  Mandate<Date>[],
-  Term<Date>[],
-  Sale<Date>[],
-  Term<Date>[],
-  Bucket<Date>,
-  Movie
-];
+import { TerritoryValue } from '@blockframes/model';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -56,33 +44,24 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     this.shell.bucketForm.value$,
     this.shell.movie$,
   ]).pipe(
-    map(
-      ([
-        avails,
+    map(([avails, mandates, mandateTerms, sales, salesTerms, bucket, movie]) => {
+      if (this.availsForm.invalid) return emptyAvailabilities;
+      const res = filterContractsByTitle(
+        movie.id,
         mandates,
         mandateTerms,
         sales,
         salesTerms,
-        bucket,
-        movie,
-      ]: AvailabilitiesInputs) => {
-        if (this.availsForm.invalid) return emptyAvailabilities;
-        const res = filterContractsByTitle(
-          movie.id,
-          mandates,
-          mandateTerms,
-          sales,
-          salesTerms,
-          bucket
-        );
-        const data = {
-          avails,
-          mandates: res.mandates,
-          sales: res.sales,
-          bucketContracts: res.bucketContracts,
-        };
-        return territoryAvailabilities(data);
-      }
+        bucket
+      );
+      const data = {
+        avails,
+        mandates: res.mandates,
+        sales: res.sales,
+        bucketContracts: res.bucketContracts,
+      };
+      return territoryAvailabilities(data);
+    }
     ),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -92,7 +71,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     private shell: MarketplaceMovieAvailsComponent,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   /** Display the territories information in the tooltip */
   public displayTerritoryTooltip(territory: TerritoryValue, status: string) {
@@ -137,7 +116,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
 
   onNewRight() {
     this.snackbar
-      .open(`Rights added`, 'Show ⇩', { duration: 5000 })
+      .open('Terms added', 'SHOW ⇩', { duration: 5000 })
       .onAction()
       .subscribe(() => {
         scrollIntoView(document.querySelector('#rights'));

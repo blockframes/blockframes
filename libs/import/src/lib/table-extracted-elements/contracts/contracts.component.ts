@@ -10,18 +10,20 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
-import { AngularFirestore, Query } from '@angular/fire/firestore';
 import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
 import { createDocumentMeta } from '@blockframes/model';
+import { Firestore } from '@angular/fire/firestore';
+import { where, doc, collection } from 'firebase/firestore';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 
-const getTitleContracts = (type: 'mandate' | 'sale', titleId: string) => (ref: Query) => ref.where('type', '==', type)
-  .where('titleId', '==', titleId)
-  .where('status', '==', 'accepted');
-
+const getTitleContracts = (type: 'mandate' | 'sale', titleId: string) => [
+  where('type', '==', type),
+  where('titleId', '==', titleId),
+  where('status', '==', 'accepted')
+];
 
 @Component({
   selector: 'import-table-extracted-contracts',
@@ -53,7 +55,7 @@ export class TableExtractedContractsComponent implements OnInit {
     private dialog: MatDialog,
     private contractService: ContractService,
     private termService: TermService,
-    private db: AngularFirestore,
+    private db: Firestore,
   ) { }
 
   ngOnInit() {
@@ -145,7 +147,7 @@ export class TableExtractedContractsComponent implements OnInit {
    * @param importState
    */
   private async addContract(importState: ContractsImportState, mode: 'create' | 'update' = 'update'): Promise<boolean> {
-    importState.terms.forEach(t => t.id = this.db.createId());
+    importState.terms.forEach(t => t.id = doc(collection(this.db, '_')).id);
     importState.contract.termIds = importState.terms.map(t => t.id);
     if (mode === 'create') {
       const overlapConditions = await this.verifyOverlappingMandatesAndSales(importState);
@@ -154,7 +156,7 @@ export class TableExtractedContractsComponent implements OnInit {
           type: 'error',
           name: 'Contract',
           reason: 'The Terms of a Contract overlap with that of an already existing Mandate.',
-          hint: 'The Terms of a Contract overlap with that of an already existing Mandate.'
+          message: 'The Terms of a Contract overlap with that of an already existing Mandate.'
         });
         return false;
       }
@@ -163,7 +165,7 @@ export class TableExtractedContractsComponent implements OnInit {
           type: 'error',
           name: 'Contract',
           reason: 'The terms of the imported sale have been sold already.',
-          hint: 'The terms of the imported sale have been sold already.'
+          message: 'The terms of the imported sale have been sold already.'
         });
         return false;
       }
@@ -180,7 +182,7 @@ export class TableExtractedContractsComponent implements OnInit {
       type: 'error',
       name: 'Contract',
       reason: 'Contract already added',
-      hint: 'Contract already added'
+      message: 'Contract already added'
     });
     return true;
   }

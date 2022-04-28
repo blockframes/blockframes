@@ -96,7 +96,7 @@ export const sentryDsn = undefined;
 // BigQuery
 // ========
 
-export const bigQueryAnalyticsTable = 'blockframes-bruce.analytics_194443494.events_';
+export const bigQueryAnalyticsTable = 'blockframes-kevin-d.analytics_306095054.events_';
 
 // Data Studio
 // ========

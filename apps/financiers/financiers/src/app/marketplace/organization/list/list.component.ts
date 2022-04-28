@@ -4,14 +4,13 @@ import { Component, ChangeDetectionStrategy, HostBinding, OnInit, OnDestroy } fr
 // Blockframes
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { scaleOut } from '@blockframes/utils/animations/fade';
-import { Movie, Organization } from '@blockframes/model';
+import { Organization } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/organization/forms/search.form';
 
 // RxJs
 import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { Territory } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'financiers-organization-list',

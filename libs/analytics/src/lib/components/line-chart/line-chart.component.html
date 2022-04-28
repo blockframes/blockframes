@@ -1,0 +1,32 @@
+<header>
+  <ng-content></ng-content>
+</header>
+<ng-container *ngIf="!isLoading else loading">
+  <ng-container *ngIf="lineChartOptions.series?.length; else empty">
+    <section>
+      <button mat-button [disabled]="period === 'day'" (click)="changePeriod('day')">Per day</button>
+      <button mat-button [disabled]="period === 'week'" (click)="changePeriod('week')">Per week</button>
+      <button mat-button [disabled]="period === 'month'" (click)="changePeriod('month')">Per month</button>
+    </section>
+    <apx-chart
+      #chart
+      [series]="lineChartOptions.series"
+      [chart]="lineChartOptions.chart"
+      [theme]="lineChartOptions.theme"
+      [legend]="lineChartOptions.legend"
+      [yaxis]="lineChartOptions.yaxis"
+      [xaxis]="lineChartOptions.xaxis"
+      [dataLabels]="lineChartOptions.dataLabels"
+      [stroke]="lineChartOptions.stroke"
+      [markers]="lineChartOptions.markers"
+    ></apx-chart>
+  </ng-container>
+</ng-container>
+
+<ng-template #empty>
+  <img asset="empty_line_chart.svg" alt="Line chart">
+</ng-template>
+
+<ng-template #loading>
+  <mat-spinner color="primary"></mat-spinner>
+</ng-template>

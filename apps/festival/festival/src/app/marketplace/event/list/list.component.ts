@@ -6,10 +6,10 @@ import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { FormList } from '@blockframes/utils/form';
-import { AlgoliaOrganization } from '@blockframes/utils/algolia';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
-import { Event, Screening } from '@blockframes/model';
-
+import { orderBy, startAt, where } from 'firebase/firestore';
+import { Event, Screening, AlgoliaOrganization, Slate } from '@blockframes/model';
+import { hasMedia } from '@blockframes/model';
 @Component({
   selector: 'festival-event-list',
   templateUrl: './list.component.html',
@@ -18,7 +18,7 @@ import { Event, Screening } from '@blockframes/model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
-  public events$: Observable<Event<Screening>[]>;
+  public events$: Observable<Event<Screening | Slate>[]>;
   public searchForm = FormList.factory<AlgoliaOrganization>([]);
 
   trackById = (i: number, doc: { id: string }) => doc.id;
@@ -32,19 +32,24 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     const orgIds$ = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value));
-    const query = ref => ref.where('type', '==', 'screening').where('isSecret', '==', false).orderBy('end').startAt(new Date());
-    const events$ = this.service.valueChanges(query) as Observable<Event<Screening>[]>;
+    const query = [
+      where('type', 'in', ['screening', 'slate']),
+      where('isSecret', '==', false),
+      orderBy('end'),
+      startAt(new Date())
+    ];
+    const events$ = this.service.valueChanges(query) as Observable<Event<Screening | Slate>[]>;
 
     this.events$ = combineLatest([events$, orgIds$]).pipe(
       map(([events, orgs]) => this.filterByOrgIds(events, orgs.map(org => org.objectID))),
       // We can't filter by meta.titleId directly in the query because range and not equals comparisons must all filter on the same field
-      map(events => events.filter(event => !!event.meta.titleId)),
+      map(events => events.filter(hasMedia)),
       tap(events => this.setTitle(events.length)),
       shareReplay({ bufferSize: 1, refCount: true })
     )
   }
 
-  filterByOrgIds(events: Event<Screening>[], orgIds: string[]) {
+  filterByOrgIds(events: Event<Screening | Slate>[], orgIds: string[]) {
     if (!orgIds.length) return events;
     return events.filter(event => orgIds.includes(event.ownerOrgId));
   }

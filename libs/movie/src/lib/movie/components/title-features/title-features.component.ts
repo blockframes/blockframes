@@ -1,12 +1,12 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { Movie } from '@blockframes/model';
 import {
+  Movie,
   productionStatus,
   contentType,
   getISO3166TerritoryFromSlug,
   languages,
-  genres as staticGenres,
-} from '@blockframes/utils/static-model';
+  genres as staticGenres
+} from '@blockframes/model';
 import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
 
 interface TitleFeature {

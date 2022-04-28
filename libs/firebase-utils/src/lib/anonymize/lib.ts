@@ -9,21 +9,21 @@ import {
   createPublicOrganization,
   Organization,
   PublicOrganization,
-  Invitation
+  Invitation,
+  IMaintenanceDoc
 } from '@blockframes/model';
 import { DbRecord, throwOnProduction } from '../util';
 import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
 import { Queue } from '../queue';
-import { FirestoreEmulator } from '../firestore/emulator';
 import { firebase, testVideoId } from '@env';
 import { runChunks } from '../firebase-utils';
-import { IMaintenanceDoc } from '@blockframes/utils/maintenance';
+import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { firestore } from 'firebase-admin';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
 
-export function fakeEmail(name: string) {
+function fakeEmail(name: string) {
   const random = Math.random()
     .toString(36)
     .replace(/[^a-z]+/g, '')
@@ -149,9 +149,9 @@ function processMovie(movie: Movie): Movie {
   return movie;
 }
 
-function processMaintenanceDoc(doc: IMaintenanceDoc): IMaintenanceDoc {
+function processMaintenanceDoc(doc: IMaintenanceDoc) {
   if (doc.startedAt && !doc.endedAt) return doc;
-  return { endedAt: null, startedAt: firestore.Timestamp.now() };
+  return { endedAt: null, startedAt: firestore.Timestamp.now() };  // TODO #7273 #8006
 }
 
 export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
@@ -194,8 +194,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     }
     if (docPath.includes('_META')) {
       // Always set maintenance
-      if (hasKeys<IMaintenanceDoc>(doc, 'endedAt'))
-        return { docPath, content: processMaintenanceDoc(doc) };
+      if (hasKeys<IMaintenanceDoc>(doc, 'endedAt')) return { docPath, content: processMaintenanceDoc(doc) };
       return { docPath, content: doc };
     }
   } catch (e) {
@@ -203,8 +202,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
   }
   const error = 'CRITICAL: could not clean a document, docPath not handled';
   const location = `Document path: ${docPath}`;
-  const solution =
-    'The collection name might be missing in the anonymisation script. Update file tools/scripts/anonymize-db.ts';
+  const solution = 'The collection name might be missing in the anonymisation script. Update file tools/scripts/anonymize-db.ts';
   throw new Error([error, location, solution].join('/n'));
 }
 
@@ -216,11 +214,11 @@ function getPathOrder(path: string): number {
   return 5;
 }
 
-export async function runAnonymization(db: FirestoreEmulator) {
+export async function runAnonymization(db: FirebaseFirestore.Firestore) {
   throwOnProduction();
   const dbArray = await loadDb(db);
   const orderedDbArray = dbArray.sort((a, b) => getPathOrder(a.docPath) - getPathOrder(b.docPath));
-  await db.clearFirestoreData({ projectId: firebase().projectId });
+  await clearFirestoreData({ projectId: firebase().projectId });
   const anonDb = orderedDbArray.map(anonymizeDocument);
   await runChunks(
     anonDb,
@@ -259,7 +257,7 @@ async function loadDb(db: FirebaseFirestore.Firestore) {
     }
 
     // Go through each document of the collection for backup
-    const promises = q.docs.map(async (doc: QueryDocumentSnapshot) => {
+    await runChunks(q.docs, async (doc: QueryDocumentSnapshot) => {
       // Store the data
       const docPath: string = doc.ref.path;
       const content: any = doc.data();
@@ -270,10 +268,8 @@ async function loadDb(db: FirebaseFirestore.Firestore) {
       // Adding the current path to the subcollections to backup
       const subCollections = await doc.ref.listCollections();
       subCollections.forEach((x) => processingQueue.push(x.path));
-    });
+    }, 1000);
 
-    // Wait for this backup to complete
-    await Promise.all(promises);
     // This console.log is here to avoid "Too long with no output (exceeded 10m0s): context deadline exceeded" error from CircleCi
     console.log('Loading Firestore. Please wait ...');
   }

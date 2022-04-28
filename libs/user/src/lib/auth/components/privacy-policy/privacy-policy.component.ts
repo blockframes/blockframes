@@ -1,7 +1,5 @@
-import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
-import { Location } from '@angular/common';
-import { App } from "@blockframes/utils/apps";
-import { APP } from '@blockframes/utils/routes/utils';
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
   selector: 'auth-privacy-policy',
@@ -11,13 +9,11 @@ import { APP } from '@blockframes/utils/routes/utils';
 })
 
 export class PrivacyPolicyComponent {
-  canGoBack = window.history.length > 1;
   constructor(
-    private location: Location,
-    @Inject(APP) public app: App,
+    public dialogRef: MatDialogRef<PrivacyPolicyComponent>,
   ) { }
 
-  goBack() {
-    this.location.back();
+  close() {
+    this.dialogRef.close();
   }
 }

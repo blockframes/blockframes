@@ -1,4 +1,4 @@
-@import "~@angular/flex-layout/mq";
+@import "@angular/flex-layout/mq";
 
 :host {
   display: flex;
@@ -54,7 +54,8 @@
 }
 
 movie-slide {
-  height: 700px;
+  height: 100%;
+  min-height: 620px;
 }
 
 @include layout-bp(gt-sm) {

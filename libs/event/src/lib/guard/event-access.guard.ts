@@ -4,12 +4,12 @@ import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { combineLatest } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import { EventService } from '../+state';
-import type firebase from 'firebase';
-import { Event } from '@blockframes/model';
-import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
-import { createInvitation } from '@blockframes/model';
+import { User } from '@angular/fire/auth';
+import { Event, AnonymousCredentials, createInvitation } from '@blockframes/model';
+import { hasDisplayName } from '@blockframes/utils/helpers';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Injectable({ providedIn: 'root' })
 export class EventAccessGuard implements CanActivate {
@@ -17,6 +17,7 @@ export class EventAccessGuard implements CanActivate {
   constructor(
     private service: EventService,
     private invitationService: InvitationService,
+    private orgService: OrganizationService,
     private authService: AuthService,
     private router: Router,
     private snackBar: MatSnackBar
@@ -24,7 +25,7 @@ export class EventAccessGuard implements CanActivate {
 
   canActivate(next: ActivatedRouteSnapshot) {
     return combineLatest([
-      this.authService.user,
+      this.authService.user$,
       this.service.getValue(next.params.eventId as string),
       this.authService.anonymousCredentials$
     ]).pipe(
@@ -32,8 +33,18 @@ export class EventAccessGuard implements CanActivate {
     );
   }
 
-  private async guard(next: ActivatedRouteSnapshot, user: firebase.User, event: Event<unknown>, credentials: AnonymousCredentials) {
-    if (!user.isAnonymous) return true;
+  private async guard(next: ActivatedRouteSnapshot, user: User, event: Event<unknown>, credentials: AnonymousCredentials) {
+    if (!user.isAnonymous) {
+      const profile = await this.authService.profile$.pipe(take(1)).toPromise();
+      const validUser = hasDisplayName(profile) && user.emailVerified && profile.orgId;
+      if (!validUser) return this.router.createUrlTree(['/auth/identity']);
+
+      const org = await this.orgService.currentOrg$.pipe(take(1)).toPromise();
+      if (org.status !== 'accepted') return this.router.createUrlTree(['/c/organization/create-congratulations']);
+
+      return true;
+    };
+
     switch (event.accessibility) {
       case 'protected': {
         const credentialsUpdateNeeded = !credentials.invitationId || credentials.invitationId !== next.queryParams?.i;
@@ -61,7 +72,7 @@ export class EventAccessGuard implements CanActivate {
 
           return true;
         } else {
-          this.snackBar.open('Sorry, it seems that you were not invited to this event', 'Try with other mail', { duration: 6000 })
+          this.snackBar.open('Sorry, it seems that you were not invited to this event', 'TRY WITH OTHER MAIL', { duration: 6000 })
             .onAction()
             .subscribe(() => this.router.navigate([`/event/${event.id}`]));
           await this.authService.deleteAnonymousUser();

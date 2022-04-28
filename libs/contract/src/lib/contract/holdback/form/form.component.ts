@@ -9,10 +9,9 @@ import {
 } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { Holdback, Movie } from '@blockframes/model';
+import { Holdback, Movie, Scope } from '@blockframes/model';
 import { FormTableComponent } from '@blockframes/ui/form/table/form-table.component';
 import { FormList } from '@blockframes/utils/form';
-import { Scope } from '@blockframes/utils/static-model';
 import { HoldbackForm } from '../form';
 
 @Component({

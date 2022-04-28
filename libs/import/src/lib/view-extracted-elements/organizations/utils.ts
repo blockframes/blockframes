@@ -1,8 +1,6 @@
-import { Territory } from '@blockframes/utils/static-model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
-import { createUser, User, createOrganization, Organization } from '@blockframes/model';
-import { Module, ModuleAccess, modules } from '@blockframes/utils/apps';
+import { createUser, User, createOrganization, Organization, Territory, Module, ModuleAccess, modules } from '@blockframes/model';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { alreadyExistError, getOrgId, getUser, mandatoryError, optionalWarning, OrganizationsImportState, wrongValueError } from '@blockframes/import/utils';
@@ -44,7 +42,7 @@ type ModuleOrUndefined = Module | '';
 function formatAccess(value: string, name: string) {
   const rawModules = value.split(separator).map(m => m.trim().toLowerCase()) as ModuleOrUndefined[];
   const wrongValue = rawModules.some(module => ![...modules, ''].includes(module));
-  if (wrongValue) return wrongValueError<ModuleAccess>(name);
+  if (wrongValue) throw wrongValueError<string>(value, name);
   const access: Partial<ModuleAccess> = {};
   for (const module of modules) access[module] = false;
   for (const module of rawModules) if (module !== '') access[module] = true;
@@ -64,64 +62,64 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
     /* a */ 'org.denomination.full': async (value: string) => {
-      if (!value) return mandatoryError('Organization Name');
+      if (!value) throw mandatoryError(value, 'Organization Name');
       const exist = await getOrgId(value, organizationService, orgNameCache);
-      if (exist) return alreadyExistError('Organization Name');
+      if (exist) throw alreadyExistError(value, 'Organization Name');
       return value
     },
     /* b */ 'org.denomination.public': async (value: string, data: Partial<FieldsConfig>) => {
-      if (!value) return optionalWarning('Organization Public Name', data.org.denomination.full);
+      if (!value) throw optionalWarning('Organization Public Name', data.org.denomination.full);
       const exist = await getOrgId(value, organizationService, orgNameCache);
-      if (exist) return alreadyExistError('Organization Public Name');
+      if (exist) throw alreadyExistError(value, 'Organization Public Name');
       return value;
     },
     /* c */ 'org.email': async (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) return mandatoryError('Contract Email');
+      if (!lower) throw mandatoryError(value, 'Contract Email');
       return lower;
     },
     /* d */ 'org.activity': (value: string) => {
-      if (!value) return optionalWarning('Activity');
+      if (!value) throw optionalWarning('Activity');
       const activity = getKeyIfExists('orgActivity', value);
-      if (!activity) return wrongValueError('Activity');
+      if (!activity) throw wrongValueError(value, 'Activity');
       return activity;
     },
     /* e */ 'org.fiscalNumber': (value: string) => {
-      if (!value) return optionalWarning('Fiscal Number');
+      if (!value) throw optionalWarning('Fiscal Number');
       return value;
     },
     /* f */ 'org.addresses.main.street': (value: string) => {
-      if (!value) return optionalWarning('Fiscal Number');
+      if (!value) throw optionalWarning('Fiscal Number');
       return value;
     },
     /* g */ 'org.addresses.main.city': (value: string) => {
-      if (!value) return optionalWarning('City');
+      if (!value) throw optionalWarning('City');
       return value;
     },
     /* h */ 'org.addresses.main.zipCode': (value: string) => {
-      if (!value) return optionalWarning('Zip Code');
+      if (!value) throw optionalWarning('Zip Code');
       return value;
     },
     /* i */ 'org.addresses.main.region': (value: string) => {
-      if (!value) return optionalWarning('Region');
+      if (!value) throw optionalWarning('Region');
       return value;
     },
     /* j */ 'org.addresses.main.country': (value: string) => {
       if (!value) return optionalWarning('Country');
       const country = getKeyIfExists('territories', value) as Territory;
-      if (!country) return wrongValueError('Country');
+      if (!country) throw wrongValueError(value, 'Country');
       return country as any;
     },
     /* k */ 'org.addresses.main.phoneNumber': (value: string) => {
-      if (!value) return optionalWarning('Phone Number');
+      if (!value) throw optionalWarning('Phone Number');
       return value;
     },
     /* l */ 'superAdmin.email': async (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) return mandatoryError('Admin Email');
+      if (!lower) throw mandatoryError(value, 'Admin Email');
 
       const exist = await getUser({ email: lower }, userService, userCache);
-      if (exist) return alreadyExistError('Admin Email');
+      if (exist) throw alreadyExistError(value, 'Admin Email');
 
       return lower;
     },

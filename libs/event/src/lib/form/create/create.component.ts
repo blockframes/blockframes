@@ -1,10 +1,9 @@
 import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService } from '@blockframes/auth/+state';
-import { AccessibilityTypes } from '@blockframes/utils/static-model/types';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { EventForm } from '../event.form';
-import { Event, Meeting, Screening, Slate } from '@blockframes/model';
+import { Event, Meeting, Screening, Slate, AccessibilityTypes } from '@blockframes/model';
 
 @Component({
   selector: 'event-create',

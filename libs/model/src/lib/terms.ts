@@ -1,4 +1,4 @@
-import { Media, Territory, staticModel } from '@blockframes/utils/static-model';
+import { Media, Territory, staticModel } from './static';
 import { Timestamp } from './timestamp';
 import { format } from 'date-fns';
 import { toLanguageVersionString } from '@blockframes/utils/utils';

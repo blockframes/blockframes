@@ -1,11 +1,13 @@
 import { createStorageFile, StorageFile } from './media';
-import {
+import type {
   CrewRole,
   Territory,
   ProducerRole,
   MemberStatus,
-  DirectorCategory
-} from '@blockframes/utils/static-model/types';
+  DirectorCategory,
+  AnonymousRole,
+  AccessibilityTypes
+} from './static';
 
 //////////////////////////
 // VARIOUS IDENTITY OBJECTS
@@ -88,6 +90,13 @@ export interface Crew extends Credit {
   role: CrewRole, // overrided role scope from Crew interface
 };
 
+export interface AnonymousCredentials extends Person {
+  uid: string;
+  role?: AnonymousRole;
+  email?: string,
+  invitationId?: string, // Invitation for the event
+}
+
 ///////////////////
 // CREATE FUNCTIONS
 ///////////////////
@@ -126,4 +135,15 @@ export function createFilmography(params: Partial<Filmography> = {}): Filmograph
     title: '',
     ...params
   }
+}
+
+/**
+ * Check if anonymous user has given enough informations to access event
+ * @param creds 
+ * @param accessibility 
+ * @returns 
+ */
+export function hasAnonymousIdentity(creds: AnonymousCredentials, accessibility: AccessibilityTypes) {
+  const hasIdentity = !!creds?.lastName && !!creds?.firstName && !!creds?.role;
+  return accessibility === 'public' ? hasIdentity : hasIdentity && !!creds?.email;
 }

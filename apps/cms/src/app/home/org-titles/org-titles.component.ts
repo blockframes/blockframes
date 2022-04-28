@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
-import { Organization, orgName, Movie } from '@blockframes/model';
+import { Organization, orgName, Movie, App } from '@blockframes/model';
 import { OrgTitlesSection } from '@blockframes/admin/cms';
 import { FormAutocompleteModule } from '../../forms/autocomplete';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
@@ -18,7 +18,6 @@ import {
   limit,
 } from '../../forms/firestore';
 import { HomePipesModule } from '../pipes';
-import { App } from '@blockframes/utils/apps';
 
 export const orgTitleSchema: FormGroupSchema<OrgTitlesSection> = {
   form: 'group',
@@ -53,7 +52,7 @@ export class OrgsComponent {
   displayTitleLabel = (title?: Movie) => title?.title.international;
   getTitleValue = (title?: Movie) => title?.id;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute) { }
 
   get queryMode() {
     return this.mode || (this.form?.get('titleIds').length ? 'titleIds' : 'query');
@@ -89,4 +88,4 @@ export class OrgsComponent {
     FirestoreFormModule,
   ],
 })
-export class OrgsModule {}
+export class OrgsModule { }

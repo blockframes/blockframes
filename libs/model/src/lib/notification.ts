@@ -1,12 +1,12 @@
-import { firestore } from 'firebase-admin';
 import { DocumentMeta } from './meta';
 import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
-import { App } from '@blockframes/utils/apps';
 import { PublicUser } from './user';
 import { PublicOrganization } from './organisation';
 import { PublicInvitation } from './invitation';
 import { Bucket } from './bucket';
 import { StorageFile } from './media';
+import { Timestamp } from './timestamp';
+import { App } from './static';
 
 // Type of notification used in front
 export const notificationTypesBase = [
@@ -99,8 +99,6 @@ interface NotificationBase<D> {
     isRead: boolean;
   }
 }
-
-type Timestamp = firestore.Timestamp;
 
 export type NotificationDocument = NotificationBase<Timestamp>;
 

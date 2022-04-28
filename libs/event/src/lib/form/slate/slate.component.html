@@ -2,7 +2,7 @@
   <h2>Presentation</h2>
   <div class="link" fxLayout>
     <mat-form-field appearance="outline" fxFlex>
-      <mat-label>Direct link to presentation Room</mat-label>
+      <mat-label>Direct link to Presentation Room</mat-label>
       <input matInput type="text" disabled [value]="link">
     </mat-form-field>
     <button mat-icon-button [cdkCopyToClipboard]="link" (click)="copied()" matTooltip="Copy the link">
@@ -13,7 +13,7 @@
     <ng-container *ngIf="(videos$ | async) as videos; else loading">
       <!-- Video -->
       <p>Add a video you'll want to screen.<br>If you can't find the videos you're looking for, you can upload them directly in
-      <a routerLink="/c/o/dashboard/files" target="_blank"><strong>My Files/Company/Videos</strong></a> section.</p>
+      <a routerLink="/c/o/dashboard/files" [queryParams]="{directory: 'videos'}" target="_blank">My Files/Company/Videos</a> section.</p>
       <mat-form-field appearance="outline">
         <mat-label>{{videos.length ? 'Select video to display' : 'You have no video to select'}}</mat-label>
         <mat-select formControlName="videoId" [disabled]="!videos.length">

@@ -1,8 +1,7 @@
-import { MovieLanguageType, productionStatus } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
 import { createStorageFile, StorageFile, StorageVideo } from './media';
-import { App, getAllAppsExcept } from '@blockframes/utils/apps';
-import type {
+import {
+  MovieLanguageType,
   Language,
   MediaValue,
   Scoring,
@@ -24,7 +23,9 @@ import type {
   SocialGoal,
   NumberRange,
   ScreeningStatus,
-} from '@blockframes/utils/static-model/types';
+  App,
+  app,
+} from './static';
 import type {
   Producer,
   Crew,
@@ -34,6 +35,8 @@ import type {
 } from './identity';
 import type { DocumentMeta } from './meta';
 import type { Timestamp } from './timestamp';
+import { productionStatus } from './static';
+import { getAllAppsExcept } from './apps';
 
 //////////////////
 // MOVIE OBJECT //
@@ -530,4 +533,22 @@ export function getAllowedproductionStatuses(app: App): ProductionStatus[] {
 
 export function hasAppStatus(app: App, status: StoreStatus[]) {
   return (movie: Movie) => status.includes(movie.app[app].status);
+}
+
+/** Return an array of the app access of the movie */
+export function getMovieAppAccess(movie: MovieDocument | MovieBase<Date>): App[] {
+  return app.filter((a) => !['crm'].includes(a) && movie.app[a].access);
+}
+
+/** Return true if the movie has the status passed in parameter for at least one application */
+export function checkMovieStatus(movie: MovieDocument | MovieBase<Date>, status: StoreStatus) {
+  return Object.keys(movie.app).some((a) => movie.app[a].status === status);
+}
+
+/**
+ * Determine the status to update depending on the current app.
+ * For app Festival, publish status is "accepted", "submitted" for other apps
+ */
+export function getMoviePublishStatus(a: App): StoreStatus {
+  return a === 'festival' ? 'accepted' : 'submitted';
 }

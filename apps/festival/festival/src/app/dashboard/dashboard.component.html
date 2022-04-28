@@ -24,15 +24,9 @@
           <span matLine><b>Buyer's Platform</b></span>
         </a>
       </ng-container>
+      <auth-sidenav fxHide.gt-xs></auth-sidenav>
     </mat-nav-list>
-    <mat-nav-list *ngIf="org$ | async as org">
-      <mat-divider></mat-divider>
-      <a mat-list-item [routerLink]="['/c/o/organization', org.id]" routerLinkActive="active">
-        <img matListAvatar [ref]="org.logo" asset="empty_organization.svg" type="logo" alt="Organization logo">
-        <span mat-line>{{ org | orgName }}
-          <small mat-line class="mat-caption">{{ org.activity | toLabel: 'orgActivity' }}</small>
-        </span>
-      </a>
-    </mat-nav-list>
+
+    <auth-sidenav-widget fxHide.gt-xs></auth-sidenav-widget>
   </aside>
 </layout-dashboard>

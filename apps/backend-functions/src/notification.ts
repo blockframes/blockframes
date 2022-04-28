@@ -16,10 +16,19 @@ import {
   ContractDocument,
   Screening,
   NegotiationDocument,
-  Offer
+  Offer,
+  App,
+  appName
 } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
-import { emailErrorCodes, EventEmailData, getEventEmailData, getMovieEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
+import {
+  emailErrorCodes,
+  EventEmailData,
+  getEventEmailData,
+  getMovieEmailData,
+  getOrgEmailData,
+  getUserEmailData
+} from '@blockframes/utils/emails/utils';
 import {
   reminderEventToUser,
   userJoinedYourOrganization,
@@ -51,14 +60,14 @@ import {
   // offerAcceptedOrDeclined,
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
-import { App, applicationUrl, appName } from '@blockframes/utils/apps';
+import { applicationUrl } from '@blockframes/utils/apps';
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
 import { appUrl, supportEmails } from './environments/environment';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
 // #7946 this may be reactivated later
 // import { createMailContract, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
-// import { movieCurrencies } from '@blockframes/utils/static-model';
+// import { movieCurrencies } from '@blockframes/model';
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
@@ -433,8 +442,15 @@ async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notifica
 async function sendScreeningRequested(recipient: User, notification: NotificationDocument) {
   const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
   const requestor = await getDocument<User>(`users/${notification.user.uid}`);
+  const buyerOrg = await getDocument<OrganizationDocument>(`orgs/${requestor.orgId}`);
   const toUser = getUserEmailData(recipient);
-  const template = screeningRequestedToSeller(toUser, requestor, movie);
+
+  const template = screeningRequestedToSeller(
+    toUser,
+    getUserEmailData(requestor),
+    getOrgEmailData(buyerOrg),
+    movie
+  );
   await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
 }
 
@@ -526,10 +542,18 @@ async function sendMovieAskingPriceRequested(recipient: User, notification: Noti
   const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
   const toUser = getUserEmailData(recipient);
   const buyer = getUserEmailData(notification.user);
+  const buyerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.user.orgId}`);
   const { territories, message } = notification.data;
 
   const app = notification._meta.createdFrom;
-  const template = movieAskingPriceRequested(toUser, buyer, movie.title.international, territories, message);
+  const template = movieAskingPriceRequested(
+    toUser,
+    buyer,
+    getOrgEmailData(buyerOrg),
+    getMovieEmailData(movie),
+    territories,
+    message
+  );
   await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
@@ -545,7 +569,7 @@ async function sendMovieAskingPriceRequestSent(recipient: User, notification: No
   const orgNames = orgs.map(org => orgName(org)).join(', ');
 
   const app = notification._meta.createdFrom;
-  const template = movieAskingPriceRequestSent(toUser, movie, orgNames, territories, message);
+  const template = movieAskingPriceRequestSent(toUser, getMovieEmailData(movie), orgNames, territories, message);
   await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
@@ -684,7 +708,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
     : `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
 
   const crmPageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${contract.offerId}/view`;
-  
+
   const termsUrl = isRecipientBuyer
     ? `${appUrl.content}/c/o/marketplace/terms`
     : `${appUrl.content}/c/o/dashboard/terms`;

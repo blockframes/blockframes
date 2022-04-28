@@ -1,6 +1,5 @@
 import { Firestore } from '@blockframes/firebase-utils';
-import { Stakeholder, Movie, Organization } from '@blockframes/model';
-import { Territory } from '@blockframes/utils/static-model';
+import { Stakeholder, Movie, Organization, Territory } from '@blockframes/model';
 import { runChunks } from '../firebase-utils';
 
 const replaced = {

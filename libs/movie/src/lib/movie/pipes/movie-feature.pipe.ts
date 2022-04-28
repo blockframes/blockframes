@@ -1,10 +1,10 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Movie } from '@blockframes/model';
 import {
+  Movie,
   genres as staticGenres,
   languages,
-  territoriesISOA2,
-} from '@blockframes/utils/static-model/static-model';
+  territoriesISOA2
+} from '@blockframes/model';
 import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
 
 @Pipe({

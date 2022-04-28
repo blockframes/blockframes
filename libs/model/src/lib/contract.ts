@@ -1,15 +1,19 @@
 import { DocumentMeta, createDocumentMeta } from './meta';
-import type { Media, Territory, ContractStatus } from '@blockframes/utils/static-model';
+import type { Media, Territory, ContractStatus } from './static';
 import { Timestamp } from './timestamp';
 import { toDate } from '@blockframes/utils/helpers';
 import { createMailTerm, Duration } from './terms';
 import { BucketContract } from './bucket';
 
 export function createMailContract(contract: BucketContract<Timestamp>) {
+  const formatter = new Intl.NumberFormat('en-US');
+  const price = formatter.format(contract.price);
+
   return ({
     ...contract,
+    price,
     terms: createMailTerm(contract.terms)
-  })
+  });
 }
 
 export interface Holdback<D extends Timestamp | Date = Date> {
@@ -58,7 +62,7 @@ export interface Sale<D extends Timestamp | Date = Date> extends Contract<D> {
 
 export type ContractDocument = Mandate<Timestamp> | Sale<Timestamp>;
 
-export type MailContract = ReturnType<typeof createMailContract>
+export type MailContract = ReturnType<typeof createMailContract>;
 
 export function createHoldback(params: Partial<Holdback<Date>> = {}): Holdback {
   return {

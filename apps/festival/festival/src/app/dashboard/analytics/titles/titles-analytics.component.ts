@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { map } from "rxjs/operators";
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 // Blockframes
-import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie } from "@blockframes/model";
-import { MovieService } from "@blockframes/movie/+state/movie.service";
-import { App } from "@blockframes/utils/apps";
-import { APP } from "@blockframes/utils/routes/utils";
-import { joinWith } from "@blockframes/utils/operators";
-import { EventService } from "@blockframes/event/+state";
-import { Event } from '@blockframes/model'
+import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie, App, Event } from '@blockframes/model';
+import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movie.service';
+import { APP } from '@blockframes/utils/routes/utils';
+import { joinWith } from '@blockframes/utils/operators';
+import { EventService } from '@blockframes/event/+state';
+import { where } from 'firebase/firestore';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 interface AggregatedPerTitle extends AggregatedAnalytic {
   screenings: number;
@@ -42,22 +43,26 @@ function countAnalytics(title: Movie & { analytics?: Analytics[], events?: Event
 })
 export class TitlesAnalyticsComponent {
 
-  titlesAnalytics$ = this.service.queryDashboard(this.app).pipe(
+  titlesAnalytics$ = this.service.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
     joinWith({
-      events: title => this.eventService.valueChanges(ref => ref
-        .where('type', '==', 'screening')
-        .where('meta.titleId', '==', title.id))
-    }),
+      analytics: title => this.analytics.getTitleAnalytics({ titleId: title.id }),
+      events: title => this.eventService.valueChanges([
+        where('type', '==', 'screening'),
+        where('meta.titleId', '==', title.id)
+      ])
+    }, { shouldAwait: true }),
     map(titles => titles.map(countAnalytics))
   );
 
   constructor(
+    private analytics: AnalyticsService,
     private route: ActivatedRoute,
     private router: Router,
     private service: MovieService,
     private eventService: EventService,
+    private orgService: OrganizationService,
     @Inject(APP) public app: App
-  ) {}
+  ) { }
 
   goToTitle(data: AggregatedAnalytic) {
     this.router.navigate([data.title.id], { relativeTo: this.route });

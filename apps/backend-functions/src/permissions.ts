@@ -1,6 +1,6 @@
+import { removeAllSubcollections } from '@blockframes/firebase-utils/util';
 import { EventContext } from 'firebase-functions';
 import { db } from './internals/firebase';
-import { removeAllSubcollections } from './utils';
 
 /**
  * When a user creates a permisssion for a document we index its id,

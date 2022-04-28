@@ -1,4 +1,4 @@
-@import "~@angular/flex-layout/mq";
+@import "@angular/flex-layout/mq";
 $banner-background: rgba(5, 7, 36);
 
 :host {
@@ -13,6 +13,10 @@ $banner-background: rgba(5, 7, 36);
 
 landing-header {
   header {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: flex-start;
     background-image: url("/assets/images/banner_landing_new.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -31,6 +35,9 @@ landing-content {
       padding: 80px;
       div {
         margin-top: 24px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
       }
     }
   }
@@ -104,7 +111,7 @@ landing-content {
   }
   
 
-  .opinions > div {
+  .opinion {
     padding: 24px 56px;
     background-color: var(--background-card);
     img {
@@ -169,19 +176,80 @@ landing-app-link {
   }
 }
 
-@include layout-bp(lt-sm) {
+@include layout-bp(xs) {
+  landing-header {
+    #header-to-scroll {
+      height: calc(100vh - 80px);
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+      padding-inline: 16px;
+      a {
+        margin-bottom: 32px;
+      }
+      button {
+        margin-top: auto;
+      }
+    }
+  }
+
   landing-content {
-    mat-tab-group {
-      padding-inline: 0;
+    .landing-partners {
+      article {
+        padding: 16px;
+        div {
+          justify-content: space-around;
+          align-items: center;
+          gap: 16px;
+        }
+      }
+    }
+    .landing-presentation {
+      padding: 16px;
+      mat-tab-group {
+        padding-inline: 0;
+        
+        header {
+          padding: 0;
+          img, .mat-title {
+            display: none;
+          }
+        }
+      }
+    }
+    .landing-clients-opinion {
+      padding: 16px;
+      .opinion {
+        text-align: start;
+        padding: 24px;
+      }
     }
     text-align: center;
     article .surface{
       width: 100%;
     }
   }
+  
   landing-detail {
+    padding: 16px;
     a {
       width: 100%
+    }
+  }
+
+  landing-app-link {
+    section {
+      padding-inline: 16px;
+      text-align: center;
+    }
+  }
+}
+
+@include layout-bp(gt-sm) {
+  #header-to-scroll {
+    gap: 32px;
+    button {
+      display: none;
     }
   }
 }

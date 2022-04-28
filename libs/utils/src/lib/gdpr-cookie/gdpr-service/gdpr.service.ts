@@ -1,10 +1,9 @@
-import { Inject, Injectable } from "@angular/core";
-import { CookiesConsent } from "../cookie-form/cookie.form";
+import { Inject, Injectable } from '@angular/core';
+import { CookiesConsent } from '../cookie-form/cookie.form';
 import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
-import { User } from "@blockframes/model";
+import { App, User } from '@blockframes/model';
 // #7936 this may be reactivated later
 // import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
-import { App } from "@blockframes/utils/apps";
 import { APP } from '@blockframes/utils/routes/utils';
 import { HotjarService } from '@blockframes/utils/hotjar/hotjar.service';
 
@@ -37,7 +36,6 @@ export class GDPRService {
     this.enable('hotjar', enable);
     if (enable) this.hotjar.insertHotjar(this.app);
   }
-
   /*
   #7936 this may be reactivated later
   enableYandex(enable: boolean) {

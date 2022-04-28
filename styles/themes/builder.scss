@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 @use "../typography" as typography;
 @use '../components/anchor' as anchor;
 @use '../components/bf-calendar' as calendar;
@@ -214,5 +214,6 @@
   --foreground-text: #{mat.get-color-from-palette($foreground, 'text')};
   --foreground-base: #{mat.get-color-from-palette($foreground, 'base')};
   --primary-lighter: #{mat.get-color-from-palette($primary, 200)};
+  --primary-lighter-contrast: #{mat.get-color-from-palette($primary, 'lighter-contrast')};
 }
 

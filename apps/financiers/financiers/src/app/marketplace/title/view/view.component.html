@@ -4,13 +4,13 @@
       <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
         <ng-container *ngFor="let org of orgs$ | async">
           <org-chip [org]="org"></org-chip>
-          <a mat-flat-button color="primary" [href]="'mailto:' + org.email">
+          <a mat-flat-button color="accent" [href]="'mailto:' + org.email">
             <span>Contact Partner</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
         </ng-container>
       </movie-header-cta>
-      <movie-header-actions fxHide.lt-sm fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
+      <movie-header-actions>
         <wishlist-button [movieId]="movie.id"></wishlist-button>
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>

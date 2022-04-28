@@ -85,7 +85,7 @@ export class TableExtractedMoviesComponent implements OnInit {
       type: 'error',
       name: 'Film Code',
       reason: 'Movie already exists',
-      hint: 'Movie already saved'
+      message: 'Movie already saved'
     });
     this.rows.data = data;
 

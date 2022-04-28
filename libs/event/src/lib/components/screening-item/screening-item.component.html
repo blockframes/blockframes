@@ -1,6 +1,6 @@
 <ng-container *ngIf="event$ | async as event">
   <a matRipple [routerLink]="['/event', event.id, 'r', 'i']">
-    <img fxHide.lt-sm
+    <img
     [ref]="(event.meta.titleId | getTitle | async)?.poster"
     asset="empty_poster.svg"
     width="225px"
@@ -16,7 +16,7 @@
         </ng-container>
       </div>
       <h5>
-        <span>{{ event.accessibility | toLabel:'accessibility' }} Screening</span>
+        <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type | toLabel:'eventTypes' }}</span>
         <event-agenda-export [event]="event"></event-agenda-export>
       </h5>
       <pre class="mat-body-1">{{ event | eventRange }}</pre>
@@ -31,7 +31,10 @@
       <ng-template #notOwner>
         <ng-container *ngIf="invitation !== undefined">
           <invitation-action @fade [invitation]="invitation" [event]="event"></invitation-action>
-          <button mat-button [disabled]="requestSent" (click)="requestAskingPrice(event.meta.titleId)">Request Asking Price</button>
+          <button mat-button class="translucent" [disabled]="requestSent" (click)="requestAskingPrice(event.meta.titleId)">
+            <mat-icon svgIcon="local_offer"></mat-icon>
+            <span>Request Asking Price</span>
+          </button>
         </ng-container>
       </ng-template>
     </footer>

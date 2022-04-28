@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Organization, Movie, Invitation, UserRole, createOrganizationMember } from '@blockframes/model';
+import { Organization, Movie, Invitation, UserRole, createOrganizationMember, App, getAllAppsExcept, OrgAppAccess } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -14,8 +14,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
-import { App, OrgAppAccess } from '@blockframes/utils/apps';
 import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
+import { where } from 'firebase/firestore';
 import { PermissionsService } from '@blockframes/permissions/+state';
 
 @Component({
@@ -32,21 +32,10 @@ export class OrganizationComponent implements OnInit {
   public members;
   public notifyCheckbox = new FormControl(true);
   public storagePath: string;
+  public apps = getAllAppsExcept(['crm']);
 
   public invitationsFromOrganization$: Observable<Invitation[]>;
   public invitationsToJoinOrganization$: Observable<Invitation[]>;
-
-  public memberColumns = {
-    uid: '',
-    firstName: 'First Name',
-    lastName: 'Last Name',
-    email: 'Email Address',
-    position: 'Position',
-    role: 'Permissions',
-    edit: 'Edit',
-  };
-
-  public memberColumnsIndex = ['firstName', 'lastName', 'email', 'position', 'role', 'edit'];
 
   constructor(
     private organizationService: OrganizationService,
@@ -77,11 +66,11 @@ export class OrganizationComponent implements OnInit {
     this.members = await this.getMembers();
     this.cdRef.markForCheck();
 
-    const queryFn1 = buildJoinOrgQuery(this.orgId, 'invitation');
-    const queryFn2 = buildJoinOrgQuery(this.orgId, 'request');
+    const queryConstraints1 = buildJoinOrgQuery(this.orgId, 'invitation');
+    const queryConstraints2 = buildJoinOrgQuery(this.orgId, 'request');
 
-    this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
-    this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
+    this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryConstraints1);
+    this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryConstraints2);
   }
 
   public acceptInvitation(invitation: Invitation) {
@@ -199,37 +188,27 @@ export class OrganizationComponent implements OnInit {
     }
 
     // Calculate how many movie will be removed
-    const movies = await this.movieService.getValue((ref) =>
-      ref.where('orgIds', 'array-contains', organization.id)
-    );
+    const movies = await this.movieService.getValue([where('orgIds', 'array-contains', organization.id)]);
     if (movies.length) {
       output.push(`${movies.length} movie(s) will be deleted.`);
     }
 
     // Calculate how many events will be removed
-    const ownerEvent = await this.eventService.getValue((ref) =>
-      ref.where('ownerOrgId', '==', organization.id)
-    );
+    const ownerEvent = await this.eventService.getValue([where('ownerOrgId', '==', organization.id)]);
     if (ownerEvent.length) {
       output.push(`${ownerEvent.length} event(s) will be cancelled or deleted.`);
     }
 
     // Calculate how many invitation will be removed
-    const invitFrom = await this.invitationService.getValue((ref) =>
-      ref.where('fromOrg.id', '==', organization.id)
-    );
-    const invitTo = await this.invitationService.getValue((ref) =>
-      ref.where('toOrg.id', '==', organization.id)
-    );
+    const invitFrom = await this.invitationService.getValue([where('fromOrg.id', '==', organization.id)]);
+    const invitTo = await this.invitationService.getValue([where('toOrg.id', '==', organization.id)]);
     const allInvit = [...invitFrom, ...invitTo];
     if (allInvit.length) {
       output.push(`${allInvit.length} invitation(s) will be removed.`);
     }
 
     // Calculate how many contracts will be updated
-    const contracts = await this.contractService.getValue((ref) =>
-      ref.where('partyIds', 'array-contains', organization.id)
-    );
+    const contracts = await this.contractService.getValue([where('partyIds', 'array-contains', organization.id)]);
     if (contracts.length) {
       output.push(`${contracts.length} contract(s) will be updated.`);
     }

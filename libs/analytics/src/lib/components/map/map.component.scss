@@ -2,6 +2,11 @@
   display: block;
 }
 
+header {
+  display: flex;
+  gap: 8px;
+}
+
 world-map {
   height: 300px;
   border-radius: 4px;
@@ -11,6 +16,15 @@ section {
   width: 100%;
 }
 
-img{
+img {
   width: 100%;
+}
+
+button {
+  margin-left: auto;
+}
+
+
+mat-spinner {
+  margin: auto;
 }

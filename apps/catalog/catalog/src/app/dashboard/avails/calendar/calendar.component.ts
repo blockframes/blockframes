@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { format } from 'date-fns';
 import { combineLatest, Subscription } from "rxjs";
 import { first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
-import { medias } from '@blockframes/utils/static-model'
+import { medias } from '@blockframes/model';
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DurationMarker, CalendarAvailsFilter, durationAvailabilities, filterContractsByTitle } from "@blockframes/contract/avails/avails";
@@ -17,7 +17,6 @@ function formatDate(date: Date) {
 function getDuration(durations: DurationMarker[]) {
   return durations.map(duration => `${formatDate(duration.from)} - ${formatDate(duration.to)}`);
 }
-
 
 @Component({
   selector: 'catalog-dashboard-avails-calendar',

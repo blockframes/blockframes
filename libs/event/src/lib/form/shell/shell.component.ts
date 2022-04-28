@@ -5,15 +5,17 @@ import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { App, applicationUrl } from '@blockframes/utils/apps';
+import { applicationUrl } from '@blockframes/utils/apps';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { App } from '@blockframes/model';
 
-const statisticsTab = { path: 'statistics', label: 'Statistics' };
+const statisticsTab = { path: 'statistics', label: 'Attendance' };
 
 const navTabs: NavTabs = {
   screening: [
@@ -41,7 +43,6 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   tabs$: Observable<TabConfig[]>;
   private sub: Subscription;
   form: EventForm;
-  @ViewChild('confirmExit') confirmExitTemplate: TemplateRef<any>;
   internalLink: string;
   link: string;
   errorChipMessage = '';
@@ -77,7 +78,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       if (type === 'screening') {
         this.checkTitleAndScreener(this.form.meta.value.titleId);
       } else if (type === 'slate') {
-        this.checkSlateVideoMissing(this.form.meta.value.video);
+        this.checkSlateVideoMissing(this.form.meta.value.videoId);
       }
 
       this.cdr.markForCheck();
@@ -89,35 +90,40 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   }
 
   async save(options: { showSnackbar: boolean } = { showSnackbar: true }) {
-    if (this.form.valid && this.form.dirty) {
-      const value = this.form.value;
-      if (this.form.value.allDay) {
-        value.start.setHours(0, 0, 0);
-        value.end.setHours(23, 59, 59);
+    try {
+      if (this.form.valid && this.form.dirty) {
+        const value = this.form.value;
+        if (this.form.value.allDay) {
+          value.start.setHours(0, 0, 0);
+          value.end.setHours(23, 59, 59);
+        }
+        await this.eventService.update(value);
+        this.form.markAsPristine();
+        this.cdr.markForCheck();
+        if (options.showSnackbar) {
+          this.snackBar.open('Event saved', 'CLOSE', { duration: 4000 });
+        }
       }
-      await this.eventService.update(value);
-      this.form.markAsPristine();
-      this.cdr.markForCheck();
-      if (options.showSnackbar) {
-        this.snackBar.open('Event saved', 'CLOSE', { duration: 4000 });
-      }
+      return true;
     }
-    return true;
+    catch (_) {
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
+    }
   }
 
   async remove() {
     this.dialog.open(ConfirmComponent, {
       data: {
-        title: 'Are you sure you want to delete this event ?',
+        title: 'Are you sure to delete this event?',
         question: 'If you\'ve already sent out invites, please note that the invitation emails were already sent and cannot be taken back.',
         advice: 'You might want to contact the people concerned to let them know that this event won\'t be happening.',
         confirm: 'Yes, delete',
-        cancel: 'No, come back',
+        cancel: 'Go back to editing',
         onConfirm: () => {
           this.eventService.remove(this.form.value.id);
           //Here we add an eventDeleted to inform the guard thatthere is no need to display the popup
           this.router.navigate(['../..'], { relativeTo: this.route, state: { eventDeleted: true } });
-        },
+        }
       },
       autoFocus: false,
     })
@@ -128,11 +134,17 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       return true;
     }
 
-    const dialogRef = this.dialog.open(this.confirmExitTemplate, {
-      width: '80%',
-      minWidth: '50vw',
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      data: {
+        title: 'You are about to leave the form.',
+        question: 'Some changes have not been saved.',
+        advice: 'If you leave now, you will lose these changes.',
+        confirm: 'Save & Exit',
+        cancel: 'Close without saving'
+      },
       autoFocus: false,
     });
+
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {
         console.log("shouldSave", shouldSave)
@@ -158,7 +170,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       if (!title.promotional.videos?.screener?.jwPlayerId) {
         this.errorChipMessage = 'Screening file missing';
       } else if (title.app.festival.status === 'draft') {
-      // Titles in draft are not allowed for screenings
+        // Titles in draft are not allowed for screenings
         this.errorChipMessage = 'No title selected';
       } else {
         this.errorChipMessage = '';

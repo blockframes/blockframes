@@ -23,7 +23,7 @@ import { allowedFiles, AllowedFileType, fileSizeToString, maxAllowedFileSize } f
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { doc, Firestore, docData } from '@angular/fire/firestore';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
@@ -102,14 +102,15 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   private docSub: Subscription;
 
   constructor(
-    private db: AngularFirestore,
+    private db: Firestore,
     private snackBar: MatSnackBar,
     private uploaderService: FileUploaderService,
   ) { }
 
   ngOnInit() {
     if (this.listenToChanges) {
-      this.docSub = this.db.doc(`${this.metadata.collection}/${this.metadata.docId}`).valueChanges().subscribe(data => {
+      const ref = doc(this.db,`${this.metadata.collection}/${this.metadata.docId}`);
+      this.docSub = docData(ref).subscribe(data => {
         const media = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);

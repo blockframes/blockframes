@@ -1,29 +1,31 @@
 import { Inject, Injectable } from '@angular/core';
-import { AngularFireAnalytics } from '@angular/fire/analytics';
+import { getAnalytics, logEvent } from '@angular/fire/analytics';
 import { ActiveState, EntityState } from '@datorama/akita';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { where } from '@angular/fire/firestore';
 
-import { take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';
 
 // Blockframes
-import { Analytics, AnalyticsTypeRecord, AnalyticsTypes, EventName, createTitleMeta } from '@blockframes/model';
+import { Analytics, AnalyticsTypes, EventName, createTitleMeta, createDocumentMeta, formatDocumentMetaFromFirestore  } from '@blockframes/model';
+import type { Organization, Movie, App } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
-import { createMovie, createDocumentMeta, formatDocumentMetaFromFirestore } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
-import { App } from '@blockframes/utils/apps';
-import { Observable } from 'rxjs';
 
 interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> { };
+export interface AnalyticsWithOrg extends Analytics<'title'> {
+  org: Organization;
+}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'analytics' })
 export class AnalyticsService extends CollectionService<AnalyticsState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
+  private analytics = getAnalytics();
 
   constructor(
-    private analytics: AngularFireAnalytics,
     private authService: AuthService,
     @Inject(APP) private app: App
   ) {
@@ -48,77 +50,68 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
     }
   }
 
-  getTitleAnalytics(titleId: string) {
+  getTitleAnalytics(params?: { titleId?: string, uid?: string }) {
     const { orgId } = this.authService.profile;
-    return this.valueChanges(ref => ref
-      .where('type', '==', 'title')
-      .where('meta.titleId', '==', titleId)
-      .where('meta.ownerOrgIds', 'array-contains', orgId)
-      .where('_meta.createdFrom', '==', this.app)
-    ) as Observable<Analytics<'title'>[]>;
+
+    const query = [
+      where('type', '==', 'title'),
+      where('meta.ownerOrgIds', 'array-contains', orgId),
+      where('_meta.createdFrom', '==', this.app)
+    ];
+
+    if (params?.titleId) query.push(where('meta.titleId', '==', params.titleId));
+    if (params?.uid) query.push(where('meta.uid', '==', params.uid));
+
+    return this.valueChanges(query).pipe(
+      // Filter out analytics from owners of title
+      map((analytics: Analytics<'title'>[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId) ))
+    );
   }
 
-  getAnalytics() {
-    const { orgId } = this.authService.profile;
-    return this.valueChanges(ref => ref
-      .where('type', '==', 'title')
-      .where('meta.ownerOrgIds', 'array-contains', orgId)
-      .where('_meta.createdFrom', '==', this.app)
-    ) as Observable<Analytics<'title'>[]>;
-  }
-
-  async addTitle(name: EventName, titleId: string) {
-    if (await this.isOperator()) return;
-
-    const profile = this.authService.profile;
-
-    // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error)
-    const doc = await this.db.doc(`movies/${titleId}`).ref.get();
-    const title = createMovie(doc.data());
-
-    const meta = createTitleMeta({
-      titleId,
-      orgId: profile.orgId,
-      uid: profile.uid,
-      ownerOrgIds: title.orgIds
-    });
-
-    this.analytics.logEvent(name, meta);
-    return this.add({ type: 'title', name, meta });
-  }
-
-  async addPageView(type: AnalyticsTypes, id: string) {
+  async addTitle(name: EventName, title: Movie) {
     if (await this.isOperator()) return;
 
     const profile = this.authService.profile;
     if (!profile) return;
 
-    let meta: AnalyticsTypeRecord[AnalyticsTypes];
-    if (type === 'title') {
-      const start = startOfDay(new Date());
-      const analytics = await this.getValue(ref => ref
-        .where('_meta.createdBy', '==', profile.uid)
-        .where('_meta.createdFrom', '==', this.app)
-        .where('meta.titleId', '==', id)
-        .where('name', '==', 'pageView')
-      );
-      // only one pageView event per day per title per user is recorded.
-      if (analytics.some(analytic => analytic._meta.createdAt > start)) return;
+    const meta = createTitleMeta({
+      titleId: title.id,
+      orgId: profile.orgId,
+      uid: profile.uid,
+      ownerOrgIds: title.orgIds
+    });
+    logEvent(this.analytics, name, meta);
+    return this.add({ type: 'title', name, meta });
+  }
 
-      // TODO #7273 use MovieService instead once Akita has been replaced by ng-fire (currently using MovieService results in error)
-      const doc = await this.db.doc(`movies/${id}`).ref.get();
-      const title = createMovie(doc.data());
+  async addTitlePageView(title: Movie) {
+    if (await this.isOperator()) return;
 
-      meta = createTitleMeta({
-        titleId: id,
-        orgId: profile.orgId,
-        uid: profile.uid,
-        ownerOrgIds: title.orgIds
-      });
-    }
-    if (!meta) return;
+    const profile = this.authService.profile;
+    if (!profile) return;
 
-    return this.add({ name: 'pageView', type, meta });
+    const start = startOfDay(new Date());
+    const analytics = await this.getValue([
+      where('_meta.createdBy', '==', profile.uid),
+      where('_meta.createdFrom', '==', this.app),
+      where('meta.titleId', '==', title.id),
+      where('name', '==', 'pageView')
+    ]);
+    // only one pageView event per day per title per user is recorded.
+    if (analytics.some(analytic => analytic._meta.createdAt > start)) return;
+
+    const meta = createTitleMeta({
+      titleId: title.id,
+      orgId: profile.orgId,
+      uid: profile.uid,
+      ownerOrgIds: title.orgIds
+    });
+
+    return this.add({
+      name: 'pageView',
+      type: 'title',
+      meta
+    });
   }
 
   /**

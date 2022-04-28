@@ -2,8 +2,7 @@ import { Component, ChangeDetectionStrategy, Pipe, PipeTransform, Inject } from 
 
 // Blockframes
 import { NotificationsForm } from './notifications.form';
-import { App } from "@blockframes/utils/apps";
-import { NotificationTypesBase, notificationTypesBase } from '@blockframes/model';
+import { NotificationTypesBase, notificationTypesBase, App } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
 
 // Material
@@ -11,6 +10,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 interface NotificationSetting { text: string, tooltip: boolean };
 const titleType: Record<NotificationTypesBase, NotificationSetting> = {
@@ -133,11 +133,14 @@ export class NotificationsFormComponent {
   }
 
   public async update() {
-    const notifications = this.form.getRawValue();
-    const uid = this.authService.uid;
-    await this.authService.update({ uid, settings: { notifications } });
-
-    this.snackBar.open('Notifications settings updated.', 'close', { duration: 2000 });
+    try {
+      const notifications = this.form.getRawValue();
+      const uid = this.authService.uid;
+      await this.authService.update({ uid, settings: { notifications } });
+      this.snackBar.open('Notification Settings updated. ', 'close', { duration: 4000 });
+    } catch (err) {
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
+    }
   }
 }
 

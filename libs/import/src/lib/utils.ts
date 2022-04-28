@@ -5,6 +5,7 @@ import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
 import { centralOrgId } from '@env';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { UserService } from '@blockframes/user/+state';
+import { where } from 'firebase/firestore';
 
 export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts'] as const;
 
@@ -19,7 +20,8 @@ export interface SpreadsheetImportError {
   name: string;
   reason: string;
   type: 'error' | 'warning';
-  hint?: string;
+  field?: string;
+  message?: string;
 }
 
 export interface MovieImportState {
@@ -64,11 +66,11 @@ export async function getOrgId(
   cache: Record<string, string>
 ) {
   if (!name) return '';
-  if (name === 'Archipel Content') return centralOrgId.catalog;
+  if (name === 'Archipel Content' || name === centralOrgId.catalog) return centralOrgId.catalog;
 
   if (cache[name]) return cache[name];
 
-  const orgs = await orgService.getValue((ref) => ref.where('denomination.full', '==', name));
+  const orgs = await orgService.getValue([where('denomination.full', '==', name)]);
   const result = orgs.length === 1 ? orgs[0].id : '';
   cache[name] = result;
   return result;
@@ -88,20 +90,24 @@ export async function getTitleId(
   }
 
   if (cache[nameOrId]) return cache[nameOrId].id;
-  const title = await titleService.getValue(nameOrId);
+  let title: Movie;
+  try {
+    title = await titleService.getValue(nameOrId);
+  } catch (err) {/**do nothing, nameOrId isn't an id */ }
+
   // Try if nameOrId is an id
   if (title) {
     if (isBlockframesAdmin) return memo(nameOrId, title);
     if (title.orgIds.includes(userOrgId)) return memo(nameOrId, title);
-    throw new Error(`You don't have access to title with id: ${nameOrId}`);
+    throw orgWithNoTitleError(nameOrId);
   }
   // nameOrId is the international title name
   const queryFn = isBlockframesAdmin
-    ? ref => ref.where('title.international', '==', nameOrId)
-    : ref => ref.where('title.international', '==', nameOrId).where('orgIds', 'array-contains', userOrgId);
+    ? [where('title.international', '==', nameOrId)]
+    : [where('title.international', '==', nameOrId), where('orgIds', 'array-contains', userOrgId)];
   const titles = await titleService.getValue(queryFn);
-  if (!titles.length) throw new Error(`No title found with name "${nameOrId}".`);
-  if (titles.length !== 1) throw new Error(`Multiple titles with name "${nameOrId}" found.`);
+  if (!titles.length) throw noTitleError(nameOrId);
+  if (titles.length !== 1) throw sameTitleNameError(nameOrId);
   return memo(nameOrId, titles[0]);
 }
 
@@ -132,9 +138,10 @@ export async function checkParentTerm(
     if (isMandate && containTerm) return cache[id] as Mandate;
   }
 
-  const [contract] = await contractService.getValue((ref) =>
-    ref.where('type', '==', 'mandate').where('termIds', 'array-contains', id)
-  );
+  const [contract] = await contractService.getValue([
+    where('type', '==', 'mandate'),
+    where('termIds', 'array-contains', id)
+  ]);
   cache[contract.id] = contract;
   return contract as Mandate;
 }
@@ -163,7 +170,7 @@ export async function getUser(
     }
 
     user = await userService
-      .getValue((ref) => ref.where('email', '==', query.email))
+      .getValue([where('email', '==', query.email)])
       .then((u) => u[0]);
   }
 
@@ -196,96 +203,197 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
     date = new Date((excelNumberOfDays - unixNumberOfDays) * millisecondsInOneDay);
   }
 
-  if (isNaN(date.getTime())) return wrongValueError(name);
+  if (isNaN(date.getTime())) throw wrongValueError(value, name);
 
   // if date seems strange we throw an Error
   const year = date.getFullYear();
-  if (year < 1895 || year > 2200) {
-    return {
-      value: undefined,
-      error: {
-        type: 'error',
-        name: `Invalid ${name}`,
-        reason: 'The date seems too far away in the past or in the future.',
-        hint:
-          'Date must be between 1895 and 2200, if the date seems to be correct please check that Excel format the cell as a Date.',
-      },
-    };
-  }
+  if (year < 1895 || year > 2200) throw outOfRangeDate(value)
   date.setHours(0, 0, 0, 0);
   return date;
 }
 
-export function mandatoryError<T = unknown>(name: string): ValueWithError<T> {
-  return {
-    value: undefined,
-    error: {
-      type: 'error',
-      name: `Missing ${name}`,
-      reason: 'Mandatory field is missing.',
-      hint: 'Please fill in the corresponding sheet field.',
-    },
+export function outOfRangeDate(name: string): ImportLog<string> {
+  const option: LogOption = {
+    name: `Invalid ${name}`,
+    reason: 'The date seems too far away in the past or in the future.',
+    message: 'Date must be between 1895 and 2200, if the date seems to be correct please check that Excel format the cell as a Date.',
   };
+  return new ImportError(name, option);
 }
 
-export function unknownEntityError<T = unknown>(name: string): ValueWithError<T> {
-  return {
-    value: undefined,
-    error: {
-      type: 'error',
-      name: `Unknown ${name}`,
-      reason: `${name} should exist in the app but we couldn't find it.`,
-      hint: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`,
-    },
+export function mandatoryError<T = unknown>(value: T, name: string): ImportLog<T> {
+  const option: LogOption = {
+    name: `Missing ${name}`,
+    reason: 'Mandatory field is missing.',
+    message: 'Please fill in the corresponding sheet field.',
   };
+  return new ImportError(value, option);
 }
 
-export function wrongValueError<T = unknown>(name: string): ValueWithError<T> {
-  return {
-    value: undefined,
-    error: {
-      type: 'error',
-      name: `Wrong ${name}`,
-      reason: `${name} should be a value of the given list.`,
-      hint: `Please check the corresponding sheet field for mistakes, be sure to select a value form the list.`,
-    },
+export function wrongTemplateError(templateImported: 'seller' | 'admin'): ImportLog<string> {
+  const messages = {
+    admin: 'Please contact team@archipelcontent.com or delete column `b` to import as an external sale.',
+    seller: 'Please contact team@archipelcontent.com or add a `contract-type` column at column `b`.',
+  }
+  const option: LogOption = {
+    name: `Wrong Template`,
+    reason: `You are not permitted to import a ${templateImported} template.`,
+    message: messages[templateImported],
   };
+  return new WrongTemplateError(templateImported, option);
 }
 
-export function alreadyExistError<T = unknown>(name: string): ValueWithError<T> {
-  return {
-    value: undefined,
-    error: {
-      type: 'error',
-      name: `${name} already exist`,
-      reason: `We could not create a ${name} because it already exist on the app.`,
-      hint: `Please edit the corresponding sheet field with a different value.`,
-    },
+export function unknownEntityError<T = unknown>(value: T, name: string): ImportLog<T> {
+  const option: LogOption = {
+    name: `Unknown ${name}`,
+    reason: `${name} should exist in the app but we couldn't find it.`,
+    message: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`,
   };
+  return new ImportError(value, option);
 }
 
-export function optionalWarning<T = unknown>(name: string, value?: T): ValueWithError<T> {
+export function noTitleError(name: string): ImportLog<string> {
+  const option: LogOption = {
+    name: 'Error on title name or ID',
+    reason: `No title found with name/id "${name}".`,
+    message: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`,
+  };
+  return new ImportError(name, option);
+}
+
+export function sameTitleNameError(name: string): ImportLog<string> {
+  const option: LogOption = {
+    name: 'Error on title name or ID',
+    reason: `Multiple titles with name "${name}" found.`,
+    message: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`,
+  };
+  return new ImportError(name, option);
+}
+
+export function orgWithNoTitleError(name: string): ImportLog<string> {
+  const option: LogOption = {
+    name: 'Error on title name or ID',
+    reason: `${name} does not belong to your org`,
+    message: `You don't have access to title with id: ${name}`,
+  };
+  return new ImportError(name, option);
+}
+
+export function wrongValueError<T = unknown>(value: T, name: string): ImportLog<T> {
+  const option: LogOption = {
+    name: `Wrong ${name}`,
+    reason: `${name} should be a value of the given list.`,
+    message: `Please check the corresponding sheet field for mistakes, be sure to select a value form the list.`,
+  };
+  return new ImportError(value, option);
+}
+
+export function unusedMandateIdWarning<T extends string>(value: T): ImportLog<T> {
+  const option: LogOption = {
+    field: 'parentTerm',
+    name: 'Unused Mandate ID/Row',
+    reason:
+      'Mandate ID is used only for sales contracts, here the value will be omitted because the contract is a mandate.',
+    message: 'Remove the corresponding sheet field to silence this warning.',
+  };
+  return new ImportWarning(value, option);
+}
+
+export function alreadyExistError<T = unknown>(value: T, name: string): ImportLog<T> {
+  const option = {
+    name: `${name} already exist`,
+    reason: `We could not create a ${name} because it already exist on the app.`,
+    message: `Please edit the corresponding sheet field with a different value.`,
+  };
+  return new ImportError(value, option);
+}
+
+export function getOptionalWarning(name: string) {
   return {
+    field: '',
+    value: undefined,
+    name: `Missing ${name}`,
+    reason: 'Optional field is missing.',
+    message: 'Fill in the corresponding sheet field to add a value.',
+    type: 'warning'
+  } as const;
+}
+
+export function optionalWarning<T = unknown>(name: string, value?: T): ImportLog<T> {
+  const option: LogOption = {
     // value is `undefined` by default because optional warning mean that the value is missing,
     // for other warning the value should passed as a parameter
-    value,
-    error: {
-      type: 'warning',
-      name: `Missing ${name}`,
-      reason: 'Optional field is missing.',
-      hint: 'Fill in the corresponding sheet field to add a value.',
-    },
+    name: `Missing ${name}`,
+    reason: 'Optional field is missing.',
+    message: 'Fill in the corresponding sheet field to add a value.',
   };
+  return new ImportWarning(value, option);
 }
 
-export function adminOnlyWarning<T = unknown>(value: T, name: string): ValueWithError<T> {
-  return {
-    value,
-    error: {
-      type: 'warning',
-      name: `${name} is only for Admins`,
-      reason: "This field is reserved for admins, it's value will be omitted.",
-      hint: 'Remove the corresponding sheet field to silence this warning.',
-    },
+export function adminOnlyWarning<T = unknown>(value: T, name: string): ImportLog<T> {
+  const option: LogOption = {
+    reason: "This field is reserved for admins, it's value will be omitted.",
+    message: 'Remove the corresponding sheet field to silence this warning.',
+    name: 'Admin only warning'
   };
+  return new ImportWarning(value, option);
+}
+
+export function wrongValueWarning<T = unknown>(value: T, name: string, wrongData: string[]): ImportLog<T> {
+  const option: LogOption = {
+    name: `Wrong ${name}`,
+    reason: `Be careful, ${wrongData.length} values were wrong and will be omitted.`,
+    message: `${wrongData.slice(0, 3).join(', ')}...`
+  };
+  return new ImportWarning(value, option);
+}
+
+export interface LogOption {
+  name: string;
+  reason: string;
+  message: string;
+  field?: string;
+}
+
+export abstract class ImportLog<T> extends Error {
+  reason: string;
+  field?: string;
+  message: string;
+  abstract type: 'warning' | 'error';
+
+  constructor(private value: T, options: LogOption) {
+    super(options.message);
+    const { message, name, reason, field = '' } = options;
+    this.name = name;
+    this.reason = reason;
+    this.field = field;
+    this.message = message;
+  }
+
+  toJson() {
+    return {
+      type: this.type,
+      name: this.name,
+      reason: this.reason,
+      field: this.field,
+      message: this.message,
+    }
+  }
+}
+
+export class ImportError<T> extends ImportLog<T> {
+  public readonly type = 'error';
+}
+
+export class ImportWarning<T> extends ImportLog<T> {
+  public readonly type = 'warning';
+}
+
+export class WrongTemplateError<T> extends ImportLog<T> {
+  public readonly type = 'error';
+  /**
+   * When present, should be shown as the only error even
+   * when there are many other errors.
+   */
+  public onlyErrorShown = true;
 }

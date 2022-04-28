@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { AuthService } from '../+state';
 import { map, } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
+import { App, getOrgModuleAccess } from '@blockframes/model';
 import { combineLatest } from 'rxjs';
 import { CanActivate, Router } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';

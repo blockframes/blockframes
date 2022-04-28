@@ -2,13 +2,11 @@
 import { Inject, Injectable } from '@angular/core';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { FileUploaderService } from '@blockframes/media/+state';
-import { ProductionStatus } from '@blockframes/utils/static-model';
-import { App, getMoviePublishStatus } from '@blockframes/utils/apps';
 import { FormSaveOptions } from '@blockframes/utils/common-interfaces';
 import { MovieControl, MovieForm } from './movie.form';
 import type { FormShellConfig } from './movie.shell.interfaces'
 import { MovieService } from '../+state/movie.service';
-import { Movie, MoviePromotionalElements } from '@blockframes/model';
+import { Movie, MoviePromotionalElements, ProductionStatus, App, getMoviePublishStatus } from '@blockframes/model';
 import { MovieActiveGuard } from '../guards/movie-active.guard';
 import { APP } from '@blockframes/utils/routes/utils';
 
@@ -92,9 +90,9 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     // Specific updates based on production status
     const prodStatus = ['finished', 'released'];
     if (prodStatus.includes(movie.productionStatus)) {
-      movie.directors.forEach(director => director.status = 'confirmed')
-      movie.cast.forEach(cast => cast.status = 'confirmed')
-      movie.crew.forEach(crew => crew.status = 'confirmed'); // TODO #7774 previous value was 'confiremd' =>  migration needed
+      movie.directors.forEach(director => director.status = 'confirmed');
+      movie.cast.forEach(cast => cast.status = 'confirmed');
+      movie.crew.forEach(crew => crew.status = 'confirmed');
     }
 
     // Update fields with dynamic keys

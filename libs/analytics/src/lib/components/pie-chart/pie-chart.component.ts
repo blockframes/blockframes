@@ -28,6 +28,7 @@ interface PieChartOptions {
 })
 export class PieChartComponent {
   @ViewChild("chart") chart: ChartComponent;
+  isLoading = true;
 
   pieChartOptions: Partial<PieChartOptions> = {
     series: [],
@@ -65,6 +66,7 @@ export class PieChartComponent {
 
   @Input() set data(data: AnalyticData[]) {
     if (!data) return;
+    this.isLoading = false;
 
     this.pieChartOptions.labels = Object.values(data).map(d => d.label);
     this.pieChartOptions.series = Object.values(data).map(d => d.count);
@@ -72,6 +74,11 @@ export class PieChartComponent {
     this.chart?.updateOptions(this.pieChartOptions);
   }
 
-  private previousSelection?: string;
+  previousSelection?: string;
   @Output() selection: EventEmitter<string> = new EventEmitter();
+
+  toggleSelect() {
+    const index = this.pieChartOptions.labels.findIndex(label => label === this.previousSelection);
+    if (index !== -1) this.chart.toggleDataPointSelection(index);
+  }
 }

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AnalyticsMapComponent } from './map.component';
 import { ImageModule } from "@blockframes/media/image/directives/image.module";
@@ -10,13 +9,14 @@ import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-
+import { MatTooltipModule } from '@angular/material/tooltip'; 
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [
     CommonModule,
-    FlexLayoutModule,
 
     ToLabelModule,
     MapModule,
@@ -24,7 +24,10 @@ import { MatDividerModule } from '@angular/material/divider';
 
     MatIconModule,
     MatListModule,
-    MatDividerModule
+    MatButtonModule,
+    MatDividerModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule
   ],
   declarations: [AnalyticsMapComponent],
   exports: [AnalyticsMapComponent]

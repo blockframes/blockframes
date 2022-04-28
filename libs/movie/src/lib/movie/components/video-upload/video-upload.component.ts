@@ -7,9 +7,8 @@ import {
 } from '@angular/core';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie, MovieVideos } from '@blockframes/model';
+import { Movie, MovieVideos, hostedVideoTypes } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { hostedVideoTypes } from '@blockframes/utils/static-model';
 import { MovieVideosForm } from '@blockframes/movie/form/movie.form';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
 

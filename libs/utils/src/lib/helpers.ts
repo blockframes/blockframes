@@ -1,6 +1,5 @@
-import firebase from 'firebase';
-import { staticModel, Scope, GetKeys } from './static-model';
-import { Movie, User, Organization } from '@blockframes/model';
+import { Timestamp } from 'firebase/firestore';
+import { staticModel, Scope, GetKeys, Movie, User, Organization } from '@blockframes/model';
 
 /**
  * This method is used before pushing data on db
@@ -39,20 +38,15 @@ export function mergeDeep<T>(target: T, source: Partial<T>): T {
   return output;
 }
 
-/** A custom interface for group of dates. Used in notifications/invitations components. */
-export interface DateGroup<T> {
-  [date: string]: T[];
-}
-
 /** Checks if the date is a firestore Timestamp. */
 function isTimeStamp(
-  date: firebase.firestore.Timestamp | Date
-): date is firebase.firestore.Timestamp {
-  return date && date instanceof firebase.firestore.Timestamp;
+  date: Timestamp | Date
+): date is Timestamp {
+  return date && date instanceof Timestamp; // TODO #8250
 }
 
 /** Takes a Date, a string or a Timestamp and returns it as a Date. */
-export function toDate(date: firebase.firestore.Timestamp | Date): Date {
+export function toDate(date: Timestamp | Date): Date {
   if (isTimeStamp(date)) {
     return date.toDate();
   }
@@ -222,4 +216,9 @@ export function hasDenomination(organization: Organization): boolean {
 
 export function capitalize(text: string) {
   return `${text[0].toUpperCase()}${text.substring(1)}`;
+}
+
+/** Returns only unique values from array of strings */
+export function unique(array: string[]) {
+  return Array.from(new Set(array));
 }

@@ -6,6 +6,8 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { OrganizationMember, Organization, Invitation, UserRole } from '@blockframes/model';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 import { PermissionsService } from '@blockframes/permissions/+state';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
 @Component({
   selector: 'member-edit',
@@ -34,6 +36,7 @@ export class MemberComponent implements OnInit {
     private invitationService: InvitationService,
     private permissionService: PermissionsService,
     private orgService: OrganizationService,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -43,11 +46,11 @@ export class MemberComponent implements OnInit {
     this.isSuperAdmin$ = this.permissionService.isSuperAdmin$;
 
     if (this.permissionService.isUserAdmin()) {
-      const queryFn1 = buildJoinOrgQuery(this.org.id, 'invitation');
-      const queryFn2 = buildJoinOrgQuery(this.org.id, 'request');
+      const queryConstraints1 = buildJoinOrgQuery(this.org.id, 'invitation');
+      const queryConstraints2 = buildJoinOrgQuery(this.org.id, 'request');
 
-      this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
-      this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
+      this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryConstraints1);
+      this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryConstraints2);
     }
   }
 
@@ -71,8 +74,18 @@ export class MemberComponent implements OnInit {
 
   public async removeMember(uid: string) {
     try {
-      await this.orgService.removeMember(uid);
-      this.snackBar.open('Member removed.', 'close', { duration: 2000 });
+      this.dialog.open(ConfirmComponent, {
+        data: {
+          title: 'Are you sure?',
+          question: 'If you remove a member from you company, you will be able to invite this person again.',
+          confirm: 'Yes, remove member.',
+          cancel: 'No, keep member.',
+          onConfirm: async () => {
+            await this.orgService.removeMember(uid);
+            this.snackBar.open('Member removed.', 'close', { duration: 2000 });
+          },
+        }
+      });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }

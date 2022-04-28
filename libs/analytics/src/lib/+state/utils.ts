@@ -1,6 +1,5 @@
-import { Organization, Analytics, AnalyticsTypes } from "@blockframes/model";
+import { Organization, Analytics, AnalyticsTypes, Scope, createAggregatedAnalytic, AggregatedAnalytic } from "@blockframes/model";
 import { getDeepValue, toLabel } from "@blockframes/utils/pipes";
-import { Scope } from "@blockframes/utils/static-model";
 
 interface AnalyticsWithOrg extends Analytics<AnalyticsTypes> {
   org?: Organization
@@ -30,4 +29,12 @@ export function counter(analytics: AnalyticsWithOrg[], path: string, scope?: Sco
     count,
     label: scope ? toLabel(key, scope) : ''
   }));
+}
+
+export function aggregate(analytics: Analytics[], data: Partial<AggregatedAnalytic> = {}) {
+  const aggregated = createAggregatedAnalytic(data)
+  for (const analytic of analytics) {
+    aggregated[analytic.name]++;
+  }
+  return aggregated;
 }

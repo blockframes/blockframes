@@ -8,11 +8,12 @@ import { PrivacyPolicyComponent } from './privacy-policy.component';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
-// Blockframes
-import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+
+// Blockframes
+import { PrivacyPolicyTextModule } from '../privacy-policy-text/privacy-policy-text.module';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 @NgModule({
   declarations: [PrivacyPolicyComponent],
@@ -22,8 +23,9 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
     FlexLayoutModule,
     MatIconModule,
-    AppPipeModule
+    PrivacyPolicyTextModule,
+    GlobalModalModule
   ],
   exports: [PrivacyPolicyComponent]
 })
-export class PrivacyPolicyModule {}
+export class PrivacyPolicyModule { }

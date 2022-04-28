@@ -14,6 +14,6 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands';
-
-import 'cypress-file-upload';
+//TODO define proper way to import next line #8071
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import '@blockframes/testing/cypress/browser';

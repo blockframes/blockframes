@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { AngularFireFunctions } from '@angular/fire/functions';
+import { Functions } from '@angular/fire/functions';
 import { UserService } from '@blockframes/user/+state';
-import { 
+import {
   OrganizationMember,
   PublicUser,
   User,
@@ -17,24 +17,30 @@ import {
   createPublicUser,
   createDocumentMeta,
   formatDocumentMetaFromFirestore,
+  App,
+  Module,
+  createOrgAppAccess
 } from '@blockframes/model';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
-import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
+import { httpsCallable } from 'firebase/functions';
+import { where } from 'firebase/firestore';
+import { runInZone } from '@blockframes/utils/zone';
 
-interface OrganizationState extends EntityState<Organization>, ActiveState<string> {}
+interface OrganizationState extends EntityState<Organization>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
 export class OrganizationService extends CollectionService<OrganizationState> {
-  readonly useMemorization = true;
+  readonly useMemorization = false;
 
   // Organization of the current logged in user or undefined if user have no org
   org: Organization; // For this to be defined, one of the observable below must be called before
   org$: Observable<Organization> = this.authService.profile$.pipe(
     switchMap((user) => (user?.orgId ? this.valueChanges(user.orgId) : of(undefined))),
+    runInZone(this.ngZone), // TODO #7595 #7273
     tap((org) => (this.org = org))
   );
 
@@ -66,18 +72,19 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   );
 
   constructor(
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private userService: UserService,
     private permissionsService: PermissionsService,
     private analytics: AnalyticsService,
     private authService: AuthService,
+    private ngZone: NgZone,
   ) {
     super();
   }
 
   public async orgNameExist(orgName: string) {
     // @TODO #6908 a better solution for this should be found.
-    const orgs = await this.getValue((ref) => ref.where('denomination.full', '==', orgName));
+    const orgs = await this.getValue([where('denomination.full', '==', orgName)]);
     return orgs.length !== 0;
   }
 
@@ -126,13 +133,13 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   public notifyAppAccessChange(orgId: string, app: App) {
-    const callOnAccessToAppChanged = this.functions.httpsCallable('onAccessToAppChanged');
-    return callOnAccessToAppChanged({ orgId, app }).toPromise();
+    const callOnAccessToAppChanged = httpsCallable(this.functions, 'onAccessToAppChanged');
+    return callOnAccessToAppChanged({ orgId, app });
   }
 
   public requestAppAccess(app: App, module: Module, orgId: string) {
-    const f = this.functions.httpsCallable('requestFromOrgToAccessApp');
-    return f({ app, module, orgId }).toPromise();
+    const f = httpsCallable(this.functions, 'requestFromOrgToAccessApp');
+    return f({ app, module, orgId });
   }
 
   ////////////
@@ -186,10 +193,10 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     let wishlist = Array.from(new Set([...orgState.wishlist])) || [];
     if (wishlist.includes(movie.id)) {
       wishlist = orgState.wishlist.filter(id => id !== movie.id);
-      this.analytics.addTitle('removedFromWishlist', movie.id);
+      this.analytics.addTitle('removedFromWishlist', movie);
     } else {
       wishlist.push(movie.id);
-      this.analytics.addTitle('addedToWishlist', movie.id);
+      this.analytics.addTitle('addedToWishlist', movie);
     }
 
     this.update(orgState.id, { wishlist });

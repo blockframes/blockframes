@@ -11,10 +11,9 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getFileExtension } from '@blockframes/utils/file-sanitizer';
-import { extensionToType } from '@blockframes/utils/utils';
+import { ErrorResultResponse, extensionToType } from '@blockframes/utils/utils';
 import { MediaService } from '@blockframes/media/+state';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { isSlate, Slate, StorageFile, StorageVideo } from '@blockframes/model';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { filter, pluck, scan, switchMap, take } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
@@ -29,7 +28,11 @@ import {
   MeetingPdfControl,
   MeetingVideoControl,
   Screening,
-  Invitation
+  Invitation,
+  isSlate, 
+  Slate, 
+  StorageFile, 
+  StorageVideo
 } from '@blockframes/model';
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
@@ -66,7 +69,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   public requestSent = false;
 
   constructor(
-    private functions: AngularFireFunctions,
+    private functions: Functions,
     private route: ActivatedRoute,
     private service: EventService,
     private invitationService: InvitationService,
@@ -311,9 +314,10 @@ export class SessionComponent implements OnInit, OnDestroy {
   }
 
   async createVideoControl(video: StorageVideo, eventId: string): Promise<MeetingVideoControl> {
-    const getVideoInfo = this.functions.httpsCallable('privateVideo');
+    const getVideoInfo = httpsCallable<{ video: StorageVideo, eventId: string }, ErrorResultResponse>(this.functions, 'privateVideo');
 
-    const { error, result } = await getVideoInfo({ video, eventId }).toPromise();
+    const r = await getVideoInfo({ video, eventId });
+    const { error, result } = r.data;
     if (error) {
       // if error is set, result will contain the error message
       throw new Error(result);

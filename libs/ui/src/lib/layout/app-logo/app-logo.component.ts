@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, Inject } from '@angular/core';
-import { App } from '@blockframes/utils/apps';
+import { App } from '@blockframes/model';
 import { ThemeService } from '@blockframes/ui/theme/theme.service';
 import { APP } from '@blockframes/utils/routes/utils';
 

@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, Directive, EventEmitter, Output, OnInit, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Blockframes
@@ -9,19 +9,6 @@ import { Observable } from 'rxjs';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
 
-@Directive({
-  selector: 'wishlist-add-text [wishlistAddText]',
-})
-export class WishlistAddTextDirective {
-  @HostBinding('host') class = 'wishlist-add-text';
-}
-
-@Directive({
-  selector: 'wishlist-remove-text [wishlistRemoveText]',
-})
-export class WishlistRemoveTextDirective {
-  @HostBinding('host') class = 'wishlist-remove-text';
-}
 
 @Component({
   selector: '[movieId] wishlist-button',

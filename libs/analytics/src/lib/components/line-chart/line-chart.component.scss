@@ -1,0 +1,32 @@
+analytics-line-chart {
+  display: flex;
+  flex-direction: column;
+
+  header {
+    display: flex;
+    gap: 8px;
+  }
+
+  section {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  apx-chart {
+    display: block;
+    margin-block: auto;
+  
+    .apexcharts-text {
+      fill: var(--foreground-text);
+    }
+    
+    .apexcharts-legend-text {
+      color: var(--foreground--text) !important; // overwrite default inline style
+    }
+  }
+}
+
+mat-spinner {
+  margin: auto;
+}

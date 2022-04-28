@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { App, appName, appShortName } from '../apps';
+import { App, appName, appShortName } from '@blockframes/model';
 
 @Pipe({ name: 'appName' })
 export class AppNamePipe implements PipeTransform {

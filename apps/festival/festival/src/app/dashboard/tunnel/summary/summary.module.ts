@@ -9,6 +9,7 @@ import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summar
 import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
+import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -27,6 +28,7 @@ import { MatDividerModule } from '@angular/material/divider';
     GetPathModule,
     HasStatusModule,
     ToLabelModule,
+    SnackbarLinkModule,
     
     // Materials
     MatCardModule,

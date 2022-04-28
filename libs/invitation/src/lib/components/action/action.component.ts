@@ -3,6 +3,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/+state';
 import { Event, Invitation, InvitationStatus } from '@blockframes/model';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { InvitationService } from '../../+state';
 
@@ -62,17 +64,30 @@ export class ActionComponent {
 
   async acceptOrDeclineAsAnonymous(invitationId: string, status: InvitationStatus) {
     const creds = this.authService.anonymousCredentials;
-    await this.service.acceptOrDeclineInvitationAsAnonymous({ invitationId, email: creds.email, status }).toPromise<boolean>();
+    await this.service.acceptOrDeclineInvitationAsAnonymous({ invitationId, email: creds.email, status });
     this.statusChanged.emit(status);
   }
 
   /** Request the owner to accept invitation (automatically accepted if event is public) */
-  request(event: Event) {
-    const { ownerOrgId, id, accessibility } = event;
-    this.service.request(ownerOrgId).to('attendEvent', id);
-    if (accessibility !== 'public') {
-      this.snackBar.open('Your request has been sent to the organizer.', 'close', { duration: 3000 });
+  async request(event: Event) {
+    try {
+      const { ownerOrgId, id, accessibility } = event;
+      await this.service.request(ownerOrgId).to('attendEvent', id);
+      if (accessibility !== 'public') {
+        this.snackBar.open('Request sent', 'close', { duration: 4000 });
+      } else {
+        this.snackBar.openFromComponent(SnackbarLinkComponent, {
+          data: {
+            message: 'Screening added to your Calendar.',
+            link: ['/event/', event.id, 'r', 'i'],
+            linkName: 'SEE DETAILS'
+          },
+          duration: 6000
+        });
+      }
+      this.requestPending = true;
+    } catch (_) {
+      this.snackBar.openFromComponent(SnackbarErrorComponent, { data: 'There was a problem sending your request...', duration: 5000 });
     }
-    this.requestPending = true;
   }
 }

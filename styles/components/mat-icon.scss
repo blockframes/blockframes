@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 @mixin color($theme) {
   $config: mat.get-color-config($theme);
@@ -11,7 +11,7 @@
 
   mat-icon {
     path, g, polygon {
-      fill: mat.get-color-from-palette($foreground, icon);
+      fill: currentColor;
     }
     &.mat-primary {
       color: mat.get-color-from-palette($primary, 500);

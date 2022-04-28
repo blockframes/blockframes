@@ -44,8 +44,8 @@
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
-          <button test-id="remove" mat-icon-button (click)="remove(element, $event)">
-            <mat-icon svgIcon="delete" title="Remove from wishlist"></mat-icon>
+          <button test-id="remove" mat-icon-button (click)="remove(element, $event)" matTooltip="Remove from Wishlist">
+            <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </td>
       </ng-container>
@@ -64,6 +64,6 @@
   <article fxLayout="column" fxLayoutAlign="center center">
     <h1>Your Company's Wishlist is empty.</h1>
     <img asset="empty_wishlist.svg" alt="No wishlist">
-    <button mat-flat-button color="accent" routerLink="../title">Discover Titles</button>
+    <button mat-flat-button color="primary" routerLink="../title">Discover Titles</button>
   </article>
 </ng-template>

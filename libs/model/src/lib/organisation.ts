@@ -1,9 +1,10 @@
 import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
-import { OrgAppAccess, createOrgAppAccess, Module, App, getAllAppsExcept } from '@blockframes/utils/apps';
-import type { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
 import { createStorageFile, StorageFile, StorageVideo } from './media';
 import { DocumentMeta } from './meta';
 import { Timestamp } from './timestamp';
+import { getAllAppsExcept } from './apps';
+import type { App, Module, ModuleAccess, OrgActivity, OrganizationStatus, OrgAppAccess } from './static';
+import { app, modules } from './static';
 
 export interface Denomination {
   full: string;
@@ -121,9 +122,9 @@ export type AppStatus = 'none' | 'requested' | 'accepted';
 export type Organization = OrganizationBase<Date>;
 
 export const organizationRoles = {
-  catalog: { dashboard: 'Seller', marketplace: 'Buyer'},
-  festival: { dashboard: 'Sales Agent', marketplace: 'Buyer'},
-  financiers: { dashboard: 'Partners', marketplace: 'Investor'}
+  catalog: { dashboard: 'Seller', marketplace: 'Buyer' },
+  festival: { dashboard: 'Sales Agent', marketplace: 'Buyer' },
+  financiers: { dashboard: 'Partners', marketplace: 'Investor' }
 };
 
 export interface OrganizationForm {
@@ -144,4 +145,82 @@ export function createPublicOrganization(org: Partial<Organization>): PublicOrga
     denomination: createDenomination(org.denomination),
     logo: createStorageFile(org.logo),
   }
+}
+
+export function createOrgAppAccess(_appAccess: Partial<OrgAppAccess> = {}): OrgAppAccess {
+  const appAccess = {} as OrgAppAccess;
+  for (const a of app) {
+    appAccess[a] = createModuleAccess(_appAccess[a]);
+  }
+  return appAccess;
+}
+
+export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): ModuleAccess {
+  return {
+    dashboard: false,
+    marketplace: false,
+    ...moduleAccess,
+  };
+}
+
+/**
+ * Returns the apps that the org have access to
+ * @param org The org to query
+ * @param first The app name to return first (if present)
+ * @example
+ * getOrgAppAccess(orgA); // ['catalog', 'festival']
+ * getOrgAppAccess(orgA, 'festival'); // ['festival', 'catalog']
+ */
+export function getOrgAppAccess(
+  org: OrganizationDocument | OrganizationBase<Date>,
+  first: App = 'festival'
+): App[] {
+  const apps: App[] = [];
+  for (const a of app) {
+    const hasAccess = modules.some((m) => !!org.appAccess[a]?.[m]);
+    if (hasAccess) {
+      apps.push(a);
+    }
+  }
+
+  // If org have access to several app, including "first",
+  // we put it in first place of the response array
+  if (apps.length > 1 && apps.includes(first)) {
+    return [first, ...apps.filter((a) => a !== first)];
+  } else {
+    return apps;
+  }
+}
+
+/**
+ * Returns the modules an org have access to for a particular app or for all apps
+ * @param org
+ * @param a
+ * @example
+ * // we don't know in which app the module is
+ * getOrgModuleAccess(orgA); // ['dashboard', 'marketplace']
+ * getOrgModuleAccess(orgB); // ['marketplace']
+ */
+export function getOrgModuleAccess(
+  org: OrganizationDocument | OrganizationBase<Date>,
+  _a?: App
+): Module[] {
+  const allowedModules = {} as Record<Module, boolean>;
+
+  if (_a) {
+    for (const m of modules) {
+      if (org.appAccess[_a]?.[m]) {
+        allowedModules[m] = true;
+      }
+    }
+  } else {
+    for (const a of app) {
+      for (const m of modules) {
+        if (org.appAccess[a]?.[m]) {
+          allowedModules[m] = true;
+        }
+      }
+    }
+  }
+  return Object.keys(allowedModules).map((k) => k as Module);
 }

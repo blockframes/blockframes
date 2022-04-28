@@ -1,24 +1,16 @@
-@import '~@angular/flex-layout/mq';
+@import '@angular/flex-layout/mq';
 
 header {
   padding: 100px 0;
   margin: 0 auto;
   width: 60%;
+
   h1 {
     text-align: center;
   }
+
   mat-icon {
     cursor: pointer;
-  }
-}
-
-mat-card {
-  margin-top: 50px;
-  margin-bottom: 50px;
-  width: 60%;
-  ul {
-    list-style-type: disc;
-    margin-left: 16px;
   }
 }
 
@@ -26,19 +18,10 @@ mat-card {
   header {
     width: 80%;
   }
-  mat-card {
-    width: 80%;
-    margin-top: 50px;
-  }
 }
 
 @include layout-bp(xs) {
   header {
     width: 100%;
-  }
-  mat-card {
-    width: 100%;
-    margin-top: 30px;
-    margin-bottom: 30px;
   }
 }

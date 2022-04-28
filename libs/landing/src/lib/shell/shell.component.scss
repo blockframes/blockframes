@@ -1,4 +1,4 @@
-@import "~@angular/flex-layout/mq";
+@import "@angular/flex-layout/mq";
 $banner-background: rgba(5, 7, 36);
 
 // Maximum width for large screens
@@ -26,14 +26,16 @@ landing-shell-page {
 
     nav {
       width: 100%;
-      a:nth-child(2) {
-        margin-right: auto;
-      }
+      display: flex;
 
+      .mobile-navbar {
+        display: none;
+      }
       #demo-link {
         letter-spacing: 0.5px;
         line-height: 24px;
         font-weight: 600;
+        margin-right: auto;
       }
     }
   }
@@ -99,6 +101,13 @@ landing-shell-page {
             gap: 20px;
           }
         }
+        .footer-form {
+          display: flex;
+          flex-flow: row wrap;
+          button[app-logo] {
+            margin-right: auto;
+          }
+        }
         form {
           display: flex;
           gap: 16px;
@@ -159,22 +168,50 @@ landing-shell-page {
       padding: 0;
     }
   }
+
+  .footer-form {
+    justify-content: center;
+    gap: 16px;
+    button[app-logo] {
+      margin-inline: auto;
+    }
+  }
 }
 
-@include layout-bp(lt-sm) {
-  landing-shell-page main {
-    landing-header {
-      header {
-        padding: 60px 16px;
+@include layout-bp(xs) {
+  landing-shell-page {
+    button[app-logo] {
+      margin-right: 0;
+    }
+
+    mat-toolbar {
+      nav {
+        .mobile-navbar {
+          display: block;
+        }
+        a:not(.mobile-navbar) { 
+          display: none; 
+        }
       }
     }
-    section {
-      h1 {
-        text-align: center;
+
+    main {
+      section {
+        h1 {
+          text-align: center;
+        }
       }
-    }
-    form article {
-      width: 90%;
+      footer {
+        section {
+          padding: 16px;
+        }
+        .footer-form {
+          form {
+            flex-direction: column;
+            align-items: center;
+          }
+        }
+      }
     }
   }
 }

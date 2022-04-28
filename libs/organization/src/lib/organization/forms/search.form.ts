@@ -1,9 +1,6 @@
 // Blockframes
-import { Territory } from '@blockframes/utils/static-model';
 import { FormEntity, FormList } from '@blockframes/utils/form';
-import { AlgoliaSearch } from '@blockframes/utils/algolia';
-import { Organization } from '@blockframes/model';
-import { App, Module } from '@blockframes/utils/apps';
+import { Organization, Territory, AlgoliaSearch, App, Module } from '@blockframes/model';
 
 // Utils
 import algoliasearch, { SearchIndex } from 'algoliasearch';
@@ -27,7 +24,7 @@ export function createOrganizationSearch(search: Partial<OrganizationSearch> = {
     isAccepted: true,
     hasAcceptedMovies: true,
     ...search
-    };
+  };
 }
 
 function createOrganizationSearchControl(search: OrganizationSearch) {
@@ -62,7 +59,6 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
   get appModule() { return this.get('appModule') }
   get isAccepted() { return this.get('isAccepted') }
   get hasAcceptedMovies() { return this.get('hasAcceptedMovies') }
-
 
   search() {
     return this.organizationIndex.search<Organization>(this.query.value, {

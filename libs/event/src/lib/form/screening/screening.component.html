@@ -16,7 +16,7 @@
       <mat-select formControlName="titleId" (selectionChange)="checkTitleAndScreener($event.value)" test-id="title">
         <mat-option *ngFor="let title of titles; let i = index" [value]="title.id" [attr.test-id]="'title_' + i">{{ title.title.international }}</mat-option>
       </mat-select>
-      <mat-hint id="missing-screener" *ngIf="screenerMissing || titleMissing">{{titleMissing ? 'No title selected' : 'This Title has no Screener attached.'}}</mat-hint>
+      <mat-hint id="missing-screener" *ngIf="screenerMissing || titleMissing">{{titleMissing ? 'No Title selected' : 'This Title has no Screener attached.'}}</mat-hint>
     </mat-form-field>
 
     <!-- Description -->
