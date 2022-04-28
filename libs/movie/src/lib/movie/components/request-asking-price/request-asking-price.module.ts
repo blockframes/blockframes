@@ -4,7 +4,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { RequestAskingPriceComponent } from './request-asking-price.component';
-import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 // Blockframes
 import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
