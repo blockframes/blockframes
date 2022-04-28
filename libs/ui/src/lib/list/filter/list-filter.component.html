@@ -1,8 +1,8 @@
 <section>
   <ng-container *ngFor="let filter of filters">
-    <bf-filter-button [widgetTarget]="filterWidget" [color]="filter.color$ | async">
+    <button class="filter mat-body-2" mat-ripple [widgetTarget]="filterWidget" [ngClass]="filter.color$ | async">
       {{filter.label}}
-    </bf-filter-button>
+    </button>
     <overlay-widget #filterWidget (openedChanged)="filter.active = $event" overflow="auto">
       <mat-card>
         <mat-card-content>
