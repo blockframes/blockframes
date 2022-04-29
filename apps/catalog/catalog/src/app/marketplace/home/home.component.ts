@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { AfterViewInit, ChangeDetectionStrategy, Component, HostBinding, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { docData, Firestore, doc, DocumentReference } from '@angular/fire/firestore';
+import { docData, doc, DocumentReference } from '@angular/fire/firestore';
 import { CmsPage } from '@blockframes/admin/cms/template';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';

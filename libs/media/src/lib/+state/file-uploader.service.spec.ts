@@ -5,8 +5,6 @@ import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firest
 import { FileUploaderService } from './file-uploader.service';
 import { UploadData } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
-import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { initializeFirestore, provideFirestore } from '@angular/fire/firestore';
 import { FIREBASE_CONFIG, FireStorage, FIRESTORE_SETTINGS } from 'ngfire';
 
 class DummyService { }
@@ -29,10 +27,7 @@ describe('Media Service Test Suite', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        provideFirebaseApp(() => initializeApp({ projectId: 'test' })), // TODO #8280 remove
-        provideFirestore(() => initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true })), // TODO #8280 remove
-      ],
+
       providers: [
         FileUploaderService,
         {
