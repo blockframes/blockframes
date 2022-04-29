@@ -38,29 +38,14 @@ section {
 
   div {
     display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
     margin-bottom: 8px;
-  }
-}
-
-@include layout-bp(gt-xs) {
-  section {
-    button {
-      margin-left: auto;
-    }
   }
 }
 
 @include layout-bp(xs) {
   img {
     display: none;
-  }
-
-  section {
-    div {
-      flex-direction: column;
-      button {
-        width: fit-content;
-      }
-    }
   }
 }
