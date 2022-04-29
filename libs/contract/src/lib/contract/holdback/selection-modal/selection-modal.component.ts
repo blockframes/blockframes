@@ -43,13 +43,7 @@ export class SelectionModalComponent implements OnInit {
   }
 
   openDetails(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, {
-      data: createModalData({
-        terms,
-        scope
-      }, 'medium'),
-      autoFocus: false
-    });
+    this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
   }
 
   saveAndClose() {

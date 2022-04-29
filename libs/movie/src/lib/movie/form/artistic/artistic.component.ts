@@ -52,11 +52,6 @@ export class MovieFormArtisticComponent {
   openDetails(title: string, values: string | Filmography[]) {
     const arrayValues = Array.isArray(values) ? displayFilmographies(values) : [values];
     this.dialog.open(CellModalComponent, {
-      data: createModalData({
-        title,
-        values: arrayValues
-      }, 'medium'),
-      autoFocus: false
-    });
+      data: createModalData({ title, values: arrayValues }), autoFocus: false });
   }
 }

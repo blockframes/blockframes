@@ -58,10 +58,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (canHavePreferences(org, 'festival')) {
       const preferences = createPreferences();
       this.authService.update({ preferences });
-      this.dialog.open(PreferencesComponent, {
-        data: createModalData({}, 'large'),
-        autoFocus: false
-      });
+      this.dialog.open(PreferencesComponent, { data: createModalData({}, 'large'), autoFocus: false });
     }
   }
 

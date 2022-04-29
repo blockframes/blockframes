@@ -16,12 +16,6 @@ export class ListComponent {
   constructor(private dialog: MatDialog) { }
 
   openDetails(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, {
-      data: createModalData({
-        terms,
-        scope
-      }, 'medium'),
-      autoFocus: false
-    });
+    this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
   }
 }
