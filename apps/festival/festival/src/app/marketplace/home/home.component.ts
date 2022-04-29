@@ -1,21 +1,22 @@
-// Angular
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { doc, DocumentReference } from 'firebase/firestore';
+import { FirestoreService, fromRef } from 'ngfire';
+
 // RxJs
 import { Observable } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
-// env
+// Blockframes
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { doc, docData, DocumentReference } from '@angular/fire/firestore';
 import { CmsPage } from '@blockframes/admin/cms/template';
 import { AuthService } from '@blockframes/auth/+state';
 import { createPreferences } from '@blockframes/model';
-
-// Material
-import { MatDialog } from '@angular/material/dialog';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { canHavePreferences } from '@blockframes/user/+state/user.utils';
+
+// Material
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'festival-marketplace-home',
@@ -41,13 +42,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
     private authService: AuthService,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
+    //private firestoreService: FirestoreService
   ) { }
 
   async ngOnInit() {
     this.dynTitle.setPageTitle('Home');
+    //const ref = this.firestoreService.getRef('cms/festival/home/live') as DocumentReference<CmsPage>;
     const ref = doc(this.orgService._db, 'cms/festival/home/live') as DocumentReference<CmsPage>;
-    this.page$ = docData<CmsPage>(ref).pipe(
+    this.page$ = fromRef(ref).pipe(
+      map(snap => snap.data()),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
 

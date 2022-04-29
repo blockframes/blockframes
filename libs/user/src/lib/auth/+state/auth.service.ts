@@ -9,7 +9,7 @@ import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { IpService } from '@blockframes/utils/ip';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
-import { getAnalytics, setUserProperties } from '@angular/fire/analytics';
+import { getAnalytics, setUserProperties } from 'firebase/analytics';
 import {
   confirmPasswordReset,
   EmailAuthProvider,
@@ -19,13 +19,13 @@ import {
   User as FireUser,
   UserCredential,
   verifyPasswordResetCode
-} from '@angular/fire/auth';
+} from 'firebase/auth';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { doc, docData, getDoc, DocumentReference, writeBatch } from '@angular/fire/firestore';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { runInZone } from '@blockframes/utils/zone';
 import { BlockframesAuth } from '@blockframes/utils/abstract-service';
-import { CallableFunctions } from 'ngfire';
+import { CallableFunctions, fromRef } from 'ngfire';
+import { doc, DocumentReference, getDoc, writeBatch } from 'firebase/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService extends BlockframesAuth<User> {
@@ -202,7 +202,7 @@ export class AuthService extends BlockframesAuth<User> {
    * @param app
    */
   public async createUser(email: string, orgEmailData: OrgEmailData, app: App = this.app): Promise<PublicUser> {
-   const user = await this.functions.call<{ email: string, orgEmailData: OrgEmailData, app: App }, PublicUser>('createUser', { email, orgEmailData, app });
+    const user = await this.functions.call<{ email: string, orgEmailData: OrgEmailData, app: App }, PublicUser>('createUser', { email, orgEmailData, app });
     return createUser(user);
   }
 
@@ -218,7 +218,10 @@ export class AuthService extends BlockframesAuth<User> {
     if (!intercom || !intercomId) return;
 
     const ref = doc(this.db, `users/${userCredential.user.uid}`) as DocumentReference<User>;
-    docData<User>(ref).pipe(take(1)).subscribe(user => {
+    fromRef(ref).pipe(
+      map(snap => snap.data()),
+      take(1)
+    ).subscribe(user => {
       this.ngIntercom?.update(getIntercomOptions(user));
     });
   }

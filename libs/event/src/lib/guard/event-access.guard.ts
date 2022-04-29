@@ -6,7 +6,7 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { combineLatest } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { EventService } from '../+state';
-import { User } from '@angular/fire/auth';
+import { User } from 'firebase/auth';
 import { Event, AnonymousCredentials, createInvitation } from '@blockframes/model';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state';

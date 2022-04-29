@@ -5,7 +5,7 @@ import { FormFactoryModule } from 'ng-form-factory';
 
 // NgFire
 import { FIREBASE_CONFIG, FIRESTORE_SETTINGS, REGION_OR_DOMAIN } from 'ngfire';
-import { Auth, connectAuthEmulator } from 'firebase/auth';
+import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, Firestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, Functions } from 'firebase/functions';
 
@@ -20,7 +20,9 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 // Angular Fire
-import { providePerformance, getPerformance } from '@angular/fire/performance';
+import { getAnalytics, provideAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { provideAuth } from '@angular/fire/auth';
 
 // Blockframes
 import { CmsModule } from './cms.module';
@@ -34,11 +36,14 @@ import { APP } from '@blockframes/utils/routes/utils';
     BrowserAnimationsModule,
     OverlayModule,
     HttpClientModule,
-    providePerformance(() => getPerformance()), // TODO #8280 remove ?
+    provideFirebaseApp(() => initializeApp(firebase('cms'))), // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
+    provideAuth(() => getAuth()),  // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
+    provideAnalytics(() => getAnalytics()), // TODO #8280 W8 ngfire update 
 
     FormFactoryModule,
   ],
   providers: [
+    ScreenTrackingService, UserTrackingService, // TODO #8280 used on cms ?
     { provide: APP, useValue: 'cms' },
     {
       provide: FIREBASE_CONFIG, useValue: {
@@ -66,4 +71,4 @@ import { APP } from '@blockframes/utils/routes/utils';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

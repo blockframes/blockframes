@@ -26,10 +26,8 @@ import { AppComponent } from './app.component';
 
 // Angular Fire
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { providePerformance, getPerformance } from '@angular/fire/performance';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideAnalytics, getAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
-import 'firebase/storage';
 
 // Material
 import { MatNativeDateModule } from '@angular/material/core';
@@ -63,9 +61,8 @@ import { APP } from '@blockframes/utils/routes/utils';
 
     // Firebase
     provideFirebaseApp(() => initializeApp(firebase('catalog'))), // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
-    provideAuth(() =>  getAuth()),  // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
-    providePerformance(() => getPerformance()), // TODO #8280 remove ?
-    provideAnalytics(() => getAnalytics()), // TODO #8280 remove (test if data is saved on bigQuery)?
+    provideAuth(() => getAuth()),  // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
+    provideAnalytics(() => getAnalytics()), // TODO #8280 W8 ngfire update 
 
     sentryDsn ? SentryModule : ErrorLoggerModule,
 

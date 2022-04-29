@@ -58,7 +58,7 @@ describe('Notifications Test Suite', () => {
       ],
     });
     service = TestBed.inject(NotificationService);
-    db = service._db;
+    db = service._db; // TODO #8280
 
     await initializeTestEnvironment({
       projectId: 'test',

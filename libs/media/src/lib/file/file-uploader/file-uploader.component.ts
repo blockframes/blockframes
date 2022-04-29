@@ -22,10 +22,11 @@ import { FileMetaData } from '@blockframes/model';
 import { allowedFiles, AllowedFileType, fileSizeToString, maxAllowedFileSize } from '@blockframes/utils/utils';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { doc, docData } from '@angular/fire/firestore';
+import { BehaviorSubject, map, Subscription } from 'rxjs';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { doc, DocumentReference } from 'firebase/firestore';
+import { FirestoreService, fromRef } from 'ngfire';
 import { AuthService } from '@blockframes/auth/+state';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
@@ -105,13 +106,15 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   constructor(
     private snackBar: MatSnackBar,
     private uploaderService: FileUploaderService,
+    //private firestoreService: FirestoreService,
     private firestore: AuthService,
   ) { }
 
   ngOnInit() {
     if (this.listenToChanges) {
+      //const ref = this.firestoreService.getRef(`${this.metadata.collection}/${this.metadata.docId}`) as DocumentReference;
       const ref = doc(this.firestore._db,`${this.metadata.collection}/${this.metadata.docId}`);
-      this.docSub = docData(ref).subscribe(data => {
+      this.docSub = fromRef(ref).pipe(map(snap => snap.data())).subscribe(data => {
         const media = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);

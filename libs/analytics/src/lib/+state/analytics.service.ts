@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { getAnalytics, logEvent } from '@angular/fire/analytics';
-import { where } from '@angular/fire/firestore';
-
+import { getAnalytics, logEvent } from 'firebase/analytics';
+import { where } from 'firebase/firestore';
 import { map, take } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';

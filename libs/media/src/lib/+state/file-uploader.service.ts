@@ -10,7 +10,7 @@ import { delay } from '@blockframes/utils/helpers';
 import { UploadData, isValidMetadata } from '@blockframes/model';
 import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
 import { getTaskStateObservable } from "../file/upload-widget/task.pipe";
-import { FireStorage } from 'ngfire';
+import { FireStorage, FirestoreService } from 'ngfire';
 
 @Injectable({ providedIn: 'root' })
 export class FileUploaderService {
@@ -30,6 +30,7 @@ export class FileUploaderService {
   constructor(
     private overlay: Overlay,
     private authService: AuthService,
+    //private firestoreService: FirestoreService,
     private storage: FireStorage,
   ) { }
 
@@ -158,7 +159,7 @@ export class FileUploaderService {
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create(this.overlayOptions);
       const instance = new ComponentPortal(UploadWidgetComponent);
-      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this.tasks }, { provide: 'db', useValue: this.authService._db }] });
+      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this.tasks }, { provide: 'db', useValue: this.authService._db }] }); //this.firestoreService.db
       this.overlayRef.attach(instance);
     }
   }

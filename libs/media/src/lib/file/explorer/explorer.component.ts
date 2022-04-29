@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewChild, TemplateRef, Pipe, PipeTransform, Input, AfterViewInit, OnInit, Inject } from '@angular/core';
-import { where, doc, updateDoc } from 'firebase/firestore';
+import { where, updateDoc, DocumentReference, doc } from 'firebase/firestore';
+import { FirestoreService } from 'ngfire';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -63,6 +64,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
 
   constructor(
     private movieService: MovieService,
+    //private firestoreService: FirestoreService,
     private mediaService: MediaService,
     private service: FileUploaderService,
     private route: ActivatedRoute,
@@ -139,6 +141,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
         privacy: null,
         storagePath: null
       })
+      //const ref = this.firestoreService.getRef(`${metadata.collection}/${metadata.docId}`) as DocumentReference;
       const ref = doc(this.movieService._db, `${metadata.collection}/${metadata.docId}`); // TODO #8280
       updateDoc(ref, emptyStorageFile);
     }

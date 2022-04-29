@@ -71,7 +71,7 @@ describe('Invitations Test Suite', () => {
     });
 
     service = TestBed.inject(InvitationService);
-    db = service._db;
+    db = service._db; // TODO #8280
     await initializeTestEnvironment({
       projectId: 'test',
       firestore: { rules: readFileSync('./firestore.test.rules', 'utf8') }
