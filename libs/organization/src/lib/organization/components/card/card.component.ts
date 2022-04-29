@@ -1,10 +1,9 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie, Organization } from '@blockframes/model';
+import { Organization, App } from '@blockframes/model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
-import { App } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'org-card',

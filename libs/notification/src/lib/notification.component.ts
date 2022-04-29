@@ -3,7 +3,7 @@ import { NotificationService } from './+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
-import { App, getOrgModuleAccess } from '@blockframes/utils/apps';
+import { App, getOrgModuleAccess } from '@blockframes/model';
 import { take } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
 

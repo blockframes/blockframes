@@ -4,10 +4,10 @@
   <div *ngIf="module">
     <!-- ATM there is no about page for festival and financiers -->
     <ng-container *ngIf="app === 'catalog'">
-      <a mat-button [routerLink]="['/c/o/'+module+'/about']">About Us</a>
+      <a mat-button [routerLink]="['/c/o/'+module+'/about']">About us</a>
     </ng-container>
 
-    <a mat-button [routerLink]="['/c/o', module, 'contact']">Contact Us</a>
+    <a mat-button [routerLink]="['/c/o', module, 'contact']">Contact us</a>
     <a mat-button [routerLink]="['/c/o', module, 'terms']">Legal Terms</a>
     <a mat-button [routerLink]="['/c/o', module, 'privacy']">Privacy Policy</a>
   </div>

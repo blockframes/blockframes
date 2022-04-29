@@ -7,9 +7,7 @@ import { combineLatest } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { EventService } from '../+state';
 import { User } from '@angular/fire/auth';
-import { Event } from '@blockframes/model';
-import { AnonymousCredentials } from '@blockframes/auth/+state/auth.model';
-import { createInvitation } from '@blockframes/model';
+import { Event, AnonymousCredentials, createInvitation } from '@blockframes/model';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state';
 

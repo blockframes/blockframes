@@ -2,8 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { CollectionGuardConfig } from 'akita-ng-fire';
 import { MovieService } from '../+state/movie.service';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { Movie } from '@blockframes/model';
-import { App } from '@blockframes/utils/apps';
+import { Movie, App } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })

@@ -1,10 +1,9 @@
-import { GetKeys, AlgoliaMovie, AlgoliaOrganization, AlgoliaSearch } from '@blockframes/model';
+import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, AlgoliaSearch } from '@blockframes/model';
 import type { StoreStatus, ProductionStatus, Territory, Genre, SocialGoal, ContentType } from '@blockframes/model';
 import { FormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
-import { App } from "@blockframes/utils/apps";
 import { max } from './filters/budget/budget.component';
 
 export const runningTimeFilters = {
