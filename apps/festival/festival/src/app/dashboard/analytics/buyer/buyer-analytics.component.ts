@@ -17,7 +17,7 @@ import { toLabel } from "@blockframes/utils/utils";
 import { 
   BehaviorSubject,
   combineLatest,
-  lastValueFrom,
+  firstValueFrom,
   map,
   Observable,
   pluck,
@@ -69,6 +69,12 @@ function toCards(aggregated: AggregatedAnalytic): MetricCard[] {
   }));
 }
 
+function filterAnalytics(name: EventName, analytics: AggregatedAnalytic[]) {
+  return name
+    ? analytics.filter(aggregated => aggregated[name] > 0)
+    : analytics;
+}
+
 
 @Component({
   selector: 'festival-buyer-analytics',
@@ -115,10 +121,8 @@ export class BuyerAnalyticsComponent {
     this.aggregatedPerTitle$
   ]).pipe(
     map(([filter, analytics]) => {
-      const key = events.find(event => event.title === filter)?.name;
-      return key
-        ? analytics.filter(aggregated => aggregated[key] > 0)
-        : analytics;
+      const name = events.find(event => event.title === filter)?.name;
+      return filterAnalytics(name, analytics);
     })
   )
 
@@ -141,19 +145,17 @@ export class BuyerAnalyticsComponent {
   }
 
   async exportAnalytics() {
-    const analytics = await lastValueFrom(this.filtered$.pipe(
-      take(1),
-      map(data => data.map(aggregated => ({
-        'Title': aggregated.title.title.international,
-        'Release year': aggregated.title.release.year,
-        'Countries of Origin': toLabel(aggregated.title.originCountries, 'territories'),
-        'Original Languages': toLabel(aggregated.title.originalLanguages, 'languages'),
-        'In wishlist': this.inWishlist(aggregated) ? 'Yes' : 'No',
-        'Promotional Elements': aggregated.promoReelOpened,
-        'Screening Requests': aggregated.screeningRequested,
-        'Asking Price Requested': aggregated.askingPriceRequested
-      })))
-    ));
+    const data = await firstValueFrom(this.filtered$);
+    const analytics = data.map(aggregated => ({
+      'Title': aggregated.title.title.international,
+      'Release year': aggregated.title.release.year,
+      'Countries of Origin': toLabel(aggregated.title.originCountries, 'territories'),
+      'Original Languages': toLabel(aggregated.title.originalLanguages, 'languages'),
+      'In wishlist': this.inWishlist(aggregated) ? 'Yes' : 'No',
+      'Promotional Elements': aggregated.promoReelOpened,
+      'Screening Requests': aggregated.screeningRequested,
+      'Asking Price Requested': aggregated.askingPriceRequested
+    }));
 
     downloadCsvFromJson(analytics, 'buyer-analytics');
   }

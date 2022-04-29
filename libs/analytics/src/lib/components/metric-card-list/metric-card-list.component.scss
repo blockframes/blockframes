@@ -30,7 +30,6 @@ ul {
 }
 
 .selected {
-  box-sizing: border-box;
-  border: 2px solid var(--primary);
-  padding: 23px; // make up for the 1px thicker border than .surface
+  outline: 1px solid var(--primary);
+  border: 1px solid var(--primary);
 }

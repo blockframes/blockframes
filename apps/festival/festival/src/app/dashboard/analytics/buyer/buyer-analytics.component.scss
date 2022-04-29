@@ -1,7 +1,7 @@
 @import "@angular/flex-layout/mq";
 
 
-header {
+header.main {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -36,7 +36,7 @@ section {
   gap: 24px;
   padding: 24px;
 
-  div {
+  header {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
