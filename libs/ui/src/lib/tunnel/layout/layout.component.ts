@@ -154,7 +154,7 @@ export class TunnelLayoutComponent implements OnInit {
         advice: 'If you leave now, you will lose these changes.',
         confirm: 'Save & Exit',
         cancel: 'Close without saving'
-      }, 'medium'),
+      }),
       autoFocus: false
     })
     return dialogRef.afterClosed().pipe(

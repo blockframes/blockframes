@@ -75,7 +75,7 @@ export class MarketplaceFinancingComponent {
           await this.consentsService.createConsent('access', campaignId, file);
           window.open(file, '_blank');
         }
-      }, 'medium')
+      })
     });
   }
 }

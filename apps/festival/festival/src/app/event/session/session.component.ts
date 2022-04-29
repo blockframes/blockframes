@@ -130,8 +130,8 @@ export class SessionComponent implements OnInit, OnDestroy {
                   this.autoPlayTester.nativeElement.play();
                   this.autoPlayTester.nativeElement.pause();
                 }
-              }, 'medium'),
-              autoFocus: false,
+              }),
+              autoFocus: false
             });
             this.dialogSub = this.confirmDialog.afterClosed().subscribe(confirmed => {
               this.isAutoPlayEnabled = !!confirmed;

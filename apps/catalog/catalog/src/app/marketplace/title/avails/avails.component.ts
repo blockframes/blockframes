@@ -175,10 +175,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   public explain() {
-    this.dialog.open(ExplanationComponent, {
-      data: createModalData({}, 'medium'),
-      autoFocus: false
-    });
+    this.dialog.open(ExplanationComponent, { data: createModalData({}), autoFocus: false });
   }
 
   /** Open a modal to display the entire list of territories when this one is too long */
@@ -187,19 +184,14 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
       data: createModalData({
         terms: term.territories,
         scope: 'territories'
-      }, 'medium'),
+      }),
       autoFocus: false
     });
   }
 
   /** Open a modal to display holdback warnings */
   openHoldbackModal(holdbacks: Holdback[]) {
-    this.dialog.open(HoldbackModalComponent, {
-      data: createModalData({
-        holdbacks,
-        withWarning: true
-      }, 'medium')
-    });
+    this.dialog.open(HoldbackModalComponent, { data: createModalData({ holdbacks, withWarning: true }) });
   }
 
   confirmExit() {

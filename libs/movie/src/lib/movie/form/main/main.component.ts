@@ -21,6 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Filmography } from '@blockframes/model';
 import { displayFilmographies } from '@blockframes/movie/pipes/filmography.pipe';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+
 @Component({
   selector: 'movie-form-main',
   templateUrl: './main.component.html',

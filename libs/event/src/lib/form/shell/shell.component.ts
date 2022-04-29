@@ -125,7 +125,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
           //Here we add an eventDeleted to inform the guard thatthere is no need to display the popup
           this.router.navigate(['../..'], { relativeTo: this.route, state: { eventDeleted: true } });
         }
-      }, 'medium'),
+      }),
       autoFocus: false,
     })
   }

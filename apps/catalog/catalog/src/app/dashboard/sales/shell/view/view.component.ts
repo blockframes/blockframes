@@ -40,7 +40,7 @@ export class SaleViewComponent {
         question: 'Please verify if all the contract elements are convenient for you.',
         confirm: 'Yes, accept Contract',
         cancel: 'Come back & verify Contract'
-      }, 'medium')
+      })
     });
     ref.afterClosed().subscribe((acceptSuccessful) => {
       const config = { duration: 6000 };

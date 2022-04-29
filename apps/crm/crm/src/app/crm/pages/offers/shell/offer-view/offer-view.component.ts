@@ -94,7 +94,7 @@ export class OfferViewComponent implements OnDestroy, OnInit {
         confirmButtonText: 'Confirm and update',
         cancel: 'Cancel',
         onConfirm
-      }, 'medium'),
+      }),
       autoFocus: true
     });
 
@@ -111,7 +111,7 @@ export class OfferViewComponent implements OnDestroy, OnInit {
         confirmButtonText: 'Delete this right',
         cancel: 'Cancel',
         onConfirm: () => this.handleDelete(id)
-      }, 'medium'),
+      }),
       autoFocus: false
     });
   }

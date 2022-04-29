@@ -55,7 +55,7 @@ export class ContractViewComponent {
         question: 'Please verify if all the contract elements are convenient for you.',
         confirm: 'Yes, accept Contract',
         cancel: 'Come back & Verify Contract'
-      }, 'medium')
+      })
     });
   }
 }

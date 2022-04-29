@@ -32,7 +32,7 @@ export class ExternalSaleComponent {
       const ref = this.dialog.open(ConfirmDeclineComponent, {
         data: createModalData<ConfirmDeclineData>({
           type: 'seller'
-        }, 'medium')
+        })
       });
       ref.afterClosed().subscribe(declineReason => {
         const update = { declineReason, status: 'declined' } as const;

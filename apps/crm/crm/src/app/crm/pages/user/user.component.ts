@@ -209,7 +209,7 @@ export class UserComponent implements OnInit {
           this.snackBar.open('User deleted !', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/users']);
         }
-      }, 'medium')
+      })
     });
   }
 
@@ -246,13 +246,7 @@ export class UserComponent implements OnInit {
   }
 
   openDetails(terms: string[], scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, {
-      data: createModalData({
-        terms,
-        scope
-      }, 'medium'),
-      autoFocus: false
-    });
+    this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
   }
 
   getLink(invitation: Invitation) {

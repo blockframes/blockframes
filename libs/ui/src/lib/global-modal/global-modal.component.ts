@@ -24,7 +24,7 @@ export function createModalData<T>(data: T, size: Size = 'medium'): T & CommonMo
 export class GlobalModalComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: CommonModalData,
+    @Inject(MAT_DIALOG_DATA) public data: CommonModalData,
     public dialogRef: MatDialogRef<GlobalModalComponent>,
   ) { }
 
@@ -34,8 +34,4 @@ export class GlobalModalComponent {
     return this.dialogRef.close(false);
   }
 
-  public setModalType() {
-    if (this.data?.size) return this.data.size;
-    return 'medium';
-  }
 }

@@ -86,7 +86,7 @@ export class TunnelSummaryComponent implements OnInit {
             ref.afterDismissed().subscribe(() => section.scrollIntoView({ behavior: 'smooth' }));
           }
         }
-      }, 'medium')
+      })
     });
   }
 }

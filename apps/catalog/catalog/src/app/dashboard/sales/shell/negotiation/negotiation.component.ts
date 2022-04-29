@@ -59,7 +59,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
       data: createModalData<ConfirmDeclineData>({
         type: 'seller',
         showAcceptTermsCheckbox: true
-      }, 'medium')
+      })
     });
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {

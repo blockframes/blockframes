@@ -46,7 +46,7 @@ export class NegotiationGuard<T extends NegotiationGuardedComponent> implements 
         cancel: 'Come back & Submit Offer',
         confirm: 'Leave anyway'
       }, 'small'),
-      autoFocus: false,
+      autoFocus: false
     });
     return dialogRef.afterClosed();
   }
