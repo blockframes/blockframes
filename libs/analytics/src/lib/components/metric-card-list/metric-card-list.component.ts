@@ -26,16 +26,10 @@ export class MetricCardListComponent {
     if (!this.selectable) return;
 
     for (const card of this.cards) {
-      card.selected = false;
+      if (card.title === title) card.selected = true;
+      if (card.title === this.selected) card.selected = false;
     }
-
-    const card = this.cards.find(card => card.title === title);
-    if (this.selected !== title) {
-      card.selected = true;
-      this.selected = title;
-    } else {
-      this.selected = '';
-    }
+    this.selected = title === this.selected ? '' : title;
     this.selection.next(this.selected);
   }
 }
