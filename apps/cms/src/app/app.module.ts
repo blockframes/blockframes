@@ -2,7 +2,12 @@
 import { emulatorConfig } from '../environment/environment';
 import { firebase, firebaseRegion } from '@env';
 import { FormFactoryModule } from 'ng-form-factory';
-import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
+
+// NgFire
+import { FIREBASE_CONFIG, FIRESTORE_SETTINGS, REGION_OR_DOMAIN } from 'ngfire';
+import { Auth, connectAuthEmulator } from 'firebase/auth';
+import { connectFirestoreEmulator, Firestore } from 'firebase/firestore';
+import { connectFunctionsEmulator, Functions } from 'firebase/functions';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
@@ -15,12 +20,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 // Angular Fire
-import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
-import { connectFirestoreEmulator, initializeFirestore, provideFirestore } from '@angular/fire/firestore';
 import { providePerformance, getPerformance } from '@angular/fire/performance';
-import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
-import { provideStorage, getStorage } from '@angular/fire/storage';
-import { connectFunctionsEmulator, getFunctions, provideFunctions } from '@angular/fire/functions';
 
 // Blockframes
 import { CmsModule } from './cms.module';
@@ -34,37 +34,35 @@ import { APP } from '@blockframes/utils/routes/utils';
     BrowserAnimationsModule,
     OverlayModule,
     HttpClientModule,
-    provideFirebaseApp(() => initializeApp(firebase('cms'))),
-    provideFirestore(() => {
-      const db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
-      if (emulatorConfig.firestore) {
-        connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
-      }
-      return db;
-    }),
-    providePerformance(() => getPerformance()),
-    provideAuth(() => {
-      const auth = getAuth();
-      if (emulatorConfig.auth) {
-        connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
-      }
-      return auth;
-    }),
-    provideFunctions(() => {
-      const functions = getFunctions(getApp(), firebaseRegion);
-      if (emulatorConfig.functions) {
-        connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
-      }
-      return functions;
-    }),
-    provideStorage(() => getStorage()),
+    providePerformance(() => getPerformance()), // TODO #8280 remove ?
 
     FormFactoryModule,
   ],
   providers: [
     { provide: APP, useValue: 'cms' },
-    { provide: FIREBASE_CONFIG, useValue: { options: firebase('cms') } },
-    { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
+    {
+      provide: FIREBASE_CONFIG, useValue: {
+        options: firebase('cms'),
+        // TODO #8280 move on xxx-env.ts ?
+        firestore: (firestore: Firestore) => {
+          if (emulatorConfig.firestore) {
+            connectFirestoreEmulator(firestore, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
+          }
+        },
+        auth: (auth: Auth) => {
+          if (emulatorConfig.auth) {
+            connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`, { disableWarnings: true });
+          }
+        },
+        functions: (functions: Functions) => {
+          if (emulatorConfig.functions) {
+            connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
+          }
+        }
+      }
+    },
+    { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } },
+    { provide: REGION_OR_DOMAIN, useValue: firebaseRegion }
   ],
   bootstrap: [AppComponent],
 })

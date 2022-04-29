@@ -5,9 +5,9 @@ import { IntercomModule } from 'ng-intercom';
 
 // NgFire
 import { FIREBASE_CONFIG, FIRESTORE_SETTINGS, REGION_OR_DOMAIN } from 'ngfire';
-import { Auth } from 'firebase/auth';
-import { Firestore } from 'firebase/firestore';
-import { Functions } from 'firebase/functions';
+import { Auth, connectAuthEmulator } from 'firebase/auth';
+import { connectFirestoreEmulator, Firestore } from 'firebase/firestore';
+import { connectFunctionsEmulator, Functions } from 'firebase/functions';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
@@ -25,10 +25,8 @@ import { AppComponent } from './app.component';
 
 // Angular Fire
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { connectFunctionsEmulator } from '@angular/fire/functions';
-import { connectFirestoreEmulator } from '@angular/fire/firestore';
 import { providePerformance, getPerformance } from '@angular/fire/performance';
-import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
+import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideAnalytics, getAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 import 'firebase/storage';
 
@@ -66,15 +64,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 
     // Firebase
     provideFirebaseApp(() => initializeApp(firebase('festival'))), // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
-    provideAuth(() => {  // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
-      const auth = getAuth();
-      if (emulatorConfig.auth) {
-        connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
-      }
-      return auth;
-    }),
-
-
+    provideAuth(() =>  getAuth()),  // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
     providePerformance(() => getPerformance()), // TODO #8280 remove ?
     provideAnalytics(() => getAnalytics()), // TODO #8280 remove (test if data is saved on bigQuery)?
 
