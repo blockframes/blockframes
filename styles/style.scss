@@ -21,7 +21,7 @@ a {
   text-decoration-line: none;
 }
 
-p, span {
+p, span, td {
   a[href]:not([href^="mailto"]):not([href^="assets"]) {
     text-decoration: underline;
   }
