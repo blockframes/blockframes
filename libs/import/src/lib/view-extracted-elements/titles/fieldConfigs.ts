@@ -6,6 +6,7 @@ import {
   getDate,
   getUser,
   unknownEntityError,
+  wrongTemplateError,
 } from '@blockframes/import/utils';
 import { ExtractConfig } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
@@ -34,7 +35,10 @@ import {
   MovieRelease,
   MovieRunningTime,
   NumberRange,
-  MovieGoalsAudience
+  MovieGoalsAudience,
+  BoxOffice,
+  MovieRating,
+  MovieReview
 } from '@blockframes/model';
 
 export interface FieldsConfig {
@@ -93,24 +97,12 @@ export interface FieldsConfig {
     lastName: string;
     role: CrewRole;
   }[];
-  budgetRange: NumberRange;
-  boxoffice: {
-    territory: string;
-    unit: string;
-    value: number;
-  }[];
+  estimatedBudget: NumberRange;
+  boxOffice: BoxOffice[];
   certifications: Certification[];
-  ratings: {
-    country: string;
-    value: string;
-  }[];
+  rating: MovieRating[];
   audience: MovieGoalsAudience;
-  reviews: {
-    filmCriticName: string;
-    revue: string;
-    link: string;
-    quote: string;
-  }[];
+  review: MovieReview[];
   color: Color;
   format: MovieFormat;
   formatQuality: MovieFormatQuality;
@@ -124,11 +116,9 @@ export interface FieldsConfig {
   }[];
   salesPitch: string;
   app: Partial<{ [app in App]: MovieAppConfig<Date> }>;
-
   orgIds: string[];
 }
 
-// type FieldsConfigType = ExtractConfig<FieldsConfig>;
 export type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
 
@@ -357,25 +347,25 @@ export function getFieldConfigs(
       if (!role) throw wrongValueError(value, 'Crew Member(s) Role');
       return role;
     },
-      /* ap */ budgetRange: (value: string) => {
+      /* ap */ estimatedBudget: (value: string) => {
       if (!value) throw optionalWarning('Budget Range');
       const budget = getKeyIfExists('budgetRange', value);
       if (!budget) throw wrongValueError(value, 'Budget Range');
       return budget as any;
     },
-      /* aq */ 'boxoffice[].territory': (value: string) => {
+      /* aq */ 'boxOffice[].territory': (value: string) => {
       if (!value) throw optionalWarning('Box Office Country');
       const country = getKeyIfExists('territories', value);
       if (!country) throw wrongValueError(value, 'Box Office Country');
       return country;
     },
-      /* ar */ 'boxoffice[].unit': (value: string) => {
+      /* ar */ 'boxOffice[].unit': (value: string) => {
       if (!value) throw optionalWarning('Box Office Metric');
       const unit = getKeyIfExists('unitBox', value);
       if (!unit) throw wrongValueError(value, 'Box Office Metric');
       return unit;
     },
-      /* as */ 'boxoffice[].value': (value: string) => {
+      /* as */ 'boxOffice[].value': (value: string) => {
       if (!value) throw optionalWarning('Box Office Number');
       const num = Number(value);
       if (!num) throw wrongValueError(value, 'Box Office Number');
@@ -387,13 +377,13 @@ export function getFieldConfigs(
       if (!certification) throw wrongValueError(value, 'Certification');
       return certification;
     },
-      /* au */ 'ratings[].country': (value: string) => {
+      /* au */ 'rating[].country': (value: string) => {
       if (!value) throw optionalWarning('Ratings Country');
       const country = getKeyIfExists('territories', value);
       if (!country) throw wrongValueError(value, 'Ratings Country');
       return country;
     },
-      /* av */ 'ratings[].value': (value: string) => {
+      /* av */ 'rating[].value': (value: string) => {
       if (!value) throw optionalWarning('Ratings Value');
       return value;
     },
@@ -407,19 +397,19 @@ export function getFieldConfigs(
       if (!valid) throw wrongValueError(value, 'Social Responsibility Goals');
       return valid;
     },
-      /* ay */ 'reviews[].filmCriticName': (value: string) => {
+      /* ay */ 'review[].criticName': (value: string) => {
       if (!value) throw optionalWarning('Film Reviews Critic Name');
       return value;
     },
-      /* az */ 'reviews[].revue': (value: string) => {
+      /* az */ 'review[].journalName': (value: string) => {
       if (!value) throw optionalWarning('Film Reviews Revue or Journal');
       return value;
     },
-      /* ba */ 'reviews[].link': (value: string) => {
+      /* ba */ 'review[].revueLink': (value: string) => {
       if (!value) throw optionalWarning('Film Reviews Link');
       return value;
     },
-      /* bb */ 'reviews[].quote': (value: string) => {
+      /* bb */ 'review[].criticQuote': (value: string) => {
       if (!value) throw optionalWarning('Film Reviews Quote');
       return value;
     },
@@ -762,25 +752,25 @@ export function getFieldConfigs(
       if (!role) throw wrongValueError(value, 'Crew Member(s) Role');
       return role;
     },
-      /* ap */ budgetRange: (value: string) => {
+      /* ap */ estimatedBudget: (value: string) => {
       if (!value) throw optionalWarning('Budget Range');
       const budget = getKeyIfExists('budgetRange', value);
       if (!budget) throw wrongValueError(value, 'Budget Range');
       return budget as any;
     },
-      /* aq */ 'boxoffice[].territory': (value: string) => {
+      /* aq */ 'boxOffice[].territory': (value: string) => {
       if (!value) throw optionalWarning('Box Office Country');
       const country = getKeyIfExists('territories', value);
       if (!country) throw wrongValueError(value, 'Box Office Country');
       return country;
     },
-      /* ar */ 'boxoffice[].unit': (value: string) => {
+      /* ar */ 'boxOffice[].unit': (value: string) => {
       if (!value) throw optionalWarning('Box Office Metric');
       const unit = getKeyIfExists('unitBox', value);
       if (!unit) throw wrongValueError(value, 'Box Office Metric');
       return unit;
     },
-      /* as */ 'boxoffice[].value': (value: string) => {
+      /* as */ 'boxOffice[].value': (value: string) => {
       if (!value) throw optionalWarning('Box Office Number');
       const num = Number(value);
       if (!num) throw wrongValueError(value, 'Box Office Number');
@@ -792,13 +782,13 @@ export function getFieldConfigs(
       if (!certification) throw wrongValueError(value, 'Certification');
       return certification;
     },
-      /* au */ 'ratings[].country': (value: string) => {
+      /* au */ 'rating[].country': (value: string) => {
       if (!value) throw optionalWarning('Ratings Country');
       const country = getKeyIfExists('territories', value);
       if (!country) throw wrongValueError(value, 'Ratings Country');
       return country;
     },
-      /* av */ 'ratings[].value': (value: string) => {
+      /* av */ 'rating[].value': (value: string) => {
       if (!value) throw optionalWarning('Ratings Value');
       return value;
     },
@@ -812,19 +802,19 @@ export function getFieldConfigs(
       if (!valid) throw wrongValueError(value, 'Social Responsibility Goals');
       return valid;
     },
-      /* ay */ 'reviews[].filmCriticName': (value: string) => {
+      /* ay */ 'review[].criticName': (value: string) => {
       if (!value) throw optionalWarning('Film Reviews Critic Name');
       return value;
     },
-      /* az */ 'reviews[].revue': (value: string) => {
+      /* az */ 'review[].journalName': (value: string) => {
       if (!value) throw optionalWarning('Film Reviews Revue or Journal');
       return value;
     },
-      /* ba */ 'reviews[].link': (value: string) => {
+      /* ba */ 'review[].revueLink': (value: string) => {
       if (!value) throw optionalWarning('Film Reviews Link');
       return value;
     },
-      /* bb */ 'reviews[].quote': (value: string) => {
+      /* bb */ 'review[].criticQuote': (value: string) => {
       if (!value) throw optionalWarning('Film Reviews Quote');
       return value;
     },
@@ -889,6 +879,28 @@ export function getFieldConfigs(
       /* bl */ salesPitch: (value: string) => {
       if (!value) throw optionalWarning('Sales Pitch');
       return value;
+    },
+
+    // these columns will only be called if an admin template is used in lieu of a seller template.
+    /* bm */ 'app.catalog': async (value: string) => {
+      if (value) throw wrongTemplateError('admin');
+      return null;
+    },
+    /* bn */ 'app.festival': async (value: string) => {
+      if (value) throw wrongTemplateError('admin');
+      return null;
+    },
+    /* bo */ 'app.financiers': async (value: string) => {
+      if (value) throw wrongTemplateError('admin');
+      return null;
+    },
+    /* bp */ orgIds: async (value: string) => {
+      if (value) throw wrongTemplateError('admin');
+      return null;
+    },
+    /* bq */ id: async (value: string) => {
+      if (value) throw wrongTemplateError('admin');
+      return null;
     }
   };
 

@@ -9,6 +9,7 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../utils';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { getUpdatableFields } from '@blockframes/import/view-extracted-elements/titles/utils';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -93,7 +94,8 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   async updateMovie(importState: MovieImportState) {
-    await this.movieService.upsert(importState.movie);
+    const movie = getUpdatableFields(importState.movie);
+    await this.movieService.upsert(movie);
     this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
     return true;
   }
