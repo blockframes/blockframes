@@ -13,7 +13,7 @@ describe('Create an event as admin', () => {
         firebase.deleteAllSellerEvents(data.user.uid);
         cypress.wrapFeedbackData(data);
         cy.visit('');
-        cy.contains('Accept cookies').click();
+        cypress.acceptIfCookies();
         auth.loginWithEmailAndPassword(data.user.email);
         cy.visit('');
       });
@@ -380,7 +380,7 @@ describe('Create an event as member', () => {
         firebase.deleteAllSellerEvents(data.user.uid);
         cypress.wrapFeedbackData(data);
         cy.visit('');
-        cy.contains('Accept cookies').click();
+        cypress.acceptIfCookies();
         auth.loginWithEmailAndPassword(data.user.email);
         cy.visit('');
       });
@@ -432,7 +432,7 @@ describe('Testing warning chip', () => {
         firebase.deleteAllSellerEvents(data.user.uid);
         cypress.wrapFeedbackData(data);
         cy.visit('');
-        cy.contains('Accept cookies').click();
+        cypress.acceptIfCookies();
         auth.loginWithEmailAndPassword(data.user.email);
         cy.visit('');
       });
@@ -467,7 +467,7 @@ describe('Testing warning chip', () => {
         firebase.deleteAllSellerEvents(data.user.uid);
         cypress.wrapFeedbackData(data);
         cy.visit('');
-        cy.contains('Accept cookies').click();
+        cypress.acceptIfCookies();
         auth.loginWithEmailAndPassword(data.user.email);
         cy.visit('');
       });
@@ -676,6 +676,10 @@ const cypress = {
   },
 
   //* Miscellaneous functions
+
+  acceptIfCookies() {
+    cy.get('cookie-banner').then($el => $el.children().length && get('cookies').click());
+  },
 
   connectUser(email: string) {
     get('login').click();
