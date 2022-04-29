@@ -7,8 +7,8 @@ section {
 
   .closeButton {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: -8px;
+    right: -8px;
   }
 }
 
@@ -37,7 +37,7 @@ section {
   max-width: 1000px;
 
   .mat-dialog-content {
-    max-height: min(calc(60vh - 96px), 454px);
+    max-height: min(calc(60vh - 72px), 478px);
     margin: 0 -48px;
     padding: 0 48px;
   }
