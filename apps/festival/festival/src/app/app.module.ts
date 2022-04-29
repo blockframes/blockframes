@@ -4,7 +4,7 @@ import { firebase, firebaseRegion, intercomId, sentryDsn } from '@env';
 import { IntercomModule } from 'ng-intercom';
 
 // NgFire
-import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
+import { FIREBASE_CONFIG, FIRESTORE_SETTINGS, REGION_OR_DOMAIN } from 'ngfire';
 import { Auth } from 'firebase/auth';
 import { Firestore } from 'firebase/firestore';
 import { Functions } from 'firebase/functions';
@@ -82,7 +82,7 @@ import { APP } from '@blockframes/utils/routes/utils';
       return auth;
     }),
 
-    
+
     providePerformance(() => getPerformance()), // TODO #8280 remove ?
     provideAnalytics(() => getAnalytics()), // TODO #8280 remove (test if data is saved on bigQuery)?
 
@@ -130,7 +130,8 @@ import { APP } from '@blockframes/utils/routes/utils';
         }
       }
     },
-    { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
+    { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } },
+    { provide: REGION_OR_DOMAIN, useValue: firebaseRegion }
   ],
   bootstrap: [AppComponent],
 })
