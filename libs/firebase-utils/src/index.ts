@@ -6,7 +6,6 @@ export * from './lib/maintenance';
 export * from './lib/util';
 export * from './lib/types';
 export * from './lib/algolia/algolia';
-export * from './lib/anonymize';
 export * from './lib/types';
 export * from './lib/algolia/algolia';
 export * from './lib/jwplayer-api';
