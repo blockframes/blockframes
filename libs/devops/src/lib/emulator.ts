@@ -1,6 +1,4 @@
 import {
-  runAnonymization,
-  getLatestFolderURL,
   getServiceAccountObj,
   loadAdminServices,
   startMaintenance,
@@ -26,7 +24,16 @@ import { migrate } from './migrations';
 import { syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-import { awaitProcessExit, gsutilTransfer, latestAnonDbDir, latestAnonStorageDir, CI_STORAGE_BACKUP, restoreStorageFromCi } from './firebase-utils';
+import {
+  awaitProcessExit,
+  gsutilTransfer,
+  latestAnonDbDir,
+  latestAnonStorageDir,
+  CI_STORAGE_BACKUP,
+  restoreStorageFromCi,
+  getLatestFolderURL,
+  runAnonymization
+} from './firebase-utils';
 
 interface ImportEmulatorOptions {
   importFrom: string,

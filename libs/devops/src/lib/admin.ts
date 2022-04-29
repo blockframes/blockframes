@@ -5,9 +5,9 @@
  */
 import {
   getBackupBucket,
-  getLatestDirName,
   importFirestoreFromBucket,
 } from '@blockframes/firebase-utils';
+import { getLatestDirName } from './firebase-utils';
 
 /**
  * This function will import a Firestore export from the local env's

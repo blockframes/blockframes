@@ -12,11 +12,16 @@ import {
   Invitation,
   IMaintenanceDoc
 } from '@blockframes/model';
-import { DbRecord, throwOnProduction } from '../util';
-import { CollectionReference, QueryDocumentSnapshot, QuerySnapshot } from '../types';
-import { Queue } from '../queue';
+import {
+  DbRecord,
+  throwOnProduction,
+  CollectionReference,
+  QueryDocumentSnapshot,
+  QuerySnapshot,
+  Queue,
+  runChunks
+} from '@blockframes/firebase-utils';
 import { firebase, testVideoId } from '@env';
-import { runChunks } from '../firebase-utils';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { firestore } from 'firebase-admin';
 

@@ -1,11 +1,11 @@
 import { backupBucket, firebase } from '@env';
 import { enableMaintenanceInEmulator } from './emulator';
-import { clearDb, getLatestDirName, loadAdminServices } from '@blockframes/firebase-utils';
+import { clearDb, loadAdminServices } from '@blockframes/firebase-utils';
 import { defaultEmulatorBackupPath, importFirestoreEmulatorBackup, uploadDbBackupToBucket } from '@blockframes/firebase-utils/firestore/emulator';
 import { deleteAllUsers } from '@blockframes/testing/unit-tests';
 import { ensureMaintenanceMode } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
-import { gsutilTransfer, runShellCommandExec } from './firebase-utils';
+import { gsutilTransfer, runShellCommandExec, getLatestDirName } from './firebase-utils';
 
 export const getFirebaseBackupDirname = (d: Date) => `firebase-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
 

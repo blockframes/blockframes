@@ -1,10 +1,10 @@
-import { CI_STORAGE_BACKUP, getBackupBucket, loadAdminServices } from "@blockframes/firebase-utils";
+import { getBackupBucket, loadAdminServices } from "@blockframes/firebase-utils";
 import { readFileSync, unlinkSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import { backupBucket } from 'env/env.blockframes-ci'
 import type { Bucket } from "@google-cloud/storage";
 import type { firestore, storage } from "firebase-admin";
-import { latestAnonDbDir } from './firebase-utils';
+import { latestAnonDbDir, CI_STORAGE_BACKUP } from './firebase-utils';
 
 export async function healthCheck() {
   // tslint:disable-next-line: no-shadowed-variable
