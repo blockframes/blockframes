@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/model';
+import { createModalData } from '../global-modal/global-modal.component';
 import { PreviewFileModalComponent } from '../preview-file-modal/preview-file-modal.component';
 
 @Component({
@@ -22,8 +23,10 @@ export class OpenPreviewComponent {
 
   async openModal() {
     this.dialogRef = this.dialog.open(PreviewFileModalComponent, {
+      data: createModalData({
+        ...this.ref
+      }, 'medium'),
       hasBackdrop: true,
-      data: { ...this.ref, style: 'medium' },
       autoFocus: false,
     });
   }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CookiesConsentForm } from '../cookie-form/cookie.form';
 import { PrivacyPolicyComponent } from '@blockframes/auth/components/privacy-policy/privacy-policy.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'cookie-dialog',
@@ -26,10 +27,9 @@ export class CookieDialogComponent {
   /** Opens a dialog with terms of use and privacy policy given by the parent. */
   public openPrivacyPolicy() {
     this.dialog.open(PrivacyPolicyComponent, {
-      data: {
-        onClose: () => this.dialog.closeAll(),
-        style: 'large'
-      }
+      data: createModalData({
+        onClose: () => this.dialog.closeAll()
+      }, 'large')
     });
   }
 }
