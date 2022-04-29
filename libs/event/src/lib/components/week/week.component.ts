@@ -134,7 +134,7 @@ export class CalendarWeekComponent {
 
   /** Open a create dialog and redirect if needed */
   private createEvent(calEvent: CalendarEvent) {
-    const data = { event: { ...calEvent, type: '' }, types: this.eventTypes, style: 'medium' };
+    const data = { event: { ...calEvent, type: '' }, types: this.eventTypes, style: 'large' };
     this.dialog.open(EventCreateComponent, { data, autoFocus: false }).afterClosed()
       .subscribe(async ({ event } = {}) => {
         if (event) {

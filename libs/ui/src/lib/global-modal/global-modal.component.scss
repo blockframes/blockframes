@@ -4,7 +4,7 @@
 
 // All padding have +24px on the base component
 // So, in exemple, count 48 as 72px
-.sizeL {
+.large {
   padding: 48px;
   width: calc(80vw - 48px);
   min-height: 450px;
@@ -16,7 +16,7 @@
   }
 }
 
-.sizeM {
+.medium {
   padding: 24px;
   width: 60vw;
   min-height: 350px;
@@ -28,8 +28,8 @@
   }
 }
 
-.sizeS {
-  min-width: 30vw;
+.small {
+  min-width: min(40vw, 600px);
   max-height: 350px;
-  max-width: 600px;
+  max-width: 800px;
 }

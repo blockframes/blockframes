@@ -2,13 +2,16 @@ import { Component, ChangeDetectionStrategy, Inject, ViewEncapsulation } from '@
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/model';
 
-export interface GlobalModalStyle {
-  style?: 'large' | 'medium' | 'small';
+type Size = 'large' | 'medium' | 'small';
+
+interface CommonModalData {
+  size: Size;
+  selectedFiles?: StorageFile[];
+  onClose?: () => void;
 }
 
-interface Data extends GlobalModalStyle {
-  selectedFiles?: StorageFile[],
-  onClose?: () => void
+export function createModalData<T>(data: T, size: Size = 'medium'): T & CommonModalData {
+  return { ...data, size };
 }
 
 @Component({
@@ -21,7 +24,7 @@ interface Data extends GlobalModalStyle {
 export class GlobalModalComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: Data,
+    @Inject(MAT_DIALOG_DATA) private data: CommonModalData,
     public dialogRef: MatDialogRef<GlobalModalComponent>,
   ) { }
 
@@ -32,15 +35,7 @@ export class GlobalModalComponent {
   }
 
   public setModalType() {
-    switch(this.data?.style) {
-      case 'large':
-        return 'sizeL';
-      case 'medium':
-        return 'sizeM';
-      case 'small':
-        return 'sizeS';
-      default:
-        return 'sizeM';
-    }
+    if (this.data?.size) return this.data.size;
+    return 'medium';
   }
 }
