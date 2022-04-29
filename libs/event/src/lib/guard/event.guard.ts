@@ -10,6 +10,7 @@ import { AuthService } from '@blockframes/auth/+state';
 import { Event, Meeting } from '@blockframes/model';
 import { TwilioService } from '../components/meeting/+state/twilio.service';
 import { take } from 'rxjs/operators';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 
 @Injectable({ providedIn: 'root' })
@@ -114,14 +115,13 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
         }
       }
       const dialogRef = this.dialog.open(ConfirmComponent, {
-        data: {
+        data: createModalData({
           title: `You are about to leave this ${this.event.type}.`,
           question: `You might not be able to come back as the access to the ${this.event.type} is time-limited.`,
           confirm: 'Leave anyway',
-          cancel: 'Stay',
-          style: 'medium'
-        },
-        autoFocus: false,
+          cancel: 'Stay'
+        }, 'medium'),
+        autoFocus: false
       })
       return dialogRef.afterClosed();
     }

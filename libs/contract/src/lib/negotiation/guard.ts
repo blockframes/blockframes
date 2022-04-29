@@ -5,6 +5,7 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { first } from 'rxjs/operators';
 
 export type NegotiationGuardedComponent = {
@@ -39,13 +40,12 @@ export class NegotiationGuard<T extends NegotiationGuardedComponent> implements 
   canDeactivate(component: T) {
     if (component.form.pristine ) return true;
     const dialogRef = this.dialog.open(ConfirmComponent, {
-      data: {
+      data: createModalData({
         title: `Leave Page?`,
         question: `Please pay attention that unless you submit an offer the changes remain not saved.`,
         cancel: 'Come back & Submit Offer',
-        confirm: 'Leave anyway',
-        style: 'small'
-      },
+        confirm: 'Leave anyway'
+      }, 'small'),
       autoFocus: false,
     });
     return dialogRef.afterClosed();

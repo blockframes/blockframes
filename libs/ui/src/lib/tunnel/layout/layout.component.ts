@@ -23,6 +23,7 @@ import type { ShellConfig } from '@blockframes/movie/form/movie.shell.interfaces
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { FormSaveOptions } from "@blockframes/utils/common-interfaces";
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 /**
  * @description returns the next or previous page where the router should go to
@@ -147,15 +148,14 @@ export class TunnelLayoutComponent implements OnInit {
       return of(true);
     }
     const dialogRef = this.dialog.open(ConfirmComponent, {
-      data: {
+      data: createModalData({
         title: 'You are about to leave the form.',
         question: 'Some changes have not been saved.',
         advice: 'If you leave now, you will lose these changes.',
         confirm: 'Save & Exit',
-        cancel: 'Close without saving',
-        style: 'medium'
-      },
-      autoFocus: false,
+        cancel: 'Close without saving'
+      }, 'medium'),
+      autoFocus: false
     })
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {
