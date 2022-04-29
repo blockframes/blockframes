@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBindin
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { Functions, httpsCallable } from '@angular/fire/functions';
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
 import { ThemeService } from '@blockframes/ui/theme';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
@@ -11,6 +10,7 @@ import { App } from '@blockframes/model';
 //TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { supportMailosaur } from '@blockframes/utils/constants';
+import { CallableFunctions } from 'ngfire';
 
 @Directive({
   selector: 'landing-header, [landingHeader]',
@@ -81,7 +81,7 @@ export class LandingShellComponent implements OnDestroy {
 
   constructor(
     private snackBar: MatSnackBar,
-    private functions: Functions,
+    private functions: CallableFunctions,
     private theme: ThemeService,
     private cdr: ChangeDetectorRef,
     @Inject(APP) private app: App
@@ -99,16 +99,14 @@ export class LandingShellComponent implements OnDestroy {
   }
 
   /** Send a mail to the admin with user's informations. */
-  private async sendDemoRequest(information: RequestDemoInformations) {
-    const f = httpsCallable(this.functions,'sendDemoRequest');
-    return f(information);
+  private sendDemoRequest(information: RequestDemoInformations) {
+    return this.functions.call<RequestDemoInformations, unknown>('sendDemoRequest', information);
   }
 
   /** Register an email to a mailchimp mailing list */
-  private async registerEmailToNewsletters(email: string) {
-    const f = httpsCallable(this.functions,'registerToNewsletter');
+  private registerEmailToNewsletters(email: string) {
     const tags = [`landing - ${this.app}`];
-    return f({ email, tags });
+    return this.functions.call<{ email: string, tags: string[] }, unknown>('registerToNewsletter', { email, tags });
   }
 
   /** Triggers when a user click on the button from LearnMoreComponent.  */

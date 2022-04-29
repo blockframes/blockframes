@@ -1,21 +1,17 @@
-import { Injectable } from "@angular/core";
-import { Functions, httpsCallable } from '@angular/fire/functions';
+import { Injectable } from '@angular/core';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
+import { CallableFunctions } from 'ngfire';
 import { EmailParameters, EmailAdminParameters } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class SendgridService {
-
-  private sendMailAsAdmin = httpsCallable<EmailAdminParameters, ErrorResultResponse>(this.functions, 'sendMailAsAdmin');
-  private sendMailWithTemplate = httpsCallable<EmailParameters, ErrorResultResponse>(this.functions, 'sendMailWithTemplate');
 
   /**
    * Allowed only to Blockframes Admins
    * @param data EmailParameters
    */
   public async sendAsAdmin(data: EmailAdminParameters) {
-    const r = await this.sendMailAsAdmin(data);
-    return r.data;
+    return this.functions.call<EmailAdminParameters, ErrorResultResponse>('sendMailAsAdmin', data);
   }
 
 
@@ -25,10 +21,9 @@ export class SendgridService {
    * @param data EmailParameters
    */
   public async sendWithTemplate(data: EmailParameters) {
-    const r = await this.sendMailWithTemplate(data);
-    return r.data;
+    return this.functions.call<EmailParameters, ErrorResultResponse>('sendMailWithTemplate', data);
   }
 
-  constructor(private functions: Functions) { }
+  constructor(private functions: CallableFunctions) { }
 
 }

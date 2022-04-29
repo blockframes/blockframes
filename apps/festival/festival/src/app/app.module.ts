@@ -24,8 +24,8 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AppComponent } from './app.component';
 
 // Angular Fire
-import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
-import { provideFunctions, getFunctions, connectFunctionsEmulator } from '@angular/fire/functions';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { connectFunctionsEmulator } from '@angular/fire/functions';
 import { connectFirestoreEmulator } from '@angular/fire/firestore';
 import { providePerformance, getPerformance } from '@angular/fire/performance';
 import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
@@ -66,14 +66,6 @@ import { APP } from '@blockframes/utils/routes/utils';
 
     // Firebase
     provideFirebaseApp(() => initializeApp(firebase('festival'))), // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
-
-    provideFunctions(() => {  // TODO #8280 put on emulator env.ts
-      const functions = getFunctions(getApp(), firebaseRegion);
-      if (emulatorConfig.functions) {
-        connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
-      }
-      return functions;
-    }),
     provideAuth(() => {  // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
       const auth = getAuth();
       if (emulatorConfig.auth) {

@@ -1,7 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
-import { Functions } from '@angular/fire/functions';
 import { UserService } from '@blockframes/user/+state/user.service';
 import {
   OrganizationMember,
@@ -21,10 +20,9 @@ import {
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { combineLatest, Observable, of } from 'rxjs';
-import { httpsCallable } from 'firebase/functions';
 import { DocumentSnapshot, where } from 'firebase/firestore';
 import { runInZone } from '@blockframes/utils/zone';
-import { WriteOptions } from 'ngfire';
+import { CallableFunctions, WriteOptions } from 'ngfire';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
@@ -67,7 +65,7 @@ export class OrganizationService extends BlockframesCollection<Organization> {
   );
 
   constructor(
-    private functions: Functions,
+    private functions: CallableFunctions,
     private userService: UserService,
     private permissionsService: PermissionsService,
     private analytics: AnalyticsService,
@@ -128,13 +126,11 @@ export class OrganizationService extends BlockframesCollection<Organization> {
   }
 
   public notifyAppAccessChange(orgId: string, app: App) {
-    const callOnAccessToAppChanged = httpsCallable(this.functions, 'onAccessToAppChanged');
-    return callOnAccessToAppChanged({ orgId, app });
+    return this.functions.call('onAccessToAppChanged', { orgId, app });
   }
 
   public requestAppAccess(app: App, module: Module, orgId: string) {
-    const f = httpsCallable(this.functions, 'requestFromOrgToAccessApp');
-    return f({ app, module, orgId });
+    return this.functions.call('requestFromOrgToAccessApp', { app, module, orgId });
   }
 
   ////////////
