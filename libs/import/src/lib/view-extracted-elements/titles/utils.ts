@@ -13,88 +13,8 @@ import {
   App,
   Movie
 } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { FieldsConfig, FieldsConfigType, getFieldConfigs } from './fieldConfigs';
 
-export function getUpdatableFields(movie: Movie): Partial<Movie> {
-  const {
-    id,
-    title,
-    internalRef,
-    contentType,
-    productionStatus,
-    release,
-    directors,
-    originCountries,
-    stakeholders,
-    languages,
-    originalRelease,
-    originalLanguages,
-    genres,
-    customGenres,
-    runningTime,
-    cast,
-    prizes,
-    logline,
-    synopsis,
-    keyAssets,
-    keywords,
-    producers,
-    crew,
-    estimatedBudget,
-    boxOffice,
-    certifications,
-    rating,
-    audience,
-    review,
-    color,
-    format,
-    formatQuality,
-    soundFormat,
-    isOriginalVersionAvailable,
-    app,
-    orgIds
-  } = movie;
-
-  return {
-    id,
-    title,
-    internalRef,
-    contentType,
-    productionStatus,
-    release,
-    directors,
-    originCountries,
-    originalRelease,
-    originalLanguages,
-    genres,
-    customGenres,
-    runningTime,
-    cast,
-    prizes,
-    logline,
-    synopsis,
-    keyAssets,
-    keywords,
-    producers,
-    crew,
-    estimatedBudget,
-    boxOffice,
-    certifications,
-    rating,
-    audience,
-    review,
-    color,
-    format,
-    formatQuality,
-    soundFormat,
-    isOriginalVersionAvailable,
-    stakeholders,
-    languages,
-    app,
-    orgIds
-  };
-}
 
 export async function formatTitle(
   sheetTab: SheetTab,

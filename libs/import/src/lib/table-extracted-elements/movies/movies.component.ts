@@ -9,11 +9,23 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../utils';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { getUpdatableFields } from '@blockframes/import/view-extracted-elements/titles/utils';
+import { Movie } from '@blockframes/model';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
+
+function getUpdatableFields(movie: Movie) {
+  const { id, app: { catalog, festival, financiers } } = movie;
+  return {
+    id,
+    app: {
+      catalog: { status: catalog.status },
+      festival: { status: festival.status },
+      financiers: { status: financiers.status },
+    }
+  } as Partial<Movie>;
+}
 
 @Component({
   selector: 'import-table-extracted-movies',
@@ -95,9 +107,18 @@ export class TableExtractedMoviesComponent implements OnInit {
 
   async updateMovie(importState: MovieImportState) {
     const movie = getUpdatableFields(importState.movie);
-    await this.movieService.upsert(movie);
-    this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
-    return true;
+    try {
+      await this.movieService.update(movie);
+      this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
+      return true;
+    } catch (err) {
+      if (err.code === "not-found") {
+        const message = `Movie with id: ${movie.id} not found`;
+        this.snackBar.open(message, 'close', { duration: 3000 });
+        return false;
+      }
+      throw err;
+    }
   }
 
   async updateSelectedMovies(): Promise<boolean> {
