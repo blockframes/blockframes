@@ -6,6 +6,7 @@ import { DetailedTermsComponent } from '@blockframes/contract/term/components/de
 import { HoldbackModalComponent } from '../../holdback/modal/holdback-modal.component';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { BucketContract, Holdback, Sale, Scope, mediaGroup, territoriesGroup } from '@blockframes/model';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'contract-item',
@@ -33,11 +34,21 @@ export class ContractItemComponent {
   ) { }
 
   openDetails(terms: string[], scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope, style: 'medium' }, autoFocus: false });
+    this.dialog.open(DetailedTermsComponent, {
+      data: createModalData({
+        terms,
+        scope
+      }, 'medium'),
+      autoFocus: false
+    });
   }
 
   openHoldbackModal(existingHoldbacks: Holdback[]) {
-    this.dialog.open(HoldbackModalComponent, { data: { holdbacks: existingHoldbacks, style: 'medium' } });
+    this.dialog.open(HoldbackModalComponent, {
+      data: createModalData({
+        holdbacks: existingHoldbacks
+      }, 'medium')
+    });
   }
 
 }

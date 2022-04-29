@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { canHavePreferences } from '@blockframes/user/+state/user.utils';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'festival-marketplace-home',
@@ -58,8 +59,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       const preferences = createPreferences();
       this.authService.update({ preferences });
       this.dialog.open(PreferencesComponent, {
-        autoFocus: false,
-        data: { style: 'large' }
+        data: createModalData({}, 'large'),
+        autoFocus: false
       });
     }
   }

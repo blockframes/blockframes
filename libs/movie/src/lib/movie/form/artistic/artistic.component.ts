@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Filmography } from '@blockframes/model';
 import { displayFilmographies } from '@blockframes/movie/pipes/filmography.pipe';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieFormShellComponent } from '../shell/shell.component';
 
@@ -51,8 +52,11 @@ export class MovieFormArtisticComponent {
   openDetails(title: string, values: string | Filmography[]) {
     const arrayValues = Array.isArray(values) ? displayFilmographies(values) : [values];
     this.dialog.open(CellModalComponent, {
-      data: { title, values: arrayValues, style: 'medium' },
-      autoFocus: false,
+      data: createModalData({
+        title,
+        values: arrayValues
+      }, 'medium'),
+      autoFocus: false
     });
   }
 }

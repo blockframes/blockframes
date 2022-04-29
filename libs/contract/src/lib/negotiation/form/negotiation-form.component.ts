@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Movie, Scope } from '@blockframes/model';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { NegotiationForm } from '../form';
 
 const isNumber = (v: string) => !isNaN(parseFloat(v));
@@ -40,7 +41,10 @@ export class NegotiationFormComponent {
 
   openDetails(terms: string, scope: Scope) {
     this.dialog.open(DetailedTermsComponent, {
-      data: { terms, scope, style: 'medium' },
+      data: createModalData({
+        terms,
+        scope
+      }, 'medium'),
       autoFocus: false,
     });
   }

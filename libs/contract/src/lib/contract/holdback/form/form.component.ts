@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Holdback, Movie } from '@blockframes/model';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { SelectionModalComponent } from '../selection-modal/selection-modal.component';
 
 @Component({
@@ -24,12 +25,11 @@ export class HolbackFormComponent {
 
   openHoldbacks() {
     this.dialog.open(SelectionModalComponent, {
-      data: {
+      data: createModalData({
         title: this.title,
         holdbacks: this.holdbacks,
-        holdbacksChange: this.holdbacksChange,
-        style: 'large'
-      }
+        holdbacksChange: this.holdbacksChange
+      }, 'large')
     });
   }
 }
