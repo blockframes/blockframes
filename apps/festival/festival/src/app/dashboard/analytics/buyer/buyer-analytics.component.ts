@@ -95,19 +95,21 @@ export class BuyerAnalyticsComponent {
     map(toCards)
   );
 
-  filter$ = new BehaviorSubject('');
 
   private aggregatedPerTitle$ = this.buyerAnalytics$.pipe(
     map(titles => titles.map(title => aggregate(title.analytics, { title })))
   );
 
+  filter$ = new BehaviorSubject('');
   filtered$ = combineLatest([
     this.filter$.asObservable(),
     this.aggregatedPerTitle$
   ]).pipe(
     map(([filter, analytics]) => {
       const key = events.find(event => event.title === filter)?.name;
-      return key ? analytics.filter(aggregated => aggregated[key] > 0) : analytics;
+      return key
+        ? analytics.filter(aggregated => aggregated[key] > 0)
+        : analytics;
     })
   )
 
