@@ -5,7 +5,6 @@ import { importFirestore } from './admin';
 import {
   endMaintenance,
   loadAdminServices,
-  restoreAnonStorageFromCI,
   startMaintenance,
 } from '@blockframes/firebase-utils';
 import {
@@ -23,7 +22,7 @@ import { generateFixtures } from './generate-fixtures';
 import { ensureMaintenanceMode, isMigrationRequired } from './tools';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
-import { copyFirestoreExportFromCiBucket, latestAnonDbDir } from './firebase-utils/copy-db-from-ci';
+import { copyFirestoreExportFromCiBucket, latestAnonDbDir, restoreAnonStorageFromCI } from './firebase-utils';
 
 const { storageBucket } = firebase();
 

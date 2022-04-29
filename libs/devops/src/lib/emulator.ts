@@ -3,11 +3,8 @@ import {
   getLatestFolderURL,
   getServiceAccountObj,
   loadAdminServices,
-  restoreStorageFromCi,
   startMaintenance,
   getBackupBucket,
-  CI_STORAGE_BACKUP,
-  latestAnonStorageDir,
   endMaintenance,
 } from '@blockframes/firebase-utils';
 import {
@@ -29,7 +26,7 @@ import { migrate } from './migrations';
 import { syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-import { awaitProcessExit, gsutilTransfer, latestAnonDbDir } from './firebase-utils';
+import { awaitProcessExit, gsutilTransfer, latestAnonDbDir, latestAnonStorageDir, CI_STORAGE_BACKUP, restoreStorageFromCi } from './firebase-utils';
 
 interface ImportEmulatorOptions {
   importFrom: string,
