@@ -12,9 +12,19 @@ import { UserService } from "@blockframes/user/+state";
 import { App } from "@blockframes/model";
 import { joinWith } from "@blockframes/utils/operators";
 import { APP } from "@blockframes/utils/routes/utils";
-import { BehaviorSubject, combineLatest, lastValueFrom, map, Observable, pluck, shareReplay, switchMap, take } from "rxjs";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { toLabel } from "@blockframes/utils/utils";
+import { 
+  BehaviorSubject,
+  combineLatest,
+  lastValueFrom,
+  map,
+  Observable,
+  pluck,
+  shareReplay,
+  switchMap,
+  take
+} from "rxjs";
 
 interface VanityMetricEvent {
   name: EventName;
@@ -94,7 +104,6 @@ export class BuyerAnalyticsComponent {
     map(analytics => aggregate(analytics)),
     map(toCards)
   );
-
 
   private aggregatedPerTitle$ = this.buyerAnalytics$.pipe(
     map(titles => titles.map(title => aggregate(title.analytics, { title })))

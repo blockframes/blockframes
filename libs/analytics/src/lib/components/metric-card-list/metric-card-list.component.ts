@@ -37,23 +37,5 @@ export class MetricCardListComponent {
       this.selected = '';
     }
     this.selection.next(this.selected);
-
-
-
-
-
-
-    // this.selected = selected;
-
-
-
-    // if (card) {
-    //   card.selected = !card.selected;
-    //   const select = card.selected ? selected : '';
-    //   this.selection.next(select);
-    // } else {
-    //   this.cards.forEach(card => card.selected = false);
-    //   this.selection.next('');
-    // }
   }
 }
