@@ -1,12 +1,27 @@
 :host {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  position: relative;
+
+  button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    mat-icon {
+      height: 32px;
+      width: 32px;
+    }
+    
+    &.previousItem {
+      left: 0;
+    }
+    &.nextItem {
+      right: 0;
+    }
+  }
 }
 
 article {
   flex: 1;
-  padding-bottom: 62px;
 }
 
 img {

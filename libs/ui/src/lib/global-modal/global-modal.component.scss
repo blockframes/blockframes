@@ -2,6 +2,17 @@
   display: block;
 }
 
+section {
+  position: relative;
+
+  .closeButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
+
 // All padding have +24px on the base component
 // So, in exemple, count 48 as 72px
 .large {
@@ -12,7 +23,9 @@
   max-width: 1500px;
 
   .mat-dialog-content {
-    max-height: min(calc(80vh - 184px), 566px);
+    max-height: min(calc(80vh - 144px), 606px);
+    margin: 0 -72px;
+    padding: 0 72px;
   }
 }
 
@@ -24,7 +37,9 @@
   max-width: 1000px;
 
   .mat-dialog-content {
-    max-height: min(calc(60vh - 136px), 414px);
+    max-height: min(calc(60vh - 96px), 454px);
+    margin: 0 -48px;
+    padding: 0 48px;
   }
 }
 
