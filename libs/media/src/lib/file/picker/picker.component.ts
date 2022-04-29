@@ -119,12 +119,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
 
   previewFile(ref: StorageFile) {
-    this.dialog.open(FilePreviewComponent, {
-      data: createModalData({
-        ref
-      }, 'large'),
-      autoFocus: false
-    });
+    this.dialog.open(FilePreviewComponent, { data: createModalData({ ref }, 'large'), autoFocus: false });
   }
 
   closeDialog() {

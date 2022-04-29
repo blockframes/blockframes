@@ -136,10 +136,7 @@ export class CalendarWeekComponent {
   /** Open a create dialog and redirect if needed */
   private createEvent(calEvent: CalendarEvent) {
     this.dialog.open(EventCreateComponent, {
-      data: createModalData({
-        event: { ...calEvent, type: '' },
-        types: this.eventTypes
-      }, 'medium'),
+      data: createModalData({ event: { ...calEvent, type: '' }, types: this.eventTypes }),
       autoFocus: false
     }).afterClosed()
       .subscribe(async ({ event } = {}) => {

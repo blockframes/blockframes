@@ -330,9 +330,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   requestAskingPrice(movieId: string) {
     const ref = this.dialog.open(RequestAskingPriceComponent, {
-      data: createModalData({
-        movieId
-      }, 'large'),
+      data: createModalData({ movieId }, 'large'),
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {

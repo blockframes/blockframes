@@ -156,7 +156,7 @@ export class TableExtractedOrganizationsComponent implements OnInit {
       data: createModalData({
         title: `Organization id ${importState.org.id}`,
         errors: importState.errors
-      }, 'medium')
+      })
     });
   }
 

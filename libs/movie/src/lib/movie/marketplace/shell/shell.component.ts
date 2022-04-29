@@ -70,10 +70,7 @@ export class TitleMarketplaceShellComponent implements OnInit {
 
   fullscreen(refs: StorageFile[], index: number) {
     this.dialog.open(FileListPreviewComponent, {
-      data: createModalData({
-        refs,
-        index
-      }, 'large'),
+      data: createModalData({ refs, index }, 'large'),
       autoFocus: false
     });
   }

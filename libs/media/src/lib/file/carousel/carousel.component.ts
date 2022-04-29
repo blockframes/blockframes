@@ -39,9 +39,7 @@ export class FileCarouselComponent {
 
   openFileSelector() {
     this.dialog.open(FilePickerComponent, {
-      data: createModalData({
-        selectedFiles: this.files
-      }, 'large'),
+      data: createModalData({ selectedFiles: this.files }, 'large'),
       disableClose: true
     }).afterClosed().subscribe((result: string[]) => {
       this.picked.emit(result);

@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { Organization } from '@blockframes/model';
 import { orderBy, startAt, where } from 'firebase/firestore';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'festival-movie-view',
@@ -78,7 +79,7 @@ export class MarketplaceMovieViewComponent {
 
   requestAskingPrice(movieId: string) {
     const ref = this.dialog.open(RequestAskingPriceComponent, {
-      data: { movieId, style: 'large' },
+      data: createModalData({ movieId }, 'large'),
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {

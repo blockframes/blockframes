@@ -152,7 +152,9 @@ export class MarketplaceSelectionComponent {
         { duration: 2000 }
       );
     } else {
-      this.dialog.open(SpecificTermsComponent, { data: createModalData({ currency: this.currencyForm.value }, 'large') });
+      this.dialog.open(SpecificTermsComponent, {
+        data: createModalData({ currency: this.currencyForm.value }, 'large')
+      });
     }
   }
 

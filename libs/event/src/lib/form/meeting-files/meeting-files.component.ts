@@ -42,19 +42,12 @@ export class MeetingFilesComponent implements OnInit {
   }
 
   previewFile(ref: StorageFile) {
-    this.dialog.open(FilePreviewComponent, {
-      data: createModalData({
-        ref
-      }, 'large'),
-      autoFocus: false
-    });
+    this.dialog.open(FilePreviewComponent, { data: createModalData({ ref }, 'large'), autoFocus: false });
   }
 
   openFileSelector() {
     this.dialog.open(FilePickerComponent, {
-      data: createModalData({
-        selectedFiles: this.files.value
-      }, 'medium'),
+      data: createModalData({ selectedFiles: this.files.value }),
       disableClose: true
     }).afterClosed().pipe(take(1)).subscribe(result => {
       this.files.patchAllValue(result);

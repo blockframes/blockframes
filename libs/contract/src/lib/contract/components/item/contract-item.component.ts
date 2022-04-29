@@ -37,8 +37,8 @@ export class ContractItemComponent {
     this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
   }
 
-  openHoldbackModal(existingHoldbacks: Holdback[]) {
-    this.dialog.open(HoldbackModalComponent, { data: createModalData({ holdbacks: existingHoldbacks }) });
+  openHoldbackModal(holdbacks: Holdback[]) {
+    this.dialog.open(HoldbackModalComponent, { data: createModalData({ holdbacks }) });
   }
 
 }

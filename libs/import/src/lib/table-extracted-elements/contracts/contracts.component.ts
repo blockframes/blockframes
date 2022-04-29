@@ -205,7 +205,7 @@ export class TableExtractedContractsComponent implements OnInit {
       data: createModalData({
         title: `Contract id ${importState.contract.id}`,
         errors: importState.errors
-      }, 'medium')
+      })
     });
   }
 

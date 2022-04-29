@@ -180,11 +180,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   /** Open a modal to display the entire list of territories when this one is too long */
   public openTerritoryModal(term: BucketTerm) {
-    this.dialog.open(DetailedTermsComponent, {
-      data: createModalData({
-        terms: term.territories,
-        scope: 'territories'
-      }),
+    this.dialog.open(DetailedTermsComponent, { 
+      data: createModalData({ terms: term.territories, scope: 'territories' }),
       autoFocus: false
     });
   }
