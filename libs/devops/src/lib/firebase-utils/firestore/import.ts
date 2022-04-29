@@ -1,4 +1,4 @@
-import { loadAdminServices } from '../util';
+import { loadAdminServices } from '@blockframes/firebase-utils';
 import { clearDb } from './clear';
 import { backupBucket, firebase } from '@env';
 import { runShellCommandExec } from '@blockframes/devops';

@@ -1,5 +1,5 @@
 import { backupBucket, firebase } from '@env';
-import { loadAdminServices } from '../util';
+import { loadAdminServices } from '@blockframes/firebase-utils';
 import type { Bucket } from "@google-cloud/storage";
 import type { storage } from 'firebase-admin';
 import { runShellCommandExec } from '@blockframes/devops';

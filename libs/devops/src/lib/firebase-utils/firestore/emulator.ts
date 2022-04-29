@@ -5,7 +5,7 @@ import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, r
 import { join, resolve, sep } from 'path';
 import { runShellCommand, runShellCommandUntil, awaitProcOutput, gsutilTransfer } from '@blockframes/devops';
 import { getFirestoreExportDirname } from './export';
-import { sleep, throwOnProduction } from '../util';
+import { sleep, throwOnProduction } from '@blockframes/firebase-utils';
 import { promises } from 'fs';
 import { set, camelCase } from 'lodash';
 const { writeFile, rename } = promises;
