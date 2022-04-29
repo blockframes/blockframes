@@ -24,6 +24,7 @@ header {
 
       a {
         margin-top: auto;
+        width: fit-content;
       }
     }
   }
@@ -34,10 +35,32 @@ section {
   flex-direction: column;
   gap: 24px;
   padding: 24px;
+
+  div {
+    display: flex;
+    margin-bottom: 8px;
+  }
+}
+
+@include layout-bp(gt-xs) {
+  section {
+    button {
+      margin-left: auto;
+    }
+  }
 }
 
 @include layout-bp(xs) {
   img {
     display: none;
+  }
+
+  section {
+    div {
+      flex-direction: column;
+      button {
+        width: fit-content;
+      }
+    }
   }
 }

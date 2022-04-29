@@ -1,5 +1,5 @@
 <ul>
-  <li *ngFor="let card of cards" class="surface">
+  <li *ngFor="let card of cards" class="surface" (click)="toggleSelect(card.title)" [ngClass]="card.selected ? 'selected' : null">
     <header>
       <mat-icon [svgIcon]="card.icon"></mat-icon>
     </header>

@@ -12,7 +12,9 @@ import { UserService } from "@blockframes/user/+state";
 import { App } from "@blockframes/model";
 import { joinWith } from "@blockframes/utils/operators";
 import { APP } from "@blockframes/utils/routes/utils";
-import { map, Observable, pluck, shareReplay, switchMap } from "rxjs";
+import { BehaviorSubject, combineLatest, lastValueFrom, map, Observable, pluck, shareReplay, switchMap, take } from "rxjs";
+import { downloadCsvFromJson } from "@blockframes/utils/helpers";
+import { toLabel } from "@blockframes/utils/utils";
 
 interface VanityMetricEvent {
   name: EventName;
@@ -52,7 +54,8 @@ function toCards(aggregated: AggregatedAnalytic): MetricCard[] {
   return events.map(event => ({
     title: event.title,
     value: aggregated[event.name],
-    icon: event.icon
+    icon: event.icon,
+    selected: false
   }));
 }
 
@@ -92,9 +95,21 @@ export class BuyerAnalyticsComponent {
     map(toCards)
   );
 
-  aggregatedPerTitle$ = this.buyerAnalytics$.pipe(
+  filter$ = new BehaviorSubject('');
+
+  private aggregatedPerTitle$ = this.buyerAnalytics$.pipe(
     map(titles => titles.map(title => aggregate(title.analytics, { title })))
   );
+
+  filtered$ = combineLatest([
+    this.filter$.asObservable(),
+    this.aggregatedPerTitle$
+  ]).pipe(
+    map(([filter, analytics]) => {
+      const key = events.find(event => event.title === filter)?.name;
+      return key ? analytics.filter(aggregated => aggregated[key] > 0) : analytics;
+    })
+  )
 
   constructor(
     private analytics: AnalyticsService,
@@ -112,5 +127,23 @@ export class BuyerAnalyticsComponent {
 
   inWishlist(data: AggregatedAnalytic) {
     return data.addedToWishlist > data.removedFromWishlist;
+  }
+
+  async exportAnalytics() {
+    const analytics = await lastValueFrom(this.filtered$.pipe(
+      take(1),
+      map(data => data.map(aggregated => ({
+        'Title': aggregated.title.title.international,
+        'Release year': aggregated.title.release.year,
+        'Countries of Origin': toLabel(aggregated.title.originCountries, 'territories'),
+        'Original Languages': toLabel(aggregated.title.originalLanguages, 'languages'),
+        'In wishlist': this.inWishlist(aggregated) ? 'Yes' : 'No',
+        'Promotional Elements': aggregated.promoReelOpened,
+        'Screening Requests': aggregated.screeningRequested,
+        'Asking Price Requested': aggregated.askingPriceRequested
+      })))
+    ));
+
+    downloadCsvFromJson(analytics, 'buyer-analytics');
   }
 }

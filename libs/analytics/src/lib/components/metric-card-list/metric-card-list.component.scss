@@ -7,6 +7,7 @@ ul {
     display: flex;
     flex-direction: column;
     text-align: center;
+    cursor: pointer;
 
     header {
       background-color: var(--primary-lighter);
@@ -26,4 +27,10 @@ ul {
       margin-bottom: 0px;
     }
   }
+}
+
+.selected {
+  box-sizing: border-box;
+  border: 2px solid var(--primary);
+  padding: 23px; // make up for the 1px thicker border than .surface
 }
