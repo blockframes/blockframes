@@ -80,7 +80,6 @@ export function importSpreadsheet(bytes: Uint8Array, range?: string): SheetTab[]
 /**
  * @param state all previous entities
  * @param item current entity (Title, Org, Contract, ...)
- * @continue from here: find out where undefined is pushed into the error array.
  */
 export async function parse<T>(
   state: any[],
