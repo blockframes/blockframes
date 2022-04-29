@@ -69,7 +69,8 @@ function toCards(aggregated: AggregatedAnalytic): MetricCard[] {
   }));
 }
 
-function filterAnalytics(name: EventName, analytics: AggregatedAnalytic[]) {
+function filterAnalytics(title: string, analytics: AggregatedAnalytic[]) {
+  const name = events.find(event => event.title === title)?.name;
   return name
     ? analytics.filter(aggregated => aggregated[name] > 0)
     : analytics;
@@ -120,10 +121,7 @@ export class BuyerAnalyticsComponent {
     this.filter$.asObservable(),
     this.aggregatedPerTitle$
   ]).pipe(
-    map(([filter, analytics]) => {
-      const name = events.find(event => event.title === filter)?.name;
-      return filterAnalytics(name, analytics);
-    })
+    map(([filter, analytics]) => filterAnalytics(filter, analytics))
   )
 
   constructor(
