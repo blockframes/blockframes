@@ -1,6 +1,6 @@
 // Angular
-import { Injectable } from "@angular/core";
-import { CallableFunctions } from "ngfire";
+import { Injectable } from '@angular/core';
+import { CallableFunctions } from 'ngfire';
 
 // State
 import { StorageFile } from '@blockframes/model';
