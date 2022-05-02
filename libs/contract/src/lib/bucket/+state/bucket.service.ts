@@ -128,20 +128,20 @@ export class BucketService extends CollectionService<BucketState> {
 
   async addBatchTerms(availsResults: AddTermConfig[]) {
     const orgId = this.orgService.org.id;
-    const bucket = await this.getActive();
-    const contracts = bucket?.contracts ?? [];
+    let bucket = await this.getActive();
+    if (!bucket) bucket = createBucket({ id: orgId });
+
     for (const { titleId, parentTermId, avail } of availsResults) {
       const term = createBucketTerm(avail);
-      const sale = contracts.find(c => c.titleId === titleId && c.parentTermId === parentTermId);
+      const sale = bucket.contracts.find(c => c.titleId === titleId && c.parentTermId === parentTermId);
       if (sale) {
         sale.terms.push(term);
       } else {
         const contract = createBucketContract({ titleId, parentTermId, terms: [term] });
-        contracts.push(contract);
+        bucket.contracts.push(contract);
       }
     }
-    return bucket
-      ? this.update(orgId, { contracts })
-      : this.add({ ...bucket, contracts })
+
+    return this.upsert(bucket);
   }
 }
