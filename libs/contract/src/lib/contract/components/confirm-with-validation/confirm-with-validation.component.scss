@@ -3,10 +3,6 @@
   flex-direction: column;
 }
 
-section {
-  padding: 40px 80px 80px 80px;
-}
-
 div[mat-dialog-content] {
   text-align: center;
   h3, p {
@@ -14,7 +10,7 @@ div[mat-dialog-content] {
   }
 }
 
-p {
+p, span {
   max-width: 70%;
 }
 

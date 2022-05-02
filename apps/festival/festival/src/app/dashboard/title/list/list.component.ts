@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 import { displayPerson } from '@blockframes/utils/pipes';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'festival-dashboard-title-list',
@@ -72,15 +73,10 @@ export class ListComponent {
     this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 
-  //TODO #6507
   openDetails(title: string, values: Person[]) {
     this.dialog.open(CellModalComponent, {
-      data: { title, values: displayPerson(values) },
-      maxHeight: '80vh',
-      minWidth: '50vw',
-      maxWidth: '80vw',
-      minHeight: '50vh',
-      autoFocus: false,
+      data: createModalData({ title, values: displayPerson(values) }),
+      autoFocus: false
     });
   }
 }

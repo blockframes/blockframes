@@ -18,6 +18,7 @@ import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { collection, doc } from 'firebase/firestore';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;
@@ -134,8 +135,10 @@ export class CalendarWeekComponent {
 
   /** Open a create dialog and redirect if needed */
   private createEvent(calEvent: CalendarEvent) {
-    const data = { event: { ...calEvent, type: '' }, types: this.eventTypes };
-    this.dialog.open(EventCreateComponent, { data, width: '650px', autoFocus: false }).afterClosed()
+    this.dialog.open(EventCreateComponent, {
+      data: createModalData({ event: { ...calEvent, type: '' }, types: this.eventTypes }),
+      autoFocus: false
+    }).afterClosed()
       .subscribe(async ({ event } = {}) => {
         if (event) {
           this.loading = true;

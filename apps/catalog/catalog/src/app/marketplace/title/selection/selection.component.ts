@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { FormControl } from '@angular/forms';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'catalog-selection',
@@ -151,7 +152,9 @@ export class MarketplaceSelectionComponent {
         { duration: 2000 }
       );
     } else {
-      this.dialog.open(SpecificTermsComponent, { data: { currency: this.currencyForm.value } });
+      this.dialog.open(SpecificTermsComponent, {
+        data: createModalData({ currency: this.currencyForm.value }, 'large')
+      });
     }
   }
 

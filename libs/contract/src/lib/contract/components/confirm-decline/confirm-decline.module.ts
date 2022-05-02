@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { ConfirmDeclineComponent } from './confirm-decline.component';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -24,7 +25,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatSelectModule,
     MatFormFieldModule,
     MatCheckboxModule,
-    RouterModule
+    RouterModule,
+    GlobalModalModule
   ],
   exports: [ConfirmDeclineComponent],
   declarations: [ConfirmDeclineComponent]

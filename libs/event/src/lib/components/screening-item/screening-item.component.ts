@@ -6,6 +6,7 @@ import { filter, map } from 'rxjs/operators';
 import { fade } from '@blockframes/utils/animations/fade';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'event-screening-item',
@@ -52,9 +53,7 @@ export class ScreeningItemComponent implements OnInit, OnDestroy {
 
   requestAskingPrice(movieId: string) {
     const ref = this.dialog.open(RequestAskingPriceComponent, {
-      data: { movieId },
-      maxHeight: '80vh',
-      maxWidth: '650px',
+      data: createModalData({ movieId }, 'large'),
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {
