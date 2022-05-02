@@ -9,6 +9,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { ActivatedRoute } from '@angular/router';
 import { TitleModalComponent } from '../modal/modal.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'financiers-dashboard-title-view',
@@ -70,12 +71,7 @@ export class TitleViewComponent {
     const form = this.shell.getForm('campaign');
     const errorMatcher = new CrossFieldErrorMatcher();
     this.dialogRef = this.dialog.open(TitleModalComponent, {
-      minWidth: '50vw',
-      data: {
-        form,
-        errorMatcher,
-        onSave: this.save
-      }
+      data: createModalData({ form, errorMatcher, onSave: this.save })
     });
   }
 

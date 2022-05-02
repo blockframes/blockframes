@@ -7,6 +7,7 @@ import { Movie, Organization } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { additionalRoute, artisticRoute, mainRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
 import { pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { MarketplaceMovieModalComponent } from '../modal/modal.component';
@@ -79,7 +80,7 @@ export class MarketplaceMovieViewComponent {
       message: new FormControl(),
     });
     this.dialog.open(MarketplaceMovieModalComponent, {
-      data: {
+      data: createModalData({
         orgs,
         form,
         movie,
@@ -88,7 +89,7 @@ export class MarketplaceMovieViewComponent {
           switchMap(movie => this.campaignService.valueChanges(movie.id))
         ),
         closeModal: this.close
-      }
+      })
     });
   }
 
