@@ -122,6 +122,12 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
 export async function upgrade() {
   const { db, auth, storage } = loadAdminServices();
 
+  if (!await isMigrationRequired()) {
+    console.log('Skipping upgrade because migration is not required...');
+    return;
+  }
+  await startMaintenance(db);
+
   console.info('Preparing the database...');
   await migrate({ withBackup: true, db, storage });
   console.info('Database ready for deploy!');
@@ -139,6 +145,8 @@ export async function upgrade() {
   await upgradeAlgoliaMovies(null, db);
   await upgradeAlgoliaUsers(db);
   console.info('Algolia ready for testing!');
+
+  await endMaintenance(db);
 }
 
 export async function upgradeEmulators() {

@@ -94,13 +94,7 @@ async function runCommand() {
       await generateFixtures(db);
       break;
     case 'upgrade':
-      if (!await isMigrationRequired()) {
-        console.log('Skipping upgrade because migration is not required...');
-        return;
-      }
-      await startMaintenance(db);
       await upgrade();
-      await endMaintenance(db);
       break;
     case 'auditDatabaseConsistency':
       await printDatabaseInconsistencies(undefined, db);
