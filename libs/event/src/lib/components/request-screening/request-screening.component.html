@@ -16,7 +16,8 @@
       <mat-spinner diameter="24" *ngIf="status === 'sending'"></mat-spinner>
     </ng-container>
     <ng-template #icon>
-      <mat-icon svgIcon="ask_screening_2" [matTooltip]="screeningRequest[status]"></mat-icon>
+      <mat-icon *ngIf="status === 'available'" svgIcon="ask_screening_2" [matTooltip]="screeningRequest[status]"></mat-icon>
+      <mat-icon *ngIf="status === 'sent'" svgIcon="ask_screening_2" [matTooltip]="screeningRequest[status]" color='disabled'></mat-icon>
     </ng-template>
   </ng-template>
 </ng-container>
