@@ -1,4 +1,4 @@
-<header class="dark-contrast-theme" bgAsset="background_header.png" bgTheme="dark">
+<header class="dark-contrast-theme main" bgAsset="background_header.png" bgTheme="dark">
   <button mat-icon-button (click)="goBack()">
     <mat-icon svgIcon="arrow_back"></mat-icon>
   </button>
@@ -24,11 +24,15 @@
 </header>
 
 <section>
-  <analytics-metric-card-list [cards]="aggregatedCards$ | async"></analytics-metric-card-list>
+  <analytics-metric-card-list [cards]="aggregatedCards$ | async" selectable (selection)="filter$.next($event)"></analytics-metric-card-list>
 
   <article>
-    <h3>Buyer was interested in these titles</h3>
-    <bf-table [source]="aggregatedPerTitle$ | async" pagination="5" userFilter>
+    <header>
+      <h3>Buyer was interested in these titles</h3>
+      <button mat-flat-button (click)="exportAnalytics()">Export Analytics</button>
+    </header>
+
+    <bf-table [source]="filtered$ | async" pagination="5" useFilter>
       <ng-template colRef="title.title.international" label="Title" let-title sort>
         {{ title | maxLength:50 }}
       </ng-template>

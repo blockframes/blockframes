@@ -12,7 +12,19 @@ import { UserService } from "@blockframes/user/+state";
 import { App } from "@blockframes/model";
 import { joinWith } from "@blockframes/utils/operators";
 import { APP } from "@blockframes/utils/routes/utils";
-import { map, Observable, pluck, shareReplay, switchMap } from "rxjs";
+import { downloadCsvFromJson } from "@blockframes/utils/helpers";
+import { toLabel } from "@blockframes/utils/utils";
+import { 
+  BehaviorSubject,
+  combineLatest,
+  firstValueFrom,
+  map,
+  Observable,
+  pluck,
+  shareReplay,
+  switchMap,
+  take
+} from "rxjs";
 
 interface VanityMetricEvent {
   name: EventName;
@@ -52,8 +64,16 @@ function toCards(aggregated: AggregatedAnalytic): MetricCard[] {
   return events.map(event => ({
     title: event.title,
     value: aggregated[event.name],
-    icon: event.icon
+    icon: event.icon,
+    selected: false
   }));
+}
+
+function filterAnalytics(title: string, analytics: AggregatedAnalytic[]) {
+  const name = events.find(event => event.title === title)?.name;
+  return name
+    ? analytics.filter(aggregated => aggregated[name] > 0)
+    : analytics;
 }
 
 
@@ -92,9 +112,17 @@ export class BuyerAnalyticsComponent {
     map(toCards)
   );
 
-  aggregatedPerTitle$ = this.buyerAnalytics$.pipe(
+  private aggregatedPerTitle$ = this.buyerAnalytics$.pipe(
     map(titles => titles.map(title => aggregate(title.analytics, { title })))
   );
+
+  filter$ = new BehaviorSubject('');
+  filtered$ = combineLatest([
+    this.filter$.asObservable(),
+    this.aggregatedPerTitle$
+  ]).pipe(
+    map(([filter, analytics]) => filterAnalytics(filter, analytics))
+  )
 
   constructor(
     private analytics: AnalyticsService,
@@ -112,5 +140,21 @@ export class BuyerAnalyticsComponent {
 
   inWishlist(data: AggregatedAnalytic) {
     return data.addedToWishlist > data.removedFromWishlist;
+  }
+
+  async exportAnalytics() {
+    const data = await firstValueFrom(this.filtered$);
+    const analytics = data.map(aggregated => ({
+      'Title': aggregated.title.title.international,
+      'Release year': aggregated.title.release.year,
+      'Countries of Origin': toLabel(aggregated.title.originCountries, 'territories'),
+      'Original Languages': toLabel(aggregated.title.originalLanguages, 'languages'),
+      'In wishlist': this.inWishlist(aggregated) ? 'Yes' : 'No',
+      'Promotional Elements': aggregated.promoReelOpened,
+      'Screening Requests': aggregated.screeningRequested,
+      'Asking Price Requested': aggregated.askingPriceRequested
+    }));
+
+    downloadCsvFromJson(analytics, 'buyer-analytics');
   }
 }

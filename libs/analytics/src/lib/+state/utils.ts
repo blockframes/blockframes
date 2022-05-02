@@ -1,4 +1,4 @@
-import { Organization, Analytics, AnalyticsTypes, Scope, createAggregatedAnalytic, AggregatedAnalytic } from "@blockframes/model";
+import { Organization, Analytics, AnalyticsTypes, Scope, createAggregatedAnalytic, AggregatedAnalytic, User } from "@blockframes/model";
 import { getDeepValue, toLabel } from "@blockframes/utils/pipes";
 
 interface AnalyticsWithOrg extends Analytics<AnalyticsTypes> {
@@ -37,4 +37,19 @@ export function aggregate(analytics: Analytics[], data: Partial<AggregatedAnalyt
     aggregated[analytic.name]++;
   }
   return aggregated;
+}
+
+export function aggregatePerUser(analytics: (Analytics<"title"> & { user: User, org: Organization})[]) {
+  const aggregator: Record<string, AggregatedAnalytic> = {};
+  for (const analytic of analytics) {
+    if (!analytic.user?.uid) continue;
+    if (!aggregator[analytic.user.uid]) {
+      aggregator[analytic.user.uid] = createAggregatedAnalytic({
+        user: analytic.user,
+        org: analytic.org
+      });
+    };
+    aggregator[analytic.user.uid][analytic.name]++;
+  }
+  return Object.values(aggregator);
 }
