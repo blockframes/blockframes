@@ -140,9 +140,7 @@ async function runCommand() {
       await auditUsers(db);
       break;
     case 'clearUsers':
-      await startMaintenance(db);
       await clearUsers();
-      await endMaintenance(db);
       break;
     case 'createUsers':
       await startMaintenance(db);

@@ -142,10 +142,11 @@ export async function printUsers() {
 }
 
 export async function clearUsers() {
-  const { auth } = loadAdminServices();
-
+  const { auth, db } = loadAdminServices();
+  await startMaintenance(db);
   // clear users is equivalent to "we expect no users", we can reuse the code.
-  return deleteAllUsers(auth);
+  await deleteAllUsers(auth);
+  return endMaintenance(db);
 }
 
 function readUsersFromSTDIN(): Promise<UserConfig[]> {
