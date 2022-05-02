@@ -16,7 +16,9 @@ import { combineLatest } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
-import { joinWith } from '@blockframes/utils/operators';
+
+// NgFire
+import { joinWith } from 'ngfire';
 
 @Component({
   selector: 'dashboard-home',

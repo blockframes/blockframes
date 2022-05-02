@@ -1,7 +1,6 @@
 import { DocumentMeta, createDocumentMeta } from './meta';
 import type { Media, Territory, ContractStatus } from './static';
 import { Timestamp } from './timestamp';
-import { toDate } from '@blockframes/utils/helpers';
 import { createMailTerm, Duration } from './terms';
 import { BucketContract } from './bucket';
 
@@ -116,11 +115,4 @@ export function isMandate(contract: Contract): contract is Mandate {
 
 export function isSale(contract: Contract): contract is Sale {
   return contract.type === 'sale';
-}
-
-export function convertDuration(duration: Duration<Date | Timestamp>): Duration<Date> {
-  return {
-    from: toDate(duration.from),
-    to: toDate(duration.to),
-  }
 }

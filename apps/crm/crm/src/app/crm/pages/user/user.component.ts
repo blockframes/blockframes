@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Functions, httpsCallable } from '@angular/fire/functions';
 import { User, Organization, Invitation, UserRole, Scope, App, getOrgAppAccess } from '@blockframes/model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
@@ -14,7 +13,7 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { where } from 'firebase/firestore';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { joinWith } from '@blockframes/utils/operators';
+import { joinWith, CallableFunctions } from 'ngfire';
 import { map } from 'rxjs/operators';
 
 // Material
@@ -53,7 +52,7 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private functions: Functions
+    private functions: CallableFunctions
   ) { }
 
   async ngOnInit() {
@@ -215,8 +214,7 @@ export class UserComponent implements OnInit {
 
   async verifyEmail() {
     this.snackBar.open('Verifying email...', 'close', { duration: 2000 });
-    const f = httpsCallable<{ uid: string }>(this.functions, 'verifyEmail');
-    await f({ uid: this.userId });
+    await this.functions.call<{ uid: string }, unknown>('verifyEmail', { uid: this.userId });
     this.snackBar.open('Email verified', 'close', { duration: 2000 });
   }
 

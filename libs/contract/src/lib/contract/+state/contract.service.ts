@@ -1,31 +1,23 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { map } from 'rxjs/operators';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { centralOrgId } from '@env';
-import { ActiveState, EntityState } from '@datorama/akita';
 import {
-  Timestamp,
-  ContractDocument,
-  convertDuration,
-  Holdback,
   Mandate,
   Sale,
   createMandate,
   createSale,
   Negotiation,
   createDocumentMeta,
-  formatDocumentMetaFromFirestore
+  Contract,
 } from '@blockframes/model';
-import { limit, orderBy, where } from 'firebase/firestore';
-
-interface ContractState extends EntityState<Sale | Mandate>, ActiveState<string> { }
+import { DocumentSnapshot, limit, orderBy, where } from 'firebase/firestore';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'contracts' })
-export class ContractService extends CollectionService<ContractState> {
-  useMemorization = false;
+export class ContractService extends BlockframesCollection<Sale | Mandate> {
+  readonly path = 'contracts';
 
   constructor(
     private orgService: OrganizationService,
@@ -38,34 +30,24 @@ export class ContractService extends CollectionService<ContractState> {
    * This converts the ContractDocument into an Organization
    * @param contract
    */
-  formatFromFirestore(contract: ContractDocument): Sale | Mandate {
-    const convertHoldback = (holdback: Holdback<Timestamp>): Holdback<Date> => ({
-      ...holdback,
-      duration: convertDuration(holdback.duration)
-    });
-    const _meta = formatDocumentMetaFromFirestore(contract?._meta);
-
-    return contract.type === 'mandate' ?
-      createMandate({ ...contract, _meta }) :
-      createSale({ ...contract, _meta, holdbacks: contract.holdbacks?.map(convertHoldback) ?? [] })
-      ;
+  protected fromFirestore(document: DocumentSnapshot<Sale | Mandate>): Sale | Mandate {
+    const contract = super.fromFirestore(document);
+    return contract.type === 'mandate' ? createMandate(contract) : createSale(contract);
   }
 
   /** Return the last negotiation of the contractId */
   lastNegotiation(contractId: string) {
-    const options = { params: { contractId } };
     const orgId = this.orgService.org.id;
     const query = [where('stakeholders', 'array-contains', orgId), orderBy('_meta.createdAt', 'desc'), limit(1)];
-    return this.negotiationService.valueChanges(query, options).pipe(
+    return this.negotiationService.valueChanges(query, { contractId }).pipe(
       map(negotiations => negotiations[0])
     );
   }
 
   //used exclusively in the crm
   adminLastNegotiation(contractId: string) {
-    const options = { params: { contractId } };
     const query = [orderBy('_meta.createdAt', 'desc'), limit(1)];
-    return this.negotiationService.valueChanges(query, options).pipe(
+    return this.negotiationService.valueChanges(query, { contractId }).pipe(
       map(negotiations => negotiations[0])
     );
   }

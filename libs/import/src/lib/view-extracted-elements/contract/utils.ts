@@ -1,5 +1,3 @@
-import { Firestore } from '@angular/fire/firestore';
-import { collection, doc } from 'firebase/firestore';
 import { checkParentTerm, ContractsImportState, sheetHeaderLine, } from '@blockframes/import/utils';
 import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -20,7 +18,7 @@ import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getContractConfig } from './fieldConfigs';
 
 
-function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, firestore: Firestore): Term {
+function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string): Term {
 
   const { medias, duration, territories_excluded = [], territories_included = [], exclusive, licensedOriginal } = rawTerm;
 
@@ -41,7 +39,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, fires
 
   const territories = territories_included.filter(territory => !territories_excluded.includes(territory));
 
-  const id = doc(collection(firestore, '_')).id;
+  const id = termId;
 
   return {
     id,
@@ -65,7 +63,6 @@ export async function formatContract(
   titleService: MovieService,
   contractService: ContractService,
   userService: UserService,
-  firestore: Firestore,
   blockframesAdmin: boolean,
   userOrgId: string,
   config: FormatConfig
@@ -83,7 +80,6 @@ export async function formatContract(
     titleService,
     contractService,
     userService,
-    firestore,
     blockframesAdmin,
     userOrgId,
     caches,
@@ -114,7 +110,7 @@ export async function formatContract(
       }
     }
 
-    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, firestore));
+    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, contractService.createId())); // TODO #8280 use firestoreService instead for all createId?
 
     // for **internal** sales we should check the parentTerm
     const isInternalSale = contract.type === 'sale' && contract.sellerId === centralOrgId.catalog;

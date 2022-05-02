@@ -1,7 +1,6 @@
 
 import { Component, ChangeDetectionStrategy, OnInit, Input, Inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Firestore } from '@angular/fire/firestore';
 import { MatTableDataSource } from '@angular/material/table';
 import { AuthService } from '@blockframes/auth/+state';
 import { UserService } from '@blockframes/user/+state';
@@ -33,7 +32,6 @@ export class ViewExtractedContractsComponent implements OnInit {
     private userService: UserService,
     private authService: AuthService,
     private titleService: MovieService,
-    private firestore: Firestore,
     private dynTitle: DynamicTitleService,
     private orgService: OrganizationService,
     private contractService: ContractService,
@@ -50,7 +48,6 @@ export class ViewExtractedContractsComponent implements OnInit {
       this.titleService,
       this.contractService,
       this.userService,
-      this.firestore,
       isBlockframesAdmin,
       this.authService.profile.orgId,
       { isSeller: this.isCatalogApp }

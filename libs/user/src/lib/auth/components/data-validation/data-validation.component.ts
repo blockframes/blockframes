@@ -4,9 +4,9 @@ import { App, getOrgModuleAccess, Organization } from '@blockframes/model';
 import { BehaviorSubject } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { delay, hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
-import { Functions, httpsCallable } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
+import { CallableFunctions } from 'ngfire';
 
 @Component({
   selector: 'auth-data-validation',
@@ -31,7 +31,7 @@ export class AuthDataValidationComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private functions: Functions,
+    private functions: CallableFunctions,
     private snackbar: MatSnackBar,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App,
@@ -72,8 +72,7 @@ export class AuthDataValidationComponent implements OnInit {
     const publicUser = this.authService.profile;
 
     try {
-      const sendVerifyEmail = httpsCallable(this.functions, 'sendVerifyEmailAddress');
-      await sendVerifyEmail({ email: publicUser.email, publicUser, app: this.app });
+      await this.functions.call('sendVerifyEmailAddress', { email: publicUser.email, publicUser, app: this.app });
       snack.dismiss();
       this.snackbar.open('Verification email sent.', '', { duration: 3000 });
     } catch (err) {

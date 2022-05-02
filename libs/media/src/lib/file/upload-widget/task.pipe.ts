@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { UploadTask, UploadTaskSnapshot, percentage } from '@angular/fire/storage';
+import { UploadTask, UploadTaskSnapshot } from 'firebase/storage';
+import { percentage } from 'ngfire';
 
 // Rxjs
 import { Observable, of } from 'rxjs';

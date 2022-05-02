@@ -1,6 +1,6 @@
 // Angular
-import { Injectable } from "@angular/core";
-import { Functions, httpsCallable } from "@angular/fire/functions";
+import { Injectable } from '@angular/core';
+import { CallableFunctions } from 'ngfire';
 
 // State
 import { StorageFile } from '@blockframes/model';
@@ -8,16 +8,13 @@ import { ImageParameters, getImgSize, getImgIxResourceUrl } from '../image/direc
 
 // Blockframes
 import { clamp } from '@blockframes/utils/utils';
+
 @Injectable({ providedIn: 'root' })
 export class MediaService {
 
   private breakpoints = [600, 1024, 1440, 1920];
 
-  private getMediaToken = httpsCallable<{file: StorageFile, parametersSet: ImageParameters[], eventId?: string},string[]>(this.functions, 'getMediaToken');
-
-  constructor(
-    private functions: Functions,
-  ) { }
+  constructor(private functions: CallableFunctions) { }
 
   /**
    * This https callable method will check if current user asking for the media
@@ -27,9 +24,8 @@ export class MediaService {
    * @param ref (without "/protected")
    * @param parametersSet ImageParameters[]
    */
-  private async getProtectedMediaToken(file: StorageFile, parametersSet: ImageParameters[], eventId?: string): Promise<string[]> {
-    const r = await this.getMediaToken({ file, parametersSet, eventId });
-    return r.data;
+  private getProtectedMediaToken(file: StorageFile, parametersSet: ImageParameters[], eventId?: string): Promise<string[]> {
+    return this.functions.call<{ file: StorageFile, parametersSet: ImageParameters[], eventId?: string }, string[]>('getMediaToken', { file, parametersSet, eventId });
   }
 
   async generateImageSrcset(file: StorageFile, _parameters: ImageParameters): Promise<string> {
@@ -54,7 +50,7 @@ export class MediaService {
    * @param parameters ImageParameters
    */
   async generateImgIxUrl(file: StorageFile, parameters: ImageParameters = {}, eventId?: string): Promise<string> {
-      if (file.privacy === 'protected') {
+    if (file.privacy === 'protected') {
       const [token] = await this.getProtectedMediaToken(file, [parameters], eventId);
       parameters.s = token;
     }

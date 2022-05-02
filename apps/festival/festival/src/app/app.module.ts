@@ -2,7 +2,12 @@
 import { emulatorConfig } from '../environment/environment';
 import { firebase, firebaseRegion, intercomId, sentryDsn } from '@env';
 import { IntercomModule } from 'ng-intercom';
-import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
+
+// NgFire
+import { FIREBASE_CONFIG, FIRESTORE_SETTINGS, REGION_OR_DOMAIN } from 'ngfire';
+import { Auth, connectAuthEmulator } from 'firebase/auth';
+import { connectFirestoreEmulator, Firestore } from 'firebase/firestore';
+import { connectFunctionsEmulator, Functions } from 'firebase/functions';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
@@ -19,14 +24,9 @@ import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { AppComponent } from './app.component';
 
 // Angular Fire
-import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
-import { provideFunctions, getFunctions, connectFunctionsEmulator } from '@angular/fire/functions';
-import { connectFirestoreEmulator, initializeFirestore, provideFirestore } from '@angular/fire/firestore';
-import { providePerformance, getPerformance } from '@angular/fire/performance';
-import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
-import { provideStorage, getStorage } from '@angular/fire/storage';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideAnalytics, getAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
-import 'firebase/storage';
 
 // Material
 import { MatNativeDateModule } from '@angular/material/core';
@@ -60,31 +60,9 @@ import { APP } from '@blockframes/utils/routes/utils';
     IntercomModule.forRoot({ appId: intercomId }),
 
     // Firebase
-    provideFirebaseApp(() => initializeApp(firebase('festival'))),
-    provideFirestore(() => {
-      const db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
-      if (emulatorConfig.firestore) {
-        connectFirestoreEmulator(db, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
-      }
-      return db;
-    }),
-    provideFunctions(() => {
-      const functions = getFunctions(getApp(), firebaseRegion);
-      if (emulatorConfig.functions) {
-        connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
-      }
-      return functions;
-    }),
-    providePerformance(() => getPerformance()),
-    provideAuth(() => {
-      const auth = getAuth();
-      if (emulatorConfig.auth) {
-        connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`);
-      }
-      return auth;
-    }),
-    provideStorage(() => getStorage()),
-    provideAnalytics(() => getAnalytics()),
+    provideFirebaseApp(() => initializeApp(firebase('festival'))), // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
+    provideAuth(() => getAuth()),  // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
+    provideAnalytics(() => getAnalytics()), // TODO #8280 W8 ngfire update 
 
     sentryDsn ? SentryModule : ErrorLoggerModule,
 
@@ -100,8 +78,29 @@ import { APP } from '@blockframes/utils/routes/utils';
     ScreenTrackingService,
     UserTrackingService,
     { provide: APP, useValue: 'festival' },
-    { provide: FIREBASE_CONFIG, useValue: { options: firebase('festival') } },
-    { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
+    {
+      provide: FIREBASE_CONFIG, useValue: {
+        options: firebase('festival'),
+        // TODO #8280 move on xxx-env.ts ?
+        firestore: (firestore: Firestore) => {
+          if (emulatorConfig.firestore) {
+            connectFirestoreEmulator(firestore, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
+          }
+        },
+        auth: (auth: Auth) => {
+          if (emulatorConfig.auth) {
+            connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`, { disableWarnings: true });
+          }
+        },
+        functions: (functions: Functions) => {
+          if (emulatorConfig.functions) {
+            connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
+          }
+        }
+      }
+    },
+    { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } },
+    { provide: REGION_OR_DOMAIN, useValue: firebaseRegion }
   ],
   bootstrap: [AppComponent],
 })

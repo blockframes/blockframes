@@ -2,8 +2,7 @@
 import { Injectable, Injector } from "@angular/core";
 import { ComponentPortal } from "@angular/cdk/portal";
 import { Overlay, OverlayRef } from "@angular/cdk/overlay";
-import { Firestore } from "@angular/fire/firestore";
-import { Storage, UploadTask, uploadBytesResumable, ref } from '@angular/fire/storage';
+import { UploadTask } from 'firebase/storage';
 import { AuthService } from "@blockframes/auth/+state";
 import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
 import { BehaviorStore } from "@blockframes/utils/observable-helpers";
@@ -11,6 +10,7 @@ import { delay } from '@blockframes/utils/helpers';
 import { UploadData, isValidMetadata } from '@blockframes/model';
 import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
 import { getTaskStateObservable } from "../file/upload-widget/task.pipe";
+import { FireStorage, FirestoreService } from 'ngfire';
 
 @Injectable({ providedIn: 'root' })
 export class FileUploaderService {
@@ -29,9 +29,9 @@ export class FileUploaderService {
 
   constructor(
     private overlay: Overlay,
-    private db: Firestore,
     private authService: AuthService,
-    private storage: Storage,
+    private firestoreService: FirestoreService,
+    private storage: FireStorage,
   ) { }
 
   /**
@@ -115,8 +115,7 @@ export class FileUploaderService {
         const alreadyUploading = (fullPath: string) => this.tasks.value.some(task => task.snapshot.ref.fullPath === fullPath);
         if (alreadyUploading(finalPath)) return undefined;
 
-        const reference = ref(this.storage, finalPath);
-        const afTask = uploadBytesResumable(reference, upload.file, { customMetadata: upload.metadata });
+        const afTask = this.storage.upload(finalPath, upload.file, { customMetadata: upload.metadata })
 
         // clean on success
         if (afTask) {
@@ -160,7 +159,7 @@ export class FileUploaderService {
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create(this.overlayOptions);
       const instance = new ComponentPortal(UploadWidgetComponent);
-      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this.tasks }, { provide: 'db', useValue: this.db }] });
+      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this.tasks }, { provide: 'db', useValue: this.firestoreService.db }] }); 
       this.overlayRef.attach(instance);
     }
   }

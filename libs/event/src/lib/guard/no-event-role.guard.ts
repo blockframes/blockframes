@@ -16,7 +16,7 @@ export class NoEventRoleGuard implements CanActivate {
 
   canActivate(next: ActivatedRouteSnapshot) {
     return combineLatest([
-      this.authService.user$,
+      this.authService._user$,
       this.authService.anonymousCredentials$,
       this.service.valueChanges(next.params.eventId as string)
     ]).pipe(

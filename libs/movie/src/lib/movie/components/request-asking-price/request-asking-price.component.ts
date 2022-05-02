@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
-import { Functions, httpsCallable } from "@angular/fire/functions";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -8,6 +7,7 @@ import { AuthService } from "@blockframes/auth/+state";
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { FormStaticValueArray } from "@blockframes/utils/form";
 import { toLabel } from "@blockframes/utils/pipes/to-label.pipe";
+import { CallableFunctions } from 'ngfire';
 import { take } from "rxjs";
 
 @Component({
@@ -26,7 +26,7 @@ export class RequestAskingPriceComponent {
   constructor(
     private authService: AuthService,
     private dialog: MatDialogRef<RequestAskingPriceComponent>,
-    private functions: Functions,
+    private functions: CallableFunctions,
     private snackbar: MatSnackBar,
     private analytics: AnalyticsService,
     private titleService: MovieService,
@@ -39,8 +39,7 @@ export class RequestAskingPriceComponent {
       this.form.disable();
       const territories = toLabel(this.form.get('territories').value, 'territories', ', ', ' and ');
       const message = this.form.get('message').value ?? 'No message provided.';
-      const f = httpsCallable<{ movieId: string, uid: string, territories: string, message: string }>(this.functions, 'requestAskingPrice');
-      await f({
+      await this.functions.call<{ movieId: string, uid: string, territories: string, message: string }, unknown>('requestAskingPrice', {
         movieId: this.data.movieId,
         uid: this.authService.uid,
         territories,

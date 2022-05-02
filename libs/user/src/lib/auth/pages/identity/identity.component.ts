@@ -347,7 +347,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   public async searchForInvitation() {
-    const { data: event } = await this.invitationService.getInvitationLinkedToEmail(this.form.get('email').value);
+    const event = await this.invitationService.getInvitationLinkedToEmail(this.form.get('email').value);
     if (event) {
       this.existingUser = true;
       this.form.get('generatedPassword').enable();

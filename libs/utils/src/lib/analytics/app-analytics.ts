@@ -1,4 +1,4 @@
-import { getAnalytics, logEvent, setUserProperties } from '@angular/fire/analytics';
+import { getAnalytics, logEvent, setUserProperties } from 'firebase/analytics';
 import { Injectable } from '@angular/core';
 import { EventName, AnalyticsUserProperties } from '@blockframes/model';
 import { centralOrgId } from '@env';

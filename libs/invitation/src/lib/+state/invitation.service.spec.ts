@@ -2,18 +2,6 @@
 import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
 import { AuthService } from '@blockframes/auth/+state';
-import { toDate } from '@blockframes/utils/helpers';
-import {
-  Firestore,
-  provideFirestore,
-  initializeFirestore,
-  connectFirestoreEmulator,
-  disableNetwork,
-  doc,
-  setDoc,
-  getDoc,
-  Timestamp
-} from '@angular/fire/firestore';
 import { initializeTestEnvironment } from '@firebase/rules-unit-testing';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { readFileSync } from 'fs';
@@ -23,8 +11,8 @@ import { AnalyticsService } from '@blockframes/analytics/+state/analytics.servic
 import { createInvitation, createUser, InvitationDocument } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
-import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { connectFunctionsEmulator, getFunctions, provideFunctions } from '@angular/fire/functions';
+import { FIREBASE_CONFIG, FirestoreService, FIRESTORE_SETTINGS } from 'ngfire';
+import { connectFirestoreEmulator, disableNetwork, doc, Firestore, getDoc, setDoc } from 'firebase/firestore';
 
 class InjectedAuthService {
   uid = 'userId';
@@ -59,33 +47,34 @@ describe('Invitations Test Suite', () => {
   let service: InvitationService;
   let db: Firestore;
 
+
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        provideFirebaseApp(() => initializeApp({ projectId: 'test' })),
-        provideFirestore(() => {
-          if (db) return db;
-          db = initializeFirestore(getApp(), { experimentalAutoDetectLongPolling: true });
-          connectFirestoreEmulator(db, 'localhost', 8080);
-          return db;
-        }),
-        provideFunctions(() => {
-          const functions = getFunctions(getApp());
-          connectFunctionsEmulator(functions, 'localhost', 5001);
-          return functions;
-        }),
-      ],
       providers: [
         InvitationService,
+        FirestoreService,
         { provide: AuthService, useClass: InjectedAuthService },
         { provide: UserService, useClass: DummyService },
         { provide: AnalyticsService, useClass: DummyService },
         { provide: ActivatedRoute, useValue: { params: of({}) } },
         { provide: APP, useValue: 'festival' },
+        {
+          provide: FIREBASE_CONFIG, useValue:
+          {
+            options: { projectId: 'test' },
+            firestore: (firestore: Firestore) => {
+              if (db) return db;
+              connectFirestoreEmulator(firestore, 'localhost', 8080);
+            }
+          }
+        },
+        { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
       ],
     });
-    db = TestBed.inject(Firestore);
+
     service = TestBed.inject(InvitationService);
+    const firestoreService = TestBed.inject(FirestoreService);
+    db = firestoreService.db;
 
     await initializeTestEnvironment({
       projectId: 'test',
@@ -103,17 +92,6 @@ describe('Invitations Test Suite', () => {
     expect(service).toBeTruthy();
   })
 
-  it('Formats invitation from firestore', () => {
-    const invitationService = TestBed.inject(InvitationService);
-    const timestamp = Timestamp.fromDate(today);
-    const formattedDate = toDate(timestamp);
-
-    //Create an Invitation Document
-    const newInvite = createInvitation();
-    const invite: InvitationDocument = { ...newInvite, ...{ date: timestamp } }
-    const formattedInvite = invitationService.formatFromFirestore(invite);
-    expect(formattedInvite.date).toEqual(formattedDate);
-  });
 
   it('Formats invitation to firestore', () => {
     const invitationService = TestBed.inject(InvitationService);
@@ -122,7 +100,7 @@ describe('Invitations Test Suite', () => {
     const inviteData = { ...invitationParamsOrg, ...invitationParamsUser };
     const inviteParams = { ...inviteData, ...{ message: 'Clean it', watchTime: undefined } };
     const newInvite = createInvitation(inviteParams);
-    const formattedInvite = invitationService.formatToFirestore(newInvite);
+    const formattedInvite = invitationService.toFirestore(newInvite);
     expect(formattedInvite).toMatchObject(inviteData);
   });
 

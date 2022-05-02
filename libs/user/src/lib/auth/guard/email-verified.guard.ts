@@ -10,7 +10,7 @@ export class EmailVerifiedGuard implements CanActivate  {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate() {
-    return this.authService.user$.pipe(
+    return this.authService._user$.pipe(
       map(user => user.emailVerified ? true : this.router.createUrlTree(['/auth/identity']))
     )
   }
