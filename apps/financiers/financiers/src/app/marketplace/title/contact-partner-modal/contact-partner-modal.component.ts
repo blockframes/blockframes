@@ -31,7 +31,7 @@ export interface ContactPartnerModalData {
 }
 
 @Component({
-  selector: 'financiers-movie-modal',
+  selector: 'financiers-contact-partner-modal',
   templateUrl: './contact-partner-modal.component.html',
   styleUrls: ['./contact-partner-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

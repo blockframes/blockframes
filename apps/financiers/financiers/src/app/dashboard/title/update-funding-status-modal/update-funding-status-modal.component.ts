@@ -10,7 +10,7 @@ export interface UpdateFundingStatusModalData {
 }
 
 @Component({
-  selector: 'financiers-dashboard-title-modal',
+  selector: 'financiers-update-funding-status-modal',
   templateUrl: './update-funding-status-modal.component.html',
   styleUrls: ['./update-funding-status-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
