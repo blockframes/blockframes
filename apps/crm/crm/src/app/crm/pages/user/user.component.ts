@@ -19,6 +19,7 @@ import { map } from 'rxjs/operators';
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'crm-user',
@@ -195,7 +196,7 @@ export class UserComponent implements OnInit {
 
     const simulation = await this.simulateDeletion(this.user);
     this.dialog.open(ConfirmInputComponent, {
-      data: {
+      data: createModalData({
         title: 'You are currently deleting this user from Archipel, are you sure?',
         text: 'If yes, please write \'HARD DELETE\' inside the form below.',
         warning: 'This user will be deleted from the application.',
@@ -207,7 +208,7 @@ export class UserComponent implements OnInit {
           this.snackBar.open('User deleted !', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/users']);
         }
-      }
+      })
     });
   }
 
@@ -243,7 +244,7 @@ export class UserComponent implements OnInit {
   }
 
   openDetails(terms: string[], scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
+    this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
   }
 
   getLink(invitation: Invitation) {

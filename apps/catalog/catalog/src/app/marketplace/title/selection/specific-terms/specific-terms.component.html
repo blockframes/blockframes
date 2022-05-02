@@ -1,52 +1,53 @@
-<section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px" >
-  <h1>Specific Terms</h1>
-  <p>Please indicate any specific conditions you'd like to request for this deal.</p>
-  <form [formGroup]="form" fxLayout="column" (ngSubmit)="createOffer()">
-    <mat-form-field appearance="outline">
-      <mat-label>Specific Terms</mat-label>
-      <textarea
-        matInput
-        placeholder="eg: Licensee shall have the exclusive option to acquire additional Episodes of the Program(s) or additional Rights during the Licence Period for an additional fee equal or superior to the actual fee per Episode."
-        formControlName="specificity"
-        cdkTextareaAutosize
-        #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="4"
-        maxlength="500"
-        test-id="specific-terms">
-      </textarea>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Delivery Specifications</mat-label>
-      <textarea
-        matInput
-        placeholder="Please indicate here the specific items you require for your delivery, if any."
-        formControlName="delivery"
-        cdkTextareaAutosize
-        #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="4"
-        maxlength="500"
-        test-id="delivery-list">
-      </textarea>
-    </mat-form-field>
-    <mat-checkbox class="example-margin" formControlName="acceptTerms">
-      <p>
-        I confirm that I have read and agree the <a routerLink="/c/o/marketplace/terms" target="_blank">Terms & Conditions</a> that will applied to the offer.
-      </p>
-    </mat-checkbox>
-    <footer fxLayout="column" fxLayoutAlign="center center">
-      <button mat-flat-button color="primary" [disabled]="form.disabled || !form.value.acceptTerms" type="submit"
-        test-id="send-offer">
-        <span>
-          Send Your Offer
-        </span>
-        <ng-container *ngIf="form.disabled">
-          <mat-spinner diameter="16"></mat-spinner>
-        </ng-container>
-      </button>
-      <button mat-button mat-dialog-close type="button">
-        Cancel
-      </button>
-    </footer>
-  </form>
-
-</section>
+<global-modal>
+  <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px" >
+    <h2>Specific Terms</h2>
+    <p>Please indicate any specific conditions you'd like to request for this deal.</p>
+    <form [formGroup]="form" fxLayout="column" (ngSubmit)="createOffer()">
+      <mat-form-field appearance="outline">
+        <mat-label>Specific Terms</mat-label>
+        <textarea
+          matInput
+          placeholder="eg: Licensee shall have the exclusive option to acquire additional Episodes of the Program(s) or additional Rights during the Licence Period for an additional fee equal or superior to the actual fee per Episode."
+          formControlName="specificity"
+          cdkTextareaAutosize
+          #autosize="cdkTextareaAutosize"
+          cdkAutosizeMinRows="4"
+          maxlength="500"
+          test-id="specific-terms">
+        </textarea>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Delivery Specifications</mat-label>
+        <textarea
+          matInput
+          placeholder="Please indicate here the specific items you require for your delivery, if any."
+          formControlName="delivery"
+          cdkTextareaAutosize
+          #autosize="cdkTextareaAutosize"
+          cdkAutosizeMinRows="4"
+          maxlength="500"
+          test-id="delivery-list">
+        </textarea>
+      </mat-form-field>
+      <mat-checkbox class="example-margin" formControlName="acceptTerms">
+        <p>
+          I confirm that I have read and agree the <a routerLink="/c/o/marketplace/terms" target="_blank">Terms & Conditions</a> that will applied to the offer.
+        </p>
+      </mat-checkbox>
+      <footer fxLayout="column" fxLayoutAlign="center center">
+        <button mat-flat-button color="primary" [disabled]="form.disabled || !form.value.acceptTerms" type="submit"
+          test-id="send-offer">
+          <span>
+            Send Your Offer
+          </span>
+          <ng-container *ngIf="form.disabled">
+            <mat-spinner diameter="16"></mat-spinner>
+          </ng-container>
+        </button>
+        <button mat-button mat-dialog-close type="button">
+          Cancel
+        </button>
+      </footer>
+    </form>
+  </section>
+</global-modal>

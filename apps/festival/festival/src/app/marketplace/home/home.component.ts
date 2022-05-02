@@ -14,6 +14,7 @@ import { createPreferences } from '@blockframes/model';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { canHavePreferences } from '@blockframes/user/+state/user.utils';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
@@ -59,9 +60,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (canHavePreferences(org, 'festival')) {
       const preferences = createPreferences();
       this.authService.update({ preferences });
-      this.dialog.open(PreferencesComponent, {
-        autoFocus: false
-      });
+      this.dialog.open(PreferencesComponent, { data: createModalData({}, 'large'), autoFocus: false });
     }
   }
 
