@@ -7,6 +7,7 @@ import { RequestAskingPriceComponent } from "./request-asking-price.component";
 
 // Blockframes
 import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { GlobalModalModule } from "@blockframes/ui/global-modal/global-modal.module";
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -23,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
     ReactiveFormsModule,
     // Blockframes
     StaticGroupModule,
+    GlobalModalModule,
     // Material
     MatProgressSpinnerModule,
     MatFormFieldModule,

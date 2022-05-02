@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, TemplateRef, ChangeDetectorRef, OnDestroy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, OnDestroy, Inject } from '@angular/core';
 import { Router, ActivatedRoute, RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { EventForm } from '../../form/event.form';
@@ -14,6 +14,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { App } from '@blockframes/model';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const statisticsTab = { path: 'statistics', label: 'Attendance' };
 
@@ -113,7 +114,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
 
   async remove() {
     this.dialog.open(ConfirmComponent, {
-      data: {
+      data: createModalData({
         title: 'Are you sure to delete this event?',
         question: 'If you\'ve already sent out invites, please note that the invitation emails were already sent and cannot be taken back.',
         advice: 'You might want to contact the people concerned to let them know that this event won\'t be happening.',
@@ -124,7 +125,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
           //Here we add an eventDeleted to inform the guard thatthere is no need to display the popup
           this.router.navigate(['../..'], { relativeTo: this.route, state: { eventDeleted: true } });
         }
-      },
+      }),
       autoFocus: false,
     })
   }
@@ -135,14 +136,14 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     }
 
     const dialogRef = this.dialog.open(ConfirmComponent, {
-      data: {
+      data: createModalData({
         title: 'You are about to leave the form.',
         question: 'Some changes have not been saved.',
         advice: 'If you leave now, you will lose these changes.',
         confirm: 'Save & Exit',
         cancel: 'Close without saving'
-      },
-      autoFocus: false,
+      }, 'small'),
+      autoFocus: false
     });
 
     return dialogRef.afterClosed().pipe(

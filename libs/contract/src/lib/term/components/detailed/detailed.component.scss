@@ -1,17 +1,5 @@
-:host {
-  display: block;
-}
-
-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  overflow: hidden;
-  h1 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+h2 {
+  text-align: center;
 }
 
 article {

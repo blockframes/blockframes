@@ -12,6 +12,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
 import { PublicUser, getOrgAppAccess } from '@blockframes/model';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: OrganizationsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -151,8 +152,12 @@ export class TableExtractedOrganizationsComponent implements OnInit {
   ///////////////////
 
   displayErrors(importState: OrganizationsImportState) {
-    const data = { title: `Organization id ${importState.org.id}`, errors: importState.errors };
-    this.dialog.open(ViewImportErrorsComponent, { data, width: '50%' });
+    this.dialog.open(ViewImportErrorsComponent, {
+      data: createModalData({
+        title: `Organization id ${importState.org.id}`,
+        errors: importState.errors
+      })
+    });
   }
 
   ///////////////////

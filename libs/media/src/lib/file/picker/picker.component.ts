@@ -13,6 +13,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { FilePreviewComponent } from '../preview/preview.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'file-picker',
@@ -118,12 +119,7 @@ export class FilePickerComponent implements OnInit, OnDestroy {
   }
 
   previewFile(ref: StorageFile) {
-    this.dialog.open(FilePreviewComponent, {
-      data: { ref },
-      width: '70vw',
-      height: '70vh',
-      autoFocus: false,
-    });
+    this.dialog.open(FilePreviewComponent, { data: createModalData({ ref }, 'large'), autoFocus: false });
   }
 
   closeDialog() {
