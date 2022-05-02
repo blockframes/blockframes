@@ -110,9 +110,7 @@ async function runCommand() {
       await importFirestore(arg1)
       break;
     case 'restoreEnv':
-      await startMaintenance(db);
       await restoreLiveEnv();
-      await endMaintenance(db);
       break
     case 'backupEnv':
       await backupLiveEnv()

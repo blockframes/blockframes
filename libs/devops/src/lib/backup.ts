@@ -1,6 +1,6 @@
 import { backupBucket, firebase } from '@env';
 import { enableMaintenanceInEmulator } from './emulator';
-import { loadAdminServices } from '@blockframes/firebase-utils';
+import { endMaintenance, loadAdminServices, startMaintenance } from '@blockframes/firebase-utils';
 import { defaultEmulatorBackupPath, importFirestoreEmulatorBackup, uploadDbBackupToBucket } from '@blockframes/firebase-utils/firestore/emulator';
 import { deleteAllUsers } from '@blockframes/testing/unit-tests';
 import { ensureMaintenanceMode } from './tools';
@@ -45,11 +45,15 @@ export async function backupLiveEnv(dirName?: string) {
  * @param dirName name of backup dir in GCS Bucket
  */
 export async function restoreLiveEnv(dirName?: string) {
+  
+  const { storage, db, auth } = loadAdminServices();
+
+  await startMaintenance(db);
+
   console.log('When restoring an entire env, this function will check your local environment vars for AUTH_KEY');
   console.log('You can find this key in your project, and this function will fail without it');
   if (!process.env['AUTH_KEY']) throw 'No AUTH_KEY found in env...';
 
-  const { storage, db, auth } = loadAdminServices();
   const bucket = storage.bucket(backupBucket);
   const backupDir = dirName ? `${dirName}/` : await getLatestDirName(bucket, 'firebase');
 
@@ -103,4 +107,7 @@ export async function restoreLiveEnv(dirName?: string) {
   console.info('Algolia ready!');
 
   maintenanceInsurance();
+
+  await endMaintenance(db);
+
 }
