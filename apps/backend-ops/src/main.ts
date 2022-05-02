@@ -131,9 +131,7 @@ async function runCommand() {
       await syncAuthEmulatorWithFirestoreEmulator({ importFrom: arg1 });
       break;
     case 'syncUsers':
-      await startMaintenance(db);
       await syncUsers();
-      await endMaintenance(db);
       break;
     case 'printUsers':
       await printUsers();
