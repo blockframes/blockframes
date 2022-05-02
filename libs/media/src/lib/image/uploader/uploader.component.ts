@@ -13,9 +13,8 @@ import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { allowedFiles, fileSizeToString } from '@blockframes/utils/utils';
-import { doc, DocumentReference } from 'firebase/firestore';
+import { DocumentReference } from 'firebase/firestore';
 import { FirestoreService, fromRef } from 'ngfire';
-import { OrganizationService } from '@blockframes/organization/+state';
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
@@ -160,14 +159,12 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private snackBar: MatSnackBar,
     private uploaderService: FileUploaderService,
-    //private firestoreService: FirestoreService
-    private firestore : OrganizationService // TODO #8280 temp
+    private firestoreService: FirestoreService
   ) { }
 
   async ngOnInit() {
     if (this.listenToChanges) {
-      //const ref = this.firestoreService.getRef(`${this.metadata.collection}/${this.metadata.docId}`) as DocumentReference;
-      const ref = doc(this.firestore._db,`${this.metadata.collection}/${this.metadata.docId}`);
+      const ref = this.firestoreService.getRef(`${this.metadata.collection}/${this.metadata.docId}`) as DocumentReference;
       this.docSub = fromRef(ref).pipe(map(snap => snap.data())).subscribe(data => {
         const media = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]

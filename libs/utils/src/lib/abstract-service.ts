@@ -10,8 +10,6 @@ export abstract class BlockframesCollection<T> extends FireCollection<T> {
 
   storeId = true;
 
-  _db = this.db; // TODO #8280 remove when ngfire gets updated
-
   protected toFirestore(document: FireEntity<T>, actionType: 'add' | 'update') {
     return document;
   }
@@ -25,8 +23,6 @@ export abstract class BlockframesSubCollection<T> extends FireSubCollection<T> {
 
   storeId = true;
 
-  _db = this.db; // TODO #8280 remove when ngfire gets updated
-
   protected toFirestore(document: FireEntity<T>, actionType: 'add' | 'update') {
     return document;
   }
@@ -34,8 +30,6 @@ export abstract class BlockframesSubCollection<T> extends FireSubCollection<T> {
 
 export abstract class BlockframesAuth<T> extends FireAuth<T> {
   protected app: App = inject(APP);
-
-  _db = this.db; // TODO #8280 remove when ngfire gets updated
 
   protected toFirestore(document: Partial<T>, actionType: 'add' | 'update') {
     return document;

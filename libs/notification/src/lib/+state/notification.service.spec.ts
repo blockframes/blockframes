@@ -16,7 +16,7 @@ import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { AuthService } from '@blockframes/auth/+state';
 import { APP } from '@blockframes/utils/routes/utils';
 import { connectFirestoreEmulator, disableNetwork, doc, Firestore, getDoc, setDoc } from 'firebase/firestore';
-import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
+import { FIREBASE_CONFIG, FirestoreService, FIRESTORE_SETTINGS } from 'ngfire';
 
 class DummyAuthService {
   profile$ = new Observable();
@@ -36,6 +36,7 @@ describe('Notifications Test Suite', () => {
     TestBed.configureTestingModule({
       providers: [
         NotificationService,
+        FirestoreService,
         { provide: HttpClient, useClass: HttpTestingController },
         { provide: AuthService, useClass: DummyAuthService },
         { provide: UserService, useClass: DummyService },
@@ -58,7 +59,8 @@ describe('Notifications Test Suite', () => {
       ],
     });
     service = TestBed.inject(NotificationService);
-    db = service._db; // TODO #8280
+    const firestoreService = TestBed.inject(FirestoreService);
+    db = firestoreService.db;
 
     await initializeTestEnvironment({
       projectId: 'test',

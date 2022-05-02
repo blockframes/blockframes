@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { AfterViewInit, ChangeDetectionStrategy, Component, HostBinding, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { doc, DocumentReference } from 'firebase/firestore';
+import { DocumentReference } from 'firebase/firestore';
 import { CmsPage } from '@blockframes/admin/cms/template';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -36,13 +36,12 @@ export class MarketplaceHomeComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private authService: AuthService,
     private orgService: OrganizationService,
-    //private firestoreService: FirestoreService,
+    private firestoreService: FirestoreService,
   ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Home');
-    //const ref = this.firestoreService.getRef('cms/catalog/home/live') as DocumentReference<CmsPage>;
-    const ref = doc(this.orgService._db, 'cms/catalog/home/live') as DocumentReference<CmsPage>;
+    const ref = this.firestoreService.getRef('cms/catalog/home/live') as DocumentReference<CmsPage>;
     this.page$ = fromRef(ref).pipe(
       map(snap => snap.data()),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))

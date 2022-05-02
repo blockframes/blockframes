@@ -25,9 +25,8 @@ import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { BehaviorSubject, map, Subscription } from 'rxjs';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { doc, DocumentReference } from 'firebase/firestore';
+import { DocumentReference } from 'firebase/firestore';
 import { FirestoreService, fromRef } from 'ngfire';
-import { AuthService } from '@blockframes/auth/+state';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
@@ -106,14 +105,12 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   constructor(
     private snackBar: MatSnackBar,
     private uploaderService: FileUploaderService,
-    //private firestoreService: FirestoreService,
-    private firestore: AuthService,
+    private firestoreService: FirestoreService,
   ) { }
 
   ngOnInit() {
     if (this.listenToChanges) {
-      //const ref = this.firestoreService.getRef(`${this.metadata.collection}/${this.metadata.docId}`) as DocumentReference;
-      const ref = doc(this.firestore._db,`${this.metadata.collection}/${this.metadata.docId}`);
+      const ref = this.firestoreService.getRef(`${this.metadata.collection}/${this.metadata.docId}`) as DocumentReference;
       this.docSub = fromRef(ref).pipe(map(snap => snap.data())).subscribe(data => {
         const media = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
@@ -171,14 +168,14 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
       this.file = files.item(0);
 
     } else if (!files) { // No files
-        this.snackBar.open('No file found', 'close', { duration: 1000 });
-        if (this.file) {
-          this.state$.next('file');
-        } else {
-          this.state$.next('waiting');
-          this.fileExplorer.nativeElement.value = null;
-        }
-        return;
+      this.snackBar.open('No file found', 'close', { duration: 1000 });
+      if (this.file) {
+        this.state$.next('file');
+      } else {
+        this.state$.next('waiting');
+        this.fileExplorer.nativeElement.value = null;
+      }
+      return;
     } else { // Single file
       this.file = files;
     }

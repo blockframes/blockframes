@@ -9,7 +9,6 @@ import { AllowedFileType } from '@blockframes/utils/utils';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { getDoc, updateDoc, doc } from 'firebase/firestore';
 import { FirestoreService } from 'ngfire';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 @Component({
   selector: '[form] [meta] [accept] file-list-uploader',
@@ -32,8 +31,7 @@ export class FileListUploaderComponent {
 
   constructor(
     private uploadService: FileUploaderService,
-    //private firestoreService: FirestoreService,
-    private firestore: MovieService, // TODO #8280
+    private firestoreService: FirestoreService,
   ) { }
 
   save() {
@@ -41,8 +39,7 @@ export class FileListUploaderComponent {
   }
 
   async delete(file: StorageFile, index: number) {
-    //const docRef = doc(this.firestoreService.db, `${file.collection}/${file.docId}`);
-    const docRef = doc(this.firestore._db, `${file.collection}/${file.docId}`);
+    const docRef = doc(this.firestoreService.db, `${file.collection}/${file.docId}`);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
       console.warn(`Document ${file.collection}/${file.docId} doesn't exists!`);

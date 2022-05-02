@@ -30,7 +30,7 @@ export class FileUploaderService {
   constructor(
     private overlay: Overlay,
     private authService: AuthService,
-    //private firestoreService: FirestoreService,
+    private firestoreService: FirestoreService,
     private storage: FireStorage,
   ) { }
 
@@ -159,7 +159,7 @@ export class FileUploaderService {
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create(this.overlayOptions);
       const instance = new ComponentPortal(UploadWidgetComponent);
-      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this.tasks }, { provide: 'db', useValue: this.authService._db }] }); //this.firestoreService.db
+      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this.tasks }, { provide: 'db', useValue: this.firestoreService.db }] }); 
       this.overlayRef.attach(instance);
     }
   }

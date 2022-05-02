@@ -11,7 +11,7 @@ import { AnalyticsService } from '@blockframes/analytics/+state/analytics.servic
 import { createInvitation, createUser, InvitationDocument } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
-import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
+import { FIREBASE_CONFIG, FirestoreService, FIRESTORE_SETTINGS } from 'ngfire';
 import { connectFirestoreEmulator, disableNetwork, doc, Firestore, getDoc, setDoc } from 'firebase/firestore';
 
 class InjectedAuthService {
@@ -47,10 +47,12 @@ describe('Invitations Test Suite', () => {
   let service: InvitationService;
   let db: Firestore;
 
+
   beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         InvitationService,
+        FirestoreService,
         { provide: AuthService, useClass: InjectedAuthService },
         { provide: UserService, useClass: DummyService },
         { provide: AnalyticsService, useClass: DummyService },
@@ -71,7 +73,9 @@ describe('Invitations Test Suite', () => {
     });
 
     service = TestBed.inject(InvitationService);
-    db = service._db; // TODO #8280
+    const firestoreService = TestBed.inject(FirestoreService);
+    db = firestoreService.db;
+
     await initializeTestEnvironment({
       projectId: 'test',
       firestore: { rules: readFileSync('./firestore.test.rules', 'utf8') }

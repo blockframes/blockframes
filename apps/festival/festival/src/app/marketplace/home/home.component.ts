@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
-import { doc, DocumentReference } from 'firebase/firestore';
+import { DocumentReference } from 'firebase/firestore';
 import { FirestoreService, fromRef } from 'ngfire';
 
 // RxJs
@@ -43,13 +43,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private authService: AuthService,
     private orgService: OrganizationService,
-    //private firestoreService: FirestoreService
+    private firestoreService: FirestoreService
   ) { }
 
   async ngOnInit() {
     this.dynTitle.setPageTitle('Home');
-    //const ref = this.firestoreService.getRef('cms/festival/home/live') as DocumentReference<CmsPage>;
-    const ref = doc(this.orgService._db, 'cms/festival/home/live') as DocumentReference<CmsPage>;
+    const ref = this.firestoreService.getRef('cms/festival/home/live') as DocumentReference<CmsPage>;
     this.page$ = fromRef(ref).pipe(
       map(snap => snap.data()),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
