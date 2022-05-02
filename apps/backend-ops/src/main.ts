@@ -125,13 +125,7 @@ async function runCommand() {
       await healthCheck();
       break;
     case 'migrate':
-      if (!await isMigrationRequired()) {
-        console.log('Skipping because there is no migration to run...');
-        return;
-      }
-      await startMaintenance(db);
       await migrate();
-      await endMaintenance(db);
       break;
     case 'syncAuthEmulatorWithFirestoreEmulator':
       await syncAuthEmulatorWithFirestoreEmulator({ importFrom: arg1 });
