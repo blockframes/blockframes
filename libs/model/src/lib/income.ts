@@ -1,4 +1,4 @@
-import { MovieCurrency } from './static/types';
+import type { MovieCurrency } from './static/types';
 
 export interface Income {
   /** Should be the same as the sale that generated this income */
