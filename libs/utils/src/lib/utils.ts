@@ -316,9 +316,6 @@ export function removeNulls(obj: any) {
     } else if (typeof obj[k] === "object") {
       removeNulls(obj[k]);
     }
-    if (isArray && obj.length === +k) {
-      removeNulls(obj);
-    }
   }
   return obj;
 }
