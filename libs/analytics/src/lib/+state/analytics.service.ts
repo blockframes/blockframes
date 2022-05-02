@@ -4,6 +4,7 @@ import { where } from 'firebase/firestore';
 import { map, take } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';
+import { CallableFunctions } from 'ngfire';
 
 // Blockframes
 import { Analytics, AnalyticsTypes, EventName, createTitleMeta, Movie } from '@blockframes/model';
@@ -11,14 +12,37 @@ import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { createDocumentMeta } from '@blockframes/model';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
+interface AnalyticsActiveUser {
+  user_id: string,
+  first_connexion: {
+    value: Date
+  },
+  last_connexion: {
+    value: Date
+  },
+  session_count: number,
+  page_view: number
+}
+
+interface ConnectedUserInfo {
+  uid: string,
+  firstConnexion: Date,
+  lastConnexion: Date,
+  pageView: number,
+  sessionCount: number,
+}
+
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService extends BlockframesCollection<Analytics> {
   readonly path = 'analytics';
 
   private analytics = getAnalytics();
 
+  private analyticsCache: ConnectedUserInfo[] = [];
+
   constructor(
     private authService: AuthService,
+    private functions: CallableFunctions
   ) {
     super();
   }
@@ -109,5 +133,49 @@ export class AnalyticsService extends BlockframesCollection<Analytics> {
     const profile = this.authService.profile;
     const isConcierge = profile?.email.includes('concierge');
     return isBlockframesAdmin || isConcierge || Object.values(centralOrgId).includes(profile?.orgId);
+  }
+
+  public async loadAnalyticsData() {
+    if (this.analyticsCache.length) return;
+    const rows = await this.getAnalyticsActiveUsers();
+    this.analyticsCache = rows.map(r => ({
+      uid: r.user_id,
+      firstConnexion: r.first_connexion.value,
+      lastConnexion: r.last_connexion.value,
+      sessionCount: r.session_count,
+      pageView: r.page_view,
+    }));
+  }
+
+  private getAnalyticsActiveUsers(): Promise<AnalyticsActiveUser[]> {
+    return this.functions.call<unknown, AnalyticsActiveUser[]>('getAnalyticsActiveUsers', {});
+  }
+
+  getLastConnexion(uid: string): Date {
+    const userInfo = this.analyticsCache.find(u => u.uid === uid);
+    if (userInfo && userInfo.lastConnexion) {
+      return userInfo.lastConnexion;
+    }
+  }
+
+  getFirstConnexion(uid: string): Date {
+    const userInfo = this.analyticsCache.find(u => u.uid === uid);
+    if (userInfo && userInfo.firstConnexion) {
+      return userInfo.firstConnexion;
+    }
+  }
+
+  getSessionCount(uid: string): number {
+    const userInfo = this.analyticsCache.find(u => u.uid === uid);
+    if (userInfo && userInfo.sessionCount) {
+      return userInfo.sessionCount;
+    }
+  }
+
+  getPageView(uid: string): number {
+    const userInfo = this.analyticsCache.find(u => u.uid === uid);
+    if (userInfo && userInfo.pageView) {
+      return userInfo.pageView;
+    }
   }
 }
