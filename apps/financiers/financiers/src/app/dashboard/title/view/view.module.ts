@@ -12,11 +12,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
-import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/actions/actions.module';
 // Blockframes
+import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/actions/actions.module';
 import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
 import { OrgAccessModule } from '@blockframes/organization/pipes';
-import { UpdateFundingStatusModalModule } from '../modal/modal.module';
+import { UpdateFundingStatusModalModule } from '../update-funding-status-modal/update-funding-status-modal.module';
 // Components
 import { TitleViewComponent } from './view.component';
 

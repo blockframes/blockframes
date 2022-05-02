@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { MarketplaceMovieViewComponent } from './view.component';
-import { ContactPartnerModalModule } from '../modal/modal.module';
+import { ContactPartnerModalModule } from '../contact-partner-modal/contact-partner-modal.module';
 import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
 
 // Custom Modules

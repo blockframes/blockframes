@@ -8,7 +8,7 @@ import { pluck, switchMap } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { ActivatedRoute } from '@angular/router';
-import { UpdateFundingStatusModalComponent, UpdateFundingStatusModalData } from '../modal/modal.component';
+import { UpdateFundingStatusModalComponent, UpdateFundingStatusModalData } from '../update-funding-status-modal/update-funding-status-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({

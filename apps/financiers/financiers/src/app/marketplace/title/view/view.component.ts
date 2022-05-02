@@ -10,7 +10,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
 import { pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
-import { ContactPartnerModalComponent, ContactPartnerModalData } from '../modal/modal.component';
+import { ContactPartnerModalComponent, ContactPartnerModalData } from '../contact-partner-modal/contact-partner-modal.component';
 
 @Component({
   selector: 'financiers-movie-view',
@@ -85,9 +85,7 @@ export class MarketplaceMovieViewComponent {
         form,
         movie,
         currency: this.currency,
-        campaign: this.movie$.pipe(
-          switchMap(movie => this.campaignService.valueChanges(movie.id))
-        )
+        campaign: this.campaign$
       })
     });
   }
