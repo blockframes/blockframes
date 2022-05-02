@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 
 import { CellModalComponent } from './cell-modal.component';
+import { GlobalModalModule } from '../global-modal/global-modal.module';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { CellModalComponent } from './cell-modal.component';
     MatIconModule,
     MatButtonModule,
     MatDialogModule,
+    GlobalModalModule
   ],
   exports: [CellModalComponent],
   declarations: [CellModalComponent]

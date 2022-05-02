@@ -132,7 +132,9 @@ export class TableExtractedMoviesComponent implements OnInit {
   ///////////////////
 
   displayErrors(data: MovieImportState) {
-    this.dialog.open(ViewImportErrorsComponent, { data: { title: data.movie.title.original, errors: data.errors }, width: '50%' });
+    this.dialog.open(ViewImportErrorsComponent, {
+      data: createModalData({ title: data.movie.title.original, errors: data.errors })
+    });
   }
 
   ///////////////////

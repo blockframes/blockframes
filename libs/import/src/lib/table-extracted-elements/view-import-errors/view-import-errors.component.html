@@ -1,5 +1,8 @@
-<mat-dialog-content>
-  <h1>{{ element.title }}</h1>
+<global-modal>
+  <header>
+    <h2>{{ element.title }}</h2>
+  </header>
+
   <mat-accordion class="example-headers-align">
     <mat-expansion-panel *ngFor="let error of element.errors; let i = index" [expanded]="step === i"
       (opened)="setStep(i)" hideToggle>
@@ -22,4 +25,4 @@
       </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>
-</mat-dialog-content>
+</global-modal>
