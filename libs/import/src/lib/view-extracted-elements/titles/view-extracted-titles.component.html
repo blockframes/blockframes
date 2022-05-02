@@ -8,7 +8,7 @@
   </ng-container>
   <ng-container *ngIf="moviesToUpdate$ | async as moviesToUpdate">
     <ng-container *ngIf="moviesToUpdate.data.length">
-      <h3>Titles to Update & Submit</h3>
+      <h3 class="margin-top">Titles to Update & Submit</h3>
       <p>These movies will be updated should they already exist otherwise, they'll be created.</p>
       <import-table-extracted-movies [rows]="moviesToUpdate" mode="update"></import-table-extracted-movies>
     </ng-container>

@@ -108,7 +108,7 @@ export class TableExtractedMoviesComponent implements OnInit {
       for (const importState of updates) {
         this.processedTitles++;
         const movie = removeNulls(importState.movie);
-        await this.movieService.update(movie.id, movie);
+        await this.movieService.upsert(movie);
       }
       this.snackBar.open(`${this.processedTitles} movies updated!`, 'close', { duration: 3000 });
       this.processedTitles = 0;
