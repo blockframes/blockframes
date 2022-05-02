@@ -11,7 +11,6 @@ import {
   migrate,
   disableMaintenanceMode,
   displayCredentials,
-  isMigrationRequired,
   showHelp,
   upgradeAlgoliaMovies,
   upgradeAlgoliaOrgs,
