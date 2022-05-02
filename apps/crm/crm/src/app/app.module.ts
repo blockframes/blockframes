@@ -16,9 +16,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
 
-// Akita
-import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-
 // Components
 import { AppComponent } from './app.component';
 
@@ -55,9 +52,6 @@ import { APP } from '@blockframes/utils/routes/utils';
 
     // Sentry
     sentryDsn ? SentryModule : ErrorLoggerModule,
-
-    // Akita
-    AkitaNgRouterStoreModule,
 
     // Router
     CrmModule,

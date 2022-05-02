@@ -17,9 +17,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { Router, NavigationEnd } from '@angular/router';
 
-// Akita
-import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-
 // Components
 import { AppComponent } from './app.component';
 
@@ -65,9 +62,6 @@ import { APP } from '@blockframes/utils/routes/utils';
     provideAnalytics(() => getAnalytics()), // TODO #8280 W8 ngfire update 
 
     sentryDsn ? SentryModule : ErrorLoggerModule,
-
-    // Akita
-    AkitaNgRouterStoreModule,
 
     // Router
     FestivalModule,

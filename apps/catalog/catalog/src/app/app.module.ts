@@ -18,9 +18,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
-// Akita
-import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-
 // Components
 import { AppComponent } from './app.component';
 
@@ -64,9 +61,6 @@ import { APP } from '@blockframes/utils/routes/utils';
     provideAnalytics(() => getAnalytics()), // TODO #8280 W8 ngfire update 
 
     sentryDsn ? SentryModule : ErrorLoggerModule,
-
-    // Akita
-    AkitaNgRouterStoreModule,
 
     // Router
     IdlePreloadModule.forRoot(),
