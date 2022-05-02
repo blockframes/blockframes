@@ -11,7 +11,6 @@ import {
   Stakeholder,
   StakeholderRole,
   App,
-  Movie
 } from '@blockframes/model';
 import { FieldsConfig, FieldsConfigType, getFieldConfigs } from './fieldConfigs';
 
@@ -40,8 +39,9 @@ export async function formatTitle(
       errors.push(getOptionalWarning('Stakeholders'));
     }
 
-    const getStakeholders = (role: StakeholderRole): Stakeholder[] =>
-      data.stakeholders?.filter((s) => s.role === role) ?? [];
+    const getStakeholders = (role: StakeholderRole): Stakeholder[] =>{
+      return data.stakeholders?.filter((s) => s.role === role) ?? [];
+    }
 
     const stakeholders: MovieStakeholders = {
       productionCompany: getStakeholders('executiveProducer'),

@@ -42,13 +42,9 @@ export class ViewExtractedTitlesComponent implements OnInit {
       this.app
     );
 
-    if (isBlockframesAdmin) {
-      //title with id might create or update.
-      const moviesToCreate = titles.filter(title => !title.movie.id);
-      const moviesToUpdate = titles.filter(title => title.movie.id);
-      this.moviesToUpdate$.next(new MatTableDataSource(moviesToUpdate));
-      this.moviesToCreate$.next(new MatTableDataSource(moviesToCreate));
-    } else
-      this.moviesToCreate$.next(new MatTableDataSource(titles));
+    const moviesToCreate = titles.filter(title => !title.movie.id);
+    const moviesToUpdate = titles.filter(title => title.movie.id);
+    this.moviesToUpdate$.next(new MatTableDataSource(moviesToUpdate));
+    this.moviesToCreate$.next(new MatTableDataSource(moviesToCreate));
   }
 }
