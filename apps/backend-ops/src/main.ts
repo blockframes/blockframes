@@ -1,7 +1,7 @@
 import 'tsconfig-paths/register';
 import { config } from 'dotenv';
 config(); // * Must be run here!
-import { endMaintenance, keepAlive, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
+import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
 import { generateFixtures } from './generate-fixtures';
@@ -40,7 +40,8 @@ import {
   upgrade,
   prepareEmulators,
   upgradeEmulators,
-  printDatabaseInconsistencies
+  printDatabaseInconsistencies,
+  keepAlive
 } from '@blockframes/devops';
 
 const args = process.argv.slice(2);
