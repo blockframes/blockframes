@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { MarketplaceMovieViewComponent } from './view.component';
-import { MarketplaceMovieModalModule } from '../modal/modal.module';
+import { ContactPartnerModalModule } from '../modal/modal.module';
 import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
 
 // Custom Modules
@@ -84,7 +84,7 @@ const routes = [
     WishlistButtonModule,
     PromotionalLinksModule,
     CampaignProgressModule,
-    MarketplaceMovieModalModule,
+    ContactPartnerModalModule,
     // Material
     MatDialogModule,
     MatButtonModule,

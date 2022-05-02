@@ -5,9 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
-import { MarketplaceMovieModalComponent } from './modal.component';
-import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
-import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
+import { ContactPartnerModalComponent } from './modal.component';
 
 // Custom Modules
 import { MovieShellModule } from '@blockframes/movie/marketplace/shell/shell.module';
@@ -17,6 +15,9 @@ import { OrgChipModule } from '@blockframes/organization/components/chip/chip.mo
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { CampaignProgressModule } from '@blockframes/campaign/components/progress/progress.module';
+import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
+
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,7 +29,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
-  declarations: [MarketplaceMovieModalComponent],
+  declarations: [ContactPartnerModalComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -53,4 +54,4 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     SnackbarErrorModule
   ]
 })
-export class MarketplaceMovieModalModule {}
+export class ContactPartnerModalModule {}

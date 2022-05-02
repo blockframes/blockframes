@@ -8,7 +8,7 @@ import { pluck, switchMap } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { ActivatedRoute } from '@angular/router';
-import { TitleModalComponent } from '../modal/modal.component';
+import { UpdateFundingStatusModalComponent, UpdateFundingStatusModalData } from '../modal/modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
@@ -70,8 +70,8 @@ export class TitleViewComponent {
   async openDialog() {
     const form = this.shell.getForm('campaign');
     const errorMatcher = new CrossFieldErrorMatcher();
-    this.dialogRef = this.dialog.open(TitleModalComponent, {
-      data: createModalData({ form, errorMatcher, onSave: this.save })
+    this.dialogRef = this.dialog.open(UpdateFundingStatusModalComponent, {
+      data: createModalData<UpdateFundingStatusModalData>({ form, errorMatcher, onSave: this.save })
     });
   }
 

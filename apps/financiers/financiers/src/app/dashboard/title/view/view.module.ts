@@ -16,7 +16,7 @@ import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/action
 // Blockframes
 import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
 import { OrgAccessModule } from '@blockframes/organization/pipes';
-import { TitleModalModule } from '../modal/modal.module';
+import { UpdateFundingStatusModalModule } from '../modal/modal.module';
 // Components
 import { TitleViewComponent } from './view.component';
 
@@ -77,7 +77,7 @@ const routes = [{
     DashboardTitleShellModule,
     DashboardActionsShellModule,
     OrgAccessModule,
-    TitleModalModule,
+    UpdateFundingStatusModalModule,
     // Material
     MatButtonModule,
     MatIconModule,

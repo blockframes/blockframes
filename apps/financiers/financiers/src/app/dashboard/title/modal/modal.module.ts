@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
-import { TitleModalComponent } from './modal.component';
+import { UpdateFundingStatusModalComponent } from './modal.component';
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 // Material
@@ -19,7 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { OrgAccessModule } from '@blockframes/organization/pipes';
 
 @NgModule({
-  declarations: [TitleModalComponent],
+  declarations: [UpdateFundingStatusModalComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -35,4 +35,4 @@ import { OrgAccessModule } from '@blockframes/organization/pipes';
     MatIconModule
   ]
 })
-export class TitleModalModule { }
+export class UpdateFundingStatusModalModule { }

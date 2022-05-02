@@ -1,5 +1,6 @@
 import { getCurrencySymbol } from '@angular/common';
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/+state';
@@ -21,14 +22,12 @@ interface EmailData {
   message: string;
 }
 
-interface Data {
-  form: FormData;
+export interface ContactPartnerModalData {
+  form: FormGroup;
   orgs: Organization[];
   movie: Movie;
   campaign: Observable<Campaign>;
   currency: MovieCurrency;
-  onSend: (emailData: EmailData, title: string, orgs: Organization[]) => void;
-  closeModal: () => void
 }
 
 @Component({
@@ -37,13 +36,13 @@ interface Data {
   styleUrls: ['./modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieModalComponent {
+export class ContactPartnerModalComponent {
   
   public sending = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: Data,
-    public dialogRef: MatDialogRef<MarketplaceMovieModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ContactPartnerModalData,
+    public dialogRef: MatDialogRef<ContactPartnerModalComponent>,
     private userService: UserService,
     private authService: AuthService,
     private snackBar: MatSnackBar,
@@ -90,6 +89,7 @@ export class MarketplaceMovieModalComponent {
           };
 
           /*
+            * TODO #7777
             * If running E2E, for user other than sender,
             * store it for access in E2E test.
             * A single email is sufficient to check the email template
@@ -108,19 +108,19 @@ export class MarketplaceMovieModalComponent {
         }
       }
 
+      // TODO #7777
       if (cyCheck && emailReady) {
         window['cyEmailData'].numEmails = numEmails;
       }
       const res = await Promise.all(promises);
       const success = res.some(r => r.result);
       if (success) {
-        this.data.closeModal();
+        this.dialogRef.close();
         this.snackBar.open('Your email has been sent.', null, { duration: 3000 });
       } else {
         throw new Error('An error occured');
         }
     } catch (err) {
-      console.log(err)
       this.sending = false;
       this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
     }
