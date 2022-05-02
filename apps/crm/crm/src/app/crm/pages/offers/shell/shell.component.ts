@@ -4,12 +4,12 @@ import { QueryConstraint, where } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { OfferService } from '@blockframes/contract/offer/+state';
-import { Income, IncomeService } from '@blockframes/contract/income/+state';
+import { IncomeService } from '@blockframes/contract/income/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { joinWith } from 'ngfire';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Contract, Offer, Organization } from '@blockframes/model';
+import { Contract, Offer, Organization, Income } from '@blockframes/model';
 
 @Component({
   selector: 'offer-shell',
