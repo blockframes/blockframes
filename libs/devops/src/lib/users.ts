@@ -191,7 +191,9 @@ function readUsersFromSTDIN(): Promise<UserConfig[]> {
 }
 
 export async function createUsers() {
-  const { auth } = loadAdminServices();
+  const { auth, db } = loadAdminServices();
+  await startMaintenance(db);
   const users = await readUsersFromSTDIN();
-  return createAllUsers(users, auth);
+  await createAllUsers(users, auth);
+  return endMaintenance(db);
 }

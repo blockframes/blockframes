@@ -143,9 +143,7 @@ async function runCommand() {
       await clearUsers();
       break;
     case 'createUsers':
-      await startMaintenance(db);
       await createUsers();
-      await endMaintenance(db);
       break;
     case 'upgradeAlgoliaOrgs':
       await upgradeAlgoliaOrgs();
