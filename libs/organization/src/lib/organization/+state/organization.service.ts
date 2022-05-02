@@ -21,7 +21,6 @@ import { PermissionsService } from '@blockframes/permissions/+state/permissions.
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { DocumentSnapshot, where } from 'firebase/firestore';
-import { runInZone } from '@blockframes/utils/zone';
 import { CallableFunctions, WriteOptions } from 'ngfire';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
@@ -33,7 +32,6 @@ export class OrganizationService extends BlockframesCollection<Organization> {
   org: Organization; // For this to be defined, one of the observable below must be called before
   org$: Observable<Organization> = this.authService.profile$.pipe(
     switchMap((user) => (user?.orgId ? this.valueChanges(user.orgId) : of(undefined))),
-    runInZone(this.ngZone), // TODO #7595 #7273
     tap((org) => (this.org = org))
   );
 
