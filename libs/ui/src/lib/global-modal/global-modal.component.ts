@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/model';
 
