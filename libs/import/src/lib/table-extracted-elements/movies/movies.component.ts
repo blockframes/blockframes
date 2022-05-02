@@ -10,6 +10,7 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../utils';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { removeNulls } from '@blockframes/utils/utils';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -106,7 +107,8 @@ export class TableExtractedMoviesComponent implements OnInit {
       const updates = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState));
       for (const importState of updates) {
         this.processedTitles++;
-        await this.movieService.update(importState.movie.id, importState.movie);
+        const movie = removeNulls(importState.movie);
+        await this.movieService.update(movie.id, movie);
       }
       this.snackBar.open(`${this.processedTitles} movies updated!`, 'close', { duration: 3000 });
       this.processedTitles = 0;
