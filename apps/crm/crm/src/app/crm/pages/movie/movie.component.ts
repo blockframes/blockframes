@@ -14,6 +14,7 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { CampaignService } from '@blockframes/campaign/+state';
 import { MovieAppConfigForm } from '@blockframes/movie/form/movie.form';
 import { where } from 'firebase/firestore';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'crm-movie',
@@ -112,7 +113,7 @@ export class MovieComponent implements OnInit {
   public async deleteMovie() {
     const simulation = await this.simulateDeletion(this.movie);
     this.dialog.open(ConfirmInputComponent, {
-      data: {
+      data: createModalData({
         title: 'You are about to delete this movie from Archipel, are you sure ?',
         text: "If yes, please write 'HARD DELETE' inside the form below.",
         warning: 'Doing this will also delete everything regarding this movie',
@@ -123,8 +124,8 @@ export class MovieComponent implements OnInit {
           await this.movieService.remove(this.movie.id);
           this.snackBar.open('Movie deleted !', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/movies']);
-        },
-      },
+        }
+      })
     });
   }
 

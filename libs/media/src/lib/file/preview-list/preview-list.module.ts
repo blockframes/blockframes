@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { FileListPreviewComponent } from './preview-list.component';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 import { PdfViewerModule } from '../../pdf/viewer/viewer.module';
 import { VideoViewerModule } from '../../video/viewer/viewer.module';
@@ -20,6 +21,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     FlexLayoutModule,
 
+    GlobalModalModule,
     PdfViewerModule,
     VideoViewerModule,
     FileNameModule,

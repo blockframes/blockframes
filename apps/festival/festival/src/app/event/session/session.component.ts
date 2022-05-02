@@ -34,6 +34,7 @@ import {
   StorageFile, 
   StorageVideo
 } from '@blockframes/model';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
   return meetingEvent.type === 'meeting';
@@ -121,16 +122,16 @@ export class SessionComponent implements OnInit, OnDestroy {
         } catch (error) {
           if (!this.confirmDialog) {
             this.confirmDialog = this.dialog.open(ConfirmComponent, {
-              data: {
+              data: createModalData({
                 title: 'Your browser might be blocking autoplay',
                 question: 'This can result in poor viewing experience during your meeting.\nYou can try to unblock autoplay by clicking the following button. If it doesn\'t work, please change your browser settings to allow autoplay.',
                 confirm: 'Unblock autoplay',
                 onConfirm: () => {
                   this.autoPlayTester.nativeElement.play();
                   this.autoPlayTester.nativeElement.pause();
-                },
-              },
-              autoFocus: false,
+                }
+              }),
+              autoFocus: false
             });
             this.dialogSub = this.confirmDialog.afterClosed().subscribe(confirmed => {
               this.isAutoPlayEnabled = !!confirmed;
@@ -329,9 +330,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   requestAskingPrice(movieId: string) {
     const ref = this.dialog.open(RequestAskingPriceComponent, {
-      data: { movieId },
-      maxHeight: '80vh',
-      maxWidth: '650px',
+      data: createModalData({ movieId }, 'large'),
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {
