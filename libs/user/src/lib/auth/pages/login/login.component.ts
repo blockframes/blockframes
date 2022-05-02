@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SigninForm } from '../../forms/signin.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 @Component({
   selector: 'auth-login-view',
@@ -72,7 +73,7 @@ export class LoginComponent implements OnInit {
           duration: 8000
         });
       } else {
-        this.snackBar.open(err.message, 'close', { duration: 8000 });
+        this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 8000 });
       }
     }
 

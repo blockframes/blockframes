@@ -28,6 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AppPipeModule } from '@blockframes/utils/pipes';
 import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
+import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
 
 @NgModule({
   declarations: [IdentityComponent],
@@ -44,6 +45,7 @@ import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.
     PasswordConfirmModule,
     AppPipeModule,
     SnackbarLinkModule,
+    SnackbarErrorModule,
 
     // Material
     MatSnackBarModule,
