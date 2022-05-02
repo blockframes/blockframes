@@ -1,9 +1,11 @@
 <ul>
-  <li *ngFor="let card of cards" class="surface">
-    <header>
-      <mat-icon [svgIcon]="card.icon"></mat-icon>
-    </header>
-    <p><b>{{ card.value }}</b></p>
-    <p class="mat-caption">{{ card.title }}</p>
+  <li *ngFor="let card of cards">
+    <button (click)="toggleSelect(card.title)" class="surface mat-body-2" [ngClass]="card.selected ? 'selected' : null">
+      <header>
+        <mat-icon [svgIcon]="card.icon"></mat-icon>
+      </header>
+      <p><b>{{ card.value }}</b></p>
+      <p class="mat-caption">{{ card.title }}</p>
+    </button>
   </li>
 </ul>
