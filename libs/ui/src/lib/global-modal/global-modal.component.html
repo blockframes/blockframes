@@ -1,9 +1,7 @@
 <section [class]="data.size">
-  <header class="closeButton">
-    <button mat-icon-button (click)="close()">
-      <mat-icon svgIcon="close"></mat-icon>
-    </button>
-  </header>
+  <button mat-icon-button (click)="close()" class="closeButton">
+    <mat-icon svgIcon="close"></mat-icon>
+  </button>
   
   <mat-dialog-content class="mat-dialog-content" fxLayout="column">
     <ng-content></ng-content>

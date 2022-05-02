@@ -18,8 +18,7 @@ export function createModalData<T>(data: T, size: Size = 'medium'): T & CommonMo
   selector: 'global-modal',
   templateUrl: './global-modal.component.html',
   styleUrls: ['./global-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GlobalModalComponent {
 
