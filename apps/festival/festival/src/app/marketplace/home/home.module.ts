@@ -26,7 +26,6 @@ import { EventSlideModule } from '@blockframes/event/components/slide/slide.modu
 import { PreferenceModule } from '@blockframes/auth/pages/preferences/modal/preferences.module';
 import { RequestScreeningModule } from '@blockframes/event/components/request-screening/request-screening.module';
 
-
 // Page
 import { HomeComponent } from './home.component';
 
