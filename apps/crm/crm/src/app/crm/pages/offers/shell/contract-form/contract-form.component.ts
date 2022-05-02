@@ -13,7 +13,6 @@ import { TermService } from '@blockframes/contract/term/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 
-
 // Forms
 import { NegotiationForm } from '@blockframes/contract/negotiation/form';
 
