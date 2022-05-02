@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FilePickerComponent } from '@blockframes/media/file/picker/picker.component';
 import { FilePreviewComponent } from '@blockframes/media/file/preview/preview.component';
 import { StorageFile } from '@blockframes/model';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'event-meeting-files',
@@ -41,16 +42,13 @@ export class MeetingFilesComponent implements OnInit {
   }
 
   previewFile(ref: StorageFile) {
-    this.dialog.open(FilePreviewComponent, { data: { ref, style: 'large' }, autoFocus: false })
+    this.dialog.open(FilePreviewComponent, { data: createModalData({ ref }, 'large'), autoFocus: false });
   }
 
   openFileSelector() {
     this.dialog.open(FilePickerComponent, {
-      disableClose: true,
-      data: {
-        selectedFiles: this.files.value,
-        style: 'large'
-      }
+      data: createModalData({ selectedFiles: this.files.value }),
+      disableClose: true
     }).afterClosed().pipe(take(1)).subscribe(result => {
       this.files.patchAllValue(result);
       this.files.markAsDirty();

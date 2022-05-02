@@ -10,6 +10,7 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
 import { MatDialog } from '@angular/material/dialog';
 import { Access, StorageFile, Budget, Campaign, Funding } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const budgetData: { serie: keyof Budget, label: string }[] = [{
   serie: 'development',
@@ -64,7 +65,7 @@ export class MarketplaceFinancingComponent {
 
   consentBeforeDownload(campaignId: string, file: string) {
     this.dialog.open(ConfirmInputComponent, {
-      data: {
+      data: createModalData({
         title: 'Confidentiality Reminder',
         subtitle: `You are about to download a confidential document. Please make sure that you are aware of our Confidentiality Policy before doing so.`,
         text: 'To confirm that you agree with these terms, please write “I AGREE” in the field below.',
@@ -73,9 +74,8 @@ export class MarketplaceFinancingComponent {
         onConfirm: async () => {
           await this.consentsService.createConsent('access', campaignId, file);
           window.open(file, '_blank');
-        },
-        style: 'medium'
-      }
+        }
+      })
     });
   }
 }

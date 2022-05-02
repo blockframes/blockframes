@@ -5,9 +5,7 @@ import { SaleShellComponent } from '../shell.component';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { ContractStatus } from '@blockframes/model';
-import { GlobalModalStyle } from '@blockframes/ui/global-modal/global-modal.component';
-
-interface Data extends ConfirmDeclineData, GlobalModalStyle {}
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'sale-external',
@@ -32,10 +30,7 @@ export class ExternalSaleComponent {
   changeStatus(status: ContractStatus, id: string) {
     if (status === 'declined') {
       const ref = this.dialog.open(ConfirmDeclineComponent, {
-        data: {
-          type: 'seller',
-          style: 'medium'
-        } as Data
+        data: createModalData<ConfirmDeclineData>({ type: 'seller' })
       });
       ref.afterClosed().subscribe(declineReason => {
         const update = { declineReason, status: 'declined' } as const;

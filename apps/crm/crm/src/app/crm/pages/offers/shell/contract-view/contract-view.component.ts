@@ -13,6 +13,7 @@ import { OfferShellComponent } from '../shell.component';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
 import { Holdback, Negotiation, Term } from '@blockframes/model';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 
 @Component({
@@ -76,15 +77,14 @@ export class ContractViewComponent implements OnInit, OnDestroy {
 
   confirm(term: Term) {
     this.dialog.open(ConfirmInputComponent, {
-      data: {
+      data: createModalData({
         title: 'Are you sure ?',
         subtitle: `You are about to delete permanently this term (#${term.id}). This action will also update the contract #${term.contractId} to remove the reference to the deleted term.`,
         text: `Please type "DELETE" to confirm.`,
         confirmationWord: 'DELETE',
         confirmButtonText: 'Delete term',
-        onConfirm: this.delete(term),
-        style: 'medium'
-      }
+        onConfirm: this.delete(term)
+      })
     });
   }
 

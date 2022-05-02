@@ -2,6 +2,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/model';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { FilePickerComponent } from '../picker/picker.component';
 
 @Component({
@@ -38,11 +39,8 @@ export class FileCarouselComponent {
 
   openFileSelector() {
     this.dialog.open(FilePickerComponent, {
-      disableClose: true,
-      data: {
-        selectedFiles: this.files,
-        style: 'large'
-      }
+      data: createModalData({ selectedFiles: this.files }, 'large'),
+      disableClose: true
     }).afterClosed().subscribe((result: string[]) => {
       this.picked.emit(result);
     });

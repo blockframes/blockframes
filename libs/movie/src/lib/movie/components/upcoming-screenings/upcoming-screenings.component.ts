@@ -16,6 +16,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'movie-screening',
@@ -115,7 +116,7 @@ export class UpcomingScreeningsComponent {
 
   requestAskingPrice() {
     const ref = this.dialog.open(RequestAskingPriceComponent, {
-      data: { movieId: this.movieId, style: 'large' },
+      data: createModalData({ movieId: this.movieId }, 'large'),
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {

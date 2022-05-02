@@ -1,27 +1,29 @@
-import { Component, ChangeDetectionStrategy, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/model';
 
-export interface GlobalModalStyle {
-  style?: 'large' | 'medium' | 'small';
+type Size = 'large' | 'medium' | 'small';
+
+interface CommonModalData {
+  size: Size;
+  selectedFiles?: StorageFile[];
+  onClose?: () => void;
 }
 
-interface Data extends GlobalModalStyle {
-  selectedFiles?: StorageFile[],
-  onClose?: () => void
+export function createModalData<T>(data: T, size: Size = 'medium'): T & CommonModalData {
+  return { ...data, size };
 }
 
 @Component({
   selector: 'global-modal',
   templateUrl: './global-modal.component.html',
   styleUrls: ['./global-modal.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GlobalModalComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: Data,
+    @Inject(MAT_DIALOG_DATA) public data: CommonModalData,
     public dialogRef: MatDialogRef<GlobalModalComponent>,
   ) { }
 
@@ -31,16 +33,4 @@ export class GlobalModalComponent {
     return this.dialogRef.close(false);
   }
 
-  public setModalType() {
-    switch(this.data?.style) {
-      case 'large':
-        return 'sizeL';
-      case 'medium':
-        return 'sizeM';
-      case 'small':
-        return 'sizeS';
-      default:
-        return 'sizeM';
-    }
-  }
 }

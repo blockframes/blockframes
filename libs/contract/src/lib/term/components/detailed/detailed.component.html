@@ -1,6 +1,6 @@
 <global-modal>
   <header>
-    <h2>{{ data.scope | mediaToRights | titlecase }}</h2>
+    <h2>{{ (data.scope === 'medias' ? 'rights' : data.scope) | titlecase }}</h2>
   </header>
   <section>
     <ng-container *ngIf="(groups$ | async) as groups">

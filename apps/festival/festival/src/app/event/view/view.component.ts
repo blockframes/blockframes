@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 import { Event, Invitation } from '@blockframes/model';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'festival-event-view',
@@ -100,7 +101,7 @@ export class EventViewComponent implements OnInit {
 
   requestAskingPrice(movieId: string) {
     const ref = this.dialog.open(RequestAskingPriceComponent, {
-      data: { movieId, style: 'large' },
+      data: createModalData({ movieId }, 'large'),
       autoFocus: false
     });
     ref.afterClosed().subscribe(isSent => {

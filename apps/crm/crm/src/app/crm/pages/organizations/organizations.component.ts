@@ -5,6 +5,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
 import { Organization, getAllAppsExcept, appName, modules } from '@blockframes/model';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'crm-organizations',
@@ -52,7 +53,7 @@ export class OrganizationsComponent {
   }
 
   createOrg() {
-    this.dialog.open(OrganizationCreateComponent, { data: { style: 'large' } });
+    this.dialog.open(OrganizationCreateComponent, { data: createModalData({}, 'large') });
   }
 
 }

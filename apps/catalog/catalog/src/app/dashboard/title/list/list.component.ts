@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 import { displayPerson } from '@blockframes/utils/pipes';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'catalog-title-list',
@@ -78,8 +79,8 @@ export class TitleListComponent {
 
   openDetails(title: string, values: Person[]) {
     this.dialog.open(CellModalComponent, {
-      data: { title, values: displayPerson(values), style: 'medium' },
-      autoFocus: false,
+      data: createModalData({ title, values: displayPerson(values) }),
+      autoFocus: false
     });
   }
 }

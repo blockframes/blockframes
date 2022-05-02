@@ -18,11 +18,25 @@ section {
   padding-bottom: 24px;
 }
 
-button {
-  margin-right: 16px;
-}
-
 mat-card {
   margin-top: 16px;
   min-width: 400px;
+}
+
+button.filter {
+  background: transparent;
+  cursor: pointer;
+  color: var(--primary-contrast);
+  border: solid 1px var(--primary-contrast);
+  border-radius: 26px;
+  padding: 8px 16px;
+  font-weight: 500;
+  margin-right: 16px;
+  &:hover {
+    background-color: var(--background-hover);
+  }
+  &.primary {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
 }

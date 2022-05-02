@@ -11,6 +11,7 @@ import { TermService } from '@blockframes/contract/term/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { Contract, staticModel } from '@blockframes/model';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'offer-view',
@@ -84,7 +85,7 @@ export class OfferViewComponent implements OnDestroy, OnInit {
 
   confirmStatusUpdate(onConfirm: () => void) {
     this.dialog.open(ConfirmInputComponent, {
-      data: {
+      data: createModalData({
         title: 'Are you sure you want to update this offer?',
         subtitle: 'The modification that you bring can impact this offer and all the contracts that are inside. Please make sure that you are aware of these modifications.',
         confirmationWord: 'update',
@@ -92,17 +93,16 @@ export class OfferViewComponent implements OnDestroy, OnInit {
         confirm: 'Confirm and update',
         confirmButtonText: 'Confirm and update',
         cancel: 'Cancel',
-        onConfirm,
-        style: 'medium'
-      },
-      autoFocus: true,
+        onConfirm
+      }),
+      autoFocus: true
     });
 
   }
 
   confirmDelete(id: string) {
     this.dialog.open(ConfirmInputComponent, {
-      data: {
+      data: createModalData({
         title: 'Are you sure you want to delete a right from this package?',
         subtitle: 'This action can\'t be undone. Before we delete this right please write “DELETE” in the field below.',
         confirmationWord: 'delete',
@@ -110,10 +110,9 @@ export class OfferViewComponent implements OnDestroy, OnInit {
         confirm: 'Delete this right',
         confirmButtonText: 'Delete this right',
         cancel: 'Cancel',
-        onConfirm: () => this.handleDelete(id),
-        style: 'medium'
-      },
-      autoFocus: false,
+        onConfirm: () => this.handleDelete(id)
+      }),
+      autoFocus: false
     });
   }
 

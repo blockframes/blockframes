@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'financiers-summary-tunnel',
@@ -56,7 +57,7 @@ export class TunnelSummaryComponent implements OnInit {
 
   public async submit() {
     this.dialog.open(ConfirmInputComponent, {
-      data: {
+      data: createModalData({
         title: 'Confidentiality Reminder',
         subtitle: 'You are about to submit your project for publication. We kindly remind you that some of the information you\'re about to share might be confidential.',
         text: 'By submitting your project, you assume the responsibility of disclosing all of the information previously filled out to potential future investors. Before submitting your project, please confirm by writing “I AGREE” in the field below.',
@@ -84,9 +85,8 @@ export class TunnelSummaryComponent implements OnInit {
             const ref = this.snackBar.open(message, 'VERIFY FIELDS', { duration: 5000 });
             ref.afterDismissed().subscribe(() => section.scrollIntoView({ behavior: 'smooth' }));
           }
-        },
-        style: 'medium'
-      }
+        }
+      })
     });
   }
 }

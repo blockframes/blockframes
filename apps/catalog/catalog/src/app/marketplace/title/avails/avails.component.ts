@@ -20,6 +20,7 @@ import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { where } from 'firebase/firestore';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -174,20 +175,20 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   public explain() {
-    this.dialog.open(ExplanationComponent, {
-      data: { style: 'large' },
-      autoFocus: false
-    });
+    this.dialog.open(ExplanationComponent, { data: createModalData({}), autoFocus: false });
   }
 
   /** Open a modal to display the entire list of territories when this one is too long */
   public openTerritoryModal(term: BucketTerm) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms: term.territories, scope: 'territories', style: 'medium' }, autoFocus: false });
+    this.dialog.open(DetailedTermsComponent, { 
+      data: createModalData({ terms: term.territories, scope: 'territories' }),
+      autoFocus: false
+    });
   }
 
   /** Open a modal to display holdback warnings */
   openHoldbackModal(holdbacks: Holdback[]) {
-    this.dialog.open(HoldbackModalComponent, { data: { holdbacks, withWarning: true, style: 'medium' } });
+    this.dialog.open(HoldbackModalComponent, { data: createModalData({ holdbacks, withWarning: true }) });
   }
 
   confirmExit() {
@@ -196,13 +197,12 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
       return of(true);
     }
     const dialogRef = this.dialog.open(ConfirmComponent, {
-      data: {
+      data: createModalData({
         title: 'You are about to leave the page',
         question: 'Some changes have not been added to Selection. If you leave now, you will lose these changes.',
         confirm: 'Leave anyway',
-        cancel: 'Stay',
-        style: 'small'
-      },
+        cancel: 'Stay'
+      }, 'small'),
       autoFocus: false,
     });
     return dialogRef.afterClosed().pipe(
