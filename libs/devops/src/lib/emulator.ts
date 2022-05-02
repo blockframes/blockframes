@@ -2,7 +2,6 @@ import {
   getServiceAccountObj,
   loadAdminServices,
   startMaintenance,
-  getBackupBucket,
   endMaintenance,
 } from '@blockframes/firebase-utils';
 import {
@@ -32,7 +31,8 @@ import {
   CI_STORAGE_BACKUP,
   restoreStorageFromCi,
   getLatestFolderURL,
-  runAnonymization
+  runAnonymization,
+  getBackupBucket
 } from './firebase-utils';
 
 interface ImportEmulatorOptions {

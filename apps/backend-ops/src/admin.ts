@@ -1,4 +1,4 @@
-import { exportFirestoreToBucketBeta } from '@blockframes/firebase-utils';
+import { exportFirestoreToBucketBeta } from '@blockframes/devops';
 
 /**
  * This function runs `gcloud` shell command to backup live Firestore to the project's backup bucket GCS resource

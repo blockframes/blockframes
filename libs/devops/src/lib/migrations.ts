@@ -3,9 +3,11 @@
  * to the LAST version.
  */
 import { exportFirestore, importFirestore } from './admin';
-import { Firestore, loadAdminServices, IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS, getFirestoreExportDirname } from "@blockframes/firebase-utils";
+import { Firestore, loadAdminServices, IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from "@blockframes/firebase-utils";
 import { last } from 'lodash';
 import { dbVersionDoc } from '@blockframes/utils/maintenance';
+import { getFirestoreExportDirname } from './firebase-utils';
+
 
 export const VERSION_ZERO = 2;
 
