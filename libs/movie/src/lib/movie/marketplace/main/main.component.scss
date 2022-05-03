@@ -1,3 +1,5 @@
+@import '@angular/flex-layout/mq';
+
 :host {
   display: block;
   padding: 24px;
@@ -30,7 +32,12 @@ h5 {
   }
 }
 
-@import '@angular/flex-layout/mq';
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 16px;
+  margin: 24px;
+}
 
 @include layout-bp(lt-md) {
   video-viewer {

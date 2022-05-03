@@ -23,7 +23,7 @@ section {
 }
 
 @include layout-bp(lt-sm) {
-  section {
-    margin: 0;
+  a span {
+      display: block;
   }
 }
