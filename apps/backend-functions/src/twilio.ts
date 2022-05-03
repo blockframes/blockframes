@@ -91,7 +91,7 @@ export const getTwilioAccessToken = async (
   const videoGrant = new VideoGrant({ room: eventId });
   // add Grant to token
   token.addGrant(videoGrant);
-
+  console.log('twilioAccountSid bruce', twilioAccountSid)
   const client = new Twilio(twilioAccountSid, twilioAccountSecret);
   const [roomAlreadyExists] = await client.video.rooms.list({ uniqueName: eventId, limit: 1 });
   if (!roomAlreadyExists) {
