@@ -2,15 +2,19 @@
 
   <ng-container *ngIf="moviesToCreate$ | async as moviesToCreate">
     <ng-container *ngIf="moviesToCreate.data.length">
-      <h3>Titles to Create</h3>
-      <import-table-extracted-movies [rows]="moviesToCreate" mode="create"></import-table-extracted-movies>
+      <section>
+        <h3>Titles to Create</h3>
+        <import-table-extracted-movies [rows]="moviesToCreate" mode="create"></import-table-extracted-movies>
+      </section>
     </ng-container>
   </ng-container>
   <ng-container *ngIf="moviesToUpdate$ | async as moviesToUpdate">
     <ng-container *ngIf="moviesToUpdate.data.length">
-      <h3 class="margin-top">Titles to Update & Submit</h3>
-      <p>These movies will be updated should they already exist otherwise, they'll be created.</p>
-      <import-table-extracted-movies [rows]="moviesToUpdate" mode="update"></import-table-extracted-movies>
+      <section>
+        <h3>Titles to Update & Submit</h3>
+        <p>These movies will be updated should they already exist otherwise, they'll be created.</p>
+        <import-table-extracted-movies [rows]="moviesToUpdate" mode="update"></import-table-extracted-movies>
+      </section>
     </ng-container>
   </ng-container>
 

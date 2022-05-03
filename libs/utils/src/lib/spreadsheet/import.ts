@@ -1,4 +1,3 @@
-
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 import { GetKeys, GroupScope, StaticGroup, staticGroups, parseToAll, Scope } from '@blockframes/model';
 import { ImportLog, mandatoryError, SpreadsheetImportError, WrongTemplateError, wrongValueWarning } from 'libs/import/src/lib/utils';
@@ -172,7 +171,7 @@ export interface ValueWithErrorSimple<T = unknown> extends SpreadsheetImportErro
 }
 
 function isValueWithError(o: unknown): o is ValueWithError {
-  return o && o instanceof ImportLog;
+  return o instanceof ImportLog;
 }
 
 /**
@@ -223,7 +222,7 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
 
   for (let rowIndex = 0; rowIndex < flatRows.length; rowIndex++) {
     const item = {};
-    let errors: SpreadsheetImportError[] = [];
+    const errors: SpreadsheetImportError[] = [];
     const entries = Object.entries(config);
     excelColumnLoop: for (let columnIndex = 0; columnIndex < entries.length; columnIndex++) {
       const [key, transform] = entries[columnIndex];
@@ -238,9 +237,11 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
       }
     }
     const data = cleanUp(item) as T;
-    errors = errors.filter(err => err);
     state.push(data);
-    results.push({ data, errors });
+    results.push({
+      data,
+      errors: errors.filter(err => err)
+    });
   }
   return results;
 }

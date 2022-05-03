@@ -314,7 +314,7 @@ export function removeNulls(obj: any) {
         delete obj[k];
       }
     } else if (typeof obj[k] === "object") {
-      removeNulls(obj[k]);
+      obj[k] = removeNulls(obj[k]);
     }
   }
   return obj;
