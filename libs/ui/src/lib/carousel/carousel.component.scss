@@ -8,10 +8,11 @@
   width: 100%;
   overflow: auto; // Cannot scroll if overflow hidden on Safari
   scroll-behavior: smooth;
+  scrollbar-width: none; // Hide scrollbar for firefox
 }
 
 .row::-webkit-scrollbar {
-  display: none // Hide scrollbar this way instead of overflow hidden
+  display: none; // Hide scrollbar this way instead of overflow hidden
 }
 
 .direction {
