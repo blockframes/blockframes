@@ -27,6 +27,7 @@ import { ViewImportErrorsComponent } from './view-import-errors/view-import-erro
 import { RouterModule } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TableExtractedOrganizationsComponent } from './organizations/organizations.component';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { TableExtractedOrganizationsComponent } from './organizations/organizati
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
+    GlobalModalModule,
 
     // Material
     MatIconModule,

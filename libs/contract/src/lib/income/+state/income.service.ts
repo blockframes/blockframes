@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { ActiveState, EntityState } from '@datorama/akita';
-import { Income } from './income.model';
+import { Income } from '@blockframes/model';
 
 interface IncomeState extends EntityState<Income>, ActiveState<string> { }
 

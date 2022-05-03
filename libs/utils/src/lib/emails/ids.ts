@@ -64,11 +64,11 @@ export const templateIds = {
     oneHour: 'd-8a9439a404cc4b51887e9dea44f7fbd7'
   },
   event: {
-    screeningRequested: 'd-1a4f08ee48734343bb02f5f3238a5713'
+    screeningRequested: 'd-4fbb3fbe74d04353bb7185303969fbf9'
   },
   movie: {
     accepted: 'd-bfcf2760bcb7484ab55f864a59331d26',
-    askingPriceRequested: 'd-13c1cbe54bb74a9c9e9ea506db02669f',
+    askingPriceRequested: 'd-107203d5807e48f68e5725518e71354f',
     askingPriceRequestSent: 'd-fa8f0f0f5799468ca3ac478c7ceeeb68'
   },
   offer: {
