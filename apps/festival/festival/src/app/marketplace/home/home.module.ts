@@ -24,6 +24,7 @@ import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 import { SortByPipeModule } from '@blockframes/utils/pipes/sort-array.pipe';
 import { EventSlideModule } from '@blockframes/event/components/slide/slide.module';
 import { PreferenceModule } from '@blockframes/auth/pages/preferences/modal/preferences.module';
+import { RequestScreeningModule } from '@blockframes/event/components/request-screening/request-screening.module';
 
 // Page
 import { HomeComponent } from './home.component';
@@ -52,6 +53,7 @@ import { HomeComponent } from './home.component';
     SortByPipeModule,
     EventSlideModule,
     PreferenceModule,
+    RequestScreeningModule,
 
     // Material
     MatButtonModule,

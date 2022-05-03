@@ -111,16 +111,7 @@ import { APP } from '@blockframes/utils/routes/utils';
   ],
   providers: [
     ScreenTrackingService, UserTrackingService,
-    { provide: APP, useValue: 'catalog' },
-    {
-      provide: MAT_DIALOG_DEFAULT_OPTIONS,
-      useValue: {
-        minWidth: '50vw',
-        minHeight: '50vh',
-        maxWidth: '80vw',
-        maxHeight: '80vh'
-      }
-    }
+    { provide: APP, useValue: 'catalog' }
   ],
   bootstrap: [AppComponent]
 })

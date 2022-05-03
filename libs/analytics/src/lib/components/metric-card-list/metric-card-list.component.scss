@@ -7,6 +7,7 @@ ul {
     display: flex;
     flex-direction: column;
     text-align: center;
+    cursor: pointer;
 
     header {
       background-color: var(--primary-lighter);
@@ -26,4 +27,9 @@ ul {
       margin-bottom: 0px;
     }
   }
+}
+
+.selected {
+  outline: 1px solid var(--primary);
+  border: 1px solid var(--primary);
 }

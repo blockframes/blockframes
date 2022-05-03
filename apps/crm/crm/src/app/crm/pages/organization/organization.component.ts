@@ -17,6 +17,7 @@ import { FileUploaderService } from '@blockframes/media/+state/file-uploader.ser
 import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
 import { where } from 'firebase/firestore';
 import { PermissionsService } from '@blockframes/permissions/+state';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'crm-organization',
@@ -157,7 +158,7 @@ export class OrganizationComponent implements OnInit {
   public async deleteOrg() {
     const simulation = await this.simulateDeletion(this.orgId);
     this.dialog.open(ConfirmInputComponent, {
-      data: {
+      data: createModalData({
         title: 'You are currently deleting this organization from Archipel, are you sure?',
         text: "If yes, please write 'HARD DELETE' inside the form below.",
         warning: 'You will also delete everything regarding this organization',
@@ -168,8 +169,8 @@ export class OrganizationComponent implements OnInit {
           await this.organizationService.remove(this.orgId);
           this.snackBar.open('Organization deleted!', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/organizations']);
-        },
-      },
+        }
+      })
     });
   }
 
