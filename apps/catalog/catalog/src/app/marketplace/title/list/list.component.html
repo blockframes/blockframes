@@ -60,8 +60,9 @@
       <filter-running-time [form]="searchForm.runningTime"></filter-running-time>
     </ng-template>
 
-    <button mat-icon-button (click)="clear()" matTooltip="Clear all filters">
+    <button mat-button class="refresh translucent" (click)="clear()" matTooltip="Clear all filters">
       <mat-icon svgIcon="refresh_filters"></mat-icon>
+      Refresh
     </button>
   </list-filter>
 
