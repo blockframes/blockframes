@@ -302,3 +302,20 @@ export function toLanguageVersionString(languages: LanguageRecord) {
     .filter((d) => d)
     .join(', ');
 }
+
+
+export function removeNulls(obj: any) {
+  const isArray = Array.isArray(obj);
+  for (const k of Object.keys(obj)) {
+    if (obj[k] === null || obj[k] === undefined) {
+      if (isArray) {
+        obj.splice(+k, 1)
+      } else {
+        delete obj[k];
+      }
+    } else if (typeof obj[k] === "object") {
+      obj[k] = removeNulls(obj[k]);
+    }
+  }
+  return obj;
+}
