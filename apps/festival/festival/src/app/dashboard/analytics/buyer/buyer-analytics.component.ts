@@ -24,7 +24,6 @@ import {
   pluck,
   shareReplay,
   switchMap,
-  tap,
 } from "rxjs";
 import { InvitationService } from "@blockframes/invitation/+state";
 import { EventService } from "@blockframes/event/+state";
