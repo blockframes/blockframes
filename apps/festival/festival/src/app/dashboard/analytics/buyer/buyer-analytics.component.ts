@@ -24,6 +24,7 @@ import {
   pluck,
   shareReplay,
   switchMap,
+  tap,
 } from "rxjs";
 import { InvitationService } from "@blockframes/invitation/+state";
 import { EventService } from "@blockframes/event/+state";
@@ -105,6 +106,9 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
   ];
 }
 
+function fromUser(invitation: Invitation, uid: string) {
+  return invitation.fromUser?.uid === uid || invitation.toUser?.uid === uid;
+}
 
 @Component({
   selector: 'festival-buyer-analytics',
@@ -153,14 +157,17 @@ export class BuyerAnalyticsComponent {
     map(([filter, analytics]) => filterAnalytics(filter, analytics))
   );
 
-  invitations$ = this.user$.pipe(
-    switchMap(user => combineLatest([
+  invitations$ = combineLatest([
       // Event invitations linked to current org
-      this.invitationService.valueChanges([where('type', '==', 'attendEvent'), where('fromOrg.id', '==', user.orgId)]),
-      this.invitationService.valueChanges([where('type', '==', 'attendEvent'), where('toOrg.id', '==', user.orgId)])
-    ])),
+      this.invitationService.valueChanges([where('type', '==', 'attendEvent'), where('fromOrg.id', '==', this.orgService.org.id)]),
+      this.invitationService.valueChanges([where('type', '==', 'attendEvent'), where('toOrg.id', '==', this.orgService.org.id)])
+    ]).pipe(
     map(i => i.flat()),
     map(invitations => invitations.filter((i, index) => invitations.findIndex(elm => elm.id === i.id) === index)),
+    map(invitations => {
+      const { userId } = this.route.snapshot.params;
+      return invitations.filter(invitation => fromUser(invitation, userId));
+    }),
     joinWith({
       event: invitation => this.eventService.queryDocs(invitation.eventId)
     }, { shouldAwait: true }),
