@@ -41,6 +41,11 @@ export class WishlistButtonComponent implements OnInit {
   public async addToWishlist(event?: Event) {
     event.stopPropagation();
     event.preventDefault();
+
+    if (!this.orgService.org?.id) {
+      return this.router.navigate(['/auth/identity']);
+    }
+
     const movie = await this.movieService.getValue(this.movieId);
     const title = movie.title?.international ?? movie.title.original;
     this.orgService.updateWishlist(movie);
