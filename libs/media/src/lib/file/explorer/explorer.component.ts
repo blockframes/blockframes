@@ -81,7 +81,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     if (directory) this.next(directory);
 
     const titles$ = this.movieService.valueChanges(query).pipe(
-      map(titles => titles.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
+      map(titles => titles.filter(t => t.app[this.app].status !== 'archived').sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
     );
 
     this.root$ = combineLatest([
