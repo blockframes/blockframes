@@ -253,7 +253,7 @@ export function getMovieEmailData(movie: Partial<MovieDocument>): MovieEmailData
 export function getNegotiationEmailData(negotiation: Partial<NegotiationDocument>): NegotiationEmailData {
   const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
   const formatter = new Intl.NumberFormat('en-US');
-  const price = formatter.format(negotiation.price);
+  const price = negotiation.price ? formatter.format(negotiation.price) : '';
   const terms = createMailTerm(negotiation.terms);
 
   return {
