@@ -25,21 +25,21 @@ footer {
     }
   }
 
-  #videoFooter div {
+  .videos {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 16px;
-  }
 
-  .video-container {
-    margin: 0 24px;
-    video-viewer {
-      display: block;
-      height: 100%;
-    }
-    p {
-      padding-top: 8px;
-      text-align: center;
+    article {
+      margin: 0 24px;
+      video-viewer {
+        display: block;
+        height: 100%;
+      }
+      p {
+        padding-top: 8px;
+        text-align: center;
+      }
     }
   }
 }
@@ -48,11 +48,12 @@ footer {
 
 @include layout-bp(xs) {
   footer {
-    .video-container {
-      margin: 0;
-    }
-    #videoFooter div {
+    .videos {
       grid-template-columns: 1fr;
+
+      article {
+        margin: 0;
+      }
     }
   }
 }
