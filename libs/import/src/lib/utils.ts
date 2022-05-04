@@ -232,8 +232,8 @@ export function mandatoryError<T = unknown>(value: T, name: string): ImportLog<T
 
 export function wrongTemplateError(templateImported: 'seller' | 'admin'): ImportLog<string> {
   const messages = {
-    admin: 'Please contact team@archipelcontent.com or delete column `b` to import as an external sale.',
-    seller: 'Please contact team@archipelcontent.com or add a `contract-type` column at column `b`.',
+    admin: 'Please contact team@archipelcontent.com or use a template that\'s appropriate to sellers',
+    seller: 'Please contact team@archipelcontent.com or use a template that\'s appropriate to admins',
   }
   const option: LogOption = {
     name: `Wrong Template`,

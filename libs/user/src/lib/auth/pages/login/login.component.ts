@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,7 +13,7 @@ import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   public buttonText = 'Log in';
   public signinIn = false;
@@ -27,6 +27,10 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Login')
+  }
+
+  ngOnDestroy() {
+    this.snackBar.dismiss();
   }
 
   public async signin(signinForm: SigninForm) {

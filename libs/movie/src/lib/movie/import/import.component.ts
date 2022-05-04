@@ -1,5 +1,6 @@
-
-import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
+import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/model';
 
 import { Intercom } from 'ng-intercom';
 
@@ -13,9 +14,16 @@ import { SheetTab } from '@blockframes/utils/spreadsheet';
 })
 export class TitleImportComponent {
 
+  public templateUrl = this.app === 'catalog'
+    ? '/assets/templates/import-titles-seller-template.xlsx'
+    : '/assets/templates/import-titles-template.xlsx';
+
   sheetTab?: SheetTab;
 
-  constructor(@Optional() private intercom: Intercom) { }
+  constructor(
+    @Optional() private intercom: Intercom,
+    @Inject(APP) private app: App
+  ) { }
 
   openIntercom() {
     return this.intercom.show();
