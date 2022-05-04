@@ -11,8 +11,8 @@ import { AnalyticsService } from '@blockframes/analytics/+state/analytics.servic
 import { counter } from '@blockframes/analytics/+state/utils';
 
 // RxJs
-import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
-import { combineLatest, firstValueFrom } from 'rxjs';
+import { map, switchMap, shareReplay, tap, filter } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
@@ -35,7 +35,7 @@ export class HomeComponent {
     })
   );
 
-  private titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
+  titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
     }, { shouldAwait: true }),
@@ -43,16 +43,10 @@ export class HomeComponent {
   );
 
   popularTitle$ = this.titleAnalytics$.pipe(
+    filter(analytics => analytics.length > 0),
     map(analytics => counter(analytics, 'meta.titleId')),
     map(analytics => analytics.sort((a, b) => a.count > b.count ? -1 : 1)),
-    switchMap(([popularEvent]) => {
-      if (popularEvent) {
-        return this.movieService.valueChanges(popularEvent.key);
-      } else {
-        // No titles have any analytics yet so show any movie
-        return firstValueFrom(this.titles$).then(titles => this.movieService.getValue(titles[0].id));
-      }
-    })
+    switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key))
   );
 
   private titleAnalyticsOfPopularTitle$ = combineLatest([ this.popularTitle$, this.titleAnalytics$ ]).pipe(

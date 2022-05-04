@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { where } from "firebase/firestore";
 import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
 import { aggregate } from "@blockframes/analytics/+state/utils";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
@@ -152,11 +153,14 @@ export class BuyerAnalyticsComponent {
     map(([filter, analytics]) => filterAnalytics(filter, analytics))
   );
 
-  invitations$ = combineLatest([
-    this.user$,
-    this.invitationService.allInvitations$
-  ]).pipe(
-    map(([user, invitations]) => invitations.filter(i => i.fromUser?.uid === user.uid || i.toUser?.uid === user.uid)),
+  invitations$ = this.user$.pipe(
+    switchMap(user => combineLatest([
+      // Event invitations linked to current org
+      this.invitationService.valueChanges([where('type', '==', 'attendEvent'), where('fromOrg.id', '==', user.orgId)]),
+      this.invitationService.valueChanges([where('type', '==', 'attendEvent'), where('toOrg.id', '==', user.orgId)])
+    ])),
+    map(i => i.flat()),
+    map(invitations => invitations.filter((i, index) => invitations.findIndex(elm => elm.id === i.id) === index)),
     joinWith({
       event: invitation => this.eventService.queryDocs(invitation.eventId)
     }, { shouldAwait: true }),
@@ -168,11 +172,12 @@ export class BuyerAnalyticsComponent {
         return title.analytics.filter(analytic => analytic.name === 'screeningRequested');
       }
     }, { shouldAwait: true }),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   aggregatedScreeningCards$: Observable<MetricCard[]> = this.invitations$.pipe(
     map(toScreenerCards)
-  )
+  );
 
   constructor(
     private analytics: AnalyticsService,
