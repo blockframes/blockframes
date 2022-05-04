@@ -4,7 +4,7 @@ import { where } from "firebase/firestore";
 import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
 import { aggregate } from "@blockframes/analytics/+state/utils";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
-import { AggregatedAnalytic, EventName, Event, Screening, isScreening, Invitation, Analytics } from "@blockframes/model";
+import { AggregatedAnalytic, EventName, Event, Screening, isScreening, Invitation, Analytics, isMovieAccepted } from "@blockframes/model";
 import { fromOrgAndAccepted, MovieService } from "@blockframes/movie/+state/movie.service";
 import { OrganizationService } from "@blockframes/organization/+state";
 import { IconSvg } from "@blockframes/ui/icon.service";
@@ -99,7 +99,7 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
     },
     {
       title: 'Average watch time',
-      value: attended.reduce((acc, curr) => acc + curr.watchTime, 0) / invitations.length,
+      value: attended.reduce((acc, curr) => acc + curr.watchTime, 0) / invitations.length || 0,
       icon: 'access_time'
     }
   ];
@@ -157,20 +157,15 @@ export class BuyerAnalyticsComponent {
   );
 
   invitations$ = combineLatest([
-      // Event invitations linked to current org
-      this.invitationService.valueChanges([where('type', '==', 'attendEvent'), where('fromOrg.id', '==', this.orgService.org.id)]),
-      this.invitationService.valueChanges([where('type', '==', 'attendEvent'), where('toOrg.id', '==', this.orgService.org.id)])
-    ]).pipe(
-    map(i => i.flat()),
-    map(invitations => invitations.filter((i, index) => invitations.findIndex(elm => elm.id === i.id) === index)),
-    map(invitations => {
-      const { userId } = this.route.snapshot.params;
-      return invitations.filter(invitation => fromUser(invitation, userId));
-    }),
+    this.user$,
+    this.invitationService.allInvitations$  
+  ]).pipe(
+    map(([user, invitations]) => invitations.filter(invitation => fromUser(invitation, user.uid))),
     joinWith({
       event: invitation => this.eventService.queryDocs(invitation.eventId)
     }, { shouldAwait: true }),
     map(invitations => invitations.filter(invitation => isScreening(invitation.event) && invitation.event.meta.titleId)),
+    map(invitations => invitations.filter(invitation => isMovieAccepted(invitation.event.movie, this.app))),
     joinWith({
       analytics: async invitation => {
         const titleWithAnalytics = await firstValueFrom(this.buyerAnalytics$);
