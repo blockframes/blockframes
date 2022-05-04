@@ -1,7 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { firstValueFrom } from 'rxjs';
 import { DashboardTitleShellComponent } from '../shell/shell.component';
 
 @Component({
@@ -18,7 +17,7 @@ export class MovieViewMainComponent {
     private dynTitle: DynamicTitleService,
     private shell: DashboardTitleShellComponent
   ) {
-    firstValueFrom(this.shell.movie$).then(movie => {
+    this.shell.movie.then(movie => {
       const titleName = movie?.title?.international || 'No title';
       this.dynTitle.setPageTitle(titleName, 'Main Information');
     });

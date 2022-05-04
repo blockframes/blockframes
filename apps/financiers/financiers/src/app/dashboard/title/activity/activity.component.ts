@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { firstValueFrom } from 'rxjs';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -26,7 +25,7 @@ export class TitleActivityComponent {
     private dynTitle: DynamicTitleService,
     private shell: DashboardTitleShellComponent
   ) {
-    firstValueFrom(this.shell.movie$).then(movie => {
+    this.shell.movie.then(movie => {
       const titleName = movie?.title?.international || 'No title';
       this.dynTitle.setPageTitle(titleName, 'Marketplace Activity');
     });
