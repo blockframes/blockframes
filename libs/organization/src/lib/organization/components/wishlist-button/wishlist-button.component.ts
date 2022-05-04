@@ -8,6 +8,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { Observable } from 'rxjs';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
+import { AuthService } from '@blockframes/auth/+state';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class WishlistButtonComponent implements OnInit {
   @Output() added = new EventEmitter<string>()
 
   constructor(
+    private auth: AuthService,
     private movieService: MovieService,
     private orgService: OrganizationService,
     private router: Router,
@@ -42,7 +44,7 @@ export class WishlistButtonComponent implements OnInit {
     event.stopPropagation();
     event.preventDefault();
 
-    if (!this.orgService.org?.id) {
+    if (await this.auth.isSignedInAnonymously()) {
       return this.router.navigate(['/auth/identity']);
     }
 
