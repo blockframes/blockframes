@@ -1,6 +1,7 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { firstValueFrom } from 'rxjs';
 import { DashboardTitleShellComponent } from '../shell/shell.component';
 
 @Component({
@@ -9,15 +10,18 @@ import { DashboardTitleShellComponent } from '../shell/shell.component';
   styleUrls: ['./delivery.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MovieViewDeliveryComponent implements OnInit {
+export class MovieViewDeliveryComponent {
 
   public form = this.shell.getForm('movie');
 
-  constructor(private dynTitle: DynamicTitleService, private shell: DashboardTitleShellComponent) { }
-
-  ngOnInit() {
-    const titleName = this.shell.movie?.title?.international || 'No title';
-    this.dynTitle.setPageTitle(titleName, 'Delivery Information');
+  constructor(
+    private dynTitle: DynamicTitleService,
+    private shell: DashboardTitleShellComponent
+  ) {
+    firstValueFrom(this.shell.movie$).then(movie => {
+      const titleName = movie?.title?.international || 'No title';
+      this.dynTitle.setPageTitle(titleName, 'Delivery Information');
+    });
   }
 
   get file() {

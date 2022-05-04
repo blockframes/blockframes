@@ -17,6 +17,7 @@ import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
 import { filter, pluck, switchMap, tap } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
 import { NavigationService } from '@blockframes/ui/navigation.service';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Directive({ selector: 'movie-cta, [movieCta]' })
 export class MovieCtaDirective { }
@@ -34,7 +35,10 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   movie$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
-    tap((movie) => (this.movie = movie))
+    tap((movie) => {
+      this.movie = movie;
+      this.dynTitle.setPageTitle(movie.title.international, 'Marketplace Activity');
+    })
   );
 
   public movie: Movie;
@@ -47,7 +51,8 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private router: Router,
     private route: ActivatedRoute,
-    private navService: NavigationService
+    private navService: NavigationService,
+    private dynTitle: DynamicTitleService
   ) { }
 
   async ngOnInit() {
