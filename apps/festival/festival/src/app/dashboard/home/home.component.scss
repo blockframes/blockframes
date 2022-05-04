@@ -34,6 +34,13 @@ header {
   }
 }
 
+.no-analytics {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .no-accepted-movies {
   .surface {
     width: 330px;

@@ -545,6 +545,10 @@ export function checkMovieStatus(movie: MovieDocument | MovieBase<Date>, status:
   return Object.keys(movie.app).some((a) => movie.app[a].status === status);
 }
 
+export function isMovieAccepted(movie: Movie, app: App) {
+  return movie.app[app].status === 'accepted' && movie.app[app].access;
+}
+
 /**
  * Determine the status to update depending on the current app.
  * For app Festival, publish status is "accepted", "submitted" for other apps
