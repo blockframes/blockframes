@@ -15,7 +15,7 @@
                 <p matLine fxLayout="row wrap" fxLayoutGap="6px">
                   <a [href]="'mailto:' + fromUser.email">{{ fromUser | displayUser | async }}</a> 
                   <span>
-                    invited you to {{ event.type }}
+                    invited you to {{ event.type | toLabel:'eventTypes' }}
                     <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i/lobby']" id="link">{{ event.title }}</a>
                   </span>
                   <span>({{ event | eventRange }})</span>
@@ -42,7 +42,7 @@
                 <p matLine fxLayout="row wrap" fxLayoutGap="6px">
                   <a [href]="'mailto:' + fromUser.email">{{ fromUser | displayUser | async }}</a> 
                   <span>
-                    would like to attend {{ event.type }}
+                    would like to attend {{ event.type | toLabel:'eventTypes' }}
                     <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i']" id="link">{{ event.title }}</a>
                   </span>
                 <span>({{ event | eventRange }})</span>
@@ -54,7 +54,7 @@
               <p matLine fxLayout="row wrap" fxLayoutGap="6px">
                 <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a> 
                 <span>
-                  would like to attend {{ event.type }}
+                  would like to attend {{ event.type | toLabel:'eventTypes' }}
                   <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i']" id="link">{{ event.title }}</a>.
                 </span>
                 <span>({{ event | eventRange }})</span>

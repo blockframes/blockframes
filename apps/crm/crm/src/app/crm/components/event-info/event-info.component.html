@@ -12,7 +12,7 @@
       </a>
     </ng-container>
     <h5>Type</h5>
-    <p>{{ event.type }}</p>
+    <p>{{ event.type | toLabel:'eventTypes'}}</p>
   </section>
   <event-agenda-export [event]="event" text="Export Event"></event-agenda-export>
 </mat-card>

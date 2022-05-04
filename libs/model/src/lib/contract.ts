@@ -7,7 +7,7 @@ import { BucketContract } from './bucket';
 
 export function createMailContract(contract: BucketContract<Timestamp>) {
   const formatter = new Intl.NumberFormat('en-US');
-  const price = formatter.format(contract.price);
+  const price = contract.price ? formatter.format(contract.price) : '';
 
   return ({
     ...contract,

@@ -10,7 +10,7 @@
   
           <ng-container *ngSwitchCase="'early'">
             <h6>
-              <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</span>
+              <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type | toLabel: 'eventTypes' }}</span>
               <event-agenda-export [event]="event" color="primary"></event-agenda-export>
             </h6>
             <pre class="mat-body-1" matTooltip="Your Greenwich Mean Time" >{{ event | eventRange }}</pre>
@@ -27,14 +27,14 @@
             <ng-template #notOwner>
                 <invitation-action *ngIf="(invitation$ | async) !== undefined" @fade [invitation]="(invitation$ | async)" [event]="event" (statusChanged)="reloadInvitation()"></invitation-action>
                 <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'  || event.accessibility === 'public'">
-                  <a mat-flat-button color="accent" [disabled]="!timerEnded" [routerLink]="accessRoute" matTooltip="You'll be able to join the screening when it starts.">Access {{ event.type | titlecase }} Room</a>
+                  <a mat-flat-button color="accent" [disabled]="!timerEnded" [routerLink]="accessRoute" matTooltip="You'll be able to join the screening when it starts.">Access {{ event.type | toLabel: 'eventTypes' }} Room</a>
                 </ng-container>
             </ng-template>
           </ng-container>
   
           <ng-container *ngSwitchCase="'onTime'">
             <h6>
-              <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type }}</span>
+              <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type | toLabel: 'eventTypes' }}</span>
               <event-agenda-export [event]="event"></event-agenda-export>
             </h6>
             <pre class="mat-body-1">{{ event | eventRange }}</pre>
@@ -50,20 +50,20 @@
                 <div @fade *ngIf="(invitation$ | async) !== undefined" fxLayout="column" fxLayoutAlign="center center">
                   <invitation-action [invitation]="(invitation$ | async)" [event]="event" (statusChanged)="reloadInvitation()"></invitation-action>
                   <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'">
-                    <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
+                    <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | toLabel: 'eventTypes' }} Room</a>
                   </ng-container>
                 </div>
               </ng-container>
               <ng-template #publicEvent>
                 <div @fade fxLayout="column" fxLayoutAlign="center center">
-                  <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
+                  <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | toLabel: 'eventTypes' }} Room</a>
                 </div>
               </ng-template>
             </ng-template>
           </ng-container>
   
           <ng-container *ngSwitchCase="'late'">
-            <h6>{{ event.type }} session closed</h6>
+            <h6>{{ event.type | toLabel: 'eventTypes' }} session closed</h6>
             <pre class="mat-body-1">{{ event | eventRange }}</pre>
             
             <ng-container *ngIf="event.type === 'screening' && event.accessibility === 'private'">

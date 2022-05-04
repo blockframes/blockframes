@@ -14,7 +14,7 @@ import { EventFromInvitationPipeModule } from '@blockframes/invitation/pipes/eve
 import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
 import { DisplayUserModule } from '@blockframes/utils/pipes/display-user.pipe';
 import { TimeSinceModule } from '@blockframes/utils/pipes/time-since.pipe';
-import { ToDateModule } from '@blockframes/utils/pipes';
+import { ToDateModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { ExportToGoogleAgendaModule } from '@blockframes/event/pipes/export-to-google-agenda.pipe';
 
 // Material
@@ -40,6 +40,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     EventRangeModule,
     TimeSinceModule,
     ToDateModule,
+    ToLabelModule,
     ExportToGoogleAgendaModule,
 
     // Material
