@@ -1,12 +1,11 @@
-﻿import { connectFirestoreEmulator } from '@blockframes/firebase-utils/firestore/emulator';
+﻿import { firestore } from 'firebase-admin';
 import { initFunctionsTestMock } from './functions';
 
 describe('firebase testing library', () => {
-  it.skip('should read the doc and get same data', async () => {
+  it('should read the doc and get same data', async () => {
     //Init Mocks and environment
-    initFunctionsTestMock();
-
-    const db = connectFirestoreEmulator();
+    const app = await initFunctionsTestMock();
+    const db = firestore() // * The reason we do it this way is because functions use this connect code so we test it this way
     const docRef = db.collection('testCollection').doc('testDoc');
     const testData = { name: 'blockframes' };
     await docRef.set(testData);

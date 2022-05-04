@@ -8,6 +8,7 @@ import { TokenOptions, initializeTestEnvironment, RulesTestEnvironment } from '@
 import type { FeaturesList } from 'firebase-functions-test/lib/features';
 import type { AppOptions } from 'firebase-admin'; // * Correct Import
 import fs from 'fs';
+import { functionsConfigMap, writeRuntimeConfig } from '@blockframes/firebase-utils/firestore/emulator';
 
 export interface FirebaseTestConfig extends FeaturesList {
   firebaseConfig?: { projectId: string, app: admin.app.App };
@@ -23,8 +24,9 @@ config();
  * @param overrideConfig allows custom configuration of test object
  * @returns firebase-functions-test mock object
  */
-export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptions): FirebaseTestConfig {
-  let runtimeConfig: any = {};
+export async function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptions): Promise<FirebaseTestConfig> {
+  await writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
+  let runtimeConfig: Parameters<FirebaseTestConfig['mockConfig']>[0] = {};
   try {
     // tslint:disable-next-line: no-eval
     runtimeConfig = eval('require')(join(process.cwd(), './.runtimeconfig.json'));
@@ -97,7 +99,7 @@ function setData(testEnv: RulesTestEnvironment, dataDB: Record<string, unknown>)
 //////////////
 
 export function populate(collection: string, set: any[]) {
-  const db = admin.firestore();
+  const db = admin.firestore(); // TODO! Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   return runChunks(set, async (d) => {
     const docRef = db.collection(collection).doc(d.id || d.uid);
     if (d.date?._seconds) { d.date = new Date(d.date._seconds * 1000) };
