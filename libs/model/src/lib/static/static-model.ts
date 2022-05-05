@@ -84,8 +84,6 @@ export const eventTypes = {
   local: 'Local'
 } as const;
 
-
-
 export const crewRoles = {
   writer: 'Writer',
   scoreComposer: 'Score Composer',
