@@ -13,12 +13,12 @@
 <router-outlet></router-outlet>
 
 <ng-container *ngIf="(terms$ | async)?.length">
-  <h2 id="rights">Preselected Rights</h2>
+  <h2 id="rights">Preselected Terms</h2>
   <mat-card *ngFor="let control of terms$ | async | reverse; index as i;" [attr.data-scroll-to-view-id]="i">
     <form [formGroup]="control" *ngIf="control.value as term">
       <mat-card-header fxLayout fxLayoutAlign="space-between center">
         <mat-card-title>
-          {{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} Rights from {{ term.duration.from | date:
+          {{ term.exclusive ? 'Exclusive' : 'Non Exclusive' }} Terms from {{ term.duration.from | date:
           'MM/dd/yyyy' }} until {{ term.duration.to | date: 'MM/dd/yyyy' }}
         </mat-card-title>
         <section fxLayoutGap="12px">
@@ -35,7 +35,7 @@
           <ng-container *ngIf="collision.length">
             <button mat-button (click)="openHoldbackModal(collision)">
               <mat-icon svgIcon="info"></mat-icon>
-              <span>Holdback(s) exist for this right</span>
+              <span>Holdback(s) for these Terms</span>
             </button>
           </ng-container>
         </ng-container>
@@ -110,7 +110,7 @@
           <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                Medias
+                Rights
               </mat-panel-title>
             </mat-expansion-panel-header>
             <article class="expansion-panel-content">

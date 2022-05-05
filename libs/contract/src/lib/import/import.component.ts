@@ -1,9 +1,8 @@
-
-import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-
+import { Inject, Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Intercom } from 'ng-intercom';
-
 import { SheetTab } from '@blockframes/utils/spreadsheet';
+import { APP } from '@blockframes/utils/routes/utils';
+import { App } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'contract-import',
@@ -14,8 +13,14 @@ import { SheetTab } from '@blockframes/utils/spreadsheet';
 export class ContractImportComponent {
 
   sheetTab?: SheetTab;
+  public templateUrl = this.app === 'catalog'
+    ? '/assets/templates/import-contracts-seller-template.xlsm'
+    : '/assets/templates/import-contracts-template.xlsm';
 
-  constructor(@Optional() private intercom: Intercom) { }
+  constructor(
+    @Optional() private intercom: Intercom,
+    @Inject(APP) private app: App,
+  ) { }
 
   openIntercom() {
     return this.intercom.show();
