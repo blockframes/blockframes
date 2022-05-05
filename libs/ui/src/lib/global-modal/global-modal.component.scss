@@ -41,10 +41,24 @@ section {
     margin: 0 -48px;
     padding: 0 48px;
   }
+  .closeButton {
+    top: -16px;
+    right: -16px;
+  }
 }
 
 .small {
+  padding-top: 48px;
   min-width: min(40vw, 600px);
   max-height: 350px;
   max-width: 800px;
+
+  .closeButton {
+    top: 0;
+    right: 0;
+  }
+
+  .mat-dialog-content {
+    max-height: 302px;
+  }
 }
