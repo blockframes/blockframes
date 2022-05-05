@@ -34,6 +34,12 @@ export class EventViewComponent implements OnInit {
   public timerEnded = false;
   private preventBrowserEvent = false;
 
+  public eventRoomAccess = {
+    meeting: 'Meeting',
+    screening: 'Screening',
+    slate: 'Screening' // for Buyers point of view Slate event remains a Screening
+  };
+
   constructor(
     private route: ActivatedRoute,
     private service: EventService,
