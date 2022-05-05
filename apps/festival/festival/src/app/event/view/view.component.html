@@ -27,7 +27,7 @@
             <ng-template #notOwner>
                 <invitation-action *ngIf="(invitation$ | async) !== undefined" @fade [invitation]="(invitation$ | async)" [event]="event" (statusChanged)="reloadInvitation()"></invitation-action>
                 <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'  || event.accessibility === 'public'">
-                  <a mat-flat-button color="accent" [disabled]="!timerEnded" [routerLink]="accessRoute" matTooltip="You'll be able to join the screening when it starts.">Access {{ event.type | toLabel: 'eventTypes' }} Room</a>
+                  <a mat-flat-button color="accent" [disabled]="!timerEnded" [routerLink]="accessRoute" matTooltip="You'll be able to join the screening when it starts.">Access {{ eventRoomAccess[event.type] }} Room</a>
                 </ng-container>
             </ng-template>
           </ng-container>
@@ -50,13 +50,13 @@
                 <div @fade *ngIf="(invitation$ | async) !== undefined" fxLayout="column" fxLayoutAlign="center center">
                   <invitation-action [invitation]="(invitation$ | async)" [event]="event" (statusChanged)="reloadInvitation()"></invitation-action>
                   <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'">
-                    <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | toLabel: 'eventTypes' }} Room</a>
+                    <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ eventRoomAccess[event.type] }} Room</a>
                   </ng-container>
                 </div>
               </ng-container>
               <ng-template #publicEvent>
                 <div @fade fxLayout="column" fxLayoutAlign="center center">
-                  <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | toLabel: 'eventTypes' }} Room</a>
+                  <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ eventRoomAccess[event.type] }} Room</a>
                 </div>
               </ng-template>
             </ng-template>
