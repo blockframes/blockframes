@@ -74,6 +74,7 @@ const eventAppKey: App = 'festival';
 
 /** Takes one or more notifications and add them on the notifications collection */
 export async function triggerNotifications(notifications: NotificationDocument[]) {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   const batch = db.batch();
 
@@ -125,6 +126,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
 
 /** Create a Notification with required and generic information. */
 export function createNotification(notification: Partial<NotificationDocument> = {}): NotificationDocument {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   return {
     _meta: createDocumentMeta(),
@@ -320,6 +322,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
     }
 
+    // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
     const db = admin.firestore();
     await db.collection('notifications').doc(notification.id).set({ email: notification.email }, { merge: true });
   }

@@ -110,6 +110,7 @@ export const getTwilioAccessToken = async (
 
 /** This function will be called directly by the Twilio servers each time an event happens in a Video Room */
 export const twilioWebhook = async (req: Request, res: Response) => {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   try {
 

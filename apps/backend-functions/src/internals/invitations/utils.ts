@@ -21,6 +21,7 @@ export function wasCreated(before: InvitationOrUndefined, after: InvitationDocum
  * @returns boolean, true if the users have an org or there is an invitation to join organization for those emails
  */
  export async function hasUserAnOrgOrIsAlreadyInvited(userEmails: string[]) {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   const userPromises = userEmails.map(email => db.collection('users')
     .where('email', '==', email)

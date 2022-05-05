@@ -212,6 +212,7 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string): 
   try {
     let orgData;
     if (user.orgId) {
+      // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
       const db = admin.firestore();
       const org = await db.doc(`orgs/${user.orgId}`).get();
       orgData = org.data();

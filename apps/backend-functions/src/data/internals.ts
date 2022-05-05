@@ -53,6 +53,7 @@ export function createDocumentMeta(meta: Partial<DocumentMeta<any>> = {}): Docum
  * @returns the organizations that have movie id in organization.movieIds
  */
 export async function getOrganizationsOfMovie(movieId: string) {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   const movie = await db.doc(`movies/${movieId}`).get();
   const orgIds = movie.data().orgIds;

@@ -18,6 +18,7 @@ import {
  * Handles notifications and emails when an invitation to an event is created.
  */
 async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   if (!invitation.eventId) {
     console.log('eventId is not defined');
@@ -198,6 +199,7 @@ export async function createNotificationsForEventsToStart() {
 
 /** Fetch event collection with a start and an end range search */
 async function fetchEventStartingIn(from: number, to: number) {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   return await db.collection('events')
     .where('start', '>=', new Date(Date.now() + from))
@@ -211,6 +213,7 @@ async function fetchEventStartingIn(from: number, to: number) {
  * @param pendingInvites Set true for invitations that are pending invites (not requests)
  */
 async function fetchAttendeesToEvent(collectionDocs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[], pendingInvites = false) {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   const invitations: InvitationDocument[] = [];
 
@@ -230,6 +233,7 @@ async function fetchAttendeesToEvent(collectionDocs: FirebaseFirestore.QueryDocu
  */
 async function createNotificationIfNotExists(invitations: InvitationDocument[], notificationType: NotificationTypes) {
   const notifications = [];
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
 
   for (const invitation of invitations) {
@@ -261,6 +265,7 @@ async function createNotificationIfNotExists(invitations: InvitationDocument[], 
  * @param email
  */
 export async function isUserInvitedToEvent(userId: string, event: EventDocument<EventMeta>, email?: string) {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
 
   if (event.accessibility === 'public') return true;

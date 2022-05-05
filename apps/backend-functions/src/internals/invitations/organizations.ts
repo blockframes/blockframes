@@ -11,6 +11,7 @@ import { groupIds } from '@blockframes/utils/emails/ids';
 import { InvitationDocument, InvitationOrUndefined, OrganizationDocument } from '@blockframes/model';
 
 async function addUserToOrg(userId: string, organizationId: string) {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   if (!organizationId || !userId) {
     throw new Error(`missing data: userId=${userId}, organizationId=${organizationId}`);

@@ -7,6 +7,7 @@ import { deconstructFilePath } from "@blockframes/utils/file-sanitizer";
 import { RuntimeOptions } from 'firebase-functions';
 
 export function getDocumentRef(path: string): Promise<FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>> {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   return db.doc(path).get();
 }
@@ -16,6 +17,7 @@ export function getDocument<T>(path: string): Promise<T> {
 }
 
 export function getCollectionRef(path: string): Promise<FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>> {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   return db.collection(path).get();
 }
@@ -28,6 +30,7 @@ export function getCollection<T>(path: string): Promise<T[]> {
  * @param fullPath the storage path of the file
  */
 export async function getDocAndPath(fullPath: string | undefined) {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
 
   const { collection, docPath, isTmp, privacy, field, filePath } = deconstructFilePath(fullPath)

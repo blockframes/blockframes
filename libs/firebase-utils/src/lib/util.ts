@@ -127,6 +127,7 @@ export function getServiceAccountObj(keyFile: string): admin.ServiceAccount {
 }
 
 export async function hasAcceptedMovies(org: OrganizationDocument, appli: App) {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const moviesColRef = await admin.firestore().collection('movies')
     .where('orgIds', 'array-contains', org.id).get();
   const movies = moviesColRef.docs.map(doc => doc.data());
@@ -145,6 +146,7 @@ export function throwOnProduction(): never | void {
 export async function removeAllSubcollections(
   snapshot: FirebaseFirestore.DocumentSnapshot,
   batch: FirebaseFirestore.WriteBatch,
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   db = admin.firestore(),
   options = { verbose: true }
 ): Promise<FirebaseFirestore.WriteBatch> {

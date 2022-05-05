@@ -12,6 +12,7 @@ import { isUserInvitedToEvent } from './invitations/events';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string, email?: string): Promise<boolean> {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   const eventData = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
 

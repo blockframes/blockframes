@@ -104,6 +104,7 @@ export const sendMailAsAdmin = async (
   data: { request: EmailRequest, from?: EmailJSON },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   if (!context?.auth) {
     throw new Error('Permission denied: missing auth context.');

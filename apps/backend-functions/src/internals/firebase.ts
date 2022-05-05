@@ -11,6 +11,7 @@ import { IMaintenanceDoc } from '@blockframes/model';
 if (!admin.apps.length) {
   admin.initializeApp();
 }
+// TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
 export const db = admin.firestore();
 export const auth = admin.auth();
 export const storage = admin.storage();

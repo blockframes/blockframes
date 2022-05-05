@@ -11,6 +11,7 @@ import { endMaintenance } from '@blockframes/firebase-utils';
 const testEnv = firebaseTest(firebase());
 
 describe('Permissions backend-function unit-tests', () => {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
 
   beforeAll(async () => {

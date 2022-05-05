@@ -7,6 +7,7 @@ export { firebaseRegion } from '@env';
  * Throws if the user does not exists.
  */
 export async function getUser(userId: string): Promise<PublicUser> {
+  // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   const db = admin.firestore();
   const user = await db.doc(`users/${userId}`).get();
   return user.data() as PublicUser;

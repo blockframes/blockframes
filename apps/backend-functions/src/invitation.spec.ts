@@ -140,6 +140,7 @@ describe('Invitation backend-function unit-tests', () => {
       );
 
       const inviteId = result[0].result;
+      // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
       const snap = await admin.firestore().collection('invitations').doc(inviteId).get();
       const inviteData = snap.data();
       expect(inviteData.id).toEqual(inviteId);
@@ -275,6 +276,7 @@ describe('Invitation backend-function unit-tests', () => {
       const result = await wrapped(data, context);
       expect(result).toBeTruthy();
 
+      // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
       const snap = await admin.firestore().collection('invitations').doc(data.invitationId).get();
       const inviteData = snap.data();
       expect(inviteData).toEqual(

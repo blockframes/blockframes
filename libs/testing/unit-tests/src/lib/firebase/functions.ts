@@ -26,6 +26,7 @@ config();
  */
 export async function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptions): Promise<FirebaseTestConfig> {
   await writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
+  await writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json'));
   let runtimeConfig: Parameters<FirebaseTestConfig['mockConfig']>[0] = {};
   try {
     // tslint:disable-next-line: no-eval
@@ -99,7 +100,7 @@ function setData(testEnv: RulesTestEnvironment, dataDB: Record<string, unknown>)
 //////////////
 
 export function populate(collection: string, set: any[]) {
-  const db = admin.firestore(); // TODO! Do not do this - db init is a side-effect and db should be passed in or init in a diff module
+  const db = admin.firestore(); // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
   return runChunks(set, async (d) => {
     const docRef = db.collection(collection).doc(d.id || d.uid);
     if (d.date?._seconds) { d.date = new Date(d.date._seconds * 1000) };

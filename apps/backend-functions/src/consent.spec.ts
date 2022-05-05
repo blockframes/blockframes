@@ -177,6 +177,7 @@ describe('Consent backend-function unit-tests', () => {
       expect(result).toBeTruthy();
 
       //Fetch the updated consents data and compare the result
+      // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
       const snap = await admin.firestore().collection('consents').doc(data.docId).get();
       const consentsData = snap.data();
       expect(consentsData).toEqual(
@@ -218,6 +219,7 @@ describe('Consent backend-function unit-tests', () => {
       expect(result).toBeTruthy();
 
       //Fetch the data and compare the result
+      // TODO! #8376 Do not do this - db init is a side-effect and db should be passed in or init in a diff module
       const snap = await admin.firestore().collection('consents').doc(data.docId).get();
       const consentsData = snap.data();
       expect(consentsData).toEqual(
