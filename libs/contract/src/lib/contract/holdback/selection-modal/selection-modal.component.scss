@@ -1,3 +1,20 @@
 p {
   text-align: center;
 }
+
+mat-divider {
+  margin-bottom: 16px
+}
+
+div.duration {
+  display: flex;
+  gap: 16px;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}

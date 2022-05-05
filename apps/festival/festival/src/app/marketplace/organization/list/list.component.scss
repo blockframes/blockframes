@@ -11,8 +11,17 @@ list-filter {
   justify-content: center;
 }
 
+button {
+  margin-bottom: 24px;
+}
+
 .loading {
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+.refresh {
+  margin-left: auto;
+  flex-shrink: 0;
 }

@@ -3,13 +3,15 @@
     <h1 class="mat-display-2 page-title">Screening List</h1>
   </list-page-title>
 
-  <list-filter fxLayout fxLayoutAlign="center">
+  <!-- (#8301)  Remove the filter for screnning list since it's not really used (#8301) 
+    but keep it commented if UI changes its mind-->
+  <!-- <list-filter fxLayout fxLayoutAlign="center">
     <ng-template filter label="Sales Agents" [form]="searchForm">
       <algolia-chips-autocomplete index="org" displayWithPath="name"
         [filters]="['appModule:dashboard',' hasAcceptedMovies:true']" [form]="searchForm"
         label="Search for a Sales Agent" placeholder="Sales Agent"></algolia-chips-autocomplete>
     </ng-template>
-  </list-filter>
+  </list-filter> -->
 
   <!-- EVENTS COUNT (ng-content)-->
   <list-page-description *ngIf="events$ | async as events">
