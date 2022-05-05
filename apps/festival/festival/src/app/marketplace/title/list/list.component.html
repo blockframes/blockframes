@@ -84,7 +84,7 @@
   <!-- TITLE CARD -->
   <ng-template listPageCard let-title>
     <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.objectID]" size="poster">
-      <event-request-screening [movieId]="title.id" iconOnly></event-request-screening>
+      <event-request-screening [movieId]="title.objectID" iconOnly></event-request-screening>
     </movie-card>
   </ng-template>
 
