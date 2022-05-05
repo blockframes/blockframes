@@ -51,7 +51,7 @@ export class EventAccessGuard implements CanActivate {
         if (next.queryParams?.i && credentialsUpdateNeeded) {
           this.authService.updateAnonymousCredentials({ invitationId: next.queryParams?.i });
         }
-        const incorrectInvitation = 'Sorry, it seems that you were not invited to this event, check your emails';
+        const incorrectInvitation = 'Sorry, it seems that you were not invited to this event. Check your emails';
         const invitationId = next.queryParams?.i as string || credentials?.invitationId;
         if (invitationId) {
           const invitation = await this.invitationService.getValue(invitationId).catch(() => createInvitation());
@@ -65,12 +65,11 @@ export class EventAccessGuard implements CanActivate {
           }
 
           if (!isEmailMatchingInvitation) {
-            this.snackBar.open('Sorry, it seems that you were not invited to this event, try with other mail', 'close', { duration: 12000 });
+            this.snackBar.open('Sorry, it seems that you were not invited to this event. Try with other mail', 'close', { duration: 12000 });
             this.authService.updateAnonymousCredentials({ email: undefined });
             this.router.navigate([`/event/${event.id}`], { queryParams: next.queryParams });
             return false;
           }
-
 
           return true;
         } else {
