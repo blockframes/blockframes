@@ -30,7 +30,8 @@ import {
 } from '@blockframes/model';
 import { toIcsFile } from '../agenda/utils';
 import { IcsEvent } from '../agenda/agenda.interfaces';
-import { capitalize, getKeyIfExists } from '../helpers';
+import { getKeyIfExists } from '../helpers';
+import { toLabel } from '../utils';
 
 interface EmailData {
   to: string;
@@ -222,7 +223,7 @@ export function getOrgEmailData(org: Partial<OrganizationDocument>): OrgEmailDat
     id: org.id,
     denomination: orgName(org, 'full'),
     email: org.email || '',
-    country: capitalize(org.addresses?.main?.country)
+    country: toLabel(org.addresses?.main?.country, 'territories')
   }
 }
 

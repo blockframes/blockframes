@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, HostBinding, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding, OnInit, OnDestroy } from '@angular/core';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { scaleOut } from '@blockframes/utils/animations/fade';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
@@ -33,8 +33,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   constructor(
     private service: OrganizationService,
-    private dynTitle: DynamicTitleService,
-    private cdr: ChangeDetectorRef
+    private dynTitle: DynamicTitleService
   ) { }
 
   ngOnInit() {
@@ -80,7 +79,6 @@ export class ListComponent implements OnInit, OnDestroy {
   clear() {
     const initial = createOrganizationSearch();
     this.searchForm.reset(initial);
-    this.cdr.markForCheck();
   }
 
   ngOnDestroy() {
