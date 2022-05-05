@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
 import { APP } from '@blockframes/utils/routes/utils';
+import { filters } from '@blockframes/ui/list/table/filters';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
@@ -47,6 +48,7 @@ export class ListComponent implements OnInit {
   titleCount$: Observable<Record<string, number>>;
   filter = new FormControl('all');
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
+  filters = filters;
 
   constructor(
     private campaignService: CampaignService,
