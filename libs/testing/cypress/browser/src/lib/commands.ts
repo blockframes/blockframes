@@ -46,12 +46,10 @@ Cypress.config('defaultCommandTimeout', 60000);
 /**
  * This command is like the get command above but chainable!
  */
-// // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// // @ts-ignore
 Cypress.Commands.add('getId', { prevSubject: 'optional' }, (subject: Cypress.Chainable, selector: string) => {
   return subject ? subject.get(`[test-id="${selector}"]`) : cy.get(`[test-id="${selector}"]`);
 });
 
-Cypress.Commands.add('logSubject', { prevSubject: ['document', 'element', 'optional', 'window'] }, subject => {
-  cy.log(subject as unknown as string);
+Cypress.Commands.add('logSubject', { prevSubject: 'optional' }, subject => {
+  if (subject) cy.log(subject as unknown as string);
 });
