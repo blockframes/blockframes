@@ -84,6 +84,14 @@ export const eventTypes = {
   local: 'Local'
 } as const;
 
+export const eventRoomAccess = {
+  meeting: 'Meeting',
+  screening: 'Screening',
+  slate: 'Screening', // for Buyers point of view Slate event remains a Screening
+  standard: 'Standard',
+  local: 'Local'
+} as const;
+
 export const crewRoles = {
   writer: 'Writer',
   scoreComposer: 'Score Composer',
@@ -1294,6 +1302,7 @@ export const staticModel = {
   crewRoles,
   directorCategory,
   eventTypes,
+  eventRoomAccess,
   genres,
   hostedVideoTypes,
   invitationType,
