@@ -10,8 +10,8 @@ import { Auth, UserRecord } from '@blockframes/firebase-utils';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/unit-tests';
 import * as env from '@env';
 import { PublicUser, User } from '@blockframes/model';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 import { subMonths } from 'date-fns';
+import { USER_FIXTURES_PASSWORD } from './firebase-utils/anonymize/util';
 
 export const { storageBucket } = env.firebase();
 

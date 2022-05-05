@@ -142,9 +142,8 @@ export async function firebaseEmulatorExec({
   const startType = execCommand ? 'exec' : 'start';
   const onlyParam = typeof emulators === 'string' ? emulators : emulators.join(',');
   const exportString = typeof exportData === 'string' ? `--export-on-exit ${exportData} ` : '--export-on-exit ';
-  const cmd = `npx firebase emulators:${startType} --project ${projectId} --only ${onlyParam} ${
-    importPath ? `--import ${importPath} ` : ''
-  }${exportData ? exportString : ''}${execCommand ? `'${execCommand}'` : ''}`;
+  const cmd = `npx firebase emulators:${startType} --project ${projectId} --only ${onlyParam} ${importPath ? `--import ${importPath} ` : ''
+    }${exportData ? exportString : ''}${execCommand ? `'${execCommand}'` : ''}`;
   console.log('Running command:', cmd);
   const { proc, procPromise } = runShellCommandUntil(cmd, 'All emulators ready');
   process.on('SIGINT', async () => await shutdownEmulator(proc));

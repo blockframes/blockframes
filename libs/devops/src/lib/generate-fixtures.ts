@@ -1,6 +1,6 @@
 import { promises as fsPromises } from 'fs';
 import { join } from 'path';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
+import { USER_FIXTURES_PASSWORD } from './firebase-utils/anonymize/util';
 import type { Movie, Organization, User } from '@blockframes/model';
 
 export async function generateFixtures(db: FirebaseFirestore.Firestore) {

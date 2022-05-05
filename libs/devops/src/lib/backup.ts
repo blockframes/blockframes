@@ -1,7 +1,7 @@
 import { backupBucket, firebase } from '@env';
 import { enableMaintenanceInEmulator } from './emulator';
 import { endMaintenance, loadAdminServices, startMaintenance } from '@blockframes/firebase-utils';
-import { defaultEmulatorBackupPath, importFirestoreEmulatorBackup, uploadDbBackupToBucket } from '@blockframes/firebase-utils/firestore/emulator';
+import { defaultEmulatorBackupPath, importFirestoreEmulatorBackup, uploadDbBackupToBucket } from './firebase-utils/firestore/emulator';
 import { deleteAllUsers } from '@blockframes/testing/unit-tests';
 import { ensureMaintenanceMode } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
@@ -45,7 +45,7 @@ export async function backupLiveEnv(dirName?: string) {
  * @param dirName name of backup dir in GCS Bucket
  */
 export async function restoreLiveEnv(dirName?: string) {
-  
+
   const { storage, db, auth } = loadAdminServices();
 
   await startMaintenance(db);

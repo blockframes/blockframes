@@ -1,15 +1,15 @@
-import { endMaintenance, removeAllSubcollections, startMaintenance } from "@blockframes/firebase-utils";
-import { connectFirestoreEmulator, defaultEmulatorBackupPath, firebaseEmulatorExec, getFirestoreExportPath, importFirestoreEmulatorBackup, shutdownEmulator } from "@blockframes/firebase-utils/firestore/emulator";
-import { uploadBackup } from "./emulator";
+import { endMaintenance, removeAllSubcollections, startMaintenance } from '@blockframes/firebase-utils';
+import { connectFirestoreEmulator, defaultEmulatorBackupPath, firebaseEmulatorExec, getFirestoreExportPath, importFirestoreEmulatorBackup, shutdownEmulator } from './firebase-utils/firestore/emulator';
+import { uploadBackup } from './emulator';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
 import { backupBucket } from '@env'
 import { latestAnonDbDir, latestAnonShrinkedDbDir } from './firebase-utils';
 
 // Users for E2E tests
-import { EIGHT_MINUTES_IN_MS } from "@blockframes/utils/maintenance";
-import type { ChildProcess } from "child_process";
-import { CollectionData, DatabaseData, DocumentDescriptor, getAllDocumentCount, inspectDocumentRelations, loadAllCollections, printDatabaseInconsistencies } from "./internals/utils";
-import { cleanDeprecatedData } from "./db-cleaning";
+import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
+import type { ChildProcess } from 'child_process';
+import { CollectionData, DatabaseData, DocumentDescriptor, getAllDocumentCount, inspectDocumentRelations, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
+import { cleanDeprecatedData } from './db-cleaning';
 
 /**
  * Temp this should be removed when fixtures are updated. 
