@@ -4,6 +4,15 @@ nav {
   margin: 0 24px;
 }
 
+header {
+  overflow: auto; // enable scrolling for small screen
+  scrollbar-width: none;  // Hide scrollbar for firefox
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 footer {
   margin: 24px 24px 72px 24px;
 
@@ -34,8 +43,8 @@ footer {
       margin: 0 24px;
       video-viewer {
         display: block;
-        height: 100%;
       }
+
       p {
         padding-top: 8px;
         text-align: center;
