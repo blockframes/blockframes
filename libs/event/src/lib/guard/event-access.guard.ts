@@ -59,7 +59,7 @@ export class EventAccessGuard implements CanActivate {
 
           const isInvitationMatchingEvent = invitation?.eventId === event.id;
           if (!isInvitationMatchingEvent) {
-            this.snackBar.open(incorrectInvitation, 'close', { duration: 6000 });
+            this.snackBar.open(incorrectInvitation, 'close', { duration: 12000 });
             await this.authService.deleteAnonymousUser();
             return false;
           }
