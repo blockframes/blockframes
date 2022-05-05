@@ -10,6 +10,7 @@ import { JoinPipeModule } from '@blockframes/utils/pipes';
 import { ContractItemModule } from '@blockframes/contract/contract/components/item/contract-item.module';
 import { HoldbackFormModule } from '@blockframes/contract/contract/holdback/form/form.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';

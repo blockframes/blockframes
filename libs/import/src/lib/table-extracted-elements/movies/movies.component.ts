@@ -9,6 +9,7 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../utils';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -127,7 +128,9 @@ export class TableExtractedMoviesComponent implements OnInit {
   ///////////////////
 
   displayErrors(data: MovieImportState) {
-    this.dialog.open(ViewImportErrorsComponent, { data: { title: data.movie.title.original, errors: data.errors }, width: '50%' });
+    this.dialog.open(ViewImportErrorsComponent, {
+      data: createModalData({ title: data.movie.title.original, errors: data.errors })
+    });
   }
 
   ///////////////////

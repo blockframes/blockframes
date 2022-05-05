@@ -4,8 +4,8 @@ import { where } from 'firebase/firestore';
 
 // Services
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { Contract, Movie, Negotiation } from '@blockframes/model';
-import { Income, IncomeService } from '@blockframes/contract/income/+state';
+import { Contract, Income, Movie, Negotiation } from '@blockframes/model';
+import { IncomeService } from '@blockframes/contract/income/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { TermService } from '@blockframes/contract/term/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';

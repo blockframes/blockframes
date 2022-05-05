@@ -1,12 +1,13 @@
-import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { RequestAskingPriceComponent } from "./request-asking-price.component";
+import { RequestAskingPriceComponent } from './request-asking-price.component';
 
 // Blockframes
 import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { GlobalModalModule } from "@blockframes/ui/global-modal/global-modal.module";
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -23,13 +24,14 @@ import { MatIconModule } from '@angular/material/icon';
     ReactiveFormsModule,
     // Blockframes
     StaticGroupModule,
+    GlobalModalModule,
     // Material
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatButtonModule,
     MatDialogModule,
     MatInputModule,
-    MatIconModule,
+    MatIconModule
   ],
   declarations: [RequestAskingPriceComponent]
 })

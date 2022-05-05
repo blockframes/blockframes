@@ -59,8 +59,9 @@
       <filter-budget fxLayout="column" [form]="searchForm.minBudget"></filter-budget>
     </ng-template>
 
-    <button mat-icon-button (click)="clear()" matTooltip="Clear all filters">
+    <button mat-button class="refresh translucent" (click)="clear()" matTooltip="Clear all filters">
       <mat-icon svgIcon="refresh_filters"></mat-icon>
+      Refresh
     </button>
   </list-filter>
 
@@ -83,6 +84,7 @@
   <!-- TITLE CARD -->
   <ng-template listPageCard let-title>
     <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.objectID]" size="poster">
+      <event-request-screening [movieId]="title.id" iconOnly></event-request-screening>
     </movie-card>
   </ng-template>
 

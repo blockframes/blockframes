@@ -1,29 +1,24 @@
 // Angular
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
-// Components
-import { TitleViewComponent } from './view.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RouterModule } from '@angular/router';
 // Blockframes
-import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
 import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/actions/actions.module';
+import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
 import { OrgAccessModule } from '@blockframes/organization/pipes';
+import { UpdateFundingStatusModalModule } from '../update-funding-status-modal/update-funding-status-modal.module';
+// Components
+import { TitleViewComponent } from './view.component';
 
 const routes = [{
   path: '',
@@ -82,15 +77,13 @@ const routes = [{
     DashboardTitleShellModule,
     DashboardActionsShellModule,
     OrgAccessModule,
+    UpdateFundingStatusModalModule,
     // Material
     MatButtonModule,
     MatIconModule,
     MatTabsModule,
     MatDividerModule,
-    MatDialogModule,
-    MatSelectModule,
     MatFormFieldModule,
-    MatInputModule,
     MatSnackBarModule,
     MatMenuModule,
     // Route

@@ -2,7 +2,6 @@
 
 movie-header-cta {
   width: 100%;
-  margin-bottom: 16px;
 
   .orgs {
     display: grid;
@@ -15,15 +14,22 @@ movie-header-cta {
     wishlist-button {
       margin: auto 0;
     }
+  }
+}
+
+movie-header-actions {
+  display: flex;
+  gap: 24px;
+
+  section {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 20px;
 
     a {
-      margin-left: auto;
+      margin-top: auto;
     }
-  }
-  
-  a, button {
-    width: fit-content;
-    height: fit-content;
   }
 }
 
@@ -32,18 +38,15 @@ movie-header-cta {
     margin-left: auto;
   }
 }
- 
-movie-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 24px;
+
+@include layout-bp(lt-md) {
+  movie-header-actions section {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
 }
 
-@include layout-bp(xs) {
-  movie-header-actions {
-    display: none;
-  }
-  
+@include layout-bp(xs) {  
   org-chip {
     display: flex;
     justify-content: center;

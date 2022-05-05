@@ -1,3 +1,50 @@
 :host {
   display: block;
 }
+
+section {
+  position: relative;
+
+  .closeButton {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+  }
+}
+
+
+// All padding have +24px on the base component
+// So, in exemple, count 48 as 72px
+.large {
+  padding: 48px;
+  width: calc(80vw - 48px);
+  min-height: 450px;
+  max-height: min(calc(80vh - 48px), 750px);
+  max-width: 1500px;
+
+  .mat-dialog-content {
+    max-height: min(calc(80vh - 144px), 606px);
+    margin: 0 -72px;
+    padding: 0 72px;
+  }
+}
+
+.medium {
+  padding: 24px;
+  width: 60vw;
+  min-height: 350px;
+  max-height: min(60vh, 550px);
+  max-width: 1000px;
+
+  .mat-dialog-content {
+    max-height: min(calc(60vh - 72px), 478px);
+    margin: 0 -48px;
+    padding: 0 48px;
+  }
+}
+
+.small {
+  min-width: min(40vw, 600px);
+  max-height: 350px;
+  max-width: 800px;
+}

@@ -14,6 +14,7 @@ import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/con
 import { createDocumentMeta } from '@blockframes/model';
 import { Firestore } from '@angular/fire/firestore';
 import { where, doc, collection } from 'firebase/firestore';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -200,8 +201,12 @@ export class TableExtractedContractsComponent implements OnInit {
   ///////////////////
 
   displayErrors(importState: ContractsImportState) {
-    const data = { title: `Contract id ${importState.contract.id}`, errors: importState.errors };
-    this.dialog.open(ViewImportErrorsComponent, { data, width: '50%' });
+    this.dialog.open(ViewImportErrorsComponent, {
+      data: createModalData({
+        title: `Contract id ${importState.contract.id}`,
+        errors: importState.errors
+      })
+    });
   }
 
   ///////////////////
