@@ -13,6 +13,7 @@ section {
   }
   article.drop-zone {
     border: dashed 1px var(--primary);
+    min-height: 295px;
   }
 }
 
