@@ -51,30 +51,29 @@ export class EventAccessGuard implements CanActivate {
         if (next.queryParams?.i && credentialsUpdateNeeded) {
           this.authService.updateAnonymousCredentials({ invitationId: next.queryParams?.i });
         }
-
+        const incorrectInvitation = 'Sorry, it seems that you were not invited to this event. Check your emails';
         const invitationId = next.queryParams?.i as string || credentials?.invitationId;
         if (invitationId) {
           const invitation = await this.invitationService.getValue(invitationId).catch(() => createInvitation());
           const isEmailMatchingInvitation = invitation?.toUser?.email === credentials?.email;
+
+          const isInvitationMatchingEvent = invitation?.eventId === event.id;
+          if (!isInvitationMatchingEvent) {
+            this.snackBar.open(incorrectInvitation, 'close', { duration: 12000 });
+            await this.authService.deleteAnonymousUser();
+            return false;
+          }
+
           if (!isEmailMatchingInvitation) {
-            this.snackBar.open('Provided email does not match invitation', 'close', { duration: 5000 });
+            this.snackBar.open('Sorry, it seems that you were not invited to this event. Try with other mail', 'close', { duration: 12000 });
             this.authService.updateAnonymousCredentials({ email: undefined });
             this.router.navigate([`/event/${event.id}`], { queryParams: next.queryParams });
             return false;
           }
 
-          const isInvitationMatchingEvent = invitation?.eventId === event.id;
-          if (!isInvitationMatchingEvent) {
-            this.snackBar.open('Incorrect invitation for event', 'close', { duration: 5000 });
-            await this.authService.deleteAnonymousUser();
-            return false;
-          }
-
           return true;
         } else {
-          this.snackBar.open('Sorry, it seems that you were not invited to this event', 'TRY WITH OTHER MAIL', { duration: 6000 })
-            .onAction()
-            .subscribe(() => this.router.navigate([`/event/${event.id}`]));
+          this.snackBar.open(incorrectInvitation, 'close', { duration: 12000 });
           await this.authService.deleteAnonymousUser();
           return false;
         }
