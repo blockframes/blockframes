@@ -1,9 +1,6 @@
-@import '@angular/flex-layout/mq';
-
 header {
-  padding: 100px 0;
-  margin: 0 auto;
-  width: 60%;
+  margin: 0 auto 8px;
+  width: 100%;
 
   h1 {
     text-align: center;
@@ -14,14 +11,6 @@ header {
   }
 }
 
-@include layout-bp(lt-lg) {
-  header {
-    width: 80%;
-  }
-}
-
-@include layout-bp(xs) {
-  header {
-    width: 100%;
-  }
+.surface {
+  width: 100%;
 }
