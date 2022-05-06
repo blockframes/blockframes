@@ -153,14 +153,14 @@ export function getFieldConfigs(
       if (!key) throw wrongValueError(value, 'Content Type');
       return key;
     },
-      /* e */ 'title.series': (value: string) => {
-      if (!value) throw optionalWarning('Season Number');
+      /* e */ 'title.series': (value: string, data: Partial<FieldsConfig>) => {
+      if (!value && data.contentType === 'tv') throw optionalWarning('Season Number');
       const series = Number(value);
       if (isNaN(series)) throw wrongValueError(value, 'Season Number');
       return series;
     },
-      /* f */ 'runningTime.episodeCount': (value: string) => {
-      if (!value) throw optionalWarning('Number of Episodes');
+      /* f */ 'runningTime.episodeCount': (value: string, data: Partial<FieldsConfig>) => {
+      if (!value && data.contentType === 'tv') throw optionalWarning('Number of Episodes');
       const count = Number(value);
       if (isNaN(count)) throw wrongValueError(value, 'Number of Episodes');
       return count;
@@ -558,14 +558,14 @@ export function getFieldConfigs(
       if (!key) throw wrongValueError(value, 'Content Type');
       return key;
     },
-      /* e */ 'title.series': (value: string) => {
-      if (!value) throw optionalWarning('Season Number');
+      /* e */ 'title.series': (value: string, data: Partial<FieldsConfig>) => {
+      if (!value && data.contentType === 'tv') throw optionalWarning('Season Number');
       const series = Number(value);
       if (isNaN(series)) throw wrongValueError(value, 'Season Number');
       return series;
     },
-      /* f */ 'runningTime.episodeCount': (value: string) => {
-      if (!value) throw optionalWarning('Number of Episodes');
+      /* f */ 'runningTime.episodeCount': (value: string, data: Partial<FieldsConfig>) => {
+      if (!value && data.contentType === 'tv') throw optionalWarning('Number of Episodes');
       const count = Number(value);
       if (isNaN(count)) throw wrongValueError(value, 'Number of Episodes');
       return count;
