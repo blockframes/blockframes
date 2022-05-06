@@ -5,7 +5,6 @@ header, section {
 }
 
 header {
-  height: 240px;
   padding-top: 48px;
   background: linear-gradient(to bottom, var(--background-disabled-button), var(--background));
 }
@@ -27,12 +26,6 @@ img {
 @include layout-bp(sm) {
   header, section {
     padding: 0 100px
-  }
-}
-
-@include layout-bp(lt-sm) {
-  header {
-    height: fit-content;
   }
 }
 
