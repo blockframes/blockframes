@@ -1,6 +1,7 @@
 import * as auth from './lib/auth';
 export { auth };
 export * from './lib/commands';
+export * from './lib/dashboard';
 import * as events from './lib/events';
 export { events };
 import * as festival from './lib/festival';

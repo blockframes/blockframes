@@ -45,7 +45,10 @@ export async function getRandomOrg(data: { app: App; access: ModuleAccess, userT
   const { app, access, userType } = data;
   const { docs } = access.dashboard ? await getDashboardOrgs(app) : await getMarketplaceOrgs(app);
   const ramdomIndex = Math.floor(Math.random() * docs.length);
-  return createOrganization(docs[ramdomIndex].data());
+  const org = createOrganization(docs[ramdomIndex].data());
+  const orgHasUserType = await getRandomOrgMember({ orgId: org.id, userType });
+  if(!orgHasUserType.email) return getRandomOrg(data);
+  return org;
 }
 
 export async function validateOrg(orgName: string) {
