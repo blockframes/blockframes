@@ -4,14 +4,6 @@
   display: flex;
 }
 
-section button {
-  margin-bottom: 12px;
-}
-
-.mat-button {
-  padding: 12px;
-}
-
 @include layout-bp(xs) {
   .mat-button {
     padding: 0;
