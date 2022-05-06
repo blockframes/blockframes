@@ -7,6 +7,11 @@ h1,p {
   text-align: center;
 }
 
+p {
+  max-width: 70%;
+  margin-inline: auto;
+}
+
 mat-spinner {
   margin-left: 8px;
   display: inline-block;
@@ -14,4 +19,13 @@ mat-spinner {
 
 .validation-checkbox {
   margin-block: 24px;
+}
+
+mat-checkbox {
+  max-width: 70%;
+
+  span {
+    display: flex;
+    flex-flow: row wrap;
+  }
 }
