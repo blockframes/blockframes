@@ -349,7 +349,7 @@ export function createMovieLanguageSpecification(params: Partial<MovieLanguageSp
   };
 }
 
-export function createAppConfig(params: Partial<MovieAppConfig<Date>>) {
+export function createAppConfig(params: Partial<MovieAppConfig<Date>>): MovieAppConfig<Date> {
   return {
     status: 'draft',
     access: false,

@@ -13,6 +13,7 @@ import {
   App,
   MovieAppConfigRecord,
   MovieAppConfig,
+  createAppConfig,
 } from '@blockframes/model';
 import { FieldsConfig, FieldsConfigType, getFieldConfigs } from './fieldConfigs';
 
@@ -65,13 +66,9 @@ export async function formatTitle(
       }
     }
 
-    if (currentApp === 'catalog'){
+    if (currentApp !== 'crm') {
       data.orgIds = [userOrgId];
-      data.app[currentApp] = {
-        acceptedAt:new Date(),
-        status:'draft',
-        access:true,
-      } as MovieAppConfig<Date>
+      data.app[currentApp] = createAppConfig({ status: 'draft', access: true });
     }
 
     const title = createMovie({ ...data, languages, stakeholders });
