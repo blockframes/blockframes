@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 import { displayPerson } from '@blockframes/utils/pipes';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { filters } from '@blockframes/ui/list/table/filters';
 
 @Component({
   selector: 'catalog-title-list',
@@ -24,6 +25,7 @@ export class TitleListComponent {
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(
     startWith(this.filter.value || '')
   );
+  filters = filters;
 
   movies$ = this.service.queryDashboard(this.app).pipe(
     tap((movies) => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
