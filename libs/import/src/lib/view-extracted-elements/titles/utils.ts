@@ -11,6 +11,7 @@ import {
   Stakeholder,
   StakeholderRole,
   App,
+  createAppConfig,
 } from '@blockframes/model';
 import { FieldsConfig, FieldsConfigType, getFieldConfigs } from './fieldConfigs';
 
@@ -39,7 +40,7 @@ export async function formatTitle(
       errors.push(getOptionalWarning('Stakeholders'));
     }
 
-    const getStakeholders = (role: StakeholderRole): Stakeholder[] =>{
+    const getStakeholders = (role: StakeholderRole): Stakeholder[] => {
       return data.stakeholders?.filter((s) => s.role === role) ?? [];
     }
 
@@ -61,6 +62,11 @@ export async function formatTitle(
       for (const { language, dubbed, subtitle, caption } of data.languages) {
         languages[language] = { dubbed, subtitle, caption };
       }
+    }
+
+    if (!blockframesAdmin) {
+      data.orgIds = [userOrgId];
+      data.app[currentApp] = createAppConfig({ status: 'draft', access: true });
     }
 
     const title = createMovie({ ...data, languages, stakeholders });
