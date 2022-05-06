@@ -23,7 +23,6 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
   @Input() sheetTab: SheetTab;
 
   public orgsToCreate$ = new BehaviorSubject<MatTableDataSource<OrganizationsImportState>>(null);
-  public orgsToUpdate$ = new BehaviorSubject<MatTableDataSource<OrganizationsImportState>>(null);
 
   constructor(
     private userService: UserService,
