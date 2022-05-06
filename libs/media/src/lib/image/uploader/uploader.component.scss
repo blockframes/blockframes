@@ -13,7 +13,11 @@ section {
   }
   article.drop-zone {
     border: dashed 1px var(--primary);
-    min-height: 295px;
+    min-height: 295px; // Size of the "Waiting" drop zone
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }
 
