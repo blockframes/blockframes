@@ -33,8 +33,7 @@ mat-card {
 }
 
 @include layout-bp(lt-md) {
-  app-logo {
-    position: inherit;
+  button[app-logo] {
     margin-bottom: 24px;
   }
   mat-card {
@@ -49,10 +48,12 @@ mat-card {
     padding: 16px 0;
     justify-content: center;
     text-align: center;
+    h1 {
+      margin-bottom: 16px;
+    }
   }
-  app-logo {
-    position: inherit;
-    margin-bottom: 24px;
+  section {
+    margin-top: 48px;
   }
   mat-card {
     width: 100%;
