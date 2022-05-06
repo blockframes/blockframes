@@ -235,9 +235,13 @@ export function wrongTemplateError(templateImported: 'seller' | 'admin'): Import
     admin: 'Please contact team@archipelcontent.com or use a template that\'s appropriate to sellers',
     seller: 'Please contact team@archipelcontent.com or use a template that\'s appropriate to admins',
   }
+  const article = {
+    admin:'an',
+    seller: 'a',
+  }
   const option: LogOption = {
     name: `Wrong Template`,
-    reason: `You are not permitted to import a ${templateImported} template.`,
+    reason: `You are not permitted to import ${article[templateImported]} ${templateImported} template.`,
     message: messages[templateImported],
   };
   return new WrongTemplateError(templateImported, option);
