@@ -256,6 +256,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
     if (!isFileTypeValid) {
       this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 3000 });
       this.delete();
+      return;
     } else if (this.file.size >= this.maxSize) {
       this.snackBar.open(`Your image is too big: max allowed size is ${fileSizeToString(this.maxSize)}.`, 'close', { duration: 4000 });
       this.delete();
@@ -314,7 +315,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
     }
 
     this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
-    this.form.reset();
+    this.form.reset(new StorageFileForm());
 
     this.fileUploader.nativeElement.value = null;
     this.selectionChange.emit('removed');
