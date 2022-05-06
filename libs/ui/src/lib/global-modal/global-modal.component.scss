@@ -5,10 +5,10 @@
 section {
   position: relative;
 
-  .closeButton {
+  & > button {
     position: absolute;
-    top: -8px;
-    right: -8px;
+    top: 0;
+    right: 0;
   }
 }
 
@@ -31,20 +31,26 @@ section {
 
 .medium {
   padding: 24px;
+  padding-top: 48px;
   width: 60vw;
   min-height: 350px;
   max-height: min(60vh, 550px);
   max-width: 1000px;
 
   .mat-dialog-content {
-    max-height: min(calc(60vh - 72px), 478px);
+    max-height: min(calc(60vh - 96px), 454px);
     margin: 0 -48px;
     padding: 0 48px;
   }
 }
 
 .small {
+  padding-top: 48px;
   min-width: min(40vw, 600px);
   max-height: 350px;
   max-width: 800px;
+  
+  .mat-dialog-content {
+    max-height: 302px;
+  }
 }
