@@ -5,12 +5,12 @@
     <button mat-stroked-button color="primary" [disabled]="!selection.selected.length"
       (click)="createSelectedOrgs()">
       <ng-container *ngIf="processedOrgs === 0 else createinprogress">
-        <span>Create</span>
+        <span>Create</span> {{processedOrgs}}
         <mat-icon svgIcon="edit"></mat-icon>
       </ng-container>
       <ng-template #createinprogress>
-        <span>Creating... {{ processedOrgs }} / {{ selection.selected.length}} </span>
-        <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>   
+        <span>Created... {{ processedOrgs }} / {{ selection.selected.length}} </span>
+        <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
       </ng-template>
     </button>
   </p>
@@ -24,7 +24,7 @@
         <mat-icon svgIcon="edit"></mat-icon>
       </ng-container>
       <ng-template #updateinprogress>
-        <span>Updating... {{ processedOrgs }} / {{ selection.selected.length}} </span>
+        <span>Updated... {{ processedOrgs }} / {{ selection.selected.length}} </span>
         <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
       </ng-template>
     </button>
