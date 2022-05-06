@@ -5,7 +5,7 @@
     <button mat-stroked-button color="primary" [disabled]="!selection.selected.length"
       (click)="createSelectedOrgs()">
       <ng-container *ngIf="processedOrgs === 0 else createinprogress">
-        <span>Create</span> {{processedOrgs}}
+        <span>Create</span>
         <mat-icon svgIcon="edit"></mat-icon>
       </ng-container>
       <ng-template #createinprogress>
