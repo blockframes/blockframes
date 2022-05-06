@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { where } from "firebase/firestore";
 import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
 import { aggregate } from "@blockframes/analytics/+state/utils";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
-import { AggregatedAnalytic, EventName } from "@blockframes/model";
+import { AggregatedAnalytic, EventName, Event, Screening, isScreening, Invitation, Analytics, isMovieAccepted } from "@blockframes/model";
 import { fromOrgAndAccepted, MovieService } from "@blockframes/movie/+state/movie.service";
 import { OrganizationService } from "@blockframes/organization/+state";
 import { IconSvg } from "@blockframes/ui/icon.service";
@@ -23,8 +24,9 @@ import {
   pluck,
   shareReplay,
   switchMap,
-  take
 } from "rxjs";
+import { InvitationService } from "@blockframes/invitation/+state";
+import { EventService } from "@blockframes/event/+state";
 
 interface VanityMetricEvent {
   name: EventName;
@@ -76,6 +78,36 @@ function filterAnalytics(title: string, analytics: AggregatedAnalytic[]) {
     : analytics;
 }
 
+interface InvitationWithAnalytics extends Invitation { analytics: Analytics[]; };
+function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
+  const attended = invitations.filter(invitation => invitation.watchTime);
+  return [
+    {
+      title: 'Invitations',
+      value: invitations.length,
+      icon: 'badge'
+    },
+    {
+      title: 'Screenings attended',
+      value: attended.length,
+      icon: 'movie'
+    },
+    {
+      title: 'Requests',
+      value: invitations.reduce((acc, curr) => acc + curr.analytics.length, 0),
+      icon: 'ask_screening_2'
+    },
+    {
+      title: 'Average watch time',
+      value: attended.reduce((acc, curr) => acc + curr.watchTime, 0) / invitations.length || 0,
+      icon: 'access_time'
+    }
+  ];
+}
+
+function fromUser(invitation: Invitation, uid: string) {
+  return invitation.fromUser?.uid === uid || invitation.toUser?.uid === uid;
+}
 
 @Component({
   selector: 'festival-buyer-analytics',
@@ -122,10 +154,36 @@ export class BuyerAnalyticsComponent {
     this.aggregatedPerTitle$
   ]).pipe(
     map(([filter, analytics]) => filterAnalytics(filter, analytics))
-  )
+  );
+
+  invitations$ = combineLatest([
+    this.user$,
+    this.invitationService.allInvitations$  
+  ]).pipe(
+    map(([user, invitations]) => invitations.filter(invitation => fromUser(invitation, user.uid))),
+    joinWith({
+      event: invitation => this.eventService.queryDocs(invitation.eventId)
+    }, { shouldAwait: true }),
+    map(invitations => invitations.filter(invitation => isScreening(invitation.event) && invitation.event.meta.titleId)),
+    map(invitations => invitations.filter(invitation => isMovieAccepted(invitation.event.movie, this.app))),
+    joinWith({
+      analytics: async invitation => {
+        const titleWithAnalytics = await firstValueFrom(this.buyerAnalytics$);
+        const title = titleWithAnalytics.find(title => (invitation.event as Event<Screening>).meta.titleId === title.id);
+        return title.analytics.filter(analytic => analytic.name === 'screeningRequested');
+      }
+    }, { shouldAwait: true }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  aggregatedScreeningCards$: Observable<MetricCard[]> = this.invitations$.pipe(
+    map(toScreenerCards)
+  );
 
   constructor(
     private analytics: AnalyticsService,
+    private eventService: EventService,
+    private invitationService: InvitationService,
     private navService: NavigationService,
     private orgService: OrganizationService,
     private route: ActivatedRoute,
@@ -156,5 +214,17 @@ export class BuyerAnalyticsComponent {
     }));
 
     downloadCsvFromJson(analytics, 'buyer-analytics');
+  }
+
+  async exportScreenerAnalytics() {
+    const data = await firstValueFrom(this.invitations$);
+    const analytics = data.map(invitation => ({
+      'Title': invitation.event?.movie?.title.international,
+      'Invitation': invitation.status,
+      'Request to participate': invitation.mode,
+      'Screening Requests': invitation.analytics?.length,
+      'Watch Time': invitation.watchTime || '0min'
+    }));
+    downloadCsvFromJson(analytics, 'buyer-screener-analytics')
   }
 }
