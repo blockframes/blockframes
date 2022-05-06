@@ -26,6 +26,7 @@ section {
 }
 section.drop-zone {
   border: dashed 1px var(--primary);
+  min-height: 316px; // Size of the "Waiting" drop zone
 }
 
 .upload-button-container {
