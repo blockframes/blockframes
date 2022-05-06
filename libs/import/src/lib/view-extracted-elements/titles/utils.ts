@@ -11,8 +11,6 @@ import {
   Stakeholder,
   StakeholderRole,
   App,
-  MovieAppConfigRecord,
-  MovieAppConfig,
   createAppConfig,
 } from '@blockframes/model';
 import { FieldsConfig, FieldsConfigType, getFieldConfigs } from './fieldConfigs';
