@@ -63,7 +63,8 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
       data: createModalData<ConfirmDeclineData>({
         type: 'buyer',
         showAcceptTermsCheckbox: true
-      })
+      }),
+      autoFocus: false
     });
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {

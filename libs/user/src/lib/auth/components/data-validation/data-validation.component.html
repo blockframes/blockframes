@@ -21,7 +21,7 @@
         matTooltip="Fill in your company information (activity, country, etc.)"></mat-icon>
     </div>
     <mat-icon *ngIf="orgData" svgIcon="check_circle" color="primary" test-id="org-data-ok"></mat-icon>
-    <mat-icon *ngIf="!orgData" class="refresh-icon" (click)="refresh()" svgIcon="update" matTooltip="Refresh page." test-id="org-data-pending">
+    <mat-icon *ngIf="!orgData" class="refresh-icon" (click)="refresh()" svgIcon="update" matTooltip="Refresh page" test-id="org-data-pending">
     </mat-icon>
   </article>
 
@@ -38,7 +38,7 @@
       <mat-icon svgIcon="check_circle" color="primary" test-id="email-ok"></mat-icon>
     </ng-container>
     <ng-template #notValid>
-      <mat-icon class="refresh-icon" color="primary" (click)="resendEmailVerification()" svgIcon="resend_email" matTooltip="Resend verification email." test-id="email-pending"></mat-icon>
+      <mat-icon class="refresh-icon" color="primary" (click)="resendEmailVerification()" svgIcon="resend_email" matTooltip="Resend verification email" test-id="email-pending"></mat-icon>
     </ng-template>
   </article>
 
