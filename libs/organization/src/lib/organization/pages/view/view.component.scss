@@ -30,6 +30,12 @@ img {
   }
 }
 
+@include layout-bp(lt-sm) {
+  header {
+    height: fit-content;
+  }
+}
+
 @include layout-bp(xs) {
   header, section {
     padding: 0px;
