@@ -142,17 +142,4 @@ describe('Meeting creation', () => {
     cypress.getEventSlot({ day: futureSlot.day, hours: editHour, minutes: 0 }).should('contain', 'Event modified');
     firebase.deleteAllSellerEvents(this.user.uid);
   });
-
-  it('ending time of a meeting cannot precede starting time', function () {
-    cy.then(function () {
-      const randomDay = Math.floor(Math.random() * 7);
-      cypress.goToNextWeek();
-      cypress.selectFirstSlotOfDay(randomDay);
-      get('event-start').find('[type=time]').click();
-      cy.contains('12:00').click();
-      get('event-end').find('[type=time]').click();
-      cy.contains('11:30').click();
-      getByClass('mat-error').should('have.length', 2);
-    });
-  });
 });

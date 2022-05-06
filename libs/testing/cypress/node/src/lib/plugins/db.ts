@@ -1,6 +1,5 @@
 import { db } from '../testing-cypress';
-import { createUser, createOrganization, Organization, createPermissions, UserRole, MovieDocument } from '@blockframes/model';
-import { App, ModuleAccess } from '@blockframes/utils/apps';
+import { createUser, createOrganization, createPermissions, UserRole, MovieDocument, App, ModuleAccess } from '@blockframes/model';
 import { isUndefined } from 'lodash';
 
 //* USERS
