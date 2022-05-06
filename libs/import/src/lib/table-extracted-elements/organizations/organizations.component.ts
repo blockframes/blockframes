@@ -14,7 +14,6 @@ import { PublicUser, getOrgAppAccess } from '@blockframes/model';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
-
 const hasImportErrors = (importState: OrganizationsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
