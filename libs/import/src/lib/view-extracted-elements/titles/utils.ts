@@ -64,7 +64,7 @@ export async function formatTitle(
       }
     }
 
-    if (currentApp !== 'crm') {
+    if (!blockframesAdmin) {
       data.orgIds = [userOrgId];
       data.app[currentApp] = createAppConfig({ status: 'draft', access: true });
     }
