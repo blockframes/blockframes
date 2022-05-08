@@ -85,7 +85,7 @@ export class MemberComponent implements OnInit {
             await this.orgService.removeMember(uid);
             this.snackBar.open('Member removed.', 'close', { duration: 2000 });
           }
-        })
+        }, 'small')
       });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
