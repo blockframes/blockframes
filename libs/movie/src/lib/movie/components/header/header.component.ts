@@ -37,7 +37,6 @@ type MovieHeaderView = ReturnType<typeof createMovieView>;
   selector: '[movie] movie-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
