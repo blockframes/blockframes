@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Optional, Inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';
 
@@ -24,11 +24,15 @@ export class TitleImportComponent implements OnInit {
     @Optional() private intercom: Intercom,
     @Inject(APP) private app: App,
     private authService: AuthService,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
     const isBlockframesAdmin = await firstValueFrom(this.authService.isBlockframesAdmin$);
-    if (isBlockframesAdmin) this.templateUrl = '/assets/templates/import-titles-admin-template.xlsx';
+    if (isBlockframesAdmin) {
+      this.templateUrl = '/assets/templates/import-titles-admin-template.xlsx';
+      this.cdr.markForCheck();
+    }
   }
 
   openIntercom() {

@@ -26,14 +26,14 @@ export class ViewImportErrorsComponent {
     if (index === this.element.errors.length) {
       this.dialog.close();
     } else {
-      const next = document.querySelector(`[data-index="${this.step}"]`);
+      const next = document.querySelector(`[data-scroll-to-view-id="${this.step}"]`);
       scrollIntoView(next)
     }
   }
 
   prevStep() {
     this.step--;
-    const previous = document.querySelector(`[data-index="${this.step}"]`);
+    const previous = document.querySelector(`[data-scroll-to-view-id="${this.step}"]`);
     scrollIntoView(previous)
   }
 }
