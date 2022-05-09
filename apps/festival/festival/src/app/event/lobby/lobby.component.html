@@ -53,7 +53,7 @@
           <ng-container [ngSwitch]="attendeeStatus">
 
             <ng-container *ngSwitchCase="'owner' || 'accepted'">
-              <a mat-flat-button routerLink="../session" color="accent">Access {{ event.type | titlecase }} Room</a>
+              <a mat-flat-button routerLink="../session" color="accent">Access {{ event.type | toLabel: 'eventTypes' }} Room</a>
             </ng-container>
 
             <ng-container *ngSwitchCase="'requesting'">
@@ -68,7 +68,7 @@
 
             <ng-container *ngSwitchDefault>
               <ng-container *ngIf="ownerIsPresent else ownerNotPresent">
-                <a mat-flat-button (click)="requestAccess()" color="accent">Ask to join {{ event.type | titlecase }} Room</a>
+                <a mat-flat-button (click)="requestAccess()" color="accent">Ask to join {{ event.type | toLabel: 'eventTypes' }} Room</a>
               </ng-container>
 
               <ng-template #ownerNotPresent>

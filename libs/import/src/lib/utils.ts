@@ -24,20 +24,22 @@ export interface SpreadsheetImportError {
   message?: string;
 }
 
-export interface MovieImportState {
-  movie: Movie;
+interface ImportState {
   errors?: SpreadsheetImportError[];
+  importing?: boolean;
 }
 
-export interface ContractsImportState {
-  errors?: SpreadsheetImportError[];
+export interface MovieImportState extends ImportState {
+  movie: Movie;
+}
+
+export interface ContractsImportState extends ImportState {
   newContract: boolean;
   contract: Sale | Mandate;
   terms: Term<Date>[];
 }
 
-export interface OrganizationsImportState {
-  errors?: SpreadsheetImportError[];
+export interface OrganizationsImportState extends ImportState {
   org: Organization;
   superAdmin: User;
   newOrg: boolean;
@@ -235,9 +237,10 @@ export function wrongTemplateError(templateImported: 'seller' | 'admin'): Import
     admin: 'Please contact team@archipelcontent.com or use a template that\'s appropriate to sellers',
     seller: 'Please contact team@archipelcontent.com or use a template that\'s appropriate to admins',
   }
+
   const option: LogOption = {
-    name: `Wrong Template`,
-    reason: `You are not permitted to import a ${templateImported} template.`,
+    name: 'Wrong Template',
+    reason: `You are not permitted to import ${templateImported === 'admin' ? 'an' : 'a'} ${templateImported} template.`,
     message: messages[templateImported],
   };
   return new WrongTemplateError(templateImported, option);

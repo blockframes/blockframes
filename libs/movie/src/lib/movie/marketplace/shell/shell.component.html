@@ -83,16 +83,16 @@
       </bf-carousel>
     </article>
 
-    <article id="videoFooter" *ngIf="hasPublicVideos(movie)">
+    <ng-container *ngIf="hasPublicVideos(movie)">
       <h2>Videos</h2>
-      <div>
+      <section class="videos" id="videoFooter"> <!-- id videoFooter is used for promotional links -->
         <ng-container *ngFor="let video of movie.promotional.videos.otherVideos">
-          <div class="video-container" *ngIf="video.privacy === 'public'">
+          <article *ngIf="video.privacy === 'public'">
             <video-viewer [ref]="video" *ngIf="video.jwPlayerId" (stateChange)="videoStateChanged(movie, $event)"></video-viewer>
             <p>{{ video.title || (video.type | toLabel: 'hostedVideoTypes') }}</p>
-          </div>
+          </article>
         </ng-container>
-      </div>
-    </article>
+      </section>
+    </ng-container>
   </footer>
 </ng-container>

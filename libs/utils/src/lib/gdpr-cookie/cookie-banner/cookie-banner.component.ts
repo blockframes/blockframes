@@ -36,7 +36,7 @@ export class CookieBannerComponent implements OnInit {
 
   /** Opens a dialog with terms of use and privacy policy given by the parent. */
   public openPrivacyPolicy() {
-    this.dialog.open(PrivacyPolicyComponent, { data: createModalData({}, 'large') });
+    this.dialog.open(PrivacyPolicyComponent, { data: createModalData({}, 'large'), autoFocus: false });
   }
 
   public acceptCookies() {
