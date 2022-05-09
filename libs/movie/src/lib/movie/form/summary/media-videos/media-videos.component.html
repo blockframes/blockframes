@@ -4,47 +4,45 @@
     <mat-icon svgIcon="edit" color="primary"></mat-icon>
   </a>
 </h6>
-<ul>
-  <li fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+<main>
+  <section>
     <strong>Videos</strong>
     <missing-control [control]="movie.promotional.get('videos').get('otherVideos')" [link]="link">
       <ng-template let-videos>
         <ul>
-          <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px" *ngFor="let video of videos">
+          <li *ngFor="let video of videos">
             <bf-preview-modal [ref]="video"></bf-preview-modal>
             {{ video.type | toLabel: 'hostedVideoTypes' }}{{ video.type ? ' - ' : '' }}{{ video.title | titlecase }} - {{ video.storagePath | fileName }}
           </li>
         </ul>
       </ng-template>
     </missing-control>
-  </li>
-  <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
-    <strong>Screener</strong>
-    <bf-preview-modal [ref]="movie.promotional.get('videos').get('screener').value"></bf-preview-modal>
+  </section>
+  <section>
+    <strong class="margin">Screener</strong>
     <missing-control [control]="movie.promotional.get('videos').get('screener').get('storagePath')" [link]="link"
       fragment="videos">
       <ng-template let-video>
-        {{ video | fileName }}
+        <article>
+          <bf-preview-modal [ref]="movie.promotional.get('videos').get('screener').value"></bf-preview-modal>
+          {{ video | fileName }}
+        </article>
       </ng-template>
     </missing-control>
-  </li>
+  </section>
 
   <ng-container *ngIf="movie.promotional.get('videos').get('salesPitch') as salesPitch">
-    <li fxLayout="column" fxLayoutAlign="start" fxLayoutGap="8px">
+    <section>
       <strong class="margin">Sales Pitch</strong>
       <missing-control [control]="salesPitch.get('storagePath')" [link]="link">
         <ng-template let-salesPitchStorage>
-          <ul>
-            <li  fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
-              <bf-preview-modal [ref]="salesPitch.value"></bf-preview-modal>
-              {{ salesPitchStorage | fileName }}
-            </li>
-            <li *ngIf="!!salesPitch.get('description').value" fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="8px">
-              {{ salesPitch.get('description').value }}
-            </li>
-          </ul>
+          <article>
+            <bf-preview-modal [ref]="salesPitch.value"></bf-preview-modal>
+            {{ salesPitchStorage | fileName }}
+          </article>
+          <p *ngIf="salesPitch.get('description').value">{{ salesPitch.get('description').value }}</p>
         </ng-template>
       </missing-control>
-    </li>
+    </section>
   </ng-container>
-</ul>
+</main>
