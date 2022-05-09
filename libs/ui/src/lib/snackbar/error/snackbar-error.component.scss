@@ -1,12 +1,26 @@
+@import "@angular/flex-layout/mq";
+
 :host {
   display: flex;
-  gap: 50px;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 30px,
 }
 
 .snack-bar-button {
   color: #d3d5dc;
   padding: 0;
   font-weight: bold;
+  margin-inline-start: auto
+}
+
+span {
+  align-self: start;
+}
+
+@include layout-bp(lt-lg) {
+  :host {
+    flex-direction: column;
+    gap: 16px;
+  }
 }

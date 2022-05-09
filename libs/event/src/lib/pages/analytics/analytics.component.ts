@@ -85,9 +85,9 @@ export class AnalyticsComponent implements OnInit {
           };
         });
 
-        // if event is a screening we add the watch time column to the table
+        // if event is a screening or a slate presentation we add the watch time column to the table
         // and we compute the average watch time
-        if (this.eventType === 'screening') {
+        if (this.eventType === 'screening' || this.eventType === 'slate') {
           this.hasWatchTime = true;
           const totalWatchTime = this.analytics.reduce((acc, curr) => acc + curr.watchTime, 0);
           this.averageWatchTime = totalWatchTime / this.analytics.length;
