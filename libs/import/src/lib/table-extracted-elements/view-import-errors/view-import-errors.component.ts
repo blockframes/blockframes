@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { SpreadsheetImportError } from '../../utils';
 
 @Component({
@@ -24,10 +25,15 @@ export class ViewImportErrorsComponent {
     this.step++;
     if (index === this.element.errors.length) {
       this.dialog.close();
+    } else {
+      const next = document.querySelector(`[data-index="${this.step}"]`);
+      scrollIntoView(next)
     }
   }
 
   prevStep() {
     this.step--;
+    const previous = document.querySelector(`[data-index="${this.step}"]`);
+    scrollIntoView(previous)
   }
 }
