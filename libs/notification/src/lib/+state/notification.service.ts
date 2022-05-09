@@ -44,7 +44,9 @@ export class NotificationService extends CollectionService<NotificationState> {
       this.valueChanges([where('toUserId', '==', user.uid)])
     ),
     switchMap((notifications) => {
-      const promises = notifications.map((n) => this.appendNotificationData(n));
+      const promises = notifications
+        .filter(n => n.app?.isRead !== undefined)
+        .map(n => this.appendNotificationData(n));
       return Promise.all(promises);
     })
   );
