@@ -1,5 +1,5 @@
 <global-modal>
-  <header fxLayout fxLayoutAlign="center">
+  <header fxLayout fxLayoutAlign="center center">
     <h2>Holdback for "{{ data.title.title.international }}"</h2>
   </header>
 
@@ -76,7 +76,7 @@
     </ng-template>
   </bf-form-table>
 
-  <footer class="actions" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+  <footer class="actions">
     <button mat-flat-button color="primary" (click)="saveAndClose()" [disabled]="false">Add Holdbacks</button>
     <button mat-button (click)="close()">Cancel</button>
   </footer>

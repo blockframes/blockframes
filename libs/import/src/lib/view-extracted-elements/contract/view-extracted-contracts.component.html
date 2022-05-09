@@ -2,7 +2,7 @@
 <ng-container *ngIf="contractsToCreate$ | async as contractsToCreate; else isLoading">
   <ng-container *ngIf="contractsToCreate.data.length">
     <h3>Contracts to Create</h3>
-    <import-table-extracted-contracts [rows]="contractsToCreate" mode="create"></import-table-extracted-contracts>
+    <import-table-extracted-contracts [rows]="contractsToCreate"></import-table-extracted-contracts>
   </ng-container>
 </ng-container>
 <ng-template #isLoading>
