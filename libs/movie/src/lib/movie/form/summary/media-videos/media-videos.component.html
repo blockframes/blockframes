@@ -4,21 +4,21 @@
     <mat-icon svgIcon="edit" color="primary"></mat-icon>
   </a>
 </h6>
-<main>
-  <section>
+<ul class="controls">
+  <li>
     <strong>Videos</strong>
     <missing-control [control]="movie.promotional.get('videos').get('otherVideos')" [link]="link">
       <ng-template let-videos>
-        <ul>
-          <li *ngFor="let video of videos">
+        <ul class="videos">
+          <li class="video" *ngFor="let video of videos">
             <bf-preview-modal [ref]="video"></bf-preview-modal>
             {{ video.type | toLabel: 'hostedVideoTypes' }}{{ video.type ? ' - ' : '' }}{{ video.title | titlecase }} - {{ video.storagePath | fileName }}
           </li>
         </ul>
       </ng-template>
     </missing-control>
-  </section>
-  <section>
+  </li>
+  <li>
     <strong>Screener</strong>
     <missing-control [control]="movie.promotional.get('videos').get('screener').get('storagePath')" [link]="link"
       fragment="videos">
@@ -29,10 +29,10 @@
         </article>
       </ng-template>
     </missing-control>
-  </section>
+  </li>
 
   <ng-container *ngIf="movie.promotional.get('videos').get('salesPitch') as salesPitch">
-    <section>
+    <li>
       <strong>Sales Pitch</strong>
       <missing-control [control]="salesPitch.get('storagePath')" [link]="link">
         <ng-template let-salesPitchStorage>
@@ -43,6 +43,6 @@
           <p *ngIf="salesPitch.get('description').value">{{ salesPitch.get('description').value }}</p>
         </ng-template>
       </missing-control>
-    </section>
+    </li>
   </ng-container>
-</main>
+</ul>
