@@ -19,7 +19,7 @@
     </missing-control>
   </section>
   <section>
-    <strong class="margin">Screener</strong>
+    <strong>Screener</strong>
     <missing-control [control]="movie.promotional.get('videos').get('screener').get('storagePath')" [link]="link"
       fragment="videos">
       <ng-template let-video>
@@ -33,7 +33,7 @@
 
   <ng-container *ngIf="movie.promotional.get('videos').get('salesPitch') as salesPitch">
     <section>
-      <strong class="margin">Sales Pitch</strong>
+      <strong>Sales Pitch</strong>
       <missing-control [control]="salesPitch.get('storagePath')" [link]="link">
         <ng-template let-salesPitchStorage>
           <article>
