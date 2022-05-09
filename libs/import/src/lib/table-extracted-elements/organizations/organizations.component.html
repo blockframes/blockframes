@@ -9,7 +9,7 @@
         <mat-icon svgIcon="edit"></mat-icon>
       </ng-container>
       <ng-template #createinprogress>
-        <span>Created... {{ processedOrgs }} / {{ selection.selected.length}} </span>
+        <span>Creating... {{ processedOrgs }} / {{ selection.selected.length}} </span>
         <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
       </ng-template>
     </button>
@@ -24,7 +24,7 @@
         <mat-icon svgIcon="edit"></mat-icon>
       </ng-container>
       <ng-template #updateinprogress>
-        <span>Updated... {{ processedOrgs }} / {{ selection.selected.length}} </span>
+        <span>Updating... {{ processedOrgs }} / {{ selection.selected.length}} </span>
         <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
       </ng-template>
     </button>
