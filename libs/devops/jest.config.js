@@ -10,5 +10,6 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  testEnvironment: 'node',
   coverageDirectory: '../../coverage/libs/devops',
 };
