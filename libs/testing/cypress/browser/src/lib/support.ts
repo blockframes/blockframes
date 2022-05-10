@@ -1,3 +1,4 @@
+import { AppAndUserType } from '@blockframes/testing/cypress/browser';
 import { serverId } from '@blockframes/utils/constants';
 
 export function awaitElementDeletion(selector: string, timeout?: number) {

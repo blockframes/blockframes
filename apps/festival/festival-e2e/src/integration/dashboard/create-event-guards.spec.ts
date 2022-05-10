@@ -11,7 +11,7 @@ describe('Meeting creation', () => {
   beforeEach(() => {
     cy.visit('');
     auth.clearBrowserAuth();
-    firebase.getScreeningData({ userType: 'admin' }).then((data: { org: Organization; user: User; movies: Movie[] }) => {
+    firebase.getScreeningData({ userType: 'admin' }).then((data: { org: Organization, user: User, movies: Movie[] }) => {
       firebase.deleteAllSellerEvents(data.user.uid);
       cypress.wrapFeedbackData(data);
       cy.visit('');

@@ -7,7 +7,7 @@ import {
   EventSlot,
   createFutureSlot,
 } from '@blockframes/testing/cypress/browser';
-import { Organization, User, Movie } from '@blockframes/model';
+import { Organization, User, Movie, EventTypes } from '@blockframes/model';
 
 describe('Screening creation', () => {
   beforeEach(() => {
@@ -29,7 +29,7 @@ describe('Screening creation', () => {
     // below line allow us to use 'this' instead of calling object with 'get('@alias')' for wrapped objects
     cy.then(function () {
       const futureSlot = createFutureSlot();
-      const eventType = 'Screening';
+      const eventType: EventTypes = 'screening';
       const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
       const randomIndex = Math.floor(Math.random() * movieTitles.length);
       const movieTitle = movieTitles[randomIndex];
@@ -37,7 +37,7 @@ describe('Screening creation', () => {
       cypress.selectSlot(futureSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
       cypress.fillScreeningForm({
-        eventPrivacy: 'public',
+        accessibility: 'public',
         isSecret: false,
         eventTitle,
         movieTitle,
@@ -53,7 +53,7 @@ describe('Screening creation', () => {
           cypress.connectUser(user.email);
           get('Screenings').click();
           assertUrlIncludes('c/o/marketplace/event');
-          cypress.searchInEvents({ title: eventTitle, type: 'public screening', expected: true });
+          cypress.searchInEvents({ title: eventTitle, accessibility: 'public screening', expected: true });
         });
       firebase.deleteAllSellerEvents(this.user.uid);
     });
@@ -62,7 +62,7 @@ describe('Screening creation', () => {
   it('can add a future protected screening event', function () {
     cy.then(function () {
       const futureSlot = createFutureSlot();
-      const eventType = 'Screening';
+      const eventType: EventTypes = 'screening';
       const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
       const randomIndex = Math.floor(Math.random() * movieTitles.length);
       const movieTitle = movieTitles[randomIndex];
@@ -70,7 +70,7 @@ describe('Screening creation', () => {
       cypress.selectSlot(futureSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
       cypress.fillScreeningForm({
-        eventPrivacy: 'protected',
+        accessibility: 'protected',
         isSecret: false,
         eventTitle,
         movieTitle,
@@ -86,7 +86,7 @@ describe('Screening creation', () => {
           cypress.connectUser(user.email);
           get('Screenings').click();
           assertUrlIncludes('c/o/marketplace/event');
-          cypress.searchInEvents({ title: eventTitle, type: 'protected screening', expected: true });
+          cypress.searchInEvents({ title: eventTitle, accessibility: 'protected screening', expected: true });
         });
       firebase.deleteAllSellerEvents(this.user.uid);
     });
@@ -95,7 +95,7 @@ describe('Screening creation', () => {
   it('can add a future private screening event', function () {
     cy.then(function () {
       const futureSlot = createFutureSlot();
-      const eventType = 'Screening';
+      const eventType: EventTypes = 'screening';
       const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
       const randomIndex = Math.floor(Math.random() * movieTitles.length);
       const movieTitle = movieTitles[randomIndex];
@@ -103,7 +103,7 @@ describe('Screening creation', () => {
       cypress.selectSlot(futureSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
       cypress.fillScreeningForm({
-        eventPrivacy: 'private',
+        accessibility: 'private',
         isSecret: false,
         eventTitle,
         movieTitle,
@@ -115,11 +115,10 @@ describe('Screening creation', () => {
       firebase.getRandomUser({ app: 'festival', access: { marketplace: true, dashboard: false }, userType: 'member' })
         .then((user: User) => {
           auth.clearBrowserAuth();
-          console.log('user : ', user)
           cypress.connectUser(user.email);
           get('Screenings').click();
           assertUrlIncludes('c/o/marketplace/event');
-          cypress.searchInEvents({ title: eventTitle, type: 'private screening', expected: true });
+          cypress.searchInEvents({ title: eventTitle, accessibility: 'private screening', expected: true });
         });
       firebase.deleteAllSellerEvents(this.user.uid);
     });
@@ -130,14 +129,14 @@ describe('Screening creation', () => {
       const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
       const randomIndex = Math.floor(Math.random() * movieTitles.length);
       const movieTitle = movieTitles[randomIndex];
-      const eventType = 'Screening';
+      const eventType: EventTypes = 'screening';
       // creation of a dummy event in order to assess that the secret one is not visible
       const dummySlot = createFutureSlot();
       const dummyEventTitle = `Dummy event`;
       cypress.selectSlot(dummySlot);
       cypress.fillPopinForm({ eventType, eventTitle: dummyEventTitle });
       cypress.fillScreeningForm({
-        eventPrivacy: 'public',
+        accessibility: 'public',
         isSecret: false,
         eventTitle: dummyEventTitle,
         movieTitle,
@@ -155,7 +154,7 @@ describe('Screening creation', () => {
       cypress.selectSlot(secretSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
       cypress.fillScreeningForm({
-        eventPrivacy: 'public',
+        accessibility: 'public',
         isSecret: true,
         eventTitle,
         movieTitle,
@@ -198,7 +197,7 @@ describe('Create an event as member', () => {
   it('A member can add a future public screening event', function () {
     cy.then(function () {
       const futureSlot = createFutureSlot();
-      const eventType = 'Screening';
+      const eventType: EventTypes = 'screening';
       const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
       const randomIndex = Math.floor(Math.random() * movieTitles.length);
       const movieTitle = movieTitles[randomIndex];
@@ -206,7 +205,7 @@ describe('Create an event as member', () => {
       cypress.selectSlot(futureSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
       cypress.fillScreeningForm({
-        eventPrivacy: 'public',
+        accessibility: 'public',
         isSecret: false,
         eventTitle,
         movieTitle,
@@ -221,7 +220,7 @@ describe('Create an event as member', () => {
           cypress.connectUser(user.email);
           get('Screenings').click();
           assertUrlIncludes('c/o/marketplace/event');
-          cypress.searchInEvents({ title: eventTitle, type: 'public screening', expected: true });
+          cypress.searchInEvents({ title: eventTitle, accessibility: 'public screening', expected: true });
         });
       firebase.deleteAllSellerEvents(this.user.uid);
     });
@@ -247,7 +246,7 @@ describe('Testing warning chip', () => {
     get('my-events').click();
     cy.then(function () {
       const futureSlot = createFutureSlot();
-      const eventType = 'Screening';
+      const eventType: EventTypes = 'screening';
       const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
       const randomIndex = Math.floor(Math.random() * movieTitles.length);
       const movieTitle = movieTitles[randomIndex];
@@ -255,7 +254,7 @@ describe('Testing warning chip', () => {
       cypress.selectSlot(futureSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
       cypress.fillScreeningForm({
-        eventPrivacy: 'public',
+        accessibility: 'public',
         isSecret: false,
         eventTitle,
         movieTitle,
@@ -282,7 +281,7 @@ describe('Testing warning chip', () => {
     get('my-events').click();
     cy.then(function () {
       const futureSlot = createFutureSlot();
-      const eventType = 'Screening';
+      const eventType: EventTypes = 'screening';
       const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
       const randomIndex = Math.floor(Math.random() * movieTitles.length);
       const movieTitle = movieTitles[randomIndex];
@@ -290,7 +289,7 @@ describe('Testing warning chip', () => {
       cypress.selectSlot(futureSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
       cypress.fillScreeningForm({
-        eventPrivacy: 'public',
+        accessibility: 'public',
         isSecret: false,
         eventTitle,
         movieTitle,

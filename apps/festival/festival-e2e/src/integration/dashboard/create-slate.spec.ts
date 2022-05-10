@@ -5,7 +5,7 @@ import {
   firebase,
   createFutureSlot,
 } from '@blockframes/testing/cypress/browser';
-import { Organization, User, Movie } from '@blockframes/model';
+import { Organization, User, Movie, EventTypes } from '@blockframes/model';
 
 describe('Slate creation', () => {
   beforeEach(() => {
@@ -26,7 +26,7 @@ describe('Slate creation', () => {
   it('can add a future public slate event', function () {
     cy.then(function () {
       const futureSlot = createFutureSlot();
-      const eventType = 'Slate';
+      const eventType: EventTypes = 'slate';
       const eventTitle = `Admin public slate / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
       const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
       const shuffledTitles = [...movieTitles].sort(() => 0.5 - Math.random());
@@ -35,7 +35,7 @@ describe('Slate creation', () => {
       cypress.selectSlot(futureSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
       cypress.fillSlateForm({
-        eventPrivacy: 'public',
+        accessibility: 'public',
         isSecret: false,
         eventTitle,
         selectedTitles,
@@ -53,7 +53,7 @@ describe('Slate creation', () => {
   it('can add a future public and secret slate event', function () {
     cy.then(function () {
       const futureSlot = createFutureSlot();
-      const eventType = 'Slate';
+      const eventType: EventTypes = 'slate';
       const eventTitle = `Admin public and secret slate / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
       const movieTitles = this.movies.map((movie: Movie) => movie.title.international.trim());
       const shuffledTitles = [...movieTitles].sort(() => 0.5 - Math.random());
@@ -62,7 +62,7 @@ describe('Slate creation', () => {
       cypress.selectSlot(futureSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
       cypress.fillSlateForm({
-        eventPrivacy: 'public',
+        accessibility: 'public',
         isSecret: true,
         eventTitle,
         selectedTitles,

@@ -1,5 +1,5 @@
 import { db } from '../testing-cypress';
-import { createUser, createOrganization, createPermissions, UserRole, MovieDocument, App, ModuleAccess } from '@blockframes/model';
+import { createUser, createOrganization, createPermissions, UserRole, MovieDocument, App, AppAndUserType } from '@blockframes/model';
 import { isUndefined } from 'lodash';
 
 //* USERS
@@ -15,7 +15,7 @@ export async function getRandomUser() {
   return createUser(docs[randomIndex].data());
 }
 
-export async function getRandomMember(data: { app: App; access: ModuleAccess, userType: UserRole}) {
+export async function getRandomMember(data: AppAndUserType) {
   const { userType } = data;
   const org = await getRandomOrg(data);
   return getRandomOrgMember({ orgId: org.id, userType })
@@ -40,7 +40,7 @@ function getDashboardOrgs(app: App) {
   return db.collection('orgs').where('status', '==', 'accepted').where(`appAccess.${app}.dashboard`, '==', true).get();
 }
 
-export async function getRandomOrg(data: { app: App; access: ModuleAccess, userType: UserRole}) {
+export async function getRandomOrg(data: AppAndUserType) {
   const { app, access, userType } = data;
   const { docs } = access.dashboard ? await getDashboardOrgs(app) : await getMarketplaceOrgs(app);
   const ramdomIndex = Math.floor(Math.random() * docs.length);
@@ -81,7 +81,8 @@ export async function getRandomOrgMember(data: {orgId: string, userType: UserRol
   const permissionsRef = await db.doc(`permissions/${orgId}`).get();
   const permissions = createPermissions(permissionsRef.data());
   const userIds = Object.keys(permissions.roles).filter(uid =>
-    userType==='member' ? permissions.roles[uid] === 'member' : permissions.roles[uid] === 'superAdmin' || 'admin');
+    userType === 'member' ? permissions.roles[uid] === 'member' : permissions.roles[uid] === 'superAdmin' || 'admin'
+  );
   const randomIndex = Math.floor(Math.random() * userIds.length);
   const userId = userIds[randomIndex];
   const userRef = await db.doc(`users/${userId}`).get();
@@ -98,8 +99,9 @@ async function getOrgMovies(orgId: string) {
 
 //* ORGS + USERS + MOVIES
 
-export async function getRandomScreeningData(data: { app: App, access: ModuleAccess, userType: UserRole, moviesWithScreener?: boolean}) {
-  const { app, access, userType, moviesWithScreener } = data;
+export async function getRandomScreeningData(data: { appAndUserType: AppAndUserType, options: { moviesWithScreener?: boolean }}) {
+  const { app, access, userType } = data.appAndUserType;
+  const { moviesWithScreener } = data.options;
   let result = {};
   do {
     const org = await getRandomOrg({ app, access, userType });
@@ -115,11 +117,11 @@ export async function getRandomScreeningData(data: { app: App, access: ModuleAcc
   return result;
 }
 
-export async function getRandomScreeningDataArray(data: { app: App; access: ModuleAccess, userType: UserRole, number: number, moviesWithScreener: boolean}) {
-  const { app, access, userType, number, moviesWithScreener } = data;
+export async function getRandomScreeningDataArray(data: { appAndUserType: AppAndUserType, options: { number: number, moviesWithScreener: boolean }}) {
+  const { number, moviesWithScreener } = data.options;
   const promises= [];
   for( let i = 0; i < number; i++) {
-    promises.push(getRandomScreeningData({app, access, userType, moviesWithScreener}));
+    promises.push(getRandomScreeningData({ ...data.appAndUserType, moviesWithScreener }));
   }
   return Promise.all(promises);
 }
@@ -143,7 +145,7 @@ export async function deleteAllSellerEvents(sellerUid: string) {
   const eventIds = await getAllSellerEventIds(sellerUid);
   const promises = [];
   for(const eventId of eventIds) {
-    promises.push(deleteEvent(eventId))
+    promises.push(deleteEvent(eventId));
   }
-  return Promise.all(promises)
+  return Promise.all(promises);
 }

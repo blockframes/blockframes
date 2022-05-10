@@ -1,6 +1,7 @@
 import { serverId } from '@blockframes/utils/constants';
 import faker from '@faker-js/faker';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
+import { UserRole, App, ModuleAccess } from '@blockframes/model';
 import { startOfWeek, add, isPast, isFuture } from 'date-fns';
 
 export function createFakeUserData() {
@@ -33,11 +34,6 @@ export function createFakeUserDataArray(number: number) {
 }
 
 //* DASHBOARD FUNCTIONS *//
-export interface EventSlot {
-  day: number;
-  hours: number;
-  minutes: 0 | 30;
-}
 
 export function createFutureSlot() {
   const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
@@ -62,7 +58,7 @@ export function createPastSlot() {
 
 export function getCurrentWeekDays() {
   const d = new Date();
-  const weekDays = [];
+  const weekDays: { day: string; date: string }[] = [];
   d.setDate(d.getDate() - d.getDay());
   for (let i = 0; i < 7; i++) {
     weekDays.push({
@@ -72,4 +68,18 @@ export function getCurrentWeekDays() {
     d.setDate(d.getDate() + 1);
   }
   return weekDays;
+}
+
+//* INTERFACES *//
+
+export interface EventSlot {
+  day: number;
+  hours: number;
+  minutes: 0 | 30;
+}
+
+export interface AppAndUserType {
+  app: App;
+  access: ModuleAccess;
+  userType: UserRole;
 }

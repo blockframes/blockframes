@@ -8,13 +8,13 @@ import {
   createFutureSlot,
   getCurrentWeekDays,
 } from '@blockframes/testing/cypress/browser';
-import { Organization, User, Movie } from '@blockframes/model';
+import { Organization, User, Movie, EventTypes } from '@blockframes/model';
 
 describe('Meeting creation', () => {
   beforeEach(() => {
     cy.visit('');
     auth.clearBrowserAuth();
-    firebase.getScreeningData({ userType: 'admin' }).then((data: { org: Organization; user: User; movies: Movie[] }) => {
+    firebase.getScreeningData({ userType: 'admin' }).then((data: { org: Organization, user: User, movies: Movie[] }) => {
       firebase.deleteAllSellerEvents(data.user.uid);
       cypress.wrapFeedbackData(data);
       cy.visit('');
@@ -36,12 +36,12 @@ describe('Meeting creation', () => {
   it('can add a future public meeting event', function () {
     cy.then(function () {
       const futureSlot = createFutureSlot();
-      const eventType = 'Meeting';
+      const eventType: EventTypes = 'meeting';
       const eventTitle = `Admin public Meeting / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes}`;
       cypress.selectSlot(futureSlot);
       cypress.fillPopinForm({ eventType, eventTitle });
       cypress.fillMeetingForm({
-        eventPrivacy: 'public',
+        accessibility: 'public',
         isSecret: false,
         eventTitle,
         dataToCheck: {
@@ -56,14 +56,14 @@ describe('Meeting creation', () => {
     cy.then(function () {
       const randomDay = Math.floor(Math.random() * 7);
       const randomSlot: EventSlot = { day: randomDay, hours: 12, minutes: 0 };
-      const eventType = 'Meeting';
+      const eventType: EventTypes = 'meeting';
       const eventTitle = `Admin all day public meeting`;
       cypress.goToNextWeek();
       cypress.selectSlot(randomSlot);
       get('all-day').click();
       cypress.fillPopinForm({ eventType, eventTitle });
       cypress.fillMeetingForm({
-        eventPrivacy: 'public',
+        accessibility: 'public',
         isSecret: false,
         eventTitle,
         dataToCheck: {
@@ -77,7 +77,7 @@ describe('Meeting creation', () => {
   it('can visualize multiple future meetings events taking place at the same time', function () {
     cy.then(function () {
       const randomDay = Math.floor(Math.random() * 7);
-      const eventType = 'Meeting';
+      const eventType: EventTypes = 'meeting';
       const eventTitle = `Multiple`;
       cypress.goToNextWeek();
       cypress.createMultipeEvents({ day: randomDay, eventType: eventType, eventTitle, multiple: 3 });
@@ -96,12 +96,12 @@ describe('Meeting creation', () => {
 
   it('can delete an upcoming event', function () {
     const futureSlot = createFutureSlot();
-    const eventType = 'Meeting';
+    const eventType: EventTypes = 'meeting';
     const eventTitle = `Event to delete`;
     cypress.selectSlot(futureSlot);
     cypress.fillPopinForm({ eventType, eventTitle });
     cypress.fillMeetingForm({
-      eventPrivacy: 'public',
+      accessibility: 'public',
       isSecret: false,
       eventTitle,
       dataToCheck: {
@@ -118,12 +118,12 @@ describe('Meeting creation', () => {
   it('can edit an upcoming event', function () {
     const futureSlot = createFutureSlot();
     const editHour = futureSlot.hours === 23 ? 22 : 23;
-    const eventType = 'Meeting';
-    const eventTitle = `Event to edit`;
+    const eventType: EventTypes = 'meeting';
+    const eventTitle = 'Event to edit';
     cypress.selectSlot(futureSlot);
     cypress.fillPopinForm({ eventType, eventTitle });
     cypress.fillMeetingForm({
-      eventPrivacy: 'public',
+      accessibility: 'public',
       isSecret: false,
       eventTitle,
       dataToCheck: {

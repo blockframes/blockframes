@@ -1,5 +1,5 @@
-import { get, getInList, getAllStartingWith, assertUrlIncludes, EventSlot } from '@blockframes/testing/cypress/browser';
-import { Organization, User, Movie, UserRole, App, ModuleAccess } from '@blockframes/model';
+import { get, getInList, getAllStartingWith, assertUrlIncludes, EventSlot, AppAndUserType } from '@blockframes/testing/cypress/browser';
+import { Organization, User, Movie, UserRole, EventTypes, eventTypes, AccessibilityTypes } from '@blockframes/model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 
 //* CYPRESS FUNCTIONS *//
@@ -9,14 +9,14 @@ export const cypress = {
   //* Form functions
 
   fillMeetingForm(data: {
-    eventPrivacy: 'public' | 'protected' | 'private';
+    accessibility: AccessibilityTypes;
     isSecret: boolean;
     eventTitle: string;
     dataToCheck: { calendarSlot: EventSlot | number };
   }) {
-    const { eventPrivacy, eventTitle, dataToCheck } = data;
+    const { accessibility, eventTitle, dataToCheck } = data;
     get('description').type(`Description : ${eventTitle}`);
-    get(eventPrivacy).click();
+    get(accessibility).click();
     get('event-save').should('be.enabled');
     get('event-save').click();
     get('event-save-disabled').should('be.disabled');
@@ -45,22 +45,22 @@ export const cypress = {
       })
   },
 
-  fillPopinForm(data: { eventType: 'Screening' | 'Meeting' | 'Slate'; eventTitle: string }) {
+  fillPopinForm(data: { eventType: EventTypes; eventTitle: string }) {
     const { eventType, eventTitle } = data;
     get('event-type').click();
-    getInList('type_', eventType);
+    getInList('type_', eventTypes[eventType]);
     get('event-title-modal').clear().type(eventTitle);
     get('more-details').click();
   },
 
   fillScreeningForm(data: {
-    eventPrivacy: 'public' | 'protected' | 'private';
+    accessibility: AccessibilityTypes;
     isSecret: boolean;
     eventTitle: string;
     movieTitle: string;
     dataToCheck: { movieTitles?: string[]; calendarSlot: EventSlot };
   }) {
-    const { eventPrivacy, isSecret, eventTitle, movieTitle, dataToCheck } = data;
+    const { accessibility, isSecret, eventTitle, movieTitle, dataToCheck } = data;
     get('warning-chip').should('exist');
     if(dataToCheck.movieTitles) {
       get('title').click();
@@ -73,7 +73,7 @@ export const cypress = {
     cypress.selectTitle(movieTitle);
     get('title').should('contain', movieTitle);
     get('description').type(`Description : ${eventTitle}`);
-    get(eventPrivacy).click();
+    get(accessibility).click();
     if (isSecret) get('secret').click();
     get('event-save').should('be.enabled');
     get('event-save').click();
@@ -83,15 +83,15 @@ export const cypress = {
   },
 
   fillSlateForm(data: {
-    eventPrivacy: 'public' | 'protected' | 'private';
+    accessibility: AccessibilityTypes;
     isSecret: boolean;
     eventTitle: string;
     selectedTitles: string[];
     dataToCheck: { calendarSlot: EventSlot };
   }) {
-    const { eventPrivacy, isSecret, eventTitle, selectedTitles, dataToCheck } = data;
+    const { accessibility, isSecret, eventTitle, selectedTitles, dataToCheck } = data;
     get('description').type(`Description : ${eventTitle}`);
-    get(eventPrivacy).click();
+    get(accessibility).click();
     if (isSecret) get('secret').click();
     get('titles').click();
     for(const title of selectedTitles) {
@@ -140,16 +140,11 @@ export const cypress = {
       .click();
   },
 
-  getColumnsSpread() {
-    console.log('column spread')
-    return cy.get('.cal-all-day-events').find('.cal-day-column').eq(6).contains('')
-  },
-
   //* Events functions
 
   createMultipeEvents(data: {
     day: number,
-    eventType: 'Screening' | 'Meeting' | 'Slate',
+    eventType: EventTypes,
     eventTitle: string,
     multiple: number
   }) {
@@ -165,14 +160,14 @@ export const cypress = {
     }
   },
 
-  searchInEvents(data: { title: string; type?: string; expected: boolean }) {
-    const { title, type, expected } = data;
+  searchInEvents(data: { title: string; accessibility?: string; expected: boolean }) {
+    const { title, accessibility, expected } = data;
     let eventFound = false;
     return getAllStartingWith('event_')
       .then(events => {
         events.toArray().map(event => {
           if (event.textContent.includes(title)) {
-            expect(event.textContent).to.include(type);
+            expect(event.textContent).to.include(accessibility);
             eventFound = true;
           }
         });
@@ -217,14 +212,18 @@ export const firebase = {
   getScreeningData(options: { userType: UserRole; moviesWithScreener?: boolean }) {
     const { userType, moviesWithScreener } = options;
     return cy.task('getRandomScreeningData', {
-      app: 'festival',
-      access: { marketplace: true, dashboard: true },
-      userType: userType,
-      moviesWithScreener: moviesWithScreener,
+      appAndUserType: {
+        app: 'festival',
+        access: { marketplace: true, dashboard: true },
+        userType: userType,
+      },
+      options: {
+        moviesWithScreener: moviesWithScreener,
+      },
     });
   },
 
-  getRandomUser(data: { app: App; access: ModuleAccess; userType: UserRole }) {
+  getRandomUser(data: AppAndUserType) {
     const { app, access, userType } = data;
     return cy.task('getRandomMember', { app, access, userType });
   },
