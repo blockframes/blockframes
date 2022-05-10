@@ -6,7 +6,7 @@ import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StorageFile, FileMetaData } from '@blockframes/model';
+import { StorageFile, FileMetaData, createStorageFile } from '@blockframes/model';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { FileUploaderService } from '../../+state/file-uploader.service';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
@@ -315,7 +315,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
     }
 
     this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
-    this.form.reset(new StorageFileForm());
+    this.form.reset(createStorageFile());
 
     this.fileUploader.nativeElement.value = null;
     this.selectionChange.emit('removed');
