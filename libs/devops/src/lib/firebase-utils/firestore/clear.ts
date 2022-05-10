@@ -1,7 +1,7 @@
 import { DB_DOCUMENT_NAME, META_COLLECTION_NAME } from "@blockframes/utils/maintenance";
 import { firebase } from '@env';
-import { runShellCommandExec } from '@blockframes/devops';
 import { throwOnProduction } from '@blockframes/firebase-utils';
+import { runShellCommandExec } from '../commands';
 
 /**
  * This function uses firebase CLI to clear firestore, but excludes the maintenance doc

@@ -3,13 +3,13 @@ import * as admin from 'firebase-admin';
 import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
 import { join, resolve, sep } from 'path';
-import { runShellCommand, runShellCommandUntil, awaitProcOutput, gsutilTransfer } from '@blockframes/devops';
 import { getFirestoreExportDirname } from './export';
 import { sleep, throwOnProduction } from '@blockframes/firebase-utils';
 import { promises } from 'fs';
 import { set, camelCase } from 'lodash';
 const { writeFile, rename } = promises;
 import type { auth as authType } from 'firebase-admin';
+import { awaitProcOutput, gsutilTransfer, runShellCommand, runShellCommandUntil } from '../commands';
 
 const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
 const emulatorMetadataFilename = 'firebase-export-metadata.json';
