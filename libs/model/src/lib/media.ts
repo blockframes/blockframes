@@ -13,15 +13,16 @@ export interface StorageFile {
   [K: string]: string; // extra-data
 }
 
-export function createStorageFile(file: Partial<StorageFile> = {}): StorageFile {
-  return {
-    privacy: 'public',
-    collection: 'movies',
-    docId: '',
-    field: '',
-    storagePath: '',
-    ...file,
-  };
+export function createStorageFile(file: Partial<StorageFile> = {}, extraFields = true): StorageFile {
+  const mandatory: StorageFile = {
+    privacy: file.privacy ?? 'public',
+    collection: file.collection ?? 'movies',
+    docId: file.docId ?? '',
+    field: file.field ?? '',
+    storagePath: file.storagePath ?? ''
+  }
+
+  return extraFields ? { ...mandatory, ...file } : mandatory;
 }
 
 export interface StorageVideo extends StorageFile {

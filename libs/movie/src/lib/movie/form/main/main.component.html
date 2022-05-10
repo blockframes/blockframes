@@ -98,7 +98,7 @@
           The poster image will be used as the main image to represent your film on the marketplace, and, more
           generally, for all film components requiring vertical formats on the marketplace.
         </p>
-        <image-uploader [meta]="['movies', 'poster', movieId]" ratio="poster" [form]="form.poster" listenToChanges>
+        <image-uploader [meta]="['movies', 'poster', movieId]" ratio="poster" [form]="form.poster">
           <h3 title>Film Poster</h3>
         </image-uploader>
         <span class="mat-caption">Please note that this document will be available for download on the
@@ -111,7 +111,7 @@
           The banner image will be used as a cover picture on your project page on the marketplace, and, more generally,
           for all film components requiring horizontal formats on the marketplace.
         </p>
-        <image-uploader [meta]="['movies', 'banner', movieId]" ratio="banner" [form]="form.banner" listenToChanges>
+        <image-uploader [meta]="['movies', 'banner', movieId]" ratio="banner" [form]="form.banner">
           <h3 title>Film Banner Image</h3>
         </image-uploader>
         <span class="mat-caption">Please note that this document will be available for download on the

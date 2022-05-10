@@ -18,7 +18,7 @@ import {
   sanitizeFileName,
 } from '@blockframes/utils/file-sanitizer';
 import { FileUploaderService } from '@blockframes/media/+state';
-import { FileMetaData } from '@blockframes/model';
+import { createStorageFile, FileMetaData } from '@blockframes/model';
 import { allowedFiles, AllowedFileType, fileSizeToString, maxAllowedFileSize } from '@blockframes/utils/utils';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
@@ -111,16 +111,16 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     if (this.listenToChanges) {
       const ref = doc(this.db,`${this.metadata.collection}/${this.metadata.docId}`);
       this.docSub = docData(ref).subscribe(data => {
-        const media = this.formIndex !== undefined
+        const incoming = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
-        if (media) {
-          const extra = this.getExtra();
-          // jwPlayer comes from the doc, not from the form.
-          delete extra?.['jwPlayerId'];
-          this.form.patchValue({ ...media, ...extra });
+        const current = this.form.value;
+
+        if (incoming.storagePath !== current.storagePath) {
+          const storageFile = createStorageFile(incoming, false);
+          this.form.patchValue(storageFile);
         }
-      })
+      });
     }
   }
 

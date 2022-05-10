@@ -2,15 +2,20 @@
 import { Component, ChangeDetectionStrategy, OnInit, Inject, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, Data } from '@angular/router';
+import { AbstractControl } from '@angular/forms';
 
 // Blockframes
 import { TunnelRoot, TunnelStep, TunnelLayoutComponent } from '@blockframes/ui/tunnel';
 import { FORMS_CONFIG, ShellConfig } from '../movie.shell.interfaces';
-import { ProductionStatus } from '@blockframes/model';
+import { createStorageFile, Movie, ProductionStatus, StorageFile } from '@blockframes/model';
 import { isChrome } from '@blockframes/utils/browser/utils';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { FileLabel, getFileMetadata } from '@blockframes/media/+state/static-files';
+import { getDeepValue } from '@blockframes/utils/pipes';
+import { FormList } from '@blockframes/utils/form';
 
 // RxJs
-import { map, pluck, startWith, tap } from 'rxjs/operators';
+import { map, pluck, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 
 function isStatus(prodStatus: ProductionStatus, acceptableStatus: ProductionStatus[]) {
@@ -101,6 +106,11 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
   })
 }
 
+function getPath(id: string, label: FileLabel, index?: number) {
+  const field = getFileMetadata('movies', label, id).field;
+  return index !== undefined ? `${field}.${index}` : field;
+}
+
 @Component({
   selector: 'movie-form-shell',
   templateUrl: './shell.component.html',
@@ -113,17 +123,27 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
 
   steps$: Observable<TunnelStep[]>;
 
-  exitRoute$: Observable<string> = this.route.params.pipe(
+  private movieId$: Observable<string> = this.route.params.pipe(
     pluck('movieId'),
+    shareReplay({ bufferSize: 1, refCount: true })
+  )
+
+  exitRoute$: Observable<string> = this.movieId$.pipe(
     map((movieId: string) => `/c/o/dashboard/title/${movieId}`)
   );
+
+  private fileSub = this.movieId$.pipe(
+    switchMap(id => this.movieService.valueChanges(id)),
+    tap(movie => this.patchFiles(movie))
+  ).subscribe();
 
   constructor(
     @Inject(DOCUMENT) private doc: Document,
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
-  ) { }
+    private cdr: ChangeDetectorRef,
+    private movieService: MovieService
+  ) {}
 
   async ngOnInit() {
     this.configs.movie.onInit();
@@ -153,6 +173,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
+    this.fileSub?.unsubscribe();
     this.getForm('movie').reset();
     this.getForm('campaign')?.reset();
   }
@@ -169,5 +190,58 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
         resolve(this.doc.getElementById(id));
       }).observe(this.doc.documentElement, { childList: true, subtree: true });
     });
+  }
+
+  private patchFiles(movie: Movie) {
+    const movieFiles: FileLabel[] = [
+      'poster',
+      'banner',
+      'scenario',
+      'moodboard',
+      'presentation_deck',
+      'screener',
+      'salesPitch',
+      'delivery',
+      'otherVideos',
+      'still_photo',
+      'notes'
+    ];
+
+    for (const file of movieFiles) {
+      this.patchFile(movie, file);
+    }
+  }
+
+  /**
+   * Patches the value of file in form after the file has been uploaded
+   * @param index index of file in array
+   */
+  private patchFile(movie: Movie, label: FileLabel, index?: number) {
+    const path = getPath(movie.id, label, index);
+    const incoming = getDeepValue(movie, path) as StorageFile;
+
+    if (Array.isArray(incoming)) {
+      for (const index of incoming.keys()) {
+        this.patchFile(movie, label, index);
+      }
+      return;
+    }
+
+    const movieForm = this.getForm('movie');
+    const current = getDeepValue(movieForm.value, path) as StorageFile;
+
+    if (incoming.storagePath !== current.storagePath) {
+
+      let form: AbstractControl;
+      if (index !== undefined) {
+        const formPath = getPath(movie.id, label);
+        const formList = getDeepValue(movieForm, formPath) as FormList<AbstractControl>;
+        form = formList.get(`${index}`);
+      } else {
+        form = getDeepValue(movieForm, path);
+      }
+      const storageFile = createStorageFile(incoming, false);
+      form.patchValue(storageFile);
+    }
   }
 }
