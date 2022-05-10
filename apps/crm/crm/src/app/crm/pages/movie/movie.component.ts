@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
-import { Movie, storeStatus, productionStatus, getAllAppsExcept } from '@blockframes/model';
+import { Movie, storeStatus, productionStatus, getAllAppsExcept, Analytics, EventName, AggregatedAnalytic } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -13,7 +13,22 @@ import { PermissionsService } from '@blockframes/permissions/+state/permissions.
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { CampaignService } from '@blockframes/campaign/+state';
 import { MovieAppConfigForm } from '@blockframes/movie/form/movie.form';
-import { where } from 'firebase/firestore';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { QueryConstraint, where } from 'firebase/firestore';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { map, Observable } from 'rxjs';
+import { aggregatePerUser } from '@blockframes/analytics/+state/utils';
+import { joinWith } from '@blockframes/utils/operators';
+import { UserService } from '@blockframes/user/+state';
+
+const eventLabel: Record<EventName, string> = {
+  addedToWishlist: 'Added to Wishlist',
+  askingPriceRequested: 'Asking Price Requested',
+  pageView: 'Page Views',
+  promoReelOpened: 'Promoreel Opened',
+  removedFromWishlist: 'Removed from Wishlist',
+  screeningRequested: 'Screening Requested'
+}
 
 @Component({
   selector: 'crm-movie',
@@ -30,7 +45,11 @@ export class MovieComponent implements OnInit {
   public productionStatus = productionStatus;
   public apps = getAllAppsExcept(['crm']);
 
+  public analytics$: Observable<AggregatedAnalytic[]>;
+  public eventLabel = eventLabel;
+
   constructor(
+    private analytics: AnalyticsService,
     private movieService: MovieService,
     private organizationService: OrganizationService,
     private permissionsService: PermissionsService,
@@ -42,7 +61,8 @@ export class MovieComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {}
 
   async ngOnInit() {
@@ -50,6 +70,20 @@ export class MovieComponent implements OnInit {
     this.movie = await this.movieService.getValue(this.movieId);
     this.movieForm = new MovieCrmForm(this.movie);
     this.movieAppConfigForm = new MovieAppConfigForm(this.movie.app);
+
+    const query: QueryConstraint[] = [
+      where('type', '==', 'title'),
+      where('meta.titleId', '==', this.movieId)
+    ];
+    this.analytics$ = this.analytics.valueChanges(query).pipe(
+      // Filter out analytics from owners of title
+      map((analytics: Analytics<'title'>[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId) )),
+      joinWith({
+        org: analytic => this.organizationService.valueChanges(analytic.meta.orgId),
+        user: analytic => this.userService.valueChanges(analytic.meta.uid)
+      }, { shouldAwait: true }),
+      map(aggregatePerUser)
+    );
 
     this.cdRef.markForCheck();
   }
@@ -112,7 +146,7 @@ export class MovieComponent implements OnInit {
   public async deleteMovie() {
     const simulation = await this.simulateDeletion(this.movie);
     this.dialog.open(ConfirmInputComponent, {
-      data: {
+      data: createModalData({
         title: 'You are about to delete this movie from Archipel, are you sure ?',
         text: "If yes, please write 'HARD DELETE' inside the form below.",
         warning: 'Doing this will also delete everything regarding this movie',
@@ -123,8 +157,8 @@ export class MovieComponent implements OnInit {
           await this.movieService.remove(this.movie.id);
           this.snackBar.open('Movie deleted !', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/movies']);
-        },
-      },
+        }
+      })
     });
   }
 

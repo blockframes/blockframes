@@ -11,10 +11,10 @@ import { TitleMarketplaceShellComponent } from '../shell/shell.component';
 })
 export class ArtisticComponent implements OnInit {
   public movie$ = this.shell.movie$;
-
+  
   constructor(
     private shell: TitleMarketplaceShellComponent,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
   ) {}
 
   ngOnInit() {

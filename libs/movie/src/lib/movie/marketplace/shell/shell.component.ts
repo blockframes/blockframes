@@ -17,6 +17,7 @@ import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'title-marketplace-shell',
@@ -69,10 +70,8 @@ export class TitleMarketplaceShellComponent implements OnInit {
 
   fullscreen(refs: StorageFile[], index: number) {
     this.dialog.open(FileListPreviewComponent, {
-      data: { refs, index },
-      width: '80vw',
-      height: '80vh',
-      autoFocus: false,
+      data: createModalData({ refs, index }, 'large'),
+      autoFocus: false
     });
   }
 

@@ -7,6 +7,7 @@ import { PrivacyPolicyComponent } from '@blockframes/auth/components/privacy-pol
 import { CookieDialogComponent } from '../cookie-dialog/cookie-dialog.component';
 import { GDPRService } from '../gdpr-service/gdpr.service'
 import { AuthService } from '@blockframes/auth/+state';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'cookie-banner',
@@ -35,7 +36,7 @@ export class CookieBannerComponent implements OnInit {
 
   /** Opens a dialog with terms of use and privacy policy given by the parent. */
   public openPrivacyPolicy() {
-    this.dialog.open(PrivacyPolicyComponent, { maxHeight: '80vh' })
+    this.dialog.open(PrivacyPolicyComponent, { data: createModalData({}, 'large') });
   }
 
   public acceptCookies() {
@@ -46,10 +47,7 @@ export class CookieBannerComponent implements OnInit {
   }
 
   public changePreferences() {
-    const dialogRef = this.dialog.open(CookieDialogComponent, {
-      minHeight: '80vh',
-      minWidth: '80vw'
-    });
+    const dialogRef = this.dialog.open(CookieDialogComponent, { data: createModalData({}, 'large') });
     dialogRef.afterClosed().subscribe(settings => {
       if (settings) {
         this.confirmCookies();

@@ -2,6 +2,18 @@ import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/model';
 
+type Size = 'large' | 'medium' | 'small';
+
+interface CommonModalData {
+  size: Size;
+  selectedFiles?: StorageFile[];
+  onClose?: () => void;
+}
+
+export function createModalData<T>(data: T, size: Size = 'medium'): T & CommonModalData {
+  return { ...data, size };
+}
+
 @Component({
   selector: 'global-modal',
   templateUrl: './global-modal.component.html',
@@ -11,7 +23,7 @@ import { StorageFile } from '@blockframes/model';
 export class GlobalModalComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: { selectedFiles?: StorageFile[], onClose?: () => void },
+    @Inject(MAT_DIALOG_DATA) public data: CommonModalData,
     public dialogRef: MatDialogRef<GlobalModalComponent>,
   ) { }
 
@@ -20,4 +32,5 @@ export class GlobalModalComponent {
     if (this.data?.onClose) return this.data.onClose();
     return this.dialogRef.close(false);
   }
+
 }

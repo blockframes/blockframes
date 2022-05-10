@@ -1,3 +1,6 @@
+import 'cypress-wait-until';
+import 'cypress-mailosaur';
+
 import * as auth from './lib/auth';
 export { auth };
 export * from './lib/commands';

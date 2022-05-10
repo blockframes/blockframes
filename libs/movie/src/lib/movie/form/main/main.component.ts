@@ -20,6 +20,8 @@ import { maxYear } from '@blockframes/utils/form/validators/validators';
 import { MatDialog } from '@angular/material/dialog';
 import { Filmography } from '@blockframes/model';
 import { displayFilmographies } from '@blockframes/movie/pipes/filmography.pipe';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+
 @Component({
   selector: 'movie-form-main',
   templateUrl: './main.component.html',
@@ -102,16 +104,8 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
     }
   }
 
-  //TODO #6507
   openDetails(title: string, values: string | Filmography[]) {
-    const arrayValues = Array.isArray(values) ? displayFilmographies(values) : values;
-    this.dialog.open(CellModalComponent, {
-      data: { title, values: arrayValues },
-      maxHeight: '80vh',
-      minWidth: '50vw',
-      maxWidth: '80vw',
-      minHeight: '50vh',
-      autoFocus: false,
-    });
+    const arrayValues = Array.isArray(values) ? displayFilmographies(values) : [values];
+    this.dialog.open(CellModalComponent, { data: createModalData({ title, values: arrayValues }), autoFocus: false });
   }
 }

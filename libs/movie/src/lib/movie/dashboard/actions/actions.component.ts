@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Directive({ selector: 'movie-action-menu, [movieActionMenu]' })
 export class MovieActionMenuDirective { }
@@ -39,7 +40,7 @@ export class DashboardActionsShellComponent {
       : '';
 
     this.dialog.open(ConfirmInputComponent, {
-      data: {
+      data: createModalData({
         title: `You are about to delete ${this.movie.title.international} permanently.`,
         subtitle: `${subtitle}If you wish to proceed, please type "DELETE" in the field below.`,
         confirmationWord: 'delete',
@@ -56,11 +57,10 @@ export class DashboardActionsShellComponent {
               },
             },
           } as any));
-
           const ref = this.snackbar.open('Title deleted.', '', { duration: 4000 });
           ref.afterDismissed().subscribe(() => this.router.navigate(['/c/o/dashboard/title']));
-        },
-      }
+        }
+      })
     });
   }
 

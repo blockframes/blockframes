@@ -50,6 +50,7 @@
     <bf-carousel flex>
       <ng-container *ngFor="let movie of section | queryTitles | async | sortBy:section.sorting">
         <movie-card [movie]="movie" [size]="section.mode" [link]="['../title', movie.id]" [col]="3" carouselItem>
+          <event-request-screening [movieId]="movie.id" iconOnly></event-request-screening>
         </movie-card>
       </ng-container>
     </bf-carousel>

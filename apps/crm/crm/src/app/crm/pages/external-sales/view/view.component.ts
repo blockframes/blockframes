@@ -13,6 +13,7 @@ import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { Sale, Term  } from '@blockframes/model';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'contract-view',
@@ -60,14 +61,14 @@ export class ContractViewComponent {
 
   confirm(term: Term) {
     this.dialog.open(ConfirmInputComponent, {
-      data: {
+      data: createModalData({
         title: 'Are you sure ?',
         subtitle: `You are about to delete permanently this term (#${term.id}). This action will also update the contract #${term.contractId} to remove the reference to the deleted term.`,
         text: `Please type "DELETE" to confirm.`,
         confirmationWord: 'DELETE',
         confirmButtonText: 'Delete term',
-        onConfirm: this.delete(term),
-      }
+        onConfirm: this.delete(term)
+      })
     });
   }
 
