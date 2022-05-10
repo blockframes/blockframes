@@ -10,7 +10,7 @@
       </ng-container>
       <ng-template #createinprogress>
         <span>Creating... {{ processedOrgs }} / {{ selection.selected.length}} </span>
-        <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>   
+        <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
       </ng-template>
     </button>
   </p>
@@ -114,4 +114,4 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 
-<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" [length]="rows.data.length" [pageSize]="10" #paginator showFirstLastButtons></mat-paginator>
