@@ -58,14 +58,24 @@ export class ProfileComponent implements OnInit {
         this.passwordForm.markAsPristine();
       }
     } catch (err) {
-      switch (err.message) {
-        case 'Your profile information are not valid':
-        case 'Your information to change your password are not valid.':
-          this.snackBar.open(err.message, 'close', { duration: 2000 });
-          break;
-        default:
-          this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
-          break;
+      if (
+        err.message === 'Your profile information are not valid' ||
+        err.message === 'Your information to change your password are not valid.'
+      ) {
+        this.snackBar.open(err.message, 'close', { duration: 2000 });
+      }
+      else if (err.message.includes('auth/wrong-password')) {
+        this.snackBar.open('Your current password is not valid.', 'close', { duration: 2000 });
+      }
+      else if (err.message.includes('auth/too-many-requests')) {
+        this.snackBar.open(
+          'You have repeatedly failed to change your password. Please, try again in 5 minutes.',
+          'close',
+          { duration: 5000 }
+        );
+      }
+      else {
+        this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
       }
     }
   }
