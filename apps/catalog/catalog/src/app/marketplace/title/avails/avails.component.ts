@@ -108,7 +108,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     if ('contract' in queryParams) {
       skipValue = 1
       const selector = "[data-scroll-to-view-id='" + queryParams.contract + "']"
-      //@why: #6383
+      //Because the queried element is within an ngIf and we need to give it some time to render.
       setTimeout(() => {
         const element = document.querySelector<HTMLElement>(selector);
         if (element) scrollIntoView(element);
@@ -120,7 +120,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     const fragSub = this.route.fragment.pipe(
       filter(fragment => !!fragment),
       skip(skipValue),
-      //@why: #6383
+      //Because the queried element is within an ngIf and we need to give it some time to render.
       delay(100)
     ).subscribe(fragment => scrollIntoView(document.querySelector(`#${fragment}`)));
 
