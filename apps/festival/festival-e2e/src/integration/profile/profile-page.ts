@@ -8,7 +8,7 @@ describe('Basic Landing Page, Login and Profile Page Tests', () => {
     cy.visit('/')
   })
   it('should load user and log into profile page', () => {
-    auth.loginWithRandomUser();
+    auth.loginWithRandomUser().logSubject();
     cy.visit('c/o/account/profile/view/settings');
     cy.contains('Profile Information').should('exist');
   })
