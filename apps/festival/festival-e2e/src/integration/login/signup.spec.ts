@@ -122,7 +122,7 @@ describe('Signup', () => {
       assertUrlIncludes('c/o/marketplace/home');
       get('skip-preferences').click();
       //Checks if an admin of this org received the inApp invitation
-      cy.task('getRandomOrgAdmin', org.id).then((admin: User) => {
+      cy.task('getRandomOrgMember', {orgId: org.id, userType: 'admin'}).then((admin: User) => {
         get('auth-user').click();
         get('auth-logout').click();
         get('login').click();
@@ -174,7 +174,7 @@ describe('Signup', () => {
       get('refresh').click();
       assertUrlIncludes('c/o/dashboard/home');
       //Checks if an admin of this org received the inApp invitation
-      cy.task('getRandomOrgAdmin', org.id).then((admin: User) => {
+      cy.task('getRandomOrgMember', {orgId: org.id, userType: 'admin'}).then((admin: User) => {
         get('auth-user').click();
         get('auth-logout').click();
         get('login').click();
