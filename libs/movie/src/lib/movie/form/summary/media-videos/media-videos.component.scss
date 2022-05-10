@@ -1,27 +1,44 @@
 :host {
   padding-bottom: 32px;
 }
-strong {
-  opacity: 0.5;
-  font-weight: normal;
-  white-space: nowrap;
-}
 
 h6 {
   margin: 0;
   opacity: 0.5;
 }
 
-ul {
-  margin-top: 8px;
-  margin-bottom: 8px;
+ul.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  > li {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+ul.videos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+
+li.video, article {
+  display: flex;
+  align-items: center;
+  gap: 8px
+}
+
+strong {
+  opacity: 0.5;
+  font-weight: normal;
+  white-space: nowrap;
 }
 
 a.mat-icon-button {
   height: 32px;
   width: 32px;
-}
-
-li strong.margin {
-  margin-top: 16px;
 }
