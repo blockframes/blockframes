@@ -1,6 +1,6 @@
 <ng-container *ngIf="movie$ | async as movie">
   <!-- App bar -->
-  <ng-template pageBar targetId="nav">
+  <ng-template *ngIf="gtSm$ | async" pageBar targetId="nav">
     <header fxLayout fxLayoutAlign="start center">
       <app-menu></app-menu>
       <ng-container *ngFor="let link of routes">
