@@ -16,7 +16,7 @@ import {
 import { CdkScrollable } from '@angular/cdk/overlay';
 
 // Layout
-import { Flex } from '../layout/layout.module';
+import { Flex, Layout } from '../layout/layout.module';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
@@ -32,9 +32,9 @@ export class CarouselItemDirective {
   selector: 'bf-carousel',
   templateUrl: 'carousel.component.html',
   styleUrls: ['./carousel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDestroy {
+export class CarouselComponent extends Layout implements AfterViewInit, AfterContentInit, OnDestroy {
 
   @Input() min: number;
 
@@ -53,7 +53,12 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
   @ViewChild('container') container: ElementRef<HTMLDivElement>;
   @ContentChildren(CarouselItemDirective) items: QueryList<CarouselItemDirective>;
 
-  constructor(private flex: Flex, private cdr: ChangeDetectorRef, private ngZone: NgZone) { }
+  private flex: Flex;
+
+  constructor(el: ElementRef, private cdr: ChangeDetectorRef, private ngZone: NgZone) {
+    super(el);
+    this.flex = new Flex(this);
+  }
 
   get clientWidth() {
     return this.container.nativeElement.clientWidth;
