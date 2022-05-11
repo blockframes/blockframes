@@ -1,18 +1,20 @@
 <ng-container *ngIf="movie$ | async as movie">
   <!-- App bar -->
-  <ng-template pageBar targetId="nav">
-    <header fxLayout fxLayoutAlign="start center">
-      <app-menu></app-menu>
-      <ng-container *ngFor="let link of routes">
-        <ng-container *ngIf="movie | hasKeys : (link.requireKeys || [])">
-          <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive
-            #rla="routerLinkActive">
-            {{link.label}}
-          </a>
+  <ng-container *ngIf="gtSm$ | async">
+    <ng-template pageBar targetId="nav">
+      <header fxLayout fxLayoutAlign="start center">
+        <app-menu></app-menu>
+        <ng-container *ngFor="let link of routes">
+          <ng-container *ngIf="movie | hasKeys : (link.requireKeys || [])">
+            <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive
+              #rla="routerLinkActive">
+              {{link.label}}
+            </a>
+          </ng-container>
         </ng-container>
-      </ng-container>
-    </header>
-  </ng-template>
+      </header>
+    </ng-template>
+  </ng-container>
 
   <!-- Header -->
   <ng-content select="movie-header"></ng-content>
