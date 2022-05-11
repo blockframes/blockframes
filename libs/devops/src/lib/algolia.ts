@@ -19,9 +19,11 @@ import {
 } from '@blockframes/model';
 import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 
-export async function upgradeAlgoliaOrgs(appConfig?: App, db = loadAdminServices().db) {
+type AlgoliaApp = Exclude<App, 'crm'>
+
+export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = loadAdminServices().db) {
   if (!appConfig) {
-    const promises = getAllAppsExcept(['crm']).map((app) => upgradeAlgoliaOrgs(app, db));
+    const promises = (<AlgoliaApp[]>getAllAppsExcept(['crm'])).map((app) => upgradeAlgoliaOrgs(app, db));
     await Promise.all(promises);
   } else {
     // reset config, clear index and fill it up from the db (which is the only source of truth)

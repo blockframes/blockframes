@@ -1,8 +1,8 @@
-import { LATEST_VERSION, loadAdminServices, startMaintenance } from "@blockframes/firebase-utils";
-import { resolve } from "path";
-import { loadDBVersion } from "./migrations";
+import { LATEST_VERSION, loadAdminServices, startMaintenance } from '@blockframes/firebase-utils';
+import { resolve } from 'path';
+import { loadDBVersion } from './migrations';
 import { firebase } from '@env'
-import { IMaintenanceDoc } from "@blockframes/model";
+import { IMaintenanceDoc } from '@blockframes/model';
 
 export function showHelp() {
   console.log('TODO: write a documentation');

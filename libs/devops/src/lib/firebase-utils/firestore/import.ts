@@ -1,8 +1,7 @@
-import { loadAdminServices } from '../util';
+import { loadAdminServices } from '@blockframes/firebase-utils';
 import { clearDb } from './clear';
 import { backupBucket, firebase } from '@env';
 import { runShellCommandExec } from '../commands';
-
 
 /**
  * This function will run `gcloud` shell command to import Firestore backup from GCS bucket into Firestore.

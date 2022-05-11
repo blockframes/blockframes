@@ -4,14 +4,14 @@
  * This module provides functions to trigger a firestore restore and test user creations.
  */
 import { differenceBy } from 'lodash';
-import { loadAdminServices, getCollectionInBatches, sleep } from '@blockframes/firebase-utils';
+import { loadAdminServices, getCollectionInBatches, sleep, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 import readline from 'readline';
 import { Auth, UserRecord } from '@blockframes/firebase-utils';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/unit-tests';
 import * as env from '@env';
 import { PublicUser, User } from '@blockframes/model';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
 import { subMonths } from 'date-fns';
+import { USER_FIXTURES_PASSWORD } from './firebase-utils/anonymize/util';
 
 export const { storageBucket } = env.firebase();
 
@@ -118,9 +118,11 @@ async function getUsersFromDb(db: FirebaseFirestore.Firestore) {
  * and creates them in Auth
  */
 export async function syncUsers(db = loadAdminServices().db, auth = loadAdminServices().auth) {
+  await startMaintenance(db);
   const expectedUsers = await getUsersFromDb(db);
   await deleteAllUsers(auth);
   await importAllUsers(auth, expectedUsers);
+  await endMaintenance(db);
 }
 
 export async function printUsers() {
@@ -140,10 +142,11 @@ export async function printUsers() {
 }
 
 export async function clearUsers() {
-  const { auth } = loadAdminServices();
-
+  const { auth, db } = loadAdminServices();
+  await startMaintenance(db);
   // clear users is equivalent to "we expect no users", we can reuse the code.
-  return deleteAllUsers(auth);
+  await deleteAllUsers(auth);
+  return endMaintenance(db);
 }
 
 function readUsersFromSTDIN(): Promise<UserConfig[]> {
@@ -188,7 +191,9 @@ function readUsersFromSTDIN(): Promise<UserConfig[]> {
 }
 
 export async function createUsers() {
-  const { auth } = loadAdminServices();
+  const { auth, db } = loadAdminServices();
+  await startMaintenance(db);
   const users = await readUsersFromSTDIN();
-  return createAllUsers(users, auth);
+  await createAllUsers(users, auth);
+  return endMaintenance(db);
 }

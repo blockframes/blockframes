@@ -1,4 +1,4 @@
-import { runInBackground } from '@blockframes/firebase-utils';
+import { runInBackground } from './firebase-utils';
 
 export async function cleanBackups({ bucketName, maxDays }: { bucketName: string, maxDays: string }) {
   if (!bucketName) throw 'This command needs GCS URI starting with gs:// preceeded by an integer number of days to keep backups';

@@ -3,11 +3,9 @@ import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from '.
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
 import {
-  copyFirestoreExportFromCiBucket,
   endMaintenance,
-  latestAnonDbDir,
   loadAdminServices,
-  restoreAnonStorageFromCI,
+  startMaintenance,
 } from '@blockframes/firebase-utils';
 import {
   connectAuthEmulator,
@@ -16,7 +14,7 @@ import {
   firebaseEmulatorExec,
   importFirestoreEmulatorBackup,
   shutdownEmulator,
-} from '@blockframes/firebase-utils/firestore/emulator';
+} from './firebase-utils/firestore/emulator';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { firebase } from '@env';
@@ -24,10 +22,16 @@ import { generateFixtures } from './generate-fixtures';
 import { ensureMaintenanceMode, isMigrationRequired } from './tools';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
+import { copyFirestoreExportFromCiBucket, latestAnonDbDir, restoreAnonStorageFromCI } from './firebase-utils';
+
 const { storageBucket } = firebase();
 
 export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string } = {}) {
+
   const { storage, db, auth } = loadAdminServices();
+
+  await startMaintenance(db)
+
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.log('Copying AnonDb from CI...');
@@ -67,6 +71,9 @@ export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string 
   console.info('Algolia ready for testing!');
 
   insurance(); // Switch off maintenance insurance
+
+  await endMaintenance(db, EIGHT_MINUTES_IN_MS);
+
 }
 
 export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string } = {}) {
@@ -115,6 +122,12 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
 export async function upgrade() {
   const { db, auth, storage } = loadAdminServices();
 
+  if (!await isMigrationRequired()) {
+    console.log('Skipping upgrade because migration is not required...');
+    return;
+  }
+  await startMaintenance(db);
+
   console.info('Preparing the database...');
   await migrate({ withBackup: true, db, storage });
   console.info('Database ready for deploy!');
@@ -132,6 +145,8 @@ export async function upgrade() {
   await upgradeAlgoliaMovies(null, db);
   await upgradeAlgoliaUsers(db);
   console.info('Algolia ready for testing!');
+
+  await endMaintenance(db);
 }
 
 export async function upgradeEmulators() {

@@ -1,5 +1,5 @@
+import { DbRecord } from '@blockframes/firebase-utils';
 import { testVideoId } from '@env';
-import { DbRecord } from '../util';
 import { anonymizeDocument } from './lib';
 
 //@TODO #5543 unit-test runAnonymization and loadDb 

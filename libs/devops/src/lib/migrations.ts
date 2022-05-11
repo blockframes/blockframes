@@ -2,10 +2,13 @@
  * This module deal with migrating the system from a CURRENT version
  * to the LAST version.
  */
-import { exportFirestore, importFirestore } from './admin';
-import { Firestore, loadAdminServices, IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS, getFirestoreExportDirname } from "@blockframes/firebase-utils";
+import { importFirestore } from './admin';
+import { Firestore, loadAdminServices, IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 import { last } from 'lodash';
 import { dbVersionDoc } from '@blockframes/utils/maintenance';
+import { getFirestoreExportDirname } from './firebase-utils';
+import { isMigrationRequired } from './tools';
+import { exportFirestore } from '../../../../apps/backend-ops/src/admin'
 
 export const VERSION_ZERO = 2;
 
@@ -47,6 +50,13 @@ export async function migrate({
   db?: FirebaseFirestore.Firestore;
   storage?: import('firebase-admin').storage.Storage;
 } = {}) {
+
+  if (!await isMigrationRequired()) {
+    console.log('Skipping because there is no migration to run...');
+    return;
+  }
+
+  await startMaintenance(db);
   console.info('Start the migration process...');
 
   const backupDir = `pre-migration-${getFirestoreExportDirname(new Date())}`;
@@ -79,6 +89,7 @@ export async function migrate({
     }
 
     await updateDBVersion(db, lastVersion);
+    await endMaintenance(db);
   } catch (e) {
     console.error(e);
     if (withBackup) {

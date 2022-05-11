@@ -3,13 +3,13 @@ import * as admin from 'firebase-admin';
 import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
 import { join, resolve, sep } from 'path';
-import { runShellCommand, runShellCommandUntil, awaitProcOutput, gsutilTransfer } from '../commands';
 import { getFirestoreExportDirname } from './export';
-import { sleep, throwOnProduction } from '../util';
+import { sleep, throwOnProduction } from '@blockframes/firebase-utils';
 import { promises } from 'fs';
 import { set, camelCase } from 'lodash';
 const { writeFile, rename } = promises;
 import type { auth as authType } from 'firebase-admin';
+import { awaitProcOutput, gsutilTransfer, runShellCommand, runShellCommandUntil } from '../commands';
 
 const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
 const emulatorMetadataFilename = 'firebase-export-metadata.json';
@@ -142,9 +142,8 @@ export async function firebaseEmulatorExec({
   const startType = execCommand ? 'exec' : 'start';
   const onlyParam = typeof emulators === 'string' ? emulators : emulators.join(',');
   const exportString = typeof exportData === 'string' ? `--export-on-exit ${exportData} ` : '--export-on-exit ';
-  const cmd = `npx firebase emulators:${startType} --project ${projectId} --only ${onlyParam} ${
-    importPath ? `--import ${importPath} ` : ''
-  }${exportData ? exportString : ''}${execCommand ? `'${execCommand}'` : ''}`;
+  const cmd = `npx firebase emulators:${startType} --project ${projectId} --only ${onlyParam} ${importPath ? `--import ${importPath} ` : ''
+    }${exportData ? exportString : ''}${execCommand ? `'${execCommand}'` : ''}`;
   console.log('Running command:', cmd);
   const { proc, procPromise } = runShellCommandUntil(cmd, 'All emulators ready');
   process.on('SIGINT', async () => await shutdownEmulator(proc));
@@ -186,7 +185,7 @@ function createEmulatorMetadataJson(emuPath: string) {
  * @param proc the `ChildPRocess` object for the running emulator process.
  * @param timeLimit number of seconds to await gracefull shutdown before SIGKILL
  */
-export async function shutdownEmulator(proc: ChildProcess, exportDir = defaultEmulatorBackupPath, timeLimit: number = 30) {
+export async function shutdownEmulator(proc: ChildProcess, exportDir = defaultEmulatorBackupPath, timeLimit = 30) {
   if (!proc) {
     console.warn('Kill emulator process cannot run as there is no process');
     return;

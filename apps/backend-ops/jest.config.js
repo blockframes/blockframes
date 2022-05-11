@@ -8,7 +8,6 @@
     '^.+\\.(ts)$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   testEnvironment: 'node',
   coverageDirectory: '../../coverage/apps/backend-ops',
 };

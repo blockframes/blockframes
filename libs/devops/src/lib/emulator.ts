@@ -1,16 +1,7 @@
 import {
-  runAnonymization,
-  getLatestFolderURL,
   getServiceAccountObj,
   loadAdminServices,
-  restoreStorageFromCi,
   startMaintenance,
-  latestAnonDbDir,
-  getBackupBucket,
-  CI_STORAGE_BACKUP,
-  latestAnonStorageDir,
-  gsutilTransfer,
-  awaitProcessExit,
   endMaintenance,
 } from '@blockframes/firebase-utils';
 import {
@@ -22,7 +13,7 @@ import {
   firebaseEmulatorExec,
   connectAuthEmulator,
   connectFirestoreEmulator,
-} from '@blockframes/firebase-utils/firestore/emulator';
+} from './firebase-utils/firestore/emulator';
 import { ChildProcess } from 'child_process';
 import { join, resolve } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
@@ -32,6 +23,17 @@ import { migrate } from './migrations';
 import { syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
+import {
+  awaitProcessExit,
+  gsutilTransfer,
+  latestAnonDbDir,
+  latestAnonStorageDir,
+  CI_STORAGE_BACKUP,
+  restoreStorageFromCi,
+  getLatestFolderURL,
+  runAnonymization,
+  getBackupBucket
+} from './firebase-utils';
 
 interface ImportEmulatorOptions {
   importFrom: string,

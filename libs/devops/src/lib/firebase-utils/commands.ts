@@ -1,5 +1,5 @@
+import { sleep } from '@blockframes/firebase-utils';
 import { ChildProcess, spawn, SpawnOptions, exec } from 'child_process';
-import { sleep } from './util';
 
 export function runShellCommand(cmd: string) {
   process.env.FORCE_COLOR = 'true';
