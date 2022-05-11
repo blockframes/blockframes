@@ -17,6 +17,10 @@
         <mat-icon matListIcon svgIcon="document"></mat-icon>
         <span matLine><b>My Files</b></span>
       </a>
+      <a mat-list-item routerLink="organization" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="sellers"></mat-icon>
+        <span matLine><b>Buyer List</b></span>
+      </a>
       <ng-container *ngIf="org$ | async | canAccess: 'marketplace':'festival'">
         <mat-divider></mat-divider>
         <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">
