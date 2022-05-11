@@ -7,13 +7,12 @@
 // commands please read more here:
 // https://on.cypress.io/custom-commands
 // ***********************************************
-import 'cypress-wait-until';
-import 'cypress-mailosaur';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Cypress {
   interface Chainable<Subject> {
-    login(email: string, password: string): void;
+    getId(selector: string): Chainable<Subject>;
+    logSubject(): Chainable<Subject>;
   }
 }
 //
@@ -36,10 +35,21 @@ declare namespace Cypress {
 Cypress.Server.defaults({
   delay: 500,
   force404: false,
-  ignore: xhr => {
+  ignore: () => {
     // handle custom logic for whitelisting
     return true;
   },
 });
 
 Cypress.config('defaultCommandTimeout', 60000);
+
+/**
+ * This command is like the get command above but chainable!
+ */
+Cypress.Commands.add('getId', { prevSubject: 'optional' }, (subject: Cypress.Chainable, selector: string) => {
+  return subject ? subject.get(`[test-id="${selector}"]`) : cy.get(`[test-id="${selector}"]`);
+});
+
+Cypress.Commands.add('logSubject', { prevSubject: 'optional' }, subject => {
+  if (subject) cy.log(subject as unknown as string);
+});
