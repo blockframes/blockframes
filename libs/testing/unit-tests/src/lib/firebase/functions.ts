@@ -8,6 +8,7 @@ import { TokenOptions, initializeTestEnvironment, RulesTestEnvironment } from '@
 import type { FeaturesList } from 'firebase-functions-test/lib/features';
 import type { AppOptions } from 'firebase-admin'; // * Correct Import
 import fs from 'fs';
+import { functionsConfigMap, writeRuntimeConfig } from '@blockframes/firebase-utils/firestore/emulator';
 
 export interface FirebaseTestConfig extends FeaturesList {
   firebaseConfig?: { projectId: string, app: admin.app.App };
@@ -27,11 +28,14 @@ export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptio
   let runtimeConfig: any = {};
   try {
     // tslint:disable-next-line: no-eval
+    writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
+    writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json'));
     runtimeConfig = eval('require')(join(process.cwd(), './.runtimeconfig.json'));
   } catch (e) {
     console.log(e);
   }
-  if (emulator) { // ** Connect to emulator
+  if (emulator) {
+    // ** Connect to emulator
     const firebaseTest: FirebaseTestConfig = firebaseFunctionsTest();
     testIndex++;
     const projectId = getTestingProjectId();

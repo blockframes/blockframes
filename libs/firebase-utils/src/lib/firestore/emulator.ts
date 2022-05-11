@@ -396,7 +396,7 @@ export function writeRuntimeConfig(values: { [key: string]: string }, path: stri
   }
 
   Object.entries(values).forEach(([key, value]) => set(runtimeObj, key, process.env[getKeyName(value)] || 'missing-env-value'));
-  return writeFile(path, JSON.stringify(runtimeObj, null, 4));
+  return writeFileSync(path, JSON.stringify(runtimeObj, null, 4));
 }
 
 /**
