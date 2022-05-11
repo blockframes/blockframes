@@ -1,6 +1,6 @@
 import { db } from '../testing-cypress';
 import { createUser, createOrganization, Organization, createPermissions } from '@blockframes/model';
-import { App, ModuleAccess } from '@blockframes/utils/apps';
+import { App, ModuleAccess } from '@blockframes/model';
 
 export async function getRandomEmail() {
   const { email } = await getRandomUser();
@@ -75,4 +75,36 @@ export async function getOrgByName(orgName: string) {
 
 export function deleteOrg(orgId: string) {
   return db.doc(`orgs/${orgId}`).delete();
+}
+
+const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
+
+export async function importData(data: any | any[]) {
+  // Array of Promises to create all documents in the data
+  const createAll = Object.entries(data).map(([path, content]) => {
+    // If document create doc
+    if (isDocumentPath(path)) {
+      const docRef = db.doc(path);
+      return docRef.set(content);
+    }
+    // If collection, add all documents
+    if (!Array.isArray(content)) {
+      throw new Error('If path is a collection, the content should be an array. Got ' + JSON.stringify(content));
+    }
+    const docRef = db.collection(path);
+    const addAll = content.map(document => docRef.doc().create(document));
+    return Promise.all(addAll);
+  });
+  // wait for all promises to finish
+  return Promise.all(createAll);
+}
+
+export async function deleteData(path: string) {
+  // if only name of a collection, erase all its data
+  if (!isDocumentPath(path)) {
+    const docsRef = await db.collection(path).listDocuments();
+    return docsRef.every(doc => doc.delete());
+  }
+  // if doc path, delete doc
+  return db.doc(path).delete();
 }
