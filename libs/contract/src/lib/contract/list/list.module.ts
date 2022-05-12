@@ -8,6 +8,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ExternalSaleListComponent } from './external-sales/external-sales.component';
 import { InternalSaleListComponent } from './internal-sales/internal-sales.component';
 
+import { LetModule } from '@rx-angular/template';
+
 // Blockframes
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
@@ -49,6 +51,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     NegotiationPipeModule,
     GetOrgPipeModule,
     OrgNameModule,
+    LetModule,
 
     // Material
     MatTooltipModule,
