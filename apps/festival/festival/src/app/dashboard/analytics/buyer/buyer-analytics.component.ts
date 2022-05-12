@@ -28,6 +28,10 @@ import {
 import { InvitationService } from "@blockframes/invitation/+state";
 import { EventService } from "@blockframes/event/+state";
 
+interface InvitationWithScreening extends Invitation {
+  event: Event<Screening>;
+}
+
 interface VanityMetricEvent {
   name: EventName;
   title: string;
@@ -167,11 +171,7 @@ export class BuyerAnalyticsComponent {
     map(invitations => invitations.filter(invitation => isScreening(invitation.event) && invitation.event.meta.titleId)),
     map(invitations => invitations.filter(invitation => isMovieAccepted(invitation.event.movie, this.app))),
     joinWith({
-      analytics: async invitation => {
-        const titleWithAnalytics = await firstValueFrom(this.buyerAnalytics$);
-        const title = titleWithAnalytics.find(title => (invitation.event as Event<Screening>).meta.titleId === title.id);
-        return title.analytics.filter(analytic => analytic.name === 'screeningRequested');
-      }
+      analytics: (invitation: InvitationWithScreening) => this.getAnalyticsPerInvitation(invitation)
     }, { shouldAwait: true }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -226,5 +226,11 @@ export class BuyerAnalyticsComponent {
       'Watch Time': invitation.watchTime || '0min'
     }));
     downloadCsvFromJson(analytics, 'buyer-screener-analytics')
+  }
+
+  private async getAnalyticsPerInvitation(invitation: InvitationWithScreening) {
+    const titleWithAnalytics = await firstValueFrom(this.buyerAnalytics$);
+    const title = titleWithAnalytics.find(title => invitation.event.meta.titleId === title.id);
+    return title.analytics.filter(analytic => analytic.name === 'screeningRequested');
   }
 }
