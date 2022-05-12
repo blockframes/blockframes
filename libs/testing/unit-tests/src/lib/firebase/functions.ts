@@ -27,9 +27,9 @@ config();
 export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptions): FirebaseTestConfig {
   let runtimeConfig: any = {};
   try {
-    // tslint:disable-next-line: no-eval
     writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
     writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json'));
+    // tslint:disable-next-line: no-eval
     runtimeConfig = eval('require')(join(process.cwd(), './.runtimeconfig.json'));
   } catch (e) {
     console.log(e);
