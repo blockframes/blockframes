@@ -9,6 +9,7 @@ import { EventName, hasAppStatus, App } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { counter } from '@blockframes/analytics/+state/utils';
+import { aggregate } from '@blockframes/analytics/+state/utils';
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter } from 'rxjs/operators';
@@ -17,6 +18,8 @@ import { combineLatest } from 'rxjs';
 // Intercom
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
+import { UserService } from '@blockframes/user/+state';
+import { unique } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'dashboard-home',
@@ -49,7 +52,28 @@ export class HomeComponent {
     switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key))
   );
 
-  private titleAnalyticsOfPopularTitle$ = combineLatest([ this.popularTitle$, this.titleAnalytics$ ]).pipe(
+  activeBuyers$ = this.titleAnalytics$.pipe(
+    filter(analytics => analytics.length > 0),
+    map(analytics => {
+      const uids = counter(analytics, 'meta.uid').map(({ key }) => key);
+      const orgIds = counter(analytics, 'meta.orgId').map(({ key }) => key);
+      return { uids, orgIds, analytics };
+    }),
+    joinWith({
+      users: ({ uids }) => this.userService.valueChanges(uids),
+      orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
+    }, { shouldAwait: true }),
+    map(({ users, orgs, analytics }) => {
+      return users.map(user => {
+        const org = orgs.find(o => o.id === user.orgId);
+        const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === user.uid);
+        return aggregate(analyticsOfUser, { user, org });
+      });
+    }),
+    tap(data => console.log({ data }))
+  );
+
+  private titleAnalyticsOfPopularTitle$ = combineLatest([this.popularTitle$, this.titleAnalytics$]).pipe(
     map(([title, titleAnalytics]) => titleAnalytics.filter(analytics => analytics.meta.titleId === title.id)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -82,6 +106,7 @@ export class HomeComponent {
     private movieService: MovieService,
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
+    private userService: UserService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
   ) { }
