@@ -35,10 +35,8 @@ header {
 }
 
 .no-analytics {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  place-items: center;
 }
 
 .no-accepted-movies {

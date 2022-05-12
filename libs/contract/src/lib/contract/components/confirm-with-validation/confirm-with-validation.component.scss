@@ -27,8 +27,7 @@ mat-checkbox {
   margin-bottom: 12px;
   max-width: 70%;
 
-  span {
-    display: flex;
-    flex-flow: row wrap;
+  span { 
+    white-space: normal;
   }
 }

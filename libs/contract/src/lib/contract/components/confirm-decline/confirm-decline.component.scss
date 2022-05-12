@@ -24,8 +24,7 @@ mat-spinner {
 mat-checkbox {
   max-width: 70%;
 
-  span {
-    display: flex;
-    flex-flow: row wrap;
+  span { 
+    white-space: normal;
   }
 }
