@@ -19,7 +19,6 @@ import { combineLatest } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from '@blockframes/utils/operators';
 import { UserService } from '@blockframes/user/+state';
-import { unique } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'dashboard-home',
@@ -69,8 +68,7 @@ export class HomeComponent {
         const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === user.uid);
         return aggregate(analyticsOfUser, { user, org });
       });
-    }),
-    tap(data => console.log({ data }))
+    })
   );
 
   private titleAnalyticsOfPopularTitle$ = combineLatest([this.popularTitle$, this.titleAnalytics$]).pipe(
