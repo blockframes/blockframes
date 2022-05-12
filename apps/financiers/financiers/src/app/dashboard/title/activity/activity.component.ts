@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
@@ -12,7 +12,7 @@ import { toMovieAnalytics } from '@blockframes/analytics/components/movie-analyt
   styleUrls: ['./activity.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleActivityComponent {
+export class TitleActivityComponent implements OnInit {
   public movieAnalytics$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((titleId: string) => this.analyticsService.getTitleAnalytics({ titleId })),
@@ -24,10 +24,11 @@ export class TitleActivityComponent {
     private analyticsService: AnalyticsService,
     private dynTitle: DynamicTitleService,
     private shell: DashboardTitleShellComponent
-  ) {
-    this.shell.movie.then(movie => {
-      const titleName = movie?.title?.international || 'No title';
-      this.dynTitle.setPageTitle(titleName, 'Marketplace Activity');
-    });
+  ) { }
+
+  async ngOnInit() {
+    const movie = await this.shell.movie;
+    const titleName = movie?.title?.international || 'No title';
+    this.dynTitle.setPageTitle(titleName, 'Marketplace Activity');
   }
 }

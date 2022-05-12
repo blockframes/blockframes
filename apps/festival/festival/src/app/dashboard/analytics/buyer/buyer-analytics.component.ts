@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { where } from "firebase/firestore";
 import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
 import { aggregate } from "@blockframes/analytics/+state/utils";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
@@ -14,8 +13,8 @@ import { App } from "@blockframes/model";
 import { joinWith } from "@blockframes/utils/operators";
 import { APP } from "@blockframes/utils/routes/utils";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { toLabel } from "@blockframes/utils/utils";
-import { 
+import { sum, toLabel } from "@blockframes/utils/utils";
+import {
   BehaviorSubject,
   combineLatest,
   firstValueFrom,
@@ -45,7 +44,7 @@ const events: VanityMetricEvent[] = [
     title: 'Promoreel Opened',
     icon: 'star_fill'
   },
-  { 
+  {
     name: 'addedToWishlist',
     title: 'Adds to Wishlist',
     icon: 'favorite'
@@ -94,12 +93,12 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
     },
     {
       title: 'Requests',
-      value: invitations.reduce((acc, curr) => acc + curr.analytics.length, 0),
+      value: sum(invitations, inv => inv.analytics.length),
       icon: 'ask_screening_2'
     },
     {
       title: 'Average watch time',
-      value: attended.reduce((acc, curr) => acc + curr.watchTime, 0) / invitations.length || 0,
+      value: sum(attended, inv => inv.watchTime) / invitations.length || 0,
       icon: 'access_time'
     }
   ];
@@ -158,7 +157,7 @@ export class BuyerAnalyticsComponent {
 
   invitations$ = combineLatest([
     this.user$,
-    this.invitationService.allInvitations$  
+    this.invitationService.allInvitations$
   ]).pipe(
     map(([user, invitations]) => invitations.filter(invitation => fromUser(invitation, user.uid))),
     joinWith({
@@ -190,7 +189,7 @@ export class BuyerAnalyticsComponent {
     private titleService: MovieService,
     private userService: UserService,
     @Inject(APP) public app: App
-  ) {}
+  ) { }
 
   goBack() {
     this.navService.goBack(1);
