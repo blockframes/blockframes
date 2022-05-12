@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Optional, Inject, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject, Pipe, PipeTransform } from '@angular/core';
 
 // Blockframes
 import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
@@ -149,7 +149,6 @@ export class HomeComponent {
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App,
-    private cdr: ChangeDetectorRef,
   ) { }
 
   public openIntercom(): void {
