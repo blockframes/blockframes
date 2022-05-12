@@ -10,10 +10,6 @@ div[mat-dialog-content] {
   }
 }
 
-p, span {
-  max-width: 70%;
-}
-
 button {
   width: fit-content;
 }
@@ -25,9 +21,8 @@ button.close {
 
 mat-checkbox {
   margin-bottom: 12px;
-  max-width: 70%;
 
-  span { 
+  span {
     white-space: normal;
   }
 }

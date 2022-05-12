@@ -2,14 +2,9 @@ form {
   width: 100%;
 }
 
-h1,p {
+h1, p {
   margin-bottom: 12px;
   text-align: center;
-}
-
-p {
-  max-width: 70%;
-  margin-inline: auto;
 }
 
 mat-spinner {
@@ -21,10 +16,6 @@ mat-spinner {
   margin-block: 24px;
 }
 
-mat-checkbox {
-  max-width: 70%;
-
-  span { 
-    white-space: normal;
-  }
+span {
+  white-space: normal;
 }
