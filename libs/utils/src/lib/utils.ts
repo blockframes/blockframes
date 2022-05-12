@@ -303,6 +303,12 @@ export function toLanguageVersionString(languages: LanguageRecord) {
     .join(', ');
 }
 
+export function sum(array: number[]): number
+export function sum<T>(array: T[], getAmount: (item: T) => number): number
+export function sum<T>(array: T[], getAmount?: (item: T) => number): number {
+  const cb = getAmount || ((item: number) => item);
+  return array.reduce((total, item) => total + cb(item as any), 0);
+}
 
 export function removeNulls(obj: any) {
   const isArray = Array.isArray(obj);
