@@ -1,5 +1,5 @@
 <ng-container *ngIf="organization$ | async as org">
-  <header fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-md="column">
+  <header>
     <article fxLayout fxLayoutAlign="space-around start">
       <img [ref]="org.logo" type="logo" asset="empty_organization.svg" alt="organization logo">
       <div class="org-info">

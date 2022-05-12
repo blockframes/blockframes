@@ -10,6 +10,13 @@ export function getStaticModelFilter(scope: Scope) {
 }
 
 export const filters = {
-  movieDirectors: (input: string, _, movie: Movie) => movie?.directors?.map(director => displayName(director)).some(name => name.toLocaleLowerCase().includes(input)),
-  movieTitle: (input: string, _, movie: Movie) => movie?.title?.international.toLocaleLowerCase().includes(input)
+  movieDirectors: (input: string, _, movie: Movie) => {
+    if (!movie?.directors) return false;
+    return movie.directors.map(director => displayName(director))
+      .some(name => name.toLocaleLowerCase().includes(input))
+  },
+  movieTitle: (input: string, _, movie: Movie) => {
+    if (!movie?.title?.international) return false;
+    return movie.title.international.toLocaleLowerCase().includes(input)
+  }
 }
