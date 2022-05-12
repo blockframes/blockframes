@@ -12,7 +12,7 @@
         <a mat-fab color="black" routerLink="../import" matTooltip="Import Titles">
           <mat-icon svgIcon="excel"></mat-icon>
         </a>
-      </div>   
+      </div>
     </header>
 
     <ng-container *ngIf="titleAnalytics$ | async as analytics; else loading">
@@ -36,7 +36,7 @@
                   <h5>Interactions</h5>
                   <p class="mat-caption">Learn how people interact with your Title.</p>
                 </div>
-    
+
               </analytics-line-chart>
               <analytics-line-chart class="surface" carouselItem [eventNames]="['pageView']" [data]="pageViewsOfPopularTitle$ | async">
                 <mat-icon svgIcon="visibility"></mat-icon>
@@ -47,7 +47,7 @@
                 </analytics-line-chart>
             </bf-carousel>
           </ng-container>
-    
+
           <a mat-button class="see_titles" routerLink="title">
             <span>View all Titles Activity</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
@@ -56,8 +56,76 @@
 
       </ng-container>
     </ng-container>
+
+    <section>
+      <h3>Buyers' Insights</h3>
+      <div class="surface" fxLayout="row" fxLayoutGap="24px">
+        <ng-container *ngIf="activeCountries$|async as activeCountries">
+          <div class="country-list">
+            <h4>TOP 5 COUNTRIES</h4>
+            <ul>
+              <ng-container *ngFor="let stat of activeCountries | combineStats | slice :0:5">
+                <li *ngIf="stat.territory" fxLayout fxLayoutAlign="space-between center">
+                  <span>{{stat.territory}}</span>
+                  <b><span>{{stat.count}}</span></b>
+                </li>
+              </ng-container>
+            </ul>
+          </div>
+          <world-map>
+            <!-- MAP LAYERS -->
+            <ng-container *ngFor="let stat of activeCountries.zero">
+              <map-feature [tag]="stat.territoryISOA3" color="#dee5ff">
+              </map-feature>
+            </ng-container>
+            <ng-container *ngFor="let stat of activeCountries.lessThan5">
+              <map-feature [tag]="stat.territoryISOA3" color="#8da4fa">
+              </map-feature>
+            </ng-container>
+            <ng-container *ngFor="let stat of activeCountries.lessThan50">
+              <map-feature [tag]="stat.territoryISOA3" color="#3c64f7">
+              </map-feature>
+            </ng-container>
+            <ng-container *ngFor="let stat of activeCountries.lessThan100">
+              <map-feature [tag]="stat.territoryISOA3" color="#001ec7">
+              </map-feature>
+            </ng-container>
+
+            <!-- MAP LEGEND -->
+            <article class="colors-card">
+              <mat-list>
+                <mat-list-item>
+                  <svg viewBox="0 0 100 100" width="10px" height="10px">
+                    <rect fill="#001ec7" x="0" y="0" width="100" height="100" rx="10" />
+                  </svg>
+                  <span class="mat-caption">> 100</span>
+                </mat-list-item>
+                <mat-list-item>
+                  <svg viewBox="0 0 100 100" width="10px" height="10px">
+                    <rect fill="#3c64f7" x="0" y="0" width="100" height="100" rx="10" />
+                  </svg>
+                  <span class="mat-caption">> 50</span>
+                </mat-list-item>
+                <mat-list-item>
+                  <svg viewBox="0 0 100 100" width="10px" height="10px">
+                    <rect fill="#8da4fa" x="0" y="0" width="100" height="100" rx="10" />
+                  </svg>
+                  <span class="mat-caption">> 5</span>
+                </mat-list-item>
+                <mat-list-item>
+                  <svg viewBox="0 0 100 100" width="10px" height="10px">
+                    <rect fill="#dee5ff" x="0" y="0" width="100" height="100" rx="10" />
+                  </svg>
+                  <span class="mat-caption">0</span>
+                </mat-list-item>
+              </mat-list>
+            </article>
+          </world-map>
+        </ng-container>
+      </div>
+    </section>
   </ng-container>
-  
+
   <ng-template #noAcceptedMovies>
     <section fxLayout="column" fxLayoutAlign="center center" class="no-accepted-movies">
       <ng-container *ngIf="titles.length; else noMovies">
