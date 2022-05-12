@@ -36,6 +36,15 @@ export function aggregate(analytics: Analytics[], data: Partial<AggregatedAnalyt
   for (const analytic of analytics) {
     aggregated[analytic.name]++;
   }
+  const {
+    addedToWishlist,
+    askingPriceRequested,
+    pageView,
+    promoReelOpened,
+    removedFromWishlist,
+    screeningRequested
+  } = aggregated;
+  aggregated.countEvents = addedToWishlist + askingPriceRequested + pageView + promoReelOpened + removedFromWishlist + screeningRequested;
   return aggregated;
 }
 
