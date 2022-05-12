@@ -36,9 +36,9 @@ interface TerritoryCount {
 }
 
 function getTerritoryAndCount({ orgs, analytics }: { orgs: Organization[], analytics: Analytics<'title'>[], orgIds: string[] }): TerritoryStat[] {
-  const territories = Object.values(territoriesISOA3)
+  const iSOA3Names = Object.values(territoriesISOA3)
     .filter((country) => country !== '') as TerritoryISOA3Value[];
-  return territories.map(territoryISOA3 => {
+  return iSOA3Names.map(territoryISOA3 => {
     const orgsInTerritory = orgs
       .filter(o => territoriesISOA3[o.addresses.main.country] === territoryISOA3);
 
