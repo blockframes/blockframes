@@ -9,7 +9,7 @@
     margin-left: 16px;
   }
 
-  &.modal {
+  &.dialog {
     width: 100%;
     margin: 0;
   }
@@ -19,7 +19,7 @@
   .surface {
     width: 80%;
     margin-top: 50px;
-    &.modal {
+    &.dialog {
       width: 100%;
       margin: 0;
     }
@@ -31,7 +31,7 @@
     width: 100%;
     margin-top: 30px;
     margin-bottom: 30px;
-    &.modal {
+    &.dialog {
       width: 100%;
       margin: 0;
     }
