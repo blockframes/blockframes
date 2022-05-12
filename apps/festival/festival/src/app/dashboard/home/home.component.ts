@@ -10,6 +10,9 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { counter } from '@blockframes/analytics/+state/utils';
 import { aggregate } from '@blockframes/analytics/+state/utils';
+import { UserService } from '@blockframes/user/+state';
+import { unique } from '@blockframes/utils/helpers';
+import { joinWith } from '@blockframes/utils/operators';
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter } from 'rxjs/operators';
@@ -17,9 +20,6 @@ import { combineLatest } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
-import { joinWith } from '@blockframes/utils/operators';
-import { UserService } from '@blockframes/user/+state';
-import { unique } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'dashboard-home',
@@ -85,13 +85,13 @@ export class HomeComponent {
       orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
     }, { shouldAwait: true }),
     map(({ users, orgs, analytics }) => {
-      const aggregatedUsers = users.map(user => {
+      return users.map(user => {
         const org = orgs.find(o => o.id === user.orgId);
         const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === user.uid);
         return aggregate(analyticsOfUser, { user, org });
       });
-      return aggregatedUsers.sort((userA, userB) => userA.countEvents - userB.countEvents)
-    })
+    }),
+    map(users => users.sort((userA, userB) => userA.total - userB.total))
   );
 
   interactions: EventName[] = [

@@ -36,19 +36,11 @@ export function aggregate(analytics: Analytics[], data: Partial<AggregatedAnalyt
   for (const analytic of analytics) {
     aggregated[analytic.name]++;
   }
-  const {
-    addedToWishlist,
-    askingPriceRequested,
-    pageView,
-    promoReelOpened,
-    removedFromWishlist,
-    screeningRequested
-  } = aggregated;
-  aggregated.countEvents = addedToWishlist + askingPriceRequested + pageView + promoReelOpened + removedFromWishlist + screeningRequested;
+  aggregated.total = analytics.length;
   return aggregated;
 }
 
-export function aggregatePerUser(analytics: (Analytics<"title"> & { user: User, org: Organization})[]) {
+export function aggregatePerUser(analytics: (Analytics<"title"> & { user: User, org: Organization })[]) {
   const aggregator: Record<string, AggregatedAnalytic> = {};
   for (const analytic of analytics) {
     if (!analytic.user?.uid) continue;

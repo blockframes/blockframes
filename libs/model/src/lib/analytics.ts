@@ -43,7 +43,7 @@ export interface MetaEvent {
 }
 
 export interface AggregatedAnalytic extends Record<EventName, number> {
-  countEvents:number;
+  total: number;
   user?: User;
   org?: Organization;
   title?: Movie;
@@ -68,7 +68,7 @@ export function createTitleMeta(meta: Partial<MetaTitle>): MetaTitle {
 
 export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>): AggregatedAnalytic {
   return {
-    countEvents:0,
+    total: 0,
     addedToWishlist: 0,
     askingPriceRequested: 0,
     pageView: 0,
