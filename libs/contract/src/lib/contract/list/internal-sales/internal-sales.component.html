@@ -35,14 +35,15 @@
       {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
     </bf-tag>
   </ng-template>
-  <ng-template
-    *ngIf="(filter$ | async) !== 'accepted' && (filter$ | async) !== 'declined'"
-    colRef="negotiation"
-    label="Negotiation Stage"
-    let-negotiation
-  >
-    <ng-container *ngIf=" negotiation | negotiationStage | async  as negoStage">
-      <span [matTooltip]="negoStage"> {{negoStage | maxLength:50}} </span>
-    </ng-container>
-  </ng-template>
+  <ng-container *ngIf="(filter$ | async) !== 'accepted' && (filter$ | async) !== 'declined'">
+    <ng-template
+      colRef="negotiation"
+      label="Negotiation Stage"
+      let-negotiation
+    >
+      <ng-container *ngIf="negotiation | negotiationStage | async  as negoStage">
+        <span [matTooltip]="negoStage"> {{negoStage | maxLength:50}} </span>
+      </ng-container>
+    </ng-template>
+  </ng-container>
 </bf-table>
