@@ -23,6 +23,23 @@ export const examples = {
     },
   },
 
+  multipleDocsBis: {
+    ['example-multiple']: [
+      {
+        type: 'example 1',
+        time: time,
+      },
+      {
+        type: 'example 2',
+        time: time,
+      },
+      {
+        type: 'example 3',
+        time: time,
+      },
+    ],
+  },
+
   docWithArray: {
     [`example-array/doc-${time}`]: {
       type: 'example 1',
@@ -46,5 +63,12 @@ export const examples = {
         time: time,
       },
     ],
+  },
+
+  docToDelete: {
+    [`example-deletion/doc-${time}`]: {
+      type: 'example 1',
+      time: time,
+    },
   },
 };

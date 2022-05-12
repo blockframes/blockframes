@@ -1,5 +1,5 @@
 import { db } from '../testing-cypress';
-import { createUser, createOrganization, Organization, createPermissions } from '@blockframes/model';
+import { createUser, createOrganization, createPermissions } from '@blockframes/model';
 import { App, ModuleAccess } from '@blockframes/model';
 
 export async function getRandomEmail() {
@@ -51,10 +51,7 @@ export async function getRandomOrgAdmin(orgId: string) {
   const permissionsRef = await db.doc(`permissions/${orgId}`).get();
   const permissions = createPermissions(permissionsRef.data());
   const adminIds = Object.keys(permissions.roles).filter(userId => {
-    return (
-      permissions.roles[userId] === 'superAdmin' ||
-      permissions.roles[userId] === 'admin'
-    );
+    return permissions.roles[userId] === 'superAdmin' || permissions.roles[userId] === 'admin';
   });
   const randomIndex = Math.floor(Math.random() * adminIds.length);
   const adminId = adminIds[randomIndex];
@@ -69,7 +66,7 @@ export function deleteUser(userId: string) {
 export async function getOrgByName(orgName: string) {
   const userQuery = await db.collection('orgs').where('denomination.full', '==', orgName).get();
   const [org] = userQuery.docs;
-  if(!org) return null;
+  if (!org) return null;
   return createOrganization(org.data());
 }
 
@@ -77,9 +74,16 @@ export function deleteOrg(orgId: string) {
   return db.doc(`orgs/${orgId}`).delete();
 }
 
+
+// TODO : create a CRUD light plugin, see issue #8460
+
+//* LIGHT PLUGIN*----------------------------------------------------------------
+
 const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
 
-export async function importData(data: any | any[]) {
+//* IMPORT DATA*-----------------------------------------------------------------
+
+export function importData(data: Record<string, object> | Record<string, object[]>) {
   // Array of Promises to create all documents in the data
   const createAll = Object.entries(data).map(([path, content]) => {
     // If document create doc
@@ -91,20 +95,82 @@ export async function importData(data: any | any[]) {
     if (!Array.isArray(content)) {
       throw new Error('If path is a collection, the content should be an array. Got ' + JSON.stringify(content));
     }
-    const docRef = db.collection(path);
-    const addAll = content.map(document => docRef.doc().create(document));
+    const collRef = db.collection(path);
+    const addAll = content.map(document => collRef.add(document));
     return Promise.all(addAll);
   });
   // wait for all promises to finish
   return Promise.all(createAll);
 }
 
-export async function deleteData(path: string) {
-  // if only name of a collection, erase all its data
-  if (!isDocumentPath(path)) {
-    const docsRef = await db.collection(path).listDocuments();
-    return docsRef.every(doc => doc.delete());
+//* DELETE DATA*----------------------------------------------------------------
+
+export async function deleteData(paths: string | string[]) {
+  if (!Array.isArray(paths)) {
+    const path = paths;
+    isDocumentPath(path) ? await deleteDocument(path) : await deleteCollection(path);
+  } else {
+    paths.forEach(async path => (isDocumentPath(path) ? await deleteDocument(path) : await deleteCollection(path)));
   }
-  // if doc path, delete doc
+  // This function being used in a task, Cypress requires a return value
+  return true;
+}
+
+function deleteDocument(path: string) {
   return db.doc(path).delete();
 }
+
+async function deleteCollection(collection: string) {
+  const docsRef = await db.collection(collection).listDocuments();
+  return Promise.all(docsRef.map(docRef => docRef.delete()));
+}
+
+//* GET DATA*------------------------------------------------------------------
+
+export async function getData(paths: string | string[]) {
+  let data;
+  if (!Array.isArray(paths)) {
+    const path = paths;
+    data = isDocumentPath(path) ? await getDocument(path) : await getCollection(path);
+  } else {
+    data = paths.map(async path => (isDocumentPath(path) ? await getDocument(path) : await getCollection(path)));
+  }
+  return data || 'no data';
+}
+
+async function getDocument(path: string) {
+  const doc = await db.doc(path).get();
+  return doc.data();
+}
+
+async function getCollection(collection: string) {
+  const docRefs = await db.collection(collection).listDocuments();
+  const data = docRefs.map(async docRef => {
+    const path = docRef.path;
+    const doc = await db.doc(path).get();
+    return { [`${path}`]: doc.data() };
+  });
+  return Promise.all(data);
+}
+
+//* UPDATE DATA*-----------------------------------------------------------------
+
+//TODO : adapt to use id of doc or uid for users
+
+/*
+export function updateData(data: any | any[]) {
+  const createAll = Object.entries(data).map(([path, content]) => {
+    if (isDocumentPath(path)) {
+      const docRef = db.doc(path);
+      return docRef.update(content);
+    }
+    if (!Array.isArray(content)) {
+      throw new Error('If path is a collection, the content should be an array. Got ' + JSON.stringify(content));
+    }
+    const collRef = db.collection(path);
+    const addAll = content.map(document => collRef.doc().update(document));
+    return Promise.all(addAll);
+  });
+  return Promise.all(createAll);
+}
+*/
