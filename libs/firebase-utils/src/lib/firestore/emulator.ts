@@ -387,10 +387,10 @@ async function ensureSafeEmulatorBackupPath(importPath: string) {
 export function writeRuntimeConfig(values: { [key: string]: string }, path: string) {
   const runtimeObj = {};
 
-  const env = process.env['PROJECT_ID'];
+  const projectId = process.env['PROJECT_ID'];
   function getKeyName(key: string) {
-    if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(env)}_${key}`)) {
-      return `${camelCase(env)}_${key}`;
+    if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(projectId)}_${key}`)) {
+      return `${camelCase(projectId)}_${key}`;
     }
     return key;
   }

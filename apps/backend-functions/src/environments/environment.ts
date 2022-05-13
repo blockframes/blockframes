@@ -6,6 +6,13 @@
  * functions.
  */
 
+import { config } from 'firebase-functions';
+import { firebase } from '@env';
+import { mockConfigIfNeeded } from '@blockframes/firebase-utils/firebase-utils';
+
+console.log('Functions config() output: ')
+console.log(config());
+
 export const e2eMode = false;
 
 export {
@@ -17,11 +24,9 @@ export {
   bigQueryAnalyticsTable,
   centralOrgId,
   supportEmails,
-  playerId
+  playerId,
 } from '@env';
 
-import { firebase } from '@env';
-import { mockConfigIfNeeded } from '@blockframes/firebase-utils/firebase-utils';
 export const { projectId, storageBucket } = firebase();
 
 export const sendgridAPIKey = mockConfigIfNeeded('sendgrid', 'api_key');
@@ -40,4 +45,3 @@ export const twilioApiKeySid = mockConfigIfNeeded('twilio', 'api', 'key', 'sid')
 export const mailchimpAPIKey = mockConfigIfNeeded('mailchimp', 'api_key');
 export const mailchimpServer = mockConfigIfNeeded('mailchimp', 'server');
 export const mailchimpListId = mockConfigIfNeeded('mailchimp', 'list_id');
-
