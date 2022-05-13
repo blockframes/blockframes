@@ -5,10 +5,10 @@ import { join, resolve } from 'path';
 import { config } from 'dotenv';
 import { firebase as firebaseEnv } from '@env';
 import { TokenOptions, initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
-import type { FeaturesList } from 'firebase-functions-test/lib/features';
-import type { AppOptions } from 'firebase-admin'; // * Correct Import
 import fs from 'fs';
 import { functionsConfigMap, writeRuntimeConfig } from '@blockframes/firebase-utils/firestore/emulator';
+import type { FeaturesList } from 'firebase-functions-test/lib/features';
+import type { AppOptions } from 'firebase-admin'; // * Correct Import
 
 export interface FirebaseTestConfig extends FeaturesList {
   firebaseConfig?: { projectId: string, app: admin.app.App };
@@ -30,6 +30,7 @@ export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptio
     writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
     // tslint:disable-next-line: no-eval
     runtimeConfig = eval('require')(join(process.cwd(), './.runtimeconfig.json'));
+    console.dir('', runtimeConfig);
   } catch (e) {
     console.log(e);
   }
