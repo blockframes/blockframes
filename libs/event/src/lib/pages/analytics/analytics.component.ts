@@ -55,7 +55,6 @@ export class AnalyticsComponent implements OnInit {
   private eventType: EventTypes;
   analytics: WatchTimeInfo[];
   attendeesAnalytics: WatchTimeInfo[];
-  public hasWatchTime = false;
   public exporting = false
   public averageWatchTime = 0; // in seconds
   public dataMissing = '(Not Registered)';
@@ -110,7 +109,6 @@ export class AnalyticsComponent implements OnInit {
         // if event is a screening or a slate presentation we add the watch time column to the table
         // and we compute the average watch time
         if (this.eventType === 'screening' || this.eventType === 'slate') {
-          this.hasWatchTime = true;
           const totalWatchTime = sum(this.attendeesAnalytics, a => a.watchTime);
           this.averageWatchTime = totalWatchTime / this.attendeesAnalytics.length;
         }
