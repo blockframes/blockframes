@@ -167,13 +167,13 @@ export class AnalyticsComponent implements OnInit {
     }
     const eventStart = formatDate(this.eventData.start, 'MM/dd/yyyy', 'en');
 
-    const invitationStatusCount = [0, 0, 0, 0, 0];
+    const invitationsCount = [0, 0, 0, 0, 0];
     this.eventInvitations.forEach(({ status, mode }) => {
-      if (status === 'accepted') invitationStatusCount[0]++;
-      else if (status === 'pending') invitationStatusCount[1]++;
-      else if (status === 'declined') invitationStatusCount[2]++;
-      if (mode === 'invitation') invitationStatusCount[3]++;
-      else if (mode === 'request') invitationStatusCount[4]++;
+      if (status === 'accepted') invitationsCount[0]++;
+      else if (status === 'pending') invitationsCount[1]++;
+      else if (status === 'declined') invitationsCount[2]++;
+      if (mode === 'invitation') invitationsCount[3]++;
+      else if (mode === 'request') invitationsCount[4]++;
     });
     const [
       acceptedCount,
@@ -181,7 +181,7 @@ export class AnalyticsComponent implements OnInit {
       declinedCount,
       invitationCount,
       requestCount
-    ] = invitationStatusCount;
+    ] = invitationsCount;
 
     const [avgWatchTimeMins, avgWatchTimeSecs] = formatDate(this.averageWatchTime * 1000, 'm,ss', 'en').split(',') || [0, 0];
 
