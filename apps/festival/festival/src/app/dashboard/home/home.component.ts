@@ -29,13 +29,19 @@ interface TerritoryStat {
 }
 
 interface TerritoryCount {
-  zero: TerritoryStat[],
-  lessThan5: TerritoryStat[],
-  lessThan50: TerritoryStat[],
-  lessThan100: TerritoryStat[],
+  lessThanOrEql5: TerritoryStat[],
+  greaterThan5: TerritoryStat[],
+  greaterThan50: TerritoryStat[],
+  greaterThan100: TerritoryStat[],
 }
 
-function getTerritoryAndCount({ orgs, analytics }: { orgs: Organization[], analytics: Analytics<'title'>[], orgIds: string[] }): TerritoryStat[] {
+interface TerritoryAndCountOption {
+  orgs: Organization[],
+  analytics: Analytics<'title'>[],
+  orgIds: string[]
+}
+
+function getTerritoryAndCount({ orgs, analytics }: TerritoryAndCountOption): TerritoryStat[] {
   const iSOA3Names = Object.values(territoriesISOA3)
     .filter((country) => country !== '') as TerritoryISOA3Value[];
   return iSOA3Names.map(territoryISOA3 => {
@@ -54,19 +60,14 @@ function getTerritoryAndCount({ orgs, analytics }: { orgs: Organization[], analy
 function getCount(stats: TerritoryStat[]) {
   return stats.reduce(
     (acc, stat) => {
-      if (stat.count === 0) acc.zero.push(stat);
-      else if (stat.count <= 5) acc.lessThan5.push(stat);
-      else if (stat.count <= 50) acc.lessThan50.push(stat);
-      else if (stat.count <= 100) acc.lessThan100.push(stat);
+      if (stat.count > 100) acc.greaterThan100.push(stat);
+      else if (stat.count > 50) acc.greaterThan50.push(stat);
+      else if (stat.count > 5) acc.greaterThan5.push(stat);
+      else acc.lessThanOrEql5.push(stat);
       return acc;
     },
-    {
-      zero: [],
-      lessThan5: [],
-      lessThan50: [],
-      lessThan100: [],
-    } as TerritoryCount
-  )
+    { lessThanOrEql5: [], greaterThan5: [], greaterThan50: [], greaterThan100: [], } as TerritoryCount
+  );
 }
 
 @Component({
@@ -100,7 +101,7 @@ export class HomeComponent {
     switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key))
   );
 
-  private titleAnalyticsOfPopularTitle$ = combineLatest([ this.popularTitle$, this.titleAnalytics$ ]).pipe(
+  private titleAnalyticsOfPopularTitle$ = combineLatest([this.popularTitle$, this.titleAnalytics$]).pipe(
     map(([title, titleAnalytics]) => titleAnalytics.filter(analytics => analytics.meta.titleId === title.id)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -159,7 +160,7 @@ export class HomeComponent {
 
 @Pipe({ name: 'combineStats' })
 export class CombineStatsPipe implements PipeTransform {
-  transform({ zero, lessThan5, lessThan50, lessThan100 }: TerritoryCount) {
-    return [...lessThan100, ...lessThan50, ...lessThan5, ...zero];
+  transform({ lessThanOrEql5, greaterThan5, greaterThan50, greaterThan100 }: TerritoryCount) {
+    return [...greaterThan100, ...greaterThan50, ...greaterThan5, ...lessThanOrEql5];
   }
 }
