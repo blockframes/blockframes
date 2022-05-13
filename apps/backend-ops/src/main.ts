@@ -30,6 +30,8 @@ import { loadAndShrinkLatestAnonDbAndUpload } from './db-shrink';
 import { printDatabaseInconsistencies } from './internals/utils';
 import { cleanBackups } from './clean-backups';
 import { auditUsers } from './db-cleaning';
+import { migration7677 } from './migration-76-77';
+import { setMoviesStatus } from './set-movies-status';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -165,6 +167,12 @@ async function runCommand() {
       break;
     case 'rescueJWP':
       await rescueJWP({ jwplayerKey: arg1, jwplayerApiV2Secret: arg2 });
+      break;
+    case 'migration-76-77':
+      await migration7677(db);
+      break;
+    case 'set-movies-status':
+      await setMoviesStatus(db);
       break;
     default:
       showHelp();
