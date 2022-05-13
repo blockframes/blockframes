@@ -82,13 +82,7 @@ export class AnalyticsComponent implements OnInit {
         this.eventType = event.type;
         this.eventData = event;
 
-        const allInvitations = await this.invitationService.getValue([where('type', '==', 'attendEvent'), where('eventId', '==', event.id)]);
-
-        // we are looking for invitations related to this event
-        this.eventInvitations = allInvitations.filter(invit => {
-          if (invit.eventId !== event.id) return false;
-          return true;
-        });
+        this.eventInvitations = await this.invitationService.getValue([where('type', '==', 'attendEvent'), where('eventId', '==', event.id)]);
 
         const allOrgIds = this.eventInvitations.map(i => i.fromUser?.orgId || i.toUser?.orgId).filter(orgId => !!orgId);
         const orgIds = Array.from(new Set(allOrgIds));
