@@ -38,8 +38,7 @@
             <ng-template colRef="orgName" label="Company Name" let-orgName sort>{{ orgName || dataMissing }}</ng-template>
             <ng-template colRef="orgActivity" label="Company Activity" let-orgActivity>{{ orgActivity ? (orgActivity | toLabel: 'orgActivity') : dataMissing }}</ng-template>
             <ng-template colRef="orgCountry" label="Country" let-orgCountry>{{ orgCountry ? (orgCountry | toLabel: 'territories') : dataMissing }}</ng-template>
-            <ng-template colRef="watchTime" label="watch time" let-watchTime sort>{{ watchTime * 1000 | duration: '0min' }}
-            </ng-template>
+            <ng-template colRef="watchTime" label="watch time" let-watchTime sort>{{ watchTime * 1000 | duration: '0min' }}</ng-template>
           </bf-table>
         </mat-card>
       </section>
