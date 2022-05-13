@@ -1,9 +1,10 @@
-import { LATEST_VERSION, loadAdminServices, startMaintenance } from '@blockframes/firebase-utils';
+import { loadAdminServices, startMaintenance } from '@blockframes/firebase-utils';
 import * as env from '@env';
 import { config } from 'dotenv';
 import { resolve } from 'path';
 import { loadDBVersion } from './migrations';
 import { IMaintenanceDoc } from '@blockframes/model';
+import { LATEST_VERSION } from './firestoreMigrations';
 
 export async function isMigrationRequired(db = loadAdminServices().db) {
   const currentVersion = await loadDBVersion(db);

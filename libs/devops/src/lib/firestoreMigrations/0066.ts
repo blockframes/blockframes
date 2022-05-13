@@ -1,7 +1,6 @@
 import { centralOrgId } from '@env';
 import { Timestamp, Mandate, Movie } from '@blockframes/model';
-import { Firestore } from '../types';
-import { runChunks } from '../firebase-utils';
+import { Firestore, runChunks } from '@blockframes/firebase-utils';
 
 /**
  * Fill Mandate Contracts with missing values

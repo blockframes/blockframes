@@ -1,7 +1,6 @@
 
 import * as env from '@env';
-import { Firestore } from '../types';
-import { runChunks } from '../firebase-utils';
+import { Firestore, runChunks } from '@blockframes/firebase-utils';
 
 export const { storageBucket } = env.firebase();
 
@@ -13,7 +12,7 @@ export const { storageBucket } = env.firebase();
 export async function upgrade(db: Firestore) {
 
   const events = await db.collection('events').get();
-  return runChunks( 
+  return runChunks(
     events.docs,
     async (doc) => {
       const event = doc.data();

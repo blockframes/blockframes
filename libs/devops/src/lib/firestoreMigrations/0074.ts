@@ -1,5 +1,4 @@
-import { Firestore } from '../types';
-import { runChunks } from '../firebase-utils';
+import { Firestore, runChunks } from '@blockframes/firebase-utils';
 import { Organization, Movie } from '@blockframes/model';
 
 /**

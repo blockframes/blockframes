@@ -1,4 +1,3 @@
-export * from './lib/firestoreMigrations';
 export * from './lib/queue';
 export * from './lib/firebase-utils';
 export * from './lib/maintenance';

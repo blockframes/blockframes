@@ -1,6 +1,5 @@
-import { Firestore } from '@blockframes/firebase-utils';
 import { Stakeholder, Movie, Organization, Territory } from '@blockframes/model';
-import { runChunks } from '../firebase-utils';
+import { Firestore, runChunks } from '@blockframes/firebase-utils';
 
 const replaced = {
   'christmas- island': 'christmas-island',

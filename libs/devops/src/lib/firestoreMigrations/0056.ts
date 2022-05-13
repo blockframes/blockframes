@@ -1,7 +1,6 @@
 import { StorageFile, Event, MeetingEvent } from '@blockframes/model';
-import { Firestore } from '@blockframes/firebase-utils';
 import { get } from 'lodash';
-import { runChunks } from '../firebase-utils';
+import { Firestore, runChunks } from '@blockframes/firebase-utils';
 import { OldMeeting } from './old-types';
 
 

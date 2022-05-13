@@ -1,5 +1,5 @@
-import { Firestore } from '../types';
-import { runChunks } from '../firebase-utils';
+
+import { Firestore, runChunks } from '@blockframes/firebase-utils';
 // import { createUser } from '@blockframes/auth/+state';
 // import { createOrganization } from '@blockframes/organization/+state';
 
@@ -33,7 +33,7 @@ export async function upgrade(db: Firestore) {
     db.collection('users').get(),
     db.collection('orgs').get()
   ]);
-  
+
   await runChunks(buckets.docs, async (doc) => {
     const bucket = doc.data();
     const original = JSON.stringify(bucket);
@@ -61,7 +61,7 @@ export async function upgrade(db: Firestore) {
     const movie = doc.data();
     const original = JSON.stringify(movie);
     movie.originCountries = movie.originCountries.filter(territory => !removed.includes(territory));
-    
+
     // country is mandatory for box office
     movie.boxOffice = movie.boxOffice?.filter(box => !removed.includes(box.territory));
 
@@ -102,7 +102,7 @@ export async function upgrade(db: Firestore) {
     if (user.preferences?.territories?.length) {
       user.preferences.territories = user.preferences.territories.filter(territory => !removed.includes(territory));
     }
-  
+
     if (original !== JSON.stringify(user)) {
       await doc.ref.set(user);
     }

@@ -3,7 +3,8 @@
  * to the LAST version.
  */
 import { importFirestore } from './admin';
-import { Firestore, loadAdminServices, IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { Firestore, loadAdminServices, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
 import { last } from 'lodash';
 import { dbVersionDoc } from '@blockframes/utils/maintenance';
 import { exportFirestoreToBucketBeta, getFirestoreExportDirname } from './firebase-utils';

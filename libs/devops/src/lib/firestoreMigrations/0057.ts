@@ -1,6 +1,5 @@
-import { Firestore } from '@blockframes/firebase-utils';
 import { OrganizationDocument } from '@blockframes/model';
-import { runChunks } from '../firebase-utils';
+import { Firestore, runChunks } from '@blockframes/firebase-utils';
 
 
 export async function upgrade(db: Firestore) {

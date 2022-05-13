@@ -1,6 +1,5 @@
 import * as env from '@env';
-import { Firestore } from '../types';
-import { runChunks } from '../firebase-utils';
+import { Firestore, runChunks } from '@blockframes/firebase-utils';
 import { createMovieVideo, createMovieVideos } from '@blockframes/model';
 
 export const { storageBucket } = env.firebase();

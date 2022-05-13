@@ -1,5 +1,4 @@
-import { Firestore } from '@blockframes/firebase-utils';
-import { runChunks } from '../firebase-utils';
+import { Firestore, runChunks } from '@blockframes/firebase-utils';
 import { StorageFile } from '@blockframes/model';
 import { privacies } from '@blockframes/utils/file-sanitizer';
 
@@ -15,7 +14,7 @@ function createStorageFile(data: StorageFile) {
   } else {
     data.storagePath = ''
   }
-  
+
   return data;
 }
 
@@ -101,7 +100,7 @@ export async function upgrade(db: Firestore) {
         ...data.promotional.salesPitch
       })
     }
-  
+
     if (data.promotional.videos) {
       // promotional.videos.screener
       if (data.promotional.videos.screener) {

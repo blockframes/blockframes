@@ -1,11 +1,9 @@
-import { Firestore } from '../types';
 import { BigQuery } from '@google-cloud/bigquery';
 import { Analytics, createTitleMeta, createDocumentMeta  } from '@blockframes/model';
-import { getCollection } from '../firebase-utils';
 import { MovieDocument } from '@blockframes/model';
 import { MovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
-import { getCollectionInBatches } from '../util';
 import { bigQueryAnalyticsTable, firebase } from '@env';
+import { Firestore, getCollection, getCollectionInBatches } from '@blockframes/firebase-utils';
 
 const events_query = `
   SELECT *

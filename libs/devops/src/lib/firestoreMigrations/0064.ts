@@ -1,13 +1,11 @@
-import { runChunks } from '../firebase-utils';
-import { loadAdminServices } from '../util';
-import { Firestore, UserIdentifier, UserRecord } from '../types';
+import { Firestore, loadAdminServices, runChunks, UserIdentifier, UserRecord } from '@blockframes/firebase-utils';
 import { PublicUser, DocumentMeta, Timestamp } from '@blockframes/model';
 
 
 /**
  * Add an empty videos array on orgs.documents
- * @param db 
- * @returns 
+ * @param db
+ * @returns
  */
  export async function upgrade(db: Firestore) {
   const auth = loadAdminServices().auth;

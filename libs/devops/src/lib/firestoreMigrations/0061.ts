@@ -1,6 +1,5 @@
-import { Firestore } from '@blockframes/firebase-utils';
+import { Firestore, runChunks } from '@blockframes/firebase-utils';
 import { App, getAllAppsExcept } from '@blockframes/model';
-import { runChunks } from '../firebase-utils';
 import { OldStoreConfig } from './old-types';
 
 export async function upgrade(db: Firestore) {

@@ -1,7 +1,6 @@
 import { Timestamp, Term } from '@blockframes/model';
 import firestore from 'firebase/firestore';
-import { runChunks } from '../firebase-utils';
-import { Firestore } from '../types';
+import { Firestore, runChunks } from '@blockframes/firebase-utils';
 
 /**
  * Update time in terms duration

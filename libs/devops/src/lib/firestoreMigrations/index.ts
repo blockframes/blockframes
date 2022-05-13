@@ -26,7 +26,7 @@ import * as v0078 from './0078';
 
 const removedMigrations = 53; // Number of previous migrations removed
 
-import { Firestore, Storage } from '../types';
+import { Firestore, Storage } from '@blockframes/firebase-utils';
 
 export interface IMigration {
   upgrade: (db: Firestore, storage: Storage) => Promise<any>;

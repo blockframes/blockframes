@@ -1,4 +1,4 @@
-import { Firestore } from '../types';
+import { Firestore } from '@blockframes/firebase-utils';
 import { createUser } from '@blockframes/model';
 import { production } from '@env';
 import * as mailchimp from '@mailchimp/mailchimp_marketing';
@@ -37,7 +37,7 @@ export async function upgrade(db: Firestore) {
   if(production) {
     for (let i = 0; i < users.docs.length; i++) {
       const user = createUser(users.docs[i].data());
-    
+
       const isBlockframeEmail = ['dev+', 'concierge+', 'blockframes.io'].some(str => user.email.includes(str));
       if(isBlockframeEmail) continue;
       const member = {
@@ -45,7 +45,7 @@ export async function upgrade(db: Firestore) {
         status: 'subscribed'
       };
       membersBatch.push(member);
-  
+
       if (i === users.docs.length) {
         await batch(membersBatch);
         break;

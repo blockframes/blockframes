@@ -1,4 +1,4 @@
-import { Firestore } from '../types';
+import { Firestore } from '@blockframes/firebase-utils';
 import { createUser } from '@blockframes/model';
 import { production } from '@env';
 import * as mailchimp from '@mailchimp/mailchimp_marketing';
@@ -36,7 +36,7 @@ export async function upgrade(db: Firestore) {
     const user = createUser(users.docs[i].data());
     const isBlockframeEmail = ['dev+', 'concierge+', 'blockframes.io'].some(str => user.email.includes(str));
     if (isBlockframeEmail) continue;
-    
+
     const method = 'POST';
     const subscriber_hash = createHash('md5').update(user.email).digest('hex');
 
@@ -51,11 +51,11 @@ export async function upgrade(db: Firestore) {
     const body = JSON.stringify({
       list_id,
       subscriber_hash,
-      tags
+      tags,
     });
 
     batchCalls.push({ method, path, body });
-    
+
     if (i === users.docs.length) {
       await batchOperations(batchCalls);
       break;

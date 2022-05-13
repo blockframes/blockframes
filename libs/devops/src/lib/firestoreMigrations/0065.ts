@@ -1,13 +1,12 @@
-import { runChunks } from '../firebase-utils';
-import { Firestore } from '../types';
+import { Firestore, runChunks } from '@blockframes/firebase-utils';
 import { OldMovieDocument } from './old-types';
 
 
 
 /**
  * Clean some unused collections or document attributes
- * @param db 
- * @returns 
+ * @param db
+ * @returns
  */
 export async function upgrade(db: Firestore) {
 

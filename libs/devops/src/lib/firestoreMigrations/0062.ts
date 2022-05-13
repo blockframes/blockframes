@@ -1,5 +1,5 @@
-import { runChunks } from '../firebase-utils';
-import { Firestore } from '../types';
+import { Firestore, runChunks } from '@blockframes/firebase-utils';
+
 
 export async function upgrade(db: Firestore) {
   const movies = await db.collection('movies').get();
