@@ -1,7 +1,10 @@
 const time = Date.now();
 
+// The key works a follow : [`COLLECTION/DOC/SUBCOLLECTION`]
+// If there is only a collection, then the ids for each document will be given by firestore
 export const examples = {
   singleDoc: {
+    // Collection + doc.id
     [`example-single/doc-${time}`]: {
       type: 'example',
       time: time,
@@ -23,6 +26,7 @@ export const examples = {
     },
   },
 
+  // collection + random doc.ids
   multipleDocsBis: {
     ['example-multiple']: [
       {
@@ -35,6 +39,23 @@ export const examples = {
       },
       {
         type: 'example 3',
+        time: time,
+      },
+    ],
+  },
+
+  multipleDocsTer: {
+    ['example-multiple2']: [
+      {
+        type: 'example 4',
+        time: time,
+      },
+      {
+        type: 'example 5',
+        time: time,
+      },
+      {
+        type: 'example 6',
         time: time,
       },
     ],
@@ -56,6 +77,7 @@ export const examples = {
     },
   },
 
+  // collection + doc.id + subcollection + random doc.id in subcollection
   docWithSubCollection: {
     [`example-subcollection/doc-${time}/subcollection`]: [
       {

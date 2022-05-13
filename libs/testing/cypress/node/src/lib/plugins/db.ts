@@ -74,7 +74,6 @@ export function deleteOrg(orgId: string) {
   return db.doc(`orgs/${orgId}`).delete();
 }
 
-
 // TODO : create a CRUD light plugin, see issue #8460
 
 //* LIGHT PLUGIN*----------------------------------------------------------------
@@ -133,7 +132,7 @@ export async function getData(paths: string | string[]) {
     const path = paths;
     data = isDocumentPath(path) ? await getDocument(path) : await getCollection(path);
   } else {
-    data = paths.map(async path => (isDocumentPath(path) ? await getDocument(path) : await getCollection(path)));
+    data = Promise.all(paths.map(async path => (isDocumentPath(path) ? await getDocument(path) : await getCollection(path))));
   }
   return data || 'no data';
 }
