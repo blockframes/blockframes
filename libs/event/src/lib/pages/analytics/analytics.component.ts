@@ -14,7 +14,6 @@ import {
   Slate,
   Event,
   EventMeta,
-  EventTypes,
   territories,
   orgActivity,
   invitationStatus
@@ -58,9 +57,8 @@ export class AnalyticsComponent implements OnInit {
 
 
   event$: Observable<Event<EventMeta>>;
-  private eventType: EventTypes;
-  analytics: WatchTimeInfo[];
-  acceptedAnalytics: WatchTimeInfo[];
+  private analytics: WatchTimeInfo[];
+  public acceptedAnalytics: WatchTimeInfo[];
   public exporting = false
   public averageWatchTime = 0; // in seconds
   public dataMissing = '(Not Registered)';
@@ -84,7 +82,6 @@ export class AnalyticsComponent implements OnInit {
       pluck('eventId'),
       switchMap((eventId: string) => this.service.valueChanges(eventId)),
       tap(async event => {
-        this.eventType = event.type;
         this.eventData = event;
 
         this.eventInvitations = await this.invitationService.getValue([where('type', '==', 'attendEvent'), where('eventId', '==', event.id)]);
