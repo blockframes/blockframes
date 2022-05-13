@@ -1,4 +1,4 @@
-<header>
+<header *ngIf="!noHeader">
   <mat-icon svgIcon="landscape"></mat-icon>
   <article>
     <h5>Split by Company Territory</h5>
@@ -10,37 +10,33 @@
 </header>
 
 <ng-container *ngIf="!isLoading else loading">
-  <world-map *ngIf="top3.length; else empty">
+  <world-map *ngIf="topCountries.length; else empty">
     <!-- MAP LAYERS -->
     <ng-container *ngFor="let isoA3 of zero">
       <map-feature [tag]="isoA3" color="#ebeef3" (click)="toggleSelect(isoA3)"></map-feature>
     </ng-container>
-  
+
     <ng-container *ngFor="let isoA3 of lessThanFive">
       <map-feature [tag]="isoA3" color="#dee5ff" (click)="toggleSelect(isoA3)"></map-feature>
     </ng-container>
-  
+
     <ng-container *ngFor="let isoA3 of lessThanFifty">
       <map-feature [tag]="isoA3" color="#8da4fa" (click)="toggleSelect(isoA3)"></map-feature>
     </ng-container>
-  
+
     <ng-container *ngFor="let isoA3 of moreThanFifty">
       <map-feature [tag]="isoA3" color="#001ec7" (click)="toggleSelect(isoA3)"></map-feature>
     </ng-container>
-  
+
     <ng-container *ngIf="selected">
       <map-feature [tag]="selected" color="#3c64f7" (click)="toggleSelect(selected)"></map-feature>
     </ng-container>
+
+    <ng-container *ngTemplateOutlet="mapLegend"></ng-container>
   </world-map>
-  
-  <mat-list>
-    <mat-list-item *ngFor="let top of top3">
-      <span matLine>{{ top.label }}</span>
-      <span>{{ top.count }}</span>
-  
-      <mat-divider></mat-divider>
-    </mat-list-item>
-  </mat-list>
+  <ng-container
+    *ngTemplateOutlet="topCountriesTemplate || defaultTopCountries; context: {$implicit: topCountries}"
+  ></ng-container>
 </ng-container>
 
 <ng-template #empty>
@@ -49,4 +45,14 @@
 
 <ng-template #loading>
   <mat-spinner color="primary"></mat-spinner>
+</ng-template>
+
+<ng-template #defaultTopCountries let-topCountries>
+  <mat-list>
+    <mat-list-item *ngFor="let top of topCountries">
+      <span matLine>{{ top.label }}</span>
+      <span>{{ top.count }}</span>
+      <mat-divider></mat-divider>
+    </mat-list-item>
+  </mat-list>
 </ng-template>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { AnalyticData } from '@blockframes/analytics/+state/utils';
 import { Territory, TerritoryISOA3Value, parseToAll, territoriesISOA3, staticModel } from '@blockframes/model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
@@ -21,8 +21,11 @@ export class AnalyticsMapComponent {
   moreThanFifty: TerritoryISOA3Value[] = [];
   selected: TerritoryISOA3Value;
 
-  top3: AnalyticData[] = [];
-
+  topCountries: AnalyticData[] = [];
+  @Input() topCountryCount = 3;
+  @Input() mapLegend: TemplateRef<HTMLElement>;
+  @Input() topCountriesTemplate: TemplateRef<HTMLElement>;
+  @Input() @boolean noHeader = false;
   @Input() set data(data: AnalyticData[]) {
     if (!data) return;
     this.isLoading = false;
@@ -46,7 +49,7 @@ export class AnalyticsMapComponent {
     }
 
     const sorted = data.sort((a, b) => b.count - a.count);
-    this.top3 = sorted.splice(0, 3);
+    this.topCountries = sorted.splice(0, this.topCountryCount);
   }
 
   @Input() @boolean selectable = false;
@@ -59,4 +62,4 @@ export class AnalyticsMapComponent {
     const selection = key === 'world' ? '' : staticModel.territories[key];
     this.selection.next(selection);
   }
- }
+}
