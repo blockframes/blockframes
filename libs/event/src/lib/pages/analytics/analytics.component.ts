@@ -24,9 +24,16 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { where } from 'firebase/firestore';
 import { sum } from '@blockframes/utils/utils';
 import { formatDate } from '@angular/common';
-import { writeFile, utils } from 'xlsx';
 import { convertToTimeString } from '@blockframes/utils/helpers';
-import { addNewSheetsInWorkbook, calculateColsWidthFromArray, convertArrayToWorksheet, createWorkBook, exportSpreadsheet, mergeWorksheetCells, setWorksheetColumnsWidth } from '@blockframes/utils/spreadsheet';
+import {
+  addNewSheetsInWorkbook,
+  calculateColsWidthFromArray,
+  convertArrayToWorksheet,
+  createWorkBook,
+  exportSpreadsheet,
+  mergeWorksheetCells,
+  setWorksheetColumnsWidth
+} from '@blockframes/utils/spreadsheet';
 
 interface WatchTimeInfo {
   name: string, // firstName + lastName
