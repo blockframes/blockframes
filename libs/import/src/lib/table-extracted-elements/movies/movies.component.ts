@@ -9,7 +9,6 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../utils';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { removeNulls } from '@blockframes/utils/utils';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
@@ -122,8 +121,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     if (increment) this.processing++;
     importState.importing = true;
     this.cdr.markForCheck();
-    const movie = removeNulls(importState.movie); // TODO #7273 #8280 remove
-    await this.movieService.upsert(movie);
+    await this.movieService.upsert(importState.movie); // TODO #7273 #8280 test if working ok wihtout removeNulls
     importState.importing = false;
     this.cdr.markForCheck();
   }
