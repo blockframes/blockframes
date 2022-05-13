@@ -3,13 +3,14 @@
     <h1 class="mat-display-2 page-title">Screening List</h1>
   </list-page-title>
 
-  <list-filter fxLayout fxLayoutAlign="center">
+  <!-- TODO : #8383-->
+  <!-- <list-filter fxLayout fxLayoutAlign="center">
     <ng-template filter label="Sales Agents" [form]="searchForm">
       <algolia-chips-autocomplete index="org" displayWithPath="name"
         [filters]="['appModule:dashboard',' hasAcceptedMovies:true']" [form]="searchForm"
         label="Search for a Sales Agent" placeholder="Sales Agent"></algolia-chips-autocomplete>
     </ng-template>
-  </list-filter>
+  </list-filter> -->
 
   <!-- EVENTS COUNT (ng-content)-->
   <list-page-description *ngIf="events$ | async as events">
@@ -42,7 +43,7 @@
     <div class="no-screenings" fxLayout="column" fxLayoutAlign="start center">
       <h6>Sorry, there are no Screenings at the moment.</h6>
       <img asset="empty_upcoming_screening.svg" alt="No titles">
-      <a mat-flat-button [routerLink]="['../title']" color="primary">Discover Titles</a>
+      <a mat-flat-button [routerLink]="['../title']" color="accent">Discover Titles</a>
     </div>
   </ng-template>
 

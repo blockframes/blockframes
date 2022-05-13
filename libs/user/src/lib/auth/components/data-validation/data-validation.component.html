@@ -6,9 +6,10 @@
       <mat-icon class="icon-tooltip" svgIcon="info"
         matTooltip="Fill in your profile information (first name, last name, etc.)"></mat-icon>
     </div>
-    <mat-icon *ngIf="profileData" svgIcon="check_circle" color="primary" test-id="profile-data-ok"></mat-icon>
-    <mat-icon *ngIf="!profileData" class="refresh-icon" (click)="refresh()" svgIcon="update" matTooltip="Refresh page." test-id="profile-data-pending">
-    </mat-icon>
+    <mat-icon *ngIf="profileData" svgIcon="check_circle" color="primary" class="margin" test-id="profile-data-ok"></mat-icon>
+    <button *ngIf="!profileData" mat-icon-button (click)="refresh()" matTooltip="Refresh page.">
+      <mat-icon svgIcon="update" test-id="profile-data-pending"></mat-icon>
+    </button>
   </article>
 
   <mat-divider inset></mat-divider>
@@ -20,9 +21,10 @@
       <mat-icon class="icon-tooltip" svgIcon="info"
         matTooltip="Fill in your company information (activity, country, etc.)"></mat-icon>
     </div>
-    <mat-icon *ngIf="orgData" svgIcon="check_circle" color="primary" test-id="org-data-ok"></mat-icon>
-    <mat-icon *ngIf="!orgData" class="refresh-icon" (click)="refresh()" svgIcon="update" matTooltip="Refresh page." test-id="org-data-pending">
-    </mat-icon>
+    <mat-icon *ngIf="orgData" svgIcon="check_circle" color="primary" class="margin" test-id="org-data-ok"></mat-icon>
+    <button *ngIf="!orgData" mat-icon-button (click)="refresh()" matTooltip="Refresh page">
+      <mat-icon svgIcon="update" test-id="org-data-pending"></mat-icon>
+    </button>
   </article>
 
   <mat-divider inset></mat-divider>
@@ -35,10 +37,12 @@
       </mat-icon>
     </div>
     <ng-container *ngIf="emailValidate$ | async; else notValid">
-      <mat-icon svgIcon="check_circle" color="primary" test-id="email-ok"></mat-icon>
+      <mat-icon svgIcon="check_circle" color="primary" class="margin" test-id="email-ok"></mat-icon>
     </ng-container>
     <ng-template #notValid>
-      <mat-icon class="refresh-icon" color="primary" (click)="resendEmailVerification()" svgIcon="resend_email" matTooltip="Resend verification email." test-id="email-pending"></mat-icon>
+      <button mat-icon-button (click)="resendEmailVerification()" matTooltip="Resend verification email">
+        <mat-icon color="primary" svgIcon="resend_email" test-id="email-pending"></mat-icon>
+      </button>
     </ng-template>
   </article>
 
@@ -51,15 +55,16 @@
       <mat-icon class="icon-tooltip" svgIcon="info"
         matTooltip="Please wait for the approval of the company information you provided."></mat-icon>
     </div>
-    <mat-icon *ngIf="orgApproval" svgIcon="check_circle" color="primary" test-id="org-approval-ok"></mat-icon>
-    <mat-icon *ngIf="!orgApproval" class="refresh-icon" (click)="refresh()" svgIcon="update" matTooltip="Refresh page." test-id="org-approval-pending">
-    </mat-icon>
+    <mat-icon *ngIf="orgApproval" svgIcon="check_circle" color="primary" class="margin" test-id="org-approval-ok"></mat-icon>
+    <button *ngIf="!orgApproval" mat-icon-button (click)="refresh()"  matTooltip="Refresh page.">
+      <mat-icon svgIcon="update" test-id="org-approval-pending"></mat-icon>
+    </button>
   </article>
 </section>
 
-<article fxLayout="column">
+<footer>
   <button mat-flat-button color="primary" (click)="openIntercom()" fxHide.xs="true" test-id="contact-desktop">Contact {{ app | appName }}
     Team</button>
   <button mat-flat-button color="primary" (click)="openIntercom()" fxHide.gt-xs="true" test-id="contact-mobile">Contact Us</button>
   <button mat-button color="primary" (click)="refresh()" test-id="refresh">Refresh Page</button>
-</article>
+</footer>

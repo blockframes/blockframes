@@ -234,8 +234,8 @@ export class AuthService extends FireAuthService<AuthState> {
    */
   public async createUser(email: string, orgEmailData: OrgEmailData, app: App = this.app): Promise<PublicUser> {
     const f = httpsCallable(this.functions, 'createUser');
-    const user = await f({ email, orgEmailData, app }) as unknown;
-    return createUser(user);
+    const user = await f({ email, orgEmailData, app }) as { data: unknown };
+    return createUser(user.data);
   }
 
   public async getPrivacyPolicy(): Promise<PrivacyPolicy> {

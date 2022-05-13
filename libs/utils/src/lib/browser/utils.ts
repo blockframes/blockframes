@@ -18,7 +18,7 @@ export function isSafari() {
 
 export function isChrome() { return navigator.userAgent.indexOf("Chrome") != -1 }
 
-export function scrollIntoView(element: HTMLElement) {
+export function scrollIntoView(element: Element) {
   if (isChrome())
     element.scrollIntoView();
   else

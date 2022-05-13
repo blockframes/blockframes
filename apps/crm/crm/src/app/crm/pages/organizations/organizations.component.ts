@@ -53,7 +53,7 @@ export class OrganizationsComponent {
   }
 
   createOrg() {
-    this.dialog.open(OrganizationCreateComponent, { data: createModalData({}, 'large') });
+    this.dialog.open(OrganizationCreateComponent, { data: createModalData({}, 'large'), maxHeight: '80vh'});
   }
 
 }
