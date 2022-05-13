@@ -25,6 +25,7 @@ import { where } from 'firebase/firestore';
 import { sum } from '@blockframes/utils/utils';
 import { formatDate } from '@angular/common';
 import { writeFile, utils } from 'xlsx';
+import { convertToTimeString } from '@blockframes/utils/helpers';
 const { aoa_to_sheet, decode_range, book_new, book_append_sheet } = utils;
 
 interface WatchTimeInfo {
@@ -181,7 +182,7 @@ export class AnalyticsComponent implements OnInit {
       requestCount
     ] = invitationsCount;
 
-    const [avgWatchTimeMins, avgWatchTimeSecs] = formatDate(this.averageWatchTime * 1000, 'm,ss', 'en').split(',') || [0, 0];
+    const avgWatchTime = convertToTimeString(this.averageWatchTime * 1000);
 
     // Create data for Archipel Event Summary Tab
     const worksheet_summary = [
@@ -189,19 +190,18 @@ export class AnalyticsComponent implements OnInit {
       [ 'Total number of guests', null, null, null, null, this.eventInvitations.length ],
       [ 'Answers', null, null, null, null, `${ acceptedCount } accepted, ${ pendingCount } unanswered, ${ declinedCount } declined` ],
       [ 'Number of attendees', null, null, null, null, this.acceptedAnalytics.length ],
-      [ 'Average watchtime', null, null, null, null, `${avgWatchTimeMins}min ${avgWatchTimeSecs}s` ],
+      [ 'Average watchtime', null, null, null, null, `${avgWatchTime}` ],
       null,
       [ 'NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME' ]
     ];
     this.acceptedAnalytics.forEach(({ watchTime, email, name, orgActivity: activity, orgCountry, orgName }) => {
-      const [watchTimeMins, watchTimeSecs] = formatDate((watchTime || 0) * 1000, 'm,ss', 'en').split(',');
       worksheet_summary.push([
         name,
         email,
         orgName ? orgName : '-',
         activity ? orgActivity[activity] : '-',
         orgCountry ? territories[orgCountry] : '-',
-        watchTime ? `${watchTimeMins}min ${watchTimeSecs}s` : '-'
+        watchTime ? `${convertToTimeString(watchTime * 1000)}s` : '-'
       ]);
     });
 
