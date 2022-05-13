@@ -146,14 +146,11 @@ export class MarketplaceSelectionComponent {
         });
       })
     ) {
-      this.snackBar.open(
-        'Some terms conflict with each other. Please remove duplicate terms.',
-        '',
-        { duration: 2000 }
-      );
+      this.snackBar.open('Some terms conflict with each other. Please remove duplicate terms.', '', { duration: 2000 });
     } else {
       this.dialog.open(SpecificTermsComponent, {
-        data: createModalData({ currency: this.currencyForm.value }, 'large')
+        data: createModalData({ currency: this.currencyForm.value }, 'large'),
+        autoFocus: false
       });
     }
   }

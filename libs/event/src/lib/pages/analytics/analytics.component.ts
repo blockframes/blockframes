@@ -24,6 +24,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { formatDate } from '@angular/common';
 import XLSX from "xlsx";
 import { where } from 'firebase/firestore';
+import { sum } from '@blockframes/utils/utils';
 
 interface WatchTimeInfo {
   name: string, // firstName + lastName
@@ -111,11 +112,11 @@ export class AnalyticsComponent implements OnInit {
         // Create same analitics but only with 'accepted' status
         this.attendeesAnalytics = this.analytics.filter(({status}) => status === 'accepted');
 
-        // if event is a screening we add the watch time column to the table
+        // if event is a screening or a slate presentation we add the watch time column to the table
         // and we compute the average watch time
-        if (this.eventType === 'screening') {
+        if (this.eventType === 'screening' || this.eventType === 'slate') {
           this.hasWatchTime = true;
-          const totalWatchTime = this.attendeesAnalytics.reduce((acc, curr) => acc + curr.watchTime, 0);
+          const totalWatchTime = sum(this.attendeesAnalytics, a => a.watchTime);
           this.averageWatchTime = totalWatchTime / this.attendeesAnalytics.length;
         }
 

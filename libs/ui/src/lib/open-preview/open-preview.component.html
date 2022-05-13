@@ -1,4 +1,4 @@
-<button mat-icon-button (click)="openModal()" [disabled]="!ref" matTooltip="Click to see preview"
+<button mat-icon-button (click)="openModal()" [disabled]="!ref?.storagePath" matTooltip="Click to see preview"
   [matTooltipDisabled]="!ref">
   <mat-icon svgIcon="visibility" color="primary"></mat-icon>
 </button>

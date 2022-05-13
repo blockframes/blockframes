@@ -1,5 +1,5 @@
 <section fxLayout="row" fxLayoutAlign="center">
-  <div class="surface">
+  <div class="surface" [ngClass]="{ dialog: this.dialog }">
       <article>
         <p>
           The following websites and platforms are edited by the company CASCADE 8, whose
@@ -216,7 +216,7 @@
 
       <article>
         <h3>4. Personal Data we collect directly from You</h3>
-        <div class="table_wrapper">
+        <div class="table-wrapper">
           <table border="1px solid">
             <tr>
               <th>Personal Data</th>
@@ -317,7 +317,7 @@
           the Service (as authorized under the T&Cs), Our Trusted Partners in order to either provide
           You with the Service or enhance Your user experience.
         </p>
-        <div class="table__wrapper">
+        <div class="table-wrapper">
           <table border="1px solid">
             <tr>
               <th>MF</th>

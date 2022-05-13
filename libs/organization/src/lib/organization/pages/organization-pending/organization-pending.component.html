@@ -7,13 +7,9 @@
       <ng-container *ngIf="orgActive$ | async as active">
         <ng-container *ngIf="app === 'festival' "class="mat-body-2">
           <p>
-            The {{ app | appName }} team will come back to you
-          </p>
-          <p>
-            within <b>less than 15 minutes</b> <br> during an open screening session,
-          </p>
-          <p class="p-margin">
-            <b>48 hours otherwise.</b>
+            The {{ app | appName }} team will come back to you within <br>         
+            <b>less than 15 minutes during an open screening session</b>, <br>       
+            48 hours otherwise.
           </p>
         </ng-container>
         <p *ngIf="app !== 'festival' "class="mat-body-2">
