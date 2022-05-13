@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Optional, Inject, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
 
 // Blockframes
 import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
@@ -7,11 +7,11 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import {
   EventName, hasAppStatus, App, territories,
-  territoriesISOA3, TerritoryISOA3Value, Territory, Organization, Analytics
+  Organization, Analytics
 } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { counter } from '@blockframes/analytics/+state/utils';
+import { AnalyticData, counter } from '@blockframes/analytics/+state/utils';
 import { joinWith } from '@blockframes/utils/operators';
 import { unique } from '@blockframes/utils/helpers';
 
@@ -22,18 +22,6 @@ import { combineLatest } from 'rxjs';
 // Intercom
 import { Intercom } from 'ng-intercom';
 
-interface TerritoryStat {
-  territoryISOA3: TerritoryISOA3Value;
-  count: number;
-  territory: typeof territories[Territory],
-}
-
-interface TerritoryCount {
-  lessThanOrEql5: TerritoryStat[],
-  greaterThan5: TerritoryStat[],
-  greaterThan50: TerritoryStat[],
-  greaterThan100: TerritoryStat[],
-}
 
 interface TerritoryAndCountOption {
   orgs: Organization[],
@@ -41,34 +29,23 @@ interface TerritoryAndCountOption {
   orgIds: string[]
 }
 
-function getTerritoryAndCount({ orgs, analytics }: TerritoryAndCountOption): TerritoryStat[] {
-  const iSOA3Names = Object.values(territoriesISOA3)
-    .filter((country) => country !== '') as TerritoryISOA3Value[];
-  return iSOA3Names.map(territoryISOA3 => {
+function getTerritoryAndCount({ orgs, analytics }: TerritoryAndCountOption): AnalyticData[]{
+  const territoryEntries = Object.entries(territories)
+    .filter(([key]) => key !== 'world');
+
+  return territoryEntries.map(([key,label]:[string,string]) => {
     const orgsInTerritory = orgs
-      .filter(o => territoriesISOA3[o.addresses.main.country] === territoryISOA3);
+      .filter(o => o.addresses.main.country === key);
 
     const orgIds = orgsInTerritory.map(({ id }) => id);
     const analyticsOfCountry = analytics.filter(
       analytic => orgIds.includes(analytic.meta.orgId)
     );
-    const territory = territories[orgsInTerritory[0]?.addresses?.main?.country]
-    return { territoryISOA3, count: analyticsOfCountry.length, territory };
+
+    return { key, count: analyticsOfCountry.length, label };
   });
 }
 
-function getCount(stats: TerritoryStat[]) {
-  return stats.reduce(
-    (acc, stat) => {
-      if (stat.count > 100) acc.greaterThan100.push(stat);
-      else if (stat.count > 50) acc.greaterThan50.push(stat);
-      else if (stat.count > 5) acc.greaterThan5.push(stat);
-      else acc.lessThanOrEql5.push(stat);
-      return acc;
-    },
-    { lessThanOrEql5: [], greaterThan5: [], greaterThan50: [], greaterThan100: [], } as TerritoryCount
-  );
-}
 
 @Component({
   selector: 'dashboard-home',
@@ -132,8 +109,7 @@ export class HomeComponent {
       orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
     }, { shouldAwait: true }),
     map(getTerritoryAndCount),
-    map(stats => stats.sort(({ count: countA }, { count: countB }) => countA - countB)),
-    map(getCount)
+    map(stats => stats.sort(({ count: countA }, { count: countB }) => countA - countB))
   );
 
   interactions: EventName[] = [
@@ -154,13 +130,5 @@ export class HomeComponent {
 
   public openIntercom(): void {
     return this.intercom.show();
-  }
-}
-
-
-@Pipe({ name: 'combineStats' })
-export class CombineStatsPipe implements PipeTransform {
-  transform({ lessThanOrEql5, greaterThan5, greaterThan50, greaterThan100 }: TerritoryCount) {
-    return [...greaterThan100, ...greaterThan50, ...greaterThan5, ...lessThanOrEql5];
   }
 }

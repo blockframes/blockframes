@@ -57,68 +57,58 @@
         <section>
           <h3>Buyers' Insights</h3>
           <div class="surface" fxLayout="row" fxLayoutGap="24px">
-            <ng-container *ngIf="activeCountries$|async as activeCountries">
-              <aside class="country-list">
-                <h4>TOP 5 COUNTRIES</h4>
-                <ul>
-                  <ng-container *ngFor="let stat of activeCountries | combineStats | slice :0:5">
-                    <li *ngIf="stat.territory" fxLayout fxLayoutAlign="space-between center">
-                      <span>{{stat.territory}}</span>
-                      <b><span>{{stat.count}}</span></b>
-                    </li>
-                  </ng-container>
-                </ul>
-              </aside>
-              <world-map>
-                <!-- MAP LAYERS -->
-                <ng-container *ngFor="let stat of activeCountries.lessThanOrEql5">
-                  <map-feature [tag]="stat.territoryISOA3" color="#dee5ff">
-                  </map-feature>
-                </ng-container>
-                <ng-container *ngFor="let stat of activeCountries.greaterThan5">
-                  <map-feature [tag]="stat.territoryISOA3" color="#8da4fa">
-                  </map-feature>
-                </ng-container>
-                <ng-container *ngFor="let stat of activeCountries.greaterThan50">
-                  <map-feature [tag]="stat.territoryISOA3" color="#3c64f7">
-                  </map-feature>
-                </ng-container>
-                <ng-container *ngFor="let stat of activeCountries.greaterThan100">
-                  <map-feature [tag]="stat.territoryISOA3" color="#001ec7">
-                  </map-feature>
-                </ng-container>
-
-                <!-- MAP LEGEND -->
-                <article class="colors-card">
+            <analytics-map
+              class="map-insights"
+              [data]="activeCountries$ | async"
+              [topCountryCount]="5"
+              [topCountriesTemplate]="topCountriesTemplate"
+              [mapLegend]="mapLegend"
+              noHeader
+            >
+              <ng-template #mapLegend>
+                <!-- Map Legen -->
+                <aside class="colors-card">
                   <mat-list>
                     <mat-list-item>
                       <svg viewBox="0 0 100 100" width="10px" height="10px">
-                        <rect fill="#001ec7" x="0" y="0" width="100" height="100" rx="10" />
+                        <rect fill="#001ec7" x="0" y="0" width="150" height="100" rx="10" />
                       </svg>
                       <span class="mat-caption">> 100</span>
                     </mat-list-item>
                     <mat-list-item>
                       <svg viewBox="0 0 100 100" width="10px" height="10px">
-                        <rect fill="#3c64f7" x="0" y="0" width="100" height="100" rx="10" />
+                        <rect fill="#3c64f7" x="0" y="0" width="150" height="100" rx="10" />
                       </svg>
                       <span class="mat-caption">> 50</span>
                     </mat-list-item>
                     <mat-list-item>
                       <svg viewBox="0 0 100 100" width="10px" height="10px">
-                        <rect fill="#8da4fa" x="0" y="0" width="100" height="100" rx="10" />
+                        <rect fill="#8da4fa" x="0" y="0" width="150" height="100" rx="10" />
                       </svg>
                       <span class="mat-caption">> 5</span>
                     </mat-list-item>
                     <mat-list-item>
                       <svg viewBox="0 0 100 100" width="10px" height="10px">
-                        <rect fill="#dee5ff" x="0" y="0" width="100" height="100" rx="10" />
+                        <rect fill="#dee5ff" x="0" y="0" width="150" height="100" rx="10" />
                       </svg>
-                      <span class="mat-caption"> <= 5</span>
+                      <span class="mat-caption">≤ 5</span>
                     </mat-list-item>
                   </mat-list>
-                </article>
-              </world-map>
-            </ng-container>
+                </aside>
+              </ng-template>
+              <ng-template #topCountriesTemplate let-topCountries>
+                <aside class="country-list">
+                  <h4>TOP 5 COUNTRIES</h4>
+                  <mat-list>
+                    <mat-list-item *ngFor="let top of topCountries">
+                      <span matLine>{{ top.label }}</span>
+                      <b><span>{{ top.count }}</span></b>
+                      <mat-divider></mat-divider>
+                    </mat-list-item>
+                  </mat-list>
+                </aside>
+              </ng-template>
+          </analytics-map>
           </div>
         </section>
       </ng-container>

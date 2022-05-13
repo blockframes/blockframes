@@ -79,10 +79,13 @@ header {
   }
 }
 
-world-map {
-  height: 300px;
-  border-radius: 4px;
-  flex: 1 1 350px;
+analytics-map.map-insights {
+  width: 100%;
+  flex: 1 1 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  gap: 24px;
 }
 
 .colors-card {
@@ -100,7 +103,7 @@ world-map {
 
   svg {
     margin-right: 12px;
-    width: 16px;
+    width: 32px;
     height: 16px;
   }
 }
@@ -111,7 +114,7 @@ world-map {
   border: 1px solid var(--foreground-divider);
   display: flex;
   flex-direction: column;
-  flex: 0 0 270px;
+  flex: 0 0 300px;
 
   li {
     border-bottom: 1px solid var(--foreground-divider);

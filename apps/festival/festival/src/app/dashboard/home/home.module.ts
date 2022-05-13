@@ -11,7 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Pages
-import { CombineStatsPipe, HomeComponent } from './home.component';
+import { HomeComponent } from './home.component';
 
 // Modules
 import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
@@ -29,7 +29,7 @@ import { MapModule } from "@blockframes/ui/map";
 import { MatListModule } from '@angular/material/list';
 
 @NgModule({
-  declarations: [HomeComponent, CombineStatsPipe],
+  declarations: [HomeComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
