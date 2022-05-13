@@ -103,15 +103,15 @@ export class AnalyticsComponent implements OnInit {
             status: i.status
           };
         });
-        // Create same analitics but only with 'accepted' status
-        this.acceptedAnalytics = this.analytics.filter(({status}) => status === 'accepted');
+        // Create same analitics but only with 'accepted' status and with a Watchtime > 0
+        this.acceptedAnalytics = this.analytics.filter(
+          ({status, watchTime}) => status === 'accepted' && watchTime !== 0
+        );
 
         // if event is a screening or a slate presentation we add the watch time column to the table
         // and we compute the average watch time
-        if (this.eventType === 'screening' || this.eventType === 'slate') {
-          const totalWatchTime = sum(this.acceptedAnalytics, a => a.watchTime);
-          this.averageWatchTime = totalWatchTime / this.acceptedAnalytics.length;
-        }
+        const totalWatchTime = sum(this.acceptedAnalytics, a => a.watchTime);
+        this.averageWatchTime = totalWatchTime / this.acceptedAnalytics.length;
 
         this.cdr.markForCheck();
       })
