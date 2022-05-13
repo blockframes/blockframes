@@ -28,7 +28,6 @@ export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptio
   let runtimeConfig: any = {};
   try {
     writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
-    writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json'));
     // tslint:disable-next-line: no-eval
     runtimeConfig = eval('require')(join(process.cwd(), './.runtimeconfig.json'));
   } catch (e) {

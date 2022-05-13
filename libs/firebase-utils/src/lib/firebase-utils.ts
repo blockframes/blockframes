@@ -78,7 +78,7 @@ export async function runChunks<K, T extends (arg: K) => Promise<any>>(rows: K[]
  * @param path the field path to look for, ['x', 'y'] will look for config.x.y
  */
 export const mockConfigIfNeeded = (...path: string[]): any =>
-  path.reduce((config: any, field) => (config ? config[field] : undefined), functions.config());
+  path.reduce((config: any, field) => (config ? config[field] : undefined), functions.config()); // TODO! This is terrible why use reduce?
 
 /**
  * Sorts an array of files in a bucket by timeCreated and returns the latest
