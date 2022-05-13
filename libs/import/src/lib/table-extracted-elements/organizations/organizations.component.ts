@@ -118,14 +118,6 @@ export class TableExtractedOrganizationsComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  errorCount(data: OrganizationsImportState, type: string = 'error') {
-    return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
-  }
-
-  isDisabled(element: OrganizationsImportState) {
-    return this.errorCount(element) > 0 || this.processing > 0 || element.importing;
-  }
-
   ///////////////////
   // POPINS
   ///////////////////

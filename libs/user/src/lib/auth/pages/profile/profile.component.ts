@@ -36,7 +36,7 @@ export class ProfileComponent implements OnInit {
       // update profile
       if (this.profileForm.dirty) {
         if (this.profileForm.invalid) {
-          throw new Error('Your profile information are not valid.')
+          throw new Error('auth/invalid-form');
         } else {
           const uid = this.authService.uid;
 
@@ -50,7 +50,7 @@ export class ProfileComponent implements OnInit {
 
       // update password
       if (this.passwordForm.dirty) {
-        if (this.passwordForm.invalid) throw new Error('Your information to change your password are not valid.');
+        if (this.passwordForm.invalid) throw new Error('auth/invalid-password');
         const { current, next } = this.passwordForm.value;
         await this.authService.updatePassword(current, next);
         this.snackBar.open('Password changed.', 'close', { duration: 2000 });
@@ -58,23 +58,15 @@ export class ProfileComponent implements OnInit {
         this.passwordForm.markAsPristine();
       }
     } catch (err) {
-      if (
-        err.message === 'Your profile information are not valid' ||
-        err.message === 'Your information to change your password are not valid.'
-      ) {
-        this.snackBar.open(err.message, 'close', { duration: 2000 });
-      }
-      else if (err.message.includes('auth/wrong-password')) {
+      if (err.message === 'auth/invalid-form') {
+        this.snackBar.open('Your profile information are not valid.', 'close', { duration: 2000 });
+      } else if (err.message === 'auth/invalid-password') {
+        this.snackBar.open('Your information to change your password are not valid.', 'close', { duration: 2000 });
+      } else if (err.message.includes('auth/wrong-password')) {
         this.snackBar.open('Your current password is not valid.', 'close', { duration: 2000 });
-      }
-      else if (err.message.includes('auth/too-many-requests')) {
-        this.snackBar.open(
-          'You have repeatedly failed to change your password. Please, try again in 5 minutes.',
-          'close',
-          { duration: 5000 }
-        );
-      }
-      else {
+      } else if (err.message.includes('auth/too-many-requests')) {
+        this.snackBar.open('You have repeatedly failed to change your password. Please, try again in 5 minutes.', 'close', { duration: 5000 });
+      } else {
         this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
       }
     }

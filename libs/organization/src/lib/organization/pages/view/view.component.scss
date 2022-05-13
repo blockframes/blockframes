@@ -5,6 +5,9 @@ header, section {
 }
 
 header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   padding-top: 48px;
   background: linear-gradient(to bottom, var(--background-disabled-button), var(--background));
 }
@@ -32,6 +35,12 @@ img {
 @include layout-bp(xs) {
   header, section {
     padding: 0px;
+  }
+}
+
+@include layout-bp(lt-md) {
+  header {
+    flex-direction: column;
   }
 }
 

@@ -19,7 +19,7 @@
   <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
 </mat-form-field>
 
-<table mat-table [dataSource]="rows" matSort class="extracted-contract-list">
+<table mat-table [dataSource]="rows" matSort>
 
   <!-- Checkbox Column -->
   <ng-container matColumnDef="select">
@@ -48,37 +48,39 @@
 
   <ng-container matColumnDef="contract.type">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
-    <td mat-cell *matCellDef="let element"> {{( element.contract?.type ? element.contract.type : '--' ) | toLabel:
-      'contractType' }} </td>
+    <td mat-cell *matCellDef="let element"> 
+      {{( element.contract?.type ? element.contract.type : '--' ) | toLabel: 'contractType' }} 
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="errors">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Errors </th>
-    <td mat-cell *matCellDef="let element" [style.color]="errorCount(element) ? 'red': 'green'"
-      [style.font-weight]="errorCount(element) ? 'bold': 'normal'">
-      <button mat-flat-button color="warn" [disabled]="errorCount(element) === 0" (click)="displayErrors(element)">{{
-        errorCount(element) }}</button>
+    <td mat-cell *matCellDef="let element">
+      <button mat-flat-button color="warn" [disabled]="!(element | errorCount)" (click)="displayErrors(element)">
+        {{ element | errorCount  }}
+      </button>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="warnings">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Warnings </th>
-    <td mat-cell *matCellDef="let element" [style.color]="errorCount(element, 'warning') ? 'orange': 'green'"
-      [style.font-weight]="errorCount(element, 'warning') ? 'bold': 'normal'">
-      <button mat-flat-button color="accent" [disabled]="errorCount(element, 'warning') === 0"
-        (click)="displayErrors(element)">{{ errorCount(element, 'warning') }}</button>
+    <td mat-cell *matCellDef="let element">
+      <button mat-flat-button color="accent" [disabled]="!(element | errorCount : 'warning')"
+        (click)="displayErrors(element)">{{ element | errorCount : 'warning' }}</button>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef> Actions </th>
     <td mat-cell *matCellDef="let element">
-      <button mat-flat-button color="primary" [disabled]="isDisabled(element)" (click)="create(element)">
+      <button mat-flat-button color="primary" [disabled]="element | isDisabled: processing" (click)="create(element)">
         <ng-container *ngIf="element.importing">
-          Creating <mat-spinner [diameter]="20" [strokeWidth]="2"></mat-spinner>
+          <span>Creating</span> 
+          <mat-spinner [diameter]="20" [strokeWidth]="2"></mat-spinner>
         </ng-container>
         <ng-container *ngIf="!element.importing">
-          Create <mat-icon svgIcon="edit"></mat-icon>
+          <span>Create</span> 
+          <mat-icon svgIcon="edit"></mat-icon>
         </ng-container>
       </button>
     </td>
