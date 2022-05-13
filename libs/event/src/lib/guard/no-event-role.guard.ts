@@ -4,7 +4,6 @@ import { ActivatedRouteSnapshot, CanActivate, Router } from "@angular/router";
 import { map } from "rxjs/operators";
 import { AuthService } from "@blockframes/auth/+state";
 import { combineLatest } from "rxjs";
-import { runInZone } from "@blockframes/utils/zone";
 
 @Injectable({ providedIn: 'root' })
 export class NoEventRoleGuard implements CanActivate {
@@ -20,7 +19,7 @@ export class NoEventRoleGuard implements CanActivate {
     return combineLatest([
       this.authService._user$,
       this.authService.anonymousCredentials$,
-      this.service.valueChanges(next.params.eventId as string).pipe(runInZone(this.ngZone)) // TODO #7595 #7273
+      this.service.valueChanges(next.params.eventId as string)
     ]).pipe(
       map(([userAuth, creds, event]) => {
         if (userAuth && !userAuth.isAnonymous) return true;
