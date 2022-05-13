@@ -50,6 +50,17 @@ span + .mat-icon {
   margin-left: 8px;
 }
 
+// Apply space of 4px between span & spinner inside a or button
+button, a {
+  .mat-spinner {
+    display: inline;
+  }
+  span + .mat-spinner, 
+  .mat-spinner + span {
+    margin-left: 4px;
+  }
+}
+
 main {
   height: 100%;
 }

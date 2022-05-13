@@ -47,7 +47,7 @@ export class CookieBannerComponent implements OnInit {
   }
 
   public changePreferences() {
-    const dialogRef = this.dialog.open(CookieDialogComponent, { data: createModalData({}, 'large') });
+    const dialogRef = this.dialog.open(CookieDialogComponent, { data: createModalData({}, 'large'), autoFocus: false });
     dialogRef.afterClosed().subscribe(settings => {
       if (settings) {
         this.confirmCookies();

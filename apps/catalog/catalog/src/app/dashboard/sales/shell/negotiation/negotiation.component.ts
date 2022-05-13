@@ -91,7 +91,8 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
         question: 'Please verify if all the contract elements are convenient for you.',
         confirm: 'Yes, submit Contract',
         cancel: 'Come back & Verify Contract'
-      }, 'small')
+      }, 'small'),
+      autoFocus: false
     });
   }
 }
