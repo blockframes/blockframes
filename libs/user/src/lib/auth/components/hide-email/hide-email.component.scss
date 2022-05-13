@@ -1,0 +1,15 @@
+:host {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0 16px;
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+mat-slide-toggle {
+  grid-column: 1;
+}
+
+p {
+  grid-column: 2;
+}

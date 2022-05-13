@@ -35,7 +35,8 @@ export function createPublicUserDocument(user: Partial<PublicUser> = {}) {
     avatar: createStorageFile(user.avatar),
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
-    orgId: user.orgId ?? ''
+    orgId: user.orgId ?? '',
+    hideEmail: user.hideEmail ?? false
   }
 }
 

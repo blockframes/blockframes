@@ -21,6 +21,8 @@
           </mat-error>
         </mat-form-field>
 
+        <hide-email [control]="form.get('hideEmail')"></hide-email>
+
         <article fxFlex fxLayout="row" fxLayoutGap="24px" fxLayout.lt-md="column">
           <mat-form-field appearance="outline">
             <mat-label>First Name</mat-label>
