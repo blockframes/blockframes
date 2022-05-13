@@ -37,7 +37,7 @@ export class HomeComponent {
     })
   );
 
-  private titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
+  titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
     }, { shouldAwait: true }),
@@ -48,7 +48,7 @@ export class HomeComponent {
     filter(analytics => analytics.length > 0),
     map(analytics => counter(analytics, 'meta.titleId')),
     map(analytics => analytics.sort((a, b) => a.count > b.count ? -1 : 1)),
-    switchMap(([popularEvent]) => this.movieService.getValue(popularEvent.key))
+    switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key))
   );
 
   private titleAnalyticsOfPopularTitle$ = combineLatest([ this.popularTitle$, this.titleAnalytics$ ]).pipe(

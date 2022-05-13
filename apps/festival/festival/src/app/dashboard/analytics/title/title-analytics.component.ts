@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Organization, User, Scope, staticModel } from '@blockframes/model';
+import { AggregatedAnalytic } from '@blockframes/model';
+import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { joinWith } from 'ngfire';
@@ -9,14 +10,6 @@ import { aggregatePerUser, counter } from '@blockframes/analytics/+state/utils';
 import { UserService } from "@blockframes/user/+state";
 import { NavigationService } from "@blockframes/ui/navigation.service";
 import { OrganizationService } from "@blockframes/organization/+state";
-
-function getFilter(scope: Scope) {
-  return (input: string, value: any) => {
-    if (typeof value !== 'string') return false;
-    const label = staticModel[scope][value];
-    return label.toLowerCase().includes(input);
-  };
-}
 
 @Component({
   selector: 'festival-title-analytics',
@@ -57,8 +50,8 @@ export class TitleAnalyticsComponent {
   );
 
   filters = {
-    orgActivity: getFilter('orgActivity'),
-    territories: getFilter('territories')
+    orgActivity: getStaticModelFilter('orgActivity'),
+    territories: getStaticModelFilter('territories')
   };
   filterValue?: string;
 

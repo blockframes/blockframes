@@ -3,7 +3,7 @@
     <header>
       <h1>Dashboard</h1>
       <div fxLayoutGap="24px">
-        <a mat-fab color="black" routerLink="../title/lobby" matTooltip="Add a Title">
+        <a mat-fab color="black" routerLink="../title/lobby" matTooltip="Add Title">
           <mat-icon svgIcon="add"></mat-icon>
         </a>
         <a mat-fab color="black" routerLink="../title" matTooltip="View Titles">
@@ -14,41 +14,48 @@
         </a>
       </div>   
     </header>
-    <section class="surface carousel-container">
-      <ng-container *ngIf="popularTitle$ | async as title else loading">
-        <header>
-          <h3>{{ title.title.international }}</h3>
-          <a mat-button [routerLink]="['title', title.id]">
-            <span>See Analytics details</span>
+
+    <ng-container *ngIf="titleAnalytics$ | async as analytics; else loading">
+      <ng-container *ngIf="analytics.length else empty">
+
+        <section class="surface carousel-container">
+          <ng-container *ngIf="popularTitle$ | async as title else loading">
+            <header>
+              <h3>{{ title.title.international }}</h3>
+              <a mat-button [routerLink]="['title', title.id]">
+                <span>See Analytics details</span>
+                <mat-icon svgIcon="arrow_forward"></mat-icon>
+              </a>
+            </header>
+            <bf-carousel flex layout>
+              <analytics-pie-chart class="surface" carouselItem [data]="orgActivityOfPopularTitle$ | async"></analytics-pie-chart>
+              <analytics-map class="surface" carouselItem [data]="territoryActivityOfPopularTitle$ | async"></analytics-map>
+              <analytics-line-chart class="surface" carouselItem [eventNames]="interactions" [data]="interactionsOfPopularTitle$ | async">
+                <h5>
+                  <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
+                  <span>Interactions</span>
+                </h5>
+                <p class="mat-caption">Learn how people interact with your Title.</p>
+    
+              </analytics-line-chart>
+              <analytics-line-chart class="surface" carouselItem [eventNames]="['pageView']" [data]="pageViewsOfPopularTitle$ | async">
+                <h5>
+                  <mat-icon svgIcon="visibility"></mat-icon>
+                  <span>Film Page Views</span>
+                </h5>
+                <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
+              </analytics-line-chart>
+            </bf-carousel>
+          </ng-container>
+    
+          <a mat-button class="see_titles" routerLink="title">
+            <span>View all Titles Activity</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
-        </header>
-        <bf-carousel flex layout>
-          <analytics-pie-chart class="surface" carouselItem [data]="orgActivityOfPopularTitle$ | async"></analytics-pie-chart>
-          <analytics-map class="surface" carouselItem [data]="territoryActivityOfPopularTitle$ | async"></analytics-map>
-          <analytics-line-chart class="surface" carouselItem [eventNames]="interactions" [data]="interactionsOfPopularTitle$ | async">
-            <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
-            <div>
-              <h5>Interactions</h5>
-              <p class="mat-caption">Learn how people interact with your Title.</p>
-            </div>
+        </section>
 
-          </analytics-line-chart>
-          <analytics-line-chart class="surface" carouselItem [eventNames]="['pageView']" [data]="pageViewsOfPopularTitle$ | async">
-            <mat-icon svgIcon="visibility"></mat-icon>
-            <div>
-              <h5>Film Page Views</h5>
-              <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
-            </div>
-            </analytics-line-chart>
-        </bf-carousel>
       </ng-container>
-
-      <a mat-button class="see_titles" routerLink="title">
-        <span>View all Titles Activity</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
-      </a>
-    </section>
+    </ng-container>
   </ng-container>
   
   <ng-template #noAcceptedMovies>
@@ -91,8 +98,16 @@
     </section>
   </ng-template>
 </ng-container>
+
 <ng-template #loading>
   <article fxLayout="column" fxLayoutAlign="center center">
     <mat-spinner color="primary"></mat-spinner>
   </article>
+</ng-template>
+
+<ng-template #empty>
+  <section class="no-analytics">
+    <img asset="wait.svg" alt="waiting">
+    <p class="mat-body-2">There are no statistics available here yet.</p>
+  </section>
 </ng-template>

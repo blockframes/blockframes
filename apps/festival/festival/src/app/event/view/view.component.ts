@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef, NgZone } from '@angular/core';
 import { EventService } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
@@ -13,6 +13,7 @@ import { RequestAskingPriceComponent } from '@blockframes/movie/components/reque
 import { Event, Invitation } from '@blockframes/model';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { runInZone } from '@blockframes/utils/zone';
 
 @Component({
   selector: 'festival-event-view',
@@ -33,6 +34,12 @@ export class EventViewComponent implements OnInit {
   public timerEnded = false;
   private preventBrowserEvent = false;
 
+  public eventRoomAccess = {
+    meeting: 'Meeting',
+    screening: 'Screening',
+    slate: 'Screening' // for Buyers point of view Slate event remains a Screening
+  };
+
   constructor(
     private route: ActivatedRoute,
     private service: EventService,
@@ -42,7 +49,8 @@ export class EventViewComponent implements OnInit {
     private authService: AuthService,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
   ) { }
 
   @HostListener('window:popstate', ['$event'])
@@ -56,7 +64,7 @@ export class EventViewComponent implements OnInit {
 
     this.event$ = this.route.params.pipe(
       pluck('eventId'),
-      switchMap((eventId: string) => this.service.queryDocs(eventId)),
+      switchMap((eventId: string) => this.service.queryDocs(eventId).pipe(runInZone(this.ngZone))), // TODO #7595 #7273,
       tap(event => {
         this.editEvent = `/c/o/dashboard/event/${event.id}/edit`;
         this.dynTitle.setPageTitle(event.title);

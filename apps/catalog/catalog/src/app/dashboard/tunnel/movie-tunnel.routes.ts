@@ -49,24 +49,24 @@ export const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/production/production.module').then(m => m.MovieFormProductionModule),
       },
       {
-        path: 'shooting-information',
-        data: { animation: 4 },
-        loadChildren: () => import('@blockframes/movie/form/shooting-information/shooting-information.module').then(m => m.MovieFormShootingInformationModule),
-      },
-      {
         path: 'artistic',
-        data: { animation: 5 },
+        data: { animation: 4 },
         loadChildren: () => import('@blockframes/movie/form/artistic/artistic.module').then(m => m.MovieFormArtisticModule),
       },
       {
         path: 'reviews',
-        data: { animation: 6 },
+        data: { animation: 5 },
         loadChildren: () => import('@blockframes/movie/form/reviews/reviews.module').then(m => m.MovieFormReviewsModule),
       },
       {
         path: 'additional-information',
-        data: { animation: 7 },
+        data: { animation: 6 },
         loadChildren: () => import('@blockframes/movie/form/additional-information/additional-information.module').then(m => m.MovieFormAdditionalInformationModule),
+      },
+      {
+        path: 'shooting-information',
+        data: { animation: 7 },
+        loadChildren: () => import('@blockframes/movie/form/shooting-information/shooting-information.module').then(m => m.MovieFormShootingInformationModule),
       },
       {
         path: 'technical-spec',

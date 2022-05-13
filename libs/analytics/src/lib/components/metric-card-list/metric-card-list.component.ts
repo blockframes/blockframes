@@ -5,7 +5,7 @@ export interface MetricCard {
   title: string;
   value: number;
   icon: string;
-  selected: boolean;
+  selected?: boolean;
 }
 
 @Component({

@@ -79,7 +79,7 @@
     <mat-divider></mat-divider>
   </section>
 
-  <section *ngIf="movie | hasStatus: status.finished">
+  <section *ngIf="(movie | hasStatus: ['development']) === false">
     <h2>Versions</h2>
     <article>
       <h5>Original version</h5>
