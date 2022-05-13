@@ -37,8 +37,6 @@ import {
 
 interface WatchTimeInfo {
   name: string, // firstName + lastName
-  firstname: string,
-  lastname: string,
   email: string,
   orgName?: string,
   orgActivity?: string,
@@ -103,8 +101,6 @@ export class AnalyticsComponent implements OnInit {
             email: user.email,
             watchTime: i.watchTime || 0,
             name,
-            firstname: user?.firstName || this.dataMissing,
-            lastname: user?.lastName || this.dataMissing,
             orgName: orgName(org),
             orgActivity: org?.activity,
             orgCountry: org?.addresses?.main.country,
@@ -207,11 +203,10 @@ export class AnalyticsComponent implements OnInit {
 
     // Create data for Archipel Event Guests Tab
     let guestsData = [
-      [ 'Number of invitations sent', null, null, null, null, null, invitationsModeCounter.invitation ],
-      [ 'Number of Requests to join the event', null, null, null, null, null, invitationsModeCounter.request ],
+      [ 'Number of invitations sent', null, null, null, null, invitationsModeCounter.invitation ],
+      [ 'Number of Requests to join the event', null, null, null, null, invitationsModeCounter.request ],
       [
         'Answers:',
-        null,
         null,
         null,
         null,
@@ -219,16 +214,15 @@ export class AnalyticsComponent implements OnInit {
         `${ invitationsStatusCounter.accepted } accepted, ${ invitationsStatusCounter.pending } unanswered, ${ invitationsStatusCounter.declined } declined`
       ],
       null,
-      [ 'FIRST NAME', 'LAST NAME', 'EMAIL', 'COMPANY', 'TERRITORY', 'ACTIVITY', 'INVITATION STATUS' ]
+      [ 'NAME', 'EMAIL', 'COMPANY', 'TERRITORY', 'ACTIVITY', 'INVITATION STATUS' ]
     ];
     const guestsAccepted = [];
     const guestsPending = [];
     const guestsDeclined = [];
     this.analytics.forEach(
-      ({ firstname, lastname, email, orgName, orgCountry, orgActivity: activity, status }) => {
+      ({ name, email, orgName, orgCountry, orgActivity: activity, status }) => {
         const guest = [
-          firstname,
-          lastname,
+          name ? name : '-',
           email,
           orgName ? orgName : '-',
           orgCountry ? territories[orgCountry] : '-',
