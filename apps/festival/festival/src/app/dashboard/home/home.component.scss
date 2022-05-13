@@ -17,16 +17,12 @@ header {
   display: flex;
   flex-direction: column;
 
-  article {
-    display: flex;
-
-    h3 {
-      margin: auto auto auto 0;
-    }
-  }
-
   bf-carousel {
     margin-top: 24px;
+
+    h5 {
+      display: flex;
+    }
   }
 
   .see_titles {
