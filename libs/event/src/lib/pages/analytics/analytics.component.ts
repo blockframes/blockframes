@@ -26,7 +26,7 @@ import { sum } from '@blockframes/utils/utils';
 import { formatDate } from '@angular/common';
 import { writeFile, utils } from 'xlsx';
 import { convertToTimeString } from '@blockframes/utils/helpers';
-const { aoa_to_sheet, decode_range, book_new, book_append_sheet } = utils;
+import { addNewSheetsInWorkbook, calculateColsWidthFromArray, convertArrayToWorksheet, createWorkBook, exportSpreadsheet, mergeWorksheetCells, setWorksheetColumnsWidth } from '@blockframes/utils/spreadsheet';
 
 interface WatchTimeInfo {
   name: string, // firstName + lastName
@@ -138,19 +138,6 @@ export class AnalyticsComponent implements OnInit {
     return start.getTime() < Date.now();
   }
 
-  // Calculate the width of cols from text within cell
-  private calculateColsWidth(sheetArray: (string | number)[][]): number[] {
-    const maxCols: number[] = Array(sheetArray[0].length).fill(15);
-    for(let row = 0; row < sheetArray.length; row++) {
-      for(let col = 0; col < sheetArray[row].length; col++) {
-        const currentNumber = maxCols[col]
-        const newNumber = sheetArray[row][col] ? `${sheetArray[row][col]}`.length + 5 : 0
-        if (currentNumber < newNumber) maxCols[col] = newNumber
-      }
-    }
-    return maxCols;
-  }
-
   // Create Event Statistic Excel
   private async createEventStatistics() {
     let movieTitle: string;
@@ -165,37 +152,43 @@ export class AnalyticsComponent implements OnInit {
       movieTitle = movies.map(({ title }) => title.international).join(', ');
     }
     const eventStart = formatDate(this.eventData.start, 'MM/dd/yyyy', 'en');
-
-    const invitationsCount = [0, 0, 0, 0, 0];
+    const invitationsStatusCounter = {
+      accepted: 0,
+      pending: 0,
+      declined: 0
+    };
+    const invitationsModeCounter = {
+      invitation: 0,
+      request: 0
+    };
     this.eventInvitations.forEach(({ status, mode }) => {
-      if (status === 'accepted') invitationsCount[0]++;
-      else if (status === 'pending') invitationsCount[1]++;
-      else if (status === 'declined') invitationsCount[2]++;
-      if (mode === 'invitation') invitationsCount[3]++;
-      else if (mode === 'request') invitationsCount[4]++;
+      if (status === 'accepted') invitationsStatusCounter.accepted++;
+      else if (status === 'pending') invitationsStatusCounter.pending++;
+      else if (status === 'declined') invitationsStatusCounter.declined++;
+      if (mode === 'invitation') invitationsModeCounter.invitation++;
+      else if (mode === 'request') invitationsModeCounter.request++;
     });
-    const [
-      acceptedCount,
-      pendingCount,
-      declinedCount,
-      invitationCount,
-      requestCount
-    ] = invitationsCount;
-
     const avgWatchTime = convertToTimeString(this.averageWatchTime * 1000);
 
     // Create data for Archipel Event Summary Tab
-    const worksheet_summary = [
+    const summaryData = [
       [ `${ movieTitle } - Archipel Market Screening Report - ${ eventStart }` ],
       [ 'Total number of guests', null, null, null, null, this.eventInvitations.length ],
-      [ 'Answers', null, null, null, null, `${ acceptedCount } accepted, ${ pendingCount } unanswered, ${ declinedCount } declined` ],
+      [
+        'Answers',
+        null,
+        null,
+        null,
+        null,
+        `${ invitationsStatusCounter.accepted } accepted, ${ invitationsStatusCounter.pending } unanswered, ${ invitationsStatusCounter.declined } declined`
+      ],
       [ 'Number of attendees', null, null, null, null, this.acceptedAnalytics.length ],
       [ 'Average watchtime', null, null, null, null, `${avgWatchTime}` ],
       null,
       [ 'NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME' ]
     ];
     this.acceptedAnalytics.forEach(({ watchTime, email, name, orgActivity: activity, orgCountry, orgName }) => {
-      worksheet_summary.push([
+      summaryData.push([
         name,
         email,
         orgName ? orgName : '-',
@@ -206,11 +199,19 @@ export class AnalyticsComponent implements OnInit {
     });
 
     // Create data for Archipel Event Guests Tab
-    let worksheet_guests = [
-      [ 'Number of invitations sent', null, null, null, null, null, invitationCount ],
-      [ 'Number of Requests to join the event', null, null, null, null, null, requestCount ],
-      [ 'Answers:', null, null, null, null, null, `${ acceptedCount } accepted, ${ pendingCount } unanswered, ${ declinedCount } declined` ],
-      [],
+    let guestsData = [
+      [ 'Number of invitations sent', null, null, null, null, null, invitationsModeCounter.invitation ],
+      [ 'Number of Requests to join the event', null, null, null, null, null, invitationsModeCounter.request ],
+      [
+        'Answers:',
+        null,
+        null,
+        null,
+        null,
+        null,
+        `${ invitationsStatusCounter.accepted } accepted, ${ invitationsStatusCounter.pending } unanswered, ${ invitationsStatusCounter.declined } declined`
+      ],
+      null,
       [ 'FIRST NAME', 'LAST NAME', 'EMAIL', 'COMPANY', 'TERRITORY', 'ACTIVITY', 'INVITATION STATUS' ]
     ];
     const guestsAccepted = [];
@@ -238,44 +239,42 @@ export class AnalyticsComponent implements OnInit {
         }
       }
     );
-    worksheet_guests = worksheet_guests.concat(guestsAccepted, guestsPending, guestsDeclined);
+    guestsData = guestsData.concat(guestsAccepted, guestsPending, guestsDeclined);
 
     // Convert Array to Sheet
-    const worksheetSummary = aoa_to_sheet(worksheet_summary);
-    const worksheetGuests = aoa_to_sheet(worksheet_guests);
+    const worksheetSummary = convertArrayToWorksheet(summaryData);
+    const worksheetGuests = convertArrayToWorksheet(guestsData);
 
     // Merge Cells
-    if(!worksheetSummary['!merges']) worksheetSummary['!merges'] = [];
-    const summaryMerge = decode_range('A1:F1');
-    worksheetSummary['!merges'].push(summaryMerge);
-    if(!worksheetGuests['!merges']) worksheetGuests['!merges'] = [];
-    const guestsMerge1 = decode_range('A1:C1');
-    const guestsMerge2 = decode_range('A2:C2');
-    const guestsMerge3 = decode_range('A3:C3');
-    worksheetGuests['!merges'].push(guestsMerge1, guestsMerge2, guestsMerge3);
+    mergeWorksheetCells(['A1:F1'], worksheetSummary);
+    mergeWorksheetCells(['A1:C1', 'A2:C2', 'A3:C3'], worksheetGuests);
 
     // Calculate Cols Auto Width
-    worksheet_summary.splice(0, 6); // to not use the first 6 rows
-    worksheet_guests.splice(0, 4); // to not use the first 4 rows
-    const maxSummaryCols = this.calculateColsWidth(worksheet_summary);
-    const maxGuestsCols = this.calculateColsWidth(worksheet_guests);
-    worksheetSummary['!cols'] = maxSummaryCols.map((n: number) => ({ width: n }));
-    worksheetGuests['!cols'] = maxGuestsCols.map((n: number) => ({ width: n }));
+    summaryData.splice(0, 6); // to not use the first 6 rows
+    guestsData.splice(0, 4); // to not use the first 4 rows
+    const maxSummaryCols = calculateColsWidthFromArray(summaryData);
+    const maxGuestsCols = calculateColsWidthFromArray(guestsData);
+    setWorksheetColumnsWidth(worksheetSummary, maxSummaryCols.map((n: number) => ({ width: n })));
+    setWorksheetColumnsWidth(worksheetGuests, maxGuestsCols.map((n: number) => ({ width: n })));
 
     // Create Workbook
-    const workbook = book_new();
-    workbook.Props = {
+    const workbook = createWorkBook({
       Title: 'Archipel Market Screening Report',
       Author: 'Archipel Market',
       CreatedDate: new Date()
-    };
+    });
 
     // Merge Sheets into Book
-    book_append_sheet(workbook, worksheetSummary, 'ARCHIPEL EVENT SUMMARY');
-    book_append_sheet(workbook, worksheetGuests, 'ARCHIPEL EVENT GUESTS');
+    addNewSheetsInWorkbook(
+      [
+        { name: 'ARCHIPEL EVENT SUMMARY', sheet: worksheetSummary},
+        { name: 'ARCHIPEL EVENT GUESTS', sheet: worksheetGuests}
+      ],
+      workbook
+    );
 
     // Save Excel file
     const filename = `${movieTitle} on Archipel Market ${eventStart} - Report`;
-    writeFile(workbook, `${filename}.xlsx`);
+    exportSpreadsheet(workbook, `${filename}.xlsx`);
   }
 }
