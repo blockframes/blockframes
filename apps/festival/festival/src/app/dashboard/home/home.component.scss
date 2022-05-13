@@ -92,9 +92,7 @@ world-map {
   z-index: 2;
   padding: 8px;
   border-radius: 4px;
-  background-color: #dee5ff20;
   color: #434773;
-  @include mat.elevation(1);
 
   mat-list-item {
     height: 32px;
