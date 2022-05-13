@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventLoginComponent implements OnInit {
+export class EventLoginComponent implements OnInit, OnDestroy {
   public form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(24)])
@@ -30,6 +30,10 @@ export class EventLoginComponent implements OnInit {
   ngOnInit() {
     const { email } = this.route.snapshot.queryParams;
     this.form.get('email').setValue(email);
+  }
+
+  ngOnDestroy(): void {
+    this.snackBar.dismiss();
   }
 
   @HostListener('window:popstate', ['$event'])

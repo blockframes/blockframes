@@ -7,7 +7,8 @@ import { AnalyticsService } from "@blockframes/analytics/+state/analytics.servic
 import { AuthService } from "@blockframes/auth/+state";
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { FormStaticValueArray } from "@blockframes/utils/form";
-import { toLabel } from "@blockframes/utils/pipes/to-label.pipe";
+import { toGroupLabel } from "@blockframes/utils/pipes";
+import { smartJoin } from "@blockframes/utils/utils";
 import { take } from "rxjs";
 
 @Component({
@@ -37,7 +38,8 @@ export class RequestAskingPriceComponent {
     try {
       this.sending = true;
       this.form.disable();
-      const territories = toLabel(this.form.get('territories').value, 'territories', ', ', ' and ');
+      const groupedTerritories = toGroupLabel(this.form.get('territories').value, 'territories', 'World');
+      const territories = smartJoin(groupedTerritories, ', ', ' and ');
       const message = this.form.get('message').value ?? 'No message provided.';
       const f = httpsCallable<{ movieId: string, uid: string, territories: string, message: string }>(this.functions, 'requestAskingPrice');
       await f({

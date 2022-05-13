@@ -16,7 +16,7 @@
                 <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')" />
                 <mat-hint>You can give a name to your video</mat-hint>
               </mat-form-field>
-              <static-select scope="hostedVideoTypes" [control]="activeForm.get('type')" fxFlex>
+              <static-select required scope="hostedVideoTypes" [control]="activeForm.get('type')" fxFlex>
                 <mat-label>Video Type</mat-label>
                 <mat-hint>Trailer, Teaser, Clip...</mat-hint>
               </static-select>
