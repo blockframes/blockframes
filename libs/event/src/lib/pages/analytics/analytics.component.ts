@@ -21,10 +21,11 @@ import {
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { formatDate } from '@angular/common';
-import XLSX from "xlsx";
 import { where } from 'firebase/firestore';
 import { sum } from '@blockframes/utils/utils';
+import { formatDate } from '@angular/common';
+import { writeFile, utils } from "xlsx";
+const { aoa_to_sheet, decode_range, book_new, book_append_sheet } = utils;
 
 interface WatchTimeInfo {
   name: string, // firstName + lastName
@@ -248,17 +249,17 @@ export class AnalyticsComponent implements OnInit {
     worksheet_guests = worksheet_guests.concat(guestsAccepted, guestsPending, guestsDeclined);
 
     // Convert Array to Sheet
-    const worksheetSummary = XLSX.utils.aoa_to_sheet(worksheet_summary);
-    const worksheetGuests = XLSX.utils.aoa_to_sheet(worksheet_guests);
+    const worksheetSummary = aoa_to_sheet(worksheet_summary);
+    const worksheetGuests = aoa_to_sheet(worksheet_guests);
 
     // Merge Cells
     if(!worksheetSummary['!merges']) worksheetSummary['!merges'] = [];
-    const summaryMerge = XLSX.utils.decode_range('A1:F1');
+    const summaryMerge = decode_range('A1:F1');
     worksheetSummary['!merges'].push(summaryMerge);
     if(!worksheetGuests['!merges']) worksheetGuests['!merges'] = [];
-    const guestsMerge1 = XLSX.utils.decode_range('A1:C1');
-    const guestsMerge2 = XLSX.utils.decode_range('A2:C2');
-    const guestsMerge3 = XLSX.utils.decode_range('A3:C3');
+    const guestsMerge1 = decode_range('A1:C1');
+    const guestsMerge2 = decode_range('A2:C2');
+    const guestsMerge3 = decode_range('A3:C3');
     worksheetGuests['!merges'].push(guestsMerge1, guestsMerge2, guestsMerge3);
 
     // Calculate Cols Auto Width
@@ -270,7 +271,7 @@ export class AnalyticsComponent implements OnInit {
     worksheetGuests['!cols'] = maxGuestsCols.map((n: number) => ({ width: n }));
 
     // Create Workbook
-    const workbook = XLSX.utils.book_new();
+    const workbook = book_new();
     workbook.Props = {
       Title: 'Archipel Market Screening Report',
       Author: 'Archipel Market',
@@ -278,11 +279,11 @@ export class AnalyticsComponent implements OnInit {
     };
 
     // Merge Sheets into Book
-    XLSX.utils.book_append_sheet(workbook, worksheetSummary, 'ARCHIPEL EVENT SUMMARY');
-    XLSX.utils.book_append_sheet(workbook, worksheetGuests, 'ARCHIPEL EVENT GUESTS');
+    book_append_sheet(workbook, worksheetSummary, 'ARCHIPEL EVENT SUMMARY');
+    book_append_sheet(workbook, worksheetGuests, 'ARCHIPEL EVENT GUESTS');
 
     // Save Excel file
     const filename = `${movieTitle} on Archipel Market ${eventStart} - Report`;
-    XLSX.writeFile(workbook, `${filename}.xlsx`);
+    writeFile(workbook, `${filename}.xlsx`);
   }
 }
