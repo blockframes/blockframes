@@ -54,7 +54,7 @@ export class AnalyticsComponent implements OnInit {
   event$: Observable<Event<EventMeta>>;
   private eventType: EventTypes;
   analytics: WatchTimeInfo[];
-  attendeesAnalytics: WatchTimeInfo[];
+  acceptedAnalytics: WatchTimeInfo[];
   public exporting = false
   public averageWatchTime = 0; // in seconds
   public dataMissing = '(Not Registered)';
@@ -104,13 +104,13 @@ export class AnalyticsComponent implements OnInit {
           };
         });
         // Create same analitics but only with 'accepted' status
-        this.attendeesAnalytics = this.analytics.filter(({status}) => status === 'accepted');
+        this.acceptedAnalytics = this.analytics.filter(({status}) => status === 'accepted');
 
         // if event is a screening or a slate presentation we add the watch time column to the table
         // and we compute the average watch time
         if (this.eventType === 'screening' || this.eventType === 'slate') {
-          const totalWatchTime = sum(this.attendeesAnalytics, a => a.watchTime);
-          this.averageWatchTime = totalWatchTime / this.attendeesAnalytics.length;
+          const totalWatchTime = sum(this.acceptedAnalytics, a => a.watchTime);
+          this.averageWatchTime = totalWatchTime / this.acceptedAnalytics.length;
         }
 
         this.cdr.markForCheck();
@@ -188,12 +188,12 @@ export class AnalyticsComponent implements OnInit {
       [ `${ movieTitle } - Archipel Market Screening Report - ${ eventStart }` ],
       [ 'Total number of guests', null, null, null, null, this.eventInvitations.length ],
       [ 'Answers', null, null, null, null, `${ acceptedCount } accepted, ${ pendingCount } unanswered, ${ declinedCount } declined` ],
-      [ 'Number of attendees', null, null, null, null, this.attendeesAnalytics.length ],
+      [ 'Number of attendees', null, null, null, null, this.acceptedAnalytics.length ],
       [ 'Average watchtime', null, null, null, null, `${avgWatchTimeMins}min ${avgWatchTimeSecs}s` ],
       null,
       [ 'NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME' ]
     ];
-    this.attendeesAnalytics.forEach(({ watchTime, email, name, orgActivity: activity, orgCountry, orgName }) => {
+    this.acceptedAnalytics.forEach(({ watchTime, email, name, orgActivity: activity, orgCountry, orgName }) => {
       const [watchTimeMins, watchTimeSecs] = formatDate((watchTime || 0) * 1000, 'm,ss', 'en').split(',');
       worksheet_summary.push([
         name,
