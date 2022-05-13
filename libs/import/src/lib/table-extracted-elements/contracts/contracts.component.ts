@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -14,6 +14,7 @@ import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/con
 import { createDocumentMeta } from '@blockframes/model';
 import { Firestore } from '@angular/fire/firestore';
 import { where, doc, collection } from 'firebase/firestore';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -34,10 +35,9 @@ const getTitleContracts = (type: 'mandate' | 'sale', titleId: string) => [
 export class TableExtractedContractsComponent implements OnInit {
 
   @Input() rows: MatTableDataSource<ContractsImportState>;
-  @Input() mode: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  public processedContracts = 0;
+  public processing = 0;
 
   public selection = new SelectionModel<ContractsImportState>(true, []);
   public displayedColumns: string[] = [
@@ -56,6 +56,7 @@ export class TableExtractedContractsComponent implements OnInit {
     private contractService: ContractService,
     private termService: TermService,
     private db: Firestore,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -66,57 +67,34 @@ export class TableExtractedContractsComponent implements OnInit {
     this.rows.sort = this.sort;
   }
 
-  async createContract(importState: ContractsImportState): Promise<boolean> {
-    const success = await this.addContract(importState, 'create');
+  async create(importState: ContractsImportState) {
+    const success = await this.add(importState);
     const message = success
       ? 'Contract added!'
-      : `Contract terms overlaps with existing mandate terms. Please update your template file and try again.`;
+      : 'Contract terms overlaps with existing mandate terms. Please update your template file and try again.';
     this.snackBar.open(message, 'close', { duration: 9000 });
-    return true;
   }
 
-  async updateContract(importState: ContractsImportState): Promise<boolean> {
-    await this.addContract(importState);
-    this.snackBar.open('Contract updated!', 'close', { duration: 3000 });
-    return true;
-  }
-
-  async createSelectedContracts(): Promise<boolean> {
+  async createSelected() {
     try {
       const creations = this.selection.selected.filter(importState => importState.newContract && !hasImportErrors(importState));
       for (const contract of creations) {
-        const success = await this.addContract(contract, 'create');
-        if (success) this.processedContracts++;
+        await this.add(contract, { increment: true });
       }
 
-      const text = this.processedContracts === creations.length
+      const text = this.processing === creations.length
         ? `${creations.length}/${creations.length} contract(s) created!`
-        : `Could not import all contracts (${this.processedContracts} / ${this.selection.selected.length})`;
+        : `Could not import all contracts (${this.processing} / ${this.selection.selected.length})`;
       this.snackBar.open(text, 'close', { duration: 3000 });
 
-      this.processedContracts = 0;
-      return true;
+      this.processing = 0;
     } catch (err) {
       console.error(err);
-      this.snackBar.open(`Could not import all contracts (${this.processedContracts} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
-      this.processedContracts = 0;
+      this.snackBar.open(`Could not import all contracts (${this.processing} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.processing = 0;
     }
-  }
 
-  async updateSelectedContracts(): Promise<boolean> {
-    try {
-      const updates = this.selection.selected.filter(importState => !importState.newContract && !hasImportErrors(importState));
-      for (const contract of updates) {
-        this.processedContracts++;
-        await this.addContract(contract);
-      }
-      this.snackBar.open(`${this.processedContracts} contracts updated!`, 'close', { duration: 3000 });
-      this.processedContracts = 0;
-      return true;
-    } catch (err) {
-      this.snackBar.open(`Could not update all contracts (${this.processedContracts} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
-      this.processedContracts = 0;
-    }
+    this.cdr.markForCheck();
   }
 
   async getExistingContracts(type: 'sale', titleId: string): Promise<FullSale[]>;
@@ -146,30 +124,39 @@ export class TableExtractedContractsComponent implements OnInit {
    * Adds a contract to database and prevents multi-insert by refreshing mat-table
    * @param importState
    */
-  private async addContract(importState: ContractsImportState, mode: 'create' | 'update' = 'update'): Promise<boolean> {
+  private async add(importState: ContractsImportState, { increment } = { increment: false }) {
+    importState.importing = true;
+    this.cdr.markForCheck();
     importState.terms.forEach(t => t.id = doc(collection(this.db, '_')).id);
     importState.contract.termIds = importState.terms.map(t => t.id);
-    if (mode === 'create') {
-      const overlapConditions = await this.verifyOverlappingMandatesAndSales(importState);
-      if (overlapConditions.isOverlappingMandate) {
-        importState.errors.push({
-          type: 'error',
-          name: 'Contract',
-          reason: 'The Terms of a Contract overlap with that of an already existing Mandate.',
-          message: 'The Terms of a Contract overlap with that of an already existing Mandate.'
-        });
-        return false;
-      }
-      if (overlapConditions.isOverlappingSale) {
-        importState.errors.push({
-          type: 'error',
-          name: 'Contract',
-          reason: 'The terms of the imported sale have been sold already.',
-          message: 'The terms of the imported sale have been sold already.'
-        });
-        return false;
-      }
+
+    const overlapConditions = await this.verifyOverlappingMandatesAndSales(importState);
+    if (overlapConditions.isOverlappingMandate) {
+      importState.errors.push({
+        type: 'error',
+        name: 'Contract',
+        reason: 'The Terms of a Contract overlap with that of an already existing Mandate.',
+        message: 'The Terms of a Contract overlap with that of an already existing Mandate.'
+      });
+      importState.importing = false;
+      this.cdr.markForCheck();
+      return false;
     }
+    if (overlapConditions.isOverlappingSale) {
+      importState.errors.push({
+        type: 'error',
+        name: 'Contract',
+        reason: 'The terms of the imported sale have been sold already.',
+        message: 'The terms of the imported sale have been sold already.'
+      });
+      importState.importing = false;
+      this.cdr.markForCheck();
+      return false;
+    }
+
+    if (increment) this.processing++;
+    this.cdr.markForCheck();
+
     await this.contractService.add({
       ...importState.contract,
       _meta: createDocumentMeta({ createdAt: new Date() })
@@ -184,15 +171,10 @@ export class TableExtractedContractsComponent implements OnInit {
       reason: 'Contract already added',
       message: 'Contract already added'
     });
+
+    importState.importing = false;
+    this.cdr.markForCheck();
     return true;
-  }
-
-  errorCount(data: ContractsImportState, type: string = 'error') {
-    return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
-  }
-
-  parseInt(str: string): number {
-    return parseInt(str, 10);
   }
 
   ///////////////////
@@ -200,8 +182,12 @@ export class TableExtractedContractsComponent implements OnInit {
   ///////////////////
 
   displayErrors(importState: ContractsImportState) {
-    const data = { title: `Contract id ${importState.contract.id}`, errors: importState.errors };
-    this.dialog.open(ViewImportErrorsComponent, { data, width: '50%' });
+    this.dialog.open(ViewImportErrorsComponent, {
+      data: createModalData({
+        title: `Contract id ${importState.contract.id}`,
+        errors: importState.errors
+      })
+    });
   }
 
   ///////////////////

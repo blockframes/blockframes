@@ -10,14 +10,14 @@ import { getUser } from "./internals/utils";
 import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { triggerNotifications, createNotification } from './notification';
-import { app, App, getOrgAppAccess, getMailSender, Module } from '@blockframes/utils/apps';
+import { getMailSender } from '@blockframes/utils/apps';
 import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getDocument, createDocumentMeta } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils/algolia/algolia';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { User, NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser, PermissionsDocument } from '@blockframes/model';
+import { User, NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser, PermissionsDocument, app, App, getOrgAppAccess, Module } from '@blockframes/model';
 import { groupIds } from '@blockframes/utils/emails/ids';
 
 /** Create a notification with user and org. */
@@ -82,6 +82,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 
 export function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot) {
   const org = snap.data() as OrganizationDocument;
+  if(org.status === 'accepted') return;
 
   if (!org?.denomination?.full) {
     console.error('Invalid org data:', org);

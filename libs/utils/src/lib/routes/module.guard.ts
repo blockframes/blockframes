@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { App, Module } from '../apps';
 import { APP } from './utils';
+import { App, Module } from '@blockframes/model';
 
 function currentModule(path: string): Module {
   const fragments = path.split('/');

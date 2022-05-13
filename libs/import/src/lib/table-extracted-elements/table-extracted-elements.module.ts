@@ -20,6 +20,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
+// Pipes
+import { ErrorCountPipeModule } from '../pipes/error-count.pipe';
+import { IsDisabledPipeModule } from '../pipes/is-disabled.pipe';
+
 // Components
 import { TableExtractedContractsComponent } from './contracts/contracts.component';
 import { TableExtractedMoviesComponent } from './movies/movies.component';
@@ -27,6 +31,7 @@ import { ViewImportErrorsComponent } from './view-import-errors/view-import-erro
 import { RouterModule } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TableExtractedOrganizationsComponent } from './organizations/organizations.component';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 @NgModule({
   declarations: [
@@ -41,6 +46,7 @@ import { TableExtractedOrganizationsComponent } from './organizations/organizati
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
+    GlobalModalModule,
 
     // Material
     MatIconModule,
@@ -58,6 +64,9 @@ import { TableExtractedOrganizationsComponent } from './organizations/organizati
     // Librairies
     ImageModule,
     ToLabelModule,
+    ErrorCountPipeModule,
+    IsDisabledPipeModule
+    
   ],
   exports: [
     TableExtractedMoviesComponent,

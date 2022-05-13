@@ -2,7 +2,6 @@ import { Inject, Injectable, NgZone, Optional } from '@angular/core';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { FireAuthService, CollectionConfig, FireAuthState, RoleState, initialAuthState } from 'akita-ng-fire';
 import { map, switchMap, take, tap } from 'rxjs/operators';
-import { App } from '@blockframes/utils/apps';
 import {
   createUser,
   PublicUser,
@@ -11,8 +10,9 @@ import {
   createDocumentMeta,
   DocumentMeta,
   Timestamp,
+  App,
   AnonymousCredentials,
-  AnonymousRole
+  AnonymousRole,
 } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
@@ -234,8 +234,8 @@ export class AuthService extends FireAuthService<AuthState> {
    */
   public async createUser(email: string, orgEmailData: OrgEmailData, app: App = this.app): Promise<PublicUser> {
     const f = httpsCallable(this.functions, 'createUser');
-    const user = await f({ email, orgEmailData, app }) as unknown;
-    return createUser(user);
+    const user = await f({ email, orgEmailData, app }) as { data: unknown };
+    return createUser(user.data);
   }
 
   public async getPrivacyPolicy(): Promise<PrivacyPolicy> {

@@ -13,6 +13,11 @@ section {
   }
   article.drop-zone {
     border: dashed 1px var(--primary);
+    min-height: 316px; // Size of the "Waiting" drop zone TODO #5964
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }
 

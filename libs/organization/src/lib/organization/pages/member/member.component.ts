@@ -8,6 +8,7 @@ import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'member-edit',
@@ -75,7 +76,7 @@ export class MemberComponent implements OnInit {
   public async removeMember(uid: string) {
     try {
       this.dialog.open(ConfirmComponent, {
-        data: {
+        data: createModalData({
           title: 'Are you sure?',
           question: 'If you remove a member from you company, you will be able to invite this person again.',
           confirm: 'Yes, remove member.',
@@ -83,8 +84,9 @@ export class MemberComponent implements OnInit {
           onConfirm: async () => {
             await this.orgService.removeMember(uid);
             this.snackBar.open('Member removed.', 'close', { duration: 2000 });
-          },
-        }
+          }
+        }, 'small'),
+        autoFocus: false
       });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

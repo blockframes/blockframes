@@ -1,0 +1,35 @@
+ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 24px;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    cursor: pointer;
+
+    header {
+      background-color: var(--primary-lighter);
+      border-radius: 4px;
+      padding: 8px 0;
+    
+      mat-icon {
+        display: block;
+        margin: auto;
+        color: var(--primary-lighter-contrast);
+      }
+    }
+    
+    p {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      margin-bottom: 0px;
+    }
+  }
+}
+
+.selected {
+  outline: 1px solid var(--primary);
+  border: 1px solid var(--primary);
+}

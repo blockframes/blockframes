@@ -10,6 +10,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { canHavePreferences } from '@blockframes/user/+state/user.utils';
 import { createPreferences } from '@blockframes/model';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'catalog-home',
@@ -50,9 +51,7 @@ export class MarketplaceHomeComponent implements OnInit, AfterViewInit {
     if (canHavePreferences(org, 'catalog')) {
       const preferences = createPreferences();
       this.authService.update({ preferences });
-      this.dialog.open(PreferencesComponent, {
-        autoFocus: false
-      });
+      this.dialog.open(PreferencesComponent, { data: createModalData({}, 'large'), autoFocus: false });
     }
   }
 

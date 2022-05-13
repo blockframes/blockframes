@@ -37,8 +37,20 @@ import {
   directorCategory,
   importContractStatus,
   offerStatus,
-  negotiationStatus
+  negotiationStatus,
+  app,
+  modules,
+  appName,
+  eventTypes
 } from './static-model';
+
+export type App = typeof app[number];
+export type AppNameValue = typeof appName[App];
+
+export type Module = typeof modules[number];
+export type ModuleAccess = Record<Module, boolean>;
+
+export type OrgAppAccess = Record<App, ModuleAccess>;
 
 export type NumberRange = keyof typeof budgetRange;
 
@@ -98,6 +110,9 @@ export type ProducerRoleValue = typeof producerRoles[ProducerRole];
 
 export type ProductionStatus = keyof typeof productionStatus;
 export type ProductionStatusValue = typeof productionStatus[ProductionStatus];
+
+export type EventTypes  = keyof typeof eventTypes;
+export type EventTypesValue = typeof eventTypes[EventTypes];
 
 export type Rating = keyof typeof rating;
 

@@ -1,5 +1,11 @@
+@import '@angular/flex-layout/mq';
+
 :host {
   display: block;
+}
+
+h2 {
+  text-align: center;
 }
 
 form {
@@ -17,4 +23,10 @@ mat-spinner {
 
 .button-container button {
   margin-bottom: 8px;
+}
+
+@include layout-bp(xs) {
+  form {
+    padding: 16px;
+  }
 }

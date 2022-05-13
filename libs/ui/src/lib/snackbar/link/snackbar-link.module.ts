@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     MatButtonModule,
-    RouterModule
+    RouterModule,
   ]
 })
 export class SnackbarLinkModule { }

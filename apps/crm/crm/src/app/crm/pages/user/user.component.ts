@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Functions, httpsCallable } from '@angular/fire/functions';
-import { User, Organization, Invitation, UserRole, Scope } from '@blockframes/model';
+import { User, Organization, Invitation, UserRole, Scope, App, getOrgAppAccess } from '@blockframes/model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -10,7 +10,6 @@ import { combineLatest, Observable, Subscription } from 'rxjs';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { PermissionsService } from '@blockframes/permissions/+state';
-import { App, getOrgAppAccess } from '@blockframes/utils/apps';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { where } from 'firebase/firestore';
@@ -21,6 +20,7 @@ import { map } from 'rxjs/operators';
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'crm-user',
@@ -197,7 +197,7 @@ export class UserComponent implements OnInit {
 
     const simulation = await this.simulateDeletion(this.user);
     this.dialog.open(ConfirmInputComponent, {
-      data: {
+      data: createModalData({
         title: 'You are currently deleting this user from Archipel, are you sure?',
         text: 'If yes, please write \'HARD DELETE\' inside the form below.',
         warning: 'This user will be deleted from the application.',
@@ -209,7 +209,7 @@ export class UserComponent implements OnInit {
           this.snackBar.open('User deleted !', 'close', { duration: 5000 });
           this.router.navigate(['c/o/dashboard/crm/users']);
         }
-      }
+      })
     });
   }
 
@@ -246,7 +246,7 @@ export class UserComponent implements OnInit {
   }
 
   openDetails(terms: string[], scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms, scope }, maxHeight: '80vh', autoFocus: false });
+    this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
   }
 
   getLink(invitation: Invitation) {

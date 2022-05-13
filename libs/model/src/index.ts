@@ -20,3 +20,5 @@ export * from './lib/static';
 export * from './lib/maintenance';
 export * from './lib/algolia';
 export * from './lib/campaign';
+export * from './lib/apps';
+export * from './lib/income';

@@ -1,37 +1,15 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Organization, User, Scope, staticModel } from '@blockframes/model';
+import { AggregatedAnalytic } from '@blockframes/model';
+import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { joinWith } from "@blockframes/utils/operators";
 import { map, pluck, shareReplay, switchMap } from "rxjs/operators";
-import { counter } from '@blockframes/analytics/+state/utils';
+import { aggregatePerUser, counter } from '@blockframes/analytics/+state/utils';
 import { UserService } from "@blockframes/user/+state";
 import { NavigationService } from "@blockframes/ui/navigation.service";
 import { OrganizationService } from "@blockframes/organization/+state";
-
-function getFilter(scope: Scope) {
-  return (input: string, value: any) => {
-    if (typeof value !== 'string') return false;
-    const label = staticModel[scope][value];
-    return label.toLowerCase().includes(input);
-  };
-}
-
-function aggregatePerUser(analytics: (Analytics<"title"> & { user: User, org: Organization})[]) {
-  const aggregator: Record<string, AggregatedAnalytic> = {};
-  for (const analytic of analytics) {
-    if (!analytic.user?.uid) continue;
-    if (!aggregator[analytic.user.uid]) {
-      aggregator[analytic.user.uid] = createAggregatedAnalytic({
-        user: analytic.user,
-        org: analytic.org
-      });
-    };
-    aggregator[analytic.user.uid][analytic.name]++;
-  }
-  return Object.values(aggregator);
-}
 
 @Component({
   selector: 'festival-title-analytics',
@@ -72,8 +50,8 @@ export class TitleAnalyticsComponent {
   );
 
   filters = {
-    orgActivity: getFilter('orgActivity'),
-    territories: getFilter('territories')
+    orgActivity: getStaticModelFilter('orgActivity'),
+    territories: getStaticModelFilter('territories')
   };
   filterValue?: string;
 

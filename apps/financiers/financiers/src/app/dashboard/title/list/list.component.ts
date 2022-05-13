@@ -1,15 +1,15 @@
 import { Component, ChangeDetectionStrategy, OnInit, Optional, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie, storeStatus, StoreStatus } from '@blockframes/model';
+import { Movie, storeStatus, StoreStatus, App } from '@blockframes/model';
 import { CampaignService, MovieCampaign } from '@blockframes/campaign/+state/campaign.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
-import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
+import { filters } from '@blockframes/ui/list/table/filters';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
@@ -48,6 +48,7 @@ export class ListComponent implements OnInit {
   titleCount$: Observable<Record<string, number>>;
   filter = new FormControl('all');
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
+  filters = filters;
 
   constructor(
     private campaignService: CampaignService,
@@ -57,7 +58,7 @@ export class ListComponent implements OnInit {
     private movieService: MovieService,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.titles$ = this.orgService.currentOrg$.pipe(

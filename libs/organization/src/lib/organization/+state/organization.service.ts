@@ -17,9 +17,11 @@ import {
   createPublicUser,
   createDocumentMeta,
   formatDocumentMetaFromFirestore,
+  App,
+  Module,
+  createOrgAppAccess
 } from '@blockframes/model';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
-import { App, Module, createOrgAppAccess } from '@blockframes/utils/apps';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { ActiveState, EntityState } from '@datorama/akita';
@@ -82,7 +84,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   public async orgNameExist(orgName: string) {
     // @TODO #6908 a better solution for this should be found.
-    const orgs = await this.getValue([where('denomination.full', '==', orgName)]);
+    const orgs = await this.getValue([where('denomination.full', '==', orgName.trim())]);
     return orgs.length !== 0;
   }
 
@@ -96,6 +98,12 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       appAccess: createOrgAppAccess(org.appAccess),
       _meta: formatDocumentMetaFromFirestore(org?._meta),
     };
+  }
+
+  formatToFirestore(org: Partial<Organization>) { // TODO #7273 #8280
+    if (org.denomination?.full) org.denomination.full = org.denomination.full.trim();
+    if (org.denomination?.public) org.denomination.public = org.denomination.public.trim();
+    return org;
   }
 
   /**

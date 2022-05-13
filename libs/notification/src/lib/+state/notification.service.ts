@@ -10,12 +10,16 @@ import {
   isScreening,
   Notification,
   Contract,
-  createStorageFile
+  createStorageFile,
+  appName,
+  getMovieAppAccess,
+  App,
+  eventTypes
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/utils/utils';
-import { App, applicationUrl, appName, getMovieAppAccess } from '@blockframes/utils/apps';
+import { applicationUrl } from '@blockframes/utils/apps';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { format } from 'date-fns';
 import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
@@ -40,7 +44,9 @@ export class NotificationService extends CollectionService<NotificationState> {
       this.valueChanges([where('toUserId', '==', user.uid)])
     ),
     switchMap((notifications) => {
-      const promises = notifications.map((n) => this.appendNotificationData(n));
+      const promises = notifications
+        .filter(n => n.app?.isRead !== undefined)
+        .map(n => this.appendNotificationData(n));
       return Promise.all(promises);
     })
   );
@@ -132,7 +138,7 @@ export class NotificationService extends CollectionService<NotificationState> {
           .pipe(take(1))
           .toPromise();
         const subject = await this.notificationSubject(notification, event);
-        const message = `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to attend ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>".`;
+        const message = `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to attend ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>".`;
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
@@ -151,7 +157,7 @@ export class NotificationService extends CollectionService<NotificationState> {
           .valueChanges(notification.docId)
           .pipe(take(1))
           .toPromise();
-        const message = `Your request to attend event ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" has been sent.`;
+        const message = `Your request to attend event ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" has been sent.`;
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
@@ -213,7 +219,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         const movie = await this.movieService.valueChanges(titleId).pipe(take(1)).toPromise();
         const imgRef = this.getPoster(movie);
         const org = await this.orgService.valueChanges(event.ownerOrgId).pipe(take(1)).toPromise();
-        const message = `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" is about to start.`;
+        const message = `REMINDER - ${org.denomination.full}'s ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" is about to start.`;
 
         return {
           ...notification,
@@ -233,7 +239,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         const movie = await this.movieService.valueChanges(titleId).pipe(take(1)).toPromise();
         const imgRef = this.getPoster(movie);
         const org = await this.orgService.valueChanges(event.ownerOrgId).pipe(take(1)).toPromise();
-        const message = `REMINDER - ${org.denomination.full}'s ${event.type} "<a href="/event/${
+        const message = `REMINDER - ${org.denomination.full}'s ${eventTypes[event.type]} "<a href="/event/${
           event.id
         }" target="_blank">${event.title}</a>" will start tomorrow at ${format(
           toDate(event.start),

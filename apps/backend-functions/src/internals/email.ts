@@ -7,9 +7,17 @@ import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import * as admin from 'firebase-admin';
-import { App, getMailSender, AppMailSetting, appLogo, applicationUrl, appDescription, appName } from '@blockframes/utils/apps';
+import { getMailSender, appLogo, applicationUrl, AppLogoValue } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { logger } from 'firebase-functions';
+import { App, appDescription, appName, AppNameValue } from '@blockframes/model';
+
+interface AppMailSetting {
+  description: string;
+  logo: AppLogoValue;
+  name: AppNameValue;
+  url?: string;
+}
 
 // Substitutions used in Sendgrid templates
 const substitutions = {
@@ -60,7 +68,7 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     customArgs: { projectId }
   };
 
-  if(data.event?.calendar) {
+  if (data.event?.calendar) {
     msg.attachments = [data.event.calendar];
   }
 
@@ -150,7 +158,7 @@ export const sendMailWithTemplate = async (
  * @param templateId
  * @param uid
  */
-function isAllowedToUseTemplate( templateId: string, uid: string) {
+function isAllowedToUseTemplate(templateId: string, uid: string) {
   templateId = uid; //! Fix linter error, delete this once updated.
   // @TODO #4085
   return true;

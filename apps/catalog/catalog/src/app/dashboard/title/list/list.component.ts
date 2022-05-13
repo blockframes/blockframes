@@ -2,16 +2,17 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { FormControl } from '@angular/forms';
 import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { Movie, StoreStatus, storeStatus, Person } from '@blockframes/model';
+import { Movie, StoreStatus, storeStatus, Person, App } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Intercom } from 'ng-intercom';
-import { App } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 import { displayPerson } from '@blockframes/utils/pipes';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { filters } from '@blockframes/ui/list/table/filters';
 
 @Component({
   selector: 'catalog-title-list',
@@ -24,6 +25,7 @@ export class TitleListComponent {
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(
     startWith(this.filter.value || '')
   );
+  filters = filters;
 
   movies$ = this.service.queryDashboard(this.app).pipe(
     tap((movies) => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
@@ -55,7 +57,7 @@ export class TitleListComponent {
     private dialog: MatDialog,
     @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
-  ) {}
+  ) { }
 
   /** Dynamic filter of movies for each tab. */
   applyFilter(filter?: StoreStatus) {
@@ -77,15 +79,10 @@ export class TitleListComponent {
     this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 
-  //TODO #6507
   openDetails(title: string, values: Person[]) {
     this.dialog.open(CellModalComponent, {
-      data: { title, values: displayPerson(values) },
-      maxHeight: '80vh',
-      minWidth: '50vw',
-      maxWidth: '80vw',
-      minHeight: '50vh',
-      autoFocus: false,
+      data: createModalData({ title, values: displayPerson(values) }),
+      autoFocus: false
     });
   }
 }

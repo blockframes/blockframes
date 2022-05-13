@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { FormControl } from '@angular/forms';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'catalog-selection',
@@ -145,13 +146,12 @@ export class MarketplaceSelectionComponent {
         });
       })
     ) {
-      this.snackBar.open(
-        'Some terms conflict with each other. Please remove duplicate terms.',
-        '',
-        { duration: 2000 }
-      );
+      this.snackBar.open('Some terms conflict with each other. Please remove duplicate terms.', '', { duration: 2000 });
     } else {
-      this.dialog.open(SpecificTermsComponent, { data: { currency: this.currencyForm.value } });
+      this.dialog.open(SpecificTermsComponent, {
+        data: createModalData({ currency: this.currencyForm.value }, 'large'),
+        autoFocus: false
+      });
     }
   }
 

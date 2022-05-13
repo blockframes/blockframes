@@ -7,7 +7,7 @@ import { RequestDemoRole } from '@blockframes/utils/request-demo';
 import { ThemeService } from '@blockframes/ui/theme';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { APP } from '@blockframes/utils/routes/utils';
-import { App } from '@blockframes/utils/apps';
+import { App } from '@blockframes/model';
 //TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { supportMailosaur } from '@blockframes/utils/constants';
@@ -149,9 +149,8 @@ export class LandingShellComponent implements OnDestroy {
       this.newslettersSubmitted = true;
       this.snackBar.open('Subscribed to newsletters', 'close', { duration: 2000 });
       this.cdr.markForCheck();
-
-    } catch (error) {
-      this.snackBar.open('Please enter a valid email address.', 'close', { duration: 2000 });
+    } catch (err) {
+      this.snackBar.open('You are already subscribed to our newsletter.', 'close', { duration: 5000 });
     }
   }
 }

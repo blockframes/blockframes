@@ -5,8 +5,7 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { EventName, hasAppStatus } from '@blockframes/model';
-import { App } from '@blockframes/utils/apps';
+import { EventName, hasAppStatus, App } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { counter } from '@blockframes/analytics/+state/utils';
@@ -36,7 +35,7 @@ export class HomeComponent {
     })
   );
 
-  private titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
+  titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
     }, { shouldAwait: true }),
@@ -47,7 +46,7 @@ export class HomeComponent {
     filter(analytics => analytics.length > 0),
     map(analytics => counter(analytics, 'meta.titleId')),
     map(analytics => analytics.sort((a, b) => a.count > b.count ? -1 : 1)),
-    switchMap(([popularEvent]) => this.movieService.getValue(popularEvent.key))
+    switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key))
   );
 
   private titleAnalyticsOfPopularTitle$ = combineLatest([ this.popularTitle$, this.titleAnalytics$ ]).pipe(

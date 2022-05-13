@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { SigninFormModule } from '../../components/signin-form/signin-form.module';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
+import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
 
 // Material
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -22,6 +23,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     SigninFormModule,
     AppLogoModule,
     SnackbarLinkModule,
+    SnackbarErrorModule,
 
     // Material
     MatSnackBarModule,

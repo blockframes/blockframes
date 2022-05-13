@@ -3,16 +3,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { OrganizationsImportState, SpreadsheetImportError } from '../../utils';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { AuthService } from '@blockframes/auth/+state';
-import { PublicUser } from '@blockframes/model';
-import { getOrgAppAccess } from '@blockframes/utils/apps';
+import { PublicUser, getOrgAppAccess } from '@blockframes/model';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: OrganizationsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -27,10 +27,9 @@ const hasImportErrors = (importState: OrganizationsImportState, type: string = '
 export class TableExtractedOrganizationsComponent implements OnInit {
 
   @Input() rows: MatTableDataSource<OrganizationsImportState>;
-  @Input() mode: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  public processedOrgs = 0;
+  public processing = 0;
 
   public selection = new SelectionModel<OrganizationsImportState>(true, []);
   public displayedColumns: string[] = [
@@ -49,7 +48,8 @@ export class TableExtractedOrganizationsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private authService: AuthService,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -60,56 +60,34 @@ export class TableExtractedOrganizationsComponent implements OnInit {
     this.rows.sort = this.sort;
   }
 
-  async createOrg(importState: OrganizationsImportState): Promise<boolean> {
-    await this.addOrganization(importState);
+  async create(importState: OrganizationsImportState) {
+    await this.add(importState);
     this.snackBar.open('Organization added!', 'close', { duration: 3000 });
-    return true;
   }
 
-  async updateOrg(importState: OrganizationsImportState): Promise<boolean> {
-    await this.addOrganization(importState);
-    this.snackBar.open('Organization updated!', 'close', { duration: 3000 });
-    return true;
-  }
-
-  async createSelectedOrgs(): Promise<boolean> {
+  async createSelected() {
     try {
       const creations = this.selection.selected.filter(importState => importState.newOrg && !hasImportErrors(importState));
       for (const org of creations) {
-        await this.addOrganization(org);
-        this.processedOrgs++;
+        await this.add(org, { increment: true });
       }
-      this.snackBar.open(`${this.processedOrgs} organizations created!`, 'close', { duration: 3000 });
-      this.processedOrgs = 0;
-      return true;
+      this.snackBar.open(`${this.processing} organizations created!`, 'close', { duration: 3000 });
+      this.processing = 0;
     } catch (err) {
-      this.snackBar.open(`Could not import all organizations (${this.processedOrgs} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
-      this.processedOrgs = 0;
+      this.snackBar.open(`Could not import all organizations (${this.processing} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.processing = 0;
     }
-  }
-
-  async updateSelectedOrgs(): Promise<boolean> {
-    try {
-      const updates = this.selection.selected.filter(importState => !importState.newOrg && !hasImportErrors(importState));
-      for (const org of updates) {
-        this.processedOrgs++;
-        await this.addOrganization(org);
-      }
-      this.snackBar.open(`${this.processedOrgs} organizations updated!`, 'close', { duration: 3000 });
-      this.processedOrgs = 0;
-      return true;
-    } catch (err) {
-      this.snackBar.open(`Could not update all organizations (${this.processedOrgs} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
-      this.processedOrgs = 0;
-    }
+    this.cdr.markForCheck();
   }
 
   /**
    * Adds an org to database and prevents multi-insert by refreshing mat-table
    * @param importState
    */
-  private async addOrganization(importState: OrganizationsImportState): Promise<boolean> {
-
+  private async add(importState: OrganizationsImportState, { increment } = { increment: false }) {
+    if (increment) this.processing++;
+    importState.importing = true;
+    this.cdr.markForCheck();
     const [firstApp] = getOrgAppAccess(importState.org);
     const superAdmin = importState.superAdmin;
 
@@ -136,15 +114,8 @@ export class TableExtractedOrganizationsComponent implements OnInit {
       reason: 'Organization already created!',
     });
 
-    return true;
-  }
-
-  errorCount(data: OrganizationsImportState, type: string = 'error') {
-    return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
-  }
-
-  parseInt(str: string): number {
-    return parseInt(str, 10);
+    importState.importing = false;
+    this.cdr.markForCheck();
   }
 
   ///////////////////
@@ -152,8 +123,12 @@ export class TableExtractedOrganizationsComponent implements OnInit {
   ///////////////////
 
   displayErrors(importState: OrganizationsImportState) {
-    const data = { title: `Organization id ${importState.org.id}`, errors: importState.errors };
-    this.dialog.open(ViewImportErrorsComponent, { data, width: '50%' });
+    this.dialog.open(ViewImportErrorsComponent, {
+      data: createModalData({
+        title: `Organization id ${importState.org.id}`,
+        errors: importState.errors
+      })
+    });
   }
 
   ///////////////////

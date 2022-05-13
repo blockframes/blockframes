@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy, OnInit, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { AuthService } from '@blockframes/auth/+state';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 @Component({
   selector: 'festival-event-login',
@@ -11,7 +12,7 @@ import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-li
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventLoginComponent implements OnInit {
+export class EventLoginComponent implements OnInit, OnDestroy {
   public form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(24)])
@@ -29,6 +30,10 @@ export class EventLoginComponent implements OnInit {
   ngOnInit() {
     const { email } = this.route.snapshot.queryParams;
     this.form.get('email').setValue(email);
+  }
+
+  ngOnDestroy(): void {
+    this.snackBar.dismiss();
   }
 
   @HostListener('window:popstate', ['$event'])
@@ -66,7 +71,7 @@ export class EventLoginComponent implements OnInit {
           duration: 8000
         });
       } else {
-        this.snackBar.open(err.message, 'close', { duration: 8000 });
+        this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 8000 });
       }
     }
     this.signinIn = false;

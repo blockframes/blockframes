@@ -1,10 +1,11 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SigninForm } from '../../forms/signin.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 @Component({
   selector: 'auth-login-view',
@@ -12,7 +13,7 @@ import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-li
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   public buttonText = 'Log in';
   public signinIn = false;
@@ -26,6 +27,10 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Login')
+  }
+
+  ngOnDestroy() {
+    this.snackBar.dismiss();
   }
 
   public async signin(signinForm: SigninForm) {
@@ -72,7 +77,7 @@ export class LoginComponent implements OnInit {
           duration: 8000
         });
       } else {
-        this.snackBar.open(err.message, 'close', { duration: 8000 });
+        this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 8000 });
       }
     }
 

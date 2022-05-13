@@ -20,6 +20,7 @@ import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { where } from 'firebase/firestore';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -107,10 +108,10 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     if ('contract' in queryParams) {
       skipValue = 1
       const selector = "[data-scroll-to-view-id='" + queryParams.contract + "']"
-      //@why: #6383
+      //Because the queried element is within an ngIf and we need to give it some time to render.
       setTimeout(() => {
         const element = document.querySelector<HTMLElement>(selector);
-        scrollIntoView(element);
+        if (element) scrollIntoView(element);
       }, 400);
 
     }
@@ -119,7 +120,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
     const fragSub = this.route.fragment.pipe(
       filter(fragment => !!fragment),
       skip(skipValue),
-      //@why: #6383
+      //Because the queried element is within an ngIf and we need to give it some time to render.
       delay(100)
     ).subscribe(fragment => scrollIntoView(document.querySelector(`#${fragment}`)));
 
@@ -174,21 +175,20 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   }
 
   public explain() {
-    this.dialog.open(ExplanationComponent, {
-      height: '80vh',
-      width: '80vw',
-      autoFocus: false
-    });
+    this.dialog.open(ExplanationComponent, { data: createModalData({}), autoFocus: false });
   }
 
   /** Open a modal to display the entire list of territories when this one is too long */
   public openTerritoryModal(term: BucketTerm) {
-    this.dialog.open(DetailedTermsComponent, { data: { terms: term.territories, scope: 'territories' }, maxHeight: '80vh', autoFocus: false });
+    this.dialog.open(DetailedTermsComponent, {
+      data: createModalData({ terms: term.territories, scope: 'territories' }),
+      autoFocus: false
+    });
   }
 
   /** Open a modal to display holdback warnings */
   openHoldbackModal(holdbacks: Holdback[]) {
-    this.dialog.open(HoldbackModalComponent, { data: { holdbacks, withWarning: true }, maxHeight: '80vh' });
+    this.dialog.open(HoldbackModalComponent, { data: createModalData({ holdbacks, withWarning: true }) });
   }
 
   confirmExit() {
@@ -197,12 +197,12 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
       return of(true);
     }
     const dialogRef = this.dialog.open(ConfirmComponent, {
-      data: {
+      data: createModalData({
         title: 'You are about to leave the page',
         question: 'Some changes have not been added to Selection. If you leave now, you will lose these changes.',
         confirm: 'Leave anyway',
-        cancel: 'Stay',
-      },
+        cancel: 'Stay'
+      }, 'small'),
       autoFocus: false,
     });
     return dialogRef.afterClosed().pipe(

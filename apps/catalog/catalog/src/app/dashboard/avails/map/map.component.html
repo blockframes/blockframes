@@ -23,6 +23,11 @@
         (mouseout)="clearTerritoryTooltip()">
       </map-feature>
     </ng-container>
+    <ng-container *ngFor="let tag of availabilities.notLicensed">
+      <map-feature [tag]="tag.isoA3" (mouseover)="displayTerritoryTooltip(tag.label, 'Not Licensed')"
+        (mouseout)="clearTerritoryTooltip()">
+      </map-feature>
+    </ng-container>
 
     <!-- TOOLTIP ON HOVERING-->
     <article *ngIf="hoveredTerritory" class="hovered-territory-card">

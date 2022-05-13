@@ -8,6 +8,7 @@ import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/c
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'catalog-contract-view',
@@ -38,8 +39,6 @@ export class ContractViewComponent {
     private negotiationService: NegotiationService,
   ) { }
 
-
-
   async accept() {
     const onConfirm = async () => {
       const sale = await this.contract$.pipe(first()).toPromise();
@@ -49,15 +48,15 @@ export class ContractViewComponent {
       const config = { duration: 6000 };
       this.snackBar.open(`You accepted contract for ${sale.title.title.international}`, null, config);
     }
-
-    const data = {
-      onConfirm,
-      title: 'Are you sure to accept this contract?',
-      question: 'Please verify if all the contract elements are convenient for you.',
-      confirm: 'Yes, accept contract',
-      cancel: 'Come back & verify contract'
-    };
-    this.dialog.open(ConfirmWithValidationComponent, { data });
+    this.dialog.open(ConfirmWithValidationComponent, {
+      data: createModalData({
+        onConfirm,
+        title: 'Are you sure you wish to accept this contract?',
+        question: 'Please verify if all the contract elements are convenient for you.',
+        confirm: 'Yes, accept Contract',
+        cancel: 'Come back & Verify Contract'
+      }),
+      autoFocus: false
+    });
   }
-
 }

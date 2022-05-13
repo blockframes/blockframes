@@ -15,9 +15,10 @@ import {
   MovieDocument,
   PublicUser,
   Campaign,
-  AlgoliaConfig
+  AlgoliaConfig,
+  App,
+  getAllAppsExcept
 } from '@blockframes/model';
-import { App, getAllAppsExcept } from '@blockframes/utils/apps';
 
 type AlgoliaApp = Exclude<App, 'crm'>
 

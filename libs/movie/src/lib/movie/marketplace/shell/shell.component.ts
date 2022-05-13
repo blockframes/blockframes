@@ -17,6 +17,8 @@ import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Component({
   selector: 'title-marketplace-shell',
@@ -33,12 +35,15 @@ export class TitleMarketplaceShellComponent implements OnInit {
   @Input() routes: RouteDescription[];
   @ViewChild('main') main: ElementRef<HTMLDivElement>;
 
+  gtSm$ = this.breakpoint.gtSm;
+
   constructor(
     private dialog: MatDialog,
     private movie: MovieService,
     private route: ActivatedRoute,
     public router: Router,
     private analytics: AnalyticsService,
+    private breakpoint: BreakpointsService
   ) { }
 
   ngOnInit() {
@@ -69,10 +74,8 @@ export class TitleMarketplaceShellComponent implements OnInit {
 
   fullscreen(refs: StorageFile[], index: number) {
     this.dialog.open(FileListPreviewComponent, {
-      data: { refs, index },
-      width: '80vw',
-      height: '80vh',
-      autoFocus: false,
+      data: createModalData({ refs, index }, 'large'),
+      autoFocus: false
     });
   }
 

@@ -22,10 +22,12 @@ p {
   margin: 0;
 }
 
-button {
-  margin-bottom: 16px;
+.margin {
+  margin: 8px;
 }
 
-.refresh-icon {
-  cursor: pointer;
+footer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }

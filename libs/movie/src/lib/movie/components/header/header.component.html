@@ -3,7 +3,7 @@
   fxLayout="column"
   fxLayoutGap="20px"
   *ngIf="movieView"
-  [bgRef]="movieView.banner"
+  [bgRef]="(xs$ | async) ? null : movieView.banner"
   bgAsset="empty_banner.png"
   bgTheme="dark"
   >

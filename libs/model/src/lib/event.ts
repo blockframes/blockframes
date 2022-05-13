@@ -1,17 +1,15 @@
-import { AccessibilityTypes } from './static';
+import { AccessibilityTypes, EventTypes } from './static';
 import { toDate } from '@blockframes/utils/helpers';
 import { CalendarEvent } from 'angular-calendar';
-import { AnonymousCredentials } from '@blockframes/model';
 import { Organization } from './organisation';
 import { Movie } from './movie';
 import { User } from './user';
 import { StorageFile } from './media';
-import { Person } from './identity';
+import { AnonymousCredentials, Person } from './identity';
 import { Timestamp } from './timestamp';
 
 // Event types
-export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local' | 'slate';
-export type EventMeta = Meeting | Screening | unknown;
+export type EventMeta = Meeting | Screening | Slate | unknown;
 
 export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended';
 export interface MeetingAttendee extends Person {

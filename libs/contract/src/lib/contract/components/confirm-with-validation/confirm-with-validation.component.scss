@@ -3,19 +3,11 @@
   flex-direction: column;
 }
 
-section {
-  padding: 40px 80px 80px 80px;
-}
-
 div[mat-dialog-content] {
   text-align: center;
   h3, p {
     padding: 0;
   }
-}
-
-p {
-  max-width: 70%;
 }
 
 button {
@@ -29,4 +21,8 @@ button.close {
 
 mat-checkbox {
   margin-bottom: 12px;
+
+  span {
+    white-space: normal;
+  }
 }

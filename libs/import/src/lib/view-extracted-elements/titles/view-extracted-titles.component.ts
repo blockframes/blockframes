@@ -11,7 +11,7 @@ import { MovieImportState } from '../../utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { take } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
-import { App } from '@blockframes/utils/apps';
+import { App } from '@blockframes/model';
 
 @Component({
   selector: 'import-view-extracted-titles[sheetTab]',
@@ -41,6 +41,10 @@ export class ViewExtractedTitlesComponent implements OnInit {
       this.authService.profile.orgId,
       this.app
     );
-    this.moviesToCreate$.next(new MatTableDataSource(titles));
+
+    const moviesToCreate = titles.filter(title => !title.movie.id);
+    const moviesToUpdate = titles.filter(title => title.movie.id);
+    this.moviesToUpdate$.next(new MatTableDataSource(moviesToUpdate));
+    this.moviesToCreate$.next(new MatTableDataSource(moviesToCreate));
   }
 }

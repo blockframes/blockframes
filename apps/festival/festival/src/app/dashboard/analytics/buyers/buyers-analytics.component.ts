@@ -1,16 +1,15 @@
-import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
-import { aggregate } from "@blockframes/analytics/+state/utils";
-import { AggregatedAnalytic } from "@blockframes/model";
-import { fromOrgAndAccepted, MovieService } from "@blockframes/movie/+state/movie.service";
-import { OrganizationService } from "@blockframes/organization/+state";
-import { UserService } from "@blockframes/user/+state";
-import { App } from "@blockframes/utils/apps";
-import { unique } from "@blockframes/utils/helpers";
-import { joinWith } from "@blockframes/utils/operators";
-import { APP } from "@blockframes/utils/routes/utils";
-import { map } from "rxjs/operators";
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { aggregate } from '@blockframes/analytics/+state/utils';
+import { AggregatedAnalytic, App } from '@blockframes/model';
+import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movie.service';
+import { OrganizationService } from '@blockframes/organization/+state';
+import { UserService } from '@blockframes/user/+state';
+import { unique } from '@blockframes/utils/helpers';
+import { joinWith } from '@blockframes/utils/operators';
+import { APP } from '@blockframes/utils/routes/utils';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-buyers-analytics',
@@ -52,7 +51,7 @@ export class BuyersAnalyticsComponent {
     private userService: UserService,
     private orgService: OrganizationService,
     @Inject(APP) public app: App
-  ) {}
+  ) { }
 
   goToBuyer(data: AggregatedAnalytic) {
     this.router.navigate([data.user.uid], { relativeTo: this.route });
