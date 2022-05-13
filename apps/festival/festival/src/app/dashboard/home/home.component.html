@@ -56,9 +56,8 @@
 
         <section>
           <h3>Buyers' Insights</h3>
-          <div class="surface" fxLayout="row" fxLayoutGap="24px">
             <analytics-map
-              class="map-insights"
+              class="surface map-insights"
               [data]="activeCountries$ | async"
               [topCountryCount]="5"
               [topCountriesTemplate]="topCountriesTemplate"
@@ -108,8 +107,7 @@
                   </mat-list>
                 </aside>
               </ng-template>
-          </analytics-map>
-          </div>
+            </analytics-map>
         </section>
       </ng-container>
     </ng-container>

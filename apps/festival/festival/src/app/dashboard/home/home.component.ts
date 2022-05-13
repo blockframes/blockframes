@@ -29,11 +29,11 @@ interface TerritoryAndCountOption {
   orgIds: string[]
 }
 
-function getTerritoryAndCount({ orgs, analytics }: TerritoryAndCountOption): AnalyticData[]{
+function getTerritoryAndCount({ orgs, analytics }: TerritoryAndCountOption): AnalyticData[] {
   const territoryEntries = Object.entries(territories)
     .filter(([key]) => key !== 'world');
 
-  return territoryEntries.map(([key,label]:[string,string]) => {
+  return territoryEntries.map(([key, label]: [string, string]) => {
     const orgsInTerritory = orgs
       .filter(o => o.addresses.main.country === key);
 
@@ -102,12 +102,9 @@ export class HomeComponent {
   activeCountries$ = this.titleAnalytics$.pipe(
     filter(analytics => analytics.length > 0),
     map(analytics => {
-      const orgIds = unique(analytics.map(analytic => analytic.meta.orgId));
-      return { orgIds, analytics };
+      const orgs = analytics.map((analytic) => analytic.org)
+      return { orgs, analytics };
     }),
-    joinWith({
-      orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
-    }, { shouldAwait: true }),
     map(getTerritoryAndCount),
     map(stats => stats.sort(({ count: countA }, { count: countB }) => countA - countB))
   );
