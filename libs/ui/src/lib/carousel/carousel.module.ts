@@ -5,8 +5,6 @@ import { CommonModule } from '@angular/common';
 // Component
 import { CarouselComponent, CarouselItemDirective } from './carousel.component';
 
-// Blockframes
-import { MatLayoutModule } from '../layout/layout.module';
 import { IsAboveModule } from '@blockframes/utils/pipes';
 
 // Material
@@ -18,7 +16,6 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [
     CommonModule,
     ScrollingModule,
-    MatLayoutModule,
     IsAboveModule,
 
     // Material
