@@ -2,6 +2,9 @@
   "name": "blockframes",
   "version": "4.1.0",
   "license": "MIT",
+  "bin": {
+    "bf": "./tools/bootstrap.ts"
+  },
   "engines": {
     "node": "^16.14.0",
     "npm": "^8.5.0"
@@ -56,7 +59,7 @@
     "affected": "nx affected",
     "pwm": "pwmetrics --config",
     "bundlesize": "bundlesize",
-    "postinstall": "ngcc --properties es2015 browser module main && node ./decorate-angular-cli.js",
+    "postinstall": "npm link && ngcc --properties es2015 browser module main && node ./decorate-angular-cli.js",
     "prerender:festival": "nx build festival --prod && nx run festival:server --configuration production && angular-prerender --browser-target festival:build --server-target festival:server",
     "backend-ops": "ts-node -P tools/tsconfig.tools.json apps/backend-ops/src/main.ts"
   },

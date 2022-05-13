@@ -8,8 +8,8 @@ import { runShellCommandExec } from '../commands';
  * ie: META_COLLECTION_NAME/MAINTENANCE_DOCUMENT_NAME
  * @param db firestore object
  */
-export async function clearDb(db: FirebaseFirestore.Firestore) {
-  throwOnProduction();
+export async function clearDb(db: FirebaseFirestore.Firestore, allowProd?: boolean) {
+  if (!allowProd) throwOnProduction();
   const collections = (await db.listCollections()).filter((ref) => ref.id !== META_COLLECTION_NAME).map(ref => ref.id);
   const cmds = collections.map(collection => `firebase firestore:delete -P ${firebase().projectId} -r -y ${collection}`)
   for (const cmd of cmds) {

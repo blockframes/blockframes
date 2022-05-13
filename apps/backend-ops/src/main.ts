@@ -4,14 +4,12 @@ config(); // * Must be run here!
 import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
 warnMissingVars()
 
-import { generateFixtures } from './generate-fixtures';
-import { exportFirestore } from './admin';
 import {
+  exportFirestoreToBucketBeta,
   healthCheck,
   migrate,
   disableMaintenanceMode,
   displayCredentials,
-  showHelp,
   upgradeAlgoliaMovies,
   upgradeAlgoliaOrgs,
   upgradeAlgoliaUsers,
@@ -40,12 +38,21 @@ import {
   prepareEmulators,
   upgradeEmulators,
   printDatabaseInconsistencies,
-  keepAlive
+  keepAlive,
+  generateUsers,
+  generateMovies,
+  generateOrgs,
 } from '@blockframes/devops';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
 const [arg1, arg2] = flags;
+
+export async function generateFixtures(db: FirebaseFirestore.Firestore) { // TODO - will move this in next PR
+  await generateUsers(db);
+  await generateMovies(db);
+  await generateOrgs(db);
+}
 
 async function runCommand() {
   const { db } = loadAdminServices();
@@ -103,7 +110,7 @@ async function runCommand() {
       await upgradeEmulators();
       break;
     case 'exportFirestore':
-      await exportFirestore(arg1)
+      await exportFirestoreToBucketBeta(arg1)
       break;
     case 'importFirestore':
       await importFirestore(arg1)
@@ -157,9 +164,7 @@ async function runCommand() {
       await rescueJWP({ jwplayerKey: arg1, jwplayerApiV2Secret: arg2 });
       break;
     default:
-      showHelp();
-      await Promise.reject('Command not recognised');
-      break;
+      return Promise.reject('Command Args not detected... exiting..');
   }
 }
 

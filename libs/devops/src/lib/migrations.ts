@@ -6,9 +6,8 @@ import { importFirestore } from './admin';
 import { Firestore, loadAdminServices, IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 import { last } from 'lodash';
 import { dbVersionDoc } from '@blockframes/utils/maintenance';
-import { getFirestoreExportDirname } from './firebase-utils';
+import { exportFirestoreToBucketBeta, getFirestoreExportDirname } from './firebase-utils';
 import { isMigrationRequired } from './tools';
-import { exportFirestore } from '../../../../apps/backend-ops/src/admin'
 
 export const VERSION_ZERO = 2;
 
@@ -72,7 +71,7 @@ export async function migrate({
 
     if (withBackup) {
       console.info('Backup the database before doing anything');
-      await exportFirestore(backupDir);
+      await exportFirestoreToBucketBeta(backupDir);
       console.info('Backup done, moving on to the migrations...');
     } else {
       console.warn('⚠️ skipping the backup before running migrations!');
@@ -94,13 +93,13 @@ export async function migrate({
     console.error(e);
     if (withBackup) {
       console.error('Migration failed. Restoring pre-migration backup...');
-      await importFirestore(backupDir);
+      await importFirestore(backupDir, { allowProd: true });
     }
     throw e;
   } finally {
     if (withBackup) {
       console.info('Running a backup post-migration');
-      await exportFirestore(`post-migration-${getFirestoreExportDirname(new Date())}`);
+      await exportFirestoreToBucketBeta(`post-migration-${getFirestoreExportDirname(new Date())}`);
       console.info('Done with the backup post-migration');
     }
     console.info('Data model version migration complete!');

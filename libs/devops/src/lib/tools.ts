@@ -1,12 +1,9 @@
 import { LATEST_VERSION, loadAdminServices, startMaintenance } from '@blockframes/firebase-utils';
+import * as env from '@env';
+import { config } from 'dotenv';
 import { resolve } from 'path';
 import { loadDBVersion } from './migrations';
-import { firebase } from '@env'
 import { IMaintenanceDoc } from '@blockframes/model';
-
-export function showHelp() {
-  console.log('TODO: write a documentation');
-}
 
 export async function isMigrationRequired(db = loadAdminServices().db) {
   const currentVersion = await loadDBVersion(db);
@@ -22,20 +19,31 @@ export function disableMaintenanceMode() {
 }
 
 export async function displayCredentials() {
-  let GAP: { [key: string]: string };
+  console.log('Local Firebase config:\n\n', env.firebase());
+  console.log('\n\nBackup Storage Bucket: ', env.backupBucket);
+  console.log('\n\nFull env.ts module:');
+  console.log({ ...env });
+
+  console.log('\n\nContents of .env secrets:');
+  console.log(config({ debug: true }));
+
+  const GAC = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  if (!GAC) {
+    console.log('NO GAC value detected, will not display SAK');
+    return;
+  }
+  let GACObj: { [key: string]: string };
   try {
     // If service account is a stringified json object
-    GAP = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+    GACObj = JSON.parse(GAC);
   } catch (e) {
     // If service account is a path
     // tslint:disable-next-line: no-eval
-    GAP = eval('require')(resolve(process.env.GOOGLE_APPLICATION_CREDENTIALS));
+    GACObj = eval('require')(resolve(GAC));
   }
-  delete GAP.privateKey;
-  delete GAP.private_key;
-  console.log('Using default service account:\n', GAP);
-
-  console.log('Local env.ts:\n', firebase());
+  delete GACObj.privateKey;
+  delete GACObj.private_key;
+  console.log('\n\nUsing default service account:\n', GACObj);
 }
 
 export async function ensureMaintenanceMode(db: FirebaseFirestore.Firestore) {
