@@ -56,7 +56,8 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
     this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
     const sale = await this.sale$.pipe(first()).toPromise();
     const ref = this.dialog.open(ConfirmDeclineComponent, {
-      data: createModalData<ConfirmDeclineData>({ type: 'seller', showAcceptTermsCheckbox: true })
+      data: createModalData<ConfirmDeclineData>({ type: 'seller', showAcceptTermsCheckbox: true }),
+      autoFocus: false
     });
     const options = { params: { contractId: sale.id } };
     ref.afterClosed().subscribe(declineReason => {
@@ -90,7 +91,8 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
         question: 'Please verify if all the contract elements are convenient for you.',
         confirm: 'Yes, submit Contract',
         cancel: 'Come back & Verify Contract'
-      }, 'small')
+      }, 'small'),
+      autoFocus: false
     });
   }
 }

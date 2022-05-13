@@ -37,7 +37,7 @@
     </header>
 
     <bf-table [source]="result$ | async" useFilter pagination="50">
-      <ng-template colRef label="Title" let-movie sort defaultSort>
+      <ng-template colRef label="Title" let-movie sort defaultSort [filter]="filters.movieTitle">
         <a [routerLink]="movie.id" [matTooltip]="movie.title.international">
           <u>{{ movie.title.international | maxLength:50 }}</u>
         </a>

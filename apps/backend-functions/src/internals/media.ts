@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 
 // Blockframes dependencies
 import { getDocument } from '../data/internals';
-import { StorageFile, createPublicUser, MovieDocument, EventDocument, EventMeta, Meeting, Screening } from '@blockframes/model';
+import { StorageFile, createPublicUser, MovieDocument, EventDocument, EventMeta, Meeting, Screening, Slate } from '@blockframes/model';
 
 // Internal dependencies
 import { isUserInvitedToEvent } from './invitations/events';
@@ -105,6 +105,9 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
       // only give access for this specific movie screener
       canAccess = file.field === 'promotional.videos.screener'
         && file.docId === (eventData.meta as Screening).titleId;
+    } else if (eventData.type === 'slate') {
+      canAccess = file.field === 'documents.videos'
+        && file.fileId === (eventData.meta as Slate).videoId;
     }
   }
 

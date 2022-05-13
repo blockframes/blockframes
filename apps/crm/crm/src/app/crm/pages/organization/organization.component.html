@@ -77,7 +77,7 @@
         <ng-template colRef="releaseYear" label="Release year" let-releaseYear sort>
           {{ releaseYear }}
         </ng-template>
-        <ng-template colRef="apps" label="Status" let-appAccess>
+        <ng-template colRef="app" label="Status" let-appAccess>
           <ul>
             <li *ngFor="let app of apps">
               {{ app | appName:'short' }} : {{ appAccess[app]?.status | titlecase }}

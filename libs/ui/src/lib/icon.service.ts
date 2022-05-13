@@ -22,6 +22,7 @@ export const icons = [
   { name: 'ask_screening_2', url: 'assets/icons/ask_screening_2.svg' },
   { name: 'attachment', url: 'assets/icons/attachment.svg' },
   { name: 'AUD', url: 'assets/icons/attach_money.svg' },
+  { name: 'badge', url: 'assets/icons/badge.svg' },
   { name: 'block', url: 'assets/icons/block.svg' },
   { name: 'build', url: 'assets/icons/build.svg' },
   { name: 'business', url: 'assets/icons/business.svg' },
