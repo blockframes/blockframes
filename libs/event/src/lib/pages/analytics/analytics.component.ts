@@ -24,7 +24,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { where } from 'firebase/firestore';
 import { sum } from '@blockframes/utils/utils';
 import { formatDate } from '@angular/common';
-import { writeFile, utils } from "xlsx";
+import { writeFile, utils } from 'xlsx';
 const { aoa_to_sheet, decode_range, book_new, book_append_sheet } = utils;
 
 interface WatchTimeInfo {
