@@ -9,7 +9,7 @@
               <mat-icon svgIcon="group"></mat-icon>
               <span class="mat-body-2">Number of attendees</span>
             </span>
-            <h2>{{ analytics.length }}</h2>
+            <h2>{{ attendeesAnalytics.length }}</h2>
           </mat-card>
           <mat-card class="attendees">
             <span fxLayout="row" fxLayoutAlign="start center">
@@ -24,15 +24,15 @@
             <h3>Attendees</h3>
             <button [disabled]="exporting" mat-button color="primary" (click)="exportTable()">
               <ng-container *ngIf="exporting else export">
-                <span>Generating CSV...</span>
+                <span>Generating Excel...</span>
               </ng-container>
               <ng-template #export>
                 <mat-icon svgIcon="excel"></mat-icon>
-                <span>Export to CSV</span>
+                <span>Export to Excel</span>
               </ng-template>
             </button>
           </article>
-          <bf-table pagination="50" useFilter [source]="analytics">
+          <bf-table pagination="50" useFilter [source]="attendeesAnalytics">
             <ng-template colRef="name" label="Name" let-name sort>{{ name | titlecase }}</ng-template>
             <ng-template colRef="email" label="Email Address" let-email sort>{{ email }}</ng-template>
             <ng-template colRef="orgName" label="Company Name" let-orgName sort>{{ orgName || dataMissing }}</ng-template>
