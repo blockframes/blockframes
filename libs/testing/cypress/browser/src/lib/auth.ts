@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import type { AuthService } from '@blockframes/auth/+state';
-import { USER_FIXTURES_PASSWORD } from 'libs/devops/src/lib/firebase-utils/anonymize/util';
+import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 
 export function loginWithEmailAndPassword(email: string) {
   cy.window().should('have.property', 'LoginService');
