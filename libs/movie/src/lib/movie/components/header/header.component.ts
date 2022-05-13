@@ -16,6 +16,7 @@ import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { NavigationService } from '@blockframes/ui/navigation.service';
+import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 function createMovieView(movie: Movie) {
   return {
@@ -36,7 +37,6 @@ type MovieHeaderView = ReturnType<typeof createMovieView>;
   selector: '[movie] movie-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
@@ -44,8 +44,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private _movie: Movie;
   private countRouteEvents = 1;
   private sub: Subscription;
+  public xs$ = this.breakpointsService.xs;
 
-  constructor(private router: Router, private navService: NavigationService) { }
+  constructor(
+    private router: Router, 
+    private navService: NavigationService,
+    private breakpointsService: BreakpointsService
+  ) { }
 
   @Input() showBackArrow = true;
   @Input() set movie(movie: Movie) {

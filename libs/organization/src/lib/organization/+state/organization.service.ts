@@ -75,7 +75,7 @@ export class OrganizationService extends BlockframesCollection<Organization> {
 
   public async orgNameExist(orgName: string) {
     // @TODO #6908 a better solution for this should be found.
-    const orgs = await this.getValue([where('denomination.full', '==', orgName)]);
+    const orgs = await this.getValue([where('denomination.full', '==', orgName.trim())]);
     return orgs.length !== 0;
   }
 
@@ -89,6 +89,12 @@ export class OrganizationService extends BlockframesCollection<Organization> {
       ...org,
       appAccess: createOrgAppAccess(org.appAccess),
     };
+  }
+
+  formatToFirestore(org: Partial<Organization>) { // TODO #7273 #8280
+    if (org.denomination?.full) org.denomination.full = org.denomination.full.trim();
+    if (org.denomination?.public) org.denomination.public = org.denomination.public.trim();
+    return org;
   }
 
   /**

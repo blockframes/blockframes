@@ -30,6 +30,7 @@ import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/
 import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { RequestScreeningModule } from '@blockframes/event/components/request-screening/request-screening.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -47,6 +48,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     BudgetFilterModule,
     StaticCheckBoxesModule,
     ImageModule,
+    RequestScreeningModule,
 
     // Material
     MatIconModule,

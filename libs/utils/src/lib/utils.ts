@@ -258,7 +258,7 @@ export function toLabel(
  * @param endWith
  * @returns
  */
-function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
+export function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
   const last = str.pop();
   return `${str.join(joinWith)}${str.length ? endWith : ''}${last || ''}`;
 }
@@ -286,4 +286,11 @@ export function toLanguageVersionString(languages: LanguageRecord) {
     })
     .filter((d) => d)
     .join(', ');
+}
+
+export function sum(array: number[]): number
+export function sum<T>(array: T[], getAmount: (item: T) => number): number
+export function sum<T>(array: T[], getAmount?: (item: T) => number): number {
+  const cb = getAmount || ((item: number) => item);
+  return array.reduce((total, item) => total + cb(item as any), 0);
 }

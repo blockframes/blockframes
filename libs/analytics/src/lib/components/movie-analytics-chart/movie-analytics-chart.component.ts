@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieAnalytics } from './movie-analytics.model';
 import { lineChartOptions } from './default-chart-options';
+import { sum } from '@blockframes/utils/utils';
 
 const chartInfo = [
   {
@@ -25,10 +26,6 @@ const chartInfo = [
 
 type MovieAnalyticsEventName = typeof chartInfo[number]['eventName'];
 type MovieAnalyticsTitle = typeof chartInfo[number]['title'];
-
-function getSum(array: number[]): number {
-  return array.reduce((acc, num) => acc + num, 0);
-}
 
 /** Generate each past date for chart's x axis, number means how far from today's date */
 function getLastDays(from: number, to: number = 0) {
@@ -123,13 +120,13 @@ export class MovieAnalyticsChartComponent {
   totalHitsOnCurrentMonth(eventName: MovieAnalyticsEventName) {
     const total = this.chartData.find((chart) => chart.eventName === eventName).y;
     if (total) {
-      return getSum(total);
+      return sum(total);
     }
   }
 
   calculatePercentage(currentHits: number[], pastHits: number[]): number {
-    const current = getSum(currentHits);
-    const past = getSum(pastHits);
+    const current = sum(currentHits);
+    const past = sum(pastHits);
     if (current && past && current > past) {
       return Math.round(((current - past) / past) * 100);
     } else if (past > current) {

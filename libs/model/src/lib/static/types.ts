@@ -40,7 +40,8 @@ import {
   negotiationStatus,
   app,
   modules,
-  appName
+  appName,
+  eventTypes
 } from './static-model';
 
 export type App = typeof app[number];
@@ -109,6 +110,9 @@ export type ProducerRoleValue = typeof producerRoles[ProducerRole];
 
 export type ProductionStatus = keyof typeof productionStatus;
 export type ProductionStatusValue = typeof productionStatus[ProductionStatus];
+
+export type EventTypes  = keyof typeof eventTypes;
+export type EventTypesValue = typeof eventTypes[EventTypes];
 
 export type Rating = keyof typeof rating;
 

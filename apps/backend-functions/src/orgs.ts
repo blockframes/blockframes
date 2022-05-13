@@ -82,6 +82,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 
 export function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot) {
   const org = snap.data() as OrganizationDocument;
+  if(org.status === 'accepted') return;
 
   if (!org?.denomination?.full) {
     console.error('Invalid org data:', org);

@@ -147,9 +147,8 @@ export class LandingShellComponent implements OnDestroy {
       this.newslettersSubmitted = true;
       this.snackBar.open('Subscribed to newsletters', 'close', { duration: 2000 });
       this.cdr.markForCheck();
-
-    } catch (error) {
-      this.snackBar.open('Please enter a valid email address.', 'close', { duration: 2000 });
+    } catch (err) {
+      this.snackBar.open('You are already subscribed to our newsletter.', 'close', { duration: 5000 });
     }
   }
 }

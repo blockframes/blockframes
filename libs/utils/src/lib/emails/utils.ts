@@ -5,7 +5,6 @@ import { format } from 'date-fns';
 import {
   EventDocument,
   EventMeta,
-  EventTypes,
   MeetingEventDocument,
   ScreeningEventDocument,
   User,
@@ -25,11 +24,14 @@ import {
   ContractDocument,
   Offer,
   movieCurrenciesSymbols,
-  SlateEventDocument
+  SlateEventDocument,
+  EventTypesValue,
+  eventTypes
 } from '@blockframes/model';
 import { toIcsFile } from '../agenda/utils';
 import { IcsEvent } from '../agenda/agenda.interfaces';
 import { getKeyIfExists } from '../helpers';
+import { toLabel } from '../utils';
 
 interface EmailData {
   to: string;
@@ -77,7 +79,7 @@ export interface EventEmailData {
   title: string;
   start: string;
   end: string;
-  type: EventTypes;
+  type: EventTypesValue;
   viewUrl: string;
   sessionUrl: string;
   accessibility: AccessibilityTypes;
@@ -177,7 +179,7 @@ export function getEventEmailData({ event, orgName, attachment = true, email, in
     title: event.title,
     start: format(eventStartDate, 'Pppp'),
     end: format(eventEndDate, 'Pppp'),
-    type: event.type,
+    type: eventTypes[event.type],
     viewUrl: `/event/${event.id}/r/i${eventUrlParams}`,
     sessionUrl: `/event/${event.id}/r/i/session${eventUrlParams}`,
     accessibility: event.accessibility,
@@ -197,11 +199,11 @@ function getEventEmailAttachment(event: EventDocument<EventMeta>, orgName: strin
 
 function createIcsFromEventDocument(e: EventDocument<EventMeta>, orgName: string): IcsEvent {
   if (!['meeting', 'screening', 'slate'].includes(e.type)) return;
-  const event = e.type == 'meeting' 
-  ? e as MeetingEventDocument 
-  : e.type == 'screening' 
-    ? e as ScreeningEventDocument 
-    : e as SlateEventDocument;
+  const event = e.type == 'meeting'
+    ? e as MeetingEventDocument
+    : e.type == 'screening'
+      ? e as ScreeningEventDocument
+      : e as SlateEventDocument;
 
   return {
     id: event.id,
@@ -221,7 +223,7 @@ export function getOrgEmailData(org: Partial<OrganizationDocument>): OrgEmailDat
     id: org.id,
     denomination: orgName(org, 'full'),
     email: org.email || '',
-    country: org.addresses?.main?.country
+    country: toLabel(org.addresses?.main?.country, 'territories')
   }
 }
 
@@ -253,7 +255,7 @@ export function getMovieEmailData(movie: Partial<MovieDocument>): MovieEmailData
 export function getNegotiationEmailData(negotiation: Partial<NegotiationDocument>): NegotiationEmailData {
   const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
   const formatter = new Intl.NumberFormat('en-US');
-  const price = formatter.format(negotiation.price);
+  const price = negotiation.price ? formatter.format(negotiation.price) : '';
   const terms = createMailTerm(negotiation.terms);
 
   return {

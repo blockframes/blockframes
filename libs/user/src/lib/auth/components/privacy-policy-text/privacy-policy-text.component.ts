@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { boolean } from "@blockframes/utils/decorators/decorators";
 
 @Component({
   selector: 'auth-privacy-policy-text',
@@ -7,4 +8,6 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class PrivacyPolicyTextComponent {}
+export class PrivacyPolicyTextComponent {
+  @Input() @boolean dialog = false;
+}
