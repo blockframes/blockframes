@@ -121,7 +121,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     if (increment) this.processing++;
     importState.importing = true;
     this.cdr.markForCheck();
-    await this.movieService.upsert(importState.movie); // TODO #7273 #8280 test if working ok wihtout removeNulls
+    await this.movieService.upsert(importState.movie);
     importState.importing = false;
     this.cdr.markForCheck();
   }
