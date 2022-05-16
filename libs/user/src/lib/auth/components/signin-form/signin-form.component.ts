@@ -12,4 +12,9 @@ export class SigninFormComponent {
   @Output() submited = new EventEmitter();
 
   public signinForm = new SigninForm();
+  public hidePassword : boolean = true;
+
+  passwordVisibility(){
+   return this.hidePassword = !this.hidePassword
+  }
 }
