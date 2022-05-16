@@ -98,16 +98,3 @@ analytics-map.map-insights {
     margin-right: 12px;
   }
 }
-
-.country-list {
-  padding: 24px;
-  border-radius: 4px;
-  border: 1px solid var(--foreground-divider);
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 300px;
-
-  li {
-    border-bottom: 1px solid var(--foreground-divider);
-  }
-}
