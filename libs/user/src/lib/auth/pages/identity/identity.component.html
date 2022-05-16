@@ -103,7 +103,9 @@
             [errorStateMatcher]="currentPasswordMatch"
             required
             test-id="password"
+            [type]="hidePassword ? 'password' : 'text'"
           />
+          <mat-icon matSuffix svgIcon="visibility" (click)=passwordVisibility()></mat-icon>
           <mat-hint>Between 6 and 24 characters.</mat-hint>
           <mat-error *ngIf="form.get('password').hasError('required')">
             New password is <strong>required</strong>.
@@ -128,7 +130,9 @@
             [errorStateMatcher]="passwordsMatcher"
             required
             test-id="password-confirm"
+            [type]="hidePassword ? 'password' : 'text'"
           />
+          <mat-icon matSuffix svgIcon="visibility" (click)=passwordVisibility()></mat-icon>
           <mat-hint>Please rewrite your password for confirmation.</mat-hint>
           <mat-error *ngIf="form.get('confirm').hasError('required')">
             New password confirmation is <strong>required</strong>.
