@@ -54,8 +54,8 @@ import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.mod
     MatInputModule,
     MatButtonModule,
     MatTableModule,
-    MatPaginatorModule, // @TODO #7429
-    MatSortModule, // @TODO #7429
+    MatPaginatorModule,
+    MatSortModule,
     MatDialogModule,
     MatCheckboxModule,
     MatExpansionModule,
@@ -65,8 +65,9 @@ import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.mod
     ImageModule,
     ToLabelModule,
     ErrorCountPipeModule,
-    IsDisabledPipeModule
-    
+    IsDisabledPipeModule,
+    IsDisabledPipeModule,
+
   ],
   exports: [
     TableExtractedMoviesComponent,
