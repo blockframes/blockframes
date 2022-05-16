@@ -88,20 +88,19 @@ describe('Invitations Test Suite', () => {
   // To prevent "This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue."
   afterAll(() => disableNetwork(db));
 
-  it('Should check invitation service is created', () => {
+  it('Should check if invitation service is created', () => {
     expect(service).toBeTruthy();
   })
-
 
   it('Formats invitation to firestore', () => {
     const invitationService = TestBed.inject(InvitationService);
 
     //Create an Invitation Document
     const inviteData = { ...invitationParamsOrg, ...invitationParamsUser };
-    const inviteParams = { ...inviteData, ...{ message: 'Clean it', watchTime: undefined } };
+    const inviteParams = { ...inviteData, ...{ message: 'Clean it' } };
     const newInvite = createInvitation(inviteParams);
     const formattedInvite = invitationService.toFirestore(newInvite);
-    expect(formattedInvite).toMatchObject(inviteData);
+    expect(formattedInvite.message).toBe(undefined);
   });
 
   it('Should invitation status become accepted', async () => {

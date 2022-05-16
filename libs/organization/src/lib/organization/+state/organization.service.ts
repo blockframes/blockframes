@@ -22,7 +22,7 @@ import { AnalyticsService } from '@blockframes/analytics/+state/analytics.servic
 import { combineLatest, Observable, of } from 'rxjs';
 import { DocumentSnapshot, where } from 'firebase/firestore';
 import { runInZone } from '@blockframes/utils/zone';
-import { CallableFunctions, WriteOptions } from 'ngfire';
+import { CallableFunctions, FireEntity, WriteOptions } from 'ngfire';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
@@ -93,7 +93,7 @@ export class OrganizationService extends BlockframesCollection<Organization> {
     };
   }
 
-  formatToFirestore(org: Partial<Organization>) { // TODO #7273 #8280
+  cleanOrganization(org: Organization) {
     if (org.denomination?.full) org.denomination.full = org.denomination.full.trim();
     if (org.denomination?.public) org.denomination.public = org.denomination.public.trim();
     return org;
@@ -128,7 +128,8 @@ export class OrganizationService extends BlockframesCollection<Organization> {
       userIds: [user.uid],
     });
 
-    return this.add(newOrganization);
+    const newOrg = this.cleanOrganization(newOrganization);
+    return this.add(newOrg);
   }
 
   public notifyAppAccessChange(orgId: string, app: App) {
