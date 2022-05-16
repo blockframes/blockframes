@@ -65,8 +65,9 @@ import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.mod
     ImageModule,
     ToLabelModule,
     ErrorCountPipeModule,
-    IsDisabledPipeModule
-    
+    IsDisabledPipeModule,
+    IsDisabledPipeModule,
+
   ],
   exports: [
     TableExtractedMoviesComponent,
