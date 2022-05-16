@@ -9,6 +9,7 @@ import { PasswordFormComponent } from './password.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [PasswordFormComponent],
@@ -19,7 +20,8 @@ import { MatInputModule } from '@angular/material/input';
     // Material
     MatCardModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatIconModule
   ],
   exports: [PasswordFormComponent]
 })
