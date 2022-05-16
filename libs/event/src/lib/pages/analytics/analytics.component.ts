@@ -57,7 +57,7 @@ export class AnalyticsComponent implements OnInit {
 
 
   event$: Observable<Event<EventMeta>>;
-  private analytics: WatchTimeInfo[];
+  public analytics: WatchTimeInfo[];
   public acceptedAnalytics: WatchTimeInfo[];
   public exporting = false
   public averageWatchTime = 0; // in seconds
