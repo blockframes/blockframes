@@ -5,13 +5,11 @@
 header {
   display: flex;
   gap: 8px;
-
-  h5 {
-    display: flex;
-  }
+  justify-content: space-between;
 }
 
 world-map {
+  flex: 1 1 auto;
   height: 300px;
   border-radius: 4px;
 }
@@ -28,7 +26,10 @@ button {
   margin-left: auto;
 }
 
-
 mat-spinner {
   margin: auto;
+}
+
+mat-list.horizontal {
+  flex: 0 0 300px;
 }

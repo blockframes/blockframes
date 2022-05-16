@@ -1,45 +1,39 @@
-<header>
-  <article>
-    <h5>
-      <mat-icon svgIcon="landscape"></mat-icon>
-      <span>Split by Company Territory</span>
-    </h5>
-    <p class="mat-caption">Learn where are the interested people from.</p>
-  </article>
-  <button mat-icon-button *ngIf="selected" (click)="toggleSelect(selected)" matTooltip="Remove selection">
-    <mat-icon svgIcon="refresh_filters"></mat-icon>
-  </button>
-</header>
+<ng-container *ngIf="header">
+  <header>
+    <ng-template [ngTemplateOutlet]="header" [ngTemplateOutletContext]="{resetSelected, selected}"></ng-template>
+  </header>
+</ng-container>
 
 <ng-container *ngIf="!isLoading else loading">
-  <world-map *ngIf="top3.length; else empty">
+  <world-map *ngIf="topCountries.length; else empty">
     <!-- MAP LAYERS -->
     <ng-container *ngFor="let isoA3 of zero">
       <map-feature [tag]="isoA3" color="#ebeef3" (click)="toggleSelect(isoA3)"></map-feature>
     </ng-container>
-  
+
     <ng-container *ngFor="let isoA3 of lessThanFive">
       <map-feature [tag]="isoA3" color="#dee5ff" (click)="toggleSelect(isoA3)"></map-feature>
     </ng-container>
-  
+
     <ng-container *ngFor="let isoA3 of lessThanFifty">
       <map-feature [tag]="isoA3" color="#8da4fa" (click)="toggleSelect(isoA3)"></map-feature>
     </ng-container>
-  
+
     <ng-container *ngFor="let isoA3 of moreThanFifty">
       <map-feature [tag]="isoA3" color="#001ec7" (click)="toggleSelect(isoA3)"></map-feature>
     </ng-container>
-  
+
     <ng-container *ngIf="selected">
       <map-feature [tag]="selected" color="#3c64f7" (click)="toggleSelect(selected)"></map-feature>
     </ng-container>
+    <ng-container *ngIf="mapLegend">
+      <ng-container *ngTemplateOutlet="mapLegend"></ng-container>
+    </ng-container>
   </world-map>
-  
-  <mat-list>
-    <mat-list-item *ngFor="let top of top3">
+  <mat-list [ngClass]="{horizontal}">
+    <mat-list-item *ngFor="let top of topCountries">
       <span matLine>{{ top.label }}</span>
       <span>{{ top.count }}</span>
-  
       <mat-divider></mat-divider>
     </mat-list-item>
   </mat-list>

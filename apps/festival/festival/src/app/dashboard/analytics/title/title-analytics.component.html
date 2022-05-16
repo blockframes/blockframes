@@ -35,7 +35,20 @@
 
     <div fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
       <analytics-pie-chart fxFlex class="surface" [data]="orgActivity$ | async" (selection)="filterValue = $event"></analytics-pie-chart>
-      <analytics-map fxFlex class="surface" [data]="territoryActivity$ | async" selectable (selection)="filterValue = $event"></analytics-map>
+      <analytics-map fxFlex class="surface" [data]="territoryActivity$ | async" selectable (selection)="filterValue = $event">
+        <ng-template #header let-selected="selected" let-resetSelected="resetSelected">
+          <article>
+            <h5>
+              <mat-icon svgIcon="landscape"></mat-icon>
+              <span>Split by Company Territory</span><br/>
+            </h5>
+            <p class="mat-caption">Learn where are the interested people from.</p>
+          </article>
+          <button mat-icon-button *ngIf="selected" (click)="resetSelected(selected)" matTooltip="Remove selection">
+            <mat-icon svgIcon="refresh_filters"></mat-icon>
+          </button>
+        </ng-template>
+      </analytics-map>
     </div>
   </article>
 

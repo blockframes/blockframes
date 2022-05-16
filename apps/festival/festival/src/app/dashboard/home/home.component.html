@@ -12,7 +12,7 @@
         <a mat-fab color="black" routerLink="../import" matTooltip="Import Titles">
           <mat-icon svgIcon="excel"></mat-icon>
         </a>
-      </div>   
+      </div>
     </header>
 
     <ng-container *ngIf="titleAnalytics$ | async as analytics; else loading">
@@ -28,15 +28,27 @@
               </a>
             </header>
             <bf-carousel>
-              <analytics-pie-chart class="surface" carouselItem [data]="orgActivityOfPopularTitle$ | async"></analytics-pie-chart>
-              <analytics-map class="surface" carouselItem [data]="territoryActivityOfPopularTitle$ | async"></analytics-map>
-              <analytics-line-chart class="surface" carouselItem [eventNames]="interactions" [data]="interactionsOfPopularTitle$ | async">
+              <analytics-pie-chart class="surface" carouselItem [data]="orgActivityOfPopularTitle$ | async">
+              </analytics-pie-chart>
+              <analytics-map class="surface" carouselItem [data]="territoryActivityOfPopularTitle$ | async">
+                <ng-template #header>
+                    <article>
+                      <h5>
+                        <mat-icon svgIcon="landscape"></mat-icon>
+                        <span>Split by Company Territory</span>
+                      </h5>
+                      <p class="mat-caption">Learn where are the interested people from.</p>
+                    </article>
+                </ng-template>
+              </analytics-map>
+              <analytics-line-chart class="surface" carouselItem [eventNames]="interactions"
+                [data]="interactionsOfPopularTitle$ | async">
                 <h5>
                   <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
                   <span>Interactions</span>
                 </h5>
                 <p class="mat-caption">Learn how people interact with your Title.</p>
-    
+
               </analytics-line-chart>
               <analytics-line-chart class="surface" carouselItem [eventNames]="['pageView']" [data]="pageViewsOfPopularTitle$ | async">
                 <h5>
@@ -47,7 +59,7 @@
               </analytics-line-chart>
             </bf-carousel>
           </ng-container>
-    
+
           <a mat-button class="see_titles" routerLink="title">
             <span>View all Titles Activity</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
@@ -57,7 +69,7 @@
       </ng-container>
     </ng-container>
   </ng-container>
-  
+
   <ng-template #noAcceptedMovies>
     <section fxLayout="column" fxLayoutAlign="center center" class="no-accepted-movies">
       <ng-container *ngIf="titles.length; else noMovies">

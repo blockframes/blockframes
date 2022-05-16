@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { AnalyticData } from '@blockframes/analytics/+state/utils';
 import { Territory, TerritoryISOA3Value, parseToAll, territoriesISOA3, staticModel } from '@blockframes/model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
@@ -20,9 +20,14 @@ export class AnalyticsMapComponent {
   lessThanFifty: TerritoryISOA3Value[] = [];
   moreThanFifty: TerritoryISOA3Value[] = [];
   selected: TerritoryISOA3Value;
+  topCountries: AnalyticData[] = [];
 
-  top3: AnalyticData[] = [];
 
+  @Input() topCountryCount = 3;
+  @ContentChild('mapLegend') mapLegend: TemplateRef<HTMLElement>;
+  @ContentChild('header') header: TemplateRef<HTMLElement>;
+  @Input() @boolean noHeader = false;
+  @Input() @boolean horizontal = false;
   @Input() set data(data: AnalyticData[]) {
     if (!data) return;
     this.isLoading = false;
@@ -46,11 +51,15 @@ export class AnalyticsMapComponent {
     }
 
     const sorted = data.sort((a, b) => b.count - a.count);
-    this.top3 = sorted.splice(0, 3);
+    this.topCountries = sorted.splice(0, this.topCountryCount);
   }
 
   @Input() @boolean selectable = false;
   @Output() selection: EventEmitter<string> = new EventEmitter();
+
+  resetSelected = () => {
+    return this.toggleSelect(this.selected);
+  }
 
   toggleSelect(isoA3: TerritoryISOA3Value) {
     if (!this.selectable) return;
@@ -59,4 +68,5 @@ export class AnalyticsMapComponent {
     const selection = key === 'world' ? '' : staticModel.territories[key];
     this.selection.next(selection);
   }
- }
+
+}
