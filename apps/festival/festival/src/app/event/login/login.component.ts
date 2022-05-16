@@ -18,6 +18,7 @@ export class EventLoginComponent implements OnInit {
   });
   public buttonText = 'Log in';
   public signinIn = false;
+  public hidePassword: boolean = true;
 
   constructor(
     private service: AuthService,
@@ -75,5 +76,9 @@ export class EventLoginComponent implements OnInit {
   goBack() {
     this.service.updateAnonymousCredentials({ role: undefined });
     this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
+  }
+
+  passwordVisibility() {
+    return this.hidePassword = !this.hidePassword
   }
 }
