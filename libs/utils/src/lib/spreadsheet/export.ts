@@ -1,4 +1,12 @@
-import { WorkBook, WorkSheet, utils, writeFile, FullProperties, ColInfo, AOA2SheetOpts }  from 'xlsx';
+import {
+  WorkBook,
+  WorkSheet,
+  utils,
+  writeFile,
+  FullProperties,
+  ColInfo,
+  AOA2SheetOpts
+}  from 'xlsx';
 
 interface SheetOptions {
   name: string,
@@ -9,6 +17,17 @@ export function addNewSheetsInWorkbook(worksheets: SheetOptions[], workbook: Wor
   worksheets.forEach(({ name, sheet }) => utils.book_append_sheet(workbook, sheet, name));
 }
 
+export function addWorksheetColumnsWidth(data: unknown[][], worksheet: WorkSheet) {
+  const colsWidth = calculateColsWidthFromArray(data);
+  setWorksheetColumnsWidth(worksheet, colsWidth.map((n: number) => ({ width: n })));
+}
+
+/**
+ * Calculate the width of columns with the total length of the letters + 5 to add some extra space.
+ * @param arrayOfValue Array of Array
+ * @param defaultSpace Will be used as a comparation with the width
+ * @returns An array of number
+ */
 export function calculateColsWidthFromArray(arrayOfValue: unknown[][], defaultSpace: number = 15) {
   const maxCols: number[] = Array(arrayOfValue[0].length).fill(defaultSpace);
   for(let row = 0; row < arrayOfValue.length; row++) {

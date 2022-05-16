@@ -1,4 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
+} from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute } from '@angular/router';
 import { pluck, switchMap, tap } from 'rxjs/operators';
@@ -26,9 +31,11 @@ import { formatDate } from '@angular/common';
 import { convertToTimeString } from '@blockframes/utils/helpers';
 import {
   addNewSheetsInWorkbook,
+  addWorksheetColumnsWidth,
   calculateColsWidthFromArray,
   convertArrayToWorksheet,
   createWorkBook,
+  ExcelData,
   exportSpreadsheet,
   mergeWorksheetCells,
   setWorksheetColumnsWidth
@@ -57,7 +64,7 @@ export class AnalyticsComponent implements OnInit {
 
 
   event$: Observable<Event<EventMeta>>;
-  public analytics: WatchTimeInfo[];
+  private analytics: WatchTimeInfo[];
   public acceptedAnalytics: WatchTimeInfo[];
   public exporting = false
   public averageWatchTime = 0; // in seconds
@@ -104,7 +111,7 @@ export class AnalyticsComponent implements OnInit {
             status: i.status
           };
         });
-        // Create same analitics but only with 'accepted' status and with a Watchtime > 0
+        // Create same analytics but only with 'accepted' status and with a Watchtime > 0
         this.acceptedAnalytics = this.analytics.filter(
           ({status, watchTime}) => status === 'accepted' && watchTime !== 0
         );
@@ -123,7 +130,7 @@ export class AnalyticsComponent implements OnInit {
     try {
       this.exporting = true;
       this.cdr.markForCheck();
-      await this.createEventStatistics();
+      await this.exportExcelFile();
       this.exporting = false;
     } catch (err) {
       this.exporting = false;
@@ -139,7 +146,7 @@ export class AnalyticsComponent implements OnInit {
   }
 
   // Create Event Statistic Excel
-  private async createEventStatistics() {
+  private async exportExcelFile() {
     let movieTitle: string;
     if (this.eventData.type === 'screening') {
       const titleId = (this.eventData.meta as Screening).titleId;
@@ -163,32 +170,40 @@ export class AnalyticsComponent implements OnInit {
     };
     this.eventInvitations.forEach(({ status, mode }) => {
       if (status === 'accepted') invitationsStatusCounter.accepted++;
-      else if (status === 'pending') invitationsStatusCounter.pending++;
-      else if (status === 'declined') invitationsStatusCounter.declined++;
+      if (status === 'pending') invitationsStatusCounter.pending++;
+      if (status === 'declined') invitationsStatusCounter.declined++;
       if (mode === 'invitation') invitationsModeCounter.invitation++;
-      else if (mode === 'request') invitationsModeCounter.request++;
+      if (mode === 'request') invitationsModeCounter.request++;
     });
     const avgWatchTime = convertToTimeString(this.averageWatchTime * 1000);
 
-    // Create data for Archipel Event Summary Tab
-    const summaryData = [
-      [ `${ movieTitle } - Archipel Market Screening Report - ${ eventStart }` ],
-      [ 'Total number of guests', null, null, null, null, this.eventInvitations.length ],
-      [
-        'Answers',
-        null,
-        null,
-        null,
-        null,
-        `${ invitationsStatusCounter.accepted } accepted, ${ invitationsStatusCounter.pending } unanswered, ${ invitationsStatusCounter.declined } declined`
-      ],
-      [ 'Number of attendees', null, null, null, null, this.acceptedAnalytics.length ],
-      [ 'Average watchtime', null, null, null, null, `${avgWatchTime}` ],
+    // Create data for Archipel Event Summary Tab - With Merge
+    const summaryData = new ExcelData();
+    summaryData.addLine(
+      [ `${ movieTitle } - Archipel Market Screening Report` ],
+      {
+        merge: [
+          { startCell: 1, endCell: 6 }
+        ]
+      }
+    );
+    summaryData.addLine([ eventStart ]);
+    summaryData.addBlankLine();
+    summaryData.addLine([ 'Total number of guests', null, null, null, null, this.eventInvitations.length ]);
+    summaryData.addLine([
+      'Answers',
       null,
-      [ 'NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME' ]
-    ];
+      null,
+      null,
+      null,
+      `${ invitationsStatusCounter.accepted } accepted, ${ invitationsStatusCounter.pending } unanswered, ${ invitationsStatusCounter.declined } declined`
+    ]);
+    summaryData.addLine([ 'Number of attendees', null, null, null, null, this.acceptedAnalytics.length ]);
+    summaryData.addLine([ 'Average watchtime', null, null, null, null, `${avgWatchTime}` ]);
+    summaryData.addBlankLine();
+    summaryData.addLine([ 'NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME' ]);
     this.acceptedAnalytics.forEach(({ watchTime, email, name, orgActivity: activity, orgCountry, orgName }) => {
-      summaryData.push([
+      summaryData.addLine([
         name,
         email,
         orgName ? orgName : '-',
@@ -199,61 +214,55 @@ export class AnalyticsComponent implements OnInit {
     });
 
     // Create data for Archipel Event Guests Tab
-    let guestsData = [
-      [ 'Number of invitations sent', null, null, null, null, invitationsModeCounter.invitation ],
-      [ 'Number of Requests to join the event', null, null, null, null, invitationsModeCounter.request ],
-      [
-        'Answers:',
-        null,
-        null,
-        null,
-        null,
-        `${ invitationsStatusCounter.accepted } accepted, ${ invitationsStatusCounter.pending } unanswered, ${ invitationsStatusCounter.declined } declined`
-      ],
+    const guestsData = new ExcelData();
+    guestsData.addLine(
+      [ 'Number of invitations sent', null, null, null, null, invitationsModeCounter.invitation ]
+    );
+    guestsData.addLine(
+      [ 'Number of Requests to join the event', null, null, null, null, invitationsModeCounter.request ]
+    );
+    guestsData.addLine([
+      'Answers',
       null,
-      [ 'NAME', 'EMAIL', 'COMPANY', 'TERRITORY', 'ACTIVITY', 'INVITATION STATUS' ]
-    ];
+      null,
+      null,
+      null,
+      `${ invitationsStatusCounter.accepted } accepted, ${ invitationsStatusCounter.pending } unanswered, ${ invitationsStatusCounter.declined } declined`
+    ]);
+    guestsData.addBlankLine();
+    guestsData.addLine([ 'NAME', 'EMAIL', 'COMPANY', 'TERRITORY', 'ACTIVITY', 'INVITATION STATUS' ]);
     const guestsAccepted = [];
     const guestsPending = [];
     const guestsDeclined = [];
     this.analytics.forEach(
       ({ name, email, orgName, orgCountry, orgActivity: activity, status }) => {
         const guest = [
-          name ? name : '-',
+          name || '-',
           email,
           orgName ? orgName : '-',
           orgCountry ? territories[orgCountry] : '-',
           activity ? orgActivity[activity] : '-',
           invitationStatus[status]
         ];
-        if (status === 'accepted') {
-          guestsAccepted.push(guest);
-        }
-        else if (status === 'declined') {
-          guestsDeclined.push(guest);
-        }
-        else if (status === 'pending') {
-          guestsPending.push(guest);
-        }
+        if (status === 'accepted') guestsAccepted.push(guest);
+        if (status === 'declined') guestsDeclined.push(guest);
+        if (status === 'pending') guestsPending.push(guest);
       }
     );
-    guestsData = guestsData.concat(guestsAccepted, guestsPending, guestsDeclined);
+    const guestsStatus = [...guestsAccepted, ...guestsPending, ...guestsDeclined];
+    guestsStatus.forEach(row => guestsData.addLine(row));
 
     // Convert Array to Sheet
-    const worksheetSummary = convertArrayToWorksheet(summaryData);
-    const worksheetGuests = convertArrayToWorksheet(guestsData);
-
-    // Merge Cells
-    mergeWorksheetCells(['A1:F1'], worksheetSummary);
-    mergeWorksheetCells(['A1:C1', 'A2:C2', 'A3:C3'], worksheetGuests);
+    const worksheetSummary = summaryData.createWorksheet();
+    const worksheetGuests = guestsData.createWorksheet();
 
     // Calculate Cols Auto Width
-    summaryData.splice(0, 6); // to not use the first 6 rows
-    guestsData.splice(0, 4); // to not use the first 4 rows
-    const maxSummaryCols = calculateColsWidthFromArray(summaryData);
-    const maxGuestsCols = calculateColsWidthFromArray(guestsData);
-    setWorksheetColumnsWidth(worksheetSummary, maxSummaryCols.map((n: number) => ({ width: n })));
-    setWorksheetColumnsWidth(worksheetGuests, maxGuestsCols.map((n: number) => ({ width: n })));
+    const summaryArray = summaryData.getArrayOfValue;
+    const guestsArray = guestsData.getArrayOfValue;
+    summaryArray.splice(0, 8); // to not use the first 6 rows
+    guestsArray.splice(0, 5); // to not use the first 4 rows
+    addWorksheetColumnsWidth(summaryArray, worksheetSummary);
+    addWorksheetColumnsWidth(guestsArray, worksheetGuests);
 
     // Create Workbook
     const workbook = createWorkBook({
