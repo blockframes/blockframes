@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { where } from "firebase/firestore";
 import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
 import { aggregate } from "@blockframes/analytics/+state/utils";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
@@ -14,8 +13,8 @@ import { App } from "@blockframes/model";
 import { joinWith } from "@blockframes/utils/operators";
 import { APP } from "@blockframes/utils/routes/utils";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { toLabel } from "@blockframes/utils/utils";
-import { 
+import { sum, toLabel } from "@blockframes/utils/utils";
+import {
   BehaviorSubject,
   combineLatest,
   firstValueFrom,
@@ -27,6 +26,10 @@ import {
 } from "rxjs";
 import { InvitationService } from "@blockframes/invitation/+state";
 import { EventService } from "@blockframes/event/+state";
+
+interface InvitationWithScreening extends Invitation {
+  event: Event<Screening>;
+}
 
 interface VanityMetricEvent {
   name: EventName;
@@ -45,7 +48,7 @@ const events: VanityMetricEvent[] = [
     title: 'Promoreel Opened',
     icon: 'star_fill'
   },
-  { 
+  {
     name: 'addedToWishlist',
     title: 'Adds to Wishlist',
     icon: 'favorite'
@@ -94,12 +97,12 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
     },
     {
       title: 'Requests',
-      value: invitations.reduce((acc, curr) => acc + curr.analytics.length, 0),
+      value: sum(invitations, inv => inv.analytics.length),
       icon: 'ask_screening_2'
     },
     {
       title: 'Average watch time',
-      value: attended.reduce((acc, curr) => acc + curr.watchTime, 0) / invitations.length || 0,
+      value: sum(attended, inv => inv.watchTime) / invitations.length || 0,
       icon: 'access_time'
     }
   ];
@@ -158,7 +161,7 @@ export class BuyerAnalyticsComponent {
 
   invitations$ = combineLatest([
     this.user$,
-    this.invitationService.allInvitations$  
+    this.invitationService.allInvitations$
   ]).pipe(
     map(([user, invitations]) => invitations.filter(invitation => fromUser(invitation, user.uid))),
     joinWith({
@@ -167,11 +170,7 @@ export class BuyerAnalyticsComponent {
     map(invitations => invitations.filter(invitation => isScreening(invitation.event) && invitation.event.meta.titleId)),
     map(invitations => invitations.filter(invitation => isMovieAccepted(invitation.event.movie, this.app))),
     joinWith({
-      analytics: async invitation => {
-        const titleWithAnalytics = await firstValueFrom(this.buyerAnalytics$);
-        const title = titleWithAnalytics.find(title => (invitation.event as Event<Screening>).meta.titleId === title.id);
-        return title.analytics.filter(analytic => analytic.name === 'screeningRequested');
-      }
+      analytics: (invitation: InvitationWithScreening) => this.getAnalyticsPerInvitation(invitation)
     }, { shouldAwait: true }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -190,7 +189,7 @@ export class BuyerAnalyticsComponent {
     private titleService: MovieService,
     private userService: UserService,
     @Inject(APP) public app: App
-  ) {}
+  ) { }
 
   goBack() {
     this.navService.goBack(1);
@@ -226,5 +225,11 @@ export class BuyerAnalyticsComponent {
       'Watch Time': invitation.watchTime || '0min'
     }));
     downloadCsvFromJson(analytics, 'buyer-screener-analytics')
+  }
+
+  private async getAnalyticsPerInvitation(invitation: InvitationWithScreening) {
+    const titleWithAnalytics = await firstValueFrom(this.buyerAnalytics$);
+    const title = titleWithAnalytics.find(title => invitation.event.meta.titleId === title.id);
+    return title.analytics.filter(analytic => analytic.name === 'screeningRequested');
   }
 }

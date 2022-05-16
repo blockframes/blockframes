@@ -26,7 +26,7 @@ export class ViewImportErrorsComponent {
     if (index === this.element.errors.length) {
       this.dialog.close();
     } else {
-      const next = document.querySelector(`[data-scroll-to-view-id="${this.step}"]`);
+      const next = document.querySelector(`#panel-${this.step}`);
       scrollIntoView(next)
     }
   }

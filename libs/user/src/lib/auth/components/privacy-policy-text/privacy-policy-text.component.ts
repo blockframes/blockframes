@@ -9,5 +9,5 @@ import { boolean } from "@blockframes/utils/decorators/decorators";
 })
 
 export class PrivacyPolicyTextComponent {
-  @Input() @boolean modal = false;
+  @Input() @boolean dialog = false;
 }

@@ -28,26 +28,22 @@
               </a>
             </header>
             <bf-carousel flex layout>
-              <analytics-pie-chart class="surface" carouselItem [data]="orgActivityOfPopularTitle$ | async">
-              </analytics-pie-chart>
-              <analytics-map class="surface" carouselItem [data]="territoryActivityOfPopularTitle$ | async">
-              </analytics-map>
-              <analytics-line-chart class="surface" carouselItem [eventNames]="interactions"
-                [data]="interactionsOfPopularTitle$ | async">
-                <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
-                <div>
-                  <h5>Interactions</h5>
-                  <p class="mat-caption">Learn how people interact with your Title.</p>
-                </div>
+              <analytics-pie-chart class="surface" carouselItem [data]="orgActivityOfPopularTitle$ | async"></analytics-pie-chart>
+              <analytics-map class="surface" carouselItem [data]="territoryActivityOfPopularTitle$ | async"></analytics-map>
+              <analytics-line-chart class="surface" carouselItem [eventNames]="interactions" [data]="interactionsOfPopularTitle$ | async">
+                <h5>
+                  <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
+                  <span>Interactions</span>
+                </h5>
+                <p class="mat-caption">Learn how people interact with your Title.</p>
 
               </analytics-line-chart>
-              <analytics-line-chart class="surface" carouselItem [eventNames]="['pageView']"
-                [data]="pageViewsOfPopularTitle$ | async">
-                <mat-icon svgIcon="visibility"></mat-icon>
-                <div>
-                  <h5>Film Page Views</h5>
-                  <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
-                </div>
+              <analytics-line-chart class="surface" carouselItem [eventNames]="['pageView']" [data]="pageViewsOfPopularTitle$ | async">
+                <h5>
+                  <mat-icon svgIcon="visibility"></mat-icon>
+                  <span>Film Page Views</span>
+                </h5>
+                <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
               </analytics-line-chart>
             </bf-carousel>
           </ng-container>
