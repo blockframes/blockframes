@@ -5,10 +5,15 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { EventName, hasAppStatus, App } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import {
+  EventName,
+  hasAppStatus,
+  App,
+} from '@blockframes/model';
 import { counter } from '@blockframes/analytics/+state/utils';
+import { joinWith } from '@blockframes/utils/operators';
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter } from 'rxjs/operators';
@@ -16,7 +21,6 @@ import { combineLatest } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
-import { joinWith } from '@blockframes/utils/operators';
 
 @Component({
   selector: 'dashboard-home',
@@ -68,6 +72,12 @@ export class HomeComponent {
 
   pageViewsOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
     map(analytics => analytics.filter(analytic => analytic.name === 'pageView'))
+  );
+
+  activeCountries$ = this.titleAnalytics$.pipe(
+    filter(analytics => analytics.length > 0),
+    map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
+    map(stats => stats.sort((a,b) => a.count - b.count))
   );
 
   interactions: EventName[] = [

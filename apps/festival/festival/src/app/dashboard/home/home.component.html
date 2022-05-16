@@ -68,6 +68,42 @@
 
       </ng-container>
     </ng-container>
+    <section>
+      <h3>Buyers' Insights</h3>
+      <analytics-map class="surface map-insights" [data]="activeCountries$ | async" [topCountryCount]="5" horizontal>
+        <ng-template #mapLegend>
+          <!-- Map Legen -->
+          <aside class="colors-card">
+            <mat-list>
+              <mat-list-item>
+                <svg viewBox="0 0 100 100" width="32px" height="16px">
+                  <rect fill="#001ec7" x="0" y="0" width="150" height="100" rx="10" />
+                </svg>
+                <span class="mat-caption">> 100</span>
+              </mat-list-item>
+              <mat-list-item>
+                <svg viewBox="0 0 100 100" width="32px" height="16px">
+                  <rect fill="#3c64f7" x="0" y="0" width="150" height="100" rx="10" />
+                </svg>
+                <span class="mat-caption">> 50</span>
+              </mat-list-item>
+              <mat-list-item>
+                <svg viewBox="0 0 100 100" width="32px" height="16px">
+                  <rect fill="#8da4fa" x="0" y="0" width="150" height="100" rx="10" />
+                </svg>
+                <span class="mat-caption">> 5</span>
+              </mat-list-item>
+              <mat-list-item>
+                <svg viewBox="0 0 100 100" width="32px" height="16px">
+                  <rect fill="#dee5ff" x="0" y="0" width="150" height="100" rx="10" />
+                </svg>
+                <span class="mat-caption">≤ 5</span>
+              </mat-list-item>
+            </mat-list>
+          </aside>
+        </ng-template>
+      </analytics-map>
+    </section>
   </ng-container>
 
   <ng-template #noAcceptedMovies>
