@@ -15,8 +15,8 @@ import {
 } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
-// Layout
-import { Flex } from '../layout/layout.module';
+// Blockframes
+import { getLayoutGrid } from '../layout/layout.module';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
@@ -53,7 +53,7 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
   @ViewChild('container') container: ElementRef<HTMLDivElement>;
   @ContentChildren(CarouselItemDirective) items: QueryList<CarouselItemDirective>;
 
-  constructor(private flex: Flex, private cdr: ChangeDetectorRef, private ngZone: NgZone) { }
+  constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone) { }
 
   get clientWidth() {
     return this.container.nativeElement.clientWidth;
@@ -80,9 +80,11 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
     this.currentPosition = this.scrollable.measureScrollOffset('left');
     const clientWidth = this.clientWidth
 
+    const { margin } = getLayoutGrid(clientWidth);
+
     direction === 'right'
-      ? this.scrollable.scrollTo({ left: this.currentPosition + clientWidth + this.flex.marginOffset() })
-      : this.scrollable.scrollTo({ left: this.currentPosition - clientWidth - this.flex.marginOffset() })
+      ? this.scrollable.scrollTo({ left: this.currentPosition + clientWidth + margin })
+      : this.scrollable.scrollTo({ left: this.currentPosition - clientWidth - margin })
   }
 
   onScrolling(direction: 'right' | 'left') {
