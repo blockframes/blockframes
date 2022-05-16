@@ -1,6 +1,6 @@
 <ng-container *ngIf="organization$ | async as org">
-  <header fxLayout="row" fxLayoutAlign="space-between start">
-    <article fxLayout="row" fxLayoutAlign="space-around start">
+  <header>
+    <article fxLayout fxLayoutAlign="space-around start">
       <img [ref]="org.logo" type="logo" asset="empty_organization.svg" alt="organization logo">
       <div class="org-info">
         <h1>{{ org | orgName }}</h1>
@@ -8,12 +8,10 @@
         <p class="mat-body-2">{{ org | orgAddress }}</p>
       </div>
     </article>
-    <ng-container>
       <a mat-button color="primary" (click)="goBack()" fxLayoutAlign="center center">
         <mat-icon svgIcon="arrow_back"></mat-icon>
         <span>Previous page</span>
       </a>
-    </ng-container>
   </header>
   <section>
     <nav mat-tab-nav-bar>

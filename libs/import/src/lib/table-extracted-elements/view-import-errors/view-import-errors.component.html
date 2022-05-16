@@ -5,7 +5,7 @@
 
   <mat-accordion class="example-headers-align">
     <mat-expansion-panel *ngFor="let error of element.errors; let i = index" [expanded]="step === i"
-      (opened)="setStep(i)" hideToggle>
+      (opened)="setStep(i)" hideToggle [id]="'panel-'+i">
       <mat-expansion-panel-header>
         <mat-panel-title>
           {{ error.name }}

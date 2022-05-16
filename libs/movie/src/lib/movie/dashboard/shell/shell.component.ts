@@ -9,12 +9,12 @@ import {
 } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet, Event, ActivatedRoute } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
-import { Movie, App } from '@blockframes/model';
+import { App } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';
-import { filter, pluck, switchMap, tap } from 'rxjs/operators';
+import { filter, pluck, switchMap } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 
@@ -33,11 +33,10 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   private countRouteEvents = 1;
   movie$ = this.route.params.pipe(
     pluck('movieId'),
-    switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
-    tap((movie) => (this.movie = movie))
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId))
   );
 
-  public movie: Movie;
+  public movie = firstValueFrom(this.movie$);
 
   @Input() routes: RouteDescription[];
 
