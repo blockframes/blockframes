@@ -153,11 +153,7 @@ export class AnalyticsComponent implements OnInit {
       const { title } = await this.movieService.getValue(titleId);
       movieTitle = title.international;
     }
-    else if (this.eventData.type === 'slate') {
-      const titleIds = (this.eventData.meta as Slate).titleIds;
-      const movies = await this.movieService.getValue(titleIds);
-      movieTitle = movies.map(({ title }) => title.international).join(', ');
-    }
+    else if (this.eventData.type === 'slate') movieTitle = this.eventData.title;
     const eventStart = formatDate(this.eventData.start, 'MM/dd/yyyy', 'en');
     const invitationsStatusCounter = {
       accepted: 0,
