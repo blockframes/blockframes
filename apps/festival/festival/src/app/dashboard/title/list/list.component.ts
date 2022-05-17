@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 import { displayPerson } from '@blockframes/utils/pipes';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { filters } from '@blockframes/ui/list/table/filters';
 
 @Component({
   selector: 'festival-dashboard-title-list',
@@ -45,6 +46,8 @@ export class ListComponent {
       archived: m.filter((m) => m.app.festival.status === 'archived').length,
     }))
   );
+
+  filters = filters;
 
   constructor(
     private service: MovieService,

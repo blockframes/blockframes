@@ -349,7 +349,7 @@ export function createMovieLanguageSpecification(params: Partial<MovieLanguageSp
   };
 }
 
-export function createAppConfig(params: Partial<MovieAppConfig<Date>>) {
+export function createAppConfig(params: Partial<MovieAppConfig<Date>>): MovieAppConfig<Date> {
   return {
     status: 'draft',
     access: false,
@@ -543,6 +543,10 @@ export function getMovieAppAccess(movie: MovieDocument | MovieBase<Date>): App[]
 /** Return true if the movie has the status passed in parameter for at least one application */
 export function checkMovieStatus(movie: MovieDocument | MovieBase<Date>, status: StoreStatus) {
   return Object.keys(movie.app).some((a) => movie.app[a].status === status);
+}
+
+export function isMovieAccepted(movie: Movie, app: App) {
+  return movie.app[app].status === 'accepted' && movie.app[app].access;
 }
 
 /**

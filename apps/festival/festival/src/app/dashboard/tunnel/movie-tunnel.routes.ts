@@ -34,24 +34,24 @@ export const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/production/production.module').then(m => m.MovieFormProductionModule),
       },
       {
-        path: 'shooting-information',
-        data: { animation: 4 },
-        loadChildren: () => import('@blockframes/movie/form/shooting-information/shooting-information.module').then(m => m.MovieFormShootingInformationModule),
-      },
-      {
         path: 'artistic',
-        data: { animation: 5 },
+        data: { animation: 4 },
         loadChildren: () => import('@blockframes/movie/form/artistic/artistic.module').then(m => m.MovieFormArtisticModule),
       },
       {
         path: 'reviews',
-        data: { animation: 6 },
+        data: { animation: 5 },
         loadChildren: () => import('@blockframes/movie/form/reviews/reviews.module').then(m => m.MovieFormReviewsModule),
       },
       {
         path: 'additional-information',
-        data: { animation: 7 },
+        data: { animation: 6 },
         loadChildren: () => import('@blockframes/movie/form/additional-information/additional-information.module').then(m => m.MovieFormAdditionalInformationModule),
+      },
+      {
+        path: 'shooting-information',
+        data: { animation: 7 },
+        loadChildren: () => import('@blockframes/movie/form/shooting-information/shooting-information.module').then(m => m.MovieFormShootingInformationModule),
       },
       {
         path: 'technical-spec',
@@ -70,19 +70,19 @@ export const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule),
       },
       {
-        path: 'media-notes',
-        data: { animation: 11 },
-        loadChildren: () => import('@blockframes/movie/form/media-notes/notes.module').then(m => m.MovieFormNotesModule),
-      },
-      {
         path: 'media-images',
-        data: { animation: 12 },
+        data: { animation: 11 },
         loadChildren: () => import('@blockframes/movie/form/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule),
       },
       {
         path: 'media-videos',
-        data: { animation: 13 },
+        data: { animation: 12 },
         loadChildren: () => import('@blockframes/movie/form/media-videos/media-videos.module').then(m => m.MediaFormVideosModule),
+      },
+      {
+        path: 'media-notes',
+        data: { animation: 13 },
+        loadChildren: () => import('@blockframes/movie/form/media-notes/notes.module').then(m => m.MovieFormNotesModule),
       },
       {
         path: 'summary',

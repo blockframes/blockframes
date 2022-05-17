@@ -10,6 +10,7 @@ import { DisplayNameModule, ToLabelModule, MaxLengthModule } from '@blockframes/
 import { OrgNameModule } from '@blockframes/organization/pipes';
 import { MetricCardListModule } from '@blockframes/analytics/components/metric-card-list/metric-card-list.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -27,6 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
     MetricCardListModule,
     TableModule,
     MaxLengthModule,
+    DurationModule,
     // Material
     MatIconModule,
     MatCardModule,
