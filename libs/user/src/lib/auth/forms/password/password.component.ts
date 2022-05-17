@@ -16,9 +16,9 @@ export class PasswordFormComponent {
   currentPasswordMatch = new DifferentPasswordStateMatcher('current', 'next');
 
   @Input() form: EditPasswordForm;
-  public hideCurrentPassword: boolean = true;
-  public hideNewPassword: boolean = true;
-  public hideConfirmationPassword: boolean = true;
+  public hideCurrentPassword = true;
+  public hideNewPassword = true;
+  public hideConfirmationPassword = true;
 
   currentPasswordVisibility() {
     return this.hideCurrentPassword = !this.hideCurrentPassword

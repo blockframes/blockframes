@@ -19,7 +19,7 @@ export class EventLoginComponent implements OnInit {
   });
   public buttonText = 'Log in';
   public signinIn = false;
-  public hidePassword: boolean = true;
+  public hidePassword = true;
 
   constructor(
     private service: AuthService,

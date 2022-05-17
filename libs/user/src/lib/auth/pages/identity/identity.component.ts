@@ -39,8 +39,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public existingUser = false;
   public passwordsMatcher = new RepeatPasswordStateMatcher('password', 'confirm');
   public currentPasswordMatch = new DifferentPasswordStateMatcher('generatedPassword', 'password');
-  public hidePassword: boolean = true;
-  public hideConfirmationPassword: boolean = true;
+  public hidePassword = true;
+  public hideConfirmationPassword = true;
 
   private existingOrgId: string;
   private subs: Subscription[] = [];
