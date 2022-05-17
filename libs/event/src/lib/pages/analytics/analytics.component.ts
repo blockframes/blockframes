@@ -148,7 +148,9 @@ export class AnalyticsComponent implements OnInit {
       movieTitle = title.international;
     }
     else if (this.event.type === 'slate') movieTitle = this.event.title;
+
     const eventStart = formatDate(this.event.start, 'MM/dd/yyyy', 'en');
+
     const invitationsStatusCounter = {
       accepted: 0,
       pending: 0,
@@ -165,6 +167,7 @@ export class AnalyticsComponent implements OnInit {
       if (mode === 'invitation') invitationsModeCounter.invitation++;
       if (mode === 'request') invitationsModeCounter.request++;
     });
+
     const avgWatchTime = convertToTimeString(this.averageWatchTime * 1000);
 
     // Create data for Archipel Event Summary Tab - With Merge
@@ -188,6 +191,7 @@ export class AnalyticsComponent implements OnInit {
     summaryData.addLine(['Average watchtime', null, null, null, null, `${avgWatchTime}`]);
     summaryData.addBlankLine();
     summaryData.addLine(['NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME']);
+
     this.acceptedAnalytics.forEach(({ watchTime, email, name, orgActivity: activity, orgCountry, orgName }) => {
       summaryData.addLine([
         name,
@@ -216,6 +220,7 @@ export class AnalyticsComponent implements OnInit {
     const guestsAccepted = [];
     const guestsPending = [];
     const guestsDeclined = [];
+
     this.analytics.forEach(
       ({ name, email, orgName, orgCountry, orgActivity: activity, status }) => {
         const guest = [
@@ -241,8 +246,10 @@ export class AnalyticsComponent implements OnInit {
     // Calculate Cols Auto Width
     const summaryArray = summaryData.getArrayOfValue;
     const guestsArray = guestsData.getArrayOfValue;
+
     summaryArray.splice(0, 8); // to not use the first 6 rows
     guestsArray.splice(0, 5); // to not use the first 4 rows
+
     addWorksheetColumnsWidth(summaryArray, worksheetSummary);
     addWorksheetColumnsWidth(guestsArray, worksheetGuests);
 
