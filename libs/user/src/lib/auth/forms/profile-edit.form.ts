@@ -10,6 +10,7 @@ export interface Profile {
   position: string;
   avatar: StorageFile;
   email: string;
+  hideEmail: boolean
 }
 
 export function createProfile(params: Partial<User> = {}): Profile {
@@ -19,6 +20,7 @@ export function createProfile(params: Partial<User> = {}): Profile {
     phoneNumber: '',
     position: '',
     email: '',
+    hideEmail: false,
     ...params,
     avatar: createStorageFile(params?.avatar),
   };
@@ -32,7 +34,8 @@ function createProfileControls(entity: Partial<User>) {
     phoneNumber: new FormControl(profile.phoneNumber),
     position: new FormControl(profile.position),
     avatar: new StorageFileForm(profile.avatar),
-    email: new FormControl({ value: profile.email, disabled: true })
+    email: new FormControl({ value: profile.email, disabled: true }),
+    hideEmail: new FormControl(profile.hideEmail),
   };
 }
 
