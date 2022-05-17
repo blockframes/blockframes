@@ -82,24 +82,17 @@ const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
 
 //* IMPORT DATA*-----------------------------------------------------------------
 
-export function importData(data: Record<string, object> | Record<string, object[]>) {
-  // Array of Promises to create all documents in the data
-  const createAll = Object.entries(data).map(([path, content]) => {
-    // If document create doc
-    if (isDocumentPath(path)) {
-      const docRef = db.doc(path);
-      return docRef.set(content);
-    }
-    // If collection, add all documents
-    if (!Array.isArray(content)) {
-      throw new Error('If path is a collection, the content should be an array. Got ' + JSON.stringify(content));
-    }
-    const collRef = db.collection(path);
-    const addAll = content.map(document => collRef.add(document));
-    return Promise.all(addAll);
-  });
-  // wait for all promises to finish
-  return Promise.all(createAll);
+export async function importData(data: Record<string, object>[]) {
+  const createAll = [];
+  for(const document of data) {
+    const createDocs = Object.entries(document).map(([path, content]) => {
+      if (!isDocumentPath(path)) throw new Error('Document path mandatory, like [collectionPath/DocumentPath]. Got ' + JSON.stringify(path));
+      return db.doc(path).set(content);
+    });
+    createAll.push(createDocs)
+  }
+  await Promise.all(createAll)
+  return true;
 }
 
 //* DELETE DATA*----------------------------------------------------------------
@@ -109,7 +102,7 @@ export async function deleteData(paths: string | string[]) {
     const path = paths;
     isDocumentPath(path) ? await deleteDocument(path) : await deleteCollection(path);
   } else {
-    paths.forEach(async path => (isDocumentPath(path) ? await deleteDocument(path) : await deleteCollection(path)));
+    paths.map(async path => (isDocumentPath(path) ? await deleteDocument(path) : await deleteCollection(path)));
   }
   // This function being used in a task, Cypress requires a return value
   return true;
@@ -126,15 +119,10 @@ async function deleteCollection(collection: string) {
 
 //* GET DATA*------------------------------------------------------------------
 
-export async function getData(paths: string | string[]) {
-  let data;
-  if (!Array.isArray(paths)) {
-    const path = paths;
-    data = isDocumentPath(path) ? await getDocument(path) : await getCollection(path);
-  } else {
-    data = Promise.all(paths.map(async path => (isDocumentPath(path) ? await getDocument(path) : await getCollection(path))));
-  }
-  return data || 'no data';
+export async function getData(paths: string[]) {
+  const docOrCollectionData = (path: string) => (isDocumentPath(path) ? getDocument(path) : getCollection(path));
+  const data = await Promise.all(paths.map(path => docOrCollectionData(path)));
+  return data;
 }
 
 async function getDocument(path: string) {
@@ -144,17 +132,16 @@ async function getDocument(path: string) {
 
 async function getCollection(collection: string) {
   const docRefs = await db.collection(collection).listDocuments();
-  const data = docRefs.map(async docRef => {
-    const path = docRef.path;
-    const doc = await db.doc(path).get();
-    return { [`${path}`]: doc.data() };
+  const getAll = docRefs.map(async docRef => {
+    const doc = await docRef.get();
+    return doc.data();
   });
-  return Promise.all(data);
+  return Promise.all(getAll);
 }
 
 //* UPDATE DATA*-----------------------------------------------------------------
 
-//TODO : adapt to use id of doc or uid for users
+//TODO : adapt to use id of doc or uid for users #8460
 
 /*
 export function updateData(data: any | any[]) {
