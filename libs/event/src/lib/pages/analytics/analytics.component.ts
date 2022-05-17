@@ -64,7 +64,7 @@ export class AnalyticsComponent implements OnInit {
   public averageWatchTime = 0; // in seconds
   public dataMissing = '(Not Registered)';
   private eventInvitations: Invitation[];
-  private eventData: Event<EventMeta>;
+  private event: Event<EventMeta>;
 
   constructor(
     private dynTitle: DynamicTitleService,
@@ -83,7 +83,7 @@ export class AnalyticsComponent implements OnInit {
       pluck('eventId'),
       switchMap((eventId: string) => this.service.valueChanges(eventId)),
       tap(async event => {
-        this.eventData = event;
+        this.event = event;
 
         this.eventInvitations = await this.invitationService.getValue([where('type', '==', 'attendEvent'), where('eventId', '==', event.id)]);
 
@@ -142,13 +142,13 @@ export class AnalyticsComponent implements OnInit {
   // Create Event Statistic Excel
   private async exportExcelFile() {
     let movieTitle: string;
-    if (this.eventData.type === 'screening') {
-      const titleId = (this.eventData.meta as Screening).titleId;
+    if (this.event.type === 'screening') {
+      const titleId = (this.event.meta as Screening).titleId;
       const { title } = await this.movieService.getValue(titleId);
       movieTitle = title.international;
     }
-    else if (this.eventData.type === 'slate') movieTitle = this.eventData.title;
-    const eventStart = formatDate(this.eventData.start, 'MM/dd/yyyy', 'en');
+    else if (this.event.type === 'slate') movieTitle = this.event.title;
+    const eventStart = formatDate(this.event.start, 'MM/dd/yyyy', 'en');
     const invitationsStatusCounter = {
       accepted: 0,
       pending: 0,
