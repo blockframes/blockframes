@@ -29,6 +29,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AppPipeModule } from '@blockframes/utils/pipes';
 import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
 import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
+import { HideEmailModule } from '@blockframes/auth/components/hide-email/hide-email.module';
 
 @NgModule({
   declarations: [IdentityComponent],
@@ -46,6 +47,7 @@ import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-err
     AppPipeModule,
     SnackbarLinkModule,
     SnackbarErrorModule,
+    HideEmailModule,
 
     // Material
     MatSnackBarModule,

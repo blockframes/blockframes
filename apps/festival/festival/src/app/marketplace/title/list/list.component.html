@@ -61,7 +61,7 @@
 
     <button mat-button class="refresh translucent" (click)="clear()" matTooltip="Clear all filters">
       <mat-icon svgIcon="refresh_filters"></mat-icon>
-      Refresh
+      <span>Clear Filters</span>
     </button>
   </list-filter>
 
@@ -84,7 +84,7 @@
   <!-- TITLE CARD -->
   <ng-template listPageCard let-title>
     <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.objectID]" size="poster">
-      <event-request-screening [movieId]="title.id" iconOnly></event-request-screening>
+      <event-request-screening [movieId]="title.objectID" iconOnly></event-request-screening>
     </movie-card>
   </ng-template>
 

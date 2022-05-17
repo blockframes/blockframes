@@ -10,6 +10,7 @@ import { toLabel } from '@blockframes/utils/pipes';
 import { orgName } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Event, EventMeta, EventTypes } from '@blockframes/model';
+import { sum } from '@blockframes/utils/utils';
 
 interface WatchTimeInfo {
   name: string, // firstName + lastName
@@ -85,11 +86,11 @@ export class AnalyticsComponent implements OnInit {
           };
         });
 
-        // if event is a screening we add the watch time column to the table
+        // if event is a screening or a slate presentation we add the watch time column to the table
         // and we compute the average watch time
-        if (this.eventType === 'screening') {
+        if (this.eventType === 'screening' || this.eventType === 'slate') {
           this.hasWatchTime = true;
-          const totalWatchTime = this.analytics.reduce((acc, curr) => acc + curr.watchTime, 0);
+          const totalWatchTime = sum(this.analytics, a => a.watchTime);
           this.averageWatchTime = totalWatchTime / this.analytics.length;
         }
 

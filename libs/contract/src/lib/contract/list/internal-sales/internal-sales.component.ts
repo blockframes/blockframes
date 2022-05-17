@@ -27,8 +27,8 @@ export class InternalSaleListComponent implements OnInit {
 
   private _sales = new BehaviorSubject<InternalSale[]>([]);
 
-  filter = new FormControl();
-  filter$: Observable<ContractStatus | ''> = this.filter.valueChanges.pipe(startWith(this.filter.value || ''));
+  filterForm = new FormControl();
+  filter$: Observable<ContractStatus | ''> = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value || ''));
 
   public salesCount$ = this._sales.pipe(
     filter(data => !!data),
@@ -61,14 +61,14 @@ export class InternalSaleListComponent implements OnInit {
   }
 
   applyFilter(filter?: ContractStatus) {
-    this.filter.setValue(filter);
+    this.filterForm.setValue(filter);
     const titleFilter = filter === 'pending' ? 'new' : filter;
     const pageTitle = `${this.title} (${titleFilter ? capitalize(titleFilter) : 'All'})`;
     this.dynTitle.setPageTitle(pageTitle);
   }
 
   resetFilter() {
-    this.filter.reset('');
+    this.filterForm.reset('');
     this.dynTitle.setPageTitle(`${this.title} (All)`);
   }
 

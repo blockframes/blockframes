@@ -9,7 +9,6 @@ main {
   flex-direction: column;
   justify-content: center;
   align-content: center;
-  text-align: center;
   background-color: var(--background-card);
   padding: 24px;
   width: 100%;
@@ -32,10 +31,12 @@ section {
   h1 {
     margin-top: 24px;
     margin-bottom: 8px;
+    text-align: center;
   }
 
   p {
     margin-bottom: 16px;
+    text-align: center;
     &.mat-body-2 {
       margin-bottom: 24px;
     }

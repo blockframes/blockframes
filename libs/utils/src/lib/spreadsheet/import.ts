@@ -1,7 +1,6 @@
-
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 import { GetKeys, GroupScope, StaticGroup, staticGroups, parseToAll, Scope } from '@blockframes/model';
-import { mandatoryError, SpreadsheetImportError, WrongTemplateError, wrongValueWarning } from 'libs/import/src/lib/utils';
+import { ImportLog, mandatoryError, SpreadsheetImportError, WrongTemplateError, wrongValueWarning } from 'libs/import/src/lib/utils';
 import { getKeyIfExists } from '../helpers';
 
 type Matrix = any[][]; // @todo find better type
@@ -143,7 +142,7 @@ export async function parse<T>(
         } catch (err) {
           if (err instanceof WrongTemplateError)
             throw err; //stops the recursive looping of parse.
-          return errors.push(err);
+          errors.push(err);
         }
       } else {
         if (!item[segment]) item[segment] = {};
@@ -172,7 +171,7 @@ export interface ValueWithErrorSimple<T = unknown> extends SpreadsheetImportErro
 }
 
 function isValueWithError(o: unknown): o is ValueWithError {
-  return typeof o === 'object' && ('value' in o) && ('error' in o);
+  return o instanceof ImportLog;
 }
 
 /**
@@ -239,7 +238,10 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
     }
     const data = cleanUp(item) as T;
     state.push(data);
-    results.push({ data, errors });
+    results.push({
+      data,
+      errors: errors.filter(err => err)
+    });
   }
   return results;
 }

@@ -3,14 +3,11 @@ mat-form-field {
 }
 
 list-filter {
+  padding-bottom: 24px;
   static-check-boxes,
   filter-budget {
     padding: 0 16px;
   }
-}
-
-button {
-  margin-bottom: 24px;
 }
 
 mat-form-field {
