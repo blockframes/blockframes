@@ -78,7 +78,6 @@ export class HomeComponent {
   );
 
   activeCountries$ = this.titleAnalytics$.pipe(
-    filter(analytics => analytics.length > 0),
     map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
   );
 
