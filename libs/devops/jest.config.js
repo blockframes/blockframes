@@ -7,10 +7,9 @@ module.exports = {
     },
   },
   transform: {
-    '^.+\\.(ts)$': 'ts-jest',
+    '^.+\\.[tj]sx?$': 'ts-jest',
   },
-  moduleFileExtensions: ['ts', 'js', 'html'],
-  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   testEnvironment: 'node',
   coverageDirectory: '../../coverage/libs/devops',
 };
