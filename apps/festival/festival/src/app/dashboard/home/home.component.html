@@ -69,16 +69,14 @@
       </ng-container>
     </ng-container>
 
-    <section>
+    <section class="surface">
       <h3>
         <mat-icon svgIcon="movie_open"></mat-icon>
         <span>Buyers' Insights</span>
       </h3>
-      <analytics-map class="surface map-insights" [data]="activeCountries$ | async" [topCount]="5" horizontal showLegend>
+      <analytics-map class="map-insights" [data]="activeCountries$ | async" [topCount]="5" horizontal showLegend>
       </analytics-map>
-    </section>
 
-    <section>
       <h3>Most active buyers in the world</h3>
       <bf-table [source]="activeBuyers$ | async" clickable useFilter pagination="5">
         <ng-template colRef="user" label="Name" let-item sort>
