@@ -14,7 +14,4 @@ export class SigninFormComponent {
   public signinForm = new SigninForm();
   public hidePassword = true;
 
-  passwordVisibility(){
-   return this.hidePassword = !this.hidePassword
-  }
 }

@@ -79,7 +79,4 @@ export class EventLoginComponent implements OnInit {
     this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
 
-  passwordVisibility() {
-    return this.hidePassword = !this.hidePassword
-  }
 }

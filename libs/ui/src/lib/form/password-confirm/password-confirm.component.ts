@@ -57,13 +57,4 @@ export class PasswordConfirmComponent implements OnInit, OnDestroy, ControlValue
     fn(true);
   }
 
-  // Show/hide password
-
-  newPasswordVisibility() {
-    return this.hideNewPassword = !this.hideNewPassword
-  }
-
-  confirmationPasswordVisibility() {
-    return this.hideConfirmationPassword = !this.hideConfirmationPassword
-  }
 }

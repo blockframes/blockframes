@@ -39,8 +39,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public existingUser = false;
   public passwordsMatcher = new RepeatPasswordStateMatcher('password', 'confirm');
   public currentPasswordMatch = new DifferentPasswordStateMatcher('generatedPassword', 'password');
-  public hidePassword = true;
-  public hideConfirmationPassword = true;
+  public passwordState = {
+    new: true,
+    confirm: true
+  }
 
   private existingOrgId: string;
   private subs: Subscription[] = [];
@@ -373,10 +375,4 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
   }
 
-  passwordVisibility() {
-    return this.hidePassword = !this.hidePassword
-  }
-  confirmationPasswordVisibility() {
-    return this.hideConfirmationPassword = !this.hideConfirmationPassword
-  }
 }
