@@ -151,7 +151,7 @@
         <article *ngIf="event.meta.titleIds | getTitle | async as titles" >
           <ng-container *ngIf="titles.length">
             <h2>Titles in presentation</h2>
-            <bf-carousel flex [min]="(ltMd$ | async) ? 2 : 4">
+            <bf-carousel [min]="(ltMd$ | async) ? 2 : 4">
               <ng-container *ngFor="let title of titles">
                 <movie-card [movie]="title" size="banner" [link]="['/c/o/marketplace/title', title.id]" carouselItem>
                 </movie-card>
