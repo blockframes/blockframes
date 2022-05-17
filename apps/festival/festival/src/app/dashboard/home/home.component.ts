@@ -14,6 +14,9 @@ import {
 } from '@blockframes/model';
 import { counter } from '@blockframes/analytics/+state/utils';
 import { joinWith } from '@blockframes/utils/operators';
+import { aggregate } from '@blockframes/analytics/+state/utils';
+import { UserService } from '@blockframes/user/+state';
+import { unique } from '@blockframes/utils/helpers';
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter } from 'rxjs/operators';
@@ -53,7 +56,7 @@ export class HomeComponent {
     switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key))
   );
 
-  private titleAnalyticsOfPopularTitle$ = combineLatest([ this.popularTitle$, this.titleAnalytics$ ]).pipe(
+  private titleAnalyticsOfPopularTitle$ = combineLatest([this.popularTitle$, this.titleAnalytics$]).pipe(
     map(([title, titleAnalytics]) => titleAnalytics.filter(analytics => analytics.meta.titleId === title.id)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -79,6 +82,27 @@ export class HomeComponent {
     map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
   );
 
+  activeBuyers$ = this.titleAnalytics$.pipe(
+    filter(analytics => analytics.length > 0),
+    map(analytics => {
+      const uids = unique(analytics.map(analytic => analytic.meta.uid));
+      const orgIds = unique(analytics.map(analytic => analytic.meta.orgId));
+      return { uids, orgIds, analytics };
+    }),
+    joinWith({
+      users: ({ uids }) => this.userService.valueChanges(uids),
+      orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
+    }, { shouldAwait: true }),
+    map(({ users, orgs, analytics }) => {
+      return users.map(user => {
+        const org = orgs.find(o => o.id === user.orgId);
+        const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === user.uid);
+        return aggregate(analyticsOfUser, { user, org });
+      });
+    }),
+    map(users => users.sort((userA, userB) => userA.total - userB.total))
+  );
+
   interactions: EventName[] = [
     'addedToWishlist',
     'askingPriceRequested',
@@ -92,6 +116,7 @@ export class HomeComponent {
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
+    private userService: UserService,
     @Inject(APP) public app: App
   ) { }
 

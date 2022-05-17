@@ -68,9 +68,40 @@
 
       </ng-container>
     </ng-container>
+
+    <section>
+      <h3>Most active buyers in the world</h3>
+      <bf-table [source]="activeBuyers$ | async" clickable useFilter pagination="5">
+        <ng-template colRef="user" label="Name" let-item sort>
+          <b>{{ item | displayName }}</b>
+        </ng-template>
+        <ng-template colRef="user.email" label="Email" let-email sort>
+          {{ email }}
+        </ng-template>
+        <ng-template colRef="org.denomination.public" label="Company name" let-name sort>
+          {{ name }}
+        </ng-template>
+        <ng-template colRef="org.activity" label="Activity" let-activity sort>
+          {{ activity | toLabel:'orgActivity' }}
+        </ng-template>
+        <ng-template colRef="addedToWishlist" label="Titles in Wishlist" let-wishlist sort>
+          {{ wishlist }}
+        </ng-template>
+        <ng-template colRef="promoReelOpened" label="Promotional Elements" let-promoReelOpened sort>
+          {{ promoReelOpened }}
+        </ng-template>
+        <ng-template colRef="screeningRequested" label="Screening Requests" let-screeningRequested sort>
+          {{ screeningRequested }}
+        </ng-template>
+        <ng-template colRef="askingPriceRequested" label="Asking Price Requested" let-askingPriceRequested sort>
+          {{ askingPriceRequested }}
+        </ng-template>
+      </bf-table>
+    </section>
+
     <section>
       <h3>Buyers' Insights</h3>
-      <analytics-map class="surface map-insights" [data]="activeCountries$ | async" [topCountryCount]="5" horizontal showLegend>
+      <analytics-map class="surface map-insights" [data]="activeCountries$ | async" [topCount]="5" horizontal showLegend>
       </analytics-map>
     </section>
   </ng-container>

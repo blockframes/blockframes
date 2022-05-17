@@ -24,8 +24,8 @@ import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { HasAppStatusModule } from '@blockframes/movie/pipes/has-app-status.pipe';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { MapModule } from "@blockframes/ui/map";
+import { DisplayNameModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -40,9 +40,11 @@ import { MapModule } from "@blockframes/ui/map";
     NoTitleModule,
     ImageModule,
     HasAppStatusModule,
+    MapModule,
+    DisplayNameModule,
+    ToLabelModule,
     TableModule,
     MaxLengthModule,
-    MapModule,
 
     // Material
     MatButtonModule,
