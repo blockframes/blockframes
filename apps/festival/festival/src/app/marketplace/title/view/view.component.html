@@ -8,7 +8,7 @@
             <org-chip [org]="org"></org-chip>
           </ng-container>
         </section>
-        <section class="buttons" fxLayout="row wrap" fxLayoutAlign.lt-md="center">
+        <section fxLayout="row wrap">
           <ng-container *ngIf="(eventId$ | async) === null">
             <event-request-screening [movieId]="movie.id"></event-request-screening>
           </ng-container>
