@@ -22,10 +22,10 @@ export class PasswordConfirmComponent implements OnInit, OnDestroy, ControlValue
   public form = new ConfirmPasswordForm();
 
   public passwordsMatcher: RepeatPasswordStateMatcher;
-
-  public hideNewPassword = true;
-  public hideConfirmationPassword = true;
-
+  public passwordState = {
+    new: true,
+    confirm: true
+  }
 
   ngOnInit() {
     this.passwordsMatcher = new RepeatPasswordStateMatcher('password', 'confirm');
