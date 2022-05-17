@@ -23,6 +23,10 @@ export class PasswordConfirmComponent implements OnInit, OnDestroy, ControlValue
 
   public passwordsMatcher: RepeatPasswordStateMatcher;
 
+  public hideNewPassword: boolean = true;
+  public hideConfirmationPassword: boolean = true;
+
+
   ngOnInit() {
     this.passwordsMatcher = new RepeatPasswordStateMatcher('password', 'confirm');
   }
@@ -51,5 +55,15 @@ export class PasswordConfirmComponent implements OnInit, OnDestroy, ControlValue
 
   public registerOnTouched(fn: (touched: boolean) => void) {
     fn(true);
+  }
+
+  // Show/hide password
+
+  newPasswordVisibility() {
+    return this.hideNewPassword = !this.hideNewPassword
+  }
+
+  confirmationPasswordVisibility() {
+    return this.hideConfirmationPassword = !this.hideConfirmationPassword
   }
 }
