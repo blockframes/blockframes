@@ -1,0 +1,51 @@
+<list-page [items]="orgs$ | async">
+
+  <list-page-app-bar>
+    <form class="app-bar" [formGroup]="searchForm">
+      <mat-icon matPrefix svgIcon="search"></mat-icon>
+      <input type="text" formControlName="query" [value]="searchForm.query.value"
+        placeholder="Search for a buyer...">
+    </form>
+  </list-page-app-bar>
+
+  <list-page-title>
+    <h1 class="mat-display-2 page-title">Buyer List</h1>
+  </list-page-title>
+
+  <list-page-search>
+    <mat-form-field appearance="outline" [formGroup]="searchForm">
+      <mat-label>Search for a buyer...</mat-label>
+      <mat-icon matPrefix svgIcon="search"></mat-icon>
+      <input matInput type="text" formControlName="query" [value]="searchForm.query.value">
+    </mat-form-field>
+  </list-page-search>
+
+  <list-page-description>
+    <span i18n *ngIf="nbHits" class="mat-body-2">
+      There {nbHits, plural, =1 {is} other {are}} {{ nbHits }} buyer{nbHits, plural, =1 {} other {s}}
+      available.
+    </span>
+  </list-page-description>
+
+  <list-filter>
+    <ng-template filter [form]="searchForm.countries" label="Company's Nationality">
+      <chips-autocomplete [form]="searchForm.countries" placeholder="Country of Origin" scope="territories">
+        <mat-label>Type and select Country</mat-label>
+      </chips-autocomplete>
+    </ng-template>
+
+    <button mat-button class="refresh translucent" (click)="clear()" matTooltip="Clear all filters">
+      <mat-icon svgIcon="refresh_filters"></mat-icon>
+      Clear Filters
+    </button>
+  </list-filter>
+
+  <ng-template listPageCard let-org>
+    <org-card [org]="org"></org-card>
+  </ng-template>
+
+  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
+    <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
+  </list-page-progress>
+
+</list-page>
