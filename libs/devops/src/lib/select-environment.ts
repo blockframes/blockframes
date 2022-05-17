@@ -1,11 +1,9 @@
 import { join, resolve } from 'path';
 import { getServiceAccountObj } from '@blockframes/firebase-utils';
-import { promises as fsPromises } from 'fs';
+import { promises } from 'fs';
 import { execSync } from 'child_process';
 import camelcase from 'camelcase';
 import { runShellCommand } from './firebase-utils';
-
-const { readdir, readFile, writeFile } = fsPromises;
 
 const SAKDirPath = join('tools', 'credentials');
 
@@ -48,7 +46,7 @@ async function updateSAKPathInDotenv(projectId: string) {
     console.log(`GAP key found in env: ${GAPKey}`);
     if (isJSON(process.env[GAPKey])) {
       // * Is an object, write to disk
-      await writeFile(resolve(SAKDirPath, 'creds.json'), process.env[GAPKey], 'utf-8');
+      await promises.writeFile(resolve(SAKDirPath, 'creds.json'), process.env[GAPKey], 'utf-8');
       return updateDotenv(SAKKeyName, join(process.cwd(), SAKDirPath, 'creds.json'));
     } else return updateDotenv(SAKKeyName, process.env[GAPKey]); // * Is a path
   }
@@ -76,7 +74,7 @@ async function updateSAKPathInDotenv(projectId: string) {
  * @param projectId the project ID for which to find corresponding SAK for
  */
 async function findSAKFilename(dirPath: string, projectId: string) {
-  const credFileNames = await readdir(resolve(dirPath));
+  const credFileNames = await promises.readdir(resolve(dirPath));
   const jsonFiles = credFileNames.filter((fileName) => fileName.split('.').pop() === 'json');
   // tslint:disable-next-line: no-eval
   const SAKS = jsonFiles.map((fileName) => ({ fileName, key: eval('require')(resolve(dirPath, fileName)), }));
@@ -110,7 +108,7 @@ export async function selectEnvironment(projectId: string) {
     const fileName = `env.${projectId}`;
     const envLine = `export * from 'env/${fileName}'`;
     const localEnvFile = join(process.cwd(), 'env', 'env.ts');
-    await writeFile(localEnvFile, envLine);
+    await promises.writeFile(localEnvFile, envLine);
     console.log(`env.ts file now contains: ${envLine}`);
   }
 
@@ -144,7 +142,7 @@ export async function selectEnvironment(projectId: string) {
  * @param value value to place for keyname
  */
 async function updateDotenv(key: string, value: string) {
-  const file = await readFile(join(process.cwd(), '.env'), 'utf-8').catch(() => {
+  const file = await promises.readFile(join(process.cwd(), '.env'), 'utf-8').catch(() => {
     console.warn('Generating .env file - NOT FOUND');
     return '';
   });
@@ -161,6 +159,6 @@ async function updateDotenv(key: string, value: string) {
   const updatedEnvFile = dotenvLines.map(processEnvLine);
   if (!lineFound) updatedEnvFile.push('\n', updateLine, '\n');
   process.env[key] = value;
-  await writeFile(join(process.cwd(), '.env'), updatedEnvFile.join('\n'));
+  await promises.writeFile(join(process.cwd(), '.env'), updatedEnvFile.join('\n'));
   console.log('./.env - successfully updated with:', updateLine);
 }
