@@ -1,3 +1,5 @@
+@import "@angular/flex-layout/mq";
+
 :host {
   width: 100%;
 
@@ -12,8 +14,30 @@
     justify-content: space-between;
     align-items: center;
   }
+
+  div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
 }
 
 a[app-logo] {
   margin: 0 24px;
+}
+
+@include layout-bp(xs) {
+  section {
+    flex-direction: column;
+
+    div {
+      justify-content: center;
+    }
+  }
+}
+
+@include layout-bp(gt-xs) {
+  span {
+    margin-left: auto;
+  }
 }

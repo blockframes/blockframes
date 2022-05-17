@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 @Component({
   selector: 'festival-event-login',
@@ -67,7 +68,7 @@ export class EventLoginComponent implements OnInit {
           duration: 8000
         });
       } else {
-        this.snackBar.open(err.message, 'close', { duration: 8000 });
+        this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 8000 });
       }
     }
     this.signinIn = false;

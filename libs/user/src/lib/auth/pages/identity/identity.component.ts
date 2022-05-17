@@ -19,6 +19,7 @@ import { filter } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
 import { where } from 'firebase/firestore';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
+import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 @Component({
   selector: 'auth-identity',
@@ -178,7 +179,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
           break;
         default:
           console.error(err); // let the devs see what happened
-          this.snackBar.open(err.message, 'close', { duration: 8000 });
+          this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 8000 });
+
           break;
       }
     }
