@@ -65,7 +65,8 @@ const acceptedUserA = {
   uid: 'uidUserTest',
   email: 'A@fake.com',
   firstName: 'foo',
-  lastName: 'bar'
+  lastName: 'bar',
+  hideEmail: false
 };
 
 const testUsers = [acceptedUserA, { uid: 'uidUserTestNotAccepted' }];
