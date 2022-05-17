@@ -17,9 +17,8 @@ import {
   auditUsers,
 } from './db-cleaning';
 import { every } from 'lodash';
-import { loadAdminServices } from '@blockframes/firebase-utils';
+import { loadAdminServices, getCollectionRef } from '@blockframes/firebase-utils';
 import { removeUnexpectedUsers } from './users';
-import { getCollectionRef } from '@blockframes/firebase-utils';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { createPermissions, PermissionsDocument, PublicUser, getAllAppsExcept } from '@blockframes/model';
 import { addDays, subDays, subMonths, subYears } from 'date-fns';
