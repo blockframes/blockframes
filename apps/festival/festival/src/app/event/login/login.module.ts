@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -29,6 +30,7 @@ import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.
     ImageModule,
     AppLogoModule,
     MatIconModule,
+    MatTooltipModule,
     RouterModule.forChild([{ path: '', component: EventLoginComponent }]),
   ]
 })
