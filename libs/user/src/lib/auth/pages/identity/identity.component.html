@@ -103,11 +103,11 @@
             [errorStateMatcher]="currentPasswordMatch"
             required
             test-id="password"
-            [type]="this.passwordState.new ? 'password' : 'text'"
+            [type]="passwordState.new ? 'password' : 'text'"
           />
-          <button matSuffix mat-icon-button (click)="this.passwordState.new = !this.passwordState.new" [matTooltip]="this.passwordState.new ? 'Show Password' : 'Hide Password'">
-            <mat-icon *ngIf="!this.passwordState.new" svgIcon="visibility_off"></mat-icon>
-            <mat-icon *ngIf="this.passwordState.new" svgIcon="visibility"></mat-icon>
+          <button matSuffix mat-icon-button (click)="passwordState.new = !passwordState.new" [matTooltip]="passwordState.new ? 'Show Password' : 'Hide Password'">
+            <mat-icon *ngIf="!passwordState.new" svgIcon="visibility_off"></mat-icon>
+            <mat-icon *ngIf="passwordState.new" svgIcon="visibility"></mat-icon>
           </button>
           <mat-hint>Between 6 and 24 characters.</mat-hint>
           <mat-error *ngIf="form.get('password').hasError('required')">
@@ -133,11 +133,11 @@
             [errorStateMatcher]="passwordsMatcher"
             required
             test-id="password-confirm"
-            [type]="this.passwordState.confirm ? 'password' : 'text'"
+            [type]="passwordState.confirm ? 'password' : 'text'"
           />
-          <button matSuffix mat-icon-button (click)="this.passwordState.confirm = !this.passwordState.confirm" [matTooltip]="this.passwordState.confirm ? 'Show Password' : 'Hide Password'">
-            <mat-icon *ngIf="!this.passwordState.confirm" svgIcon="visibility_off"></mat-icon>
-            <mat-icon *ngIf="this.passwordState.confirm" svgIcon="visibility"></mat-icon>
+          <button matSuffix mat-icon-button (click)="passwordState.confirm = !passwordState.confirm" [matTooltip]="passwordState.confirm ? 'Show Password' : 'Hide Password'">
+            <mat-icon *ngIf="!passwordState.confirm" svgIcon="visibility_off"></mat-icon>
+            <mat-icon *ngIf="passwordState.confirm" svgIcon="visibility"></mat-icon>
           </button>
           <mat-hint>Please rewrite your password for confirmation.</mat-hint>
           <mat-error *ngIf="form.get('confirm').hasError('required')">
