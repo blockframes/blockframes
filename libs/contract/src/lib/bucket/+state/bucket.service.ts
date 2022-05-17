@@ -15,7 +15,8 @@ import {
   createBucketTerm,
   createBucketContract,
   createDocumentMeta,
-  MovieCurrency
+  MovieCurrency,
+  Sale
 } from '@blockframes/model';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
@@ -89,7 +90,7 @@ export class BucketService extends BlockframesCollection<Bucket> {
       };
 
       // Create the contract
-      await this.contractService.add({
+      await this.contractService.add<Sale>({
         _meta: createDocumentMeta(),
         status: 'pending',
         id: contractId,
@@ -101,7 +102,7 @@ export class BucketService extends BlockframesCollection<Bucket> {
         specificity,
         delivery,
         ...commonFields
-      } as any); // TODO #8280
+      });
 
       // Add the default negotiation.
       this.contractService.addNegotiation(contractId, {

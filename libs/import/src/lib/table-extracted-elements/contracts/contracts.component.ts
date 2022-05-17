@@ -11,7 +11,7 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
-import { createDocumentMeta } from '@blockframes/model';
+import { createDocumentMeta, Mandate, Sale } from '@blockframes/model';
 import { where } from 'firebase/firestore';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
@@ -154,10 +154,18 @@ export class TableExtractedContractsComponent implements AfterViewInit {
     if (increment) this.processing++;
     this.cdr.markForCheck();
 
-    await this.contractService.add({
-      ...importState.contract,
-      _meta: createDocumentMeta({ createdAt: new Date() })
-    } as any); // TODO #8280
+    if (importState.contract.type === 'sale') {
+      await this.contractService.add<Sale>({
+        ...importState.contract,
+        _meta: createDocumentMeta({ createdAt: new Date() })
+      });
+
+    } else {
+      await this.contractService.add<Mandate>({
+        ...importState.contract,
+        _meta: createDocumentMeta({ createdAt: new Date() })
+      });
+    }
 
     // @dev: Create terms after contract because rules require contract to be created first
     await this.termService.add(importState.terms);
