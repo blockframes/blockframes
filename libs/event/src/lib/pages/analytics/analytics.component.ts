@@ -55,12 +55,10 @@ interface WatchTimeInfo {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AnalyticsComponent implements OnInit {
-
-
   event$: Observable<Event<EventMeta>>;
   private analytics: WatchTimeInfo[];
   public acceptedAnalytics: WatchTimeInfo[];
-  public exporting = false
+  public exporting = false;
   public averageWatchTime = 0; // in seconds
   public dataMissing = '(Not Registered)';
   private eventInvitations: Invitation[];
@@ -73,8 +71,8 @@ export class AnalyticsComponent implements OnInit {
     private invitationService: InvitationService,
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
-    private orgService: OrganizationService,
-  ) { }
+    private orgService: OrganizationService
+  ) {}
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Event', 'Event Statistics');
@@ -85,7 +83,10 @@ export class AnalyticsComponent implements OnInit {
       tap(async event => {
         this.event = event;
 
-        this.eventInvitations = await this.invitationService.getValue([where('type', '==', 'attendEvent'), where('eventId', '==', event.id)]);
+        this.eventInvitations = await this.invitationService.getValue([
+          where('type', '==', 'attendEvent'),
+          where('eventId', '==', event.id)
+        ]);
 
         const allOrgIds = this.eventInvitations.map(i => i.fromUser?.orgId || i.toUser?.orgId).filter(orgId => !!orgId);
         const orgIds = Array.from(new Set(allOrgIds));
@@ -106,9 +107,7 @@ export class AnalyticsComponent implements OnInit {
           };
         });
         // Create same analytics but only with 'accepted' status and with a Watchtime > 0
-        this.acceptedAnalytics = this.analytics.filter(
-          ({status, watchTime}) => status === 'accepted' && watchTime !== 0
-        );
+        this.acceptedAnalytics = this.analytics.filter(({ status, watchTime }) => status === 'accepted' && watchTime !== 0);
 
         // if event is a screening or a slate presentation we add the watch time column to the table
         // and we compute the average watch time
@@ -141,13 +140,12 @@ export class AnalyticsComponent implements OnInit {
 
   // Create Event Statistic Excel
   private async exportExcelFile() {
-    let staticticsTitle: string;
+    let staticticsTitle = this.event.title;
     if (this.event.type === 'screening') {
       const titleId = (this.event.meta as Screening).titleId;
       const { title } = await this.movieService.getValue(titleId);
       staticticsTitle = title.international;
     }
-    else if (this.event.type === 'slate') staticticsTitle = this.event.title;
 
     const eventStart = formatDate(this.event.start, 'MM/dd/yyyy', 'en');
 
@@ -172,10 +170,7 @@ export class AnalyticsComponent implements OnInit {
 
     // Create data for Archipel Event Summary Tab - With Merge
     const summaryData = new ExcelData();
-    summaryData.addLine(
-      [`${ staticticsTitle } - Archipel Market Screening Report`],
-      { merge: [{ start: 'A', end: 'F' }] }
-    );
+    summaryData.addLine([`${staticticsTitle} - Archipel Market Screening Report`], { merge: [{ start: 'A', end: 'F' }] });
     summaryData.addLine([eventStart]);
     summaryData.addBlankLine();
     summaryData.addLine(['Total number of guests', null, null, null, null, this.eventInvitations.length]);
@@ -185,7 +180,7 @@ export class AnalyticsComponent implements OnInit {
       null,
       null,
       null,
-      `${ invitationsStatusCounter.accepted } accepted, ${ invitationsStatusCounter.pending } unanswered, ${ invitationsStatusCounter.declined } declined`
+      `${invitationsStatusCounter.accepted} accepted, ${invitationsStatusCounter.pending} unanswered, ${invitationsStatusCounter.declined} declined`
     ]);
     summaryData.addLine(['Number of attendees', null, null, null, null, this.acceptedAnalytics.length]);
     summaryData.addLine(['Average watchtime', null, null, null, null, `${avgWatchTime}`]);
@@ -213,7 +208,7 @@ export class AnalyticsComponent implements OnInit {
       null,
       null,
       null,
-      `${ invitationsStatusCounter.accepted } accepted, ${ invitationsStatusCounter.pending } unanswered, ${ invitationsStatusCounter.declined } declined`
+      `${invitationsStatusCounter.accepted} accepted, ${invitationsStatusCounter.pending} unanswered, ${invitationsStatusCounter.declined} declined`
     ]);
     guestsData.addBlankLine();
     guestsData.addLine(['NAME', 'EMAIL', 'COMPANY', 'TERRITORY', 'ACTIVITY', 'INVITATION STATUS']);
@@ -221,21 +216,19 @@ export class AnalyticsComponent implements OnInit {
     const guestsPending = [];
     const guestsDeclined = [];
 
-    this.analytics.forEach(
-      ({ name, email, orgName, orgCountry, orgActivity: activity, status }) => {
-        const guest = [
-          name || '-',
-          email,
-          orgName || '-',
-          orgCountry ? territories[orgCountry] : '-',
-          activity ? orgActivity[activity] : '-',
-          invitationStatus[status]
-        ];
-        if (status === 'accepted') guestsAccepted.push(guest);
-        if (status === 'declined') guestsDeclined.push(guest);
-        if (status === 'pending') guestsPending.push(guest);
-      }
-    );
+    this.analytics.forEach(({ name, email, orgName, orgCountry, orgActivity: activity, status }) => {
+      const guest = [
+        name || '-',
+        email,
+        orgName || '-',
+        orgCountry ? territories[orgCountry] : '-',
+        activity ? orgActivity[activity] : '-',
+        invitationStatus[status]
+      ];
+      if (status === 'accepted') guestsAccepted.push(guest);
+      if (status === 'declined') guestsDeclined.push(guest);
+      if (status === 'pending') guestsPending.push(guest);
+    });
     const guestsStatus = [...guestsAccepted, ...guestsPending, ...guestsDeclined];
     guestsStatus.forEach(row => guestsData.addLine(row));
 
@@ -244,8 +237,8 @@ export class AnalyticsComponent implements OnInit {
     const worksheetGuests = guestsData.createWorksheet();
 
     // Calculate Cols Auto Width
-    const summaryArray = summaryData.getArrayOfValue;
-    const guestsArray = guestsData.getArrayOfValue;
+    const summaryArray = summaryData.rowsData;
+    const guestsArray = guestsData.rowsData;
 
     summaryArray.splice(0, 8); // to not use the first 6 rows
     guestsArray.splice(0, 5); // to not use the first 4 rows
@@ -263,8 +256,8 @@ export class AnalyticsComponent implements OnInit {
     // Merge Sheets into Book
     addNewSheetsInWorkbook(
       [
-        { name: 'ARCHIPEL EVENT SUMMARY', sheet: worksheetSummary},
-        { name: 'ARCHIPEL EVENT GUESTS', sheet: worksheetGuests}
+        { name: 'ARCHIPEL EVENT SUMMARY', sheet: worksheetSummary },
+        { name: 'ARCHIPEL EVENT GUESTS', sheet: worksheetGuests }
       ],
       workbook
     );
