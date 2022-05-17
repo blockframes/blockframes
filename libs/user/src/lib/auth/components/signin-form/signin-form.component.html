@@ -16,7 +16,8 @@
         <mat-label>Password</mat-label>
         <input matInput type="password" placeholder="Password" formControlName="password" required test-id="password" [type]="hidePassword ? 'password' : 'text'"/>
         <button matSuffix mat-icon-button (click)="hidePassword = !hidePassword" [matTooltip]="hidePassword ? 'Show Password' : 'Hide Password'"> 
-          <mat-icon svgIcon="visibility_off"></mat-icon>
+          <mat-icon *ngIf="!hidePassword" svgIcon="visibility_off"></mat-icon>
+          <mat-icon *ngIf="hidePassword" svgIcon="visibility"></mat-icon>
         </button>
         <mat-hint>Between 6 and 24 characters.</mat-hint>
         <mat-error *ngIf="signinForm.get('password').hasError('minlength')">

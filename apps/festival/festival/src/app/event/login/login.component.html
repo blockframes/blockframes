@@ -22,7 +22,8 @@
       <mat-label>Password</mat-label>
       <input test-id="password" matInput type="password" placeholder="Password" formControlName="password" required [type]="hidePassword ? 'password' : 'text'"/>
       <button matSuffix mat-icon-button (click)="hidePassword = !hidePassword" [matTooltip]="hidePassword ? 'Show Password' : 'Hide Password'">
-        <mat-icon svgIcon="visibility"></mat-icon>
+        <mat-icon *ngIf="!hidePassword" svgIcon="visibility_off"></mat-icon>
+        <mat-icon *ngIf="hidePassword" svgIcon="visibility"></mat-icon>
       </button>
       <mat-error *ngIf="form.get('password').hasError('required')">
         Password is <strong>required</strong> 
