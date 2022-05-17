@@ -273,7 +273,7 @@ export function toLabel(
  * @param endWith
  * @returns
  */
-function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
+export function smartJoin(str: string[], joinWith = ', ', endWith = ', ') {
   const last = str.pop();
   return `${str.join(joinWith)}${str.length ? endWith : ''}${last || ''}`;
 }
@@ -301,4 +301,27 @@ export function toLanguageVersionString(languages: LanguageRecord) {
     })
     .filter((d) => d)
     .join(', ');
+}
+
+export function sum(array: number[]): number
+export function sum<T>(array: T[], getAmount: (item: T) => number): number
+export function sum<T>(array: T[], getAmount?: (item: T) => number): number {
+  const cb = getAmount || ((item: number) => item);
+  return array.reduce((total, item) => total + cb(item as any), 0);
+}
+
+export function removeNulls(obj: any) {
+  const isArray = Array.isArray(obj);
+  for (const k of Object.keys(obj)) {
+    if (obj[k] === null || obj[k] === undefined) {
+      if (isArray) {
+        obj.splice(+k, 1)
+      } else {
+        delete obj[k];
+      }
+    } else if (typeof obj[k] === "object") {
+      obj[k] = removeNulls(obj[k]);
+    }
+  }
+  return obj;
 }

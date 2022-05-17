@@ -30,7 +30,8 @@ export class ExternalSaleComponent {
   changeStatus(status: ContractStatus, id: string) {
     if (status === 'declined') {
       const ref = this.dialog.open(ConfirmDeclineComponent, {
-        data: createModalData<ConfirmDeclineData>({ type: 'seller' })
+        data: createModalData<ConfirmDeclineData>({ type: 'seller' }),
+        autoFocus: false
       });
       ref.afterClosed().subscribe(declineReason => {
         const update = { declineReason, status: 'declined' } as const;

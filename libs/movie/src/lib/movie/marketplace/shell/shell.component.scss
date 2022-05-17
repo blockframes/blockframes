@@ -25,21 +25,24 @@ footer {
     }
   }
 
-  #videoFooter div {
+  ul.videos {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 16px;
-  }
+    list-style: none;
+    margin:0;
+    padding-left: 0;
 
-  .video-container {
-    margin: 0 24px;
-    video-viewer {
-      display: block;
-      height: 100%;
-    }
-    p {
-      padding-top: 8px;
-      text-align: center;
+    li {
+      margin: 0 24px;
+      video-viewer {
+        display: block;
+      }
+
+      p {
+        padding-top: 8px;
+        text-align: center;
+      }
     }
   }
 }
@@ -48,11 +51,12 @@ footer {
 
 @include layout-bp(xs) {
   footer {
-    .video-container {
-      margin: 0;
-    }
-    #videoFooter div {
+    .videos {
       grid-template-columns: 1fr;
+
+      article {
+        margin: 0;
+      }
     }
   }
 }

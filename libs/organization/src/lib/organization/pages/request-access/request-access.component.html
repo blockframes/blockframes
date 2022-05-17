@@ -6,14 +6,14 @@
       <img asset="wait.svg"/>
       <h1>Looks like you don't have access to {{ currentApp | appName }}... yet!</h1>
       <p class="mat-body-2">
-        Your email address is already associated with an existing user account of 
+        Your email address is already associated with an existing user account of
         <ng-container *ngFor="let app of (orgExistingAccess$ | async); let isLast = last">
-          {{ app | appName }}{{ !isLast ? ' and ': ''}}
-        </ng-container>. 
+          {{ app | appName }}{{ !isLast ? ' and ': ''}}.
+        </ng-container>
         To access {{ currentApp | appName }}, please request access and wait for our team's approval.
       </p>
       <button mat-flat-button color="primary" (click)="joinOptions()" [disabled]="disabledRequest">Join {{ currentApp | appName }}</button>
-      <button mat-button color="primary" (click)="logout()">Sign up with another email</button>
+      <button mat-button color="primary" (click)="logout()">Try with another email address</button>
     </ng-container>
 
     <ng-container *ngSwitchCase="'request'">
@@ -21,7 +21,7 @@
       <p class="mat-body-1">
         To access {{ currentApp | appName }}, please select a "role". It will determine the features you can acccess once you've joined the platform.
       </p>
-      <p class="mat-body-2">N.B.: All members from your company will also get granted access to {{ currentApp | appName }}.</p>
+      <p class="mat-body-2">All members from your company will also get granted access to {{ currentApp | appName }}.</p>
 
       <article fxLayout fxLayoutAlign="space-between center" fxLayout.lt-md="column">
         <label fxLayout>

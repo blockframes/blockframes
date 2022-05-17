@@ -214,6 +214,7 @@ export class AuthService extends FireAuthService<AuthState> {
     lastName: string,
     _meta: DocumentMeta<Date>,
     privacyPolicy: PrivacyPolicy
+    hideEmail: boolean
   }) {
     return {
       _meta: createDocumentMeta({ emailVerified: false, ...ctx._meta }),
@@ -222,6 +223,7 @@ export class AuthService extends FireAuthService<AuthState> {
       firstName: ctx.firstName,
       lastName: ctx.lastName,
       privacyPolicy: ctx.privacyPolicy,
+      hideEmail: ctx.hideEmail
     };
   }
 
@@ -234,8 +236,8 @@ export class AuthService extends FireAuthService<AuthState> {
    */
   public async createUser(email: string, orgEmailData: OrgEmailData, app: App = this.app): Promise<PublicUser> {
     const f = httpsCallable(this.functions, 'createUser');
-    const user = await f({ email, orgEmailData, app }) as unknown;
-    return createUser(user);
+    const user = await f({ email, orgEmailData, app }) as { data: unknown };
+    return createUser(user.data);
   }
 
   public async getPrivacyPolicy(): Promise<PrivacyPolicy> {

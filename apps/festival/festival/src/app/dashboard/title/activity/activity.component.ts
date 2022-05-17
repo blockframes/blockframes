@@ -26,8 +26,9 @@ export class TitleActivityComponent implements OnInit {
     private shell: DashboardTitleShellComponent
   ) { }
 
-  ngOnInit() {
-    const titleName = this.shell.movie?.title?.international || 'No title';
+  async ngOnInit() {
+    const movie = await this.shell.movie;
+    const titleName = movie?.title?.international || 'No title';
     this.dynTitle.setPageTitle(titleName, 'Marketplace Activity');
   }
 
