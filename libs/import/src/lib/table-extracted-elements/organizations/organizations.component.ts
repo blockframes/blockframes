@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { sortingDataAccessor } from '@blockframes/utils/table';
@@ -24,7 +24,7 @@ const hasImportErrors = (importState: OrganizationsImportState, type: string = '
   styleUrls: ['./organizations.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableExtractedOrganizationsComponent implements OnInit {
+export class TableExtractedOrganizationsComponent implements AfterViewInit {
 
   @Input() rows: MatTableDataSource<OrganizationsImportState>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -52,8 +52,7 @@ export class TableExtractedOrganizationsComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) { }
 
-  ngOnInit() {
-    // Mat table setup @TODO #7429
+  ngAfterViewInit(): void {
     this.rows.paginator = this.paginator;
     this.rows.filterPredicate = this.filterPredicate;
     this.rows.sortingDataAccessor = sortingDataAccessor;
