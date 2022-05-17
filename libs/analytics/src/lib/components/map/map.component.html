@@ -1,8 +1,7 @@
-<ng-container *ngIf="header">
-  <header>
+<header>
+  <ng-content></ng-content>
     <ng-template [ngTemplateOutlet]="header" [ngTemplateOutletContext]="{resetSelected, selected}"></ng-template>
-  </header>
-</ng-container>
+</header>
 
 <ng-container *ngIf="!isLoading else loading">
   <world-map *ngIf="top.length; else empty">

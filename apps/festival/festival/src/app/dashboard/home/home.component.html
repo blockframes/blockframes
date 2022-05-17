@@ -31,15 +31,13 @@
               <analytics-pie-chart class="surface" carouselItem [data]="orgActivityOfPopularTitle$ | async">
               </analytics-pie-chart>
               <analytics-map class="surface" carouselItem [data]="territoryActivityOfPopularTitle$ | async">
-                <ng-template #header>
-                    <article>
-                      <h5>
-                        <mat-icon svgIcon="landscape"></mat-icon>
-                        <span>Split by Company Territory</span>
-                      </h5>
-                      <p class="mat-caption">Learn where are the interested people from.</p>
-                    </article>
-                </ng-template>
+                <article>
+                  <h5>
+                    <mat-icon svgIcon="landscape"></mat-icon>
+                    <span>Split by Company Territory</span>
+                  </h5>
+                  <p class="mat-caption">Learn where are the interested people from.</p>
+                </article>
               </analytics-map>
               <analytics-line-chart class="surface" carouselItem [eventNames]="interactions"
                 [data]="interactionsOfPopularTitle$ | async">
@@ -74,7 +72,12 @@
         <mat-icon svgIcon="movie_open"></mat-icon>
         <span>Buyers' Insights</span>
       </h3>
-      <analytics-map class="map-insights" [data]="activeCountries$ | async" [topCount]="5" horizontal showLegend>
+      <analytics-map class="map-insights" [data]="activeCountries$ | async" [topCount]="5" horizontal showLegend selectable>
+        <ng-template #header let-selected="selected" let-resetSelected="resetSelected">
+          <button mat-icon-button *ngIf="selected" (click)="resetSelected(selected)" matTooltip="Remove selection">
+            <mat-icon svgIcon="refresh_filters"></mat-icon>
+          </button>
+        </ng-template>
       </analytics-map>
 
       <h3>Most active buyers in the world</h3>

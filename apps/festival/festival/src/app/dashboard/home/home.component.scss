@@ -80,4 +80,10 @@ analytics-map.map-insights {
   flex-wrap: wrap;
   gap: 24px;
   margin-bottom: 24px;
+  position: relative;
+  button {
+    position: absolute;
+    top: -47px;
+    right: 0px;
+  }
 }
