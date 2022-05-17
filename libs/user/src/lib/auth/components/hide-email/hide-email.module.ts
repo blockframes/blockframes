@@ -7,15 +7,13 @@ import { HideEmailComponent } from './hide-email.component';
 
 // Material
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { AppPipeModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   declarations: [HideEmailComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatSlideToggleModule,
-    AppPipeModule
+    MatSlideToggleModule
   ],
   exports: [HideEmailComponent]
 })
