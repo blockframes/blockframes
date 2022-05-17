@@ -20,13 +20,12 @@ export class AnalyticsMapComponent {
   lessThanFifty: TerritoryISOA3Value[] = [];
   moreThanFifty: TerritoryISOA3Value[] = [];
   selected: TerritoryISOA3Value;
-  topCountries: AnalyticData[] = [];
+  top: AnalyticData[] = [];
 
 
-  @Input() topCountryCount = 3;
-  @ContentChild('mapLegend') mapLegend: TemplateRef<HTMLElement>;
+  @Input() topCount = 3;
   @ContentChild('header') header: TemplateRef<HTMLElement>;
-  @Input() @boolean noHeader = false;
+  @Input() @boolean showLegend = false;
   @Input() @boolean horizontal = false;
   @Input() set data(data: AnalyticData[]) {
     if (!data) return;
@@ -51,7 +50,7 @@ export class AnalyticsMapComponent {
     }
 
     const sorted = data.sort((a, b) => b.count - a.count);
-    this.topCountries = sorted.splice(0, this.topCountryCount);
+    this.top = sorted.splice(0, this.topCount);
   }
 
   @Input() @boolean selectable = false;

@@ -80,21 +80,3 @@ analytics-map.map-insights {
   flex-wrap: wrap;
   gap: 24px;
 }
-
-.colors-card {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  z-index: 2;
-  padding: 8px;
-  border-radius: 4px;
-  color: #434773;
-
-  mat-list-item {
-    height: 32px;
-  }
-
-  svg {
-    margin-right: 12px;
-  }
-}
