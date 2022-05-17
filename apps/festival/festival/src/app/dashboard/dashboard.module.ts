@@ -183,6 +183,18 @@ const routes: Routes = [{
       ],
     },
     {
+      path: 'organization',
+      children: [{
+        path: '',
+        loadChildren: () => import('./organization/list/list.module').then(m => m.OrganizationListModule),
+        data: { animation: 'list' }
+      }, {
+        path: ':orgId',
+        loadChildren: () => import('./organization/view/view.module').then(m => m.OrganizationViewModule),
+        data: { animation: 'view' },
+      }]
+    },
+    {
       path: 'files',
       loadChildren: () => import('./files/files.module').then(m => m.FilesViewModule)
     },
