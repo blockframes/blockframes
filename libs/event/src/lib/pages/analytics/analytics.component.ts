@@ -141,13 +141,13 @@ export class AnalyticsComponent implements OnInit {
 
   // Create Event Statistic Excel
   private async exportExcelFile() {
-    let movieTitle: string;
+    let staticticsTitle: string;
     if (this.event.type === 'screening') {
       const titleId = (this.event.meta as Screening).titleId;
       const { title } = await this.movieService.getValue(titleId);
-      movieTitle = title.international;
+      staticticsTitle = title.international;
     }
-    else if (this.event.type === 'slate') movieTitle = this.event.title;
+    else if (this.event.type === 'slate') staticticsTitle = this.event.title;
 
     const eventStart = formatDate(this.event.start, 'MM/dd/yyyy', 'en');
 
@@ -173,8 +173,8 @@ export class AnalyticsComponent implements OnInit {
     // Create data for Archipel Event Summary Tab - With Merge
     const summaryData = new ExcelData();
     summaryData.addLine(
-      [`${ movieTitle } - Archipel Market Screening Report`],
-      { merge: [{ start: "A", end: "F" }] }
+      [`${ staticticsTitle } - Archipel Market Screening Report`],
+      { merge: [{ start: 'A', end: 'F' }] }
     );
     summaryData.addLine([eventStart]);
     summaryData.addBlankLine();
@@ -270,7 +270,7 @@ export class AnalyticsComponent implements OnInit {
     );
 
     // Save Excel file
-    const filename = `${movieTitle} on Archipel Market ${eventStart} - Report`;
+    const filename = `${staticticsTitle} on Archipel Market ${eventStart} - Report`;
     exportSpreadsheet(workbook, `${filename}.xlsx`);
   }
 }
