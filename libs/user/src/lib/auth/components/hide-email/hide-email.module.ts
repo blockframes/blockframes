@@ -1,7 +1,7 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { ReactiveFormsModule } from '@angular/forms';
 // Component
 import { HideEmailComponent } from './hide-email.component';
 
@@ -13,6 +13,7 @@ import { AppPipeModule } from '@blockframes/utils/pipes';
   declarations: [HideEmailComponent],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     MatSlideToggleModule,
     AppPipeModule
   ],
