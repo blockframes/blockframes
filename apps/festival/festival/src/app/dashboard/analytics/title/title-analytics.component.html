@@ -43,11 +43,6 @@
           </h5>
           <p class="mat-caption">Learn where are the interested people from.</p>
         </article>
-        <ng-template #header let-selected="selected" let-resetSelected="resetSelected">
-          <button mat-icon-button *ngIf="selected" (click)="resetSelected(selected)" matTooltip="Remove selection">
-            <mat-icon svgIcon="refresh_filters"></mat-icon>
-          </button>
-        </ng-template>
       </analytics-map>
     </div>
   </article>

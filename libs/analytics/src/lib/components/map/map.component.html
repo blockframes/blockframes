@@ -1,9 +1,11 @@
 <header>
   <ng-content></ng-content>
-    <ng-template [ngTemplateOutlet]="header" [ngTemplateOutletContext]="{resetSelected, selected}"></ng-template>
+  <button mat-icon-button *ngIf="selected" (click)="toggleSelect(selected)" matTooltip="Remove selection">
+    <mat-icon svgIcon="refresh_filters"></mat-icon>
+  </button>
 </header>
 
-<ng-container *ngIf="!isLoading else loading">
+<div *ngIf="!isLoading else loading" [ngClass]="{'map-wrapper':horizontal}">
   <world-map *ngIf="top.length; else empty">
     <!-- MAP LAYERS -->
     <ng-container *ngFor="let isoA3 of zero">
@@ -63,7 +65,7 @@
       <mat-divider></mat-divider>
     </mat-list-item>
   </mat-list>
-</ng-container>
+</div>
 
 <ng-template #empty>
   <img asset="empty_state_analytics_map.svg" alt="Image, you have no movies yet">

@@ -53,7 +53,7 @@ header {
 @include layout-bp(gt-xs) {
   analytics-pie-chart,
   analytics-line-chart,
-  analytics-map {
+  analytics-map:not(.map-insights) {
     width: calc(50% - 16px);
     margin-right: 16px;
   }
@@ -66,24 +66,12 @@ header {
 
   analytics-pie-chart,
   analytics-line-chart,
-  analytics-map {
+  analytics-map:not(.map-insights) {
     width: calc(100% - 8px);
     margin-right: 8px;
   }
 }
 
 analytics-map.map-insights {
-  width: 100%;
-  flex: 1 1 100%;
-  display: flex;
-  flex-direction: row-reverse;
-  flex-wrap: wrap;
-  gap: 24px;
-  margin-bottom: 24px;
-  position: relative;
-  button {
-    position: absolute;
-    top: -47px;
-    right: 0px;
-  }
+  display: block;
 }

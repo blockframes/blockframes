@@ -24,7 +24,6 @@ export class AnalyticsMapComponent {
 
 
   @Input() topCount = 3;
-  @ContentChild('header') header: TemplateRef<HTMLElement>;
   @Input() @boolean showLegend = false;
   @Input() @boolean horizontal = false;
   @Input() set data(data: AnalyticData[]) {
