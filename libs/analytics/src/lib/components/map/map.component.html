@@ -5,7 +5,7 @@
   </button>
 </header>
 
-<div *ngIf="!isLoading else loading" [ngClass]="{'map-wrapper':horizontal}">
+<section *ngIf="!isLoading else loading" [ngClass]="{'map-wrapper':horizontal}">
   <world-map *ngIf="top.length; else empty">
     <!-- MAP LAYERS -->
     <ng-container *ngFor="let isoA3 of zero">
@@ -65,7 +65,7 @@
       <mat-divider></mat-divider>
     </mat-list-item>
   </mat-list>
-</div>
+</section>
 
 <ng-template #empty>
   <img asset="empty_state_analytics_map.svg" alt="Image, you have no movies yet">
