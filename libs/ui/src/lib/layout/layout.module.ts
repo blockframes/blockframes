@@ -9,7 +9,7 @@ interface LayoutGrid {
   margin: number;
 }
 
-function getLayoutGrid(width: number): LayoutGrid {
+export function getLayoutGrid(width: number): LayoutGrid {
   if (width < 599) {
     return { columns: 4, gutter: 16, margin: 16 };  // xs
   } else if (width < 1023) {
@@ -96,21 +96,10 @@ export class Flex implements OnInit, OnDestroy {
   @HostBinding('style.marginLeft')
   margin: string;
 
-  private _margin: number;
-
   constructor(private layout: Layout) { }
-
-  /* Use this function if you need the number value of calculation */
-  marginOffset() {
-    if (this._margin === undefined) {
-      return 0;
-    }
-    return this._margin;
-  }
 
   ngOnInit() {
     this.sub = this.layout.layout$.subscribe(({ margin }) => {
-      this._margin = margin
       this.margin = `${margin}px`;
     });
   }
