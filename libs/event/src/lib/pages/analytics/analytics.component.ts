@@ -15,8 +15,6 @@ import {
   InvitationStatus,
   orgName,
   Screening,
-  Meeting,
-  Slate,
   Event,
   EventMeta,
   territories,
@@ -32,13 +30,9 @@ import { convertToTimeString } from '@blockframes/utils/helpers';
 import {
   addNewSheetsInWorkbook,
   addWorksheetColumnsWidth,
-  calculateColsWidthFromArray,
-  convertArrayToWorksheet,
   createWorkBook,
   ExcelData,
-  exportSpreadsheet,
-  mergeWorksheetCells,
-  setWorksheetColumnsWidth
+  exportSpreadsheet
 } from '@blockframes/utils/spreadsheet';
 
 interface WatchTimeInfo {
@@ -70,7 +64,7 @@ export class AnalyticsComponent implements OnInit {
   public averageWatchTime = 0; // in seconds
   public dataMissing = '(Not Registered)';
   private eventInvitations: Invitation[];
-  private eventData: Event<Screening | Meeting | Slate | unknown>;
+  private eventData: Event<EventMeta>;
 
   constructor(
     private dynTitle: DynamicTitleService,
@@ -176,16 +170,12 @@ export class AnalyticsComponent implements OnInit {
     // Create data for Archipel Event Summary Tab - With Merge
     const summaryData = new ExcelData();
     summaryData.addLine(
-      [ `${ movieTitle } - Archipel Market Screening Report` ],
-      {
-        merge: [
-          { startCell: 1, endCell: 6 }
-        ]
-      }
+      [`${ movieTitle } - Archipel Market Screening Report`],
+      { merge: [{ start: "A", end: "F" }] }
     );
-    summaryData.addLine([ eventStart ]);
+    summaryData.addLine([eventStart]);
     summaryData.addBlankLine();
-    summaryData.addLine([ 'Total number of guests', null, null, null, null, this.eventInvitations.length ]);
+    summaryData.addLine(['Total number of guests', null, null, null, null, this.eventInvitations.length]);
     summaryData.addLine([
       'Answers',
       null,
@@ -194,10 +184,10 @@ export class AnalyticsComponent implements OnInit {
       null,
       `${ invitationsStatusCounter.accepted } accepted, ${ invitationsStatusCounter.pending } unanswered, ${ invitationsStatusCounter.declined } declined`
     ]);
-    summaryData.addLine([ 'Number of attendees', null, null, null, null, this.acceptedAnalytics.length ]);
-    summaryData.addLine([ 'Average watchtime', null, null, null, null, `${avgWatchTime}` ]);
+    summaryData.addLine(['Number of attendees', null, null, null, null, this.acceptedAnalytics.length]);
+    summaryData.addLine(['Average watchtime', null, null, null, null, `${avgWatchTime}`]);
     summaryData.addBlankLine();
-    summaryData.addLine([ 'NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME' ]);
+    summaryData.addLine(['NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME']);
     this.acceptedAnalytics.forEach(({ watchTime, email, name, orgActivity: activity, orgCountry, orgName }) => {
       summaryData.addLine([
         name,
@@ -205,18 +195,14 @@ export class AnalyticsComponent implements OnInit {
         orgName ? orgName : '-',
         activity ? orgActivity[activity] : '-',
         orgCountry ? territories[orgCountry] : '-',
-        watchTime ? `${convertToTimeString(watchTime * 1000)}s` : '-'
+        watchTime ? `${convertToTimeString(watchTime * 1000)}` : '-'
       ]);
     });
 
     // Create data for Archipel Event Guests Tab
     const guestsData = new ExcelData();
-    guestsData.addLine(
-      [ 'Number of invitations sent', null, null, null, null, invitationsModeCounter.invitation ]
-    );
-    guestsData.addLine(
-      [ 'Number of Requests to join the event', null, null, null, null, invitationsModeCounter.request ]
-    );
+    guestsData.addLine(['Number of invitations sent', null, null, null, null, invitationsModeCounter.invitation]);
+    guestsData.addLine(['Number of Requests to join the event', null, null, null, null, invitationsModeCounter.request]);
     guestsData.addLine([
       'Answers',
       null,
@@ -226,7 +212,7 @@ export class AnalyticsComponent implements OnInit {
       `${ invitationsStatusCounter.accepted } accepted, ${ invitationsStatusCounter.pending } unanswered, ${ invitationsStatusCounter.declined } declined`
     ]);
     guestsData.addBlankLine();
-    guestsData.addLine([ 'NAME', 'EMAIL', 'COMPANY', 'TERRITORY', 'ACTIVITY', 'INVITATION STATUS' ]);
+    guestsData.addLine(['NAME', 'EMAIL', 'COMPANY', 'TERRITORY', 'ACTIVITY', 'INVITATION STATUS']);
     const guestsAccepted = [];
     const guestsPending = [];
     const guestsDeclined = [];
@@ -235,7 +221,7 @@ export class AnalyticsComponent implements OnInit {
         const guest = [
           name || '-',
           email,
-          orgName ? orgName : '-',
+          orgName || '-',
           orgCountry ? territories[orgCountry] : '-',
           activity ? orgActivity[activity] : '-',
           invitationStatus[status]

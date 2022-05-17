@@ -4,7 +4,6 @@ import {
   utils,
   writeFile,
   FullProperties,
-  ColInfo,
   AOA2SheetOpts
 }  from 'xlsx';
 
@@ -13,35 +12,33 @@ interface SheetOptions {
   sheet: WorkSheet
 }
 
+interface AddLineOptions {
+  merge: CellRange[]
+}
+
+interface CellRange {
+  start: string,
+  end: string
+}
+
 export function addNewSheetsInWorkbook(worksheets: SheetOptions[], workbook: WorkBook) {
   worksheets.forEach(({ name, sheet }) => utils.book_append_sheet(workbook, sheet, name));
 }
 
-export function addWorksheetColumnsWidth(data: unknown[][], worksheet: WorkSheet) {
-  const colsWidth = calculateColsWidthFromArray(data);
-  setWorksheetColumnsWidth(worksheet, colsWidth.map((n: number) => ({ width: n })));
-}
-
 /**
  * Calculate the width of columns with the total length of the letters + 5 to add some extra space.
- * @param arrayOfValue Array of Array
- * @param defaultSpace Will be used as a comparation with the width
- * @returns An array of number
+ * Add the max value to each columns.
  */
-export function calculateColsWidthFromArray(arrayOfValue: unknown[][], defaultSpace: number = 15) {
-  const maxCols: number[] = Array(arrayOfValue[0].length).fill(defaultSpace);
-  for(let row = 0; row < arrayOfValue.length; row++) {
-    for(let col = 0; col < arrayOfValue[row].length; col++) {
+export function addWorksheetColumnsWidth(data: unknown[][], worksheet: WorkSheet, defaultSpace: number = 15) {
+  const maxCols = Array(data[0].length).fill(defaultSpace);
+  for(let row = 0; row < data.length; row++) {
+    for(let col = 0; col < data[row].length; col++) {
       const currentNumber = maxCols[col];
-      const newNumber = arrayOfValue[row][col] ? `${arrayOfValue[row][col]}`.length + 5 : 0;
+      const newNumber = data[row][col] ? `${data[row][col]}`.length + 5 : 0;
       if (currentNumber < newNumber) maxCols[col] = newNumber;
     }
   }
-  return maxCols;
-}
-
-export function convertArrayToWorksheet(arrayOfValue: unknown[][], options?: AOA2SheetOpts) {
-  return utils.aoa_to_sheet(arrayOfValue, options);
+  worksheet['!cols'] = maxCols.map((n: number) => ({ width: n }));
 }
 
 export function createWorkBook(properties: FullProperties) {
@@ -50,16 +47,43 @@ export function createWorkBook(properties: FullProperties) {
   return workbook;
 }
 
-export function exportSpreadsheet(workbook: WorkBook, filename: string ='SheetJS.xlsx') {
+export function exportSpreadsheet(workbook: WorkBook, filename: string = 'SheetJS.xlsx') {
   writeFile(workbook, filename);
 }
 
-export function mergeWorksheetCells(ranges: string[], worksheet: WorkSheet) {
-  const rangesArray = ranges.map(range => utils.decode_range(range));
-  if(!worksheet['!merges']) worksheet['!merges'] = [];
-  worksheet['!merges'].push(...rangesArray);
-}
+export class ExcelData {
 
-export function setWorksheetColumnsWidth(worksheet: WorkSheet, colsWidth: ColInfo[]) {
-  worksheet['!cols'] = colsWidth;
+  private arrayOfValue: unknown[][] = [];
+  private mergeArray: string[] = [];
+  private rowNumber = 1;
+
+  addLine(line: unknown[], options?: AddLineOptions) {
+    this.arrayOfValue.push(line);
+    if (options) {
+      options.merge.forEach(range => {
+        const startCol = `${range.start}${this.rowNumber}`;
+        const endCol = `${range.end}${this.rowNumber}`;
+        this.mergeArray.push(`${startCol}:${endCol}`);
+      })
+    }
+    this.rowNumber++;
+  }
+
+  addBlankLine() {
+    this.arrayOfValue.push(null);
+    this.rowNumber++;
+  }
+
+  createWorksheet(options?: AOA2SheetOpts) {
+    const worksheet = utils.aoa_to_sheet(this.arrayOfValue, options);
+    const mergeRange = this.mergeArray.map(range => utils.decode_range(range));
+    if (!worksheet['!merges']) worksheet['!merges'] = [];
+    worksheet['!merges'].push(...mergeRange);
+    return worksheet;
+  }
+
+  get getArrayOfValue() {
+    return this.arrayOfValue;
+  }
+
 }
