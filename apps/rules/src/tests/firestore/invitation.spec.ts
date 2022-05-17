@@ -58,7 +58,7 @@ describe('Invitation Rules Tests', () => {
         const createInvite: Partial<Invitation> = {
           mode: 'request',
           status: <InvitationStatus>'pending',
-          fromUser: { uid: 'uid-user2', email: 'user2@O001.com' },
+          fromUser: { uid: 'uid-user2', email: 'user2@O001.com', hideEmail: false },
         };
         const inviteDoc = db.collection('invitations').doc(newInviteId).set(createInvite);
         await assertSucceeds(inviteDoc);

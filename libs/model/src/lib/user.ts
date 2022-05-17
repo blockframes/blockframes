@@ -45,6 +45,7 @@ export interface PublicUser {
   firstName?: string;
   lastName?: string;
   orgId?: string;
+  hideEmail: boolean;
 }
 
 export interface Preferences {
@@ -62,6 +63,7 @@ export function createPublicUser(user: Partial<User> = {}): PublicUser {
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
     orgId: user.orgId ?? '',
+    hideEmail: user.hideEmail ?? false,
   };
 }
 
