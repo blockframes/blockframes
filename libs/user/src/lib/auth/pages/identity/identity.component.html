@@ -107,7 +107,7 @@
             test-id="password"
             [type]="passwordState.new ? 'password' : 'text'"
           />
-          <button matSuffix mat-icon-button (click)="passwordState.new = !passwordState.new" [matTooltip]="passwordState.new ? 'Show Password' : 'Hide Password'">
+          <button type="button" matSuffix mat-icon-button (click)="passwordState.new = !passwordState.new" [matTooltip]="passwordState.new ? 'Show Password' : 'Hide Password'">
             <mat-icon *ngIf="!passwordState.new" svgIcon="visibility_off"></mat-icon>
             <mat-icon *ngIf="passwordState.new" svgIcon="visibility"></mat-icon>
           </button>
@@ -137,7 +137,7 @@
             test-id="password-confirm"
             [type]="passwordState.confirm ? 'password' : 'text'"
           />
-          <button matSuffix mat-icon-button (click)="passwordState.confirm = !passwordState.confirm" [matTooltip]="passwordState.confirm ? 'Show Password' : 'Hide Password'">
+          <button type="button" matSuffix mat-icon-button (click)="passwordState.confirm = !passwordState.confirm" [matTooltip]="passwordState.confirm ? 'Show Password' : 'Hide Password'">
             <mat-icon *ngIf="!passwordState.confirm" svgIcon="visibility_off"></mat-icon>
             <mat-icon *ngIf="passwordState.confirm" svgIcon="visibility"></mat-icon>
           </button>
