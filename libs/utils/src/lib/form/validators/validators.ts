@@ -219,17 +219,3 @@ export function isDateInFuture(form: FormControl) {
   now.setHours(0, 0, 0, 0);
   return form.value < now ? { inPast: true } : null;
 }
-
-/**
- * Check if the control value length is less or equal to maxLength parameter
- * #### Max Length numbers
- * - LogLine: **350**
- * - Description for Director, Cast and Crew: **500**
- * - Film Review Quote: **500**
- * - Key Assets, Sales Pitch and Synopsis: **1500**
- */
-export function characterLimit(maxLength: 10 | 350 | 500 | 1500): ValidatorFn {
-  return (control: FormControl): ValidationErrors => {
-    return control.value <= maxLength ? null : { characterLimit: true };
-  }
-}
