@@ -10,9 +10,6 @@ import { config } from 'firebase-functions';
 import { firebase } from '@env';
 import { mockConfigIfNeeded } from '@blockframes/firebase-utils/firebase-utils';
 
-console.log('Functions config() output: ')
-console.log(config());
-
 export const e2eMode = false;
 
 export {
@@ -45,3 +42,8 @@ export const twilioApiKeySid = mockConfigIfNeeded('twilio', 'api', 'key', 'sid')
 export const mailchimpAPIKey = mockConfigIfNeeded('mailchimp', 'api_key');
 export const mailchimpServer = mockConfigIfNeeded('mailchimp', 'server');
 export const mailchimpListId = mockConfigIfNeeded('mailchimp', 'list_id');
+
+console.log('Functions config() output: ')
+const test = config();
+console.log(test);
+console.log(test.twilio.api.key);
