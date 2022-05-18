@@ -183,6 +183,7 @@ export class AuthService extends BlockframesAuth<User> {
     lastName: string,
     _meta: DocumentMeta<Date>,
     privacyPolicy: PrivacyPolicy
+    hideEmail: boolean
   }) {
     return {
       _meta: createDocumentMeta({ emailVerified: false, ...ctx._meta }),
@@ -191,6 +192,7 @@ export class AuthService extends BlockframesAuth<User> {
       firstName: ctx.firstName,
       lastName: ctx.lastName,
       privacyPolicy: ctx.privacyPolicy,
+      hideEmail: ctx.hideEmail
     };
   }
 

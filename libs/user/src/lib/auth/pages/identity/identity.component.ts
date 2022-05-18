@@ -234,11 +234,12 @@ export class IdentityComponent implements OnInit, OnDestroy {
    * @param user 
    * @returns PublicUser
    */
-  private async createUser(user: { email, password, firstName, lastName }) {
+  private async createUser(user: { email, password, firstName, lastName, hideEmail }) {
     const privacyPolicy = await this.authService.getPrivacyPolicy();
     const ctx = {
       firstName: user.firstName,
       lastName: user.lastName,
+      hideEmail: user.hideEmail,
       _meta: { createdFrom: this.app },
       privacyPolicy
     };
@@ -247,7 +248,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      uid: credentials.user.uid
+      uid: credentials.user.uid,
+      hideEmail: user.hideEmail,
     });
   }
 
@@ -256,12 +258,13 @@ export class IdentityComponent implements OnInit, OnDestroy {
   * @param user 
   * @returns PublicUser
   */
-  private async createUserFromAnonymous(user: { email, password, firstName, lastName }) {
+  private async createUserFromAnonymous(user: { email, password, firstName, lastName, hideEmail }) {
     const privacyPolicy = await this.authService.getPrivacyPolicy();
     const ctx = {
       firstName: user.firstName,
       lastName: user.lastName,
       _meta: { createdFrom: this.app, createdBy: 'anonymous', },
+      hideEmail: user.hideEmail,
       privacyPolicy
     };
     const credentials = await this.authService.signupFromAnonymous(user.email.trim(), user.password, { ctx });
@@ -269,7 +272,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      uid: credentials.user.uid
+      uid: credentials.user.uid,
+      hideEmail: user.hideEmail,
     });
   }
 

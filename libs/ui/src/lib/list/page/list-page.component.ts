@@ -56,7 +56,6 @@ export class ListPageComponent implements AfterContentInit {
   @ContentChild(PageAppBarSearchDirective) appBar: PageAppBarSearchDirective;
 
   @Input() items: unknown[];
-  @Input() @boolean exportButton = false;
 
   public listView = false;
   public canToggle = false;

@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { ProfileFormComponent } from './profile.component';
+import { HideEmailModule } from '@blockframes/auth/components/hide-email/hide-email.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -19,6 +20,7 @@ import { MatInputModule } from '@angular/material/input';
     FlexLayoutModule,
     ImageUploaderModule,
     ReactiveFormsModule,
+    HideEmailModule,
 
     // Material
     MatCardModule,

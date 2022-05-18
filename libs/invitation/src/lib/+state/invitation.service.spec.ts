@@ -39,7 +39,8 @@ const invitationParamsUser = {
   date: today,
   toUser: {
     uid: 'userId',
-    email: 'userId@myorg.org'
+    email: 'userId@myorg.org',
+    hideEmail: false
   }
 };
 
