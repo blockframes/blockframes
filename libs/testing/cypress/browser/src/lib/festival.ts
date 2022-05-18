@@ -148,6 +148,7 @@ export function selectSalesAgents() {
   cy.get('layout-marketplace a[test-id=sellers]').click();
 }
 export function clickOnOrganization(orgName: string) {
+  cy.get('[test-id="search-input"').type(orgName);
   cy.get('festival-organization-list org-card').contains(orgName).parent().parent().find('a').click();
 }
 
