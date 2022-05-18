@@ -1,6 +1,7 @@
 import { db } from '../testing-cypress';
 import { createUser, createOrganization, createPermissions } from '@blockframes/model';
 import { App, ModuleAccess } from '@blockframes/model';
+import { copyFile } from 'fs';
 
 export async function getRandomEmail() {
   const { email } = await getRandomUser();
@@ -83,46 +84,38 @@ const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
 //* IMPORT DATA*-----------------------------------------------------------------
 
 export async function importData(data: Record<string, object>[]) {
-  const createAll = [];
-  for(const document of data) {
-    const createDocs = Object.entries(document).map(([path, content]) => {
-      if (!isDocumentPath(path)) throw new Error('Document path mandatory, like [collectionPath/DocumentPath]. Got ' + JSON.stringify(path));
-      return db.doc(path).set(content);
+  const createAll: Promise<FirebaseFirestore.WriteResult>[] = [];
+  for (const document of data) {
+    Object.entries(document).map(([path, content]) => {
+      if (!isDocumentPath(path))
+        throw new Error('Document path mandatory, like [collectionPath/DocumentPath]. Got ' + JSON.stringify(path));
+      createAll.push(db.doc(path).set(content));
     });
-    createAll.push(createDocs)
   }
-  await Promise.all(createAll)
-  return true;
+  return Promise.all(createAll);
 }
 
 //* DELETE DATA*----------------------------------------------------------------
 
-export async function deleteData(paths: string | string[]) {
-  if (!Array.isArray(paths)) {
-    const path = paths;
-    isDocumentPath(path) ? await deleteDocument(path) : await deleteCollection(path);
-  } else {
-    paths.map(async path => (isDocumentPath(path) ? await deleteDocument(path) : await deleteCollection(path)));
+export async function deleteData(paths: string[]) {
+  const deleteAll: Promise<FirebaseFirestore.WriteResult>[] = [];
+  for (const path of paths) {
+    if (isDocumentPath(path)) {
+      deleteAll.push(db.doc(path).delete());
+    } else {
+      const docsRef = await db.collection(path).listDocuments();
+      for (const docRef of docsRef) deleteAll.push(docRef.delete());
+    }
   }
-  // This function being used in a task, Cypress requires a return value
-  return true;
-}
-
-function deleteDocument(path: string) {
-  return db.doc(path).delete();
-}
-
-async function deleteCollection(collection: string) {
-  const docsRef = await db.collection(collection).listDocuments();
-  return Promise.all(docsRef.map(docRef => docRef.delete()));
+  return Promise.all(deleteAll);
 }
 
 //* GET DATA*------------------------------------------------------------------
 
 export async function getData(paths: string[]) {
   const docOrCollectionData = (path: string) => (isDocumentPath(path) ? getDocument(path) : getCollection(path));
-  const data = await Promise.all(paths.map(path => docOrCollectionData(path)));
-  return data;
+  const data = paths.map(path => docOrCollectionData(path));
+  return Promise.all(data);
 }
 
 async function getDocument(path: string) {

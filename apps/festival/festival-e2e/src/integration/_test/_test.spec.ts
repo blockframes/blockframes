@@ -34,63 +34,53 @@ describe('Testing bridge between Cypress and node', () => {
   });
 
   it('retrieves a document', () => {
-    firebase.create([examples.singleDoc])
-      .then(() => {
-        const path = Object.keys(examples.singleDoc)[0];
-        firebase.get([path]).then(data => {
-          cy.log('Data retrieved : ', data);
-          expect(Object.values(data)[0]).to.deep.equal(examples.singleDoc[path]);
-        });
-      })
+    firebase.create([examples.singleDoc]).then(() => {
+      const path = Object.keys(examples.singleDoc)[0];
+      firebase.get([path]).then(data => {
+        expect(Object.values(data)[0]).to.deep.equal(examples.singleDoc[path]);
+      });
+    });
   });
 
   it('retrieves a collection', () => {
-    firebase.create([examples.multipleDocs])
-      .then(() => {
-        const collection = Object.keys(examples.multipleDocs)[0].split('/')[0];
-        firebase.get([collection]).then(data => {
-          cy.log('Collection retrieved : ', JSON.stringify(data));
-          data[0].map(retrieved => {
-            const exampleValues = Object.values(examples.multipleDocs);
-            expect(exampleValues).to.deep.include(retrieved);
-          });
-        });
-      })
+    firebase.create([examples.multipleDocs]);
+    const collection = Object.keys(examples.multipleDocs)[0].split('/')[0];
+    firebase.get([collection]).then(data => {
+      data[0].map(retrieved => {
+        const exampleValues = Object.values(examples.multipleDocs);
+        expect(exampleValues).to.deep.include(retrieved);
+      });
+    });
   });
 
   it('retrieves an array of documents', () => {
     const docs = [examples.singleDoc, examples.singleDocBis, examples.singleDocTer];
-    firebase.create(docs)
-      .then(() => {
-        const paths = docs.map(doc => Object.keys(doc)[0]);
-        const exampleValues = docs.map(doc => Object.values(doc)[0]);
-        firebase.get(paths).then(retrievedValues => expect(retrievedValues).to.deep.equal(exampleValues))
-      })
+    firebase.create(docs);
+    const paths = docs.map(doc => Object.keys(doc)[0]);
+    const exampleValues = docs.map(doc => Object.values(doc)[0]);
+    firebase.get(paths).then(retrievedValues => {
+      expect(retrievedValues).to.deep.equal(exampleValues);
+    });
   });
 
   it('retrieves an array of collections', () => {
     const docs = [examples.singleDoc, examples.multipleDocs];
-    firebase.create(docs)
-      .then(() => {
-        const paths = docs.map(doc => Object.keys(doc)[0].split('/')[0]);
-        const exampleValues = docs.map(doc => Object.values(doc));
-        firebase.get(paths).then(retrievedValues => expect(retrievedValues).to.deep.equal(exampleValues));
-      })
+    firebase.create(docs);
+    const paths = docs.map(doc => Object.keys(doc)[0].split('/')[0]);
+    const exampleValues = docs.map(doc => Object.values(doc));
+    firebase.get(paths).then(retrievedValues => expect(retrievedValues).to.deep.equal(exampleValues));
   });
-  /*
-
 
   it('deletes a doc', () => {
-    firebase.create({ ...examples.docToDelete });
+    firebase.create([examples.docToDelete]);
     const path = Object.keys(examples.docToDelete)[0];
-    firebase.get(path).then(data => {
-      console.log('data : ', data);
+    firebase.get([path]).then(data => {
       expect(Object.values(data)[0]).to.deep.equal(examples.docToDelete[path]);
     });
-    firebase.delete(path);
-    firebase.get(path).then(data => expect(data[0]).to.equal(null));
+    firebase.delete([path]);
+    firebase.get([path]).then(data => expect(data[0]).to.equal(null));
   });
-*/
+
   //TODO : delete a collection, an array of documents, an array of collections
 
   //TODO : update documents
@@ -103,16 +93,15 @@ const firebase = {
     this.delete([
       'example-single',
       'example-multiple',
-      'example-multiple2',
       'example-array',
       'example-object',
       'example-subcollection',
       'example-deletion',
-    ]).then(() => cy.log('example data deleted'));
+    ]);
   },
 
   //TODO : take care of subcollections
-  delete(paths: string | string[]) {
+  delete(paths: string[]) {
     return cy.task('deleteData', paths);
   },
 
