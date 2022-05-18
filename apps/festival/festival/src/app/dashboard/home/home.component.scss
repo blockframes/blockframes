@@ -53,7 +53,7 @@ header {
 @include layout-bp(gt-xs) {
   analytics-pie-chart,
   analytics-line-chart,
-  analytics-map:not(.map-insights) {
+  analytics-map.caroussel-map {
     width: calc(50% - 16px);
     margin-right: 16px;
   }
@@ -66,12 +66,13 @@ header {
 
   analytics-pie-chart,
   analytics-line-chart,
-  analytics-map:not(.map-insights) {
+  analytics-map.caroussel-map {
     width: calc(100% - 8px);
     margin-right: 8px;
   }
 }
 
-analytics-map.map-insights {
-  display: block;
+analytics-map h3{
+  display: flex;
+  align-items: center;
 }

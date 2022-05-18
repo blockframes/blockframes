@@ -1,3 +1,5 @@
+@import '@angular/flex-layout/mq';
+
 :host {
   display: block;
 }
@@ -14,7 +16,7 @@ world-map {
   border-radius: 4px;
 }
 
-.map-wrapper{
+.map-wrapper {
   width: 100%;
   flex: 1 1 100%;
   display: flex;
@@ -23,6 +25,16 @@ world-map {
   gap: 24px;
   margin-bottom: 24px;
   position: relative;
+}
+
+@include layout-bp(lt-md) {
+  .map-wrapper {
+    flex-direction: column;
+  }
+}
+
+mat-list.horizontal {
+  flex: 0 0 clamp(20%,300px,30%);
 }
 
 img {
@@ -37,11 +49,8 @@ mat-spinner {
   margin: auto;
 }
 
-mat-list.horizontal {
-  flex: 0 0 300px;
-}
-
 .legend {
+  background-color: white;
   position: absolute;
   right: 0px;
   z-index: 2;

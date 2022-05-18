@@ -55,10 +55,6 @@ export class AnalyticsMapComponent {
   @Input() @boolean selectable = false;
   @Output() selection: EventEmitter<string> = new EventEmitter();
 
-  resetSelected = () => {
-    return this.toggleSelect(this.selected);
-  }
-
   toggleSelect(isoA3: TerritoryISOA3Value) {
     if (!this.selectable) return;
     this.selected = this.selected === isoA3 ? '' : isoA3;

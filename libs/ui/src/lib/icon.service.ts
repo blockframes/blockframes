@@ -96,7 +96,7 @@ export const icons = [
   { name: 'more_vert', url: 'assets/icons/more_vert.svg' },
   { name: 'mouse_pointer', url: 'assets/icons/mouse_pointer.svg' },
   { name: 'movie', url: 'assets/icons/movie.svg' },
-  { name: 'movie_open', url: 'assets/icons/movie_open.svg' },
+  { name: 'buyer_insights', url: 'assets/icons/buyer_insights.svg' },
   { name: 'negotiate', url: 'assets/icons/negotiate.svg' },
   { name: 'notifications', url: 'assets/icons/notifications.svg' },
   { name: 'NZD', url: 'assets/icons/NZD.svg' },

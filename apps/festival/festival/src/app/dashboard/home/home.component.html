@@ -30,7 +30,7 @@
             <bf-carousel>
               <analytics-pie-chart class="surface" carouselItem [data]="orgActivityOfPopularTitle$ | async">
               </analytics-pie-chart>
-              <analytics-map class="surface" carouselItem [data]="territoryActivityOfPopularTitle$ | async">
+              <analytics-map class="surface caroussel-map" carouselItem [data]="territoryActivityOfPopularTitle$ | async">
                 <article>
                   <h5>
                     <mat-icon svgIcon="landscape"></mat-icon>
@@ -68,9 +68,9 @@
     </ng-container>
 
     <section class="surface">
-      <analytics-map class="map-insights" [data]="activeCountries$ | async" [topCount]="5" horizontal showLegend selectable>
+      <analytics-map [data]="activeCountries$ | async" [topCount]="5" horizontal showLegend selectable>
         <h3>
-          <mat-icon svgIcon="movie_open"></mat-icon>
+          <mat-icon svgIcon="buyer_insights"></mat-icon>
           <span>Buyers' Insights</span>
         </h3>
       </analytics-map>
