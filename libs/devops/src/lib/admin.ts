@@ -12,7 +12,7 @@ import { getLatestDirName, importFirestoreFromBucket, getBackupBucket } from './
  *
  * @param dirName optional name of bucket dir to import Firestore from
  */
-export async function importFirestore(dirName?: string, settings?: { allowProd: boolean }) {
+export async function importFirestore(dirName?: string) {
   let dir: string;
   if (dirName) {
     dir = dirName;
@@ -20,5 +20,5 @@ export async function importFirestore(dirName?: string, settings?: { allowProd: 
     const bucket = await getBackupBucket();
     dir = await getLatestDirName(bucket, 'firestore');
   }
-  await importFirestoreFromBucket(dir, settings);
+  await importFirestoreFromBucket(dir);
 }

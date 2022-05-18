@@ -94,7 +94,7 @@ export async function migrate({
     console.error(e);
     if (withBackup) {
       console.error('Migration failed. Restoring pre-migration backup...');
-      await importFirestore(backupDir, { allowProd: true });
+      await importFirestore(backupDir);
     }
     throw e;
   } finally {
