@@ -39,10 +39,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public existingUser = false;
   public passwordsMatcher = new RepeatPasswordStateMatcher('password', 'confirm');
   public currentPasswordMatch = new DifferentPasswordStateMatcher('generatedPassword', 'password');
-  public passwordState = {
-    new: true,
-    confirm: true
-  }
+  public hidePassword = true
 
   private existingOrgId: string;
   private subs: Subscription[] = [];
