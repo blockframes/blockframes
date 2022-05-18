@@ -1,18 +1,20 @@
 <ng-container *ngIf="movie$ | async as movie">
   <!-- App bar -->
-  <ng-template pageBar targetId="nav">
-    <header fxLayout fxLayoutAlign="start center">
-      <app-menu></app-menu>
-      <ng-container *ngFor="let link of routes">
-        <ng-container *ngIf="movie | hasKeys : (link.requireKeys || [])">
-          <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive
-            #rla="routerLinkActive">
-            {{link.label}}
-          </a>
+  <ng-container *ngIf="gtSm$ | async">
+    <ng-template pageBar targetId="nav">
+      <header fxLayout fxLayoutAlign="start center">
+        <app-menu></app-menu>
+        <ng-container *ngFor="let link of routes">
+          <ng-container *ngIf="movie | hasKeys : (link.requireKeys || [])">
+            <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive
+              #rla="routerLinkActive">
+              {{link.label}}
+            </a>
+          </ng-container>
         </ng-container>
-      </ng-container>
-    </header>
-  </ng-template>
+      </header>
+    </ng-template>
+  </ng-container>
 
   <!-- Header -->
   <ng-content select="movie-header"></ng-content>
@@ -83,16 +85,16 @@
       </bf-carousel>
     </article>
 
-    <article id="videoFooter" *ngIf="hasPublicVideos(movie)">
+    <article *ngIf="hasPublicVideos(movie)" id="videoFooter"> <!-- id videoFooter is used for promotional links -->
       <h2>Videos</h2>
-      <div>
+      <ul class="videos">
         <ng-container *ngFor="let video of movie.promotional.videos.otherVideos">
-          <div class="video-container" *ngIf="video.privacy === 'public'">
+          <li *ngIf="video.privacy === 'public'">
             <video-viewer [ref]="video" *ngIf="video.jwPlayerId" (stateChange)="videoStateChanged(movie, $event)"></video-viewer>
             <p>{{ video.title || (video.type | toLabel: 'hostedVideoTypes') }}</p>
-          </div>
+          </li>
         </ng-container>
-      </div>
+      </ul>
     </article>
   </footer>
 </ng-container>

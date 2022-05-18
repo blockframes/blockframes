@@ -1,4 +1,4 @@
-﻿<list-page [items]="movies$ | async" exportButton>
+﻿<list-page [items]="movies$ | async">
 
   <!-- App Bar Search -->
   <list-page-app-bar>
@@ -62,7 +62,7 @@
 
     <button mat-button class="refresh translucent" (click)="clear()" matTooltip="Clear all filters">
       <mat-icon svgIcon="refresh_filters"></mat-icon>
-      Refresh
+      <span>Clear Filters</span>
     </button>
   </list-filter>
 

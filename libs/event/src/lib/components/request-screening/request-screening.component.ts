@@ -42,7 +42,7 @@ export class RequestScreeningComponent {
     this.requestStatus.next('sent');
     const title = await this.titleService.valueChanges(this.movieId).pipe(take(1)).toPromise();
     this.analytics.addTitle('screeningRequested', title);
-    this.snackbar.open('Screening request successfully sent', '', { duration: 3000 });
+    this.snackbar.open('Screening request successfully sent.', '', { duration: 3000 });
   }
 }
 

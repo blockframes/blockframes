@@ -3,12 +3,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../utils';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { removeNulls } from '@blockframes/utils/utils';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
@@ -21,14 +22,13 @@ const hasImportErrors = (importState: MovieImportState, type: string = 'error'):
   styleUrls: ['./movies.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableExtractedMoviesComponent implements OnInit {
+export class TableExtractedMoviesComponent implements AfterViewInit {
 
   @Input() rows: MatTableDataSource<MovieImportState>;
   @Input() mode: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  public processedTitles = 0;
-  public publishedTitles = 0;
+  public processing = 0;
   public selection = new SelectionModel<MovieImportState>(true, []);
   public displayedColumns: string[] = [
     'movie.internalRef',
@@ -42,44 +42,46 @@ export class TableExtractedMoviesComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private cdr: ChangeDetectorRef
   ) { }
 
-  ngOnInit() {
-    // Mat table setup @TODO #7429
+  ngAfterViewInit(): void {
     this.rows.paginator = this.paginator;
     this.rows.filterPredicate = this.filterPredicate;
     this.rows.sortingDataAccessor = sortingDataAccessor;
     this.rows.sort = this.sort;
   }
 
-  async createMovie(importState: MovieImportState): Promise<boolean> {
-    await this.addMovie(importState);
+  async create(importState: MovieImportState) {
+    await this.add(importState);
     this.snackBar.open('Title created!', 'close', { duration: 3000 });
-    return true;
   }
 
-  async createSelectedMovies(): Promise<boolean> {
+  async createSelected() {
     try {
       const creations = this.selection.selected.filter(importState => !importState.movie.id && !hasImportErrors(importState));
       for (const movie of creations) {
-        this.processedTitles++;
-        await this.addMovie(movie);
+        await this.add(movie, { increment: true });
       }
-      this.snackBar.open(`${this.processedTitles} titles created!`, 'close', { duration: 3000 });
-      this.processedTitles = 0;
-      return true;
+      this.snackBar.open(`${this.processing} titles created!`, 'close', { duration: 3000 });
+      this.processing = 0;
     } catch (err) {
-      this.snackBar.open(`Could not create all titles (${this.processedTitles} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
-      this.processedTitles = 0;
+      this.snackBar.open(`Could not create all titles (${this.processing} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.processing = 0;
     }
+
+    this.cdr.markForCheck();
   }
 
   /**
    * Adds a movie to database and prevents multi-insert by refreshing mat-table
    * @param importState
    */
-  private async addMovie(importState: MovieImportState): Promise<boolean> {
+  private async add(importState: MovieImportState, { increment } = { increment: false }) {
+    if (increment) this.processing++;
+    importState.importing = true;
+    this.cdr.markForCheck();
     const data = this.rows.data;
     importState.movie = await this.movieService.create(importState.movie);
     importState.errors.push({
@@ -90,37 +92,39 @@ export class TableExtractedMoviesComponent implements OnInit {
     });
     this.rows.data = data;
 
-    return true;
+    importState.importing = false;
+    this.cdr.markForCheck();
   }
 
-  async updateMovie(importState: MovieImportState) {
-    await this.movieService.update(importState.movie.id, importState.movie)
+  async update(importState: MovieImportState) {
+    await this.upsert(importState);
     this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
     return true;
   }
 
-  async updateSelectedMovies(): Promise<boolean> {
+  async updateSelected() {
     try {
       const updates = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState));
       for (const importState of updates) {
-        this.processedTitles++;
-        await this.movieService.update(importState.movie.id, importState.movie);
+        await this.upsert(importState, { increment: true });
       }
-      this.snackBar.open(`${this.processedTitles} movies updated!`, 'close', { duration: 3000 });
-      this.processedTitles = 0;
-      return true;
+      this.snackBar.open(`${this.processing} movies updated!`, 'close', { duration: 3000 });
+      this.processing = 0;
     } catch (err) {
-      this.snackBar.open(`Could not update all titles (${this.processedTitles} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
-      this.processedTitles = 0;
+      this.snackBar.open(`Could not update all titles (${this.processing} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.processing = 0;
     }
+    this.cdr.markForCheck();
   }
 
-  errorCount(data: MovieImportState, type: string = 'error') {
-    return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
-  }
-
-  isSaveOrUpdateDisabledForTitle(element) {
-    return this.errorCount(element) > 0 || this.processedTitles > 0;
+  private async upsert(importState: MovieImportState, { increment } = { increment: false }) {
+    if (increment) this.processing++;
+    importState.importing = true;
+    this.cdr.markForCheck();
+    const movie = removeNulls(importState.movie); // TODO #7273 #8280 remove
+    await this.movieService.upsert(movie);
+    importState.importing = false;
+    this.cdr.markForCheck();
   }
 
   ///////////////////

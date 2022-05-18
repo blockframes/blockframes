@@ -36,6 +36,7 @@ export function aggregate(analytics: Analytics[], data: Partial<AggregatedAnalyt
   for (const analytic of analytics) {
     aggregated[analytic.name]++;
   }
+  aggregated.total = analytics.length;
   return aggregated;
 }
 
