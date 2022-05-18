@@ -5,8 +5,13 @@
  * Use this setup (non-production) when the execution context is outside firebase
  * functions.
  */
+ import { config } from 'firebase-functions';
 
-import { config } from 'firebase-functions';
+ console.log('Functions config() output: ')
+ const test = config();
+ console.log(test);
+ console.log(test?.twilio?.api?.key);
+
 import { firebase } from '@env';
 import { mockConfigIfNeeded } from '@blockframes/firebase-utils/firebase-utils';
 
@@ -42,8 +47,3 @@ export const twilioApiKeySid = mockConfigIfNeeded('twilio', 'api', 'key', 'sid')
 export const mailchimpAPIKey = mockConfigIfNeeded('mailchimp', 'api_key');
 export const mailchimpServer = mockConfigIfNeeded('mailchimp', 'server');
 export const mailchimpListId = mockConfigIfNeeded('mailchimp', 'list_id');
-
-console.log('Functions config() output: ')
-const test = config();
-console.log(test);
-console.log(test.twilio.api.key);
