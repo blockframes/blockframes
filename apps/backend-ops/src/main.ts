@@ -2,7 +2,7 @@ import 'tsconfig-paths/register';
 import { config } from 'dotenv';
 config(); // * Must be run here!
 import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
-warnMissingVars()
+warnMissingVars();
 
 import {
   exportFirestoreToBucketBeta,
@@ -48,7 +48,7 @@ const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
 const [arg1, arg2] = flags;
 
-export async function generateFixtures(db: FirebaseFirestore.Firestore) { // TODO - will move this in next PR
+export async function generateFixtures(db: FirebaseFirestore.Firestore) { // TODO #8051 - will move this in next PR
   await generateUsers(db);
   await generateMovies(db);
   await generateOrgs(db);
@@ -169,12 +169,12 @@ async function runCommand() {
 }
 
 function hasFlag(compare: string) {
-  return flags.some(flag => flag === compare) || flags.some(flag => flag === `--${compare}`)
+  return flags.some(flag => flag === compare) || flags.some(flag => flag === `--${compare}`);
 }
 
 if (hasFlag('skipMaintenance')) {
-  console.warn('WARNING! BLOCKFRAMES_MAINTENANCE_DISABLED is set to true')
-  disableMaintenanceMode()
+  console.warn('WARNING! BLOCKFRAMES_MAINTENANCE_DISABLED is set to true');
+  disableMaintenanceMode();
 }
 
 const consoleMsg = `Time running command "${cmd}"`;

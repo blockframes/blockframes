@@ -7,7 +7,6 @@ import { getFirestoreExportDirname } from './export';
 import { sleep, throwOnProduction } from '@blockframes/firebase-utils';
 import { promises } from 'fs';
 import { set, camelCase } from 'lodash';
-const { writeFile, rename } = promises;
 import type { auth as authType } from 'firebase-admin';
 import { awaitProcOutput, gsutilTransfer, runShellCommand, runShellCommandUntil } from '../commands';
 
@@ -134,7 +133,7 @@ export async function firebaseEmulatorExec({
         importPath.charAt(importPath.length - 1) === sep
           ? `${importPath.slice(0, -1)}${new Date().getTime()}`
           : `${importPath}${new Date().getTime()}`;
-      await rename(importPath, backupPath);
+      await promises.rename(importPath, backupPath);
       console.log('Dir backed up');
     }
   }
@@ -395,7 +394,7 @@ export function writeRuntimeConfig(values: { [key: string]: string }, path: stri
   }
 
   Object.entries(values).forEach(([key, value]) => set(runtimeObj, key, process.env[getKeyName(value)] || 'missing-env-value'));
-  return writeFile(path, JSON.stringify(runtimeObj, null, 4));
+  return promises.writeFile(path, JSON.stringify(runtimeObj, null, 4));
 }
 
 /**
