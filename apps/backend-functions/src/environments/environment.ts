@@ -6,14 +6,18 @@
  * functions.
  */
  import { config } from 'firebase-functions';
+ import { firebase } from '@env';
+ import { mockConfigIfNeeded } from '@blockframes/firebase-utils/firebase-utils';
+ import { initFunctionsTestMock } from '@blockframes/testing/unit-tests';
 
+
+ initFunctionsTestMock();
  console.log('Functions config() output: ')
  const test = config();
  console.log(test);
  console.log(test?.twilio?.api?.key);
 
-import { firebase } from '@env';
-import { mockConfigIfNeeded } from '@blockframes/firebase-utils/firebase-utils';
+
 
 export const e2eMode = false;
 
