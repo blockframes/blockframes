@@ -108,8 +108,7 @@
             [type]="hidePassword ? 'password' : 'text'"
           />
           <button type="button" matSuffix mat-icon-button (click)="hidePassword = !hidePassword" [matTooltip]="hidePassword ? 'Show Password' : 'Hide Password'">
-            <mat-icon *ngIf="!hidePassword" svgIcon="visibility_off"></mat-icon>
-            <mat-icon *ngIf="hidePassword" svgIcon="visibility"></mat-icon>
+            <mat-icon [svgIcon]="hideNewPassword ? 'visibility' : 'visibility_off'"></mat-icon>
           </button>
           <mat-hint>Between 6 and 24 characters.</mat-hint>
           <mat-error *ngIf="form.get('password').hasError('required')">
@@ -138,8 +137,7 @@
             [type]="hidePassword ? 'password' : 'text'"
           />
           <button type="button" matSuffix mat-icon-button (click)="hidePassword = !hidePassword" [matTooltip]="hidePassword ? 'Show Password' : 'Hide Password'">
-            <mat-icon *ngIf="!hidePassword" svgIcon="visibility_off"></mat-icon>
-            <mat-icon *ngIf="hidePassword" svgIcon="visibility"></mat-icon>
+            <mat-icon [svgIcon]="hideNewPassword ? 'visibility' : 'visibility_off'"></mat-icon>
           </button>
           <mat-hint>Please rewrite your password for confirmation.</mat-hint>
           <mat-error *ngIf="form.get('confirm').hasError('required')">
