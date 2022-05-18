@@ -30,7 +30,7 @@ export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string 
 
   const { storage, db, auth } = loadAdminServices();
 
-  await startMaintenance(db)
+  await startMaintenance(db);
 
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 

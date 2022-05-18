@@ -1,7 +1,18 @@
 import { getCollection, jwplayerApiV2 } from '@blockframes/firebase-utils';
 import { StorageVideo, MovieVideo, Movie } from '@blockframes/model';
 import { delay } from '@blockframes/utils/helpers';
-import { storageFileExist } from 'libs/firebase-utils/src/lib/firebase-utils';
+import * as admin from 'firebase-admin';
+
+async function storageFileExist(path: string) {
+  const storage = admin.storage();
+  const file = await storage.bucket().file(path);
+
+  // for more info check
+  //  - https://googleapis.dev/nodejs/storage/latest/File.html#exists
+  //  - https://googleapis.dev/nodejs/storage/latest/global.html#FileExistsResponse
+  const result = await file.exists();
+  return result[0];
+}
 
 type StorageVideoKeys = keyof StorageVideo;
 

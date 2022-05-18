@@ -3,7 +3,7 @@ import { triggerNotifications, createNotification } from './notification';
 import { createDocumentMeta, createPublicUserDocument, getDocument, getOrganizationsOfMovie } from './data/internals';
 import { cleanMovieMedias, moveMovieMedia } from './media';
 import { Change, EventContext } from 'firebase-functions';
-import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils/algolia/algolia';
+import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils/algolia';
 import { getMailSender } from '@blockframes/utils/apps';
 import { sendMovieSubmittedEmail } from './templates/mail';
 import { sendMail } from './internals/email';
