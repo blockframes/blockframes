@@ -1,19 +1,24 @@
 import 'tsconfig-paths/register';
 import { config } from 'dotenv';
 config(); // * Must be run here!
-import { endMaintenance, keepAlive, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
-warnMissingVars()
+import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
+warnMissingVars();
 
-import { prepareForTesting, upgrade, prepareEmulators, upgradeEmulators } from './firebaseSetup';
-import { migrate } from './migrations';
-import { disableMaintenanceMode, displayCredentials, isMigrationRequired, showHelp } from './tools';
-import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
-import { clearUsers, createUsers, printUsers, syncUsers } from './users';
-import { generateFixtures } from './generate-fixtures';
-import { exportFirestore, importFirestore } from './admin';
-import { selectEnvironment } from './select-environment';
-import { healthCheck } from './health-check';
 import {
+  exportFirestoreToBucketBeta,
+  healthCheck,
+  migrate,
+  disableMaintenanceMode,
+  displayCredentials,
+  upgradeAlgoliaMovies,
+  upgradeAlgoliaOrgs,
+  upgradeAlgoliaUsers,
+  clearUsers,
+  createUsers,
+  printUsers,
+  syncUsers,
+  importFirestore,
+  selectEnvironment,
   anonymizeLatestProdDb,
   downloadProdDbBackup,
   importEmulatorFromBucket,
@@ -22,14 +27,20 @@ import {
   uploadBackup,
   startEmulators,
   syncAuthEmulatorWithFirestoreEmulator,
-} from './emulator';
-import { backupLiveEnv, restoreLiveEnv } from './backup';
-import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
-import { rescueJWP } from './rescueJWP';
-import { loadAndShrinkLatestAnonDbAndUpload } from './db-shrink';
-import { printDatabaseInconsistencies } from './internals/utils';
-import { cleanBackups } from './clean-backups';
-import { auditUsers } from './db-cleaning';
+  backupLiveEnv,
+  restoreLiveEnv,
+  rescueJWP,
+  loadAndShrinkLatestAnonDbAndUpload,
+  cleanBackups,
+  auditUsers,
+  prepareForTesting,
+  upgrade,
+  prepareEmulators,
+  upgradeEmulators,
+  printDatabaseInconsistencies,
+  keepAlive,
+  generateFixtures
+} from '@blockframes/devops';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -39,9 +50,7 @@ async function runCommand() {
   const { db } = loadAdminServices();
   switch (cmd) {
     case 'prepareForTesting':
-      await startMaintenance(db);
       await prepareForTesting({ dbBackupURL: arg1 });
-      await endMaintenance(db, EIGHT_MINUTES_IN_MS);
       break;
     case 'displayCredentials':
       await displayCredentials();
@@ -84,13 +93,7 @@ async function runCommand() {
       await generateFixtures(db);
       break;
     case 'upgrade':
-      if (!await isMigrationRequired()) {
-        console.log('Skipping upgrade because migration is not required...');
-        return;
-      }
-      await startMaintenance(db);
       await upgrade();
-      await endMaintenance(db);
       break;
     case 'auditDatabaseConsistency':
       await printDatabaseInconsistencies(undefined, db);
@@ -99,15 +102,13 @@ async function runCommand() {
       await upgradeEmulators();
       break;
     case 'exportFirestore':
-      await exportFirestore(arg1)
+      await exportFirestoreToBucketBeta(arg1)
       break;
     case 'importFirestore':
       await importFirestore(arg1)
       break;
     case 'restoreEnv':
-      await startMaintenance(db);
       await restoreLiveEnv();
-      await endMaintenance(db);
       break
     case 'backupEnv':
       await backupLiveEnv()
@@ -122,21 +123,13 @@ async function runCommand() {
       await healthCheck();
       break;
     case 'migrate':
-      if (!await isMigrationRequired()) {
-        console.log('Skipping because there is no migration to run...');
-        return;
-      }
-      await startMaintenance(db);
       await migrate();
-      await endMaintenance(db);
       break;
     case 'syncAuthEmulatorWithFirestoreEmulator':
       await syncAuthEmulatorWithFirestoreEmulator({ importFrom: arg1 });
       break;
     case 'syncUsers':
-      await startMaintenance(db);
       await syncUsers();
-      await endMaintenance(db);
       break;
     case 'printUsers':
       await printUsers();
@@ -145,14 +138,10 @@ async function runCommand() {
       await auditUsers(db);
       break;
     case 'clearUsers':
-      await startMaintenance(db);
       await clearUsers();
-      await endMaintenance(db);
       break;
     case 'createUsers':
-      await startMaintenance(db);
       await createUsers();
-      await endMaintenance(db);
       break;
     case 'upgradeAlgoliaOrgs':
       await upgradeAlgoliaOrgs();
@@ -167,19 +156,17 @@ async function runCommand() {
       await rescueJWP({ jwplayerKey: arg1, jwplayerApiV2Secret: arg2 });
       break;
     default:
-      showHelp();
-      await Promise.reject('Command not recognised');
-      break;
+      return Promise.reject('Command Args not detected... exiting..');
   }
 }
 
 function hasFlag(compare: string) {
-  return flags.some(flag => flag === compare) || flags.some(flag => flag === `--${compare}`)
+  return flags.some(flag => flag === compare) || flags.some(flag => flag === `--${compare}`);
 }
 
 if (hasFlag('skipMaintenance')) {
-  console.warn('WARNING! BLOCKFRAMES_MAINTENANCE_DISABLED is set to true')
-  disableMaintenanceMode()
+  console.warn('WARNING! BLOCKFRAMES_MAINTENANCE_DISABLED is set to true');
+  disableMaintenanceMode();
 }
 
 const consoleMsg = `Time running command "${cmd}"`;

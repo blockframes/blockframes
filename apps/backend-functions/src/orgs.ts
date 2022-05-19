@@ -15,7 +15,7 @@ import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
-import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, storeSearchableUser } from '@blockframes/firebase-utils/algolia/algolia';
+import { algolia, deleteObject, storeSearchableOrg, storeSearchableUser } from '@blockframes/firebase-utils/algolia';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { User, NotificationDocument, NotificationTypes, OrganizationDocument, PublicUser, PermissionsDocument, app, App, getOrgAppAccess, Module } from '@blockframes/model';
 import { groupIds } from '@blockframes/utils/emails/ids';
@@ -228,7 +228,7 @@ export async function onOrganizationDelete(
   // Clean all media for the organization
   await cleanOrgMedias(org);
 
-  const orgAppAccess = findOrgAppAccess(org);
+  const orgAppAccess = getOrgAppAccess(org);
   // Update algolia's index
   const promises = orgAppAccess.map(appName => deleteObject(algolia.indexNameOrganizations[appName], context.params.orgID) as Promise<boolean>);
 
