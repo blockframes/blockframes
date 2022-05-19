@@ -17,7 +17,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MemberComponent implements OnInit {
-  public orgName: string = this.orgService.org.denomination.full;
+  public orgName: string = this.orgService.org.name;
   public org: Organization = this.orgService.org;
 
   /** Observable of all members of the organization */
