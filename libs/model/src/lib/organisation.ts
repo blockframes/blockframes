@@ -76,12 +76,8 @@ export function createAddressSet(params: Partial<AddressSet> = {}): AddressSet {
 }
 
 /** A function that create a denomination object for Organization */
-export function createDenomination(params: Partial<Denomination> = {}): Denomination {
-  return {
-    full: '',
-    public: '',
-    ...params
-  }
+export function createDenomination(name = '') {
+  return name;
 }
 
 export function createOrgMedias(params: Partial<OrgMedias> = {}): OrgMedias {
@@ -93,8 +89,8 @@ export function createOrgMedias(params: Partial<OrgMedias> = {}): OrgMedias {
 }
 
 export function orgName(org: Partial<PublicOrganization>, type: 'public' | 'full' = 'public') {
-  if (org?.denomination) {
-    return org.denomination[type] || org.denomination.full;
+  if (org?.name) {
+    return org.name;
   } else {
     return '';
   }
@@ -137,7 +133,7 @@ export function createOrganization(
 export function createPublicOrganization(org: Partial<Organization>): PublicOrganization {
   return {
     id: org.id ?? '',
-    denomination: createDenomination(org.denomination),
+    name: org.name,
     logo: createStorageFile(org.logo),
   }
 }
