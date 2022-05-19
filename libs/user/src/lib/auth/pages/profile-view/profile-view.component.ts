@@ -54,7 +54,7 @@ export class ProfileViewComponent implements OnInit, OnDestroy {
     this.dynTitle.setPageTitle(`
     ${this.authService.profile.lastName}
     ${this.authService.profile.firstName}`,
-      `${this.orgService.org.denomination.full}`);
+      `${this.orgService.org.name}`);
 
     this.sub = this.router.events.pipe(
       filter((evt: Event) => evt instanceof NavigationEnd),
