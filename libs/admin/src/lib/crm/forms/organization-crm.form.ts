@@ -13,7 +13,7 @@ function createOrgCrmControls(entity: Partial<Organization>) {
     appAccess.addControl(a, new ModuleAccessCrmForm(org.appAccess[a]))
   }
   return {
-    denomination: new OrganizationDenominationForm(org.denomination),
+    name: new OrganizationDenominationForm(org.name),
     description: new FormControl(org.description),
     addresses: new OrganizationAddressesForm(org.addresses),
     email: new FormControl(org.email, Validators.email),

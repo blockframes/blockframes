@@ -75,9 +75,7 @@ type OrganizationAddressesControl = ReturnType<typeof createOrganizationAddresse
 // Denomination form
 function createDenominationFormControl(denomination) {
   return {
-    full: new FormControl(denomination.full, Validators.required),
-    // TODO #2860 implements denomination.public
-    public: new FormControl(denomination.public)
+    name: new FormControl(denomination, Validators.required)
   }
 }
 
