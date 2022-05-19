@@ -54,7 +54,6 @@ import { APP } from '@blockframes/utils/routes/utils';
     // Intercom
     IntercomModule.forRoot({ appId: intercomId }),
 
-
     sentryDsn ? SentryModule : ErrorLoggerModule,
 
     // Akita
