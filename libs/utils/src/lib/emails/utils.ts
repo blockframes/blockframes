@@ -87,7 +87,7 @@ export interface EventEmailData {
 }
 
 export interface OrgEmailData {
-  denomination: string;
+  name: string;
   email: string;
   id: string;
   country?: string;
@@ -221,7 +221,7 @@ function createIcsFromEventDocument(e: EventDocument<EventMeta>, orgName: string
 export function getOrgEmailData(org: Partial<OrganizationDocument>): OrgEmailData {
   return {
     id: org.id,
-    denomination: orgName(org, 'full'),
+    name: org.name,
     email: org.email || '',
     country: toLabel(org.addresses?.main?.country, 'territories')
   }
