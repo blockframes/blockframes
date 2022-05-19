@@ -48,13 +48,13 @@
 
   <ng-container matColumnDef="contract.type">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
-    <td mat-cell *matCellDef="let element"> 
-      {{( element.contract?.type ? element.contract.type : '--' ) | toLabel: 'contractType' }} 
+    <td mat-cell *matCellDef="let element">
+      {{( element.contract?.type ? element.contract.type : '--' ) | toLabel: 'contractType' }}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="errors">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Errors </th>
+    <th mat-header-cell *matHeaderCellDef> Errors </th>
     <td mat-cell *matCellDef="let element">
       <button mat-flat-button color="warn" [disabled]="!(element | errorCount)" (click)="displayErrors(element)">
         {{ element | errorCount  }}
@@ -63,7 +63,7 @@
   </ng-container>
 
   <ng-container matColumnDef="warnings">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Warnings </th>
+    <th mat-header-cell *matHeaderCellDef> Warnings </th>
     <td mat-cell *matCellDef="let element">
       <button mat-flat-button color="accent" [disabled]="!(element | errorCount : 'warning')"
         (click)="displayErrors(element)">{{ element | errorCount : 'warning' }}</button>
@@ -75,11 +75,11 @@
     <td mat-cell *matCellDef="let element">
       <button mat-flat-button color="primary" [disabled]="element | isDisabled: processing" (click)="create(element)">
         <ng-container *ngIf="element.importing">
-          <span>Creating</span> 
+          <span>Creating</span>
           <mat-spinner [diameter]="20" [strokeWidth]="2"></mat-spinner>
         </ng-container>
         <ng-container *ngIf="!element.importing">
-          <span>Create</span> 
+          <span>Create</span>
           <mat-icon svgIcon="edit"></mat-icon>
         </ng-container>
       </button>
@@ -90,4 +90,4 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 
-<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" [length]="rows.data.length" [pageSize]="10" #paginator showFirstLastButtons></mat-paginator>

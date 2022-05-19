@@ -15,7 +15,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
-import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 
@@ -24,7 +23,6 @@ import { MatDialogModule } from '@angular/material/dialog';
   imports: [
     CommonModule,
     RouterModule,
-    MatLayoutModule,
 
     FileNameModule,
     ImageModule,

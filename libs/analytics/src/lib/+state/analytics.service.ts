@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
-import { getAnalytics, logEvent } from 'firebase/analytics';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { isSupported, logEvent, setUserId, Analytics as FirebaseAnalytics } from 'firebase/analytics';
 import { where } from 'firebase/firestore';
 import { map, take } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';
+import { Subscription } from 'rxjs';
+import { FIRE_ANALYTICS } from 'ngfire';
 
 // Blockframes
 import { Analytics, AnalyticsTypes, EventName, createTitleMeta, Movie } from '@blockframes/model';
@@ -12,15 +14,25 @@ import { createDocumentMeta } from '@blockframes/model';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
-export class AnalyticsService extends BlockframesCollection<Analytics> {
+export class AnalyticsService extends BlockframesCollection<Analytics> implements OnDestroy {
   readonly path = 'analytics';
-
-  private analytics = getAnalytics();
+  private subscription?: Subscription
 
   constructor(
+    @Inject(FIRE_ANALYTICS) private analytics: FirebaseAnalytics,
     private authService: AuthService,
   ) {
     super();
+    // User tracking
+    isSupported().then((supported) => {
+      if (supported) {
+        this.subscription = authService.user$.subscribe(user => setUserId(analytics, user?.uid));
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
   }
 
   toFirestore(analytic: Partial<Analytics<AnalyticsTypes>>, actionType: 'add' | 'update') {

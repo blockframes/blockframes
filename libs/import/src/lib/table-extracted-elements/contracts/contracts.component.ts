@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -11,7 +11,7 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
-import { Contract, createDocumentMeta } from '@blockframes/model';
+import { createDocumentMeta, Mandate, Sale } from '@blockframes/model';
 import { where } from 'firebase/firestore';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
@@ -31,7 +31,7 @@ const getTitleContracts = (type: 'mandate' | 'sale', titleId: string) => [
   styleUrls: ['./contracts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableExtractedContractsComponent implements OnInit {
+export class TableExtractedContractsComponent implements AfterViewInit {
 
   @Input() rows: MatTableDataSource<ContractsImportState>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -57,8 +57,7 @@ export class TableExtractedContractsComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) { }
 
-  ngOnInit() {
-    // Mat table setup @TODO #7429
+  ngAfterViewInit(): void {
     this.rows.paginator = this.paginator;
     this.rows.filterPredicate = this.filterPredicate;
     this.rows.sortingDataAccessor = sortingDataAccessor;
@@ -155,10 +154,18 @@ export class TableExtractedContractsComponent implements OnInit {
     if (increment) this.processing++;
     this.cdr.markForCheck();
 
-    await this.contractService.add({
-      ...importState.contract,
-      _meta: createDocumentMeta({ createdAt: new Date() })
-    } as Contract);
+    if (importState.contract.type === 'sale') {
+      await this.contractService.add<Sale>({
+        ...importState.contract,
+        _meta: createDocumentMeta({ createdAt: new Date() })
+      });
+
+    } else {
+      await this.contractService.add<Mandate>({
+        ...importState.contract,
+        _meta: createDocumentMeta({ createdAt: new Date() })
+      });
+    }
 
     // @dev: Create terms after contract because rules require contract to be created first
     await this.termService.add(importState.terms);
