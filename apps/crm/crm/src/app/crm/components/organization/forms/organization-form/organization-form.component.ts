@@ -27,10 +27,10 @@ export class CrmOrganizationFormComponent {
   ) {}
 
   public async uniqueOrgName() {
-    const orgName = this.form.get('denomination').get('full').value
+    const orgName = this.form.get('name').value
     const unique = await this.organizationService.uniqueOrgName(orgName);
     if (!unique) {
-      this.form.get('denomination').get('full').setErrors({ notUnique: true });
+      this.form.get('name').setErrors({ notUnique: true });
     }
   }
 }
