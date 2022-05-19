@@ -4,6 +4,7 @@ import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 import { config } from 'dotenv';
 import requiredVars from 'tools/mandatory-env-vars.json';
 import { resolve } from 'path';
+import { firebase as firebaseProd } from 'env/env.blockframes';
 import { OrganizationDocument, App } from '@blockframes/model';
 
 /**
@@ -122,6 +123,7 @@ export async function hasAcceptedMovies(org: OrganizationDocument, appli: App) {
 
 export function throwOnProduction(): never | void {
   if (firebase().projectId === 'blockframes') throw Error('DO NOT RUN ON PRODUCTION!');
+  if (firebase().projectId === firebaseProd().projectId) throw Error('DO NOT RUN ON PRODUCTION!');
 }
 
 /**
