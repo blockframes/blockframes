@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy, ContentChild, TemplateRef } from '@angular/core';
 import { SigninForm } from '../../forms/signin.form';
 
 @Component({
@@ -9,9 +9,10 @@ import { SigninForm } from '../../forms/signin.form';
 })
 
 export class SigninFormComponent {
-  @Output() submited = new EventEmitter();
 
+  @Output() submited = new EventEmitter();
+  
   public signinForm = new SigninForm();
-  public hidePassword = true;
+  public hidePassword = true
 
 }
