@@ -39,20 +39,12 @@ import {
   upgradeEmulators,
   printDatabaseInconsistencies,
   keepAlive,
-  generateUsers,
-  generateMovies,
-  generateOrgs,
+  generateFixtures
 } from '@blockframes/devops';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
 const [arg1, arg2] = flags;
-
-export async function generateFixtures(db: FirebaseFirestore.Firestore) { // TODO #8051 - will move this in next PR
-  await generateUsers(db);
-  await generateMovies(db);
-  await generateOrgs(db);
-}
 
 async function runCommand() {
   const { db } = loadAdminServices();

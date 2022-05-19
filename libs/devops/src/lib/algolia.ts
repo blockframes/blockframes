@@ -20,7 +20,7 @@ import {
   getAllAppsExcept
 } from '@blockframes/model';
 
-type AlgoliaApp = Exclude<App, 'crm'>
+type AlgoliaApp = Exclude<App, 'crm'>;
 
 export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = loadAdminServices().db) {
   if (!appConfig) {

@@ -2,9 +2,6 @@
   "name": "blockframes",
   "version": "4.1.0",
   "license": "MIT",
-  "bin": {
-    "bf": "./tools/bootstrap.ts"
-  },
   "engines": {
     "node": "^16.14.0",
     "npm": "^8.5.0"

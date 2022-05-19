@@ -24,11 +24,11 @@ export function exportFirestoreToBucketBeta(dirName?: string) {
   const suffix = dirName || getFirestoreExportDirname(new Date());
   const url = `gs://${backupBucket}/${suffix}`;
   const cmd = `gcloud firestore export --project ${firebase().projectId} ${url}`;
-  return runShellCommandExec(cmd)
+  return runShellCommandExec(cmd);
 }
 
 /**
  * This functino will generate conventional directory name for a Firestore backup given a date
  * @param d `Date` object
  */
-export const getFirestoreExportDirname = (d: Date) => `firestore-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`
+export const getFirestoreExportDirname = (d: Date) => `firestore-backup-${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;

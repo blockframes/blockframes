@@ -12,14 +12,12 @@ import {
   AlgoliaMovie,
   AlgoliaUser,
   AlgoliaConfig,
-  App,
-  app,
   getOrgModuleAccess,
-  modules,
-  getMovieAppAccess
+  getMovieAppAccess,
+  getOrgAppAccess
 } from '@blockframes/model';
 import * as admin from 'firebase-admin';
-import { hasAcceptedMovies } from '../util';
+import { hasAcceptedMovies } from './util';
 
 export const algolia = {
   ...algoliaClient,
@@ -75,7 +73,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
   if (Object.values(centralOrgId).includes(org.id)) return;
 
   /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
-  const orgAppAccess = findOrgAppAccess(org);
+  const orgAppAccess = getOrgAppAccess(org);
 
   // Update algolia's index
   const promises = orgAppAccess.map(async (appName) => {
@@ -234,8 +232,4 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string): 
     console.error(error);
     return new Promise((res) => res(true));
   }
-}
-
-export function findOrgAppAccess(org: OrganizationDocument): App[] {
-  return app.filter((a) => modules.some((m) => org.appAccess[a]?.[m]));
 }
