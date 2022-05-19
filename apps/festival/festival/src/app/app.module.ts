@@ -20,11 +20,6 @@ import { Router, NavigationEnd } from '@angular/router';
 // Components
 import { AppComponent } from './app.component';
 
-// Angular Fire
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { provideAuth, getAuth } from '@angular/fire/auth';
-import { provideAnalytics, getAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
-
 // Material
 import { MatNativeDateModule } from '@angular/material/core';
 
@@ -56,11 +51,6 @@ import { APP } from '@blockframes/utils/routes/utils';
     // Intercom
     IntercomModule.forRoot({ appId: intercomId }),
 
-    // Firebase
-    provideFirebaseApp(() => initializeApp(firebase('festival'))), // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
-    provideAuth(() => getAuth()),  // TODO #8280 remove but used by ScreenTrackingService & UserTrackingService
-    provideAnalytics(() => getAnalytics()), // TODO #8280 W8 ngfire update 
-
     sentryDsn ? SentryModule : ErrorLoggerModule,
 
     // Router
@@ -69,8 +59,6 @@ import { APP } from '@blockframes/utils/routes/utils';
     CookieBannerModule,
   ],
   providers: [
-    ScreenTrackingService,
-    UserTrackingService,
     { provide: APP, useValue: 'festival' },
     {
       provide: FIREBASE_CONFIG, useValue: {

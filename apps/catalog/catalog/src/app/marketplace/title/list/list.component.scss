@@ -3,14 +3,11 @@ mat-form-field {
 }
 
 list-filter {
+  padding-bottom: 24px;
   static-check-boxes,
   filter-budget {
     padding: 0 16px;
   }
-}
-
-button {
-  margin-bottom: 24px;
 }
 
 mat-form-field {
@@ -36,3 +33,7 @@ list-page-description, pdf-export button {
   margin: 24px;
 }
 
+.refresh {
+  margin-left: auto;
+  flex-shrink: 0;
+}
