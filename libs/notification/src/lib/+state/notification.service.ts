@@ -14,7 +14,8 @@ import {
   appName,
   getMovieAppAccess,
   App,
-  eventTypes
+  eventTypes,
+  isAppNotification,
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { toDate } from '@blockframes/utils/helpers';
@@ -46,6 +47,7 @@ export class NotificationService extends CollectionService<NotificationState> {
     switchMap((notifications) => {
       const promises = notifications
         .filter(n => n.app?.isRead !== undefined)
+        .filter(n => isAppNotification(n.type, this.app as 'catalog' | 'festival'))
         .map(n => this.appendNotificationData(n));
       return Promise.all(promises);
     })
