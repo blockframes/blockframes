@@ -67,7 +67,7 @@ export class BucketService extends CollectionService<BucketState> {
 
   async createOffer(specificity: string, delivery: string, currency: MovieCurrency) {
     const orgId = this.orgService.org.id;
-    const orgName = this.orgService.org.denomination.full;
+    const orgName = this.orgService.org.name;
     const bucket = await this.getActive();
     await this.update(orgId, {
       specificity,
