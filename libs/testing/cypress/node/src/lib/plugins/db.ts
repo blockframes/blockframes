@@ -1,7 +1,6 @@
 import { db } from '../testing-cypress';
 import { createUser, createOrganization, createPermissions } from '@blockframes/model';
 import { App, ModuleAccess } from '@blockframes/model';
-import { copyFile } from 'fs';
 
 export async function getRandomEmail() {
   const { email } = await getRandomUser();
@@ -101,36 +100,80 @@ export async function deleteData(paths: string[]) {
   const deleteAll: Promise<FirebaseFirestore.WriteResult>[] = [];
   for (const path of paths) {
     if (isDocumentPath(path)) {
+      const subcollectionsDocs = await subcollectionsDocsOf(path);
+      subcollectionsDocs.forEach(doc => deleteAll.push(doc.delete()));
       deleteAll.push(db.doc(path).delete());
     } else {
       const docsRef = await db.collection(path).listDocuments();
-      for (const docRef of docsRef) deleteAll.push(docRef.delete());
+      docsRef.forEach(async docRef => {
+        const subcollectionsDocs = await subcollectionsDocsOf(docRef.path);
+        subcollectionsDocs.forEach(doc => deleteAll.push(doc.delete()));
+        deleteAll.push(docRef.delete());
+      });
     }
   }
   return Promise.all(deleteAll);
 }
 
+const subcollectionsDocsOf = async (path: string) => {
+  const result: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>[] = [];
+  const subcollections = await db.doc(path).listCollections();
+  for (const subcollection of subcollections) {
+    const subdocs = await subcollection.listDocuments();
+    for (const subdoc of subdocs) result.push(subdoc);
+  }
+  return result;
+};
+
 //* GET DATA*------------------------------------------------------------------
 
 export async function getData(paths: string[]) {
-  const docOrCollectionData = (path: string) => (isDocumentPath(path) ? getDocument(path) : getCollection(path));
-  const data = paths.map(path => docOrCollectionData(path));
-  return Promise.all(data);
+  const getAll: Promise<Record<string, unknown> | Record<string, unknown>[]>[] = [];
+  for (const path of paths) {
+    if (isDocumentPath(path)) {
+      const docData = getDocument(path);
+      getAll.push(docData);
+    } else {
+      const collectionData = getCollection(path);
+      getAll.push(collectionData);
+    }
+  }
+  return Promise.all(getAll);
 }
 
 async function getDocument(path: string) {
-  const doc = await db.doc(path).get();
-  return doc.data();
+  const docSnap = await db.doc(path).get();
+  const docData = docSnap.data();
+  const subcollectionsData = await subcollectionsDataOf(path);
+  const result = { ...docData, ...subcollectionsData };
+  return result;
 }
 
 async function getCollection(collection: string) {
+  const result = [];
   const docRefs = await db.collection(collection).listDocuments();
-  const getAll = docRefs.map(async docRef => {
-    const doc = await docRef.get();
-    return doc.data();
-  });
-  return Promise.all(getAll);
+  for (const docRef of docRefs) {
+    const docData = await getDocument(docRef.path);
+    result.push(docData);
+  }
+  return result;
 }
+
+const subcollectionsDataOf = async (path: string) => {
+  const result = {};
+  const subcollections = await db.doc(path).listCollections();
+  for (const subcollection of subcollections) {
+    const subdocs = await subcollection.listDocuments();
+    const subdocsData = [];
+    for (const subdoc of subdocs) {
+      const subDocSnap = await subdoc.get();
+      const subdocData = subDocSnap.data();
+      subdocsData.push(subdocData);
+    }
+    result[`${subcollection.id}`] = subdocsData;
+  }
+  return result;
+};
 
 //* UPDATE DATA*-----------------------------------------------------------------
 

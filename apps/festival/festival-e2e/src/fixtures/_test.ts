@@ -53,11 +53,31 @@ export const examples = {
     },
   },
 
-  docWithSubCollection: {
+  docWithSubCollection1: {
     // Collection + doc.id + subcollection + doc.id
-    [`example-subcollection/doc-${time}/subcollection/subdoc1-${time}`]: {
+    [`example-subcollection/doc1-${time}`]: {
+      example: 'doc 1',
+      id: `doc1-${time}`,
+    },
+    [`example-subcollection/doc1-${time}/subcollection1/subdoc1-${time}`]: {
       example: 'subdoc 1',
       id: `subdoc1-${time}`,
+    },
+    [`example-subcollection/doc1-${time}/subcollection2/subdoc2-${time}`]: {
+      example: 'subdoc 2',
+      id: `subdoc2-${time}`,
+    },
+    [`example-subcollection/doc1-${time}/subcollection2/subdoc3-${time}`]: {
+      example: 'subdoc 3',
+      id: `subdoc3-${time}`,
+    },
+  },
+
+  docWithSubCollection2: {
+    // Collection + doc.id + subcollection + doc.id
+    [`example-subcollection/doc2-${time}/subcollection3/subdoc3-${time}`]: {
+      example: 'subdoc 3',
+      id: `subdoc3-${time}`,
     },
   },
 
@@ -65,6 +85,40 @@ export const examples = {
     [`example-deletion/delete1-${time}`]: {
       example: 'delete 1',
       id: `delete1-${time}`,
+    },
+  },
+
+  docWithSubCollectionToDelete1: {
+    [`example-deletion/doc1-${time}`]: {
+      example: 'deletion 1',
+      id: `doc1-${time}`,
+    },
+    [`example-deletion/doc1-${time}/subcollection1/subdoc1-${time}`]: {
+      example: 'deletion 1',
+      id: `subdoc1-${time}`,
+    },
+    [`example-deletion/doc1-${time}/subcollection1/subdoc2-${time}`]: {
+      example: 'deletion 2',
+      id: `subdoc2-${time}`,
+    },
+    [`example-deletion/doc1-${time}/subcollection2/subdoc3-${time}`]: {
+      example: 'deletion 3',
+      id: `subdoc3-${time}`,
+    },
+  },
+
+  docWithSubCollectionToDelete2: {
+    [`example-deletion/doc2-${time}/subcollection1/subdoc1-${time}`]: {
+      example: 'deletion 4',
+      id: `subdoc4-${time}`,
+    },
+    [`example-deletion/doc2-${time}/subcollection1/subdoc2-${time}`]: {
+      example: 'deletion 5',
+      id: `subdoc5-${time}`,
+    },
+    [`example-deletion/doc2-${time}/subcollection2/subdoc1-${time}`]: {
+      example: 'deletion 6',
+      id: `subdoc6-${time}`,
     },
   },
 };
