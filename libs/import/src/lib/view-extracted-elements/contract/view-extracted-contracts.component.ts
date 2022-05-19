@@ -34,7 +34,7 @@ export class ViewExtractedContractsComponent implements OnInit {
     private userService: UserService,
     private authService: AuthService,
     private titleService: MovieService,
-    private termsService:TermService,
+    private termsService: TermService,
     private firestore: Firestore,
     private dynTitle: DynamicTitleService,
     private orgService: OrganizationService,

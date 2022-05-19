@@ -26,6 +26,7 @@ export interface SpreadsheetImportError {
 
 export interface ImportState {
   errors?: SpreadsheetImportError[];
+  imported?:boolean;
   importing?: boolean;
 }
 
