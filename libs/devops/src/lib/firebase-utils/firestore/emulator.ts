@@ -99,8 +99,8 @@ export async function firebaseEmulatorExec({
   if (isOrHasValue(emulators, 'functions')) {
     // * If functions has been selected, write project config to .runtimeConfig file in root of repo dir
 
-    await writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
-    await writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json'));
+    writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
+    writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json'));
     // * #7723 Keep the below until we know we don't need to programmatically access firebase tools
     // console.log('Writing Firebase Functions config secrets to .runtimeConfig');
     // try {
@@ -385,16 +385,16 @@ async function ensureSafeEmulatorBackupPath(importPath: string) {
 export function writeRuntimeConfig(values: { [key: string]: string }, path: string) {
   const runtimeObj = {};
 
-  const env = process.env['PROJECT_ID'];
+  const projectId = process.env['PROJECT_ID'];
   function getKeyName(key: string) {
-    if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(env)}_${key}`)) {
-      return `${camelCase(env)}_${key}`;
+    if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(projectId)}_${key}`)) {
+      return `${camelCase(projectId)}_${key}`;
     }
     return key;
   }
 
   Object.entries(values).forEach(([key, value]) => set(runtimeObj, key, process.env[getKeyName(value)] || 'missing-env-value'));
-  return promises.writeFile(path, JSON.stringify(runtimeObj, null, 4));
+  return writeFileSync(path, JSON.stringify(runtimeObj, null, 4));
 }
 
 /**
