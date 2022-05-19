@@ -101,8 +101,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   formatToFirestore(org: Partial<Organization>) { // TODO #7273 #8280
-    if (org.denomination?.full) org.denomination.full = org.denomination.full.trim();
-    if (org.denomination?.public) org.denomination.public = org.denomination.public.trim();
+    org.name = org.name.trim();
     return org;
   }
 
