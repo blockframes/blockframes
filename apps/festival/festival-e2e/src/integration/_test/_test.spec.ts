@@ -8,6 +8,8 @@ import { examples } from '../../fixtures/_test';
 describe('Testing bridge between Cypress and node', () => {
   beforeEach(() => {
     firebase.clear();
+    //necessary for now to wait until the clear is finished, seems to be an async issue in delete function
+    cy.wait(100);
   });
 
   //* CREATE *//
@@ -49,9 +51,9 @@ describe('Testing bridge between Cypress and node', () => {
 
   it('retrieves a collection', () => {
     firebase.create([examples.multipleDocs]);
-    const collection = Object.keys(examples.multipleDocs)[0].split('/')[0];
+    const collectionPath = Object.keys(examples.multipleDocs)[0].split('/')[0];
     const exampleValues = exampleValuesFrom([examples.multipleDocs]);
-    firebase.get([collection]).then(data => expect(data).to.eql(exampleValues));
+    firebase.get([collectionPath]).then(data => expect(data).to.eql(exampleValues));
   });
 
   it('retrieves an array of documents', () => {
@@ -65,14 +67,14 @@ describe('Testing bridge between Cypress and node', () => {
   it('retrieves an array of collections', () => {
     const docs = [examples.singleDoc, examples.multipleDocs];
     firebase.create(docs);
-    const paths = docs.map(doc => Object.keys(doc)[0].split('/')[0]);
+    const collectionsPaths = docs.map(doc => Object.keys(doc)[0].split('/')[0]);
     const exampleValues = exampleValuesFrom(docs);
-    firebase.get(paths).then(data => expect(data).to.eql(exampleValues));
+    firebase.get(collectionsPaths).then(data => expect(data).to.eql(exampleValues));
   });
 
-  //*** docs without subcollections */
+  //*** docs with subcollections */
 
-  it('retrieves a document and its subcollections', () => {
+  it('retrieves a document with subcollections', () => {
     firebase.create([examples.docWithSubCollection1]);
     const path = Object.keys(examples.docWithSubCollection1)[0];
     const parentDocPath = path.split('/').slice(0, 2).join('/');
@@ -80,71 +82,82 @@ describe('Testing bridge between Cypress and node', () => {
     firebase.get([parentDocPath]).then(data => expect(data).to.eql(exampleValues.flat()));
   });
 
-  //TODO : retrieves an array of documents with subcollections
+  it('retrieves a collection of documents with subcollections', () => {
+    const docs = [examples.docWithSubCollection1, examples.docWithSubCollection2];
+    firebase.create(docs);
+    const collectionPath = Object.keys(docs[0])[0].split('/')[0];
+    console.log(collectionPath);
+    const exampleValues = exampleValuesFrom(docs);
+    firebase.get([collectionPath]).then(data => expect(data[0]).to.eql(exampleValues.flat()));
+  });
 
-  //TODO : retrieves a collection of documents with subcollections
+  it('retriebes a array of documents with subcollections', () => {
+    const docs = [examples.docWithSubCollection1, examples.docWithSubCollection2];
+    firebase.create(docs);
+    const docPaths = docs.map(doc => Object.keys(doc)[1].split('/').slice(0, 2).join('/'));
+    const exampleValues = exampleValuesFrom(docs);
+    firebase.get(docPaths).then(data => expect(data).to.eql(exampleValues.flat()));
+  });
 
-  //TODO : retrieves an array of collection of documents with subcollections
+  it('retrieves an array of collection of documents with subcollections', () => {
+    const docs = [examples.docWithSubCollection1, examples.docWithSubCollection2, examples.docWithSubCollection3];
+    firebase.create(docs);
+    // keeps only unique collection paths
+    const collectionsPaths = [...new Set(docs.map(doc => Object.keys(doc)[0].split('/')[0]))];
+    const exampleValues = exampleValuesFrom(docs);
+    firebase.get(collectionsPaths).then((data: []) => expect(data.flat()).to.eql(exampleValues.flat()));
+  });
 
   //* DELETE *//
 
   //*** docs without subcollections */
 
   it('deletes a doc', () => {
-    firebase.create([examples.docToDelete]);
-    const path = Object.keys(examples.docToDelete)[0];
-    const exampleValues = exampleValuesFrom([examples.docToDelete]);
+    firebase.create([examples.docToDelete1]);
+    const path = Object.keys(examples.docToDelete1)[0];
+    const exampleValues = exampleValuesFrom([examples.docToDelete1]);
     firebase.get([path]).then(data => expect(data).to.eql(exampleValues.flat()));
     firebase.delete([path]);
     firebase.get([path]).then(data => expect(data[0]).to.eql({}));
   });
 
-  //TODO : below test WIP
-  /*   it.only('deletes an array of documents with their subcollections', () => {
-    const docs = [examples.docWithSubCollectionToDelete1, examples.docWithSubCollectionToDelete2];
+  it('deletes a collection', () => {
+    const docs = [examples.docToDelete1, examples.docToDelete2];
     firebase.create(docs);
-    const docPaths = docs.map(doc => Object.keys(doc)[1] .split('/').slice(0, 2).join('/'));
-    console.log(docPaths)
-    const exampleValues = exampleValuesFrom(docs)
-    firebase.get(docPaths).then(data => {
-      console.log(exampleValues)
-      console.log(data);
-    });
-  }); */
+    const collectionPath = Object.keys(examples.docToDelete1)[0].split('/')[0];
+    const exampleValues = exampleValuesFrom(docs);
+    firebase.get([collectionPath]).then((data: []) => expect(data.flat()).to.eql(exampleValues.flat()));
+    firebase.delete([collectionPath]);
+    firebase.get([collectionPath]).then((data: []) => expect(data.flat()).to.eql([{}, {}]));
+  });
 
-  //TODO : deletes a collection of documents
+  it('deletes an array of documents', () => {
+    const docs = [examples.docToDelete1, examples.docToDelete2];
+    firebase.create(docs);
+    const docPaths = docs.map(doc => Object.keys(doc)[0]);
+    const exampleValues = exampleValuesFrom(docs);
+    firebase.get(docPaths).then((data: []) => expect(data.flat()).to.eql(exampleValues.flat()));
+    firebase.delete(docPaths);
+    firebase.get(docPaths).then((data: []) => expect(data.flat()).to.eql([{}, {}]));
+  });
 
-  //TODO : deletes an array of collection of documents
+  it('deletes an array of collection of documents', () => {
+    const docs = [examples.docToDelete1, examples.docToDelete2, examples.docToDelete3];
+    firebase.create(docs);
+    const docPaths = [...new Set(docs.map(doc => Object.keys(doc)[0]))];
+    const exampleValues = exampleValuesFrom(docs);
+    firebase.get(docPaths).then((data: []) => expect(data.flat()).to.eql(exampleValues.flat()));
+    firebase.delete(docPaths);
+    firebase.get(docPaths).then((data: []) => expect(data.flat()).to.eql([{}, {}, {}]));
+  });
 
   //*** docs with subcollections */
 
-  //TODO : below tests WIP
-  /*   it('deletes a doc with its subcollections', () => {
-    firebase.create([examples.docWithSubCollectionToDelete1]);
-    const path = Object.keys(examples.docWithSubCollectionToDelete1)[0];
-    const parentDocPath = path.split('/').slice(0, 2).join('/');
-    console.log(parentDocPath);
-    firebase.get([parentDocPath]).then(data => {
-      console.log(data);
-      //expect(Object.values(data)[0]).to.deep.equal(examples.docWithSubCollectionToDelete1[path]);
-    });
-    firebase.delete([parentDocPath]);
-
-  });
-
-  it('deletes a collection with documents with subcollections', () => {
-    const docs = [examples.docWithSubCollectionToDelete1, examples.docWithSubCollectionToDelete2];
-    firebase.create(docs);
-    const collectionPath = Object.keys(docs[0])[0].split('/')[0];
-    console.log('paths', collectionPath);
-    firebase.get([collectionPath]).then(data => {
-      console.log(data);
-    });
-    //cy.pause()
-    //firebase.delete([collectionPath])
-  }); */
+  //TODO : deletes a documents with subcollections
 
   //TODO : deletes a collection of documents with subcollections
+
+  //TODO : deletes an array of documents with subcollections
 
   //TODO : deletes an array of collection of documents with subcollections
 
@@ -161,6 +174,7 @@ const firebase = {
       'example-array',
       'example-object',
       'example-subcollection',
+      'example-subcollectionBis',
       'example-deletion',
     ]);
   },
@@ -201,7 +215,6 @@ const exampleValuesFrom = (examples: Record<string, object>[]) => {
       // data inside subcollection
       const subcollection = key.split('/')[2];
       if (partsInPath === 4) {
-        //TODO : below line crashes for multiple docs => to fix
         const subcollectionExists = !!exampleValues[0][subcollection];
         if (subcollectionExists) {
           exampleValues[0][subcollection].push({ ...value });

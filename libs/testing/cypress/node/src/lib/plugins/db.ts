@@ -95,6 +95,7 @@ export async function importData(data: Record<string, object>[]) {
 
 //* DELETE DATA*----------------------------------------------------------------
 
+//TODO : add an option to take subcollection into account or not
 export async function deleteData(paths: string[]) {
   const deleteAll: Promise<FirebaseFirestore.WriteResult>[] = [];
   for (const path of paths) {
@@ -126,6 +127,7 @@ const subcollectionsDocsOf = async (path: string) => {
 
 //* GET DATA*------------------------------------------------------------------
 
+//TODO : add an option to take subcollection into account or not
 export async function getData(paths: string[]) {
   const getAll: Promise<Record<string, unknown> | Record<string, unknown>[]>[] = [];
   for (const path of paths) {
