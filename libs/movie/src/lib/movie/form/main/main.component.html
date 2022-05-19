@@ -252,6 +252,9 @@
               <mat-hint>
                 Director's biography, remarkable elements...
               </mat-hint>
+              <mat-error *ngIf="directorForm.get('description').hasError('maxlength')">
+                Description should not exceed 500 characters.
+              </mat-error>
             </mat-form-field>
             <div fxLayout="column" fxLayoutAlign="start">
               <ng-container *ngFor="let filmography of directorForm.get('filmography').controls">
