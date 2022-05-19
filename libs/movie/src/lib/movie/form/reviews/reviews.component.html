@@ -144,6 +144,9 @@
             <mat-form-field appearance="outline">
               <mat-label>Quote</mat-label>
               <textarea test-id="quote" matInput formControlName="criticQuote"></textarea>
+              <mat-error *ngIf="reviewForm.get('criticQuote').hasError('maxlength')">
+                Quote should not exceed 500 characters.
+              </mat-error>
             </mat-form-field>
 
             <ng-template saveButtonText>Save Film Review</ng-template>
