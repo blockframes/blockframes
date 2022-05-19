@@ -1,6 +1,6 @@
 import { serverId } from '@blockframes/utils/constants';
 import faker from '@faker-js/faker';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/firebase-utils/anonymize/util';
+import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 
 export function createFakeUserData() {
   const firstname = faker.name.firstName();
