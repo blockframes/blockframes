@@ -101,8 +101,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   formatToFirestore(org: Partial<Organization>) { // TODO #7273 #8280
-    org.name = org.name.trim();
-    return org;
+    return org.name.trim();
   }
 
   /**
