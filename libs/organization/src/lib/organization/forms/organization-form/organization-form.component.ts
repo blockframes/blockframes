@@ -21,10 +21,10 @@ export class OrganizationFormComponent {
 
   /** Check if the `name` field of an Organization create form already exists as an ENS domain */
   public async uniqueOrgName() {
-    const orgName = this.form.get('denomination').get('full').value
+    const orgName = this.form.get('name').value
     const unique = await this.service.uniqueOrgName(orgName);
     if(!unique){
-      this.form.get('denomination').get('full').setErrors({ notUnique: true });
+      this.form.get('name').setErrors({ notUnique: true });
     }
   }
 
