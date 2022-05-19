@@ -32,8 +32,8 @@ export class OrganizationsComponent {
     const exportedRows = orgs.map(r => {
       const row = {
         id: r.id,
-        fullDenomination: r.denomination.full,
-        publicDenormination: r.denomination.public,
+        fullDenomination: r.name,
+        publicDenormination: r.name,
         status: r.status,
         country: r.addresses.main.country ?? '--',
         email: r.email,
