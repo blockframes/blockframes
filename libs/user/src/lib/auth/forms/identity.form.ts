@@ -12,6 +12,7 @@ function createIdentityFormControl() {
     confirm: new PasswordControl(),
     termsOfUse: new FormControl(false, Validators.requiredTrue),
     privacyPolicy: new FormControl(false, Validators.requiredTrue),
+    hideEmail: new FormControl(false)
   }
 }
 

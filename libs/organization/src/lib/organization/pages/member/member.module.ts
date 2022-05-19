@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { MatDialogModule } from '@angular/material/dialog';
 
 // Modules
 import { MemberRepertoryModule } from '@blockframes/organization/components/member-repertory/member-repertory.module';
@@ -25,6 +26,7 @@ import { MemberComponent } from './member.component';
     MemberAddModule,
     ConfirmModule,
     FlexLayoutModule,
+    MatDialogModule,
     RouterModule.forChild([{ path: '', component: MemberComponent }])
   ]
 })

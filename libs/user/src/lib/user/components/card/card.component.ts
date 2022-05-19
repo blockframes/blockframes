@@ -10,7 +10,8 @@ function createUserView(user: Partial<User>) {
     avatar: createStorageFile(user.avatar),
     name: displayName(user),
     position: user.position || '',
-    email: user.email
+    email: user.email,
+    hideEmail: user.hideEmail
   }
 }
 

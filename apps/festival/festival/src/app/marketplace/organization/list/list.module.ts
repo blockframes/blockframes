@@ -10,18 +10,15 @@ import { ListComponent } from './list.component';
 // Blockframes
 import { OrganizationCardModule } from '@blockframes/organization/components/card/card.module';
 import { ListPageModule } from '@blockframes/ui/list/page/list-page.module'
-import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module';
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
-import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module";
-import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module";
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [ListComponent],
@@ -31,17 +28,15 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     OrganizationCardModule,
     ListPageModule,
-    StaticSelectModule,
     ListFilterModule,
     ChipsAutocompleteModule,
-    AlgoliaAutocompleteModule,
-    AlgoliaChipsAutocompleteModule,
     
     // Material
     MatProgressSpinnerModule,
     MatIconModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatButtonModule
   ]
 })
 export class OrganizationListModule { }

@@ -3,8 +3,7 @@
     <section id="logline">
       <h3>Logline</h3>
       <mat-form-field appearance="outline">
-        <textarea test-id="logline" matInput [formControl]="form.logline" cdkTextareaAutosize cdkAutosizeMinRows="2"
-          maxlength="350" type="string"
+        <textarea test-id="logline" matInput [formControl]="form.logline" cdkTextareaAutosize cdkAutosizeMinRows="2" type="string"
           placeholder="e.g. A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxruious, ill-fated Titanic."></textarea>
         <mat-hint align="start">Logline should not exceed 350 characters</mat-hint>
         <mat-error *ngIf="form.logline.hasError('maxlength')">
@@ -27,6 +26,9 @@
         <mat-error *ngIf="form.synopsis.hasError('required')">
           Please fill in your project's synopsis.
         </mat-error>
+        <mat-error *ngIf="form.synopsis.hasError('maxlength')">
+          1500 characters maximum.
+        </mat-error>
       </mat-form-field>
     </section>
 
@@ -42,7 +44,7 @@
         </textarea>
         <mat-hint align="start">Highlight your film's main selling point(s).</mat-hint>
         <mat-error *ngIf="form.keyAssets.hasError('maxlength')">
-          Key assets should not exceed 750 characters.
+          Key assets should not exceed 1500 characters.
         </mat-error>
       </mat-form-field>
     </section>

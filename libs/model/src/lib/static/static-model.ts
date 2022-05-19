@@ -1,4 +1,3 @@
-import { EventTypes } from '../event';
 import { Territory } from './types';
 
 export const app = ['catalog', 'festival', 'financiers', 'crm'] as const;
@@ -77,13 +76,13 @@ export const contentType = {
   tv: 'TV'
 }
 
-export const eventTypes: Record<EventTypes, string> = {
+export const eventTypes = {
   meeting: 'Meeting',
   screening: 'Screening',
   slate: 'Slate Presentation',
   standard: 'Standard',
   local: 'Local'
-};
+} as const;
 
 export const crewRoles = {
   writer: 'Writer',

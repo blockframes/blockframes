@@ -16,7 +16,7 @@
                 <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')" />
                 <mat-hint>You can give a name to your video</mat-hint>
               </mat-form-field>
-              <static-select scope="hostedVideoTypes" [control]="activeForm.get('type')" fxFlex>
+              <static-select required scope="hostedVideoTypes" [control]="activeForm.get('type')" fxFlex>
                 <mat-label>Video Type</mat-label>
                 <mat-hint>Trailer, Teaser, Clip...</mat-hint>
               </static-select>
@@ -57,6 +57,9 @@
         <mat-label>Description</mat-label>
         <textarea test-id="description" matInput [formControl]="salesPitchForm.get('description')" cdkTextareaAutosize
           cdkAutosizeMinRows="10"></textarea>
+        <mat-error *ngIf="salesPitchForm.get('description').hasError('maxlength')">
+          Description should not exceed 1500 characters.
+        </mat-error>
       </mat-form-field>
       <mat-checkbox [checked]="salesPitchForm.isPublic" (change)="salesPitchForm.togglePrivacy($event.checked)" color="primary">
         <b>Public</b> (Buyers can see video on Marketplace)

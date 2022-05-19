@@ -25,6 +25,9 @@
       <mat-label>Email Address</mat-label>
       <input matInput test-id="phone-form" placeholder="Email Address" type="tel" [formControl]="form.get('email')" />
     </mat-form-field>
+
+    <user-hide-email [form]="form.get('hideEmail')"></user-hide-email>
+
     <mat-form-field appearance="outline">
       <mat-label>Phone Number</mat-label>
       <input matInput test-id="phone-form" placeholder="Phone Number" type="tel" [formControl]="form.get('phoneNumber')" />

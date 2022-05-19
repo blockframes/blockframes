@@ -6,7 +6,7 @@
   </button>
 </section>
 <ng-container *ngIf="files.length; else noFiles">
-  <bf-carousel flex>
+  <bf-carousel>
 
     <button carouselItem mat-button (click)="selectFile('')" matTooltip="Stop presenting file">
       <mat-icon svgIcon="cancel"></mat-icon>

@@ -110,7 +110,7 @@ export async function formatContract(
       }
     }
 
-    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, contractService.createId())); // TODO #8280 use firestoreService instead for all createId?
+    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, contractService.createId()));
 
     // for **internal** sales we should check the parentTerm
     const isInternalSale = contract.type === 'sale' && contract.sellerId === centralOrgId.catalog;

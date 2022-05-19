@@ -9,8 +9,7 @@ import {
   createMandate,
   createSale,
   Negotiation,
-  createDocumentMeta,
-  Contract,
+  createDocumentMeta
 } from '@blockframes/model';
 import { DocumentSnapshot, limit, orderBy, where } from 'firebase/firestore';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';

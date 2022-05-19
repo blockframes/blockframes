@@ -1,7 +1,7 @@
 <ng-container *ngIf="isEventStarted(event$ | async)">
   <h2>Statistics</h2>
-  <ng-container *ngIf="analytics as analytics; else loading">
-    <ng-container *ngIf="analytics.length else noAnalytics">
+  <ng-container *ngIf="acceptedAnalytics as analytics; else loading">
+    <ng-container *ngIf="acceptedAnalytics.length else noAnalytics">
       <section class="analytics">
         <span fxLayout="row" fxLayoutGap="24px">
           <mat-card class="attendees">
@@ -9,7 +9,7 @@
               <mat-icon svgIcon="group"></mat-icon>
               <span class="mat-body-2">Number of attendees</span>
             </span>
-            <h2>{{ analytics.length }}</h2>
+            <h2>{{ acceptedAnalytics.length }}</h2>
           </mat-card>
           <mat-card class="attendees">
             <span fxLayout="row" fxLayoutAlign="start center">
@@ -24,23 +24,21 @@
             <h3>Attendees</h3>
             <button [disabled]="exporting" mat-button color="primary" (click)="exportTable()">
               <ng-container *ngIf="exporting else export">
-                <span>Generating CSV...</span>
+                <span>Generating Excel...</span>
               </ng-container>
               <ng-template #export>
                 <mat-icon svgIcon="excel"></mat-icon>
-                <span>Export to CSV</span>
+                <span>Export to Excel</span>
               </ng-template>
             </button>
           </article>
-          <bf-table pagination="50" useFilter [source]="analytics">
+          <bf-table pagination="50" useFilter [source]="acceptedAnalytics">
             <ng-template colRef="name" label="Name" let-name sort>{{ name | titlecase }}</ng-template>
             <ng-template colRef="email" label="Email Address" let-email sort>{{ email }}</ng-template>
             <ng-template colRef="orgName" label="Company Name" let-orgName sort>{{ orgName || dataMissing }}</ng-template>
             <ng-template colRef="orgActivity" label="Company Activity" let-orgActivity>{{ orgActivity ? (orgActivity | toLabel: 'orgActivity') : dataMissing }}</ng-template>
-            <ng-template colRef="orgCountry" label="Country" let-orgCountry>{{ orgCountry ? (orgCountry | toLabel: 'territories') : dataMissing }}
-            </ng-template>
-            <ng-template *ngIf="hasWatchTime" colRef="watchTime" label="watch time" let-watchTime sort>{{ watchTime * 1000 | duration: '0min' }}
-            </ng-template>
+            <ng-template colRef="orgCountry" label="Country" let-orgCountry>{{ orgCountry ? (orgCountry | toLabel: 'territories') : dataMissing }}</ng-template>
+            <ng-template colRef="watchTime" label="watch time" let-watchTime sort>{{ watchTime * 1000 | duration: '0min' }}</ng-template>
           </bf-table>
         </mat-card>
       </section>

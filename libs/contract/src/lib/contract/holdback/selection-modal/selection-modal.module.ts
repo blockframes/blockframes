@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +25,7 @@ import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/gro
     FormTableModule,
     HoldbackListModule,
     GlobalModalModule,
+    FlexLayoutModule,
     MatIconModule,
     MatButtonModule,
     MatDialogModule,
