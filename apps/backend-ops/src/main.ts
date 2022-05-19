@@ -156,7 +156,7 @@ async function runCommand() {
       await rescueJWP({ jwplayerKey: arg1, jwplayerApiV2Secret: arg2 });
       break;
     case 'writeRuntimeConfig':
-      await writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
+      writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
       break;
     default:
       return Promise.reject('Command Args not detected... exiting..');
