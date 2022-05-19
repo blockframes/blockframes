@@ -39,8 +39,11 @@ import {
   upgradeEmulators,
   printDatabaseInconsistencies,
   keepAlive,
-  generateFixtures
+  generateFixtures,
+  writeRuntimeConfig,
+  functionsConfigMap
 } from '@blockframes/devops';
+import { join } from 'node:path';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
