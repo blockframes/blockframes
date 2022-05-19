@@ -8,7 +8,7 @@ import { warnMissingVars } from '@blockframes/firebase-utils';
 import { existsSync } from 'fs';
 import { execSync } from 'child_process'
 import camelcase from 'camelcase'
-import { functionsConfigMap } from '@blockframes/firebase-utils/firestore/emulator';
+import { functionsConfigMap } from '@blockframes/devops';
 
 const args = process.argv.slice(2);
 const [arg] = args;
