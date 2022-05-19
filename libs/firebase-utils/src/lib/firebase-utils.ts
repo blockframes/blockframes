@@ -2,8 +2,6 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { chunk } from "lodash";
 import * as env from '@env'
-import type { File as GFile } from '@google-cloud/storage';
-import { deconstructFilePath } from "@blockframes/utils/file-sanitizer";
 import { RuntimeOptions } from 'firebase-functions';
 
 export function getDocumentRef(path: string): Promise<FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>> {
@@ -22,34 +20,6 @@ export function getCollectionRef(path: string): Promise<FirebaseFirestore.QueryS
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return getCollectionRef(path).then(collection => collection.docs.map(doc => doc.data() as T));
-}
-
-/**
- * @param fullPath the storage path of the file
- */
-export async function getDocAndPath(fullPath: string | undefined) {
-  const db = admin.firestore();
-
-  const { collection, docPath, isTmp, privacy, field, filePath } = deconstructFilePath(fullPath)
-
-  const doc = db.doc(docPath);
-  const snapshot = await doc.get();
-
-  if (!snapshot.exists) {
-    throw new Error('File Path point to a firestore document that does not exists');
-  }
-  const docData = snapshot.data();
-
-  return {
-    isTmp,
-    privacy,
-    filePath,
-    doc,
-    docData,
-    field,
-    docPath,
-    collection
-  }
 }
 
 type AsyncReturnType<T extends (args: any) => Promise<any>> =
@@ -80,18 +50,6 @@ export async function runChunks<K, T extends (arg: K) => Promise<any>>(rows: K[]
 export const mockConfigIfNeeded = (...path: string[]): any =>
   path.reduce((config: any, field) => (config ? config[field] : undefined), functions.config());
 
-/**
- * Sorts an array of files in a bucket by timeCreated and returns the latest
- * @param files GCP file type
- */
-export function getLatestFile(files: GFile[]) {
-  return files
-    .sort(
-      (a, b) =>
-        Number(new Date(a.metadata?.timeCreated)) - Number(new Date(b.metadata?.timeCreated))
-    )
-    .pop();
-}
 
 /**
  * Default runtime options for functions
@@ -126,13 +84,3 @@ export const heavyConfig: RuntimeOptions = {
   memory: '4GB',
 };
 
-export async function storageFileExist(path: string) {
-  const storage = admin.storage();
-  const file = await storage.bucket().file(path);
-
-  // for more info check
-  //  - https://googleapis.dev/nodejs/storage/latest/File.html#exists
-  //  - https://googleapis.dev/nodejs/storage/latest/global.html#FileExistsResponse
-  const result = await file.exists();
-  return result[0];
-}
