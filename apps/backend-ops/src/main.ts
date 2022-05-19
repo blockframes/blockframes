@@ -30,6 +30,9 @@ import { loadAndShrinkLatestAnonDbAndUpload } from './db-shrink';
 import { printDatabaseInconsistencies } from './internals/utils';
 import { cleanBackups } from './clean-backups';
 import { auditUsers } from './db-cleaning';
+import { functionsConfigMap } from '@blockframes/firebase-utils/firestore/emulator';
+import { writeRuntimeConfig } from '@blockframes/firebase-utils/firestore/emulator';
+import { join } from 'path';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -165,6 +168,9 @@ async function runCommand() {
       break;
     case 'rescueJWP':
       await rescueJWP({ jwplayerKey: arg1, jwplayerApiV2Secret: arg2 });
+      break;
+    case 'writeRuntimeConfig':
+      await writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
       break;
     default:
       showHelp();

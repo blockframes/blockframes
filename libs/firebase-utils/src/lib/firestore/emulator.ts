@@ -100,8 +100,8 @@ export async function firebaseEmulatorExec({
   if (isOrHasValue(emulators, 'functions')) {
     // * If functions has been selected, write project config to .runtimeConfig file in root of repo dir
 
-    await writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
-    await writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json'));
+    writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
+    writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json'));
     // * #7723 Keep the below until we know we don't need to programmatically access firebase tools
     // console.log('Writing Firebase Functions config secrets to .runtimeConfig');
     // try {
