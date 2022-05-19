@@ -157,7 +157,7 @@
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Approximate Date</mat-label>
           <input test-id="event-date" matInput [matDatepicker]="eventDate"
-            [formControl]="form.expectedPremiere.get('date')">
+            [formControl]="form.expectedPremiere.get('date')" placeholder="MM/DD/YYYY">
           <mat-datepicker-toggle matSuffix [for]="eventDate">
             <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
           </mat-datepicker-toggle>
