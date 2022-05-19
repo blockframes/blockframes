@@ -94,6 +94,7 @@ export class BucketService extends BlockframesCollection<Bucket> {
         _meta: createDocumentMeta(),
         status: 'pending',
         id: contractId,
+        type: 'sale',
         titleId: contract.titleId,
         parentTermId: contract.parentTermId,
         holdbacks: contract.holdbacks,
