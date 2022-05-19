@@ -6,15 +6,10 @@ import { getAllAppsExcept } from './apps';
 import type { App, Module, ModuleAccess, OrgActivity, OrganizationStatus, OrgAppAccess } from './static';
 import { app, modules } from './static';
 
-export interface Denomination {
-  full: string;
-  public?: string;
-}
-
 /** A public interface or Organization, without sensitive data. */
 export interface PublicOrganization {
   id: string;
-  denomination: Denomination;
+  name: string;
   logo: StorageFile;
   activity?: OrgActivity
 }
