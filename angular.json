@@ -147,14 +147,6 @@
             "lintFilePatterns": ["apps/backend-ops/src/**/*.ts", "apps/backend-ops/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/backend-ops/jest.config.js",
-            "passWithNoTests": true,
-            "runInBand": true
-          }
         }
       },
       "tags": ["node", "local"]
@@ -760,6 +752,30 @@
       },
       "tags": ["browser", "e2e"],
       "implicitDependencies": ["crm"]
+    },
+    "devops": {
+      "root": "libs/devops",
+      "sourceRoot": "libs/devops/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/devops/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/devops"],
+          "options": {
+            "jestConfig": "libs/devops/jest.config.js",
+            "passWithNoTests": true,
+            "runInBand": true
+          }
+        }
+      },
+      "tags": ["node", "local"]
     },
     "e2e": {
       "projectType": "library",
