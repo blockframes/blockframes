@@ -91,7 +91,7 @@ export class TableExtractedOrganizationsComponent implements AfterViewInit {
     const superAdmin = importState.superAdmin;
 
     const orgData: OrgEmailData = {
-      denomination: importState.org.denomination.full ?? importState.org.denomination.public,
+      name: importState.org.name,
       id: importState.org.id || '',
       email: importState.org.email || ''
     }
@@ -174,7 +174,7 @@ export class TableExtractedOrganizationsComponent implements AfterViewInit {
    * Even for nested objects.
    */
   public filterPredicate(data: OrganizationsImportState, filter: string) {
-    const dataStr = data.org.id + data.org.denomination.full + data.org.denomination.public + data.org.email;
+    const dataStr = data.org.id + data.org.name + data.org.email;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
