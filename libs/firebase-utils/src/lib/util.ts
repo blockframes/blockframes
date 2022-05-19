@@ -59,20 +59,7 @@ export function warnMissingVars(): void | never {
   missingVarsMessageShown = true;
 }
 
-export function catchErrors<T>(fn: (...args: any[]) => T): T | undefined {
-  try {
-    return fn();
-  } catch (err) {
-    if ('errors' in err) {
-      err.errors.forEach((error: any) => console.error('ERROR:', error.message));
-    } else {
-      console.error(err);
-    }
-    return;
-  }
-}
-
-export interface AdminServices {
+interface AdminServices {
   auth: admin.auth.Auth;
   db: admin.firestore.Firestore;
   storage: admin.storage.Storage;

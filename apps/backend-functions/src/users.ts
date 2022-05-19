@@ -4,7 +4,7 @@ import { db } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
-import { storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils/algolia/algolia';
+import { storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils/algolia';
 import { getCollection } from '@blockframes/firebase-utils/firebase-utils';
 import { getDocument } from './data/internals';
 import { getMailSender, applicationUrl } from '@blockframes/utils/apps';

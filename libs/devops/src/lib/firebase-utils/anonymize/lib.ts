@@ -18,12 +18,12 @@ import {
   CollectionReference,
   QueryDocumentSnapshot,
   QuerySnapshot,
-  Queue,
   runChunks
 } from '@blockframes/firebase-utils';
 import { firebase, testVideoId } from '@env';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { firestore } from 'firebase-admin';
+import { Queue } from '../../internals/queue';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};

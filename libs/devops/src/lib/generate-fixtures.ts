@@ -11,8 +11,7 @@ export async function generateFixtures(db: FirebaseFirestore.Firestore) {
 /**
  * This function will generate `tools/fixtures/users.json` from local Firestore
  */
-
-export async function generateUsers(db: FirebaseFirestore.Firestore) {
+async function generateUsers(db: FirebaseFirestore.Firestore) {
   console.log('Generating user fixtures file from Firestore...');
 
   console.time('Fetching users from Firestore');
@@ -35,7 +34,7 @@ export async function generateUsers(db: FirebaseFirestore.Firestore) {
 /**
  * This function will generate `tools/fixtures/movies.json` from local Firestore
  */
-export async function generateMovies(db: FirebaseFirestore.Firestore) {
+async function generateMovies(db: FirebaseFirestore.Firestore) {
   console.log('Generating movie fixtures file from Firestore...');
 
   console.time('Fetching movies from Firestore');
@@ -56,7 +55,7 @@ export async function generateMovies(db: FirebaseFirestore.Firestore) {
 /**
  * This function will generate `tools/fixtures/orgs.json` from local Firestore
  */
-export async function generateOrgs(db: FirebaseFirestore.Firestore) {
+async function generateOrgs(db: FirebaseFirestore.Firestore) {
   console.log('Generating orgs fixtures file from Firestore...');
 
   console.time('Fetching orgs from Firestore');
