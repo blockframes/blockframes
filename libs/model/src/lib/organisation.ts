@@ -60,7 +60,7 @@ function createOrganizationBase(
     wishlist: [],
     ...params,
     addresses: createAddressSet(params.addresses),
-    denomination: createDenomination(params.denomination),
+    name: params.name,
     logo: createStorageFile(params?.logo),
     appAccess: createOrgAppAccess(params.appAccess),
     documents: createOrgMedias(params?.documents),
