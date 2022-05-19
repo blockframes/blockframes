@@ -209,7 +209,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       // Check if the org name is already existing
       const unique = await this.orgService.uniqueOrgName(name);
       if (!unique) {
-        this.orgForm.get('denomination').setErrors({ notUnique: true });
+        this.orgForm.get('name').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
         this.creating = false;
         this.cdr.markForCheck();
@@ -335,7 +335,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       // Check if the org name is already existing
       const unique = await this.orgService.uniqueOrgName(name);
       if (!unique) {
-        this.orgForm.get('denomination').setErrors({ notUnique: true });
+        this.orgForm.get('name').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
         this.creating = false;
         this.cdr.markForCheck();

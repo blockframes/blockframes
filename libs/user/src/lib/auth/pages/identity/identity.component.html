@@ -75,11 +75,11 @@
             <mat-hint *ngIf="existingUser">Your Company Information is pre-filled as we found an invitation matching
               your email address, associating you with an existing company.</mat-hint>
             <mat-label>Company Name*</mat-label>
-            <input matInput type="text" [formControl]="orgForm.get('denomination').get('full')" disabled />
+            <input matInput type="text" [formControl]="orgForm.get('name')" disabled />
           </mat-form-field>
         </ng-template>
 
-        <organization-lite-form *ngIf="!!orgForm.get('denomination').get('full').value" [form]="orgForm">
+        <organization-lite-form *ngIf="!!orgForm.get('name').value" [form]="orgForm">
         </organization-lite-form>
 
         <!-- PASSWORD FIELDS -->
