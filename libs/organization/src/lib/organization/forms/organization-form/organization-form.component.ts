@@ -20,13 +20,11 @@ export class OrganizationFormComponent implements OnInit {
   constructor(private service: OrganizationService) { }
 
   ngOnInit() {
-    /** Get current orgName for not trigger error check 'This company already exists' with it */
-    this.currentOrgName = this.form.get('denomination').get('full').value
+    this.currentOrgName = this.form.get('denomination').get('full').value.trim();
   }
 
-  /** Check if the `name` field of an Organization create form already exists as an ENS domain */
   public async uniqueOrgName() {
-    const orgName = this.form.get('denomination').get('full').value
+    const orgName = this.form.get('denomination').get('full').value.trim();
     const unique = await this.service.uniqueOrgName(orgName);
     if(!unique && orgName !== this.currentOrgName ){
       this.form.get('denomination').get('full').setErrors({ notUnique: true });
