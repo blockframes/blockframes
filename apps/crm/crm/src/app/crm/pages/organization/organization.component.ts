@@ -129,14 +129,6 @@ export class OrganizationComponent implements OnInit {
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
 
-  public async uniqueOrgName() {
-    const orgName = this.orgForm.get('denomination').get('full').value;
-    const unique = await this.organizationService.uniqueOrgName(orgName);
-    if (!unique) {
-      this.orgForm.get('denomination').get('full').setErrors({ notUnique: true });
-    }
-  }
-
   /** Update user role. */
   public async updateRole(uid: string, role: UserRole) {
     const message = await this.permissionService.updateMemberRole(uid, role);
