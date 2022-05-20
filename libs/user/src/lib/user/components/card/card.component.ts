@@ -3,7 +3,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 // Interface
 import { createStorageFile, User } from '@blockframes/model';
-import { displayName } from '@blockframes/utils/utils';
+import { displayName } from '@blockframes/model';
 
 function createUserView(user: Partial<User>) {
   return {
