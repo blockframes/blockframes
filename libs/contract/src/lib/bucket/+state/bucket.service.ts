@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { centralOrgId } from '@env';
 import { switchMap, take } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
-import { createOfferId } from '@blockframes/utils/utils';
+import { createOfferId } from '@blockframes/model';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { TermService } from '../../term/+state/term.service';

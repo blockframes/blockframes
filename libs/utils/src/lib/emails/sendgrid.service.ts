@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ErrorResultResponse } from '@blockframes/utils/utils';
+import { ErrorResultResponse } from '@blockframes/model';
 import { CallableFunctions } from 'ngfire';
 import { EmailParameters, EmailAdminParameters } from './utils';
 

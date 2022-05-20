@@ -21,7 +21,7 @@ import {
   verifyPasswordResetCode
 } from 'firebase/auth';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { ErrorResultResponse } from '@blockframes/utils/utils';
+import { ErrorResultResponse } from '@blockframes/model';
 import { BlockframesAuth } from '@blockframes/utils/abstract-service';
 import { CallableFunctions, fromRef } from 'ngfire';
 import { doc, DocumentReference, getDoc, writeBatch } from 'firebase/firestore';

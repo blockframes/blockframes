@@ -1,5 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { sum } from '../utils';
+import { sum } from '@blockframes/model';
 import { getDeepValue } from './deep-key.pipe';
 
 @Pipe({ name: 'total' })

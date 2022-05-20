@@ -1,7 +1,7 @@
 
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { displayName } from '@blockframes/utils/utils'
+import { displayName } from '@blockframes/model'
 import { AuthService } from '@blockframes/auth/+state';
 import { Attendee, LocalAttendee, TrackKind } from '../+state/twilio.model';
 import { TwilioService } from '../+state/twilio.service';
