@@ -17,7 +17,6 @@
 
     <ng-container *ngIf="titleAnalytics$ | async as analytics; else loading">
       <ng-container *ngIf="analytics.length else empty">
-
         <section class="surface carousel-container">
           <ng-container *ngIf="popularTitle$ | async as title else loading">
             <header>
@@ -28,9 +27,19 @@
               </a>
             </header>
             <bf-carousel>
-              <analytics-pie-chart class="surface" carouselItem [data]="orgActivityOfPopularTitle$ | async"></analytics-pie-chart>
-              <analytics-map class="surface" carouselItem [data]="territoryActivityOfPopularTitle$ | async"></analytics-map>
-              <analytics-line-chart class="surface" carouselItem [eventNames]="interactions" [data]="interactionsOfPopularTitle$ | async">
+              <analytics-pie-chart class="surface" carouselItem [data]="orgActivityOfPopularTitle$ | async">
+              </analytics-pie-chart>
+              <analytics-map class="surface carousel-map" carouselItem [data]="territoryActivityOfPopularTitle$ | async">
+                <article>
+                  <h5>
+                    <mat-icon svgIcon="landscape"></mat-icon>
+                    <span>Split by Company Territory</span>
+                  </h5>
+                  <p class="mat-caption">Learn where are the interested people from.</p>
+                </article>
+              </analytics-map>
+              <analytics-line-chart class="surface" carouselItem [eventNames]="interactions"
+                [data]="interactionsOfPopularTitle$ | async">
                 <h5>
                   <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
                   <span>Interactions</span>
@@ -54,38 +63,44 @@
           </a>
         </section>
 
+        <section class="surface">
+          <analytics-map class="insights-map"  [data]="activeCountries$ | async" [topCount]="5" horizontal showLegend selectable>
+            <h3>
+              <mat-icon svgIcon="buyer_insights"></mat-icon>
+              <span>Buyers' Insights</span>
+            </h3>
+          </analytics-map>
+
+          <h3>Most active buyers</h3>
+          <bf-table [source]="activeBuyers$ | async" clickable useFilter pagination="5">
+            <ng-template colRef="user" label="Name" let-item sort>
+              <b>{{ item | displayName }}</b>
+            </ng-template>
+            <ng-template colRef="user.email" label="Email" let-email sort>
+              {{ email }}
+            </ng-template>
+            <ng-template colRef="org.denomination.public" label="Company name" let-name sort>
+              {{ name }}
+            </ng-template>
+            <ng-template colRef="org.activity" label="Activity" let-activity sort>
+              {{ activity | toLabel:'orgActivity' }}
+            </ng-template>
+            <ng-template colRef="addedToWishlist" label="Titles in Wishlist" let-wishlist sort>
+              {{ wishlist }}
+            </ng-template>
+            <ng-template colRef="promoReelOpened" label="Promotional Elements" let-promoReelOpened sort>
+              {{ promoReelOpened }}
+            </ng-template>
+            <ng-template colRef="screeningRequested" label="Screening Requests" let-screeningRequested sort>
+              {{ screeningRequested }}
+            </ng-template>
+            <ng-template colRef="askingPriceRequested" label="Asking Price Requested" let-askingPriceRequested sort>
+              {{ askingPriceRequested }}
+            </ng-template>
+          </bf-table>
+        </section>
       </ng-container>
     </ng-container>
-
-    <section>
-      <h3>Most active buyers in the world</h3>
-      <bf-table [source]="activeBuyers$ | async" clickable useFilter pagination="5">
-        <ng-template colRef="user" label="Name" let-item sort>
-          <b>{{ item | displayName }}</b>
-        </ng-template>
-        <ng-template colRef="user.email" label="Email" let-email sort>
-          {{ email }}
-        </ng-template>
-        <ng-template colRef="org.denomination.public" label="Company name" let-name sort>
-          {{ name }}
-        </ng-template>
-        <ng-template colRef="org.activity" label="Activity" let-activity sort>
-          {{ activity | toLabel:'orgActivity' }}
-        </ng-template>
-        <ng-template colRef="addedToWishlist" label="Titles in Wishlist" let-wishlist sort>
-          {{ wishlist }}
-        </ng-template>
-        <ng-template colRef="promoReelOpened" label="Promotional Elements" let-promoReelOpened sort>
-          {{ promoReelOpened }}
-        </ng-template>
-        <ng-template colRef="screeningRequested" label="Screening Requests" let-screeningRequested sort>
-          {{ screeningRequested }}
-        </ng-template>
-        <ng-template colRef="askingPriceRequested" label="Asking Price Requested" let-askingPriceRequested sort>
-          {{ askingPriceRequested }}
-        </ng-template>
-      </bf-table>
-    </section>
   </ng-container>
 
   <ng-template #noAcceptedMovies>

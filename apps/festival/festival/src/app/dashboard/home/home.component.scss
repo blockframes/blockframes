@@ -1,4 +1,4 @@
-@import "@angular/flex-layout/mq";
+@import '@angular/flex-layout/mq';
 
 :host {
   display: flex;
@@ -44,7 +44,7 @@ header {
       align-self: center;
     }
   }
-  
+
   h3 {
     margin-top: 24px;
   }
@@ -53,7 +53,7 @@ header {
 @include layout-bp(gt-xs) {
   analytics-pie-chart,
   analytics-line-chart,
-  analytics-map {
+  analytics-map.carousel-map {
     width: calc(50% - 16px);
     margin-right: 16px;
   }
@@ -66,8 +66,17 @@ header {
 
   analytics-pie-chart,
   analytics-line-chart,
-  analytics-map {
+  analytics-map.carousel-map {
     width: calc(100% - 8px);
     margin-right: 8px;
   }
+}
+
+analytics-map h3{
+  display: flex;
+  align-items: center;
+}
+
+.insights-map{
+  margin-bottom: 24px;
 }
