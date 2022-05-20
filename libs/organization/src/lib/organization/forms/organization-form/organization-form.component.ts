@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 import { OrganizationService } from './../../+state/organization.service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
@@ -12,19 +12,21 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 export class OrganizationFormComponent {
 
   public orgId = this.service.org.id;
-
   @Input() form: OrganizationForm;
 
   @Input() @boolean disableCropper = false;
 
-  constructor(private service: OrganizationService) { }
+  constructor(
+    private service: OrganizationService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
-  /** Check if the `name` field of an Organization create form already exists as an ENS domain */
   public async uniqueOrgName() {
-    const orgName = this.form.get('denomination').get('full').value
-    const unique = await this.service.uniqueOrgName(orgName);
-    if(!unique){
+    const orgName = this.form.get('denomination').get('full').value.trim();
+    const orgId = await this.service.getOrgIdFromName(orgName);
+    if (orgId && orgId !== this.orgId) {
       this.form.get('denomination').get('full').setErrors({ notUnique: true });
+      this.cdr.markForCheck();
     }
   }
 
