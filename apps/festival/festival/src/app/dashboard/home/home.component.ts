@@ -13,7 +13,7 @@ import {
   App,
   AggregatedAnalytic,
 } from '@blockframes/model';
-import { AnalyticData, counter } from '@blockframes/analytics/+state/utils';
+import { counter } from '@blockframes/analytics/+state/utils';
 import { joinWith } from '@blockframes/utils/operators';
 import { aggregate } from '@blockframes/analytics/+state/utils';
 import { UserService } from '@blockframes/user/+state';
