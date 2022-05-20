@@ -11,7 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Pages
-import { HomeComponent, FilterByPipe } from './home.component';
+import { HomeComponent } from './home.component';
 
 // Modules
 import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
@@ -27,7 +27,7 @@ import { MapModule } from "@blockframes/ui/map";
 import { DisplayNameModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 
 @NgModule({
-  declarations: [HomeComponent, FilterByPipe],
+  declarations: [HomeComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,

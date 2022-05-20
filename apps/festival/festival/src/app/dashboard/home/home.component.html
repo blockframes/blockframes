@@ -81,7 +81,8 @@
 
           <h3>Most active buyers</h3>
           <bf-table
-            [source]="activeBuyers$ | async | filterBy : selectedTerritory"
+            [source]="activeBuyers$ | async"
+            [filterValue]="selectedCountry"
             clickable
             useFilter
             pagination="5"
@@ -97,6 +98,9 @@
             </ng-template>
             <ng-template colRef="org.activity" label="Activity" let-activity sort>
               {{ activity | toLabel:'orgActivity' }}
+            </ng-template>
+            <ng-template colRef="org.addresses.main.country" label="Country" let-country sort>
+              {{ country | toLabel:'territories' }}
             </ng-template>
             <ng-template colRef="addedToWishlist" label="Titles in Wishlist" let-wishlist sort>
               {{ wishlist }}
