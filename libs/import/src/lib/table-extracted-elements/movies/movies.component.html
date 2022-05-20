@@ -46,7 +46,7 @@
       </mat-checkbox>
     </th>
     <td mat-cell *matCellDef="let row">
-      <mat-checkbox [disabled]="row | isDisabled: processing" (click)="$event.stopPropagation()"
+      <mat-checkbox [disabled]="row | isDisabled: processing : row.imported" (click)="$event.stopPropagation()"
         (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)"
         [aria-label]="checkboxLabel(row)" color="primary">
       </mat-checkbox>
@@ -88,7 +88,7 @@
     <th mat-header-cell *matHeaderCellDef> Actions </th>
     <td mat-cell *matCellDef="let element">
       <ng-container *ngIf="element.movie.id; else new">
-        <button mat-stroked-button color="accent" [disabled]="element | isDisabled: processing" (click)="update(element)">
+        <button mat-stroked-button color="accent" [disabled]="element | isDisabled: processing : element.imported" (click)="update(element)">
           <ng-container *ngIf="element.importing">
             <span>Updating</span>
             <mat-spinner [diameter]="20" [strokeWidth]="2"></mat-spinner>

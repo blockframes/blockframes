@@ -94,6 +94,9 @@ export class TableExtractedContractsComponent implements AfterViewInit {
    * @param importState
    */
   private async add(importState: ContractsImportState, { increment } = { increment: false }) {
+    importState.imported=true;
+    return true;
+
     importState.importing = true;
     this.cdr.markForCheck();
     importState.terms.forEach(t => t.id = doc(collection(this.db, '_')).id);
