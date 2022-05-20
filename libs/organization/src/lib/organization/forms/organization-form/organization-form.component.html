@@ -30,7 +30,7 @@
         </mat-form-field>
       </mat-card-content>
     </mat-card>
-
+  </form>
     <!-- Company Logo -->
     <mat-card *ngIf="!disableCropper">
       <mat-card-header>
@@ -43,6 +43,7 @@
         </image-uploader>
       </mat-card-content>
     </mat-card>
+  <form [formGroup]="form">
     <!-- Legal Entity -->
     <mat-card>
       <mat-card-header>

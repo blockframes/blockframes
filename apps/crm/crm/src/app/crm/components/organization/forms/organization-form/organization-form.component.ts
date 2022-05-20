@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 // Blockframes
 import { organizationStatus, getAllAppsExcept } from '@blockframes/model';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
@@ -12,7 +12,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
   styleUrls: ['./organization-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CrmOrganizationFormComponent implements OnInit {
+export class CrmOrganizationFormComponent {
   @Input() form: OrganizationCrmForm;
 
   @Input() @boolean disableCropper = false;
@@ -21,21 +21,16 @@ export class CrmOrganizationFormComponent implements OnInit {
   public organizationStatus = organizationStatus;
   public app = getAllAppsExcept(['crm']);
   public notifyCheckbox = new FormControl(false);
-  private currentOrgName: string;
 
   constructor(
     private organizationService: OrganizationService,
     private cdr: ChangeDetectorRef
   ) { }
 
-  ngOnInit() {
-    this.currentOrgName = this.form.get('denomination').get('full').value.trim();
-  }
-
   public async uniqueOrgName() {
     const orgName = this.form.get('denomination').get('full').value.trim();
-    const unique = await this.organizationService.uniqueOrgName(orgName);
-    if (!unique && orgName !== this.currentOrgName) {
+    const orgId = await this.organizationService.getOrgIdFromName(orgName);
+    if (orgId && orgId !== this.orgId) {
       this.form.get('denomination').get('full').setErrors({ notUnique: true });
       this.cdr.markForCheck();
     }
