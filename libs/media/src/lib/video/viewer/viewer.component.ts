@@ -3,7 +3,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmi
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/+state';
 import { StorageVideo, MeetingVideoControl, hasAnonymousIdentity } from '@blockframes/model';
-import { ErrorResultResponse, getWatermark, loadJWPlayerScript } from '@blockframes/utils/utils';
+import { ErrorResultResponse, getWatermark, loadJWPlayerScript } from '@blockframes/model';
 import { BehaviorSubject } from 'rxjs';
 import { toggleFullScreen } from '../../file/viewers/utils';
 import { EventService } from '@blockframes/event/+state';

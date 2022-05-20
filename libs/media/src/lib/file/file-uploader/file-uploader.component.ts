@@ -19,7 +19,7 @@ import {
 } from '@blockframes/utils/file-sanitizer';
 import { FileUploaderService } from '@blockframes/media/+state';
 import { FileMetaData } from '@blockframes/model';
-import { allowedFiles, AllowedFileType, fileSizeToString, maxAllowedFileSize } from '@blockframes/utils/utils';
+import { allowedFiles, AllowedFileType, fileSizeToString, maxAllowedFileSize } from '@blockframes/model';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { BehaviorSubject, map, Subscription } from 'rxjs';
