@@ -193,8 +193,8 @@ export async function formatContract(
       errors.push({
         type: 'error',
         name: 'Contract',
-        reason: 'The terms of the imported sale have been already sold.',
-        message: 'The terms of the imported sale have been already sold.'
+        reason: 'The terms of the imported sale have already sold been.',
+        message: 'The terms of the imported sale have already sold been.'
       });
     }
     // remove duplicate from stakeholders

@@ -29,7 +29,7 @@
       </mat-checkbox>
     </th>
     <td mat-cell *matCellDef="let row">
-      <mat-checkbox [disabled]="processing > 0" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+      <mat-checkbox [disabled]="row | isDisabled: processing" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
         [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
       </mat-checkbox>
     </td>
