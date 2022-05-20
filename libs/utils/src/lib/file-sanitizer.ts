@@ -1,5 +1,3 @@
-export const privacies = ['public', 'protected'] as const;
-export type Privacy = typeof privacies[number];
 export const tempUploadDir = 'tmp';
 
 /**
