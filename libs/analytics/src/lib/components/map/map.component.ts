@@ -20,9 +20,12 @@ export class AnalyticsMapComponent {
   lessThanFifty: TerritoryISOA3Value[] = [];
   moreThanFifty: TerritoryISOA3Value[] = [];
   selected: TerritoryISOA3Value;
+  top: AnalyticData[] = [];
 
-  top3: AnalyticData[] = [];
 
+  @Input() topCount = 3;
+  @Input() @boolean showLegend = false;
+  @Input() @boolean horizontal = false;
   @Input() set data(data: AnalyticData[]) {
     if (!data) return;
     this.isLoading = false;
@@ -46,7 +49,7 @@ export class AnalyticsMapComponent {
     }
 
     const sorted = data.sort((a, b) => b.count - a.count);
-    this.top3 = sorted.splice(0, 3);
+    this.top = sorted.splice(0, this.topCount);
   }
 
   @Input() @boolean selectable = false;
@@ -59,4 +62,5 @@ export class AnalyticsMapComponent {
     const selection = key === 'world' ? '' : staticModel.territories[key];
     this.selection.next(selection);
   }
- }
+
+}
