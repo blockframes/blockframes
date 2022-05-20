@@ -67,7 +67,7 @@
           <analytics-map
             class="insights-map"
             [data]="activeCountries$ | async"
-            (selection)="territorySelected($event)"
+            (selection)="selectedCountry = $event"
             [topCount]="5"
             horizontal
             showLegend
@@ -83,6 +83,7 @@
           <bf-table
             [source]="activeBuyers$ | async"
             [filterValue]="selectedCountry"
+            (rowClick)="showBuyer($event)"
             clickable
             useFilter
             pagination="5"

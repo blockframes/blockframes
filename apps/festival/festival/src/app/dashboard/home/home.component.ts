@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Optional, Inject, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
 
 // Blockframes
 import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
@@ -11,8 +11,9 @@ import {
   EventName,
   hasAppStatus,
   App,
+  AggregatedAnalytic,
 } from '@blockframes/model';
-import { counter } from '@blockframes/analytics/+state/utils';
+import { AnalyticData, counter } from '@blockframes/analytics/+state/utils';
 import { joinWith } from '@blockframes/utils/operators';
 import { aggregate } from '@blockframes/analytics/+state/utils';
 import { UserService } from '@blockframes/user/+state';
@@ -24,6 +25,7 @@ import { combineLatest } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'dashboard-home',
@@ -117,11 +119,13 @@ export class HomeComponent {
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
     private userService: UserService,
-    @Inject(APP) public app: App
+    @Inject(APP) public app: App,
+    private router:Router,
+    private route:ActivatedRoute
   ) { }
 
-  public territorySelected(territory: string) {
-    this.selectedCountry = territory;
+  public showBuyer(row: AggregatedAnalytic) {
+    this.router.navigate([`/c/o/dashboard/home/buyer/${row.user.uid}`],{relativeTo:this.route})
   }
 
   public openIntercom(): void {
