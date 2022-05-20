@@ -9,7 +9,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatListModule } from '@angular/material/list';
 
 // Pages
 import { HomeComponent } from './home.component';
@@ -51,7 +50,6 @@ import { DisplayNameModule, MaxLengthModule, ToLabelModule } from '@blockframes/
     MatIconModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
-    MatListModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: HomeComponent }])

@@ -5,7 +5,7 @@
   </button>
 </header>
 
-<section *ngIf="!isLoading else loading" [ngClass]="{'map-wrapper':horizontal}">
+<section *ngIf="!isLoading else loading" [ngClass]="{horizontal}">
   <world-map *ngIf="top.length; else empty">
     <!-- MAP LAYERS -->
     <ng-container *ngFor="let isoA3 of zero">

@@ -16,25 +16,17 @@ world-map {
   border-radius: 4px;
 }
 
-.map-wrapper {
+section.horizontal {
   width: 100%;
-  flex: 1 1 100%;
   display: flex;
   flex-direction: row-reverse;
   flex-wrap: wrap;
   gap: 24px;
-  margin-bottom: 24px;
   position: relative;
 }
 
-@include layout-bp(lt-md) {
-  .map-wrapper {
-    flex-direction: column;
-  }
-}
-
 mat-list.horizontal {
-  flex: 0 0 clamp(20%,300px,30%);
+  flex: 0 0 25%;
 }
 
 img {
@@ -64,5 +56,11 @@ mat-spinner {
 
   svg {
     margin-right: 12px;
+  }
+}
+
+@include layout-bp(lt-md) {
+  section.horizontal {
+    flex-direction: column;
   }
 }

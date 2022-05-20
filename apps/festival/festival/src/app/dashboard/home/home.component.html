@@ -17,7 +17,6 @@
 
     <ng-container *ngIf="titleAnalytics$ | async as analytics; else loading">
       <ng-container *ngIf="analytics.length else empty">
-
         <section class="surface carousel-container">
           <ng-container *ngIf="popularTitle$ | async as title else loading">
             <header>
@@ -64,45 +63,44 @@
           </a>
         </section>
 
+        <section class="surface">
+          <analytics-map  [data]="activeCountries$ | async" [topCount]="5" horizontal showLegend selectable>
+            <h3>
+              <mat-icon svgIcon="buyer_insights"></mat-icon>
+              <span>Buyers' Insights</span>
+            </h3>
+          </analytics-map>
+
+          <h3>Most active buyers</h3>
+          <bf-table [source]="activeBuyers$ | async" clickable useFilter pagination="5">
+            <ng-template colRef="user" label="Name" let-item sort>
+              <b>{{ item | displayName }}</b>
+            </ng-template>
+            <ng-template colRef="user.email" label="Email" let-email sort>
+              {{ email }}
+            </ng-template>
+            <ng-template colRef="org.denomination.public" label="Company name" let-name sort>
+              {{ name }}
+            </ng-template>
+            <ng-template colRef="org.activity" label="Activity" let-activity sort>
+              {{ activity | toLabel:'orgActivity' }}
+            </ng-template>
+            <ng-template colRef="addedToWishlist" label="Titles in Wishlist" let-wishlist sort>
+              {{ wishlist }}
+            </ng-template>
+            <ng-template colRef="promoReelOpened" label="Promotional Elements" let-promoReelOpened sort>
+              {{ promoReelOpened }}
+            </ng-template>
+            <ng-template colRef="screeningRequested" label="Screening Requests" let-screeningRequested sort>
+              {{ screeningRequested }}
+            </ng-template>
+            <ng-template colRef="askingPriceRequested" label="Asking Price Requested" let-askingPriceRequested sort>
+              {{ askingPriceRequested }}
+            </ng-template>
+          </bf-table>
+        </section>
       </ng-container>
     </ng-container>
-
-    <section class="surface">
-      <analytics-map [data]="activeCountries$ | async" [topCount]="5" horizontal showLegend selectable>
-        <h3>
-          <mat-icon svgIcon="buyer_insights"></mat-icon>
-          <span>Buyers' Insights</span>
-        </h3>
-      </analytics-map>
-
-      <h3>Most active buyers</h3>
-      <bf-table [source]="activeBuyers$ | async" clickable useFilter pagination="5">
-        <ng-template colRef="user" label="Name" let-item sort>
-          <b>{{ item | displayName }}</b>
-        </ng-template>
-        <ng-template colRef="user.email" label="Email" let-email sort>
-          {{ email }}
-        </ng-template>
-        <ng-template colRef="org.denomination.public" label="Company name" let-name sort>
-          {{ name }}
-        </ng-template>
-        <ng-template colRef="org.activity" label="Activity" let-activity sort>
-          {{ activity | toLabel:'orgActivity' }}
-        </ng-template>
-        <ng-template colRef="addedToWishlist" label="Titles in Wishlist" let-wishlist sort>
-          {{ wishlist }}
-        </ng-template>
-        <ng-template colRef="promoReelOpened" label="Promotional Elements" let-promoReelOpened sort>
-          {{ promoReelOpened }}
-        </ng-template>
-        <ng-template colRef="screeningRequested" label="Screening Requests" let-screeningRequested sort>
-          {{ screeningRequested }}
-        </ng-template>
-        <ng-template colRef="askingPriceRequested" label="Asking Price Requested" let-askingPriceRequested sort>
-          {{ askingPriceRequested }}
-        </ng-template>
-      </bf-table>
-    </section>
   </ng-container>
 
   <ng-template #noAcceptedMovies>
