@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CrmStore } from './crm.store';
 import { AuthService } from '@blockframes/auth/+state';
-import { App } from '@blockframes/model';
+import { App, ErrorResultResponse } from '@blockframes/model';
 import { CallableFunctions } from 'ngfire';
-import { ErrorResultResponse } from '@blockframes/utils/utils';
 
 interface AnalyticsActiveUser {
   user_id: string,
