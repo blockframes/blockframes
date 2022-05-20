@@ -1,8 +1,8 @@
-import { InjectionToken } from "@angular/core";
+import { InjectionToken } from '@angular/core';
 import { EntityControl, FormEntity } from '@blockframes/utils/form';
 import type { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.config';
 import type { MovieShellConfig } from './movie.shell.config';
-import { FormSaveOptions } from "@blockframes/utils/common-interfaces";
+import { FormSaveOptions } from '@blockframes/model';
 
 export const FORMS_CONFIG = new InjectionToken<ShellConfig>('List of form managed by the shell');
 
