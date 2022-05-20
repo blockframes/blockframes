@@ -13,6 +13,5 @@ export class SigninFormComponent {
   @Output() submited = new EventEmitter();
   
   public signinForm = new SigninForm();
-  public hidePassword = true
 
 }

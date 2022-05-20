@@ -17,7 +17,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { SigninFormComponent } from './signin-form.component';
 
 // Blockframes
-import { EyePasswordModule } from '@blockframes/ui/eye-password/eye-password.module';
+import { PasswordInputModule } from '@blockframes/ui/form/password-input/password-input.module';
 
 @NgModule({
   declarations: [SigninFormComponent],
@@ -38,7 +38,7 @@ import { EyePasswordModule } from '@blockframes/ui/eye-password/eye-password.mod
     MatTooltipModule,
 
     // Blockframes
-    EyePasswordModule
+    PasswordInputModule
   ],
 })
 export class SigninFormModule {}
