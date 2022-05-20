@@ -12,14 +12,8 @@
           Email Address is <strong>required</strong>.
         </mat-error>
       </mat-form-field>
-      <!-- <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
-        <input matInput placeholder="Password" formControlName="password" required test-id="password" [type]="hidePassword ? 'password' : 'text'"/> -->
-      <!-- <button type="button" matSuffix mat-icon-button (click)="hidePassword = !hidePassword" [matTooltip]="hidePassword ? 'Show Password' : 'Hide Password'">
-        <mat-icon [svgIcon]="hidePassword ? 'visibility' : 'visibility_off'"></mat-icon>
-      </button> -->
-      
-      <eye-password [form]="signinForm" [placeholder]="'Password'" [formControlName]="'password'">        
+
+      <eye-password [control]="signinForm.get('password')" placeholder="Password" >   
         <mat-hint>Between 6 and 24 characters.</mat-hint>
         <mat-error *ngIf="signinForm.get('password').hasError('minlength')">
           Password with less than <strong>6</strong> characters.
@@ -29,9 +23,8 @@
         </mat-error>
         <mat-error *ngIf="signinForm.get('password').hasError('required')">
           Password is <strong>required</strong>.
-        </mat-error>    
+        </mat-error>
       </eye-password>
-      <!-- </mat-form-field> -->
 
       <a type="button" mat-button routerLink="../reset-password" class="forgot-password">Forgot your password?</a>
       <div fxLayout="column" fxLayoutAlign="center center">

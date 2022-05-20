@@ -4,6 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { PasswordFormComponent } from './password.component';
+import { EyePasswordModule } from '@blockframes/ui/form/eye-password/eye-password.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -19,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    EyePasswordModule,
     // Material
     MatCardModule,
     MatFormFieldModule,
