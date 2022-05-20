@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 
-import { cp } from 'fs/promises';
 import { examples } from '../../fixtures/_test';
 
 //* TESTS --------------------------------------*//
