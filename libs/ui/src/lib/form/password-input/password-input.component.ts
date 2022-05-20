@@ -14,6 +14,6 @@ export class PasswordInputComponent {
   @Input() public control = new FormControl();
   @Input() public errorStateMatcher: ErrorStateMatcher;
 
-  public hidePassword: boolean;
+  public hidePassword = true
 
 }
