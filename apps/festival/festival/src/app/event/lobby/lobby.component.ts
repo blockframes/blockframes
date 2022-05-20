@@ -6,7 +6,7 @@ import { EventService } from '@blockframes/event/+state';
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
 import { AuthService } from '@blockframes/auth/+state';
 import { LocalAttendee, TrackKind } from '@blockframes/event/components/meeting/+state/twilio.model';
-import { displayName } from '@blockframes/utils/utils';
+import { displayName } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { pluck, switchMap } from 'rxjs/operators';
 import { createMeetingAttendee, Event, AttendeeStatus, Meeting } from '@blockframes/model';

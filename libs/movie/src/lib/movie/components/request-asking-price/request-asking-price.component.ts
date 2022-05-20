@@ -8,7 +8,7 @@ import { AuthService } from "@blockframes/auth/+state";
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { FormStaticValueArray } from "@blockframes/utils/form";
 import { toGroupLabel } from "@blockframes/utils/pipes";
-import { smartJoin } from "@blockframes/utils/utils";
+import { smartJoin } from "@blockframes/model";
 import { take } from "rxjs";
 
 @Component({
