@@ -24,7 +24,7 @@ import {
 import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { where } from 'firebase/firestore';
-import { sum } from '@blockframes/utils/utils';
+import { sum } from '@blockframes/model';
 import { formatDate } from '@angular/common';
 import { convertToTimeString } from '@blockframes/utils/helpers';
 import {

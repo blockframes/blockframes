@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Functions, httpsCallable } from '@angular/fire/functions';
-import { ErrorResultResponse } from '@blockframes/utils/utils';
+import { ErrorResultResponse } from '@blockframes/model';
 import { EmailParameters, EmailAdminParameters } from './utils';
 
 @Injectable({ providedIn: 'root' })
