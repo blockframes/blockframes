@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-import { EyePasswordComponent } from './eye-password.component';
+import { PasswordInputComponent } from './password-input.component';
 
 // Material
 import { MatInputModule } from '@angular/material/input';
@@ -13,8 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [EyePasswordComponent],
-  exports: [EyePasswordComponent],
+  declarations: [PasswordInputComponent],
+  exports: [PasswordInputComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -29,4 +29,4 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatFormFieldModule
   ]
 })
-export class EyePasswordModule { }
+export class PasswordInputModule { }
