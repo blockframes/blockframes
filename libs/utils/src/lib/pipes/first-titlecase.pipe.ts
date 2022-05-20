@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { titleCase } from '@blockframes/utils/utils';
+import { titleCase } from '@blockframes/model';
 
 @Pipe({
   name: 'firstWordTitlecase'

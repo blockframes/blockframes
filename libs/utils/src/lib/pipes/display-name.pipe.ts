@@ -1,7 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Person } from '@blockframes/model';
-import { displayName } from '../utils';
+import { Person, displayName } from '@blockframes/model';
 
 export const displayPerson = (person: Person | Person[] | string[]) => {
   if (Array.isArray(person)) {

@@ -5,9 +5,13 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { EventName, hasAppStatus, App } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import {
+  EventName,
+  hasAppStatus,
+  App,
+} from '@blockframes/model';
 import { counter } from '@blockframes/analytics/+state/utils';
 import { aggregate } from '@blockframes/analytics/+state/utils';
 import { UserService } from '@blockframes/user/+state';
@@ -54,7 +58,7 @@ export class HomeComponent {
     switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key))
   );
 
-  private titleAnalyticsOfPopularTitle$ = combineLatest([ this.popularTitle$, this.titleAnalytics$ ]).pipe(
+  private titleAnalyticsOfPopularTitle$ = combineLatest([this.popularTitle$, this.titleAnalytics$]).pipe(
     map(([title, titleAnalytics]) => titleAnalytics.filter(analytics => analytics.meta.titleId === title.id)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -73,6 +77,10 @@ export class HomeComponent {
 
   pageViewsOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
     map(analytics => analytics.filter(analytic => analytic.name === 'pageView'))
+  );
+
+  activeCountries$ = this.titleAnalytics$.pipe(
+    map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
   );
 
   activeBuyers$ = this.titleAnalytics$.pipe(

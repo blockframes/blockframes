@@ -12,7 +12,7 @@ import { FileUploaderService } from '../../+state/file-uploader.service';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { allowedFiles, fileSizeToString } from '@blockframes/utils/utils';
+import { allowedFiles, fileSizeToString } from '@blockframes/model';
 import { DocumentReference } from 'firebase/firestore';
 import { FirestoreService, fromRef } from 'ngfire';
 
