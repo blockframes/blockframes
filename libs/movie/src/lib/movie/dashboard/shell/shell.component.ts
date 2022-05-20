@@ -10,7 +10,7 @@ import {
 import { NavigationEnd, Router, RouterOutlet, Event, ActivatedRoute } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
+import { RouteDescription } from '@blockframes/model';
 import { App } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { FORMS_CONFIG, ShellConfig } from '../../form/movie.shell.interfaces';

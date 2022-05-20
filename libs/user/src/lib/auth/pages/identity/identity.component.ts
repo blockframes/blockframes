@@ -10,7 +10,7 @@ import { createPublicUser, PublicUser, User, createOrganization, createDocumentM
 import { OrganizationService } from '@blockframes/organization/+state';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
-import { createLocation } from '@blockframes/utils/common-interfaces/utility';
+import { createLocation } from '@blockframes/model';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
