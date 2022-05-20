@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 import { OrganizationService } from './../../+state/organization.service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
@@ -9,10 +9,9 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
   styleUrls: ['./organization-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationFormComponent implements OnInit {
+export class OrganizationFormComponent {
 
   public orgId = this.service.org.id;
-  private currentOrgName: string;
   @Input() form: OrganizationForm;
 
   @Input() @boolean disableCropper = false;
@@ -22,14 +21,10 @@ export class OrganizationFormComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) { }
 
-  ngOnInit() {
-    this.currentOrgName = this.form.get('denomination').get('full').value.trim();
-  }
-
   public async uniqueOrgName() {
     const orgName = this.form.get('denomination').get('full').value.trim();
-    const unique = await this.service.uniqueOrgName(orgName);
-    if (!unique && orgName !== this.currentOrgName) {
+    const orgId = await this.service.getOrgIdFromName(orgName);
+    if (orgId && orgId !== this.orgId) {
       this.form.get('denomination').get('full').setErrors({ notUnique: true });
       this.cdr.markForCheck();
     }

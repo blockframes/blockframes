@@ -207,8 +207,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.isAnonymous = (await this.authService.user).isAnonymous;
 
       // Check if the org name is already existing
-      const unique = await this.orgService.uniqueOrgName(denomination.full);
-      if (!unique) {
+      const orgId = await this.orgService.getOrgIdFromName(denomination.full);
+      if (orgId) {
         this.orgForm.get('denomination').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
         this.creating = false;
@@ -333,8 +333,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const { denomination, addresses, activity, appAccess } = this.orgForm.value;
 
       // Check if the org name is already existing
-      const unique = await this.orgService.uniqueOrgName(denomination.full);
-      if (!unique) {
+      const orgId = await this.orgService.getOrgIdFromName(denomination.full);
+      if (!orgId) {
         this.orgForm.get('denomination').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
         this.creating = false;
