@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
-import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
+import { RouteDescription } from '@blockframes/model';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CrossFieldErrorMatcher } from '@blockframes/utils/form/matchers';
 import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell/shell.component';

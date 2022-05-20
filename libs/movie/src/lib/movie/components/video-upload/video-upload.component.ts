@@ -5,9 +5,8 @@ import {
   OnInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import { Privacy } from '@blockframes/utils/file-sanitizer';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie, MovieVideos, hostedVideoTypes } from '@blockframes/model';
+import { Movie, MovieVideos, hostedVideoTypes, Privacy } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MovieVideosForm } from '@blockframes/movie/form/movie.form';
 import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
