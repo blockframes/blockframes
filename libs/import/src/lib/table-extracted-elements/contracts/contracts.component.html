@@ -73,7 +73,6 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef> Actions </th>
     <td mat-cell *matCellDef="let element">
-      {{{imported:element.imported}|json}}
       <button mat-flat-button color="primary" [disabled]="element | isDisabled: processing" (click)="create(element)">
         <ng-container *ngIf="element.importing">
           <span>Creating</span>

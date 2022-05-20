@@ -19,7 +19,7 @@ export interface SpreadsheetImportEvent {
 export interface SpreadsheetImportError {
   name: string;
   reason: string;
-  type: 'error' | 'warning';
+  type?: 'error' | 'warning';
   field?: string;
   message?: string;
 }
@@ -216,7 +216,7 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
 }
 
 export function outOfRangeDate(name: string): ImportLog<string> {
-  const option: LogOption = {
+  const option: SpreadsheetImportError = {
     name: `Invalid ${name}`,
     reason: 'The date seems too far away in the past or in the future.',
     message: 'Date must be between 1895 and 2200, if the date seems to be correct please check that Excel format the cell as a Date.',
@@ -225,7 +225,7 @@ export function outOfRangeDate(name: string): ImportLog<string> {
 }
 
 export function mandatoryError<T = unknown>(value: T, name: string): ImportLog<T> {
-  const option: LogOption = {
+  const option: SpreadsheetImportError = {
     name: `Missing ${name}`,
     reason: 'Mandatory field is missing.',
     message: 'Please fill in the corresponding sheet field.',
@@ -239,7 +239,7 @@ export function wrongTemplateError(templateImported: 'seller' | 'admin'): Import
     seller: 'Please contact team@archipelcontent.com or use a template that\'s appropriate to admins',
   }
 
-  const option: LogOption = {
+  const option: SpreadsheetImportError = {
     name: 'Wrong Template',
     reason: `You are not permitted to import ${templateImported === 'admin' ? 'an' : 'a'} ${templateImported} template.`,
     message: messages[templateImported],
@@ -248,7 +248,7 @@ export function wrongTemplateError(templateImported: 'seller' | 'admin'): Import
 }
 
 export function unknownEntityError<T = unknown>(value: T, name: string): ImportLog<T> {
-  const option: LogOption = {
+  const option: SpreadsheetImportError = {
     name: `Unknown ${name}`,
     reason: `${name} should exist in the app but we couldn't find it.`,
     message: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`,
@@ -257,7 +257,7 @@ export function unknownEntityError<T = unknown>(value: T, name: string): ImportL
 }
 
 export function noTitleError(name: string): ImportLog<string> {
-  const option: LogOption = {
+  const option: SpreadsheetImportError = {
     name: 'Error on title name or ID',
     reason: `No title found with name/id "${name}".`,
     message: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`,
@@ -266,7 +266,7 @@ export function noTitleError(name: string): ImportLog<string> {
 }
 
 export function sameTitleNameError(name: string): ImportLog<string> {
-  const option: LogOption = {
+  const option: SpreadsheetImportError = {
     name: 'Error on title name or ID',
     reason: `Multiple titles with name "${name}" found.`,
     message: `Please check the corresponding sheet field for mistake, create the corresponding ${name} if you can, or contact us.`,
@@ -275,7 +275,7 @@ export function sameTitleNameError(name: string): ImportLog<string> {
 }
 
 export function orgWithNoTitleError(name: string): ImportLog<string> {
-  const option: LogOption = {
+  const option: SpreadsheetImportError = {
     name: 'Error on title name or ID',
     reason: `${name} does not belong to your org`,
     message: `You don't have access to title with id: ${name}`,
@@ -284,7 +284,7 @@ export function orgWithNoTitleError(name: string): ImportLog<string> {
 }
 
 export function wrongValueError<T = unknown>(value: T, name: string): ImportLog<T> {
-  const option: LogOption = {
+  const option: SpreadsheetImportError = {
     name: `Wrong ${name}`,
     reason: `${name} should be a value of the given list.`,
     message: `Please check the corresponding sheet field for mistakes, be sure to select a value form the list.`,
@@ -293,7 +293,7 @@ export function wrongValueError<T = unknown>(value: T, name: string): ImportLog<
 }
 
 export function unusedMandateIdWarning<T extends string>(value: T): ImportLog<T> {
-  const option: LogOption = {
+  const option: SpreadsheetImportError = {
     field: 'parentTerm',
     name: 'Unused Mandate ID/Row',
     reason:
@@ -324,7 +324,7 @@ export function getOptionalWarning(name: string) {
 }
 
 export function optionalWarning<T = unknown>(name: string, value?: T): ImportLog<T> {
-  const option: LogOption = {
+  const option: SpreadsheetImportError = {
     // value is `undefined` by default because optional warning mean that the value is missing,
     // for other warning the value should passed as a parameter
     name: `Missing ${name}`,
@@ -335,7 +335,7 @@ export function optionalWarning<T = unknown>(name: string, value?: T): ImportLog
 }
 
 export function adminOnlyWarning<T = unknown>(value: T, name: string): ImportLog<T> {
-  const option: LogOption = {
+  const option: SpreadsheetImportError = {
     reason: "This field is reserved for admins, it's value will be omitted.",
     message: 'Remove the corresponding sheet field to silence this warning.',
     name: 'Admin only warning'
@@ -344,19 +344,12 @@ export function adminOnlyWarning<T = unknown>(value: T, name: string): ImportLog
 }
 
 export function wrongValueWarning<T = unknown>(value: T, name: string, wrongData: string[]): ImportLog<T> {
-  const option: LogOption = {
+  const option: SpreadsheetImportError = {
     name: `Wrong ${name}`,
     reason: `Be careful, ${wrongData.length} values were wrong and will be omitted.`,
     message: `${wrongData.slice(0, 3).join(', ')}...`
   };
   return new ImportWarning(value, option);
-}
-
-export interface LogOption {
-  name: string;
-  reason: string;
-  message: string;
-  field?: string;
 }
 
 export abstract class ImportLog<T> extends Error {
@@ -365,9 +358,9 @@ export abstract class ImportLog<T> extends Error {
   message: string;
   abstract type: 'warning' | 'error';
 
-  constructor(private value: T, options: LogOption) {
+  constructor(private value: T, options: SpreadsheetImportError) {
     super(options.message);
-    const { message, name, reason, field = '' } = options;
+    const { message='', name, reason, field = '' } = options;
     this.name = name;
     this.reason = reason;
     this.field = field;
