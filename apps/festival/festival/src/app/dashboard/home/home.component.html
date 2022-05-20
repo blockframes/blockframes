@@ -64,7 +64,15 @@
         </section>
 
         <section class="surface">
-          <analytics-map class="insights-map"  [data]="activeCountries$ | async" [topCount]="5" horizontal showLegend selectable>
+          <analytics-map
+            class="insights-map"
+            [data]="activeCountries$ | async"
+            (selection)="territorySelected($event)"
+            [topCount]="5"
+            horizontal
+            showLegend
+            selectable
+          >
             <h3>
               <mat-icon svgIcon="buyer_insights"></mat-icon>
               <span>Buyers' Insights</span>
@@ -72,7 +80,12 @@
           </analytics-map>
 
           <h3>Most active buyers</h3>
-          <bf-table [source]="activeBuyers$ | async" clickable useFilter pagination="5">
+          <bf-table
+            [source]="activeBuyers$ | async | filterBy : selectedTerritory"
+            clickable
+            useFilter
+            pagination="5"
+          >
             <ng-template colRef="user" label="Name" let-item sort>
               <b>{{ item | displayName }}</b>
             </ng-template>

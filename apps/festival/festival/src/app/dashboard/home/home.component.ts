@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject, Pipe, PipeTransform } from '@angular/core';
 
 // Blockframes
 import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
@@ -11,6 +11,9 @@ import {
   EventName,
   hasAppStatus,
   App,
+  Territory,
+  territories,
+  AggregatedAnalytic,
 } from '@blockframes/model';
 import { counter } from '@blockframes/analytics/+state/utils';
 import { joinWith } from '@blockframes/utils/operators';
@@ -32,6 +35,7 @@ import { Intercom } from 'ng-intercom';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
+  public selectedTerritory: string;
   public titles$ = this.orgService.currentOrg$.pipe(
     switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
     map((titles) => titles.filter((title) => title.app[this.app].access)),
@@ -119,7 +123,20 @@ export class HomeComponent {
     @Inject(APP) public app: App
   ) { }
 
+  public territorySelected(territory: string) {
+    this.selectedTerritory = territory;
+  }
+
   public openIntercom(): void {
     return this.intercom.show();
+  }
+}
+
+@Pipe({ name: 'filterBy' })
+export class FilterByPipe implements PipeTransform {
+  transform(data: AggregatedAnalytic[], country: string): AggregatedAnalytic[] {
+    if (!country) return data;
+    const [territory] = Object.entries(territories).find(([, value]) => value === country)
+    return data.filter(datum => datum.org.addresses.main.country === territory)
   }
 }
