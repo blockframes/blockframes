@@ -137,20 +137,39 @@ export const examples = {
 
   docWithSubCollectionToDelete2: {
     [`example-deletion/doc2-${time}`]: {
-      example: 'deletion 4',
+      example: 'deletion 2',
       id: `doc2-${time}`,
     },
     [`example-deletion/doc2-${time}/subcollection1/subdoc1-${time}`]: {
-      example: 'deletion 5',
+      example: 'deletion 4',
       id: `subdoc4-${time}`,
     },
     [`example-deletion/doc2-${time}/subcollection1/subdoc2-${time}`]: {
-      example: 'deletion 6',
+      example: 'deletion 5',
       id: `subdoc5-${time}`,
     },
     [`example-deletion/doc2-${time}/subcollection2/subdoc1-${time}`]: {
-      example: 'deletion 7',
+      example: 'deletion 6',
       id: `subdoc6-${time}`,
+    },
+  },
+
+  docWithSubCollectionToDelete3: {
+    [`example-deletion2/doc3-${time}`]: {
+      example: 'deletion 3',
+      id: `doc3-${time}`,
+    },
+    [`example-deletion2/doc3-${time}/subcollection3/subdoc1-${time}`]: {
+      example: 'deletion 7',
+      id: `subdoc7-${time}`,
+    },
+    [`example-deletion2/doc3-${time}/subcollection4/subdoc1-${time}`]: {
+      example: 'deletion 8',
+      id: `subdoc8-${time}`,
+    },
+    [`example-deletion2/doc3-${time}/subcollection4/subdoc2-${time}`]: {
+      example: 'deletion 9',
+      id: `subdoc10-${time}`,
     },
   },
 };

@@ -8,8 +8,6 @@ import { examples } from '../../fixtures/_test';
 describe('Testing bridge between Cypress and node', () => {
   beforeEach(() => {
     firebase.clear();
-    //necessary for now to wait until the clear is finished, seems to be an async issue in delete function
-    cy.wait(100);
   });
 
   //* CREATE *//
@@ -86,12 +84,11 @@ describe('Testing bridge between Cypress and node', () => {
     const docs = [examples.docWithSubCollection1, examples.docWithSubCollection2];
     firebase.create(docs);
     const collectionPath = Object.keys(docs[0])[0].split('/')[0];
-    console.log(collectionPath);
     const exampleValues = exampleValuesFrom(docs);
     firebase.get([collectionPath]).then(data => expect(data[0]).to.eql(exampleValues.flat()));
   });
 
-  it('retriebes a array of documents with subcollections', () => {
+  it('retrieves a array of documents with subcollections', () => {
     const docs = [examples.docWithSubCollection1, examples.docWithSubCollection2];
     firebase.create(docs);
     const docPaths = docs.map(doc => Object.keys(doc)[1].split('/').slice(0, 2).join('/'));
@@ -128,7 +125,8 @@ describe('Testing bridge between Cypress and node', () => {
     const exampleValues = exampleValuesFrom(docs);
     firebase.get([collectionPath]).then((data: []) => expect(data.flat()).to.eql(exampleValues.flat()));
     firebase.delete([collectionPath]);
-    firebase.get([collectionPath]).then((data: []) => expect(data.flat()).to.eql([{}, {}]));
+    cy.wait(100); // temporary async fix
+    firebase.get([collectionPath]).then((data: []) => expect(data.flat()).to.eql([]));
   });
 
   it('deletes an array of documents', () => {
@@ -144,22 +142,60 @@ describe('Testing bridge between Cypress and node', () => {
   it('deletes an array of collection of documents', () => {
     const docs = [examples.docToDelete1, examples.docToDelete2, examples.docToDelete3];
     firebase.create(docs);
-    const docPaths = [...new Set(docs.map(doc => Object.keys(doc)[0]))];
+    const collectionsPaths = [...new Set(docs.map(doc => Object.keys(doc)[0]))];
     const exampleValues = exampleValuesFrom(docs);
-    firebase.get(docPaths).then((data: []) => expect(data.flat()).to.eql(exampleValues.flat()));
-    firebase.delete(docPaths);
-    firebase.get(docPaths).then((data: []) => expect(data.flat()).to.eql([{}, {}, {}]));
+    firebase.get(collectionsPaths).then((data: []) => expect(data.flat()).to.eql(exampleValues.flat()));
+    firebase.delete(collectionsPaths);
+    firebase.get(collectionsPaths).then((data: []) => expect(data.flat()).to.eql([{}, {}, {}]));
   });
 
   //*** docs with subcollections */
 
-  //TODO : deletes a documents with subcollections
+  it('deletes a document with subcollections', () => {
+    firebase.create([examples.docWithSubCollectionToDelete1]);
+    const path = Object.keys(examples.docWithSubCollectionToDelete1)[0];
+    const parentDocPath = path.split('/').slice(0, 2).join('/');
+    const exampleValues = exampleValuesFrom([examples.docWithSubCollectionToDelete1]);
+    firebase.get([parentDocPath]).then(data => expect(data).to.eql(exampleValues.flat()));
+    firebase.delete([parentDocPath]);
+    firebase.get([parentDocPath]).then(data => expect(data[0]).to.eql({}));
+  });
 
-  //TODO : deletes a collection of documents with subcollections
+  it('deletes a collection of documents with subcollections', () => {
+    const docs = [examples.docWithSubCollectionToDelete1, examples.docWithSubCollectionToDelete2];
+    firebase.create(docs);
+    const collectionPath = Object.keys(docs[0])[0].split('/')[0];
+    const exampleValues = exampleValuesFrom(docs);
+    firebase.get([collectionPath]).then(data => expect(data[0]).to.eql(exampleValues.flat()));
+    firebase.delete([collectionPath]);
+    cy.wait(100); // temporary async fix
+    firebase.get([collectionPath]).then((data: []) => expect(data.flat()).to.eql([]));
+  });
 
-  //TODO : deletes an array of documents with subcollections
+  it('deletes a array of documents with subcollections', () => {
+    const docs = [examples.docWithSubCollectionToDelete1, examples.docWithSubCollectionToDelete2];
+    firebase.create(docs);
+    const docPaths = docs.map(doc => Object.keys(doc)[1].split('/').slice(0, 2).join('/'));
+    const exampleValues = exampleValuesFrom(docs);
+    firebase.get(docPaths).then(data => expect(data).to.eql(exampleValues.flat()));
+    firebase.delete(docPaths);
+    firebase.get(docPaths).then((data: []) => expect(data.flat()).to.eql([{}, {}]));
+  });
 
-  //TODO : deletes an array of collection of documents with subcollections
+  it('deletes an array of collection of documents with subcollections', () => {
+    const docs = [
+      examples.docWithSubCollectionToDelete1,
+      examples.docWithSubCollectionToDelete2,
+      examples.docWithSubCollectionToDelete3,
+    ];
+    firebase.create(docs);
+    const collectionsPaths = [...new Set(docs.map(doc => Object.keys(doc)[0].split('/')[0]))];
+    const exampleValues = exampleValuesFrom(docs);
+    firebase.get(collectionsPaths).then((data: []) => expect(data.flat()).to.eql(exampleValues.flat()));
+    firebase.delete(collectionsPaths);
+    cy.wait(100); // temporary async fix
+    firebase.get(collectionsPaths).then((data: []) => expect(data.flat()).to.eql([]));
+  });
 
   //TODO : UPDATE
 });
@@ -176,6 +212,7 @@ const firebase = {
       'example-subcollection',
       'example-subcollectionBis',
       'example-deletion',
+      'example-deletion2',
     ]);
   },
 
