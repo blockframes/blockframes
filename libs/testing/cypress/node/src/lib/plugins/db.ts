@@ -1,6 +1,5 @@
 import { db } from '../testing-cypress';
-import { createUser, createOrganization, Organization, createPermissions } from '@blockframes/model';
-import { App, ModuleAccess } from '@blockframes/utils/apps';
+import { createUser, createOrganization, createPermissions, ModuleAccess, App } from '@blockframes/model';
 
 export async function getRandomEmail() {
   const { email } = await getRandomUser();

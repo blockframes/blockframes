@@ -4,6 +4,7 @@ import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 import { config } from 'dotenv';
 import requiredVars from 'tools/mandatory-env-vars.json';
 import { resolve } from 'path';
+import { firebase as firebaseProd } from 'env/env.blockframes';
 import { OrganizationDocument, App } from '@blockframes/model';
 
 /**
@@ -58,20 +59,7 @@ export function warnMissingVars(): void | never {
   missingVarsMessageShown = true;
 }
 
-export function catchErrors<T>(fn: (...args: any[]) => T): T | undefined {
-  try {
-    return fn();
-  } catch (err) {
-    if ('errors' in err) {
-      err.errors.forEach((error: any) => console.error('ERROR:', error.message));
-    } else {
-      console.error(err);
-    }
-    return;
-  }
-}
-
-export interface AdminServices {
+interface AdminServices {
   auth: admin.auth.Auth;
   db: admin.firestore.Firestore;
   storage: admin.storage.Storage;
@@ -135,6 +123,7 @@ export async function hasAcceptedMovies(org: OrganizationDocument, appli: App) {
 
 export function throwOnProduction(): never | void {
   if (firebase().projectId === 'blockframes') throw Error('DO NOT RUN ON PRODUCTION!');
+  if (firebase().projectId === firebaseProd().projectId) throw Error('DO NOT RUN ON PRODUCTION!');
 }
 
 /**
