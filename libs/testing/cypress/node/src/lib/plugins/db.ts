@@ -81,6 +81,7 @@ const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
 
 //* IMPORT DATA*-----------------------------------------------------------------
 
+// TODO : add field called meta, with 'test: true' as value
 export async function importData(data: Record<string, object>[]) {
   const createAll: Promise<FirebaseFirestore.WriteResult>[] = [];
   for (const document of data) {
@@ -95,21 +96,20 @@ export async function importData(data: Record<string, object>[]) {
 
 //* DELETE DATA*----------------------------------------------------------------
 
-//TODO : add an option to take subcollection into account or not
 export async function deleteData(paths: string[]) {
   const deleteAll: Promise<FirebaseFirestore.WriteResult>[] = [];
   for (const path of paths) {
     if (isDocumentPath(path)) {
       const subcollectionsDocs = await subcollectionsDocsOf(path);
-      subcollectionsDocs.forEach(doc => deleteAll.push(doc.delete()));
+      for (const doc of subcollectionsDocs) deleteAll.push(doc.delete());
       deleteAll.push(db.doc(path).delete());
     } else {
       const docsRef = await db.collection(path).listDocuments();
-      docsRef.forEach(async docRef => {
+      for (const docRef of docsRef) {
         const subcollectionsDocs = await subcollectionsDocsOf(docRef.path);
-        subcollectionsDocs.forEach(doc => deleteAll.push(doc.delete()));
+        for (const doc of subcollectionsDocs) deleteAll.push(doc.delete());
         deleteAll.push(docRef.delete());
-      });
+      }
     }
   }
   return Promise.all(deleteAll);
@@ -125,9 +125,10 @@ const subcollectionsDocsOf = async (path: string) => {
   return result;
 };
 
+// TODO : add a function clearDb() to erase all documents with meta.test: true
+
 //* GET DATA*------------------------------------------------------------------
 
-//TODO : add an option to take subcollection into account or not
 export async function getData(paths: string[]) {
   const getAll: Promise<Record<string, unknown> | Record<string, unknown>[]>[] = [];
   for (const path of paths) {
