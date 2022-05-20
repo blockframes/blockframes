@@ -22,11 +22,11 @@ section.horizontal {
   flex-direction: row-reverse;
   flex-wrap: wrap;
   gap: 24px;
-  position: relative;
+  // position: relative;
 }
 
 mat-list.horizontal {
-  flex: 0 0 25%;
+  width: 25%;
 }
 
 img {
