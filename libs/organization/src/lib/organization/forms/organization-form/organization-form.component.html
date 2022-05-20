@@ -31,18 +31,18 @@
       </mat-card-content>
     </mat-card>
   </form>
-    <!-- Company Logo -->
-    <mat-card *ngIf="!disableCropper">
-      <mat-card-header>
-        <mat-card-title class="title">Company Logo</mat-card-title>
-        <mat-card-subtitle class="mat-caption">Please upload your company logo.</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content fxLayout="column">
-        <image-uploader ratio="square" [meta]="['orgs', 'logo', orgId]" [form]="form.logo" (selectionChange)="change()" listenToChanges>
-          <h3 title>Logo</h3>
-        </image-uploader>
-      </mat-card-content>
-    </mat-card>
+  <!-- Company Logo -->
+  <mat-card *ngIf="!disableCropper">
+    <mat-card-header>
+      <mat-card-title class="title">Company Logo</mat-card-title>
+      <mat-card-subtitle class="mat-caption">Please upload your company logo.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content fxLayout="column">
+      <image-uploader ratio="square" [meta]="['orgs', 'logo', orgId]" [form]="form.logo" (selectionChange)="change()" listenToChanges>
+        <h3 title>Logo</h3>
+      </image-uploader>
+    </mat-card-content>
+  </mat-card>
   <form [formGroup]="form">
     <!-- Legal Entity -->
     <mat-card>
