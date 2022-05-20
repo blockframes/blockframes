@@ -334,7 +334,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
       // Check if the org name is already existing
       const orgId = await this.orgService.getOrgIdFromName(denomination.full);
-      if (!orgId) {
+      if (orgId) {
         this.orgForm.get('denomination').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
         this.creating = false;
