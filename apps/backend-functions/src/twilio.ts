@@ -1,7 +1,7 @@
 
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { getDocument } from './data/internals';
-import { ErrorResultResponse, displayName } from '@blockframes/utils/utils';
+import { ErrorResultResponse, displayName } from '@blockframes/model';
 import { projectId, twilioAccountSid, twilioAccountSecret, twilioApiKeySecret, twilioApiKeySid } from './environments/environment';
 import Twilio from 'twilio/lib/rest/Twilio';
 import AccessToken, { VideoGrant } from 'twilio/lib/jwt/AccessToken';

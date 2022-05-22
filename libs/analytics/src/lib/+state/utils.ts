@@ -1,5 +1,5 @@
-import { Organization, Analytics, AnalyticsTypes, Scope, createAggregatedAnalytic, AggregatedAnalytic, User } from "@blockframes/model";
-import { getDeepValue, toLabel } from "@blockframes/utils/pipes";
+import { Organization, Analytics, AnalyticsTypes, Scope, createAggregatedAnalytic, AggregatedAnalytic, User, toLabel } from "@blockframes/model";
+import { getDeepValue } from '@blockframes/utils/pipes';
 
 interface AnalyticsWithOrg extends Analytics<AnalyticsTypes> {
   org?: Organization
