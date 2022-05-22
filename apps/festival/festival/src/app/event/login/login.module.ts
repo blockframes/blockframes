@@ -17,6 +17,7 @@ import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
 import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
+import { PasswordInputModule } from '@blockframes/ui/form/password-input/password-input.module';
 
 @NgModule({
   declarations: [EventLoginComponent],
@@ -33,6 +34,7 @@ import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-err
     MatIconModule,
     MatTooltipModule,
     SnackbarErrorModule,
+    PasswordInputModule,
     RouterModule.forChild([{ path: '', component: EventLoginComponent }]),
   ]
 })

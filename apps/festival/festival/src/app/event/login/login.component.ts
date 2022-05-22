@@ -19,7 +19,6 @@ export class EventLoginComponent implements OnInit, OnDestroy {
   });
   public buttonText = 'Log in';
   public signinIn = false;
-  public hidePassword = true;
 
   constructor(
     private service: AuthService,
