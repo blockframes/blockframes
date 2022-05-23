@@ -1,5 +1,5 @@
 import { festival, MovieDocument, App } from '@blockframes/model';
-import { toLanguageVersionString, toLabel } from '@blockframes/utils/utils';
+import { toLanguageVersionString, toLabel } from '@blockframes/model';
 import { Response } from 'firebase-functions';
 import { db } from './internals/firebase';
 import { applicationUrl } from '@blockframes/utils/apps';

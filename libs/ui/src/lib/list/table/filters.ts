@@ -1,5 +1,5 @@
 import { Movie, Scope, staticModel } from "@blockframes/model";
-import { displayName } from "@blockframes/utils/utils";
+import { displayName } from "@blockframes/model";
 
 export function getStaticModelFilter(scope: Scope) {
   return (input: string, value: string) => {

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { MediaService } from '../../+state/media.service';
 import { StorageFile } from '@blockframes/model';
-import { fileSizeToString } from '@blockframes/utils/utils';
+import { fileSizeToString } from '@blockframes/model';
 
 @Pipe({ name: 'getUrl' })
 export class GetUrlPipe implements PipeTransform {
