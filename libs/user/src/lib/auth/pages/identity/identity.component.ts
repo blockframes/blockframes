@@ -376,4 +376,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
   }
 
+  public switchHidePassword() { 
+   return this.hidePassword = !this.hidePassword
+   }
 }

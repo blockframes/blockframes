@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: 'password-input',
@@ -14,7 +15,12 @@ export class PasswordInputComponent {
   @Input() public control = new FormControl();
   @Input() public errorStateMatcher: ErrorStateMatcher;
   @Input() public label: string;
+  @Input() public hidePassword : boolean
 
-  public hidePassword = true
+  @Output() switchHidePassword: EventEmitter<any> = new EventEmitter()
+
+  public showHidePassword(){
+      this.switchHidePassword.emit()
+  }
 
 }
