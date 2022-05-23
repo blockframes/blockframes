@@ -13,7 +13,7 @@ import { App } from "@blockframes/model";
 import { joinWith } from "@blockframes/utils/operators";
 import { APP } from "@blockframes/utils/routes/utils";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { sum, toLabel } from "@blockframes/utils/utils";
+import { sum, toLabel } from "@blockframes/model";
 import {
   BehaviorSubject,
   combineLatest,

@@ -1,8 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { displayName } from '../utils';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { Organization, orgName, PublicUser } from '@blockframes/model';
+import { Organization, orgName, PublicUser, displayName } from '@blockframes/model';
 
 /**
  * This pipe is used to display the firstname and lastname of the user but also the organization in parenthesis.
