@@ -10,7 +10,6 @@ import { PasswordInputModule } from '@blockframes/ui/form/password-input/passwor
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -25,7 +24,6 @@ import { MatButtonModule } from '@angular/material/button';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatIconModule,
     MatTooltipModule,
     MatButtonModule
   ],

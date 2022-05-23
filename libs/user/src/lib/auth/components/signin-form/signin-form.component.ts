@@ -9,9 +9,7 @@ import { SigninForm } from '../../forms/signin.form';
 })
 
 export class SigninFormComponent {
-
   @Output() submited = new EventEmitter();
-  
-  public signinForm = new SigninForm();
 
+  public signinForm = new SigninForm();
 }

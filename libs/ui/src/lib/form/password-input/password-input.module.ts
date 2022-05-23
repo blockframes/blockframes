@@ -1,6 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { PasswordInputComponent } from './password-input.component';
@@ -16,8 +14,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   declarations: [PasswordInputComponent],
   exports: [PasswordInputComponent],
   imports: [
-    CommonModule,
-    FlexLayoutModule,
     ReactiveFormsModule,
     FormsModule,
 

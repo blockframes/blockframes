@@ -9,10 +9,9 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
   styleUrls: ['./password-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class PasswordInputComponent {
   @Input() public placeholder: string;
-  @Input() public control = new FormControl();
+  @Input() public control : FormControl;
   @Input() public errorStateMatcher: ErrorStateMatcher;
   @Input() public label: string;
   public hidePassword = true;

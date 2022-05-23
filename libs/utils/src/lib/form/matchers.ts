@@ -11,8 +11,8 @@ export class CrossFieldErrorMatcher implements ErrorStateMatcher {
 /** Checks if two inputs have the same value */
 export class RepeatPasswordStateMatcher implements ErrorStateMatcher {
   constructor(
-    private password: string = 'password',
-    private confirm: string = 'confirm'
+    private password = 'password',
+    private confirm = 'confirm'
   ) { }
 
   isErrorState(control: FormControl | null): boolean {
@@ -24,8 +24,8 @@ export class RepeatPasswordStateMatcher implements ErrorStateMatcher {
 /** Check if two inputs have the same value (but inversed version of RepeatPasswordStateMatcher) */
 export class DifferentPasswordStateMatcher implements ErrorStateMatcher {
   constructor(
-    private current: string = 'current',
-    private next: string = 'next'
+    private current = 'current',
+    private next = 'next'
   ) { }
 
   isErrorState(control: FormControl | null): boolean {
