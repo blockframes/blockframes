@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { EventService } from '../+state/event.service';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { map } from 'rxjs/operators';
@@ -13,7 +13,6 @@ export class NoEventIdentityGuard implements CanActivate {
     private service: EventService,
     private authService: AuthService,
     private router: Router,
-    private ngZone: NgZone,
   ) { }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {

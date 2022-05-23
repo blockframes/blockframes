@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/+state';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { BehaviorSubject, take } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { CallableFunctions } from 'ngfire';
 
@@ -39,7 +39,7 @@ export class RequestScreeningComponent {
     this.requestStatus.next('sending');
     await this.functions.call('requestScreening', { movieId: this.movieId, uid: this.authService.uid });
     this.requestStatus.next('sent');
-    const title = await this.titleService.valueChanges(this.movieId).pipe(take(1)).toPromise();
+    const title = await this.titleService.load(this.movieId);
     this.analytics.addTitle('screeningRequested', title);
     this.snackbar.open('Screening request successfully sent.', '', { duration: 3000 });
   }

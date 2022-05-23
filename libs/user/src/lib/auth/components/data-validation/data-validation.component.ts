@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, Optional, Inject } from '@angular/core';
 import { AuthService } from '@blockframes/auth/+state';
-import { App, getOrgModuleAccess, Organization } from '@blockframes/model';
+import { App, getOrgModuleAccess, Organization, hasDisplayName } from '@blockframes/model';
 import { BehaviorSubject } from 'rxjs';
 import { Intercom } from 'ng-intercom';
-import { delay, hasDenomination, hasDisplayName } from '@blockframes/utils/helpers';
+import { delay, hasDenomination } from '@blockframes/utils/helpers';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
 import { CallableFunctions } from 'ngfire';

@@ -95,3 +95,8 @@ export function createUser(user: Partial<User> = {}) {
     avatar: createStorageFile(user.avatar),
   } as User;
 }
+
+/** Verify if the user exists and has a name and surname. */
+export function hasDisplayName(user: User): boolean {
+  return !!user && !!user.firstName && !!user.lastName;
+}

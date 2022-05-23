@@ -2,7 +2,8 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { where } from 'firebase/firestore';
 import { joinWith } from 'ngfire';
-import { filter, first } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 // Services
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -58,7 +59,7 @@ export class ContractFormComponent implements OnInit {
 
   async ngOnInit() {
     const [contract, income, offer] = await Promise.all([
-      this.contracts$.pipe(first()).toPromise(),
+      firstValueFrom(this.contracts$),
       this.incomeService.getValue(this.contractId),
       this.offerService.getValue(this.offerId),
     ]);

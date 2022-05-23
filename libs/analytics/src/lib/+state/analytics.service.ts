@@ -1,10 +1,10 @@
 import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { isSupported, logEvent, setUserId, Analytics as FirebaseAnalytics } from 'firebase/analytics';
 import { where } from 'firebase/firestore';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { FIRE_ANALYTICS } from 'ngfire';
 
 // Blockframes
@@ -117,7 +117,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
    * admins nor concierge users actions on the platform.
    */
   private async isOperator(): Promise<boolean> {
-    const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
+    const isBlockframesAdmin = await firstValueFrom(this.authService.isBlockframesAdmin$);
     const profile = this.authService.profile;
     const isConcierge = profile?.email.includes('concierge');
     return isBlockframesAdmin || isConcierge || Object.values(centralOrgId).includes(profile?.orgId);

@@ -1,4 +1,4 @@
-import { Injectable, NgZone, Optional } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta, Timestamp, AnonymousCredentials, AnonymousRole, App } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
@@ -86,7 +86,6 @@ export class AuthService extends BlockframesAuth<User> {
     })
   );
 
-
   get anonymouseOrRegularProfile() { return this.profile || this.anonymousCredentials };
 
   constructor(
@@ -94,7 +93,6 @@ export class AuthService extends BlockframesAuth<User> {
     private gdprService: GDPRService,
     private ipService: IpService,
     private userService: UserService,
-    private ngZone: NgZone,
     @Optional() public ngIntercom?: Intercom,
   ) {
     super();

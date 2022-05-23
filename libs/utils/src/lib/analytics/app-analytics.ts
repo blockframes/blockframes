@@ -3,9 +3,8 @@ import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { EventName, AnalyticsUserProperties } from '@blockframes/model';
 import { centralOrgId } from '@env';
 import { AuthService } from '@blockframes/auth/+state';
-import { take } from 'rxjs/operators';
 import { FIRE_ANALYTICS } from 'ngfire';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class FireAnalytics implements OnDestroy {
@@ -28,8 +27,8 @@ export class FireAnalytics implements OnDestroy {
   }
 
   public async event(name: EventName, params: Record<string, unknown>) {
-    const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
-    const profile = await this.authService.profile$.pipe(take(1)).toPromise();
+    const isBlockframesAdmin = await firstValueFrom(this.authService.isBlockframesAdmin$);
+    const profile = await firstValueFrom(this.authService.profile$);
     const isOperator = isBlockframesAdmin || Object.values(centralOrgId).includes(profile?.orgId);
 
     /**

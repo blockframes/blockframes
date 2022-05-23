@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef } from '@angular/core';
 import { EventService } from '@blockframes/event/+state';
 import { ActivatedRoute } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/+state';
@@ -48,8 +48,7 @@ export class EventViewComponent implements OnInit {
     private authService: AuthService,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
-    private cdr: ChangeDetectorRef,
-    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef
   ) { }
 
   @HostListener('window:popstate', ['$event'])

@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { UserService } from '@blockframes/user/+state/user.service';
@@ -68,7 +68,6 @@ export class OrganizationService extends BlockframesCollection<Organization> {
     private permissionsService: PermissionsService,
     private analytics: AnalyticsService,
     private authService: AuthService,
-    private ngZone: NgZone,
   ) {
     super();
   }
