@@ -14,6 +14,7 @@ import { App } from '@blockframes/model';
 import { formatContract } from './utils';
 import { ContractsImportState } from '../../utils';
 import { take } from 'rxjs/operators';
+import { TermService } from '@blockframes/contract/term/+state/term.service';
 
 @Component({
   selector: 'import-view-extracted-contracts[sheetTab]',
@@ -32,6 +33,7 @@ export class ViewExtractedContractsComponent implements OnInit {
     private userService: UserService,
     private authService: AuthService,
     private titleService: MovieService,
+    private termsService: TermService,
     private dynTitle: DynamicTitleService,
     private orgService: OrganizationService,
     private contractService: ContractService,
@@ -47,6 +49,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       this.orgService,
       this.titleService,
       this.contractService,
+      this.termsService,
       this.userService,
       isBlockframesAdmin,
       this.authService.profile.orgId,
