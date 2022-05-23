@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-// @Blockframes
+// Blockframes
 import { PasswordInputModule } from '@blockframes/ui/form/password-input/password-input.module';
 
 @NgModule({

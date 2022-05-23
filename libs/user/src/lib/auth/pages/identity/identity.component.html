@@ -101,7 +101,6 @@
           placeholder="New Password"
           label="Password"
           test-id="password"
-          hidePassword="hidePassword"
         >
           <mat-hint>Between 6 and 24 characters.</mat-hint>
           <mat-error *ngIf="form.get('password').hasError('required')">
@@ -122,7 +121,6 @@
           placeholder="New Password Confirmation"
           label="Password Confirmation"
           test-id="password-confirm"
-          hidePassword="hidePassword"
         >
           <mat-hint>Please rewrite your password for confirmation.</mat-hint>
           <mat-error *ngIf="form.get('confirm').hasError('required')">

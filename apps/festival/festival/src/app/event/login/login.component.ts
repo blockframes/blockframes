@@ -81,5 +81,4 @@ export class EventLoginComponent implements OnInit, OnDestroy {
     this.service.updateAnonymousCredentials({ role: undefined });
     this.router.navigate(['../../'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
   }
-
 }

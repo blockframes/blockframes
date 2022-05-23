@@ -52,5 +52,4 @@ export class PasswordConfirmComponent implements OnInit, OnDestroy, ControlValue
   public registerOnTouched(fn: (touched: boolean) => void) {
     fn(true);
   }
-
 }
