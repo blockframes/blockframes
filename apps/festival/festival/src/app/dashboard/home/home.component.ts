@@ -34,7 +34,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
-  public selectedCountry: string;
+  public selectedCountry?: string;
   public titles$ = this.orgService.currentOrg$.pipe(
     switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
     map((titles) => titles.filter((title) => title.app[this.app].access)),
@@ -120,12 +120,12 @@ export class HomeComponent {
     @Optional() private intercom: Intercom,
     private userService: UserService,
     @Inject(APP) public app: App,
-    private router:Router,
-    private route:ActivatedRoute
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   public showBuyer(row: AggregatedAnalytic) {
-    this.router.navigate([`/c/o/dashboard/home/buyer/${row.user.uid}`],{relativeTo:this.route})
+    this.router.navigate([`/c/o/dashboard/home/buyer/${row.user.uid}`], { relativeTo: this.route })
   }
 
   public openIntercom(): void {
