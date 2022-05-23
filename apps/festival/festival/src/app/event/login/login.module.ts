@@ -9,7 +9,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -32,7 +31,6 @@ import { PasswordInputModule } from '@blockframes/ui/form/password-input/passwor
     ImageModule,
     AppLogoModule,
     MatIconModule,
-    MatTooltipModule,
     SnackbarErrorModule,
     PasswordInputModule,
     RouterModule.forChild([{ path: '', component: EventLoginComponent }]),
