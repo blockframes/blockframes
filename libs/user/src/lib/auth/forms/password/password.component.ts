@@ -14,10 +14,6 @@ export class PasswordFormComponent {
 
   passwordsMatcher = new RepeatPasswordStateMatcher('next', 'confirm');
   currentPasswordMatch = new DifferentPasswordStateMatcher('current', 'next');
-  public hidePassword = true
   @Input() form: EditPasswordForm;
 
-  public switchHidePassword() { 
-    return this.hidePassword = !this.hidePassword
-  }
 }

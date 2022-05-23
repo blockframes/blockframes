@@ -39,7 +39,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public existingUser = false;
   public passwordsMatcher = new RepeatPasswordStateMatcher('password', 'confirm');
   public currentPasswordMatch = new DifferentPasswordStateMatcher('generatedPassword', 'password');
-  public hidePassword = true
 
   private existingOrgId: string;
   private subs: Subscription[] = [];
@@ -376,7 +375,4 @@ export class IdentityComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
   }
 
-  public switchHidePassword() { 
-   return this.hidePassword = !this.hidePassword
-   }
 }

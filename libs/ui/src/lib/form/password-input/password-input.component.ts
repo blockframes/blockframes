@@ -15,12 +15,6 @@ export class PasswordInputComponent {
   @Input() public control = new FormControl();
   @Input() public errorStateMatcher: ErrorStateMatcher;
   @Input() public label: string;
-  @Input() public hidePassword : boolean
-
-  @Output() switchHidePassword: EventEmitter<any> = new EventEmitter()
-
-  public showHidePassword(){
-      this.switchHidePassword.emit()
-  }
+  @Input() public hidePassword = true
 
 }
