@@ -1,8 +1,8 @@
-import { Territory } from './types';
-
 export const app = ['catalog', 'festival', 'financiers', 'crm'] as const;
 
 export const modules = ['dashboard', 'marketplace'] as const;
+
+export const privacies = ['public', 'protected'] as const;
 
 export const appShortName = {
   catalog: 'AC',
@@ -1346,7 +1346,7 @@ export const isInKeys = (scope: Scope, givenValue: string) => {
 /**
  * @param slug
  */
-export function getISO3166TerritoryFromSlug(slug: Territory) {
+export function getISO3166TerritoryFromSlug(slug: keyof typeof territories) {
   const territory = Object.keys(territories).find(i => i.toLowerCase() === slug.toLowerCase());
   if (!territory) {
     throw new Error(`Failed to territory: ${slug}.`);
