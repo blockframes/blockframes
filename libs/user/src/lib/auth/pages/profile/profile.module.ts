@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { ProfileFormModule } from '@blockframes/auth/forms/profile/profile.module';
-import { PasswordFormModule } from '@blockframes/auth/forms/password/password.module';
+import { PasswordFormModule } from '@blockframes/auth/forms/password/change-password.module';
 
 // Components
 import { ProfileComponent } from './profile.component';
