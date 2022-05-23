@@ -8,7 +8,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { additionalRoute, artisticRoute, mainRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { RouteDescription } from '@blockframes/utils/common-interfaces';
+import { RouteDescription } from '@blockframes/model';
 import { pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { ContactPartnerModalComponent, ContactPartnerModalData } from '../contact-partner-modal/contact-partner-modal.component';
 

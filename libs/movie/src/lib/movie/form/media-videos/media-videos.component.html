@@ -57,6 +57,9 @@
         <mat-label>Description</mat-label>
         <textarea test-id="description" matInput [formControl]="salesPitchForm.get('description')" cdkTextareaAutosize
           cdkAutosizeMinRows="10"></textarea>
+        <mat-error *ngIf="salesPitchForm.get('description').hasError('maxlength')">
+          Description should not exceed 1500 characters.
+        </mat-error>
       </mat-form-field>
       <mat-checkbox [checked]="salesPitchForm.isPublic" (change)="salesPitchForm.togglePrivacy($event.checked)" color="primary">
         <b>Public</b> (Buyers can see video on Marketplace)
