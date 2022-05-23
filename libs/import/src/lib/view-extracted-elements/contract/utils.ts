@@ -74,8 +74,6 @@ async function getExistingContracts(type: 'sale' | 'mandate', titleId: string, c
   return contracts.map((contract, idx) => ({ ...contract, terms: terms[idx] }) as FullSale | FullMandate)
 }
 
-
-
 /**Verifies if terms overlap with existing mandate terms in the Db */
 async function verifyOverlappingMandatesAndSales(contract: Partial<Contract>, terms: Term[], contractService: ContractService, termService: TermService) {
   const mandates = await getExistingContracts('mandate', contract.titleId, contractService, termService);
@@ -180,7 +178,7 @@ export async function formatContract(
     }
 
 
-    const overlap = await verifyOverlappingMandatesAndSales(contract, terms, contractService, termService)
+    const overlap = await verifyOverlappingMandatesAndSales(contract, terms, contractService, termService);
     if (overlap.mandate) {
       errors.push({
         type: 'error',
@@ -193,8 +191,8 @@ export async function formatContract(
       errors.push({
         type: 'error',
         name: 'Contract',
-        reason: 'The terms of the imported sale have already sold been.',
-        message: 'The terms of the imported sale have already sold been.'
+        reason: 'The terms of the imported sale have already been sold.',
+        message: 'The terms of the imported sale have already been sold.'
       });
     }
     // remove duplicate from stakeholders

@@ -26,7 +26,7 @@ export interface SpreadsheetImportError {
 
 export interface ImportState {
   errors?: SpreadsheetImportError[];
-  imported?:boolean;
+  imported?: boolean;
   importing?: boolean;
 }
 
@@ -360,7 +360,7 @@ export abstract class ImportLog<T> extends Error {
 
   constructor(private value: T, options: SpreadsheetImportError) {
     super(options.message);
-    const { message='', name, reason, field = '' } = options;
+    const { message = '', name, reason, field = '' } = options;
     this.name = name;
     this.reason = reason;
     this.field = field;
