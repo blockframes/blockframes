@@ -5,9 +5,6 @@ import { IntercomModule } from 'ng-intercom';
 
 // NgFire
 import { FIREBASE_CONFIG, FIRESTORE_SETTINGS, REGION_OR_DOMAIN } from 'ngfire';
-import { Auth, connectAuthEmulator } from 'firebase/auth';
-import { connectFirestoreEmulator, Firestore } from 'firebase/firestore';
-import { connectFunctionsEmulator, Functions } from 'firebase/functions';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
@@ -40,6 +37,7 @@ import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.se
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { AuthService } from '@blockframes/auth/+state';
 import { APP } from '@blockframes/utils/routes/utils';
+import { EMULATORS_CONFIG, setupEmulators } from '@blockframes/utils/emulator-front-setup';
 
 @NgModule({
   declarations: [AppComponent],
@@ -79,25 +77,11 @@ import { APP } from '@blockframes/utils/routes/utils';
   ],
   providers: [
     { provide: APP, useValue: 'catalog' },
+    { provide: EMULATORS_CONFIG, useValue: emulatorConfig },
     {
       provide: FIREBASE_CONFIG, useValue: {
         options: firebase('catalog'),
-        // TODO #8280 move on xxx-env.ts ?
-        firestore: (firestore: Firestore) => {
-          if (emulatorConfig.firestore) {
-            connectFirestoreEmulator(firestore, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
-          }
-        },
-        auth: (auth: Auth) => {
-          if (emulatorConfig.auth) {
-            connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`, { disableWarnings: true });
-          }
-        },
-        functions: (functions: Functions) => {
-          if (emulatorConfig.functions) {
-            connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
-          }
-        }
+        ...setupEmulators(emulatorConfig)
       }
     },
     { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } },
