@@ -30,7 +30,7 @@
       </ng-template>
       <ng-template colRef="org" label="Organization" let-org>
         <a *ngIf="org else noOrg" [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
-          <span>{{ org | orgName:'long'}} </span>
+          <span>{{ org.name }} </span>
           <mat-icon svgIcon="visibility"></mat-icon>
         </a>
         <ng-template #noOrg>--</ng-template>

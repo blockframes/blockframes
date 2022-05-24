@@ -102,7 +102,7 @@
                 <img [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
               </a>
               <div fxLayout="column" fxLayoutGap="4px">
-                <h6><a [routerLink]="['/c/o/marketplace/organization', event.org.id]">{{ event.org | orgName }}</a></h6>
+                <h6><a [routerLink]="['/c/o/marketplace/organization', event.org.id]">{{ event.org.name }}</a></h6>
                 <ng-container *ngIf="event.organizedBy as user">
                   <span>{{ user | displayName }} {{ user | displayPosition }}</span>
                 </ng-container>
@@ -111,7 +111,7 @@
             <ng-template #anonymous>
               <img [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
               <div fxLayout="column" fxLayoutGap="4px">
-                <h6>{{ event.org | orgName }}</h6>
+                <h6>{{ event.org.name }}</h6>
                 <ng-container *ngIf="event.organizedBy as user">
                   <span>{{ user | displayName }} {{ user | displayPosition }}</span>
                 </ng-container>
@@ -131,7 +131,7 @@
                 <img [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
               </a>
               <div fxLayout="column" fxLayoutGap="4px">
-                <h6><a [routerLink]="['/c/o/marketplace/organization', event.org.id]">{{ event.org | orgName }}</a></h6>
+                <h6><a [routerLink]="['/c/o/marketplace/organization', event.org.id]">{{ event.org.name }}</a></h6>
                 <ng-container *ngIf="event.organizedBy as user">
                   <span>{{ user | displayName }} {{ user | displayPosition }}</span>
                 </ng-container>
@@ -140,7 +140,7 @@
             <ng-template #anonymous>
               <img [ref]="event.org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
               <div fxLayout="column" fxLayoutGap="4px">
-                <h6>{{ event.org | orgName }}</h6>
+                <h6>{{ event.org.name }}</h6>
                 <ng-container *ngIf="event.organizedBy as user">
                   <span>{{ user | displayName }} {{ user | displayPosition }}</span>
                 </ng-container>

@@ -2,7 +2,7 @@
   <img [ref]="org.logo | storageFile:'orgs':'logo':org.id" asset="empty_organization.svg" type="logo" alt="organization logo">
 </a>
 <header fxLayout="column">
-  <h5>{{ org | orgName }}</h5>
+  <h5>{{ org.name }}</h5>
   <span class="mat-body-2">{{ (org.activity | toLabel: 'orgActivity') || "-" }}</span>
 </header>
 <mat-tab-group headerPosition="below" mat-align-tabs="center" [disablePagination]="true">

@@ -34,7 +34,7 @@
       <ng-template colRef="lastName" sort label="Last Name" let-name>{{ name }}</ng-template>
       <ng-template colRef="org" let-org label="Organization">
         <a *ngIf="org else noOrg" [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
-          <span>{{ org | orgName:'long'}} </span><mat-icon svgIcon="visibility"></mat-icon>
+          <span>{{ org.name }} </span><mat-icon svgIcon="visibility"></mat-icon>
         </a>
         <ng-template #noOrg>--</ng-template>
       </ng-template>

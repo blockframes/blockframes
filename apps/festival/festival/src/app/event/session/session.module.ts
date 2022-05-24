@@ -10,7 +10,6 @@ import { FileControlsModule } from '@blockframes/media/file/controls/controls.mo
 import { FileViewersModule } from '@blockframes/media/file/viewers/viewers.module';
 import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.pipe";
 import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
 import { FileCarouselModule } from '@blockframes/media/file/carousel/carousel.module';
 import { MeetingVideoRoomModule } from '@blockframes/event/components/meeting/room/video-room.module';
@@ -35,7 +34,6 @@ import { MatDividerModule } from '@angular/material/divider';
     ImageModule,
     DisplayNameModule,
     EventTimeModule,
-    OrgNameModule,
     VideoViewerModule,
     FileCarouselModule,
     FileNameModule,

@@ -20,7 +20,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 
 
 import { MapModule } from '@blockframes/ui/map';
-import { OrgNameModule } from '@blockframes/organization/pipes';
 
 
 import { MarketplaceMovieAvailsCalendarComponent } from './avails-calendar.component';
@@ -37,7 +36,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ReactiveFormsModule,
 
     MapModule,
-    OrgNameModule,
     AvailsFilterModule,
     AvailsCalendarModule,
 

@@ -133,7 +133,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   public createOrg(orgName: string) {
-    this.orgForm.reset({ denomination: { full: orgName } });
+    this.orgForm.reset({ name: orgName });
     this.orgForm.enable();
     this.existingOrgId = '';
   }

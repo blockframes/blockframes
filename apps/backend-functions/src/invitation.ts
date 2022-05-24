@@ -7,7 +7,6 @@ import {
   createPublicUser,
   PublicUser,
   OrganizationDocument,
-  orgName,
   EventDocument,
   EventMeta,
   MEETING_MAX_INVITATIONS_NUMBER,
@@ -176,7 +175,7 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   for (const email of data.emails) {
     const invitationId = db.collection('invitations').doc().id;
     const { type, mode, fromOrg } = invitation;
-    const eventData = type == 'attendEvent' ? getEventEmailData({ event, orgName: orgName(fromOrg, 'full'), email, invitationId }) : undefined;
+    const eventData = type == 'attendEvent' ? getEventEmailData({ event, orgName: fromOrg.name, email, invitationId }) : undefined;
     const user = await getOrInviteUserByMail(email, { id: invitationId, type, mode, fromOrg }, data.app, eventData);
 
     if (user.invitationStatus) invitation.status = user.invitationStatus;

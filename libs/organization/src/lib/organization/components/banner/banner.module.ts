@@ -7,7 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // BlockFrames
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrganizationBannerComponent } from './banner.component';
-import { OrgNameModule } from '../../pipes/org-name.pipe';
 import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { OrgMoviesModule } from '@blockframes/organization/pipes/org-movies.pipe';
@@ -24,7 +23,6 @@ import { MatButtonModule } from '@angular/material/button';
     FlexLayoutModule,
 
     // Blockframes
-    OrgNameModule,
     ImageModule,
     MovieCardModule,
     MatLayoutModule,

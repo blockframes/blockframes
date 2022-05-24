@@ -5,7 +5,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 
 // Components
 import { ProfileViewComponent } from './profile-view.component';
@@ -56,7 +55,6 @@ const routes: Routes = [{
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
-    OrgNameModule,
     MatTabsModule,
     RouterModule.forChild(routes)
   ]

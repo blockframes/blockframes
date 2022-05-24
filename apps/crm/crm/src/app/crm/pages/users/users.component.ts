@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { Router } from '@angular/router';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
-import { User, Organization, orgName, getAllAppsExcept, appName, getOrgModuleAccess, modules } from '@blockframes/model';
+import { User, Organization, getAllAppsExcept, appName, getOrgModuleAccess, modules } from '@blockframes/model';
 import { CrmService } from '@blockframes/admin/crm/+state/crm.service';
 import { CrmQuery } from '@blockframes/admin/crm/+state/crm.query';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -84,7 +84,7 @@ export class UsersComponent implements OnInit {
           'userId': r.uid,
           'first name': r.firstName ?? '--',
           'last name': r.lastName ?? '--',
-          'organization': r.org ? orgName(r.org) : '--',
+          'organization': r.org.name || '--',
           'org id': r.orgId ?? '--',
           'org status': r.org ? r.org.status : '--',
           'type': type ?? '--',

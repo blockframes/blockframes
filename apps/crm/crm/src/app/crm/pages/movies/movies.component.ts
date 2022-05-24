@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Movie, Organization, orgName, isScreening } from '@blockframes/model';
+import { Movie, Organization, isScreening } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -69,7 +69,7 @@ export class MoviesComponent implements OnInit {
         'movie id': m.id,
         title: m.title.international,
         'internal ref': m.internalRef ?? '--',
-        org: m.org ? orgName(m.org) : '--',
+        org: m.org.name || '--',
         orgId: m.org?.id ?? '--',
         'catalog status': m.app.catalog.status,
         'catalog access': m.app.catalog.access ? 'yes' : 'no',

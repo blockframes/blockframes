@@ -3,7 +3,6 @@ import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AuthService } from '@blockframes/auth/+state';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import {
-  orgName,
   Movie,
   Event,
   isMeeting,
@@ -493,17 +492,17 @@ export class NotificationService extends CollectionService<NotificationState> {
         .valueChanges(event.meta.organizerUid)
         .pipe(take(1))
         .toPromise();
-      const organizationName = orgName(notification.organization);
+      const organizationName = notification.organization.name;
       subject = `${user.firstName} ${user.lastName} (${organizationName})`;
     } else if (notification.organization) {
-      subject = orgName(notification.organization);
+      subject = notification.organization.name;
     } else if (notification.user && notification.user.lastName && notification.user.firstName) {
       if (notification.user.orgId) {
         const org = await this.orgService
           .valueChanges(notification.user.orgId)
           .pipe(take(1))
           .toPromise();
-        subject = `${displayName(notification.user)} (${orgName(org)})`;
+        subject = `${displayName(notification.user)} (${org.name})`;
       } else subject = displayName(notification.user);
     } else if (notification.user && notification.user.email) {
       subject = notification.user.email;
@@ -530,7 +529,7 @@ export class NotificationService extends CollectionService<NotificationState> {
   public async nameToDisplay(notification: Notification, contract: Contract) {
     if (contract.buyerUserId === notification.toUserId) {
       const org = await this.orgService.valueChanges(contract.sellerId).pipe(take(1)).toPromise();
-      return orgName(org);
+      return org.name;
     } else {
       const user = await this.userService.valueChanges(contract.buyerUserId).pipe(take(1)).toPromise();
       return displayName(user);

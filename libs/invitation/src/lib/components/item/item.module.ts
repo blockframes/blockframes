@@ -8,7 +8,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ItemComponent } from './item.component';
 import { InvitationActionModule } from '../action/action.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { EventFromInvitationPipeModule } from '@blockframes/invitation/pipes/event-from-invitation.pipe';
 import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
@@ -33,7 +32,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ImageModule,
     InvitationActionModule,
     RouterModule,
-    OrgNameModule,
     DisplayUserModule,
     DisplayNameModule,
     EventFromInvitationPipeModule,

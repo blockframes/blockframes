@@ -12,7 +12,7 @@ import { matMultiSelect } from '../../forms/select';
 import { getOrgsQueryConstraints, toMap } from '../pipes';
 import { FirestoreFormModule, firestoreQuery, orgsFromApp } from '../../forms/firestore';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { Organization, orgName } from '@blockframes/model';
+import { Organization } from '@blockframes/model';
 
 export type OrgsSchema = FormGroupSchema<OrgsSection>;
 
@@ -51,7 +51,7 @@ export class OrgsComponent implements OnInit {
     shareReplay({ refCount: true, bufferSize: 1 }),
   );
 
-  displayLabel = (org?: Organization) => orgName(org);
+  displayLabel = (org?: Organization) => org?.name;
   getValue = (org?: Organization) => org?.id;
 
   constructor(

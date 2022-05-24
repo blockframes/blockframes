@@ -7,7 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { ToLabelModule } from '@blockframes/utils/pipes';
-import { OrgNameModule, OrgAddressModule } from '@blockframes/organization/pipes';
 
 // Components
 import { ViewComponent } from './view.component';
@@ -28,13 +27,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     ImageModule,
     AppBarModule,
     ToLabelModule,
-    OrgNameModule,
     OrgAddressModule,
     // Material
     MatTabsModule,
     MatButtonModule,
     MatIconModule,
-    MatToolbarModule,
+    MatToolbarModule
   ]
 })
 export class OrganizationViewModule { }

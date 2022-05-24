@@ -96,14 +96,6 @@ export function createOrgMedias(params: Partial<OrgMedias> = {}): OrgMedias {
   }
 }
 
-export function orgName(org: Partial<PublicOrganization>, type: 'public' | 'full' = 'public') {
-  if (org?.name) {
-    return org.name;
-  } else {
-    return '';
-  }
-}
-
 /**
  * This check if org have access to a specific module in at least one app
  * @param org

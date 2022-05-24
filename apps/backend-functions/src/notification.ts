@@ -5,7 +5,6 @@ import {
   User,
   OrganizationDocument,
   canAccessModule,
-  orgName,
   MovieDocument,
   EventDocument,
   EventMeta,
@@ -566,7 +565,7 @@ async function sendMovieAskingPriceRequestSent(recipient: User, notification: No
   const orgs = await Promise.all(
     movie.orgIds.map(orgId => getDocument<OrganizationDocument>(`orgs/${orgId}`))
   );
-  const orgNames = orgs.map(org => orgName(org)).join(', ');
+  const orgNames = orgs.map(org => org.name).join(', ');
 
   const app = notification._meta.createdFrom;
   const template = movieAskingPriceRequestSent(toUser, getMovieEmailData(movie), orgNames, territories, message);

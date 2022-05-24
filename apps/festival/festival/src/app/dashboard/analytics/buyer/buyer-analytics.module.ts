@@ -7,7 +7,6 @@ import { BuyerAnalyticsComponent } from './buyer-analytics.component';
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DisplayNameModule, ToLabelModule, MaxLengthModule } from '@blockframes/utils/pipes';
-import { OrgNameModule } from '@blockframes/organization/pipes';
 import { MetricCardListModule } from '@blockframes/analytics/components/metric-card-list/metric-card-list.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
@@ -23,7 +22,6 @@ import { MatButtonModule } from '@angular/material/button';
     // Blockframes
     ImageModule,
     DisplayNameModule,
-    OrgNameModule,
     ToLabelModule,
     MetricCardListModule,
     TableModule,
