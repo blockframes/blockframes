@@ -18,6 +18,9 @@ interface AnalyticsActiveUser {
 
 @Injectable({ providedIn: 'root' })
 export class CrmService {
+
+  getAnalyticsActiveUsers = this.functions.prepare<unknown, AnalyticsActiveUser[]>('getAnalyticsActiveUsers');
+
   constructor(
     protected store: CrmStore, // TODO #8280 clean
     private functions: CallableFunctions,
@@ -26,7 +29,7 @@ export class CrmService {
 
   public async loadAnalyticsData() {
     if (this.store.getValue().analytics.connectedUsers?.length) return;
-    const rows = await this.getAnalyticsActiveUsers();
+    const rows = await this.getAnalyticsActiveUsers({});
     this.store.update({
       analytics: {
         connectedUsers: rows.map(r => ({
@@ -38,10 +41,6 @@ export class CrmService {
         }))
       }
     });
-  }
-
-  private getAnalyticsActiveUsers(): Promise<AnalyticsActiveUser[]> {
-    return this.functions.call<unknown, AnalyticsActiveUser[]>('getAnalyticsActiveUsers', {});
   }
 
   public sendPasswordResetEmail(email: string, app: App): Promise<ErrorResultResponse> {
