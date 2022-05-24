@@ -5,7 +5,7 @@ import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { intercomId, production } from '@env';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, of, Subject } from 'rxjs';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { IpService } from '@blockframes/utils/ip';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
@@ -211,17 +211,13 @@ export class AuthService extends BlockframesAuth<User> {
     }
   }
 
-  private updateIntercom(userCredential: UserCredential) {
+  private async updateIntercom(userCredential: UserCredential) {
     const { intercom } = this.gdprService.cookieConsent;
     if (!intercom || !intercomId) return;
 
     const ref = doc(this.db, `users/${userCredential.user.uid}`) as DocumentReference<User>;
-    fromRef(ref).pipe(
-      map(snap => snap.data()),
-      take(1)
-    ).subscribe(user => {
-      this.ngIntercom?.update(getIntercomOptions(user));
-    });
+    const user = await firstValueFrom(fromRef(ref).pipe(map(snap => snap.data())));
+    this.ngIntercom?.update(getIntercomOptions(user));
   }
 
   ////////////////////
