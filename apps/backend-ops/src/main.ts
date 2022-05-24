@@ -41,7 +41,8 @@ import {
   keepAlive,
   generateFixtures,
   writeRuntimeConfig,
-  functionsConfigMap
+  functionsConfigMap,
+  clearDb
 } from '@blockframes/devops';
 import { join } from 'node:path';
 
@@ -145,6 +146,9 @@ async function runCommand() {
       break;
     case 'createUsers':
       await createUsers();
+      break;
+    case 'clearDb':
+      await clearDb(db, false);
       break;
     case 'upgradeAlgoliaOrgs':
       await upgradeAlgoliaOrgs();

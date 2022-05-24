@@ -97,8 +97,8 @@ export const centralOrgId = {
 // =======
 
 export const backupBucket = 'ci-backups-blockframes';
-export const heavyChunkSize = 15;
-export const chunkSize = 30;
+export const heavyChunkSize = 25;
+export const chunkSize = 50;
 
 // JwPlayer
 // @see https://dashboard.jwplayer.com/#/content/detail?key=7R9ttesP&property=75507f12-83b6-11ea-ab11-3e60acbe08db&spotlight=default&tab=metadata&view=list

@@ -1,7 +1,7 @@
 import { db } from './internals/firebase';
 import { Change, EventContext } from 'firebase-functions';
 import { createDocumentMeta, getDocument } from './data/internals';
-import { centralOrgId } from 'env/env.blockframes-ci';
+import { centralOrgId } from '@env';
 import { Contract, formatDocumentMetaFromFirestore, Negotiation, Organization, Sale, NotificationTypes, Offer, Timestamp } from '@blockframes/model';
 import { createNotification, triggerNotifications } from './notification';
 import { getReviewer, isInitial } from '@blockframes/contract/negotiation/utils'
