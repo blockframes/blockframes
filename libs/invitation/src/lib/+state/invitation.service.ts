@@ -12,8 +12,9 @@ import {
   Invitation,
   InvitationStatus,
   AlgoliaOrganization,
+  App,
   getOrgAppAccess,
-  App
+  filterInvitation
 } from '@blockframes/model';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
@@ -67,7 +68,9 @@ export class InvitationService extends BlockframesCollection<Invitation> {
   ]).pipe(
     map(([user, invitations]) => {
       if (!user?.uid || !user?.orgId) return [];
-      return invitations.filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid);
+      return invitations
+        .filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid)
+        .filter(i => filterInvitation(i, this.app));
     })
   );
 
