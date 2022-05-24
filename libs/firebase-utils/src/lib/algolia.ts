@@ -17,7 +17,7 @@ import {
   getOrgAppAccess
 } from '@blockframes/model';
 import * as admin from 'firebase-admin';
-import { hasAcceptedMovies } from './util';
+import { hasAcceptedMovies, loadAdminServices } from './util';
 
 export const algolia = {
   ...algoliaClient,
@@ -64,7 +64,7 @@ export function setIndexConfiguration(indexName: string, config: AlgoliaConfig, 
 //           ORGANIZATIONS
 // ------------------------------------
 
-export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string): Promise<any> {
+export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string, db = loadAdminServices().db): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -77,7 +77,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
 
   // Update algolia's index
   const promises = orgAppAccess.map(async (appName) => {
-    org['hasAcceptedMovies'] = await hasAcceptedMovies(org, appName);
+    org['hasAcceptedMovies'] = await hasAcceptedMovies(org, appName, db);
     const orgRecord = createAlgoliaOrganization(org);
     if (orgRecord.name) {
       return indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord);
