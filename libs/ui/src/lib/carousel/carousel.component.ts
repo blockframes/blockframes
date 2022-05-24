@@ -56,7 +56,6 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
   private currentPosition: number;
 
   @ViewChild(CdkScrollable) scrollable: CdkScrollable;
-  @ViewChild('container') container: ElementRef<HTMLDivElement>;
   @ContentChildren(CarouselItemDirective) items: QueryList<CarouselItemDirective>;
 
   @Input() set columns(columns: 2 | 3 | 4 | 5 | 6) {
@@ -71,10 +70,6 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
 
   get carouselWidth() {
     return this.elementRef.nativeElement.clientWidth
-  }
-
-  get clientWidth() {
-    return this.container.nativeElement.clientWidth;
   }
 
   ngAfterViewInit() {
@@ -105,8 +100,8 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
     this.currentPosition = this.scrollable.measureScrollOffset('left');
 
     direction === 'right'
-      ? this.scrollable.scrollTo({ left: this.currentPosition + this.clientWidth })
-      : this.scrollable.scrollTo({ left: this.currentPosition - this.clientWidth })
+      ? this.scrollable.scrollTo({ left: this.currentPosition + this.carouselWidth })
+      : this.scrollable.scrollTo({ left: this.currentPosition - this.carouselWidth })
   }
 
   onScrolling(direction: 'right' | 'left') {
