@@ -106,13 +106,11 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
 
       const anonymousCredentials = this.authService.anonymousCredentials;
 
-      const r = await this.functions.call<{ eventId: string, video: StorageVideo, email?: string }, ErrorResultResponse>('privateVideo', {
+      const { error, result } = await this.functions.call<{ eventId: string, video: StorageVideo, email?: string }, ErrorResultResponse>('privateVideo', {
         eventId: this.eventId,
         video: this.ref,
         email: anonymousCredentials?.email
       });
-
-      const { error, result } = r;
 
       if (error) {
         throw new Error(errorMessage);
