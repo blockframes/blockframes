@@ -7,7 +7,7 @@ const specialOrgs = [
 ];
 
 /**
- * Remove isBlockchainEnabled from org documents
+ * Update organization from organizations, invitations and notifications documents
  * @param db
  * @returns
  */
