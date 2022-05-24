@@ -51,12 +51,16 @@ export const notifications = {
     'organizationAcceptedByArchipelContent',
     'orgAppAccessChanged',
     'userRequestAppAccess',
-  ] as const
+  ] as const,
+  financiers: [] as const,
+  crm: [] as const,
 }
 
-export type NotificationTypes = typeof notifications.catalog[number] | typeof notifications.festival[number] | typeof notifications.shared[number];
-export const notificationTypes = [...notifications.festival, ...notifications.catalog, ...notifications.shared];
 type AppNotificationType = typeof notifications;
+type AppNotificationKey = keyof AppNotificationType;
+export type NotificationTypes = typeof notifications[AppNotificationKey][number];
+export const notificationTypes = [...notifications.festival, ...notifications.catalog, ...notifications.shared];
+
 function isNotificationType<K extends keyof AppNotificationType>(
   type: NotificationTypes,
   kind: K
@@ -65,7 +69,7 @@ function isNotificationType<K extends keyof AppNotificationType>(
   return notif.includes(type);
 }
 
-export function isAppNotification(type: NotificationTypes, app: 'festival' | 'catalog') {
+export function isAppNotification(type: NotificationTypes, app: App) {
   return isNotificationType(type, app) || isNotificationType(type, 'shared');
 }
 

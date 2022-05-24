@@ -106,7 +106,7 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
 })
 export class NotificationsFormComponent {
 
-  public types = [...notificationTypes];
+  public types = notificationTypes;
   public titleType = titleType;
   public tables = tables;
 

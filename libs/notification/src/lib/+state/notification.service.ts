@@ -47,7 +47,7 @@ export class NotificationService extends CollectionService<NotificationState> {
     switchMap((notifications) => {
       const promises = notifications
         .filter(n => n.app?.isRead !== undefined)
-        .filter(n => isAppNotification(n.type, this.app as 'catalog' | 'festival'))
+        .filter(n => isAppNotification(n.type, this.app))
         .map(n => this.appendNotificationData(n));
       return Promise.all(promises);
     })
