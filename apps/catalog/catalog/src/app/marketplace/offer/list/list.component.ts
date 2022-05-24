@@ -3,7 +3,7 @@ import { ContractService } from '@blockframes/contract/contract/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { joinWith } from '@blockframes/utils/operators';
+import { joinWith } from 'ngfire';
 import { switchMap } from 'rxjs/operators';
 import { orderBy, QueryConstraint, where } from 'firebase/firestore';
 

@@ -17,7 +17,7 @@ export class SidenavAuthComponent {
   ) { }
 
   public async logout() {
-    await this.authService.signOut();
+    await this.authService.signout();
   }
 
 }

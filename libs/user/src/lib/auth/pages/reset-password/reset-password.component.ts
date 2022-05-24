@@ -32,7 +32,7 @@ export class ResetPasswordComponent implements OnInit {
       if (this.emailForm.invalid) {
         this.snackBar.open('Incorrect email address', 'close', { duration: 5000 });
       } else {
-        const { data: res } = await this.service.resetPasswordInit(this.emailForm.value.email);
+        const res = await this.service.resetPasswordInit(this.emailForm.value.email);
         if (res.error === 'auth/email-not-found') {
           this.snackBar.openFromComponent(SnackbarLinkComponent, {
             data: {

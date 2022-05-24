@@ -6,9 +6,8 @@ import { InvitationService } from '@blockframes/invitation/+state';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
-import { createPublicUser, PublicUser, User, createOrganization, createDocumentMeta, AlgoliaOrganization, App } from '@blockframes/model';
+import { createPublicUser, PublicUser, User, createOrganization, createDocumentMeta, AlgoliaOrganization, App, hasDisplayName } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
 import { createLocation } from '@blockframes/model';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
@@ -353,7 +352,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   public async searchForInvitation() {
-    const { data: event } = await this.invitationService.getInvitationLinkedToEmail(this.form.get('email').value);
+    const email = this.form.get('email').value;
+    const event = await this.invitationService.getInvitationLinkedToEmail(email);
     if (event) {
       this.existingUser = true;
       this.form.get('generatedPassword').enable();

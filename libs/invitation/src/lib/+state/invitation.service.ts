@@ -1,9 +1,7 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { where } from 'firebase/firestore';
-import { Functions, httpsCallable } from '@angular/fire/functions';
-import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { AuthService } from '@blockframes/auth/+state';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
 import {
   createPublicUser,
   PublicUser,
@@ -12,43 +10,22 @@ import {
   Organization,
   createInvitation,
   Invitation,
-  InvitationDocument,
   InvitationStatus,
   AlgoliaOrganization,
   App,
   getOrgAppAccess,
   filterInvitation
 } from '@blockframes/model';
-import { toDate } from '@blockframes/utils/helpers';
-import { cleanInvitation } from '../invitation-utils';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { PermissionsService } from '@blockframes/permissions/+state';
-import { ActiveState, EntityState } from '@datorama/akita';
-import { APP } from '@blockframes/utils/routes/utils';
+import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { subMonths } from 'date-fns';
-
-interface InvitationState extends EntityState<Invitation>, ActiveState<string> { }
+import { AtomicWrite, CallableFunctions } from 'ngfire';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'invitations' })
-export class InvitationService extends CollectionService<InvitationState> {
-  readonly useMemorization = false;
-  /**
-   * Return true if there is already a pending invitation for a list of users
-   */
-  public hasUserAnOrgOrIsAlreadyInvited = httpsCallable<string[], boolean>(this.functions, 'hasUserAnOrgOrIsAlreadyInvited');
-
-  /**
-   * Return a boolean or a PublicOrganization doc if there is an invitation linked to the email.
-   * Return false if there is no invitation at all.
-   */
-  public getInvitationLinkedToEmail = httpsCallable<string, boolean | AlgoliaOrganization>(this.functions, 'getInvitationLinkedToEmail');
-
-  /**
-   * Used to accept or decline invitation if user is logged in as anonymous
-   */
-  public acceptOrDeclineInvitationAsAnonymous = httpsCallable<{ invitationId: string, email: string, status: InvitationStatus }>(this.functions, 'acceptOrDeclineInvitationAsAnonymous');
+export class InvitationService extends BlockframesCollection<Invitation> {
+  readonly path = 'invitations';
 
   /** All Invitations related to current user or org */
   allInvitations$: Observable<Invitation[]> = combineLatest([
@@ -110,26 +87,34 @@ export class InvitationService extends CollectionService<InvitationState> {
     })
   );
 
+  /**
+   * Return true if there is already a pending invitation for a list of users
+   */
+  hasUserAnOrgOrIsAlreadyInvited = this.functions.prepare<string[], boolean>('hasUserAnOrgOrIsAlreadyInvited');
+
+  /**
+   * Return a boolean or a PublicOrganization doc if there is an invitation linked to the email.
+   * Return false if there is no invitation at all.
+   */
+  getInvitationLinkedToEmail = this.functions.prepare<string, boolean | AlgoliaOrganization>('getInvitationLinkedToEmail');
+
+  /**
+   * Used to accept or decline invitation if user is logged in as anonymous
+   */
+  acceptOrDeclineInvitationAsAnonymous = this.functions.prepare<{ invitationId: string, email: string, status: InvitationStatus }, unknown>('acceptOrDeclineInvitationAsAnonymous');
+
   constructor(
     private orgService: OrganizationService,
     private authService: AuthService,
     private permissionsService: PermissionsService,
-    private functions: Functions,
-    @Inject(APP) private app: App
+    private functions: CallableFunctions
   ) {
     super();
   }
 
-  formatFromFirestore(_invitation: InvitationDocument): Invitation {
-    const invitation = {
-      ..._invitation,
-      date: toDate(_invitation.date)
-    }
+  toFirestore(invitation: Invitation) {
+    delete invitation.message;
     return invitation;
-  }
-
-  formatToFirestore(invitation: Invitation): Invitation {
-    return cleanInvitation(invitation);
   }
 
   /////////////
@@ -181,13 +166,12 @@ export class InvitationService extends CollectionService<InvitationState> {
         invitation.fromOrg = createPublicOrganization(fromOrg);
         const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
 
-        const f = httpsCallable(this.functions, 'inviteUsers');
         let app = this.app;
         if (app === 'crm') {
           // Instead use first found app where org has access to
           app = getOrgAppAccess(fromOrg)[0];
         }
-        return f({ emails: recipients, invitation, app });
+        return this.functions.call<{ emails: string[], invitation: Partial<Invitation>, app: App }, unknown>('inviteUsers', { emails: recipients, invitation, app });
       }
     }
   }

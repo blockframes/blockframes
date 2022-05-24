@@ -3,8 +3,7 @@ import { Router } from '@angular/router';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state';
 import { User, Organization, orgName, getAllAppsExcept, appName, getOrgModuleAccess, modules } from '@blockframes/model';
-import { CrmService } from '@blockframes/admin/crm/+state/crm.service';
-import { CrmQuery } from '@blockframes/admin/crm/+state/crm.query';
+import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
@@ -32,8 +31,7 @@ export class UsersComponent implements OnInit {
   constructor(
     private userService: UserService,
     private cdr: ChangeDetectorRef,
-    private crmService: CrmService,
-    private crmQuery: CrmQuery,
+    private analyticsService: AnalyticsService,
     private orgService: OrganizationService,
     private router: Router,
   ) { }
@@ -43,17 +41,17 @@ export class UsersComponent implements OnInit {
     this.users$ = combineLatest([
       this.userService.valueChanges(),
       this.orgService.valueChanges(),
-      this.crmService.loadAnalyticsData()
+      this.analyticsService.loadAnalyticsData()
     ]).pipe(
       map(([users, orgs]) => {
         return users.map(u => {
           const org = orgs.find(o => o.id === u.orgId);
           return {
             ...u,
-            firstConnection: this.crmQuery.getFirstConnexion(u.uid),
-            lastConnection: this.crmQuery.getLastConnexion(u.uid),
-            pageView: this.crmQuery.getPageView(u.uid),
-            sessionCount: this.crmQuery.getSessionCount(u.uid),
+            firstConnection: this.analyticsService.getFirstConnexion(u.uid),
+            lastConnection: this.analyticsService.getLastConnexion(u.uid),
+            pageView: this.analyticsService.getPageView(u.uid),
+            sessionCount: this.analyticsService.getSessionCount(u.uid),
             createdFrom: u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
             org,
           };
