@@ -40,27 +40,27 @@ ul::-webkit-scrollbar {
 
 :host[data-columns="2"] li {
   min-width: show(2, $gap);
-  max-width: show(2, $gap);
+  width: show(2, $gap);
 }
 
 :host[data-columns="3"] li {
   min-width: show(3, $gap);
-  max-width: show(3, $gap);
+  width: show(3, $gap);
 }
 
 :host[data-columns="4"] li {
   min-width: show(4, $gap);
-  max-width: show(4, $gap);
+  width: show(4, $gap);
 }
 
 :host[data-columns="5"] li {
+  width: show(5, $gap);
   min-width: show(5, $gap);
-  max-width: show(5, $gap);
 }
 
 :host[data-columns="6"] li {
+  width: show(6, $gap);
   min-width: show(6, $gap);
-  max-width: show(6, $gap); 
 }
 
 @include layout-bp(md) {
@@ -72,27 +72,27 @@ ul::-webkit-scrollbar {
 
   :host[data-columns="2"] li {
     min-width: show(2, $gap);
-    max-width: show(2, $gap);
+    width: show(2, $gap);
   }
   
   :host[data-columns="3"] li {
     min-width: show(3, $gap);
-    max-width: show(3, $gap);
+    width: show(3, $gap);
   }
   
   :host[data-columns="4"] li {
     min-width: show(4, $gap);
-    max-width: show(4, $gap);
+    width: show(4, $gap);
   }
   
   :host[data-columns="5"] li {
     min-width: show(5, $gap);
-    max-width: show(5, $gap);
+    width: show(5, $gap);
   }
   
   :host[data-columns="6"] li {
     min-width: show(6, $gap);
-    max-width: show(6, $gap); 
+    width: show(6, $gap); 
   }
 }
 
@@ -105,27 +105,27 @@ ul::-webkit-scrollbar {
 
   :host[data-columns="2"] li {
     min-width: show(1, $gap);
-    max-width: show(1, $gap);
+    width: show(1, $gap);
   }
   
   :host[data-columns="3"] li {
     min-width: show(2, $gap); 
-    max-width: show(2, $gap);
+    width: show(2, $gap);
   }
   
   :host[data-columns="4"] li {
     min-width: show(3, $gap);
-    max-width: show(3, $gap);
+    width: show(3, $gap);
   }
   
   :host[data-columns="5"] li {
     min-width: show(4, $gap);
-    max-width: show(4, $gap);
+    width: show(4, $gap);
   }
   
   :host[data-columns="6"] li {
     min-width: show(5, $gap);
-    max-width: show(5, $gap); 
+    width: show(5, $gap); 
   }
 }
 
@@ -138,26 +138,26 @@ ul::-webkit-scrollbar {
 
   :host[data-columns="2"] li {
     min-width: show(1, $gap);
-    max-width: show(1, $gap);
+    width: show(1, $gap);
   }
   
   :host[data-columns="3"] li {
     min-width: show(1, $gap); 
-    max-width: show(1, $gap);
+    width: show(1, $gap);
   }
   
   :host[data-columns="4"] li {
     min-width: show(2, $gap);
-    max-width: show(2, $gap);
+    width: show(2, $gap);
   }
   
   :host[data-columns="5"] li {
     min-width: show(3, $gap);
-    max-width: show(3, $gap);
+    width: show(3, $gap);
   }
   
   :host[data-columns="6"] li {
     min-width: show(4, $gap);
-    max-width: show(4, $gap); 
+    width: show(4, $gap); 
   }
 }

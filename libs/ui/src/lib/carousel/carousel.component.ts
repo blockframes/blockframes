@@ -40,7 +40,7 @@ export class CarouselItemDirective {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDestroy {
-  @HostBinding('attr.data-columns') _columns: number;
+  @HostBinding('attr.data-columns') _columns: number = 0;
 
 
   /* Indicators to show arrow buttons */
@@ -91,11 +91,9 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
 
   ngAfterContentInit() {
     this.amount$ = this.items.changes.pipe(startWith(this.items), map(items => items.length));
-    this.itemsSub = this.items.changes.subscribe(() => {
-      setTimeout(() => {
-        this.showForward = !!this.scrollable.measureScrollOffset('right')
-      }, 0)
-      // this.showForward = items.length > this.columns
+    this.itemsSub = this.items.changes.subscribe(items => {
+      this.showForward = items.length > this._columns;
+      this.cdr.markForCheck();
     });
 
     const { columns } = getLayoutGrid(this.carouselWidth);
