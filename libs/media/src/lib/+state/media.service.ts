@@ -7,7 +7,7 @@ import { StorageFile } from '@blockframes/model';
 import { ImageParameters, getImgSize, getImgIxResourceUrl } from '../image/directives/imgix-helpers';
 
 // Blockframes
-import { clamp } from '@blockframes/utils/utils';
+import { clamp } from '@blockframes/model';
 @Injectable({ providedIn: 'root' })
 export class MediaService {
 

@@ -1,4 +1,4 @@
-import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
+import { privacies, Privacy } from './static';
 
 /**
  * Representation of a storage file in our Firestore db.

@@ -2,7 +2,7 @@ import { ContractService } from "@blockframes/contract/contract/+state/contract.
 import {
   adminOnlyWarning, alreadyExistError, ImportLog, checkParentTerm, getContract,
   getOrgId, getTitleId, getUser, ImportError, mandatoryError,
-  unknownEntityError, unusedMandateIdWarning, wrongValueError, LogOption, wrongTemplateError
+  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError
 } from "@blockframes/import/utils";
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
@@ -130,7 +130,7 @@ export function getContractConfig(option: ContractConfig) {
         if (!value) throw mandatoryError(value, 'Licensor');
         if (value === 'Archipel Content' || value === centralOrgId.catalog) {
           if (!blockframesAdmin) {
-            const option: LogOption = {
+            const option: SpreadsheetImportError = {
               name: 'Forbidden Licensor',
               reason: 'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
               message: 'Please ensure that the Licensor name is not "Archipel Content". Only admin can import internal sales.',
@@ -161,7 +161,7 @@ export function getContractConfig(option: ContractConfig) {
         if (data.contract.type === 'mandate') {
           if (!value) throw mandatoryError(value, 'Licensee');
           if (value !== 'Archipel Content' && value !== centralOrgId.catalog) {
-            const option: LogOption = {
+            const option: SpreadsheetImportError = {
               name: 'Forbidden Licensee',
               reason: 'The Licensee name of a mandate must be "Archipel Content".',
               message: 'Please edit the corresponding sheet field',
@@ -278,7 +278,7 @@ export function getContractConfig(option: ContractConfig) {
         }
         if (value === 'Archipel Content' || value === centralOrgId.catalog) {
           if (!blockframesAdmin) {
-            const option: LogOption = {
+            const option: SpreadsheetImportError = {
               name: 'Forbidden Licensor',
               reason: 'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
               message: 'Please ensure that the Licensor name is not "Archipel Content". Only admin can import internal sales.',
@@ -294,7 +294,7 @@ export function getContractConfig(option: ContractConfig) {
             return sellerId = value;
           }
           if (!blockframesAdmin && sellerId !== userOrgId) {
-            const option: LogOption = {
+            const option: SpreadsheetImportError = {
               name: 'Forbidden Licensor',
               reason: 'The Licensor name should be your organization name.',
               message: 'Please edit the corresponding sheet field',
@@ -308,7 +308,7 @@ export function getContractConfig(option: ContractConfig) {
         if (data.contract.type === 'mandate') {
           if (!value) throw mandatoryError(value, 'Licensee');
           if (value !== 'Archipel Content' && value !== centralOrgId.catalog) {
-            const option: LogOption = {
+            const option: SpreadsheetImportError = {
               name: 'Forbidden Licensee',
               reason: 'The Licensee name of a mandate must be "Archipel Content".',
               message: 'Please edit the corresponding sheet field',

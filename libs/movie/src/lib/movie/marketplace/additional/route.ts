@@ -1,4 +1,4 @@
-import { RouteDescription } from "@blockframes/utils/common-interfaces";
+import { RouteDescription } from '@blockframes/model';
 
 export const additionalRoute: RouteDescription = {
   path: 'additional',

@@ -20,7 +20,7 @@ import { FormControl } from '@angular/forms';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { Paginator, PageState } from './paginator';
-import { removeAccent } from '@blockframes/utils/utils';
+import { removeAccent } from '@blockframes/model';
 
 /** Ascending sorting */
 function sortValue<T>(a: T, b: T) {

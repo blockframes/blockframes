@@ -1,5 +1,5 @@
 import { loadAdminServices } from '@blockframes/firebase-utils';
-import { connectFirestoreEmulator, connectAuthEmulator } from '@blockframes/firebase-utils/firestore/emulator';
+import { connectFirestoreEmulator, connectAuthEmulator } from '@blockframes/devops';
 import * as plugins from './plugins';
 import type * as admin from 'firebase-admin';
 

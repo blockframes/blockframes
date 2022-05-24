@@ -27,7 +27,6 @@ import {
   createAppConfig,
   createMovieStakeholders,
   createMoviePromotional,
-  createMovieLanguageSpecification,
   createShootingPlannedObject,
   createExpectedPremiere,
   createAudienceGoals,
@@ -42,7 +41,8 @@ import {
   createStakeholder,
   Director,
   createStorageFile,
-  App
+  App,
+  Privacy
 } from '@blockframes/model';
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import {
@@ -55,7 +55,6 @@ import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
 import { FormValue } from '@blockframes/utils/form';
 import { toDate } from '@blockframes/utils/helpers';
-import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 function createMovieControls(movie: Partial<Movie>) {
   const entity = createMovie(movie);
@@ -85,7 +84,7 @@ function createMovieControls(movie: Partial<Movie>) {
       Validators.required,
     ]),
     internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
-    keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
+    keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(1500)]),
     keywords: FormList.factory(entity.keywords, (el) => new FormControl(el)),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
     logline: new FormControl(entity.logline, [Validators.maxLength(350)]),
@@ -387,7 +386,7 @@ function createCreditFormControl(credit?: Partial<Credit>) {
       new FilmographyForm(filmography[1]),
       new FilmographyForm(filmography[2]),
     ]),
-    description: new FormControl(description),
+    description: new FormControl(description, Validators.maxLength(500)),
     status: new FormControl(status),
   };
 }
@@ -430,7 +429,7 @@ function createDirectorFormControl(director?: Partial<Director>) {
       new FilmographyForm(filmography[1]),
       new FilmographyForm(filmography[2]),
     ]),
-    description: new FormControl(description),
+    description: new FormControl(description, Validators.maxLength(500)),
     status: new FormControl(status),
     category: new FormControl(category),
   };
@@ -679,7 +678,7 @@ function createMovieReviewControl(review: Partial<MovieReview> = {}) {
   return {
     criticName: new FormControl(criticName),
     journalName: new FormControl(journalName, [Validators.required]),
-    criticQuote: new FormControl(criticQuote),
+    criticQuote: new FormControl(criticQuote, Validators.maxLength(500)),
     revueLink: new FormControl(revueLink, urlValidators),
   };
 }
@@ -983,7 +982,7 @@ function createMovieVideoControl(movieVideo: Partial<MovieVideo> = {}) {
     field: new FormControl(file.field),
     storagePath: new FormControl(file.storagePath),
     title: new FormControl(movieVideo?.title ?? ''),
-    description: new FormControl(movieVideo?.description ?? ''),
+    description: new FormControl(movieVideo?.description ?? '', Validators.maxLength(1500)),
     type: new FormControl(movieVideo?.type ?? ''),
     jwPlayerId: new FormControl(movieVideo?.jwPlayerId ?? ''),
   };

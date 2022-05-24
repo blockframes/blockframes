@@ -107,11 +107,7 @@ export class TableExtractedOrganizationsComponent implements AfterViewInit {
     await this.orgService.addOrganization(importState.org, firstApp, superAdmin);
 
     // prevent user to create the same org twice
-    importState.errors.push({
-      type: 'error',
-      name: 'Organizations',
-      reason: 'Organization already created!',
-    });
+    importState.imported = true;
 
     importState.importing = false;
     this.cdr.markForCheck();
@@ -149,7 +145,7 @@ export class TableExtractedOrganizationsComponent implements AfterViewInit {
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.rows.data.forEach(row => this.selection.select(row));
+      : this.rows.data.filter(row => !row.imported).forEach(row => this.selection.select(row));
   }
 
   /**

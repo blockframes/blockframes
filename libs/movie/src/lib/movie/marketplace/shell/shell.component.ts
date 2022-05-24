@@ -10,7 +10,7 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 import { StorageFile, Movie } from '@blockframes/model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
+import { RouteDescription } from '@blockframes/model';
 import { FileListPreviewComponent } from '@blockframes/media/file/preview-list/preview-list.component';
 import { MatDialog } from '@angular/material/dialog';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
