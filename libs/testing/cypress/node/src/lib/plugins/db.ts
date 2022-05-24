@@ -88,6 +88,7 @@ export async function importData(data: Record<string, object>[]) {
     Object.entries(document).map(([path, content]) => {
       if (!isDocumentPath(path))
         throw new Error('Document path mandatory, like [collectionPath/DocumentPath]. Got ' + JSON.stringify(path));
+      content['_meta'] = { e2e: true };
       createAll.push(db.doc(path).set(content));
     });
   }
@@ -125,7 +126,16 @@ const subcollectionsDocsOf = async (path: string) => {
   return result;
 };
 
-// TODO : add a function clearDb() to erase all documents with meta.test: true
+export async function clearTestData() {
+  const docsToDelete: string[] = [];
+  const collections = await db.listCollections();
+  for (const collection of collections) {
+    const snapshot = await collection.where('_meta.e2e', '==', true).get();
+    const docs = snapshot.docs;
+    for (const doc of docs) docsToDelete.push(`${collection.id}/${doc.id}`);
+  }
+  return deleteData(docsToDelete);
+}
 
 //* GET DATA*------------------------------------------------------------------
 
@@ -179,22 +189,14 @@ const subcollectionsDataOf = async (path: string) => {
 
 //* UPDATE DATA*-----------------------------------------------------------------
 
-//TODO : adapt to use id of doc or uid for users #8460
-
-/*
-export function updateData(data: any | any[]) {
-  const createAll = Object.entries(data).map(([path, content]) => {
-    if (isDocumentPath(path)) {
-      const docRef = db.doc(path);
-      return docRef.update(content);
-    }
-    if (!Array.isArray(content)) {
-      throw new Error('If path is a collection, the content should be an array. Got ' + JSON.stringify(content));
-    }
-    const collRef = db.collection(path);
-    const addAll = content.map(document => collRef.doc().update(document));
-    return Promise.all(addAll);
-  });
-  return Promise.all(createAll);
+export async function updateData(data: { docPath: string; field: string; value: unknown }[]) {
+  const updateAll: Promise<FirebaseFirestore.WriteResult>[] = [];
+  for (const update of data) {
+    const { docPath, field, value } = update;
+    if (!isDocumentPath(docPath))
+      throw new Error('Document path mandatory, like [collectionPath/DocumentPath]. Got ' + JSON.stringify(docPath));
+      const docRef = db.doc(docPath);
+    updateAll.push(docRef.update({ [field]: value }));
+  }
+  return Promise.all(updateAll);
 }
-*/

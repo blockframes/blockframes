@@ -6,8 +6,8 @@ import { examples } from '../../fixtures/_test';
 
 describe('Testing bridge between Cypress and node', () => {
   describe('creation possibilities', () => {
-    beforeEach(() => {
-      firebase.clear();
+    before(() => {
+      firebase.clearTestData();
     });
 
     //* CREATE *//
@@ -38,8 +38,8 @@ describe('Testing bridge between Cypress and node', () => {
   });
 
   describe('create/get/delete', () => {
-    beforeEach(() => {
-      firebase.clear();
+    before(() => {
+      firebase.clearTestData();
     });
 
     //*** docs without subcollections */
@@ -124,32 +124,62 @@ describe('Testing bridge between Cypress and node', () => {
       firebase.delete(collectionsPaths);
       firebase.get(collectionsPaths).then((data: []) => expect(data.flat()).to.eql([]));
     });
+  });
 
-    //TODO : UPDATE
+  describe('create/update', () => {
+    before(() => {
+      firebase.clearTestData();
+    });
+
+    it('a doc', () => {
+      firebase.create([examples.simpleDoc1]);
+      const docPath = Object.keys(examples.simpleDoc1)[0];
+      const exampleValues = exampleValuesFrom([examples.simpleDoc1]);
+      firebase.get([docPath]).then(data => expect(data).to.eql(exampleValues.flat()));
+      const updateExamples = {
+        boolean: true,
+        string: 'value',
+        number: 123,
+        array: [1, 2, 3],
+        object: { property: 'object value' },
+      };
+      const updates = [];
+      for (const [key, value] of Object.entries(updateExamples)) {
+        updates.push({ docPath, field: key, value });
+      }
+      firebase.update(updates);
+      firebase.get([docPath]).then(data => expect(data[0]).to.deep.include(updateExamples));
+    });
+
+    it('a doc in a subcollection', () => {
+      firebase.create([examples.docWithSubcollection1]);
+      const docPath = Object.keys(examples.docWithSubcollection1)[0];
+      const subDocPath = Object.keys(examples.docWithSubcollection1)[1];
+      const exampleValues = exampleValuesFrom([examples.docWithSubcollection1]);
+      firebase.get([docPath]).then(data => expect(data).to.eql(exampleValues.flat()));
+      const updateExamples = {
+        boolean: true,
+        string: 'value',
+        number: 123,
+        array: [1, 2, 3],
+        object: { property: 'object value' },
+      };
+      const updates = [];
+      for (const [key, value] of Object.entries(updateExamples)) {
+        updates.push({ docPath: subDocPath, field: key, value });
+      }
+      firebase.update(updates);
+      const subCollectionName = Object.keys(examples.docWithSubcollection1)[1].split('/')[2];
+      firebase.get([docPath]).then(data => expect(data[0][subCollectionName][0]).to.deep.include(updateExamples));
+    });
   });
 });
 
 //* FUNCTIONS -------------------------------*//
 
 const firebase = {
-  clear() {
-    this.delete([
-      'ex-create-simple',
-      'ex-create-multiple',
-      'ex-create-array',
-      'ex-create-object',
-      'ex-subcollection',
-      'ex-crud-simple1',
-      'ex-crud-simple2',
-      'ex-crud-simple3',
-      'ex-crud-simple4',
-      'ex-crud-simple5',
-      'ex-crud-subcollection1',
-      'ex-crud-subcollection2',
-      'ex-crud-subcollection3',
-      'ex-crud-subcollection4',
-      'ex-crud-subcollection5',
-    ]);
+  clearTestData() {
+    return cy.task('clearTestData');
   },
 
   delete(paths: string[]) {
@@ -164,9 +194,8 @@ const firebase = {
     return cy.task('importData', data);
   },
 
-  //TODO : better type
-  update(data: any | any[]) {
-    return cy.task('updateData', { ...data });
+  update(data: { docPath: string; field: string; value: unknown }[]) {
+    return cy.task('updateData', data);
   },
 };
 
@@ -176,6 +205,7 @@ const exampleValuesFrom = (examples: Record<string, object>[]) => {
     let exampleValues = [];
     for (const [index, [key, value]] of Object.entries(Object.entries(example))) {
       const partsInPath = key.split('/').length;
+      value['_meta'] = { e2e: true };
       // data at the root of the doccument
       if (partsInPath === 2) {
         const exampleExists = index !== '0';
