@@ -5,11 +5,10 @@ import { firstValueFrom } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class IpService {
   private api = 'https://api.ipify.org/?format=json';
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   public get(): Promise<string> {
-    return firstValueFrom(this.http
-      .get<{ ip: string }>(this.api))
+    return firstValueFrom(this.http.get<{ ip: string }>(this.api))
       .then(data => data.ip)
       .catch(() => 'unknown');
   }
