@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 // Blockframes
 import { organizationStatus, getAllAppsExcept } from '@blockframes/model';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
@@ -24,13 +24,15 @@ export class CrmOrganizationFormComponent {
 
   constructor(
     private organizationService: OrganizationService,
-  ) {}
+    private cdr: ChangeDetectorRef
+  ) { }
 
   public async uniqueOrgName() {
-    const orgName = this.form.get('name').value
-    const unique = await this.organizationService.uniqueOrgName(orgName);
-    if (!unique) {
+    const orgName = this.form.get('name').value.trim();
+    const orgId = await this.organizationService.getOrgIdFromName(orgName);
+    if (orgId && orgId !== this.orgId) {
       this.form.get('name').setErrors({ notUnique: true });
+      this.cdr.markForCheck();
     }
   }
 }

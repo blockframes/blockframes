@@ -4,8 +4,7 @@ import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { toLabel } from '@blockframes/utils/pipes';
-import { orgName } from '@blockframes/model';
+import { orgName, toLabel } from '@blockframes/model';
 import { where } from 'firebase/firestore';
 
 @Component({
@@ -34,7 +33,7 @@ export class EventsComponent implements OnInit {
 
     const ownerOrgIds = events.map(event => event.ownerOrgId);
     const orgs = await this.orgService.getValue(ownerOrgIds);
-    
+
     this.rows = events.map(event => {
       const row = { ...event } as any;
       const invitations = invites.filter(inv => inv.eventId === event.id);

@@ -13,7 +13,7 @@ import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { doc, Firestore, docData } from '@angular/fire/firestore';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { allowedFiles, fileSizeToString } from '@blockframes/utils/utils';
+import { allowedFiles, fileSizeToString } from '@blockframes/model';
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 

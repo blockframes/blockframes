@@ -12,7 +12,7 @@ import { supportMailosaur } from '@blockframes/utils/constants';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { SendgridService } from '@blockframes/utils/emails/sendgrid.service';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
-import { ErrorResultResponse } from '@blockframes/utils/utils';
+import { ErrorResultResponse } from '@blockframes/model';
 import { Observable } from 'rxjs';
 
 interface EmailData {
@@ -37,7 +37,7 @@ export interface ContactPartnerModalData {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContactPartnerModalComponent {
-  
+
   public sending = false;
 
   constructor(

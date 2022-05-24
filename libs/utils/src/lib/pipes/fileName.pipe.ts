@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
-import { StorageFile } from '@blockframes/model';
+import { StorageFile, extensionToType, titleCase } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { getFileExtension } from '../file-sanitizer';
-import { extensionToType, titleCase } from '../utils';
 
 @Pipe({ name: 'fileName' })
 export class FileNamePipe implements PipeTransform {

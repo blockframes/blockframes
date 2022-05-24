@@ -82,10 +82,10 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     super();
   }
 
-  public async orgNameExist(orgName: string) {
+  public async getOrgIdFromName(orgName: string) {
     // @TODO #6908 a better solution for this should be found.
-    const orgs = await this.getValue([where('denomination.full', '==', orgName.trim())]);
-    return orgs.length !== 0;
+    const [org] = await this.getValue([where('denomination.full', '==', orgName.trim())]);
+    return org?.id;
   }
 
   /**
@@ -178,10 +178,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     const org = typeof _org === 'string' ? await this.getValue(_org) : _org;
     const role = await this.permissionsService.getValue(org.id);
     return role.roles[uid];
-  }
-
-  public async uniqueOrgName(orgName: string): Promise<boolean> {
-    return this.orgNameExist(orgName).then((exist) => !exist);
   }
 
   //////////////////

@@ -7,7 +7,7 @@ import {
 } from 'rxjs';
 
 import { debounceTime, map, startWith, switchMap, tap } from 'rxjs/operators';
-import { jsonDateReviver } from './utils';
+import { jsonDateReviver } from '@blockframes/model';
 
 type QueryMap<T> = Record<string, (data: Entity<T>) => any>
 type Entity<T> = T extends Array<infer I> ? I : T;

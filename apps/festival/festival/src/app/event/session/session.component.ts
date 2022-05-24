@@ -11,7 +11,7 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getFileExtension } from '@blockframes/utils/file-sanitizer';
-import { ErrorResultResponse, extensionToType } from '@blockframes/utils/utils';
+import { ErrorResultResponse, extensionToType } from '@blockframes/model';
 import { MediaService } from '@blockframes/media/+state';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
@@ -29,9 +29,9 @@ import {
   MeetingVideoControl,
   Screening,
   Invitation,
-  isSlate, 
-  Slate, 
-  StorageFile, 
+  isSlate,
+  Slate,
+  StorageFile,
   StorageVideo
 } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

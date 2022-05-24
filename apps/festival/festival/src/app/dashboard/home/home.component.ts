@@ -5,10 +5,16 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { EventName, hasAppStatus, App } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import {
+  EventName,
+  hasAppStatus,
+  App,
+  AggregatedAnalytic,
+} from '@blockframes/model';
 import { counter } from '@blockframes/analytics/+state/utils';
+import { joinWith } from '@blockframes/utils/operators';
 import { aggregate } from '@blockframes/analytics/+state/utils';
 import { UserService } from '@blockframes/user/+state';
 import { unique } from '@blockframes/utils/helpers';
@@ -19,7 +25,7 @@ import { combineLatest } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
-import { joinWith } from '@blockframes/utils/operators';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'dashboard-home',
@@ -28,6 +34,7 @@ import { joinWith } from '@blockframes/utils/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
+  public selectedCountry?: string;
   public titles$ = this.orgService.currentOrg$.pipe(
     switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
     map((titles) => titles.filter((title) => title.app[this.app].access)),
@@ -52,7 +59,7 @@ export class HomeComponent {
     switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key))
   );
 
-  private titleAnalyticsOfPopularTitle$ = combineLatest([ this.popularTitle$, this.titleAnalytics$ ]).pipe(
+  private titleAnalyticsOfPopularTitle$ = combineLatest([this.popularTitle$, this.titleAnalytics$]).pipe(
     map(([title, titleAnalytics]) => titleAnalytics.filter(analytics => analytics.meta.titleId === title.id)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -71,6 +78,10 @@ export class HomeComponent {
 
   pageViewsOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
     map(analytics => analytics.filter(analytic => analytic.name === 'pageView'))
+  );
+
+  activeCountries$ = this.titleAnalytics$.pipe(
+    map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
   );
 
   activeBuyers$ = this.titleAnalytics$.pipe(
@@ -108,8 +119,14 @@ export class HomeComponent {
     private dynTitle: DynamicTitleService,
     @Optional() private intercom: Intercom,
     private userService: UserService,
-    @Inject(APP) public app: App
+    @Inject(APP) public app: App,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
+
+  public showBuyer(row: AggregatedAnalytic) {
+    this.router.navigate([`/c/o/dashboard/home/buyer/${row.user.uid}`], { relativeTo: this.route })
+  }
 
   public openIntercom(): void {
     return this.intercom.show();

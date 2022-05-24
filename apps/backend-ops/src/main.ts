@@ -39,8 +39,11 @@ import {
   upgradeEmulators,
   printDatabaseInconsistencies,
   keepAlive,
-  generateFixtures
+  generateFixtures,
+  writeRuntimeConfig,
+  functionsConfigMap
 } from '@blockframes/devops';
+import { join } from 'node:path';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -154,6 +157,9 @@ async function runCommand() {
       break;
     case 'rescueJWP':
       await rescueJWP({ jwplayerKey: arg1, jwplayerApiV2Secret: arg2 });
+      break;
+    case 'writeRuntimeConfig':
+      writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
       break;
     default:
       return Promise.reject('Command Args not detected... exiting..');

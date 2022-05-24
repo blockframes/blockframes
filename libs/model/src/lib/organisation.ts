@@ -1,9 +1,8 @@
-import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { createStorageFile, StorageFile, StorageVideo } from './media';
 import { DocumentMeta } from './meta';
 import { Timestamp } from './timestamp';
 import { getAllAppsExcept } from './apps';
-import type { App, Module, ModuleAccess, OrgActivity, OrganizationStatus, OrgAppAccess } from './static';
+import type { App, Module, ModuleAccess, OrgActivity, OrganizationStatus, OrgAppAccess, Territory } from './static';
 import { app, modules } from './static';
 
 /** A public interface or Organization, without sensitive data. */
@@ -40,6 +39,15 @@ export interface AddressSet {
   billing?: Location;
   office?: Location;
   // Other can be added here
+}
+
+export interface Location {
+  street: string;
+  zipCode: string;
+  city: string;
+  country?: Territory;
+  region?: string;
+  phoneNumber: string;
 }
 
 /** Default placeholder logo used when an Organization is created. */
@@ -151,6 +159,18 @@ export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): Mo
     dashboard: false,
     marketplace: false,
     ...moduleAccess,
+  };
+}
+
+/** A factory function that creates an Address/Location */
+export function createLocation(params: Partial<Location> = {}): Location {
+  return {
+    street: '',
+    zipCode: '',
+    city: '',
+    phoneNumber: '',
+    region: '',
+    ...params
   };
 }
 

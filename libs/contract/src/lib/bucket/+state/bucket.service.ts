@@ -3,7 +3,7 @@ import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { centralOrgId } from '@env';
 import { switchMap, take } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
-import { createOfferId } from '@blockframes/utils/utils';
+import { createOfferId } from '@blockframes/model';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { TermService } from '../../term/+state';

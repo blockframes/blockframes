@@ -10,7 +10,7 @@ import { createPublicUser, PublicUser, User, createOrganization, createDocumentM
 import { OrganizationService } from '@blockframes/organization/+state';
 import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
-import { createLocation } from '@blockframes/utils/common-interfaces/utility';
+import { createLocation } from '@blockframes/model';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -207,8 +207,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.isAnonymous = (await this.authService.user).isAnonymous;
 
       // Check if the org name is already existing
-      const unique = await this.orgService.uniqueOrgName(name);
-      if (!unique) {
+      const orgId = await this.orgService.getOrgIdFromName(name);
+      if (orgId) {
         this.orgForm.get('name').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
         this.creating = false;
@@ -333,8 +333,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const { name, addresses, activity, appAccess } = this.orgForm.value;
 
       // Check if the org name is already existing
-      const unique = await this.orgService.uniqueOrgName(name);
-      if (!unique) {
+      const orgId = await this.orgService.getOrgIdFromName(name);
+      if (orgId) {
         this.orgForm.get('name').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
         this.creating = false;
