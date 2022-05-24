@@ -142,7 +142,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
    * @dev We do not want to log centralOrg operators nor blockframes
    * admins nor concierge users actions on the platform.
    */
-  private async isOperator(): Promise<boolean> {
+  private async isOperator() {
     const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
     const profile = this.authService.profile;
     const isConcierge = profile?.email.includes('concierge');
@@ -161,28 +161,28 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     }));
   }
 
-  getLastConnexion(uid: string): Date {
+  getLastConnexion(uid: string) {
     const userInfo = this.analyticsCache.find(u => u.uid === uid);
     if (userInfo && userInfo.lastConnexion) {
       return userInfo.lastConnexion;
     }
   }
 
-  getFirstConnexion(uid: string): Date {
+  getFirstConnexion(uid: string) {
     const userInfo = this.analyticsCache.find(u => u.uid === uid);
     if (userInfo && userInfo.firstConnexion) {
       return userInfo.firstConnexion;
     }
   }
 
-  getSessionCount(uid: string): number {
+  getSessionCount(uid: string) {
     const userInfo = this.analyticsCache.find(u => u.uid === uid);
     if (userInfo && userInfo.sessionCount) {
       return userInfo.sessionCount;
     }
   }
 
-  getPageView(uid: string): number {
+  getPageView(uid: string) {
     const userInfo = this.analyticsCache.find(u => u.uid === uid);
     if (userInfo && userInfo.pageView) {
       return userInfo.pageView;
