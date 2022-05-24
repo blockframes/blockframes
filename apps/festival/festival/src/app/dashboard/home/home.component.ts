@@ -14,7 +14,6 @@ import {
   AggregatedAnalytic,
 } from '@blockframes/model';
 import { counter } from '@blockframes/analytics/+state/utils';
-import { joinWith } from '@blockframes/utils/operators';
 import { aggregate } from '@blockframes/analytics/+state/utils';
 import { UserService } from '@blockframes/user/+state';
 import { unique } from '@blockframes/utils/helpers';
@@ -26,6 +25,9 @@ import { combineLatest } from 'rxjs';
 // Intercom
 import { Intercom } from 'ng-intercom';
 import { ActivatedRoute, Router } from '@angular/router';
+
+// NgFire
+import { joinWith } from 'ngfire';
 
 @Component({
   selector: 'dashboard-home',

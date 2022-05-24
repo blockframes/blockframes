@@ -1,19 +1,15 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { EntityState } from '@datorama/akita';
 import { User } from '@blockframes/model';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 import { deleteDoc, getDoc, updateDoc, doc } from 'firebase/firestore';
 
-type UserState = EntityState<User>;
-
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'users' })
-export class UserService extends CollectionService<UserState> {
-  readonly useMemorization = false;
+export class UserService extends BlockframesCollection<User> {
+  readonly path = 'users';
 
   /**
    * Check if uid is exists in blockframesAdmin collection.
-   * If document exists, user is blockframeAdmin (like an ancient god).
+   * If document exists, user is blockframeAdmin.
    * @param uid
    */
   public async isBlockframesAdmin(uid: string): Promise<boolean> {

@@ -1,6 +1,6 @@
 import { ContractService } from "@blockframes/contract/contract/+state/contract.service";
 import {
-  adminOnlyWarning, alreadyExistError, ImportLog, checkParentTerm, getContract,
+  adminOnlyWarning, alreadyExistError, checkParentTerm, getContract,
   getOrgId, getTitleId, getUser, ImportError, mandatoryError,
   unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError
 } from "@blockframes/import/utils";
@@ -14,7 +14,6 @@ import { OrganizationService } from "@blockframes/organization/+state";
 import { UserService } from "@blockframes/user/+state";
 import { getKeyIfExists } from "@blockframes/utils/helpers";
 import { centralOrgId } from "@env";
-import { collection, doc, Firestore } from "firebase/firestore";
 import { getDate } from '@blockframes/import/utils';
 import { FormatConfig } from "./utils";
 
@@ -63,7 +62,6 @@ interface ContractConfig {
   titleService: MovieService,
   contractService: ContractService,
   userService: UserService,
-  firestore: Firestore,
   blockframesAdmin: boolean,
   userOrgId: string,
   caches: Caches,
@@ -77,7 +75,6 @@ export function getContractConfig(option: ContractConfig) {
     titleService,
     contractService,
     userService,
-    firestore,
     blockframesAdmin,
     userOrgId,
     caches,
@@ -212,7 +209,7 @@ export function getContractConfig(option: ContractConfig) {
         /* o */ 'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
 
         /* p */ 'contract.id': async (value: string) => {
-        const dummyId = doc(collection(firestore, '_')).id;
+        const dummyId = contractService.createId();
         if (value && !blockframesAdmin) throw adminOnlyWarning(dummyId, 'Contract ID');
         if (!value) return dummyId;
         const exist = await getContract(value, contractService, contractCache);
@@ -359,8 +356,8 @@ export function getContractConfig(option: ContractConfig) {
         /* n */ 'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
 
         /* o */ 'contract.id': async (value: string) => {
-        if (value && !blockframesAdmin) throw adminOnlyWarning(doc(collection(firestore, '_')).id, 'Contract ID');
-        if (!value) return doc(collection(firestore, '_')).id;
+        if (value && !blockframesAdmin) throw adminOnlyWarning(contractService.createId(), 'Contract ID');
+        if (!value) return contractService.createId();
         const exist = await getContract(value, contractService, contractCache);
         if (exist) throw alreadyExistError(value, 'Contract ID');
         return value;

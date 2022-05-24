@@ -1,5 +1,5 @@
 import '@angular/compiler';
-import { signInWithEmailAndPassword, signOut, getAuth } from '@angular/fire/auth';
+import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
 //Note:
 // This file is intended to be imported from support commands

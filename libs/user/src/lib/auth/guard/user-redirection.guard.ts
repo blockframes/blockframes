@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
-import { Auth } from '@angular/fire/auth';
+import { AuthService } from '../+state/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserRedirectionGuard implements CanActivate {
   constructor(
     private router: Router,
-    private afAuth: Auth
+    private authService: AuthService,
   ) { }
 
   async canActivate() {
-    const user = await this.afAuth.currentUser;
-
+    const user = await this.authService.auth.currentUser;
     // If user is not logged in, stay on the page
     if (!user || user.isAnonymous) return true;
 

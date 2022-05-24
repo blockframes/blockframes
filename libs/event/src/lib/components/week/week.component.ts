@@ -17,7 +17,6 @@ import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { collection, doc } from 'firebase/firestore';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 function floorToNearest(amount: number, precision: number) {
@@ -91,7 +90,7 @@ export class CalendarWeekComponent {
       return;
     }
     const localEvent: CalendarEvent = createEvent({
-      id: doc(collection(this.service['db'], '_')).id,
+      id: this.service.createId(),
       ownerOrgId: this.orgService.org.id,
       title: 'New event',
       start: segment.date,

@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService, Query, WriteOptions, queryChanges } from 'akita-ng-fire';
 import {
-  EventDocument,
   EventBase,
   EventTypes,
   Event,
@@ -13,65 +11,75 @@ import {
   SlateEvent,
   Timestamp
 } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { PermissionsService } from '@blockframes/permissions/+state';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { Observable, combineLatest, of } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import { ActiveState, EntityState } from '@datorama/akita';
 import { production } from '@env';
-import { QueryConstraint, where } from 'firebase/firestore';
-
-interface EventState extends EntityState<Event>, ActiveState<string> { };
-
-const eventQuery = (id: string) => ({
-  path: `events/${id}`,
-  org: ({ ownerOrgId }: ScreeningEvent) => ({ path: `orgs/${ownerOrgId}` }),
-  movie: (event: Event) => {
-    if (isScreening(event)) {
-      return event.meta.titleId ? { path: `movies/${event.meta.titleId}` } : undefined
-    }
-  },
-  organizedBy: (event: Event) => {
-    if (isMeeting(event)) {
-      return event.meta.organizerUid ? { path: `users/${event.meta.organizerUid}` } : undefined
-    }
-  }
-})
-
-/** Hold all the different queries for an event */
-const eventQueries = {
-  // Screening
-  screening: (queryConstraints: QueryConstraint[]): Query<ScreeningEvent> => ({
-    path: 'events',
-    queryConstraints: queryConstraints.concat([where('type', '==', 'screening')]),
-    movie: ({ meta }: ScreeningEvent) => {
-      return meta?.titleId ? { path: `movies/${meta.titleId}` } : undefined
-    },
-    org: (e: ScreeningEvent) => ({ path: `orgs/${e.ownerOrgId}` }),
-  }),
-
-  // Meeting
-  meeting: (queryConstraints: QueryConstraint[]): Query<MeetingEvent> => ({
-    path: 'events',
-    queryConstraints: queryConstraints.concat([where('type', '==', 'meeting')]),
-    org: ({ ownerOrgId }: MeetingEvent) => ({ path: `orgs/${ownerOrgId}` }),
-  }),
-
-  slate: (queryConstraints: QueryConstraint[]): Query<SlateEvent> => ({
-    path: 'events',
-    queryConstraints: queryConstraints.concat([where('type', '==', 'slate')]),
-    org: ({ ownerOrgId }: SlateEvent) => ({ path: `orgs/${ownerOrgId}` }),
-  }),
-}
+import { DocumentSnapshot, QueryConstraint, where } from 'firebase/firestore';
+import { WriteOptions } from 'ngfire';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { UserService } from '@blockframes/user/+state/user.service';
+import { joinWith } from 'ngfire';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'events' })
-export class EventService extends CollectionService<EventState> {
-  readonly useMemorization = false;
+export class EventService extends BlockframesCollection<Event> {
+  readonly path = 'events';
+
+  private eventQueries = {
+    // Screening
+    screening: (queryConstraints: QueryConstraint[]) => {
+      return this.valueChanges(queryConstraints.concat([where('type', '==', 'screening')])).pipe(
+        joinWith({
+          org: ({ ownerOrgId }: ScreeningEvent) => this.orgService.valueChanges(ownerOrgId),
+          movie: ({ meta }: ScreeningEvent) => {
+            return meta?.titleId ? this.movieService.valueChanges(meta.titleId) : undefined;
+          },
+        })
+      )
+    },
+    // Meeting
+    meeting: (queryConstraints: QueryConstraint[]) => {
+      return this.valueChanges(queryConstraints.concat([where('type', '==', 'meeting')])).pipe(
+        joinWith({
+          org: ({ ownerOrgId }: MeetingEvent) => this.orgService.valueChanges(ownerOrgId),
+        })
+      )
+    },
+    // Slate
+    slate: (queryConstraints: QueryConstraint[]) => {
+      return this.valueChanges(queryConstraints.concat([where('type', '==', 'slate')])).pipe(
+        joinWith({
+          org: ({ ownerOrgId }: SlateEvent) => this.orgService.valueChanges(ownerOrgId),
+        })
+      )
+    },
+  };
+
+  private eventQuery = (id: string) => {
+    return this.valueChanges(id).pipe(
+      joinWith({
+        org: ({ ownerOrgId }: ScreeningEvent) => this.orgService.valueChanges(ownerOrgId),
+        movie: (event: Event) => {
+          if (isScreening(event)) {
+            return event.meta.titleId ? this.movieService.valueChanges(event.meta.titleId) : undefined;
+          }
+        },
+        organizedBy: (event: Event) => {
+          if (isMeeting(event)) {
+            return event.meta.organizerUid ? this.userService.valueChanges(event.meta.organizerUid) : undefined;
+          }
+        }
+      })
+    )
+  };
 
   constructor(
     private permissionsService: PermissionsService,
     private orgService: OrganizationService,
+    private movieService: MovieService,
+    private userService: UserService,
   ) {
     super();
     if (!production && window['Cypress']) window['eventService'] = this; // instrument Cypress only out of PROD
@@ -87,7 +95,7 @@ export class EventService extends CollectionService<EventState> {
     return this.permissionsService.addDocumentPermissions(event.id, write, this.orgService.org.id);
   }
 
-  formatToFirestore(event: Event) {
+  toFirestore(event: Event) {
     const e = { ...event };
     // Remove frontend values
     delete e.draggable;
@@ -102,14 +110,14 @@ export class EventService extends CollectionService<EventState> {
     return e;
   }
 
-  formatFromFirestore<T>(event: EventDocument<T>): Event<T> {
-    return createCalendarEvent(event, this.isOwner(event));
+  protected fromFirestore(snapshot: DocumentSnapshot<Event<Timestamp>>): Event<Date> {
+    const event = super.fromFirestore(snapshot) as Event<Date>;
+    return createCalendarEvent<Date>(event, this.isOwner(event));
   }
 
   /** Query events based on types */
   queryByType(types: EventTypes[], queryConstraints?: QueryConstraint[]): Observable<Event[]> {
-    const queries = types.map(type => eventQueries[type](queryConstraints));
-    const queries$ = queries.map(query => queryChanges.call(this, query));
+    const queries$ = types.map(type => this.eventQueries[type](queryConstraints));
     return combineLatest(queries$).pipe(
       map((results) => results.flat()),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
@@ -121,11 +129,11 @@ export class EventService extends CollectionService<EventState> {
   queryDocs(ids: string): Observable<Event>
   queryDocs(ids: string | string[]): Observable<Event | Event[]> {
     if (typeof ids === 'string') {
-      return queryChanges.call(this, eventQuery(ids))
+      return this.eventQuery(ids);
     } else if (ids.length === 0) {
       return of([]);
     } else {
-      const queries = ids.map(id => queryChanges.call(this, eventQuery(id)))
+      const queries = ids.map(id => this.eventQuery(id))
       return combineLatest(queries);
     }
   }
