@@ -1,8 +1,24 @@
-import { Person, LanguageRecord, staticModel, Scope } from '@blockframes/model';
+import { Person } from "./identity";
+import { LanguageRecord } from "./movie";
+import { Scope, staticModel } from "./static";
 
 export interface ErrorResultResponse {
   error: string;
   result: any;
+}
+
+export interface FormSaveOptions {
+  publishing: boolean;
+}
+
+export interface RouteDescription {
+  path: string;
+  label: string;
+  icon?: string;
+  shouldHide?: boolean;
+  /** List of the keys required by the movie or organization to display the page */
+  requireKeys?: string[],
+  disclaimer?: string;
 }
 
 /**
@@ -225,7 +241,7 @@ export function createOfferId(orgName: string) {
  * https://developer.jwplayer.com/jwplayer/docs/jw8-add-custom-icons
  * https://css-tricks.com/probably-dont-base64-svg/
  */
-export function getWatermark(email: string = '', firstName: string = '', lastName: string = '') {
+export function getWatermark(email = '', firstName = '', lastName = '') {
   const svg = `
     <svg id="jwplayer-user-watermark" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg">
       <style>

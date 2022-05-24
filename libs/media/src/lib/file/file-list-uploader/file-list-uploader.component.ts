@@ -6,7 +6,7 @@ import { StorageFile } from '@blockframes/model';
 import { CollectionHoldingFile, FileLabel } from '@blockframes/media/+state/static-files';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { FormList } from '@blockframes/utils/form';
-import { AllowedFileType } from '@blockframes/utils/utils';
+import { AllowedFileType } from '@blockframes/model';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { getDoc, updateDoc, doc } from 'firebase/firestore';
 

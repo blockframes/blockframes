@@ -40,7 +40,7 @@ import { UserService } from '@blockframes/user/+state';
 import { Store, StoreConfig } from '@datorama/akita';
 import { APP } from '@blockframes/utils/routes/utils';
 import { doc, docData, getDoc, DocumentReference, writeBatch } from '@angular/fire/firestore';
-import { ErrorResultResponse } from '@blockframes/utils/utils';
+import { ErrorResultResponse } from '@blockframes/model';
 import { runInZone } from '@blockframes/utils/zone';
 
 @Injectable({ providedIn: 'root' })
