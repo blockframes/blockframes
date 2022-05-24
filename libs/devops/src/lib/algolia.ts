@@ -132,7 +132,7 @@ export async function upgradeAlgoliaUsers(db = loadAdminServices().db) {
   for await (const users of usersIterator) {
     const promises = users.map(async (user) => {
       try {
-        await storeSearchableUser(user, process.env['ALGOLIA_API_KEY']);
+        await storeSearchableUser(user, process.env['ALGOLIA_API_KEY'], db);
       } catch (error) {
         console.error(`\n\n\tFailed to insert a user ${user.uid} : skipping\n\n`);
         console.error(error);

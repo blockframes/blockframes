@@ -16,7 +16,6 @@ import {
   getMovieAppAccess,
   getOrgAppAccess
 } from '@blockframes/model';
-import * as admin from 'firebase-admin';
 import { hasAcceptedMovies, loadAdminServices } from './util';
 
 export const algolia = {
@@ -201,7 +200,7 @@ export function storeSearchableMovie(
 //                USERS
 // ------------------------------------
 
-export async function storeSearchableUser(user: PublicUser, adminKey?: string): Promise<any> {
+export async function storeSearchableUser(user: PublicUser, adminKey?: string, db = loadAdminServices().db): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -210,7 +209,6 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string): 
   try {
     let orgData;
     if (user.orgId) {
-      const db = admin.firestore();
       const org = await db.doc(`orgs/${user.orgId}`).get();
       orgData = org.data();
     }
