@@ -16,7 +16,8 @@ import {
   InvitationStatus,
   AlgoliaOrganization,
   App,
-  getOrgAppAccess
+  getOrgAppAccess,
+  filterInvitation
 } from '@blockframes/model';
 import { toDate } from '@blockframes/utils/helpers';
 import { cleanInvitation } from '../invitation-utils';
@@ -90,7 +91,9 @@ export class InvitationService extends CollectionService<InvitationState> {
   ]).pipe(
     map(([user, invitations]) => {
       if (!user?.uid || !user?.orgId) return [];
-      return invitations.filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid);
+      return invitations
+        .filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid)
+        .filter(i => filterInvitation(i, this.app));
     })
   );
 
