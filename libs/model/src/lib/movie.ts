@@ -1,4 +1,4 @@
-import { toDate } from '@blockframes/utils/helpers';
+import { toDate } from '@blockframes/model';
 import { createStorageFile, StorageFile, StorageVideo } from './media';
 import {
   MovieLanguageType,

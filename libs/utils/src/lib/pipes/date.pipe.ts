@@ -1,6 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { toDate } from '../helpers';
-import { Timestamp } from '@blockframes/model';
+import { Timestamp, toDate } from '@blockframes/model';
 
 @Pipe({ name: 'toDate' })
 export class ToDatePipe implements PipeTransform {

@@ -14,11 +14,11 @@ import {
   appName,
   getMovieAppAccess,
   App,
-  eventTypes
+  eventTypes,
+  toDate,
+  displayName
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { toDate } from '@blockframes/utils/helpers';
-import { displayName } from '@blockframes/model';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { format } from 'date-fns';
@@ -354,7 +354,7 @@ export class NotificationService extends CollectionService<NotificationState> {
           placeholderUrl: 'list_offer.svg',
           url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}`
         }
-      }  
+      }
       case 'createdCounterOffer': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
@@ -362,7 +362,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
         const name = await this.nameToDisplay(notification, contract);
         const message = `Your counter-offer for ${movie.title.international} was successfully sent to ${name}.`;
-        
+
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
@@ -392,7 +392,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
-        
+
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
@@ -426,7 +426,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
         const message = `Congrats for accepting the offer ${notification.offerId} for ${movie.title.international}! The agreement will now be drafted offline.`;
-        
+
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
@@ -440,7 +440,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
-        
+
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
@@ -454,7 +454,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
         const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
-        
+
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: toDate(notification._meta.createdAt) },
@@ -534,6 +534,6 @@ export class NotificationService extends CollectionService<NotificationState> {
     } else {
       const user = await this.userService.valueChanges(contract.buyerUserId).pipe(take(1)).toPromise();
       return displayName(user);
-    } 
+    }
   }
 }

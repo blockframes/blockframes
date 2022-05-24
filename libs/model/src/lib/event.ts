@@ -1,12 +1,11 @@
 import { AccessibilityTypes, EventTypes } from './static';
-import { toDate } from '@blockframes/utils/helpers';
 import { CalendarEvent } from 'angular-calendar';
 import { Organization } from './organisation';
 import { Movie } from './movie';
 import { User } from './user';
 import { StorageFile } from './media';
 import { AnonymousCredentials, Person } from './identity';
-import { Timestamp } from './timestamp';
+import { Timestamp, toDate } from './timestamp';
 
 // Event types
 export type EventMeta = Meeting | Screening | Slate | unknown;

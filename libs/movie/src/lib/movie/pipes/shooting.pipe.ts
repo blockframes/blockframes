@@ -1,7 +1,6 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { MovieShooting, TerritoryValue, territories } from '@blockframes/model';
-import { toDate } from '@blockframes/utils/helpers';
+import { MovieShooting, TerritoryValue, territories, toDate } from '@blockframes/model';
 
 @Pipe({ name: 'shootingDates' })
 export class ShootingDatesPipe implements PipeTransform {

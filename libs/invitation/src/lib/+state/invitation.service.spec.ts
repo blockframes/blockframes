@@ -2,7 +2,6 @@
 import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
 import { AuthService } from '@blockframes/auth/+state';
-import { toDate } from '@blockframes/utils/helpers';
 import {
   Firestore,
   provideFirestore,
@@ -20,7 +19,7 @@ import { readFileSync } from 'fs';
 import { Observable, of } from 'rxjs';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { createInvitation, createUser, InvitationDocument } from '@blockframes/model';
+import { createInvitation, createUser, InvitationDocument, toDate } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
 import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';

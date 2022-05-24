@@ -16,9 +16,9 @@ import {
   InvitationStatus,
   AlgoliaOrganization,
   App,
-  getOrgAppAccess
+  getOrgAppAccess,
+  toDate
 } from '@blockframes/model';
-import { toDate } from '@blockframes/utils/helpers';
 import { cleanInvitation } from '../invitation-utils';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
