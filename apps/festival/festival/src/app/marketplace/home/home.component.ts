@@ -10,10 +10,9 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CmsPage } from '@blockframes/admin/cms/template';
 import { AuthService } from '@blockframes/auth/+state';
-import { createPreferences } from '@blockframes/model';
+import { createPreferences, canHavePreferences } from '@blockframes/model';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { canHavePreferences } from '@blockframes/user/+state/user.utils';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 // Material

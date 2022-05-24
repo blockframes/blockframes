@@ -1,4 +1,4 @@
-import { Injectable, NgZone, Optional } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { map, switchMap, take, tap } from 'rxjs/operators';
 import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta, Timestamp, AnonymousCredentials, AnonymousRole, App } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
@@ -22,7 +22,6 @@ import {
 } from 'firebase/auth';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { ErrorResultResponse } from '@blockframes/model';
-import { runInZone } from '@blockframes/utils/zone';
 import { BlockframesAuth } from '@blockframes/utils/abstract-service';
 import { CallableFunctions, fromRef } from 'ngfire';
 import { doc, DocumentReference, getDoc, writeBatch } from 'firebase/firestore';
@@ -53,7 +52,6 @@ export class AuthService extends BlockframesAuth<User> {
       if (!authState || authState.isAnonymous) return of(undefined).pipe(map(() => [undefined, authState]));
       return this.userService.valueChanges(authState.uid).pipe(map(profile => [profile, authState]));
     }),
-    runInZone(this.ngZone), // TODO #7595 #7273 #8280
     map(([profile, userAuth]: [User, FireUser]) => {
       if (!userAuth) return;
 
@@ -88,7 +86,6 @@ export class AuthService extends BlockframesAuth<User> {
     })
   );
 
-
   get anonymouseOrRegularProfile() { return this.profile || this.anonymousCredentials };
 
   constructor(
@@ -96,7 +93,6 @@ export class AuthService extends BlockframesAuth<User> {
     private gdprService: GDPRService,
     private ipService: IpService,
     private userService: UserService,
-    private ngZone: NgZone,
     @Optional() public ngIntercom?: Intercom,
   ) {
     super();

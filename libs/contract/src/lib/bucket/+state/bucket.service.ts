@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { centralOrgId } from '@env';
-import { switchMap, take } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { createOfferId } from '@blockframes/model';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
@@ -19,6 +19,7 @@ import {
   Sale
 } from '@blockframes/model';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
+import { firstValueFrom } from 'rxjs';
 
 interface AddTermConfig {
   titleId: string,
@@ -51,7 +52,7 @@ export class BucketService extends BlockframesCollection<Bucket> {
   }
 
   getActive() {
-    return this.active$.pipe(take(1)).toPromise();
+    return firstValueFrom(this.active$);
   }
 
   async createOffer(specificity: string, delivery: string, currency: MovieCurrency) {

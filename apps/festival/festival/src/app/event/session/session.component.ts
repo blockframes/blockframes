@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { EventService } from '@blockframes/event/+state';
-import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, interval, Observable, Subscription } from 'rxjs';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { DoorbellBottomSheetComponent } from '@blockframes/event/components/doorbell/doorbell.component';
@@ -14,7 +14,7 @@ import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 import { ErrorResultResponse, extensionToType } from '@blockframes/model';
 import { MediaService } from '@blockframes/media/+state';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
-import { filter, pluck, scan, switchMap, take } from 'rxjs/operators';
+import { filter, pluck, scan, switchMap } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
 import { AuthService } from '@blockframes/auth/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
@@ -232,7 +232,7 @@ export class SessionComponent implements OnInit, OnDestroy {
     if (event.ownerOrgId !== this.authService.profile?.orgId) {
       // Try to get invitation the regular way
       const uidFilter = (invit: Invitation) => invit.toUser?.uid === this.authService.uid || invit.fromUser?.uid === this.authService.uid;
-      const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
+      const allInvitations = await firstValueFrom(this.invitationService.allInvitations$);
       let invitation = allInvitations.find(invit => invit.eventId === event.id && uidFilter(invit));
 
       // If user is logged-in as anonymous

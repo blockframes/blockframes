@@ -9,7 +9,7 @@ export class UserService extends BlockframesCollection<User> {
 
   /**
    * Check if uid is exists in blockframesAdmin collection.
-   * If document exists, user is blockframeAdmin (like an ancient god).
+   * If document exists, user is blockframeAdmin.
    * @param uid
    */
   public async isBlockframesAdmin(uid: string): Promise<boolean> {

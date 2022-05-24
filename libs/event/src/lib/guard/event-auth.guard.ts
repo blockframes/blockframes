@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { switchMap, catchError, take, filter, tap } from 'rxjs/operators';
-import { hasDisplayName } from '@blockframes/utils/helpers';
+import { switchMap, catchError, filter, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { CanActivate, CanDeactivate, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
+import { hasDisplayName } from '@blockframes/model';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +27,7 @@ export class EventAuthGuard implements CanActivate, CanDeactivate<unknown> {
         const validUser = hasDisplayName(authState.profile) && authState.emailVerified && authState.profile.orgId;
         if (!validUser) return this.router.createUrlTree(['/auth/identity']);
 
-        const org = await this.orgService.currentOrg$.pipe(take(1)).toPromise();
+        const org = await firstValueFrom(this.orgService.currentOrg$);
         if (org.status !== 'accepted') return this.router.createUrlTree(['/c/organization/create-congratulations']);
 
         return true;

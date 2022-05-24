@@ -10,9 +10,10 @@ import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contra
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { filter, first, pluck } from 'rxjs/operators'
+import { filter, pluck } from 'rxjs/operators'
 import { Negotiation } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'sale-negotiation',
@@ -42,11 +43,10 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.negotiation = await this.sale$.pipe(
+    this.negotiation = await firstValueFrom(this.sale$.pipe(
       pluck('negotiation'),
       filter(data => !!data),
-      first()
-    ).toPromise();
+    ));
     this.form.hardReset(this.negotiation);
     const termIndex = this.route.snapshot.queryParams.termIndex;
     this.activeTerm = termIndex ? parseInt(termIndex) : 0;
@@ -54,7 +54,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
 
   async decline() {
     this.form.markAsPristine(); // usefull to be able to route in the NegotiationGuard
-    const sale = await this.sale$.pipe(first()).toPromise();
+    const sale = await firstValueFrom(this.sale$);
     const ref = this.dialog.open(ConfirmDeclineComponent, {
       data: createModalData<ConfirmDeclineData>({ type: 'seller', showAcceptTermsCheckbox: true }),
       autoFocus: false
@@ -74,7 +74,7 @@ export class NegotiationComponent implements NegotiationGuardedComponent, OnInit
 
   async submit() {
     const onConfirm = async () => {
-      const sale = await this.sale$.pipe(first()).toPromise();
+      const sale = await firstValueFrom(this.sale$);
       const config = { duration: 6000 };
       await this.contractService.addNegotiation(sale.id, {
         ...sale.negotiation,

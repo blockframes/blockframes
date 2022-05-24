@@ -9,7 +9,6 @@ import { FormStaticValueArray } from "@blockframes/utils/form";
 import { toGroupLabel } from "@blockframes/utils/pipes";
 import { CallableFunctions } from 'ngfire';
 import { smartJoin } from "@blockframes/model";
-import { take } from "rxjs";
 
 @Component({
   selector: 'movie-request-asking-price',
@@ -47,7 +46,7 @@ export class RequestAskingPriceComponent {
         territories,
         message
       });
-      const title = await this.titleService.valueChanges(this.data.movieId).pipe(take(1)).toPromise();
+      const title = await this.titleService.load(this.data.movieId);
       this.analytics.addTitle('askingPriceRequested', title);
       this.snackbar.open('Asking price request successfully sent.', '', { duration: 3000 });
       this.dialog.close(true);

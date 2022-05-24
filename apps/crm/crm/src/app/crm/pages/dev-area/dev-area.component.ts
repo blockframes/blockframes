@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { first } from 'rxjs/operators';
 import { firebase } from '@env';
 import { AuthService } from '@blockframes/auth/+state';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'crm-dev-area',
@@ -20,8 +20,7 @@ export class DevAreaComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.token = await this.authService._user$.pipe(first())
-      .toPromise()
+    this.token = await firstValueFrom(this.authService._user$)
       .then(user => user.getIdToken());
     this.cdRef.markForCheck();
   }
