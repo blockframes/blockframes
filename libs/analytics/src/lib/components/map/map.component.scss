@@ -1,3 +1,5 @@
+@import '@angular/flex-layout/mq';
+
 :host {
   display: block;
 }
@@ -5,19 +7,24 @@
 header {
   display: flex;
   gap: 8px;
-
-  h5 {
-    display: flex;
-  }
+  justify-content: space-between;
 }
 
 world-map {
+  flex: 1 1 auto;
   height: 300px;
   border-radius: 4px;
 }
 
-section {
+section.horizontal {
   width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 24px;
+}
+
+mat-list.horizontal {
+  width: 25%;
 }
 
 img {
@@ -28,7 +35,30 @@ button {
   margin-left: auto;
 }
 
-
 mat-spinner {
   margin: auto;
+}
+
+.legend {
+  background-color: white;
+  position: absolute;
+  right: 0px;
+  z-index: 2;
+  padding: 8px;
+  border-radius: 4px;
+  color: #434773;
+
+  mat-list-item {
+    height: 32px;
+  }
+
+  svg {
+    margin-right: 12px;
+  }
+}
+
+@include layout-bp(lt-md) {
+  section.horizontal {
+    flex-direction: column;
+  }
 }

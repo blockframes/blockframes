@@ -41,7 +41,8 @@ import {
   createStakeholder,
   Director,
   createStorageFile,
-  App
+  App,
+  Privacy
 } from '@blockframes/model';
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import {
@@ -54,7 +55,6 @@ import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
 import { FormValue } from '@blockframes/utils/form';
 import { toDate } from '@blockframes/utils/helpers';
-import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 function createMovieControls(movie: Partial<Movie>) {
   const entity = createMovie(movie);

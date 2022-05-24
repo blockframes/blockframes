@@ -31,7 +31,8 @@ export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptio
   } catch (e) {
     console.log(e);
   }
-  if (emulator) { // ** Connect to emulator
+  if (emulator) {
+    // ** Connect to emulator
     const firebaseTest: FirebaseTestConfig = firebaseFunctionsTest();
     testIndex++;
     const projectId = getTestingProjectId();

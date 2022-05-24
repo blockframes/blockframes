@@ -41,7 +41,8 @@ import {
   app,
   modules,
   appName,
-  eventTypes
+  eventTypes,
+  privacies
 } from './static-model';
 
 export type App = typeof app[number];
@@ -51,6 +52,8 @@ export type Module = typeof modules[number];
 export type ModuleAccess = Record<Module, boolean>;
 
 export type OrgAppAccess = Record<App, ModuleAccess>;
+
+export type Privacy = typeof privacies[number];
 
 export type NumberRange = keyof typeof budgetRange;
 
