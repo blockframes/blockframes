@@ -7,14 +7,14 @@ import { FirestoreService, fromRef } from 'ngfire';
 @Injectable({ providedIn: 'root' })
 export class MaintenanceService {
 
-  private ref = this.firestoreService.getRef(`${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`) as DocumentReference<IMaintenanceDoc>;
+  private ref = this.firestore.getRef(`${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`) as DocumentReference<IMaintenanceDoc>;
   // if document doesn't exist, it means that there is something not normal, we force maintenance mode to true.
   isInMaintenance$ = fromRef(this.ref).pipe(
     map(snap => snap.data()),
     map(maintenanceDoc => maintenanceDoc ? _isInMaintenance(maintenanceDoc) : true)
   );
 
-  constructor(private firestoreService: FirestoreService) { }
+  constructor(private firestore: FirestoreService) { }
 
   redirectOnMaintenance() {
     return this.isInMaintenance$.pipe(
