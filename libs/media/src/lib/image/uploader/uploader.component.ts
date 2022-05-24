@@ -159,12 +159,12 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private snackBar: MatSnackBar,
     private uploaderService: FileUploaderService,
-    private firestoreService: FirestoreService
+    private firestore: FirestoreService
   ) { }
 
   async ngOnInit() {
     if (this.listenToChanges) {
-      const ref = this.firestoreService.getRef(`${this.metadata.collection}/${this.metadata.docId}`) as DocumentReference;
+      const ref = this.firestore.getRef(`${this.metadata.collection}/${this.metadata.docId}`) as DocumentReference;
       this.docSub = fromRef(ref).pipe(map(snap => snap.data())).subscribe(data => {
         const media = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]

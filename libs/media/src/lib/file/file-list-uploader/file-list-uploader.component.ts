@@ -31,7 +31,7 @@ export class FileListUploaderComponent {
 
   constructor(
     private uploadService: FileUploaderService,
-    private firestoreService: FirestoreService,
+    private firestore: FirestoreService,
   ) { }
 
   save() {
@@ -39,7 +39,7 @@ export class FileListUploaderComponent {
   }
 
   async delete(file: StorageFile, index: number) {
-    const docRef = doc(this.firestoreService.db, `${file.collection}/${file.docId}`);
+    const docRef = doc(this.firestore.db, `${file.collection}/${file.docId}`);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
       console.warn(`Document ${file.collection}/${file.docId} doesn't exists!`);

@@ -41,6 +41,8 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
 
   private analyticsCache: ConnectedUserInfo[] = [];
 
+  private getAnalyticsActiveUsers = this.functions.prepare<unknown, AnalyticsActiveUser[]>('getAnalyticsActiveUsers');
+
   constructor(
     @Inject(FIRE_ANALYTICS) private analytics: FirebaseAnalytics,
     private authService: AuthService,
@@ -149,7 +151,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
 
   public async loadAnalyticsData() {
     if (this.analyticsCache.length) return;
-    const rows = await this.getAnalyticsActiveUsers();
+    const rows = await this.getAnalyticsActiveUsers({});
     this.analyticsCache = rows.map(r => ({
       uid: r.user_id,
       firstConnexion: r.first_connexion.value,
@@ -157,10 +159,6 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
       sessionCount: r.session_count,
       pageView: r.page_view,
     }));
-  }
-
-  private getAnalyticsActiveUsers(): Promise<AnalyticsActiveUser[]> {
-    return this.functions.call<unknown, AnalyticsActiveUser[]>('getAnalyticsActiveUsers', {});
   }
 
   getLastConnexion(uid: string): Date {

@@ -13,7 +13,7 @@ export interface CmsParams {
 @Injectable({ providedIn: 'root' })
 export class CmsService {
 
-  constructor(private firestoreService: FirestoreService) { }
+  constructor(private firestore: FirestoreService) { }
 
   private getPath({ app, page, template }: CmsParams) {
     return ['cms', app, page, template].filter(v => !!v).join('/');
@@ -21,19 +21,19 @@ export class CmsService {
 
   save(document: CmsTemplate | CmsApp, params: CmsParams) {
     const path = this.getPath(params);
-    const ref = this.firestoreService.getRef(path) as DocumentReference<CmsTemplate | CmsApp>;
+    const ref = this.firestore.getRef(path) as DocumentReference<CmsTemplate | CmsApp>;
     return updateDoc<CmsTemplate | CmsApp>(ref, document);
   }
 
   collection<T extends CmsTemplate | CmsApp>(params: CmsParams) {
     const path = this.getPath(params);
-    const ref = this.firestoreService.getRef(path) as CollectionReference<T>;
+    const ref = this.firestore.getRef(path) as CollectionReference<T>;
     return fromRef(ref).pipe(map(snap => snap.docs.map(d => d.data())));
   }
 
   doc<T extends CmsTemplate | CmsApp>(params: CmsParams) {
     const path = this.getPath(params);
-    const ref = this.firestoreService.getRef(path) as DocumentReference<T>;
+    const ref = this.firestore.getRef(path) as DocumentReference<T>;
     return fromRef(ref).pipe(map(snap => snap.data()));
   }
 }

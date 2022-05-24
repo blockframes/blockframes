@@ -64,6 +64,10 @@ export class OrganizationService extends BlockframesCollection<Organization> {
     })
   );
 
+  notifyAppAccessChange = this.functions.prepare<{ orgId, app }, unknown>('onAccessToAppChanged');
+
+  requestAppAccess = this.functions.prepare<{ app: App, module: Module, orgId: string }, unknown>('requestFromOrgToAccessApp');
+
   constructor(
     private functions: CallableFunctions,
     private userService: UserService,
@@ -75,10 +79,10 @@ export class OrganizationService extends BlockframesCollection<Organization> {
     super();
   }
 
-  public async orgNameExist(orgName: string) {
+  public async getOrgIdFromName(orgName: string) {
     // @TODO #6908 a better solution for this should be found.
-    const orgs = await this.getValue([where('denomination.full', '==', orgName.trim())]);
-    return orgs.length !== 0;
+    const [org] = await this.getValue([where('denomination.full', '==', orgName.trim())]);
+    return org?.id;
   }
 
   /**
@@ -132,14 +136,6 @@ export class OrganizationService extends BlockframesCollection<Organization> {
     return this.add(newOrg);
   }
 
-  public notifyAppAccessChange(orgId: string, app: App) {
-    return this.functions.call('onAccessToAppChanged', { orgId, app });
-  }
-
-  public requestAppAccess(app: App, module: Module, orgId: string) {
-    return this.functions.call('requestFromOrgToAccessApp', { app, module, orgId });
-  }
-
   ////////////
   // MEMBER //
   ////////////
@@ -172,10 +168,6 @@ export class OrganizationService extends BlockframesCollection<Organization> {
     const org = typeof _org === 'string' ? await this.getValue(_org) : _org;
     const role = await this.permissionsService.getValue(org.id);
     return role.roles[uid];
-  }
-
-  public async uniqueOrgName(orgName: string): Promise<boolean> {
-    return this.orgNameExist(orgName).then((exist) => !exist);
   }
 
   //////////////////

@@ -83,12 +83,7 @@ export class TableExtractedMoviesComponent implements AfterViewInit {
     this.cdr.markForCheck();
     const data = this.rows.data;
     importState.movie = await this.movieService.create(importState.movie);
-    importState.errors.push({
-      type: 'error',
-      name: 'Film Code',
-      reason: 'Movie already exists',
-      message: 'Movie already saved'
-    });
+    importState.imported = true;
     this.rows.data = data;
 
     importState.importing = false;
@@ -154,7 +149,7 @@ export class TableExtractedMoviesComponent implements AfterViewInit {
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.rows.data.forEach(row => this.selection.select(row));
+      : this.rows.data.filter(row => !row.imported).forEach(row => this.selection.select(row));
   }
 
   /**

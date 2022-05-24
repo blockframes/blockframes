@@ -7,6 +7,20 @@ export interface ErrorResultResponse {
   result: any;
 }
 
+export interface FormSaveOptions {
+  publishing: boolean;
+}
+
+export interface RouteDescription {
+  path: string;
+  label: string;
+  icon?: string;
+  shouldHide?: boolean;
+  /** List of the keys required by the movie or organization to display the page */
+  requireKeys?: string[],
+  disclaimer?: string;
+}
+
 /**
  * replaces accented characters with their closes neighbour
  * in english characters
