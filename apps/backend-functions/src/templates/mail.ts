@@ -497,7 +497,7 @@ const organizationCreatedTemplate = (orgId: string) =>
  */
 const organizationRequestAccessToAppTemplate = (org: PublicOrganization, app: App, module: Module) =>
   `
-  Organization '${org.denomination.full}' requested access to ${module} module of app ${appName[app]},
+  Organization '${org.name}' requested access to ${module} module of app ${appName[app]},
 
   Visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${org.id} or go to ${ADMIN_ACCEPT_ORG_PATH}/${org.id} to enable it.
   `;
@@ -519,7 +519,7 @@ export function organizationCreated(org: OrganizationDocument): EmailRequest {
 
   return {
     to: supportEmail,
-    subject: `${appName[org._meta.createdFrom]} - ${org.denomination.full} was created and needs a review`,
+    subject: `${appName[org._meta.createdFrom]} - ${org.name} was created and needs a review`,
     text: organizationCreatedTemplate(org.id)
   };
 }

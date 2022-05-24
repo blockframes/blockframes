@@ -13,7 +13,7 @@ export { getDocument };
 export function createPublicOrganizationDocument(org: Partial<OrganizationDocument>) {
   return {
     id: org.id ?? '',
-    denomination: createDenomination(org.denomination),
+    name: org.name,
     logo: createStorageFile(org.logo),
     activity: org.activity ?? null,
   }
