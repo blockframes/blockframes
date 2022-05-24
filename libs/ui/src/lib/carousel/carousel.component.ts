@@ -44,7 +44,7 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
 
 
   /* Indicators to show arrow buttons */
-  @Input() min: number = 0;
+  min = 0;
   public showForward: boolean;
   public showBack: boolean;
   public amount$: Observable<number>;
