@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';
 import { firstValueFrom, Subscription } from 'rxjs';
+import { CallableFunctions } from 'ngfire';
 import { FIRE_ANALYTICS } from 'ngfire';
 
 // Blockframes
@@ -13,14 +14,39 @@ import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { createDocumentMeta } from '@blockframes/model';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
+interface AnalyticsActiveUser {
+  user_id: string,
+  first_connexion: {
+    value: Date
+  },
+  last_connexion: {
+    value: Date
+  },
+  session_count: number,
+  page_view: number
+}
+
+interface ConnectedUserInfo {
+  uid: string,
+  firstConnexion: Date,
+  lastConnexion: Date,
+  pageView: number,
+  sessionCount: number,
+}
+
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService extends BlockframesCollection<Analytics> implements OnDestroy {
   readonly path = 'analytics';
   private subscription?: Subscription
 
+  private analyticsCache: ConnectedUserInfo[] = [];
+
+  private getAnalyticsActiveUsers = this.functions.prepare<unknown, AnalyticsActiveUser[]>('getAnalyticsActiveUsers');
+
   constructor(
     @Inject(FIRE_ANALYTICS) private analytics: FirebaseAnalytics,
     private authService: AuthService,
+    private functions: CallableFunctions
   ) {
     super();
     // User tracking
@@ -116,10 +142,50 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
    * @dev We do not want to log centralOrg operators nor blockframes
    * admins nor concierge users actions on the platform.
    */
-  private async isOperator(): Promise<boolean> {
+  private async isOperator() {
     const isBlockframesAdmin = await firstValueFrom(this.authService.isBlockframesAdmin$);
     const profile = this.authService.profile;
     const isConcierge = profile?.email.includes('concierge');
     return isBlockframesAdmin || isConcierge || Object.values(centralOrgId).includes(profile?.orgId);
+  }
+
+  public async loadAnalyticsData() {
+    if (this.analyticsCache.length) return;
+    const rows = await this.getAnalyticsActiveUsers({});
+    this.analyticsCache = rows.map(r => ({
+      uid: r.user_id,
+      firstConnexion: r.first_connexion.value,
+      lastConnexion: r.last_connexion.value,
+      sessionCount: r.session_count,
+      pageView: r.page_view,
+    }));
+  }
+
+  getLastConnexion(uid: string) {
+    const userInfo = this.analyticsCache.find(u => u.uid === uid);
+    if (userInfo && userInfo.lastConnexion) {
+      return userInfo.lastConnexion;
+    }
+  }
+
+  getFirstConnexion(uid: string) {
+    const userInfo = this.analyticsCache.find(u => u.uid === uid);
+    if (userInfo && userInfo.firstConnexion) {
+      return userInfo.firstConnexion;
+    }
+  }
+
+  getSessionCount(uid: string) {
+    const userInfo = this.analyticsCache.find(u => u.uid === uid);
+    if (userInfo && userInfo.sessionCount) {
+      return userInfo.sessionCount;
+    }
+  }
+
+  getPageView(uid: string) {
+    const userInfo = this.analyticsCache.find(u => u.uid === uid);
+    if (userInfo && userInfo.pageView) {
+      return userInfo.pageView;
+    }
   }
 }

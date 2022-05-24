@@ -15,9 +15,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { Router, NavigationEnd } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
-// Akita
-import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-
 // Components
 import { AppComponent } from './app.component';
 
@@ -55,9 +52,6 @@ import { EMULATORS_CONFIG, setupEmulators } from '@blockframes/utils/emulator-fr
     IntercomModule.forRoot({ appId: intercomId }),
 
     sentryDsn ? SentryModule : ErrorLoggerModule,
-
-    // Akita
-    AkitaNgRouterStoreModule,
 
     // Router
     FinanciersModule,
