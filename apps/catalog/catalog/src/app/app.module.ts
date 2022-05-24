@@ -15,9 +15,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
-// Akita
-import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-
 // Components
 import { AppComponent } from './app.component';
 
@@ -52,9 +49,6 @@ import { EMULATORS_CONFIG, setupEmulators } from '@blockframes/utils/emulator-fr
     IntercomModule.forRoot({ appId: intercomId }),
 
     sentryDsn ? SentryModule : ErrorLoggerModule,
-
-    // Akita
-    AkitaNgRouterStoreModule,
 
     // Router
     IdlePreloadModule.forRoot(),
