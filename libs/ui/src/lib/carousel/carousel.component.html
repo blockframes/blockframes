@@ -1,6 +1,8 @@
-<div class="row" cdkScrollable #container>
-  <ng-content></ng-content>
-</div>
+<ul cdkScrollable #container>
+  <li *ngFor="let item of items">
+    <ng-template [ngTemplateOutlet]="item.template"></ng-template>
+  </li>
+</ul>
 <ng-container *ngIf="(amount$ | async) | isAbove: min">
   <ng-container *ngIf="showBack">
     <button mat-fab (click)="scrollTo('left')" class="previous direction active">

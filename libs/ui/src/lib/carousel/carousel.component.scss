@@ -1,18 +1,13 @@
+@import '@angular/flex-layout/mq';
+
+@function show($number, $gap) {
+  @return calc(percentage(calc(1 / $number)) - $gap);
+}
+$gap: 24px;
+
 :host {
   display: block;
   position: relative;
-}
-
-.row {
-  display: flex;
-  width: 100%;
-  overflow: auto; // Cannot scroll if overflow hidden on Safari
-  scroll-behavior: smooth;
-  scrollbar-width: none; // Hide scrollbar for firefox
-}
-
-.row::-webkit-scrollbar {
-  display: none; // Hide scrollbar this way instead of overflow hidden
 }
 
 .direction {
@@ -28,4 +23,141 @@
 .next {
   right: 0px;
   bottom: calc(50% - 20px);
+}
+
+ul {
+  display: flex;
+  gap: $gap;
+  width: 100%;
+  overflow: auto; // Cannot scroll if overflow hidden on Safari
+  scroll-behavior: smooth;
+  scrollbar-width: none; // Hide scrollbar for firefox
+}
+
+ul::-webkit-scrollbar {
+  display: none; // Hide scrollbar this way instead of overflow hidden
+}
+
+:host[data-columns="2"] li {
+  min-width: show(2, $gap);
+  max-width: show(2, $gap);
+}
+
+:host[data-columns="3"] li {
+  min-width: show(3, $gap);
+  max-width: show(3, $gap);
+}
+
+:host[data-columns="4"] li {
+  min-width: show(4, $gap);
+  max-width: show(4, $gap);
+}
+
+:host[data-columns="5"] li {
+  min-width: show(5, $gap);
+  max-width: show(5, $gap);
+}
+
+:host[data-columns="6"] li {
+  min-width: show(6, $gap);
+  max-width: show(6, $gap); 
+}
+
+@include layout-bp(md) {
+  $gap: 16px;
+
+  ul {
+    gap: $gap;
+  }
+
+  :host[data-columns="2"] li {
+    min-width: show(2, $gap);
+    max-width: show(2, $gap);
+  }
+  
+  :host[data-columns="3"] li {
+    min-width: show(3, $gap);
+    max-width: show(3, $gap);
+  }
+  
+  :host[data-columns="4"] li {
+    min-width: show(4, $gap);
+    max-width: show(4, $gap);
+  }
+  
+  :host[data-columns="5"] li {
+    min-width: show(5, $gap);
+    max-width: show(5, $gap);
+  }
+  
+  :host[data-columns="6"] li {
+    min-width: show(6, $gap);
+    max-width: show(6, $gap); 
+  }
+}
+
+@include layout-bp(sm) {
+  $gap: 16px;
+
+  ul {
+    gap: $gap;
+  }
+
+  :host[data-columns="2"] li {
+    min-width: show(1, $gap);
+    max-width: show(1, $gap);
+  }
+  
+  :host[data-columns="3"] li {
+    min-width: show(2, $gap); 
+    max-width: show(2, $gap);
+  }
+  
+  :host[data-columns="4"] li {
+    min-width: show(3, $gap);
+    max-width: show(3, $gap);
+  }
+  
+  :host[data-columns="5"] li {
+    min-width: show(4, $gap);
+    max-width: show(4, $gap);
+  }
+  
+  :host[data-columns="6"] li {
+    min-width: show(5, $gap);
+    max-width: show(5, $gap); 
+  }
+}
+
+@include layout-bp(xs) {
+  $gap: 16px;
+
+  ul {
+    gap: $gap;
+  }
+
+  :host[data-columns="2"] li {
+    min-width: show(1, $gap);
+    max-width: show(1, $gap);
+  }
+  
+  :host[data-columns="3"] li {
+    min-width: show(1, $gap); 
+    max-width: show(1, $gap);
+  }
+  
+  :host[data-columns="4"] li {
+    min-width: show(2, $gap);
+    max-width: show(2, $gap);
+  }
+  
+  :host[data-columns="5"] li {
+    min-width: show(3, $gap);
+    max-width: show(3, $gap);
+  }
+  
+  :host[data-columns="6"] li {
+    min-width: show(4, $gap);
+    max-width: show(4, $gap); 
+  }
 }

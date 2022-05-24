@@ -11,7 +11,10 @@ import {
   NgZone,
   OnDestroy,
   ContentChildren,
-  QueryList, Input, AfterContentInit
+  QueryList,
+  Input,
+  AfterContentInit,
+  TemplateRef
 } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
@@ -26,6 +29,8 @@ import { startWith, distinctUntilChanged, map, debounceTime, tap } from 'rxjs/op
 @Directive({ selector: '[carouselItem]' })
 export class CarouselItemDirective {
   @HostBinding('style.flexShrink') shrink = 0;
+
+  constructor(public template: TemplateRef<unknown>) {}
 }
 
 @Component({
@@ -35,10 +40,11 @@ export class CarouselItemDirective {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDestroy {
+  @HostBinding('attr.data-columns') _columns: number;
 
-  @Input() min: number;
 
   /* Indicators to show arrow buttons */
+  @Input() min: number = 0;
   public showForward: boolean;
   public showBack: boolean;
   public amount$: Observable<number>;
@@ -53,7 +59,19 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
   @ViewChild('container') container: ElementRef<HTMLDivElement>;
   @ContentChildren(CarouselItemDirective) items: QueryList<CarouselItemDirective>;
 
-  constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone) { }
+  @Input() set columns(columns: 2 | 3 | 4 | 5 | 6) {
+    this._columns = columns;
+  }
+
+  constructor(
+    private elementRef: ElementRef,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
+  ) { }
+
+  get carouselWidth() {
+    return this.elementRef.nativeElement.clientWidth
+  }
 
   get clientWidth() {
     return this.container.nativeElement.clientWidth;
@@ -73,18 +91,24 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
 
   ngAfterContentInit() {
     this.amount$ = this.items.changes.pipe(startWith(this.items), map(items => items.length));
-    this.itemsSub = this.items.changes.subscribe(() => this.showForward = !!this.scrollable.measureScrollOffset('right'));
+    this.itemsSub = this.items.changes.subscribe(() => {
+      setTimeout(() => {
+        this.showForward = !!this.scrollable.measureScrollOffset('right')
+      }, 0)
+      // this.showForward = items.length > this.columns
+    });
+
+    const { columns } = getLayoutGrid(this.carouselWidth);
+    const col = 12 / this._columns // number of columns in 12 column grid
+    this.min = this._columns ? Math.floor(columns / col) : 0;
   }
 
   scrollTo(direction: 'left' | 'right') {
     this.currentPosition = this.scrollable.measureScrollOffset('left');
-    const clientWidth = this.clientWidth
-
-    const { margin } = getLayoutGrid(clientWidth);
 
     direction === 'right'
-      ? this.scrollable.scrollTo({ left: this.currentPosition + clientWidth + margin })
-      : this.scrollable.scrollTo({ left: this.currentPosition - clientWidth - margin })
+      ? this.scrollable.scrollTo({ left: this.currentPosition + this.clientWidth })
+      : this.scrollable.scrollTo({ left: this.currentPosition - this.clientWidth })
   }
 
   onScrolling(direction: 'right' | 'left') {

@@ -46,10 +46,12 @@
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>
     </header>
-    <bf-carousel flex>
+    <bf-carousel [columns]="4">
       <ng-container *ngFor="let movie of section | queryTitles | async | sortBy:section.sorting">
-        <movie-card [movie]="movie" [size]="section.mode" [link]="['../title', movie.id]" [col]="3" carouselItem>
-        </movie-card>
+        <ng-template carouselItem>
+          <movie-card [movie]="movie" [size]="section.mode" [link]="['../title', movie.id]">
+          </movie-card>
+        </ng-template>
       </ng-container>
     </bf-carousel>
   </section>
@@ -66,9 +68,11 @@
       </a>
     </header>
     <article>
-      <bf-carousel flex>
+      <bf-carousel [columns]="6">
         <ng-container *ngFor="let org of section | queryOrgs | async">
-          <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
+          <ng-template carouselItem>
+            <org-card-minimal [org]="org"></org-card-minimal>
+          </ng-template>
         </ng-container>
       </bf-carousel>
     </article>
