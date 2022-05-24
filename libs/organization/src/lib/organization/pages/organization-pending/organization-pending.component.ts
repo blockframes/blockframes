@@ -50,6 +50,6 @@ export class OrganizationPendingComponent {
   }
 
   public logout() {
-    this.authService.signOut();
+    this.authService.signout();
   }
 }

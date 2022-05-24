@@ -1,7 +1,6 @@
-// Angular
 import { Component, ChangeDetectionStrategy, Inject, HostBinding, HostListener } from '@angular/core';
-import { UploadTask } from '@angular/fire/storage';
-import { Firestore } from '@angular/fire/firestore';
+import { Firestore } from 'firebase/firestore';
+import { UploadTask } from 'firebase/storage';
 
 // Blockframes
 import { BehaviorStore } from '@blockframes/utils/observable-helpers';

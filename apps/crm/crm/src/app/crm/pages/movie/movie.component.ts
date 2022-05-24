@@ -18,7 +18,7 @@ import { QueryConstraint, where } from 'firebase/firestore';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { map, Observable } from 'rxjs';
 import { aggregatePerUser } from '@blockframes/analytics/+state/utils';
-import { joinWith } from '@blockframes/utils/operators';
+import { joinWith } from 'ngfire';
 import { UserService } from '@blockframes/user/+state';
 
 const eventLabel: Record<EventName, string> = {

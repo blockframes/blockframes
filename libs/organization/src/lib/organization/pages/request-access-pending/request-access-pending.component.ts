@@ -18,6 +18,6 @@ export class OrgRequestAccessPendingComponent {
   }
 
   logout() {
-    this.authService.signOut();
+    this.authService.signout();
   }
 }

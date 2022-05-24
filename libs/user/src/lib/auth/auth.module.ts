@@ -4,10 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 
-// Angular Fire
-import { getAuth, provideAuth } from '@angular/fire/auth';
-import { getPerformance, providePerformance } from '@angular/fire/performance';
-
 // Material
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -89,8 +85,6 @@ export const AuthRoutes: Routes = [
     MatCardModule,
 
     // Fire
-    provideAuth(() => getAuth()),
-    providePerformance(() => getPerformance()),
     RouterModule.forChild(AuthRoutes),
   ],
   declarations: [
