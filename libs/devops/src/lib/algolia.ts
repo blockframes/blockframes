@@ -53,7 +53,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = loadAdminS
       300
     );
     for await (const orgs of orgsIterator) {
-      const promises = orgs.map((org) => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']));
+      const promises = orgs.map((org) => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY'], db));
 
       await Promise.all(promises);
       console.log(`chunk of ${orgs.length} orgs processed...`);
