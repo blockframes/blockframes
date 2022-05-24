@@ -12,7 +12,7 @@
           Email Address is <strong>required</strong>.
         </mat-error>
       </mat-form-field>
-      <password-input [control]="signinForm.get('password')" placeholder="Password" label="Password" testId="password" >   
+      <password-input [control]="signinForm.get('password')" placeholder="Password" label="Password" test-id="password" >   
         <mat-hint>Between 6 and 24 characters.</mat-hint>
         <mat-error *ngIf="signinForm.get('password').hasError('minlength')">
           Password with less than <strong>6</strong> characters.

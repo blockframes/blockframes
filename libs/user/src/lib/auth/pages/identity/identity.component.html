@@ -99,7 +99,7 @@
           [control]="form.get('password')"
           placeholder="New Password"
           label="Password"
-          testId="password"
+          test-id="password"
         >
           <mat-hint>Between 6 and 24 characters.</mat-hint>
           <mat-error *ngIf="form.get('password').hasError('required')">
@@ -118,7 +118,7 @@
           [errorStateMatcher]="passwordsMatcher"
           placeholder="New Password Confirmation"
           label="Password Confirmation"
-          testId="password-confirm"
+          test-id="password-confirm"
         >
           <mat-hint>Please rewrite your password for confirmation.</mat-hint>
           <mat-error *ngIf="form.get('confirm').hasError('required')">
