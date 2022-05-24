@@ -64,7 +64,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
 
   constructor(
     private movieService: MovieService,
-    private firestoreService: FirestoreService,
+    private firestore: FirestoreService,
     private mediaService: MediaService,
     private service: FileUploaderService,
     private route: ActivatedRoute,
@@ -142,7 +142,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
         privacy: null,
         storagePath: null
       })
-      const ref = this.firestoreService.getRef(`${metadata.collection}/${metadata.docId}`) as DocumentReference;
+      const ref = this.firestore.getRef(`${metadata.collection}/${metadata.docId}`) as DocumentReference;
       updateDoc(ref, emptyStorageFile);
     }
   }

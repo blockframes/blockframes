@@ -12,8 +12,9 @@ import {
   Invitation,
   InvitationStatus,
   AlgoliaOrganization,
+  App,
   getOrgAppAccess,
-  App
+  filterInvitation
 } from '@blockframes/model';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
@@ -67,7 +68,9 @@ export class InvitationService extends BlockframesCollection<Invitation> {
   ]).pipe(
     map(([user, invitations]) => {
       if (!user?.uid || !user?.orgId) return [];
-      return invitations.filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid);
+      return invitations
+        .filter(i => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid)
+        .filter(i => filterInvitation(i, this.app));
     })
   );
 
@@ -84,6 +87,22 @@ export class InvitationService extends BlockframesCollection<Invitation> {
     })
   );
 
+  /**
+   * Return true if there is already a pending invitation for a list of users
+   */
+  hasUserAnOrgOrIsAlreadyInvited = this.functions.prepare<string[], boolean>('hasUserAnOrgOrIsAlreadyInvited');
+
+  /**
+   * Return a boolean or a PublicOrganization doc if there is an invitation linked to the email.
+   * Return false if there is no invitation at all.
+   */
+  getInvitationLinkedToEmail = this.functions.prepare<string, boolean | AlgoliaOrganization>('getInvitationLinkedToEmail');
+
+  /**
+   * Used to accept or decline invitation if user is logged in as anonymous
+   */
+  acceptOrDeclineInvitationAsAnonymous = this.functions.prepare<{ invitationId: string, email: string, status: InvitationStatus }, unknown>('acceptOrDeclineInvitationAsAnonymous');
+
   constructor(
     private orgService: OrganizationService,
     private authService: AuthService,
@@ -96,28 +115,6 @@ export class InvitationService extends BlockframesCollection<Invitation> {
   toFirestore(invitation: Invitation) {
     delete invitation.message;
     return invitation;
-  }
-
-  /**
-   * Return true if there is already a pending invitation for a list of users
-   */
-  public hasUserAnOrgOrIsAlreadyInvited(emails: string[]) {
-    return this.functions.call<string[], boolean>('hasUserAnOrgOrIsAlreadyInvited', emails);
-  }
-
-  /**
-   * Return a boolean or a PublicOrganization doc if there is an invitation linked to the email.
-   * Return false if there is no invitation at all.
-   */
-  public getInvitationLinkedToEmail(email: string) {
-    return this.functions.call<string, boolean | AlgoliaOrganization>('getInvitationLinkedToEmail', email);
-  }
-
-  /**
-   * Used to accept or decline invitation if user is logged in as anonymous
-   */
-  public acceptOrDeclineInvitationAsAnonymous({ invitationId, email, status }: { invitationId: string, email: string, status: InvitationStatus }) {
-    return this.functions.call<{ invitationId: string, email: string, status: InvitationStatus }, unknown>('acceptOrDeclineInvitationAsAnonymous', { invitationId, email, status });
   }
 
   /////////////

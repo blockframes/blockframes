@@ -59,8 +59,8 @@ describe('Notifications Test Suite', () => {
       ],
     });
     service = TestBed.inject(NotificationService);
-    const firestoreService = TestBed.inject(FirestoreService);
-    db = firestoreService.db;
+    const firestore = TestBed.inject(FirestoreService);
+    db = firestore.db;
 
     await initializeTestEnvironment({
       projectId: 'test',
