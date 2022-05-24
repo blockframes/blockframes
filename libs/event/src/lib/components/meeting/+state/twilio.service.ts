@@ -47,11 +47,9 @@ export class TwilioService {
     return this._attendees.value['local'] as LocalAttendee;
   }
 
-  constructor(private functions: CallableFunctions) { }
+  private getToken = this.functions.prepare<{ eventId: string, credentials: Partial<PublicUser> }, ErrorResultResponse>('getAccessToken');
 
-  getToken(eventId: string, credentials: Partial<PublicUser>) {
-    return this.functions.call<{ eventId: string, credentials: Partial<PublicUser> }, ErrorResultResponse>('getAccessToken', { eventId, credentials });
-  }
+  constructor(private functions: CallableFunctions) { }
 
   togglePreference(kind: TrackKind) {
     this.preference[kind] = !this.preference[kind];
@@ -143,7 +141,7 @@ export class TwilioService {
     if (this.room) return;
 
     // Get Twilio token & ensure that there is no error
-    const response = await this.getToken(eventId, credentials);
+    const response = await this.getToken({eventId, credentials});
     if (response.error) {
       throw new Error(`${response.error}: ${response.result}`);
     }

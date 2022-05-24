@@ -62,6 +62,10 @@ export class OrganizationService extends BlockframesCollection<Organization> {
     })
   );
 
+  notifyAppAccessChange = this.functions.prepare<{ orgId, app }, unknown>('onAccessToAppChanged');
+
+  requestAppAccess = this.functions.prepare<{ app: App, module: Module, orgId: string }, unknown>('requestFromOrgToAccessApp');
+
   constructor(
     private functions: CallableFunctions,
     private userService: UserService,
@@ -127,14 +131,6 @@ export class OrganizationService extends BlockframesCollection<Organization> {
 
     const newOrg = this.cleanOrganization(newOrganization);
     return this.add(newOrg);
-  }
-
-  public notifyAppAccessChange(orgId: string, app: App) {
-    return this.functions.call('onAccessToAppChanged', { orgId, app });
-  }
-
-  public requestAppAccess(app: App, module: Module, orgId: string) {
-    return this.functions.call('requestFromOrgToAccessApp', { app, module, orgId });
   }
 
   ////////////

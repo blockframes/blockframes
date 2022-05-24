@@ -21,14 +21,14 @@ export class AuthWidgetComponent {
   organization$ = this.orgService.currentOrg$;
   theme$ = this.themeService.theme$;
   isBfAdmin = firstValueFrom(this.authService.isBlockframesAdmin$); 
-  appVersion$ = fromRef(this.firestoreService.getRef(dbVersionDoc) as DocumentReference<IVersionDoc>).pipe(map(snap => snap.data()));
+  appVersion$ = fromRef(this.firestore.getRef(dbVersionDoc) as DocumentReference<IVersionDoc>).pipe(map(snap => snap.data()));
   emulatorList = Object.keys(emulators).filter(key => !!emulators[key]);
   emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none'
 
   constructor(
     private authService: AuthService,
     private orgService: OrganizationService,
-    private firestoreService: FirestoreService,
+    private firestore: FirestoreService,
     private themeService: ThemeService
   ) { }
 

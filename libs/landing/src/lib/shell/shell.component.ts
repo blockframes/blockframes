@@ -79,6 +79,9 @@ export class LandingShellComponent implements OnDestroy {
   @ContentChild(LandingAppLinkDirective) landingAppLinkDirective: LandingAppLinkDirective
   @ContentChild(LandingFooterComponent) landingFooterComponent: LandingFooterComponent
 
+  /** Send a mail to the admin with user's informations. */
+  sendDemoRequest = this.functions.prepare<RequestDemoInformations, unknown>('sendDemoRequest');
+
   constructor(
     private snackBar: MatSnackBar,
     private functions: CallableFunctions,
@@ -96,11 +99,6 @@ export class LandingShellComponent implements OnDestroy {
   ngOnDestroy() {
     // resetting theme to theme preference of system/browser
     this.theme.initTheme('light');
-  }
-
-  /** Send a mail to the admin with user's informations. */
-  private sendDemoRequest(information: RequestDemoInformations) {
-    return this.functions.call<RequestDemoInformations, unknown>('sendDemoRequest', information);
   }
 
   /** Register an email to a mailchimp mailing list */

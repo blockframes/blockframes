@@ -121,7 +121,7 @@ export class OrganizationComponent implements OnInit {
           Object.keys(after[app]).every((module) => before[app][module] === false) &&
           Object.keys(after[app]).some((module) => after[app][module] === true)
         ) {
-          this.organizationService.notifyAppAccessChange(this.orgId, app as App);
+          this.organizationService.notifyAppAccessChange({ orgId: this.orgId, app: app as App });
         }
       }
     }
