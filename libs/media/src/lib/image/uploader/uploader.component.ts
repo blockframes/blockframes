@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener, ElementRef, ViewChild, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, map, Subscription } from 'rxjs';
 import { MediaService } from '../../+state/media.service';
 import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
@@ -10,10 +10,11 @@ import { StorageFile, FileMetaData, createStorageFile } from '@blockframes/model
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
 import { FileUploaderService } from '../../+state/file-uploader.service';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
-import { doc, Firestore, docData } from '@angular/fire/firestore';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { allowedFiles, fileSizeToString } from '@blockframes/utils/utils';
+import { allowedFiles, fileSizeToString } from '@blockframes/model';
+import { DocumentReference } from 'firebase/firestore';
+import { FirestoreService, fromRef } from 'ngfire';
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
@@ -127,7 +128,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   }
 
   @Input() set meta(value: [CollectionHoldingFile, FileLabel, string]) {
-    const [ collection, label, docId ] = value;
+    const [collection, label, docId] = value;
     this.storagePath = getFileStoragePath(collection, label, docId);
     this.metadata = getFileMetadata(collection, label, docId);
   }
@@ -154,17 +155,17 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   private dropEnabledSteps: CropStep[] = ['drop', 'hovering'];
 
   constructor(
-    private db: Firestore,
     private mediaService: MediaService,
     private sanitizer: DomSanitizer,
     private snackBar: MatSnackBar,
     private uploaderService: FileUploaderService,
+    private firestore: FirestoreService
   ) { }
 
   async ngOnInit() {
     if (this.listenToChanges) {
-      const ref = doc(this.db,`${this.metadata.collection}/${this.metadata.docId}`);
-      this.docSub = docData(ref).subscribe(data => {
+      const ref = this.firestore.getRef(`${this.metadata.collection}/${this.metadata.docId}`) as DocumentReference;
+      this.docSub = fromRef(ref).pipe(map(snap => snap.data())).subscribe(data => {
         const media = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);

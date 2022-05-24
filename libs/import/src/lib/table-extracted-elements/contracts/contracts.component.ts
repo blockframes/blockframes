@@ -10,21 +10,12 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
-import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
-import { createDocumentMeta } from '@blockframes/model';
-import { Firestore } from '@angular/fire/firestore';
-import { where, doc, collection } from 'firebase/firestore';
+import { createDocumentMeta, Mandate, Sale } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
-
-const getTitleContracts = (type: 'mandate' | 'sale', titleId: string) => [
-  where('type', '==', type),
-  where('titleId', '==', titleId),
-  where('status', '==', 'accepted')
-];
 
 @Component({
   selector: 'import-table-extracted-contracts',
@@ -55,7 +46,6 @@ export class TableExtractedContractsComponent implements AfterViewInit {
     private dialog: MatDialog,
     private contractService: ContractService,
     private termService: TermService,
-    private db: Firestore,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -96,29 +86,6 @@ export class TableExtractedContractsComponent implements AfterViewInit {
     this.cdr.markForCheck();
   }
 
-  async getExistingContracts(type: 'sale', titleId: string): Promise<FullSale[]>;
-  async getExistingContracts(type: 'mandate', titleId: string): Promise<FullMandate[]>;
-  async getExistingContracts(type: 'sale' | 'mandate', titleId: string): Promise<(FullSale | FullMandate)[]> {
-    const query = getTitleContracts(type, titleId);
-    const contracts = await this.contractService.getValue(query);
-    const promises = contracts.map(contract => this.termService.getValue(contract.termIds))
-    const terms = await Promise.all(promises);
-    return contracts.map((contract, idx) => ({ ...contract, terms: terms[idx] }) as FullSale | FullMandate)
-  }
-
-  /**Verifies if terms overlap with existing mandate terms in the Db */
-  private async verifyOverlappingMandatesAndSales(importState: ContractsImportState) {
-    const mandates = await this.getExistingContracts('mandate', importState.contract.titleId);
-    const sales = await this.getExistingContracts('sale', importState.contract.titleId);
-    const availabilities = importState.terms.map(term => {
-      const data = { avails: term, mandates: [], sales, bucketContracts: [], existingMandates: mandates };
-      return territoryAvailabilities(data);
-    });
-    const isOverlappingSale = importState.contract.type === 'sale' && availabilities.some(availability => availability.sold.length);
-    const isOverlappingMandate = importState.contract.type === 'mandate' && availabilities.some(availability => availability.available.length);
-    return { isOverlappingSale, isOverlappingMandate };
-  }
-
   /**
    * Adds a contract to database and prevents multi-insert by refreshing mat-table
    * @param importState
@@ -126,50 +93,31 @@ export class TableExtractedContractsComponent implements AfterViewInit {
   private async add(importState: ContractsImportState, { increment } = { increment: false }) {
     importState.importing = true;
     this.cdr.markForCheck();
-    importState.terms.forEach(t => t.id = doc(collection(this.db, '_')).id);
+    importState.terms.forEach(t => t.id = this.termService.createId());
     importState.contract.termIds = importState.terms.map(t => t.id);
 
-    const overlapConditions = await this.verifyOverlappingMandatesAndSales(importState);
-    if (overlapConditions.isOverlappingMandate) {
-      importState.errors.push({
-        type: 'error',
-        name: 'Contract',
-        reason: 'The Terms of a Contract overlap with that of an already existing Mandate.',
-        message: 'The Terms of a Contract overlap with that of an already existing Mandate.'
-      });
-      importState.importing = false;
-      this.cdr.markForCheck();
-      return false;
-    }
-    if (overlapConditions.isOverlappingSale) {
-      importState.errors.push({
-        type: 'error',
-        name: 'Contract',
-        reason: 'The terms of the imported sale have been sold already.',
-        message: 'The terms of the imported sale have been sold already.'
-      });
-      importState.importing = false;
-      this.cdr.markForCheck();
-      return false;
-    }
+
 
     if (increment) this.processing++;
     this.cdr.markForCheck();
 
-    await this.contractService.add({
-      ...importState.contract,
-      _meta: createDocumentMeta({ createdAt: new Date() })
-    });
+    if (importState.contract.type === 'sale') {
+      await this.contractService.add<Sale>({
+        ...importState.contract,
+        _meta: createDocumentMeta({ createdAt: new Date() })
+      });
+
+    } else {
+      await this.contractService.add<Mandate>({
+        ...importState.contract,
+        _meta: createDocumentMeta({ createdAt: new Date() })
+      });
+    }
 
     // @dev: Create terms after contract because rules require contract to be created first
     await this.termService.add(importState.terms);
 
-    importState.errors.push({
-      type: 'error',
-      name: 'Contract',
-      reason: 'Contract already added',
-      message: 'Contract already added'
-    });
+    importState.imported = true;
 
     importState.importing = false;
     this.cdr.markForCheck();
@@ -208,7 +156,7 @@ export class TableExtractedContractsComponent implements AfterViewInit {
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.rows.data.forEach(row => this.selection.select(row));
+      : this.rows.data.filter(row => !row.imported).forEach(row => this.selection.select(row));
   }
 
   /**

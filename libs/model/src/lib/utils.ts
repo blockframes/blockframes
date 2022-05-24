@@ -1,8 +1,24 @@
-import { Person, LanguageRecord, staticModel, Scope } from '@blockframes/model';
+import { Person } from "./identity";
+import { LanguageRecord } from "./movie";
+import { Scope, staticModel } from "./static";
 
 export interface ErrorResultResponse {
   error: string;
   result: any;
+}
+
+export interface FormSaveOptions {
+  publishing: boolean;
+}
+
+export interface RouteDescription {
+  path: string;
+  label: string;
+  icon?: string;
+  shouldHide?: boolean;
+  /** List of the keys required by the movie or organization to display the page */
+  requireKeys?: string[],
+  disclaimer?: string;
 }
 
 /**
@@ -13,21 +29,6 @@ export interface ErrorResultResponse {
 export function removeAccent<T>(str: T) {
   if (typeof str === 'string') return str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
   return str;
-}
-
-export function jsonDateReviver(key: unknown, value: any) {
-  if (!value) return value;
-
-  const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,}|)Z$/;
-  if (typeof value === 'string' && dateFormat.test(value)) return new Date(value);
-  if (
-    typeof value === 'object' &&
-    Object.keys(value).length === 2 &&
-    ['nanoseconds', 'seconds'].every((k) => k in value)
-  )
-    return new Date(((value.nanoseconds * 1) ^ -6) + value.seconds * 1000);
-
-  return value;
 }
 
 export function titleCase(text: string) {
@@ -225,7 +226,7 @@ export function createOfferId(orgName: string) {
  * https://developer.jwplayer.com/jwplayer/docs/jw8-add-custom-icons
  * https://css-tricks.com/probably-dont-base64-svg/
  */
-export function getWatermark(email: string = '', firstName: string = '', lastName: string = '') {
+export function getWatermark(email = '', firstName = '', lastName = '') {
   const svg = `
     <svg id="jwplayer-user-watermark" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg">
       <style>
@@ -308,20 +309,4 @@ export function sum<T>(array: T[], getAmount: (item: T) => number): number
 export function sum<T>(array: T[], getAmount?: (item: T) => number): number {
   const cb = getAmount || ((item: number) => item);
   return array.reduce((total, item) => total + cb(item as any), 0);
-}
-
-export function removeNulls(obj: any) {
-  const isArray = Array.isArray(obj);
-  for (const k of Object.keys(obj)) {
-    if (obj[k] === null || obj[k] === undefined) {
-      if (isArray) {
-        obj.splice(+k, 1)
-      } else {
-        delete obj[k];
-      }
-    } else if (typeof obj[k] === "object") {
-      obj[k] = removeNulls(obj[k]);
-    }
-  }
-  return obj;
 }

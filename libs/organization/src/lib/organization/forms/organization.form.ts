@@ -1,7 +1,6 @@
 import { FormControl, Validators } from "@angular/forms";
 import { FormStaticValue, FormEntity } from "@blockframes/utils/form";
-import { AddressSet, createAddressSet, createOrganization, Organization } from "@blockframes/model";
-import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
+import { AddressSet, createAddressSet, createOrganization, Organization, Location, createLocation } from "@blockframes/model";
 import { StorageFileForm } from "@blockframes/media/form/media.form";
 import { OrganizationMediasForm } from './medias.form';
 

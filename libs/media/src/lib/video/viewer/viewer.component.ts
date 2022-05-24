@@ -1,14 +1,14 @@
 import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Functions, httpsCallable } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/+state';
 import { StorageVideo, MeetingVideoControl, hasAnonymousIdentity } from '@blockframes/model';
-import { ErrorResultResponse, getWatermark, loadJWPlayerScript } from '@blockframes/utils/utils';
+import { ErrorResultResponse, getWatermark, loadJWPlayerScript } from '@blockframes/model';
 import { BehaviorSubject } from 'rxjs';
 import { toggleFullScreen } from '../../file/viewers/utils';
 import { EventService } from '@blockframes/event/+state';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { CallableFunctions } from 'ngfire';
 
 declare const jwplayer: any;
 
@@ -91,7 +91,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private authService: AuthService,
-    private functions: Functions,
+    private functions: CallableFunctions,
     private snackBar: MatSnackBar,
     private eventService: EventService,
   ) { }
@@ -101,15 +101,16 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
     try {
       await this.waitForViewReady; // we need the container div to exists, so we wait for the ngAfterViewInit
 
-      const playerUrl = httpsCallable<unknown, string>(this.functions, 'playerUrl');
-      const { data: url } = await playerUrl({});
+      const url = await this.functions.call<unknown, string>('playerUrl', {});
       await loadJWPlayerScript(this.document, url);
 
       const anonymousCredentials = this.authService.anonymousCredentials;
 
-      const privateVideo = httpsCallable<{ eventId: string, video: StorageVideo, email?: string }, ErrorResultResponse>(this.functions, 'privateVideo');
-      const r = await privateVideo({ eventId: this.eventId, video: this.ref, email: anonymousCredentials?.email });
-      const { error, result } = r.data;
+      const { error, result } = await this.functions.call<{ eventId: string, video: StorageVideo, email?: string }, ErrorResultResponse>('privateVideo', {
+        eventId: this.eventId,
+        video: this.ref,
+        email: anonymousCredentials?.email
+      });
 
       if (error) {
         throw new Error(errorMessage);

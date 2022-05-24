@@ -1,4 +1,4 @@
-import type { InvitationStatus, InvitationType } from './static';
+import type { App, InvitationStatus, InvitationType } from './static';
 import { Organization, PublicOrganization } from './organisation';
 import { PublicUser } from './user';
 import { Movie } from './movie';
@@ -57,6 +57,14 @@ export function createInvitation(params: Partial<InvitationBase<Date>> = {}): In
     date: new Date(),
     ...params,
   };
+}
+
+/* 
+  We want to display attendEvent invitation in festival only
+  JoinOrganisation must be displayed on every app 
+*/
+export function filterInvitation(invitation: Invitation, app: App) {
+  return invitation.type === 'attendEvent' ? app === 'festival' : true;
 }
 
 export type Invitation = InvitationBase<Date>;

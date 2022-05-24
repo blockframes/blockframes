@@ -1,8 +1,8 @@
 
 import { Injectable } from '@angular/core';
-import { Functions, httpsCallable } from '@angular/fire/functions';
 import { PublicUser } from '@blockframes/model';
-import { ErrorResultResponse } from '@blockframes/utils/utils';
+import { ErrorResultResponse } from '@blockframes/model';
+import { CallableFunctions } from 'ngfire';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -35,7 +35,6 @@ type GetAttendee<Id> = Id extends 'local' ? LocalAttendee : RemoteAttendee;
 export class TwilioService {
 
   private room: Room;
-  private getAccessToken = httpsCallable<{ eventId: string, credentials: Partial<PublicUser> }, ErrorResultResponse>(this.functions, 'getAccessToken');
 
   private preference: { [K in TrackKind]: boolean } = { 'video': true, 'audio': true };
 
@@ -48,12 +47,9 @@ export class TwilioService {
     return this._attendees.value['local'] as LocalAttendee;
   }
 
-  constructor(private functions: Functions) { }
+  private getToken = this.functions.prepare<{ eventId: string, credentials: Partial<PublicUser> }, ErrorResultResponse>('getAccessToken');
 
-  async getToken(eventId: string, credentials: Partial<PublicUser>) {
-    const r = await this.getAccessToken({ eventId, credentials });
-    return r.data;
-  }
+  constructor(private functions: CallableFunctions) { }
 
   togglePreference(kind: TrackKind) {
     this.preference[kind] = !this.preference[kind];
@@ -145,7 +141,7 @@ export class TwilioService {
     if (this.room) return;
 
     // Get Twilio token & ensure that there is no error
-    const response = await this.getToken(eventId, credentials);
+    const response = await this.getToken({eventId, credentials});
     if (response.error) {
       throw new Error(`${response.error}: ${response.result}`);
     }
