@@ -114,8 +114,8 @@ export function getServiceAccountObj(keyFile: string): admin.ServiceAccount {
   }
 }
 
-export async function hasAcceptedMovies(org: OrganizationDocument, appli: App) {
-  const moviesColRef = await admin.firestore().collection('movies')
+export async function hasAcceptedMovies(org: OrganizationDocument, appli: App, db = loadAdminServices().db) {
+  const moviesColRef = await db.collection('movies')
     .where('orgIds', 'array-contains', org.id).get();
   const movies = moviesColRef.docs.map(doc => doc.data());
   return movies.some(movie => movie?.app?.[appli].status === 'accepted' && movie?.app?.[appli].access);
