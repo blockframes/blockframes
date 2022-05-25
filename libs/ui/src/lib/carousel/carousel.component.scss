@@ -12,7 +12,7 @@ $sizes:
   min-width: calc(100% / var(--#{$size}-columns, var(--columns)) - $gap);
 }
 
-@each $size, $gap, $idk in $sizes {
+@each $size, $gap in $sizes {
   @include layout-bp($size) {
     li {
       @include show($size, $gap);
