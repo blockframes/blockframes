@@ -4,17 +4,16 @@ import { EditPasswordForm } from '@blockframes/utils/form/controls/password.cont
 import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
 
 @Component({
-  selector: '[form] auth-form-password',
-  templateUrl: './password.component.html',
-  styleUrls: ['./password.component.scss'],
+  selector: '[form] change-password',
+  templateUrl: './change-password.component.html',
+  styleUrls: ['./change-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class PasswordFormComponent {
+export class ChangePasswordComponent {
 
   passwordsMatcher = new RepeatPasswordStateMatcher('next', 'confirm');
   currentPasswordMatch = new DifferentPasswordStateMatcher('current', 'next');
-
   @Input() form: EditPasswordForm;
 
 }

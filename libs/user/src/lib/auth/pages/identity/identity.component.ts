@@ -374,4 +374,5 @@ export class IdentityComponent implements OnInit, OnDestroy {
     await this.authService.deleteAnonymousUserOrSignOut();
     this.router.navigate(['/']);
   }
+
 }
