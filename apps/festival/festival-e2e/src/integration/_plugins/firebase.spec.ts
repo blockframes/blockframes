@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 
+import { firebase } from '@blockframes/testing/cypress/browser';
 import { examples } from '../../fixtures/_test';
 
 //* TESTS --------------------------------------*//
@@ -176,28 +177,6 @@ describe('Testing bridge between Cypress and node', () => {
 });
 
 //* FUNCTIONS -------------------------------*//
-
-const firebase = {
-  clearTestData() {
-    return cy.task('clearTestData');
-  },
-
-  delete(paths: string[]) {
-    return cy.task('deleteData', paths);
-  },
-
-  get(paths: string[]) {
-    return cy.task('getData', paths);
-  },
-
-  create(data: Record<string, object>[]) {
-    return cy.task('importData', data);
-  },
-
-  update(data: { docPath: string; field: string; value: unknown }[]) {
-    return cy.task('updateData', data);
-  },
-};
 
 const exampleValuesFrom = (examples: Record<string, object>[]) => {
   const result = [];
