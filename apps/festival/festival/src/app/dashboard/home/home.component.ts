@@ -30,12 +30,13 @@ import { MetricCard } from '@blockframes/analytics/components/metric-card-list/m
 // RxJs
 import { map, switchMap, shareReplay, tap, filter, toArray, first } from 'rxjs/operators';
 import { combineLatest, firstValueFrom, from, Observable, of } from 'rxjs';
-import {joinWith} from 'ngfire';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
 import { sum } from "@blockframes/model";
 
+// NgFire
+import { joinWith } from 'ngfire';
 
 export function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attendees = invitations.filter(invitation => invitation.watchTime);

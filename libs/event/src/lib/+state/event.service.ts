@@ -58,16 +58,16 @@ export class EventService extends BlockframesCollection<Event> {
     },
   };
 
-  private eventQuery = (id: string) => {
-    return this.valueChanges(id).pipe(
+  private eventQuery = <Meta extends EventMeta = unknown>(id: string) => {
+    return this.valueChanges<Event<Meta>>(id).pipe(
       joinWith({
-        org: ({ ownerOrgId }: ScreeningEvent) => this.orgService.valueChanges(ownerOrgId),
-        movie: (event: Event) => {
+        org: ({ ownerOrgId }: Event<Meta>) => this.orgService.valueChanges(ownerOrgId),
+        movie: (event: Event<Meta>) => {
           if (isScreening(event)) {
             return event.meta.titleId ? this.movieService.valueChanges(event.meta.titleId) : undefined;
           }
         },
-        organizedBy: (event: Event) => {
+        organizedBy: (event: Event<Meta>) => {
           if (isMeeting(event)) {
             return event.meta.organizerUid ? this.userService.valueChanges(event.meta.organizerUid) : undefined;
           }
@@ -134,7 +134,7 @@ export class EventService extends BlockframesCollection<Event> {
     } else if (ids.length === 0) {
       return of([]);
     } else {
-      const queries = ids.map(id => this.eventQuery(id))
+      const queries = ids.map(id => this.eventQuery<Meta>(id))
       return combineLatest(queries);
     }
   }
