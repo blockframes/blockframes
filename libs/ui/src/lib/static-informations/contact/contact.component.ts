@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Functions, httpsCallable } from '@angular/fire/functions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';
+import { CallableFunctions } from 'ngfire';
 
 @Component({
   selector: 'bf-contact',
@@ -21,7 +21,7 @@ export class ContactComponent implements OnInit {
   public markerLabel: Record<string, string>;
 
   constructor(
-    private functions: Functions,
+    private functions: CallableFunctions,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService,
     @Inject(APP) private app: App
@@ -45,10 +45,9 @@ export class ContactComponent implements OnInit {
     const userMessage = this.form.get('message').value;
 
     if (this.form.valid) {
-      const callSendUserMail = httpsCallable(this.functions, 'sendUserContactMail');
       this.snackBar.open('Message sent.', 'close', { duration: 2000 });
       this.form.reset();
-      return callSendUserMail({ subject: userSubject, message: userMessage, app: this.app });
+      return this.functions.call('sendUserContactMail', { subject: userSubject, message: userMessage, app: this.app });
     } else {
       this.snackBar.open('Subject and message are mandatory.', 'close', { duration: 2000 });
     }

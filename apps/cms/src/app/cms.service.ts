@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
-import {
-  docData,
-  updateDoc,
-  collectionData,
-  Firestore,
-  doc,
-  DocumentReference,
-  collection,
-  CollectionReference
-} from '@angular/fire/firestore';
 import { CmsTemplate, CmsApp } from '@blockframes/admin/cms';
+import { CollectionReference, DocumentReference, updateDoc } from 'firebase/firestore';
+import { fromRef, FirestoreService } from 'ngfire';
+import { map } from 'rxjs';
+
 export interface CmsParams {
   app?: string;
   page?: string;
@@ -19,7 +13,7 @@ export interface CmsParams {
 @Injectable({ providedIn: 'root' })
 export class CmsService {
 
-  constructor(private db: Firestore) { }
+  constructor(private firestore: FirestoreService) { }
 
   private getPath({ app, page, template }: CmsParams) {
     return ['cms', app, page, template].filter(v => !!v).join('/');
@@ -27,19 +21,19 @@ export class CmsService {
 
   save(document: CmsTemplate | CmsApp, params: CmsParams) {
     const path = this.getPath(params);
-    const ref = doc(this.db, path) as DocumentReference<CmsTemplate | CmsApp>;
+    const ref = this.firestore.getRef(path) as DocumentReference<CmsTemplate | CmsApp>;
     return updateDoc<CmsTemplate | CmsApp>(ref, document);
   }
 
   collection<T extends CmsTemplate | CmsApp>(params: CmsParams) {
     const path = this.getPath(params);
-    const ref = collection(this.db, path) as CollectionReference<T>;
-    return collectionData<T>(ref);
+    const ref = this.firestore.getRef(path) as CollectionReference<T>;
+    return fromRef(ref).pipe(map(snap => snap.docs.map(d => d.data())));
   }
 
   doc<T extends CmsTemplate | CmsApp>(params: CmsParams) {
     const path = this.getPath(params);
-    const ref = doc(this.db, path) as DocumentReference<T>;
-    return docData<T>(ref);
+    const ref = this.firestore.getRef(path) as DocumentReference<T>;
+    return fromRef(ref).pipe(map(snap => snap.data()));
   }
 }

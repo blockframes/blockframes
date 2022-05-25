@@ -1,5 +1,4 @@
-import { Firestore } from '@angular/fire/firestore';
-import { where, collection, doc } from 'firebase/firestore';
+import { where } from 'firebase/firestore';
 import { checkParentTerm, ContractsImportState, sheetHeaderLine, } from '@blockframes/import/utils';
 import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -21,11 +20,9 @@ import { FieldsConfig, getContractConfig } from './fieldConfigs';
 import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
 import { TermService } from '@blockframes/contract/term/+state/term.service';
 
-
-function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, firestore: Firestore): Term {
+function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string): Term {
 
   const { medias, duration, territories_excluded = [], territories_included = [], exclusive, licensedOriginal } = rawTerm;
-
 
   const languages: Term['languages'] = {};
 
@@ -43,7 +40,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, fires
 
   const territories = territories_included.filter(territory => !territories_excluded.includes(territory));
 
-  const id = doc(collection(firestore, '_')).id;
+  const id = termId;
 
   return {
     id,
@@ -98,7 +95,6 @@ export async function formatContract(
   contractService: ContractService,
   termService: TermService,
   userService: UserService,
-  firestore: Firestore,
   blockframesAdmin: boolean,
   userOrgId: string,
   config: FormatConfig
@@ -116,7 +112,6 @@ export async function formatContract(
     titleService,
     contractService,
     userService,
-    firestore,
     blockframesAdmin,
     userOrgId,
     caches,
@@ -147,7 +142,7 @@ export async function formatContract(
       }
     }
 
-    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, firestore));
+    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, contractService.createId()));
 
     // for **internal** sales we should check the parentTerm
     const isInternalSale = contract.type === 'sale' && contract.sellerId === centralOrgId.catalog;
@@ -176,7 +171,6 @@ export async function formatContract(
         contract.stakeholders.concat(mandate.stakeholders);
       }
     }
-
 
     const overlap = await verifyOverlappingMandatesAndSales(contract, terms, contractService, termService);
     if (overlap.mandate) {

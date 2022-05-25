@@ -1,7 +1,6 @@
-import { Inject, Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { AuthService } from '@blockframes/auth/+state';
-import { filter, map, switchMap, take } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { filter, map, switchMap } from 'rxjs/operators';
 import {
   orgName,
   Movie,
@@ -17,26 +16,24 @@ import {
   eventTypes,
   isAppNotification,
 } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/model';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { format } from 'date-fns';
 import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
-import { ActiveState, EntityState } from '@datorama/akita';
-import { UserService } from '@blockframes/user/+state';
-import { EventService } from '@blockframes/event/+state';
+import { UserService } from '@blockframes/user/+state/user.service';
+import { EventService } from '@blockframes/event/+state/event.service';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
-import { APP } from '@blockframes/utils/routes/utils';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { where } from 'firebase/firestore';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
-interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'notifications' })
-export class NotificationService extends CollectionService<NotificationState> {
-  readonly useMemorization = false;
+export class NotificationService extends BlockframesCollection<Notification> {
+  readonly path = 'notifications';
+
   private appName = appName[this.app];
 
   myNotifications$ = this.authService.profile$.pipe(
@@ -62,8 +59,7 @@ export class NotificationService extends CollectionService<NotificationState> {
     private movieService: MovieService,
     private contractService: ContractService,
     private userService: UserService,
-    private eventService: EventService,
-    @Inject(APP) private app: App
+    private eventService: EventService
   ) {
     super();
   }
@@ -114,10 +110,7 @@ export class NotificationService extends CollectionService<NotificationState> {
           }/view/members`,
         };
       case 'orgMemberUpdated': {
-        const org = await this.orgService
-          .valueChanges(notification.organization.id)
-          .pipe(take(1))
-          .toPromise();
+        const org = await this.orgService.load(notification.organization.id);
         const message = org.userIds.includes(notification.user.uid)
           ? `${displayUserName} is now part of your organization.`
           : `${displayUserName} has been removed from your organization.`;
@@ -135,10 +128,7 @@ export class NotificationService extends CollectionService<NotificationState> {
       }
       case 'invitationToAttendEventUpdated':
       case 'requestToAttendEventUpdated': {
-        const event = await this.eventService
-          .valueChanges(notification.docId)
-          .pipe(take(1))
-          .toPromise();
+        const event = await this.eventService.load(notification.docId);
         const subject = await this.notificationSubject(notification, event);
         const message = `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to attend ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>".`;
         return {
@@ -155,10 +145,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'requestToAttendEventSent': {
-        const event = await this.eventService
-          .valueChanges(notification.docId)
-          .pipe(take(1))
-          .toPromise();
+        const event = await this.eventService.load(notification.docId);
         const message = `Your request to attend event ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" has been sent.`;
         return {
           ...notification,
@@ -174,10 +161,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'movieSubmitted': {
-        const movie = await this.movieService
-          .valueChanges(notification.docId)
-          .pipe(take(1))
-          .toPromise();
+        const movie = await this.movieService.load(notification.docId);
         const imgRef = this.getPoster(movie);
         const movieAppAccess = getMovieAppAccess(movie);
         const message = `<a href="/c/o/dashboard/title/${movie.id}" target="_blank">${
@@ -196,10 +180,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'movieAskingPriceRequestSent': {
-        const movie = await this.movieService
-          .valueChanges(notification.docId)
-          .pipe(take(1))
-          .toPromise();
+        const movie = await this.movieService.load(notification.docId);
         const imgRef = this.getPoster(movie);
         const message = `Your request for ${movie.title.international}'s asking price was successfully sent.`;
 
@@ -213,14 +194,11 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'eventIsAboutToStart': {
-        const event = await this.eventService
-          .valueChanges(notification.docId)
-          .pipe(take(1))
-          .toPromise();
+        const event = await this.eventService.load(notification.docId);
         const titleId = isScreening(event) ? event.meta.titleId : undefined;
-        const movie = await this.movieService.valueChanges(titleId).pipe(take(1)).toPromise();
+        const movie = await this.movieService.load(titleId);
         const imgRef = this.getPoster(movie);
-        const org = await this.orgService.valueChanges(event.ownerOrgId).pipe(take(1)).toPromise();
+        const org = await this.orgService.load(event.ownerOrgId);
         const message = `REMINDER - ${org.denomination.full}'s ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" is about to start.`;
 
         return {
@@ -233,14 +211,11 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'oneDayReminder': {
-        const event = await this.eventService
-          .valueChanges(notification.docId)
-          .pipe(take(1))
-          .toPromise();
+        const event = await this.eventService.load(notification.docId);
         const titleId = isScreening(event) ? event.meta.titleId : undefined;
-        const movie = await this.movieService.valueChanges(titleId).pipe(take(1)).toPromise();
+        const movie = await this.movieService.load(titleId);
         const imgRef = this.getPoster(movie);
-        const org = await this.orgService.valueChanges(event.ownerOrgId).pipe(take(1)).toPromise();
+        const org = await this.orgService.load(event.ownerOrgId);
         const message = `REMINDER - ${org.denomination.full}'s ${eventTypes[event.type]} "<a href="/event/${
           event.id
         }" target="_blank">${event.title}</a>" will start tomorrow at ${format(
@@ -258,10 +233,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'movieAccepted': {
-        const movie = await this.movieService
-          .valueChanges(notification.docId)
-          .pipe(take(1))
-          .toPromise();
+        const movie = await this.movieService.load(notification.docId);
         const movieAppAccess = getMovieAppAccess(movie);
         const imgRef = this.getPoster(movie);
         const message = `<a href="/c/o/dashboard/title/${movie.id}" target="_blank">${movie.title.international}</a> was successfully published on the marketplace.`;
@@ -278,10 +250,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'movieAskingPriceRequested': {
-        const movie = await this.movieService
-          .valueChanges(notification.docId)
-          .pipe(take(1))
-          .toPromise();
+        const movie = await this.movieService.load(notification.docId);
         const message = `${displayName(notification.user)} requested the asking price for ${
           movie.title.international
         } in ${trimString(
@@ -301,10 +270,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'screeningRequested': {
-        const movie = await this.movieService
-          .valueChanges(notification.docId)
-          .pipe(take(1))
-          .toPromise();
+        const movie = await this.movieService.load(notification.docId);
         const message = `${displayName(notification.user)} requested a screening for ${
           movie.title.international
         }`;
@@ -320,10 +286,7 @@ export class NotificationService extends CollectionService<NotificationState> {
         };
       }
       case 'screeningRequestSent': {
-        const movie = await this.movieService
-          .valueChanges(notification.docId)
-          .pipe(take(1))
-          .toPromise();
+        const movie = await this.movieService.load(notification.docId);
         const message = `Your screening request for ${movie.title.international} was successfully sent.`;
 
         return {
@@ -344,9 +307,9 @@ export class NotificationService extends CollectionService<NotificationState> {
           url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`
         }
       case 'contractCreated': {
-        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
-        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
-        const user = await this.userService.valueChanges(contract.buyerUserId).pipe(take(1)).toPromise();
+        const contract = await this.contractService.load(notification.docId);
+        const movie = await this.movieService.load(contract.titleId);
+        const user = await this.userService.load(contract.buyerUserId);
         const message = `${displayName(user)} sent an offer for ${movie.title.international}.`;
 
         return {
@@ -360,8 +323,8 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'createdCounterOffer': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
-        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
-        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
+        const contract = await this.contractService.load(notification.docId);
+        const movie = await this.movieService.load(contract.titleId);
         const name = await this.nameToDisplay(notification, contract);
         const message = `Your counter-offer for ${movie.title.international} was successfully sent to ${name}.`;
         
@@ -376,8 +339,8 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'receivedCounterOffer': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
-        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
-        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
+        const contract = await this.contractService.load(notification.docId);
+        const movie = await this.movieService.load(contract.titleId);
         const name = await this.nameToDisplay(notification, contract);
         const message = `${name} sent a counter-offer for ${movie.title.international}.`;
 
@@ -392,8 +355,8 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'myContractWasAccepted': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
-        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
-        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
+        const contract = await this.contractService.load(notification.docId);
+        const movie = await this.movieService.load(contract.titleId);
         
         return {
           ...notification,
@@ -425,8 +388,8 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'myOrgAcceptedAContract': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
-        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
-        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
+        const contract = await this.contractService.load(notification.docId);
+        const movie = await this.movieService.load(contract.titleId);
         const message = `Congrats for accepting the offer ${notification.offerId} for ${movie.title.international}! The agreement will now be drafted offline.`;
         
         return {
@@ -440,8 +403,8 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'myContractWasDeclined': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
-        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
-        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
+        const contract = await this.contractService.load(notification.docId);
+        const movie = await this.movieService.load(contract.titleId);
         
         return {
           ...notification,
@@ -454,8 +417,8 @@ export class NotificationService extends CollectionService<NotificationState> {
       case 'myOrgDeclinedAContract': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
-        const contract = await this.contractService.valueChanges(notification.docId).pipe(take(1)).toPromise();
-        const movie = await this.movieService.valueChanges(contract.titleId).pipe(take(1)).toPromise();
+        const contract = await this.contractService.load(notification.docId);
+        const movie = await this.movieService.load(contract.titleId);
         
         return {
           ...notification,
@@ -491,20 +454,14 @@ export class NotificationService extends CollectionService<NotificationState> {
 
     // Adding user data to the notification of meeting events
     if (event && isMeeting(event) && notification.organization) {
-      const user = await this.userService
-        .valueChanges(event.meta.organizerUid)
-        .pipe(take(1))
-        .toPromise();
+      const user = await this.userService.load(event.meta.organizerUid);
       const organizationName = orgName(notification.organization);
       subject = `${user.firstName} ${user.lastName} (${organizationName})`;
     } else if (notification.organization) {
       subject = orgName(notification.organization);
     } else if (notification.user && notification.user.lastName && notification.user.firstName) {
       if (notification.user.orgId) {
-        const org = await this.orgService
-          .valueChanges(notification.user.orgId)
-          .pipe(take(1))
-          .toPromise();
+        const org = await this.orgService.load(notification.user.orgId);
         subject = `${displayName(notification.user)} (${orgName(org)})`;
       } else subject = displayName(notification.user);
     } else if (notification.user && notification.user.email) {
@@ -531,10 +488,10 @@ export class NotificationService extends CollectionService<NotificationState> {
   */
   public async nameToDisplay(notification: Notification, contract: Contract) {
     if (contract.buyerUserId === notification.toUserId) {
-      const org = await this.orgService.valueChanges(contract.sellerId).pipe(take(1)).toPromise();
+      const org = await this.orgService.load(contract.sellerId);
       return orgName(org);
     } else {
-      const user = await this.userService.valueChanges(contract.buyerUserId).pipe(take(1)).toPromise();
+      const user = await this.userService.load(contract.buyerUserId);
       return displayName(user);
     } 
   }
