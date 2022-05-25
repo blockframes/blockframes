@@ -53,7 +53,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = loadAdminS
       300
     );
     for await (const orgs of orgsIterator) {
-      const promises = orgs.map((org) => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']));
+      const promises = orgs.map((org) => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY'], db));
 
       await Promise.all(promises);
       console.log(`chunk of ${orgs.length} orgs processed...`);
@@ -132,7 +132,7 @@ export async function upgradeAlgoliaUsers(db = loadAdminServices().db) {
   for await (const users of usersIterator) {
     const promises = users.map(async (user) => {
       try {
-        await storeSearchableUser(user, process.env['ALGOLIA_API_KEY']);
+        await storeSearchableUser(user, process.env['ALGOLIA_API_KEY'], db);
       } catch (error) {
         console.error(`\n\n\tFailed to insert a user ${user.uid} : skipping\n\n`);
         console.error(error);
