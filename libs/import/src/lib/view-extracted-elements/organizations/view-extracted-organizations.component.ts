@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { UserService } from '@blockframes/user/service';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 
 import { formatOrg } from './utils';
 import { OrganizationsImportState } from '../../utils';

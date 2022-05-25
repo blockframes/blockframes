@@ -12,7 +12,7 @@ import { CmsPage } from '@blockframes/admin/cms/template';
 import { AuthService } from '@blockframes/auth/service';
 import { createPreferences, canHavePreferences } from '@blockframes/model';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 // Material

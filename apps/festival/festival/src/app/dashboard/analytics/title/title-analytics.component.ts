@@ -3,13 +3,13 @@ import { ActivatedRoute } from "@angular/router";
 import { AggregatedAnalytic } from '@blockframes/model';
 import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { MovieService } from "@blockframes/movie/+state/movie.service";
+import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { aggregatePerUser, counter } from '@blockframes/analytics/+state/utils';
 import { UserService } from '@blockframes/user/service';
 import { NavigationService } from "@blockframes/ui/navigation.service";
-import { OrganizationService } from "@blockframes/organization/+state";
+import { OrganizationService } from '@blockframes/organization/service';
 
 @Component({
   selector: 'festival-title-analytics',

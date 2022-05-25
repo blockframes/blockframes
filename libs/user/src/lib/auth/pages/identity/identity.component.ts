@@ -7,7 +7,7 @@ import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
 import { createPublicUser, PublicUser, User, createOrganization, createDocumentMeta, AlgoliaOrganization, App, hasDisplayName } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { Intercom } from 'ng-intercom';
 import { createLocation } from '@blockframes/model';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';

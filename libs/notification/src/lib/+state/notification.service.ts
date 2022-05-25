@@ -16,11 +16,11 @@ import {
   eventTypes,
   isAppNotification,
 } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { toDate } from '@blockframes/utils/helpers';
 import { displayName } from '@blockframes/model';
 import { applicationUrl } from '@blockframes/utils/apps';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { format } from 'date-fns';
 import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
 import { UserService } from '@blockframes/user/service';

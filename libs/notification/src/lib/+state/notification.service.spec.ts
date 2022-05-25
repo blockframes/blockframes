@@ -10,7 +10,7 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { Observable } from 'rxjs';
 import { UserService } from '@blockframes/user/service';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { AuthService } from '@blockframes/auth/service';

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { Router } from '@angular/router';
 import { createPublicUser, getOrgAppAccess } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';

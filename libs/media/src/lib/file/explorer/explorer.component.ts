@@ -3,7 +3,7 @@ import { where, updateDoc, DocumentReference } from 'firebase/firestore';
 import { FirestoreService } from 'ngfire';
 
 // Blockframes
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { createStorageFile, StorageFile, Organization, App } from '@blockframes/model';
 import { FileUploaderService, MediaService } from '@blockframes/media/+state';
 import { getFileMetadata } from '@blockframes/media/+state/static-files';

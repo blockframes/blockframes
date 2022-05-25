@@ -8,7 +8,7 @@ import { switchMap } from 'rxjs/operators';
 import { EventService } from '../+state';
 import { User } from 'firebase/auth';
 import { Event, AnonymousCredentials, createInvitation, hasDisplayName } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 
 @Injectable({ providedIn: 'root' })
 export class EventAccessGuard implements CanActivate {

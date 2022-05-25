@@ -1,6 +1,6 @@
 ﻿// Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 
 @Component({
   selector: 'catalog-dashboard',

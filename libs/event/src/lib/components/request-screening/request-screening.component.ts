@@ -4,7 +4,7 @@ import { AuthService } from '@blockframes/auth/service';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { BehaviorSubject } from 'rxjs';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { CallableFunctions } from 'ngfire';
 
 type RequestStatus = 'available' | 'sending' | 'sent';

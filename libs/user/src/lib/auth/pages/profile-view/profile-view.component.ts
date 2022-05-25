@@ -6,7 +6,7 @@ import { distinctUntilChanged, filter } from 'rxjs/operators';
 // blockframes
 import { Organization, User, App, canHavePreferences } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { NavigationService } from '@blockframes/ui/navigation.service';

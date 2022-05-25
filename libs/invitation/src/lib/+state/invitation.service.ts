@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { where } from 'firebase/firestore';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { AuthService } from '@blockframes/auth/service';
 import {
   createPublicUser,

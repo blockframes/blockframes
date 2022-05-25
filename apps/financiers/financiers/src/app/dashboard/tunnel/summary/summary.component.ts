@@ -8,7 +8,7 @@ import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.compon
 import { map, pluck, switchMap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 

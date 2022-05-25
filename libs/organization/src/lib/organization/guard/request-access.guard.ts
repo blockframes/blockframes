@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { OrganizationService } from '../+state';
+import { OrganizationService } from '../service';
 import { CanActivate, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';

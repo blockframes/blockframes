@@ -4,7 +4,7 @@ import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/service';
 import { User, Organization, orgName, getAllAppsExcept, appName, getOrgModuleAccess, modules } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { map } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 
