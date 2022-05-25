@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OfferShellComponent } from '../shell.component';
-import { combineLatest } from 'rxjs';
-import { first, map, pluck } from 'rxjs/operators';
+import { combineLatest, firstValueFrom } from 'rxjs';
+import { map, pluck } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -41,7 +41,7 @@ export class ContractViewComponent {
 
   async accept() {
     const onConfirm = async () => {
-      const sale = await this.contract$.pipe(first()).toPromise();
+      const sale = await firstValueFrom(this.contract$);
       this.negotiationService.update(
         sale.negotiation.id, { status: 'accepted' }, { params: { contractId: sale.id } }
       );

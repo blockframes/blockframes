@@ -2,10 +2,32 @@ import { db } from './internals/firebase';
 import { Change, EventContext } from 'firebase-functions';
 import { createDocumentMeta, getDocument } from './data/internals';
 import { centralOrgId } from '@env';
-import { Contract, formatDocumentMetaFromFirestore, Negotiation, Organization, Sale, NotificationTypes, Offer, Timestamp } from '@blockframes/model';
+import { ContractStatus, Contract, Negotiation, Organization, Sale, NotificationTypes, Offer, Timestamp, DocumentMeta } from '@blockframes/model';
 import { createNotification, triggerNotifications } from './notification';
 import { getReviewer, isInitial } from '@blockframes/contract/negotiation/utils'
-import { ContractStatus } from '@blockframes/model';
+
+function formatDocumentMetaFromFirestore( // TODO #8280 clean
+  meta: DocumentMeta<Timestamp>
+): DocumentMeta<Date> {
+
+  const m = { ...meta } as any;
+
+  if (meta) {
+    if (meta.createdAt) {
+      m.createdAt = meta.createdAt.toDate();
+    }
+
+    if (meta.updatedAt) {
+      m.updatedAt = meta.updatedAt.toDate();
+    }
+
+    if (meta.deletedAt) {
+      m.deletedAt = meta.deletedAt.toDate();
+    }
+  }
+
+  return m;
+}
 
 // KEEP THE OFFER STATUS IN SYNC WITH IT'S CONTRACTS AND NEGOTIATIONS
 async function updateOfferStatus(contract: Contract) {

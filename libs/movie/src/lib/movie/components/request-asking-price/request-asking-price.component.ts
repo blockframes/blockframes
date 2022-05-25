@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
-import { Functions, httpsCallable } from "@angular/fire/functions";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -8,8 +7,8 @@ import { AuthService } from "@blockframes/auth/+state";
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { FormStaticValueArray } from "@blockframes/utils/form";
 import { toGroupLabel } from "@blockframes/utils/pipes";
+import { CallableFunctions } from 'ngfire';
 import { smartJoin } from "@blockframes/model";
-import { take } from "rxjs";
 
 @Component({
   selector: 'movie-request-asking-price',
@@ -27,7 +26,7 @@ export class RequestAskingPriceComponent {
   constructor(
     private authService: AuthService,
     private dialog: MatDialogRef<RequestAskingPriceComponent>,
-    private functions: Functions,
+    private functions: CallableFunctions,
     private snackbar: MatSnackBar,
     private analytics: AnalyticsService,
     private titleService: MovieService,
@@ -41,14 +40,13 @@ export class RequestAskingPriceComponent {
       const groupedTerritories = toGroupLabel(this.form.get('territories').value, 'territories', 'World');
       const territories = smartJoin(groupedTerritories, ', ', ' and ');
       const message = this.form.get('message').value ?? 'No message provided.';
-      const f = httpsCallable<{ movieId: string, uid: string, territories: string, message: string }>(this.functions, 'requestAskingPrice');
-      await f({
+      await this.functions.call<{ movieId: string, uid: string, territories: string, message: string }, unknown>('requestAskingPrice', {
         movieId: this.data.movieId,
         uid: this.authService.uid,
         territories,
         message
       });
-      const title = await this.titleService.valueChanges(this.data.movieId).pipe(take(1)).toPromise();
+      const title = await this.titleService.load(this.data.movieId);
       this.analytics.addTitle('askingPriceRequested', title);
       this.snackbar.open('Asking price request successfully sent.', '', { duration: 3000 });
       this.dialog.close(true);
