@@ -1,23 +1,17 @@
 // Angular
-import { Injectable } from "@angular/core";
-import { Functions, httpsCallable } from "@angular/fire/functions";
+import { Injectable } from '@angular/core';
+import { CallableFunctions } from 'ngfire';
 
 // State
 import { StorageFile } from '@blockframes/model';
 import { ImageParameters, getImgSize, getImgIxResourceUrl } from '../image/directives/imgix-helpers';
 
 // Blockframes
-import { clamp } from '@blockframes/utils/utils';
+import { clamp } from '@blockframes/model';
 @Injectable({ providedIn: 'root' })
 export class MediaService {
 
   private breakpoints = [600, 1024, 1440, 1920];
-
-  private getMediaToken = httpsCallable<{file: StorageFile, parametersSet: ImageParameters[], eventId?: string},string[]>(this.functions, 'getMediaToken');
-
-  constructor(
-    private functions: Functions,
-  ) { }
 
   /**
    * This https callable method will check if current user asking for the media
@@ -27,20 +21,19 @@ export class MediaService {
    * @param ref (without "/protected")
    * @param parametersSet ImageParameters[]
    */
-  private async getProtectedMediaToken(file: StorageFile, parametersSet: ImageParameters[], eventId?: string): Promise<string[]> {
-    const r = await this.getMediaToken({ file, parametersSet, eventId });
-    return r.data;
-  }
+  getProtectedMediaToken = this.functions.prepare<{ file: StorageFile, parametersSet: ImageParameters[], eventId?: string }, string[]>('getMediaToken');
+
+  constructor(private functions: CallableFunctions) { }
 
   async generateImageSrcset(file: StorageFile, _parameters: ImageParameters): Promise<string> {
-    const params: ImageParameters[] = getImgSize(file.storagePath).map(size => ({ ..._parameters, w: size }));
+    const parametersSet: ImageParameters[] = getImgSize(file.storagePath).map(size => ({ ..._parameters, w: size }));
     let tokens: string[] = [];
 
     if (file.privacy === 'protected') {
-      tokens = await this.getProtectedMediaToken(file, params);
+      tokens = await this.getProtectedMediaToken({ file, parametersSet });
     }
 
-    const urls = params.map((param, index) => {
+    const urls = parametersSet.map((param, index) => {
       if (tokens[index]) { param.s = tokens[index] };
       return `${getImgIxResourceUrl(file, param)} ${param.w}w`;
     })
@@ -54,8 +47,8 @@ export class MediaService {
    * @param parameters ImageParameters
    */
   async generateImgIxUrl(file: StorageFile, parameters: ImageParameters = {}, eventId?: string): Promise<string> {
-      if (file.privacy === 'protected') {
-      const [token] = await this.getProtectedMediaToken(file, [parameters], eventId);
+    if (file.privacy === 'protected') {
+      const [token] = await this.getProtectedMediaToken({ file, parametersSet: [parameters], eventId });
       parameters.s = token;
     }
 

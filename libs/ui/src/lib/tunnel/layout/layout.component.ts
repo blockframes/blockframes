@@ -14,14 +14,13 @@ import { filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operat
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { MatSidenavContent, MatSidenav } from '@angular/material/sidenav';
 import { Router, NavigationEnd, RouterOutlet, ActivatedRoute, Event } from '@angular/router';
-import { RouteDescription } from '@blockframes/utils/common-interfaces';
+import { FormSaveOptions, RouteDescription } from '@blockframes/model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import type { ShellConfig } from '@blockframes/movie/form/movie.shell.interfaces';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
-import { FormSaveOptions } from "@blockframes/utils/common-interfaces";
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 

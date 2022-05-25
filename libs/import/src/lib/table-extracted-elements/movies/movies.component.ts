@@ -9,7 +9,6 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../utils';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { removeNulls } from '@blockframes/utils/utils';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
@@ -84,12 +83,7 @@ export class TableExtractedMoviesComponent implements AfterViewInit {
     this.cdr.markForCheck();
     const data = this.rows.data;
     importState.movie = await this.movieService.create(importState.movie);
-    importState.errors.push({
-      type: 'error',
-      name: 'Film Code',
-      reason: 'Movie already exists',
-      message: 'Movie already saved'
-    });
+    importState.imported = true;
     this.rows.data = data;
 
     importState.importing = false;
@@ -121,8 +115,7 @@ export class TableExtractedMoviesComponent implements AfterViewInit {
     if (increment) this.processing++;
     importState.importing = true;
     this.cdr.markForCheck();
-    const movie = removeNulls(importState.movie); // TODO #7273 #8280 remove
-    await this.movieService.upsert(movie);
+    await this.movieService.upsert(importState.movie);
     importState.importing = false;
     this.cdr.markForCheck();
   }
@@ -156,7 +149,7 @@ export class TableExtractedMoviesComponent implements AfterViewInit {
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.rows.data.forEach(row => this.selection.select(row));
+      : this.rows.data.filter(row => !row.imported).forEach(row => this.selection.select(row));
   }
 
   /**

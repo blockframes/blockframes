@@ -26,12 +26,12 @@ import {
   movieCurrenciesSymbols,
   SlateEventDocument,
   EventTypesValue,
-  eventTypes
+  eventTypes,
+  toLabel
 } from '@blockframes/model';
 import { toIcsFile } from '../agenda/utils';
 import { IcsEvent } from '../agenda/agenda.interfaces';
 import { getKeyIfExists } from '../helpers';
-import { toLabel } from '../utils';
 
 interface EmailData {
   to: string;

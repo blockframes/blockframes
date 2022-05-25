@@ -1,9 +1,8 @@
-import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { createStorageFile, StorageFile, StorageVideo } from './media';
 import { DocumentMeta } from './meta';
 import { Timestamp } from './timestamp';
 import { getAllAppsExcept } from './apps';
-import type { App, Module, ModuleAccess, OrgActivity, OrganizationStatus, OrgAppAccess } from './static';
+import type { App, Module, ModuleAccess, OrgActivity, OrganizationStatus, OrgAppAccess, Territory } from './static';
 import { app, modules } from './static';
 
 export interface Denomination {
@@ -45,6 +44,15 @@ export interface AddressSet {
   billing?: Location;
   office?: Location;
   // Other can be added here
+}
+
+export interface Location {
+  street: string;
+  zipCode: string;
+  city: string;
+  country?: Territory;
+  region?: string;
+  phoneNumber: string;
 }
 
 /** Default placeholder logo used when an Organization is created. */
@@ -163,6 +171,18 @@ export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): Mo
   };
 }
 
+/** A factory function that creates an Address/Location */
+export function createLocation(params: Partial<Location> = {}): Location {
+  return {
+    street: '',
+    zipCode: '',
+    city: '',
+    phoneNumber: '',
+    region: '',
+    ...params
+  };
+}
+
 /**
  * Returns the apps that the org have access to
  * @param org The org to query
@@ -223,4 +243,10 @@ export function getOrgModuleAccess(
     }
   }
   return Object.keys(allowedModules).map((k) => k as Module);
+}
+
+export function canHavePreferences(org: Organization, app: App) {
+  if (app !== 'catalog' && app !== 'festival') return;
+  const { marketplace, dashboard } = org.appAccess[app];
+  return marketplace && !dashboard;
 }

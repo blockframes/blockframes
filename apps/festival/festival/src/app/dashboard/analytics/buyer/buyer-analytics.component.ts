@@ -10,10 +10,10 @@ import { IconSvg } from "@blockframes/ui/icon.service";
 import { NavigationService } from "@blockframes/ui/navigation.service";
 import { UserService } from "@blockframes/user/+state";
 import { App } from "@blockframes/model";
-import { joinWith } from "@blockframes/utils/operators";
 import { APP } from "@blockframes/utils/routes/utils";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { sum, toLabel } from "@blockframes/utils/utils";
+import { joinWith } from 'ngfire';
+import { sum, toLabel } from "@blockframes/model";
 import {
   BehaviorSubject,
   combineLatest,
@@ -22,7 +22,7 @@ import {
   Observable,
   pluck,
   shareReplay,
-  switchMap,
+  switchMap
 } from "rxjs";
 import { InvitationService } from "@blockframes/invitation/+state";
 import { EventService } from "@blockframes/event/+state";
