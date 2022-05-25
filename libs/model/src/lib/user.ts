@@ -1,7 +1,7 @@
 import { createStorageFile, StorageFile } from './media';
 import type { DocumentMeta } from './meta';
 import type { Genre, Language, Media, Territory } from './static';
-import type { NotificationTypesBase } from './notification';
+import type { NotificationTypes } from './notification';
 import type { UserRole } from './permissions';
 import type { Timestamp } from './timestamp';
 
@@ -34,7 +34,7 @@ export interface NotificationSettingsTemplate {
   app: boolean;
 }
 
-export type NotificationSettings = Record<NotificationTypesBase, NotificationSettingsTemplate>;
+export type NotificationSettings = Partial<Record<NotificationTypes, NotificationSettingsTemplate>>;
 
 /** A user interface with public information */
 export interface PublicUser {

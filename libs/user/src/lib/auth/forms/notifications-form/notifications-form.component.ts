@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Pipe, PipeTransform, Inject } from 
 
 // Blockframes
 import { NotificationsForm } from './notifications.form';
-import { NotificationTypesBase, notificationTypesBase, App } from '@blockframes/model';
+import { App, notificationTypes, NotificationTypes } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/+state';
 
 // Material
@@ -13,7 +13,8 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 interface NotificationSetting { text: string, tooltip: boolean };
-const titleType: Record<NotificationTypesBase, NotificationSetting> = {
+
+const titleType: Partial<Record<NotificationTypes, NotificationSetting>> = {
   movieAccepted: { text: 'A title is successfully published on the marketplace.', tooltip: false },
   movieAskingPriceRequested: { text: `A user requests the asking price for a title.`, tooltip: false },
   movieAskingPriceRequestSent: { text: `Your request for the asking price has been sent.`, tooltip: false },
@@ -42,7 +43,7 @@ const titleType: Record<NotificationTypesBase, NotificationSetting> = {
   // underSignature: { text: 'Your offer is now under signature. (RECOMMENDED)', tooltip: true },
 };
 
-const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
+const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] }[] = [
   {
     title: 'Company Management',
     types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated'],
@@ -105,7 +106,7 @@ const tables: { title: string, types: string[], appAuthorized: App[] }[] = [
 })
 export class NotificationsFormComponent {
 
-  public types = [...notificationTypesBase];
+  public types = notificationTypes;
   public titleType = titleType;
   public tables = tables;
 
@@ -124,10 +125,11 @@ export class NotificationsFormComponent {
     }
   }
 
-  setAll(event: MatCheckboxChange, mode: 'email' | 'app', types: NotificationTypesBase[]) {
+  setAll(event: MatCheckboxChange, mode: 'email' | 'app', types: NotificationTypes[]) {
     const checked = event.checked;
     for (const type of types) {
-      const c = this.form.get(type).get(mode);
+      const castedType = type as any;
+      const c = this.form.get(castedType).get(mode);
       if (!c.disabled) c.setValue(checked);
     }
   }
@@ -146,7 +148,7 @@ export class NotificationsFormComponent {
 
 @Pipe({ name: 'someChecked' })
 export class SomeCheckedPipe implements PipeTransform {
-  transform(value: NotificationsForm['value'], mode: 'email' | 'app', types: NotificationTypesBase[]) {
+  transform(value: NotificationsForm['value'], mode: 'email' | 'app', types: NotificationTypes[]) {
     let checked = 0;
     for (const type of types) {
       if (value[type]?.[mode]) checked++;
@@ -157,7 +159,7 @@ export class SomeCheckedPipe implements PipeTransform {
 
 @Pipe({ name: 'everyChecked' })
 export class EveryCheckedPipe implements PipeTransform {
-  transform(value: NotificationsForm['value'], mode: 'email' | 'app', types: NotificationTypesBase[]) {
+  transform(value: NotificationsForm['value'], mode: 'email' | 'app', types: NotificationTypes[]) {
     return types.every(type => !!value[type]?.[mode] || value[type]?.[mode] === undefined);
   }
 }
