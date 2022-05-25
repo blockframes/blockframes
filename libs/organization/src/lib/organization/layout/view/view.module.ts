@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { OrgAddressModule } from '@blockframes/organization/pipes';
 
 // Components
 import { ViewComponent } from './view.component';

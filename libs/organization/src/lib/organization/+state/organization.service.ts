@@ -95,7 +95,8 @@ export class OrganizationService extends BlockframesCollection<Organization> {
   }
 
   cleanOrganization(org: Organization) {
-    return org.name.trim();
+    if (org.name) org.name = org.name.trim();
+    return org;
   }
 
   /**
