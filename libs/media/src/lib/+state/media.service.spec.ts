@@ -5,8 +5,7 @@ import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firest
 import { ImageParameters, formatParameters } from '../image/directives/imgix-helpers';
 import { firebase } from '@env';
 import { createStorageFile, UploadData } from '@blockframes/model';
-import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app'
-import { connectFunctionsEmulator, getFunctions, provideFunctions } from '@angular/fire/functions';
+import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
 
 describe('Media Service Test Suite', () => {
   let service: MediaService;
@@ -25,16 +24,10 @@ describe('Media Service Test Suite', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        provideFirebaseApp(() => initializeApp({ projectId: 'test' })),
-        provideFunctions(() => {
-          const functions = getFunctions(getApp());
-          connectFunctionsEmulator(functions, 'localhost', 5001);
-          return functions;
-        }),
-      ],
       providers: [
-        MediaService
+        MediaService,
+        { provide: FIREBASE_CONFIG, useValue: { options: { projectId: 'test' } } },
+        { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
       ],
     });
     service = TestBed.inject(MediaService);

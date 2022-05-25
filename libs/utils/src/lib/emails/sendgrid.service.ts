@@ -1,34 +1,24 @@
-import { Injectable } from "@angular/core";
-import { Functions, httpsCallable } from '@angular/fire/functions';
+import { Injectable } from '@angular/core';
 import { ErrorResultResponse } from '@blockframes/model';
+import { CallableFunctions } from 'ngfire';
 import { EmailParameters, EmailAdminParameters } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class SendgridService {
 
-  private sendMailAsAdmin = httpsCallable<EmailAdminParameters, ErrorResultResponse>(this.functions, 'sendMailAsAdmin');
-  private sendMailWithTemplate = httpsCallable<EmailParameters, ErrorResultResponse>(this.functions, 'sendMailWithTemplate');
-
   /**
    * Allowed only to Blockframes Admins
    * @param data EmailParameters
    */
-  public async sendAsAdmin(data: EmailAdminParameters) {
-    const r = await this.sendMailAsAdmin(data);
-    return r.data;
-  }
-
+  sendAsAdmin = this.functions.prepare<EmailAdminParameters, ErrorResultResponse>('sendMailAsAdmin');
 
   /**
    * Allowed to every user, but they must use a template Id and cannot choose "from".
    * Template ids can be allowed to use in apps/backend-functions/src/internals/email.ts isAllowedToUseTemplate
    * @param data EmailParameters
    */
-  public async sendWithTemplate(data: EmailParameters) {
-    const r = await this.sendMailWithTemplate(data);
-    return r.data;
-  }
+  sendWithTemplate = this.functions.prepare<EmailParameters, ErrorResultResponse>('sendMailWithTemplate');
 
-  constructor(private functions: Functions) { }
+  constructor(private functions: CallableFunctions) { }
 
 }

@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { AuthService } from '../../+state';
 import { ThemeService } from '@blockframes/ui/theme';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { UserService } from '@blockframes/user/+state';
-import { doc, docData, DocumentReference, Firestore } from '@angular/fire/firestore';
 import { dbVersionDoc } from '@blockframes/utils/maintenance';
-import { emulators } from '@env';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { IVersionDoc } from '@blockframes/model';
+import { DocumentReference } from 'firebase/firestore';
+import { firstValueFrom, map } from 'rxjs';
+import { FirestoreService, fromRef } from 'ngfire';
+import { EMULATORS_CONFIG, EmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
 
 @Component({
   selector: 'auth-widget',
@@ -19,21 +20,21 @@ export class AuthWidgetComponent {
   user$ = this.authService.profile$;
   organization$ = this.orgService.currentOrg$;
   theme$ = this.themeService.theme$;
-  isBfAdmin = this.userService.isBlockframesAdmin(this.authService.uid);
-  appVersion$ = docData<IVersionDoc>(doc(this.db, dbVersionDoc) as DocumentReference<IVersionDoc>);
-  emulatorList = Object.keys(emulators).filter(key => !!emulators[key]);
-  emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none'
+  isBfAdmin = firstValueFrom(this.authService.isBlockframesAdmin$); 
+  appVersion$ = fromRef(this.firestore.getRef(dbVersionDoc) as DocumentReference<IVersionDoc>).pipe(map(snap => snap.data()));
+  emulatorList = Object.keys(this.emulatorsConfig);
+  emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none';
 
   constructor(
-    private db: Firestore,
     private authService: AuthService,
     private orgService: OrganizationService,
+    private firestore: FirestoreService,
     private themeService: ThemeService,
-    private userService: UserService
+    @Inject(EMULATORS_CONFIG) private emulatorsConfig: EmulatorsConfig
   ) { }
 
   public async logout() {
-    await this.authService.signOut();
+    await this.authService.signout();
   }
 
   setTheme({ checked }: MatSlideToggleChange) {

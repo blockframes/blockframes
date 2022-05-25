@@ -1,11 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Functions, httpsCallable } from '@angular/fire/functions';
 import { User, Organization, Invitation, UserRole, Scope, App, getOrgAppAccess } from '@blockframes/model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { CrmService } from '@blockframes/admin/crm/+state';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
@@ -14,13 +12,14 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { where } from 'firebase/firestore';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { joinWith } from '@blockframes/utils/operators';
+import { joinWith, CallableFunctions } from 'ngfire';
 import { map } from 'rxjs/operators';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { AuthService } from '@blockframes/auth/+state';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'crm-user',
@@ -43,17 +42,17 @@ export class UserComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private authService: AuthService,
     private eventService: EventService,
     private organizationService: OrganizationService,
     private router: Router,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private permissionService: PermissionsService,
-    private crmService: CrmService,
     private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private functions: Functions
+    private functions: CallableFunctions
   ) { }
 
   async ngOnInit() {
@@ -183,7 +182,7 @@ export class UserComponent implements OnInit {
       ? getOrgAppAccess(this.userOrg)[0]
       : 'crm';
 
-    await this.crmService.sendPasswordResetEmail(this.user.email, app);
+    await this.authService.resetPasswordInit(this.user.email, app);
     this.snackBar.open(`Reset password email sent to : ${this.user.email}`, 'close', { duration: 2000 });
   }
 
@@ -215,8 +214,7 @@ export class UserComponent implements OnInit {
 
   async verifyEmail() {
     this.snackBar.open('Verifying email...', 'close', { duration: 2000 });
-    const f = httpsCallable<{ uid: string }>(this.functions, 'verifyEmail');
-    await f({ uid: this.userId });
+    await this.functions.call<{ uid: string }, unknown>('verifyEmail', { uid: this.userId });
     this.snackBar.open('Email verified', 'close', { duration: 2000 });
   }
 

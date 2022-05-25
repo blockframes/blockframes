@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
-import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
 import type firestore from 'firebase/firestore';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { combineLatest, Observable, of } from 'rxjs';
-import { ActiveState, EntityState } from '@datorama/akita';
 import { createDocPermissions, PermissionsDocument, UserRole, Permissions } from '@blockframes/model';
 import { doc, getDoc } from 'firebase/firestore';
+import { AtomicWrite } from 'ngfire';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
-interface PermissionsState extends EntityState<Permissions>, ActiveState<string> { }
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'permissions' })
-export class PermissionsService extends CollectionService<PermissionsState> {
-  readonly useMemorization = false;
+export class PermissionsService extends BlockframesCollection<Permissions> {
+  readonly path = 'permissions';
 
   // The whole permissions document for organization of the current logged in user.
   permissions: Permissions;

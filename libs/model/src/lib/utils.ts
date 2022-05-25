@@ -31,21 +31,6 @@ export function removeAccent<T>(str: T) {
   return str;
 }
 
-export function jsonDateReviver(key: unknown, value: any) {
-  if (!value) return value;
-
-  const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,}|)Z$/;
-  if (typeof value === 'string' && dateFormat.test(value)) return new Date(value);
-  if (
-    typeof value === 'object' &&
-    Object.keys(value).length === 2 &&
-    ['nanoseconds', 'seconds'].every((k) => k in value)
-  )
-    return new Date(((value.nanoseconds * 1) ^ -6) + value.seconds * 1000);
-
-  return value;
-}
-
 export function titleCase(text: string) {
   if (!text) return '';
   return text[0].toUpperCase() + text.substring(1);
@@ -324,20 +309,4 @@ export function sum<T>(array: T[], getAmount: (item: T) => number): number
 export function sum<T>(array: T[], getAmount?: (item: T) => number): number {
   const cb = getAmount || ((item: number) => item);
   return array.reduce((total, item) => total + cb(item as any), 0);
-}
-
-export function removeNulls(obj: any) {
-  const isArray = Array.isArray(obj);
-  for (const k of Object.keys(obj)) {
-    if (obj[k] === null || obj[k] === undefined) {
-      if (isArray) {
-        obj.splice(+k, 1)
-      } else {
-        delete obj[k];
-      }
-    } else if (typeof obj[k] === "object") {
-      obj[k] = removeNulls(obj[k]);
-    }
-  }
-  return obj;
 }

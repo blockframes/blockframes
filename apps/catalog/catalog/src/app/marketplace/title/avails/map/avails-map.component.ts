@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
-import { combineLatest } from 'rxjs';
-import { map, shareReplay, take, throttleTime } from 'rxjs/operators';
+import { combineLatest, firstValueFrom } from 'rxjs';
+import { map, shareReplay, throttleTime } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
@@ -94,10 +94,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
 
   public async selectAll() {
     if (this.availsForm.invalid) return;
-    const available = await this.availabilities$
-      .pipe(take(1))
-      .toPromise()
-      .then((a) => a.available);
+    const { available } = await firstValueFrom(this.availabilities$);
     for (const marker of available) {
       const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(
         this.availsForm.value,

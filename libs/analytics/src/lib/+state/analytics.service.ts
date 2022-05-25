@@ -1,46 +1,70 @@
-import { Inject, Injectable } from '@angular/core';
-import { getAnalytics, logEvent } from '@angular/fire/analytics';
-import { ActiveState, EntityState } from '@datorama/akita';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { where } from '@angular/fire/firestore';
-
-import { map, take } from 'rxjs/operators';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { isSupported, logEvent, setUserId, Analytics as FirebaseAnalytics } from 'firebase/analytics';
+import { where } from 'firebase/firestore';
+import { map } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';
+import { firstValueFrom, Subscription } from 'rxjs';
+import { CallableFunctions } from 'ngfire';
+import { FIRE_ANALYTICS } from 'ngfire';
 
 // Blockframes
-import { Analytics, AnalyticsTypes, EventName, createTitleMeta, createDocumentMeta, formatDocumentMetaFromFirestore  } from '@blockframes/model';
-import type { Organization, Movie, App } from '@blockframes/model';
-import { AuthService } from '@blockframes/auth/+state';
-import { APP } from '@blockframes/utils/routes/utils';
+import { Analytics, AnalyticsTypes, EventName, createTitleMeta, Movie } from '@blockframes/model';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { createDocumentMeta } from '@blockframes/model';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
-interface AnalyticsState extends EntityState<Analytics>, ActiveState<string> { };
-export interface AnalyticsWithOrg extends Analytics<'title'> {
-  org: Organization;
+interface AnalyticsActiveUser {
+  user_id: string,
+  first_connexion: {
+    value: Date
+  },
+  last_connexion: {
+    value: Date
+  },
+  session_count: number,
+  page_view: number
+}
+
+interface ConnectedUserInfo {
+  uid: string,
+  firstConnexion: Date,
+  lastConnexion: Date,
+  pageView: number,
+  sessionCount: number,
 }
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'analytics' })
-export class AnalyticsService extends CollectionService<AnalyticsState> {
-  readonly useMemorization = false;
-  private analytics = getAnalytics();
+export class AnalyticsService extends BlockframesCollection<Analytics> implements OnDestroy {
+  readonly path = 'analytics';
+  private subscription?: Subscription
+
+  private analyticsCache: ConnectedUserInfo[] = [];
+
+  private getAnalyticsActiveUsers = this.functions.prepare<unknown, AnalyticsActiveUser[]>('getAnalyticsActiveUsers');
 
   constructor(
+    @Inject(FIRE_ANALYTICS) private analytics: FirebaseAnalytics,
     private authService: AuthService,
-    @Inject(APP) private app: App
+    private functions: CallableFunctions
   ) {
     super();
+    // User tracking
+    isSupported().then((supported) => {
+      if (supported) {
+        this.subscription = authService.user$.subscribe(user => setUserId(analytics, user?.uid));
+      }
+    })
   }
 
-  formatFromFirestore(analytic): Analytics<AnalyticsTypes> {
-    return {
-      ...analytic,
-      _meta: formatDocumentMetaFromFirestore(analytic._meta)
-    };
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
   }
 
-  formatToFirestore(analytic: Partial<Analytics<AnalyticsTypes>>) {
+  toFirestore(analytic: Partial<Analytics<AnalyticsTypes>>, actionType: 'add' | 'update') {
     const profile = this.authService.profile;
+    if (actionType === 'update') return analytic;
+
     return {
       ...analytic,
       _meta: createDocumentMeta({
@@ -64,7 +88,7 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
 
     return this.valueChanges(query).pipe(
       // Filter out analytics from owners of title
-      map((analytics: Analytics<'title'>[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId) ))
+      map((analytics: Analytics<'title'>[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId)))
     );
   }
 
@@ -118,10 +142,50 @@ export class AnalyticsService extends CollectionService<AnalyticsState> {
    * @dev We do not want to log centralOrg operators nor blockframes
    * admins nor concierge users actions on the platform.
    */
-  private async isOperator(): Promise<boolean> {
-    const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
+  private async isOperator() {
+    const isBlockframesAdmin = await firstValueFrom(this.authService.isBlockframesAdmin$);
     const profile = this.authService.profile;
     const isConcierge = profile?.email.includes('concierge');
     return isBlockframesAdmin || isConcierge || Object.values(centralOrgId).includes(profile?.orgId);
+  }
+
+  public async loadAnalyticsData() {
+    if (this.analyticsCache.length) return;
+    const rows = await this.getAnalyticsActiveUsers({});
+    this.analyticsCache = rows.map(r => ({
+      uid: r.user_id,
+      firstConnexion: r.first_connexion.value,
+      lastConnexion: r.last_connexion.value,
+      sessionCount: r.session_count,
+      pageView: r.page_view,
+    }));
+  }
+
+  getLastConnexion(uid: string) {
+    const userInfo = this.analyticsCache.find(u => u.uid === uid);
+    if (userInfo && userInfo.lastConnexion) {
+      return userInfo.lastConnexion;
+    }
+  }
+
+  getFirstConnexion(uid: string) {
+    const userInfo = this.analyticsCache.find(u => u.uid === uid);
+    if (userInfo && userInfo.firstConnexion) {
+      return userInfo.firstConnexion;
+    }
+  }
+
+  getSessionCount(uid: string) {
+    const userInfo = this.analyticsCache.find(u => u.uid === uid);
+    if (userInfo && userInfo.sessionCount) {
+      return userInfo.sessionCount;
+    }
+  }
+
+  getPageView(uid: string) {
+    const userInfo = this.analyticsCache.find(u => u.uid === uid);
+    if (userInfo && userInfo.pageView) {
+      return userInfo.pageView;
+    }
   }
 }
