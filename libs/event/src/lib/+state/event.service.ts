@@ -9,7 +9,8 @@ import {
   isMeeting,
   isScreening,
   SlateEvent,
-  Timestamp
+  Timestamp,
+  EventMeta
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
@@ -125,9 +126,9 @@ export class EventService extends BlockframesCollection<Event> {
   }
 
   /** Query one or many event by id */
-  queryDocs(ids: string[]): Observable<Event[]>
-  queryDocs(ids: string): Observable<Event>
-  queryDocs(ids: string | string[]): Observable<Event | Event[]> {
+  queryDocs<Meta extends EventMeta = unknown>(ids: string[]): Observable<Event<Meta>[]>
+  queryDocs<Meta extends EventMeta = unknown>(ids: string): Observable<Event<Meta>>
+  queryDocs<Meta extends EventMeta = unknown>(ids: string | string[]): Observable<Event<Meta> | Event<Meta>[]> {
     if (typeof ids === 'string') {
       return this.eventQuery(ids);
     } else if (ids.length === 0) {

@@ -3,7 +3,7 @@ import { boolean } from "@blockframes/utils/decorators/decorators";
 
 export interface MetricCard {
   title: string;
-  value: number;
+  value: number|string;
   icon: string;
   selected?: boolean;
 }

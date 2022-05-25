@@ -3,17 +3,26 @@ import { ActivatedRoute } from "@angular/router";
 import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
 import { aggregate } from "@blockframes/analytics/+state/utils";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
-import { AggregatedAnalytic, EventName, Event, Screening, isScreening, Invitation, Analytics, isMovieAccepted } from "@blockframes/model";
+import {
+  AggregatedAnalytic,
+  EventName,
+  isScreening,
+  Invitation,
+  isMovieAccepted,
+  sum,
+  App,
+  toLabel,
+  InvitationWithScreening,
+  InvitationWithAnalytics,
+} from "@blockframes/model";
 import { fromOrgAndAccepted, MovieService } from "@blockframes/movie/+state/movie.service";
 import { OrganizationService } from "@blockframes/organization/+state";
 import { IconSvg } from "@blockframes/ui/icon.service";
 import { NavigationService } from "@blockframes/ui/navigation.service";
 import { UserService } from "@blockframes/user/+state";
-import { App } from "@blockframes/model";
 import { APP } from "@blockframes/utils/routes/utils";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { joinWith } from 'ngfire';
-import { sum, toLabel } from "@blockframes/model";
 import {
   BehaviorSubject,
   combineLatest,
@@ -26,10 +35,6 @@ import {
 } from "rxjs";
 import { InvitationService } from "@blockframes/invitation/+state";
 import { EventService } from "@blockframes/event/+state";
-
-interface InvitationWithScreening extends Invitation {
-  event: Event<Screening>;
-}
 
 interface VanityMetricEvent {
   name: EventName;
@@ -81,8 +86,7 @@ function filterAnalytics(title: string, analytics: AggregatedAnalytic[]) {
     : analytics;
 }
 
-interface InvitationWithAnalytics extends Invitation { analytics: Analytics[]; };
-function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
+export function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attended = invitations.filter(invitation => invitation.watchTime);
   return [
     {
