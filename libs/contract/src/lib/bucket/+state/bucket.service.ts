@@ -1,27 +1,26 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { centralOrgId } from '@env';
-import { switchMap, take } from 'rxjs/operators';
-import { AuthService } from '@blockframes/auth/+state';
+import { switchMap } from 'rxjs/operators';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { createOfferId } from '@blockframes/model';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { TermService } from '../../term/+state';
-import { OfferService } from '../../offer/+state';
-import { ContractService } from '../../contract/+state';
-import { ActiveState, EntityState } from '@datorama/akita';
-import { collection, doc } from 'firebase/firestore';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { TermService } from '../../term/+state/term.service';
+import { OfferService } from '../../offer/+state/offer.service';
+import { ContractService } from '../../contract/+state/contract.service';
+import { DocumentSnapshot } from 'firebase/firestore';
 import {
-  convertDuration,
   Bucket,
   createBucket,
   createBucketTerm,
   createBucketContract,
   createDocumentMeta,
-  MovieCurrency
+  MovieCurrency,
+  Sale
 } from '@blockframes/model';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
+import { firstValueFrom } from 'rxjs';
 
-interface BucketState extends EntityState<Bucket>, ActiveState<string> { }
 interface AddTermConfig {
   titleId: string,
   parentTermId: string,
@@ -30,9 +29,9 @@ interface AddTermConfig {
 
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'buckets' })
-export class BucketService extends CollectionService<BucketState> {
-  useMemorization = false;
+export class BucketService extends BlockframesCollection<Bucket> {
+  readonly path = 'buckets';
+
   active$ = this.orgService.currentOrg$.pipe(
     switchMap(org => this.valueChanges(org.id)),
   );
@@ -47,22 +46,13 @@ export class BucketService extends CollectionService<BucketState> {
     super();
   }
 
-  formatFromFirestore(document): Bucket {
-    if (!document) return;
-    const bucket = createBucket(document);
-    for (const contract of bucket.contracts) {
-      for (const term of contract.terms) {
-        term.duration = convertDuration(term.duration);
-      }
-      for (const holdback of contract.holdbacks) {
-        holdback.duration = convertDuration(holdback.duration);
-      }
-    }
-    return bucket;
+  protected fromFirestore(document: DocumentSnapshot<Bucket>): Bucket {
+    const bucket = super.fromFirestore(document);
+    return createBucket(bucket);
   }
 
   getActive() {
-    return this.active$.pipe(take(1)).toPromise();
+    return firstValueFrom(this.active$);
   }
 
   async createOffer(specificity: string, delivery: string, currency: MovieCurrency) {
@@ -89,7 +79,7 @@ export class BucketService extends CollectionService<BucketState> {
     });
 
     const promises = bucket.contracts.map(async (contract) => {
-      const contractId = doc(collection(this.db, '_')).id;
+      const contractId = this.contractService.createId();
       const parentTerms = await this.termService.getValue(contract.parentTermId);
       const parentContract = await this.contractService.getValue(parentTerms.contractId);
 
@@ -101,7 +91,7 @@ export class BucketService extends CollectionService<BucketState> {
       };
 
       // Create the contract
-      await this.contractService.add({
+      await this.contractService.add<Sale>({
         _meta: createDocumentMeta(),
         status: 'pending',
         id: contractId,

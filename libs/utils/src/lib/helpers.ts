@@ -1,18 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
-import { staticModel, Scope, GetKeys, Movie, User, Organization } from '@blockframes/model';
+import { staticModel, Scope, GetKeys, Organization } from '@blockframes/model';
 
-/**
- * This method is used before pushing data on db
- * to prevent "Unsupported field value: undefined" errors.
- * Doing JSON.parse(JSON.stringify(data)) clones object and
- * removes undefined fields and empty arrays.
- * This methods also removes readonly settings on objects coming from Akita
- */
-export function cleanModel<T>(data: T): T {
-  return JSON.parse(JSON.stringify(data));
-}
-
-export function isObject(item: unknown) {
+function isObject(item: unknown) {
   return item && typeof item === 'object' && !Array.isArray(item) && item !== null;
 }
 
@@ -46,7 +35,7 @@ function isTimeStamp(
 }
 
 /** Takes a Date, a string or a Timestamp and returns it as a Date. */
-export function toDate(date: Timestamp | Date): Date {
+export function toDate(date: Timestamp | Date): Date { // TODO #8280 remove
   if (isTimeStamp(date)) {
     return date.toDate();
   }
@@ -70,19 +59,6 @@ export function getValue(item: any, key: string) {
     item = item?.[path[i]];
   }
   return item;
-}
-
-/**
- * Takes a list of items and an asynchronous filtering function and
- * returns a promise of the filtered list.
- * @param items A list of item to filter with an asynchronous function
- * @param filterFunction Asynchronous function that filters items
- */
-export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Promise<boolean>) {
-  const _null = Symbol();
-  const x = items.map(async (item) => ((await filterFunction(item)) ? item : _null));
-  const y = await Promise.all(x);
-  return y.filter((w) => w !== _null) as T[];
 }
 
 function findCorrespondence(code: string) {
@@ -161,52 +137,6 @@ export function debounceFactory(func: (...params) => unknown, wait: number) {
     window.clearTimeout(timeout);
     timeout = window.setTimeout(later, wait);
   };
-}
-
-/**
- * Remove all undefined fields
- * @param value anything
- */
-export function removeUndefined(value: unknown) {
-  if (Array.isArray(value)) {
-    return value.map(removeUndefined);
-  } else if (value === null) {
-    return null;
-  } else if (typeof value === 'object') {
-    const result = {};
-    for (const key in value) {
-      if (value[key] !== undefined) {
-        result[key] = removeUndefined(value[key]);
-      }
-    }
-    return result;
-  } else {
-    return value;
-  }
-}
-
-export function sortMovieBy(a: Movie, b: Movie, sortIdentifier: string) {
-  switch (sortIdentifier) {
-    case 'Title':
-      return a.title.international.localeCompare(b.title.international);
-    case 'Director':
-      return a.directors[0]?.lastName.localeCompare(b.directors[0]?.lastName);
-    case 'Production Year':
-      if (b.release.year < a.release.year) {
-        return -1;
-      }
-      if (b.release.year > a.release.year) {
-        return 1;
-      }
-      return 0;
-    default:
-      return 0;
-  }
-}
-
-/** Verify if the user exists and has a name and surname. */
-export function hasDisplayName(user: User): boolean {
-  return !!user && !!user.firstName && !!user.lastName;
 }
 
 /** Verify if the org exists and has denomination.full. */

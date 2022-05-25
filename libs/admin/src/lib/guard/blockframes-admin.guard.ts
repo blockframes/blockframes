@@ -14,7 +14,7 @@ export class BlockframesAdminGuard implements CanActivate {
     return this.authService.isBlockframesAdmin$.pipe(
       switchMap(async isBlockframesAdmin => {
         if (isBlockframesAdmin) return true;
-        await this.authService.signOut();
+        await this.authService.signout();
         return this.router.createUrlTree(['/']);
       })
     )

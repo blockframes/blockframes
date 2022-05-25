@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Optional, OnInit } from '@angular/core';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { Intercom } from 'ng-intercom';
-import { joinWith } from '@blockframes/utils/operators';
+import { joinWith } from 'ngfire';
 import { map } from 'rxjs/operators';
 import { combineLatest, of } from 'rxjs';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
