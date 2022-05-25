@@ -3,24 +3,28 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { PasswordFormComponent } from './change-password.component';
+// Page
+import { ChangePasswordComponent } from './change-password.component';
+
+// Modules
 import { PasswordInputModule } from '@blockframes/ui/form/password-input/password-input.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
-  declarations: [PasswordFormComponent],
+  declarations: [ChangePasswordComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+
+    // Modules
     PasswordInputModule,
+
     // Material
     MatCardModule,
-    MatFormFieldModule,
   ],
-  exports: [PasswordFormComponent]
+  exports: [ChangePasswordComponent]
 })
-export class PasswordFormModule { }
+export class ChangePasswordModule { }

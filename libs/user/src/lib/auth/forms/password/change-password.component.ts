@@ -10,7 +10,7 @@ import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@bloc
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class PasswordFormComponent {
+export class ChangePasswordComponent {
 
   passwordsMatcher = new RepeatPasswordStateMatcher('next', 'confirm');
   currentPasswordMatch = new DifferentPasswordStateMatcher('current', 'next');

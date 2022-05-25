@@ -85,12 +85,14 @@
         <!-- PASSWORD FIELDS -->
         <ng-container *ngIf="form.get('generatedPassword').enabled">
           <div fxLayout fxLayoutGap="16px" fxLayoutAlign="start">
-            <mat-form-field appearance="outline">
-              <mat-label>Invitation Pass</mat-label>
-              <input matInput type="password" placeholder="Your Invitation Pass" formControlName="generatedPassword"
-              test-id="invitation-code" required />
+            <password-input
+              [control]="form.get('generatedPassword')"
+              placeholder="Your Invitation Pass"
+              label="Invitation Pass"
+              test-id="invitation-code"
+            >
               <mat-hint>You'll find your Invitation Pass in your invitation email.</mat-hint>
-            </mat-form-field>
+            </password-input>
             <button mat-mini-fab color="primary" matTooltip="Contact us to get help" (click)="openIntercom()">?</button>
           </div>
         </ng-container>
