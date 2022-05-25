@@ -5,7 +5,6 @@ import { combineLatest, Observable } from 'rxjs';
 import { Movie, Person, StoreStatus, storeStatus, App } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Intercom } from 'ng-intercom';
 import { APP } from '@blockframes/utils/routes/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
@@ -54,13 +53,8 @@ export class ListComponent {
     private snackbar: MatSnackBar,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
-    @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
   ) { }
-
-  public openIntercom(): void {
-    return this.intercom.show();
-  }
 
   /** Dynamic filter of movies for each tab. */
   applyFilter(filter?: StoreStatus) {

@@ -11,8 +11,7 @@ import { ListComponent } from './list.component';
 // Blockframes
 import { AppPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
+import { EmptyMovieModule } from '@blockframes/ui/dashboard/components/empty-movie/empty-movie.module';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
@@ -20,7 +19,6 @@ import { MaxLengthModule } from "@blockframes/utils/pipes";
 import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,21 +31,22 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
+
+    // Blockframes
     TableModule,
     ToLabelModule,
     DisplayNameModule,
-    ImageModule,
-    NoTitleModule,
+    EmptyMovieModule,
     FilterByModule,
     TagModule,
     MaxLengthModule,
     AppPipeModule,
     CellModalModule,
+
     // Material
     MatButtonModule,
     MatTabsModule,
     MatIconModule,
-    MatCardModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
     // Router
