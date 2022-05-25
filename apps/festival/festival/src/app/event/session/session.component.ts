@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
+import { TwilioService } from '@blockframes/utils/twilio';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 import { ErrorResultResponse, extensionToType } from '@blockframes/model';

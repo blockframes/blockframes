@@ -323,20 +323,20 @@ describe('Signup', () => {
     get('password').type('short');
     get('password-confirm').type('short');
     get('submit').should('be.disabled');
-    get('password').clear();
-    get('password-confirm').clear();
+    get('password').type('{selectall}{backspace}');
+    get('password-confirm').type('{selectall}{backspace}');
     //too long
     get('password').type('ThisIsWayTooLongForAPassword');
     get('password-confirm').type('ThisIsWayTooLongForAPassword');
     get('submit').should('be.disabled');
-    get('password').clear();
-    get('password-confirm').clear();
+    get('password').type('{selectall}{backspace}');
+    get('password-confirm').type('{selectall}{backspace}');
     //unmatching
     get('password').type('LambdaPassword');
     get('password-confirm').type('OtherPassword');
     get('submit').should('be.disabled');
-    get('password').clear();
-    get('password-confirm').clear();
+    get('password').type('{selectall}{backspace}');
+    get('password-confirm').type('{selectall}{backspace}');
     //proper password
     get('password').type(user.password);
     get('password-confirm').type(user.password);
