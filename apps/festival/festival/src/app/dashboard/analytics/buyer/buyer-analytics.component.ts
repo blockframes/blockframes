@@ -86,7 +86,7 @@ function filterAnalytics(title: string, analytics: AggregatedAnalytic[]) {
     : analytics;
 }
 
-export function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
+function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attended = invitations.filter(invitation => invitation.watchTime);
   return [
     {

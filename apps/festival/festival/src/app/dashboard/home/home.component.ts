@@ -38,7 +38,7 @@ import { sum } from "@blockframes/model";
 // NgFire
 import { joinWith } from 'ngfire';
 
-export function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
+function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attendees = invitations.filter(invitation => invitation.watchTime);
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
   const participationRate = Math.round(attendees.length / invitations.length) * 100;
@@ -96,16 +96,6 @@ export class HomeComponent {
         ? this.dynTitle.setPageTitle('Dashboard')
         : this.dynTitle.setPageTitle('Dashboard', 'Empty');
     })
-  );
-
-  buyerAnalytics$ = this.movieService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
-    joinWith({
-      analytics: title => {
-        const { userId } = this.route.snapshot.params;
-        return this.analyticsService.getTitleAnalytics({ titleId: title.id, uid: userId });
-      }
-    }, { shouldAwait: true }),
-    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
@@ -168,6 +158,15 @@ export class HomeComponent {
     map(users => users.sort((userA, userB) => userA.total - userB.total))
   );
 
+  buyerAnalytics$ = this.movieService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
+    joinWith({
+      analytics: title => {
+        const { userId } = this.route.snapshot.params;
+        return this.analyticsService.getTitleAnalytics({ titleId: title.id, uid: userId });
+      }
+    }, { shouldAwait: true }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
 
   invitations$ = this.invitationWithEventAndUserOrg().pipe(
     map(invitations => invitations.filter(invitation => (invitation.event) && invitation.event.meta.titleId)),

@@ -89,39 +89,6 @@ analytics-map h3{
   }
 }
 
-.screening-grid{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
-  grid-auto-columns: 112px;
-  column-gap: 58px;
-  row-gap: 24px;
-  margin-top: 24px;
-  margin-bottom: 24px;
-}
-
-.screening-item{
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  justify-items: center;
-  text-align: center;
-  border: 1px solid #8DA4FA;
-  border-radius: 4px;
-  h5{
-    margin-top: 8px;
-    margin-bottom: 0;
-  }
-}
-
-.screening-header{
-  width: 100%;
-  background-color: #8DA4FA;
-  height: 40px;
-  display: grid;
-  place-content: center;
-  justify-self: stretch;
-}
-
 .heading,
 .space-between{
   display: flex;
