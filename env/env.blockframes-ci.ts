@@ -3,6 +3,13 @@
 // Firebase
 // ========
 
+export const appUrl = {
+  content: 'http://localhost:4200',
+  market: 'http://localhost:4200',
+  financiers: 'http://localhost:4200',
+  crm: 'http://localhost:4200',
+}
+
 const firebaseConfig = {
   apiKey: 'AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0',
   authDomain: 'blockframes-ci.firebaseapp.com',
