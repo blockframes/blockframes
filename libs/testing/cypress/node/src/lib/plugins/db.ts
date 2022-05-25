@@ -73,15 +73,12 @@ export function deleteOrg(orgId: string) {
   return db.doc(`orgs/${orgId}`).delete();
 }
 
-// TODO : create a CRUD light plugin, see issue #8460
-
 //* LIGHT PLUGIN*----------------------------------------------------------------
 
 const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
 
 //* IMPORT DATA*-----------------------------------------------------------------
 
-// TODO : add field called meta, with 'test: true' as value
 export async function importData(data: Record<string, object>[]) {
   const createAll: Promise<FirebaseFirestore.WriteResult>[] = [];
   for (const document of data) {
