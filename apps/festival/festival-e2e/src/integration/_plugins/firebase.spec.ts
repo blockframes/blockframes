@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { firebase } from '@blockframes/testing/cypress/browser';
-import { examples } from '../../fixtures/_test';
+import { examples } from '../../fixtures/plugins-firebase';
 
 //* TESTS --------------------------------------*//
 
