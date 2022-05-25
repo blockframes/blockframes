@@ -36,6 +36,24 @@ export function firebase(app?: string) {
   return firebaseConfig
 }
 
+// ! CI ALGOLIA VALUES - needed for test runs
+export const algolia = {
+  appId: '8E9YO1I9HB',
+  searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
+  indexNameOrganizations: {
+    festival: 'ci_festival_org',
+    financiers: 'ci_financiers_org',
+    catalog: 'ci_catalog_org'
+  },
+  indexNameMovies: {
+    festival: 'ci_festival_movies',
+    financiers: 'ci_financiers_movies',
+    catalog: 'ci_catalog_movies',
+  },
+  indexNameUsers: 'ci_users',
+};
+
+
 // Support emails
 // =======
 
@@ -77,6 +95,7 @@ export const sentryDsn = undefined;
 // BigQuery
 // ========
 
+export const bigQueryAnalyticsTable = '';
 
 // Data Studio
 // ========
@@ -106,22 +125,3 @@ export const chunkSize = 50;
 
 export const playerId = 'LVeBD5vf';
 export const testVideoId = 'YlSFNnkR';
-
-export const bigQueryAnalyticsTable = '';
-
-// ! CI ALGOLIA VALUES - use this as a testing env? same for imgix, twilio, mailchimp...
-export const algolia = {
-  appId: '8E9YO1I9HB',
-  searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
-  indexNameOrganizations: {
-    festival: 'ci_festival_org',
-    financiers: 'ci_financiers_org',
-    catalog: 'ci_catalog_org'
-  },
-  indexNameMovies: {
-    festival: 'ci_festival_movies',
-    financiers: 'ci_financiers_movies',
-    catalog: 'ci_catalog_movies',
-  },
-  indexNameUsers: 'ci_users',
-};
