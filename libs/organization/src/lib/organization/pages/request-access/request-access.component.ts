@@ -54,11 +54,11 @@ export class OrgRequestAccessComponent implements OnInit {
 
     this.disabledRequest = true;
 
-    await this.orgService.requestAppAccess(this.currentApp, this.formControl.value, this.orgId);
+    await this.orgService.requestAppAccess({ app: this.currentApp, module: this.formControl.value, orgId: this.orgId });
     this.router.navigate(['pending'], { relativeTo: this.route });
   }
 
   public logout() {
-    this.authService.signOut();
+    this.authService.signout();
   }
 }

@@ -12,7 +12,7 @@ import { combineLatest, Subscription } from 'rxjs';
 import { map, throttleTime } from 'rxjs/operators';
 
 import { centralOrgId } from '@env';
-import { joinWith } from '@blockframes/utils/operators';
+import { joinWith } from 'ngfire';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { Movie, Income } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/+state';

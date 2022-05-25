@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { App, appName } from '@blockframes/model';
-import { firebaseRegion, firebase, emulators } from '@env';
+import { firebaseRegion, firebase } from '@env';
+import { EmulatorsConfig, EMULATORS_CONFIG } from '../emulator-front-setup';
 import { APP } from '../routes/utils';
 import { PdfParams } from './pdf.interfaces';
 
@@ -9,7 +10,10 @@ export const { projectId } = firebase();
 @Injectable({ providedIn: 'root' })
 export class PdfService {
 
-  constructor(@Inject(APP) private app: App) { }
+  constructor(
+    @Inject(APP) private app: App,
+    @Inject(EMULATORS_CONFIG) private emulatorsConfig: EmulatorsConfig
+  ) { }
 
   async download(titleIds: string[]) {
     const app = this.app;
@@ -24,7 +28,7 @@ export class PdfService {
       body: JSON.stringify(data)
     }
 
-    const url = emulators.functions
+    const url = this.emulatorsConfig.functions
       ? `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`
       : `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`
 

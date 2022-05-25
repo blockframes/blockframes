@@ -4,8 +4,8 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
 import { App, getOrgModuleAccess } from '@blockframes/model';
-import { take } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'notification-view',
@@ -30,7 +30,7 @@ export class NotificationComponent implements OnInit {
   }
 
   async markAll() {
-    const myNotifications = await this.service.myNotifications$.pipe(take(1)).toPromise();
+    const myNotifications = await firstValueFrom(this.service.myNotifications$);
     for (const notification of myNotifications) {
       this.service.readNotification(notification);
     }
