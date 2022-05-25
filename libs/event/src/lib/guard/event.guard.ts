@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { AuthService } from '@blockframes/auth/service';
 import { Event, Meeting } from '@blockframes/model';
-import { TwilioService } from '../components/meeting/+state/twilio.service';
+import { TwilioService } from '@blockframes/utils/twilio';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 
