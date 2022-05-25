@@ -12,7 +12,9 @@ import {
   createStorageFile,
   appName,
   getMovieAppAccess,
-  eventTypes
+  App,
+  eventTypes,
+  isAppNotification,
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { toDate } from '@blockframes/utils/helpers';
@@ -42,6 +44,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
     switchMap((notifications) => {
       const promises = notifications
         .filter(n => n.app?.isRead !== undefined)
+        .filter(n => isAppNotification(n.type, this.app))
         .map(n => this.appendNotificationData(n));
       return Promise.all(promises);
     })
