@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
-import { AuthService } from "@blockframes/auth/+state";
+import { AuthService } from '@blockframes/auth/service';
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { FormStaticValueArray } from "@blockframes/utils/form";
 import { toGroupLabel } from "@blockframes/utils/pipes";

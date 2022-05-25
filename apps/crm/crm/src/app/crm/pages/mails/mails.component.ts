@@ -4,7 +4,7 @@ import { TestEmailForm } from '@blockframes/admin/crm/forms/test-email.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SendgridService } from '@blockframes/utils/emails/sendgrid.service'
 import { sendgridEmailsFrom } from '@blockframes/utils/apps';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 
 @Component({
   selector: 'crm-mails',

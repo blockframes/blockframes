@@ -15,7 +15,7 @@ import { NotificationService } from '@blockframes/notification/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Movie, App } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({

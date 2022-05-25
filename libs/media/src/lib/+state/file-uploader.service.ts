@@ -3,7 +3,7 @@ import { Injectable, Injector } from "@angular/core";
 import { ComponentPortal } from "@angular/cdk/portal";
 import { Overlay, OverlayRef } from "@angular/cdk/overlay";
 import { UploadTask } from 'firebase/storage';
-import { AuthService } from "@blockframes/auth/+state";
+import { AuthService } from '@blockframes/auth/service';
 import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
 import { BehaviorStore } from "@blockframes/utils/observable-helpers";
 import { delay } from '@blockframes/utils/helpers';

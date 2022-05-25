@@ -5,7 +5,7 @@ import { filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { User, Organization, Invitation, App } from '@blockframes/model';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { where } from 'firebase/firestore';
 

@@ -9,7 +9,7 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { OrganizationsImportState, SpreadsheetImportError } from '../../utils';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { PublicUser, getOrgAppAccess } from '@blockframes/model';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

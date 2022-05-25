@@ -11,7 +11,7 @@ import {
 } from "@blockframes/model";
 import { MovieService } from "@blockframes/movie/+state/movie.service";
 import { OrganizationService } from "@blockframes/organization/+state";
-import { UserService } from "@blockframes/user/+state";
+import { UserService } from '@blockframes/user/service';
 import { getKeyIfExists } from "@blockframes/utils/helpers";
 import { centralOrgId } from "@env";
 import { getDate } from '@blockframes/import/utils';

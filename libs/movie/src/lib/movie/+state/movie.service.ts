@@ -4,7 +4,7 @@ import { PermissionsService } from '@blockframes/permissions/+state/permissions.
 import type firestore from 'firebase/firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { map } from 'rxjs/operators';
-import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { where, doc, updateDoc, DocumentSnapshot } from 'firebase/firestore';
 import { WriteOptions } from 'ngfire';

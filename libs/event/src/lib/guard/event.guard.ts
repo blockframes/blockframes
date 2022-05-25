@@ -6,7 +6,7 @@ import { EventService } from '../+state';
 import { eventTime } from '../pipes/event-time.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { Event, Meeting } from '@blockframes/model';
 import { TwilioService } from '../components/meeting/+state/twilio.service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

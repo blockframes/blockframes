@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core
 import { BehaviorSubject } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { OrganizationService } from '@blockframes/organization/+state';
 

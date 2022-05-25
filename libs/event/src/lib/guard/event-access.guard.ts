@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { combineLatest, firstValueFrom } from 'rxjs';
 import { switchMap } from 'rxjs/operators';

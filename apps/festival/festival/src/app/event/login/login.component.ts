@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, HostListener, OnDestroy } from '@angular/core';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';

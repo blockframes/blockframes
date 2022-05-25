@@ -2,7 +2,7 @@ import { where } from 'firebase/firestore';
 import { checkParentTerm, ContractsImportState, sheetHeaderLine, } from '@blockframes/import/utils';
 import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Contract, Movie, Term } from '@blockframes/model';
 import {

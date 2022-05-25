@@ -19,7 +19,7 @@ import { production } from '@env';
 import { DocumentSnapshot, QueryConstraint, where } from 'firebase/firestore';
 import { WriteOptions } from 'ngfire';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { UserService } from '@blockframes/user/+state/user.service';
+import { UserService } from '@blockframes/user/service';
 import { joinWith } from 'ngfire';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 

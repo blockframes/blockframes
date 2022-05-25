@@ -6,7 +6,7 @@ import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/c
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/model';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({

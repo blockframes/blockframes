@@ -8,7 +8,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { Observable } from 'rxjs';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { Router } from '@angular/router';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 
 
 @Component({

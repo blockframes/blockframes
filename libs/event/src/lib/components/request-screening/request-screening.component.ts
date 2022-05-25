@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { BehaviorSubject } from 'rxjs';

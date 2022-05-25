@@ -8,7 +8,7 @@ import { fromOrgAndAccepted, MovieService } from "@blockframes/movie/+state/movi
 import { OrganizationService } from "@blockframes/organization/+state";
 import { IconSvg } from "@blockframes/ui/icon.service";
 import { NavigationService } from "@blockframes/ui/navigation.service";
-import { UserService } from "@blockframes/user/+state";
+import { UserService } from '@blockframes/user/service';
 import { App } from "@blockframes/model";
 import { APP } from "@blockframes/utils/routes/utils";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";

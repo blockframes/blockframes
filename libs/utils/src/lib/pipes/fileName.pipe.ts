@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { StorageFile, extensionToType, titleCase } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 import { getFileExtension } from '../file-sanitizer';
 
 @Pipe({ name: 'fileName' })

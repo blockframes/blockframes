@@ -4,7 +4,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
 import { centralOrgId } from '@env';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 import { where } from 'firebase/firestore';
 
 export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts'] as const;

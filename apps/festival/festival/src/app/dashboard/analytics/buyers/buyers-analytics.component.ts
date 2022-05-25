@@ -5,7 +5,7 @@ import { aggregate } from '@blockframes/analytics/+state/utils';
 import { AggregatedAnalytic, App } from '@blockframes/model';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 import { joinWith } from 'ngfire';
 import { APP } from '@blockframes/utils/routes/utils';

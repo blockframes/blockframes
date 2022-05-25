@@ -19,7 +19,7 @@ import { AnalyticsService } from '@blockframes/analytics/+state/analytics.servic
 import { map, Observable } from 'rxjs';
 import { aggregatePerUser } from '@blockframes/analytics/+state/utils';
 import { joinWith } from 'ngfire';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 
 const eventLabel: Record<EventName, string> = {
   addedToWishlist: 'Added to Wishlist',

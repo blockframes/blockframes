@@ -15,7 +15,7 @@ import {
 } from '@blockframes/model';
 import { counter } from '@blockframes/analytics/+state/utils';
 import { aggregate } from '@blockframes/analytics/+state/utils';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 
 // RxJs

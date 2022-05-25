@@ -2,8 +2,8 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, Inject } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
-import { AuthService } from '@blockframes/auth/+state';
-import { UserService } from '@blockframes/user/+state';
+import { AuthService } from '@blockframes/auth/service';
+import { UserService } from '@blockframes/user/service';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationService } from '@blockframes/organization/+state';
