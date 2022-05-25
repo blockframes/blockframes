@@ -11,6 +11,7 @@ import { PasswordInputModule } from '@blockframes/ui/form/password-input/passwor
 
 // Material
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [ChangePasswordComponent],
@@ -24,6 +25,7 @@ import { MatCardModule } from '@angular/material/card';
 
     // Material
     MatCardModule,
+    MatFormFieldModule
   ],
   exports: [ChangePasswordComponent]
 })
