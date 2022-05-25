@@ -87,21 +87,5 @@
 </ng-template>
 
 <ng-template #empty>
-  <section fxLayout="column" fxLayoutAlign="center center">
-    <dashboard-no-title></dashboard-no-title>
-    <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
-      <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
-        <img asset="add_title.svg" alt="Add title">
-        <a routerLink="lobby" mat-button color="primary">Add one Title</a>
-      </mat-card>
-      <mat-card class="no-title-card" fxLayout="column">
-        <img asset="add_files.svg" alt="Upload files">
-        <a routerLink="../import" mat-button color="primary">Import Titles in bulk</a>
-      </mat-card>
-    </article>
-    <h3>Or</h3>
-    <button (click)="openIntercom()" mat-flat-button color="primary">
-      Contact the {{ app | appName }} team
-    </button>
-  </section>
+  <dashboard-empty-movie appName="{{ app | appName }}"></dashboard-empty-movie>
 </ng-template>
