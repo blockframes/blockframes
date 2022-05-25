@@ -24,7 +24,7 @@
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
         </div>
-        <bf-carousel [columns]="4">
+        <bf-carousel [columns]="{ gtMd: 4, md: 3, ltMd: 2 }">
           <ng-container *ngFor="let movie of movies.hits">
             <ng-template carouselItem>
               <movie-card [movie]="movie" [size]="section.size" [link]="['/c/o/marketplace/title', movie.objectID]">
@@ -55,19 +55,21 @@
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>
     </div>
-    <bf-carousel [columns]="6">
-      <ng-container *ngFor="let org of (orgs | async)?.hits">
-        <ng-template carouselItem>
-          <org-card-minimal [org]="org"></org-card-minimal>
-        </ng-template>
-      </ng-container>
-    </bf-carousel>
+    <ng-container *ngIf="(orgs | async)?.hits as hits">
+      <bf-carousel [columns]="{ gtMd: 6, md: 5, sm: 4, xs: 3 }">
+        <ng-container *ngFor="let org of hits">
+          <ng-template carouselItem>
+            <org-card-minimal [org]="org"></org-card-minimal>
+          </ng-template>
+        </ng-container>
+      </bf-carousel>
+    </ng-container>
   </section>
   <section class="cards">
     <div fxLayout="row" fxLayoutAlign="space-between start">
       <h1>What's in it for you?</h1>
     </div>
-    <bf-carousel [columns]="2">
+    <bf-carousel [columns]="{ gtMd: 2, ltLg: 1 }">
       <ng-container *ngFor="let benefit of benefits">
         <ng-template carouselItem>
           <mat-card>

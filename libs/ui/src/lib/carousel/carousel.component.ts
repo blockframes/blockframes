@@ -4,7 +4,6 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
   Directive,
-  HostBinding,
   ElementRef,
   AfterViewInit,
   ChangeDetectorRef,
@@ -18,18 +17,39 @@ import {
 } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
-// Blockframes
-import { getLayoutGrid } from '../layout/layout.module';
-
 // RxJs
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { startWith, distinctUntilChanged, map, debounceTime, tap } from 'rxjs/operators';
+
+interface Columns {
+  xs: number;
+  sm: number;
+  md: number;
+  lg: number;
+  xl: number;
+
+  gtXs: number;
+  gtSm: number;
+  gtMd: number;
+  gtLg: number;
+
+  ltSm: number;
+  ltMd: number;
+  ltLg: number;
+  ltXl: number;
+}
+
+const sizes: Record<string, string[]> = {
+  xs: ['xs', 'ltSm', 'ltMd', 'ltLg', 'ltXl'],
+  sm: ['gtXs', 'sm', 'ltMd', 'ltLg', 'ltXl'],
+  md: ['gtXs', 'gtSm', 'md', 'ltLg', 'ltXl'],
+  lg: ['gtXs', 'gtSm', 'gtMd', 'lg', 'ltXl'],
+  xl: ['gtXs', 'gtSm', 'gtMd', 'gtLg', 'xl']
+}
 
 
 @Directive({ selector: '[carouselItem]' })
 export class CarouselItemDirective {
-  @HostBinding('style.flexShrink') shrink = 0;
-
   constructor(public template: TemplateRef<unknown>) {}
 }
 
@@ -40,14 +60,10 @@ export class CarouselItemDirective {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDestroy {
-  @HostBinding('attr.data-columns') _columns: number = 0;
-
 
   /* Indicators to show arrow buttons */
-  min = 0;
   public showForward: boolean;
   public showBack: boolean;
-  public amount$: Observable<number>;
 
   private subRight: Subscription;
   private subLeft: Subscription;
@@ -58,18 +74,29 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
   @ViewChild(CdkScrollable) scrollable: CdkScrollable;
   @ContentChildren(CarouselItemDirective) items: QueryList<CarouselItemDirective>;
 
-  @Input() set columns(columns: 2 | 3 | 4 | 5 | 6) {
-    this._columns = columns;
+  @Input() set columns(amount: Partial<Columns> | string) {
+    if (!amount) return;
+
+    if (typeof amount === 'object') {
+      for (const [size, values] of Object.entries(sizes)) {
+        const index = Object.keys(amount).find(key => values.includes(key));
+        if (index) {
+          this.el.nativeElement.style.setProperty(`--${size}-columns`, amount[index]);
+        }
+      }
+    } else {
+      this.el.nativeElement.style.setProperty('--columns', amount)
+    }
   }
 
   constructor(
-    private elementRef: ElementRef,
+    private el: ElementRef,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone
   ) { }
 
   get carouselWidth() {
-    return this.elementRef.nativeElement.clientWidth
+    return this.el.nativeElement.clientWidth
   }
 
   ngAfterViewInit() {
@@ -85,15 +112,10 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
   }
 
   ngAfterContentInit() {
-    this.amount$ = this.items.changes.pipe(startWith(this.items), map(items => items.length));
-    this.itemsSub = this.items.changes.subscribe(items => {
-      this.showForward = items.length > this._columns;
+    this.itemsSub = this.items.changes.subscribe(() => {
+      this.showForward = !!this.scrollable.measureScrollOffset('right')
       this.cdr.markForCheck();
     });
-
-    const { columns } = getLayoutGrid(this.carouselWidth);
-    const col = 12 / this._columns // number of columns in 12 column grid
-    this.min = this._columns ? Math.floor(columns / col) : 0;
   }
 
   scrollTo(direction: 'left' | 'right') {

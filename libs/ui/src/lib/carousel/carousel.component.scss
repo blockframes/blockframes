@@ -1,9 +1,28 @@
 @import '@angular/flex-layout/mq';
 
-@function show($number, $gap) {
-  @return calc(percentage(calc(1 / $number)) - $gap);
+$sizes:
+  xs 16px,
+  sm 16px,
+  md 16px,
+  lg 24px,
+  xl 24px;
+
+@mixin show($size, $gap) {  
+  width: calc(100% / var(--#{$size}-columns, var(--columns)) - $gap);
+  min-width: calc(100% / var(--#{$size}-columns, var(--columns)) - $gap);
 }
-$gap: 24px;
+
+@each $size, $gap, $idk in $sizes {
+  @include layout-bp($size) {
+    li {
+      @include show($size, $gap);
+    }
+  }
+
+  ul {
+    gap: $gap;
+  }
+}
 
 :host {
   display: block;
@@ -27,7 +46,6 @@ $gap: 24px;
 
 ul {
   display: flex;
-  gap: $gap;
   width: 100%;
   overflow: auto; // Cannot scroll if overflow hidden on Safari
   scroll-behavior: smooth;
@@ -36,128 +54,4 @@ ul {
 
 ul::-webkit-scrollbar {
   display: none; // Hide scrollbar this way instead of overflow hidden
-}
-
-:host[data-columns="2"] li {
-  min-width: show(2, $gap);
-  width: show(2, $gap);
-}
-
-:host[data-columns="3"] li {
-  min-width: show(3, $gap);
-  width: show(3, $gap);
-}
-
-:host[data-columns="4"] li {
-  min-width: show(4, $gap);
-  width: show(4, $gap);
-}
-
-:host[data-columns="5"] li {
-  width: show(5, $gap);
-  min-width: show(5, $gap);
-}
-
-:host[data-columns="6"] li {
-  width: show(6, $gap);
-  min-width: show(6, $gap);
-}
-
-@include layout-bp(md) {
-  $gap: 16px;
-
-  ul {
-    gap: $gap;
-  }
-
-  :host[data-columns="2"] li {
-    min-width: show(2, $gap);
-    width: show(2, $gap);
-  }
-  
-  :host[data-columns="3"] li {
-    min-width: show(3, $gap);
-    width: show(3, $gap);
-  }
-  
-  :host[data-columns="4"] li {
-    min-width: show(4, $gap);
-    width: show(4, $gap);
-  }
-  
-  :host[data-columns="5"] li {
-    min-width: show(5, $gap);
-    width: show(5, $gap);
-  }
-  
-  :host[data-columns="6"] li {
-    min-width: show(6, $gap);
-    width: show(6, $gap); 
-  }
-}
-
-@include layout-bp(sm) {
-  $gap: 16px;
-
-  ul {
-    gap: $gap;
-  }
-
-  :host[data-columns="2"] li {
-    min-width: show(1, $gap);
-    width: show(1, $gap);
-  }
-  
-  :host[data-columns="3"] li {
-    min-width: show(2, $gap); 
-    width: show(2, $gap);
-  }
-  
-  :host[data-columns="4"] li {
-    min-width: show(3, $gap);
-    width: show(3, $gap);
-  }
-  
-  :host[data-columns="5"] li {
-    min-width: show(4, $gap);
-    width: show(4, $gap);
-  }
-  
-  :host[data-columns="6"] li {
-    min-width: show(5, $gap);
-    width: show(5, $gap); 
-  }
-}
-
-@include layout-bp(xs) {
-  $gap: 16px;
-
-  ul {
-    gap: $gap;
-  }
-
-  :host[data-columns="2"] li {
-    min-width: show(1, $gap);
-    width: show(1, $gap);
-  }
-  
-  :host[data-columns="3"] li {
-    min-width: show(1, $gap); 
-    width: show(1, $gap);
-  }
-  
-  :host[data-columns="4"] li {
-    min-width: show(2, $gap);
-    width: show(2, $gap);
-  }
-  
-  :host[data-columns="5"] li {
-    min-width: show(3, $gap);
-    width: show(3, $gap);
-  }
-  
-  :host[data-columns="6"] li {
-    min-width: show(4, $gap);
-    width: show(4, $gap); 
-  }
 }

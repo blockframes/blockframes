@@ -47,15 +47,17 @@
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>
     </header>
-    <bf-carousel [columns]="4">
-      <ng-container *ngFor="let movie of section | queryTitles | async | sortBy:section.sorting">
-        <ng-template carouselItem>
-          <movie-card [movie]="movie" [size]="section.mode" [link]="['../title', movie.id]">
-            <event-request-screening [movieId]="movie.id" iconOnly></event-request-screening>
-          </movie-card>
-        </ng-template>
-      </ng-container>
-    </bf-carousel>
+    <ng-container *ngIf="section | queryTitles | async | sortBy:section.sorting as movies">
+      <bf-carousel [columns]="{ gtMd: 4, md: 3, ltMd: 2 }">
+        <ng-container *ngFor="let movie of movies">
+          <ng-template carouselItem>
+            <movie-card [movie]="movie" [size]="section.mode" [link]="['../title', movie.id]">
+              <event-request-screening [movieId]="movie.id" iconOnly></event-request-screening>
+            </movie-card>
+          </ng-template>
+        </ng-container>
+      </bf-carousel>
+    </ng-container>
   </section>
 </ng-template>
 
@@ -70,13 +72,15 @@
       </a>
     </header>
     <article>
-      <bf-carousel [columns]="6">
-        <ng-container *ngFor="let org of section | queryOrgs | async">
-          <ng-template carouselItem>
-            <org-card-minimal [org]="org"></org-card-minimal>
-          </ng-template>
-        </ng-container>
-      </bf-carousel>
+      <ng-container *ngIf="section | queryOrgs | async as orgs">
+        <bf-carousel [columns]="{ gtMd: 6, md: 5, sm: 4, xs: 3 }">
+          <ng-container *ngFor="let org of orgs">
+            <ng-template carouselItem>
+              <org-card-minimal [org]="org"></org-card-minimal>
+            </ng-template>
+          </ng-container>
+        </bf-carousel>
+      </ng-container>
     </article>
   </section>
 </ng-template>
