@@ -102,6 +102,7 @@
           placeholder="New Password"
           label="Password"
           test-id="password"
+          [errorStateMatcher]="currentPasswordMatch"
         >
           <mat-hint>Between 6 and 24 characters.</mat-hint>
           <mat-error *ngIf="form.get('password').hasError('required')">
@@ -112,6 +113,9 @@
           </mat-error>
           <mat-error *ngIf="form.get('password').hasError('maxlength')">
             New password with more than <strong>24</strong> characters.
+          </mat-error>
+          <mat-error *ngIf="form.hasError('currentPasswordMatch')">
+            Your new password has to be <strong>different</strong> than invitation pass.
           </mat-error>
         </password-input>
 
