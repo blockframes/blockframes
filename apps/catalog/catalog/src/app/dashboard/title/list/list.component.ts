@@ -1,12 +1,11 @@
-import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { Movie, StoreStatus, storeStatus, Person, App } from '@blockframes/model';
+import { StoreStatus, storeStatus, Person, App } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { APP } from '@blockframes/utils/routes/utils';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 import { displayPerson } from '@blockframes/utils/pipes';
@@ -51,7 +50,6 @@ export class TitleListComponent {
 
   constructor(
     private service: MovieService,
-    private snackbar: MatSnackBar,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
     @Inject(APP) public app: App
@@ -66,11 +64,6 @@ export class TitleListComponent {
   resetFilter() {
     this.filter.reset('');
     this.dynTitle.useDefault();
-  }
-
-  async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
-    await this.service.updateStatus(movie.id, status);
-    this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 
   openDetails(title: string, values: Person[]) {
