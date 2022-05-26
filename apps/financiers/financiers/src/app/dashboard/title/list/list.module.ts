@@ -10,13 +10,11 @@ import { ListComponent } from './list.component';
 
 // Blockframes
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
+import { EmptyMovieModule } from '@blockframes/ui/dashboard/components/empty-movie/empty-movie.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { AppPipeModule, MaxLengthModule } from '@blockframes/utils/pipes';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,19 +27,21 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
+
+    // Blockframes
     TableModule,
-    ImageModule,
-    NoTitleModule,
     ToLabelModule,
     AppPipeModule,
+    EmptyMovieModule,
+
     // Material
     MatButtonModule,
     MatTabsModule,
     MatIconModule,
-    MatCardModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
     MaxLengthModule,
+
     // Router
     RouterModule.forChild([{ path: '', component: ListComponent }])
   ]

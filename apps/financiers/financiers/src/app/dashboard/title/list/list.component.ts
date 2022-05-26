@@ -7,7 +7,6 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
-import { Intercom } from 'ng-intercom';
 import { APP } from '@blockframes/utils/routes/utils';
 import { filters } from '@blockframes/ui/list/table/filters';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -56,7 +55,6 @@ export class ListComponent implements OnInit {
     private dynTitle: DynamicTitleService,
     private snackbar: MatSnackBar,
     private movieService: MovieService,
-    @Optional() private intercom: Intercom,
     @Inject(APP) public app: App
   ) { }
 
@@ -103,10 +101,6 @@ export class ListComponent implements OnInit {
 
   public applyFilter(filter: Filters) {
     this.filter.setValue(filter);
-  }
-
-  public openIntercom(): void {
-    return this.intercom.show();
   }
 
   async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
