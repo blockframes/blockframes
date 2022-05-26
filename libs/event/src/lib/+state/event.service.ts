@@ -130,7 +130,7 @@ export class EventService extends BlockframesCollection<Event> {
   queryDocs<Meta extends EventMeta = unknown>(ids: string): Observable<Event<Meta>>
   queryDocs<Meta extends EventMeta = unknown>(ids: string | string[]): Observable<Event<Meta> | Event<Meta>[]> {
     if (typeof ids === 'string') {
-      return this.eventQuery(ids);
+      return this.eventQuery<Meta>(ids);
     } else if (ids.length === 0) {
       return of([]);
     } else {
