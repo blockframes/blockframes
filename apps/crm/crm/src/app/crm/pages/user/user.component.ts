@@ -7,7 +7,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { PermissionsService } from '@blockframes/permissions/+state';
+import { PermissionsService } from '@blockframes/permissions/service';
 import { EventService } from '@blockframes/event/service';
 import { InvitationService } from '@blockframes/invitation/service';
 import { where } from 'firebase/firestore';

@@ -13,10 +13,10 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
 import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/service';
 import { ContractService } from '@blockframes/contract/contract/service';
-import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { where } from 'firebase/firestore';
-import { PermissionsService } from '@blockframes/permissions/+state';
+import { PermissionsService } from '@blockframes/permissions/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({

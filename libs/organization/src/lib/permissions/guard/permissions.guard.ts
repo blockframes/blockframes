@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PermissionsService } from '../+state';
+import { PermissionsService } from '../service';
 import { CanActivate, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';

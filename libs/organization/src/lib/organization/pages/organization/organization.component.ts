@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FileUploaderService } from '@blockframes/media/+state';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 @Component({

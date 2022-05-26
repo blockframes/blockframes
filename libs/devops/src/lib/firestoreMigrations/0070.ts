@@ -1,7 +1,5 @@
 
 import { Firestore, runChunks } from '@blockframes/firebase-utils';
-// import { createUser } from '@blockframes/auth/+state';
-// import { createOrganization } from '@blockframes/organization/+state';
 
 /**
  * Remove territories that are not in the geojson

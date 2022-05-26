@@ -12,7 +12,7 @@ import { TwilioService } from '@blockframes/utils/twilio';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 import { ErrorResultResponse, extensionToType } from '@blockframes/model';
-import { MediaService } from '@blockframes/media/+state';
+import { MediaService } from '@blockframes/media/service';
 import { InvitationService } from '@blockframes/invitation/service';
 import { filter, pluck, scan, switchMap } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';

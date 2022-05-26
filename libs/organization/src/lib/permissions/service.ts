@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import type firestore from 'firebase/firestore';
 import { UserService } from '@blockframes/user/service';
-import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/service';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, Observable, of, map, switchMap, tap } from 'rxjs';
 import { createDocPermissions, PermissionsDocument, UserRole, Permissions } from '@blockframes/model';
 import { doc, getDoc } from 'firebase/firestore';
 import { AtomicWrite } from 'ngfire';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
-
 
 @Injectable({ providedIn: 'root' })
 export class PermissionsService extends BlockframesCollection<Permissions> {
