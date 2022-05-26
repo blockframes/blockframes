@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { OrganizationService } from '@blockframes/organization/service';
+import { MovieService } from '@blockframes/movie/service';
 import { Movie, Campaign } from '@blockframes/model';
 import { combineLatest, of } from 'rxjs';
 import { map } from 'rxjs/operators';

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
 import { centralOrgId } from '@env';

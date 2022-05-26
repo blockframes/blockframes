@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
 import { Movie, storeStatus, productionStatus, getAllAppsExcept, Analytics, EventName, AggregatedAnalytic } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { MatDialog } from '@angular/material/dialog';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
@@ -19,7 +19,7 @@ import { AnalyticsService } from '@blockframes/analytics/+state/analytics.servic
 import { map, Observable } from 'rxjs';
 import { aggregatePerUser } from '@blockframes/analytics/+state/utils';
 import { joinWith } from 'ngfire';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 
 const eventLabel: Record<EventName, string> = {
   addedToWishlist: 'Added to Wishlist',

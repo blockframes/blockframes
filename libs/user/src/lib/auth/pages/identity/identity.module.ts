@@ -30,6 +30,7 @@ import { AppPipeModule } from '@blockframes/utils/pipes';
 import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
 import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
 import { HideEmailModule } from '@blockframes/auth/components/hide-email/hide-email.module';
+import { PasswordInputModule } from '@blockframes/ui/form/password-input/password-input.module';
 
 @NgModule({
   declarations: [IdentityComponent],
@@ -48,6 +49,7 @@ import { HideEmailModule } from '@blockframes/auth/components/hide-email/hide-em
     SnackbarLinkModule,
     SnackbarErrorModule,
     HideEmailModule,
+    PasswordInputModule,
 
     // Material
     MatSnackBarModule,

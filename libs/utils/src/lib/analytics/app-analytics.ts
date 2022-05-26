@@ -2,7 +2,7 @@ import { isSupported, setUserId, logEvent, setUserProperties, Analytics } from '
 import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { EventName, AnalyticsUserProperties } from '@blockframes/model';
 import { centralOrgId } from '@env';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { FIRE_ANALYTICS } from 'ngfire';
 import { firstValueFrom, Subscription } from 'rxjs';
 

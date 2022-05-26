@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { where } from 'firebase/firestore';
 import { Intercom } from 'ng-intercom';

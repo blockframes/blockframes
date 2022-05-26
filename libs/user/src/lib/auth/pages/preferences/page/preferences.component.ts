@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { AuthService } from "@blockframes/auth/+state";
+import { AuthService } from '@blockframes/auth/service';
 import { PreferencesForm } from "@blockframes/auth/forms/preferences/preferences.form";
 
 @Component({

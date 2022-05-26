@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router } from "@angular/router";
 import { map } from "rxjs/operators";
-import { AuthService } from "@blockframes/auth/+state";
+import { AuthService } from '@blockframes/auth/service';
 import { combineLatest } from "rxjs";
 
 @Injectable({ providedIn: 'root' })

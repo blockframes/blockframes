@@ -5,7 +5,7 @@ import { NegotiationForm } from '@blockframes/contract/negotiation/form';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard'
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';

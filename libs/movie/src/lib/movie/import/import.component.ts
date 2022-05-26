@@ -5,7 +5,7 @@ import { App } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 
 import { SheetTab } from '@blockframes/utils/spreadsheet';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
