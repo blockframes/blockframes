@@ -1,12 +1,12 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
 import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './invitation.service';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { initializeTestEnvironment } from '@firebase/rules-unit-testing';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { readFileSync } from 'fs';
 import { Observable, of } from 'rxjs';
-import { UserService } from '@blockframes/user/+state/user.service';
+import { UserService } from '@blockframes/user/service';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { createInvitation, createUser, InvitationDocument } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';

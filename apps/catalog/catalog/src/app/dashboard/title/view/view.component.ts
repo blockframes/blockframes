@@ -1,9 +1,9 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouteDescription } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { pluck, switchMap } from 'rxjs/operators';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 
 @Component({
   selector: 'catalog-title-view',

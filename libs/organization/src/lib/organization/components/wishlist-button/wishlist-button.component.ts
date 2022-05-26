@@ -4,11 +4,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Blockframes
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { Observable } from 'rxjs';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { Router } from '@angular/router';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 
 
 @Component({

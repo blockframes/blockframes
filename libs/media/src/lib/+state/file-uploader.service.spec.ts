@@ -4,7 +4,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { FileUploaderService } from './file-uploader.service';
 import { UploadData } from '@blockframes/model';
-import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { AuthService } from '@blockframes/auth/service';
 import { FIREBASE_CONFIG, FireStorage, FIRESTORE_SETTINGS } from 'ngfire';
 
 class DummyService { }

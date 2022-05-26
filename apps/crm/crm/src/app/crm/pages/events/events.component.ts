@@ -3,7 +3,7 @@ import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { Router } from '@angular/router';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { orgName, toLabel } from '@blockframes/model';
 import { where } from 'firebase/firestore';
 
