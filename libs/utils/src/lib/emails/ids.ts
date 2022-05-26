@@ -47,8 +47,7 @@ export const templateIds = {
   // Templates for invitations
   invitation: {
     attendEvent: {
-      // created: 'd-1a7cc9ca846c4ae1b4e8cf8a76455cc5',
-      created: 'd-4316b6694e6e457386ad27ff86858c5c',
+      created: 'd-1a7cc9ca846c4ae1b4e8cf8a76455cc5',
       accepted: 'd-5d014e60af4c431dbe7316369f41591e',
       declined: 'd-b7ea357cfd41404e9ff82f8d75410079'
     },

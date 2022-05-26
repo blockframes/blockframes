@@ -9,8 +9,10 @@ import { PasswordConfirmComponent } from './password-confirm.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+
+// Blockframes
+import { PasswordInputModule } from '@blockframes/ui/form/password-input/password-input.module';
 
 @NgModule({
   imports: [
@@ -21,7 +23,9 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
     MatChipsModule,
     MatAutocompleteModule,
-    MatIconModule
+    
+    // Blockframes
+    PasswordInputModule
   ],
   declarations: [
     PasswordConfirmComponent
