@@ -7,7 +7,6 @@ import {
   sum,
   isMovieAccepted,
   Screening,
-  InvitationWithScreening,
   InvitationWithAnalytics,
   Invitation,
   App,
@@ -73,14 +72,6 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
       icon: 'magnet_electricity'
     }
   ];
-}
-
-function eventsOfTitle(id: string) {
-  return [where('meta.titleId', '==', id)];
-}
-
-function eventInvitations(ids: string[]) {
-  return [where('eventId', 'in', ids)];
 }
 
 @Component({
@@ -196,10 +187,10 @@ export class TitleAnalyticsComponent {
 
   private invitationWithEventAndUserOrg() {
     return this.titleId$.pipe(
-      switchMap(id => this.eventService.valueChanges<Event<Screening>>(eventsOfTitle(id))),
+      switchMap(id => this.eventService.valueChanges<Event<Screening>>([where('meta.titleId', '==', id)])),
       switchMap(events => {
-        const id = events.map(({ id }) => id);
-        return this.invitationService.valueChanges(eventInvitations(id)).pipe(
+        const ids = events.map(({ id }) => id);
+        return this.invitationService.valueChanges([where('eventId', 'in', ids)]).pipe(
           map(invitations => invitations.filter(inv => inv.mode === 'invitation')),
           map(invitations => {
             return invitations.map(invitation => {
