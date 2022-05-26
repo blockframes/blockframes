@@ -1,18 +1,32 @@
+@import '@angular/flex-layout/mq';
+
+$sizes:
+  xs 16px,
+  sm 16px,
+  md 16px,
+  lg 24px,
+  xl 24px;
+
+@mixin show($size, $gap) {  
+  width: calc(100% / var(--#{$size}-columns, var(--columns)) - $gap);
+  min-width: calc(100% / var(--#{$size}-columns, var(--columns)) - $gap);
+}
+
+@each $size, $gap in $sizes {
+  @include layout-bp($size) {
+    li {
+      @include show($size, $gap);
+    }
+  }
+
+  ul {
+    gap: $gap;
+  }
+}
+
 :host {
   display: block;
   position: relative;
-}
-
-.row {
-  display: flex;
-  width: 100%;
-  overflow: auto; // Cannot scroll if overflow hidden on Safari
-  scroll-behavior: smooth;
-  scrollbar-width: none; // Hide scrollbar for firefox
-}
-
-.row::-webkit-scrollbar {
-  display: none; // Hide scrollbar this way instead of overflow hidden
 }
 
 .direction {
@@ -28,4 +42,16 @@
 .next {
   right: 0px;
   bottom: calc(50% - 20px);
+}
+
+ul {
+  display: flex;
+  width: 100%;
+  overflow: auto; // Cannot scroll if overflow hidden on Safari
+  scroll-behavior: smooth;
+  scrollbar-width: none; // Hide scrollbar for firefox
+}
+
+ul::-webkit-scrollbar {
+  display: none; // Hide scrollbar this way instead of overflow hidden
 }
