@@ -23,8 +23,8 @@ import {
   shareReplay,
   switchMap
 } from 'rxjs';
-import { InvitationService } from '@blockframes/invitation/+state';
-import { EventService } from '@blockframes/event/+state';
+import { InvitationService } from '@blockframes/invitation/service';
+import { EventService } from '@blockframes/event/service';
 
 interface InvitationWithScreening extends Invitation {
   event: Event<Screening>;

@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EventService } from '@blockframes/event/+state/event.service';
+import { EventService } from '@blockframes/event/service';
 import { InvitationDetailed, Movie, Event, isScreening } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/service';
 import { switchMap } from 'rxjs/operators';
 import { getHost } from '@blockframes/invitation/pipes/host.pipe';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';

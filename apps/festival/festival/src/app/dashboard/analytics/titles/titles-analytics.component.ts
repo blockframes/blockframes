@@ -7,7 +7,7 @@ import { joinWith } from 'ngfire';
 import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie, App, Event } from '@blockframes/model';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { APP } from '@blockframes/utils/routes/utils';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { where } from 'firebase/firestore';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { OrganizationService } from '@blockframes/organization/service';

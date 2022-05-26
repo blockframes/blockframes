@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
+import { InvitationService } from '@blockframes/invitation/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { OrganizationMember, Organization, Invitation, UserRole } from '@blockframes/model';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';

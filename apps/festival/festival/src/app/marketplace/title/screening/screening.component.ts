@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { EventService } from '@blockframes/event/+state/event.service';
+import { EventService } from '@blockframes/event/service';
 import { TitleMarketplaceShellComponent } from '@blockframes/movie/marketplace/shell/shell.component';
 import { Event } from '@blockframes/model';
 import { Observable } from 'rxjs';

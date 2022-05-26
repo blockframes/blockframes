@@ -24,7 +24,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { format } from 'date-fns';
 import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
 import { UserService } from '@blockframes/user/service';
-import { EventService } from '@blockframes/event/+state/event.service';
+import { EventService } from '@blockframes/event/service';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { where } from 'firebase/firestore';
