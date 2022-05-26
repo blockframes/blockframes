@@ -10,7 +10,7 @@ import { FIRE_ANALYTICS } from 'ngfire';
 
 // Blockframes
 import { Analytics, AnalyticsTypes, EventName, createTitleMeta, Movie } from '@blockframes/model';
-import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { AuthService } from '@blockframes/auth/service';
 import { createDocumentMeta } from '@blockframes/model';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 

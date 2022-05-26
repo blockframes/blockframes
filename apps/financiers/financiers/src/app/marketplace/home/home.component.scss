@@ -17,10 +17,6 @@
   white-space: pre-wrap;
 }
 
-bf-carousel {
-  margin-bottom: 80px;
-}
-
 header {
   padding: 40px 80px;
   margin-bottom: 80px;
@@ -44,14 +40,18 @@ header {
   }
 }
 
+.cards {
+  margin: 0 24px;
+  margin-bottom: 80px;
+}
+
 mat-card {
-  height: 350px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   place-content: center start;
   align-items: center;
   padding: 24px 16px;
-  width: 49%;
   margin-bottom: 24px;
   p {
     text-align: center;

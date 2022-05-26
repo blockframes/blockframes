@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from '../+state';
+import { AuthService } from '../service';
 import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { CanActivate, Router } from '@angular/router';
 import { where } from 'firebase/firestore';

@@ -2,7 +2,7 @@ import { ErrorHandler, Injectable, NgModule } from '@angular/core';
 import { sentryDsn, sentryEnv } from '@env';
 import * as Sentry from '@sentry/browser';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {

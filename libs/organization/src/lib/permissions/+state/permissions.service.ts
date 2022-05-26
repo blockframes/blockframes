@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import type firestore from 'firebase/firestore';
-import { UserService } from '@blockframes/user/+state/user.service';
+import { UserService } from '@blockframes/user/service';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { AuthService } from '@blockframes/auth/service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { createDocPermissions, PermissionsDocument, UserRole, Permissions } from '@blockframes/model';
 import { doc, getDoc } from 'firebase/firestore';

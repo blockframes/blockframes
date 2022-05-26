@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { AuthService } from '@blockframes/auth/+state/auth.service';
-import { UserService } from '@blockframes/user/+state/user.service';
+import { AuthService } from '@blockframes/auth/service';
+import { UserService } from '@blockframes/user/service';
 import {
   OrganizationMember,
   PublicUser,

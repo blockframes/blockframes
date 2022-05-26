@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { StorageVideo, MeetingVideoControl, hasAnonymousIdentity } from '@blockframes/model';
 import { ErrorResultResponse, getWatermark, loadJWPlayerScript } from '@blockframes/model';
 import { BehaviorSubject } from 'rxjs';

@@ -6,7 +6,7 @@ import { filter } from 'rxjs/operators';
 import { firstValueFrom } from 'rxjs';
 
 // Services
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { Contract, Income, Movie, Negotiation } from '@blockframes/model';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { ContractService } from '@blockframes/contract/contract/+state';

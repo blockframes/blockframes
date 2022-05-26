@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 // Blockframes
 import { createReleaseYear, Movie, App } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { APP } from '@blockframes/utils/routes/utils';
 
 // RxJs
