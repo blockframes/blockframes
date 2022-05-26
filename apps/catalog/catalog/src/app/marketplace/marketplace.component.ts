@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { BucketService } from '@blockframes/contract/bucket/+state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

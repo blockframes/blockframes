@@ -2,8 +2,8 @@
 import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
 
 // Blockframes
-import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { fromOrg, MovieService } from '@blockframes/movie/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
@@ -15,7 +15,7 @@ import {
 } from '@blockframes/model';
 import { counter } from '@blockframes/analytics/+state/utils';
 import { aggregate } from '@blockframes/analytics/+state/utils';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 
 // RxJs

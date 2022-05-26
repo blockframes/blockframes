@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CanActivate, ActivatedRouteSnapshot, Router, CanDeactivate } from '@angular/router';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { NegotiationForm } from '@blockframes/contract/negotiation';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { firstValueFrom } from 'rxjs';

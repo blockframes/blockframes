@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { MovieService } from '../+state/movie.service';
+import { MovieService } from '../service';
 import { Movie } from '@blockframes/model';
 import { Observable, of } from 'rxjs';
 

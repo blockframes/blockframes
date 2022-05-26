@@ -83,7 +83,7 @@ export class ListComponent implements OnInit, OnDestroy {
           this.searchForm.page.setValue(0);
         }
         this.lastPage = this.hitsViewed === this.nbHits;
-      });;
+      });
   }
 
   clear() {

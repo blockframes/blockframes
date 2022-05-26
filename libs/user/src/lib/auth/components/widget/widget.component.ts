@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { AuthService } from '../../+state';
+import { AuthService } from '../../service';
 import { ThemeService } from '@blockframes/ui/theme';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { dbVersionDoc } from '@blockframes/utils/maintenance';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { IVersionDoc } from '@blockframes/model';
 import { DocumentReference } from 'firebase/firestore';
 import { firstValueFrom, map } from 'rxjs';

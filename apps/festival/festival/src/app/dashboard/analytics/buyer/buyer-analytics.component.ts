@@ -4,11 +4,11 @@ import { AnalyticsService } from "@blockframes/analytics/+state/analytics.servic
 import { aggregate } from "@blockframes/analytics/+state/utils";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
 import { AggregatedAnalytic, EventName, Event, Screening, isScreening, Invitation, Analytics, isMovieAccepted } from "@blockframes/model";
-import { fromOrgAndAccepted, MovieService } from "@blockframes/movie/+state/movie.service";
-import { OrganizationService } from "@blockframes/organization/+state";
+import { fromOrgAndAccepted, MovieService } from "@blockframes/movie/service";
+import { OrganizationService } from '@blockframes/organization/service';
 import { IconSvg } from "@blockframes/ui/icon.service";
 import { NavigationService } from "@blockframes/ui/navigation.service";
-import { UserService } from "@blockframes/user/+state";
+import { UserService } from '@blockframes/user/service';
 import { App } from "@blockframes/model";
 import { APP } from "@blockframes/utils/routes/utils";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
