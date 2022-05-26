@@ -18,7 +18,7 @@ import {
 } from '@blockframes/model';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
+import { PermissionsService } from '@blockframes/permissions/service';
 import { subMonths } from 'date-fns';
 import { AtomicWrite, CallableFunctions } from 'ngfire';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';

@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import type { AuthService } from '@blockframes/auth/+state';
+import type { AuthService } from '@blockframes/auth/service';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 
 export function loginWithEmailAndPassword(email: string) {

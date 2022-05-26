@@ -1,6 +1,6 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
 import { TestBed } from '@angular/core/testing';
-import { NotificationService } from './notification.service';
+import { NotificationService } from './service';
 import { Notification } from '@blockframes/model';
 import { initializeTestEnvironment } from '@firebase/rules-unit-testing';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';

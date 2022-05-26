@@ -9,7 +9,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { EventService } from '@blockframes/event/service';
 import { InvitationService } from '@blockframes/invitation/service';
-import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
+import { PermissionsService } from '@blockframes/permissions/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { CampaignService } from '@blockframes/campaign/service';
 import { MovieAppConfigForm } from '@blockframes/movie/form/movie.form';

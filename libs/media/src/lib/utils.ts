@@ -1,6 +1,6 @@
 import { FileMetaData } from '@blockframes/model';
 
-export const collectionHoldingFiles = [
+const collectionHoldingFiles = [
   'orgs',
   'users',
   'movies',
@@ -8,7 +8,7 @@ export const collectionHoldingFiles = [
 ] as const;
 export type CollectionHoldingFile = typeof collectionHoldingFiles[number];
 
-export const fileLabels = [
+const fileLabels = [
   // orgs
   'logo',
   'notes',
@@ -41,7 +41,7 @@ export const fileLabels = [
 ] as const;
 export type FileLabel = typeof fileLabels[number];
 
-export const storagePaths: Record<CollectionHoldingFile, Partial<Record<FileLabel, string>>> = {
+const storagePaths: Record<CollectionHoldingFile, Partial<Record<FileLabel, string>>> = {
   orgs: {
     logo: 'logo',
     notes: 'documents.notes',

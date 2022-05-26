@@ -4,7 +4,7 @@ import { OrganizationForm } from '@blockframes/organization/forms/organization.f
 import { AllowedFileType } from '@blockframes/model';
 import { StorageFile, StorageVideo, Movie, MovieVideo, Organization } from '@blockframes/model';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
-import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../../+state/static-files';
+import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../../utils';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { FormList } from '@blockframes/utils/form';
 

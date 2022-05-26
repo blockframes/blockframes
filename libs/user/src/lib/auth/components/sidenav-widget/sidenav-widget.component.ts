@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { InvitationService } from '@blockframes/invitation/service';
-import { NotificationService } from '@blockframes/notification/+state/notification.service';
+import { NotificationService } from '@blockframes/notification/service';
 
 @Component({
   selector: 'auth-sidenav-widget',
