@@ -45,13 +45,15 @@ export async function migrate({
   withBackup = true,
   db = loadAdminServices().db,
   storage = loadAdminServices().storage,
+  performMigrationCheck = true
 }: {
   withBackup?: boolean;
   db?: FirebaseFirestore.Firestore;
   storage?: import('firebase-admin').storage.Storage;
+  performMigrationCheck?: boolean
 } = {}) {
 
-  if (!await isMigrationRequired(db)) {
+  if (performMigrationCheck && !await isMigrationRequired(db)) {
     console.log('Skipping because there is no migration to run...');
     return;
   }
