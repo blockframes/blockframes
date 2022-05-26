@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SaleShellComponent } from '../shell.component';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/model';

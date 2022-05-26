@@ -4,12 +4,12 @@ import { Intercom } from 'ng-intercom';
 import { joinWith } from 'ngfire';
 import { map } from 'rxjs/operators';
 import { combineLatest, of } from 'rxjs';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { IncomeService } from '@blockframes/contract/income/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { getSeller } from '@blockframes/contract/contract/+state/utils'
 import { Organization, Sale } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { orderBy, where } from 'firebase/firestore';
 
 function queryConstraints(orgId: string, options: { internal?: boolean }) {

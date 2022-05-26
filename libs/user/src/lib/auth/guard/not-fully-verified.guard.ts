@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { AuthService } from '../service';
 import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';

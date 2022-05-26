@@ -9,8 +9,8 @@ import {
   ContractStatus, ImportContractStatus, Language, Mandate, Media, Movie,
   Sale, Territory, User
 } from "@blockframes/model";
-import { MovieService } from "@blockframes/movie/+state/movie.service";
-import { OrganizationService } from "@blockframes/organization/+state";
+import { MovieService } from '@blockframes/movie/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { UserService } from '@blockframes/user/service';
 import { getKeyIfExists } from "@blockframes/utils/helpers";
 import { centralOrgId } from "@env";

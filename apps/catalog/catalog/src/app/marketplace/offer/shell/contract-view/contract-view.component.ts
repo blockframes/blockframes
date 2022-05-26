@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { OfferShellComponent } from '../shell.component';
 import { combineLatest, firstValueFrom } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';

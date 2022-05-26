@@ -8,7 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { OrganizationsImportState, SpreadsheetImportError } from '../../utils';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { AuthService } from '@blockframes/auth/service';
 import { PublicUser, getOrgAppAccess } from '@blockframes/model';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';

@@ -6,7 +6,7 @@ import { CmsPage } from '@blockframes/admin/cms/template';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '@blockframes/auth/service';
-import { OrganizationService, } from '@blockframes/organization/+state';
+import { OrganizationService, } from '@blockframes/organization/service';
 import { createPreferences, canHavePreferences } from '@blockframes/model';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
 import { FirestoreService, fromRef } from 'ngfire';

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractService } from '@blockframes/contract/contract/+state';
 import { OfferService } from '@blockframes/contract/offer/+state';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { orderBy, where } from 'firebase/firestore';
 

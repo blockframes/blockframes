@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { createMovie, Movie, createMovieAppConfig, createDocumentMeta, StoreStatus, App } from '@blockframes/model';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import type firestore from 'firebase/firestore';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { map } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
