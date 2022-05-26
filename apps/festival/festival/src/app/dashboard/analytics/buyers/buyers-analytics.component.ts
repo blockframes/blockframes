@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { aggregate } from '@blockframes/analytics/+state/utils';
+import { AnalyticsService } from '@blockframes/analytics/service';
+import { aggregate } from '@blockframes/analytics/utils';
 import { AggregatedAnalytic, App } from '@blockframes/model';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';

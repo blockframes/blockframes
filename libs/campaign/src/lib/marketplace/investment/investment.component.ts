@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CampaignService } from '../../+state';
+import { CampaignService } from '../../service';
 import { pluck, switchMap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 

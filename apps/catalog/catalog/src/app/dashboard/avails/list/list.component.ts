@@ -15,10 +15,10 @@ import { centralOrgId } from '@env';
 import { joinWith } from 'ngfire';
 import { MovieService } from '@blockframes/movie/service';
 import { Movie, Income } from '@blockframes/model';
-import { TermService } from '@blockframes/contract/term/+state';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { TermService } from '@blockframes/contract/term/service';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
-import { IncomeService } from '@blockframes/contract/income/+state';
+import { IncomeService } from '@blockframes/contract/income/service';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import {

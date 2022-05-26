@@ -5,9 +5,9 @@ import { AuthService } from '@blockframes/auth/service';
 import { createOfferId } from '@blockframes/model';
 import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { OrganizationService } from '@blockframes/organization/service';
-import { TermService } from '../../term/+state/term.service';
-import { OfferService } from '../../offer/+state/offer.service';
-import { ContractService } from '../../contract/+state/contract.service';
+import { TermService } from '../term/service';
+import { OfferService } from '../offer/service';
+import { ContractService } from '../contract/service';
 import { DocumentSnapshot } from 'firebase/firestore';
 import {
   Bucket,

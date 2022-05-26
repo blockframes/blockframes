@@ -8,7 +8,7 @@ import { RequestAskingPriceComponent } from '@blockframes/movie/components/reque
 import { MatDialog } from '@angular/material/dialog';
 import { MovieService } from '@blockframes/movie/service';
 import { ActivatedRoute } from '@angular/router';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { AnalyticsService } from '@blockframes/analytics/service';
 import { Organization } from '@blockframes/model';
 import { orderBy, startAt, where } from 'firebase/firestore';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

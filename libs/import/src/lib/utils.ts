@@ -3,7 +3,7 @@ import { Movie, Organization, User, Mandate, Sale, Term } from '@blockframes/mod
 import { OrganizationService } from '@blockframes/organization/service';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
 import { centralOrgId } from '@env';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { UserService } from '@blockframes/user/service';
 import { where } from 'firebase/firestore';
 

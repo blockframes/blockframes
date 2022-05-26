@@ -1,13 +1,12 @@
 import { Component, ChangeDetectionStrategy, Optional, OnInit } from '@angular/core';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { Intercom } from 'ng-intercom';
 import { joinWith } from 'ngfire';
-import { map } from 'rxjs/operators';
-import { combineLatest, of } from 'rxjs';
+import { combineLatest, of, map } from 'rxjs';
 import { MovieService } from '@blockframes/movie/service';
-import { IncomeService } from '@blockframes/contract/income/+state';
+import { IncomeService } from '@blockframes/contract/income/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { getSeller } from '@blockframes/contract/contract/+state/utils'
+import { getSeller } from '@blockframes/contract/contract/utils'
 import { Organization, Sale } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { orderBy, where } from 'firebase/firestore';

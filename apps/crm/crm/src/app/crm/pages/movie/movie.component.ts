@@ -10,14 +10,14 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
 import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
-import { ContractService } from '@blockframes/contract/contract/+state';
-import { CampaignService } from '@blockframes/campaign/+state';
+import { ContractService } from '@blockframes/contract/contract/service';
+import { CampaignService } from '@blockframes/campaign/service';
 import { MovieAppConfigForm } from '@blockframes/movie/form/movie.form';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { QueryConstraint, where } from 'firebase/firestore';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { AnalyticsService } from '@blockframes/analytics/service';
 import { map, Observable } from 'rxjs';
-import { aggregatePerUser } from '@blockframes/analytics/+state/utils';
+import { aggregatePerUser } from '@blockframes/analytics/utils';
 import { joinWith } from 'ngfire';
 import { UserService } from '@blockframes/user/service';
 
