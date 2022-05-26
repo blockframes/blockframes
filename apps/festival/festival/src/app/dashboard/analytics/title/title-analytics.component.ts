@@ -11,6 +11,7 @@ import {
   InvitationWithAnalytics,
   Invitation,
   App,
+  Event,
 } from '@blockframes/model';
 import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
@@ -28,6 +29,9 @@ import { eventTime } from "@blockframes/event/pipes/event-time.pipe";
 import { getGuest } from "@blockframes/invitation/pipes/guest.pipe";
 import { EventService } from "@blockframes/event/+state";
 import { InvitationService } from "@blockframes/invitation/+state";
+
+//firebase
+import { where } from 'firebase/firestore'
 
 function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attendees = invitations.filter(invitation => invitation.watchTime);
@@ -69,6 +73,14 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
       icon: 'magnet_electricity'
     }
   ];
+}
+
+function eventsOfTitle(id: string) {
+  return [where('meta.titleId', '==', id)];
+}
+
+function eventInvitations(ids: string[]) {
+  return [where('eventId', 'in', ids)];
 }
 
 @Component({
@@ -119,7 +131,7 @@ export class TitleAnalyticsComponent {
     map(invitations => invitations.filter(invitation => (invitation.event) && invitation?.event?.meta?.titleId)),
     map(invitations => invitations.filter(invitation => isMovieAccepted(invitation?.event?.movie, this.app))),
     joinWith({
-      analytics: (invitation: InvitationWithScreening) => this.getAnalyticsPerInvitation(invitation)
+      analytics: () => this.getAnalyticsPerInvitation()
     }, { shouldAwait: true }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -166,7 +178,7 @@ export class TitleAnalyticsComponent {
     return data.addedToWishlist > data.removedFromWishlist;
   }
 
-  private async getAnalyticsPerInvitation(invitation: InvitationWithScreening) {
+  private async getAnalyticsPerInvitation() {
     const titleAnalytics = await firstValueFrom(this.titleAnalytics$);
     return titleAnalytics.filter(analytic => analytic.name === 'screeningRequested');
   }
@@ -183,14 +195,24 @@ export class TitleAnalyticsComponent {
   }
 
   private invitationWithEventAndUserOrg() {
-    return this.invitationService.allInvitations$.pipe(
-      joinWith(
-        {
-          event: invitation => this.getEvent(invitation.eventId),
-          toUserOrg: invitation => this.getOrg(invitation)
-        },
-        { shouldAwait: true }
-      )
+    return this.titleId$.pipe(
+      switchMap(id => this.eventService.valueChanges<Event<Screening>>(eventsOfTitle(id))),
+      switchMap(events => {
+        const id = events.map(({ id }) => id);
+        return this.invitationService.valueChanges(eventInvitations(id)).pipe(
+          map(invitations => invitations.filter(inv => inv.mode === 'invitation')),
+          map(invitations => {
+            return invitations.map(invitation => {
+              const event = events.find(({ id }) => invitation.eventId === id);
+              return { ...invitation, event };
+            })
+          }),
+          joinWith(
+            { toUserOrg: invitation => this.getOrg(invitation) },
+            { shouldAwait: true }
+          )
+        )
+      })
     );
   }
 
