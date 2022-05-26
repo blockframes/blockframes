@@ -189,16 +189,8 @@ export class HomeComponent {
   );
 
   screeningRequests$ = this.buyerAnalytics$.pipe(
-    map(movieWithAnalytics => {
-      return movieWithAnalytics.flatMap(
-        ({ analytics }) => analytics
-      )
-    }),
-    map(analytics => {
-      return analytics.filter(
-        analytic => analytic.name === 'screeningRequested'
-      );
-    }),
+    map(movieWithAnalytics => movieWithAnalytics.flatMap(({ analytics }) => analytics)),
+    map(analytics => analytics.filter(analytic => analytic.name === 'screeningRequested')),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
