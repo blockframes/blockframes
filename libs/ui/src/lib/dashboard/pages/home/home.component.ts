@@ -3,8 +3,8 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { where } from 'firebase/firestore';
 
 // Blockframes
-import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { fromOrg, MovieService } from '@blockframes/movie/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { hasAppStatus, App } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';

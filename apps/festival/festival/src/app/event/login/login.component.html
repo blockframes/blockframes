@@ -18,9 +18,12 @@
         Email is <strong>required</strong>
       </mat-error>
     </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Password</mat-label>
-      <input test-id="password" matInput type="password" placeholder="Password" formControlName="password" required />
+    <password-input
+      [control]="form.get('password')"
+      placeholder="Password"
+      label="Password"
+      test-id="password"
+    >
       <mat-error *ngIf="form.get('password').hasError('required')">
         Password is <strong>required</strong> 
       </mat-error>
@@ -31,8 +34,7 @@
         New password with more than <strong>24</strong> characters.
       </mat-error>
       <mat-hint>Between 6 and 24 characters.</mat-hint>
-
-    </mat-form-field>
+    </password-input>
 
     <footer fxLayout="column" fxLayoutGap="16px">
       <a routerLink="/auth/reset-password" color="primary">Forgot your password ?</a>

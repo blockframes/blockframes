@@ -33,7 +33,6 @@
     &.ng-invalid.ng-touched {
       .mat-icon {
         svg {
-          margin-bottom: 4px;
           path {
             fill: mat.get-color-from-palette($warn);
           }

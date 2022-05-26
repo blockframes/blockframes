@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AudioTrack, VideoTrack } from 'twilio-video';
-import { Tracks, TrackKind, Attendee } from '../+state/twilio.model';
+import { Tracks, TrackKind, Attendee } from '@blockframes/utils/twilio';;
 
 @Component({
   selector: '[attendee] meeting-video',

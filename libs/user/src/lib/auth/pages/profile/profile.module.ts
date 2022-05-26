@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { ProfileFormModule } from '@blockframes/auth/forms/profile/profile.module';
-import { PasswordFormModule } from '@blockframes/auth/forms/password/password.module';
+import { ChangePasswordModule } from '@blockframes/auth/forms/password/change-password.module';
 
 // Components
 import { ProfileComponent } from './profile.component';
@@ -18,8 +18,12 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [
     CommonModule,
     FlexLayoutModule,
+
+    // Modules
     ProfileFormModule,
-    PasswordFormModule,
+    ChangePasswordModule,
+
+    // Material
     MatButtonModule,
     MatIconModule,
     RouterModule.forChild([{ path: '', component: ProfileComponent }])

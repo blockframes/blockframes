@@ -20,7 +20,7 @@ import {
   UserCredential,
   verifyPasswordResetCode
 } from 'firebase/auth';
-import { UserService } from '@blockframes/user/+state/user.service';
+import { UserService } from '@blockframes/user/service';
 import { ErrorResultResponse } from '@blockframes/model';
 import { BlockframesAuth } from '@blockframes/utils/abstract-service';
 import { CallableFunctions, fromRef } from 'ngfire';
