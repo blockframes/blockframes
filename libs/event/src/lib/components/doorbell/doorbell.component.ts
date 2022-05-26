@@ -1,7 +1,7 @@
 import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { Meeting, MeetingAttendee } from '@blockframes/model';
-import { EventService } from '@blockframes/event/+state/event.service';
+import { EventService } from '@blockframes/event/service';
 
 @Component({
   selector: 'event-doorbell',
