@@ -24,7 +24,6 @@
     "firebase": "^9.6.10",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.20.0",
-    "@faker-js/faker": "^6.1.2",
     "generate-password": "^1.7.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",

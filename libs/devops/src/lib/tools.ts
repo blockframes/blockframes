@@ -1,4 +1,4 @@
-import { loadAdminServices, startMaintenance } from '@blockframes/firebase-utils';
+import { Firestore, startMaintenance } from '@blockframes/firebase-utils';
 import * as env from '@env';
 import { config } from 'dotenv';
 import { resolve } from 'path';
@@ -6,7 +6,7 @@ import { loadDBVersion } from './migrations';
 import { IMaintenanceDoc } from '@blockframes/model';
 import { LATEST_VERSION } from './firestoreMigrations';
 
-export async function isMigrationRequired(db = loadAdminServices().db) {
+export async function isMigrationRequired(db: Firestore) {
   const currentVersion = await loadDBVersion(db);
   console.log('Detecting if Firestore migration is required:');
   console.log('Latest DB version:', LATEST_VERSION);
