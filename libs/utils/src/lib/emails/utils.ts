@@ -1,7 +1,7 @@
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { AttachmentData } from '@sendgrid/helpers/classes/attachment';
 import { sendgridEmailsFrom } from '../apps';
-import { format } from 'date-fns';
+import { differenceInDays, differenceInHours, differenceInMinutes, format, millisecondsInHour } from 'date-fns';
 import {
   EventDocument,
   EventMeta,
@@ -78,12 +78,21 @@ export interface EventEmailData {
   id: string;
   title: string;
   start: string;
+  otherTimezones: {
+    centralAmerica: string,
+    easternAmerica: string,
+    centralEurope: string,
+    westernEurope: string,
+    japan: string,
+    pacific: string,
+  }
   end: string;
   type: EventTypesValue;
   viewUrl: string;
   sessionUrl: string;
   accessibility: AccessibilityTypes;
   calendar: AttachmentData;
+  duration: string;
 }
 
 export interface OrgEmailData {
@@ -178,12 +187,37 @@ export function getEventEmailData({ event, orgName, attachment = true, email, in
     id: event.id,
     title: event.title,
     start: format(eventStartDate, 'Pppp'),
+    otherTimezones: {
+      centralAmerica: toTimezone(eventStartDate, "America/Chicago"),
+      easternAmerica: toTimezone(eventStartDate, "America/New_York"),
+      centralEurope: toTimezone(eventStartDate, "Europe/Helsinki"),
+      westernEurope: toTimezone(eventStartDate, "Europe/Paris"),
+      japan: toTimezone(eventStartDate, "Asia/Tokyo"),
+      pacific: toTimezone(eventStartDate, "America/Vancouver"),
+    },
     end: format(eventEndDate, 'Pppp'),
     type: eventTypes[event.type],
     viewUrl: `/event/${event.id}/r/i${eventUrlParams}`,
     sessionUrl: `/event/${event.id}/r/i/session${eventUrlParams}`,
     accessibility: event.accessibility,
-    calendar: attachment ? getEventEmailAttachment(event, orgName) : undefined
+    calendar: attachment ? getEventEmailAttachment(event, orgName) : undefined,
+    duration: getEventDuration(eventStartDate, eventEndDate)
+  }
+}
+function toTimezone(date: Date, timeZone: string) {
+  const tzDate = new Date(date.toLocaleString("en-us", { timeZone }));
+  return format(tzDate, 'h:mm a');
+}
+
+function getEventDuration(start: Date, end: Date): string {
+  const duration = end.getTime() - start.getTime();
+  
+  if (duration < millisecondsInHour) {
+    return `${differenceInMinutes(end, start)} minutes`;
+  } else if (duration < millisecondsInHour * 72) {
+    return `${differenceInHours(end, start)} hours`;
+  } else {
+    return `${differenceInDays(end, start)} days`;
   }
 }
 
