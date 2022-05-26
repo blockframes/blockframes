@@ -17,7 +17,8 @@ import {
   Screening,
   InvitationWithScreening,
   InvitationWithAnalytics,
-  Analytics
+  Analytics,
+  Invitation,
 } from '@blockframes/model';
 import { counter } from '@blockframes/analytics/+state/utils';
 import { aggregate } from '@blockframes/analytics/+state/utils';
@@ -26,6 +27,8 @@ import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state';
 import { MetricCard } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
+import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
+import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter, toArray, first } from 'rxjs/operators';
@@ -161,16 +164,15 @@ export class HomeComponent {
   buyerAnalytics$ = this.movieService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
     joinWith({
       analytics: title => {
-        const { userId } = this.route.snapshot.params;
-        return this.analyticsService.getTitleAnalytics({ titleId: title.id, uid: userId });
+        return this.analyticsService.getTitleAnalytics({ titleId: title.id });
       }
     }, { shouldAwait: true }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
   invitations$ = this.invitationWithEventAndUserOrg().pipe(
-    map(invitations => invitations.filter(invitation => (invitation.event) && invitation.event.meta.titleId)),
-    map(invitations => invitations.filter(invitation => isMovieAccepted(invitation.event.movie, this.app))),
+    map(invitations => invitations.filter(invitation => (invitation.event) && invitation?.event?.meta?.titleId)),
+    map(invitations => invitations.filter(invitation => isMovieAccepted(invitation?.event?.movie, this.app))),
     joinWith({
       analytics: (invitation: InvitationWithScreening) => this.getAnalyticsPerInvitation(invitation)
     }, { shouldAwait: true }),
@@ -180,7 +182,7 @@ export class HomeComponent {
   ongoingScreenings$ = this.invitations$.pipe(
     map(
       invitations => invitations.filter(
-        invitation => invitation.event.end > new Date()
+        invitation => eventTime(invitation.event) === 'onTime'
       )
     ),
     filter(invitations => !!invitations.length),
@@ -239,22 +241,18 @@ export class HomeComponent {
 
   private invitationWithEventAndUserOrg() {
     return this.invitationService.allInvitations$.pipe(
-      switchMap(
-        invitations => of(...invitations).pipe(
-          joinWith(
-            {
-              event: invitation => this.getEvent(invitation.eventId),
-              toUserOrg: invitation => this.getOrg(invitation.toUser.orgId)
-            },
-            { shouldAwait: true }
-          ),
-          toArray()
-        )
+      joinWith(
+        {
+          event: invitation => this.getEvent(invitation.eventId),
+          toUserOrg: invitation => this.getOrg(invitation)
+        },
+        { shouldAwait: true }
       )
     );
   }
 
-  private getOrg(orgId: string) {
+  private getOrg(invitation: Invitation) {
+    const orgId = getGuest(invitation, 'user').orgId;
     const externalOrg = {
       denomination: { public: 'External' },
       activity: '--'

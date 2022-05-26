@@ -29,7 +29,8 @@
             <bf-carousel>
               <analytics-pie-chart class="surface" carouselItem [data]="orgActivityOfPopularTitle$ | async">
               </analytics-pie-chart>
-              <analytics-map class="surface carousel-map" carouselItem [data]="territoryActivityOfPopularTitle$ | async">
+              <analytics-map class="surface carousel-map" carouselItem
+                [data]="territoryActivityOfPopularTitle$ | async">
                 <article>
                   <h5>
                     <mat-icon svgIcon="landscape"></mat-icon>
@@ -47,7 +48,8 @@
                 <p class="mat-caption">Learn how people interact with your Title.</p>
 
               </analytics-line-chart>
-              <analytics-line-chart class="surface" carouselItem [eventNames]="['pageView']" [data]="pageViewsOfPopularTitle$ | async">
+              <analytics-line-chart class="surface" carouselItem [eventNames]="['pageView']"
+                [data]="pageViewsOfPopularTitle$ | async">
                 <h5>
                   <mat-icon svgIcon="visibility"></mat-icon>
                   <span>Film Page Views</span>
@@ -64,15 +66,8 @@
         </section>
 
         <section class="surface">
-          <analytics-map
-            class="insights-map"
-            [data]="activeCountries$ | async"
-            (selection)="selectedCountry = $event"
-            [topCount]="5"
-            horizontal
-            showLegend
-            selectable
-          >
+          <analytics-map class="insights-map" [data]="activeCountries$ | async" (selection)="selectedCountry = $event"
+            [topCount]="5" horizontal showLegend selectable>
             <h3>
               <mat-icon svgIcon="buyer_insights"></mat-icon>
               <span>Buyers' Insights</span>
@@ -80,14 +75,8 @@
           </analytics-map>
 
           <h3>Most active buyers</h3>
-          <bf-table
-            [source]="activeBuyers$ | async"
-            [filterValue]="selectedCountry"
-            (rowClick)="showBuyer($event)"
-            clickable
-            useFilter
-            pagination="5"
-          >
+          <bf-table [source]="activeBuyers$ | async" [filterValue]="selectedCountry" (rowClick)="showBuyer($event)"
+            clickable useFilter pagination="5">
             <ng-template colRef="user" label="Name" let-item sort>
               <b>{{ item | displayName }}</b>
             </ng-template>
@@ -119,37 +108,52 @@
         </section>
 
         <section>
-          <div class="heading">
+          <header class="heading">
             <h3>
               <span>Last Screenings</span>
               <mat-icon svgIcon="info"></mat-icon>
             </h3>
             <ng-container *ngIf="ongoingScreenings$ | async as invitations">
-              <a  ongoing-event-button href="/c/o/dashboard/event/{{invitations[0].eventId}}/statistics">Ongoing Screenings</a>
+              <a ongoing-event-button href="/c/o/dashboard/event/{{invitations[0].eventId}}/statistics">Ongoing
+                Screenings</a>
             </ng-container>
-          </div>
-          <div class="surface">
+          </header>
+          <section class="surface">
             <span>"O" meaning the user left the screening right away.</span>
             <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
-            <div class="space-between">
+            <header class="space-between">
               <h5>Attendees</h5>
               <button mat-button (click)="exportScreenerAnalytics()">Export to .CSV</button>
-            </div>
+            </header>
             <bf-table class="screenings" [source]="invitations$ | async" clickable useFilter pagination="50">
               <ng-template colRef="toUser" label="Name" let-item="item" sort defaultSort>
-                <b>{{ item.toUser.firstName }} {{ item.toUser.lastName }}</b>
+                <b *ngIf="item.toUser; else noUser">{{ item.toUser.firstName }} {{ item.toUser.lastName }}</b>
+                <ng-template #noUser>
+                  <b>--</b>
+                </ng-template>
               </ng-template>
               <ng-template colRef="toUser.email" label="Email" let-email sort defaultSort>
-                <span>{{ email }}</span>
+                <span>{{ email ?? '--' }}</span>
               </ng-template>
               <ng-template colRef="toUserOrg.denomination.public" label="Company Name" let-name sort defaultSort>
-                <span>{{ name }}</span>
+                <span>{{ name ?? '--' }}</span>
               </ng-template>
               <ng-template colRef="toUserOrg.activity" label="Activity" let-activity sort defaultSort>
-                <span>{{ activity }}</span>
+                <span>{{ activity ?? '--' }}</span>
+              </ng-template>
+              <ng-template colRef="toUserOrg.addresses.main.country" label="Country" let-country sort defaultSort>
+                <span>{{ country ?? '--' }}</span>
+              </ng-template>
+              <ng-template colRef="watchTime" label="Watchtime" let-watchtime sort defaultSort>
+                <span>{{ watchtime || 0 }} S</span>
+              </ng-template>
+              <ng-template colRef="event" label="Watching status" let-event sort defaultSort>
+                <ng-container *ngIf="(event|eventTime) === 'onTime'">
+                  <a mat-stroked-button routerLink="/c/o/dashboard/event/{{event.id}}/statistics"> Watching now</a>
+                </ng-container>
               </ng-template>
             </bf-table>
-          </div>
+          </section>
         </section>
 
       </ng-container>
