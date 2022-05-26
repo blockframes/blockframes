@@ -31,20 +31,26 @@ interface Columns {
   gtXs: number;
   gtSm: number;
   gtMd: number;
-  gtLg: number;
 
-  ltSm: number;
   ltMd: number;
   ltLg: number;
   ltXl: number;
 }
 
 const sizes: Record<string, string[]> = {
-  xs: ['xs', 'ltSm', 'ltMd', 'ltLg', 'ltXl'],
-  sm: ['gtXs', 'sm', 'ltMd', 'ltLg', 'ltXl'],
-  md: ['gtXs', 'gtSm', 'md', 'ltLg', 'ltXl'],
-  lg: ['gtXs', 'gtSm', 'gtMd', 'lg', 'ltXl'],
-  xl: ['gtXs', 'gtSm', 'gtMd', 'gtLg', 'xl']
+  xs: ['xs'],
+  sm: ['sm'],
+  md: ['md'],
+  lg: ['lg'],
+  xl: ['xl'],
+
+  gtXs: ['sm', 'md', 'lg', 'xl'],
+  gtSm: ['md', 'lg', 'xl'],
+  gtMd: ['lg', 'xl'],
+
+  ltMd: ['xs', 'sm'],
+  ltLg: ['xs', 'sm', 'md'],
+  ltXl: ['xs', 'sm', 'md', 'lg']
 }
 
 
@@ -78,11 +84,8 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
     if (!amount) return;
 
     if (typeof amount === 'object') {
-      for (const [size, values] of Object.entries(sizes)) {
-        const index = Object.keys(amount).find(key => values.includes(key));
-        if (index) {
-          this.el.nativeElement.style.setProperty(`--${size}-columns`, amount[index]);
-        }
+      for (const [size, value] of Object.entries(amount)) {
+        sizes[size]?.forEach(label => this.el.nativeElement.style.setProperty(`--${label}-columns`, value));
       }
     } else {
       this.el.nativeElement.style.setProperty('--columns', amount)
