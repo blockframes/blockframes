@@ -25,9 +25,6 @@ import { HasAppStatusModule } from '@blockframes/movie/pipes/has-app-status.pipe
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { MapModule } from "@blockframes/ui/map";
 import { DisplayNameModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
-import { MetricCardListModule } from '@blockframes/analytics/components/metric-card-list/metric-card-list.module';
-import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
-import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -47,9 +44,6 @@ import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
     ToLabelModule,
     TableModule,
     MaxLengthModule,
-    MetricCardListModule,
-    OngoingButtonModule,
-    EventTimeModule,
 
     // Material
     MatButtonModule,
