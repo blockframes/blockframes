@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Blockframes
-import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { AuthService } from '@blockframes/auth/service';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { FileUploaderService } from '@blockframes/media/+state';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';

@@ -114,5 +114,5 @@ export class PageProgressComponent {
 
   @Output() loadMore = new EventEmitter();
 
-  @HostBinding('@slideUp') animation = true;;
+  @HostBinding('@slideUp') animation = true;
 }

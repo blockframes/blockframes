@@ -14,6 +14,8 @@ import { MatCardModule } from '@angular/material/card';
 // Component
 import { SigninFormComponent } from './signin-form.component';
 
+// Blockframes
+import { PasswordInputModule } from '@blockframes/ui/form/password-input/password-input.module';
 
 @NgModule({
   declarations: [SigninFormComponent],
@@ -29,7 +31,10 @@ import { SigninFormComponent } from './signin-form.component';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+
+    // Blockframes
+    PasswordInputModule
   ],
 })
 export class SigninFormModule {}

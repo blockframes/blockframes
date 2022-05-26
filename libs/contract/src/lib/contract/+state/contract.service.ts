@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
 import { map } from 'rxjs/operators';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { centralOrgId } from '@env';
 import {
   Mandate,

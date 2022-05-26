@@ -21,8 +21,8 @@ import {
   orgActivity,
   invitationStatus
 } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { OrganizationService } from '@blockframes/organization/service';
+import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
 import { sum } from '@blockframes/model';
 import { formatDate } from '@angular/common';

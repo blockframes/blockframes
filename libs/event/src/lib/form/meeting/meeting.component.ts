@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation  } from '@angular/core';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { UserService } from '@blockframes/user/+state';
+import { OrganizationService } from '@blockframes/organization/service';
+import { UserService } from '@blockframes/user/service';
 import { User } from '@blockframes/model';
 import { Observable } from 'rxjs';
 import { switchMap, } from 'rxjs/operators';

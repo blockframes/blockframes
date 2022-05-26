@@ -3,8 +3,8 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Blockframes
-import { fromOrgAndAccepted, MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { fromOrg, MovieService, fromOrgAndAccepted } from '@blockframes/movie/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
@@ -22,13 +22,13 @@ import {
 } from '@blockframes/model';
 import { counter } from '@blockframes/analytics/+state/utils';
 import { aggregate } from '@blockframes/analytics/+state/utils';
-import { UserService } from '@blockframes/user/+state';
 import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state';
 import { MetricCard } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
+import { UserService } from '@blockframes/user/service';
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter, toArray, first } from 'rxjs/operators';

@@ -12,7 +12,7 @@ import { SelectFormModule } from '../../forms/select';
 import { getTitlesQueryConstraints, toMap } from '../pipes';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { Movie } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 
 @Component({
   selector: 'form-slider',

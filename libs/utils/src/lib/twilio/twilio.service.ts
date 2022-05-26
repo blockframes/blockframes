@@ -1,10 +1,7 @@
-
 import { Injectable } from '@angular/core';
-import { PublicUser } from '@blockframes/model';
-import { ErrorResultResponse } from '@blockframes/model';
+import { PublicUser, ErrorResultResponse } from '@blockframes/model';
 import { CallableFunctions } from 'ngfire';
-import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, map } from 'rxjs';
 
 import {
   createLocalAudioTrack,
