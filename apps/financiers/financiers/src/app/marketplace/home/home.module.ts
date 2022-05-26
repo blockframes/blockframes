@@ -17,7 +17,6 @@ import { SliderModule } from '@blockframes/ui/slider/slider.module';
 import { MovieSlideModule } from '@blockframes/movie/components/slide/slide.module'
 import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
 import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
-import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { OrganizationCardMinimalModule } from '@blockframes/organization/components/card-minimal/card-minimal.module';
 import { OrganizationBannerModule } from '@blockframes/organization/components/banner/banner.module';
 import { CampaignPipeModule } from '@blockframes/campaign/pipes';
@@ -38,7 +37,6 @@ import { HomeComponent } from './home.component';
     MovieCardModule,
     MovieSlideModule,
     WishlistButtonModule,
-    MatLayoutModule,
     OrganizationCardMinimalModule,
     OrganizationBannerModule,
     CampaignPipeModule,

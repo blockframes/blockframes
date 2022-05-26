@@ -47,16 +47,16 @@
         <ng-content select="events-export"></ng-content>
       </div>
       <ng-container *ngIf="!listView; else displayList">
-        <div grid layout [@fadeList]="items.length">
+        <ul class="grid" [@fadeList]="items.length">
           <ng-container *ngFor="let item of items; trackBy:trackById">
-            <div class="grid-item" [col]="(ltMd$ | async) ? 4 : 3">
+            <li class="grid-item">
 
               <!-- INSERT CARD -->
               <ng-template [ngTemplateOutlet]="cardTemplate" [ngTemplateOutletContext]="{$implicit: item}">
               </ng-template>
-            </div>
+            </li>
           </ng-container>
-        </div>
+        </ul>
       </ng-container>
       <ng-template #displayList>
         <div class="item" *ngFor="let item of items">

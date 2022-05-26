@@ -16,9 +16,9 @@
 
   <section *ngIf="campaign.perks.length">
     <h3>Privileges</h3>
-    <article grid>
+    <article class="privileges">
       <ng-container *ngFor="let perk of campaign.perks">
-        <campaign-perk-card [col]="3" [perk]="perk"></campaign-perk-card>
+        <campaign-perk-card [perk]="perk"></campaign-perk-card>
       </ng-container>
     </article>
 

@@ -7,13 +7,20 @@ nav {
 footer {
   margin: 24px 24px 72px 24px;
 
-  mat-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  ul.files {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+    grid-gap: 16px;
+    margin: 24px;
 
-    img {
-      width: 70%;
+    li {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  
+      img {
+        width: 70%;
+      }
     }
   }
 

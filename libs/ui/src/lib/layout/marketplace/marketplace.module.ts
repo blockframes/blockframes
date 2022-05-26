@@ -5,7 +5,6 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
 import { MarketplaceComponent } from './marketplace.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { MatLayoutModule } from '../layout.module';
 
 // Widgets
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
@@ -33,7 +32,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     RouterModule,
     FlexLayoutModule,
     ScrollingModule,
-    MatLayoutModule,
     AppLogoModule,
     FooterModule,
 

@@ -39,6 +39,13 @@ section {
   align-items: center;
 }
 
+ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+  grid-gap: 16px;
+  margin: 24px;
+}
+
 span.mat-body-2 {
   margin-bottom: 16px;
 }

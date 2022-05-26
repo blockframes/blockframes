@@ -126,9 +126,9 @@
   <!-- Review -->
   <section *ngIf="movie.review.length && (movie | hasStatus: status.afterProd)">
     <h3>Film Reviews</h3>
-    <article grid>
+    <article class="card-grid">
       <ng-container *ngFor="let review of movie.review">
-        <title-review-card [col]="3" [review]="review"></title-review-card>
+        <title-review-card [review]="review"></title-review-card>
       </ng-container>
     </article>
   </section>
