@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MovieService } from '@blockframes/movie/service';
-import { Movie, Campaign } from '@blockframes/model';
+import { Campaign } from '@blockframes/model';
 import { combineLatest, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
-
-export interface MovieCampaign extends Movie {
-  campaign: Campaign;
-}
 
 @Injectable({ providedIn: 'root' })
 export class CampaignService extends BlockframesCollection<Campaign> {

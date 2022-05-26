@@ -1,17 +1,14 @@
 import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { isSupported, logEvent, setUserId, Analytics as FirebaseAnalytics } from 'firebase/analytics';
 import { where } from 'firebase/firestore';
-import { map } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { startOfDay } from 'date-fns';
-import { firstValueFrom, Subscription } from 'rxjs';
-import { CallableFunctions } from 'ngfire';
-import { FIRE_ANALYTICS } from 'ngfire';
+import { firstValueFrom, Subscription, map } from 'rxjs';
+import { CallableFunctions, FIRE_ANALYTICS } from 'ngfire';
 
 // Blockframes
-import { Analytics, AnalyticsTypes, EventName, createTitleMeta, Movie } from '@blockframes/model';
+import { Analytics, AnalyticsTypes, EventName, createTitleMeta, Movie, createDocumentMeta } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
-import { createDocumentMeta } from '@blockframes/model';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 interface AnalyticsActiveUser {

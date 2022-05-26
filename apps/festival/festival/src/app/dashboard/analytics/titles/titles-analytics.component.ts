@@ -9,7 +9,7 @@ import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { EventService } from '@blockframes/event/+state';
 import { where } from 'firebase/firestore';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { AnalyticsService } from '@blockframes/analytics/service';
 import { OrganizationService } from '@blockframes/organization/service';
 
 interface AggregatedPerTitle extends AggregatedAnalytic {

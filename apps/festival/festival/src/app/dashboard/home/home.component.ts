@@ -6,15 +6,14 @@ import { fromOrg, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { APP } from '@blockframes/utils/routes/utils';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { AnalyticsService } from '@blockframes/analytics/service';
 import {
   EventName,
   hasAppStatus,
   App,
   AggregatedAnalytic,
 } from '@blockframes/model';
-import { counter } from '@blockframes/analytics/+state/utils';
-import { aggregate } from '@blockframes/analytics/+state/utils';
+import { counter, aggregate } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 

@@ -1,15 +1,5 @@
-import { Organization, Analytics, AnalyticsTypes, Scope, createAggregatedAnalytic, AggregatedAnalytic, User, toLabel } from "@blockframes/model";
+import { Organization, Analytics, Scope, createAggregatedAnalytic, AggregatedAnalytic, User, toLabel, AnalyticsWithOrg, AnalyticData } from '@blockframes/model';
 import { getDeepValue } from '@blockframes/utils/pipes';
-
-interface AnalyticsWithOrg extends Analytics<AnalyticsTypes> {
-  org?: Organization
-}
-
-export interface AnalyticData {
-  key: string;
-  count: number;
-  label: string;
-}
 
 /**
  * Counts number of occurances in analytics
