@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Blockframes
-import { fromOrg, MovieService, fromOrgAndAccepted } from '@blockframes/movie/service';
+import { fromOrg, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -15,9 +15,9 @@ import {
   AggregatedAnalytic,
 } from '@blockframes/model';
 import { counter } from '@blockframes/analytics/+state/utils';
+import { UserService } from '@blockframes/user/service';
 import { aggregate } from '@blockframes/analytics/+state/utils';
 import { unique } from '@blockframes/utils/helpers';
-import { UserService } from '@blockframes/user/service';
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter } from 'rxjs/operators';
@@ -107,14 +107,6 @@ export class HomeComponent {
     map(users => users.sort((userA, userB) => userA.total - userB.total))
   );
 
-  buyerAnalytics$ = this.movieService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
-    joinWith({
-      analytics: title => {
-        return this.analyticsService.getTitleAnalytics({ titleId: title.id });
-      }
-    }, { shouldAwait: true }),
-    shareReplay({ bufferSize: 1, refCount: true })
-  );
 
   interactions: EventName[] = [
     'addedToWishlist',
@@ -132,7 +124,7 @@ export class HomeComponent {
     private userService: UserService,
     @Inject(APP) public app: App,
     private router: Router,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) { }
 
   public showBuyer(row: AggregatedAnalytic) {

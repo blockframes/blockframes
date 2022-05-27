@@ -5,7 +5,6 @@ import {
   AggregatedAnalytic,
   Analytics,
   sum,
-  isMovieAccepted,
   Screening,
   InvitationWithAnalytics,
   Invitation,
@@ -17,12 +16,12 @@ import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
-import { filter, first, map, pluck, shareReplay, switchMap } from "rxjs/operators";
+import { filter, map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { aggregatePerUser, counter } from '@blockframes/analytics/+state/utils';
 import { UserService } from '@blockframes/user/service';
 import { NavigationService } from "@blockframes/ui/navigation.service";
 import { OrganizationService } from '@blockframes/organization/service';
-import { combineLatest, firstValueFrom, from, Observable, of } from "rxjs";
+import { combineLatest, EMPTY, firstValueFrom, from, Observable, of } from "rxjs";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
 import { eventTime } from "@blockframes/event/pipes/event-time.pipe";
@@ -30,8 +29,6 @@ import { getGuest } from "@blockframes/invitation/pipes/guest.pipe";
 import { EventService } from "@blockframes/event/+state";
 import { InvitationService } from "@blockframes/invitation/+state";
 
-//firebase
-import { where } from 'firebase/firestore'
 
 function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attendees = invitations.filter(invitation => invitation.watchTime);
@@ -119,21 +116,15 @@ export class TitleAnalyticsComponent {
   };
   filterValue?: string;
 
-  events$ = this.invitationWithEventAndUserOrg().pipe(
-    map(events => events.filter(event => (event) && event?.meta?.titleId)),
-    map(events => events.filter(event => isMovieAccepted(event?.movie, this.app))),
+  invitations$ = this.invitationWithEventAndUserOrg().pipe(
     joinWith({
       analytics: () => this.getAnalyticsPerInvitation()
     }, { shouldAwait: true }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  ongoingScreenings$ = this.events$.pipe(
-    map(
-      events => events.filter(
-        event => eventTime(event) === 'onTime'
-      )
-    ),
+  ongoingScreenings$ = this.invitations$.pipe(
+    map(events => events.filter(({ event }) => eventTime(event) === 'onTime')),
     filter(events => !!events.length),
   );
 
@@ -145,10 +136,9 @@ export class TitleAnalyticsComponent {
 
   aggregatedScreeningCards$: Observable<MetricCard[]> = combineLatest([
     this.screeningRequests$,
-    this.events$
+    this.invitations$
   ]).pipe(
-    map(([requests, events]) => {
-      const invitations = events.map(event => event.invitation);
+    map(([requests, invitations]) => {
       return toScreenerCards(requests, invitations);
     })
   );
@@ -180,41 +170,40 @@ export class TitleAnalyticsComponent {
   }
 
   async exportScreenerAnalytics() {
-    const data = await firstValueFrom(this.events$);
-    const analytics = data.map(event => ({
-      'Name': `${event.invitation.toUser.firstName} ${event.invitation.toUser.lastName}`,
-      'Email': event.invitation.toUser.email,
-      'Company Name': event.toUserOrg.denomination?.public,
-      'Activity': event.toUserOrg.activity ?? '--',
-      'Country': event.toUserOrg.addresses?.main?.country ?? '--',
-      'Watchtime': `${event.invitation.watchTime ?? 0}s`,
-      'Watching status': eventTime(event) === 'onTime' ? 'Watching now' : '--'
+    const data = await firstValueFrom(this.invitations$);
+    const analytics = data.map(invitation => ({
+      'Name': `${invitation.toUser.firstName} ${invitation.toUser.lastName}`,
+      'Email': invitation.toUser.email,
+      'Company Name': invitation.guestOrg.denomination?.public,
+      'Activity': invitation.guestOrg.activity ?? '--',
+      'Country': invitation.guestOrg.addresses?.main?.country ?? '--',
+      'Watchtime': `${invitation.watchTime ?? 0}s`
     }));
     downloadCsvFromJson(analytics, 'screener-analytics')
   }
 
 
   private invitationWithEventAndUserOrg() {
-    return this.titleId$.pipe(
-      switchMap(id => this.eventService.valueChanges<Event<Screening>>([where('meta.titleId', '==', id)])),
-      joinWith(
-        {
-          invitation: event => {
-            return this.invitationService.valueChanges([where('eventId', '==', event.id)])
-              .pipe(
-                map(([invitation]) => invitation),
-                first()
-              );
+    return combineLatest([
+      this.titleId$,
+      this.invitationService.allInvitations$.pipe(
+        joinWith(
+          {
+            guestOrg: invitation => this.getOrg(invitation),
+            event: invitation => this.getEvent(invitation)
           },
-          movie: event => from(this.movieService.getValue(event.meta.titleId))
-        },
-        { shouldAwait: true }
-      ),
-      joinWith(
-        { toUserOrg: event => this.getOrg(event.invitation) },
-        { shouldAwait: true }
+          { shouldAwait: true }
+        )
       )
-    );
+    ]).pipe(
+      map(([titleId, invitations]) => {
+        return invitations.filter(({ event }) => {
+          const isScreening = event.type === 'screening';
+          const eventIsOfTitle = event.meta.titleId === titleId;
+          return isScreening && eventIsOfTitle;
+        })
+      })
+    )
   }
 
   private getOrg(invitation: Invitation) {
@@ -224,5 +213,10 @@ export class TitleAnalyticsComponent {
     } as Partial<Organization>;
     if (orgId) return from(this.orgService.getValue(orgId))
     return of(externalOrg);
+  }
+
+  private getEvent(invitation: Invitation) {
+    if (!invitation.eventId) return EMPTY as Observable<Event<Screening>>;
+    return this.eventService.queryDocs<Screening>(invitation.eventId)
   }
 }

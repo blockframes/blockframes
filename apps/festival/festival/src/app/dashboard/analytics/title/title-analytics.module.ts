@@ -15,7 +15,6 @@ import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { PieChartModule } from '@blockframes/analytics/components/pie-chart/pie-chart.module';
 import { AnalyticsMapModule } from '@blockframes/analytics/components/map/map.module';
 import { TableModule } from "@blockframes/ui/list/table/table.module";
-import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
 import { MetricCardListModule } from '@blockframes/analytics/components/metric-card-list/metric-card-list.module';
 
@@ -32,7 +31,6 @@ import { MetricCardListModule } from '@blockframes/analytics/components/metric-c
     TableModule,
     MetricCardListModule,
     OngoingButtonModule,
-    EventTimeModule,
 
 
     // Material
