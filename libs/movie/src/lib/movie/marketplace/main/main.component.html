@@ -96,9 +96,9 @@
   <section *ngIf="movie.directors.length">
     <h3>Directors</h3>
     <ul class="grid">
-      <ng-container *ngFor="let director of movie.directors">
+      <li *ngFor="let director of movie.directors">
         <title-credit-card [credit]="director" type="director"></title-credit-card> 
-      </ng-container>
+      </li>
     </ul>
   </section>
 
@@ -112,12 +112,12 @@
   <section *ngIf="(movie.prizes.length || movie.customPrizes.length) && (movie | hasStatus: status.afterProd)">
     <h3>Festivals & Awards</h3>
     <ul class="grid">
-      <ng-container *ngFor="let prize of movie.prizes">
+      <li *ngFor="let prize of movie.prizes">
         <title-prize-card [prize]="prize"></title-prize-card>
-      </ng-container>
-      <ng-container *ngFor="let prize of movie.customPrizes">
+      </li>
+      <li *ngFor="let prize of movie.customPrizes">
         <title-prize-card [prize]="prize"></title-prize-card>
-      </ng-container>
+      </li>
     </ul>
 
     <mat-divider></mat-divider>
@@ -127,9 +127,9 @@
   <section *ngIf="movie.review.length && (movie | hasStatus: status.afterProd)">
     <h3>Film Reviews</h3>
     <ul class="grid">
-      <ng-container *ngFor="let review of movie.review">
+      <li *ngFor="let review of movie.review">
         <title-review-card [review]="review"></title-review-card>
-      </ng-container>
+      </li>
     </ul>
   </section>
 
