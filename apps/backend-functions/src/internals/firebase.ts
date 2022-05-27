@@ -30,14 +30,6 @@ export async function getUserMail(userId: string): Promise<string | undefined> {
   return user.email;
 }
 
-function createBlockframesSnapshot(snap: admin.firestore.DocumentSnapshot): BlockframesSnapshot {
-  return {
-    id: snap.id,
-    exists: snap.exists,
-    ref: snap.ref,
-    data: () => snap.data() ? toDate(snap.data()) : undefined
-  }
-}
 export interface BlockframesSnapshot<T = admin.firestore.DocumentData> {
   id: string,
   exists: boolean,
@@ -48,6 +40,15 @@ export interface BlockframesSnapshot<T = admin.firestore.DocumentData> {
 export interface BlockframesChange<T = admin.firestore.DocumentData> {
   before: BlockframesSnapshot<T>,
   after: BlockframesSnapshot<T>,
+}
+
+function createBlockframesSnapshot(snap: admin.firestore.DocumentSnapshot): BlockframesSnapshot {
+  return {
+    id: snap.id,
+    exists: snap.exists,
+    ref: snap.ref,
+    data: () => snap.data() ? toDate(snap.data()) : undefined
+  }
 }
 
 function toDate<D>(target: D): D {
