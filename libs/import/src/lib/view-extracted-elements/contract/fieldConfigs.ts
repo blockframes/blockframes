@@ -1,21 +1,21 @@
-import { ContractService } from "@blockframes/contract/contract/+state/contract.service";
+import { ContractService } from '@blockframes/contract/contract/service';
 import {
   adminOnlyWarning, alreadyExistError, checkParentTerm, getContract,
   getOrgId, getTitleId, getUser, ImportError, mandatoryError,
   unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError
-} from "@blockframes/import/utils";
+} from '@blockframes/import/utils';
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
   ContractStatus, ImportContractStatus, Language, Mandate, Media, Movie,
   Sale, Territory, User
-} from "@blockframes/model";
+} from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { UserService } from '@blockframes/user/service';
-import { getKeyIfExists } from "@blockframes/utils/helpers";
-import { centralOrgId } from "@env";
+import { getKeyIfExists } from '@blockframes/utils/helpers';
+import { centralOrgId } from '@env';
 import { getDate } from '@blockframes/import/utils';
-import { FormatConfig } from "./utils";
+import { FormatConfig } from './utils';
 
 export interface FieldsConfig {
   contract: {

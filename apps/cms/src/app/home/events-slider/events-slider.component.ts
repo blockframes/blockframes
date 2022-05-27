@@ -10,9 +10,8 @@ import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule } from '../../forms/select';
 import { getEventsQueryConstraints, toMap } from '../pipes';
 import { map } from 'rxjs/operators';
-import { EventService } from '@blockframes/event/+state/event.service';
+import { EventService } from '@blockframes/event/service';
 import { Event } from '@blockframes/model';
-
 
 @Component({
   selector: 'form-events-slider',

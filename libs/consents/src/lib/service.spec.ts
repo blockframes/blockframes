@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ConsentsService } from './consents.service';
+import { ConsentsService } from './service';
 import { IpService } from '@blockframes/utils/ip';
 import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
 

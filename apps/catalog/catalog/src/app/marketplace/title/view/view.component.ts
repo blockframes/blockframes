@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { MovieService } from '@blockframes/movie/service';
 import { pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { AnalyticsService } from '@blockframes/analytics/service';
 
 @Component({
   selector: 'catalog-movie-view',

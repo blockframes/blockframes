@@ -2,7 +2,7 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CampaignService } from '@blockframes/campaign/+state';
+import { CampaignService } from '@blockframes/campaign/service';
 import { Movie, MovieCurrency, Organization } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { additionalRoute, artisticRoute, mainRoute, productionRoute } from '@blockframes/movie/marketplace';

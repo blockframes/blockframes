@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CalendarAvailsForm, MapAvailsForm } from '@blockframes/contract/avails/form/avails.form';
-import { ContractService } from '@blockframes/contract/contract/+state';
-import { TermService } from '@blockframes/contract/term/+state';
+import { ContractService } from '@blockframes/contract/contract/service';
+import { TermService } from '@blockframes/contract/term/service';
 import { MovieService } from '@blockframes/movie/service';
 import { Contract, isMandate, isSale, Movie, Term } from '@blockframes/model';
 import { combineLatest, Observable, of } from 'rxjs';

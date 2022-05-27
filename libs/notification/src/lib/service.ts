@@ -12,21 +12,20 @@ import {
   createStorageFile,
   appName,
   getMovieAppAccess,
-  App,
   eventTypes,
   isAppNotification,
+  displayName
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { toDate } from '@blockframes/utils/helpers';
-import { displayName } from '@blockframes/model';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { MovieService } from '@blockframes/movie/service';
 import { format } from 'date-fns';
 import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
 import { UserService } from '@blockframes/user/service';
-import { EventService } from '@blockframes/event/+state/event.service';
+import { EventService } from '@blockframes/event/service';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { where } from 'firebase/firestore';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 

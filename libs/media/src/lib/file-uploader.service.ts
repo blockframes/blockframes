@@ -1,15 +1,15 @@
 
-import { Injectable, Injector } from "@angular/core";
-import { ComponentPortal } from "@angular/cdk/portal";
-import { Overlay, OverlayRef } from "@angular/cdk/overlay";
+import { Injectable, Injector } from '@angular/core';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { UploadTask } from 'firebase/storage';
 import { AuthService } from '@blockframes/auth/service';
-import { tempUploadDir } from "@blockframes/utils/file-sanitizer";
-import { BehaviorStore } from "@blockframes/utils/observable-helpers";
+import { tempUploadDir } from '@blockframes/utils/file-sanitizer';
+import { BehaviorStore } from '@blockframes/utils/observable-helpers';
 import { delay } from '@blockframes/utils/helpers';
 import { UploadData, isValidMetadata } from '@blockframes/model';
-import { UploadWidgetComponent } from "../file/upload-widget/upload-widget.component";
-import { getTaskStateObservable } from "../file/upload-widget/task.pipe";
+import { UploadWidgetComponent } from './file/upload-widget/upload-widget.component';
+import { getTaskStateObservable } from './file/upload-widget/task.pipe';
 import { FireStorage, FirestoreService } from 'ngfire';
 
 @Injectable({ providedIn: 'root' })

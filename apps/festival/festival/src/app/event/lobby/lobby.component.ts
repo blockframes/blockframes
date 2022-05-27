@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { TwilioService, LocalAttendee, TrackKind } from '@blockframes/utils/twilio';
 import { AuthService } from '@blockframes/auth/service';
 import { displayName } from '@blockframes/model';

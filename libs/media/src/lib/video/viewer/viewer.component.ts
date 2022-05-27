@@ -6,7 +6,7 @@ import { StorageVideo, MeetingVideoControl, hasAnonymousIdentity } from '@blockf
 import { ErrorResultResponse, getWatermark, loadJWPlayerScript } from '@blockframes/model';
 import { BehaviorSubject } from 'rxjs';
 import { toggleFullScreen } from '../../file/viewers/utils';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { CallableFunctions } from 'ngfire';
 

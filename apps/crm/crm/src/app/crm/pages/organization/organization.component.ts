@@ -7,16 +7,16 @@ import { Organization, Movie, Invitation, UserRole, createOrganizationMember, Ap
 import { OrganizationService } from '@blockframes/organization/service';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/service';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MatDialog } from '@angular/material/dialog';
-import { EventService } from '@blockframes/event/+state';
-import { ContractService } from '@blockframes/contract/contract/+state';
-import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
-import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
+import { EventService } from '@blockframes/event/service';
+import { ContractService } from '@blockframes/contract/contract/service';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
+import { BucketService } from '@blockframes/contract/bucket/service';
 import { where } from 'firebase/firestore';
-import { PermissionsService } from '@blockframes/permissions/+state';
+import { PermissionsService } from '@blockframes/permissions/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({

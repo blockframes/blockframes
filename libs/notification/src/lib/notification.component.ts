@@ -1,5 +1,5 @@
 ﻿import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
-import { NotificationService } from './+state';
+import { NotificationService } from './service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { Router } from '@angular/router';

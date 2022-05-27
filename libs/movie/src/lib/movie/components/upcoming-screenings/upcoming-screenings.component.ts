@@ -8,9 +8,9 @@ import { orderBy, startAt, where } from 'firebase/firestore';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/service';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { Screening, Event, App } from '@blockframes/model';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
