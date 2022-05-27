@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import type { FormShellConfig } from '@blockframes/movie/form/movie.shell.interfaces';
 import { CampaignControls, CampaignForm } from './form';
-import { CampaignService } from '../+state';
-import { FileUploaderService } from "@blockframes/media/+state";
-import { MovieActiveGuard } from "@blockframes/movie/guards/movie-active.guard";
-import { Campaign } from "@blockframes/model";
+import { CampaignService } from '../service';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
+import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
+import { Campaign } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
 export class CampaignShellConfig implements FormShellConfig<CampaignControls, Campaign>{

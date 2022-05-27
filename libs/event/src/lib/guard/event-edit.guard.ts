@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { MovieService } from '@blockframes/movie/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { addHours } from 'date-fns'
-import { EventService } from '../+state';
+import { EventService } from '../service';
 import { createEvent, createScreening } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })

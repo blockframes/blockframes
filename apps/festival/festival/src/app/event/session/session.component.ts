@@ -1,23 +1,23 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { BehaviorSubject, firstValueFrom, interval, Observable, Subscription } from 'rxjs';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { DoorbellBottomSheetComponent } from '@blockframes/event/components/doorbell/doorbell.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
+import { TwilioService } from '@blockframes/utils/twilio';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 import { ErrorResultResponse, extensionToType } from '@blockframes/model';
-import { MediaService } from '@blockframes/media/+state';
-import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
+import { MediaService } from '@blockframes/media/service';
+import { InvitationService } from '@blockframes/invitation/service';
 import { filter, pluck, scan, switchMap } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
-import { AuthService } from '@blockframes/auth/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { AuthService } from '@blockframes/auth/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 import {
   Event,
