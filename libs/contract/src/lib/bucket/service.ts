@@ -106,7 +106,7 @@ export class BucketService extends BlockframesCollection<Bucket> {
       });
 
       // Add the default negotiation.
-      this.contractService.addNegotiation(contractId, {
+      await this.contractService.addNegotiation(contractId, {
         ...contract,
         ...commonFields,
         initial: new Date(),

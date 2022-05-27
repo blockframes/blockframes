@@ -34,7 +34,7 @@ export class AuthGuard implements CanActivate, CanDeactivate<unknown> {
   }
 
   redirectOnSignout() {
-    this.sub = this.authService._user$.pipe(
+    this.sub = this.authService.user$.pipe(
       filter(user => !user)
     ).subscribe(() => this.router.navigate(['/']));
   }

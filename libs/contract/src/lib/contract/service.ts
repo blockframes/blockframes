@@ -60,9 +60,9 @@ export class ContractService extends BlockframesCollection<Sale | Mandate> {
 
   async addNegotiation(contractId: string, nego: Partial<Negotiation>) {
     const activeOrgId = this.orgService.org.id;
-    const write = this.batch();
-    this.negotiationService.add({
-      _meta: createDocumentMeta({ createdAt: new Date(), }),
+    const write = this.negotiationService.batch();
+    await this.negotiationService.add({
+      _meta: createDocumentMeta({ createdAt: new Date() }),
       status: 'pending',
       createdByOrg: activeOrgId,
       sellerId: centralOrgId.catalog,
@@ -77,6 +77,6 @@ export class ContractService extends BlockframesCollection<Sale | Mandate> {
       orgId: nego.orgId,
     }, { write, params: { contractId } });
 
-    await write.commit();
+    return write.commit();
   }
 }
