@@ -9,6 +9,7 @@ import { TableActionsComponent } from './movie-table-actions.component';
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [TableActionsComponent],
@@ -19,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
     // Material
     MatButtonModule,
     MatIconModule,
+    MatSnackBarModule,
   ],
   exports: [TableActionsComponent]
 })

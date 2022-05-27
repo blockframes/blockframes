@@ -1,11 +1,10 @@
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { StoreStatus, storeStatus, Person, App } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { APP } from '@blockframes/utils/routes/utils';
 import { MatDialog } from '@angular/material/dialog';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 import { displayPerson } from '@blockframes/utils/pipes';
@@ -25,7 +24,7 @@ export class TitleListComponent {
   );
   filters = filters;
 
-  movies$ = this.service.queryDashboard(this.app).pipe(
+  movies$ = this.service.queryDashboard('catalog').pipe(
     tap((movies) => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
@@ -52,7 +51,6 @@ export class TitleListComponent {
     private service: MovieService,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
-    @Inject(APP) public app: App
   ) { }
 
   /** Dynamic filter of movies for each tab. */

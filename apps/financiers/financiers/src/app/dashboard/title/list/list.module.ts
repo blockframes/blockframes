@@ -14,7 +14,7 @@ import { EmptyMovieModule } from '@blockframes/ui/dashboard/components/empty-mov
 import { TableActionsModule } from '@blockframes/ui/dashboard/components/movie-table-actions/movie-table-actions.module';
 import { MovieListHeaderModule } from '@blockframes/ui/dashboard/components/movie-list-header/movie-list-header.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { AppPipeModule, MaxLengthModule } from '@blockframes/utils/pipes';
+import { MaxLengthModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -33,7 +33,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     // Blockframes
     TableModule,
     ToLabelModule,
-    AppPipeModule,
     EmptyMovieModule,
     TableActionsModule,
     MovieListHeaderModule,

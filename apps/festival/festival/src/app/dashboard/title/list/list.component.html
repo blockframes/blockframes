@@ -38,16 +38,16 @@
         <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
       </ng-template>
       <ng-template colRef label="Actions" let-movie sticky>
-        <dashboard-movie-table-actions [movie]="movie" [app]="app"></dashboard-movie-table-actions>
+        <dashboard-movie-table-actions [movie]="movie"></dashboard-movie-table-actions>
       </ng-template>
     </bf-table>
   </ng-container>
 </ng-container>
 
 <ng-template #loading>
-    <mat-spinner></mat-spinner>
+  <mat-spinner></mat-spinner>
 </ng-template>
 
 <ng-template #empty>
-  <dashboard-empty-movie appName="{{ app | appName }}"></dashboard-empty-movie>
+  <dashboard-empty-movie></dashboard-empty-movie>
 </ng-template>

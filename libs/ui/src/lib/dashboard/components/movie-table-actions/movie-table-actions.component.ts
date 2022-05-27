@@ -1,10 +1,11 @@
 // Angular
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Input } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Blockframes
 import { App, Movie, storeStatus, StoreStatus } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'dashboard-movie-table-actions',
@@ -14,11 +15,11 @@ import { MovieService } from '@blockframes/movie/service';
 })
 export class TableActionsComponent {
   @Input() movie: Movie;
-  @Input() app: App;
 
   constructor(
     private service: MovieService,
     private snackbar: MatSnackBar,
+    @Inject(APP) public app: App
   ) { }
 
   async updateStatus(movie: Movie, status: StoreStatus, message?: string) {

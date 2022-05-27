@@ -1,6 +1,5 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 
 // Pages
@@ -14,7 +13,6 @@ import { MatButtonModule } from '@angular/material/button';
 @NgModule({
   declarations: [MovieListHeaderComponent],
   imports: [
-    FlexLayoutModule,
     RouterModule,
 
     // Material

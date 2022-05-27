@@ -1,13 +1,12 @@
-import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { fromOrg, MovieService } from '@blockframes/movie/service';
-import { App, MovieCampaign } from '@blockframes/model';
+import { MovieCampaign } from '@blockframes/model';
 import { CampaignService } from '@blockframes/campaign/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
-import { APP } from '@blockframes/utils/routes/utils';
 import { filters } from '@blockframes/ui/list/table/filters';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
@@ -53,7 +52,6 @@ export class ListComponent implements OnInit {
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
     private movieService: MovieService,
-    @Inject(APP) public app: App
   ) { }
 
   ngOnInit() {

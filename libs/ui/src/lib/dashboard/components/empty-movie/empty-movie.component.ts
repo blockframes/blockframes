@@ -1,5 +1,7 @@
 // Angular
-import { ChangeDetectionStrategy, Component, Input, Optional } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Optional } from '@angular/core';
+import { App } from '@blockframes/model';
+import { APP } from '@blockframes/utils/routes/utils';
 import { Intercom } from 'ng-intercom';
 
 @Component({
@@ -9,10 +11,10 @@ import { Intercom } from 'ng-intercom';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyMovieComponent {
-  @Input() appName: string;
 
   constructor(
     @Optional() private intercom: Intercom,
+    @Inject(APP) public app: App
   ) { }
 
   public openIntercom(): void {

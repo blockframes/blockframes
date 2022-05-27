@@ -9,7 +9,7 @@ import { TableModule } from "@blockframes/ui/list/table/table.module";
 import { TitleListComponent } from './list.component';
 
 // Blockframes
-import { AppPipeModule, DisplayNameModule, MaxLengthModule, NumberPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { DisplayNameModule, MaxLengthModule, NumberPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { EmptyMovieModule } from '@blockframes/ui/dashboard/components/empty-movie/empty-movie.module';
 import { TableActionsModule } from '@blockframes/ui/dashboard/components/movie-table-actions/movie-table-actions.module';
@@ -44,7 +44,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TagModule,
     NumberPipeModule,
     IncomePipeModule,
-    AppPipeModule,
     CellModalModule,
 
     // Material

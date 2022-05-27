@@ -8,10 +8,10 @@ import { EmptyMovieComponent } from './empty-movie.component';
 // Blockframes
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { AppPipeModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [EmptyMovieComponent],
@@ -22,10 +22,10 @@ import { MatCardModule } from '@angular/material/card';
     // Blockframes
     NoTitleModule,
     ImageModule,
+    AppPipeModule,
 
     // Material
     MatButtonModule,
-    MatCardModule
   ],
   exports: [EmptyMovieComponent]
 })
