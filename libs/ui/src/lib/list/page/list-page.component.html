@@ -48,13 +48,11 @@
       </div>
       <ng-container *ngIf="!listView; else displayList">
         <ul class="grid" [@fadeList]="items.length">
-          <ng-container *ngFor="let item of items; trackBy:trackById">
-            <li>
-              <!-- INSERT CARD -->
-              <ng-template [ngTemplateOutlet]="cardTemplate" [ngTemplateOutletContext]="{$implicit: item}">
-              </ng-template>
-            </li>
-          </ng-container>
+          <li *ngFor="let item of items; trackBy:trackById">
+            <!-- INSERT CARD -->
+            <ng-template [ngTemplateOutlet]="cardTemplate" [ngTemplateOutletContext]="{$implicit: item}">
+            </ng-template>
+          </li>
         </ul>
       </ng-container>
       <ng-template #displayList>
