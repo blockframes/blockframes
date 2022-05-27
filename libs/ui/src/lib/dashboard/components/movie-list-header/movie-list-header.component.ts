@@ -7,4 +7,4 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./movie-list-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieListHeader { }
+export class MovieListHeaderComponent { }
