@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
 import { filters } from '@blockframes/ui/list/table/filters';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 
@@ -53,7 +52,6 @@ export class ListComponent implements OnInit {
     private campaignService: CampaignService,
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
-    private snackbar: MatSnackBar,
     private movieService: MovieService,
     @Inject(APP) public app: App
   ) { }
