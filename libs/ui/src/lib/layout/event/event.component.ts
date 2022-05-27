@@ -10,12 +10,12 @@ import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 // Blockframes
-import { InvitationService } from '@blockframes/invitation/+state';
-import { NotificationService } from '@blockframes/notification/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { InvitationService } from '@blockframes/invitation/service';
+import { NotificationService } from '@blockframes/notification/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { Movie, App } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { AuthService } from '@blockframes/auth/+state';
+import { MovieService } from '@blockframes/movie/service';
+import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({

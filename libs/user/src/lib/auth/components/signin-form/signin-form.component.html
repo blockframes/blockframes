@@ -4,7 +4,7 @@
     <form [formGroup]="signinForm" (ngSubmit)="submited.emit(signinForm)" fxLayout="column">
       <mat-form-field appearance="outline">
         <mat-label>Email Address</mat-label>
-        <input matInput type="email" placeholder="Email Address" formControlName="email" required test-id="email"/>
+        <input matInput type="email" placeholder="Email Address" formControlName="email" required test-id="email" />
         <mat-error *ngIf="signinForm.get('email').hasError('email') && !signinForm.get('email').hasError('required')">
           Please enter a <strong>valid</strong> email address.
         </mat-error>
@@ -12,9 +12,7 @@
           Email Address is <strong>required</strong>.
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
-        <input matInput type="password" placeholder="Password" formControlName="password" required test-id="password"/>
+      <password-input [control]="signinForm.get('password')" placeholder="Password" label="Password" test-id="password" >   
         <mat-hint>Between 6 and 24 characters.</mat-hint>
         <mat-error *ngIf="signinForm.get('password').hasError('minlength')">
           Password with less than <strong>6</strong> characters.
@@ -25,7 +23,7 @@
         <mat-error *ngIf="signinForm.get('password').hasError('required')">
           Password is <strong>required</strong>.
         </mat-error>
-      </mat-form-field>
+      </password-input>
       <a type="button" mat-button routerLink="../reset-password" class="forgot-password">Forgot your password?</a>
       <div fxLayout="column" fxLayoutAlign="center center">
         <button class="submit" type="submit" mat-flat-button color="accent" test-id="submit"><ng-content select="[buttonText]"></ng-content></button>

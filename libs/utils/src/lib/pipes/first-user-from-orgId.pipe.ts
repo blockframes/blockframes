@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 import { limit, where } from 'firebase/firestore';
 
 @Pipe({ name: 'firstUserFromOrgId' })

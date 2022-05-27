@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { EventService } from "../+state/event.service";
-import { ActivatedRouteSnapshot, CanActivate, Router } from "@angular/router";
-import { map } from "rxjs/operators";
-import { AuthService } from "@blockframes/auth/+state";
-import { combineLatest } from "rxjs";
+import { Injectable } from '@angular/core';
+import { EventService } from '../service';
+import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { AuthService } from '@blockframes/auth/service';
+import { combineLatest } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class NoEventRoleGuard implements CanActivate {

@@ -4,7 +4,7 @@ import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 // Blockframes
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 
 const navLinks = [

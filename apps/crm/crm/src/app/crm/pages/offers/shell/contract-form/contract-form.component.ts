@@ -6,13 +6,13 @@ import { filter } from 'rxjs/operators';
 import { firstValueFrom } from 'rxjs';
 
 // Services
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { Contract, Income, Movie, Negotiation } from '@blockframes/model';
-import { IncomeService } from '@blockframes/contract/income/+state';
-import { ContractService } from '@blockframes/contract/contract/+state';
-import { TermService } from '@blockframes/contract/term/+state';
-import { OfferService } from '@blockframes/contract/offer/+state';
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { IncomeService } from '@blockframes/contract/income/service';
+import { ContractService } from '@blockframes/contract/contract/service';
+import { TermService } from '@blockframes/contract/term/service';
+import { OfferService } from '@blockframes/contract/offer/service';
+import { NegotiationService } from '@blockframes/contract/negotiation/service';
 
 // Forms
 import { NegotiationForm } from '@blockframes/contract/negotiation/form';

@@ -1,7 +1,7 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { EventService } from '@blockframes/event/+state';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { EventService } from '@blockframes/event/service';
+import { MovieService } from '@blockframes/movie/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { limit, limitToLast, orderBy, startAt, where } from 'firebase/firestore';
 import { distinctUntilChanged } from 'rxjs/operators';
 

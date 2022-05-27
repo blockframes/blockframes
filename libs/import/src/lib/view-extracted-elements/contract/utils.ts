@@ -1,9 +1,9 @@
 import { where } from 'firebase/firestore';
 import { checkParentTerm, ContractsImportState, sheetHeaderLine, } from '@blockframes/import/utils';
 import { centralOrgId } from '@env';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { UserService } from '@blockframes/user/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { MovieService } from '@blockframes/movie/service';
+import { UserService } from '@blockframes/user/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { Contract, Movie, Term } from '@blockframes/model';
 import {
   createMandate,
@@ -14,11 +14,11 @@ import {
   User,
   Language,
 } from '@blockframes/model';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getContractConfig } from './fieldConfigs';
 import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
-import { TermService } from '@blockframes/contract/term/+state/term.service';
+import { TermService } from '@blockframes/contract/term/service';
 
 function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string): Term {
 

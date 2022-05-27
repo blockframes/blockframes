@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
-import { App } from '@blockframes/model';
-import { CampaignService, MovieCampaign } from '@blockframes/campaign/+state/campaign.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { fromOrg, MovieService } from '@blockframes/movie/service';
+import { App, MovieCampaign } from '@blockframes/model';
+import { CampaignService } from '@blockframes/campaign/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';

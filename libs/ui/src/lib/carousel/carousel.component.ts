@@ -4,28 +4,59 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
   Directive,
-  HostBinding,
   ElementRef,
   AfterViewInit,
   ChangeDetectorRef,
   NgZone,
   OnDestroy,
   ContentChildren,
-  QueryList, Input, AfterContentInit
+  QueryList,
+  Input,
+  AfterContentInit,
+  TemplateRef
 } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
-// Blockframes
-import { getLayoutGrid } from '../layout/layout.module';
-
 // RxJs
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { startWith, distinctUntilChanged, map, debounceTime, tap } from 'rxjs/operators';
+
+interface Columns {
+  xs: number;
+  sm: number;
+  md: number;
+  lg: number;
+  xl: number;
+
+  gtXs: number;
+  gtSm: number;
+  gtMd: number;
+
+  ltMd: number;
+  ltLg: number;
+  ltXl: number;
+}
+
+const sizes: Record<string, string[]> = {
+  xs: ['xs'],
+  sm: ['sm'],
+  md: ['md'],
+  lg: ['lg'],
+  xl: ['xl'],
+
+  gtXs: ['sm', 'md', 'lg', 'xl'],
+  gtSm: ['md', 'lg', 'xl'],
+  gtMd: ['lg', 'xl'],
+
+  ltMd: ['xs', 'sm'],
+  ltLg: ['xs', 'sm', 'md'],
+  ltXl: ['xs', 'sm', 'md', 'lg']
+}
 
 
 @Directive({ selector: '[carouselItem]' })
 export class CarouselItemDirective {
-  @HostBinding('style.flexShrink') shrink = 0;
+  constructor(public template: TemplateRef<unknown>) {}
 }
 
 @Component({
@@ -36,12 +67,9 @@ export class CarouselItemDirective {
 })
 export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDestroy {
 
-  @Input() min: number;
-
   /* Indicators to show arrow buttons */
   public showForward: boolean;
   public showBack: boolean;
-  public amount$: Observable<number>;
 
   private subRight: Subscription;
   private subLeft: Subscription;
@@ -50,13 +78,28 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
   private currentPosition: number;
 
   @ViewChild(CdkScrollable) scrollable: CdkScrollable;
-  @ViewChild('container') container: ElementRef<HTMLDivElement>;
   @ContentChildren(CarouselItemDirective) items: QueryList<CarouselItemDirective>;
 
-  constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone) { }
+  @Input() set columns(amount: Partial<Columns> | string) {
+    if (!amount) return;
 
-  get clientWidth() {
-    return this.container.nativeElement.clientWidth;
+    if (typeof amount === 'object') {
+      for (const [size, value] of Object.entries(amount)) {
+        sizes[size]?.forEach(label => this.el.nativeElement.style.setProperty(`--${label}-columns`, value));
+      }
+    } else {
+      this.el.nativeElement.style.setProperty('--columns', amount)
+    }
+  }
+
+  constructor(
+    private el: ElementRef,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
+  ) { }
+
+  get carouselWidth() {
+    return this.el.nativeElement.clientWidth
   }
 
   ngAfterViewInit() {
@@ -72,19 +115,18 @@ export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDes
   }
 
   ngAfterContentInit() {
-    this.amount$ = this.items.changes.pipe(startWith(this.items), map(items => items.length));
-    this.itemsSub = this.items.changes.subscribe(() => this.showForward = !!this.scrollable.measureScrollOffset('right'));
+    this.itemsSub = this.items.changes.subscribe(() => {
+      this.showForward = !!this.scrollable.measureScrollOffset('right')
+      this.cdr.markForCheck();
+    });
   }
 
   scrollTo(direction: 'left' | 'right') {
     this.currentPosition = this.scrollable.measureScrollOffset('left');
-    const clientWidth = this.clientWidth
-
-    const { margin } = getLayoutGrid(clientWidth);
 
     direction === 'right'
-      ? this.scrollable.scrollTo({ left: this.currentPosition + clientWidth + margin })
-      : this.scrollable.scrollTo({ left: this.currentPosition - clientWidth - margin })
+      ? this.scrollable.scrollTo({ left: this.currentPosition + this.carouselWidth })
+      : this.scrollable.scrollTo({ left: this.currentPosition - this.carouselWidth })
   }
 
   onScrolling(direction: 'right' | 'left') {

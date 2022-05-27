@@ -1,5 +1,5 @@
-import { NgModule, Pipe, PipeTransform } from "@angular/core";
-import { OrganizationService } from "../+state/organization.service";
+import { NgModule, Pipe, PipeTransform } from '@angular/core';
+import { OrganizationService } from '../service';
 
 @Pipe({ name: 'getOrg' })
 export class GetOrgPipe implements PipeTransform {

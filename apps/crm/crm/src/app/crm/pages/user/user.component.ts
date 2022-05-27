@@ -2,20 +2,20 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { User, Organization, Invitation, UserRole, Scope, App, getOrgAppAccess } from '@blockframes/model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
-import { UserService } from '@blockframes/user/+state/user.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { UserService } from '@blockframes/user/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { PermissionsService } from '@blockframes/permissions/+state';
-import { EventService } from '@blockframes/event/+state/event.service';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { PermissionsService } from '@blockframes/permissions/service';
+import { EventService } from '@blockframes/event/service';
+import { InvitationService } from '@blockframes/invitation/service';
 import { where } from 'firebase/firestore';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { joinWith, CallableFunctions } from 'ngfire';
 import { map } from 'rxjs/operators';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';

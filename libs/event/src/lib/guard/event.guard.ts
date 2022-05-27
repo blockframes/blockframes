@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree, CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/service';
 import { firstValueFrom, Observable } from 'rxjs';
-import { EventService } from '../+state';
+import { EventService } from '../service';
 import { eventTime } from '../pipes/event-time.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { Event, Meeting } from '@blockframes/model';
-import { TwilioService } from '../components/meeting/+state/twilio.service';
+import { TwilioService } from '@blockframes/utils/twilio';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 
