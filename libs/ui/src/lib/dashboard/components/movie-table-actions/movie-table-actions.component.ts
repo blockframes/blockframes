@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Blockframes
 import { App, Movie, storeStatus, StoreStatus } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 
 @Component({
   selector: 'dashboard-movie-table-actions',
