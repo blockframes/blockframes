@@ -123,9 +123,9 @@ export class LineChartComponent {
   @Input() eventNames: EventName[] = [];
   private analytics?: Analytics[];
   @Input() set data(data: Analytics[]) {
+    this.isLoading = false;
     if (!data?.length) {
       this.chart?.updateSeries([]);
-      this.isLoading = false;
       return; 
     }
 
