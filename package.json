@@ -82,7 +82,6 @@
     "@faker-js/faker": "^6.1.2",
     "@google-cloud/bigquery": "^5.12.0",
     "@google-cloud/storage": "^5.19.1",
-    "@juggle/resize-observer": "^3.2.0",
     "@mailchimp/mailchimp_marketing": "^3.0.74",
     "@nrwl/angular": "13.9.6",
     "@rx-angular/cdk": "^1.0.0-beta.2",
