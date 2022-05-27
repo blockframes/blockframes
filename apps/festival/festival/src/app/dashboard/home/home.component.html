@@ -26,7 +26,7 @@
                 <mat-icon svgIcon="arrow_forward"></mat-icon>
               </a>
             </header>
-            <bf-carousel [columns]="{ gtSm: 2, ltMg: 1 }">
+            <bf-carousel [columns]="{ gtSm: 2, ltMd: 1 }">
               <ng-template carouselItem>
                 <analytics-pie-chart class="surface" [data]="orgActivityOfPopularTitle$ | async"></analytics-pie-chart>
               </ng-template>
