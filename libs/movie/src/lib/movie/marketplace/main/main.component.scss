@@ -32,10 +32,6 @@ h5 {
   }
 }
 
-ul.grid {
-  margin: 24px;
-}
-
 @include layout-bp(lt-md) {
   video-viewer {
     width: 100%;
