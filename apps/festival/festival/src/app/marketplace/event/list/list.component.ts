@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { combineLatest, Observable } from 'rxjs';
 import { slideDown } from '@blockframes/utils/animations/fade';
 import { map, shareReplay, startWith, tap } from 'rxjs/operators';

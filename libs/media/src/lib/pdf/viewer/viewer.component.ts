@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { MediaService } from '../../+state/media.service';
+import { MediaService } from '../../service';
 import { StorageFile, MeetingPdfControl } from '@blockframes/model';
 import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { toggleFullScreen } from '../../file/viewers/utils';

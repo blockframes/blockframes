@@ -12,7 +12,7 @@ import {
   Timestamp
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
-import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
+import { PermissionsService } from '@blockframes/permissions/service';
 import { Observable, combineLatest, of } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { production } from '@env';

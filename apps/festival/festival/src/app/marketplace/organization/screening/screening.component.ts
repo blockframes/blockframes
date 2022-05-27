@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { EventService } from '@blockframes/event/+state/event.service';
+import { EventService } from '@blockframes/event/service';
 import { ViewComponent } from '../view/view.component';
 import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';

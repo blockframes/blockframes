@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 // Blockframes
 import { AuthService } from '@blockframes/auth/service';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
-import { FileUploaderService } from '@blockframes/media/+state';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 

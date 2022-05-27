@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { MovieService } from '../../service';
-import { getFileMetadata } from '@blockframes/media/+state/static-files';
+import { getFileMetadata } from '@blockframes/media/utils';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { Subscription } from 'rxjs';
 import { MovieVideo } from '@blockframes/model';
