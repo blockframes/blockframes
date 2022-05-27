@@ -13,8 +13,8 @@ export interface Denomination {
 /** A public interface or Organization, without sensitive data. */
 export interface PublicOrganization {
   id: string;
-  denomination: Denomination;
-  name?: string;
+  denomination: Denomination; // will be changed with next issue, <branch_name>-model
+  name?: string; // same
   logo: StorageFile;
   activity?: OrgActivity
 }
