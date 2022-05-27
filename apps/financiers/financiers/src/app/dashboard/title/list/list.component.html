@@ -31,7 +31,7 @@
       </ng-template>
       <ng-template colRef="campaignStarted" label="Campaign Started" let-date sort>{{ date | date: 'short' }}</ng-template>
       <ng-template colRef label="Actions" let-movie sticky>
-        <dashboard-movie-table-actions [movie]="movie" [app]="app"></dashboard-movie-table-actions>
+        <dashboard-movie-table-actions [movie]="movie"></dashboard-movie-table-actions>
       </ng-template>
     </bf-table>
   </ng-container>
