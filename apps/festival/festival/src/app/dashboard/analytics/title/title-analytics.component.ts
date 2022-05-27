@@ -11,6 +11,7 @@ import {
   Invitation,
   App,
   Event,
+  Organization,
 } from '@blockframes/model';
 import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
@@ -118,22 +119,22 @@ export class TitleAnalyticsComponent {
   };
   filterValue?: string;
 
-  invitations$ = this.invitationWithEventAndUserOrg().pipe(
-    map(invitations => invitations.filter(invitation => (invitation.event) && invitation?.event?.meta?.titleId)),
-    map(invitations => invitations.filter(invitation => isMovieAccepted(invitation?.event?.movie, this.app))),
+  events$ = this.invitationWithEventAndUserOrg().pipe(
+    map(events => events.filter(event => (event) && event?.meta?.titleId)),
+    map(events => events.filter(event => isMovieAccepted(event?.movie, this.app))),
     joinWith({
       analytics: () => this.getAnalyticsPerInvitation()
     }, { shouldAwait: true }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  ongoingScreenings$ = this.invitations$.pipe(
+  ongoingScreenings$ = this.events$.pipe(
     map(
-      invitations => invitations.filter(
-        invitation => eventTime(invitation.event) === 'onTime'
+      events => events.filter(
+        event => eventTime(event) === 'onTime'
       )
     ),
-    filter(invitations => !!invitations.length),
+    filter(events => !!events.length),
   );
 
   screeningRequests$ = this.titleAnalytics$.pipe(
@@ -141,11 +142,15 @@ export class TitleAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
+
   aggregatedScreeningCards$: Observable<MetricCard[]> = combineLatest([
     this.screeningRequests$,
-    this.invitations$
+    this.events$
   ]).pipe(
-    map(([requests, invitations]) => toScreenerCards(requests, invitations))
+    map(([requests, events]) => {
+      const invitations = events.map(event => event.invitation);
+      return toScreenerCards(requests, invitations);
+    })
   );
 
 
@@ -175,35 +180,40 @@ export class TitleAnalyticsComponent {
   }
 
   async exportScreenerAnalytics() {
-    const data = await firstValueFrom(this.invitations$);
-    const analytics = data.map(invitation => ({
-      'Name': `${invitation.toUser.firstName} ${invitation.toUser.lastName}`,
-      'Email': invitation.toUser.email,
-      'Company Name': invitation.toUserOrg.denomination.public,
-      'Activity': invitation.toUserOrg.activity,
+    const data = await firstValueFrom(this.events$);
+    const analytics = data.map(event => ({
+      'Name': `${event.invitation.toUser.firstName} ${event.invitation.toUser.lastName}`,
+      'Email': event.invitation.toUser.email,
+      'Company Name': event.toUserOrg.denomination?.public,
+      'Activity': event.toUserOrg.activity ?? '--',
+      'Country': event.toUserOrg.addresses?.main?.country ?? '--',
+      'Watchtime': `${event.invitation.watchTime ?? 0}s`,
+      'Watching status': eventTime(event) === 'onTime' ? 'Watching now' : '--'
     }));
     downloadCsvFromJson(analytics, 'screener-analytics')
   }
 
+
   private invitationWithEventAndUserOrg() {
     return this.titleId$.pipe(
       switchMap(id => this.eventService.valueChanges<Event<Screening>>([where('meta.titleId', '==', id)])),
-      switchMap(events => {
-        const ids = events.map(({ id }) => id);
-        return this.invitationService.valueChanges([where('eventId', 'in', ids)]).pipe(
-          map(invitations => invitations.filter(inv => inv.mode === 'invitation')),
-          map(invitations => {
-            return invitations.map(invitation => {
-              const event = events.find(({ id }) => invitation.eventId === id);
-              return { ...invitation, event };
-            })
-          }),
-          joinWith(
-            { toUserOrg: invitation => this.getOrg(invitation) },
-            { shouldAwait: true }
-          )
-        )
-      })
+      joinWith(
+        {
+          invitation: event => {
+            return this.invitationService.valueChanges([where('eventId', '==', event.id)])
+              .pipe(
+                map(([invitation]) => invitation),
+                first()
+              );
+          },
+          movie: event => from(this.movieService.getValue(event.meta.titleId))
+        },
+        { shouldAwait: true }
+      ),
+      joinWith(
+        { toUserOrg: event => this.getOrg(event.invitation) },
+        { shouldAwait: true }
+      )
     );
   }
 
@@ -211,15 +221,8 @@ export class TitleAnalyticsComponent {
     const orgId = getGuest(invitation, 'user').orgId;
     const externalOrg = {
       denomination: { public: 'External' },
-      activity: '--'
-    };
-    if (orgId) return from(this.orgService.getValue(orgId));
+    } as Partial<Organization>;
+    if (orgId) return from(this.orgService.getValue(orgId))
     return of(externalOrg);
   }
-
-  private getEvent(eventId: string) {
-    return this.eventService.queryDocs<Screening>(eventId)
-      .pipe(first())
-  }
-
 }

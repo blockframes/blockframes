@@ -91,8 +91,8 @@
       <span>Last Screenings</span>
       <mat-icon svgIcon="info"></mat-icon>
     </h3>
-    <ng-container *ngIf="ongoingScreenings$ | async as invitations">
-      <a ongoing-event-button href="/c/o/dashboard/event/{{invitations[0].eventId}}/statistics">Ongoing
+    <ng-container *ngIf="ongoingScreenings$ | async as events">
+      <a ongoing-event-button href="/c/o/dashboard/event/{{events[0].id}}/statistics">Ongoing
         Screenings</a>
     </ng-container>
   </header>
@@ -103,14 +103,14 @@
       <h5>Attendees</h5>
       <button mat-button (click)="exportScreenerAnalytics()">Export to .CSV</button>
     </header>
-    <bf-table class="screenings" [source]="invitations$ | async" clickable useFilter pagination="50">
-      <ng-template colRef="toUser" label="Name" let-item="item" sort defaultSort>
-        <b *ngIf="item.toUser; else noUser">{{ item.toUser.firstName }} {{ item.toUser.lastName }}</b>
+    <bf-table class="screenings" [source]="events$ | async" clickable useFilter pagination="50">
+      <ng-template colRef="invitation" label="Name" let-invitation sort defaultSort>
+        <b *ngIf="invitation.toUser; else noUser">{{ invitation.toUser.firstName }} {{ invitation.toUser.lastName }}</b>
         <ng-template #noUser>
           <b>--</b>
         </ng-template>
       </ng-template>
-      <ng-template colRef="toUser.email" label="Email" let-email sort defaultSort>
+      <ng-template colRef="invitation.toUser.email" label="Email" let-email sort defaultSort>
         <span>{{ email ?? '--' }}</span>
       </ng-template>
       <ng-template colRef="toUserOrg.denomination.public" label="Company Name" let-name sort defaultSort>
@@ -125,7 +125,7 @@
       <ng-template colRef="watchTime" label="Watchtime" let-watchtime sort defaultSort>
         <span>{{ watchtime || 0 }} S</span>
       </ng-template>
-      <ng-template colRef="event" label="Watching status" let-event sort defaultSort>
+      <ng-template colRef label="Watching status" let-event="item" sort defaultSort>
         <ng-container *ngIf="(event|eventTime) === 'onTime'">
           <a mat-stroked-button routerLink="/c/o/dashboard/event/{{event.id}}/statistics"> Watching now</a>
         </ng-container>
