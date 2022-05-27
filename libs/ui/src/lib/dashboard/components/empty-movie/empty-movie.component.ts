@@ -9,7 +9,7 @@ import { Intercom } from 'ng-intercom';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyMovieComponent {
-  @Input() appName: string
+  @Input() appName: string;
 
   constructor(
     @Optional() private intercom: Intercom,

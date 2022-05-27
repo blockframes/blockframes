@@ -13,8 +13,8 @@ import { MovieService } from '@blockframes/movie/service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableActionsComponent {
-  @Input() movie: Movie
-  @Input() app: App
+  @Input() movie: Movie;
+  @Input() app: App;
 
   constructor(
     private service: MovieService,
