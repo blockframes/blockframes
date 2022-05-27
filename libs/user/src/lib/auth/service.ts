@@ -1,5 +1,5 @@
 import { Injectable, Optional } from '@angular/core';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta, Timestamp, AnonymousCredentials, AnonymousRole, App } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
@@ -20,7 +20,6 @@ import {
   UserCredential,
   verifyPasswordResetCode
 } from 'firebase/auth';
-import { UserService } from '@blockframes/user/service';
 import { ErrorResultResponse } from '@blockframes/model';
 import { BlockframesAuth } from '@blockframes/utils/abstract-service';
 import { CallableFunctions, fromRef } from 'ngfire';
@@ -35,22 +34,14 @@ export class AuthService extends BlockframesAuth<User> {
   signedOut = new Subject<void>();
   anonymousCredentials$ = new BehaviorSubject<AnonymousCredentials>(this.anonymousCredentials);
 
-  // For these to be defined, one of the observable below must be called before
-  profile: User; // User object in Firestore DB // rework
-  uid: string; // Will be defined for regular and anonymous users
-
-  // TODO #8280 rename to user$ (using defer ?)
   // Firebase Auth User Object
-  _user$ = this.user$.pipe(tap(auth => {
-    this.uid = auth?.uid;
-    if (!auth?.uid) this.profile = undefined;
-  }));
+  user$ = this._user$;
 
   // Firebase Auth User Object and User object in Firestore DB (profile)
-  auth$: Observable<{ uid: string, isAnonymous: boolean, emailVerified: boolean, profile?: User }> = this._user$.pipe(
+  auth$: Observable<{ uid: string, isAnonymous: boolean, emailVerified: boolean, profile?: User }> = this.user$.pipe(
     switchMap(authState => {
       if (!authState || authState.isAnonymous) return of(undefined).pipe(map(() => [undefined, authState]));
-      return this.userService.valueChanges(authState.uid).pipe(map(profile => [profile, authState]));
+      return this.profile$.pipe(map(profile => [profile, authState]));
     }),
     map(([profile, userAuth]: [User, FireUser]) => {
       if (!userAuth) return;
@@ -61,7 +52,7 @@ export class AuthService extends BlockframesAuth<User> {
           ...profile._meta,
           emailVerified: true
         }
-        this.userService.update(userAuth.uid, { _meta });
+        this.update({ _meta });
       }
 
       const { isAnonymous, emailVerified } = userAuth;
@@ -92,7 +83,6 @@ export class AuthService extends BlockframesAuth<User> {
     private functions: CallableFunctions,
     private gdprService: GDPRService,
     private ipService: IpService,
-    private userService: UserService,
     @Optional() public ngIntercom?: Intercom,
   ) {
     super();
