@@ -26,8 +26,10 @@ import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
 import { eventTime } from "@blockframes/event/pipes/event-time.pipe";
 import { getGuest } from "@blockframes/invitation/pipes/guest.pipe";
-import { EventService } from "@blockframes/event/+state";
-import { InvitationService } from "@blockframes/invitation/+state";
+import { InvitationService } from "@blockframes/invitation/service";
+import { EventService } from "@blockframes/event/service";
+// import { EventService } from "@blockframes/event/+state";
+// import { InvitationService } from "@blockframes/invitation/+state";
 
 
 function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
