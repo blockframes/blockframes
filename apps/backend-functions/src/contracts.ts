@@ -1,5 +1,4 @@
-import { db } from './internals/firebase';
-import { Change } from 'firebase-functions';
+import { BlockframesChange, BlockframesSnapshot, db } from './internals/firebase';
 import { createNotification, triggerNotifications } from './notification';
 import { createDocumentMeta, getDocument } from './data/internals';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
@@ -11,9 +10,8 @@ interface ContractNotificationType {
 }
 type ContractNotificationValues = ContractNotificationType[keyof ContractNotificationType];
 
-export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
-
-  const contract = contractSnapshot.data() as Contract;
+export async function onContractDelete(contractSnapshot: BlockframesSnapshot<Contract>) {
+  const contract = contractSnapshot.data();
 
   // Delete terms belonging to contract
   const termsCollectionRef = db.collection('terms').where('contractId', '==', contract.id);
@@ -118,10 +116,7 @@ async function sendContractUpdatedNotification(before: Sale, after: Sale, negoti
   return triggerNotifications(notifications);
 }
 
-export async function onContractUpdate(
-  change: Change<FirebaseFirestore.DocumentSnapshot>
-) {
-
+export async function onContractUpdate(change: BlockframesChange<Sale>) {
   const before = change.before;
   const after = change.after;
 
@@ -129,8 +124,8 @@ export async function onContractUpdate(
     throw new Error('Parameter "change" not found');
   }
 
-  const contractBefore = before.data() as Sale;
-  const contractAfter = after.data() as Sale;
+  const contractBefore = before.data();
+  const contractAfter = after.data();
 
   const isSale = contractBefore.type === contractAfter.type && contractBefore.type === 'sale' // contract is of type 'sale'
   const statusHasChanged = contractBefore.status !== contractAfter.status // contract status has changed

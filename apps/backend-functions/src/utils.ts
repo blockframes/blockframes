@@ -1,4 +1,4 @@
-import { functions, skipInMaintenance } from './internals/firebase';
+import { convertToDate, functions, skipInMaintenance } from './internals/firebase';
 import { logErrors } from './internals/sentry';
 export { ErrorResultResponse } from '@blockframes/model';
 
@@ -23,13 +23,13 @@ export function onDocumentWrite(docPath: string, fn: FunctionType) {
 export function onDocumentUpdate(docPath: string, fn: FunctionType) {
   return functions().firestore
     .document(docPath)
-    .onUpdate(skipInMaintenance(logErrors(fn)));
+    .onUpdate(skipInMaintenance(logErrors(convertToDate(fn))));
 }
 
 export function onDocumentDelete(docPath: string, fn: FunctionType) {
   return functions().firestore
     .document(docPath)
-    .onDelete(skipInMaintenance(fn))
+    .onDelete(skipInMaintenance(convertToDate(fn)))
 }
 
 export function onDocumentCreate(docPath: string, fn: FunctionType) {

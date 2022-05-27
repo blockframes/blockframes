@@ -1,4 +1,4 @@
-﻿import { region } from 'firebase-functions';
+﻿import { Change, region } from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { firebaseRegion } from '@env';
 export const functions = (config = defaultConfig) => region(firebaseRegion).runWith(config);
@@ -29,6 +29,67 @@ export async function getUserMail(userId: string): Promise<string | undefined> {
   const user = await admin.auth().getUser(userId);
   return user.email;
 }
+
+export interface BlockframesSnapshot<T = FirebaseFirestore.DocumentData> {
+  id: string,
+  exists: boolean,
+  ref: FirebaseFirestore.DocumentReference<T>,
+  data(): T | undefined,
+}
+
+export interface BlockframesChange<T = FirebaseFirestore.DocumentData> {
+  before: BlockframesSnapshot<T>,
+  after: BlockframesSnapshot<T>,
+}
+
+function toDate<D>(target: D): D {
+  if (typeof target !== 'object') return target;
+  for (const key in target) {
+    const value = target[key];
+    if (!value || typeof value !== 'object') continue;
+    if (value instanceof admin.firestore.Timestamp) {
+      target[key] = value.toDate() as any;
+      continue;
+    }
+    toDate(value)
+  }
+  return target;
+}
+
+export const convertToDate = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
+  return async (...args: Parameters<T>) => {
+    const firstArg = args.shift();
+    if (firstArg instanceof Change) {
+      const before: FirebaseFirestore.DocumentSnapshot = firstArg.before;
+      const after: FirebaseFirestore.DocumentSnapshot = firstArg.after;
+      const changes: BlockframesChange = {
+        before: {
+          id: before.id,
+          exists: before.exists,
+          ref: before.ref,
+          data: () => before.data() ? toDate(before.data()) : undefined
+        },
+        after: {
+          id: after.id,
+          exists: after.exists,
+          ref: after.ref,
+          data: () => after.data() ? toDate(after.data()) : undefined
+        }
+      }
+      return f(changes, ...args);
+    } else if (firstArg instanceof FirebaseFirestore.QueryDocumentSnapshot) {
+      const snapshot: BlockframesSnapshot = {
+        id: firstArg.id,
+        exists: firstArg.exists,
+        ref: firstArg.ref,
+        data: () => firstArg.data() ? toDate(firstArg.data()) : undefined
+      }
+      return f(snapshot, ...args);
+    }
+
+    return f(firstArg, ...args);
+  }
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const skipInMaintenance = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
