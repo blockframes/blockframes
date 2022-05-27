@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy, OnInit, Optional, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie, storeStatus, StoreStatus, App } from '@blockframes/model';
+import { App } from '@blockframes/model';
 import { CampaignService, MovieCampaign } from '@blockframes/campaign/+state/campaign.service';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -101,10 +101,5 @@ export class ListComponent implements OnInit {
 
   public applyFilter(filter: Filters) {
     this.filter.setValue(filter);
-  }
-
-  async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
-    await this.movieService.updateStatus(movie.id, status);
-    this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 }
