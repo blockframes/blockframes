@@ -1,11 +1,11 @@
-import { Injectable, Optional } from '@angular/core';
+import { Injectable, OnDestroy, Optional } from '@angular/core';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta, Timestamp, AnonymousCredentials, AnonymousRole, App } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { intercomId, production } from '@env';
-import { BehaviorSubject, firstValueFrom, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, of, Subject, Subscription } from 'rxjs';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { IpService } from '@blockframes/utils/ip';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';
@@ -26,16 +26,18 @@ import { CallableFunctions, fromRef } from 'ngfire';
 import { doc, DocumentReference, getDoc, writeBatch } from 'firebase/firestore';
 
 @Injectable({ providedIn: 'root' })
-export class AuthService extends BlockframesAuth<User> {
+export class AuthService extends BlockframesAuth<User> implements OnDestroy {
   readonly path = 'users';
 
   readonly idKey: 'uid';
 
+  private sub: Subscription;
+
+  profile: User; // User object in Firestore DB
+  uid: string; // Will be defined for regular and anonymous users
+
   signedOut = new Subject<void>();
   anonymousCredentials$ = new BehaviorSubject<AnonymousCredentials>(this.anonymousCredentials);
-
-  // Firebase Auth User Object
-  user$ = this._user$;
 
   // Firebase Auth User Object and User object in Firestore DB (profile)
   auth$: Observable<{ uid: string, isAnonymous: boolean, emailVerified: boolean, profile?: User }> = this.user$.pipe(
@@ -87,6 +89,16 @@ export class AuthService extends BlockframesAuth<User> {
   ) {
     super();
     if (!production && window['Cypress']) window['LoginService'] = this;    // instrument Cypress only out of PROD
+
+    this.sub = this.user$.subscribe(auth => {
+      console.log('la', auth?.uid)
+      this.uid = auth?.uid;
+      if (!auth?.uid) this.profile = undefined;
+    })
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   //////////
