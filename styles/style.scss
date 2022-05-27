@@ -38,6 +38,13 @@ ul {
   padding-left: 0;
 }
 
+ul.grid {
+  --min-column: 250px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--min-column), 1fr));
+  grid-gap: 16px;
+}
+
 .ellipsis {
   white-space: nowrap;
   overflow: hidden;

@@ -50,7 +50,6 @@
         <ul class="grid" [@fadeList]="items.length">
           <ng-container *ngFor="let item of items; trackBy:trackById">
             <li class="grid-item">
-
               <!-- INSERT CARD -->
               <ng-template [ngTemplateOutlet]="cardTemplate" [ngTemplateOutletContext]="{$implicit: item}">
               </ng-template>

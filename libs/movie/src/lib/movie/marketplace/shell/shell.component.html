@@ -43,7 +43,7 @@
     <article
       *ngIf="movie | hasKeys: ['delivery.file.storagePath', 'promotional.scenario.storagePath', 'promotional.moodboard.storagePath', 'promotional.presentation_deck.storagePath']">
       <h2>Files</h2>
-      <ul class="files">
+      <ul class="grid">
         <li class="surface" *ngIf="!!movie.delivery?.file.storagePath">
           <img asset="delivery_list.svg" alt="file with gears" />
           <a mat-button [href]="movie.delivery.file| getUrl | async" target="_blank">

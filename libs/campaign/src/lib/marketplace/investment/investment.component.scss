@@ -6,9 +6,3 @@
 mat-divider {
   margin: 24px 0;
 }
-
-.privileges {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  grid-gap: 16px;
-}
