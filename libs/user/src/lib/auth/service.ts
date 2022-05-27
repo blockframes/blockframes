@@ -33,6 +33,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
 
   private sub: Subscription;
 
+  // For these to be defined, one of the observable below must be called before
   profile: User; // User object in Firestore DB
   uid: string; // Will be defined for regular and anonymous users
 
