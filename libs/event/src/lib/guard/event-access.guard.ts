@@ -24,7 +24,7 @@ export class EventAccessGuard implements CanActivate {
 
   canActivate(next: ActivatedRouteSnapshot) {
     return combineLatest([
-      this.authService._user$,
+      this.authService.user$,
       this.service.getValue(next.params.eventId as string),
       this.authService.anonymousCredentials$
     ]).pipe(
