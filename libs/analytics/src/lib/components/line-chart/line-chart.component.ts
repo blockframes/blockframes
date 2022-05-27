@@ -123,10 +123,10 @@ export class LineChartComponent {
   @Input() eventNames: EventName[] = [];
   private analytics?: Analytics[];
   @Input() set data(data: Analytics[]) {
-    this.isLoading = false;
     if (!data?.length) {
       this.chart?.updateSeries([]);
-      return; 
+      this.isLoading = false;
+      return;
     }
 
     const analytics = data.sort((a, b) => a._meta.createdAt.getTime() - b._meta.createdAt.getTime());
@@ -172,5 +172,6 @@ export class LineChartComponent {
     }
 
     this.chart?.updateOptions(this.lineChartOptions);
+    this.isLoading = false;
   }
 }
