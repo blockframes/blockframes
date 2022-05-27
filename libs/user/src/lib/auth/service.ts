@@ -33,12 +33,13 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
 
   private sub: Subscription;
 
+  signedOut = new Subject<void>();
+  anonymousCredentials$ = new BehaviorSubject<AnonymousCredentials>(this.anonymousCredentials);
+
   // For these to be defined, one of the observable below must be called before
   profile: User; // User object in Firestore DB
   uid: string; // Will be defined for regular and anonymous users
 
-  signedOut = new Subject<void>();
-  anonymousCredentials$ = new BehaviorSubject<AnonymousCredentials>(this.anonymousCredentials);
 
   // Firebase Auth User Object and User object in Firestore DB (profile)
   auth$: Observable<{ uid: string, isAnonymous: boolean, emailVerified: boolean, profile?: User }> = this.user$.pipe(
