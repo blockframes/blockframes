@@ -1,17 +1,6 @@
 <ng-container *ngIf="movies$ | async as movies; else loading">
   <ng-container *ngIf="movies.length; else empty">
-    <header class="import-header" fxLayout="row" fxLayoutAlign="space-between center">
-      <h1>My Titles</h1>
-      <div fxLayoutGap="24px">
-        <a test-id="import-titles" mat-stroked-button color="primary" routerLink="../import">
-          <mat-icon svgIcon="excel"></mat-icon>
-          <span>Import Titles</span>
-        </a>
-        <a mat-mini-fab color="primary" routerLink="lobby" matTooltip="Add Title" test-id="add-movie">
-          <mat-icon svgIcon="add"></mat-icon>
-        </a>
-      </div>
-    </header>
+    <dashboard-movie-list-header></dashboard-movie-list-header>
 
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
       <button mat-tab-link (click)="resetFilter()" [active]="(filter$|async) === ''">

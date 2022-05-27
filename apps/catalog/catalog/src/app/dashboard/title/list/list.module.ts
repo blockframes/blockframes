@@ -13,6 +13,7 @@ import { AppPipeModule, DisplayNameModule, MaxLengthModule, NumberPipeModule, To
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { EmptyMovieModule } from '@blockframes/ui/dashboard/components/empty-movie/empty-movie.module';
 import { TableActionsModule } from '@blockframes/ui/dashboard/components/movie-table-actions/movie-table-actions.module';
+import { MovieListHeaderModule } from '@blockframes/ui/dashboard/components/movie-list-header/movie-list-header.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
@@ -39,6 +40,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DisplayNameModule,
     EmptyMovieModule,
     TableActionsModule,
+    MovieListHeaderModule,
     TagModule,
     NumberPipeModule,
     IncomePipeModule,
