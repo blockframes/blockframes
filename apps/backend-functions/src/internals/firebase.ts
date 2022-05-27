@@ -30,14 +30,22 @@ export async function getUserMail(userId: string): Promise<string | undefined> {
   return user.email;
 }
 
-export interface BlockframesSnapshot<T = FirebaseFirestore.DocumentData> {
+function createBlockframesSnapshot(snap: admin.firestore.DocumentSnapshot): BlockframesSnapshot {
+  return {
+    id: snap.id,
+    exists: snap.exists,
+    ref: snap.ref,
+    data: () => snap.data() ? toDate(snap.data()) : undefined
+  }
+}
+export interface BlockframesSnapshot<T = admin.firestore.DocumentData> {
   id: string,
   exists: boolean,
-  ref: FirebaseFirestore.DocumentReference<T>,
+  ref: admin.firestore.DocumentReference<T>,
   data(): T | undefined,
 }
 
-export interface BlockframesChange<T = FirebaseFirestore.DocumentData> {
+export interface BlockframesChange<T = admin.firestore.DocumentData> {
   before: BlockframesSnapshot<T>,
   after: BlockframesSnapshot<T>,
 }
@@ -60,30 +68,15 @@ export const convertToDate = <T extends (...args: any[]) => any>(f: T): T | ((..
   return async (...args: Parameters<T>) => {
     const firstArg = args.shift();
     if (firstArg instanceof Change) {
-      const before: FirebaseFirestore.DocumentSnapshot = firstArg.before;
-      const after: FirebaseFirestore.DocumentSnapshot = firstArg.after;
+      const before: admin.firestore.DocumentSnapshot = firstArg.before;
+      const after: admin.firestore.DocumentSnapshot = firstArg.after;
       const changes: BlockframesChange = {
-        before: {
-          id: before.id,
-          exists: before.exists,
-          ref: before.ref,
-          data: () => before.data() ? toDate(before.data()) : undefined
-        },
-        after: {
-          id: after.id,
-          exists: after.exists,
-          ref: after.ref,
-          data: () => after.data() ? toDate(after.data()) : undefined
-        }
+        before: createBlockframesSnapshot(before),
+        after: createBlockframesSnapshot(after)
       }
       return f(changes, ...args);
-    } else if (firstArg instanceof FirebaseFirestore.QueryDocumentSnapshot) {
-      const snapshot: BlockframesSnapshot = {
-        id: firstArg.id,
-        exists: firstArg.exists,
-        ref: firstArg.ref,
-        data: () => firstArg.data() ? toDate(firstArg.data()) : undefined
-      }
+    } else if (firstArg instanceof admin.firestore.QueryDocumentSnapshot) {
+      const snapshot = createBlockframesSnapshot(firstArg);
       return f(snapshot, ...args);
     }
 
