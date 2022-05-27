@@ -60,6 +60,7 @@ export interface EmailTemplateRequest {
     territories?: string;
     contractId?: string;
     negotiation?: NegotiationEmailData;
+    isInvitationReminder?: boolean;
   };
 }
 
