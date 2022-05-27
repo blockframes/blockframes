@@ -92,7 +92,6 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
     if (!production && window['Cypress']) window['LoginService'] = this;    // instrument Cypress only out of PROD
 
     this.sub = this.user$.subscribe(auth => {
-      console.log('la', auth?.uid)
       this.uid = auth?.uid;
       if (!auth?.uid) this.profile = undefined;
     })
