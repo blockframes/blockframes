@@ -18,7 +18,7 @@ import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 
 // RxJs
-import { map, switchMap, shareReplay, tap, filter } from 'rxjs/operators';
+import { map, switchMap, shareReplay, tap, filter, distinctUntilChanged } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 
 // Intercom
@@ -62,6 +62,7 @@ export class HomeComponent {
 
   private titleAnalyticsOfPopularTitle$ = combineLatest([this.popularTitle$, this.titleAnalytics$]).pipe(
     map(([title, titleAnalytics]) => titleAnalytics.filter(analytics => analytics.meta.titleId === title.id)),
+    distinctUntilChanged((a, b) => a.length === b.length),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
