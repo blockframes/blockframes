@@ -7,7 +7,6 @@ import { MainComponent } from './main.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DisplayNameModule, ToLabelModule, HasKeysModule } from '@blockframes/utils/pipes';
 import { RunningTimePipeModule } from '@blockframes/movie/pipes/running-time.pipe';
-import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
 
 import { PrizeCardModule } from '../../components/prize-card/prize-card.module';
@@ -31,7 +30,6 @@ import { MatDividerModule } from '@angular/material/divider';
     ToLabelModule,
     HasStatusModule,
     ImageModule,
-    MatLayoutModule,
     PrizeCardModule,
     CreditCardModule,
     ReviewCardModule,

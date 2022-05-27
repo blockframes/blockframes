@@ -5,7 +5,6 @@ import { EventComponent } from './event.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { RouterModule } from '@angular/router';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { MatLayoutModule } from '../layout.module';
 
 // Widgets
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
@@ -29,7 +28,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     // Angular
     RouterModule,
     CommonModule,
-    MatLayoutModule,
     ScrollingModule,
     FlexLayoutModule,
     AppLogoModule,
