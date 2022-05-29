@@ -1,4 +1,4 @@
-export const firebase = {
+export const firestore = {
   clearTestData() {
     return cy.task('clearTestData');
   },

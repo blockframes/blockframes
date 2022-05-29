@@ -1,5 +1,6 @@
 import { db } from '../testing-cypress';
 import { createUser, createOrganization, createPermissions, ModuleAccess, App } from '@blockframes/model';
+import { endMaintenance, startMaintenance } from '@blockframes/firebase-utils';
 
 export async function getRandomEmail() {
   const { email } = await getRandomUser();
@@ -58,9 +59,9 @@ export async function getRandomOrgAdmin(orgId: string) {
   return createUser(adminRef.data());
 }
 
-export function deleteUser(userId: string) {
+/* export function deleteUser(userId: string) {
   return db.doc(`users/${userId}`).delete();
-}
+} */
 
 export async function getOrgByName(orgName: string) {
   const userQuery = await db.collection('orgs').where('denomination.full', '==', orgName).get();
@@ -196,4 +197,14 @@ export async function updateData(data: { docPath: string; field: string; value: 
     updateAll.push(docRef.update({ [field]: value }));
   }
   return Promise.all(updateAll);
+}
+
+//* MAINTENANCE*----------------------------------------------------------------
+
+export async function startEmulatorMaintenance() {
+  return await startMaintenance(db);
+}
+
+export async function endEmulatorMaintenance() {
+  return await endMaintenance(db, 480000); // 480000ms = 8 minutes
 }

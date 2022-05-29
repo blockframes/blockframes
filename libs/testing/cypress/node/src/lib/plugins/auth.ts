@@ -1,5 +1,6 @@
 import { auth } from '../testing-cypress';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
+import { DeleteUsersResult } from 'firebase-admin/lib/auth/base-auth';
 
 export async function createUser(data: { uid: string; email: string }) {
   return auth.createUser({ ...data, password: USER_FIXTURES_PASSWORD });
@@ -15,13 +16,13 @@ export async function getUser(emailOrUid: string) {
   }
 }
 
-export async function deleteAuthUser(uid: string) {
-  return auth.deleteUser(uid);
+export async function deleteUser(uid: string) {
+  return await auth.deleteUsers([uid]);
 }
 
 export async function updateUser(data: { uid: string; update: Record<string, unknown> }) {
   const { uid, update } = data;
-  return auth.updateUser(uid, update);
+  return await auth.updateUser(uid, update);
 }
 
 export async function deleteAllTestUsers() {
