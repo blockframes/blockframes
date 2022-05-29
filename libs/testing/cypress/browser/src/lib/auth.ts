@@ -11,10 +11,6 @@ export function loginWithEmailAndPassword(email: string) {
   });
 }
 
-export function loginWithRandomUser() {
-  return cy.task('getRandomEmail').then((email: string) => loginWithEmailAndPassword(email));
-}
-
 export function clearBrowserAuth() {
   cy.window().should('have.property', 'LoginService');
   cy.window().then(async w => {
