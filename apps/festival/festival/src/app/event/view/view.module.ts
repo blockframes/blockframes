@@ -25,7 +25,6 @@ import { MovieCardModule } from '@blockframes/movie/components/card/card.module'
 import { MatButtonModule} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 @NgModule({
   declarations: [EventViewComponent],
@@ -52,7 +51,6 @@ import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    MatLayoutModule,
     AgendaExportModule,
     RouterModule.forChild([{ path: '', component: EventViewComponent }])
   ]

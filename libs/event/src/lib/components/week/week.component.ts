@@ -9,7 +9,7 @@ import { WeekViewHourSegment } from 'calendar-utils';
 import { addDays, addMinutes, endOfWeek, startOfWeek } from 'date-fns';
 
 import { EventSmallDirective, EventLargeDirective } from '../event.directive';
-import { EventService } from '../../+state/event.service';
+import { EventService } from '../../service';
 import { EventTypes, createEvent } from '@blockframes/model';
 import { EventCreateComponent } from '../../form/create/create.component';
 import { fromEvent } from 'rxjs';

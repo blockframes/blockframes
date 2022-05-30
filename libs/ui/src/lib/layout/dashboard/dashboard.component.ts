@@ -7,8 +7,8 @@ import { MatSidenav } from '@angular/material/sidenav';
 
 // Blockframes
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
-import { InvitationService } from '@blockframes/invitation/+state';
-import { NotificationService } from '@blockframes/notification/+state';
+import { InvitationService } from '@blockframes/invitation/service';
+import { NotificationService } from '@blockframes/notification/service';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';

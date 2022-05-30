@@ -6,10 +6,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
-import { TermService } from '@blockframes/contract/term/+state/term.service';
+import { TermService } from '@blockframes/contract/term/service';
 import { createDocumentMeta, Mandate, Sale } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 

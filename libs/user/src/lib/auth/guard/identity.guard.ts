@@ -3,7 +3,7 @@ import { AuthService } from '../service';
 import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { OrganizationService } from '@blockframes/organization/service';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/service';
 import { CanActivate, Router } from '@angular/router';
 import { where } from 'firebase/firestore';
 import { hasDisplayName } from '@blockframes/model';

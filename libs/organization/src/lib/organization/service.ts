@@ -17,8 +17,8 @@ import {
   Module,
   createOrgAppAccess
 } from '@blockframes/model';
-import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { PermissionsService } from '@blockframes/permissions/service';
+import { AnalyticsService } from '@blockframes/analytics/service';
 import { combineLatest, Observable, of } from 'rxjs';
 import { DocumentSnapshot, where } from 'firebase/firestore';
 import { CallableFunctions, WriteOptions } from 'ngfire';

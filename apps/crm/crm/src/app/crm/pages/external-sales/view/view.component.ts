@@ -4,13 +4,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/service';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
-import { getSeller } from '@blockframes/contract/contract/+state/utils'
+import { getSeller } from '@blockframes/contract/contract/utils'
 import { of } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { IncomeService } from '@blockframes/contract/income/+state';
+import { IncomeService } from '@blockframes/contract/income/service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { Sale, Term  } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

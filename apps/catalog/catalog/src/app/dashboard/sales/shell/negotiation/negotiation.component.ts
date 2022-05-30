@@ -2,9 +2,9 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SaleShellComponent } from '../shell.component';
 import { NegotiationForm } from '@blockframes/contract/negotiation/form';
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { NegotiationService } from '@blockframes/contract/negotiation/service';
 import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard'
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';

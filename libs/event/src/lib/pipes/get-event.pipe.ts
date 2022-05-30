@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Event } from '@blockframes/model';
-import { EventService } from '../+state/event.service';
+import { EventService } from '../service';
 
 @Pipe({ name: 'getEvent' })
 export class GetEventPipe implements PipeTransform {

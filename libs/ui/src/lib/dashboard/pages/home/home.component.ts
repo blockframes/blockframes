@@ -9,7 +9,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { hasAppStatus, App } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { MovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { AnalyticsService } from '@blockframes/analytics/service';
 import { toMovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/utils';
 
 // RxJs
