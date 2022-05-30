@@ -232,6 +232,8 @@ jobs:
       - run: npm run affected:lint
   unit-test-commits:
     executor: blockframes-ci
+    environment:
+      PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
       - run:
@@ -282,6 +284,8 @@ jobs:
       - run: gcloud firestore export "gs://blockframes-backups/firestore-backup-$(date +%d-%m-%Y)/"
   crm-e2e:
     executor: blockframes-ci
+    environment:
+      PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=e2e
@@ -292,6 +296,8 @@ jobs:
           path: dist/cypress/apps
   cms-e2e:
     executor: blockframes-ci
+    environment:
+      PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=e2e
@@ -302,6 +308,8 @@ jobs:
           path: dist/cypress/apps
   festival-e2e:
     executor: blockframes-ci
+    environment:
+      PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=e2e
@@ -314,6 +322,8 @@ jobs:
           path: dist/cypress/apps
   financiers-e2e:
     executor: blockframes-ci
+    environment:
+      PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=e2e
@@ -324,6 +334,8 @@ jobs:
           path: dist/cypress/apps
   catalog-e2e:
     executor: blockframes-ci
+    environment:
+      PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=e2e
