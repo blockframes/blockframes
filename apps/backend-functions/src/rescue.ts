@@ -3,8 +3,8 @@ import { get } from 'https';
 import { sign } from 'jsonwebtoken';
 import * as admin from 'firebase-admin';
 import { Request, Response } from 'firebase-functions';
-import { getStorageBucketName } from './internals/firebase';
 import { sendRequest } from '@blockframes/firebase-utils/node-request';
+import { storageBucket } from './environments/environment';
 
 
 const linkDuration = 60 * 60 * 5; // 5 hours in seconds = 60 seconds * 60 minutes * 5 = 18 000 seconds
@@ -23,7 +23,7 @@ function fetchRedirect(url: string): Promise<string> {
 
 function transferFile(url: string, remoteFilePath: string) {
   return new Promise<void>((resolve, reject) => {
-    const bucket = admin.storage().bucket(getStorageBucketName());
+    const bucket = admin.storage().bucket(storageBucket);
     const storageFile =  bucket.file(remoteFilePath);
     const storageStream = storageFile.createWriteStream();
     get(url, res => {

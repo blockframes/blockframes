@@ -7,9 +7,9 @@ import * as admin from 'firebase-admin';
 import * as userOps from './internals/users';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
-import { ErrorResultResponse } from './utils';
 import { UserInvitation, AnonymousInvitationAction } from './invitation';
 import { endMaintenance } from '@blockframes/firebase-utils';
+import { ErrorResultResponse } from '@blockframes/model';
 
 const testEnv = firebaseTest(firebase());
 
