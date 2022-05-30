@@ -89,7 +89,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string,
 export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrganization {
   return {
     objectID: org.id,
-    name: org.name,
+    name: (org as any).name,
     appModule: getOrgModuleAccess(org),
     country: org.addresses.main.country,
     isAccepted: org.status === 'accepted',
