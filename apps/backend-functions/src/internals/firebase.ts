@@ -1,12 +1,11 @@
-﻿import { region } from 'firebase-functions';
+﻿import { region, RuntimeOptions } from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { firebaseRegion } from '@env';
+import { firebaseRegion, production } from '@env';
 export const functions = (config = defaultConfig) => region(firebaseRegion).runWith(config);
-import { backupBucket, storageBucket } from '../environments/environment';
 import { isInMaintenance } from '@blockframes/firebase-utils/maintenance';
-import { defaultConfig } from '@blockframes/firebase-utils/firebase-utils';
 import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
 import { IMaintenanceDoc } from '@blockframes/model';
+import { logErrors } from './sentry';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -16,19 +15,6 @@ export const auth = admin.auth();
 export const storage = admin.storage();
 
 export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
-
-// @deprecated import vars from env directly instead of using this.
-export const getBackupBucketName = (): string => backupBucket;
-export const getStorageBucketName = (): string => storageBucket;
-
-/**
- * Gets the user email for the user corresponding to a given `uid`.
- * Throws if the user does not exists.
- */
-export async function getUserMail(userId: string): Promise<string | undefined> {
-  const user = await admin.auth().getUser(userId);
-  return user.email;
-}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const skipInMaintenance = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
@@ -54,3 +40,73 @@ db.collection(META_COLLECTION_NAME)
     // If there is an error, revert back to old method to prevent stuck functions
     () => (maintenanceActive = null)
   );
+
+
+///////////////////////////////////
+// DOCUMENT ON-CHANGES FUNCTIONS //
+///////////////////////////////////
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type FunctionType = (...args: any[]) => any;
+
+/**
+ * Trigger a function when a document is written (create / update / delete).
+ *
+ * Handles internal features such as skipping functions when we backup / restore the db.
+ */
+export function onDocumentWrite(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
+  return functions(config).firestore
+    .document(docPath)
+    .onWrite(skipInMaintenance(logErrors(fn)));
+}
+
+export function onDocumentUpdate(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
+  return functions(config).firestore
+    .document(docPath)
+    .onUpdate(skipInMaintenance(logErrors(fn)));
+}
+
+export function onDocumentDelete(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
+  return functions(config).firestore
+    .document(docPath)
+    .onDelete(skipInMaintenance(fn))
+}
+
+export function onDocumentCreate(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
+  return functions(config).firestore
+    .document(docPath)
+    .onCreate(skipInMaintenance(logErrors(fn)));
+}
+
+/**
+ * Default runtime options for functions
+ */
+export const defaultConfig: RuntimeOptions = {
+  timeoutSeconds: 60,
+  memory: '256MB',
+};
+
+/**
+ * Runtime options to keep a function hot
+ * Used to improve response time
+ */
+export const hotConfig: RuntimeOptions = {
+  ...defaultConfig,
+  maxInstances: production ? 1 : 0
+}
+
+/**
+ * Runtime options for heavy functions
+ */
+export const heavyConfig: RuntimeOptions = {
+  timeoutSeconds: 300,
+  memory: '1GB',
+};
+
+/**
+ * Runtime options for super heavy functions
+ */
+export const superHeavyConfig: RuntimeOptions = {
+  timeoutSeconds: 540,
+  memory: '4GB',
+};
