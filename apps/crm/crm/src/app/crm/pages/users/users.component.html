@@ -32,20 +32,20 @@
       </ng-template>
       <ng-template colRef="firstName" sort label="First Name" let-name>{{ name }}</ng-template>
       <ng-template colRef="lastName" sort label="Last Name" let-name>{{ name }}</ng-template>
-      <ng-template colRef="org" let-org label="Organization">
+      <ng-template colRef="org" let-org [sort]="sorts.byOrgName" label="Organization">
         <a *ngIf="org else noOrg" [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
           <span>{{ org | orgName:'long'}} </span><mat-icon svgIcon="visibility"></mat-icon>
         </a>
         <ng-template #noOrg>--</ng-template>
       </ng-template>
-      <ng-template colRef="firstConnection" sort  label="First Connection" let-firstConnection>
+      <ng-template colRef="firstConnection" [sort]="sorts.byDate"  label="First Connection" let-firstConnection>
         {{ firstConnection | date: 'mediumDate' }}
       </ng-template>
-      <ng-template colRef="lastConnection" sort label="Last Connection" let-lastConnection>
+      <ng-template colRef="lastConnection" [sort]="sorts.byDate" label="Last Connection" let-lastConnection>
         {{ lastConnection | date: 'mediumDate' }}
       </ng-template>
-      <ng-template colRef="pageView" label="Page View" sort let-pageView>{{ pageView }}</ng-template>
-      <ng-template colRef="sessionCount" label="Session Count" sort let-sessionCount>{{ sessionCount }}</ng-template>
+      <ng-template colRef="pageView" label="Page View" [sort]="sorts.byNumber" let-pageView>{{ pageView }}</ng-template>
+      <ng-template colRef="sessionCount" label="Session Count" [sort]="sorts.byNumber" let-sessionCount>{{ sessionCount }}</ng-template>
       <ng-template colRef="createdFrom" label="Created From" sort let-app>{{ app }}</ng-template>
       <ng-template colRef="org.addresses.main.country" sort label="Country" let-country>
         {{ country ? country : '--' }}
