@@ -7,13 +7,13 @@ import { UserService } from '@blockframes/user/service';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';
 import { formatContract } from './utils';
 import { ContractsImportState } from '../../utils';
-import { TermService } from '@blockframes/contract/term/+state/term.service';
+import { TermService } from '@blockframes/contract/term/service';
 
 @Component({
   selector: 'import-view-extracted-contracts[sheetTab]',

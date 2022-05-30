@@ -14,11 +14,11 @@ import {
   User,
   Language,
 } from '@blockframes/model';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getContractConfig } from './fieldConfigs';
 import { FullMandate, FullSale, territoryAvailabilities } from '@blockframes/contract/avails/avails';
-import { TermService } from '@blockframes/contract/term/+state/term.service';
+import { TermService } from '@blockframes/contract/term/service';
 
 function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string): Term {
 

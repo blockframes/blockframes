@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { ConsentsService } from '@blockframes/consents/+state/consents.service';
+import { ConsentsService } from '@blockframes/consents/service';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { map, pluck, switchMap } from 'rxjs/operators';

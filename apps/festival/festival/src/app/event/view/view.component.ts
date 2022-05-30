@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef } from '@angular/core';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { ActivatedRoute } from '@angular/router';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/service';
 import { combineLatest, of, Observable, BehaviorSubject } from 'rxjs';
 import { catchError, filter, switchMap, pluck, tap, startWith } from 'rxjs/operators';
 import { Location } from '@angular/common';

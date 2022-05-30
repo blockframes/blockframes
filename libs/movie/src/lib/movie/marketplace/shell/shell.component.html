@@ -43,36 +43,36 @@
     <article
       *ngIf="movie | hasKeys: ['delivery.file.storagePath', 'promotional.scenario.storagePath', 'promotional.moodboard.storagePath', 'promotional.presentation_deck.storagePath']">
       <h2>Files</h2>
-      <div grid>
-        <mat-card [col]="3" *ngIf="!!movie.delivery?.file.storagePath">
+      <ul class="grid">
+        <li class="surface" *ngIf="!!movie.delivery?.file.storagePath">
           <img asset="delivery_list.svg" alt="file with gears" />
           <a mat-button [href]="movie.delivery.file| getUrl | async" target="_blank">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Available Materials</span>
           </a>
-        </mat-card>
-        <mat-card [col]="3" *ngIf="!!movie.promotional.presentation_deck.storagePath">
+        </li>
+        <li class="surface" *ngIf="!!movie.promotional.presentation_deck.storagePath">
           <img asset="deck.svg" />
           <a mat-button [href]="movie.promotional.presentation_deck | getUrl | async" target="_blank">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Presentation Deck</span>
           </a>
-        </mat-card>
-        <mat-card [col]="3" *ngIf="!!movie.promotional.scenario.storagePath">
+        </li>
+        <li class="surface" *ngIf="!!movie.promotional.scenario.storagePath">
           <img asset="scenario.svg" />
           <a mat-button [href]="movie.promotional.scenario | getUrl | async" target="_blank">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Script</span>
           </a>
-        </mat-card>
-        <mat-card [col]="3" *ngIf="!!movie.promotional.moodboard.storagePath">
+        </li>
+        <li class="surface" *ngIf="!!movie.promotional.moodboard.storagePath">
           <img asset="moodboard.svg" />
           <a mat-button [href]="movie.promotional.moodboard | getUrl | async" target="_blank">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Moodboard</span>
           </a>
-        </mat-card>
-      </div>
+        </li>
+      </ul>
     </article>
 
     <article *ngIf="movie.promotional.still_photo.length">

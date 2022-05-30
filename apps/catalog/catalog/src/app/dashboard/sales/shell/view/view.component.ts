@@ -5,7 +5,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/model';
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { NegotiationService } from '@blockframes/contract/negotiation/service';
 import { AuthService } from '@blockframes/auth/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 

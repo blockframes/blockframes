@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CampaignService } from '../../+state';
+import { CampaignService } from '../../service';
 import { CampaignForm } from '../../form/form';
 import { map, pluck, switchMap, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
