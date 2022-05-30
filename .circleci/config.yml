@@ -67,11 +67,10 @@ commands:
   select_environment:
     description: Configure tools to use a project ID
     steps:
-      - run: npm run backend-ops use ${PROJECT_ID}
-      - run: . ./.env && echo "export PROJECT_ID=\"$PROJECT_ID\"" >> $BASH_ENV
+      - run: npm start use ${PROJECT_ID}
+      - run: . ./.env && echo "export PROJECT_ID=\"$PROJECT_ID\"" >> $BASH_ENV # ! These are here so vars set in .env are avail in shell env
       - run: . ./.env && echo "export GOOGLE_APPLICATION_CREDENTIALS=\"$GOOGLE_APPLICATION_CREDENTIALS\"" >> $BASH_ENV
       - run: gcloud info
-      - run: gsutil ls
   checkout_project:
     description: 'Checkout the project with caching'
     steps:
