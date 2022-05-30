@@ -43,7 +43,6 @@ export interface PublicInvitation {
 
 /** Specific types of Invitation, both used in firebase functions. */
 export type InvitationDocument = InvitationBase<Timestamp>;
-export type InvitationOrUndefined = InvitationDocument | undefined;
 
 export type InvitationMode = 'request' | 'invitation';
 
@@ -57,6 +56,15 @@ export function createInvitation(params: Partial<InvitationBase<Date>> = {}): In
     date: new Date(),
     ...params,
   };
+}
+
+export function createPublicInvitation(invitation: Invitation) {
+  return {
+    id: invitation.id ?? '',
+    type: invitation.type ?? '',
+    mode: invitation.mode ?? '',
+    status: invitation.status ?? '',
+  } as PublicInvitation
 }
 
 /* 

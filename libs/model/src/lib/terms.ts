@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { LanguageRecord } from './movie';
 import { toLanguageVersionString } from './utils';
 
-export function createMailTerm(terms: BucketTerm<Timestamp>[]) {
+export function createMailTerm(terms: BucketTerm<Date>[]) {
   return terms.map((term) => ({
     ...term,
     territories: term.territories
@@ -12,8 +12,8 @@ export function createMailTerm(terms: BucketTerm<Timestamp>[]) {
       .join(', '),
     medias: term.medias.map((media) => staticModel['medias'][media] ?? media).join(', '),
     duration: {
-      from: format(term.duration.from.toDate(), 'dd MMM, yyyy'),
-      to: format(term.duration.to.toDate(), 'dd MMM, yyyy'),
+      from: format(term.duration.from, 'dd MMM, yyyy'),
+      to: format(term.duration.to, 'dd MMM, yyyy'),
     },
     languages: toLanguageVersionString(term.languages),
     exclusive: term.exclusive ? 'Exclusive' : 'Non exclusive',

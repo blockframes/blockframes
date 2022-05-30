@@ -1,4 +1,3 @@
-import { toDate } from '@blockframes/utils/helpers';
 import { createStorageFile, StorageFile, StorageVideo } from './media';
 import {
   MovieLanguageType,
@@ -101,9 +100,6 @@ export interface MovieBase<D> {
     file: StorageFile;
   };
 }
-
-/** Document model of a Movie */
-export type MovieDocument = MovieBase<Timestamp>;
 
 export interface MovieVideos {
   screener?: MovieVideo; // Main screener
@@ -307,7 +303,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     ...params,
     app: createMovieAppConfig(params.app),
     expectedPremiere: createExpectedPremiere(params.expectedPremiere),
-    campaignStarted: params.campaignStarted ? toDate(params.campaignStarted) : null,
+    campaignStarted: params.campaignStarted || null,
     banner: createStorageFile(params?.banner),
     audience: createAudienceGoals(params.audience),
     languages: createLanguageKey(params.languages ? params.languages : {}),
@@ -354,8 +350,8 @@ export function createAppConfig(params: Partial<MovieAppConfig<Date>>): MovieApp
     status: 'draft',
     access: false,
     ...params,
-    acceptedAt: toDate(params?.acceptedAt),
-    refusedAt: toDate(params?.refusedAt),
+    acceptedAt: params?.acceptedAt,
+    refusedAt: params?.refusedAt,
   };
 }
 
@@ -390,7 +386,7 @@ export function createMovieOriginalRelease(params: Partial<MovieOriginalRelease>
   return {
     country: null,
     ...params,
-    date: toDate(params.date),
+    date: params.date,
   };
 }
 
@@ -476,7 +472,7 @@ export function createExpectedPremiere(params: Partial<MovieExpectedPremiere> = 
   return {
     event: '',
     ...params,
-    date: toDate(params.date),
+    date: params.date,
   };
 }
 
@@ -536,12 +532,12 @@ export function hasAppStatus(app: App, status: StoreStatus[]) {
 }
 
 /** Return an array of the app access of the movie */
-export function getMovieAppAccess(movie: MovieDocument | MovieBase<Date>): App[] {
+export function getMovieAppAccess(movie: MovieBase<Date>): App[] {
   return app.filter((a) => !['crm'].includes(a) && movie.app[a].access);
 }
 
 /** Return true if the movie has the status passed in parameter for at least one application */
-export function checkMovieStatus(movie: MovieDocument | MovieBase<Date>, status: StoreStatus) {
+export function checkMovieStatus(movie: MovieBase<Date>, status: StoreStatus) {
   return Object.keys(movie.app).some((a) => movie.app[a].status === status);
 }
 

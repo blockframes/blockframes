@@ -54,7 +54,6 @@ import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
 import { FormValue } from '@blockframes/utils/form';
-import { toDate } from '@blockframes/utils/helpers';
 
 function createMovieControls(movie: Partial<Movie>) {
   const entity = createMovie(movie);
@@ -758,7 +757,7 @@ export function createMovieOriginalRelease(
   return {
     country: null,
     ...params,
-    date: toDate(params.date),
+    date: params.date,
   };
 }
 
@@ -863,11 +862,7 @@ export class ShootingDateForm extends FormEntity<ShootingDateFormControl> {
 export function createMovieShootingDate(
   params: Partial<MovieShootingDate> = {}
 ): MovieShootingDate {
-  return {
-    ...params,
-    completed: toDate(params.completed),
-    progress: toDate(params.progress),
-  };
+  return {...params};
 }
 
 // ---------------------------------

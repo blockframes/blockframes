@@ -5,7 +5,6 @@ import { PublicOrganization } from './organisation';
 import { PublicInvitation } from './invitation';
 import { Bucket } from './bucket';
 import { StorageFile } from './media';
-import { Timestamp } from './timestamp';
 import { App } from './static';
 
 export const notifications = {
@@ -90,7 +89,7 @@ interface NotificationBase<D> {
   offerId?: string,
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
-  bucket?: Bucket<Timestamp>;
+  bucket?: Bucket;
   appAccess?: App;
   data?: Record<string, string>;
   /** @dev Type of the notification */
@@ -104,9 +103,9 @@ interface NotificationBase<D> {
   }
 }
 
-export type NotificationDocument = NotificationBase<Timestamp>;
+export type NotificationDocument = NotificationBase<Date>; // TODO #8006 
 
-export interface Notification extends NotificationBase<Date> {
+export interface Notification extends NotificationBase<Date> { // TODO #8006 
   message: string;
   imgRef?: StorageFile;
   placeholderUrl?: string;

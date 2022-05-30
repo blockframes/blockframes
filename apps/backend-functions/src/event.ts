@@ -1,15 +1,15 @@
-import { db } from './internals/firebase';
+import { BlockframesSnapshot, db } from './internals/firebase';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { createDocumentMeta, createPublicUserDocument, getDocument } from './data/internals';
 import { createNotification, triggerNotifications } from './notification';
-import { Movie, Organization, PublicUser, EventDocument, EventMeta } from '@blockframes/model';
+import { Movie, Organization, PublicUser, EventMeta, Event, createInternalDocumentMeta, createPublicUser } from '@blockframes/model';
+import { getDocument } from '@blockframes/firebase-utils';
 
 /**
  * Removes invitations and notifications related to an event when event is deleted
  * @param snap
  */
-export async function onEventDelete(snap: FirebaseFirestore.DocumentSnapshot) {
-  const event = snap.data() as EventDocument<EventMeta>;
+export async function onEventDelete(snap: BlockframesSnapshot<Event<EventMeta>>) {
+  const event = snap.data();
   const batch = db.batch();
 
   const invitsCollectionRef = await db
@@ -57,8 +57,8 @@ export async function createScreeningRequest(
         toUserId: userId,
         type: 'screeningRequested',
         docId: movieId,
-        user: createPublicUserDocument(user),
-        _meta: createDocumentMeta({ createdFrom: 'festival' }),
+        user: createPublicUser(user),
+        _meta: createInternalDocumentMeta({ createdFrom: 'festival' }),
       })
     );
 
@@ -71,8 +71,8 @@ export async function createScreeningRequest(
     toUserId: uid,
     type: 'screeningRequestSent',
     docId: movieId,
-    user: createPublicUserDocument(user),
-    _meta: createDocumentMeta({ createdFrom: 'festival' }),
+    user: createPublicUser(user),
+    _meta: createInternalDocumentMeta({ createdFrom: 'festival' }),
   });
   triggerNotifications([notification]);
 }

@@ -1,6 +1,5 @@
 import { createStorageFile, StorageFile, StorageVideo } from './media';
 import { DocumentMeta } from './meta';
-import { Timestamp } from './timestamp';
 import { getAllAppsExcept } from './apps';
 import type { App, Module, ModuleAccess, OrgActivity, OrganizationStatus, OrgAppAccess, Territory } from './static';
 import { app, modules } from './static';
@@ -37,8 +36,6 @@ export interface OrganizationBase<D> extends PublicOrganization {
   documents?: OrgMedias;
 }
 
-export type OrganizationDocument = OrganizationBase<Timestamp>;
-
 export interface AddressSet {
   main: Location;
   billing?: Location;
@@ -59,10 +56,10 @@ export interface Location {
 export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.svg';
 
 
-/** A factory function that creates an OrganizationDocument. */
+/** A factory function that creates an Organization. */
 function createOrganizationBase(
-  params: Partial<OrganizationBase<Timestamp | Date>> = {}
-): OrganizationBase<Timestamp | Date> {
+  params: Partial<OrganizationBase<Date>> = {}
+): OrganizationBase<Date> {
   return {
     id: params.id ? params.id : '',
     description: '',
@@ -152,6 +149,7 @@ export function createPublicOrganization(org: Partial<Organization>): PublicOrga
     id: org.id ?? '',
     denomination: createDenomination(org.denomination),
     logo: createStorageFile(org.logo),
+    activity: org.activity ?? null,
   }
 }
 
@@ -192,7 +190,7 @@ export function createLocation(params: Partial<Location> = {}): Location {
  * getOrgAppAccess(orgA, 'festival'); // ['festival', 'catalog']
  */
 export function getOrgAppAccess(
-  org: OrganizationDocument | OrganizationBase<Date>,
+  org: OrganizationBase<Date>,
   first: App = 'festival'
 ): App[] {
   const apps: App[] = [];
@@ -222,7 +220,7 @@ export function getOrgAppAccess(
  * getOrgModuleAccess(orgB); // ['marketplace']
  */
 export function getOrgModuleAccess(
-  org: OrganizationDocument | OrganizationBase<Date>,
+  org: OrganizationBase<Date>,
   _a?: App
 ): Module[] {
   const allowedModules = {} as Record<Module, boolean>;
