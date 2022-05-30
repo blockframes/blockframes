@@ -1,0 +1,29 @@
+<h5>
+  <mat-icon svgIcon="movie"></mat-icon>
+  <span>Buyer was interested in these titles</span>
+</h5>
+
+<ng-container *ngIf="!isLoading else loading">
+  <ng-container *ngIf="barChartOptions.series?.length; else empty">
+    <apx-chart
+      #chart
+      [series]="barChartOptions.series"
+      [labels]="barChartOptions.labels"
+      [chart]="barChartOptions.chart"
+      [theme]="barChartOptions.theme"
+      [dataLabels]="barChartOptions.dataLabels"
+      [yaxis]="barChartOptions.yaxis"
+      [tooltip]="barChartOptions.tooltip"
+    ></apx-chart>
+  </ng-container>
+</ng-container>
+
+<ng-template #empty>
+  <!-- TODO 8550 replace with bar chart image -->
+  <img asset="empty_state_analytics_pie_chart.svg" alt="Image, you have no statistics yet">
+</ng-template>
+
+<ng-template #loading>
+  <mat-spinner color="primary"></mat-spinner>
+</ng-template>
+ 
