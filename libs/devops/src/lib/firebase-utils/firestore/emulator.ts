@@ -124,7 +124,7 @@ export async function firebaseEmulatorExec({
     await ensureSafeEmulatorBackupPath(importPath)
   }
 
-  if (isOrHasValue(emulators, 'firestore') && isEmulatorBackupDir(importPath)) {
+  if (isOrHasValue(emulators, 'firestore') && importPath && isEmulatorBackupDir(importPath)) {
     if (emulatorBackupDirHasFirestore(importPath)) {
       console.log('Firestore backup detected correctly.');
     } else {
