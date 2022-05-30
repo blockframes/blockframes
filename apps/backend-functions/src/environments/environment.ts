@@ -16,7 +16,7 @@ import * as functions from 'firebase-functions';
  *
  * @param path the field path to look for, ['x', 'y'] will look for config.x.y
  */
-export const mockConfigIfNeeded = (...path: string[]): any =>
+const mockConfigIfNeeded = (...path: string[]): any =>
   path.reduce((config: any, field) => (config ? config[field] : undefined), functions.config()); // TODO! This is terrible why use reduce?
 
 export const e2eMode = false;
