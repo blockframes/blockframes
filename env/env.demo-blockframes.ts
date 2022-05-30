@@ -11,13 +11,13 @@ export const appUrl = {
 }
 
 const firebaseConfig = {
-  apiKey: '',
+  apiKey: 'fake-key',
   authDomain: '',
   databaseURL: '',
   projectId: 'demo-blockframes',
-  storageBucket: '',
+  storageBucket: 'blockframes-ci',
   messagingSenderId: '',
-  appId: '',
+  appId: 'fake-key',
   measurementId: ''
 };
 
