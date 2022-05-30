@@ -16,7 +16,6 @@ import {
   orgName,
   MovieAppConfig,
   PublicUser,
-  MovieDocument,
   createDocPermissions,
   App,
   getAllAppsExcept,

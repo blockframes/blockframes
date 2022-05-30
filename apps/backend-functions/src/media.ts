@@ -14,7 +14,6 @@ import {
   StorageVideo,
   PublicUser,
   User,
-  MovieDocument,
   Movie,
   Organization
 } from '@blockframes/model';
@@ -28,6 +27,7 @@ import { db } from './internals/firebase';
 import { isAllowedToAccessMedia } from './internals/media';
 import { testVideoId } from '@env';
 import { getDeepValue } from './internals/utils';
+import { getDocument, getDocumentRef } from '@blockframes/firebase-utils';
 
 
 /**
@@ -94,16 +94,14 @@ export async function linkFile(data: storage.ObjectMetadata) {
           case 'movies':
           case 'campaigns': {
             // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
-            const userRef = db.collection('users').doc(uploaderUid);
-            const userSnap = await transaction.get(userRef);
+            const userSnap = await getDocumentRef(`users/${uploaderUid}`);
             await assertFile(userSnap.exists, notAllowedError);
 
-            const movieRef = db.collection('movies').doc(metadata.docId);
-            const movieSnap = await transaction.get(movieRef);
+            const movieSnap = await getDocumentRef(`movies/${metadata.docId}`);
             await assertFile(movieSnap.exists, notAllowedError);
 
-            const user = userSnap.data() as User;
-            const movie = movieSnap.data() as MovieDocument;
+            const user = await getDocument<User>(`users/${uploaderUid}`);
+            const movie = await getDocument<Movie>(`movies/${metadata.docId}`);
             const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
             await assertFile(isAllowed, notAllowedError);
             break;

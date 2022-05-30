@@ -101,9 +101,6 @@ export interface MovieBase<D> {
   };
 }
 
-/** Document model of a Movie */
-export type MovieDocument = MovieBase<Timestamp>;
-
 export interface MovieVideos {
   screener?: MovieVideo; // Main screener
   salesPitch?: MovieVideo; // Sales pitch
@@ -535,12 +532,12 @@ export function hasAppStatus(app: App, status: StoreStatus[]) {
 }
 
 /** Return an array of the app access of the movie */
-export function getMovieAppAccess(movie: MovieDocument | MovieBase<Date>): App[] {
+export function getMovieAppAccess(movie: MovieBase<Date>): App[] {
   return app.filter((a) => !['crm'].includes(a) && movie.app[a].access);
 }
 
 /** Return true if the movie has the status passed in parameter for at least one application */
-export function checkMovieStatus(movie: MovieDocument | MovieBase<Date>, status: StoreStatus) {
+export function checkMovieStatus(movie: MovieBase<Date>, status: StoreStatus) {
   return Object.keys(movie.app).some((a) => movie.app[a].status === status);
 }
 

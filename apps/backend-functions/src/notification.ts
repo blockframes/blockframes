@@ -761,7 +761,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
 //     return negoSnap.docs[0]?.data() as NegotiationDocument;
 //   });
 //   const titlePromises = contracts.map(async contract => {
-//     return await getDocument<MovieDocument>(`movies/${contract.titleId}`);
+//     return await getDocument<Movie>(`movies/${contract.titleId}`);
 //   });
 //   const negotiations = await Promise.all(negotiationPromises);
 //   const titles = await Promise.all(titlePromises);
@@ -782,7 +782,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
 //   const ref = admin.firestore().collection(`contracts/${contract.id}/negotiations`)
 //     .orderBy('_meta.createdAt', 'desc').limit(1);
 //   const negotiation = await ref.get().then(snap => snap.docs[0]?.data() as NegotiationDocument);
-//   const movie = await getDocument<MovieDocument>(`movies/${contract.titleId}`);
+//   const movie = await getDocument<Movie>(`movies/${contract.titleId}`);
 
 
 //   const mailContract: MailContract = createMailContract(negotiation);

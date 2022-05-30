@@ -7,15 +7,15 @@ import * as admin from 'firebase-admin';
 import {
   StorageFile,
   createPublicUser,
-  MovieDocument,
   Event,
   EventMeta,
   Meeting,
   Screening,
   Slate,
-  Privacy
+  Privacy,
+  Movie
 } from '@blockframes/model';
-import { getDocument } from '@blockframes/firebase-utils';
+import { getDocument, getDocumentRef } from '@blockframes/firebase-utils';
 
 // Internal dependencies
 import { isUserInvitedToEvent } from './invitations/events';
@@ -74,9 +74,9 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
       break;
     case 'movies':
       {
-        const movieSnap = await db.collection('movies').doc(file.docId).get();
+        const movieSnap = await getDocumentRef(`movies/${file.docId}`);
         if (!movieSnap.exists) { return false; }
-        const movie = movieSnap.data() as MovieDocument;
+        const movie = await getDocument<Movie>(`movies/${file.docId}`);
         canAccess = movie.orgIds.some(id => userDoc.orgId === id);
         break;
       }
