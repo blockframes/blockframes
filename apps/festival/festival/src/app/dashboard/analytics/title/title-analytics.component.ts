@@ -28,8 +28,6 @@ import { eventTime } from "@blockframes/event/pipes/event-time.pipe";
 import { getGuest } from "@blockframes/invitation/pipes/guest.pipe";
 import { InvitationService } from "@blockframes/invitation/service";
 import { EventService } from "@blockframes/event/service";
-// import { EventService } from "@blockframes/event/+state";
-// import { InvitationService } from "@blockframes/invitation/+state";
 
 
 function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
@@ -210,11 +208,8 @@ export class TitleAnalyticsComponent {
 
   private getOrg(invitation: Invitation) {
     const orgId = getGuest(invitation, 'user').orgId;
-    const externalOrg = {
-      denomination: { public: 'External' },
-    } as Partial<Organization>;
     if (orgId) return from(this.orgService.getValue(orgId))
-    return of(externalOrg);
+    return of({} as Organization);
   }
 
   private getEvent(invitation: Invitation) {
