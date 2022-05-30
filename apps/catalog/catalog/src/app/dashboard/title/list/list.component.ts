@@ -1,13 +1,10 @@
-import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { Movie, StoreStatus, storeStatus, Person, App } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { StoreStatus, storeStatus, Person, App } from '@blockframes/model';
+import { MovieService } from '@blockframes/movie/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Intercom } from 'ng-intercom';
-import { APP } from '@blockframes/utils/routes/utils';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 import { displayPerson } from '@blockframes/utils/pipes';
@@ -27,7 +24,7 @@ export class TitleListComponent {
   );
   filters = filters;
 
-  movies$ = this.service.queryDashboard(this.app).pipe(
+  movies$ = this.service.queryDashboard('catalog').pipe(
     tap((movies) => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),
     shareReplay({ refCount: true, bufferSize: 1 })
   );
@@ -52,11 +49,8 @@ export class TitleListComponent {
 
   constructor(
     private service: MovieService,
-    private snackbar: MatSnackBar,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
-    @Optional() private intercom: Intercom,
-    @Inject(APP) public app: App
   ) { }
 
   /** Dynamic filter of movies for each tab. */
@@ -68,15 +62,6 @@ export class TitleListComponent {
   resetFilter() {
     this.filter.reset('');
     this.dynTitle.useDefault();
-  }
-
-  public openIntercom(): void {
-    return this.intercom.show();
-  }
-
-  async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
-    await this.service.updateStatus(movie.id, status);
-    this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 
   openDetails(title: string, values: Person[]) {

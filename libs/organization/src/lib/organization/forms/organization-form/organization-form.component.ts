@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
-import { OrganizationService } from './../../+state/organization.service';
+import { OrganizationService } from './../../service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
@@ -22,7 +22,7 @@ export class OrganizationFormComponent {
   ) { }
 
   public async uniqueOrgName() {
-    const orgName = this.form.get('name').value.trim();
+    const orgName = this.form.get('name').value.name.trim();
     const orgId = await this.service.getOrgIdFromName(orgName);
     if (orgId && orgId !== this.orgId) {
       this.form.get('name').setErrors({ notUnique: true });

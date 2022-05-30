@@ -12,7 +12,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
 
 // Blockframes
-import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 
@@ -35,7 +34,6 @@ import {
   imports: [
     CommonModule,
     RouterModule,
-    MatLayoutModule,
     ImageModule,
     FlexLayoutModule,
     AppBarModule,

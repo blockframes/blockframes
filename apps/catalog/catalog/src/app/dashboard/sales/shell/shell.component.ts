@@ -1,11 +1,11 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { ActivatedRoute } from '@angular/router';
 import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { joinWith } from 'ngfire';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { IncomeService } from '@blockframes/contract/income/+state';
+import { MovieService } from '@blockframes/movie/service';
+import { IncomeService } from '@blockframes/contract/income/service';
 import { Intercom } from 'ng-intercom';
 import { Sale, contractStatus } from '@blockframes/model';
 

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CampaignService } from '@blockframes/campaign/+state';
+import { CampaignService } from '@blockframes/campaign/service';
 import { CampaignForm } from '@blockframes/campaign/form/form';
 import { Movie, Campaign } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map, pluck, switchMap, tap } from 'rxjs/operators';
 

@@ -7,9 +7,9 @@ import {
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute } from '@angular/router';
 import { pluck, switchMap, tap } from 'rxjs/operators';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { Observable } from 'rxjs';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/service';
 import {
   Invitation,
   InvitationStatus,
@@ -20,8 +20,8 @@ import {
   orgActivity,
   invitationStatus
 } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { OrganizationService } from '@blockframes/organization/service';
+import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
 import { sum } from '@blockframes/model';
 import { formatDate } from '@angular/common';

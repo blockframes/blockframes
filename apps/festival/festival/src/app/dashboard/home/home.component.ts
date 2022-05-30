@@ -2,24 +2,23 @@
 import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
 
 // Blockframes
-import { MovieService, fromOrg } from '@blockframes/movie/+state/movie.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { fromOrg, MovieService } from '@blockframes/movie/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { APP } from '@blockframes/utils/routes/utils';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { AnalyticsService } from '@blockframes/analytics/service';
 import {
   EventName,
   hasAppStatus,
   App,
   AggregatedAnalytic,
 } from '@blockframes/model';
-import { counter } from '@blockframes/analytics/+state/utils';
-import { aggregate } from '@blockframes/analytics/+state/utils';
-import { UserService } from '@blockframes/user/+state';
+import { counter, aggregate } from '@blockframes/analytics/utils';
+import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 
 // RxJs
-import { map, switchMap, shareReplay, tap, filter } from 'rxjs/operators';
+import { map, switchMap, shareReplay, tap, filter, distinctUntilChanged } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 
 // Intercom
@@ -63,6 +62,7 @@ export class HomeComponent {
 
   private titleAnalyticsOfPopularTitle$ = combineLatest([this.popularTitle$, this.titleAnalytics$]).pipe(
     map(([title, titleAnalytics]) => titleAnalytics.filter(analytics => analytics.meta.titleId === title.id)),
+    distinctUntilChanged((a, b) => a.length === b.length),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 

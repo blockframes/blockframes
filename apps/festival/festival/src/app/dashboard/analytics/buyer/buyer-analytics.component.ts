@@ -1,19 +1,18 @@
-import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { AnalyticsService } from "@blockframes/analytics/+state/analytics.service";
-import { aggregate } from "@blockframes/analytics/+state/utils";
-import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
-import { AggregatedAnalytic, EventName, Event, Screening, isScreening, Invitation, Analytics, isMovieAccepted } from "@blockframes/model";
-import { fromOrgAndAccepted, MovieService } from "@blockframes/movie/+state/movie.service";
-import { OrganizationService } from "@blockframes/organization/+state";
-import { IconSvg } from "@blockframes/ui/icon.service";
-import { NavigationService } from "@blockframes/ui/navigation.service";
-import { UserService } from "@blockframes/user/+state";
-import { App } from "@blockframes/model";
-import { APP } from "@blockframes/utils/routes/utils";
-import { downloadCsvFromJson } from "@blockframes/utils/helpers";
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AnalyticsService } from '@blockframes/analytics/service';
+import { aggregate } from '@blockframes/analytics/utils';
+import { MetricCard } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
+import { AggregatedAnalytic, EventName, Event, Screening, isScreening, Invitation, Analytics, isMovieAccepted, AnalyticData } from '@blockframes/model';
+import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
+import { OrganizationService } from '@blockframes/organization/service';
+import { IconSvg } from '@blockframes/ui/icon.service';
+import { NavigationService } from '@blockframes/ui/navigation.service';
+import { UserService } from '@blockframes/user/service';
+import { App, sum, toLabel } from '@blockframes/model';
+import { APP } from '@blockframes/utils/routes/utils';
+import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { joinWith } from 'ngfire';
-import { sum, toLabel } from "@blockframes/model";
 import {
   BehaviorSubject,
   combineLatest,
@@ -23,9 +22,9 @@ import {
   pluck,
   shareReplay,
   switchMap
-} from "rxjs";
-import { InvitationService } from "@blockframes/invitation/+state";
-import { EventService } from "@blockframes/event/+state";
+} from 'rxjs';
+import { InvitationService } from '@blockframes/invitation/service';
+import { EventService } from '@blockframes/event/service';
 
 interface InvitationWithScreening extends Invitation {
   event: Event<Screening>;
@@ -79,6 +78,14 @@ function filterAnalytics(title: string, analytics: AggregatedAnalytic[]) {
   return name
     ? analytics.filter(aggregated => aggregated[name] > 0)
     : analytics;
+}
+
+function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
+  return data.map(({ title, total }) => ({
+    key: title.id,
+    count: total,
+    label: title.title.international ?? title.title.original  
+  }));
 }
 
 interface InvitationWithAnalytics extends Invitation { analytics: Analytics[]; };
@@ -148,7 +155,12 @@ export class BuyerAnalyticsComponent {
   );
 
   private aggregatedPerTitle$ = this.buyerAnalytics$.pipe(
-    map(titles => titles.map(title => aggregate(title.analytics, { title })))
+    map(titles => titles.map(title => aggregate(title.analytics, { title }))),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  totalAnalyticsPerTitle$ = this.aggregatedPerTitle$.pipe(
+    map(aggregatedToAnalyticData)
   );
 
   filter$ = new BehaviorSubject('');

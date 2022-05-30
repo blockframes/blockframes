@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { Event, isMeeting, isScreening, isSlate } from "@blockframes/model";
-import { OrganizationService } from "@blockframes/organization/+state";
-import { sendgridEmailsFrom } from "../apps";
-import { IcsEvent } from "./agenda.interfaces";
-import { downloadIcs, toGoogleLink } from "./utils";
+import { Injectable } from '@angular/core';
+import { Event, isMeeting, isScreening, isSlate } from '@blockframes/model';
+import { OrganizationService } from '@blockframes/organization/service';
+import { sendgridEmailsFrom } from '../apps';
+import { IcsEvent } from './agenda.interfaces';
+import { downloadIcs, toGoogleLink } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class AgendaService {

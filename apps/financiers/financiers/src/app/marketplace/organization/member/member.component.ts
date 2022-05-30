@@ -3,7 +3,7 @@ import { ViewComponent } from '../view/view.component';
 import { switchMap } from 'rxjs/operators';
 import { fadeList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { OrganizationService } from '@blockframes/organization/service';
 
 @Component({
   selector: 'financiers-marketplace-organization-member',

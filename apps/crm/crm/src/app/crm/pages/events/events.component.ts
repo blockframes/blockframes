@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
-import { EventService } from '@blockframes/event/+state';
-import { InvitationService } from '@blockframes/invitation/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { EventService } from '@blockframes/event/service';
+import { InvitationService } from '@blockframes/invitation/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { toLabel } from '@blockframes/model';
 import { where } from 'firebase/firestore';
 

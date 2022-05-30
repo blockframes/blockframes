@@ -1,18 +1,17 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener, ElementRef, ViewChild, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { BehaviorSubject, map, Subscription } from 'rxjs';
-import { MediaService } from '../../+state/media.service';
+import { MediaService } from '../../service';
 import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StorageFile, FileMetaData, createStorageFile } from '@blockframes/model';
-import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../+state/static-files';
-import { FileUploaderService } from '../../+state/file-uploader.service';
+import { StorageFile, FileMetaData, createStorageFile, allowedFiles, fileSizeToString } from '@blockframes/model';
+import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../utils';
+import { FileUploaderService } from '../../file-uploader.service';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { allowedFiles, fileSizeToString } from '@blockframes/model';
 import { DocumentReference } from 'firebase/firestore';
 import { FirestoreService, fromRef } from 'ngfire';
 

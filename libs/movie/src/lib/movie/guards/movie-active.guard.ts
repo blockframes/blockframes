@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { MovieService } from '../+state/movie.service';
+import { MovieService } from '../service';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { Movie, App } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';

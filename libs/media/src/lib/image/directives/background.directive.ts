@@ -5,7 +5,7 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
 import { StorageFile } from '@blockframes/model';
 import { ImageParameters } from './imgix-helpers';
-import { MediaService } from '../../+state/media.service';
+import { MediaService } from '../../service';
 import { getAssetPath } from './utils';
 
 @Directive({

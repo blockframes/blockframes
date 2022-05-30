@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Event, Invitation } from '@blockframes/model';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 
 @Pipe({
   name: 'eventFromInvitation'

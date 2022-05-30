@@ -1,22 +1,22 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
-import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
+import { fromOrg, MovieService } from '@blockframes/movie/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Organization, Movie, Invitation, UserRole, createOrganizationMember, App, getAllAppsExcept } from '@blockframes/model';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/service';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MatDialog } from '@angular/material/dialog';
-import { EventService } from '@blockframes/event/+state';
-import { ContractService } from '@blockframes/contract/contract/+state';
-import { FileUploaderService } from '@blockframes/media/+state/file-uploader.service';
-import { BucketService } from '@blockframes/contract/bucket/+state/bucket.service';
+import { EventService } from '@blockframes/event/service';
+import { ContractService } from '@blockframes/contract/contract/service';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
+import { BucketService } from '@blockframes/contract/bucket/service';
 import { where } from 'firebase/firestore';
-import { PermissionsService } from '@blockframes/permissions/+state';
+import { PermissionsService } from '@blockframes/permissions/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({

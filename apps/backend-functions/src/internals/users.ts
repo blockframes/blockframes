@@ -40,7 +40,7 @@ export const getOrInviteUserByMail = async (
     //if user exists but has no orgId and no invitation to any org, we still want to send him an invitation email
     const hasOrgOrOrgInvitation = await hasUserAnOrgOrIsAlreadyInvited([email]);
     if (invitation.type === 'attendEvent' && !hasOrgOrOrgInvitation) {
-      const invitationTemplateId = templateIds.user.credentials.attendEventRemindInvitationPass;
+      const invitationTemplateId = templateIds.invitation.attendEvent.created;
       if (invitation.mode === 'invitation' && eventData?.accessibility === 'public') {
         invitationStatus = 'accepted';
       }
@@ -49,7 +49,8 @@ export const getOrInviteUserByMail = async (
         templateId: invitationTemplateId,
         data: {
           event: eventData,
-          org: getOrgEmailData(invitation.fromOrg)
+          org: getOrgEmailData(invitation.fromOrg),
+          isInvitationReminder: true
         }
       }, app)
     }

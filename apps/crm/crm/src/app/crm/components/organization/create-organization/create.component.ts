@@ -1,12 +1,12 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { Router } from '@angular/router';
 import { createPublicUser, getOrgAppAccess } from '@blockframes/model';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { FormControl, Validators, AbstractControl } from '@angular/forms';
-import { UserService } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/service';
 import { FormEntity } from '@blockframes/utils/form';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { OrgEmailData } from '@blockframes/utils/emails/utils';

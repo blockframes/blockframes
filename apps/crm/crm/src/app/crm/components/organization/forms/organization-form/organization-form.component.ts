@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@a
 import { organizationStatus, getAllAppsExcept } from '@blockframes/model';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { FormControl } from '@angular/forms';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({

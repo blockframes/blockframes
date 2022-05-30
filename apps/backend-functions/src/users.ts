@@ -13,10 +13,9 @@ import { production } from './environments/environment';
 import { cleanUserMedias } from './media';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { User, OrganizationDocument, PublicUser, InvitationDocument, PermissionsDocument, App } from '@blockframes/model';
+import { User, OrganizationDocument, PublicUser, InvitationDocument, PermissionsDocument, App, ErrorResultResponse } from '@blockframes/model';
 import { registerToNewsletters, updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
-import { ErrorResultResponse } from './utils';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;

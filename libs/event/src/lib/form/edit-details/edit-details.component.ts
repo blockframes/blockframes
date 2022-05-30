@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { EventForm } from '../event.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/service';
 import { Intercom } from 'ng-intercom';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { where } from 'firebase/firestore';
 import { AccessibilityTypes } from '@blockframes/model';
 

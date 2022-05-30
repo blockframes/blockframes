@@ -2,10 +2,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { EventService } from '@blockframes/event/+state';
-import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
-import { AuthService } from '@blockframes/auth/+state';
-import { LocalAttendee, TrackKind } from '@blockframes/event/components/meeting/+state/twilio.model';
+import { EventService } from '@blockframes/event/service';
+import { TwilioService, LocalAttendee, TrackKind } from '@blockframes/utils/twilio';
+import { AuthService } from '@blockframes/auth/service';
 import { displayName } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { pluck, switchMap } from 'rxjs/operators';

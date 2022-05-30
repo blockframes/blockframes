@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { MatDialog } from '@angular/material/dialog';
 import { SaleShellComponent } from '../shell.component';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { ContractStatus } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
