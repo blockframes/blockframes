@@ -1,14 +1,18 @@
-import { functions, skipInMaintenance } from './internals/firebase';
 import * as users from './users';
 import * as consent from './consent';
 import * as invitations from './invitation';
 import * as mailchimp from './mailchimp';
 import {
+  functions,
+  heavyConfig,
+  hotConfig,
+  skipInMaintenance,
+  superHeavyConfig,
   onDocumentCreate,
   onDocumentDelete,
   onDocumentUpdate,
   onDocumentWrite
-} from './utils';
+} from './internals/firebase';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged, onRequestFromOrgToAccessApp } from './orgs';
@@ -22,7 +26,6 @@ import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete, createScreeningRequest } from './event';
 import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
 import { eventWebhook as sendgridEventWebhook } from './sendgrid';
-import { hotConfig, heavyConfig, superHeavyConfig } from '@blockframes/firebase-utils/firebase-utils';
 import { onNotificationCreate } from './notification';
 import { onOfferCreate } from './offer';
 import { onContractDelete, onContractUpdate } from './contracts';
@@ -49,10 +52,8 @@ export const onUserCreate = functions().auth.user().onCreate(skipInMaintenance(l
 
 export const onUserCreateDocument = onDocumentCreate('/users/{userID}', users.onUserCreateDocument);
 
-export const onUserUpdate = functions(heavyConfig) // user update can potentially trigger images processing
-  .firestore.document('/users/{userID}')
-  .onUpdate(skipInMaintenance(users.onUserUpdate));
-
+// user update can potentially trigger images processing
+export const onUserUpdate = onDocumentUpdate('/users/{userID}', users.onUserUpdate, heavyConfig);
 
 export const onUserDelete = onDocumentDelete('/users/{userID}', users.onUserDelete);
 
@@ -157,10 +158,9 @@ export const onMovieCreateEvent = onDocumentCreate('movies/{movieId}', onMovieCr
 
 /**
  * Trigger: when a movie is updated
+ * movie update can potentially trigger images processing
  */
-export const onMovieUpdateEvent = functions(heavyConfig) // movie update can potentially trigger images processing
-  .firestore.document('movies/{movieId}')
-  .onUpdate(skipInMaintenance(onMovieUpdate));
+export const onMovieUpdateEvent = onDocumentUpdate('movies/{movieId}', onMovieUpdate, heavyConfig);
 
 /**
  * Trigger: when a movie is deleted
@@ -222,10 +222,11 @@ export const onOfferCreateEvent = onDocumentCreate('offers/{offerId}', onOfferCr
 /** Trigger: when an organization is created. */
 export const onOrganizationCreateEvent = onDocumentCreate('orgs/{orgID}', onOrganizationCreate);
 
-/** Trigger: when an organization is updated. */
-export const onOrganizationUpdateEvent = functions(heavyConfig) // org update can potentially trigger images processing
-  .firestore.document('orgs/{orgID}')
-  .onUpdate(skipInMaintenance(logErrors(onOrganizationUpdate)));
+/** 
+ * Trigger: when an organization is updated. 
+ * org update can potentially trigger images processing
+ */
+export const onOrganizationUpdateEvent = onDocumentUpdate('orgs/{orgID}', onOrganizationUpdate, heavyConfig);
 
 /** Trigger: when an organization is removed. */
 export const onOrganizationDeleteEvent = onDocumentDelete('orgs/{orgID}', onOrganizationDelete);
