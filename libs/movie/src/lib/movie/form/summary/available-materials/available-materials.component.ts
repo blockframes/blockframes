@@ -18,7 +18,7 @@ export class SummaryAvailableMaterialsComponent {
 
   constructor(private mediaService: MediaService) { }
 
-  get file() {
+  get file(): StorageFile {
     return this.movie.get('delivery').get('file').value;
   }
 
