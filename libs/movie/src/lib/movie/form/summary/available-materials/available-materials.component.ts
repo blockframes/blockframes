@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { MediaService } from '@blockframes/media/service';
+import { StorageFile } from '@blockframes/model';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
@@ -16,6 +18,8 @@ export class SummaryAvailableMaterialsComponent implements OnInit {
 
   public versionLength: number;
 
+  constructor( private mediaService: MediaService ) { }
+
   ngOnInit() {
     this.versionLength = Object.keys(this.movie.languages.controls).length;
   }
@@ -24,4 +28,8 @@ export class SummaryAvailableMaterialsComponent implements OnInit {
     return this.movie.get('delivery').get('file').value;
   }
 
+  public async getDownloadUrl(file: StorageFile) {
+    const url = await this.mediaService.generateImgIxUrl(file, {});
+    window.open(url);
+  }
 }
