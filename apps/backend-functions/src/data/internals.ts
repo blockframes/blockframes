@@ -6,7 +6,7 @@
 import * as admin from 'firebase-admin';
 import { App, getOrgAppAccess } from '@blockframes/model';
 import { getDocument } from '@blockframes/firebase-utils/firebase-utils';
-import { createStorageFile, createDenomination, OrganizationDocument, PublicUser, InvitationDocument, PublicInvitation, PermissionsDocument, DocumentMeta } from '@blockframes/model';
+import { createStorageFile, OrganizationDocument, PublicUser, InvitationDocument, PublicInvitation, PermissionsDocument, DocumentMeta } from '@blockframes/model';
 
 export { getDocument };
 

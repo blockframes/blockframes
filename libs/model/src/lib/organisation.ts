@@ -81,11 +81,6 @@ export function createAddressSet(params: Partial<AddressSet> = {}): AddressSet {
   };
 }
 
-/** A function that create a denomination object for Organization */
-export function createDenomination(name = '') {
-  return name;
-}
-
 export function createOrgMedias(params: Partial<OrgMedias> = {}): OrgMedias {
   return {
     notes: [],
