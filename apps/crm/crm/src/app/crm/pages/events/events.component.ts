@@ -2,10 +2,10 @@ import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { EventService } from '@blockframes/event/service';
 import { InvitationService } from '@blockframes/invitation/service';
-import { Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/service';
 import { orgName, toLabel } from '@blockframes/model';
 import { where } from 'firebase/firestore';
+import { sorts } from '@blockframes/ui/list/table/sorts';
 
 @Component({
   selector: 'crm-events',
@@ -16,12 +16,12 @@ import { where } from 'firebase/firestore';
 export class EventsComponent implements OnInit {
   public rows = [];
   public eventListLoaded = false;
+  public sorts = sorts;
 
   constructor(
     private eventService: EventService,
     private invitationService: InvitationService,
     private cdRef: ChangeDetectorRef,
-    private router: Router,
     private orgService: OrganizationService
   ) { }
 
