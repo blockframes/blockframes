@@ -1,6 +1,7 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { RouterModule } from '@angular/router';
 
 // Pages
 import { EmptyMovieComponent } from './empty-movie.component';
@@ -18,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     // Angular
     FlexLayoutModule,
+    RouterModule,
 
     // Blockframes
     NoTitleModule,
