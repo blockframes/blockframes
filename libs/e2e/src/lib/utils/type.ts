@@ -15,7 +15,6 @@ export interface Organization {
     public: string;
   }
   activity: string;
-  fiscalNumber: string;
 }
 
 export interface Location {

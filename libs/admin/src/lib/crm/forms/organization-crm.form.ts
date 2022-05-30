@@ -17,7 +17,6 @@ function createOrgCrmControls(entity: Partial<Organization>) {
     description: new FormControl(org.description),
     addresses: new OrganizationAddressesForm(org.addresses),
     email: new FormControl(org.email, Validators.email),
-    fiscalNumber: new FormControl(org.fiscalNumber),
     activity: new FormControl(org.activity),
     logo: new StorageFileForm(org.logo),
     appAccess,

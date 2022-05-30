@@ -27,7 +27,6 @@ interface FieldsConfig {
     };
     name: string;
     email: string;
-    fiscalNumber: string;
     userIds: string[];
   };
   superAdmin: {
@@ -75,37 +74,29 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
       if (!activity) throw wrongValueError(value, 'Activity');
       return activity;
     },
-    /* d */ 'org.fiscalNumber': (value: string) => {
-      if (!value) throw optionalWarning('Fiscal Number');
-      return value;
-    },
-    /* e */ 'org.addresses.main.street': (value: string) => {
-      if (!value) throw optionalWarning('Fiscal Number');
-      return value;
-    },
-    /* f */ 'org.addresses.main.city': (value: string) => {
+    /* d */ 'org.addresses.main.city': (value: string) => {
       if (!value) throw optionalWarning('City');
       return value;
     },
-    /* g */ 'org.addresses.main.zipCode': (value: string) => {
+    /* e */ 'org.addresses.main.zipCode': (value: string) => {
       if (!value) throw optionalWarning('Zip Code');
       return value;
     },
-    /* h */ 'org.addresses.main.region': (value: string) => {
+    /* f */ 'org.addresses.main.region': (value: string) => {
       if (!value) throw optionalWarning('Region');
       return value;
     },
-    /* i */ 'org.addresses.main.country': (value: string) => {
+    /* g */ 'org.addresses.main.country': (value: string) => {
       if (!value) return optionalWarning('Country');
       const country = getKeyIfExists('territories', value) as Territory;
       if (!country) throw wrongValueError(value, 'Country');
       return country as any;
     },
-    /* j */ 'org.addresses.main.phoneNumber': (value: string) => {
+    /* h */ 'org.addresses.main.phoneNumber': (value: string) => {
       if (!value) throw optionalWarning('Phone Number');
       return value;
     },
-    /* k */ 'superAdmin.email': async (value: string) => {
+    /* i */ 'superAdmin.email': async (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) throw mandatoryError(value, 'Admin Email');
 
@@ -114,9 +105,9 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
 
       return lower;
     },
-    /* l */ 'org.appAccess.catalog': (value: string) => formatAccess(value, 'Catalog Access'),
-    /* m */ 'org.appAccess.festival': (value: string) => formatAccess(value, 'Festival Access'),
-    /* n */ 'org.appAccess.financiers': (value: string) => formatAccess(value, 'Financiers Access'),
+    /* j */ 'org.appAccess.catalog': (value: string) => formatAccess(value, 'Catalog Access'),
+    /* k */ 'org.appAccess.festival': (value: string) => formatAccess(value, 'Festival Access'),
+    /* l */ 'org.appAccess.financiers': (value: string) => formatAccess(value, 'Financiers Access'),
   };
 
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig);

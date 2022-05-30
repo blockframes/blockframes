@@ -25,7 +25,6 @@ export interface OrganizationBase<D> extends PublicOrganization {
   appAccess: OrgAppAccess;
   description?: string;
   email: string;
-  fiscalNumber: string;
   userIds: string[];
   status: OrganizationStatus;
   wishlist: string[]; // An array of movieIds
@@ -62,7 +61,6 @@ function createOrganizationBase(
     id: params.id ? params.id : '',
     description: '',
     email: '',
-    fiscalNumber: '',
     status: 'pending',
     userIds: [],
     wishlist: [],

@@ -35,8 +35,8 @@ async function migrateOrganizations(db: Firestore) {
     const { updatedOrg , update } = updateOrganization(org, fullName, publicName);
 
     // Delete fiscal number and bank accounts
-    delete (updatedOrg as Organization).fiscalNumber;
-    delete (updatedOrg as any).bankAccounts;
+    delete (updatedOrg as any)?.fiscalNumber;
+    delete (updatedOrg as any)?.bankAccounts;
 
     if (update) await doc.ref.set(updatedOrg);
   }).catch(err => console.error(err));
