@@ -84,7 +84,7 @@ function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
   return data.map(({ title, total }) => ({
     key: title.id,
     count: total,
-    label: title.title.international ? title.title.international : title.title.original  
+    label: title.title.international ?? title.title.original  
   }));
 }
 
