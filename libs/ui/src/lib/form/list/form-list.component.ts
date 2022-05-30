@@ -103,11 +103,11 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
       } else {
         this.form.push(this.formItem);
       }
-      delete this.formItem;
-      this.cdr.markForCheck();
 
       if (this.keepFormOpen) this.add();
     }
+    delete this.formItem;
+    this.cdr.markForCheck();
   }
 
   edit(index: number) {
