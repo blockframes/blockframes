@@ -2,8 +2,8 @@ import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { scaleIn } from '@blockframes/utils/animations/fade';
-import { InvitationService } from '@blockframes/invitation/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { InvitationService } from '@blockframes/invitation/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';

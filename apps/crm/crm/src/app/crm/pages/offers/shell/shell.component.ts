@@ -3,12 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { QueryConstraint, where } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { pluck, shareReplay, switchMap } from 'rxjs/operators';
-import { OfferService } from '@blockframes/contract/offer/+state';
-import { IncomeService } from '@blockframes/contract/income/+state';
-import { ContractService } from '@blockframes/contract/contract/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { joinWith } from '@blockframes/utils/operators';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { OfferService } from '@blockframes/contract/offer/service';
+import { IncomeService } from '@blockframes/contract/income/service';
+import { ContractService } from '@blockframes/contract/contract/service';
+import { OrganizationService } from '@blockframes/organization/service';
+import { joinWith } from 'ngfire';
+import { MovieService } from '@blockframes/movie/service';
 import { Contract, Offer, Organization, Income } from '@blockframes/model';
 
 @Component({

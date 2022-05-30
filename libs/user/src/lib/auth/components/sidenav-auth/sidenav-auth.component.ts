@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { AuthService } from '@blockframes/auth/+state/auth.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { AuthService } from '@blockframes/auth/service';
+import { OrganizationService } from '@blockframes/organization/service';
 
 @Component({
   selector: 'auth-sidenav',
@@ -17,7 +17,7 @@ export class SidenavAuthComponent {
   ) { }
 
   public async logout() {
-    await this.authService.signOut();
+    await this.authService.signout();
   }
 
 }

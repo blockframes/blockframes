@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { MovieService } from '@blockframes/movie/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { addHours } from 'date-fns'
-import { take } from 'rxjs/operators';
-import { EventService } from '../+state';
+import { EventService } from '../service';
 import { createEvent, createScreening } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
@@ -25,7 +24,7 @@ export class EventEditGuard implements CanActivate {
     const orgId = this.orgService.org.id;
     const titleId = next.queryParamMap.get('titleId');
     if (!titleId) return redirect;
-    const title = await this.movie.valueChanges(titleId).pipe(take(1)).toPromise();
+    const title = await this.movie.load(titleId);
     if (!title?.orgIds.includes(orgId)) return redirect;
 
     const start = new Date();

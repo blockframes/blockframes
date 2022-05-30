@@ -1,10 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Movie, Organization, orgName, isScreening } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { Router } from '@angular/router';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 import { where } from 'firebase/firestore';

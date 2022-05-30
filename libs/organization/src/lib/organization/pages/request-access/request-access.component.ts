@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -54,11 +54,11 @@ export class OrgRequestAccessComponent implements OnInit {
 
     this.disabledRequest = true;
 
-    await this.orgService.requestAppAccess(this.currentApp, this.formControl.value, this.orgId);
+    await this.orgService.requestAppAccess({ app: this.currentApp, module: this.formControl.value, orgId: this.orgId });
     this.router.navigate(['pending'], { relativeTo: this.route });
   }
 
   public logout() {
-    this.authService.signOut();
+    this.authService.signout();
   }
 }

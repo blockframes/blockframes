@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { OfferService } from './+state/offer.service';
+import { OfferService } from './service';
 
 @Pipe({ name: 'getOffer' })
 export class GetOfferPipe implements PipeTransform {

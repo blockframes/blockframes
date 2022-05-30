@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
@@ -14,7 +14,7 @@ export class BlockframesAdminGuard implements CanActivate {
     return this.authService.isBlockframesAdmin$.pipe(
       switchMap(async isBlockframesAdmin => {
         if (isBlockframesAdmin) return true;
-        await this.authService.signOut();
+        await this.authService.signout();
         return this.router.createUrlTree(['/']);
       })
     )

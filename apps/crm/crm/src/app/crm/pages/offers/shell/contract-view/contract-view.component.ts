@@ -6,13 +6,13 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter, map, pluck } from 'rxjs/operators';
 import { combineLatest, Subscription } from 'rxjs';
-import { IncomeService } from '@blockframes/contract/income/+state';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { IncomeService } from '@blockframes/contract/income/service';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { OfferShellComponent } from '../shell.component';
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { NegotiationService } from '@blockframes/contract/negotiation/service';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
-import { Holdback, Negotiation, Term } from '@blockframes/model';
+import { Holdback, Negotiation, Sale, Term } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 
@@ -72,7 +72,7 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   }
 
   updateHoldbacks(contractId: string, holdbacks: Holdback[]) {
-    this.contractService.update(contractId, { holdbacks });
+    this.contractService.update<Sale>(contractId, { holdbacks });
   }
 
   confirm(term: Term) {
@@ -80,7 +80,7 @@ export class ContractViewComponent implements OnInit, OnDestroy {
       data: createModalData({
         title: 'Are you sure ?',
         subtitle: `You are about to delete permanently this term (#${term.id}). This action will also update the contract #${term.contractId} to remove the reference to the deleted term.`,
-        text: `Please type "DELETE" to confirm.`,
+        text: 'Please type "DELETE" to confirm.',
         confirmationWord: 'DELETE',
         confirmButtonText: 'Delete term',
         onConfirm: this.delete(term)

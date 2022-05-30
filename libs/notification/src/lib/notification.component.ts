@@ -1,11 +1,11 @@
 ﻿import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
-import { NotificationService } from './+state';
+import { NotificationService } from './service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { Router } from '@angular/router';
 import { App, getOrgModuleAccess } from '@blockframes/model';
-import { take } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'notification-view',
@@ -30,7 +30,7 @@ export class NotificationComponent implements OnInit {
   }
 
   async markAll() {
-    const myNotifications = await this.service.myNotifications$.pipe(take(1)).toPromise();
+    const myNotifications = await firstValueFrom(this.service.myNotifications$);
     for (const notification of myNotifications) {
       this.service.readNotification(notification);
     }

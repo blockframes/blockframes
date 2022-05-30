@@ -1,21 +1,19 @@
 
 import { Component, ChangeDetectionStrategy, OnInit, Input, Inject } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Firestore } from '@angular/fire/firestore';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
-import { AuthService } from '@blockframes/auth/+state';
-import { UserService } from '@blockframes/user/+state';
+import { AuthService } from '@blockframes/auth/service';
+import { UserService } from '@blockframes/user/service';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { MovieService } from '@blockframes/movie/service';
+import { OrganizationService } from '@blockframes/organization/service';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';
 import { formatContract } from './utils';
 import { ContractsImportState } from '../../utils';
-import { take } from 'rxjs/operators';
-import { TermService } from '@blockframes/contract/term/+state/term.service';
+import { TermService } from '@blockframes/contract/term/service';
 
 @Component({
   selector: 'import-view-extracted-contracts[sheetTab]',
@@ -35,7 +33,6 @@ export class ViewExtractedContractsComponent implements OnInit {
     private authService: AuthService,
     private titleService: MovieService,
     private termsService: TermService,
-    private firestore: Firestore,
     private dynTitle: DynamicTitleService,
     private orgService: OrganizationService,
     private contractService: ContractService,
@@ -45,7 +42,7 @@ export class ViewExtractedContractsComponent implements OnInit {
   }
 
   async ngOnInit() {
-    const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
+    const isBlockframesAdmin = await firstValueFrom(this.authService.isBlockframesAdmin$);
     const contractsToCreate = await formatContract(
       this.sheetTab,
       this.orgService,
@@ -53,7 +50,6 @@ export class ViewExtractedContractsComponent implements OnInit {
       this.contractService,
       this.termsService,
       this.userService,
-      this.firestore,
       isBlockframesAdmin,
       this.authService.profile.orgId,
       { isSeller: this.isCatalogApp }

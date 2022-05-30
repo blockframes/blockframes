@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { filter, map, pluck, switchMap } from 'rxjs/operators';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { ActivatedRoute } from '@angular/router';
 import { Event, Meeting, MeetingAttendee } from '@blockframes/model';
 

@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
-import { AuthService } from '@blockframes/auth/+state';
-import { InvitationService } from '@blockframes/invitation/+state';
-import { combineLatest } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
-import { EventService } from '../+state';
-import { User } from '@angular/fire/auth';
-import { Event, AnonymousCredentials, createInvitation } from '@blockframes/model';
-import { hasDisplayName } from '@blockframes/utils/helpers';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { AuthService } from '@blockframes/auth/service';
+import { InvitationService } from '@blockframes/invitation/service';
+import { combineLatest, firstValueFrom } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { EventService } from '../service';
+import { User } from 'firebase/auth';
+import { Event, AnonymousCredentials, createInvitation, hasDisplayName } from '@blockframes/model';
+import { OrganizationService } from '@blockframes/organization/service';
 
 @Injectable({ providedIn: 'root' })
 export class EventAccessGuard implements CanActivate {
@@ -35,11 +34,11 @@ export class EventAccessGuard implements CanActivate {
 
   private async guard(next: ActivatedRouteSnapshot, user: User, event: Event<unknown>, credentials: AnonymousCredentials) {
     if (!user.isAnonymous) {
-      const profile = await this.authService.profile$.pipe(take(1)).toPromise();
+      const profile = await firstValueFrom(this.authService.profile$);
       const validUser = hasDisplayName(profile) && user.emailVerified && profile.orgId;
       if (!validUser) return this.router.createUrlTree(['/auth/identity']);
 
-      const org = await this.orgService.currentOrg$.pipe(take(1)).toPromise();
+      const org = await firstValueFrom(this.orgService.currentOrg$);
       if (org.status !== 'accepted') return this.router.createUrlTree(['/c/organization/create-congratulations']);
 
       return true;

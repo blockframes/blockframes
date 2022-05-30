@@ -1,8 +1,10 @@
 import { StorageFile } from './media';
+import { Movie } from './movie';
 import { MovieCurrency } from './static';
 
 export interface Campaign {
   id: string;
+  orgId: string;
   currency: MovieCurrency;
   cap?: number;
   minPledge?: number;
@@ -48,9 +50,14 @@ export interface Perk {
   }
 }
 
+export interface MovieCampaign extends Movie {
+  campaign: Campaign;
+}
+
 export function createCampaign(params: Partial<Campaign> = {}): Campaign {
   return {
     id: '',
+    orgId: '',
     currency: 'USD',
     perks: [],
     fundings: [],

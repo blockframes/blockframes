@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
-import { OrganizationService } from '../+state';
+import { OrganizationService } from '../service';
 import { CanActivate, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { App, getOrgModuleAccess } from '@blockframes/model';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })

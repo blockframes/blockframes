@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CanActivate, ActivatedRouteSnapshot, Router, CanDeactivate } from '@angular/router';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { NegotiationForm } from '@blockframes/contract/negotiation';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { first } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 
 export type NegotiationGuardedComponent = {
   form: NegotiationForm,
@@ -28,7 +28,7 @@ export class NegotiationGuard<T extends NegotiationGuardedComponent> implements 
 
     if (!saleId) return this.router.parseUrl(`c/o/dashboard/sales`);
 
-    const negotiation = await this.contractService.lastNegotiation(saleId).pipe(first()).toPromise();
+    const negotiation = await firstValueFrom(this.contractService.lastNegotiation(saleId));
     if (!negotiation) return this.router.parseUrl(`c/o/dashboard/sales`);
     const isPending = negotiation.status === 'pending'
     const canNegotiate = negotiation.createdByOrg !== activeOrgId;

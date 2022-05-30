@@ -1,15 +1,16 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { joinWith } from 'ngfire';
+
 // Blockframes
 import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie, App, Event } from '@blockframes/model';
-import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movie.service';
+import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { APP } from '@blockframes/utils/routes/utils';
-import { joinWith } from '@blockframes/utils/operators';
-import { EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/service';
 import { where } from 'firebase/firestore';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { AnalyticsService } from '@blockframes/analytics/service';
+import { OrganizationService } from '@blockframes/organization/service';
 
 interface AggregatedPerTitle extends AggregatedAnalytic {
   screenings: number;

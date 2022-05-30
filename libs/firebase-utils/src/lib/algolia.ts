@@ -16,8 +16,7 @@ import {
   getMovieAppAccess,
   getOrgAppAccess
 } from '@blockframes/model';
-import * as admin from 'firebase-admin';
-import { hasAcceptedMovies } from './util';
+import { hasAcceptedMovies, loadAdminServices } from './util';
 
 export const algolia = {
   ...algoliaClient,
@@ -64,7 +63,7 @@ export function setIndexConfiguration(indexName: string, config: AlgoliaConfig, 
 //           ORGANIZATIONS
 // ------------------------------------
 
-export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string): Promise<any> {
+export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string, db = loadAdminServices().db): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -77,7 +76,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
 
   // Update algolia's index
   const promises = orgAppAccess.map(async (appName) => {
-    org['hasAcceptedMovies'] = await hasAcceptedMovies(org, appName);
+    org['hasAcceptedMovies'] = await hasAcceptedMovies(org, appName, db);
     const orgRecord = createAlgoliaOrganization(org);
     if (orgRecord.name) {
       return indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord);
@@ -90,7 +89,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
 export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrganization {
   return {
     objectID: org.id,
-    name: orgName(org),
+    name: (org as any).name,
     appModule: getOrgModuleAccess(org),
     country: org.addresses.main.country,
     isAccepted: org.status === 'accepted',
@@ -201,7 +200,7 @@ export function storeSearchableMovie(
 //                USERS
 // ------------------------------------
 
-export async function storeSearchableUser(user: PublicUser, adminKey?: string): Promise<any> {
+export async function storeSearchableUser(user: PublicUser, adminKey?: string, db = loadAdminServices().db): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -210,7 +209,6 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string): 
   try {
     let orgData;
     if (user.orgId) {
-      const db = admin.firestore();
       const org = await db.doc(`orgs/${user.orgId}`).get();
       orgData = org.data();
     }

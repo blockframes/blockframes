@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Intercom } from 'ng-intercom';
-import { BucketService } from '@blockframes/contract/bucket/+state';
+import { BucketService } from '@blockframes/contract/bucket/service';
 import { Movie, Bucket, Holdback, movieCurrencies } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable, Subject, merge } from 'rxjs';
@@ -8,7 +8,7 @@ import { map, mapTo, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService } from '@blockframes/organization/service';
 import { FormControl } from '@angular/forms';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 

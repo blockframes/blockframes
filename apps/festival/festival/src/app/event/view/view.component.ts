@@ -1,19 +1,18 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef, NgZone } from '@angular/core';
-import { EventService } from '@blockframes/event/+state';
+import { Component, OnInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef } from '@angular/core';
+import { EventService } from '@blockframes/event/service';
 import { ActivatedRoute } from '@angular/router';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService } from '@blockframes/invitation/service';
 import { combineLatest, of, Observable, BehaviorSubject } from 'rxjs';
 import { catchError, filter, switchMap, pluck, tap, startWith } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 import { Event, Invitation } from '@blockframes/model';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { runInZone } from '@blockframes/utils/zone';
 
 @Component({
   selector: 'festival-event-view',
@@ -49,8 +48,7 @@ export class EventViewComponent implements OnInit {
     private authService: AuthService,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
-    private cdr: ChangeDetectorRef,
-    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef
   ) { }
 
   @HostListener('window:popstate', ['$event'])
@@ -64,7 +62,7 @@ export class EventViewComponent implements OnInit {
 
     this.event$ = this.route.params.pipe(
       pluck('eventId'),
-      switchMap((eventId: string) => this.service.queryDocs(eventId).pipe(runInZone(this.ngZone))), // TODO #7595 #7273,
+      switchMap((eventId: string) => this.service.queryDocs(eventId)),
       tap(event => {
         this.editEvent = `/c/o/dashboard/event/${event.id}/edit`;
         this.dynTitle.setPageTitle(event.title);

@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree, CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { InvitationService } from '@blockframes/invitation/+state';
-import { Observable } from 'rxjs';
-import { EventService } from '../+state';
+import { InvitationService } from '@blockframes/invitation/service';
+import { firstValueFrom, Observable } from 'rxjs';
+import { EventService } from '../service';
 import { eventTime } from '../pipes/event-time.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { Event, Meeting } from '@blockframes/model';
-import { TwilioService } from '../components/meeting/+state/twilio.service';
-import { take } from 'rxjs/operators';
+import { TwilioService } from '@blockframes/utils/twilio';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 
@@ -39,7 +38,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
     if (eventTime(this.event) !== 'onTime') return this.router.parseUrl(`/event/${this.event.id}/r/i`);
 
     const hasRegularInvitation = async () => {
-      const allInvitations = await this.invitationService.allInvitations$.pipe(take(1)).toPromise();
+      const allInvitations = await firstValueFrom(this.invitationService.allInvitations$);
       return allInvitations.some(invitation => {
         if (invitation.eventId !== this.event.id) return false;
         if (invitation.status !== 'accepted') return false;

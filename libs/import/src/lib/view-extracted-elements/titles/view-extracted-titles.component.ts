@@ -3,13 +3,12 @@ import { Component, ChangeDetectionStrategy, OnInit, Input, Inject } from '@angu
 
 import { MatTableDataSource } from '@angular/material/table';
 
-import { BehaviorSubject } from 'rxjs';
-import { UserService } from '@blockframes/user/+state';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { UserService } from '@blockframes/user/service';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatTitle } from './utils';
 import { MovieImportState } from '../../utils';
-import { AuthService } from '@blockframes/auth/+state';
-import { take } from 'rxjs/operators';
+import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';
 
@@ -33,7 +32,7 @@ export class ViewExtractedTitlesComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const isBlockframesAdmin = await this.authService.isBlockframesAdmin$.pipe(take(1)).toPromise();
+    const isBlockframesAdmin = await firstValueFrom(this.authService.isBlockframesAdmin$);
     const titles = await formatTitle(
       this.sheetTab,
       this.userService,

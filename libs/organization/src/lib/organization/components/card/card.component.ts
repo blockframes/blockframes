@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
-import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/+state/movie.service';
+import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { Organization, App } from '@blockframes/model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

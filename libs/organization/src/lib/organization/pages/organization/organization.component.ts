@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FileUploaderService } from '@blockframes/media/+state';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
 @Component({
@@ -31,7 +31,8 @@ export class OrganizationComponent implements OnInit {
           throw new Error('Your organization profile information are not valid');
         }
         this.uploaderService.upload();
-        this.service.update(this.service.org.id, this.organizationForm.value);
+        const org = this.service.cleanOrganization(this.organizationForm.value);
+        this.service.update(this.service.org.id, org);
         this.snackBar.open('Organization Profile updated.', 'close', { duration: 4000 });
       }
     } catch (error) {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 
 @Component({
   selector: 'org-request-access-pending',
@@ -18,6 +18,6 @@ export class OrgRequestAccessPendingComponent {
   }
 
   logout() {
-    this.authService.signOut();
+    this.authService.signout();
   }
 }

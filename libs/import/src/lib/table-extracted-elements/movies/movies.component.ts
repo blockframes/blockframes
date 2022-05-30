@@ -8,8 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../utils';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { removeNulls } from '@blockframes/model';
+import { MovieService } from '@blockframes/movie/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
@@ -116,8 +115,7 @@ export class TableExtractedMoviesComponent implements AfterViewInit {
     if (increment) this.processing++;
     importState.importing = true;
     this.cdr.markForCheck();
-    const movie = removeNulls(importState.movie); // TODO #7273 #8280 remove
-    await this.movieService.upsert(movie);
+    await this.movieService.upsert(importState.movie);
     importState.importing = false;
     this.cdr.markForCheck();
   }

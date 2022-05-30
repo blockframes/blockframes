@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Directive, Input, Inject } from '@a
 import { Router } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { Movie, storeStatus, StoreStatus, App, appName, getMovieAppAccess } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -56,7 +56,8 @@ export class DashboardActionsShellComponent {
                 access: false,
               },
             },
-          } as any));
+          }));
+
           const ref = this.snackbar.open('Title deleted.', '', { duration: 4000 });
           ref.afterDismissed().subscribe(() => this.router.navigate(['/c/o/dashboard/title']));
         }

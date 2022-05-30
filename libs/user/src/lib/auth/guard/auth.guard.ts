@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from '../+state';
+import { AuthService } from '../service';
 import { map, catchError, filter, tap } from 'rxjs/operators';
 import { ActivatedRouteSnapshot, CanActivate, CanDeactivate, Router, RouterStateSnapshot } from '@angular/router';
-import { hasDisplayName } from '@blockframes/utils/helpers';
 import { Subscription } from 'rxjs';
+import { hasDisplayName } from '@blockframes/model';
 
 @Injectable({
   providedIn: 'root'

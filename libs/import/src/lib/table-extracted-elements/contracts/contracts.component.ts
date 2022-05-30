@@ -6,13 +6,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
-import { TermService } from '@blockframes/contract/term/+state/term.service';
-import { createDocumentMeta } from '@blockframes/model';
-import { Firestore } from '@angular/fire/firestore';
-import { doc, collection } from 'firebase/firestore';
+import { TermService } from '@blockframes/contract/term/service';
+import { createDocumentMeta, Mandate, Sale } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
@@ -48,7 +46,6 @@ export class TableExtractedContractsComponent implements AfterViewInit {
     private dialog: MatDialog,
     private contractService: ContractService,
     private termService: TermService,
-    private db: Firestore,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -96,7 +93,7 @@ export class TableExtractedContractsComponent implements AfterViewInit {
   private async add(importState: ContractsImportState, { increment } = { increment: false }) {
     importState.importing = true;
     this.cdr.markForCheck();
-    importState.terms.forEach(t => t.id = doc(collection(this.db, '_')).id);
+    importState.terms.forEach(t => t.id = this.termService.createId());
     importState.contract.termIds = importState.terms.map(t => t.id);
 
 
@@ -104,10 +101,18 @@ export class TableExtractedContractsComponent implements AfterViewInit {
     if (increment) this.processing++;
     this.cdr.markForCheck();
 
-    await this.contractService.add({
-      ...importState.contract,
-      _meta: createDocumentMeta({ createdAt: new Date() })
-    });
+    if (importState.contract.type === 'sale') {
+      await this.contractService.add<Sale>({
+        ...importState.contract,
+        _meta: createDocumentMeta({ createdAt: new Date() })
+      });
+
+    } else {
+      await this.contractService.add<Mandate>({
+        ...importState.contract,
+        _meta: createDocumentMeta({ createdAt: new Date() })
+      });
+    }
 
     // @dev: Create terms after contract because rules require contract to be created first
     await this.termService.add(importState.terms);

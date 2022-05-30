@@ -1,18 +1,5 @@
-import { Invitation, InvitationMode } from "@blockframes/model";
+import { InvitationMode } from "@blockframes/model";
 import { where } from "firebase/firestore";
-
-/**
- * Cleans an invitation of its optional parameters
- * @param invitation 
- */
-export function cleanInvitation(invitation: Invitation): Invitation {
-  const i = { ...invitation };
-  delete i.message; // Remove akita values
-  for (const key in i) {
-    if (typeof i[key] === 'undefined') delete i[key];
-  }
-  return i;
-}
 
 export function buildJoinOrgQuery(orgId: string, mode: InvitationMode) {
   switch (mode) {

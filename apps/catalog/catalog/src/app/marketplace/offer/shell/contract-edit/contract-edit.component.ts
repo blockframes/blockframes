@@ -1,17 +1,17 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OfferShellComponent } from '../shell.component';
-import { filter, first, map, pluck } from 'rxjs/operators';
+import { filter, map, pluck } from 'rxjs/operators';
 import { NegotiationGuardedComponent } from '@blockframes/contract/negotiation/guard';
 import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { NegotiationService } from '@blockframes/contract/negotiation/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { combineLatest } from 'rxjs';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { combineLatest, firstValueFrom } from 'rxjs';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { Negotiation } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
@@ -48,17 +48,16 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
   ) { }
 
   async ngOnInit(): Promise<void> {
-    this.negotiation = await this.negotiation$.pipe(
+    this.negotiation = await firstValueFrom(this.negotiation$.pipe(
       filter(data => !!data),
-      first()
-    ).toPromise();
+    ));
     this.form.hardReset(this.negotiation);
     const termIndex = this.route.snapshot.queryParams.termIndex;
     this.activeTerm = termIndex ? parseInt(termIndex) : 0;
   }
 
   async decline() {
-    const sale = await this.sale$.pipe(first()).toPromise();
+    const sale = await firstValueFrom(this.sale$);
     const ref = this.dialog.open(ConfirmDeclineComponent, {
       data: createModalData<ConfirmDeclineData>({
         type: 'buyer',
@@ -82,7 +81,7 @@ export class ContractEditComponent implements NegotiationGuardedComponent, OnIni
 
   async confirm() {
     const onConfirm = async () => {
-      const sale = await this.sale$.pipe(first()).toPromise();
+      const sale = await firstValueFrom(this.sale$);
       const config = { duration: 6000 };
       await this.contractService.addNegotiation(sale.id, {
         ...sale.negotiation,
