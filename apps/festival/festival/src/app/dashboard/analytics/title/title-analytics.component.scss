@@ -15,6 +15,7 @@ header {
 analytics-map h5 {
   display: flex;
 }
+
 section {
   display: flex;
   flex-direction: column;
@@ -29,7 +30,11 @@ section {
 section.surface{
   margin: 24px;
   display: block;
+  header{
+    padding: 0px;
+  }
 }
+
 
 .film-page-button {
   height: fit-content;
@@ -37,25 +42,16 @@ section.surface{
 
 
 .heading{
-  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   h3{
     display: flex;
     align-items: center;
   }
 }
 
-.heading,
-.space-between{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 bf-table.screenings{
   margin-top: 24px;
 }
 
-a[mat-stroked-button]{
-  margin-top: 8px;
-  margin-bottom: 8px;
-}

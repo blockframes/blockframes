@@ -10,7 +10,7 @@ import {
   Invitation,
   App,
   Event,
-  Organization,
+  toLabel,
 } from '@blockframes/model';
 import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -26,7 +26,7 @@ import { InvitationService } from "@blockframes/invitation/service";
 import { EventService } from "@blockframes/event/service";
 import { filter, map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { OrganizationService } from '@blockframes/organization/service';
-import { combineLatest, EMPTY, firstValueFrom, from, Observable, of } from "rxjs";
+import { combineLatest, firstValueFrom, from, Observable, of } from "rxjs";
 import { joinWith } from 'ngfire';
 
 
@@ -70,6 +70,10 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
       icon: 'magnet_electricity'
     }
   ];
+}
+
+function isEventOfTypeScreening(event: Event): event is Event<Screening> {
+  return event.type === 'screening';
 }
 
 @Component({
@@ -144,6 +148,7 @@ export class TitleAnalyticsComponent {
   );
 
 
+
   constructor(
     private movieService: MovieService,
     private route: ActivatedRoute,
@@ -164,21 +169,28 @@ export class TitleAnalyticsComponent {
     return data.addedToWishlist > data.removedFromWishlist;
   }
 
-  private async getAnalyticsPerInvitation() {
-    const titleAnalytics = await firstValueFrom(this.titleAnalytics$);
-    return titleAnalytics.filter(analytic => analytic.name === 'screeningRequested');
+  private getAnalyticsPerInvitation() {
+    return this.titleAnalytics$.pipe(
+      map(analytics => {
+        return analytics.filter(analytic => analytic.name === 'screeningRequested')
+      })
+    );
   }
 
   async exportScreenerAnalytics() {
     const data = await firstValueFrom(this.invitations$);
-    const analytics = data.map(invitation => ({
-      'Name': `${invitation.toUser.firstName} ${invitation.toUser.lastName}`,
-      'Email': invitation.toUser.email,
-      'Company Name': invitation.guestOrg.denomination?.public ?? '--',
-      'Activity': invitation.guestOrg.activity ?? '--',
-      'Country': invitation.guestOrg.addresses?.main?.country ?? '--',
-      'Watchtime': `${invitation.watchTime ?? 0}s`
-    }));
+    const analytics = data.map(invitation => {
+      const activity = invitation.guestOrg?.activity;
+      const country = invitation.guestOrg?.addresses?.main?.country;
+      return {
+        'Name': `${invitation.toUser.firstName} ${invitation.toUser.lastName}`,
+        'Email': invitation.toUser.email,
+        'Company Name': invitation.guestOrg?.denomination?.public ?? '--',
+        'Activity': activity ? toLabel(activity, 'orgActivity') : '--',
+        'Country': country ? toLabel(country, 'territories') : '--',
+        'Watchtime': `${invitation.watchTime ?? 0}s`
+      }
+    });
     downloadCsvFromJson(analytics, 'screener-analytics')
   }
 
@@ -187,6 +199,7 @@ export class TitleAnalyticsComponent {
     return combineLatest([
       this.titleId$,
       this.invitationService.allInvitations$.pipe(
+        map(invitations => invitations.filter(invitation => !!invitation.eventId)),
         joinWith(
           {
             guestOrg: invitation => this.getOrg(invitation),
@@ -198,22 +211,21 @@ export class TitleAnalyticsComponent {
     ]).pipe(
       map(([titleId, invitations]) => {
         return invitations.filter(({ event }) => {
-          const isScreening = event.type === 'screening';
-          const eventIsOfTitle = event.meta.titleId === titleId;
-          return isScreening && eventIsOfTitle;
-        })
+          const isScreening = isEventOfTypeScreening(event);
+          if (!isScreening) return false;
+          return event.meta?.titleId === titleId;
+        });
       })
-    )
+    );
   }
 
   private getOrg(invitation: Invitation) {
     const orgId = getGuest(invitation, 'user').orgId;
     if (orgId) return from(this.orgService.getValue(orgId))
-    return of({} as Organization);
+    return of(undefined);
   }
 
   private getEvent(invitation: Invitation) {
-    if (!invitation.eventId) return EMPTY as Observable<Event<Screening>>;
-    return this.eventService.queryDocs<Screening>(invitation.eventId)
+    return this.eventService.queryDocs(invitation.eventId)
   }
 }

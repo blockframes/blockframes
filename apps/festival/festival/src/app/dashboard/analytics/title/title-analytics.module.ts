@@ -17,6 +17,7 @@ import { AnalyticsMapModule } from '@blockframes/analytics/components/map/map.mo
 import { TableModule } from "@blockframes/ui/list/table/table.module";
 import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
 import { MetricCardListModule } from '@blockframes/analytics/components/metric-card-list/metric-card-list.module';
+import { GuestPipeModule } from '@blockframes/invitation/pipes/guest.pipe';
 
 @NgModule({
   imports: [
@@ -31,7 +32,7 @@ import { MetricCardListModule } from '@blockframes/analytics/components/metric-c
     TableModule,
     MetricCardListModule,
     OngoingButtonModule,
-
+    GuestPipeModule,
 
     // Material
     MatButtonModule,
@@ -46,4 +47,4 @@ import { MetricCardListModule } from '@blockframes/analytics/components/metric-c
   ],
   declarations: [TitleAnalyticsComponent]
 })
-export class TitleAnalyticsModule {}
+export class TitleAnalyticsModule { }

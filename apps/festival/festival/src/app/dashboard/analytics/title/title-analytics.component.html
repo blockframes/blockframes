@@ -90,35 +90,36 @@
     <mat-icon svgIcon="info"></mat-icon>
   </h3>
   <ng-container *ngIf="ongoingScreenings$ | async as events">
-    <a ongoing-event-button href="/c/o/dashboard/event/{{events[0].id}}/statistics">Ongoing
+    <a ongoing-event-button routerLink="/c/o/dashboard/event/{{events[0].id}}/statistics">Ongoing
       Screenings</a>
   </ng-container>
 </header>
 <section class="surface">
-  <span>"O" meaning the user left the screening right away.</span>
+  <p>"O" meaning the user left the screening right away.</p>
   <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
-  <header class="space-between">
+  <header class="heading">
     <h5>Attendees</h5>
     <button mat-button (click)="exportScreenerAnalytics()">Export to .CSV</button>
   </header>
   <bf-table class="screenings" [source]="invitations$ | async" clickable useFilter pagination="50">
     <ng-template colRef label="Name" let-invitation="item" sort defaultSort>
-      <b *ngIf="invitation.toUser; else noUser">{{ invitation.toUser.firstName }} {{ invitation.toUser.lastName }}</b>
-      <ng-template #noUser>
-        <b>--</b>
-      </ng-template>
+      <b *ngIf="invitation| guest:'user' as user">{{ user.firstName }} {{ user.lastName }}</b>
     </ng-template>
-    <ng-template colRef="toUser.email" label="Email" let-email sort defaultSort>
-      <span>{{ email ?? '--' }}</span>
+    <ng-template colRef label="Email" let-invitation="item" sort defaultSort>
+      <span>{{ (invitation | guest: 'user').email }}</span>
     </ng-template>
     <ng-template colRef="guestOrg.denomination.public" label="Company Name" let-name sort defaultSort>
       <span>{{ name ?? '--' }}</span>
     </ng-template>
-    <ng-template colRef="guestOrg.activity" label="Activity" let-activity sort defaultSort>
-      <span>{{ activity ?? '--' }}</span>
+    <ng-template colRef="guestOrg.activity" label="Activity" let-activity sort defaultSort [filter]="filters.orgActivity">
+      <span *ngIf="activity else noActivity">{{ activity | toLabel: 'orgActivity' }}</span>
+      <ng-template #noActivity>--</ng-template>
     </ng-template>
-    <ng-template colRef="guestOrg.addresses.main.country" label="Country" let-country sort defaultSort>
-      <span>{{ country ?? '--' }}</span>
+    <ng-template colRef="guestOrg.addresses.main.country" label="Country" let-country sort defaultSort [filter]="filters.territories">
+      <span *ngIf="country else noCountry">
+        {{ country | toLabel:'territories' }}
+      </span>
+      <ng-template #noCountry>--</ng-template>
     </ng-template>
     <ng-template colRef="watchTime" label="Watchtime" let-watchtime sort defaultSort>
       <span>{{ watchtime || 0 }} S</span>
