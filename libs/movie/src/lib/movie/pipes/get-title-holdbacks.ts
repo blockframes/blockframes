@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { where } from 'firebase/firestore';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { Holdback, Sale } from '@blockframes/model';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';

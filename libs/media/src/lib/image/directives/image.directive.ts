@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { ImageParameters } from './imgix-helpers';
 import { StorageFile } from '@blockframes/model';
-import { MediaService } from '../../+state/media.service';
+import { MediaService } from '../../service';
 import { getAssetPath } from './utils';
 
 const aspectRatios = {

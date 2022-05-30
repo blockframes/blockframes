@@ -9,7 +9,6 @@ import { TitleMarketplaceShellComponent } from './shell.component';
 
 // Custom Modules
 import { AppBarModule } from '@blockframes/ui/app-bar';
-import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -42,7 +41,6 @@ import { MatCardModule } from '@angular/material/card';
     PromotionalLinksModule,
     AppBarModule,
     CarouselModule,
-    MatLayoutModule,
     HasKeysModule,
     DownloadPipeModule,
     VideoViewerModule,

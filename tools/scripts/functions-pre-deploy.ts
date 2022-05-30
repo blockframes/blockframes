@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register'
-import { runShellCommand } from '@blockframes/firebase-utils';
+import { runShellCommand } from '@blockframes/devops';
 import { config } from 'dotenv';
 
 config()

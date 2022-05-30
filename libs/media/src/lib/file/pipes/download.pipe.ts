@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { MediaService } from '../../+state/media.service';
+import { MediaService } from '../../service';
 import { StorageFile } from '@blockframes/model';
 import { fileSizeToString } from '@blockframes/model';
 

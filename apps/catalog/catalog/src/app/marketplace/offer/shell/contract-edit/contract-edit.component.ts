@@ -7,11 +7,11 @@ import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
-import { NegotiationService } from '@blockframes/contract/negotiation/+state/negotiation.service';
+import { NegotiationService } from '@blockframes/contract/negotiation/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { combineLatest, firstValueFrom } from 'rxjs';
-import { ContractService } from '@blockframes/contract/contract/+state';
+import { ContractService } from '@blockframes/contract/contract/service';
 import { Negotiation } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 

@@ -1,7 +1,7 @@
 
 import { Inject, Injectable } from '@angular/core';
 import { mergeDeep } from '@blockframes/utils/helpers';
-import { FileUploaderService } from '@blockframes/media/+state';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { MovieControl, MovieForm } from './movie.form';
 import type { FormShellConfig } from './movie.shell.interfaces'
 import { MovieService } from '../service';

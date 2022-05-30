@@ -1,17 +1,6 @@
 <ng-container *ngIf="movies$ | async as movies; else loading">
   <ng-container *ngIf="movies.length; else empty">
-    <header class="import-header" fxLayout="row" fxLayoutAlign="space-between center">
-      <h1>My Titles</h1>
-      <div fxLayoutGap="24px">
-        <a test-id="import-titles" mat-stroked-button color="primary" routerLink="../import">
-          <mat-icon svgIcon="excel"></mat-icon>
-          <span>Import Titles</span>
-        </a>
-        <a mat-mini-fab color="primary" routerLink="lobby" matTooltip="Add Title" test-id="add-movie">
-          <mat-icon svgIcon="add"></mat-icon>
-        </a>
-      </div>
-    </header>
+    <dashboard-movie-list-header></dashboard-movie-list-header>
 
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
       <button mat-tab-link (click)="resetFilter()" [active]="(filter$|async) === ''">
@@ -63,20 +52,7 @@
         <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
       </ng-template>
       <ng-template colRef label="Actions" let-movie sticky>
-        <a [routerLink]="movie.id" mat-icon-button matTooltip="View">
-          <mat-icon svgIcon="visibility"></mat-icon>
-        </a>
-        <a [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-icon-button matTooltip="Edit">
-          <mat-icon svgIcon="edit"></mat-icon>
-        </a>
-        <button *ngIf="movie.app[app].status === 'archived' else archive" type="button" mat-icon-button (click)="updateStatus(movie, 'draft', 'Title restored.')" matTooltip="Restore">
-          <mat-icon svgIcon="restore"></mat-icon>
-        </button>
-        <ng-template #archive>
-          <button type="button" mat-icon-button (click)="updateStatus(movie, 'archived')" matTooltip="Archive">
-            <mat-icon svgIcon="archive"></mat-icon>
-          </button>
-        </ng-template>
+        <dashboard-movie-table-actions [movie]="movie"></dashboard-movie-table-actions>
       </ng-template>
     </bf-table>
   </ng-container>
@@ -87,21 +63,5 @@
 </ng-template>
 
 <ng-template #empty>
-  <section fxLayout="column" fxLayoutAlign="center center">
-    <dashboard-no-title></dashboard-no-title>
-    <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
-      <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
-        <img asset="add_title.svg" alt="Add title">
-        <a routerLink="lobby" mat-button color="primary">Add one Title</a>
-      </mat-card>
-      <mat-card class="no-title-card" fxLayout="column">
-        <img asset="add_files.svg" alt="Upload files">
-        <a routerLink="../import" mat-button color="primary">Import Titles in bulk</a>
-      </mat-card>
-    </article>
-    <h3>Or</h3>
-    <button (click)="openIntercom()" mat-flat-button color="primary">
-      Contact the {{ app | appName }} team
-    </button>
-  </section>
+  <dashboard-empty-movie></dashboard-empty-movie>
 </ng-template>

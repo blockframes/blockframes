@@ -1,13 +1,13 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { ContractService } from '@blockframes/contract/contract/+state';
-import { IncomeService } from '@blockframes/contract/income/+state';
+import { ContractService } from '@blockframes/contract/contract/service';
+import { IncomeService } from '@blockframes/contract/income/service';
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { getSeller } from '@blockframes/contract/contract/+state/utils'
+import { getSeller } from '@blockframes/contract/contract/utils'
 import { Organization, Sale } from '@blockframes/model';
 import { orderBy, where } from 'firebase/firestore';
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, Optional } from '@angular/core';
-import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
+import { InvitationService } from '@blockframes/invitation/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';

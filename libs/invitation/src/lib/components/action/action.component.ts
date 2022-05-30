@@ -6,7 +6,7 @@ import { Event, Invitation, InvitationStatus } from '@blockframes/model';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { InvitationService } from '../../+state';
+import { InvitationService } from '../../service';
 
 @Component({
   selector: 'invitation-action',
