@@ -6,7 +6,7 @@ import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StorageFile, FileMetaData, createStorageFile, allowedFiles, fileSizeToString } from '@blockframes/model';
+import { FileMetaData, createStorageFile, allowedFiles, fileSizeToString } from '@blockframes/model';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../utils';
 import { FileUploaderService } from '../../file-uploader.service';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
