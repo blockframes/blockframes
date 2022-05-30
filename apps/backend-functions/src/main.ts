@@ -158,6 +158,7 @@ export const onMovieCreateEvent = onDocumentCreate('movies/{movieId}', onMovieCr
 
 /**
  * Trigger: when a movie is updated
+ * movie update can potentially trigger images processing
  */
 export const onMovieUpdateEvent = onDocumentUpdate('movies/{movieId}', onMovieUpdate, heavyConfig);
 
@@ -221,7 +222,10 @@ export const onOfferCreateEvent = onDocumentCreate('offers/{offerId}', onOfferCr
 /** Trigger: when an organization is created. */
 export const onOrganizationCreateEvent = onDocumentCreate('orgs/{orgID}', onOrganizationCreate);
 
-/** Trigger: when an organization is updated. */
+/** 
+ * Trigger: when an organization is updated. 
+ * org update can potentially trigger images processing
+ */
 export const onOrganizationUpdateEvent = onDocumentUpdate('orgs/{orgID}', onOrganizationUpdate, heavyConfig);
 
 /** Trigger: when an organization is removed. */
