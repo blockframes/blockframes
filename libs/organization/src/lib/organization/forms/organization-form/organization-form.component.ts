@@ -22,7 +22,7 @@ export class OrganizationFormComponent {
   ) { }
 
   public async uniqueOrgName() {
-    const orgName = this.form.get('name').value.trim();
+    const orgName = this.form.get('name').value.name.trim();
     const orgId = await this.service.getOrgIdFromName(orgName);
     if (orgId && orgId !== this.orgId) {
       this.form.get('name').setErrors({ notUnique: true });
