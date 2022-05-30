@@ -122,12 +122,6 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     return [...dir.meta, index];
   }
 
-  async downloadFile(item: StorageFile, event: Event) {
-    event.stopPropagation();
-    const url = await this.mediaService.generateImgIxUrl(item);
-    window.open(url);
-  }
-
   update() {
     this.service.upload();
   }
