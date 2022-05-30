@@ -36,6 +36,8 @@ export function firebase(app?: string) {
   return firebaseConfig
 }
 
+// Algolia
+// =======
 // ! CI ALGOLIA VALUES - needed for test runs
 export const algolia = {
   appId: '8E9YO1I9HB',
