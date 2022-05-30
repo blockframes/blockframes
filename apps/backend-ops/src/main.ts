@@ -42,7 +42,8 @@ import {
   generateFixtures,
   writeRuntimeConfig,
   functionsConfigMap,
-  clearDb
+  clearDb,
+  startEmulatorsForUnitTests
 } from '@blockframes/devops';
 import { join } from 'node:path';
 
@@ -64,6 +65,12 @@ async function runCommand() {
       break;
     case 'importEmulator':
       await importEmulatorFromBucket({ importFrom: arg1 });
+      break;
+    case 'echo':
+      console.log(...flags);
+      break;
+    case 'emulatorsUnitTests':
+      await startEmulatorsForUnitTests({ execCommand: arg1 });
       break;
     case 'startEmulators':
     case 'emulators':
