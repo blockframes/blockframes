@@ -10,6 +10,7 @@ import {
   App,
   toLabel,
   isScreening,
+  Person,
 } from '@blockframes/model';
 import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -27,6 +28,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { filter, map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { combineLatest, firstValueFrom, from, Observable, of } from "rxjs";
 import { joinWith } from 'ngfire';
+import { displayPerson } from "@blockframes/utils/pipes";
 
 
 function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
@@ -73,9 +75,16 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
 
 function emailFilter(input: string, value: string, invitation: Invitation) {
   const email = getGuest(invitation, 'user')?.email;
-  if(!email) return false;
+  if (!email) return false;
   const caseInsensitive = new RegExp(input, 'i');
   return email.match(caseInsensitive)?.length;
+}
+
+function nameFilter(input: string, value: string, invitation: Invitation) {
+  const names = displayPerson(getGuest(invitation, 'user'));
+  if (!names.length) return false;
+  const caseInsensitive = new RegExp(input, 'i');
+  return names.some(name => name.match(caseInsensitive)?.length);
 }
 
 @Component({
@@ -119,6 +128,7 @@ export class TitleAnalyticsComponent {
   filters = {
     orgActivity: getStaticModelFilter('orgActivity'),
     territories: getStaticModelFilter('territories'),
+    name: nameFilter,
     email: emailFilter
   };
   filterValue?: string;
