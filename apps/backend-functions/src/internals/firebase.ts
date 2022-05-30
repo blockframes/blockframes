@@ -60,7 +60,7 @@ function toDate<D>(target: D): D {
       target[key] = value.toDate() as any;
       continue;
     }
-    toDate(value)
+    toDate(value);
   }
   return target;
 }
@@ -69,11 +69,9 @@ export const convertToDate = <T extends (...args: any[]) => any>(f: T): T | ((..
   return async (...args: Parameters<T>) => {
     const firstArg = args.shift();
     if (firstArg instanceof Change) {
-      const before: admin.firestore.DocumentSnapshot = firstArg.before;
-      const after: admin.firestore.DocumentSnapshot = firstArg.after;
       const changes: BlockframesChange = {
-        before: createBlockframesSnapshot(before),
-        after: createBlockframesSnapshot(after)
+        before: createBlockframesSnapshot(firstArg.before),
+        after: createBlockframesSnapshot(firstArg.after)
       }
       return f(changes, ...args);
     } else if (firstArg instanceof admin.firestore.QueryDocumentSnapshot) {
