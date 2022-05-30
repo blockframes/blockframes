@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h3 {
+  margin-top: 24px;
+}
+
+.surface {
+  width: 330px;
+  img {
+    width: 100px;
+    align-self: center;
+  }
+}
