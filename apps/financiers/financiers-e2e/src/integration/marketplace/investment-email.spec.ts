@@ -86,7 +86,7 @@ describe.skip('Invest Interest Email Test', () => {
         const messages = result.items;
         user = testInfo.user;
         investor = testInfo.userSubject;
-        orgName = testInfo.org.denomination;
+        orgName = testInfo.org.name;
         let idMail = '';
         messages.every(email => {
           expect(email.subject).to.contain(`is interested in ${titleInvest}`);

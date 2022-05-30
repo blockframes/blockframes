@@ -62,9 +62,8 @@ function processUser<T extends User | PublicUser>(u: T): T {
 
 function processOrg<T extends Organization | PublicOrganization>(o: T): T {
   const companyName = faker.company.companyName();
-  const denomination = { full: companyName, public: companyName };
   const email = fakeEmail(companyName);
-  const org = { ...o, denomination, email } as any;
+  const org = { ...o, name: companyName, email } as any;
   return org;
 }
 

@@ -6,7 +6,7 @@
       <ng-container *ngFor="let org of orgs$ | async">
         <section class="no-screening" fxLayout="column" fxLayoutAlign="center center">
           <h2>There is no screening scheduled at the moment.</h2>
-          <p class="mat-body-1">You can contact <a [routerLink]="['/c/o/marketplace/organization/', org.id]">{{ org.denomination?.public || 'the organization' }}</a> for any questions.</p>
+          <p class="mat-body-1">You can contact <a [routerLink]="['/c/o/marketplace/organization/', org.id]">{{ org?.name || 'the organization' }}</a> for any questions.</p>
           <event-request-screening [movieId]="movieId"></event-request-screening>
           <button mat-button [disabled]="requestSent" (click)="requestAskingPrice()">Request Asking Price</button>
         </section>
