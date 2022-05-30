@@ -105,23 +105,23 @@
     </header>
     <bf-table class="screenings" [source]="invitations" clickable useFilter pagination="50">
       <ng-template colRef label="Name" let-invitation="item" sort defaultSort>
-        <b *ngIf="invitation| guest:'user' as user">{{ user.firstName }} {{ user.lastName }}</b>
+        <b *ngIf="invitation| guest:'user' as user">{{ user | displayName }}</b>
       </ng-template>
-      <ng-template colRef label="Email" let-invitation="item" sort defaultSort>
+      <ng-template colRef label="Email" let-invitation="item" sort defaultSort [filter]="filters.email">
         <span>{{ (invitation | guest: 'user').email }}</span>
       </ng-template>
       <ng-template colRef="guestOrg.denomination.public" label="Company Name" let-name sort defaultSort>
-        <span>{{ name ?? '--' }}</span>
+        <span>{{ name ?? '-' }}</span>
       </ng-template>
       <ng-template colRef="guestOrg.activity" label="Activity" let-activity sort defaultSort [filter]="filters.orgActivity">
         <span *ngIf="activity else noActivity">{{ activity | toLabel: 'orgActivity' }}</span>
-        <ng-template #noActivity>--</ng-template>
+        <ng-template #noActivity>-</ng-template>
       </ng-template>
       <ng-template colRef="guestOrg.addresses.main.country" label="Country" let-country sort defaultSort [filter]="filters.territories">
         <span *ngIf="country else noCountry">
           {{ country | toLabel:'territories' }}
         </span>
-        <ng-template #noCountry>--</ng-template>
+        <ng-template #noCountry>-</ng-template>
       </ng-template>
       <ng-template colRef="watchTime" label="Watchtime" let-watchtime sort defaultSort>
         <span>{{ watchtime || 0 }} S</span>

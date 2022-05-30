@@ -5,12 +5,11 @@ import {
   AggregatedAnalytic,
   Analytics,
   sum,
-  Screening,
   InvitationWithAnalytics,
   Invitation,
   App,
-  Event,
   toLabel,
+  isScreening,
 } from '@blockframes/model';
 import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -24,8 +23,8 @@ import { eventTime } from "@blockframes/event/pipes/event-time.pipe";
 import { getGuest } from "@blockframes/invitation/pipes/guest.pipe";
 import { InvitationService } from "@blockframes/invitation/service";
 import { EventService } from "@blockframes/event/service";
-import { filter, map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { OrganizationService } from '@blockframes/organization/service';
+import { filter, map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { combineLatest, firstValueFrom, from, Observable, of } from "rxjs";
 import { joinWith } from 'ngfire';
 
@@ -72,8 +71,11 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
   ];
 }
 
-function isEventOfTypeScreening(event: Event): event is Event<Screening> {
-  return event.type === 'screening';
+function emailFilter(input: string, value: string, invitation: Invitation) {
+  const email = getGuest(invitation, 'user')?.email;
+  if(!email) return false;
+  const caseInsensitive = new RegExp(input, 'i');
+  return email.match(caseInsensitive)?.length;
 }
 
 @Component({
@@ -116,7 +118,8 @@ export class TitleAnalyticsComponent {
 
   filters = {
     orgActivity: getStaticModelFilter('orgActivity'),
-    territories: getStaticModelFilter('territories')
+    territories: getStaticModelFilter('territories'),
+    email: emailFilter
   };
   filterValue?: string;
 
@@ -128,8 +131,8 @@ export class TitleAnalyticsComponent {
   );
 
   ongoingScreenings$ = this.invitations$.pipe(
-    map(events => events.filter(({ event }) => eventTime(event) === 'onTime')),
-    filter(events => !!events.length),
+    map(invitations => invitations.filter(({ event }) => eventTime(event) === 'onTime')),
+    filter(invitations => !!invitations.length),
   );
 
   screeningRequests$ = this.titleAnalytics$.pipe(
@@ -138,13 +141,11 @@ export class TitleAnalyticsComponent {
   );
 
 
-  aggregatedScreeningCards$: Observable<MetricCard[]> = combineLatest([
+  aggregatedScreeningCards$ = combineLatest([
     this.screeningRequests$,
     this.invitations$
   ]).pipe(
-    map(([requests, invitations]) => {
-      return toScreenerCards(requests, invitations);
-    })
+    map(([requests, invitations]) => toScreenerCards(requests, invitations))
   );
 
 
@@ -185,9 +186,9 @@ export class TitleAnalyticsComponent {
       return {
         'Name': `${invitation.toUser.firstName} ${invitation.toUser.lastName}`,
         'Email': invitation.toUser.email,
-        'Company Name': invitation.guestOrg?.denomination?.public ?? '--',
-        'Activity': activity ? toLabel(activity, 'orgActivity') : '--',
-        'Country': country ? toLabel(country, 'territories') : '--',
+        'Company Name': invitation.guestOrg?.denomination?.public ?? '-',
+        'Activity': activity ? toLabel(activity, 'orgActivity') : '-',
+        'Country': country ? toLabel(country, 'territories') : '-',
         'Watchtime': `${invitation.watchTime ?? 0}s`
       }
     });
@@ -203,7 +204,7 @@ export class TitleAnalyticsComponent {
         joinWith(
           {
             guestOrg: invitation => this.getOrg(invitation),
-            event: invitation => this.getEvent(invitation)
+            event: invitation => this.eventService.queryDocs(invitation.eventId)
           },
           { shouldAwait: true }
         )
@@ -211,8 +212,8 @@ export class TitleAnalyticsComponent {
     ]).pipe(
       map(([titleId, invitations]) => {
         return invitations.filter(({ event }) => {
-          const isScreening = isEventOfTypeScreening(event);
-          if (!isScreening) return false;
+          const isEventScreening = isScreening(event);
+          if (!isEventScreening) return false;
           return event.meta?.titleId === titleId;
         });
       })
@@ -221,11 +222,6 @@ export class TitleAnalyticsComponent {
 
   private getOrg(invitation: Invitation) {
     const orgId = getGuest(invitation, 'user').orgId;
-    if (orgId) return from(this.orgService.getValue(orgId))
-    return of(undefined);
-  }
-
-  private getEvent(invitation: Invitation) {
-    return this.eventService.queryDocs(invitation.eventId)
+    return orgId ? from(this.orgService.getValue(orgId)) : of(undefined);
   }
 }
