@@ -21,7 +21,7 @@ export function wasCreated(before: InvitationOrUndefined, after: InvitationDocum
  * @returns boolean, true if the users have an org or there is an invitation to join organization for those emails
  */
  export async function hasUserAnOrgOrIsAlreadyInvited(userEmails: string[]) {
-  const db = admin.firestore();
+  const db = admin.firestore(); // ! TODO #8376 Don't do this - unify instantiation of Firestore
   const userPromises = userEmails.map(email => db.collection('users')
     .where('email', '==', email)
     .get());

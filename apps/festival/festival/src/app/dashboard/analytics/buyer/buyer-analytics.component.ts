@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { aggregate } from '@blockframes/analytics/utils';
 import { MetricCard } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
-import { AggregatedAnalytic, EventName, Event, Screening, isScreening, Invitation, Analytics, isMovieAccepted } from '@blockframes/model';
+import { AggregatedAnalytic, EventName, Event, Screening, isScreening, Invitation, Analytics, isMovieAccepted, AnalyticData } from '@blockframes/model';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { IconSvg } from '@blockframes/ui/icon.service';
@@ -80,6 +80,14 @@ function filterAnalytics(title: string, analytics: AggregatedAnalytic[]) {
     : analytics;
 }
 
+function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
+  return data.map(({ title, total }) => ({
+    key: title.id,
+    count: total,
+    label: title.title.international ?? title.title.original  
+  }));
+}
+
 interface InvitationWithAnalytics extends Invitation { analytics: Analytics[]; };
 function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attended = invitations.filter(invitation => invitation.watchTime);
@@ -147,7 +155,12 @@ export class BuyerAnalyticsComponent {
   );
 
   private aggregatedPerTitle$ = this.buyerAnalytics$.pipe(
-    map(titles => titles.map(title => aggregate(title.analytics, { title })))
+    map(titles => titles.map(title => aggregate(title.analytics, { title }))),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  totalAnalyticsPerTitle$ = this.aggregatedPerTitle$.pipe(
+    map(aggregatedToAnalyticData)
   );
 
   filter$ = new BehaviorSubject('');

@@ -17,10 +17,10 @@ import {
   InvitationStatus,
   InvitationBase,
   AlgoliaOrganization,
-  App
+  App,
+  ErrorResultResponse
 } from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
-import { ErrorResultResponse } from './utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
