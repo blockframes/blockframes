@@ -1,24 +1,25 @@
 
-import { getDocument, getOrgAppKey, createDocumentMeta } from './data/internals';
+import { getOrgAppKey } from './data/internals';
 import {
   NotificationSettingsTemplate,
   User,
-  OrganizationDocument,
   canAccessModule,
   orgName,
-  MovieDocument,
-  EventDocument,
+  Event,
   EventMeta,
   NotificationTypes,
   NotificationDocument,
   InvitationDocument,
   PublicInvitation,
-  ContractDocument,
   Screening,
-  NegotiationDocument,
   Offer,
   App,
-  appName
+  appName,
+  createInternalDocumentMeta,
+  Contract,
+  Negotiation,
+  Movie,
+  Organization
 } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
 import {
@@ -65,6 +66,8 @@ import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
 import { appUrl, supportEmails } from './environments/environment';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
+import { getDocument } from '@blockframes/firebase-utils';
+import { BlockframesSnapshot } from './internals/firebase';
 // #7946 this may be reactivated later
 // import { movieCurrencies, createMailContract, MailContract } from '@blockframes/model';
 
@@ -120,13 +123,11 @@ async function appendNotificationSettings(notification: NotificationDocument) {
   return notification;
 }
 
-
-
 /** Create a Notification with required and generic information. */
-export function createNotification(notification: Partial<NotificationDocument> = {}): NotificationDocument {
-  const db = admin.firestore();
+export function createNotification(notification: Partial<NotificationDocument> = {}): NotificationDocument { // TODO move & update
+  const db = admin.firestore(); // TODO #8376
   return {
-    _meta: createDocumentMeta(),
+    _meta: createInternalDocumentMeta(),
     type: 'movieAccepted', // We need a default value for backend-function strict mode
     toUserId: '',
     id: db.collection('notifications').doc().id,
@@ -134,8 +135,8 @@ export function createNotification(notification: Partial<NotificationDocument> =
   };
 }
 
-export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnapshot) {
-  const notification = snap.data() as NotificationDocument;
+export async function onNotificationCreate(snap: BlockframesSnapshot<NotificationDocument>) {
+  const notification = snap.data();
 
   if (notification.email?.isSent === false) {
     // Update notification state
@@ -325,7 +326,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
 }
 
 async function sendUserRequestedToJoinYourOrgEmail(recipient: User, notification: NotificationDocument) {
-  const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+  const org = await getDocument<Organization>(`orgs/${notification.organization.id}`);
   const urlToUse = applicationUrl[notification._meta.createdFrom];
   const orgData = getOrgEmailData(org);
   const toAdmin = getUserEmailData(recipient);
@@ -351,7 +352,7 @@ async function sendPendingRequestToJoinOrgEmail(notification: NotificationDocume
 }
 
 async function sendOrgMemberUpdatedEmail(recipient: User, notification: NotificationDocument) {
-  const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+  const org = await getDocument<Organization>(`orgs/${notification.organization.id}`);
   const toAdmin = getUserEmailData(recipient);
 
   if (org.userIds.includes(notification.user.uid)) {
@@ -375,8 +376,8 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
 
 /** Send a reminder email 24h or 1h before event starts */
 async function sendReminderEmails(recipient: User, notification: NotificationDocument, template: string) {
-  const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
-  const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
+  const event = await getDocument<Event<Screening>>(`events/${notification.docId}`);
+  const org = await getDocument<Organization>(`orgs/${event.ownerOrgId}`);
   const orgData = getOrgEmailData(org);
   const toUser = getUserEmailData(recipient)
   const eventData = getEventEmailData({ event, orgName: orgData.denomination, email: recipient.email, invitationId: notification.invitation?.id });
@@ -390,9 +391,9 @@ async function sendRequestToAttendEventUpdatedEmail(recipient: User, notificatio
   const invitation = await getDocument<InvitationDocument>(`invitations/${notification.invitation.id}`);
 
   if (invitation.toOrg) {
-    const organizerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+    const organizerOrg = await getDocument<Organization>(`orgs/${notification.organization.id}`);
     const organizerOrgData = getOrgEmailData(organizerOrg);
-    const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
+    const event = await getDocument<Event<EventMeta>>(`events/${notification.docId}`);
     const toUser = getUserEmailData(recipient);
 
     if (notification.invitation.status === 'accepted') {
@@ -415,9 +416,9 @@ async function sendRequestToAttendEventUpdatedEmail(recipient: User, notificatio
 async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notification: NotificationDocument) {
   const invitation = await getDocument<InvitationDocument>(`invitations/${notification.invitation.id}`);
   if (invitation.fromOrg) {
-    const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
+    const event = await getDocument<Event<EventMeta>>(`events/${notification.docId}`);
     const user = await getDocument<User>(`users/${notification.user.uid}`);
-    const userOrg = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
+    const userOrg = await getDocument<Organization>(`orgs/${user.orgId}`);
     const userOrgData = getOrgEmailData(userOrg);
     const eventData = getEventEmailData({ event, orgName: userOrgData.denomination, email: user.email, invitationId: notification.invitation.id, attachment: false });
     const userSubject = getUserEmailData(user);
@@ -439,9 +440,9 @@ async function sendInvitationToAttendEventUpdatedEmail(recipient: User, notifica
 
 /** Send an email to users of orgs of movie to request a screening */
 async function sendScreeningRequested(recipient: User, notification: NotificationDocument) {
-  const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
+  const movie = await getDocument<Movie>(`movies/${notification.docId}`);
   const requestor = await getDocument<User>(`users/${notification.user.uid}`);
-  const buyerOrg = await getDocument<OrganizationDocument>(`orgs/${requestor.orgId}`);
+  const buyerOrg = await getDocument<Organization>(`orgs/${requestor.orgId}`);
   const toUser = getUserEmailData(recipient);
 
   const template = screeningRequestedToSeller(
@@ -472,8 +473,8 @@ async function sendOrgAppAccessChangedEmail(recipient: User, notification: Notif
 }
 
 async function sendRequestToAttendEventCreatedEmail(recipient: User, notification: NotificationDocument) {
-  const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
-  const org = await getDocument<OrganizationDocument>(`orgs/${notification.user.orgId}`);
+  const event = await getDocument<Event<EventMeta>>(`events/${notification.docId}`);
+  const org = await getDocument<Organization>(`orgs/${notification.user.orgId}`);
   const userOrg = getOrgEmailData(org);
   const userSubject = getUserEmailData(notification.user);
   const eventData: EventEmailData = getEventEmailData({ event, orgName: userOrg.denomination, email: userSubject.email, invitationId: notification.invitation.id, attachment: false });
@@ -492,8 +493,8 @@ async function sendRequestToAttendEventCreatedEmail(recipient: User, notificatio
 }
 
 async function sendInvitationToAttendEventCreatedEmail(recipient: User, notification: NotificationDocument) {
-  const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
-  const org = await getDocument<OrganizationDocument>(`orgs/${notification.organization.id}`);
+  const event = await getDocument<Event<EventMeta>>(`events/${notification.docId}`);
+  const org = await getDocument<Organization>(`orgs/${notification.organization.id}`);
   const orgData = getOrgEmailData(org);
   const eventEmailData: EventEmailData = getEventEmailData({ event, orgName: orgData.denomination, email: recipient.email, invitationId: notification.invitation.id });
   const toUser = getUserEmailData(recipient);
@@ -509,7 +510,7 @@ async function sendInvitationToAttendEventCreatedEmail(recipient: User, notifica
   return sendMailFromTemplate(templateInvitation, eventAppKey, groupIds.unsubscribeAll).catch(e => logger.warn(e.message));
 }
 
-function getEventLink(data: { invitation: PublicInvitation, eventData: EventEmailData, org: OrganizationDocument, email: string }) {
+function getEventLink(data: { invitation: PublicInvitation, eventData: EventEmailData, org: Organization, email: string }) {
   const { invitation, eventData, org, email } = data;
   const isPrivateInvitation = invitation.mode === 'invitation' && eventData.accessibility === 'private';
   if (invitation.mode === 'request' || isPrivateInvitation) {
@@ -527,7 +528,7 @@ function getEventLink(data: { invitation: PublicInvitation, eventData: EventEmai
 
 /** Send an email to org admin when his/her org is accepted */
 async function sendMovieAcceptedEmail(recipient: User, notification: NotificationDocument) {
-  const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
+  const movie = await getDocument<Movie>(`movies/${notification.docId}`);
   const movieUrl = `c/o/dashboard/title/${movie.id}`;
   const toUser = getUserEmailData(recipient);
 
@@ -538,10 +539,10 @@ async function sendMovieAcceptedEmail(recipient: User, notification: Notificatio
 
 /** Send an email to orgs of a movie about the fact that someone requested the asking price */
 async function sendMovieAskingPriceRequested(recipient: User, notification: NotificationDocument) {
-  const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
+  const movie = await getDocument<Movie>(`movies/${notification.docId}`);
   const toUser = getUserEmailData(recipient);
   const buyer = getUserEmailData(notification.user);
-  const buyerOrg = await getDocument<OrganizationDocument>(`orgs/${notification.user.orgId}`);
+  const buyerOrg = await getDocument<Organization>(`orgs/${notification.user.orgId}`);
   const { territories, message } = notification.data;
 
   const app = notification._meta.createdFrom;
@@ -558,12 +559,12 @@ async function sendMovieAskingPriceRequested(recipient: User, notification: Noti
 
 /** Send an email to user when their request for the asking price has been sent */
 async function sendMovieAskingPriceRequestSent(recipient: User, notification: NotificationDocument) {
-  const movie = await getDocument<MovieDocument>(`movies/${notification.docId}`);
+  const movie = await getDocument<Movie>(`movies/${notification.docId}`);
   const toUser = getUserEmailData(recipient);
   const { territories, message } = notification.data;
 
   const orgs = await Promise.all(
-    movie.orgIds.map(orgId => getDocument<OrganizationDocument>(`orgs/${orgId}`))
+    movie.orgIds.map(orgId => getDocument<Organization>(`orgs/${orgId}`))
   );
   const orgNames = orgs.map(org => orgName(org)).join(', ');
 
@@ -574,8 +575,8 @@ async function sendMovieAskingPriceRequestSent(recipient: User, notification: No
 
 /** Send an email to user when their request to attend an event has been sent */
 async function sendRequestToAttendSentEmail(recipient: User, notification: NotificationDocument) {
-  const event = await getDocument<EventDocument<EventMeta>>(`events/${notification.docId}`);
-  const org = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
+  const event = await getDocument<Event<EventMeta>>(`events/${notification.docId}`);
+  const org = await getDocument<Organization>(`orgs/${event.ownerOrgId}`);
   const organizerOrg = getOrgEmailData(org);
   const eventEmailData: EventEmailData = getEventEmailData({ event, orgName: organizerOrg.denomination, email: recipient.email, invitationId: notification.invitation.id, attachment: false });
   const toUser = getUserEmailData(recipient);
@@ -600,12 +601,12 @@ async function sendContractCreated(recipient: User, notification: NotificationDo
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
   const [contract, negotiation] = await Promise.all([
-    getDocument<ContractDocument>(`contracts/${notification.docId}`),
-    getDocument<NegotiationDocument>(notification.docPath),
+    getDocument<Contract>(`contracts/${notification.docId}`),
+    getDocument<Negotiation>(notification.docPath),
   ]);
   const [title, buyerOrg] = await Promise.all([
-    getDocument<MovieDocument>(`movies/${contract.titleId}`),
-    getDocument<OrganizationDocument>(`orgs/${contract.buyerId}`),
+    getDocument<Movie>(`movies/${contract.titleId}`),
+    getDocument<Organization>(`orgs/${contract.buyerId}`),
   ]);
   const template = contractCreatedEmail(toUser, title, contract, negotiation, buyerOrg);
   return sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
@@ -614,10 +615,10 @@ async function sendContractCreated(recipient: User, notification: NotificationDo
 /**Send copy of offer to catalog admin and buyer who created the offer */
 async function sendOfferCreatedConfirmation(recipient: User, notification: NotificationDocument) {
   const [org, offer] = await Promise.all([
-    getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`),
+    getDocument<Organization>(`orgs/${recipient.orgId}`),
     getDocument<Offer>(`offers/${notification.docId}`),
   ]);
-  const buyerOrg = await getDocument<OrganizationDocument>(`orgs/${offer.buyerId}`);
+  const buyerOrg = await getDocument<Organization>(`orgs/${offer.buyerId}`);
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
   const adminTemplate = adminOfferCreatedConfirmationEmail(toUser, org, notification.bucket);
@@ -632,12 +633,12 @@ async function sendCreatedCounterOfferConfirmation(recipient: User, notification
   const path = notification.docPath;
   const contractId = path.split('/')[1]
   const [contract, negotiation] = await Promise.all([
-    getDocument<ContractDocument>(`contracts/${contractId}`),
-    getDocument<NegotiationDocument>(`${path}`),
+    getDocument<Contract>(`contracts/${contractId}`),
+    getDocument<Negotiation>(`${path}`),
   ]);
   const recipientOrgId = getReviewer(negotiation);
-  const recipientOrg = await getDocument<OrganizationDocument>(`orgs/${recipientOrgId}`);
-  const title = await getDocument<MovieDocument>(`movies/${negotiation.titleId}`);
+  const recipientOrg = await getDocument<Organization>(`orgs/${recipientOrgId}`);
+  const title = await getDocument<Movie>(`movies/${negotiation.titleId}`);
   const isMailRecipientBuyer = recipient.orgId === negotiation.buyerId;
   const app: App = 'catalog';
   const toUser = getUserEmailData(recipient);
@@ -655,13 +656,13 @@ async function sendReceivedCounterOfferConfirmation(recipient: User, notificatio
   const path = notification.docPath;
   const contractId = path.split('/')[1]
   const [contract, negotiation] = await Promise.all([
-    getDocument<ContractDocument>(`contracts/${contractId}`),
-    getDocument<NegotiationDocument>(`${path}`),
+    getDocument<Contract>(`contracts/${contractId}`),
+    getDocument<Negotiation>(`${path}`),
   ]);
 
   const [senderOrg, title] = await Promise.all([
-    getDocument<OrganizationDocument>(`orgs/${negotiation.createdByOrg}`),
-    getDocument<MovieDocument>(`movies/${negotiation.titleId}`),
+    getDocument<Organization>(`orgs/${negotiation.createdByOrg}`),
+    getDocument<Movie>(`movies/${negotiation.titleId}`),
   ]);
   const isMailRecipientBuyer = recipient.orgId === negotiation.buyerId;
   const app: App = 'catalog';
@@ -674,13 +675,13 @@ async function sendReceivedCounterOfferConfirmation(recipient: User, notificatio
 async function getNegotiationUpdatedEmailData(recipient: User, notification: NotificationDocument) {
   const { docPath: path, docId: contractId } = notification;
   const [contract, negotiation, recipientOrg] = await Promise.all([
-    getDocument<ContractDocument>(`contracts/${contractId}`),
-    getDocument<NegotiationDocument>(`${path}`),
-    getDocument<OrganizationDocument>(`orgs/${recipient.orgId}`),
+    getDocument<Contract>(`contracts/${contractId}`),
+    getDocument<Negotiation>(`${path}`),
+    getDocument<Organization>(`orgs/${recipient.orgId}`),
   ]);
   const [counterOfferSenderOrg, title] = await Promise.all([
-    getDocument<OrganizationDocument>(`orgs/${negotiation.createdByOrg}`),
-    getDocument<MovieDocument>(`movies/${negotiation.titleId}`),
+    getDocument<Organization>(`orgs/${negotiation.createdByOrg}`),
+    getDocument<Movie>(`movies/${negotiation.titleId}`),
   ]);
   const app: App = 'catalog';
 

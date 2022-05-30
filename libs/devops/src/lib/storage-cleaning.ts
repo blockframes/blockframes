@@ -1,4 +1,4 @@
-import { PublicUser, MovieDocument, OrganizationDocument } from '@blockframes/model';
+import { PublicUser, MovieDocument, Organization } from '@blockframes/model';
 import { getDocument, runChunks } from '@blockframes/firebase-utils';
 import type { Bucket, File as GFile } from '@google-cloud/storage';
 
@@ -107,7 +107,7 @@ export async function cleanOrgsDir(bucket: Bucket) {
       }
     } else {
       const orgId = f.name.split('/')[2];
-      const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
+      const org = await getDocument<Organization>(`orgs/${orgId}`);
       if (!org && (await f.delete())) {
         deleted++;
       }

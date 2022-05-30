@@ -18,3 +18,7 @@ export function createDocumentMeta(meta: Partial<DocumentMeta<Date>> = {}): Docu
     ...meta
   }
 }
+
+export function createInternalDocumentMeta(meta: Partial<DocumentMeta<Date>> = {}): DocumentMeta<Date> {
+  return createDocumentMeta({ createdBy: 'internal', ...meta });
+}

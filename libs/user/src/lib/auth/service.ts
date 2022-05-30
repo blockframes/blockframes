@@ -52,7 +52,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
 
       // TODO #6113 once we have a custom email verified page, we can update the users' meta there
       if (userAuth?.emailVerified && profile && !profile._meta?.emailVerified) {
-        const _meta: DocumentMeta<Date | Timestamp> = {
+        const _meta: DocumentMeta<Date> = {
           ...profile._meta,
           emailVerified: true
         }

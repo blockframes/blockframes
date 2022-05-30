@@ -1,5 +1,4 @@
 import { AccessibilityTypes, EventTypes } from './static';
-import { toDate } from '@blockframes/utils/helpers';
 import { CalendarEvent } from 'angular-calendar';
 import { Organization } from './organisation';
 import { Movie } from './movie';
@@ -64,12 +63,6 @@ export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = 
   meta: Meta;
 }
 
-// firestore documents
-export type EventDocument<Meta> = EventBase<Timestamp, Meta>;
-export type MeetingEventDocument = EventDocument<Meeting>;
-export type ScreeningEventDocument = EventDocument<Screening>;
-export type SlateEventDocument = EventDocument<Screening>;
-
 // This variable define the duration (in seconds) of a video link before it expires
 export const linkDuration = 60 * 60 * 5; // 5 hours in seconds = 60 seconds * 60 minutes * 5 = 18 000 seconds
 
@@ -90,7 +83,7 @@ export interface Event<Meta extends EventMeta = unknown>
 }
 
 export function createEvent<Meta extends EventMeta>(
-  params: Partial<EventBase<Date | Timestamp, Meta>> = {}
+  params: Partial<EventBase<Date, Meta>> = {}
 ): Event<Meta> {
   const meta: EventMeta = isMeeting(params as Event)
     ? createMeeting(params.meta)
@@ -110,8 +103,8 @@ export function createEvent<Meta extends EventMeta>(
     allDay: false,
     isOwner: false,
     ...params,
-    start: toDate(params.start || new Date()),
-    end: toDate(params.end || new Date()),
+    start: params.start || new Date(),
+    end: params.end || new Date(),
     meta: meta as Meta,
   };
 }
@@ -180,7 +173,7 @@ export function createSlate(slate: Partial<Slate>): Slate {
 
 // Calendar Event
 export function createCalendarEvent<M>(
-  event: Partial<EventBase<Date | Timestamp, M>>,
+  event: Partial<EventBase<Date, M>>,
   isOwner: boolean
 ): Event<M> {
   return {

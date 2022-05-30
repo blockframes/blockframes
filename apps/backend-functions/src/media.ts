@@ -14,8 +14,9 @@ import {
   StorageVideo,
   PublicUser,
   User,
-  OrganizationDocument,
-  MovieDocument
+  MovieDocument,
+  Movie,
+  Organization
 } from '@blockframes/model';
 import { tempUploadDir } from '@blockframes/utils/file-sanitizer';
 import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
@@ -304,7 +305,7 @@ export async function cleanUserMedias(before: PublicUser, after?: PublicUser): P
   }
 }
 
-export async function cleanOrgMedias(before: OrganizationDocument, after?: OrganizationDocument): Promise<void> {
+export async function cleanOrgMedias(before: Organization, after?: Organization): Promise<void> {
   const mediaToDelete: StorageFile[] = [];
   if (after) { // Updating
     if (needsToBeCleaned(before.logo, after.logo)) {
@@ -342,7 +343,7 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
   await Promise.all(mediaToDelete.map(m => deleteMedia(m)));
 }
 
-export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocument): Promise<void> {
+export async function cleanMovieMedias(before: Movie, after?: Movie): Promise<void> {
 
   const mediaToDelete: StorageFile[] = [];
   if (after) { // Updating
@@ -468,7 +469,7 @@ export const moveMedia = async (before: StorageFile, after: StorageFile) => {
   }
 }
 
-export async function moveMovieMedia(before: MovieDocument, after: MovieDocument): Promise<void> {
+export async function moveMovieMedia(before: Movie, after: Movie): Promise<void> {
 
   const paths = [
     'promotional.videos.salesPitch',

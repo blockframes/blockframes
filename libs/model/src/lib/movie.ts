@@ -1,4 +1,3 @@
-import { toDate } from '@blockframes/utils/helpers';
 import { createStorageFile, StorageFile, StorageVideo } from './media';
 import {
   MovieLanguageType,
@@ -307,7 +306,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     ...params,
     app: createMovieAppConfig(params.app),
     expectedPremiere: createExpectedPremiere(params.expectedPremiere),
-    campaignStarted: params.campaignStarted ? toDate(params.campaignStarted) : null,
+    campaignStarted: params.campaignStarted || null,
     banner: createStorageFile(params?.banner),
     audience: createAudienceGoals(params.audience),
     languages: createLanguageKey(params.languages ? params.languages : {}),
@@ -354,8 +353,8 @@ export function createAppConfig(params: Partial<MovieAppConfig<Date>>): MovieApp
     status: 'draft',
     access: false,
     ...params,
-    acceptedAt: toDate(params?.acceptedAt),
-    refusedAt: toDate(params?.refusedAt),
+    acceptedAt: params?.acceptedAt,
+    refusedAt: params?.refusedAt,
   };
 }
 
@@ -390,7 +389,7 @@ export function createMovieOriginalRelease(params: Partial<MovieOriginalRelease>
   return {
     country: null,
     ...params,
-    date: toDate(params.date),
+    date: params.date,
   };
 }
 
@@ -476,7 +475,7 @@ export function createExpectedPremiere(params: Partial<MovieExpectedPremiere> = 
   return {
     event: '',
     ...params,
-    date: toDate(params.date),
+    date: params.date,
   };
 }
 

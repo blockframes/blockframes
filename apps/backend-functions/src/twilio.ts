@@ -1,15 +1,14 @@
 
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { getDocument } from './data/internals';
-import { ErrorResultResponse, displayName, PublicUser, EventDocument, Meeting } from '@blockframes/model';
+import { ErrorResultResponse, displayName, PublicUser, Event, Meeting } from '@blockframes/model';
 import { projectId, twilioAccountSid, twilioAccountSecret, twilioApiKeySecret, twilioApiKeySid } from './environments/environment';
 import Twilio from 'twilio/lib/rest/Twilio';
 import AccessToken, { VideoGrant } from 'twilio/lib/jwt/AccessToken';
 import { firebaseRegion } from './internals/utils';
-import * as admin from 'firebase-admin';
 import { getUser } from './internals/utils';
 import { Request, Response } from 'firebase-functions';
 import { isUserInvitedToEvent } from './internals/invitations/events';
+import { getDocument, getDocumentRef } from '@blockframes/firebase-utils';
 
 export interface RequestAccessToken {
   eventId: string,
@@ -37,7 +36,7 @@ export const getTwilioAccessToken = async (
   }
 
   // Get meeting from firestore identify by eventId
-  const event: EventDocument<Meeting> = await getDocument<EventDocument<Meeting>>(`events/${eventId}`);
+  const event = await getDocument<Event<Meeting>>(`events/${eventId}`);
 
   if (!event) {
     return {
@@ -54,14 +53,14 @@ export const getTwilioAccessToken = async (
     };
   }
 
-  if (event.start.toMillis() > Date.now()) {
+  if (event.start.getTime() > Date.now()) {
     return {
       error: 'NOT_ALREADY_STARTED',
       result: `The event ${eventId} is not already started`
     };
   }
 
-  if (event.end.toMillis() < Date.now()) {
+  if (event.end.getTime() < Date.now()) {
     return {
       error: 'EVENT_FINISHED',
       result: `The event ${eventId} is finished`
@@ -109,7 +108,6 @@ export const getTwilioAccessToken = async (
 
 /** This function will be called directly by the Twilio servers each time an event happens in a Video Room */
 export const twilioWebhook = async (req: Request, res: Response) => {
-  const db = admin.firestore();
   try {
 
     if (
@@ -126,8 +124,8 @@ export const twilioWebhook = async (req: Request, res: Response) => {
     }
 
     const eventId = req.body.RoomName;
-    const eventRef = db.collection('events').doc(eventId);
-    const eventSnap = await eventRef.get();
+    const eventPath = `events/${eventId}`;
+    const eventSnap = await getDocumentRef(eventPath);
     if (!eventSnap.exists) {
       res.status(200).send();
       return;
@@ -136,12 +134,12 @@ export const twilioWebhook = async (req: Request, res: Response) => {
     if (req.body.StatusCallbackEvent === 'participant-disconnected') {
 
       const { id: userId } = JSON.parse(req.body.ParticipantIdentity) as { id: string };
-      const event = eventSnap.data() as EventDocument<Meeting>;
+      const event = await getDocument<Event<Meeting>>(eventPath);
       const attendee = event.meta?.attendees[userId];
       attendee.status = 'ended';
-      eventRef.update({ [`meta.attendees.${userId}`]: attendee });
+      eventSnap.ref.update({ [`meta.attendees.${userId}`]: attendee });
     } else {
-      eventRef.update({ 'meta.attendees': {} });
+      eventSnap.ref.update({ 'meta.attendees': {} });
     }
 
 

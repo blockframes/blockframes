@@ -1,30 +1,30 @@
-﻿import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
-import { getUser } from "./internals/utils";
-import { db } from './internals/firebase'
+﻿import { getUser } from "./internals/utils";
+import { BlockframesChange, db } from './internals/firebase'
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
 import { 
   createPublicUser,
   PublicUser,
-  OrganizationDocument,
   orgName,
-  EventDocument,
+  Event,
   EventMeta,
   MEETING_MAX_INVITATIONS_NUMBER,
   InvitationDocument,
-  InvitationOrUndefined,
   createInvitation,
   InvitationStatus,
   InvitationBase,
   AlgoliaOrganization,
   App,
-  ErrorResultResponse
+  ErrorResultResponse,
+  Invitation,
+  Organization,
+  createPublicOrganization
 } from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { getEventEmailData } from '@blockframes/utils/emails/utils';
-import { Change } from 'firebase-functions';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils/algolia';
+import { getDocument } from '@blockframes/firebase-utils';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
 /**
@@ -33,7 +33,7 @@ export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
  * Check the data, manage processed ids (to prevent duplicates events in functions),
  * and dispatch to the correct piece of code depending on the invitation type.
  */
-export async function onInvitationWrite(change: Change<FirebaseFirestore.DocumentSnapshot>) {
+export async function onInvitationWrite(change: BlockframesChange<Invitation>) {
   const before = change.before;
   const after = change.after;
 
@@ -41,8 +41,8 @@ export async function onInvitationWrite(change: Change<FirebaseFirestore.Documen
     throw new Error('Parameter "change" not found');
   }
 
-  const invitationDocBefore = before.data() as InvitationOrUndefined;
-  const invitationDoc = after.data() as InvitationOrUndefined;
+  const invitationDocBefore = before.data();
+  const invitationDoc = after.data();
 
   // Doc was deleted
   if (!invitationDoc) {
@@ -75,26 +75,26 @@ export async function onInvitationWrite(change: Change<FirebaseFirestore.Documen
   // We consolidate invitation document here.
   let needUpdate = false;
   if (invitationDoc.fromOrg?.id && !invitationDoc.fromOrg?.denomination.full) {
-    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.fromOrg.id}`);
-    invitationDoc.fromOrg = createPublicOrganizationDocument(org);
+    const org = await getDocument<Organization>(`orgs/${invitationDoc.fromOrg.id}`);
+    invitationDoc.fromOrg = createPublicOrganization(org);
     needUpdate = true;
   }
 
   if (invitationDoc.toOrg?.id && !invitationDoc.toOrg?.denomination.full) {
-    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.toOrg.id}`);
-    invitationDoc.toOrg = createPublicOrganizationDocument(org);
+    const org = await getDocument<Organization>(`orgs/${invitationDoc.toOrg.id}`);
+    invitationDoc.toOrg = createPublicOrganization(org);
     needUpdate = true;
   }
 
   if (invitationDoc.fromUser?.uid && (!invitationDoc.fromUser.firstName || !invitationDoc.fromUser.email)) {
     const user = await getUser(invitationDoc.fromUser?.uid);
-    invitationDoc.fromUser = createPublicUserDocument(user);
+    invitationDoc.fromUser = createPublicUser(user);
     needUpdate = true;
   }
 
   if (invitationDoc.toUser?.uid && (!invitationDoc.toUser.firstName || !invitationDoc.toUser.email)) {
     const user = await getUser(invitationDoc.toUser?.uid);
-    invitationDoc.toUser = createPublicUserDocument(user);
+    invitationDoc.toUser = createPublicUser(user);
     needUpdate = true;
   }
 
@@ -150,7 +150,7 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   if (invitation.type === 'attendEvent') {
     const eventId = invitation.eventId;
     if (eventId) {
-      const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
+      const event = await getDocument<Event<EventMeta>>(`events/${eventId}`);
 
       // for now only meetings have a limitation
       if (event.type === 'meeting') {
@@ -171,7 +171,7 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   }
 
   const eventId = invitation.type === 'attendEvent' && invitation.eventId;
-  const event = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
+  const event = eventId ? await getDocument<Event<EventMeta>>(`events/${eventId}`) : undefined;
 
   for (const email of data.emails) {
     const invitationId = db.collection('invitations').doc().id;
@@ -210,7 +210,7 @@ export async function getInvitationLinkedToEmail(email: string): Promise<boolean
   // We want to return invitation to join organization in priority
   if (joinOrgInvit.length) {
     const invit = joinOrgInvit[0].data();
-    const org = await getDocument<OrganizationDocument>(`orgs/${invit.fromOrg.id}`);
+    const org = await getDocument<Organization>(`orgs/${invit.fromOrg.id}`);
     return createAlgoliaOrganization(org);
   }
 
@@ -221,7 +221,7 @@ export async function getInvitationLinkedToEmail(email: string): Promise<boolean
     if (!user.firstName && !user.lastName) {
       if (user.orgId) {
         // If user was created along with org in CRM (without invitation)
-        const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
+        const org = await getDocument<Organization>(`orgs/${user.orgId}`);
         return createAlgoliaOrganization(org);
       } else {
         return true;

@@ -1,9 +1,9 @@
-import { db } from './internals/firebase';
+import { BlockframesSnapshot, db } from './internals/firebase';
 import { Bucket, Term } from '@blockframes/model';
 
-export async function onTermDelete(termSnapshot: FirebaseFirestore.DocumentSnapshot<Term>) {
+export async function onTermDelete(termSnapshot: BlockframesSnapshot<Term>) {
 
-  const term = termSnapshot.data() as Term;
+  const term = termSnapshot.data();
   await db.runTransaction(async tx => {
 
     const contractsCollectionRef = db.collection('contracts').where('parentTermId', '==', term.id);

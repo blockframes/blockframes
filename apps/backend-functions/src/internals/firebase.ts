@@ -6,6 +6,7 @@ import { isInMaintenance } from '@blockframes/firebase-utils/maintenance';
 import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
 import { IMaintenanceDoc } from '@blockframes/model';
 import { logErrors } from './sentry';
+import { toDate } from '@blockframes/firebase-utils/firebase-utils';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -13,8 +14,6 @@ if (!admin.apps.length) {
 export const db = admin.firestore();
 export const auth = admin.auth();
 export const storage = admin.storage();
-
-export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const skipInMaintenance = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
@@ -67,20 +66,6 @@ function createBlockframesSnapshot(snap: admin.firestore.DocumentSnapshot): Bloc
   }
 }
 
-function toDate<D>(target: D): D {
-  if (typeof target !== 'object') return target;
-  for (const key in target) {
-    const value = target[key];
-    if (!value || typeof value !== 'object') continue;
-    if (value instanceof admin.firestore.Timestamp) {
-      target[key] = value.toDate() as any;
-      continue;
-    }
-    toDate(value);
-  }
-  return target;
-}
-
 export const convertToDate = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
   return async (...args: Parameters<T>) => {
     const firstArg = args.shift();
@@ -110,7 +95,7 @@ type FunctionType = (...args: any[]) => any;
 export function onDocumentWrite(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
   return functions(config).firestore
     .document(docPath)
-    .onWrite(skipInMaintenance(logErrors(fn)));
+    .onWrite(skipInMaintenance(logErrors(convertToDate(fn))));
 }
 
 export function onDocumentUpdate(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
@@ -122,13 +107,13 @@ export function onDocumentUpdate(docPath: string, fn: FunctionType, config: Runt
 export function onDocumentDelete(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
   return functions(config).firestore
     .document(docPath)
-    .onDelete(skipInMaintenance(convertToDate(fn)))
+    .onDelete(skipInMaintenance(logErrors(convertToDate(fn))))
 }
 
 export function onDocumentCreate(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
   return functions(config).firestore
     .document(docPath)
-    .onCreate(skipInMaintenance(logErrors(fn)));
+    .onCreate(skipInMaintenance(logErrors(convertToDate(fn))));
 }
 
 /**

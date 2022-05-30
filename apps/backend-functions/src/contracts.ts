@@ -1,8 +1,8 @@
 import { BlockframesChange, BlockframesSnapshot, db } from './internals/firebase';
 import { createNotification, triggerNotifications } from './notification';
-import { createDocumentMeta, getDocument } from './data/internals';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
-import { Organization, NotificationDocument, Sale, Contract, Negotiation, Timestamp } from '@blockframes/model';
+import { Organization, NotificationDocument, Sale, Contract, Negotiation, createInternalDocumentMeta } from '@blockframes/model';
+import { queryDocument, getDocument } from '@blockframes/firebase-utils';
 
 interface ContractNotificationType {
   sender: 'myOrgAcceptedAContract' | 'myOrgDeclinedAContract', //org who accepted/declined a contract
@@ -47,7 +47,7 @@ async function deleteCurrentTerms(ref: FirebaseFirestore.Query) {
   return Promise.all(deletions);
 }
 
-async function createTerms(contractId: string, negotiation: Negotiation<Timestamp>, tx: FirebaseFirestore.Transaction) {
+async function createTerms(contractId: string, negotiation: Negotiation, tx: FirebaseFirestore.Transaction) {
   const termsCollection = db.collection('terms');
   const terms = negotiation.terms
     .map(t => ({ ...t, contractId, id: termsCollection.doc().id }));
@@ -57,7 +57,7 @@ async function createTerms(contractId: string, negotiation: Negotiation<Timestam
   return terms.map(datum => datum.id);
 }
 
-async function createIncome(sale: Sale, negotiation: Negotiation<Timestamp>, tx: FirebaseFirestore.Transaction) {
+async function createIncome(sale: Sale, negotiation: Negotiation, tx: FirebaseFirestore.Transaction) {
   const doc = db.doc(`incomes/${sale.id}`);
   return tx.set(doc, {
     status: 'pending',
@@ -69,7 +69,7 @@ async function createIncome(sale: Sale, negotiation: Negotiation<Timestamp>, tx:
 }
 
 async function getContractNotifications(
-  contractId: string, offerId: string, negotiation: Negotiation<Timestamp>, types: Partial<ContractNotificationType>
+  contractId: string, offerId: string, negotiation: Negotiation, types: Partial<ContractNotificationType>
 ) {
 
   const sendOrgNotifications = (type: ContractNotificationValues) => (org: Organization) => {
@@ -79,7 +79,7 @@ async function getContractNotifications(
       offerId,
       type,
       docPath: `contracts/${contractId}/negotiations/${negotiation.id}`,
-      _meta: createDocumentMeta({ createdFrom: 'catalog' })
+      _meta: createInternalDocumentMeta({ createdFrom: 'catalog' })
     }));
   };
 
@@ -101,7 +101,7 @@ async function getContractNotifications(
   return notifications.flat();
 }
 
-async function sendContractUpdatedNotification(before: Sale, after: Sale, negotiation: Negotiation<Timestamp>) {
+async function sendContractUpdatedNotification(before: Sale, after: Sale, negotiation: Negotiation) {
   if (before.status === after.status) return;
   let params: Partial<ContractNotificationType>;
   if (after.status === 'accepted') {
@@ -132,8 +132,7 @@ export async function onContractUpdate(change: BlockframesChange<Sale>) {
   const { status, id } = contractAfter;
   const saleRef = change.after.ref;
   const negotiationRef = saleRef.collection('negotiations').orderBy('_meta.createdAt', 'desc').limit(1);
-  const negotiation = await negotiationRef.get()
-    .then(snap => snap.docs[0]?.data()) as Negotiation<Timestamp>;
+  const negotiation = await queryDocument<Negotiation>(negotiationRef)
 
   if (!negotiation) return;
 
