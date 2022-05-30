@@ -9,6 +9,8 @@ h3 {
 }
 
 .surface {
+  display: flex;
+  flex-direction: column;
   width: 330px;
   img {
     width: 100px;
