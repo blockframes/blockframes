@@ -15,19 +15,19 @@ import {
 import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
-import { joinWith } from 'ngfire';
-import { filter, map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { aggregatePerUser, counter } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { NavigationService } from "@blockframes/ui/navigation.service";
-import { OrganizationService } from '@blockframes/organization/service';
-import { combineLatest, EMPTY, firstValueFrom, from, Observable, of } from "rxjs";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
 import { eventTime } from "@blockframes/event/pipes/event-time.pipe";
 import { getGuest } from "@blockframes/invitation/pipes/guest.pipe";
 import { InvitationService } from "@blockframes/invitation/service";
 import { EventService } from "@blockframes/event/service";
+import { filter, map, pluck, shareReplay, switchMap } from "rxjs/operators";
+import { OrganizationService } from '@blockframes/organization/service';
+import { combineLatest, EMPTY, firstValueFrom, from, Observable, of } from "rxjs";
+import { joinWith } from 'ngfire';
 
 
 function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
@@ -174,7 +174,7 @@ export class TitleAnalyticsComponent {
     const analytics = data.map(invitation => ({
       'Name': `${invitation.toUser.firstName} ${invitation.toUser.lastName}`,
       'Email': invitation.toUser.email,
-      'Company Name': invitation.guestOrg.denomination?.public,
+      'Company Name': invitation.guestOrg.denomination?.public ?? '--',
       'Activity': invitation.guestOrg.activity ?? '--',
       'Country': invitation.guestOrg.addresses?.main?.country ?? '--',
       'Watchtime': `${invitation.watchTime ?? 0}s`
