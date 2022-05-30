@@ -1,8 +1,6 @@
 import * as admin from 'firebase-admin';
-import * as functions from 'firebase-functions';
-import { chunk } from "lodash";
-import * as env from '@env'
-import { RuntimeOptions } from 'firebase-functions';
+import { chunk } from 'lodash';
+import * as env from '@env';
 
 export function getDocumentRef(path: string): Promise<FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>> {
   const db = admin.firestore();
@@ -38,49 +36,4 @@ export async function runChunks<K, T extends (arg: K) => Promise<any>>(rows: K[]
   }
   return output;
 }
-
-/**
- * Helper to work in local / remote dev mode:
- * in local the function config will be empty and this function will return an undefined value.
- * Later, when we test the backend functions code, we'll let dev define env variables
- * for local testing.
- *
- * @param path the field path to look for, ['x', 'y'] will look for config.x.y
- */
-export const mockConfigIfNeeded = (...path: string[]): any =>
-  path.reduce((config: any, field) => (config ? config[field] : undefined), functions.config()); // TODO! This is terrible why use reduce?
-
-
-/**
- * Default runtime options for functions
- */
- export const defaultConfig: RuntimeOptions = {
-  timeoutSeconds: 60,
-  memory: '256MB',
-};
-
-/**
- * Runtime options to keep a function hot
- * Used to improve response time
- */
-export const hotConfig: RuntimeOptions = {
-  ...defaultConfig,
-  maxInstances: env.production ? 1 : 0
-}
-
-/**
- * Runtime options for heavy functions
- */
-export const heavyConfig: RuntimeOptions = {
-  timeoutSeconds: 300,
-  memory: '1GB',
-};
-
-/**
- * Runtime options for super heavy functions
- */
- export const superHeavyConfig: RuntimeOptions = {
-  timeoutSeconds: 540,
-  memory: '4GB',
-};
 
