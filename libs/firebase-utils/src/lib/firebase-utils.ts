@@ -7,8 +7,12 @@ export function toDate<D>(target: D): D {
   for (const key in target) {
     const value = target[key];
     if (!value || typeof value !== 'object') continue;
-    if (!!value['_seconds'] && !!value['_nanoseconds']) {
-      target[key] = (value as any).toDate();
+    if (value['_seconds']) {
+      try {
+        target[key] = (value as any).toDate();
+      } catch (_) {
+        console.log(`${key} is not a Firebase Timestamp`);
+      }
       continue;
     }
     toDate(value);
