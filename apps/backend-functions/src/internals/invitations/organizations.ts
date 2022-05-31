@@ -9,7 +9,7 @@ import { applicationUrl } from '@blockframes/utils/apps';
 import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { createInternalDocumentMeta, createPublicOrganization, createPublicUser, Invitation, Organization } from '@blockframes/model';
-import { getDocument } from '@blockframes/firebase-utils';
+import { getDocument, getDocumentRef } from '@blockframes/firebase-utils';
 
 async function addUserToOrg(userId: string, organizationId: string) {
   const db = admin.firestore();
@@ -19,15 +19,11 @@ async function addUserToOrg(userId: string, organizationId: string) {
 
   console.debug('add user:', userId, 'to org:', organizationId);
 
-  const userRef = db.collection('users').doc(userId);
-  const organizationRef = db.collection('orgs').doc(organizationId);
-  const permissionsRef = db.collection('permissions').doc(organizationId);
-
   return db.runTransaction(async tx => {
     const [user, organization, permission] = await Promise.all([
-      tx.get(userRef),
-      tx.get(organizationRef),
-      tx.get(permissionsRef)
+      getDocumentRef(`users/${userId}`, db, tx),
+      getDocumentRef(`orgs/${organizationId}`, db, tx),
+      getDocumentRef(`permissions/${organizationId}`, db, tx)
     ]);
 
     const userData = user.data();
@@ -49,14 +45,14 @@ async function addUserToOrg(userId: string, organizationId: string) {
 
     return Promise.all([
       // Update user's orgId
-      tx.set(userRef, { ...userData, orgId: organizationId }),
+      tx.set(user.ref, { ...userData, orgId: organizationId }),
       // Update organization
-      tx.set(organizationRef, {
+      tx.set(organization.ref, {
         ...organizationData,
         userIds: Array.from(new Set([...organizationData.userIds, userId]))
       }),
       // Update Permissions
-      tx.set(permissionsRef, { ...permissionData, roles: permissionData.roles })
+      tx.set(permission.ref, { ...permissionData, roles: permissionData.roles })
     ]);
   });
 }
