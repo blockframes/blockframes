@@ -18,6 +18,7 @@ import { TableModule } from "@blockframes/ui/list/table/table.module";
 import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
 import { MetricCardListModule } from '@blockframes/analytics/components/metric-card-list/metric-card-list.module';
 import { GuestPipeModule } from '@blockframes/invitation/pipes/guest.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
@@ -37,6 +38,7 @@ import { GuestPipeModule } from '@blockframes/invitation/pipes/guest.pipe';
     // Material
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
 
     // Router
     RouterModule.forChild([

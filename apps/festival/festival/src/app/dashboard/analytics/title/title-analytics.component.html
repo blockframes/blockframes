@@ -86,7 +86,7 @@
   <header>
     <h3>
       <span>Last Screenings</span>
-      <mat-icon svgIcon="info"></mat-icon>
+      <mat-icon svgIcon="info" [matTooltip]="'Statistics are updated in real time.'"></mat-icon>
     </h3>
     <ng-container *ngIf="ongoingScreenings$ | async as events">
       <a ongoing-event-button routerLink="/c/o/dashboard/event/{{events[0].id}}/statistics">Ongoing
