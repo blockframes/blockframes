@@ -6,10 +6,10 @@
 <ul>
   <ng-container *ngIf="download; else preview">
     <li fxLayout fxLayoutAlign="start center">
-      <a mat-button color="primary" [href]="file | getDownloadUrl | async" target="_blank" *ngIf="file.storagePath">
+      <button mat-button color="primary" (click)="downloadFile()" *ngIf="file.storagePath">
         <mat-icon svgIcon="cloud_upload"></mat-icon>
         <span>Download Available Materials</span>
-      </a>
+      </button>
     </li>
   </ng-container>
   <ng-template #preview>
