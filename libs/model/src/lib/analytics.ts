@@ -49,13 +49,22 @@ export interface AggregatedAnalytic extends Record<EventName, number> {
   title?: Movie;
 }
 
+export interface AnalyticsWithOrg extends Analytics<AnalyticsTypes> {
+  org?: Organization
+}
+
+export interface AnalyticData {
+  key: string;
+  count: number;
+  label: string;
+}
+
 // FireAnalytics
 export interface AnalyticsUserProperties {
   browser_name: string;
   browser_version: string;
 }
 
-export const isTitleDataEvent = (event: Partial<Analytics>): event is Analytics<'title'> => event.type === 'title';
 export function createTitleMeta(meta: Partial<MetaTitle>): MetaTitle {
   return {
     titleId: '',

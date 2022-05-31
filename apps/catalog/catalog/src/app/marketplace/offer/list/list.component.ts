@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ContractService } from '@blockframes/contract/contract/+state';
-import { OfferService } from '@blockframes/contract/offer/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { ContractService } from '@blockframes/contract/contract/service';
+import { OfferService } from '@blockframes/contract/offer/service';
+import { OrganizationService } from '@blockframes/organization/service';
+import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { switchMap } from 'rxjs/operators';
 import { orderBy, QueryConstraint, where } from 'firebase/firestore';

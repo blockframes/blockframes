@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, Optional, Inject } from '@angular/core';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { App, getOrgModuleAccess, Organization, hasDisplayName } from '@blockframes/model';
 import { BehaviorSubject } from 'rxjs';
 import { Intercom } from 'ng-intercom';

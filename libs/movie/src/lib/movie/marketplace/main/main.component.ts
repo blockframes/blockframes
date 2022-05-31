@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { TitleMarketplaceShellComponent } from '../shell/shell.component';
 import { Movie } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { AnalyticsService } from '@blockframes/analytics/service';
 
 @Component({
   selector: 'movie-main',

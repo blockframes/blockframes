@@ -6,11 +6,11 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { MoviePictureCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { Movie } from '@blockframes/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
-import { FileUploaderService } from '@blockframes/media/+state';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 
 @Component({
   selector: 'movie-picture-upload',

@@ -1,16 +1,13 @@
-import { Component, ChangeDetectionStrategy, OnInit, Optional, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { fromOrg, MovieService } from '@blockframes/movie/+state/movie.service';
-import { Movie, storeStatus, StoreStatus, App } from '@blockframes/model';
-import { CampaignService, MovieCampaign } from '@blockframes/campaign/+state/campaign.service';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { fromOrg, MovieService } from '@blockframes/movie/service';
+import { MovieCampaign } from '@blockframes/model';
+import { CampaignService } from '@blockframes/campaign/service';
+import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
-import { Intercom } from 'ng-intercom';
-import { APP } from '@blockframes/utils/routes/utils';
 import { filters } from '@blockframes/ui/list/table/filters';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 
@@ -54,10 +51,7 @@ export class ListComponent implements OnInit {
     private campaignService: CampaignService,
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
-    private snackbar: MatSnackBar,
     private movieService: MovieService,
-    @Optional() private intercom: Intercom,
-    @Inject(APP) public app: App
   ) { }
 
   ngOnInit() {
@@ -103,14 +97,5 @@ export class ListComponent implements OnInit {
 
   public applyFilter(filter: Filters) {
     this.filter.setValue(filter);
-  }
-
-  public openIntercom(): void {
-    return this.intercom.show();
-  }
-
-  async updateStatus(movie: Movie, status: StoreStatus, message?: string) {
-    await this.movieService.updateStatus(movie.id, status);
-    this.snackbar.open(message || `Title ${storeStatus[status]}.`, '', { duration: 4000 });
   }
 }

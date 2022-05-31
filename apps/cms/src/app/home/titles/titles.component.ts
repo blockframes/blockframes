@@ -8,7 +8,7 @@ import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Movie } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { TitlesSection, TemplateParams } from '@blockframes/admin/cms';
 import { TextFormModule, matText } from '../../forms/text';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';

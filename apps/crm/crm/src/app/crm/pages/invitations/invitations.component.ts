@@ -1,12 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { InvitationService } from '@blockframes/invitation/+state';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { EventService } from '@blockframes/event/+state/';
+import { InvitationService } from '@blockframes/invitation/service';
+import { OrganizationService } from '@blockframes/organization/service';
+import { EventService } from '@blockframes/event/service';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { getHost } from '@blockframes/invitation/pipes/host.pipe';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
 import { Movie, Organization, orgName, Event, isScreening, InvitationDetailed } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
 
 @Component({

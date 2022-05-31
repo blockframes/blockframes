@@ -66,8 +66,7 @@ import { logger } from 'firebase-functions';
 import { appUrl, supportEmails } from './environments/environment';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
 // #7946 this may be reactivated later
-// import { createMailContract, MailContract } from '@blockframes/contract/contract/+state/contract.firestore';
-// import { movieCurrencies } from '@blockframes/model';
+// import { movieCurrencies, createMailContract, MailContract } from '@blockframes/model';
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
@@ -108,6 +107,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
     'requestFromUserToJoinOrgCreate',
     'requestToAttendEventCreated',
     'invitationToAttendScreeningCreated',
+    'invitationToAttendSlateCreated',
     'invitationToAttendMeetingCreated',
 
     // user does not have access to app yet, notification only used to send email
@@ -205,6 +205,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
       case 'invitationToAttendMeetingCreated':
       case 'invitationToAttendScreeningCreated':
+      case 'invitationToAttendSlateCreated':
         await sendInvitationToAttendEventCreatedEmail(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);

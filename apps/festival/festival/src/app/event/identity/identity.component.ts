@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '@blockframes/auth/+state';
+import { AuthService } from '@blockframes/auth/service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 

@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '@blockframes/auth/+state';
-import { AnalyticsService } from '@blockframes/analytics/+state/analytics.service';
+import { AuthService } from '@blockframes/auth/service';
+import { AnalyticsService } from '@blockframes/analytics/service';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { BehaviorSubject } from 'rxjs';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { CallableFunctions } from 'ngfire';
 
 type RequestStatus = 'available' | 'sending' | 'sent';

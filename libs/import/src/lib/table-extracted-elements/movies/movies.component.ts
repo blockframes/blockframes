@@ -8,7 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../utils';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService } from '@blockframes/movie/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {

@@ -5,7 +5,6 @@ import { MarketplaceInvestmentComponent } from './investment.component';
 
 import { HasKeysModule } from '@blockframes/utils/pipes';
 import { PerkCardModule } from '../../components/perk-card/perk-card.module';
-import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -17,7 +16,6 @@ import { MatDividerModule } from '@angular/material/divider';
     CommonModule,
     HasKeysModule,
     PerkCardModule,
-    MatLayoutModule,
     MatDividerModule,
     RouterModule.forChild([{ path: '', component: MarketplaceInvestmentComponent }])
   ]

@@ -122,14 +122,14 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
 export async function upgrade() {
   const { db, auth, storage } = loadAdminServices();
 
-  if (!await isMigrationRequired()) {
+  if (!await isMigrationRequired(db)) {
     console.log('Skipping upgrade because migration is not required...');
     return;
   }
   await startMaintenance(db);
 
   console.info('Preparing the database...');
-  await migrate({ withBackup: true, db, storage });
+  await migrate({ withBackup: true, db, storage, performMigrationCheck: false });
   console.info('Database ready for deploy!');
 
   console.info('Cleaning unused db data...');
@@ -160,7 +160,7 @@ export async function upgradeEmulators() {
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.info('Preparing the database...');
-  await migrate({ withBackup: false, db, storage });
+  await migrate({ withBackup: false, db, storage, performMigrationCheck: false });
   console.info('Database ready for deploy!');
 
   // console.info('Cleaning unused db data...');

@@ -3,10 +3,10 @@ import { where, updateDoc, DocumentReference } from 'firebase/firestore';
 import { FirestoreService } from 'ngfire';
 
 // Blockframes
-import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { createStorageFile, StorageFile, Organization, App } from '@blockframes/model';
-import { FileUploaderService, MediaService } from '@blockframes/media/+state';
-import { getFileMetadata } from '@blockframes/media/+state/static-files';
+import { MovieService } from '@blockframes/movie/service';
+import { createStorageFile, Organization, App } from '@blockframes/model';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
+import { getFileMetadata } from '@blockframes/media/utils';
 import { APP } from '@blockframes/utils/routes/utils';
 import { ActivatedRoute } from "@angular/router";
 
@@ -65,7 +65,6 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   constructor(
     private movieService: MovieService,
     private firestore: FirestoreService,
-    private mediaService: MediaService,
     private service: FileUploaderService,
     private route: ActivatedRoute,
     @Inject(APP) private app: App
@@ -119,12 +118,6 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
 
   getMeta(dir: FileDirectoryBase, index: number) {
     return [...dir.meta, index];
-  }
-
-  async downloadFile(item: StorageFile, event: Event) {
-    event.stopPropagation();
-    const url = await this.mediaService.generateImgIxUrl(item);
-    window.open(url);
   }
 
   update() {
