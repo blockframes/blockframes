@@ -9,7 +9,8 @@ import {
   isMeeting,
   isScreening,
   SlateEvent,
-  Timestamp
+  Timestamp,
+  EventMeta
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { PermissionsService } from '@blockframes/permissions/service';
@@ -57,16 +58,16 @@ export class EventService extends BlockframesCollection<Event> {
     },
   };
 
-  private eventQuery = (id: string) => {
-    return this.valueChanges(id).pipe(
+  private eventQuery = <Meta extends EventMeta = unknown>(id: string) => {
+    return this.valueChanges<Event<Meta>>(id).pipe(
       joinWith({
-        org: ({ ownerOrgId }: ScreeningEvent) => this.orgService.valueChanges(ownerOrgId),
-        movie: (event: Event) => {
+        org: ({ ownerOrgId }: Event<Meta>) => this.orgService.valueChanges(ownerOrgId),
+        movie: (event: Event<Meta>) => {
           if (isScreening(event)) {
             return event.meta.titleId ? this.movieService.valueChanges(event.meta.titleId) : undefined;
           }
         },
-        organizedBy: (event: Event) => {
+        organizedBy: (event: Event<Meta>) => {
           if (isMeeting(event)) {
             return event.meta.organizerUid ? this.userService.valueChanges(event.meta.organizerUid) : undefined;
           }
@@ -125,15 +126,15 @@ export class EventService extends BlockframesCollection<Event> {
   }
 
   /** Query one or many event by id */
-  queryDocs(ids: string[]): Observable<Event[]>
-  queryDocs(ids: string): Observable<Event>
-  queryDocs(ids: string | string[]): Observable<Event | Event[]> {
+  queryDocs<Meta extends EventMeta = unknown>(ids: string[]): Observable<Event<Meta>[]>
+  queryDocs<Meta extends EventMeta = unknown>(ids: string): Observable<Event<Meta>>
+  queryDocs<Meta extends EventMeta = unknown>(ids: string | string[]): Observable<Event<Meta> | Event<Meta>[]> {
     if (typeof ids === 'string') {
-      return this.eventQuery(ids);
+      return this.eventQuery<Meta>(ids);
     } else if (ids.length === 0) {
       return of([]);
     } else {
-      const queries = ids.map(id => this.eventQuery(id))
+      const queries = ids.map(id => this.eventQuery<Meta>(id))
       return combineLatest(queries);
     }
   }
