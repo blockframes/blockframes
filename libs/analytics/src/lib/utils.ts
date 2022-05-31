@@ -5,19 +5,24 @@ import { getDeepValue } from '@blockframes/utils/pipes';
  * Counts number of occurances in analytics
  * @param path Path to value in object that needs to be counted. This value has to be of type string or number
  */
-export function counter(analytics: AnalyticsWithOrg[], path: string, scope?: Scope): AnalyticData[] {
+export function counter(data: Array<unknown>, path: string, scope?: Scope): AnalyticData[] {
   const counter: Record<string | number, number> = {};
-  for (const analytic of analytics) {
-    const key = getDeepValue(analytic, path) as string | number;
-    if (!key) continue;
+
+  const count = (key: string | number) => {
     if (!counter[key]) counter[key] = 0;
     counter[key]++;
+  }
+
+  for (const datum of data) {
+    const value = getDeepValue(datum, path) as string | number;
+    if (!value) continue;
+    Array.isArray(value) ? value.forEach(count) : count(value);
   }
 
   return Object.entries(counter).map(([key, count]) => ({
     key,
     count,
-    label: scope ? toLabel(key, scope) : ''
+    label: scope ? toLabel(key, scope) : key
   }));
 }
 

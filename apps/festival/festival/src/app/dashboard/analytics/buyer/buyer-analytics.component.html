@@ -60,8 +60,14 @@
     </bf-table>
   </article>
 
-  <article class="surface">
+  <article class="surface graphs">
     <analytics-bar-chart [data]="totalAnalyticsPerTitle$ | async"></analytics-bar-chart>
+    <analytics-pie-chart class="surface" [data]="aggregatedPerGenre$ | async">
+      <h5>
+        <mat-icon svgIcon="theater_comedy"></mat-icon>
+        <span>Genres Tendancy</span>
+      </h5>
+    </analytics-pie-chart>
   </article>
 
   <article>

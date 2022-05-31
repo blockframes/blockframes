@@ -50,7 +50,11 @@ export interface AggregatedAnalytic extends Record<EventName, number> {
 }
 
 export interface AnalyticsWithOrg extends Analytics<AnalyticsTypes> {
-  org?: Organization
+  org?: Organization;
+}
+
+export interface AnalyticsWithTitle extends Analytics<AnalyticsTypes> {
+  title?: Movie;
 }
 
 export interface AnalyticData {

@@ -28,7 +28,15 @@
             </header>
             <bf-carousel [columns]="{ gtSm: 2, ltMd: 1 }">
               <ng-template carouselItem>
-                <analytics-pie-chart class="surface" [data]="orgActivityOfPopularTitle$ | async"></analytics-pie-chart>
+                <analytics-pie-chart class="surface" [data]="orgActivityOfPopularTitle$ | async">
+                  <article>
+                    <h5>
+                      <mat-icon svgIcon="business"></mat-icon>
+                      <span>Split by Company Activity</span>
+                    </h5>
+                    <p class="mat-caption">Learn who are the users who were interested in this Title.</p>
+                  </article>
+                </analytics-pie-chart>
               </ng-template>
 
               <ng-template carouselItem>

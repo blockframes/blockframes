@@ -5,9 +5,19 @@ import {
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate } from '@blockframes/analytics/utils';
+import { aggregate, counter } from '@blockframes/analytics/utils';
 import { MetricCard } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
-import { AggregatedAnalytic, EventName, Event, Screening, isScreening, Invitation, Analytics, isMovieAccepted, AnalyticData } from '@blockframes/model';
+import {
+  AggregatedAnalytic,
+  EventName,
+  isScreening,
+  Invitation,
+  Analytics,
+  isMovieAccepted,
+  AnalyticData,
+  Movie,
+  AnalyticsWithTitle
+} from '@blockframes/model';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { IconSvg } from '@blockframes/ui/icon.service';
@@ -29,6 +39,9 @@ import {
 } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/service';
 import { EventService } from '@blockframes/event/service';
+
+interface MovieWithAnalytics extends Movie { analytics: Analytics<'title'>[]; };
+
 
 interface VanityMetricEvent {
   name: EventName;
@@ -118,6 +131,17 @@ function fromUser(invitation: Invitation, uid: string) {
   return invitation.fromUser?.uid === uid || invitation.toUser?.uid === uid;
 }
 
+/**
+ * Converts array from Title With Analytics[] to Analytics[] with Title
+ */
+function swapTitleWithAnalytics(titles: MovieWithAnalytics[]): AnalyticsWithTitle[] {
+  const analytics = titles.map(title => title.analytics).flat();
+  for (const analytic of analytics) {
+    analytic['title'] = titles.find(title => title.id === analytic.meta.titleId);
+  }
+  return analytics;
+}
+
 @Component({
   selector: 'festival-buyer-analytics',
   templateUrl: './buyer-analytics.component.html',
@@ -147,10 +171,18 @@ export class BuyerAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  aggregatedCards$ = this.buyerAnalytics$.pipe(
-    map(titles => titles.map(title => title.analytics).flat()),
+  private titleAnalytics$ = this.buyerAnalytics$.pipe(
+    map(swapTitleWithAnalytics),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  aggregatedCards$ = this.titleAnalytics$.pipe(
     map(analytics => aggregate(analytics)),
     map(toCards)
+  );
+
+  aggregatedPerGenre$ = this.titleAnalytics$.pipe(
+    map(analytics => counter(analytics, 'title.genres'))
   );
 
   private aggregatedPerTitle$ = this.buyerAnalytics$.pipe(
