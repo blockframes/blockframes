@@ -60,6 +60,10 @@
     </bf-table>
   </article>
 
+  <article class="surface">
+    <analytics-bar-chart [data]="totalAnalyticsPerTitle$ | async"></analytics-bar-chart>
+  </article>
+
   <article>
     <h3>Screenings Buyer has participated</h3>
     <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
