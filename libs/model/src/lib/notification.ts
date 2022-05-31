@@ -32,6 +32,7 @@ export const notifications = {
     'requestToAttendEventCreated',
     'invitationToAttendMeetingCreated',
     'invitationToAttendScreeningCreated',
+    'invitationToAttendSlateCreated',
     'screeningRequested',
     'screeningRequestSent',
   ] as const,
