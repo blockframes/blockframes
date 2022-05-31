@@ -6,7 +6,7 @@ import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StorageFile, FileMetaData, createStorageFile, allowedFiles, fileSizeToString } from '@blockframes/model';
+import { FileMetaData, createStorageFile, allowedFiles, fileSizeToString } from '@blockframes/model';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../utils';
 import { FileUploaderService } from '../../file-uploader.service';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
@@ -227,18 +227,6 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   // Steps //
   ///////////
 
-  async goToShow() {
-    this.previewUrl$.next(await this.getDownloadUrl({
-      privacy: this.metadata.privacy,
-      collection: this.metadata.collection,
-      docId: this.metadata.docId,
-      field: this.metadata.field,
-      storagePath: this.storagePath
-    }));
-    this.nextStep('show');
-  }
-
-
   // drop
   filesSelected(fileList: FileList): void {
     this.file = fileList[0];
@@ -327,13 +315,5 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   nextStep(name: CropStep) {
     this.prev = this.step.getValue();
     this.step.next(name);
-  }
-
-  /**
-   * Returns a promise with the download url of an image based on its reference.
-   * If media is protected, this will also try to fetch a security token.
-   * */
-  private getDownloadUrl(file: StorageFile): Promise<string> {
-    return this.mediaService.generateImgIxUrl(file, this.parameters);
   }
 }
