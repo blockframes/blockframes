@@ -10,7 +10,7 @@ import {
   App,
   toLabel,
   isScreening,
-  Person,
+  displayName,
 } from '@blockframes/model';
 import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -26,7 +26,7 @@ import { InvitationService } from "@blockframes/invitation/service";
 import { EventService } from "@blockframes/event/service";
 import { OrganizationService } from '@blockframes/organization/service';
 import { filter, map, pluck, shareReplay, switchMap } from "rxjs/operators";
-import { combineLatest, firstValueFrom, from, Observable, of } from "rxjs";
+import { combineLatest, firstValueFrom, Observable, of } from "rxjs";
 import { joinWith } from 'ngfire';
 import { displayPerson } from "@blockframes/utils/pipes";
 
@@ -36,7 +36,7 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
   const participationRate = Math.round(attendees.length / invitations.length) * 100;
   const acceptationRate = Math.round(accepted.length / invitations.length) * 100;
-  const averageWatchTime = sum(attendees, inv => inv.watchTime) / invitations.length || 0
+  const averageWatchTime = Math.round(sum(attendees, inv => inv.watchTime) / invitations.length) || 0
   const parsedTime = `${Math.floor(averageWatchTime / 60)} min ${averageWatchTime % 60} s`
   const traction = Math.round(screeningRequests.length / (invitations.length + screeningRequests.length)) * 100;
   return [
@@ -58,7 +58,7 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
     {
       title: 'Participation Rate',
       value: `${participationRate}%`,
-      icon: 'hand'
+      icon: 'front_hand'
     },
     {
       title: 'Acceptation Rate',
@@ -76,15 +76,13 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
 function emailFilter(input: string, value: string, invitation: Invitation) {
   const email = getGuest(invitation, 'user')?.email;
   if (!email) return false;
-  const caseInsensitive = new RegExp(input, 'i');
-  return email.match(caseInsensitive)?.length;
+  return email.toLowerCase().includes(input.toLowerCase());
 }
 
 function nameFilter(input: string, value: string, invitation: Invitation) {
   const names = displayPerson(getGuest(invitation, 'user'));
   if (!names.length) return false;
-  const caseInsensitive = new RegExp(input, 'i');
-  return names.some(name => name.match(caseInsensitive)?.length);
+  return names.join(' ').toLowerCase().includes(input.toLowerCase());
 }
 
 @Component({
@@ -193,9 +191,11 @@ export class TitleAnalyticsComponent {
     const analytics = data.map(invitation => {
       const activity = invitation.guestOrg?.activity;
       const country = invitation.guestOrg?.addresses?.main?.country;
+      const user = getGuest(invitation, 'user');
+      const name = displayName(user);
       return {
-        'Name': `${invitation.toUser.firstName} ${invitation.toUser.lastName}`,
-        'Email': invitation.toUser.email,
+        'Name': name,
+        'Email': user.email,
         'Company Name': invitation.guestOrg?.denomination?.public ?? '-',
         'Activity': activity ? toLabel(activity, 'orgActivity') : '-',
         'Country': country ? toLabel(country, 'territories') : '-',
@@ -232,6 +232,6 @@ export class TitleAnalyticsComponent {
 
   private getOrg(invitation: Invitation) {
     const orgId = getGuest(invitation, 'user').orgId;
-    return orgId ? from(this.orgService.getValue(orgId)) : of(undefined);
+    return orgId ? this.orgService.valueChanges(orgId) : of(undefined);
   }
 }
