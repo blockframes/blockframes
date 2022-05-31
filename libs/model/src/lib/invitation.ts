@@ -2,8 +2,9 @@ import type { App, InvitationStatus, InvitationType } from './static';
 import { Organization, PublicOrganization } from './organisation';
 import { PublicUser } from './user';
 import { Movie } from './movie';
-import { Event } from './event';
+import { Event, Screening } from './event';
 import { Timestamp } from './timestamp';
+import { Analytics } from './analytics';
 
 /**
  * Raw type for Invitation.
@@ -17,10 +18,10 @@ import { Timestamp } from './timestamp';
  * */
 export interface InvitationBase<D extends Timestamp | Date> extends PublicInvitation {
   date: D;
-  /** @dev An invitation is created by an user or an org (fromOrg or fromUser) */
+  /** @dev An invitation is created by a user or an org (fromUser or fromOrg) */
   fromOrg?: PublicOrganization,
   fromUser?: PublicUser,
-  /** @dev An invitation is for an user or an org */
+  /** @dev An invitation is for a user or an org */
   toOrg?: PublicOrganization,
   toUser?: PublicUser,
   /**
@@ -69,7 +70,7 @@ export function createPublicInvitation(invitation: Invitation) {
 
 /* 
   We want to display attendEvent invitation in festival only
-  JoinOrganisation must be displayed on every app 
+  JoinOrganisation must be displayed on every app
 */
 export function filterInvitation(invitation: Invitation, app: App) {
   return invitation.type === 'attendEvent' ? app === 'festival' : true;
@@ -84,3 +85,12 @@ export interface InvitationDetailed extends Invitation {
   guest?: PublicUser;
   movie?: Movie;
 }
+
+export interface InvitationWithScreening extends Invitation {
+  event: Event<Screening>;
+}
+
+export interface InvitationWithAnalytics extends Invitation {
+  analytics: Analytics[];
+};
+
