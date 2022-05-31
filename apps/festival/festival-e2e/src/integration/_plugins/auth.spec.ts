@@ -8,7 +8,7 @@ describe('Auth tests', () => {
   it('create / get / update / delete', () => {
     cy.visit('');
     maintenance.start();
-    adminAuth.deleteAllTestUsers()
+    adminAuth.deleteAllTestUsers();
     adminAuth.getUser(adminUid).then((user: UserRecord) => expect(user).to.be.null);
     adminAuth.createUser({ uid: adminUid, email: orgAdmin.email });
     adminAuth.getUser(adminUid).then((user: UserRecord) => expect(user.emailVerified).to.be.false);

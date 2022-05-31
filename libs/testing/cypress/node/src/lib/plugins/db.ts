@@ -1,6 +1,7 @@
 import { db } from '../testing-cypress';
 import { createUser, createOrganization, createPermissions, ModuleAccess, App } from '@blockframes/model';
 import { endMaintenance, startMaintenance } from '@blockframes/firebase-utils';
+import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 
 export async function getRandomEmail() {
   const { email } = await getRandomUser();
@@ -86,7 +87,11 @@ export async function importData(data: Record<string, object>[]) {
     Object.entries(document).map(([path, content]) => {
       if (!isDocumentPath(path))
         throw new Error('Document path mandatory, like [collectionPath/DocumentPath]. Got ' + JSON.stringify(path));
-      content['_meta'] = { e2e: true };
+      if ('_meta' in content) {
+        content['_meta']['e2e'] = true;
+      } else {
+        content['_meta'] = { e2e: true };
+      }
       createAll.push(db.doc(path).set(content));
     });
   }
@@ -193,7 +198,7 @@ export async function updateData(data: { docPath: string; field: string; value: 
     const { docPath, field, value } = update;
     if (!isDocumentPath(docPath))
       throw new Error('Document path mandatory, like [collectionPath/DocumentPath]. Got ' + JSON.stringify(docPath));
-      const docRef = db.doc(docPath);
+    const docRef = db.doc(docPath);
     updateAll.push(docRef.update({ [field]: value }));
   }
   return Promise.all(updateAll);
@@ -206,5 +211,5 @@ export async function startEmulatorMaintenance() {
 }
 
 export async function endEmulatorMaintenance() {
-  return await endMaintenance(db, 480000); // 480000ms = 8 minutes
+  return await endMaintenance(db, EIGHT_MINUTES_IN_MS);
 }

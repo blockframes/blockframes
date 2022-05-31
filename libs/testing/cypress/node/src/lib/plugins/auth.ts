@@ -1,9 +1,8 @@
 import { auth } from '../testing-cypress';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
-import { DeleteUsersResult } from 'firebase-admin/lib/auth/base-auth';
 
 export async function createUser(data: { uid: string; email: string }) {
-  return auth.createUser({ ...data, password: USER_FIXTURES_PASSWORD });
+  return await auth.createUser({ ...data, password: USER_FIXTURES_PASSWORD });
 }
 
 export async function getUser(emailOrUid: string) {
