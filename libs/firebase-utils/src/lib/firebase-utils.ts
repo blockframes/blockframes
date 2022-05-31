@@ -30,7 +30,7 @@ export async function queryDocument<T>(query: FirebaseFirestore.Query<FirebaseFi
   return toDate(snap.docs[0].data()) as T;
 }
 
-export async function queryDocuments<T>(query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>, tx: FirebaseFirestore.Transaction): Promise<T[]> {
+export async function queryDocuments<T>(query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>, tx?: FirebaseFirestore.Transaction): Promise<T[]> {
   const snap =  tx ? await tx.get(query) : await query.get();
   return snap.docs.map(doc => toDate(doc.data()) as T);
 }
