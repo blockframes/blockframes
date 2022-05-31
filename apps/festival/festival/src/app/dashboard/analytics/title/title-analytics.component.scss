@@ -22,6 +22,17 @@ section {
   padding: 24px;
   gap: 24px;
 
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .last_screenings {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0;
+    }
+  }
+
   a {
     margin-bottom: 16px;
   }
@@ -31,16 +42,6 @@ section {
   height: fit-content;
 }
 
-.heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  .last_screenings {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0;
-  }
-}
 
 bf-table.screenings {
   margin-top: 24px;

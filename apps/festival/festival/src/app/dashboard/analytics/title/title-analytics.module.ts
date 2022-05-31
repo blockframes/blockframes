@@ -37,6 +37,7 @@ import { GuestPipeModule } from '@blockframes/invitation/pipes/guest.pipe';
     // Material
     MatButtonModule,
     MatIconModule,
+
     // Router
     RouterModule.forChild([
       {

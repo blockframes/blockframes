@@ -83,7 +83,7 @@
     </ng-template>
   </bf-table>
 
-  <header class="heading">
+  <header>
     <h3 class="last_screenings">
       <span>Last Screenings</span>
       <mat-icon svgIcon="info"></mat-icon>
@@ -97,14 +97,14 @@
     <p>"O" meaning the user left the screening right away.</p>
     <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
     <ng-container *ngIf="invitations$ | async as invitations">
-      <header class="heading">
+      <header>
         <h5>Attendees</h5>
 
         <button mat-button [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export to .CSV</button>
       </header>
       <bf-table class="screenings" [source]="invitations" clickable useFilter pagination="5">
         <ng-template colRef label="Name" let-invitation="item" sort defaultSort [filter]="filters.name">
-          <b *ngIf="invitation| guest:'user' as user">{{ user | displayName }}</b>
+          <b>{{ invitation | guest:'user' | displayName }}</b>
         </ng-template>
         <ng-template colRef label="Email" let-invitation="item" sort defaultSort [filter]="filters.email">
           <span>{{ (invitation | guest: 'user').email }}</span>
