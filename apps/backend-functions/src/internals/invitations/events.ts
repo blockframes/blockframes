@@ -1,6 +1,6 @@
-import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from "./utils";
-import { createNotification, triggerNotifications } from "../../notification";
-import { createDocumentMeta, createPublicInvitationDocument, getAdminIds, getDocument } from "../../data/internals";
+import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from './utils';
+import { createNotification, triggerNotifications } from '../../notification';
+import { createDocumentMeta, createPublicInvitationDocument, getAdminIds, getDocument } from '../../data/internals';
 import * as admin from 'firebase-admin';
 import {
   OrganizationDocument,

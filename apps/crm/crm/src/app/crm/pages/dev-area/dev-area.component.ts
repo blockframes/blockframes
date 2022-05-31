@@ -20,7 +20,7 @@ export class DevAreaComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.token = await firstValueFrom(this.authService._user$)
+    this.token = await firstValueFrom(this.authService.user$)
       .then(user => user.getIdToken());
     this.cdRef.markForCheck();
   }
