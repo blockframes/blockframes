@@ -3,7 +3,15 @@ import { Organization, Invitation, Notification, PublicOrganization } from '@blo
 
 // Array for special Organizations
 const specialOrgs = [
-  // { id: 'org id', name: 'Org name' }
+  { id: 'BsQS0gTqFJ1mpkJVZjNf', field: 'full' },
+  { id: 'D453XC3B8VEP64RLDbac', field: 'full' },
+  { id: 'AQRsAqOCjozQdLEkSWxb', field: 'full' },
+  { id: '2u1lVQ1AziAhgZdFBZp5', field: 'full' },
+  { id: 'OWZ6SHhsmM6C27fbEGPQ', field: 'full' },
+  { id: 'wptWZnXiAzjIJorVbycy', field: 'public' },
+  { id: 'VJFAyk8QTJkzilFzIM9d', field: 'full' },
+  { id: 'qSKCCJxDPiYenuO6tcSi', field: 'public' },
+  { id: 'XDAqvNGZJAaxw8LGyq4f', field: 'full' }
 ];
 
 /**
@@ -91,8 +99,9 @@ function updateOrganization(org: Organization | PublicOrganization, fullName: st
   const specialOrgsIds = specialOrgs.map(org => org.id);
   if (specialOrgs.length && specialOrgsIds.includes(org.id)) {
     const index = specialOrgsIds.indexOf(org.id);
+    const field = specialOrgs[index].field;
+    (org as any).name = org.denomination[field];
     delete org.denomination;
-    (org as any).name = specialOrgs[index].name;
     update = true;
   }
 
