@@ -1,13 +1,11 @@
-import { ChangeDetectionStrategy, Component, Inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { APP } from '@blockframes/utils/routes/utils';
 import {
   AggregatedAnalytic,
   Analytics,
   sum,
   InvitationWithAnalytics,
   Invitation,
-  App,
   toLabel,
   isScreening,
   displayName,
@@ -53,7 +51,7 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
     {
       title: 'Average watch time',
       value: parsedTime,
-      icon: 'stop_watch'
+      icon: 'timer'
     },
     {
       title: 'Participation Rate',
@@ -63,7 +61,7 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
     {
       title: 'Acceptation Rate',
       value: `${acceptationRate}%`,
-      icon: 'smiley'
+      icon: 'sentiment_satisfied'
     },
     {
       title: 'Traction Rate',
@@ -167,7 +165,6 @@ export class TitleAnalyticsComponent {
     private navService: NavigationService,
     private eventService: EventService,
     private invitationService: InvitationService,
-    @Inject(APP) public app: App,
   ) { }
 
   goBack() {
