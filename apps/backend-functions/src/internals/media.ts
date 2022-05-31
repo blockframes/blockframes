@@ -13,7 +13,8 @@ import {
   Screening,
   Slate,
   Privacy,
-  Movie
+  Movie,
+  User
 } from '@blockframes/model';
 import { getDocument, getDocumentRef } from '@blockframes/firebase-utils';
 
@@ -22,20 +23,17 @@ import { isUserInvitedToEvent } from './invitations/events';
 
 
 export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string, email?: string): Promise<boolean> {
-  const db = admin.firestore();
   const eventData = eventId ? await getDocument<Event<EventMeta>>(`events/${eventId}`) : undefined;
 
   let userDoc = createPublicUser({ uid, email });
-  const user = await db.collection('users').doc(uid).get();
-  if (user.exists) {
-    userDoc = createPublicUser(user.data());
-  }
+  const user = await getDocument<User>(`users/${uid}`);
+  if (user) { userDoc = createPublicUser(user);}
 
   if ((!eventData || eventData?.accessibility === 'private') && !userDoc.orgId) {
     return false;
   }
 
-  const blockframesAdmin = await db.collection('blockframesAdmin').doc(uid).get();
+  const blockframesAdmin = await getDocumentRef(`blockframesAdmin/${uid}`);
   if (blockframesAdmin.exists) { return true; }
 
   // We should not trust `privacy` & `storagePath` that comes from the parameters
