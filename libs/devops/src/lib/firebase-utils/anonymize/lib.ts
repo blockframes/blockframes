@@ -22,7 +22,6 @@ import {
 } from '@blockframes/firebase-utils';
 import { firebase, testVideoId } from '@env';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
-import { firestore } from 'firebase-admin';
 import { Queue } from '../../internals/queue';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
@@ -156,7 +155,7 @@ function processMovie(movie: Movie): Movie {
 
 function processMaintenanceDoc(doc: IMaintenanceDoc) {
   if (doc.startedAt && !doc.endedAt) return doc;
-  return { endedAt: null, startedAt: firestore.Timestamp.now() };  // TODO #7273 #8006
+  return { endedAt: null, startedAt: new Date() };
 }
 
 export function anonymizeDocument({ docPath, content: doc }: DbRecord) {

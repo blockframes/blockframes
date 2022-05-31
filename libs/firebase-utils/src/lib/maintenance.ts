@@ -1,4 +1,3 @@
-import * as admin from 'firebase-admin';
 import {
   MAINTENANCE_DOCUMENT_NAME,
   META_COLLECTION_NAME,
@@ -6,6 +5,7 @@ import {
 } from '@blockframes/utils/maintenance';
 import { loadAdminServices } from './util';
 import { IMaintenanceDoc } from '@blockframes/model';
+import { toDate } from './firebase-utils';
 
 const maintenanceRef = (db?: FirebaseFirestore.Firestore) => {
   if (!db) db = loadAdminServices().db;
@@ -48,7 +48,7 @@ export async function isInMaintenance(db?: FirebaseFirestore.Firestore): Promise
     // we force maintenance mode to true.
     if (!doc.exists) return true;
 
-    return _isInMaintenance(doc.data() as IMaintenanceDoc, 0);
+    return _isInMaintenance(toDate(doc.data()) as IMaintenanceDoc, 0);
   } catch (e) {
     throw new Error(`Error while checking if app is in maintenance mode: ${e.message}`);
   }

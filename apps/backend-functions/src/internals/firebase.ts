@@ -33,7 +33,7 @@ db.collection(META_COLLECTION_NAME)
   .doc(MAINTENANCE_DOCUMENT_NAME)
   .onSnapshot(
     (snap) => {
-      const maintenanceDoc = snap.data() as IMaintenanceDoc;
+      const maintenanceDoc = toDate(snap.data()) as IMaintenanceDoc;
       maintenanceActive = _isInMaintenance(maintenanceDoc, 0);
     },
     // If there is an error, revert back to old method to prevent stuck functions
