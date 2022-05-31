@@ -2,7 +2,7 @@
   display: block;
 }
 
-header {
+.banner {
   padding: 24px;
   background-size: cover;
   background-position: center;
@@ -27,31 +27,21 @@ section {
   }
 }
 
-section.surface{
-  margin: 24px;
-  display: block;
-  header{
-    padding: 0px;
-  }
-}
-
-
 .film-page-button {
   height: fit-content;
 }
 
-
-.heading{
+.heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  h3{
+  .last_screenings {
     display: flex;
     align-items: center;
+    margin-bottom: 0;
   }
 }
 
-bf-table.screenings{
+bf-table.screenings {
   margin-top: 24px;
 }
-
