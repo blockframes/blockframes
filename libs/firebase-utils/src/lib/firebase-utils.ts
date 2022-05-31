@@ -7,8 +7,8 @@ export function toDate<D>(target: D): D {
   for (const key in target) {
     const value = target[key];
     if (!value || typeof value !== 'object') continue;
-    if (value instanceof admin.firestore.Timestamp) {
-      target[key] = value.toDate() as any;
+    if (!!value['_seconds'] && !!value['_nanoseconds']) {
+      target[key] = (value as any).toDate();
       continue;
     }
     toDate(value);
@@ -26,12 +26,12 @@ export function getDocument<T>(path: string, db?: admin.firestore.Firestore, tx?
 }
 
 export async function queryDocument<T>(query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>, tx?: FirebaseFirestore.Transaction): Promise<T> {
-  const snap =  tx ? await tx.get(query.limit(1)) : await query.limit(1).get();
+  const snap = tx ? await tx.get(query.limit(1)) : await query.limit(1).get();
   return toDate(snap.docs[0].data()) as T;
 }
 
 export async function queryDocuments<T>(query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>, tx?: FirebaseFirestore.Transaction): Promise<T[]> {
-  const snap =  tx ? await tx.get(query) : await query.get();
+  const snap = tx ? await tx.get(query) : await query.get();
   return snap.docs.map(doc => toDate(doc.data()) as T);
 }
 
