@@ -53,7 +53,10 @@ bf-table.screenings {
   gap: 16px;
   overflow-x: auto;
   analytics-line-chart{
-  flex: 1 1;
+    flex: 1 1;
+    h5{
+      display: flex;
+    }
   }
 }
 
