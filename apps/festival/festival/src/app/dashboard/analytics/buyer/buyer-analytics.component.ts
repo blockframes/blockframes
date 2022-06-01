@@ -1,3 +1,7 @@
+import {
+  InvitationWithScreening,
+  InvitationWithAnalytics,
+} from "@blockframes/model";
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -25,10 +29,6 @@ import {
 } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/service';
 import { EventService } from '@blockframes/event/service';
-
-interface InvitationWithScreening extends Invitation {
-  event: Event<Screening>;
-}
 
 interface VanityMetricEvent {
   name: EventName;
@@ -84,11 +84,10 @@ function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
   return data.map(({ title, total }) => ({
     key: title.id,
     count: total,
-    label: title.title.international ?? title.title.original  
+    label: title.title.international ?? title.title.original
   }));
 }
 
-interface InvitationWithAnalytics extends Invitation { analytics: Analytics[]; };
 function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attended = invitations.filter(invitation => invitation.watchTime);
   return [
