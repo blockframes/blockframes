@@ -84,6 +84,19 @@
   </bf-table>
 
   <header>
+    <h3>Vanity Metrics</h3>
+  </header>
+  <article class="surface">
+    <analytics-line-chart class="surface" [eventNames]="['pageView']" [data]="titleAnalytics$ | async">
+      <h5>
+        <mat-icon svgIcon="visibility"></mat-icon>
+        <span>Film Page Views</span>
+      </h5>
+      <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
+    </analytics-line-chart>
+  </article>
+
+  <header>
     <h3>
       <span>Last Screenings</span>
       <mat-icon svgIcon="info" [matTooltip]="'Statistics are updated in real time.'"></mat-icon>
