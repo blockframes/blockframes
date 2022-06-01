@@ -15,7 +15,7 @@ export function counter(data: Array<unknown>, path: string, scope?: Scope): Anal
 
   for (const datum of data) {
     const value = getDeepValue(datum, path) as string | number | (string | number)[];
-    if (!value) continue;
+    if (!value && value !== 0) continue;
     Array.isArray(value) ? value.forEach(count) : count(value);
   }
 
