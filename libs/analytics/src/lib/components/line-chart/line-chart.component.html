@@ -1,6 +1,8 @@
 <header>
-  <ng-content></ng-content>
+  <ng-content select="[title]"></ng-content>
 </header>
+<ng-content select="[caption]"></ng-content>
+
 <ng-container *ngIf="!isLoading else loading">
   <ng-container *ngIf="lineChartOptions.series?.length; else empty">
     <section>
