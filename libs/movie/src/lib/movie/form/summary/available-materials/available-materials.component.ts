@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MediaService } from '@blockframes/media/service';
+import { StorageFile } from '@blockframes/model';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
@@ -8,20 +10,20 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
   styleUrls: ['./available-materials.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SummaryAvailableMaterialsComponent implements OnInit {
+export class SummaryAvailableMaterialsComponent {
 
   @Input() movie: MovieForm;
   @Input() link: string;
   @Input() @boolean download = false;
 
-  public versionLength: number;
+  constructor(private mediaService: MediaService) { }
 
-  ngOnInit() {
-    this.versionLength = Object.keys(this.movie.languages.controls).length;
-  }
-
-  get file() {
+  get file(): StorageFile {
     return this.movie.get('delivery').get('file').value;
   }
 
+  public async downloadFile() {
+    const url = await this.mediaService.generateImgIxUrl(this.file);
+    window.open(url);
+  }
 }
