@@ -1,5 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 // Blockframes
 import { fromOrg, MovieService } from '@blockframes/movie/service';
@@ -23,7 +24,6 @@ import { combineLatest } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
-import { ActivatedRoute, Router } from '@angular/router';
 
 // NgFire
 import { joinWith } from 'ngfire';
@@ -106,6 +106,7 @@ export class HomeComponent {
     }),
     map(users => users.sort((userA, userB) => userA.total - userB.total))
   );
+
 
   interactions: EventName[] = [
     'addedToWishlist',

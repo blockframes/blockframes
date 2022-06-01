@@ -106,6 +106,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
     'requestFromUserToJoinOrgCreate',
     'requestToAttendEventCreated',
     'invitationToAttendScreeningCreated',
+    'invitationToAttendSlateCreated',
     'invitationToAttendMeetingCreated',
 
     // user does not have access to app yet, notification only used to send email
@@ -203,6 +204,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
       case 'invitationToAttendMeetingCreated':
       case 'invitationToAttendScreeningCreated':
+      case 'invitationToAttendSlateCreated':
         await sendInvitationToAttendEventCreatedEmail(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
