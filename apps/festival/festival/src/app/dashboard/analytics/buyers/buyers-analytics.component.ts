@@ -7,9 +7,10 @@ import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
-import { joinWith } from 'ngfire';
 import { APP } from '@blockframes/utils/routes/utils';
-import { map } from 'rxjs/operators';
+
+import { joinWith } from 'ngfire';
+import { map, shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-buyers-analytics',
@@ -33,7 +34,8 @@ export class BuyersAnalyticsComponent {
     joinWith({
       users: ({ uids }) => this.userService.valueChanges(uids),
       orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
-    }, { shouldAwait: true })
+    }, { shouldAwait: true }),
+    shareReplay({bufferSize:1, refCount:true})
   );
 
   buyersAnalytics$ = this.analyticsWithUsersAndOrgs$.pipe(
