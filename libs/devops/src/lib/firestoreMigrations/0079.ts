@@ -3,8 +3,16 @@ import { Organization, Invitation, Notification, PublicOrganization } from '@blo
 
 // Array for special Organizations
 const specialOrgs = [
-  // { id: 'org id', name: 'Org name' }
-];
+  { id: 'BsQS0gTqFJ1mpkJVZjNf', field: 'full' },
+  { id: 'D453XC3B8VEP64RLDbac', field: 'full' },
+  { id: 'AQRsAqOCjozQdLEkSWxb', field: 'full' },
+  { id: '2u1lVQ1AziAhgZdFBZp5', field: 'full' },
+  { id: 'OWZ6SHhsmM6C27fbEGPQ', field: 'full' },
+  { id: 'wptWZnXiAzjIJorVbycy', field: 'public' },
+  { id: 'VJFAyk8QTJkzilFzIM9d', field: 'full' },
+  { id: 'qSKCCJxDPiYenuO6tcSi', field: 'public' },
+  { id: 'XDAqvNGZJAaxw8LGyq4f', field: 'full' }
+] as { id: string, field: 'public' | 'full'}[];
 
 /**
  * Update organization from organizations, invitations and notifications documents
@@ -17,7 +25,7 @@ export async function upgrade(db: Firestore) {
   console.log('Migrate Invitations');
   await migrateInvitations(db);
   console.log('Migrate Notifications');
-  return await migrateNotifications(db);
+  return migrateNotifications(db);
 }
 
 async function migrateOrganizations(db: Firestore) {
@@ -29,10 +37,7 @@ async function migrateOrganizations(db: Firestore) {
     // Skip all organization without denomination
     if (!(org as any)?.denomination) return false;
 
-    const publicName = (org as any).denomination.public;
-    const fullName = (org as any).denomination.full;
-
-    const { updatedOrg , update } = updateOrganization(org, fullName, publicName);
+    const { updatedOrg , update } = updateOrganization(org);
 
     // Delete fiscal number and bank accounts
     delete (updatedOrg as Organization).fiscalNumber;
@@ -48,15 +53,12 @@ async function migrateInvitations(db: Firestore) {
   return runChunks(invitations.docs, async (doc) => {
     const invitationBase = doc.data() as Invitation;
     const type = invitationBase?.fromOrg ? 'fromOrg' : 'toOrg';
-    const invitation = invitationBase[type];
+    const organization = invitationBase[type];
 
     // Skip all invitation without denomination
-    if (!(invitation as any)?.denomination) return false;
+    if (!organization?.denomination) return false;
 
-    const publicName = (invitation as any).denomination.public;
-    const fullName = (invitation as any).denomination.full;
-
-    const { updatedOrg, update } = updateOrganization(invitation, fullName, publicName);
+    const { updatedOrg, update } = updateOrganization(organization);
     invitationBase[type] = updatedOrg;
 
     if (update) await doc.ref.set(invitationBase);
@@ -72,11 +74,9 @@ async function migrateNotifications(db: Firestore) {
     // Skip all notifications without organization or organization.denomination
     if (!notificationBase?.organization || !(notificationBase.organization as any)?.denomination) return false;
 
-    const notification = notificationBase.organization;
-    const publicName = (notification as any).denomination.public;
-    const fullName = (notification as any).denomination.full;
+    const organization = notificationBase.organization;
 
-    const { updatedOrg, update } = updateOrganization(notification, fullName, publicName);
+    const { updatedOrg, update } = updateOrganization(organization);
     notificationBase.organization = updatedOrg;
 
     if (update) await doc.ref.set(notificationBase);
@@ -84,15 +84,18 @@ async function migrateNotifications(db: Firestore) {
 }
 
 
-function updateOrganization(org: Organization | PublicOrganization, fullName: string, publicName: string) {
+function updateOrganization(org: Organization | PublicOrganization) {
   let update = false;
+  const fullName = org.denomination.full;
+  const publicName = org.denomination.public;
 
   // If org is part of specialOrgs
   const specialOrgsIds = specialOrgs.map(org => org.id);
   if (specialOrgs.length && specialOrgsIds.includes(org.id)) {
     const index = specialOrgsIds.indexOf(org.id);
-    delete (org as any).denomination;
-    (org as any).name = specialOrgs[index].name;
+    const field = specialOrgs[index].field;
+    (org as any).name = field === 'full' ? fullName : publicName;
+    delete org.denomination;
     update = true;
   }
 

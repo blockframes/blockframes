@@ -1,8 +1,10 @@
+@import "@angular/flex-layout/mq";
+
 :host {
   display: block;
 }
 
-header {
+.banner {
   padding: 24px;
   background-size: cover;
   background-position: center;
@@ -15,11 +17,23 @@ header {
 analytics-map h5 {
   display: flex;
 }
+
 section {
   display: flex;
   flex-direction: column;
   padding: 24px;
   gap: 24px;
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    h3 {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0;
+    }
+  }
 
   a {
     margin-bottom: 16px;
@@ -28,4 +42,26 @@ section {
 
 .film-page-button {
   height: fit-content;
+}
+
+bf-table.screenings {
+  margin-top: 24px;
+}
+
+.vanity_metrics{
+  display: flex;
+  gap: 16px;
+  analytics-line-chart{
+    flex-grow: 1;
+    h5{
+      display: flex;
+    }
+  }
+}
+
+
+@include layout-bp(lt-lg) {
+  .vanity_metrics{
+    flex-direction: column;
+  }
 }

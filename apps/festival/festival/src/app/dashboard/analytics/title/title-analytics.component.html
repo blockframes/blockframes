@@ -1,4 +1,4 @@
-<header fxLayout="column" fxLayoutGap="20px" class="dark-contrast-theme" bgAsset="background_header.png" bgTheme="dark">
+<header fxLayout="column" fxLayoutGap="20px" class="dark-contrast-theme banner" bgAsset="background_header.png" bgTheme="dark">
   <button mat-icon-button (click)="goBack()">
     <mat-icon svgIcon="arrow_back"></mat-icon>
   </button>
@@ -82,4 +82,68 @@
       {{ askingPriceRequested ? 'Yes' : '-' }}
     </ng-template>
   </bf-table>
+
+  <h3>Vanity Metrics</h3>
+  <article class="surface vanity_metrics">
+    <analytics-line-chart class="surface" [eventNames]="['pageView']" [data]="titleAnalytics$ | async">
+      <h5>
+        <mat-icon svgIcon="visibility"></mat-icon>
+        <span>Film Page Views</span>
+      </h5>
+      <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
+    </analytics-line-chart>
+    <analytics-line-chart class="surface" [eventNames]="interactions" [data]="titleInteractions$ | async">
+      <h5>
+        <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
+        <span>Interactions</span>
+      </h5>
+    </analytics-line-chart>
+  </article>
+
+  <header>
+    <h3>
+      <span>Last Screenings</span>
+      <mat-icon svgIcon="info" [matTooltip]="'Statistics are updated in real time.'"></mat-icon>
+    </h3>
+    <ng-container *ngIf="ongoingScreenings$ | async as events">
+      <a ongoing-event-button routerLink="/c/o/dashboard/event/{{events[0].id}}/statistics">Ongoing
+        Screenings</a>
+    </ng-container>
+  </header>
+  <article class="surface">
+    <p>"O" meaning the user left the screening right away.</p>
+    <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
+    <ng-container *ngIf="invitations$ | async as invitations">
+      <header>
+        <h5>Attendees</h5>
+
+        <button mat-button [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export to .CSV</button>
+      </header>
+      <bf-table class="screenings" [source]="invitations" clickable useFilter pagination="5">
+        <ng-template colRef label="Name" let-invitation="item" sort defaultSort [filter]="filters.name">
+          <b>{{ invitation | guest:'user' | displayName }}</b>
+        </ng-template>
+        <ng-template colRef label="Email" let-invitation="item" sort defaultSort [filter]="filters.email">
+          <span>{{ (invitation | guest: 'user').email }}</span>
+        </ng-template>
+        <ng-template colRef="guestOrg.denomination.public" label="Company Name" let-name sort defaultSort>
+          <span>{{ name ?? '-' }}</span>
+        </ng-template>
+        <ng-template colRef="guestOrg.activity" label="Activity" let-activity sort defaultSort [filter]="filters.orgActivity">
+          <span *ngIf="activity else noActivity">{{ activity | toLabel: 'orgActivity' }}</span>
+          <ng-template #noActivity>-</ng-template>
+        </ng-template>
+        <ng-template colRef="guestOrg.addresses.main.country" label="Country" let-country sort defaultSort [filter]="filters.territories">
+          <span *ngIf="country else noCountry">
+            {{ country | toLabel:'territories' }}
+          </span>
+          <ng-template #noCountry>-</ng-template>
+        </ng-template>
+        <ng-template colRef="watchTime" label="Watchtime" let-watchtime sort defaultSort>
+          <span>{{ watchtime || 0 }} S</span>
+        </ng-template>
+      </bf-table>
+    </ng-container>
+  </article>
 </section>
+

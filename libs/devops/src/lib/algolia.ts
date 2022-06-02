@@ -11,7 +11,6 @@ import {
 import { algolia } from '@env';
 import {
   OrganizationDocument,
-  orgName,
   MovieDocument,
   PublicUser,
   Campaign,
@@ -94,6 +93,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = loadAdminServic
             console.error(`Movie ${movie.id} is not part of any orgs`);
           }
 
+          // TODO #8518
           const organizationNames = orgs.map((org) => (org as any).name);
 
           if (appConfig === 'financiers') {

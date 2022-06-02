@@ -4,7 +4,6 @@ import * as functions from 'firebase-functions';
 import {
   MovieDocument,
   OrganizationDocument,
-  orgName,
   PublicUser,
   festival,
   Language,
@@ -89,6 +88,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string,
 export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrganization {
   return {
     objectID: org.id,
+    // TODO #8518
     name: (org as any).name,
     appModule: getOrgModuleAccess(org),
     country: org.addresses.main.country,
@@ -219,7 +219,8 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string, d
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
       avatar: user.avatar?.storagePath ?? '',
-      orgName: orgData ? orgName(orgData) : '',
+    // TODO #8518
+      orgName: orgData ? (orgData as any).name : '',
     };
 
     return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);
