@@ -9,7 +9,7 @@ export async function createUser(data: { uid: string; email: string }) {
 
 export async function getUser(emailOrUid: string) {
   try {
-    emailOrUid.includes('@') ? await auth.getUserByEmail(emailOrUid) : await auth.getUser(emailOrUid);
+    return emailOrUid.includes('@') ? await auth.getUserByEmail(emailOrUid) : await auth.getUser(emailOrUid);
   } catch (err) {
     if (err.code === 'auth/user-not-found') return null;
     throw err.code;
@@ -28,6 +28,11 @@ export async function updateUser(data: { uid: string; update: Partial<User> }) {
 export async function deleteAllTestUsers() {
   const list = await auth.listUsers();
   const users = list.users;
-  const uids = users.filter(user => user.email.includes(`@${serverId}.mailosaur.net`)).map(user => user.uid);
+  const uids = users
+    .filter(user => {
+      if (!user.email) throw new Error(`Failed to delete all auth users because one has no mail : uid ${user.uid}`);
+      return !user.email || user.email.includes(`@${serverId}.mailosaur.net`);
+    })
+    .map(user => user.uid);
   return await auth.deleteUsers(uids);
 }

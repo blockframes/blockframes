@@ -27,7 +27,7 @@ export const fakeUserData = () => {
 export function createFakeUserDataArray(number: number) {
   const fakeUserDataArray = [];
   for (let i = 0; i < number; i++) {
-    fakeUserDataArray.push(fakeUserData);
+    fakeUserDataArray.push(fakeUserData());
   }
   return fakeUserDataArray;
 }
