@@ -12,7 +12,7 @@ const specialOrgs = [
   { id: 'VJFAyk8QTJkzilFzIM9d', field: 'full' },
   { id: 'qSKCCJxDPiYenuO6tcSi', field: 'public' },
   { id: 'XDAqvNGZJAaxw8LGyq4f', field: 'full' }
-];
+] as { id: string, field: 'public' | 'full'}[];
 
 /**
  * Update organization from organizations, invitations and notifications documents
