@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate } from '@blockframes/analytics/utils';
+import { aggregate, counter } from '@blockframes/analytics/utils';
 import { AggregatedAnalytic, App } from '@blockframes/model';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -20,7 +20,7 @@ import { map } from 'rxjs/operators';
 export class BuyersAnalyticsComponent {
 
   // The analytics of each buyer who interacted with sellers' title
-  buyersAnalytics$ = this.titleService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
+  analyticsWithUsersAndOrgs$ = this.titleService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
     joinWith({
       analytics: title => this.analytics.getTitleAnalytics({ titleId: title.id }),
     }, { shouldAwait: true }),
@@ -33,7 +33,10 @@ export class BuyersAnalyticsComponent {
     joinWith({
       users: ({ uids }) => this.userService.valueChanges(uids),
       orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
-    }, { shouldAwait: true }),
+    }, { shouldAwait: true })
+  );
+
+  buyersAnalytics$ = this.analyticsWithUsersAndOrgs$.pipe(
     map(({ users, orgs, analytics }) => {
       return users.map(user => {
         const org = orgs.find(o => o.id === user.orgId);
@@ -41,6 +44,18 @@ export class BuyersAnalyticsComponent {
         return aggregate(analyticsOfUser, { user, org });
       });
     })
+  );
+
+  orgActivity$ = this.analyticsWithUsersAndOrgs$.pipe(
+    map(({ orgs, analytics }) => {
+      return analytics.map(analytic => {
+        return {
+          ...analytic,
+          org: orgs.find(org => org.id === analytic.meta.orgId),
+        };
+      });
+    }),
+    map(analytics => counter(analytics, 'org.activity', 'orgActivity'))
   );
 
   constructor(
