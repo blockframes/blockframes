@@ -203,7 +203,7 @@ export class TitleAnalyticsComponent {
       return {
         'Name': name,
         'Email': user.email,
-        'Company Name': (invitation.guestOrg as any)?.denomination?.public ?? '-', // TODO: KevinD-Denomination
+        'Company Name': invitation.guestOrg.name ?? '-',
         'Activity': activity ? toLabel(activity, 'orgActivity') : '-',
         'Country': country ? toLabel(country, 'territories') : '-',
         'Watchtime': `${invitation.watchTime ?? 0}s`
