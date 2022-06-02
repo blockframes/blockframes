@@ -5,7 +5,7 @@ import {
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate, counter } from '@blockframes/analytics/utils';
+import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
 import { MetricCard } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
 import {
   AggregatedAnalytic,
@@ -16,7 +16,6 @@ import {
   isMovieAccepted,
   AnalyticData,
   Movie,
-  AnalyticsWithTitle
 } from '@blockframes/model';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -131,17 +130,6 @@ function fromUser(invitation: Invitation, uid: string) {
   return invitation.fromUser?.uid === uid || invitation.toUser?.uid === uid;
 }
 
-/**
- * Converts array from Title With Analytics[] to Analytics[] with Title
- */
-function swapTitleWithAnalytics(titles: MovieWithAnalytics[]): AnalyticsWithTitle[] {
-  const analytics = titles.map(title => title.analytics).flat();
-  for (const analytic of analytics) {
-    analytic['title'] = titles.find(title => title.id === analytic.meta.titleId);
-  }
-  return analytics;
-}
-
 @Component({
   selector: 'festival-buyer-analytics',
   templateUrl: './buyer-analytics.component.html',
@@ -171,19 +159,16 @@ export class BuyerAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  private titleAnalytics$ = this.buyerAnalytics$.pipe(
-    map(swapTitleWithAnalytics),
-    shareReplay({ bufferSize: 1, refCount: true })
-  );
-
-  aggregatedCards$ = this.titleAnalytics$.pipe(
+  aggregatedCards$ = this.buyerAnalytics$.pipe(
+    map(titles => titles.map(title => title.analytics).flat()),
     map(analytics => aggregate(analytics)),
     map(toCards)
   );
 
-  aggregatedPerGenre$ = this.titleAnalytics$.pipe(
-    map(analytics => counter(analytics, 'title.genres'))
-  );
+  aggregatedPerGenre$ = this.buyerAnalytics$.pipe(
+    map(titles => counter(titles, 'genres', 'analytics')),
+    map(counted => countedToAnalyticData(counted, 'genres'))
+  )
 
   private aggregatedPerTitle$ = this.buyerAnalytics$.pipe(
     map(titles => titles.map(title => aggregate(title.analytics, { title }))),

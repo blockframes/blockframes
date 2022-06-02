@@ -35,14 +35,14 @@
 
     <div fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
       <analytics-pie-chart fxFlex class="surface" [data]="orgActivity$ | async" (selection)="filterValue = $event">
-        <mat-icon title svgIcon="business"></mat-icon>
-        <h5 title>Split by Company Activity</h5>
-        <p caption class="mat-caption">Learn who are the users who were interested in this Title.</p>
+        <mat-icon svgIcon="business"></mat-icon>
+        <h5>Split by Company Activity</h5>
+        <p class="mat-caption">Learn who are the users who were interested in this Title.</p>
       </analytics-pie-chart>
       <analytics-map fxFlex class="surface" [data]="territoryActivity$ | async" selectable (selection)="filterValue = $event">
-          <mat-icon title svgIcon="landscape"></mat-icon>
-          <h5 title>Split by Company Territory</h5>
-          <p caption class="mat-caption">Learn where are the interested people from.</p>
+        <mat-icon svgIcon="landscape"></mat-icon>
+        <h5>Split by Company Territory</h5>
+        <p class="mat-caption">Learn where are the interested people from.</p>
       </analytics-map>
     </div>
   </article>

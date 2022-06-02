@@ -1,10 +1,11 @@
 <header>
-  <ng-content select="[title]"></ng-content>
+  <ng-content select="mat-icon"></ng-content>
+  <ng-content select="h5"></ng-content>
   <button mat-icon-button (click)="toggleSelect()" *ngIf="previousSelection" matTooltip="Remove selection">
     <mat-icon svgIcon="refresh_filters"></mat-icon>
   </button>
 </header>
-<ng-content select="[caption]"></ng-content>
+<ng-content select="p"></ng-content>
 
 <ng-container *ngIf="!isLoading else loading">
   <ng-container *ngIf="pieChartOptions.series?.length; else empty">

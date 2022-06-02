@@ -1,10 +1,11 @@
 <header>
-  <ng-content select="[title]"></ng-content>
+  <ng-content select="mat-icon"></ng-content>
+  <ng-content select="h3, h5"></ng-content>
   <button mat-icon-button *ngIf="selected" (click)="toggleSelect(selected)" matTooltip="Remove selection">
     <mat-icon svgIcon="refresh_filters"></mat-icon>
   </button>
 </header>
-<ng-content select="[caption]"></ng-content>
+<ng-content select="p"></ng-content>
 
 <section *ngIf="!isLoading else loading" [ngClass]="{horizontal}">
   <world-map *ngIf="top.length; else empty">

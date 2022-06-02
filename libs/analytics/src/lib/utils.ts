@@ -1,25 +1,40 @@
-import { Organization, Analytics, Scope, createAggregatedAnalytic, AggregatedAnalytic, User, toLabel, AnalyticsWithOrg, AnalyticData } from '@blockframes/model';
+import { Organization, Analytics, Scope, createAggregatedAnalytic, AggregatedAnalytic, User, toLabel, AnalyticData } from '@blockframes/model';
 import { getDeepValue } from '@blockframes/utils/pipes';
 
 /**
- * Counts number of occurances in analytics
+ * Counts number of occurances
+ * @param data 
  * @param path Path to value in object that needs to be counted. This value has to be of type string or number
+ * @param arrayPath Path to array in object that resembles the number of occurances that need to be counted.
+ * @example 
+ * // Count number of analytics per genre in array of analytics joined with Movie.
+ * counter(analytics, 'title.genres')
+ * @example
+ * // Count number of analytics per genre in array of Movies joined with Analytics.
+ * counter(movies, 'genres', 'analytics')
+ * @returns A record
  */
-export function counter(data: Array<unknown>, path: string, scope?: Scope): AnalyticData[] {
+export function counter(data: Array<unknown>, path: string, arrayPath?: string) {  
   const counter: Record<string | number, number> = {};
 
-  const count = (key: string | number) => {
+  const count = (key: string | number, delta: number) => {
     if (!counter[key]) counter[key] = 0;
-    counter[key]++;
+    counter[key] = counter[key] + delta;
   }
 
   for (const datum of data) {
     const value = getDeepValue(datum, path) as string | number | (string | number)[];
+
     if (!value && value !== 0) continue;
-    Array.isArray(value) ? value.forEach(count) : count(value);
+    const delta = arrayPath ? (getDeepValue(datum, arrayPath) as Array<unknown>).length : 1;
+    Array.isArray(value) ? value.forEach(key => count(key, delta)) : count(value, delta);
   }
 
-  return Object.entries(counter).map(([key, count]) => ({
+  return counter;
+}
+
+export function countedToAnalyticData(record: Record<string | number, number>, scope?: Scope): AnalyticData[] {
+  return Object.entries(record).map(([key, count]) => ({
     key,
     count,
     label: scope ? toLabel(key, scope) : key

@@ -1,7 +1,8 @@
 <header>
-  <ng-content select="[title]"></ng-content>
+  <ng-content select="mat-icon"></ng-content>
+  <ng-content select="h5"></ng-content>
 </header>
-<ng-content select="[caption]"></ng-content>
+<ng-content select="p"></ng-content>
 
 <ng-container *ngIf="!isLoading else loading">
   <ng-container *ngIf="lineChartOptions.series?.length; else empty">

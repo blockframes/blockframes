@@ -53,10 +53,6 @@ export interface AnalyticsWithOrg extends Analytics<AnalyticsTypes> {
   org?: Organization;
 }
 
-export interface AnalyticsWithTitle extends Analytics<AnalyticsTypes> {
-  title?: Movie;
-}
-
 export interface AnalyticData {
   key: string;
   count: number;

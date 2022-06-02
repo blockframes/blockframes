@@ -29,34 +29,34 @@
             <bf-carousel [columns]="{ gtSm: 2, ltMd: 1 }">
               <ng-template carouselItem>
                 <analytics-pie-chart class="surface" [data]="orgActivityOfPopularTitle$ | async">
-                  <mat-icon title svgIcon="business"></mat-icon>
-                  <h5 title >Split by Company Activity</h5>
-                  <p caption class="mat-caption">Learn who are the users who were interested in this Title.</p>
+                  <mat-icon svgIcon="business"></mat-icon>
+                  <h5>Split by Company Activity</h5>
+                  <p class="mat-caption">Learn who are the users who were interested in this Title.</p>
                 </analytics-pie-chart>
               </ng-template>
 
               <ng-template carouselItem>
                 <analytics-map class="surface carousel-map" [data]="territoryActivityOfPopularTitle$ | async">
-                  <mat-icon title svgIcon="landscape"></mat-icon>
-                  <h5 title>Split by Company Territory</h5>
-                  <p caption class="mat-caption">Learn where are the interested people from.</p>
+                  <mat-icon svgIcon="landscape"></mat-icon>
+                  <h5>Split by Company Territory</h5>
+                  <p class="mat-caption">Learn where are the interested people from.</p>
                 </analytics-map>
               </ng-template>
 
               <ng-template carouselItem>
                 <analytics-line-chart class="surface" [eventNames]="interactions"
                   [data]="interactionsOfPopularTitle$ | async">
-                  <mat-icon title svgIcon="switch_access_shortcut"></mat-icon>
-                  <h5 title>Interactions</h5>
-                  <p caption class="mat-caption">Learn how people interact with your Title.</p>
+                  <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
+                  <h5>Interactions</h5>
+                  <p class="mat-caption">Learn how people interact with your Title.</p>
                 </analytics-line-chart>
               </ng-template>
 
               <ng-template carouselItem>
                 <analytics-line-chart class="surface" [eventNames]="['pageView']" [data]="pageViewsOfPopularTitle$ | async">
-                  <mat-icon title svgIcon="visibility"></mat-icon>
-                  <h5 title>Film Page Views</h5>
-                  <p caption class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
+                  <mat-icon svgIcon="visibility"></mat-icon>
+                  <h5>Film Page Views</h5>
+                  <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
                 </analytics-line-chart>
               </ng-template>
             </bf-carousel>
@@ -78,8 +78,8 @@
             showLegend
             selectable
           >
-            <mat-icon title svgIcon="buyer_insights"></mat-icon>
-            <h3 title>Buyers' Insights</h3>
+            <mat-icon svgIcon="buyer_insights"></mat-icon>
+            <h3>Buyers' Insights</h3>
           </analytics-map>
 
           <h3>Most active buyers</h3>
