@@ -33,11 +33,18 @@ import { displayPerson } from "@blockframes/utils/pipes";
 function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attendees = invitations.filter(invitation => invitation.watchTime);
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
-  const participationRate = Math.round(attendees.length / invitations.length) * 100;
-  const acceptationRate = Math.round(accepted.length / invitations.length) * 100;
+
   const averageWatchTime = Math.round(sum(attendees, inv => inv.watchTime) / invitations.length) || 0
   const parsedTime = `${Math.floor(averageWatchTime / 60)} min ${averageWatchTime % 60} s`
-  const traction = Math.round(screeningRequests.length / (invitations.length + screeningRequests.length)) * 100;
+  let traction = 0;
+  let participationRate = 0;
+  let acceptationRate = 0;
+  if (invitations.length) {
+    participationRate = Math.round(attendees.length / invitations.length) * 100;
+    acceptationRate = Math.round(accepted.length / invitations.length) * 100;
+    if (screeningRequests.length)
+      traction = Math.round(screeningRequests.length / (invitations.length + screeningRequests.length)) * 100;
+  }
   return [
     {
       title: 'Guests',
