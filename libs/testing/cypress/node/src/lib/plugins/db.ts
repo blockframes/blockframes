@@ -2,6 +2,7 @@ import { db } from '../testing-cypress';
 import { createUser, createOrganization, createPermissions, ModuleAccess, App } from '@blockframes/model';
 import { endMaintenance, startMaintenance } from '@blockframes/firebase-utils';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
+import { WhereFilterOp } from 'firebase/firestore';
 
 export async function getRandomEmail() {
   const { email } = await getRandomUser();
@@ -189,6 +190,15 @@ const subcollectionsDataOf = async (path: string) => {
   }
   return result;
 };
+
+export async function queryData(data: { collection: string; field: string; operator: WhereFilterOp; value: unknown }) {
+  const { collection, field, operator, value } = data;
+  const result = [];
+  const snapshot = await db.collection(collection).where(field, operator, value).get();
+  const docs = snapshot.docs;
+  for (const doc of docs) result.push(doc.data());
+  return result;
+}
 
 //* UPDATE DATA*-----------------------------------------------------------------
 

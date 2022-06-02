@@ -174,6 +174,81 @@ describe('Testing bridge between Cypress and node', () => {
       firestore.get([docPath]).then(data => expect(data[0][subCollectionName][0]).to.deep.include(updateExamples));
     });
   });
+
+  //*** QUERY */
+
+  describe('query', () => {
+    before(() => {
+      firestore.clearTestData();
+      firestore.create([examples.collectionToQuery]);
+    });
+
+    it('less than', () => {
+      firestore
+        .queryData({ collection: 'ex-query', field: 'numericField', operator: '<', value: 2 })
+        .then(data => expect(data).to.eql([queryDoc(1), queryDoc(2)]));
+    });
+
+    it('less than or equal', () => {
+      firestore
+        .queryData({ collection: 'ex-query', field: 'numericField', operator: '<=', value: 2 })
+        .then(data => expect(data).to.eql([queryDoc(1), queryDoc(2), queryDoc(3)]));
+    });
+
+    it('more than', () => {
+      firestore
+        .queryData({ collection: 'ex-query', field: 'numericField', operator: '>', value: 2 })
+        .then(data => expect(data).to.eql([queryDoc(4)]));
+    });
+
+    it('more than or equal', () => {
+      firestore
+        .queryData({ collection: 'ex-query', field: 'numericField', operator: '>=', value: 2 })
+        .then(data => expect(data).to.eql([queryDoc(3), queryDoc(4)]));
+    });
+
+    it('equal number', () => {
+      firestore
+        .queryData({ collection: 'ex-query', field: 'numericField', operator: '==', value: 2 })
+        .then(data => expect(data).to.eql([queryDoc(3)]));
+    });
+
+    it('not equal number', () => {
+      firestore
+        .queryData({ collection: 'ex-query', field: 'numericField', operator: '!=', value: 2 })
+        .then(data => expect(data).to.eql([queryDoc(1), queryDoc(2), queryDoc(4)]));
+    });
+
+    it('equal text', () => {
+      firestore
+        .queryData({ collection: 'ex-query', field: 'textField', operator: '==', value: 'find me' })
+        .then(data => expect(data).to.eql([queryDoc(1), queryDoc(4)]));
+    });
+
+    it('not equal text', () => {
+      firestore
+        .queryData({ collection: 'ex-query', field: 'textField', operator: '!=', value: 'find me' })
+        .then(data => expect(data).to.eql([queryDoc(2), queryDoc(3)]));
+    });
+
+    it('array contains any', () => {
+      firestore
+        .queryData({ collection: 'ex-query', field: 'arrayField', operator: 'array-contains-any', value: ['North', 'West'] })
+        .then(data => expect(data).to.eql([queryDoc(1), queryDoc(3), queryDoc(4)]));
+    });
+
+    it('in', () => {
+      firestore
+        .queryData({ collection: 'ex-query', field: 'numericField', operator: 'in', value: [2, 3] })
+        .then(data => expect(data).to.eql([queryDoc(3), queryDoc(4)]));
+    });
+
+    it('not in', () => {
+      firestore
+        .queryData({ collection: 'ex-query', field: 'numericField', operator: 'not-in', value: [2, 3] })
+        .then(data => expect(data).to.eql([queryDoc(1), queryDoc(2)]));
+    });
+  });
 });
 
 //* FUNCTIONS -------------------------------*//
@@ -208,5 +283,11 @@ const exampleValuesFrom = (examples: Record<string, object>[]) => {
     result.push(exampleValues);
   });
 
+  return result;
+};
+
+const queryDoc = (index: number) => {
+  const result = { ...examples.collectionToQuery[`ex-query/doc${index}`] };
+  result['_meta'] = { e2e: true };
   return result;
 };
