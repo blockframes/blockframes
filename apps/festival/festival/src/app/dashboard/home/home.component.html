@@ -72,9 +72,9 @@
           </a>
         </section>
 
-        <section class="surface insights-wrapper">
+        <section class="surface">
           <analytics-map
-            class="insights-map"
+            class="margin-bottom"
             [data]="activeCountries$ | async"
             (selection)="selectedCountry = $event"
             [topCount]="5"
@@ -93,6 +93,7 @@
             [source]="activeBuyers$ | async"
             [filterValue]="selectedCountry"
             (rowClick)="showBuyer($event)"
+            class="margin-bottom"
             clickable
             useFilter
             pagination="5"
@@ -126,7 +127,7 @@
             </ng-template>
           </bf-table>
 
-          <button mat-button routerLink="/c/o/dashboard/home/buyer">View All Buyers' Activity</button>
+          <button mat-button class="see_titles" routerLink="/c/o/dashboard/home/buyer">View All Buyers' Activity</button>
         </section>
       </ng-container>
     </ng-container>

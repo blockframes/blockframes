@@ -24,10 +24,6 @@ header {
       display: flex;
     }
   }
-
-  .see_titles {
-    margin: 24px auto auto auto;
-  }
 }
 
 .no-analytics {
@@ -62,20 +58,16 @@ analytics-map.carousel-map {
   }
 }
 
-analytics-map h3{
+analytics-map h3 {
   display: flex;
   align-items: center;
 }
 
-.insights-map{
+.margin-bottom {
   margin-bottom: 24px;
 }
 
-.insights-wrapper{
-  flex-direction: column;
-  display: flex;
-  button{
-    align-self: center;
-    margin-top: 16px;
-  }
+.see_titles {
+  display: block;
+  margin: auto;
 }

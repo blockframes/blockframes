@@ -36,8 +36,8 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
   const attendees = invitations.filter(invitation => invitation.watchTime);
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
 
-  const averageWatchTime = Math.round(sum(attendees, inv => inv.watchTime) / invitations.length) || 0
-  const parsedTime = `${Math.floor(averageWatchTime / 60)} min ${averageWatchTime % 60} s`
+  const averageWatchTime = Math.round(sum(attendees, inv => inv.watchTime) / invitations.length) || 0;
+  const parsedTime = `${Math.floor(averageWatchTime / 60)} min ${averageWatchTime % 60} s`;
   const participationRate = Math.round(attendees.length / accepted.length) * 100;
   const acceptationRate = Math.round(accepted.length / invitations.length) * 100;
   const traction = Math.round(screeningRequests.length / invitations.length) * 100;
@@ -59,17 +59,17 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
     },
     {
       title: 'Participation Rate',
-      value: !invitations.length ? '-' : `${participationRate}%`,
+      value: invitations.length ? `${participationRate}%` : '-',
       icon: 'front_hand'
     },
     {
       title: 'Acceptation Rate',
-      value: !invitations.length ? '-' : `${acceptationRate}%`,
+      value: invitations.length ? `${acceptationRate}%` : '-',
       icon: 'sentiment_satisfied'
     },
     {
       title: 'Traction Rate',
-      value: !invitations.length ? '-' : `${traction}%`,
+      value: invitations.length ? `${traction}%` : '-',
       icon: 'magnet_electricity'
     }
   ];
