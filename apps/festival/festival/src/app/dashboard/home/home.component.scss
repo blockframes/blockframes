@@ -70,3 +70,12 @@ analytics-map h3{
 .insights-map{
   margin-bottom: 24px;
 }
+
+.insights-wrapper{
+  flex-direction: column;
+  display: flex;
+  button{
+    align-self: center;
+    margin-top: 16px;
+  }
+}

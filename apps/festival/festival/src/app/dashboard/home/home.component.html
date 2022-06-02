@@ -72,7 +72,7 @@
           </a>
         </section>
 
-        <section class="surface">
+        <section class="surface insights-wrapper">
           <analytics-map
             class="insights-map"
             [data]="activeCountries$ | async"
@@ -125,6 +125,8 @@
               {{ askingPriceRequested }}
             </ng-template>
           </bf-table>
+
+          <button mat-button routerLink="c/o/dashboard/home/buyer">View All Buyers' Activity</button>
         </section>
       </ng-container>
     </ng-container>
