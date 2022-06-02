@@ -51,9 +51,8 @@ bf-table.screenings {
 .vanity_metrics{
   display: flex;
   gap: 16px;
-  overflow-x: auto;
   analytics-line-chart{
-    flex: 1 1;
+    flex-grow: 1;
     h5{
       display: flex;
     }
@@ -61,7 +60,7 @@ bf-table.screenings {
 }
 
 
-@include layout-bp(lt-md) {
+@include layout-bp(lt-lg) {
   .vanity_metrics{
     flex-direction: column;
   }
