@@ -66,7 +66,7 @@ async function runCommand() {
     case 'importEmulator':
       await importEmulatorFromBucket({ importFrom: arg1 });
       break;
-    case 'echo':
+    case 'log':
       console.log(...flags);
       break;
     case 'emulatorsUnitTests':
