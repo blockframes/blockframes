@@ -19,6 +19,7 @@ import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-butt
 import { MetricCardListModule } from '@blockframes/analytics/components/metric-card-list/metric-card-list.module';
 import { GuestPipeModule } from '@blockframes/invitation/pipes/guest.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { LineChartModule } from '@blockframes/analytics/components/line-chart/line-chart.module';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MetricCardListModule,
     OngoingButtonModule,
     GuestPipeModule,
+    LineChartModule,
 
     // Material
     MatButtonModule,
