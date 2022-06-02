@@ -321,7 +321,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         break;
     }
 
-    // ! TODO! Don't do this - unify instantiation of Firestore
+    // ! TODO  #8376 Don't do this - unify instantiation of Firestore
     const db = admin.firestore();
     await db.collection('notifications').doc(notification.id).set({ email: notification.email }, { merge: true });
   }
