@@ -386,14 +386,23 @@ export function writeRuntimeConfig(values: { [key: string]: string }, path: stri
   const runtimeObj = {};
 
   const projectId = process.env['PROJECT_ID'];
-  function getKeyName(key: string) {
+  function getKeyName(key: string, projectId: string) {
     if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(projectId)}_${key}`)) {
       return `${camelCase(projectId)}_${key}`;
     }
     return key;
   }
+  const isDemo = projectId === 'demo-blockframes';
 
-  Object.entries(values).forEach(([key, value]) => set(runtimeObj, key, process.env[getKeyName(value)] || 'missing-env-value'));
+  Object.entries(values).forEach(([key, value]) =>
+    set(
+      runtimeObj,
+      key,
+      process.env[getKeyName(value, projectId)] ||
+        (isDemo && process.env[getKeyName(value, 'blockframes-ci')]) ||
+        'missing-env-value'
+    )
+  );
   return writeFileSync(path, JSON.stringify(runtimeObj, null, 4));
 }
 
