@@ -1,5 +1,4 @@
 import { DocumentMeta } from './meta';
-import { EmailErrorCodes } from '@blockframes/utils/emails/utils';
 import { PublicUser } from './user';
 import { PublicOrganization } from './organisation';
 import { PublicInvitation } from './invitation';
@@ -7,6 +6,7 @@ import { Bucket } from './bucket';
 import { StorageFile } from './media';
 import { Timestamp } from './timestamp';
 import { App } from './static';
+import { EmailErrorCodes } from './emails';
 
 export const notifications = {
   catalog: [
