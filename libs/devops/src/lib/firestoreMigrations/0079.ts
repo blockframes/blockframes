@@ -25,7 +25,7 @@ export async function upgrade(db: Firestore) {
   console.log('Migrate Invitations');
   await migrateInvitations(db);
   console.log('Migrate Notifications');
-  return await migrateNotifications(db);
+  return migrateNotifications(db);
 }
 
 async function migrateOrganizations(db: Firestore) {
@@ -37,10 +37,7 @@ async function migrateOrganizations(db: Firestore) {
     // Skip all organization without denomination
     if (!org?.denomination) return false;
 
-    const publicName = org.denomination.public;
-    const fullName = org.denomination.full;
-
-    const { updatedOrg , update } = updateOrganization(org, fullName, publicName);
+    const { updatedOrg , update } = updateOrganization(org);
 
     // Delete fiscal number and bank accounts
     delete (updatedOrg as Organization).fiscalNumber;
@@ -56,15 +53,12 @@ async function migrateInvitations(db: Firestore) {
   return runChunks(invitations.docs, async (doc) => {
     const invitationBase = doc.data() as Invitation;
     const type = invitationBase?.fromOrg ? 'fromOrg' : 'toOrg';
-    const invitation = invitationBase[type];
+    const organization = invitationBase[type];
 
     // Skip all invitation without denomination
-    if (!invitation?.denomination) return false;
+    if (!organization?.denomination) return false;
 
-    const publicName = invitation.denomination.public;
-    const fullName = invitation.denomination.full;
-
-    const { updatedOrg, update } = updateOrganization(invitation, fullName, publicName);
+    const { updatedOrg, update } = updateOrganization(organization);
     invitationBase[type] = updatedOrg;
 
     if (update) await doc.ref.set(invitationBase);
@@ -80,11 +74,9 @@ async function migrateNotifications(db: Firestore) {
     // Skip all notifications without organization or organization.denomination
     if (!notificationBase?.organization || !notificationBase.organization?.denomination) return false;
 
-    const notification = notificationBase.organization;
-    const publicName = notification.denomination.public;
-    const fullName = notification.denomination.full;
+    const organization = notificationBase.organization;
 
-    const { updatedOrg, update } = updateOrganization(notification, fullName, publicName);
+    const { updatedOrg, update } = updateOrganization(organization);
     notificationBase.organization = updatedOrg;
 
     if (update) await doc.ref.set(notificationBase);
@@ -92,15 +84,17 @@ async function migrateNotifications(db: Firestore) {
 }
 
 
-function updateOrganization(org: Organization | PublicOrganization, fullName: string, publicName: string) {
+function updateOrganization(org: Organization | PublicOrganization) {
   let update = false;
+  const fullName = org.denomination.full;
+  const publicName = org.denomination.public;
 
   // If org is part of specialOrgs
   const specialOrgsIds = specialOrgs.map(org => org.id);
   if (specialOrgs.length && specialOrgsIds.includes(org.id)) {
     const index = specialOrgsIds.indexOf(org.id);
     const field = specialOrgs[index].field;
-    (org as any).name = org.denomination[field];
+    (org as any).name = field === 'full' ? fullName : publicName;
     delete org.denomination;
     update = true;
   }
