@@ -52,12 +52,6 @@ analytics-map.carousel-map {
   height: 100%;
 }
 
-@include layout-bp(xs) {
-  header {
-    flex-direction: column;
-  }
-}
-
 analytics-map h3 {
   display: flex;
   align-items: center;
@@ -67,7 +61,13 @@ analytics-map h3 {
   margin-bottom: 24px;
 }
 
-.see_titles {
+.link_buttons {
   display: block;
   margin: auto;
+}
+
+@include layout-bp(xs) {
+  header {
+    flex-direction: column;
+  }
 }
