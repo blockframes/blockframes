@@ -1,12 +1,12 @@
+import { Organization, PublicUser, PermissionsDocument } from '@blockframes/model';
 import { fakeUserData } from '@blockframes/testing/cypress/browser';
-import { firestore } from 'firebase-admin';
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
 const userData = fakeUserData();
-const now = firestore.Timestamp.now();
+const now = new Date();
 
-export const user = {
+export const user: PublicUser = {
   uid: adminUid,
   firstName: userData.firstName,
   lastName: userData.lastName,
@@ -19,13 +19,9 @@ export const user = {
     createdBy: 'anonymous',
     createdAt: now,
   },
-  privacyPolicy: {
-    ip: 'unknown',
-    date: now,
-  },
 };
 
-export const org = {
+export const org: Organization = {
   id: orgId,
   denomination: {
     public: null,
@@ -84,7 +80,7 @@ export const org = {
   },
 };
 
-export const permissions = {
+export const permissions: PermissionsDocument = {
   id: orgId,
   canUpdate: [],
   roles: {

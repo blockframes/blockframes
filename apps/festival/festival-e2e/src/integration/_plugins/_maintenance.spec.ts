@@ -1,16 +1,15 @@
 import { get, firestore, maintenance } from '@blockframes/testing/cypress/browser';
+import { IMaintenanceDoc } from '@blockframes/model';
+import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME } from '@blockframes/utils/maintenance';
 
-interface META {
-  startedAt: Date | null;
-  endedAt: Date | null;
-}
+const maintenancePath = `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`;
 
 describe('Maintenance mode tests', () => {
   it('start / end', () => {
     cy.visit('');
     //starting maintenance mode
     maintenance.start();
-    firestore.get(['_META/_MAINTENANCE']).then((data: META[]) => {
+    firestore.get([maintenancePath]).then((data: IMaintenanceDoc[]) => {
       const [meta] = data;
       expect(meta.startedAt).not.to.be.null;
       expect(meta.endedAt).to.be.null;
@@ -19,7 +18,7 @@ describe('Maintenance mode tests', () => {
 
     //ending maintenance mode
     maintenance.end();
-    firestore.get(['_META/_MAINTENANCE']).then((data: META[]) => {
+    firestore.get([maintenancePath]).then((data: IMaintenanceDoc[]) => {
       const [meta] = data;
       expect(meta.startedAt).to.be.null;
       expect(meta.endedAt).not.to.be.null;
