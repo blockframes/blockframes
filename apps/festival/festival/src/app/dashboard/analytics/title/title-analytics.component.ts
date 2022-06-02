@@ -38,10 +38,9 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
 
   const averageWatchTime = Math.round(sum(attendees, inv => inv.watchTime) / invitations.length) || 0
   const parsedTime = `${Math.floor(averageWatchTime / 60)} min ${averageWatchTime % 60} s`
-  const participationRate = Math.round(attendees.length / invitations.length) * 100;
+  const participationRate = Math.round(attendees.length / accepted.length) * 100;
   const acceptationRate = Math.round(accepted.length / invitations.length) * 100;
-  const invitationAndRequestCount = invitations.length + screeningRequests.length;
-  const traction = Math.round(screeningRequests.length / invitationAndRequestCount) * 100;
+  const traction = Math.round(screeningRequests.length / invitations.length) * 100;
   return [
     {
       title: 'Guests',
@@ -70,7 +69,7 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
     },
     {
       title: 'Traction Rate',
-      value: !invitationAndRequestCount ? '-' : `${traction}%`,
+      value: !invitations.length ? '-' : `${traction}%`,
       icon: 'magnet_electricity'
     }
   ];
