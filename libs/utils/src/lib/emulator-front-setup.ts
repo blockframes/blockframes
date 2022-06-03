@@ -2,6 +2,7 @@ import { InjectionToken } from '@angular/core';
 import { Auth, connectAuthEmulator } from 'firebase/auth';
 import { connectFirestoreEmulator, Firestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, Functions } from 'firebase/functions';
+import firebaseSetup from 'firebase.json'
 
 interface EnabledEmulators {
   auth: boolean;
@@ -18,15 +19,15 @@ export function getEmulatorsConfig(emulators: EnabledEmulators) {
   const enabledEmulators: EmulatorsConfig = {};
 
   if (emulators.auth) {
-    enabledEmulators.auth = { host: 'localhost', port: 9099 };
+    enabledEmulators.auth = { host: 'localhost', port: firebaseSetup.emulators.auth.port };
   }
 
   if (emulators.firestore) {
-    enabledEmulators.firestore = { host: 'localhost', port: 8080 };
+    enabledEmulators.firestore = { host: 'localhost', port: firebaseSetup.emulators.firestore.port };
   }
 
   if (emulators.functions) {
-    enabledEmulators.functions = { host: 'localhost', port: 5001 };
+    enabledEmulators.functions = { host: 'localhost', port: firebaseSetup.emulators.functions.port };
   }
 
   return enabledEmulators;
