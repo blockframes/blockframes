@@ -4,16 +4,12 @@
     <!-- Contact Information -->
     <article fxLayout="column" fxFlex>
       <h2>Contact Information</h2>
-      <div formGroupName="name" fxLayout="column">
+      <div fxLayout="column">
         <mat-form-field appearance="outline">
           <mat-label>Company Name</mat-label>
-          <input test-id="name" matInput placeholder="Company Name" formControlName="full" type="text" (blur)="uniqueOrgName()" required/>
+          <input test-id="name" matInput placeholder="Company Name" formControlName="name" type="text" (blur)="uniqueOrgName()" required/>
           <mat-error *ngIf="form.get('name').hasError('required')">Company name is required</mat-error>
           <mat-error *ngIf="form.get('name').hasError('notUnique')">The name is already taken</mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Company Public Name</mat-label>
-          <input test-id="public-name" matInput placeholder="Company Public Name" formControlName="public" type="text"/>
         </mat-form-field>
       </div>
       <mat-form-field appearance="outline">
