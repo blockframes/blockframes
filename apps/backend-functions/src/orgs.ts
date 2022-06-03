@@ -120,8 +120,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   }
 
   // Update algolia's index
-  if (before.name !== after.name
-    || before.name !== after.name) {
+  if (before.name !== after.name) {
     for (const userId of after.userIds) {
       const userDocRef = db.doc(`users/${userId}`);
       const userSnap = await userDocRef.get();
