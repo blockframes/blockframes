@@ -291,6 +291,8 @@ jobs:
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,cms-e2e
+      - store_test_results:
+          path: dist/test-reports/
       - store_artifacts:
           path: dist/cypress/apps
   cms-e2e:
@@ -303,6 +305,8 @@ jobs:
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,crm-e2e
+      - store_test_results:
+          path: dist/test-reports/
       - store_artifacts:
           path: dist/cypress/apps
   festival-e2e:
@@ -317,6 +321,8 @@ jobs:
       - run:
           command: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e,cms-e2e
           no_output_timeout: 30m
+      - store_test_results:
+          path: dist/test-reports/
       - store_artifacts:
           path: dist/cypress/apps
   financiers-e2e:
@@ -329,6 +335,8 @@ jobs:
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e,cms-e2e
+      - store_test_results:
+          path: dist/test-reports/
       - store_artifacts:
           path: dist/cypress/apps
   catalog-e2e:
@@ -341,6 +349,8 @@ jobs:
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e,cms-e2e
+      - store_test_results:
+          path: dist/test-reports/
       - store_artifacts:
           path: dist/cypress/apps
   prepare-emulators:
