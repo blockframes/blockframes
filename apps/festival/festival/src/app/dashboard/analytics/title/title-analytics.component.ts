@@ -9,6 +9,7 @@ import {
   toLabel,
   isScreening,
   displayName,
+  EventName,
 } from '@blockframes/model';
 import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -91,6 +92,13 @@ function nameFilter(input: string, value: string, invitation: Invitation) {
 })
 export class TitleAnalyticsComponent {
 
+  interactions: EventName[] = [
+    'addedToWishlist',
+    'askingPriceRequested',
+    'promoReelOpened',
+    'screeningRequested',
+  ];
+
   titleId$ = this.route.params.pipe(
     pluck('titleId')
   ) as Observable<string>;
@@ -146,7 +154,6 @@ export class TitleAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-
   aggregatedScreeningCards$ = combineLatest([
     this.screeningRequests$,
     this.invitations$
@@ -154,6 +161,9 @@ export class TitleAnalyticsComponent {
     map(([requests, invitations]) => toScreenerCards(requests, invitations))
   );
 
+  titleInteractions$ = this.titleAnalytics$.pipe(
+    map(analytics => analytics.filter(analytic => analytic.name !== 'pageView'))
+  );
 
 
   constructor(

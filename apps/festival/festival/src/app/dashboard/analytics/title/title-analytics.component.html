@@ -84,13 +84,19 @@
   </bf-table>
 
   <h3>Vanity Metrics</h3>
-  <article class="surface">
+  <article class="surface vanity_metrics">
     <analytics-line-chart class="surface" [eventNames]="['pageView']" [data]="titleAnalytics$ | async">
       <h5>
         <mat-icon svgIcon="visibility"></mat-icon>
         <span>Film Page Views</span>
       </h5>
       <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
+    </analytics-line-chart>
+    <analytics-line-chart class="surface" [eventNames]="interactions" [data]="titleInteractions$ | async">
+      <h5>
+        <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
+        <span>Interactions</span>
+      </h5>
     </analytics-line-chart>
   </article>
 

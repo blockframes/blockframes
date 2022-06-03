@@ -1,3 +1,5 @@
+@import "@angular/flex-layout/mq";
+
 :host {
   display: block;
 }
@@ -44,4 +46,22 @@ section {
 
 bf-table.screenings {
   margin-top: 24px;
+}
+
+.vanity_metrics{
+  display: flex;
+  gap: 16px;
+  analytics-line-chart{
+    flex-grow: 1;
+    h5{
+      display: flex;
+    }
+  }
+}
+
+
+@include layout-bp(lt-lg) {
+  .vanity_metrics{
+    flex-direction: column;
+  }
 }
