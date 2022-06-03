@@ -64,7 +64,7 @@ analytics-map h3 {
 .link_buttons {
   display: block;
   margin: auto;
-  width: min-content;
+  width: fit-content;
 }
 
 @include layout-bp(xs) {
