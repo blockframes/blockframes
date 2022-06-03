@@ -14,7 +14,7 @@ import { getDeepValue } from '@blockframes/utils/pipes';
  * counter(movies, 'genres', (item) => item.analytics.length )
  * @returns A record
  */
-export function counter(array: unknown[], keyPath: string, deltaFn?: Function) {  
+export function counter<T = unknown>(array: T[], keyPath: string, deltaFn?: (item: T) => number) {  
   const counter: Record<string | number, number> = {};
 
   const count = (key: string | number, delta: number) => {
