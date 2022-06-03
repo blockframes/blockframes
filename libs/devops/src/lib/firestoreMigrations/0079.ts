@@ -15,7 +15,7 @@ const specialOrgs = [
 ] as { id: string, field: 'public' | 'full'}[];
 
 /**
- * Update organization from organizations, invitations and notifications documents
+ * Update name from organizations, invitations and notifications documents
  * @param db
  * @returns
  */
