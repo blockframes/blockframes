@@ -27,15 +27,18 @@ section {
   header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 8px;
+
     h3 {
-      display: flex;
-      align-items: center;
       margin-bottom: 0;
+    }
+
+    a, button {
+      margin-left: auto;
     }
   }
 
-  a {
+  article a {
     margin-bottom: 16px;
   }
 }
@@ -48,17 +51,14 @@ bf-table.screenings {
   margin-top: 24px;
 }
 
-.vanity_metrics{
+.vanity_metrics {
   display: flex;
   gap: 16px;
-  analytics-line-chart{
+
+  analytics-line-chart {
     flex-grow: 1;
-    h5{
-      display: flex;
-    }
   }
 }
-
 
 @include layout-bp(lt-lg) {
   .vanity_metrics{

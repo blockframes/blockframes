@@ -166,7 +166,10 @@ export class BuyerAnalyticsComponent {
   );
 
   aggregatedPerGenre$ = this.buyerAnalytics$.pipe(
-    map(titles => counter(titles, 'genres', 'analytics')),
+    map(titles => {
+      const getDelta = (movie: MovieWithAnalytics) => movie.analytics.length;
+      return counter(titles, 'genres', getDelta)
+    }),
     map(counted => countedToAnalyticData(counted, 'genres'))
   )
 

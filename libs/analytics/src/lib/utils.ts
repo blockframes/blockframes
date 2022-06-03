@@ -3,18 +3,18 @@ import { getDeepValue } from '@blockframes/utils/pipes';
 
 /**
  * Counts number of occurances
- * @param data 
- * @param path Path to value in object that needs to be counted. This value has to be of type string or number
- * @param arrayPath Path to array in object that resembles the number of occurances that need to be counted.
+ * @param array 
+ * @param keyPath Path to key in object that needs to be counted.
+ * @param deltaFn Function Path to array in object that resembles the number of occurances that need to be counted.
  * @example 
  * // Count number of analytics per genre in array of analytics joined with Movie.
  * counter(analytics, 'title.genres')
  * @example
  * // Count number of analytics per genre in array of Movies joined with Analytics.
- * counter(movies, 'genres', 'analytics')
+ * counter(movies, 'genres', (item) => item.analytics.length )
  * @returns A record
  */
-export function counter(data: Array<unknown>, path: string, arrayPath?: string) {  
+export function counter(array: unknown[], keyPath: string, deltaFn?: Function) {  
   const counter: Record<string | number, number> = {};
 
   const count = (key: string | number, delta: number) => {
@@ -22,11 +22,11 @@ export function counter(data: Array<unknown>, path: string, arrayPath?: string) 
     counter[key] = counter[key] + delta;
   }
 
-  for (const datum of data) {
-    const value = getDeepValue(datum, path) as string | number | (string | number)[];
+  for (const item of array) {
+    const value = getDeepValue(item, keyPath) as string | number | (string | number)[];
 
     if (!value && value !== 0) continue;
-    const delta = arrayPath ? (getDeepValue(datum, arrayPath) as Array<unknown>).length : 1;
+    const delta = deltaFn ? deltaFn(item) : 1;
     Array.isArray(value) ? value.forEach(key => count(key, delta)) : count(value, delta);
   }
 
