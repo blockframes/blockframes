@@ -1,23 +1,43 @@
-import { Organization, Analytics, Scope, createAggregatedAnalytic, AggregatedAnalytic, User, toLabel, AnalyticsWithOrg, AnalyticData } from '@blockframes/model';
+import { Organization, Analytics, Scope, createAggregatedAnalytic, AggregatedAnalytic, User, toLabel, AnalyticData } from '@blockframes/model';
 import { getDeepValue } from '@blockframes/utils/pipes';
 
 /**
- * Counts number of occurances in analytics
- * @param path Path to value in object that needs to be counted. This value has to be of type string or number
+ * Counts number of occurances
+ * @param array 
+ * @param keyPath Path to key in object that needs to be counted.
+ * @param deltaFn Function that returns the delta with which to count. For example a length of an array or an already aggrigated number.
+ * @example 
+ * // Count number of analytics per genre in array of analytics joined with Movie.
+ * counter(analytics, 'title.genres')
+ * @example
+ * // Count number of analytics per genre in array of Movies joined with Analytics.
+ * counter(movies, 'genres', (item) => item.analytics.length )
+ * @returns A record
  */
-export function counter(analytics: AnalyticsWithOrg[], path: string, scope?: Scope): AnalyticData[] {
+export function counter<T = unknown>(array: T[], keyPath: string, deltaFn?: (item: T) => number) {  
   const counter: Record<string | number, number> = {};
-  for (const analytic of analytics) {
-    const key = getDeepValue(analytic, path) as string | number;
-    if (!key) continue;
+
+  const count = (key: string | number, delta: number) => {
     if (!counter[key]) counter[key] = 0;
-    counter[key]++;
+    counter[key] = counter[key] + delta;
   }
 
-  return Object.entries(counter).map(([key, count]) => ({
+  for (const item of array) {
+    const value = getDeepValue(item, keyPath) as string | number | (string | number)[];
+
+    if (!value && value !== 0) continue;
+    const delta = deltaFn ? deltaFn(item) : 1;
+    Array.isArray(value) ? value.forEach(key => count(key, delta)) : count(value, delta);
+  }
+
+  return counter;
+}
+
+export function countedToAnalyticData(record: Record<string | number, number>, scope?: Scope): AnalyticData[] {
+  return Object.entries(record).map(([key, count]) => ({
     key,
     count,
-    label: scope ? toLabel(key, scope) : ''
+    label: scope ? toLabel(key, scope) : key
   }));
 }
 

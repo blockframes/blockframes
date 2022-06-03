@@ -1,7 +1,7 @@
-<h5>
+<header>
   <mat-icon svgIcon="movie"></mat-icon>
-  <span>Buyer was interested in these titles</span>
-</h5>
+  <h5>Buyer was interested in these titles</h5>
+</header>
 
 <ng-container *ngIf="!isLoading else loading">
   <ng-container *ngIf="barChartOptions.series?.length; else empty">
