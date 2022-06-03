@@ -24,10 +24,6 @@ header {
       display: flex;
     }
   }
-
-  .see_titles {
-    margin: 24px auto auto auto;
-  }
 }
 
 .no-analytics {
@@ -56,17 +52,23 @@ analytics-map.carousel-map {
   height: 100%;
 }
 
-@include layout-bp(xs) {
-  header {
-    flex-direction: column;
-  }
-}
-
-analytics-map h3{
+analytics-map h3 {
   display: flex;
   align-items: center;
 }
 
-.insights-map{
+.margin-bottom {
   margin-bottom: 24px;
+}
+
+.link_buttons {
+  display: block;
+  margin: auto;
+  width: fit-content;
+}
+
+@include layout-bp(xs) {
+  header {
+    flex-direction: column;
+  }
 }

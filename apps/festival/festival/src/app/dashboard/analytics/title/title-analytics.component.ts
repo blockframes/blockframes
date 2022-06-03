@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+
 import {
   AggregatedAnalytic,
   Analytics,
@@ -24,20 +25,22 @@ import { getGuest } from "@blockframes/invitation/pipes/guest.pipe";
 import { InvitationService } from "@blockframes/invitation/service";
 import { EventService } from "@blockframes/event/service";
 import { OrganizationService } from '@blockframes/organization/service';
+import { displayPerson } from "@blockframes/utils/pipes";
+
 import { filter, map, pluck, shareReplay, switchMap } from "rxjs/operators";
 import { combineLatest, firstValueFrom, Observable, of } from "rxjs";
 import { joinWith } from 'ngfire';
-import { displayPerson } from "@blockframes/utils/pipes";
 
 
 function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attendees = invitations.filter(invitation => invitation.watchTime);
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
-  const participationRate = Math.round(attendees.length / invitations.length) * 100;
+
+  const averageWatchTime = Math.round(sum(attendees, inv => inv.watchTime) / invitations.length) || 0;
+  const parsedTime = `${Math.floor(averageWatchTime / 60)} min ${averageWatchTime % 60} s`;
+  const participationRate = Math.round(attendees.length / accepted.length) * 100;
   const acceptationRate = Math.round(accepted.length / invitations.length) * 100;
-  const averageWatchTime = Math.round(sum(attendees, inv => inv.watchTime) / invitations.length) || 0
-  const parsedTime = `${Math.floor(averageWatchTime / 60)} min ${averageWatchTime % 60} s`
-  const traction = Math.round(screeningRequests.length / (invitations.length + screeningRequests.length)) * 100;
+  const traction = Math.round(screeningRequests.length / invitations.length) * 100;
   return [
     {
       title: 'Guests',
@@ -56,17 +59,17 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
     },
     {
       title: 'Participation Rate',
-      value: `${participationRate}%`,
+      value: invitations.length ? `${participationRate}%` : '-',
       icon: 'front_hand'
     },
     {
       title: 'Acceptation Rate',
-      value: `${acceptationRate}%`,
+      value: invitations.length ? `${acceptationRate}%` : '-',
       icon: 'sentiment_satisfied'
     },
     {
       title: 'Traction Rate',
-      value: `${traction}%`,
+      value: invitations.length ? `${traction}%` : '-',
       icon: 'magnet_electricity'
     }
   ];
