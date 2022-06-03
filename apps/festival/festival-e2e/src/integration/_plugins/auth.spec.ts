@@ -1,7 +1,7 @@
-import { adminAuth, maintenance, createFakeUserData } from '@blockframes/testing/cypress/browser';
+import { adminAuth, maintenance, fakeUserData } from '@blockframes/testing/cypress/browser';
 import { UserRecord } from '@blockframes/firebase-utils';
 
-const orgAdmin = createFakeUserData();
+const orgAdmin = fakeUserData();
 const adminUid = '0-e2e-orgAdminUid';
 
 describe('Auth tests', () => {
