@@ -4,7 +4,7 @@ import type { AuthService } from '@blockframes/auth/service';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 
 export const browserAuth = {
-  loginWithEmailAndPassword(email: string) {
+  signinWithEmailAndPassword(email: string) {
     cy.window().should('have.property', 'LoginService');
     return cy.window().then(w => {
       const authService = w['LoginService'] as AuthService;

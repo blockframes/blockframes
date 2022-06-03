@@ -20,18 +20,19 @@ import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 
 import { newUser, newOrg, marketplaceData, dashboardData } from '../../fixtures/authentification/signup';
 import { UserRecord } from '@blockframes/firebase-utils/types';
+import { WhereFilterOp } from 'firebase/firestore';
 
 function deleteUserIfExists(userEmail: string) {
-  firestore.queryData({ collection: 'users', field: 'email', operator: '==', value: userEmail }).then((users: User[]) => {
+  const query = { collection: 'users', field: 'email', operator: '==' as WhereFilterOp, value: userEmail }
+  firestore.queryData(query).then((users: User[]) => {
     if (!users.length) return cy.log(`No previous user with ${userEmail}`);
     firestore.delete([`users/${users[0].uid}`]);
   });
 }
 
 function deleteOrgIfExists(orgName: string) {
-  firestore
-    .queryData({ collection: 'orgs', field: 'denomination.full', operator: '==', value: orgName })
-    .then((orgs: Organization[]) => {
+  const query = { collection: 'orgs', field: 'denomination.full', operator: '==' as WhereFilterOp, value: orgName }
+  firestore.queryData(query).then((orgs: Organization[]) => {
       if (!orgs.length) return cy.log(`No previous organization named ${orgName}`);
       firestore.delete([`orgs/${orgs[0].id}`]);
     });

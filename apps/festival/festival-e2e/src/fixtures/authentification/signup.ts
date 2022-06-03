@@ -9,7 +9,6 @@ const dashboardOrgId = '0-e2e-dashboardOrgId';
 const [newUserData, marketplaceOrgAdminData, dashboardOrgAdminData] = createFakeUserDataArray(3);
 const now = new Date();
 
-console.log(newUserData, marketplaceOrgAdminData, dashboardOrgAdminData);
 //* Creation consts
 
 const e2eUser = (data: { uid: string; firstName: string; lastName: string; email: string }): PublicUser => {
