@@ -5,7 +5,7 @@ import { getDeepValue } from '@blockframes/utils/pipes';
  * Counts number of occurances
  * @param array 
  * @param keyPath Path to key in object that needs to be counted.
- * @param deltaFn Function Path to array in object that resembles the number of occurances that need to be counted.
+ * @param deltaFn Function that returns the delta with which to count. For example a length of an array or an already aggrigated number.
  * @example 
  * // Count number of analytics per genre in array of analytics joined with Movie.
  * counter(analytics, 'title.genres')
