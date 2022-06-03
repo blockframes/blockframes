@@ -21,7 +21,7 @@ import { map, shareReplay } from 'rxjs/operators';
 export class BuyersAnalyticsComponent {
 
   // The analytics of each buyer who interacted with sellers' title
-  analyticsWithUsersAndOrgs$ = this.titleService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
+  private analyticsWithUsersAndOrgs$ = this.titleService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
     joinWith({
       analytics: title => this.analytics.getTitleAnalytics({ titleId: title.id }),
     }, { shouldAwait: true }),
