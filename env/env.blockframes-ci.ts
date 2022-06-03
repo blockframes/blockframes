@@ -21,6 +21,7 @@ const firebaseConfig = {
   measurementId: "G-GE7LPQ7MBX"
 };
 
+export const firebaseRegion = 'europe-west1';
 
 export function firebase(app?: string) {
   return firebaseConfig
