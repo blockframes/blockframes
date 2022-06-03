@@ -237,6 +237,7 @@ export const medias = {
   aVod: 'A-VOD', // a-vod
   fVod: 'F-VOD', // f-vod
   sVod: 'S-VOD', // s-vod
+  tVod: 'T-VOD',
   theatrical: 'Theatrical',
   video: 'Video',
   planes: 'Planes',

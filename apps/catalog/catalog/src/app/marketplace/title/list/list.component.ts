@@ -26,6 +26,7 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
+import { add, isPast, lightFormat } from 'date-fns';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -97,9 +98,15 @@ export class ListComponent implements OnDestroy, OnInit {
       avails = {}
     } = decodeUrl(this.route);
 
-    const currentDate = new Date()
-    if (avails.duration?.from) avails.duration.from = new Date();
-    if (avails.duration?.to) avails.duration.to = new Date(currentDate.setFullYear(currentDate.getFullYear() + 1));
+    const currentDate = new Date();
+    const nextYears = add(new Date(), { years: 1 });
+    const formatedCurrentDate = lightFormat(new Date(currentDate), 'yyyy-MM-dd');
+    const formatedNextYears = lightFormat(new Date(nextYears), 'yyyy-MM-dd');
+
+    if (avails.duration?.from) avails.duration.from = isPast(new Date(avails.duration.from)) ? currentDate : new Date(avails.duration.from);
+    if (avails.duration?.to === "nextYears") avails.duration.to = nextYears;
+    else if (avails.duration?.to && formatedNextYears !== formatedCurrentDate) new Date(avails.duration.to);
+
     // patch everything
     this.searchForm.patchValue(search);
 
