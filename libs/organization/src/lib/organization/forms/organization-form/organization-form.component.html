@@ -6,15 +6,14 @@
         <mat-card-title>Contact Information</mat-card-title>
       </mat-card-header>
       <mat-card-content fxLayout="column">
-        <article formGroupName="denomination">
+        <article>
           <mat-form-field appearance="outline">
-            <!-- TODO #2860 implements denomination.public -->
             <!-- Here is missing an input for the public name of an organization,
             we always have to decide how we will handle that -->
             <mat-label>Company Name</mat-label>
-            <input test-id="name" matInput placeholder="Company Name" formControlName="full" type="text" (blur)="uniqueOrgName()" required/>
-            <mat-error *ngIf="form.get('denomination').hasError('required')">Company name is required</mat-error>
-            <mat-error *ngIf="form.get('denomination').get('full').hasError('notUnique')">This company already exists.</mat-error>
+            <input test-id="name" matInput placeholder="Company Name" formControlName="name" type="text" (blur)="uniqueOrgName()" required/>
+            <mat-error *ngIf="form.get('name').hasError('required')">Company name is required</mat-error>
+            <mat-error *ngIf="form.get('name').hasError('notUnique')">This company already exists.</mat-error>
           </mat-form-field>
         </article>
         <mat-form-field appearance="outline">

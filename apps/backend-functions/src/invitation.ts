@@ -74,13 +74,13 @@ export async function onInvitationWrite(change: Change<FirebaseFirestore.Documen
   // Because of rules restrictions, event creator might not have access to other informations than the id.
   // We consolidate invitation document here.
   let needUpdate = false;
-  if (invitationDoc.fromOrg?.id && !invitationDoc.fromOrg?.denomination.full) {
+  if (invitationDoc.fromOrg?.id && !invitationDoc.fromOrg?.name) {
     const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.fromOrg.id}`);
     invitationDoc.fromOrg = createPublicOrganizationDocument(org);
     needUpdate = true;
   }
 
-  if (invitationDoc.toOrg?.id && !invitationDoc.toOrg?.denomination.full) {
+  if (invitationDoc.toOrg?.id && !invitationDoc.toOrg?.name) {
     const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.toOrg.id}`);
     invitationDoc.toOrg = createPublicOrganizationDocument(org);
     needUpdate = true;

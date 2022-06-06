@@ -5,7 +5,7 @@ import { OrganizationAddressesForm, OrganizationDenominationForm } from "./organ
 
 function createOrganizationLiteFormControl() {
   return {
-    denomination: new OrganizationDenominationForm(createDenomination()),
+    name: new OrganizationDenominationForm(createDenomination()),
     addresses: new OrganizationAddressesForm(createAddressSet()),
     activity: new FormControl('', Validators.required),
     appAccess: new FormControl('', Validators.required),

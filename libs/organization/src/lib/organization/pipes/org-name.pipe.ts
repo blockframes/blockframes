@@ -5,7 +5,7 @@ import { orgName, PublicOrganization } from '@blockframes/model';
 export class OrgNamePipe implements PipeTransform {
   transform(org: PublicOrganization, display: 'public' | 'full' | 'long' = 'public') {
     if (display === 'long') {
-      return `${orgName(org, 'full')} ${org.denomination.public ? ` (${orgName(org, 'public')})` : ''}`;
+      return org.name;
     } else {
       return orgName(org, display);
     }

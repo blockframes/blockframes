@@ -198,7 +198,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const movie = await this.movieService.load(titleId);
         const imgRef = this.getPoster(movie);
         const org = await this.orgService.load(event.ownerOrgId);
-        const message = `REMINDER - ${org.denomination.full}'s ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" is about to start.`;
+        const message = `REMINDER - ${org.name}'s ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" is about to start.`;
 
         return {
           ...notification,
@@ -215,7 +215,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const movie = await this.movieService.load(titleId);
         const imgRef = this.getPoster(movie);
         const org = await this.orgService.load(event.ownerOrgId);
-        const message = `REMINDER - ${org.denomination.full}'s ${eventTypes[event.type]} "<a href="/event/${
+        const message = `REMINDER - ${org.name}'s ${eventTypes[event.type]} "<a href="/event/${
           event.id
         }" target="_blank">${event.title}</a>" will start tomorrow at ${format(
           toDate(event.start),

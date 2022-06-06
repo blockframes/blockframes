@@ -120,7 +120,7 @@ function updateUser(user: User | PublicUser | Partial<User>, toPublicUser = fals
 
 function updateOrg(org: Organization | PublicOrganization) {
   if (!org) return;
-  if (hasKeys<PublicOrganization>(org, 'denomination') && !hasKeys<Organization>(org, 'email')) {
+  if (hasKeys<PublicOrganization>(org, 'name') && !hasKeys<Organization>(org, 'email')) {
     // Is public
     const newOrg = orgCache?.[org.id] || (orgCache[org.id] = processOrg(org));
     return createPublicOrganization(newOrg);
@@ -181,7 +181,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
       // USERS
       return { docPath, content: updateUser(doc) };
     }
-    if (docPath.includes('orgs/') && hasKeys<Organization>(doc, 'id', 'denomination')) {
+    if (docPath.includes('orgs/') && hasKeys<Organization>(doc, 'id', 'name')) {
       // ORGS
       return { docPath, content: updateOrg(doc) };
     }

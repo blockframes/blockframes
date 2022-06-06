@@ -14,8 +14,7 @@ function filterGuest(invitation: Invitation, search: string) {
     || invitation.fromUser?.email.toLowerCase().includes(search)
     || invitation.fromUser?.firstName.toLowerCase().includes(search)
     || invitation.fromUser?.lastName.toLowerCase().includes(search)
-    || invitation.toOrg?.denomination.full.toLowerCase().includes(search)
-    || invitation.toOrg?.denomination.public?.toLowerCase().includes(search)
+    || invitation.toOrg?.name.toLowerCase().includes(search)
 }
 
 const points: Record<InvitationStatus, number> = {

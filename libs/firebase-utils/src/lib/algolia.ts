@@ -88,8 +88,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string,
 export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrganization {
   return {
     objectID: org.id,
-    // TODO #8518
-    name: (org as any).name,
+    name: org.name,
     appModule: getOrgModuleAccess(org),
     country: org.addresses.main.country,
     isAccepted: org.status === 'accepted',
@@ -219,8 +218,7 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string, d
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
       avatar: user.avatar?.storagePath ?? '',
-    // TODO #8518
-      orgName: orgData ? (orgData as any).name : '',
+      orgName: orgData ? orgData.name : '',
     };
 
     return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);

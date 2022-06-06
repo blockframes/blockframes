@@ -15,7 +15,7 @@ const specialOrgs = [
 ] as { id: string, field: 'public' | 'full'}[];
 
 /**
- * Update organization from organizations, invitations and notifications documents
+ * Update name from organizations, invitations and notifications documents
  * @param db
  * @returns
  */
@@ -35,7 +35,7 @@ async function migrateOrganizations(db: Firestore) {
     const org = doc.data() as Organization;
 
     // Skip all organization without denomination
-    if (!org?.denomination) return false;
+    if (!(org as any)?.denomination) return false;
 
     const { updatedOrg , update } = updateOrganization(org);
 
@@ -56,7 +56,7 @@ async function migrateInvitations(db: Firestore) {
     const organization = invitationBase[type];
 
     // Skip all invitation without denomination
-    if (!organization?.denomination) return false;
+    if (!(organization as any)?.denomination) return false;
 
     const { updatedOrg, update } = updateOrganization(organization);
     invitationBase[type] = updatedOrg;
@@ -72,7 +72,7 @@ async function migrateNotifications(db: Firestore) {
     const notificationBase = doc.data() as Notification;
 
     // Skip all notifications without organization or organization.denomination
-    if (!notificationBase?.organization || !notificationBase.organization?.denomination) return false;
+    if (!notificationBase?.organization || !(notificationBase.organization as any)?.denomination) return false;
 
     const organization = notificationBase.organization;
 
@@ -86,37 +86,37 @@ async function migrateNotifications(db: Firestore) {
 
 function updateOrganization(org: Organization | PublicOrganization) {
   let update = false;
-  const fullName = org.denomination.full;
-  const publicName = org.denomination.public;
+  const fullName = (org as any).denomination.full;
+  const publicName = (org as any).denomination.public;
 
   // If org is part of specialOrgs
   const specialOrgsIds = specialOrgs.map(org => org.id);
   if (specialOrgs.length && specialOrgsIds.includes(org.id)) {
     const index = specialOrgsIds.indexOf(org.id);
     const field = specialOrgs[index].field;
-    (org as any).name = field === 'full' ? fullName : publicName;
-    delete org.denomination;
+    org.name = field === 'full' ? fullName : publicName;
+    delete (org as any).denomination;
     update = true;
   }
 
   // If org denomination public === full
   else if (fullName === publicName) {
-    delete org.denomination;
-    (org as any).name = fullName;
+    delete (org as any).denomination;
+    org.name = fullName;
     update = true;
   }
 
   // If org have a value on full but not in public
   else if (fullName.length && !publicName.length) {
-    delete org.denomination;
-    (org as any).name = fullName;
+    delete (org as any).denomination;
+    org.name = fullName;
     update = true;
   }
 
   // If org have a value on public but not in full
   else if (publicName.length && !fullName.length) {
-    delete org.denomination;
-    (org as any).name = publicName;
+    delete (org as any).denomination;
+    org.name = publicName;
     update = true;
   }
 

@@ -18,7 +18,7 @@ const query = [
 ];
 
 function getFullName(seller: Organization) {
-  return seller.denomination.full;
+  return seller.name;
 }
 
 @Component({

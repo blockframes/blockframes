@@ -141,7 +141,7 @@ export function debounceFactory(func: (...params) => unknown, wait: number) {
 
 /** Verify if the org exists and has denomination.full. */
 export function hasDenomination(organization: Organization): boolean {
-  return !!organization && !!organization.denomination.full;
+  return !!organization && !!organization.name;
 }
 
 export function capitalize(text: string) {
