@@ -26,7 +26,7 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
-import { add, isPast, lightFormat } from 'date-fns';
+import { add, isPast } from 'date-fns';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
