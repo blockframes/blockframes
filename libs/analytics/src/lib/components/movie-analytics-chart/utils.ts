@@ -7,7 +7,7 @@ export function toMovieAnalytics(analytics: Analytics<'title'>[]): MovieAnalytic
   const today = new Date();
   const current = subDays(today, 28);
   const past = subDays(today, 56);
-  
+
   const currentEvents = analytics.filter(event => event._meta.createdAt > current);
   const pastEvents = analytics.filter(event => event._meta.createdAt > past && event._meta.createdAt < current);
 
@@ -34,6 +34,7 @@ function toMovieEventAnalytics(events: Analytics<'title'>[]): MovieEventAnalytic
     addedToWishlist: {},
     askingPriceRequested: {},
     pageView: {},
+    promoElementOpened: {},
     promoReelOpened: {},
     removedFromWishlist: {},
     screeningRequested: {}

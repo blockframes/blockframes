@@ -21,6 +21,11 @@ const events: VanityMetricEvent[] = [
     icon: 'visibility'
   },
   {
+    name: 'promoElementOpened',
+    title: 'Promotional Elements',
+    icon: 'star'
+  },
+  {
     name: 'promoReelOpened',
     title: 'Promoreel Opened',
     icon: 'star_fill'

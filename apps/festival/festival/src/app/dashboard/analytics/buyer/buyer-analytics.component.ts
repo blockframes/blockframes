@@ -42,7 +42,7 @@ import { EventService } from '@blockframes/event/service';
 interface MovieWithAnalytics extends Movie { analytics: Analytics<'title'>[]; };
 
 
-interface VanityMetricEvent {
+export interface VanityMetricEvent {
   name: EventName;
   title: string;
   icon: IconSvg;
