@@ -5,9 +5,18 @@ import {
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate } from '@blockframes/analytics/utils';
+import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
 import { MetricCard } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
-import { AggregatedAnalytic, EventName, Event, Screening, isScreening, Invitation, Analytics, isMovieAccepted, AnalyticData } from '@blockframes/model';
+import {
+  AggregatedAnalytic,
+  EventName,
+  isScreening,
+  Invitation,
+  Analytics,
+  isMovieAccepted,
+  AnalyticData,
+  Movie,
+} from '@blockframes/model';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { IconSvg } from '@blockframes/ui/icon.service';
@@ -29,6 +38,9 @@ import {
 } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/service';
 import { EventService } from '@blockframes/event/service';
+
+interface MovieWithAnalytics extends Movie { analytics: Analytics<'title'>[]; };
+
 
 interface VanityMetricEvent {
   name: EventName;
@@ -152,6 +164,14 @@ export class BuyerAnalyticsComponent {
     map(analytics => aggregate(analytics)),
     map(toCards)
   );
+
+  aggregatedPerGenre$ = this.buyerAnalytics$.pipe(
+    map(titles => {
+      const getDelta = (movie: MovieWithAnalytics) => movie.analytics.length;
+      return counter(titles, 'genres', getDelta)
+    }),
+    map(counted => countedToAnalyticData(counted, 'genres'))
+  )
 
   private aggregatedPerTitle$ = this.buyerAnalytics$.pipe(
     map(titles => titles.map(title => aggregate(title.analytics, { title }))),
