@@ -34,9 +34,6 @@ async function migrateOrganizations(db: Firestore) {
   return runChunks(orgs.docs, async (doc) => {
     const org = doc.data() as Organization;
 
-    // Skip all organization without denomination
-    if (!(org as any)?.denomination) return false;
-
     const { updatedOrg , update } = updateOrganization(org);
 
     // Delete fiscal number and bank accounts
@@ -55,9 +52,6 @@ async function migrateInvitations(db: Firestore) {
     const type = invitationBase?.fromOrg ? 'fromOrg' : 'toOrg';
     const organization = invitationBase[type];
 
-    // Skip all invitation without denomination
-    if (!(organization as any)?.denomination) return false;
-
     const { updatedOrg, update } = updateOrganization(organization);
     invitationBase[type] = updatedOrg;
 
@@ -71,8 +65,8 @@ async function migrateNotifications(db: Firestore) {
   return runChunks(notifications.docs, async (doc) => {
     const notificationBase = doc.data() as Notification;
 
-    // Skip all notifications without organization or organization.denomination
-    if (!notificationBase?.organization || !(notificationBase.organization as any)?.denomination) return false;
+    // Skip all notifications without organization
+    if (!notificationBase?.organization) return false;
 
     const organization = notificationBase.organization;
 
