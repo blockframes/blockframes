@@ -20,7 +20,7 @@ export interface BucketContract<T extends Date | Timestamp = Date> {
   /** The orgId that own the contract (mandate in this case) that  */
   orgId: string;
   /** Price used to create the income */
-  price: number;
+  price?: number;
   /** Parent terms on which the contract is create. */
   parentTermId: string;
   /** List of sub terms derived from the parent terms that the buyer want to buy */
