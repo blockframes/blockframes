@@ -75,7 +75,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
       return activity;
     },
     /* d */ 'org.addresses.main.street': (value: string) => {
-      if (!value) throw optionalWarning('Fiscal Number');
+      if (!value) throw optionalWarning('Street');
       return value;
     },
     /* e */ 'org.addresses.main.city': (value: string) => {
