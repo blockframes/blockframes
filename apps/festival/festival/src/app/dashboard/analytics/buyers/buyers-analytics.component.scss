@@ -1,9 +1,11 @@
+@import "@angular/flex-layout/mq";
+
 :host {
   display: block;
   padding: 24px;
 }
 
-section{
+section {
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -28,4 +30,26 @@ section{
     gap: 24px;
   }
 
+  analytics-pie-chart {
+    width: 55%;
+  }
+
+  analytics-metric-card-list {
+    width: 45%;
+  }
 }
+
+
+@include layout-bp(lt-md) {
+  section {
+    flex-direction: column;
+    gap: 8px;
+    analytics-pie-chart {
+      width: 100%;
+    }
+    analytics-metric-card-list {
+      width: 100%;
+    }
+  }
+}
+
