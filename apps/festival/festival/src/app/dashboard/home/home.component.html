@@ -66,7 +66,7 @@
             </bf-carousel>
           </ng-container>
 
-          <a mat-button class="see_titles" routerLink="title">
+          <a mat-button class="link_buttons" routerLink="title">
             <span>View all Titles Activity</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
@@ -74,7 +74,7 @@
 
         <section class="surface">
           <analytics-map
-            class="insights-map"
+            class="margin-bottom"
             [data]="activeCountries$ | async"
             (selection)="selectedCountry = $event"
             [topCount]="5"
@@ -93,6 +93,7 @@
             [source]="activeBuyers$ | async"
             [filterValue]="selectedCountry"
             (rowClick)="showBuyer($event)"
+            class="margin-bottom"
             clickable
             useFilter
             pagination="5"
@@ -125,6 +126,8 @@
               {{ askingPriceRequested }}
             </ng-template>
           </bf-table>
+
+          <a mat-button class="link_buttons" routerLink="buyer">View All Buyers' Activities</a>
         </section>
       </ng-container>
     </ng-container>
