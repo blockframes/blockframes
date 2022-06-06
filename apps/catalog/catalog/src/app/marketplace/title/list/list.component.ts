@@ -100,12 +100,10 @@ export class ListComponent implements OnDestroy, OnInit {
 
     const currentDate = new Date();
     const nextYear = add(new Date(), { years: 1 });
-    const formatedCurrentDate = lightFormat(new Date(currentDate), 'yyyy-MM-dd');
-    const formatedNextYears = lightFormat(new Date(nextYear), 'yyyy-MM-dd');
 
     if (avails.duration?.from) avails.duration.from = isPast(new Date(avails.duration.from)) ? currentDate : new Date(avails.duration.from);
     if (avails.duration?.to === "nextYear") avails.duration.to = nextYear;
-    else if (avails.duration?.to && formatedNextYears !== formatedCurrentDate) new Date(avails.duration.to);
+    else if (avails.duration?.to) new Date(avails.duration.to);
 
     // patch everything
     this.searchForm.patchValue(search);
