@@ -5,6 +5,27 @@
 
 section{
   display: flex;
+  flex-direction: column;
   gap: 24px;
   margin-bottom: 24px;
+
+  header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h1{
+      margin: 0;
+    }
+  }
+
+  a{
+    display: flex;
+    align-items: center;
+  }
+
+  article{
+    display: flex;
+    gap: 24px;
+  }
+
 }

@@ -7,6 +7,7 @@ import { BuyersAnalyticsComponent } from './buyers-analytics.component';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { PieChartModule } from '@blockframes/analytics/components/pie-chart/pie-chart.module';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   imports: [
@@ -16,6 +17,9 @@ import { PieChartModule } from '@blockframes/analytics/components/pie-chart/pie-
     ToLabelModule,
     DisplayNameModule,
     PieChartModule,
+
+    //material
+    MatIconModule,
 
     // Router
     RouterModule.forChild([
