@@ -13,7 +13,6 @@ import {
   Bucket,
   Movie,
   Organization,
-  orgName,
   MovieAppConfig,
   PublicUser,
   MovieDocument,
@@ -41,7 +40,7 @@ export async function onMovieCreate(snap: FirebaseFirestore.DocumentSnapshot) {
   for (const org of organizations) {
     await storeSearchableOrg(org);
   }
-  const orgNames = organizations.map((org) => orgName(org)).filter((orgName) => !!orgName);
+  const orgNames = organizations.map((org) => org.name).filter((orgName) => !!orgName);
   return storeSearchableMovie(movie, orgNames);
 }
 
@@ -194,7 +193,7 @@ export async function onMovieUpdate(change: Change<FirebaseFirestore.DocumentSna
   for (const org of organizations) {
     await storeSearchableOrg(org);
   }
-  const orgNames = organizations.map((org) => orgName(org)).filter((orgName) => !!orgName);
+  const orgNames = organizations.map((org) => org.name).filter((orgName) => !!orgName);
   await storeSearchableMovie(after, orgNames);
 
   for (const app in after.app) {

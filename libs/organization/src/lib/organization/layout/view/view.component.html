@@ -13,7 +13,7 @@
       </div>
       <div fxLayout fxLayoutAlign="end" fxLayoutGap="16px">
         <div fxLayout="column" fxLayoutAlign="space-around end">
-          <span>{{ org | orgName }}</span>
+          <span>{{ org.name }}</span>
           <span class="mat-caption">{{ org.activity | toLabel: 'orgActivity' }}</span>
         </div>
         <img [ref]="org.logo" type="logo" asset="empty_organization.svg" alt="organization logo">
@@ -29,7 +29,7 @@
       <img [ref]="org.logo" asset="empty_organization.svg" alt="organization logo">
       <article fxFlex fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.xs="start center">
         <h4>{{ org.activity | toLabel: 'orgActivity' }}</h4>
-        <h1 class="mat-display-2">{{ org | orgName }}</h1>
+        <h1 class="mat-display-2">{{ org.name }}</h1>
         <h2>{{ org | orgAddress }}</h2>
         <p class="mat-body-2">{{ org.description }}</p>
         <ng-content></ng-content>

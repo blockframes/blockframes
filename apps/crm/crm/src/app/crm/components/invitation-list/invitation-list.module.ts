@@ -7,7 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
 
 // Modules
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 // Components
@@ -21,7 +20,6 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
     CommonModule,
     TableModule,
     FlexLayoutModule,
-    OrgNameModule,
     MatIconModule,
     RouterModule,
     ImageModule,

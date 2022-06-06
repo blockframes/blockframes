@@ -7,7 +7,7 @@
           <article class="dark-contrast-theme screen" [bgRef]="event.movie.banner" bgAsset="empty_banner.png">
             <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
               <img class="organizationLogo" [ref]="event?.org?.logo" asset="empty_organization.svg" type="logo" alt="organization logo">
-              <h4>{{ event.org | orgName }} presents</h4>
+              <h4>{{ event.org.name }} presents</h4>
               <h1 class="mat-display-2">{{ event.movie.title.international }}</h1>
               <h2>by {{ event.movie.directors | displayName }}</h2>
               <span class="mat-caption">Screening now</span>
@@ -36,7 +36,7 @@
           <article class="dark-contrast-theme screen" bgAsset="empty_banner.png">
             <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
               <img class="organizationLogo" [ref]="event?.org?.logo" asset="empty_organization.svg" type="logo" alt="organization logo">
-              <h4>{{ event.org | orgName }} presents</h4>
+              <h4>{{ event.org.name }} presents</h4>
               <span class="mat-caption">Screening now</span>
               <button test-id="play" mat-flat-button color="accent" (click)="showSession = false">
                 <mat-icon svgIcon="play_arrow"></mat-icon>

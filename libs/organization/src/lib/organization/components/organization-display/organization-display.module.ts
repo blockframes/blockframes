@@ -17,7 +17,6 @@ import { OrganizationDisplayComponent } from './organization-display.component';
 
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 
 @NgModule({
   imports: [
@@ -33,8 +32,7 @@ import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
     MatSelectModule,
     MatCheckboxModule,
     FlexLayoutModule,
-    ImageModule,
-    OrgNameModule
+    ImageModule
   ],
   declarations: [
     OrganizationDisplayComponent,

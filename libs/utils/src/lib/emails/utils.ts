@@ -9,7 +9,6 @@ import {
   ScreeningEventDocument,
   User,
   OrganizationDocument,
-  orgName,
   MailBucket,
   MovieDocument,
   Bucket,

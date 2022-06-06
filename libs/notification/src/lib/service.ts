@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '@blockframes/auth/service';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {
-  orgName,
   Movie,
   Event,
   isMeeting,
@@ -454,14 +453,14 @@ export class NotificationService extends BlockframesCollection<Notification> {
     // Adding user data to the notification of meeting events
     if (event && isMeeting(event) && notification.organization) {
       const user = await this.userService.load(event.meta.organizerUid);
-      const organizationName = orgName(notification.organization);
+      const organizationName = notification.organization.name;
       subject = `${user.firstName} ${user.lastName} (${organizationName})`;
     } else if (notification.organization) {
-      subject = orgName(notification.organization);
+      subject = notification.organization.name;
     } else if (notification.user && notification.user.lastName && notification.user.firstName) {
       if (notification.user.orgId) {
         const org = await this.orgService.load(notification.user.orgId);
-        subject = `${displayName(notification.user)} (${orgName(org)})`;
+        subject = `${displayName(notification.user)} (${org.name})`;
       } else subject = displayName(notification.user);
     } else if (notification.user && notification.user.email) {
       subject = notification.user.email;
@@ -488,7 +487,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
   public async nameToDisplay(notification: Notification, contract: Contract) {
     if (contract.buyerUserId === notification.toUserId) {
       const org = await this.orgService.load(contract.sellerId);
-      return orgName(org);
+      return org.name;
     } else {
       const user = await this.userService.load(contract.buyerUserId);
       return displayName(user);

@@ -2,9 +2,8 @@ import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { EventService } from '@blockframes/event/service';
 import { InvitationService } from '@blockframes/invitation/service';
-import { Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/service';
-import { orgName, toLabel } from '@blockframes/model';
+import { toLabel } from '@blockframes/model';
 import { where } from 'firebase/firestore';
 
 @Component({
@@ -21,7 +20,6 @@ export class EventsComponent implements OnInit {
     private eventService: EventService,
     private invitationService: InvitationService,
     private cdRef: ChangeDetectorRef,
-    private router: Router,
     private orgService: OrganizationService
   ) { }
 
@@ -38,7 +36,7 @@ export class EventsComponent implements OnInit {
       const row = { ...event } as any;
       const invitations = invites.filter(inv => inv.eventId === event.id);
       const org = orgs.find(o => o.id === event.ownerOrgId);
-      row.hostedBy = org ? orgName(org) : '--';
+      row.hostedBy = org ? org.name : '--';
       row.invited = invitations.length;
       row.confirmed = invitations.filter(i => i.status === 'accepted').length;
       row.pending = invitations.filter(i => i.status === 'pending').length;
@@ -58,7 +56,7 @@ export class EventsComponent implements OnInit {
       'event type': i.type,
       'start date': i.start,
       'end date': i.end,
-      'hosted by': i.hostedBy ? orgName(i.hostedBy, 'full') : '--',
+      'hosted by': i.hostedBy,
       'invited': i.invited,
       'confirmed': i.confirmed,
       'pending': i.pending,

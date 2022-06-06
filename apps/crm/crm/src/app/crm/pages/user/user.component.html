@@ -22,7 +22,7 @@
         <ul>
           <li *ngIf="userOrg">
             <b>Organization : </b>
-            <span>{{ userOrg | orgName:'long' }}</span>
+            <span>{{ userOrg.name }}</span>
             <button mat-icon-button color="primary" [routerLink]="['/c/o/dashboard/crm/organization', userOrg.id]">
               <mat-icon svgIcon="visibility"></mat-icon>
             </button>
