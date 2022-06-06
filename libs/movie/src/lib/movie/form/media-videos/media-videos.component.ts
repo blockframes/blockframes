@@ -8,6 +8,7 @@ import { getDeepValue } from '@blockframes/utils/pipes';
 import { Subscription } from 'rxjs';
 import { MovieVideo } from '@blockframes/model';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
+import { getFileListIndex } from '@blockframes/media/file/pipes/file-list.pipe';
 
 @Component({
   selector: 'movie-form-media-videos',
@@ -57,6 +58,7 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   removeFromQueue(index: number) {
     const storagePath = getFileStoragePath('movies', 'otherVideos', this.movieId);
-    this.uploaderService.removeFromQueue(storagePath, index);
+    const queueIndex = getFileListIndex(index, this.videoList.value);
+    this.uploaderService.removeFromQueue(storagePath, queueIndex);
   }
 }

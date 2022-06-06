@@ -13,6 +13,7 @@ import { getFileMetadata, getFileStoragePath } from '@blockframes/media/utils';
 import { Subscription } from 'rxjs';
 import { MovieNote } from '@blockframes/model';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
+import { getFileListIndex } from '@blockframes/media/file/pipes/file-list.pipe';
 
 @Component({
   selector: 'movie-form-media-notes',
@@ -52,6 +53,7 @@ export class MovieFormMediaNotesComponent implements OnInit, OnDestroy {
 
   removeFromQueue(index: number) {
     const storagePath = getFileStoragePath('movies', 'notes', this.movieId);
-    this.uploaderService.removeFromQueue(storagePath, index);
+    const queueIndex = getFileListIndex(index, this.form.promotional.get('notes').value);
+    this.uploaderService.removeFromQueue(storagePath, queueIndex);
   }
 }
