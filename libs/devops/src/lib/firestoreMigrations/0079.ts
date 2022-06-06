@@ -66,7 +66,7 @@ async function migrateNotifications(db: Firestore) {
     const notificationBase = doc.data() as Notification;
 
     // Skip all notifications without organization
-    if (!notificationBase?.organization) return false;
+    if (!notificationBase?.organization?.name) return false;
 
     const organization = notificationBase.organization;
 
