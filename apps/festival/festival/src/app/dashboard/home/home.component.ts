@@ -14,7 +14,7 @@ import {
   App,
   AggregatedAnalytic,
 } from '@blockframes/model';
-import { counter, aggregate } from '@blockframes/analytics/utils';
+import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 
@@ -56,7 +56,8 @@ export class HomeComponent {
   popularTitle$ = this.titleAnalytics$.pipe(
     filter(analytics => analytics.length > 0),
     map(analytics => counter(analytics, 'meta.titleId')),
-    map(analytics => analytics.sort((a, b) => a.count > b.count ? -1 : 1)),
+    map(counted => countedToAnalyticData(counted)),
+    map(analyticData => analyticData.sort((a, b) => a.count > b.count ? -1 : 1)),
     switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key))
   );
 
@@ -67,11 +68,13 @@ export class HomeComponent {
   );
 
   orgActivityOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
-    map(analytics => counter(analytics, 'org.activity', 'orgActivity')),
+    map(analytics => counter(analytics, 'org.activity')),
+    map(counted => countedToAnalyticData(counted, 'orgActivity'))
   );
 
   territoryActivityOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
-    map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
+    map(analytics => counter(analytics, 'org.addresses.main.country')),
+    map(counted => countedToAnalyticData(counted, 'territories'))
   );
 
   interactionsOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
@@ -83,7 +86,8 @@ export class HomeComponent {
   );
 
   activeCountries$ = this.titleAnalytics$.pipe(
-    map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
+    map(analytics => counter(analytics, 'org.addresses.main.country')),
+    map(counted => countedToAnalyticData(counted, 'territories'))
   );
 
   activeBuyers$ = this.titleAnalytics$.pipe(

@@ -5,11 +5,8 @@
 
 header {
   display: flex;
+  align-items: center;
   gap: 8px;
-
-  h5 {
-    display: flex;
-  }
 }
 
 apx-chart {

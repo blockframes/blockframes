@@ -34,15 +34,15 @@
     </a>
 
     <div fxLayout fxLayout.lt-sm="column" fxLayoutGap="16px">
-      <analytics-pie-chart fxFlex class="surface" [data]="orgActivity$ | async" (selection)="filterValue = $event"></analytics-pie-chart>
+      <analytics-pie-chart fxFlex class="surface" [data]="orgActivity$ | async" (selection)="filterValue = $event">
+        <mat-icon svgIcon="business"></mat-icon>
+        <h5>Split by Company Activity</h5>
+        <p class="mat-caption">Learn who are the users who were interested in this Title.</p>
+      </analytics-pie-chart>
       <analytics-map fxFlex class="surface" [data]="territoryActivity$ | async" selectable (selection)="filterValue = $event">
-        <article>
-          <h5>
-            <mat-icon svgIcon="landscape"></mat-icon>
-            <span>Split by Company Territory</span><br/>
-          </h5>
-          <p class="mat-caption">Learn where are the interested people from.</p>
-        </article>
+        <mat-icon svgIcon="landscape"></mat-icon>
+        <h5>Split by Company Territory</h5>
+        <p class="mat-caption">Learn where are the interested people from.</p>
       </analytics-map>
     </div>
   </article>
@@ -86,25 +86,20 @@
   <h3>Vanity Metrics</h3>
   <article class="surface vanity_metrics">
     <analytics-line-chart class="surface" [eventNames]="['pageView']" [data]="titleAnalytics$ | async">
-      <h5>
-        <mat-icon svgIcon="visibility"></mat-icon>
-        <span>Film Page Views</span>
-      </h5>
+      <mat-icon svgIcon="visibility"></mat-icon>
+      <h5>Film Page Views</h5>
       <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
     </analytics-line-chart>
     <analytics-line-chart class="surface" [eventNames]="interactions" [data]="titleInteractions$ | async">
-      <h5>
-        <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
-        <span>Interactions</span>
-      </h5>
+      <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
+      <h5>Interactions</h5>
+      <p class="mat-caption">Learn how people interact with your Title.</p>
     </analytics-line-chart>
   </article>
 
   <header>
-    <h3>
-      <span>Last Screenings</span>
-      <mat-icon svgIcon="info" [matTooltip]="'Statistics are updated in real time.'"></mat-icon>
-    </h3>
+    <h3>Last Screenings</h3>
+    <mat-icon svgIcon="info" matTooltip="Statistics are updated in real time."></mat-icon>
     <ng-container *ngIf="ongoingScreenings$ | async as events">
       <a ongoing-event-button routerLink="/c/o/dashboard/event/{{events[0].id}}/statistics">Ongoing
         Screenings</a>
@@ -116,7 +111,6 @@
     <ng-container *ngIf="invitations$ | async as invitations">
       <header>
         <h5>Attendees</h5>
-
         <button mat-button [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export to .CSV</button>
       </header>
       <bf-table class="screenings" [source]="invitations" clickable useFilter pagination="5">
