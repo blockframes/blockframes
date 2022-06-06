@@ -65,7 +65,7 @@ async function migrateNotifications(db: Firestore) {
   return runChunks(notifications.docs, async (doc) => {
     const notificationBase = doc.data() as Notification;
 
-    // Skip all notifications without organization
+    // Skip all notifications without organization or orgnization name
     if (!notificationBase?.organization?.name) return false;
 
     const organization = notificationBase.organization;
