@@ -1,9 +1,22 @@
+import {
+  InvitationWithScreening,
+  InvitationWithAnalytics,
+} from "@blockframes/model";
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate } from '@blockframes/analytics/utils';
+import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
 import { MetricCard } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
-import { AggregatedAnalytic, EventName, Event, Screening, isScreening, Invitation, Analytics, isMovieAccepted, AnalyticData } from '@blockframes/model';
+import {
+  AggregatedAnalytic,
+  EventName,
+  isScreening,
+  Invitation,
+  Analytics,
+  isMovieAccepted,
+  AnalyticData,
+  Movie,
+} from '@blockframes/model';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { IconSvg } from '@blockframes/ui/icon.service';
@@ -26,9 +39,8 @@ import {
 import { InvitationService } from '@blockframes/invitation/service';
 import { EventService } from '@blockframes/event/service';
 
-interface InvitationWithScreening extends Invitation {
-  event: Event<Screening>;
-}
+interface MovieWithAnalytics extends Movie { analytics: Analytics<'title'>[]; };
+
 
 interface VanityMetricEvent {
   name: EventName;
@@ -84,11 +96,10 @@ function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
   return data.map(({ title, total }) => ({
     key: title.id,
     count: total,
-    label: title.title.international ?? title.title.original  
+    label: title.title.international ?? title.title.original
   }));
 }
 
-interface InvitationWithAnalytics extends Invitation { analytics: Analytics[]; };
 function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attended = invitations.filter(invitation => invitation.watchTime);
   return [
@@ -153,6 +164,14 @@ export class BuyerAnalyticsComponent {
     map(analytics => aggregate(analytics)),
     map(toCards)
   );
+
+  aggregatedPerGenre$ = this.buyerAnalytics$.pipe(
+    map(titles => {
+      const getDelta = (movie: MovieWithAnalytics) => movie.analytics.length;
+      return counter(titles, 'genres', getDelta)
+    }),
+    map(counted => countedToAnalyticData(counted, 'genres'))
+  )
 
   private aggregatedPerTitle$ = this.buyerAnalytics$.pipe(
     map(titles => titles.map(title => aggregate(title.analytics, { title }))),

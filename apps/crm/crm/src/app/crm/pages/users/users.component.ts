@@ -82,7 +82,7 @@ export class UsersComponent implements OnInit {
           'userId': r.uid,
           'first name': r.firstName ?? '--',
           'last name': r.lastName ?? '--',
-          'organization': r.org.name || '--',
+          'organization': r.org?.name || '--',
           'org id': r.orgId ?? '--',
           'org status': r.org ? r.org.status : '--',
           'type': type ?? '--',

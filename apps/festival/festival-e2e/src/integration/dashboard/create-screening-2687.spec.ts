@@ -64,7 +64,7 @@ describe.skip('User create a screening', () => {
   })
 
   it('Invitee1, Verify screening page and created screenings', () => {
-    const OrgName = orgsFixture.getByID(EVENTS[0].org.id).denomination.public;
+    const OrgName = orgsFixture.getByID(EVENTS[0].org.id).name;
     const event1 = EVENTS[0].event;
     const event2 = EVENTS[1].event;
 
@@ -100,7 +100,7 @@ describe.skip('User create a screening', () => {
   });
 
   it('Invitee adds public screening to his calendar', () => {
-    const OrgName = orgsFixture.getByID(EVENTS[0].org.id).denomination.public;
+    const OrgName = orgsFixture.getByID(EVENTS[0].org.id).name;
     //Screening event prefixed 2 created above.
     const screeningEvent = EVENTS[0].event + '2';
     const movieTitle = EVENTS[0].movie.title.international;

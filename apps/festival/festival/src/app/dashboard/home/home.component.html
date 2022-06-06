@@ -28,45 +28,41 @@
             </header>
             <bf-carousel [columns]="{ gtSm: 2, ltMd: 1 }">
               <ng-template carouselItem>
-                <analytics-pie-chart class="surface" [data]="orgActivityOfPopularTitle$ | async"></analytics-pie-chart>
+                <analytics-pie-chart class="surface" [data]="orgActivityOfPopularTitle$ | async">
+                  <mat-icon svgIcon="business"></mat-icon>
+                  <h5>Split by Company Activity</h5>
+                  <p class="mat-caption">Learn who are the users who were interested in this Title.</p>
+                </analytics-pie-chart>
               </ng-template>
 
               <ng-template carouselItem>
                 <analytics-map class="surface carousel-map" [data]="territoryActivityOfPopularTitle$ | async">
-                  <article>
-                    <h5>
-                      <mat-icon svgIcon="landscape"></mat-icon>
-                      <span>Split by Company Territory</span>
-                    </h5>
-                    <p class="mat-caption">Learn where are the interested people from.</p>
-                  </article>
+                  <mat-icon svgIcon="landscape"></mat-icon>
+                  <h5>Split by Company Territory</h5>
+                  <p class="mat-caption">Learn where are the interested people from.</p>
                 </analytics-map>
               </ng-template>
 
               <ng-template carouselItem>
                 <analytics-line-chart class="surface" [eventNames]="interactions"
                   [data]="interactionsOfPopularTitle$ | async">
-                  <h5>
-                    <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
-                    <span>Interactions</span>
-                  </h5>
+                  <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
+                  <h5>Interactions</h5>
                   <p class="mat-caption">Learn how people interact with your Title.</p>
                 </analytics-line-chart>
               </ng-template>
 
               <ng-template carouselItem>
                 <analytics-line-chart class="surface" [eventNames]="['pageView']" [data]="pageViewsOfPopularTitle$ | async">
-                  <h5>
-                    <mat-icon svgIcon="visibility"></mat-icon>
-                    <span>Film Page Views</span>
-                  </h5>
+                  <mat-icon svgIcon="visibility"></mat-icon>
+                  <h5>Film Page Views</h5>
                   <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
                 </analytics-line-chart>
               </ng-template>
             </bf-carousel>
           </ng-container>
 
-          <a mat-button class="see_titles" routerLink="title">
+          <a mat-button class="link_buttons" routerLink="title">
             <span>View all Titles Activity</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
@@ -74,7 +70,7 @@
 
         <section class="surface">
           <analytics-map
-            class="insights-map"
+            class="margin-bottom"
             [data]="activeCountries$ | async"
             (selection)="selectedCountry = $event"
             [topCount]="5"
@@ -82,10 +78,8 @@
             showLegend
             selectable
           >
-            <h3>
-              <mat-icon svgIcon="buyer_insights"></mat-icon>
-              <span>Buyers' Insights</span>
-            </h3>
+            <mat-icon svgIcon="buyer_insights"></mat-icon>
+            <h3>Buyers' Insights</h3>
           </analytics-map>
 
           <h3>Most active buyers</h3>
@@ -93,6 +87,7 @@
             [source]="activeBuyers$ | async"
             [filterValue]="selectedCountry"
             (rowClick)="showBuyer($event)"
+            class="margin-bottom"
             clickable
             useFilter
             pagination="5"
@@ -125,6 +120,8 @@
               {{ askingPriceRequested }}
             </ng-template>
           </bf-table>
+
+          <a mat-button class="link_buttons" routerLink="buyer">View All Buyers' Activities</a>
         </section>
       </ng-container>
     </ng-container>

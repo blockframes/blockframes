@@ -16,7 +16,7 @@ interface NotificationSetting { text: string, tooltip: boolean };
 
 const titleType: Partial<Record<NotificationTypes, NotificationSetting>> = {
   movieAccepted: { text: 'A title is successfully published on the marketplace.', tooltip: false },
-  movieAskingPriceRequested: { text: `A user requests the asking price for a title.`, tooltip: false },
+  movieAskingPriceRequested: { text: `A user requests the asking price for a title.`, tooltip: true },
   movieAskingPriceRequestSent: { text: `Your request for the asking price has been sent.`, tooltip: false },
   requestFromUserToJoinOrgCreate: { text: 'A user requests to join your organization.', tooltip: true },
   requestFromUserToJoinOrgDeclined: { text: 'A user\'s request to join your organization was declined. ', tooltip: false }, // TODO 8026
@@ -29,18 +29,19 @@ const titleType: Partial<Record<NotificationTypes, NotificationSetting>> = {
   requestToAttendEventCreated: { text: 'A user wants to join an event you\'re organizing. (RECOMMENDED)', tooltip: true },
   invitationToAttendMeetingCreated: { text: 'You are invited to a meeting. (RECOMMENDED)', tooltip: true },
   invitationToAttendScreeningCreated: { text: 'You are invited to a screening. (RECOMMENDED)', tooltip: true },
+  invitationToAttendSlateCreated: { text: 'You are invited to a slate presentation. (RECOMMENDED)', tooltip: true },
   screeningRequested: { text: 'A screening has been requested. (RECOMMENDED)', tooltip: false },
   screeningRequestSent: { text: 'Your screening request was successfully sent', tooltip: false },
   offerCreatedConfirmation: { text: 'Your offer is successfully sent', tooltip: false },
   contractCreated: { text: 'An offer has been made on one of your titles. (RECOMMENDED)', tooltip: true },
-  createdCounterOffer: { text: 'You\'ve created a counter offer.', tooltip: true },
-  receivedCounterOffer: { text: 'You\'ve received a counter offer. (RECOMMENDED)', tooltip: true },
-  myOrgAcceptedAContract: { text: 'You accepted a counter offer. (RECOMMENDED)', tooltip: true },
-  myContractWasAccepted: { text: 'Your counter offer was accepted. (RECOMMENDED)', tooltip: true },
-  myOrgDeclinedAContract: { text: 'You declined a counter offer. (RECOMMENDED)', tooltip: true },
-  myContractWasDeclined: { text: 'Your counter offer was declined. (RECOMMENDED)', tooltip: true },
+  createdCounterOffer: { text: 'Your counter-offer is submitted.', tooltip: true },
+  receivedCounterOffer: { text: 'You receive a counter offer. (RECOMMENDED)', tooltip: true },
+  myOrgAcceptedAContract: { text: 'You accept an offer. (RECOMMENDED)', tooltip: true },
+  myContractWasAccepted: { text: 'Your offer gets accepted. (RECOMMENDED)', tooltip: true },
+  myOrgDeclinedAContract: { text: 'You decline an offer. (RECOMMENDED)', tooltip: true },
+  myContractWasDeclined: { text: 'Your offer gets declined. (RECOMMENDED)', tooltip: true },
   // #7946 this may be reactivated later
-  // underSignature: { text: 'Your offer is now under signature. (RECOMMENDED)', tooltip: true },
+  // underSignature: { text: 'Your offer is now under signature or validated by all parties. (RECOMMENDED)', tooltip: true },
 };
 
 const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] }[] = [
@@ -53,15 +54,23 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
     title: 'Content Management',
     types: [
       'movieAccepted',
+    ],
+    appAuthorized: ['catalog', 'financiers']
+  },
+  {
+    title: 'Content Management',
+    types: [
+      'movieAccepted',
       'movieAskingPriceRequested',
       'movieAskingPriceRequestSent'
     ],
-    appAuthorized: ['catalog', 'festival', 'financiers']
+    appAuthorized: ['festival']
   },
   {
     title: 'Event Management',
     types: [
       'invitationToAttendScreeningCreated',
+      'invitationToAttendSlateCreated',
       'invitationToAttendMeetingCreated',
       'invitationToAttendEventUpdated',
       'requestToAttendEventCreated',

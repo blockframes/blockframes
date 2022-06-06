@@ -11,6 +11,7 @@ import { MetricCardListModule } from '@blockframes/analytics/components/metric-c
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { BarChartModule } from '@blockframes/analytics/components/bar-chart/bar-chart.module';
+import { PieChartModule } from '@blockframes/analytics/components/pie-chart/pie-chart.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -29,6 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
     MaxLengthModule,
     DurationModule,
     BarChartModule,
+    PieChartModule,
     // Material
     MatIconModule,
     MatCardModule,
