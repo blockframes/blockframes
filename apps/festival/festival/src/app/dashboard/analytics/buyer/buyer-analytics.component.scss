@@ -42,10 +42,31 @@ section {
     flex-wrap: wrap;
     margin-bottom: 8px;
   }
+
+  .graphs {
+    display: flex;
+    gap: 24px;
+
+    analytics-bar-chart {
+      flex-grow: 2;
+    }
+
+    analytics-pie-chart {
+      flex-grow: 1;
+
+      h5 {
+        margin-bottom: 0;
+      }
+    }
+  }
 }
 
 @include layout-bp(xs) {
   img {
     display: none;
+  }
+
+  .graphs {
+    flex-direction: column;
   }
 }
