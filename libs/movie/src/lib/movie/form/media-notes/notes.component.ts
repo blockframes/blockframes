@@ -9,9 +9,10 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieService } from '../../service';
 import { getDeepValue } from '@blockframes/utils/pipes';
-import { getFileMetadata } from '@blockframes/media/utils';
+import { getFileMetadata, getFileStoragePath } from '@blockframes/media/utils';
 import { Subscription } from 'rxjs';
 import { MovieNote } from '@blockframes/model';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 
 @Component({
   selector: 'movie-form-media-notes',
@@ -31,7 +32,8 @@ export class MovieFormMediaNotesComponent implements OnInit, OnDestroy {
     private movie: MovieService,
     private shell: MovieFormShellComponent,
     private route: ActivatedRoute,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    private uploaderService: FileUploaderService
   ) {
     this.dynTitle.setPageTitle('Notes');
   }
@@ -46,5 +48,10 @@ export class MovieFormMediaNotesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  removeFromQueue(index: number) {
+    const storagePath = getFileStoragePath('movies', 'notes', this.movieId);
+    this.uploaderService.removeFromQueue(storagePath, index);
   }
 }

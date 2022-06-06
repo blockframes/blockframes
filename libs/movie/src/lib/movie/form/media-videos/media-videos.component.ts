@@ -3,10 +3,11 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { MovieService } from '../../service';
-import { getFileMetadata } from '@blockframes/media/utils';
+import { getFileMetadata, getFileStoragePath } from '@blockframes/media/utils';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { Subscription } from 'rxjs';
 import { MovieVideo } from '@blockframes/model';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 
 @Component({
   selector: 'movie-form-media-videos',
@@ -24,7 +25,8 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
     private movie: MovieService,
     private shell: MovieFormShellComponent,
     private dynTitle: DynamicTitleService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private uploaderService: FileUploaderService
   ) {}
 
   ngOnInit() {
@@ -51,5 +53,10 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   get videoList() {
     return this.form.promotional.videos.otherVideos;
+  }
+
+  removeFromQueue(index: number) {
+    const storagePath = getFileStoragePath('movies', 'otherVideos', this.movieId);
+    this.uploaderService.removeFromQueue(storagePath, index);
   }
 }

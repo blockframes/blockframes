@@ -64,13 +64,12 @@ export class FileUploaderService {
    * @note if the file does not exists in the queue,
    * this function will not throw any error and simply do nothing
    */
-  removeFromQueue(storagePath: string, fileName: string) {
-
+  removeFromQueue(storagePath: string, fileNameOrIndex: string | number) {
     const uploads = this.queue[storagePath];
 
     if (!uploads || !uploads.length) return;
 
-    const index = uploads.findIndex(upload => upload?.fileName === fileName);
+    const index = typeof fileNameOrIndex === 'number' ? fileNameOrIndex : uploads.findIndex(upload => upload?.fileName === fileNameOrIndex);
 
     // ! Do not remove/splice otherwise it will shift remaining uploads and can cause weird side effects
     if (index !== -1) uploads[index] = null;
