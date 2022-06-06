@@ -89,7 +89,7 @@ export class InvitationsComponent implements OnInit {
       'guest email': getGuest(i, 'user').email,
       'guest first name': getGuest(i, 'user').firstName || '--',
       'guest last name': getGuest(i, 'user').lastName || '--',
-      'guest organization': i.guestOrg.name || '--',
+      'guest organization': i.guestOrg?.name || '--',
       'invitation mode': i.mode,
       'invitation status': i.status,
     }));
