@@ -30,11 +30,7 @@ section {
     gap: 24px;
   }
 
-  analytics-pie-chart {
-    width: 50%;
-  }
-
-  analytics-metric-card-list {
+  analytics-pie-chart, analytics-metric-card-list {
     width: 50%;
   }
 }
@@ -44,10 +40,7 @@ section {
   section {
     flex-direction: column;
     gap: 8px;
-    analytics-pie-chart {
-      width: 100%;
-    }
-    analytics-metric-card-list {
+    analytics-pie-chart, analytics-metric-card-list {
       width: 100%;
     }
   }
