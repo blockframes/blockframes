@@ -1,15 +1,16 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate } from '@blockframes/analytics/utils';
+import { aggregate, countedToAnalyticData, counter } from '@blockframes/analytics/utils';
 import { AggregatedAnalytic, App } from '@blockframes/model';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
-import { joinWith } from 'ngfire';
 import { APP } from '@blockframes/utils/routes/utils';
-import { map } from 'rxjs/operators';
+
+import { joinWith } from 'ngfire';
+import { map, shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-buyers-analytics',
@@ -20,7 +21,7 @@ import { map } from 'rxjs/operators';
 export class BuyersAnalyticsComponent {
 
   // The analytics of each buyer who interacted with sellers' title
-  buyersAnalytics$ = this.titleService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
+  private analyticsWithUsersAndOrgs$ = this.titleService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
     joinWith({
       analytics: title => this.analytics.getTitleAnalytics({ titleId: title.id }),
     }, { shouldAwait: true }),
@@ -34,6 +35,10 @@ export class BuyersAnalyticsComponent {
       users: ({ uids }) => this.userService.valueChanges(uids),
       orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
     }, { shouldAwait: true }),
+    shareReplay({bufferSize:1, refCount:true})
+  );
+
+  buyersAnalytics$ = this.analyticsWithUsersAndOrgs$.pipe(
     map(({ users, orgs, analytics }) => {
       return users.map(user => {
         const org = orgs.find(o => o.id === user.orgId);
@@ -42,6 +47,11 @@ export class BuyersAnalyticsComponent {
       });
     })
   );
+
+  orgActivity$ = this.buyersAnalytics$.pipe(
+    map(aggregated => counter(aggregated, 'org.activity', (item: AggregatedAnalytic) => item.total)),
+    map(counted => countedToAnalyticData(counted, 'orgActivity'))
+  )
 
   constructor(
     private analytics: AnalyticsService,

@@ -26,7 +26,8 @@ import {
   SlateEventDocument,
   EventTypesValue,
   eventTypes,
-  toLabel
+  toLabel,
+  EmailErrorCodes
 } from '@blockframes/model';
 import { toIcsFile } from '../agenda/utils';
 import { IcsEvent } from '../agenda/agenda.interfaces';
@@ -133,8 +134,6 @@ export interface NegotiationEmailData {
   currency: string;
   terms: MailTerm[];
 }
-
-export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
 
 export const emailErrorCodes = {
   unauthorized: {
