@@ -34,7 +34,6 @@ function toMovieEventAnalytics(events: Analytics<'title'>[]): MovieEventAnalytic
     addedToWishlist: {},
     askingPriceRequested: {},
     pageView: {},
-    promoElementOpened: {},
     promoReelOpened: {},
     removedFromWishlist: {},
     screeningRequested: {}

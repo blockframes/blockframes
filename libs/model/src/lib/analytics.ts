@@ -5,12 +5,6 @@ import { User } from './user';
 
 const analyticsEvents = [
   'pageView',
-  /**
-   * This event isn't triggered anywhere in the app.
-   * It would be when this issue is closed
-   * #8580
-   */
-  'promoElementOpened',
   'promoReelOpened',
   'addedToWishlist',
   'removedFromWishlist',
@@ -87,7 +81,6 @@ export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>):
     addedToWishlist: 0,
     askingPriceRequested: 0,
     pageView: 0,
-    promoElementOpened: 0,
     promoReelOpened: 0,
     removedFromWishlist: 0,
     screeningRequested: 0,

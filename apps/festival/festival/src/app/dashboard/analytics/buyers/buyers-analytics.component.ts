@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MetricCard } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
+import { toCards } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { aggregate, countedToAnalyticData, counter } from '@blockframes/analytics/utils';
 import { AggregatedAnalytic, App } from '@blockframes/model';
@@ -12,51 +12,6 @@ import { APP } from '@blockframes/utils/routes/utils';
 
 import { joinWith } from 'ngfire';
 import { map, shareReplay } from 'rxjs/operators';
-import { VanityMetricEvent } from '../buyer/buyer-analytics.component';
-
-const events: VanityMetricEvent[] = [
-  {
-    name: 'pageView',
-    title: 'Views',
-    icon: 'visibility'
-  },
-  {
-    name: 'promoElementOpened',
-    title: 'Promotional Elements',
-    icon: 'star'
-  },
-  {
-    name: 'promoReelOpened',
-    title: 'Promoreel Opened',
-    icon: 'star_fill'
-  },
-  {
-    name: 'addedToWishlist',
-    title: 'Adds to Wishlist',
-    icon: 'favorite'
-  },
-  {
-    name: 'screeningRequested',
-    title: 'Screening Requested',
-    icon: 'ask_screening_2'
-  },
-  {
-    name: 'askingPriceRequested',
-    title: 'Asking Price Requested',
-    icon: 'local_offer'
-  }
-];
-
-function toCards(aggregated: AggregatedAnalytic): MetricCard[] {
-  console.log({aggregated})
-  return events.map(event => ({
-    title: event.title,
-    value: aggregated[event.name],
-    icon: event.icon,
-    selected: false
-  }));
-}
-
 
 @Component({
   selector: 'festival-buyers-analytics',
@@ -81,7 +36,7 @@ export class BuyersAnalyticsComponent {
       users: ({ uids }) => this.userService.valueChanges(uids),
       orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
     }, { shouldAwait: true }),
-    shareReplay({bufferSize:1, refCount:true})
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   buyersAnalytics$ = this.analyticsWithUsersAndOrgs$.pipe(
@@ -99,7 +54,7 @@ export class BuyersAnalyticsComponent {
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
   )
   aggregatedCards$ = this.analyticsWithUsersAndOrgs$.pipe(
-    map(({analytics}) => aggregate(analytics)),
+    map(({ analytics }) => aggregate(analytics)),
     map(toCards)
   );
 
