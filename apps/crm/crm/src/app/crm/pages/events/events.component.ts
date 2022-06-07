@@ -56,7 +56,7 @@ export class EventsComponent implements OnInit {
       'event type': i.type,
       'start date': i.start,
       'end date': i.end,
-      'hosted by': i.hostedBy || '--',
+      'hosted by': i.hostedBy,
       'invited': i.invited,
       'confirmed': i.confirmed,
       'pending': i.pending,
