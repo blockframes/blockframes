@@ -1,3 +1,5 @@
+@import "@angular/flex-layout/mq";
+
 :host {
   display: block;
 }
@@ -12,8 +14,8 @@
   }
 }
 
-analytics-map h5 {
-  display: flex;
+h5 {
+  margin-bottom: 0;
 }
 
 section {
@@ -25,15 +27,18 @@ section {
   header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 8px;
+
     h3 {
-      display: flex;
-      align-items: center;
       margin-bottom: 0;
+    }
+
+    a, button {
+      margin-left: auto;
     }
   }
 
-  a {
+  article a {
     margin-bottom: 16px;
   }
 }
@@ -44,4 +49,19 @@ section {
 
 bf-table.screenings {
   margin-top: 24px;
+}
+
+.vanity_metrics {
+  display: flex;
+  gap: 16px;
+
+  analytics-line-chart {
+    flex-grow: 1;
+  }
+}
+
+@include layout-bp(lt-lg) {
+  .vanity_metrics{
+    flex-direction: column;
+  }
 }

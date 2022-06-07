@@ -39,6 +39,7 @@ export class BarChartComponent {
     labels: [],
     chart: {
       width: '100%',
+      height: '300px',
       type: 'bar',
       toolbar: {
         show: false
