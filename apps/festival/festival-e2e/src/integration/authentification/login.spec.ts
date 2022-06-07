@@ -26,6 +26,7 @@ describe('Login tests', () => {
     adminAuth.updateUser({ uid: user.uid, update: { emailVerified: true } });
     firestore.create([injectedData]);
     maintenance.end();
+    cypress.refreshIfMaintenance()
     get('login').click();
     assertUrlIncludes('/connexion');
     get('email').type(user.email);
@@ -34,3 +35,13 @@ describe('Login tests', () => {
     get('skip-preferences').should('exist');
   });
 });
+
+const cypress = {
+  refreshIfMaintenance() {
+    cy.get('festival-root').then($el => {
+      const $children = $el.children();
+      const childrenTagNames = $children.toArray().map(child => child.tagName)
+      if (childrenTagNames.includes('blockframes-maintenance'.toUpperCase())) get('maintenance-refresh').click();
+    })
+  }
+}
