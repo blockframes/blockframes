@@ -12,32 +12,13 @@ describe('Test ORG anonymization function', () => {
       content: {
         id,
         denomination: { full: 'org full name A', public: 'org public name A' },
-        email: 'email@foo.org',
-        fiscalNumber: 'FR 123 456 78 452'
+        email: 'email@foo.org'
       }
     };
 
     const doc = anonymizeDocument(orgRecord);
     expect(doc.content.id).toEqual(orgRecord.content.id);
     expect(doc.content.email).not.toEqual(orgRecord.content.email);
-    expect(doc.content.fiscalNumber).not.toEqual(orgRecord.content.fiscalNumber);
-  });
-
-  it('should not anonymise fiscalNumber if not present in original doc', async () => {
-    const id = 'BBBB01';
-    const orgRecord: DbRecord = {
-      docPath: `orgs/${id}`,
-      content: {
-        id,
-        denomination: { full: 'org full name B', public: 'org public name B' },
-        email: 'email@bar.org',
-      }
-    };
-
-    const doc = anonymizeDocument(orgRecord);
-    expect(doc.content.id).toEqual(orgRecord.content.id);
-    expect(doc.content.email).not.toEqual(orgRecord.content.email);
-    expect(doc.content.fiscalNumber).toBeUndefined();
   });
 });
 
@@ -80,8 +61,7 @@ describe('Test INVITATIONS anonymization function', () => {
         fromOrg: {
           id: 'orgIdA',
           denomination: { full: 'org full name A', public: 'org public name A' },
-          email: 'email@foo.org',
-          fiscalNumber: 'FR 123 456 78 452'
+          email: 'email@foo.org'
         },
         toUser: {
           uid: 'uidA',
@@ -105,7 +85,6 @@ describe('Test INVITATIONS anonymization function', () => {
     expect(doc.content.toUser.lastName).not.toEqual(invitationRecord.content.toUser.lastName);
     expect(doc.content.toUser.privacyPolicy).toBeUndefined();
     expect(doc.content.fromOrg.email).not.toEqual(invitationRecord.content.fromOrg.email);
-    expect(doc.content.fromOrg.fiscalNumber).not.toEqual(invitationRecord.content.fromOrg.fiscalNumber);
   });
 });
 
@@ -145,7 +124,6 @@ describe('Test NOTIFICATIONS anonymization function', () => {
     expect(doc.content.user.lastName).not.toEqual(notificationRecord.content.user.lastName);
     expect(doc.content.user.privacyPolicy).toBeUndefined();
     expect(doc.content.organization.email).not.toEqual(notificationRecord.content.organization.email);
-    expect(doc.content.organization.fiscalNumber).toBeUndefined();
   });
 });
 

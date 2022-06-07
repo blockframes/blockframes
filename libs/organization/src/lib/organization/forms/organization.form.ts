@@ -41,7 +41,6 @@ function createOrganizationFormControl(params?: Organization) {
     description: new FormControl(organization.description),
     addresses: new OrganizationAddressesForm(organization.addresses),
     email: new FormControl(organization.email, Validators.email),
-    fiscalNumber: new FormControl(organization.fiscalNumber),
     activity: new FormControl(organization.activity),
     logo: new StorageFileForm(organization.logo),
     documents: new OrganizationMediasForm(organization.documents),

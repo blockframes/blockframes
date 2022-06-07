@@ -12,7 +12,6 @@ export interface Organization {
   address: Location;
   name: string;
   activity: string;
-  fiscalNumber: string;
 }
 
 export interface Location {
