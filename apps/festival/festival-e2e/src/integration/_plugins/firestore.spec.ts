@@ -256,33 +256,25 @@ describe('Testing bridge between Cypress and node', () => {
 const exampleValuesFrom = (examples: Record<string, object>[]) => {
   const result = [];
   examples.forEach(example => {
-    let exampleValues = [];
-    for (const [index, [key, value]] of Object.entries(Object.entries(example))) {
-      const partsInPath = key.split('/').length;
-      value['_meta'] = { e2e: true };
-      // data at the root of the doccument
-      if (partsInPath === 2) {
-        const exampleExists = index !== '0';
-        if (exampleExists) {
-          exampleValues.push({ ...value });
-        } else {
-          exampleValues = [{ ...value }];
-        }
-      }
-      // data inside subcollection
-      const subcollection = key.split('/')[2];
+    const values = [];
+    for (const [path, document] of Object.entries(example)) {
+      document['_meta'] = { e2e: true };
+      const partsInPath = path.split('/').length;
+      // data in document
+      if (partsInPath === 2) values.push({...document});
+      // data in subcollection
+      const subcollection = path.split('/')[2];
       if (partsInPath === 4) {
-        const subcollectionExists = !!exampleValues[0][subcollection];
+        const subcollectionExists = !!values[0][subcollection];
         if (subcollectionExists) {
-          exampleValues[0][subcollection].push({ ...value });
+          values[0][subcollection].push(document);
         } else {
-          exampleValues[0][subcollection] = [{ ...value }];
+          values[0][subcollection] = [document];
         }
       }
     }
-    result.push(exampleValues);
+    result.push(values);
   });
-
   return result;
 };
 

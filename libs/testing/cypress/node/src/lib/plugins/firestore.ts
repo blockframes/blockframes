@@ -203,11 +203,8 @@ const subcollectionsDataOf = async (path: string) => {
 
 export async function queryData(data: { collection: string; field: string; operator: WhereFilterOp; value: unknown }) {
   const { collection, field, operator, value } = data;
-  const result = [];
   const snapshot = await db.collection(collection).where(field, operator, value).get();
-  const docs = snapshot.docs;
-  for (const doc of docs) result.push(doc.data());
-  return result;
+  return snapshot.docs.map(doc => doc.data());
 }
 
 //* UPDATE DATA*-----------------------------------------------------------------

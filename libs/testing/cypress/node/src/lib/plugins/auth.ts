@@ -28,11 +28,10 @@ export async function updateUser(data: { uid: string; update: Partial<User> }) {
 export async function deleteAllTestUsers() {
   const list = await auth.listUsers();
   const users = list.users;
-  const uids = users
-    .filter(user => {
-      if (!user.email) throw new Error(`Failed to delete all auth users because one has no mail : uid ${user.uid}`);
-      return !user.email || user.email.includes(`@${serverId}.mailosaur.net`);
-    })
-    .map(user => user.uid);
+  const uids: string[] = [];
+  for (const user of users) {
+    if (!user.email) console.warn(`Found a user with no mail : uid ${user.uid}`);
+    if (user.email.includes(`@${serverId}.mailosaur.net`)) uids.push(user.uid);
+  }
   return await auth.deleteUsers(uids);
 }
