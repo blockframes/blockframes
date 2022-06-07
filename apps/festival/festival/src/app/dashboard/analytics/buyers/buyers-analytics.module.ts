@@ -8,6 +8,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { PieChartModule } from '@blockframes/analytics/components/pie-chart/pie-chart.module';
 import { MatIconModule } from '@angular/material/icon';
+import { MetricCardListModule } from '@blockframes/analytics/components/metric-card-list/metric-card-list.module';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
     ToLabelModule,
     DisplayNameModule,
     PieChartModule,
+    MetricCardListModule,
 
     //material
     MatIconModule,
