@@ -196,6 +196,24 @@ export async function createNotificationsForEventsToStart() {
   return notifications.length ? triggerNotifications(notifications) : undefined;
 }
 
+export async function createNotificationsForFinishedScreenings() {
+  const halfAnHour = 1800 * 1000;
+  const screenings = await fetchFinishedScreenings(halfAnHour); 
+  const notifications = [];
+
+  for (const screening of screenings) {
+    const attendees = screening.meta.attendees ? Object.keys(screening.meta.attendees) : [];
+    const invitations = await fetchEventInvitations(screening.id);
+
+    for (const invitation of invitations) {
+      const notificationType = attendees.includes(invitation.toUser.uid) ? 'postScreening' : 'userMissedScreening';
+      const notification = await createNotificationIfNotExists([invitation], notificationType);
+      notifications.push(...notification);
+    } 
+  }
+  triggerNotifications(notifications);
+}
+
 /** Fetch event collection with a start and an end range search */
 async function fetchEventStartingIn(from: number, to: number) {
   const db = admin.firestore();
@@ -203,6 +221,24 @@ async function fetchEventStartingIn(from: number, to: number) {
     .where('start', '>=', new Date(Date.now() + from))
     .where('start', '<', new Date(Date.now() + to))
     .get();
+}
+
+/** Fetch screenings finished since a specific time */
+async function fetchFinishedScreenings(since: number) {
+  const db = admin.firestore();
+  const eventsCollection = await db.collection('events')
+    .where('type', '==', 'screening')
+    .where('end', '>=', new Date(Date.now() - since))
+    .where('end', '<', new Date())
+    .get();
+  return eventsCollection.docs.map(doc => doc.data() as EventDocument<Screening>);
+}
+
+/** Fetch invitations related to an event */
+async function fetchEventInvitations(eventId: string) {
+  const db = admin.firestore();
+  const invitationsDocs = await db.collection('invitations').where('eventId', '==', eventId).get();
+  return invitationsDocs.docs.map(doc => doc.data() as InvitationDocument);
 }
 
 /**

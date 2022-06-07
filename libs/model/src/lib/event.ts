@@ -11,10 +11,16 @@ import { Timestamp } from './timestamp';
 // Event types
 export type EventMeta = Meeting | Screening | Slate | unknown;
 
-export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended';
+export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended' | 'attended';
 export interface MeetingAttendee extends Person {
   uid: string,
   status: AttendeeStatus,
+}
+
+export interface ScreeningAttendee extends Person {
+  uid: string;
+  email: string;
+  status: AttendeeStatus;
 }
 
 export interface Meeting {
@@ -49,6 +55,7 @@ export interface Screening {
   titleId: string;
   description: string;
   organizerUid: string;
+  attendees: Record<string, ScreeningAttendee>;
 }
 
 export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = Record<string, unknown>> {
@@ -151,6 +158,7 @@ export function createScreening(screening: Partial<Screening>): Screening {
     titleId: '',
     description: '',
     organizerUid: '',
+    attendees: {},
     ...screening,
   };
 }
@@ -200,6 +208,14 @@ export function createMeetingAttendee(
     firstName: user.firstName,
     lastName: user.lastName,
     status,
+  };
+}
+
+export function createScreeningAttendee(user: User | AnonymousCredentials): ScreeningAttendee {
+  return {
+    uid: user.uid,
+    email: user.email,
+    status: 'attended'
   };
 }
 

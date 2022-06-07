@@ -11,7 +11,7 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { TwilioService } from '@blockframes/utils/twilio';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getFileExtension } from '@blockframes/utils/file-sanitizer';
-import { ErrorResultResponse, extensionToType } from '@blockframes/model';
+import { createScreeningAttendee, ErrorResultResponse, extensionToType } from '@blockframes/model';
 import { MediaService } from '@blockframes/media/service';
 import { InvitationService } from '@blockframes/invitation/service';
 import { filter, pluck, scan, switchMap } from 'rxjs/operators';
@@ -209,6 +209,11 @@ export class SessionComponent implements OnInit, OnDestroy {
         // SCREENING
       } else if (isScreening(event)) {
         this.dynTitle.setPageTitle(event.title, 'Screening');
+        // create attendee in event
+        const attendee = createScreeningAttendee(this.authService.anonymouseOrRegularProfile);
+        const meta: Screening = { ...event.meta, attendees: { ...event.meta.attendees, [this.authService.uid]: attendee } };
+        await this.service.update(event.id, { meta });
+
         if ((event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
           this.fileRef = movie.promotional.videos?.screener;
