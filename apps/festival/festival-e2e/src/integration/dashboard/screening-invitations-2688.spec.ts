@@ -5,7 +5,7 @@ import USERS from 'tools/fixtures/users.json'
 import ORGS from 'tools/fixtures/orgs.json'
 //TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { auth, events, festival, awaitElementDeletion } from '@blockframes/testing/cypress/browser';
+import { browserAuth, events, festival, awaitElementDeletion } from '@blockframes/testing/cypress/browser';
 
 const screeningEvent = screeningEvents[0];
 const org = ORGS.find((org) => org.id === screeningEvent.org.id);
@@ -30,13 +30,13 @@ describe('Organiser invites other users to private screening', () => {
     */
 
     cy.visit('/');
-    auth.clearBrowserAuth();
+    browserAuth.clearBrowserAuth();
     cy.visit('/');
 
     cy.clearLocalStorage(); // ! If event is deleted manually, it will be stuck in localStorage cache
     cy.contains('Accept Cookies').click();
     cy.log('user uid', userOrganiser.uid);
-    auth.loginWithEmailAndPassword(userOrganiser.email);
+    browserAuth.signinWithEmailAndPassword(userOrganiser.email);
     cy.visit('/c/o/dashboard/event');
     cy.log(`Create screening {${screeningEvent.event}}`);
     awaitElementDeletion('mat-spinner');
@@ -49,10 +49,10 @@ describe('Organiser invites other users to private screening', () => {
 
     // * STEP
     cy.log('InvitedUser1: logs in, accepts his invitations & runs the video');
-    auth.clearBrowserAuth();
+    browserAuth.clearBrowserAuth();
     cy.visit('/');
 
-    auth.loginWithEmailAndPassword(userInvited1.email);
+    browserAuth.signinWithEmailAndPassword(userInvited1.email);
 
     cy.visit('/c/o/marketplace/invitations');
     awaitElementDeletion('mat-spinner');
@@ -79,9 +79,9 @@ describe('Organiser invites other users to private screening', () => {
 
       // * STEP
       cy.log('InvitedUser2 logs in and refuses screening invitations');
-      auth.clearBrowserAuth();
+      browserAuth.clearBrowserAuth();
       cy.visit('/');
-      auth.loginWithEmailAndPassword(userInvited2.email);
+      browserAuth.signinWithEmailAndPassword(userInvited2.email);
 
       cy.visit('/c/o/marketplace/invitations');
       awaitElementDeletion('mat-spinner');
@@ -91,9 +91,9 @@ describe('Organiser invites other users to private screening', () => {
       // Member organiser do not get notification
       // Admin / Super Admin gets notification about invitation acceptance.
       cy.log('Org admin logs in and verifies the accepted invitations')
-      auth.clearBrowserAuth();
+      browserAuth.clearBrowserAuth();
       cy.visit('/');
-      auth.loginWithEmailAndPassword(userAdmin.email);
+      browserAuth.signinWithEmailAndPassword(userAdmin.email);
 
       cy.visit('/c/o/dashboard/notifications');
 
@@ -102,9 +102,9 @@ describe('Organiser invites other users to private screening', () => {
 
       // * STEP
       cy.log('UninvitedGuest logs in, go on event page, asserts no access to the video');
-      auth.clearBrowserAuth();
+      browserAuth.clearBrowserAuth();
       cy.visit('/');
-      auth.loginWithEmailAndPassword(userUninvited.email);
+      browserAuth.signinWithEmailAndPassword(userUninvited.email);
 
       cy.log('Reach Market Home & navigate to Screening Page from Screening Schedule');
       cy.visit('/c/o/marketplace/home');

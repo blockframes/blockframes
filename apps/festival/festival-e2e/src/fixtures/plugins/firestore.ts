@@ -298,4 +298,37 @@ export const examples = {
       id: `subdoc9-${time}`,
     },
   },
+
+  //* QUERY example
+
+  collectionToQuery: {
+    ['ex-query/doc1']: {
+      example: 'doc 1',
+      id: `doc1-${time}`,
+      textField: 'find me',
+      numericField: 0,
+      arrayField: ['North', 'East', 'West'],
+    },
+    ['ex-query/doc2']: {
+      example: 'doc 2',
+      id: `doc2-${time}`,
+      textField: 'do not find me',
+      numericField: 1,
+      arrayField: ['East', 'South'],
+    },
+    ['ex-query/doc3']: {
+      example: 'doc 3',
+      id: `doc3-${time}`,
+      textField: 'do not find me',
+      numericField: 2,
+      arrayField: ['North', 'West'],
+    },
+    ['ex-query/doc4']: {
+      example: 'doc 4',
+      id: `doc4-${time}`,
+      textField: 'find me',
+      numericField: 3,
+      arrayField: ['North', 'East'],
+    },
+  },
 };
