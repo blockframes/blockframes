@@ -4,7 +4,7 @@ import {
   availFrance, availsSVODArgentina, availsPayTVArgentina,
   availsGermany, availsBelgium, availsExistingEndedSales,
   availsOngoingSales, availsTerritoryWithExclusivity, availsTerritoryWithoutExclusivity,
-  availsFranceLuxembourg, availsAllButSouthKorea, availsPayTV, availsPlanes,
+  availsFranceLuxembourg, availsAllButSouthKorea, availsPayTV, availsavailsInflight,
 } from './../fixtures/availsFilters';
 import {
   mandateMovie1,
@@ -205,8 +205,8 @@ describe('Test terms are out of movie mandate', () => {
     expect(markers.available.find(m => m.slug === 'angola')).not.toBe(undefined);
   })
 
-  it('Check availability on china with planes media', () => {
-    const data = { avails: availsPlanes, mandates: [mandateMovie6], sales: [], bucketContracts: [] };
+  it('Check availability on china with inflight media', () => {
+    const data = { avails: availsavailsInflight, mandates: [mandateMovie6], sales: [], bucketContracts: [] };
     const markers = territoryAvailabilities(data);
     expect(markers.available.find(m => m.slug === 'china')).not.toBe(undefined);
     expect(markers.available.find(m => m.slug === 'brazil')).not.toBe(undefined);
