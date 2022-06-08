@@ -1,20 +1,37 @@
 import { auth } from '../testing-cypress';
+import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
+import { serverId } from '@blockframes/utils/constants';
+import { User } from 'firebase/auth';
 
-export async function validateAuthUser(email: string) {
-  const user = await auth.getUserByEmail(email);
-  return await auth.updateUser(user.uid, { emailVerified: true });
+export async function createUser(data: { uid: string; email: string }) {
+  return await auth.createUser({ ...data, password: USER_FIXTURES_PASSWORD });
 }
 
-export async function getAuthUserByEmail(email: string) {
+export async function getUser(emailOrUid: string) {
   try {
-    return await auth.getUserByEmail(email);
+    return emailOrUid.includes('@') ? await auth.getUserByEmail(emailOrUid) : await auth.getUser(emailOrUid);
   } catch (err) {
     if (err.code === 'auth/user-not-found') return null;
-    throw err;
+    throw err.code;
   }
 }
 
-export async function deleteAuthUser(userId: string) {
-  await auth.deleteUser(userId);
-  return `User ${userId} deleted`;
+export async function deleteUser(uid: string) {
+  return await auth.deleteUsers([uid]);
+}
+
+export async function updateUser(data: { uid: string; update: Partial<User> }) {
+  const { uid, update } = data;
+  return await auth.updateUser(uid, update);
+}
+
+export async function deleteAllTestUsers() {
+  const list = await auth.listUsers();
+  const users = list.users;
+  const uids: string[] = [];
+  for (const user of users) {
+    if (!user.email) console.warn(`Found a user with no mail : uid ${user.uid}`);
+    if (user.email.includes(`@${serverId}.mailosaur.net`)) uids.push(user.uid);
+  }
+  return await auth.deleteUsers(uids);
 }
