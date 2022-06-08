@@ -31,7 +31,7 @@ describe('Test territoryAvailabilities pure function', () => {
           from: new Date('01/01/2020'),
           to: new Date('01/01/2030')
         },
-        medias: ['theatrical'],
+        medias: ['educational'],
         territories: ['france', 'germany', 'greece'],
         exclusive: true
       }],
@@ -48,7 +48,7 @@ describe('Test territoryAvailabilities pure function', () => {
           from: new Date('01/01/2020'),
           to: new Date('01/01/2030')
         },
-        medias: ['theatrical'],
+        medias: ['educational'],
         territories: ['germany'],
         exclusive: true
       }],
@@ -66,7 +66,7 @@ describe('Test territoryAvailabilities pure function', () => {
           from: new Date('06/01/2021'),
           to: new Date('12/01/2021')
         },
-        medias: ['theatrical'],
+        medias: ['educational'],
         territories: ['greece'],
         exclusive: true
       }],

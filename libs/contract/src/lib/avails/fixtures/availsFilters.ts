@@ -8,7 +8,7 @@ export const availDetailsExclusive: AvailsFilter = {
   },
   exclusive: true,
   territories: [],
-  medias: ['theatrical']
+  medias: ['educational']
 };
 
 export const availSouthKorea: AvailsFilter = {
