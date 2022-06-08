@@ -45,6 +45,9 @@
       <ng-template colRef="title.originalLanguages" label="Original Language" let-languages sort>
         {{ languages | toLabel:'languages' }}
       </ng-template>
+      <ng-template colRef="pageView" label="# Views" let-pageView sort>
+        {{ pageView }}
+      </ng-template>
       <ng-template colRef label="In wishlist" let-wishlist sort>
         {{ inWishlist(wishlist) ? 'Yes' : '-' }}
       </ng-template>
