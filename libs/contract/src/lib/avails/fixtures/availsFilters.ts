@@ -282,7 +282,7 @@ export const availsPayTV: AvailsFilter = {
   medias: ['payTv']
 };
 
-export const availsavailsInflight: AvailsFilter = {
+export const availsInflight: AvailsFilter = {
   duration: {
     from: new Date('02/28/2022'),
     to: new Date('02/23/2023'),

@@ -6,8 +6,8 @@ import { Firestore, runChunks } from '@blockframes/firebase-utils';
  * @returns
  */
 export async function upgrade(db: Firestore) {
-  await updateTermsMedias(db)
-  return await updateBucketsMedias(db)
+  await updateTermsMedias(db);
+  return await updateBucketsMedias(db);
 }
 
 async function updateTermsMedias(db: Firestore) {
@@ -15,21 +15,21 @@ async function updateTermsMedias(db: Firestore) {
 
   return runChunks(terms.docs, async (doc) => {
     const term = doc.data();
-    const medias = term.medias
+    const medias = term.medias;
 
     // remove media 'video'
-    const indexVideo = medias.indexOf('video')
+    const indexVideo = medias.indexOf('video');
     if (medias.includes('video')) {
-      medias.splice(indexVideo, 1)
+      medias.splice(indexVideo, 1);
     }
 
     // rename media 'Planes' to Inflight
-    const indexPlanes = medias.indexOf('planes')
+    const indexPlanes = medias.indexOf('planes');
     if (medias.includes('planes')) {
-      medias.splice(indexPlanes, 1, 'Inflight')
+      medias.splice(indexPlanes, 1, 'inflight');
     }
 
-    term.medias = medias
+    term.medias = medias;
 
     // Update terms in DB
     await doc.ref.set(term);
@@ -41,23 +41,23 @@ async function updateBucketsMedias(db: Firestore) {
 
   return runChunks(buckets.docs, async (doc) => {
     const bucket = doc.data();
-    const contracts = bucket.contracts
+    const contracts = bucket.contracts;
     // check if bucket has contracts
     if (contracts.length > 0) {
-      const terms = contracts.map(test => test.terms[0].medias)
+      const terms = contracts.map(test => test.terms[0].medias);
 
       terms.map(media => {
         // rename media 'Planes' to Inflight
         if (media.includes('planes')) {
-          const indexPlanes = media.indexOf('planes')
-          media.splice(indexPlanes, 1, 'Inflight')
+          const indexPlanes = media.indexOf('planes');
+          media.splice(indexPlanes, 1, 'inflight');
         }
         // remove media 'video'
         if (media.includes('video')) {
-          const indexVideo = media.indexOf('video')
-          media.splice(indexVideo, 1)
+          const indexVideo = media.indexOf('video');
+          media.splice(indexVideo, 1);
         }
-        return media
+        return media;
       })
     }
 
