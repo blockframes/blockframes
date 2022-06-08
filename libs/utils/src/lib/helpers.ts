@@ -139,8 +139,8 @@ export function debounceFactory(func: (...params) => unknown, wait: number) {
   };
 }
 
-/** Verify if the org exists and has denomination.full. */
-export function hasDenomination(organization: Organization): boolean {
+/** Verify if the org exists and has a name. */
+export function hasName(organization: Organization): boolean {
   return !!organization && !!organization.name;
 }
 
