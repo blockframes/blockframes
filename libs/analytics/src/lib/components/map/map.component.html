@@ -61,9 +61,9 @@
       </mat-list>
     </aside>
   </world-map>
-  <aside>
+  <aside [ngClass]="{horizontal}">
     <ng-content select="h4, h3"></ng-content>
-    <mat-list [ngClass]="{horizontal}">
+    <mat-list>
       <mat-list-item *ngFor="let country of top">
         <span matLine>{{ country.label }}</span>
         <span>{{ country.count }}</span>
