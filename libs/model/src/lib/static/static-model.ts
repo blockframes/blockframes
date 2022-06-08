@@ -242,9 +242,9 @@ export const medias = {
   boats: 'Boats',
   hotels: 'Hotels',
   educational: 'Educational',
+  festival : 'Festival',
   rental: 'Rental',
   through: 'Sell Through',
-  festival : 'Festival'
 } as const
 
 export const memberStatus = {
