@@ -35,5 +35,13 @@ export const filters = {
   invitationEventName: (input: string, _, invitation: InvitationDetailed) => {
     if (!invitation?.event?.title) return false;
     return invitation.event.title.toLocaleLowerCase().includes(input);
-  }
+  },
+  invitationListOrgName: (input: string, _, invitation: InvitationDetailed) => {
+    if (!invitation?.org?.denomination.public) return false;
+    return invitation.org.denomination.public.toLocaleLowerCase().includes(input);
+  },
+  invitationListGuestOrgName: (input: string, _, invitation: InvitationDetailed) => {
+    if (!invitation?.guestOrg?.denomination.public) return false;
+    return invitation.guestOrg.denomination.public.toLocaleLowerCase().includes(input);
+  },
 }
