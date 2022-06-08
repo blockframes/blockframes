@@ -12,6 +12,7 @@ import {
   NotificationTypes,
   InvitationDocument,
   InvitationOrUndefined,
+  getGuest,
 } from '@blockframes/model';
 
 /**
@@ -206,9 +207,10 @@ export async function createNotificationsForFinishedScreenings() {
     const invitations = await fetchEventInvitations(screening.id);
 
     for (const invitation of invitations) {
-      const notificationType = attendees.includes(invitation.toUser.uid) ? 'postScreening' : 'userMissedScreening';
+      const userId = getGuest(invitation, 'user').uid;
+      const notificationType = attendees.includes(userId) ? 'postScreening' : 'userMissedScreening';
       const notification = await createNotificationIfNotExists([invitation], notificationType);
-      notifications.push(...notification);
+      notifications.push(notification[0]);
     } 
   }
   triggerNotifications(notifications);

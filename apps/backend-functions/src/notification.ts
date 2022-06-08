@@ -820,34 +820,34 @@ async function missedScreeningEmail(recipient: User, notification: NotificationD
   const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
   const orgDoc = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
   const org = getOrgEmailData(orgDoc);
-  const app: App = 'festival';
 
   const data = {
     user: getUserEmailData(recipient),
     org,
     event: getEventEmailData({event, orgName: org.denomination, email: recipient.email}),
-    pageUrl: `${appUrl.content}/c/o/marketplace/title/${event.meta.titleId}/main`
+    pageUrl: `${appUrl.market}/c/o/marketplace/title/${event.meta.titleId}/main`
   } 
   const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.missedScreening, data };
 
-  await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
+  await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
 }
 
 async function postScreeningEmail(recipient: User, notification: NotificationDocument) {
   const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
-  const movie = await getDocument<MovieDocument>(`movies/${event.meta.titleId}`);
-  const orgDoc = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
+  const [movie, orgDoc] = await Promise.all([
+    getDocument<MovieDocument>(`movies/${event.meta.titleId}`),
+    getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`)
+  ]);
   const org = getOrgEmailData(orgDoc);
-  const app: App = 'festival';
 
   const data = {
     user: getUserEmailData(recipient),
     org,
     movie: getMovieEmailData(movie),
     event: getEventEmailData({event, orgName: org.denomination, email: recipient.email}),
-    pageUrl: `${appUrl.content}/c/o/marketplace/title/${event.meta.titleId}/main`
+    pageUrl: `${appUrl.market}/c/o/marketplace/title/${event.meta.titleId}/main`
   } 
   const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.postScreening, data };
   
-  await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
+  await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
 }

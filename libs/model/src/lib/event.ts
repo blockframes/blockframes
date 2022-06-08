@@ -11,7 +11,7 @@ import { Timestamp } from './timestamp';
 // Event types
 export type EventMeta = Meeting | Screening | Slate | unknown;
 
-export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended' | 'attended';
+export type AttendeeStatus = 'owner' | 'requesting' | 'accepted' | 'denied' | 'ended';
 export interface MeetingAttendee extends Person {
   uid: string,
   status: AttendeeStatus,
@@ -20,7 +20,7 @@ export interface MeetingAttendee extends Person {
 export interface ScreeningAttendee extends Person {
   uid: string;
   email: string;
-  status: AttendeeStatus;
+  status: 'attended';
 }
 
 export interface Meeting {
