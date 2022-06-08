@@ -20,14 +20,14 @@
   </article>
 
   <bf-table [source]="orgs" pagination="50" useFilter>
-    <ng-template colRef="id" let-id sort>{{ id }}</ng-template>
+    <ng-template colRef="id" let-id>{{ id }}</ng-template>
     <ng-template colRef="status" let-status sort>
       <bf-tag>{{ status }}</bf-tag>
     </ng-template>
     <ng-template colRef="denomination.full" label="Organization Name" sort let-fullName>
       {{ fullName }}
     </ng-template>
-    <ng-template colRef="addresses.main.country" defaultSort label="Country" sort let-country>
+    <ng-template colRef="addresses.main.country" label="Country" let-country>
       {{ country ?? '--' | titlecase }}
     </ng-template>
     <ng-template colRef label="Status" sort let-org>
