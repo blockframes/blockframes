@@ -74,8 +74,8 @@
         <ng-template colRef="title.international" label="International title" let-international sort>
           {{ international | maxLength:50 }}
         </ng-template>
-        <ng-template colRef="releaseYear" label="Release year" let-releaseYear sort>
-          {{ releaseYear }}
+        <ng-template colRef="release" label="Release year" let-release sort>
+          {{ release?.year }}
         </ng-template>
         <ng-template colRef="app" label="Status" let-appAccess>
           <ul>
