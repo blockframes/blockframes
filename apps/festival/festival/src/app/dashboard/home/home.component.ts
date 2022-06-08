@@ -108,7 +108,7 @@ export class HomeComponent {
         return aggregate(analyticsOfUser, { user, org });
       });
     }),
-    map(users => users.sort((userA, userB) => userA.total - userB.total))
+    map(users => users.sort((userA, userB) => userB.total - userA.total))
   );
 
 

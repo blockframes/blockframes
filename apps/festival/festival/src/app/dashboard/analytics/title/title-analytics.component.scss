@@ -47,10 +47,6 @@ section {
   height: fit-content;
 }
 
-bf-table.screenings {
-  margin-top: 24px;
-}
-
 .vanity_metrics {
   display: flex;
   gap: 16px;
@@ -58,6 +54,14 @@ bf-table.screenings {
   analytics-line-chart {
     flex-grow: 1;
   }
+}
+
+analytics-metric-card-list {
+  margin-bottom: 24px;
+}
+
+bf-table.screenings {
+  margin-top: 24px;
 }
 
 @include layout-bp(lt-lg) {
