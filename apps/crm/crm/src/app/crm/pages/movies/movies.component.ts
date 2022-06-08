@@ -8,6 +8,8 @@ import { EventService } from '@blockframes/event/service';
 import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 import { where } from 'firebase/firestore';
+import { sorts } from '@blockframes/ui/list/table/sorts';
+import { filters } from '@blockframes/ui/list/table/filters';
 
 interface CrmMovie extends Movie {
   org: Organization;
@@ -23,6 +25,8 @@ interface CrmMovie extends Movie {
 export class MoviesComponent implements OnInit {
   public movies$?: Observable<CrmMovie[]>;
   public exporting = false;
+  public sorts = sorts;
+  public filters = filters;
 
   constructor(
     private movieService: MovieService,

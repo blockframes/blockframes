@@ -1,5 +1,10 @@
-import { InvitationDetailed, Movie, Scope, staticModel } from "@blockframes/model";
+import { InvitationDetailed, Movie, Organization, Scope, staticModel } from "@blockframes/model";
 import { displayName } from "@blockframes/model";
+
+interface CrmMovie extends Movie {
+  org: Organization;
+  screeningCount: number;
+}
 
 export function getStaticModelFilter(scope: Scope) {
   return (input: string, value: string) => {
@@ -18,6 +23,10 @@ export const filters = {
   movieTitle: (input: string, _, movie: Movie) => {
     if (!movie?.title?.international) return false;
     return movie.title.international.toLocaleLowerCase().includes(input);
+  },
+  orgName: (input: string, _, movie: CrmMovie) => {
+    if (!movie?.org?.denomination?.public) return false;
+    return movie.org.denomination.public.toLocaleLowerCase().includes(input);
   },
   invitationOrgName: (input: string, _, invitation: InvitationDetailed) => {
     if (!invitation?.fromOrg?.denomination.public) return false;
