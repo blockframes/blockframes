@@ -1,6 +1,12 @@
-export const firebase = {
+import { WhereFilterOp } from 'firebase/firestore';
+
+export const firestore = {
   clearTestData() {
     return cy.task('clearTestData');
+  },
+
+  create(data: Record<string, object>[]) {
+    return cy.task('importData', data);
   },
 
   delete(paths: string[]) {
@@ -11,8 +17,8 @@ export const firebase = {
     return cy.task('getData', paths);
   },
 
-  create(data: Record<string, object>[]) {
-    return cy.task('importData', data);
+  queryData(data: { collection: string; field: string; operator: WhereFilterOp; value: unknown }) {
+    return cy.task('queryData', data);
   },
 
   update(data: { docPath: string; field: string; value: unknown }[]) {

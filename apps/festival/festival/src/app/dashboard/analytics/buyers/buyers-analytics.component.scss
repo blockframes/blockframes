@@ -1,31 +1,47 @@
+@import "@angular/flex-layout/mq";
+
 :host {
   display: block;
   padding: 24px;
 }
 
-section{
+section {
   display: flex;
   flex-direction: column;
   gap: 24px;
   margin-bottom: 24px;
 
-  header{
+  header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    h1{
+
+    h1 {
       margin: 0;
     }
   }
 
-  a{
-    display: flex;
-    align-items: center;
+  a {
+    width: fit-content;
   }
 
-  article{
+  article {
     display: flex;
     gap: 24px;
-  }
 
+    analytics-pie-chart,
+    analytics-metric-card-list {
+      flex: 1;
+    }
+  }
+}
+
+@include layout-bp(xs) {
+  header {
+    flex-direction: column;
+  }
+  
+  article {
+    flex-direction: column;
+  }
 }

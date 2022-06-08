@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { toCards } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { aggregate, countedToAnalyticData, counter } from '@blockframes/analytics/utils';
 import { AggregatedAnalytic, App } from '@blockframes/model';
@@ -35,7 +36,7 @@ export class BuyersAnalyticsComponent {
       users: ({ uids }) => this.userService.valueChanges(uids),
       orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
     }, { shouldAwait: true }),
-    shareReplay({bufferSize:1, refCount:true})
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   buyersAnalytics$ = this.analyticsWithUsersAndOrgs$.pipe(
@@ -52,6 +53,10 @@ export class BuyersAnalyticsComponent {
     map(aggregated => counter(aggregated, 'org.activity', (item: AggregatedAnalytic) => item.total)),
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
   )
+  aggregatedCards$ = this.analyticsWithUsersAndOrgs$.pipe(
+    map(({ analytics }) => aggregate(analytics)),
+    map(toCards)
+  );
 
   constructor(
     private analytics: AnalyticsService,

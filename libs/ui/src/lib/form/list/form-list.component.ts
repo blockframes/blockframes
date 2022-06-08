@@ -72,7 +72,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
     ]).pipe(
       map(([list, reverse]) => reverse ? list.reverse() : list)
     );
-    if (this.isFormEmpty) {
+    if (this.isFormEmpty || this.keepFormOpen) {
       this.add();
     }
   }

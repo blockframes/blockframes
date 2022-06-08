@@ -71,7 +71,9 @@
   <article>
     <h3>Screenings Buyer has participated</h3>
     <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
+  </article>
 
+  <article>
     <header>
       <h4>Attended Screenings</h4>
       <button mat-flat-button (click)="exportScreenerAnalytics()">Export to CSV</button>
