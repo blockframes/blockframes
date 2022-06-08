@@ -4,7 +4,7 @@
       <img [ref]="user.avatar" asset="profil_user.svg" alt="profile picture">
       <div class="user-info" *ngIf="organization$ | async as org">
         <h1>{{ user.firstName }} {{ user.lastName }}</h1>
-        <ng-container *ngIf="user.position && org.denomination">
+        <ng-container *ngIf="user.position && org.name">
           <p class="mat-body-2">{{ user.position }} at {{ org.name }}</p>
         </ng-container>
       </div>

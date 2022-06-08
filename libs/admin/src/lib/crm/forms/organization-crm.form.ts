@@ -1,9 +1,9 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { createOrganization, getAllAppsExcept, Organization } from '@blockframes/model';
+import { OrganizationAddressesForm } from '@blockframes/organization/forms/organization.form';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { ModuleAccessCrmForm } from './module-access-crm.form';
-import { OrganizationDenominationForm, OrganizationAddressesForm } from '@blockframes/organization/forms/organization.form';
-import { StorageFileForm } from '@blockframes/media/form/media.form';
-import { createOrganization, Organization, getAllAppsExcept } from '@blockframes/model';
 
 function createOrgCrmControls(entity: Partial<Organization>) {
   const org = createOrganization(entity);
@@ -13,7 +13,7 @@ function createOrgCrmControls(entity: Partial<Organization>) {
     appAccess.addControl(a, new ModuleAccessCrmForm(org.appAccess[a]))
   }
   return {
-    name: new OrganizationDenominationForm(org.name),
+    name: new FormControl(org.name),
     description: new FormControl(org.description),
     addresses: new OrganizationAddressesForm(org.addresses),
     email: new FormControl(org.email, Validators.email),

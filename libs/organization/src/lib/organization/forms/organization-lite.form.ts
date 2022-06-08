@@ -1,11 +1,11 @@
 import { FormControl, Validators } from "@angular/forms";
-import { createAddressSet, createDenomination } from "@blockframes/model";
+import { createAddressSet } from "@blockframes/model";
 import { FormEntity } from "@blockframes/utils/form";
-import { OrganizationAddressesForm, OrganizationDenominationForm } from "./organization.form";
+import { OrganizationAddressesForm } from "./organization.form";
 
 function createOrganizationLiteFormControl() {
   return {
-    name: new OrganizationDenominationForm(createDenomination()),
+    name: new FormControl('', Validators.required),
     addresses: new OrganizationAddressesForm(createAddressSet()),
     activity: new FormControl('', Validators.required),
     appAccess: new FormControl('', Validators.required),

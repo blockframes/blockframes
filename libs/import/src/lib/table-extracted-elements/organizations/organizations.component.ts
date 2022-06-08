@@ -36,7 +36,7 @@ export class TableExtractedOrganizationsComponent implements AfterViewInit {
     'id',
     'select',
     'org.id',
-    'org.denomination.full',
+    'org.name',
     'org.email',
     'superAdmin.email',
     'errors',

@@ -11,10 +11,6 @@
           <mat-error *ngIf="form.get('name').hasError('required')">Company name is required</mat-error>
           <mat-error *ngIf="form.get('name').hasError('notUnique')">The name is already taken</mat-error>
         </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Company Public Name</mat-label>
-          <input test-id="public-name" matInput placeholder="Company Public Name" formControlName="public" type="text"/>
-        </mat-form-field>
       </div>
       <mat-form-field appearance="outline">
         <mat-label>Contact Email Address</mat-label>

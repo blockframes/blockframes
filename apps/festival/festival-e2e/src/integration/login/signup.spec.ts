@@ -100,8 +100,8 @@ describe('Signup', () => {
       get('email').type(user.email);
       get('first-name').type(user.firstname);
       get('last-name').type(user.lastname);
-      get('org').type(org.denomination.full);
-      getInList('org_', org.denomination.full);
+      get('org').type(org.name);
+      getInList('org_', org.name);
       get('activity').should('contain', orgActivity[org.activity]);
       get('country').should('contain', capitalize(territories[org.addresses.main.country]));
       get('password').type(user.password);
@@ -153,8 +153,8 @@ describe('Signup', () => {
       get('email').type(user.email);
       get('first-name').type(user.firstname);
       get('last-name').type(user.lastname);
-      get('org').type(org.denomination.full);
-      getInList('org_', org.denomination.full);
+      get('org').type(org.name);
+      getInList('org_', org.name);
       get('activity').should('contain', orgActivity[org.activity]);
       get('country').should('contain', capitalize(territories[org.addresses.main.country]));
       get('password').type(user.password);
@@ -203,8 +203,8 @@ describe('Signup', () => {
       get('last-name').type(user.lastName);
       cy.task('getRandomOrg', { app: 'festival', access: { marketplace: true, dashboard: true } })
       .then((org: Organization) => {
-        get('org').type(org.denomination.full);
-        getInList('org_', org.denomination.full);
+        get('org').type(org.name);
+        getInList('org_', org.name);
         get('password').type(USER_FIXTURES_PASSWORD);
         get('password-confirm').type(USER_FIXTURES_PASSWORD);
         check('terms');

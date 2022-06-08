@@ -11,7 +11,7 @@ describe('Test ORG anonymization function', () => {
       docPath: `orgs/${id}`,
       content: {
         id,
-        denomination: { full: 'org full name A', public: 'org public name A' },
+        name: 'org name A',
         email: 'email@foo.org'
       }
     };
@@ -60,7 +60,7 @@ describe('Test INVITATIONS anonymization function', () => {
         status: 'pending',
         fromOrg: {
           id: 'orgIdA',
-          denomination: { full: 'org full name A', public: 'org public name A' },
+          name: 'org name B',
           email: 'email@foo.org'
         },
         toUser: {
@@ -98,7 +98,7 @@ describe('Test NOTIFICATIONS anonymization function', () => {
         toUserId: 'uidA',
         organization: {
           id: 'orgIdB',
-          denomination: { full: 'org full name C', public: 'org public name C' },
+          name: 'org name C',
           email: 'email@foo.org'
         },
         user: {
