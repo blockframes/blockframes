@@ -30,7 +30,7 @@ export const mandateMovie1 = {
       from: new Date('01/01/2021'),
       to: new Date('01/31/2035')
     },
-    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'video', 'hotels', 'educational', 'rental', 'through'],
+    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'boats', 'hotels', 'educational', 'rental', 'through'],
     territories: allButSouthKorea,
     exclusive: true
   }],
@@ -50,7 +50,7 @@ export const saleArgentinaMovie1 = {
       from: new Date('06/01/2019'),
       to: new Date('12/31/2030')
     },
-    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'video'],
+    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'boats'],
     territories: ['argentina'],
     exclusive: true
   }],
@@ -70,7 +70,7 @@ export const saleGermanyMovie1 = {
       from: new Date('06/01/2019'),
       to: new Date('12/31/2030')
     },
-    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'video'],
+    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'boats'],
     territories: ['germany'],
     exclusive: false
   }],
@@ -90,7 +90,7 @@ export const saleCanadaMovie1 = {
       from: new Date('06/01/2019'),
       to: new Date('12/31/2030')
     },
-    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'video'],
+    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'boats'],
     territories: ['canada'],
     exclusive: false
   }],
@@ -130,7 +130,7 @@ export const mandate1Movie2 = {
       from: new Date('01/01/2021'),
       to: new Date('01/31/2040')
     },
-    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'fVod', 'sVod', 'video', 'hotels', 'planes'],
+    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'fVod', 'sVod', 'boats', 'hotels', 'inflight'],
     territories: World,
     exclusive: true
   }],
@@ -187,7 +187,7 @@ export const saleWorldMovie2 = {
       from: new Date('06/01/2022'),
       to: new Date('01/01/2029')
     },
-    medias: ['planes'],
+    medias: ['inflight'],
     territories: World,
     exclusive: true
   }],
@@ -245,7 +245,7 @@ export const mandate1Movie3 = {
       from: new Date('01/01/2021'),
       to: new Date('01/31/2040')
     },
-    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'video', 'hotels', 'planes'],
+    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'boats', 'hotels', 'inflight'],
     territories: allButSouthKorea,
     exclusive: true
   }],
@@ -341,7 +341,7 @@ export const mandateMovie4 = {
       from: new Date('01/01/2021'),
       to: new Date('01/31/2035')
     },
-    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'video', 'hotels', 'planes'],
+    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'boats', 'hotels', 'inflight'],
     territories: World,
     exclusive: true
   }],
@@ -418,7 +418,7 @@ export const mandateMovie5 = {
       from: new Date('01/01/2021'),
       to: new Date('01/31/2040')
     },
-    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'video', 'hotels', 'planes'],
+    medias: ['payTv', 'payPerView', 'freeTv', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'boats', 'hotels', 'inflight'],
     territories: allButSouthKorea,
     exclusive: true
   }],
@@ -478,7 +478,7 @@ export const mandateMovie6 = {
         from: new Date('02/21/2022'),
         to: new Date('02/21/2032')
       },
-      medias: ['payTv', 'planes', 'boats', 'educational'],
+      medias: ['payTv', 'inflight', 'boats', 'educational'],
       territories: ['france', 'belgium', 'angola'],
       exclusive: true
     },
@@ -489,7 +489,7 @@ export const mandateMovie6 = {
         from: new Date('02/21/2022'),
         to: new Date('02/21/2032')
       },
-      medias: ['planes', 'boats', 'educational', 'hotels'],
+      medias: ['inflight', 'boats', 'educational', 'hotels'],
       territories: ['china', 'brazil'],
       exclusive: true
     },
@@ -563,7 +563,7 @@ export const sale2Movie7 = {
         from: new Date('01/01/2024'),
         to: new Date('12/31/2026')
       },
-      medias: ['planes'],
+      medias: ['inflight'],
       territories: ['japan'],
       exclusive: true
     },
