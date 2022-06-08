@@ -11,26 +11,17 @@ export const appUrl = {
 }
 
 const firebaseConfig = {
-  apiKey: 'fake-key',
-  authDomain: '',
-  databaseURL: '',
-  projectId: 'demo-blockframes',
+  apiKey: 'AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0',
+  authDomain: 'blockframes-ci.firebaseapp.com',
+  databaseURL: 'https://blockframes-ci.firebaseio.com',
+  projectId: 'blockframes-ci',
   storageBucket: 'blockframes-ci',
-  messagingSenderId: '',
-  appId: 'fake-key',
-  measurementId: ''
+  messagingSenderId: '973979650792',
+  appId: "1:973979650792:web:8b3ec4caab8dd5ef",
+  measurementId: "G-GE7LPQ7MBX"
 };
 
-export const firebaseRegion = 'europe-west1';
-
-// Enable or disable emulators parts
-// and run "npm run firebase:emulator"
-// @see https://www.notion.so/cascade8/Emulator-79492738d2614b35b6435eb80584ff26
-export const emulators = {
-  auth: true,
-  firestore: true,
-  functions: true
-};
+export const firebaseRegion = '';
 
 export function firebase(app?: string) {
   return firebaseConfig
@@ -38,7 +29,7 @@ export function firebase(app?: string) {
 
 // Algolia
 // =======
-// ! CI ALGOLIA VALUES - needed for test runs
+
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
@@ -54,7 +45,6 @@ export const algolia = {
   },
   indexNameUsers: 'ci_users',
 };
-
 
 // Support emails
 // =======
@@ -97,7 +87,7 @@ export const sentryDsn = undefined;
 // BigQuery
 // ========
 
-export const bigQueryAnalyticsTable = '';
+export const bigQueryAnalyticsTable = 'blockframes-ci.analytics_197180636.events_';
 
 // Data Studio
 // ========
