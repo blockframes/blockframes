@@ -259,8 +259,4 @@ export class UserComponent implements OnInit {
       return ['/c/o/dashboard/crm/organization', id];
     }
   }
-
-  wat(...arg) {
-    console.log(arg)
-  }
 }
