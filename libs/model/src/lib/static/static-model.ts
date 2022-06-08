@@ -229,22 +229,22 @@ export const languages = {
 } as const
 
 export const medias = {
-  payTv: 'Pay TV', // pay-tv
-  freeTv: 'Free TV', // free-tv
-  payPerView: 'Pay Per View', // pay-per-view
+  payTv: 'Pay TV',
+  freeTv: 'Free TV',
+  payPerView: 'Pay Per View',
   est: 'EST',
-  nVod: 'N-VOD', // n-vod
-  aVod: 'A-VOD', // a-vod
-  fVod: 'F-VOD', // f-vod
-  sVod: 'S-VOD', // s-vod
-  theatrical: 'Theatrical',
-  video: 'Video',
-  planes: 'Planes',
+  nVod: 'N-VOD',
+  aVod: 'A-VOD',
+  fVod: 'F-VOD',
+  sVod: 'S-VOD',
+  tVod : 'T-VOD',
+  inflight: 'Inflight',
   boats: 'Boats',
   hotels: 'Hotels',
   educational: 'Educational',
   rental: 'Rental',
-  through: 'Sell Through'
+  through: 'Sell Through',
+  festival : 'Festival'
 } as const
 
 export const memberStatus = {
@@ -437,7 +437,6 @@ export const orgActivity = {
   talentAgency: 'Talent Agency',
   technical: 'Technical',
   tvBroadcast: 'Television Broadcast',
-  theatricalExhibition: 'Theatrical Exhibition',
   vodPlatform: 'VOD Platform',
   other: 'Other',
 } as const
