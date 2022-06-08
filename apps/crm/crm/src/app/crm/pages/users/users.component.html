@@ -44,8 +44,8 @@
       <ng-template colRef="lastConnection" [sort]="sorts.byDate" label="Last Connection" let-lastConnection>
         {{ lastConnection | date: 'mediumDate' }}
       </ng-template>
-      <ng-template colRef="pageView" label="Page View" [sort]="sorts.byNumber" let-pageView>{{ pageView }}</ng-template>
-      <ng-template colRef="sessionCount" label="Session Count" [sort]="sorts.byNumber" let-sessionCount>{{ sessionCount }}</ng-template>
+      <ng-template colRef="pageView" label="Page View" [sort]="sorts.defaultSort" let-pageView>{{ pageView }}</ng-template>
+      <ng-template colRef="sessionCount" label="Session Count" [sort]="sorts.defaultSort" let-sessionCount>{{ sessionCount }}</ng-template>
       <ng-template colRef="createdFrom" label="Created From" sort let-app>{{ app }}</ng-template>
       <ng-template colRef="org.addresses.main.country" sort label="Country" let-country>
         {{ country ? country : '--' }}

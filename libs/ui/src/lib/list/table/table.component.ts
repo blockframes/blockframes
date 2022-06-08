@@ -61,7 +61,7 @@ export class ColumnDirective<T> {
   @Input() @boolean defaultSort: boolean;
 
   /** Does the column support sorting. If a function is provided, the function is used to sort the column */
-  @Input() sort?: '' | ((a: any, b: any) => number);
+  @Input() sort?: '' | ((a: any, b: any) => number) | [((a: any, b: any) => number), string];
 
   /** A custom function to filter the column. `useFilter` should be set on the `bf-table` */
   @Input() filter = (input: string, value: any, row: T) => {
@@ -91,7 +91,13 @@ export class ColumnDirective<T> {
     return value$.pipe(
       map(asc => (asc ? 1 : -1)),
       map(order => data.sort((a, b) => {
-        const sorting = sort(getDeepValue(a, this.name), getDeepValue(b, this.name));
+        let sorting: number;
+        if (Array.isArray(sort)) {
+          const [refSort, sortName] = sort;
+          sorting = refSort(getDeepValue(a, sortName), getDeepValue(b, sortName));
+        } else {
+          sorting = sort(getDeepValue(a, this.name), getDeepValue(b, this.name));
+        }
         return sorting * order;
       }))
     );

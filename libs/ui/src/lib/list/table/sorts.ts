@@ -15,7 +15,13 @@ export const sorts = {
     if (aDate > bDate) return 1;
     return 0;
   },
-  byNumber: (a: number = 0, b: number = 0) => {
-    return a - b;
+  defaultSort: (a: any, b: any) => {
+    if (typeof a === 'string' && typeof b === 'string') return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
+    if (typeof a === 'number' && typeof b === 'number') return (a ?? 0) - (b ?? 0);
+    if (typeof a === 'boolean' && typeof b === 'boolean') {
+      if (a && b) return 0;
+      return a ? 1 : -1;
+    }
+    return 0;
   }
 }

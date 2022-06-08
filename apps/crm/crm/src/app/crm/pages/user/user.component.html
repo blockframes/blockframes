@@ -131,12 +131,12 @@
 </section>
 
 <bf-table *ngIf="invitations | async as invitations" [source]="invitations" useFilter pagination="50">
-  <ng-template colRef label="Date Created" let-event sort>
+  <ng-template colRef label="Date Created" let-event [sort]="[sorts.byDate, 'date']">
     <a [routerLink]="getLink(event)">
       <u>{{ event.date | date: 'short' }}</u>
     </a>
   </ng-template>
-  <ng-template colRef="event" label="Event Name" let-event sort>
+  <ng-template colRef="event" label="Event Name" let-event [sort]="[sorts.defaultSort, 'event.title']" [filter]="filters.invitationEventName">
     {{ event.title }}
   </ng-template>
   <ng-template colRef="mode" label="Mode" let-mode sort>

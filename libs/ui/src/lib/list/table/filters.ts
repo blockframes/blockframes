@@ -1,4 +1,4 @@
-import { Invitation, Movie, Scope, staticModel } from "@blockframes/model";
+import { InvitationDetailed, Movie, Scope, staticModel } from "@blockframes/model";
 import { displayName } from "@blockframes/model";
 
 export function getStaticModelFilter(scope: Scope) {
@@ -19,8 +19,12 @@ export const filters = {
     if (!movie?.title?.international) return false;
     return movie.title.international.toLocaleLowerCase().includes(input);
   },
-  invitationOrgName: (input: string, _, invitation: Invitation) => {
+  invitationOrgName: (input: string, _, invitation: InvitationDetailed) => {
     if (!invitation?.fromOrg?.denomination.public) return false;
     return invitation.fromOrg.denomination.public.toLocaleLowerCase().includes(input);
+  },
+  invitationEventName: (input: string, _, invitation: InvitationDetailed) => {
+    if (!invitation?.event?.title) return false;
+    return invitation.event.title.toLocaleLowerCase().includes(input);
   }
 }
