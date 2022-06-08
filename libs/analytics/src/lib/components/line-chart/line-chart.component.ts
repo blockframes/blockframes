@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Analytics, EventName } from "@blockframes/model";
-import { 
+import {
   eachDayOfInterval,
   eachMonthOfInterval,
   eachWeekOfInterval,
@@ -46,7 +46,7 @@ const eventNameLabel: Record<EventName, string> = {
   screeningRequested: 'Screening Requested'
 }
 
-type Period = 'day' | 'week' | 'month'; 
+type Period = 'day' | 'week' | 'month';
 
 const dateFunctions: Record<Period, Record<'interval' | 'isSame', any>> = {
   day: { interval: eachDayOfInterval, isSame: isSameDay },
@@ -111,7 +111,7 @@ export class LineChartComponent {
         formatter: (value: string, timestamp: number) => {
           return this.period === 'month'
             ? format(timestamp, "MMM yyy")
-            : format(timestamp, 'dd MMM yyyy') 
+            : format(timestamp, 'dd MMM yyyy')
         }
       }
     },
@@ -131,7 +131,7 @@ export class LineChartComponent {
 
     const analytics = data.sort((a, b) => a._meta.createdAt.getTime() - b._meta.createdAt.getTime());
     this.analytics = analytics;
-    
+
     const first = analytics[0]._meta.createdAt;
     const difference = differenceInMonths(new Date(), first);
     if (difference >= 9) {
@@ -154,7 +154,7 @@ export class LineChartComponent {
     const start = analytics[0]._meta.createdAt;
     const end = new Date();
     const { interval, isSame } = dateFunctions[this.period];
-    
+
     const eachUnit = interval({ start, end });
 
     this.lineChartOptions.series = [];

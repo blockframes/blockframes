@@ -2,27 +2,30 @@
 /// <reference types="cypress" />
 
 import {
+  browserAuth,
+  // cypress commands
   get,
   getInList,
   check,
+  // cypress tasks
   interceptEmail,
   deleteEmail,
-  createFakeUserData,
-  auth,
+  // fixture data
+  fakeUserData,
 } from '@blockframes/testing/cypress/browser';
 import { supportMailosaur } from '@blockframes/utils/constants';
 
-const user = createFakeUserData();
+const user = fakeUserData();
 
 describe('Demo Request Email', () => {
   beforeEach(() => {
     cy.visit('');
-    auth.clearBrowserAuth();
+    browserAuth.clearBrowserAuth();
   });
 
   it('Request demo email', () => {
-    get('first-name').type(user.firstname);
-    get('last-name').type(user.lastname);
+    get('first-name').type(user.firstName);
+    get('last-name').type(user.lastName);
     get('company').type(user.company.name);
     get('role').click();
     getInList('role_', user.role);

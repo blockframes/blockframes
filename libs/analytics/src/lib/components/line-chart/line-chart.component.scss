@@ -2,6 +2,12 @@ analytics-line-chart {
   display: flex;
   flex-direction: column;
 
+  header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   section {
     display: flex;
     gap: 16px;
@@ -20,8 +26,8 @@ analytics-line-chart {
       color: var(--foreground--text) !important; // overwrite default inline style
     }
   }
-}
 
-mat-spinner {
-  margin: auto;
+  mat-spinner {
+    margin: auto;
+  }
 }
