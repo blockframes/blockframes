@@ -144,7 +144,9 @@ export class BuyerAnalyticsComponent {
   filter$ = new BehaviorSubject('');
   filtered$ = combineLatest([
     this.filter$.asObservable(),
-    this.aggregatedPerTitle$
+    this.aggregatedPerTitle$.pipe(
+      map(aggregated => aggregated.filter(a => a.total > 0))
+    )
   ]).pipe(
     map(([filter, analytics]) => filterAnalytics(filter, analytics))
   );
