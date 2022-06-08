@@ -144,7 +144,6 @@ export const twilioWebhook = functions().https.onRequest(_twilioWebhook);
 /**
  * Creates notifications when an event is about to start
  */
- 
 export const scheduledNotifications = functions().pubsub.schedule('*/30 * * * *') // every 30 minutes
   .onRun(skipInMaintenance(() => {
     createNotificationsForEventsToStart();

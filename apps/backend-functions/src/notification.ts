@@ -321,10 +321,10 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
-      case 'postScreening':
-      await postScreeningEmail(recipient, notification)
-        .then(() => notification.email.isSent = true)
-        .catch(e => notification.email.error = e.message);
+      case 'attendedScreening':
+        await attendedScreeningEmail(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
       break;
       default:
         notification.email.error = emailErrorCodes.noTemplate.code;
@@ -819,12 +819,11 @@ async function requestAppAccessEmail(recipient: User, notification: Notification
 async function missedScreeningEmail(recipient: User, notification: NotificationDocument) {
   const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
   const orgDoc = await getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`);
-  const org = getOrgEmailData(orgDoc);
 
   const data = {
     user: getUserEmailData(recipient),
-    org,
-    event: getEventEmailData({event, orgName: org.denomination, email: recipient.email}),
+    org : getOrgEmailData(orgDoc),
+    event: getEventEmailData({event, orgName: orgDoc.denomination.full, email: recipient.email}),
     pageUrl: `${appUrl.market}/c/o/marketplace/title/${event.meta.titleId}/main`
   } 
   const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.missedScreening, data };
@@ -832,22 +831,21 @@ async function missedScreeningEmail(recipient: User, notification: NotificationD
   await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
 }
 
-async function postScreeningEmail(recipient: User, notification: NotificationDocument) {
+async function attendedScreeningEmail(recipient: User, notification: NotificationDocument) {
   const event = await getDocument<EventDocument<Screening>>(`events/${notification.docId}`);
   const [movie, orgDoc] = await Promise.all([
     getDocument<MovieDocument>(`movies/${event.meta.titleId}`),
     getDocument<OrganizationDocument>(`orgs/${event.ownerOrgId}`)
   ]);
-  const org = getOrgEmailData(orgDoc);
 
   const data = {
     user: getUserEmailData(recipient),
-    org,
+    org: getOrgEmailData(orgDoc),
     movie: getMovieEmailData(movie),
-    event: getEventEmailData({event, orgName: org.denomination, email: recipient.email}),
+    event: getEventEmailData({event, orgName: orgDoc.denomination.full, email: recipient.email}),
     pageUrl: `${appUrl.market}/c/o/marketplace/title/${event.meta.titleId}/main`
   } 
-  const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.postScreening, data };
+  const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.attendedScreening, data };
   
   await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
 }

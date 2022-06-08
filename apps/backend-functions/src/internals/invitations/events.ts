@@ -208,9 +208,9 @@ export async function createNotificationsForFinishedScreenings() {
 
     for (const invitation of invitations) {
       const userId = getGuest(invitation, 'user').uid;
-      const notificationType = attendees.includes(userId) ? 'postScreening' : 'userMissedScreening';
-      const notification = await createNotificationIfNotExists([invitation], notificationType);
-      notifications.push(notification[0]);
+      const notificationType = attendees.includes(userId) ? 'attendedScreening' : 'userMissedScreening';
+      const [notification] = await createNotificationIfNotExists([invitation], notificationType);
+      notifications.push(notification);
     } 
   }
   triggerNotifications(notifications);

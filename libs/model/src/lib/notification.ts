@@ -37,7 +37,7 @@ export const notifications = {
     'screeningRequested',
     'screeningRequestSent',
     'userMissedScreening',
-    'postScreening',
+    'attendedScreening',
   ] as const,
   shared: [
     // Notifications relative to movies
