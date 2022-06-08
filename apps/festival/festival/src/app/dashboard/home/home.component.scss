@@ -71,6 +71,10 @@ analytics-map h3 {
   width: fit-content;
 }
 
+h4{
+  margin: 16px auto 16px;
+}
+
 @include layout-bp(xs) {
   header {
     flex-direction: column;
