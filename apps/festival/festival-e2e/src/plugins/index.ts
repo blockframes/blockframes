@@ -2,6 +2,7 @@
 //TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { testingCypress } from '@blockframes/testing/cypress/node';
+import { install } from 'cypress-log-to-output';
 
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
@@ -32,6 +33,8 @@ export default (async (on, config) => {
   });
 
   on('task', testingCypress(config));
+
+  install(on);
 
   // * Returning config here (or promise) changes config.
 }) as Cypress.PluginConfig;
