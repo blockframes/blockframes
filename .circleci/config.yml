@@ -238,6 +238,8 @@ jobs:
       - run:
           command: npm run affected:test
           no_output_timeout: 15m
+      - store_artifacts:
+          path: dist/jest-test-results/
   deploy-to-prod:
     executor: blockframes-ci
     environment:

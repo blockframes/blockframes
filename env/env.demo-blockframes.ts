@@ -117,3 +117,9 @@ export const chunkSize = 50;
 
 export const playerId = 'LVeBD5vf';
 export const testVideoId = 'YlSFNnkR';
+
+export const emulators = {
+  auth: false,
+  firestore: false,
+  functions: false
+};
