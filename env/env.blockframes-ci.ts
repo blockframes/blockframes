@@ -117,3 +117,13 @@ export const chunkSize = 50;
 
 export const playerId = 'LVeBD5vf';
 export const testVideoId = 'YlSFNnkR';
+
+// Enable or disable emulators parts
+// and run "npm run firebase:emulator"
+// @see https://www.notion.so/cascade8/Emulator-79492738d2614b35b6435eb80584ff26
+export const emulators = {
+  auth: true,
+  firestore: true,
+  functions: true
+};
+// ! Above will be deleted in next PR, here only temporarily
