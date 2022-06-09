@@ -1,5 +1,12 @@
-import { InvitationDetailed, Movie, Organization, Scope, staticModel } from "@blockframes/model";
-import { displayName } from "@blockframes/model";
+import {
+  displayName,
+  InvitationDetailed,
+  Movie,
+  Organization,
+  Person,
+  Scope,
+  staticModel
+} from '@blockframes/model';
 
 interface CrmMovie extends Movie {
   org: Organization;
@@ -15,12 +22,16 @@ export function getStaticModelFilter(scope: Scope) {
 }
 
 export const filters = {
-  movieDirectors: (input: string, _, movie: Movie) => {
+  displayName: (input: string, user: Person) => {
+    const name = displayName(user).toLowerCase();
+    return name.includes(input);
+  },
+  movieDirectors: (input: string, movie: Movie) => {
     if (!movie?.directors) return false;
     return movie.directors.map(director => displayName(director))
       .some(name => name.toLocaleLowerCase().includes(input));
   },
-  movieTitle: (input: string, _, movie: Movie) => {
+  movieTitle: (input: string, movie: Movie) => {
     if (!movie?.title?.international) return false;
     return movie.title.international.toLocaleLowerCase().includes(input);
   },
@@ -44,4 +55,6 @@ export const filters = {
     if (!invitation?.guestOrg?.denomination.public) return false;
     return invitation.guestOrg.denomination.public.toLocaleLowerCase().includes(input);
   },
+  territories: getStaticModelFilter('territories'),
+  orgActivity: getStaticModelFilter('orgActivity')
 }

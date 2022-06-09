@@ -38,7 +38,7 @@ function filterTable<T>(data: T[], value: string, columns: QueryList<ColumnDirec
   const input = removeAccent(value.toLowerCase());
   return data.filter(row => {
     return columns.some(column => {
-      const value = removeAccent(getDeepValue(row, column.name));
+      const value = column.name ? removeAccent(getDeepValue(row, column.name)) : row;
       return column.filter(input, value, row);
     });
   });
