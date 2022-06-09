@@ -24,7 +24,7 @@
 </header>
 
 <section>
-  <analytics-metric-card-list [cards]="aggregatedCards$ | async" selectable (selection)="filter$.next($event)"></analytics-metric-card-list>
+  <analytics-metric-card-list [cards]="aggregatedCards$ | async" selectable (selection)="filter$.next($event)" showReset></analytics-metric-card-list>
 
   <article>
     <header>
