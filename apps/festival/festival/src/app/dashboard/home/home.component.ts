@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Blockframes
@@ -28,6 +28,7 @@ import { Intercom } from 'ng-intercom';
 
 // NgFire
 import { joinWith } from 'ngfire';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({
   selector: 'dashboard-home',
@@ -36,6 +37,7 @@ import { joinWith } from 'ngfire';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
+  @ViewChild('tableTitle') tableTitle: ElementRef;
   public selectedCountry?: string;
   public titles$ = this.orgService.currentOrg$.pipe(
     switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
@@ -140,5 +142,10 @@ export class HomeComponent {
 
   public openIntercom(): void {
     return this.intercom.show();
+  }
+
+  public selectCountry(country:string){
+    this.selectedCountry = country;
+    scrollIntoView(this.tableTitle.nativeElement);
   }
 }
