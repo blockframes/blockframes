@@ -134,13 +134,19 @@ export class BuyerAnalyticsComponent {
   );
 
   totalAnalyticsPerTitle$ = this.aggregatedPerTitle$.pipe(
-    map(aggregatedToAnalyticData)
+    map(aggregatedToAnalyticData),
+    map(analyticData => {
+      const sorted = analyticData.sort((a, b) => b.count - a.count);
+      return sorted.splice(0, 5); // only show top 5
+    }),
   );
 
   filter$ = new BehaviorSubject('');
   filtered$ = combineLatest([
     this.filter$.asObservable(),
-    this.aggregatedPerTitle$
+    this.aggregatedPerTitle$.pipe(
+      map(aggregated => aggregated.filter(a => a.total > 0))
+    )
   ]).pipe(
     map(([filter, analytics]) => filterAnalytics(filter, analytics))
   );
