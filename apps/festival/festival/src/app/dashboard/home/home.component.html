@@ -37,8 +37,10 @@
 
               <ng-template carouselItem>
                 <analytics-map class="surface carousel-map" [data]="territoryActivityOfPopularTitle$ | async">
-                  <mat-icon svgIcon="landscape"></mat-icon>
-                  <h5>Split by Company Territory</h5>
+                  <ng-container header>
+                    <mat-icon svgIcon="landscape"></mat-icon>
+                    <h5>Split by Company Territory</h5>
+                  </ng-container>
                   <p class="mat-caption">Learn where are the interested people from.</p>
                 </analytics-map>
               </ng-template>
@@ -78,8 +80,10 @@
             showLegend
             selectable
           >
-            <mat-icon svgIcon="buyer_insights"></mat-icon>
-            <h3>Buyers' Insights</h3>
+            <article header>
+              <mat-icon svgIcon="buyer_insights"></mat-icon>
+              <h3>Buyers' Insights</h3>
+            </article>
             <h4 listTitle><b>TOP 5 COUNTRIES</b></h4>
           </analytics-map>
 

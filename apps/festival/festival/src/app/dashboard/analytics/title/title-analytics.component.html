@@ -40,8 +40,10 @@
         <p class="mat-caption">Learn who are the users who were interested in this Title.</p>
       </analytics-pie-chart>
       <analytics-map fxFlex class="surface" [data]="territoryActivity$ | async" selectable (selection)="filterValue = $event">
-        <mat-icon svgIcon="landscape"></mat-icon>
-        <h5>Split by Company Territory</h5>
+        <ng-container header>
+          <mat-icon svgIcon="landscape"></mat-icon>
+          <h5>Split by Company Territory</h5>
+        </ng-container>
         <p class="mat-caption">Learn where are the interested people from.</p>
       </analytics-map>
     </div>

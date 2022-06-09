@@ -71,8 +71,10 @@ analytics-map h3 {
   width: fit-content;
 }
 
-h4{
-  margin: 16px auto 16px 0px;
+article[header] {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
 @include layout-bp(xs) {
