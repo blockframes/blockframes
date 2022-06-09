@@ -36,13 +36,11 @@ const marketplaceInjectedData = {
   [`orgs/${marketplaceData.org.id}`]: marketplaceData.org,
   [`permissions/${marketplaceData.permissions.id}`]: marketplaceData.permissions,
 };
-// to be used when signing up with a dashboard organisation
 const dashboardInjectedData = {
   [`users/${dashboardData.orgAdmin.uid}`]: dashboardData.orgAdmin,
   [`orgs/${dashboardData.org.id}`]: dashboardData.org,
   [`permissions/${dashboardData.permissions.id}`]: dashboardData.permissions,
 };
-//?-------------------
 
 describe('Signup', () => {
   beforeEach(() => {
@@ -126,16 +124,46 @@ describe('Signup', () => {
     get('skip-preferences').click();
     browserAuth.clearBrowserAuth();
     cy.visit('');
-    get('login').click();
-    assertUrlIncludes('auth/connexion');
-    get('signin-email').should('be.visible').type(orgAdmin.email);
-    get('password').type(USER_FIXTURES_PASSWORD);
+    verifyInvitation(orgAdmin.email, 'marketplace');
+  });
+
+  it('User from a known organization with access to festival dashboard can signup', () => {
+    const { org, orgAdmin } = dashboardData;
+    deleteUser(newUser.email);
+    deleteInvitation(newUser.email);
+    algolia.storeOrganization(org);
+    maintenance.start();
+    adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email });
+    adminAuth.updateUser({ uid: orgAdmin.uid, update: { emailVerified: true } });
+    firestore.create([dashboardInjectedData]);
+    maintenance.end();
+    cy.visit('auth/identity');
+    get('cookies').click();
+    fillCommonInputs(newUser);
+    selectCompany(dashboardData.org.denomination.full);
+    get('activity').should('contain', orgActivity[org.activity]);
+    get('country').should('contain', capitalize(territories[org.addresses.main.country]));
     get('submit').click();
-    assertUrlIncludes('marketplace/home');
-    get('skip-preferences').click();
-    get('invitations-link').click();
-    get('invitation').first().should('contain', `${newUser.firstName} ${newUser.lastName} wants to join your organization.`);
-    get('invitation-status').first().should('contain', 'Accepted');
+    interceptEmail({ sentTo: newUser.email }).then(mail => deleteEmail(mail.id));
+    interceptEmail({ body: `${newUser.email}` }).then(mail => deleteEmail(mail.id));
+    cy.log('all mails received');
+    assertUrl('c/organization/join-congratulations');
+    adminAuth.getUser(newUser.email).then((user: UserRecord) => {
+      adminAuth.updateUser({ uid: user.uid, update: { emailVerified: true } });
+      firestore.update([{ docPath: `users/${user.uid}`, field: '_meta.emailVerified', value: true }]);
+    });
+    get('email-ok').should('exist');
+    firestore
+      .queryData({ collection: 'invitations', field: 'fromUser.email', operator: '==', value: newUser.email })
+      .then((invitations: PublicInvitation[]) =>
+        firestore.update([{ docPath: `invitations/${invitations[0].id}`, field: 'status', value: 'accepted' }])
+      );
+    get('org-approval-ok').should('exist');
+    get('refresh').click();
+    assertUrlIncludes('c/o/dashboard/home');
+    browserAuth.clearBrowserAuth();
+    cy.visit('');
+    verifyInvitation(orgAdmin.email, 'dashboard');
   });
 });
 
@@ -191,4 +219,17 @@ function deleteInvitation(userEmail: string) {
     if (!invitations.length) return cy.log(`No previous invitations from ${userEmail}`);
     firestore.delete([`invitations/${invitations[0].id}`]);
   });
+}
+
+function verifyInvitation(orgAdminEmail: string, expectedApp: 'marketplace' | 'dashboard') {
+  get('login').click();
+  assertUrlIncludes('auth/connexion');
+  get('signin-email').should('be.visible').type(orgAdminEmail);
+  get('password').type(USER_FIXTURES_PASSWORD);
+  get('submit').click();
+  assertUrlIncludes(`${expectedApp}/home`);
+  if (expectedApp == 'marketplace') get('skip-preferences').click();
+  get('invitations-link').click();
+  get('invitation').first().should('contain', `${newUser.firstName} ${newUser.lastName} wants to join your organization.`);
+  get('invitation-status').first().should('contain', 'Accepted');
 }
