@@ -19,4 +19,12 @@ export const browserAuth = {
       indexedDB.deleteDatabase('firebaseLocalStorageDb');
     });
   },
+
+  getAuth() {
+    cy.window().should('have.property', 'LoginService');
+    return cy.window().then(w => {
+      const authService = w['LoginService'] as AuthService;
+      return authService
+    });
+  }
 };
