@@ -400,6 +400,8 @@ export function writeRuntimeConfig(values: { [key: string]: string }, path: stri
     const fallbackValue = 'missing-env-value';
     set(runtimeObj, key, foundValue || demoValue || fallbackValue);
   });
+  console.log('Written runtimeconfig.json:')
+  console.dir(runtimeObj);
   return writeFileSync(path, JSON.stringify(runtimeObj, null, 4));
 }
 

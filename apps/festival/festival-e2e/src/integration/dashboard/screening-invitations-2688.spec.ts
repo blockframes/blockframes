@@ -66,13 +66,11 @@ describe('Organiser invites other users to private screening', () => {
       awaitElementDeletion('mat-spinner');
       festival.clickPlay();
       festival.runVideo();
-      cy.task('log', 'DEBUG HERE')
       awaitElementDeletion('mat-spinner');
 
       cy.get('.jw-video');
       cy.get('video.jw-video').should('have.prop', 'paused', true).and('have.prop', 'ended', false);
       cy.get('.jw-display-icon-display > .jw-icon').click();
-      cy.task('log', 'DEBUG HERE')
       awaitElementDeletion('[aria-label=Loading]');
 
       cy.get('video.jw-video').should('have.prop', 'paused', false).then(($video: any) => $video[0].pause())
