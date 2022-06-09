@@ -16,6 +16,7 @@ interface NotificationSetting { text: string, tooltip: boolean };
 
 const titleType: Partial<Record<NotificationTypes, NotificationSetting>> = {
   movieAccepted: { text: 'A title is successfully published on the marketplace.', tooltip: false },
+  movieSubmitted: { text: 'A title is successfully submitted to the Archipel Content team.', tooltip: false },
   movieAskingPriceRequested: { text: `A user requests the asking price for a title.`, tooltip: true },
   movieAskingPriceRequestSent: { text: `Your request for the asking price has been sent.`, tooltip: false },
   requestFromUserToJoinOrgCreate: { text: 'A user requests to join your organization.', tooltip: true },
@@ -54,8 +55,16 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
     title: 'Content Management',
     types: [
       'movieAccepted',
+      'movieSubmitted'
     ],
-    appAuthorized: ['catalog', 'financiers']
+    appAuthorized: ['catalog']
+  },
+  {
+    title: 'Content Management',
+    types: [
+      'movieAccepted',
+    ],
+    appAuthorized: ['financiers']
   },
   {
     title: 'Content Management',
