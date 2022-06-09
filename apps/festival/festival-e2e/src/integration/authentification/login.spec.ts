@@ -20,6 +20,7 @@ const injectedData = {
 describe('Login tests', () => {
   it('login', () => {
     cy.visit('');
+    browserAuth.clearBrowserAuth();
     maintenance.start();
     adminAuth.deleteAllTestUsers();
     firestore.clearTestData();
@@ -28,7 +29,6 @@ describe('Login tests', () => {
     firestore.create([injectedData]);
     maintenance.end();
     cypress.refreshIfMaintenance();
-    browserAuth.clearBrowserAuth();
     get('login').click();
     assertUrlIncludes('/connexion');
     get('signin-email').type(user.email);
