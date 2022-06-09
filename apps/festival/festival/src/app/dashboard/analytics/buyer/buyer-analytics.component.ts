@@ -1,12 +1,23 @@
+import {
+  InvitationWithScreening,
+  InvitationWithAnalytics,
+} from "@blockframes/model";
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate } from '@blockframes/analytics/utils';
-import { MetricCard } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
-import { AggregatedAnalytic, EventName, Event, Screening, isScreening, Invitation, Analytics, isMovieAccepted } from '@blockframes/model';
+import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
+import { MetricCard, events, toCards } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
+import {
+  AggregatedAnalytic,
+  isScreening,
+  Invitation,
+  Analytics,
+  isMovieAccepted,
+  AnalyticData,
+  Movie,
+} from '@blockframes/model';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { IconSvg } from '@blockframes/ui/icon.service';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { UserService } from '@blockframes/user/service';
 import { App, sum, toLabel } from '@blockframes/model';
@@ -26,52 +37,8 @@ import {
 import { InvitationService } from '@blockframes/invitation/service';
 import { EventService } from '@blockframes/event/service';
 
-interface InvitationWithScreening extends Invitation {
-  event: Event<Screening>;
-}
+interface MovieWithAnalytics extends Movie { analytics: Analytics<'title'>[]; };
 
-interface VanityMetricEvent {
-  name: EventName;
-  title: string;
-  icon: IconSvg;
-};
-
-const events: VanityMetricEvent[] = [
-  {
-    name: 'pageView',
-    title: 'Views',
-    icon: 'visibility'
-  },
-  {
-    name: 'promoReelOpened',
-    title: 'Promoreel Opened',
-    icon: 'star_fill'
-  },
-  {
-    name: 'addedToWishlist',
-    title: 'Adds to Wishlist',
-    icon: 'favorite'
-  },
-  {
-    name: 'screeningRequested',
-    title: 'Screening Requested',
-    icon: 'ask_screening_2'
-  },
-  {
-    name: 'askingPriceRequested',
-    title: 'Asking Price Requested',
-    icon: 'local_offer'
-  }
-];
-
-function toCards(aggregated: AggregatedAnalytic): MetricCard[] {
-  return events.map(event => ({
-    title: event.title,
-    value: aggregated[event.name],
-    icon: event.icon,
-    selected: false
-  }));
-}
 
 function filterAnalytics(title: string, analytics: AggregatedAnalytic[]) {
   const name = events.find(event => event.title === title)?.name;
@@ -80,7 +47,14 @@ function filterAnalytics(title: string, analytics: AggregatedAnalytic[]) {
     : analytics;
 }
 
-interface InvitationWithAnalytics extends Invitation { analytics: Analytics[]; };
+function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
+  return data.map(({ title, total }) => ({
+    key: title.id,
+    count: total,
+    label: title.title.international ?? title.title.original
+  }));
+}
+
 function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attended = invitations.filter(invitation => invitation.watchTime);
   return [
@@ -146,14 +120,33 @@ export class BuyerAnalyticsComponent {
     map(toCards)
   );
 
+  aggregatedPerGenre$ = this.buyerAnalytics$.pipe(
+    map(titles => {
+      const getDelta = (movie: MovieWithAnalytics) => movie.analytics.length;
+      return counter(titles, 'genres', getDelta)
+    }),
+    map(counted => countedToAnalyticData(counted, 'genres'))
+  )
+
   private aggregatedPerTitle$ = this.buyerAnalytics$.pipe(
-    map(titles => titles.map(title => aggregate(title.analytics, { title })))
+    map(titles => titles.map(title => aggregate(title.analytics, { title }))),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  totalAnalyticsPerTitle$ = this.aggregatedPerTitle$.pipe(
+    map(aggregatedToAnalyticData),
+    map(analyticData => {
+      const sorted = analyticData.sort((a, b) => b.count - a.count);
+      return sorted.splice(0, 5); // only show top 5
+    }),
   );
 
   filter$ = new BehaviorSubject('');
   filtered$ = combineLatest([
     this.filter$.asObservable(),
-    this.aggregatedPerTitle$
+    this.aggregatedPerTitle$.pipe(
+      map(aggregated => aggregated.filter(a => a.total > 0))
+    )
   ]).pipe(
     map(([filter, analytics]) => filterAnalytics(filter, analytics))
   );

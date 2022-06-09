@@ -1,6 +1,6 @@
-import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from "./utils";
-import { createNotification, triggerNotifications } from "../../notification";
-import { createDocumentMeta, createPublicInvitationDocument, getAdminIds, getDocument } from "../../data/internals";
+import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from './utils';
+import { createNotification, triggerNotifications } from '../../notification';
+import { createDocumentMeta, createPublicInvitationDocument, getAdminIds, getDocument } from '../../data/internals';
 import * as admin from 'firebase-admin';
 import {
   OrganizationDocument,
@@ -71,7 +71,7 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
         organization: invitation.fromOrg,
         docId: invitation.eventId,
         invitation: createPublicInvitationDocument(invitation),
-        type: event.type === 'meeting' ? 'invitationToAttendMeetingCreated' : 'invitationToAttendScreeningCreated',
+        type: event.type === 'meeting' ? 'invitationToAttendMeetingCreated' : event.type === 'screening' ? 'invitationToAttendScreeningCreated' : 'invitationToAttendSlateCreated',
         _meta: createDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
       }));
     });

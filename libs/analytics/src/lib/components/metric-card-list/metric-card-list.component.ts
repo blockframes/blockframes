@@ -1,12 +1,58 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { AggregatedAnalytic, EventName } from "@blockframes/model";
 import { boolean } from "@blockframes/utils/decorators/decorators";
+import { IconSvg } from '@blockframes/ui/icon.service';
 
 export interface MetricCard {
   title: string;
-  value: number;
+  value: number | string;
   icon: string;
   selected?: boolean;
 }
+
+export interface VanityMetricEvent {
+  name: EventName;
+  title: string;
+  icon: IconSvg;
+};
+
+export const events: VanityMetricEvent[] = [
+  {
+    name: 'pageView',
+    title: 'Views',
+    icon: 'visibility'
+  },
+  {
+    name: 'promoReelOpened',
+    title: 'Promoreel Opened',
+    icon: 'star_fill'
+  },
+  {
+    name: 'addedToWishlist',
+    title: 'Adds to Wishlist',
+    icon: 'favorite'
+  },
+  {
+    name: 'screeningRequested',
+    title: 'Screening Requested',
+    icon: 'ask_screening_2'
+  },
+  {
+    name: 'askingPriceRequested',
+    title: 'Asking Price Requested',
+    icon: 'local_offer'
+  }
+];
+
+export function toCards(aggregated: AggregatedAnalytic): MetricCard[] {
+  return events.map(event => ({
+    title: event.title,
+    value: aggregated[event.name],
+    icon: event.icon,
+    selected: false
+  }));
+}
+
 
 @Component({
   selector: '[cards] analytics-metric-card-list',
