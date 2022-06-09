@@ -92,7 +92,7 @@
             useFilter
             pagination="5"
           >
-            <ng-template colRef="user" label="Name" let-item sort>
+            <ng-template colRef="user" label="Name" let-item sort [filter]="filters.displayName">
               <b>{{ item | displayName }}</b>
             </ng-template>
             <ng-template colRef="user.email" label="Email" let-email sort>
@@ -101,11 +101,14 @@
             <ng-template colRef="org.denomination.public" label="Company name" let-name sort>
               {{ name }}
             </ng-template>
-            <ng-template colRef="org.addresses.main.country" label="Country" let-country sort>
+            <ng-template colRef="org.addresses.main.country" label="Country" let-country sort [filter]="filters.territories">
               {{ country | toLabel:'territories' }}
             </ng-template>
-            <ng-template colRef="org.activity" label="Activity" let-activity sort>
+            <ng-template colRef="org.activity" label="Activity" let-activity sort [filter]="filters.orgActivity">
               {{ activity | toLabel:'orgActivity' }}
+            </ng-template>
+            <ng-template colRef="pageView" label="# Title Page Views" let-pageView sort>
+              {{ pageView }}
             </ng-template>
             <ng-template colRef="addedToWishlist" label="Titles in Wishlist" let-wishlist sort>
               {{ wishlist }}
