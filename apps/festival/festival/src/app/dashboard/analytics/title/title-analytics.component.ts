@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 import {
   AggregatedAnalytic,
@@ -173,6 +173,7 @@ export class TitleAnalyticsComponent {
   constructor(
     private movieService: MovieService,
     private route: ActivatedRoute,
+    private router:Router,
     private analyticsService: AnalyticsService,
     private userService: UserService,
     private orgService: OrganizationService,
@@ -244,5 +245,9 @@ export class TitleAnalyticsComponent {
   private getOrg(invitation: Invitation) {
     const orgId = getGuest(invitation, 'user').orgId;
     return orgId ? this.orgService.valueChanges(orgId) : of(undefined);
+  }
+
+  public viewBuyerActivity(analytic:AggregatedAnalytic){
+    this.router.navigate([`../../buyer/${analytic.user.uid}`], {relativeTo:this.route})
   }
 }
