@@ -24,7 +24,7 @@ export const filters = {
     if (!movie?.title?.international) return false;
     return movie.title.international.toLocaleLowerCase().includes(input);
   },
-  orgName: (input: string, _, movie: CrmMovie) => {
+  crmMovieOrgName: (input: string, _, movie: CrmMovie) => {
     if (!movie?.org?.denomination?.public) return false;
     return movie.org.denomination.public.toLocaleLowerCase().includes(input);
   },
