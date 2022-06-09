@@ -154,11 +154,11 @@
   <ng-template colRef="status" label="Status" let-status sort>
     {{status}}
   </ng-template>
-  <ng-template colRef label="Action" let-event sticky>
+  <ng-template colRef="eventId" label="Action" let-eventId let-event="item" sticky>
     <a [routerLink]="getLink(event)" mat-icon-button matTooltip="Open">
       <mat-icon svgIcon="visibility"></mat-icon>
     </a>
-    <button mat-icon-button [cdkCopyToClipboard]="event.eventId" (click)="$event.stopPropagation()">
+    <button mat-icon-button [cdkCopyToClipboard]="eventId" (click)="$event.stopPropagation()">
       <mat-icon svgIcon="file_copy"></mat-icon>
     </button>
   </ng-template>
