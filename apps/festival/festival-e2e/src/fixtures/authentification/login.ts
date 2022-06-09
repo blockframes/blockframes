@@ -85,7 +85,7 @@ export const permissions: PermissionsDocument = {
   id: orgId,
   canUpdate: [],
   roles: {
-    [`${adminUid}`]: 'superAdmin',
+    [adminUid]: 'superAdmin',
   },
   canRead: [],
   canCreate: [],

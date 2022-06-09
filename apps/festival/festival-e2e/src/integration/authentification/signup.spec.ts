@@ -36,7 +36,7 @@ const marketplaceInjectedData = {
   [`orgs/${marketplaceData.org.id}`]: marketplaceData.org,
   [`permissions/${marketplaceData.permissions.id}`]: marketplaceData.permissions,
 };
-//? to be used when signing up with a dashboard organisation
+// to be used when signing up with a dashboard organisation
 const dashboardInjectedData = {
   [`users/${dashboardData.orgAdmin.uid}`]: dashboardData.orgAdmin,
   [`orgs/${dashboardData.org.id}`]: dashboardData.org,
@@ -53,8 +53,8 @@ describe('Signup', () => {
   });
 
   it('User from new company can signup', () => {
-    deleteOrgIfExists(newOrg.name);
-    deleteUserIfExists(newUser.email);
+    deleteOrg(newOrg.name);
+    deleteUser(newUser.email);
     cy.visit('auth/identity');
     get('cookies').click();
     fillCommonInputs(newUser);
@@ -91,8 +91,8 @@ describe('Signup', () => {
 
   it('User from a known organization with access to festival marketplace can signup', () => {
     const { org, orgAdmin } = marketplaceData;
-    deleteUserIfExists(newUser.email);
-    deleteInvitationIfExists(newUser.email);
+    deleteUser(newUser.email);
+    deleteInvitation(newUser.email);
     algolia.storeOrganization(org);
     maintenance.start();
     adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email });
@@ -169,7 +169,7 @@ function selectCompany(orgName: string) {
   getInList('org_', orgName);
 }
 
-function deleteUserIfExists(userEmail: string) {
+function deleteUser(userEmail: string) {
   const query = { collection: 'users', field: 'email', operator: '==' as WhereFilterOp, value: userEmail };
   firestore.queryData(query).then((users: User[]) => {
     if (!users.length) return cy.log(`No previous user with ${userEmail}`);
@@ -177,7 +177,7 @@ function deleteUserIfExists(userEmail: string) {
   });
 }
 
-function deleteOrgIfExists(orgName: string) {
+function deleteOrg(orgName: string) {
   const query = { collection: 'orgs', field: 'denomination.full', operator: '==' as WhereFilterOp, value: orgName };
   firestore.queryData(query).then((orgs: Organization[]) => {
     if (!orgs.length) return cy.log(`No previous organization named ${orgName}`);
@@ -185,7 +185,7 @@ function deleteOrgIfExists(orgName: string) {
   });
 }
 
-function deleteInvitationIfExists(userEmail: string) {
+function deleteInvitation(userEmail: string) {
   const query = { collection: 'invitations', field: 'fromUser.email', operator: '==' as WhereFilterOp, value: newUser.email };
   firestore.queryData(query).then((invitations: PublicInvitation[]) => {
     if (!invitations.length) return cy.log(`No previous invitations from ${userEmail}`);

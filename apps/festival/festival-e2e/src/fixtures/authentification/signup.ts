@@ -12,7 +12,15 @@ const now = new Date();
 
 //* Creation consts
 
-const e2eUser = (data: { uid: string; firstName: string; lastName: string; email: string; orgId?: string }): PublicUser => {
+interface E2EUser {
+  uid: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  orgId?: string;
+}
+
+const e2eUser = (data: E2EUser): PublicUser => {
   const { uid, firstName, lastName, email, orgId } = data;
   return {
     uid,
@@ -30,13 +38,15 @@ const e2eUser = (data: { uid: string; firstName: string; lastName: string; email
   };
 };
 
-const e2eOrg = (data: {
+interface E2EOrganization {
   id: string;
   name: string;
   userIds: string[];
   email: string;
   dashboardAccess: boolean;
-}): OrganizationDocument => {
+}
+
+const e2eOrg = (data: E2EOrganization): OrganizationDocument => {
   const { id, name, userIds, email, dashboardAccess } = data;
   return {
     id,
@@ -103,7 +113,7 @@ const e2ePermissions = (data: { id: string; adminUid: string }): PermissionsDocu
   return {
     id,
     roles: {
-      [`${adminUid}`]: 'superAdmin',
+      [adminUid]: 'superAdmin',
     },
     canCreate: [],
     canDelete: [],
