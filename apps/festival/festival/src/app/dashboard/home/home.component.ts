@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Optional, Inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Blockframes
@@ -133,7 +133,8 @@ export class HomeComponent {
     private userService: UserService,
     @Inject(APP) public app: App,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr:ChangeDetectorRef
   ) { }
 
   public showBuyer(row: AggregatedAnalytic) {
@@ -145,7 +146,11 @@ export class HomeComponent {
   }
 
   public selectCountry(country:string){
-    this.selectedCountry = country;
     scrollIntoView(this.tableTitle.nativeElement);
+    const scrollDuration = country ? 1000 : 0;
+    setTimeout(() => {
+      this.selectedCountry = country;
+      this.cdr.markForCheck();
+    }, scrollDuration);
   }
 }
