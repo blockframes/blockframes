@@ -20,7 +20,9 @@
   <h3>Team</h3>
   <article class="user-list">
     <ng-container *ngFor="let user of members$ | async">
-      <user-card [user]="user"></user-card>
+      <a [routerLink]="'../../home/buyer/' + user.uid">
+        <user-card [user]="user" ></user-card>
+      </a>
     </ng-container>
   </article>
 </section>
