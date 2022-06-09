@@ -8,6 +8,7 @@ import { EventService } from '@blockframes/event/service';
 import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 import { where } from 'firebase/firestore';
+import { format, formatISO9075, isMatch, toDate } from 'date-fns';
 
 interface CrmMovie extends Movie {
   org: Organization;
@@ -30,7 +31,7 @@ export class MoviesComponent implements OnInit {
     private eventService: EventService,
     private cdr: ChangeDetectorRef,
     private router: Router
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.movies$ = combineLatest([
@@ -65,20 +66,25 @@ export class MoviesComponent implements OnInit {
       this.exporting = true;
       this.cdr.markForCheck();
 
-      const exportedRows = movies.map((m) => ({
-        'movie id': m.id,
-        title: m.title.international,
-        'internal ref': m.internalRef ?? '--',
-        org: m.org ? orgName(m.org) : '--',
-        orgId: m.org?.id ?? '--',
-        'catalog status': m.app.catalog.status,
-        'catalog access': m.app.catalog.access ? 'yes' : 'no',
-        'festival status': m.app.festival.status,
-        'festival access': m.app.festival.access ? 'yes' : 'no',
-        'financiers status': m.app.financiers.status,
-        'financiers access': m.app.financiers.access ? 'yes' : 'no',
-        screeningCount: `${m.screeningCount}`,
-      }));
+      const exportedRows = movies.map((m) => {
+        const timestamp = (m._meta.createdAt as any)?.seconds
+        return {
+          'movie id': m.id,
+          title: m.title.international,
+          'internal ref': m.internalRef ?? '--',
+          org: m.org ? orgName(m.org) : '--',
+          orgId: m.org?.id ?? '--',
+          'catalog status': m.app.catalog.status,
+          'catalog access': m.app.catalog.access ? 'yes' : 'no',
+          'festival status': m.app.festival.status,
+          'festival access': m.app.festival.access ? 'yes' : 'no',
+          'financiers status': m.app.financiers.status,
+          'financiers access': m.app.financiers.access ? 'yes' : 'no',
+          screeningCount: `${m.screeningCount}`,
+          'creation date': `${format(timestamp ? new Date(timestamp * 1000) : m._meta.createdAt, 'MM/dd/yyyy')}`,
+          'last modification date': `${m._meta.updatedAt ? format(m._meta.updatedAt, 'MM/dd/yyyy') : '--'}`
+        }
+      });
 
       downloadCsvFromJson(exportedRows, 'movies-list');
 
