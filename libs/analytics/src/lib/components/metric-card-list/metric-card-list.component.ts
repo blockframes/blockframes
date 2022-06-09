@@ -62,10 +62,9 @@ export function toCards(aggregated: AggregatedAnalytic): MetricCard[] {
 })
 export class MetricCardListComponent {
   private selected = '';
-  public canShowReset = false;
+  public showReset = false;
   @Input() cards: MetricCard[];
   @Input() @boolean selectable = false;
-  @Input() @boolean private showReset = false;
 
   @Output() selection: EventEmitter<string> = new EventEmitter();
 
@@ -75,11 +74,11 @@ export class MetricCardListComponent {
     for (const card of this.cards) {
       if (card.title === title) {
         card.selected = true;
-        this.canShowReset = true;
+        this.showReset = true;
       }
       if (card.title === this.selected) {
         card.selected = false;
-        this.canShowReset = false;
+        this.showReset = false;
       }
     }
     this.selected = title === this.selected ? '' : title;

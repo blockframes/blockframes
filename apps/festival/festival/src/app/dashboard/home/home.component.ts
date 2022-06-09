@@ -18,6 +18,8 @@ import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytic
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 import { filters } from '@blockframes/ui/list/table/filters';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
+
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter, distinctUntilChanged } from 'rxjs/operators';
@@ -28,7 +30,6 @@ import { Intercom } from 'ng-intercom';
 
 // NgFire
 import { joinWith } from 'ngfire';
-import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({
   selector: 'dashboard-home',
