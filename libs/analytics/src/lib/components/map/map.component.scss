@@ -24,8 +24,8 @@ section.horizontal {
 }
 
 aside.horizontal {
-  width: 33%;
-  margin-right: 8px;
+  width: 100%;
+  margin-right: 0px;
 }
 
 img {
@@ -62,8 +62,10 @@ mat-spinner {
   section.horizontal {
     flex-direction: column;
   }
-  aside.horizontal {
-    width: 100%;
-    margin-right: 0px;
-  }
 }
+
+@include layout-bp(gt-sm) {
+  aside.horizontal {
+    width: 33%;
+    margin-right: 8px;
+  }}

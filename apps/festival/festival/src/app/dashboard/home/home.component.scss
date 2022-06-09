@@ -57,24 +57,18 @@ analytics-map h3 {
   align-items: center;
 }
 
+.title_margin {
+  margin-bottom: 16px;
+}
+
 .margin-bottom {
   margin-bottom: 36px;
-
-  h3 {
-    margin-bottom: 0;
-  }
 }
 
 .link_buttons {
   display: block;
   margin: auto;
   width: fit-content;
-}
-
-.surface analytics-map{
-  mat-icon, h3{
-    margin-bottom:16px;
-  }
 }
 
 @include layout-bp(xs) {
