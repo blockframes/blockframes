@@ -77,16 +77,6 @@ analytics-map h3 {
   }
 }
 
-article[header] {
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.hey{
-  margin-bottom: 16px;
-}
-
 @include layout-bp(xs) {
   header {
     flex-direction: column;
