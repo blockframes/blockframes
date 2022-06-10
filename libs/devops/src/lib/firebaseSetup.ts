@@ -108,11 +108,11 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
   await generateFixtures(db);
   console.info('Fixtures generated in: tools/fixtures/*.json');
 
-  // console.info('Preparing Algolia...');
-  // await upgradeAlgoliaOrgs(null, db);
-  // await upgradeAlgoliaMovies(null, db);
-  // await upgradeAlgoliaUsers(db);
-  // console.info('Algolia ready for testing!');
+  console.info('Preparing Algolia...');
+  await upgradeAlgoliaOrgs(null, db);
+  await upgradeAlgoliaMovies(null, db);
+  await upgradeAlgoliaUsers(db);
+  console.info('Algolia ready for testing!');
 
   insurance(); // Switch off maintenance insurance
   await endMaintenance(db, EIGHT_MINUTES_IN_MS);
@@ -140,11 +140,11 @@ export async function upgrade() {
   await cleanStorage(storage.bucket(storageBucket));
   console.info('Storage data clean and fresh!');
 
-  // console.info('Preparing Algolia...');
-  // await upgradeAlgoliaOrgs(null, db);
-  // await upgradeAlgoliaMovies(null, db);
-  // await upgradeAlgoliaUsers(db);
-  // console.info('Algolia ready for testing!');
+  console.info('Preparing Algolia...');
+  await upgradeAlgoliaOrgs(null, db);
+  await upgradeAlgoliaMovies(null, db);
+  await upgradeAlgoliaUsers(db);
+  console.info('Algolia ready for testing!');
 
   await endMaintenance(db);
 }
@@ -171,11 +171,11 @@ export async function upgradeEmulators() {
   // await cleanStorage(storage.bucket(storageBucket));
   // console.info('Storage data clean and fresh!');
 
-  // console.info('Preparing Algolia...');
-  // await upgradeAlgoliaOrgs(null, db);
-  // await upgradeAlgoliaMovies(null, db);
-  // await upgradeAlgoliaUsers(db);
-  // console.info('Algolia ready for testing!');
+  console.info('Preparing Algolia...');
+  await upgradeAlgoliaOrgs(null, db);
+  await upgradeAlgoliaMovies(null, db);
+  await upgradeAlgoliaUsers(db);
+  console.info('Algolia ready for testing!');
 
   insurance(); // Switch off maintenance insurance
   await endMaintenance(db, EIGHT_MINUTES_IN_MS);
