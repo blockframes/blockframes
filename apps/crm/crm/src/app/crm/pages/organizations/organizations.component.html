@@ -27,8 +27,8 @@
     <ng-template colRef="denomination.full" label="Organization Name" sort let-fullName>
       {{ fullName }}
     </ng-template>
-    <ng-template colRef="addresses.main.country" label="Country" let-country>
-      {{ country ?? '--' | titlecase }}
+    <ng-template colRef="addresses.main.country" label="Country" let-country sort [filter]="filters.territories">
+      {{ (country | toLabel:'territories') || '--' }}
     </ng-template>
     <ng-template colRef="status" label="Status" sort let-status>
       {{ status | toLabel: 'organizationStatus' }}

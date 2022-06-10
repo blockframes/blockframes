@@ -35,17 +35,10 @@ export const filters = {
     if (!movie?.title?.international) return false;
     return movie.title.international.toLocaleLowerCase().includes(input);
   },
+  // #8355 - TODO: merge these three in one
   crmMovieOrgName: (input: string, _, movie: CrmMovie) => {
     if (!movie?.org?.denomination?.public) return false;
     return movie.org.denomination.public.toLocaleLowerCase().includes(input);
-  },
-  invitationOrgName: (input: string, _, invitation: InvitationDetailed) => {
-    if (!invitation?.fromOrg?.denomination.public) return false;
-    return invitation.fromOrg.denomination.public.toLocaleLowerCase().includes(input);
-  },
-  invitationEventName: (input: string, _, invitation: InvitationDetailed) => {
-    if (!invitation?.event?.title) return false;
-    return invitation.event.title.toLocaleLowerCase().includes(input);
   },
   invitationListOrgName: (input: string, _, invitation: InvitationDetailed) => {
     if (!invitation?.org?.denomination.public) return false;

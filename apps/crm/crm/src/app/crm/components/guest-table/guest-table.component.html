@@ -2,7 +2,7 @@
   <ng-template colRef="id" label="Id" let-invitId>
     {{ invitId }}
   </ng-template>
-  <ng-template colRef="date" label="Invitation date" let-date [sort]="sorts.byDate">
+  <ng-template colRef="date" label="Invitation date" let-date [sort]="sorts.defaultSort">
     {{ date | date: 'medium'}}
   </ng-template>
   <ng-template colRef="guestOrg" label="Guest org" let-guestOrg>

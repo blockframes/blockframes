@@ -38,10 +38,10 @@
         </a>
         <ng-template #noOrg>--</ng-template>
       </ng-template>
-      <ng-template colRef="firstConnection" [sort]="sorts.byDate"  label="First Connection" let-firstConnection>
+      <ng-template colRef="firstConnection" [sort]="sorts.defaultSort"  label="First Connection" let-firstConnection>
         {{ firstConnection | date: 'mediumDate' }}
       </ng-template>
-      <ng-template colRef="lastConnection" [sort]="sorts.byDate" label="Last Connection" let-lastConnection>
+      <ng-template colRef="lastConnection" [sort]="sorts.defaultSort" label="Last Connection" let-lastConnection>
         {{ lastConnection | date: 'mediumDate' }}
       </ng-template>
       <ng-template colRef="pageView" label="Page View" [sort]="sorts.defaultSort" let-pageView>{{ pageView }}</ng-template>
