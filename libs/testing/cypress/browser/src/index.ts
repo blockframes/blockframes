@@ -3,6 +3,7 @@ import './lib/commands';
 import 'cypress-wait-until';
 import 'cypress-mailosaur';
 
+export * from './lib/algolia';
 export * from './lib/adminAuth';
 export * from './lib/browserAuth';
 import * as events from './lib/events';
