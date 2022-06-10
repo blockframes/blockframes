@@ -17,6 +17,7 @@ import {
 import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
+import { filters } from '@blockframes/ui/list/table/filters';
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter, distinctUntilChanged } from 'rxjs/operators';
@@ -118,6 +119,8 @@ export class HomeComponent {
     'promoReelOpened',
     'screeningRequested',
   ];
+
+  filters = filters;
 
   constructor(
     private analyticsService: AnalyticsService,
