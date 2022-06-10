@@ -32,19 +32,16 @@ async function updateBucketsMedias(db: Firestore) {
 
   return runChunks(buckets.docs, async (doc) => {
     const bucket = doc.data();
-    const contracts = bucket.contracts;
 
-    // check if bucket has contracts
-    if (contracts.length > 0) {
-      bucket.contracts = bucket.contracts.map(contract => {
-        contract.terms[0].medias = contract.terms[0].medias
-          // rename media 'Planes' to Inflight
-          .map(media => media === 'planes' ? 'inflight' : media)
-          // remove media 'video'
-          .filter(media => media !== 'video');
-        return contract;
-      })
-    }
+    bucket.contracts = bucket.contracts.map(contract => {
+      contract.terms[0].medias = contract.terms[0].medias
+        // rename media 'Planes' to Inflight
+        .map(media => media === 'planes' ? 'inflight' : media)
+        // remove media 'video'
+        .filter(media => media !== 'video');
+      return contract;
+    })
+
     // Update buckets in DB
     await doc.ref.set(bucket);
   }).catch(err => console.error(err));
