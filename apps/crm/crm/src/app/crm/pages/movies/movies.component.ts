@@ -67,7 +67,6 @@ export class MoviesComponent implements OnInit {
       this.cdr.markForCheck();
 
       const exportedRows = movies.map((m) => {
-        const timestamp = (m._meta.createdAt as any)?.seconds
         return {
           'movie id': m.id,
           title: m.title.international,
@@ -80,9 +79,9 @@ export class MoviesComponent implements OnInit {
           'festival access': m.app.festival.access ? 'yes' : 'no',
           'financiers status': m.app.financiers.status,
           'financiers access': m.app.financiers.access ? 'yes' : 'no',
-          screeningCount: `${m.screeningCount}`,
-          'creation date': `${format(timestamp ? new Date(timestamp * 1000) : m._meta.createdAt, 'MM/dd/yyyy')}`,
-          'last modification date': `${m._meta.updatedAt ? format(m._meta.updatedAt, 'MM/dd/yyyy') : '--'}`
+          'screeningCount': m.screeningCount,
+          'creation date': format((m._meta.createdAt), 'MM/dd/yyyy'),
+          'last modification date': m._meta.updatedAt ? format(m._meta.updatedAt, 'MM/dd/yyyy') : '--'
         }
       });
 
