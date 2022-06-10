@@ -13,7 +13,7 @@ import {
   EventName,
   getGuest,
 } from '@blockframes/model';
-import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
+import { filters } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
 import { aggregatePerUser, countedToAnalyticData, counter } from '@blockframes/analytics/utils';
@@ -135,10 +135,9 @@ export class TitleAnalyticsComponent {
   );
 
   filters = {
-    orgActivity: getStaticModelFilter('orgActivity'),
-    territories: getStaticModelFilter('territories'),
     name: nameFilter,
-    email: emailFilter
+    email: emailFilter,
+    ...filters
   };
   filterValue?: string;
 
@@ -180,7 +179,7 @@ export class TitleAnalyticsComponent {
     private navService: NavigationService,
     private eventService: EventService,
     private invitationService: InvitationService,
-  ) { }
+  ) {}
 
   goBack() {
     this.navService.goBack(1);
