@@ -34,11 +34,15 @@ async function updateBucketsMedias(db: Firestore) {
     const bucket = doc.data();
 
     bucket.contracts = bucket.contracts.map(contract => {
-      contract.terms[0].medias = contract.terms[0].medias
-        // rename media 'Planes' to Inflight
-        .map(media => media === 'planes' ? 'inflight' : media)
-        // remove media 'video'
-        .filter(media => media !== 'video');
+      contract.terms = contract.terms
+        .map(term => {
+          term.medias = term.medias
+            // rename media 'Planes' to Inflight
+            .map(media => media === 'planes' ? 'inflight' : media)
+            // remove media 'video'
+            .filter(media => media !== 'video');
+          return term;
+        })
       return contract;
     })
 
