@@ -1,5 +1,6 @@
-import { Organization, PublicUser, PermissionsDocument } from '@blockframes/model';
+import { PublicUser, PermissionsDocument, OrganizationDocument } from '@blockframes/model';
 import { createFakeUserDataArray } from '@blockframes/testing/cypress/browser';
+import { Timestamp } from 'firebase/firestore';
 
 const newUserUid = '0-e2e-newUserUid';
 const marketplaceOrgAdminUid = '0-e2e-marketplaceOrgAdminUid';
@@ -11,13 +12,22 @@ const now = new Date();
 
 //* Creation consts
 
-const e2eUser = (data: { uid: string; firstName: string; lastName: string; email: string }): PublicUser => {
-  const { uid, firstName, lastName, email } = data;
+interface E2EUser {
+  uid: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  orgId?: string;
+}
+
+const e2eUser = (data: E2EUser): PublicUser => {
+  const { uid, firstName, lastName, email, orgId } = data;
   return {
     uid,
     firstName,
     lastName,
     email,
+    orgId,
     hideEmail: false,
     _meta: {
       emailVerified: true,
@@ -28,7 +38,15 @@ const e2eUser = (data: { uid: string; firstName: string; lastName: string; email
   };
 };
 
-const e2eOrg = (data: { id: string; name: string; userIds: string[]; email: string; dashboardAccess: boolean }): Organization => {
+interface E2EOrganization {
+  id: string;
+  name: string;
+  userIds: string[];
+  email: string;
+  dashboardAccess: boolean;
+}
+
+const e2eOrg = (data: E2EOrganization): OrganizationDocument => {
   const { id, name, userIds, email, dashboardAccess } = data;
   return {
     id,
@@ -41,7 +59,7 @@ const e2eOrg = (data: { id: string; name: string; userIds: string[]; email: stri
     status: 'accepted',
     activity: 'actor',
     _meta: {
-      createdAt: now,
+      createdAt: Timestamp.now(),
       createdFrom: 'festival',
       createdBy: marketplaceOrgAdminUid,
     },
@@ -127,6 +145,7 @@ const marketplaceOrgAdmin = e2eUser({
   firstName: marketplaceOrgAdminData.firstName,
   lastName: marketplaceOrgAdminData.lastName,
   email: marketplaceOrgAdminData.email,
+  orgId: marketplaceOrgId,
 });
 
 const marketplaceOrg = e2eOrg({
@@ -154,6 +173,7 @@ const dashboardOrgAdmin = e2eUser({
   firstName: dashboardOrgAdminData.firstName,
   lastName: dashboardOrgAdminData.lastName,
   email: dashboardOrgAdminData.email,
+  orgId: dashboardOrgId,
 });
 
 const dashboardOrg = e2eOrg({
