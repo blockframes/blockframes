@@ -1,4 +1,4 @@
-import { OrgActivity, Territory, PublicUser } from '@blockframes/model';
+import { OrgActivity, Territory, PublicUser, Module } from '@blockframes/model';
 import { browserAuth } from '@blockframes/testing/cypress/browser';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
@@ -98,11 +98,11 @@ export function selectCompany(orgName: string) {
   getInList('org_', orgName);
 }
 
-export function verifyInvitation(orgAdminEmail: string, user: PublicUser, expectedApp?: 'marketplace' | 'dashboard') {
+export function verifyInvitation(orgAdminEmail: string, user: PublicUser, expectedModule?: Module) {
   browserAuth.signinWithEmailAndPassword(orgAdminEmail);
   cy.visit('');
-  assertUrlIncludes(`${expectedApp}/home`);
-  if (expectedApp == 'marketplace') get('skip-preferences').click();
+  assertUrlIncludes(`${expectedModule}/home`);
+  if (expectedModule === 'marketplace') get('skip-preferences').click();
   get('invitations-link').click();
   get('invitation').first().should('contain', `${user.firstName} ${user.lastName} wants to join your organization.`);
   get('invitation-status').first().should('contain', 'Accepted');

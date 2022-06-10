@@ -84,6 +84,7 @@ export const e2eOrg = (data: E2EOrganization): OrganizationDocument => {
     status: 'accepted',
     activity: 'actor',
     _meta: {
+      // TODO #8006 : remove timestamp use
       createdAt: Timestamp.now(),
       createdFrom: 'festival',
       createdBy: 'e2e-test',

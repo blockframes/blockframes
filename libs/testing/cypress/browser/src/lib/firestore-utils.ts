@@ -1,5 +1,5 @@
 import { adminAuth, firestore } from '@blockframes/testing/cypress/browser';
-import { User, Organization, PublicInvitation } from '@blockframes/model';
+import { User, Organization, Invitation } from '@blockframes/model';
 import { UserRecord } from '@blockframes/firebase-utils/types';
 import { WhereFilterOp } from 'firebase/firestore';
 
@@ -21,7 +21,7 @@ export function deleteOrg(orgName: string) {
 
 export function deleteInvitation(userEmail: string) {
   const query = { collection: 'invitations', field: 'fromUser.email', operator: '==' as WhereFilterOp, value: userEmail };
-  firestore.queryData(query).then((invitations: PublicInvitation[]) => {
+  firestore.queryData(query).then((invitations: Invitation[]) => {
     if (!invitations.length) return cy.log(`No previous invitations from ${userEmail}`);
     firestore.delete([`invitations/${invitations[0].id}`]);
   });
@@ -46,7 +46,7 @@ export function validateOrg(orgName: string) {
 export function validateInvitation(userEmail: string) {
   firestore
     .queryData({ collection: 'invitations', field: 'fromUser.email', operator: '==', value: userEmail })
-    .then((invitations: PublicInvitation[]) =>
+    .then((invitations: Invitation[]) =>
       firestore.update([{ docPath: `invitations/${invitations[0].id}`, field: 'status', value: 'accepted' }])
     );
 }
