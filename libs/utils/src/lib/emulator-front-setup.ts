@@ -2,7 +2,7 @@ import { InjectionToken } from '@angular/core';
 import { Auth, connectAuthEmulator } from 'firebase/auth';
 import { connectFirestoreEmulator, Firestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, Functions } from 'firebase/functions';
-import firebaseSetup from 'firebase.json'
+import firebaseSetup from 'firebase.json';
 
 interface EnabledEmulators {
   auth: boolean;
@@ -15,7 +15,7 @@ export type EmulatorsConfig = Partial<Record<'auth' | 'firestore' | 'functions',
 /**
  * @see firebase.json for ports
  */
-export function getEmulatorsConfig(emulators: EnabledEmulators) {
+export function getEmulatorsConfig(emulators: EnabledEmulators = { auth: false, firestore: false, functions: false }) {
   const enabledEmulators: EmulatorsConfig = {};
 
   if (emulators.auth) {
