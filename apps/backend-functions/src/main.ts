@@ -19,7 +19,7 @@ import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, acces
 import { onMovieUpdate, onMovieCreate, onMovieDelete, createAskingPriceRequest } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate, onPermissionDelete } from './permissions';
-import { createNotificationsForEventsToStart } from './internals/invitations/events';
+import { createNotificationsForEventsToStart, createNotificationsForFinishedScreenings } from './internals/invitations/events';
 import { getPrivateVideoUrl, getPlayerUrl } from './player';
 import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailWithTemplate } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
@@ -145,7 +145,11 @@ export const twilioWebhook = functions().https.onRequest(_twilioWebhook);
  * Creates notifications when an event is about to start
  */
 export const scheduledNotifications = functions().pubsub.schedule('*/30 * * * *') // every 30 minutes
-  .onRun(skipInMaintenance(createNotificationsForEventsToStart));
+  .onRun(skipInMaintenance(() => {
+    createNotificationsForEventsToStart();
+    createNotificationsForFinishedScreenings();
+  }));
+
 
 //--------------------------------
 //       Movies Management      //
