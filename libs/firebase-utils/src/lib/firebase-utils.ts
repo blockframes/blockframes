@@ -7,7 +7,7 @@ export function toDate<D>(target: D): D {
   for (const key in target) {
     const value = target[key];
     if (!value || typeof value !== 'object') continue;
-    if (value['_seconds']) {
+    if (!!value['_seconds'] && value['_nanoseconds'] >= 0) {
       try {
         target[key] = (value as any).toDate();
       } catch (_) {
