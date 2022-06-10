@@ -17,12 +17,12 @@ export const mediaGroup: StaticGroup<'medias'>[] = [{
   items: ['payTv', 'freeTv', 'payPerView'],
 }, {
   label: 'VOD',
-  items: ['est', 'nVod', 'aVod', 'fVod', 'sVod']
+  items: ['est', 'nVod', 'aVod', 'fVod', 'sVod', 'tVod']
 }, {
   label: 'Ancillary Rights',
-  items: ['theatrical', 'video', 'planes', 'hotels', 'educational']
+  items: ['boats', 'inflight', 'hotels', 'educational', 'festival']
 }, {
-  label: 'DVD',
+  label: 'Video (DVD, BluRay)',
   items: ['rental', 'through']
 }];
 
