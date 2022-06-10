@@ -14,6 +14,10 @@ ul {
     text-align: center;
     cursor: pointer;
 
+    .selectable {
+      cursor: pointer;
+    }
+
     header {
       background-color: var(--primary-lighter);
       border-radius: 4px;

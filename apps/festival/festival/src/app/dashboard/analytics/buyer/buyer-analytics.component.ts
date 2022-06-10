@@ -134,7 +134,11 @@ export class BuyerAnalyticsComponent {
   );
 
   totalAnalyticsPerTitle$ = this.aggregatedPerTitle$.pipe(
-    map(aggregatedToAnalyticData)
+    map(aggregatedToAnalyticData),
+    map(analyticData => {
+      const sorted = analyticData.sort((a, b) => b.count - a.count);
+      return sorted.splice(0, 5); // only show top 5
+    }),
   );
 
   filter$ = new BehaviorSubject('');
