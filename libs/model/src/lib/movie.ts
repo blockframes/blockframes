@@ -24,6 +24,7 @@ import {
   ScreeningStatus,
   App,
   app,
+  productionStatus
 } from './static';
 import type {
   Producer,
@@ -33,7 +34,6 @@ import type {
   Director,
 } from './identity';
 import type { DocumentMeta } from './meta';
-import { productionStatus } from './static';
 import { getAllAppsExcept } from './apps';
 
 //////////////////
