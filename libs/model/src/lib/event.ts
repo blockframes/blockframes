@@ -17,10 +17,10 @@ export interface MeetingAttendee extends Person {
   status: AttendeeStatus,
 }
 
-export interface ScreeningAttendee extends Person {
+export interface ScreeningAttendee extends Person { //TODO : #7555
   uid: string;
   email: string;
-  status: 'attended';
+  status: 'attended'; //TODO: #7555 may be used later (attending status in screenings statistics for exemple)
 }
 
 export interface Meeting {

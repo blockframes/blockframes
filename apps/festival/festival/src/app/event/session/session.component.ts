@@ -52,7 +52,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   public showSession = true;
   public mediaContainerSize: string;
   public visioContainerSize: string;
-  public fileRef: StorageVideo;
+  public fileRef$ = new BehaviorSubject(null);
 
   public creatingControl$ = new BehaviorSubject(false);
 
@@ -216,7 +216,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
         if ((event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
-          this.fileRef = movie.promotional.videos?.screener;
+          this.fileRef$.next(movie.promotional.videos?.screener);
           this.trackWatchTime(event);
         }
 
@@ -225,7 +225,7 @@ export class SessionComponent implements OnInit, OnDestroy {
         this.dynTitle.setPageTitle(event.title, 'Slate');
         if ((event.meta as Slate).videoId) {
           const org = await this.orgService.getValue(event.ownerOrgId);
-          this.fileRef = org.documents.videos.find(v => v.fileId === event.meta.videoId);
+          this.fileRef$.next(org.documents.videos.find(v => v.fileId === event.meta.videoId));
           this.trackWatchTime(event);
         }
       }
