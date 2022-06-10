@@ -5,7 +5,6 @@ import { Movie } from './movie';
 import { User } from './user';
 import { StorageFile } from './media';
 import { AnonymousCredentials, Person } from './identity';
-import { Timestamp } from './timestamp';
 
 // Event types
 export type EventMeta = Meeting | Screening | Slate | unknown;
@@ -50,27 +49,18 @@ export interface Screening {
   organizerUid: string;
 }
 
-export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = Record<string, unknown>> {
+// This variable define the duration (in seconds) of a video link before it expires
+export const linkDuration = 60 * 60 * 5; // 5 hours in seconds = 60 seconds * 60 minutes * 5 = 18 000 seconds
+
+// Event
+export interface Event<Meta extends EventMeta = unknown> extends CalendarEvent<Meta> {
   id: string;
   ownerOrgId: string;
   accessibility: AccessibilityTypes;
   isSecret: boolean;
   type: EventTypes;
   title: string;
-  start: D;
-  end: D;
-  allDay: boolean,
-  meta: Meta;
-}
-
-// This variable define the duration (in seconds) of a video link before it expires
-export const linkDuration = 60 * 60 * 5; // 5 hours in seconds = 60 seconds * 60 minutes * 5 = 18 000 seconds
-
-// Event
-export interface Event<Meta extends EventMeta = unknown>
-  extends EventBase<Date, Meta>,
-  CalendarEvent<Meta> {
-  id: string;
+  start: Date;
   isOwner: boolean;
   allDay: boolean;
   end: Date;
@@ -83,7 +73,7 @@ export interface Event<Meta extends EventMeta = unknown>
 }
 
 export function createEvent<Meta extends EventMeta>(
-  params: Partial<EventBase<Date, Meta>> = {}
+  params: Partial<Event<Meta>> = {}
 ): Event<Meta> {
   const meta: EventMeta = isMeeting(params as Event)
     ? createMeeting(params.meta)
@@ -172,10 +162,10 @@ export function createSlate(slate: Partial<Slate>): Slate {
 }
 
 // Calendar Event
-export function createCalendarEvent<M>(
-  event: Partial<EventBase<Date, M>>,
+export function createCalendarEvent(
+  event: Partial<Event>,
   isOwner: boolean
-): Event<M> {
+): Event {
   return {
     ...createEvent(event),
     isOwner,

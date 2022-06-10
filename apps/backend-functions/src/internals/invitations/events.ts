@@ -1,5 +1,5 @@
 import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from './utils';
-import { createNotification, triggerNotifications } from '../../notification';
+import { triggerNotifications } from '../../notification';
 import { getAdminIds } from '../../data/internals';
 import * as admin from 'firebase-admin';
 import {
@@ -7,13 +7,13 @@ import {
   EventMeta,
   Meeting,
   Screening,
-  NotificationDocument,
+  Notification,
   NotificationTypes,
-  InvitationDocument,
   Invitation,
   createPublicInvitation,
   createInternalDocumentMeta,
   Organization,
+  createNotification,
 } from '@blockframes/model';
 import { getDocument, queryDocuments } from '@blockframes/firebase-utils';
 
@@ -117,7 +117,7 @@ async function onInvitationToAnEventCreate(invitation: Invitation) {
  */
 async function onInvitationToAnEventAcceptedOrRejected(invitation: Invitation) {
 
-  const notifications: NotificationDocument[] = [];
+  const notifications: Notification[] = [];
 
   if (!!invitation.fromUser && invitation.mode === 'request') {
     const notification = createNotification({
@@ -222,7 +222,7 @@ async function fetchAttendeesToEvent(events: Event[], pendingInvites = false) {
     ? docsIds.map(id => db.collection('invitations').where('eventId', '==', id).where('mode', '==', 'invitation').where('status', '==', 'pending'))
     : docsIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted'));
 
-  const invitations = await Promise.all(queries.map(q => queryDocuments<InvitationDocument>(q)));
+  const invitations = await Promise.all(queries.map(q => queryDocuments<Invitation>(q)));
   return invitations.flat();
 }
 
@@ -230,7 +230,7 @@ async function fetchAttendeesToEvent(events: Event[], pendingInvites = false) {
  * Look after notification already existing for one user and one event
  * Return an array of new notifications to create
  */
-async function createNotificationIfNotExists(invitations: InvitationDocument[], notificationType: NotificationTypes) {
+async function createNotificationIfNotExists(invitations: Invitation[], notificationType: NotificationTypes) {
   const notifications = [];
   const db = admin.firestore();
 

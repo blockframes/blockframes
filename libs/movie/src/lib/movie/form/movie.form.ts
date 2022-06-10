@@ -572,12 +572,12 @@ type RunningTimeFormControl = ReturnType<typeof createRunningTimeFormControl>;
 // ------------------------------
 
 export class MovieAppConfigForm extends FormEntity<MovieAppConfigControl> {
-  constructor(app?: Partial<{ [app in App]: MovieAppConfig<Date> }>) {
+  constructor(app?: Partial<{ [app in App]: MovieAppConfig }>) {
     super(createMovieAppConfigFormControl(app));
   }
 }
 
-function createMovieAppConfigFormControl(app?: Partial<{ [app in App]: MovieAppConfig<Date> }>) {
+function createMovieAppConfigFormControl(app?: Partial<{ [app in App]: MovieAppConfig }>) {
   const apps = {};
   for (const a in app) {
     apps[a] = new AppConfigForm(app[a]);
@@ -592,12 +592,12 @@ type MovieAppConfigControl = ReturnType<typeof createMovieAppConfigFormControl>;
 // ------------------------------
 
 export class AppConfigForm extends FormEntity<AppConfigControl> {
-  constructor(appAccess?: Partial<MovieAppConfig<Date>>) {
+  constructor(appAccess?: Partial<MovieAppConfig>) {
     super(createAppConfigFormControl(appAccess));
   }
 }
 
-function createAppConfigFormControl(appAccess?: Partial<MovieAppConfig<Date>>) {
+function createAppConfigFormControl(appAccess?: Partial<MovieAppConfig>) {
   const { acceptedAt, access, refusedAt, status } = createAppConfig(appAccess);
   return {
     acceptedAt: new FormControl(acceptedAt),

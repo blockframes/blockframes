@@ -285,7 +285,7 @@ export function getMovieEmailData(movie: Partial<Movie>): MovieEmailData {
   }
 }
 
-export function getNegotiationEmailData(negotiation: Partial<Negotiation<Date>>): NegotiationEmailData {
+export function getNegotiationEmailData(negotiation: Partial<Negotiation>): NegotiationEmailData {
   const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
   const formatter = new Intl.NumberFormat('en-US');
   const price = negotiation.price ? formatter.format(negotiation.price) : '';
@@ -298,7 +298,7 @@ export function getNegotiationEmailData(negotiation: Partial<Negotiation<Date>>)
   };
 }
 
-export function getBucketEmailData(bucket: Bucket<Date>): MailBucket {
+export function getBucketEmailData(bucket: Bucket): MailBucket {
   const currencyKey = getKeyIfExists('movieCurrencies', bucket.currency);
   const contracts = bucket.contracts.map(contract => createMailContract(contract));
 

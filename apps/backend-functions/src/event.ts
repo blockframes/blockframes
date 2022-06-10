@@ -1,8 +1,8 @@
-import { BlockframesSnapshot, db } from './internals/firebase';
+import { db } from './internals/firebase';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { createNotification, triggerNotifications } from './notification';
-import { Movie, Organization, PublicUser, EventMeta, Event, createInternalDocumentMeta, createPublicUser } from '@blockframes/model';
-import { getDocument } from '@blockframes/firebase-utils';
+import { triggerNotifications } from './notification';
+import { Movie, Organization, PublicUser, EventMeta, Event, createInternalDocumentMeta, createPublicUser, createNotification } from '@blockframes/model';
+import { getDocument, BlockframesSnapshot } from '@blockframes/firebase-utils';
 
 /**
  * Removes invitations and notifications related to an event when event is deleted

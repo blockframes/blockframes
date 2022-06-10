@@ -37,7 +37,7 @@ export type NotificationSettings = Partial<Record<NotificationTypes, Notificatio
 
 /** A user interface with public information */
 export interface PublicUser {
-  _meta?: DocumentMeta<Date>;
+  _meta?: DocumentMeta;
   uid: string;
   email: string;
   avatar?: StorageFile;

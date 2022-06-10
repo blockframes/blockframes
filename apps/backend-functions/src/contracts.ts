@@ -1,8 +1,8 @@
-import { BlockframesChange, BlockframesSnapshot, db } from './internals/firebase';
-import { createNotification, triggerNotifications } from './notification';
+import { db } from './internals/firebase';
+import { triggerNotifications } from './notification';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
-import { Organization, NotificationDocument, Sale, Contract, Negotiation, createInternalDocumentMeta } from '@blockframes/model';
-import { queryDocument, getDocument } from '@blockframes/firebase-utils';
+import { Organization, Notification, Sale, Contract, Negotiation, createInternalDocumentMeta, createNotification } from '@blockframes/model';
+import { queryDocument, getDocument, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 
 interface ContractNotificationType {
   sender: 'myOrgAcceptedAContract' | 'myOrgDeclinedAContract', //org who accepted/declined a contract
@@ -83,7 +83,7 @@ async function getContractNotifications(
     }));
   };
 
-  const promises: Promise<NotificationDocument[]>[] = [];
+  const promises: Promise<Notification[]>[] = [];
 
   if (types.sender) {
     const orgId = getReviewer(negotiation);

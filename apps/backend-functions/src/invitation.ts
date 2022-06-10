@@ -1,5 +1,5 @@
-﻿import { getUser } from "./internals/utils";
-import { BlockframesChange, db } from './internals/firebase'
+﻿import { getUser } from './internals/utils';
+import { db } from './internals/firebase'
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
 import { 
@@ -9,10 +9,8 @@ import {
   Event,
   EventMeta,
   MEETING_MAX_INVITATIONS_NUMBER,
-  InvitationDocument,
   createInvitation,
   InvitationStatus,
-  InvitationBase,
   AlgoliaOrganization,
   App,
   ErrorResultResponse,
@@ -24,7 +22,7 @@ import { getOrInviteUserByMail } from './internals/users';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils/algolia';
-import { getDocument } from '@blockframes/firebase-utils';
+import { BlockframesChange, getDocument } from '@blockframes/firebase-utils';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
 /**
@@ -130,7 +128,7 @@ export async function onInvitationWrite(change: BlockframesChange<Invitation>) {
 
 export interface UserInvitation {
   emails: string[];
-  invitation: Partial<InvitationBase<Date>>;
+  invitation: Partial<Invitation>;
   app?: App;
 }
 
@@ -241,7 +239,7 @@ export interface AnonymousInvitationAction {
 export const acceptOrDeclineInvitationAsAnonymous = async (data: AnonymousInvitationAction, context: CallableContext) => {
   if (!context?.auth) throw new Error('Permission denied: missing auth context.');
 
-  const invitation = await getDocument<InvitationDocument>(`invitations/${data.invitationId}`);
+  const invitation = await getDocument<Invitation>(`invitations/${data.invitationId}`);
 
   if (!invitation || invitation.type !== 'attendEvent') throw new Error('Permission denied: invalid invitation');
 

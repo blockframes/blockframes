@@ -7,6 +7,7 @@ import { resolve } from 'path';
 import { firebase as firebaseProd } from 'env/env.blockframes';
 import { App, Organization } from '@blockframes/model';
 import { toDate } from './firebase-utils';
+import { BlockframesSnapshot } from './types';
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -133,7 +134,7 @@ export function throwOnProduction(): never | void {
  * @param batch
  */
 export async function removeAllSubcollections(
-  snapshot: FirebaseFirestore.DocumentSnapshot, // TODO #8006 blockframesSnapsho
+  snapshot: FirebaseFirestore.DocumentSnapshot | BlockframesSnapshot,
   batch: FirebaseFirestore.WriteBatch,
   db = admin.firestore(),
   options = { verbose: true }

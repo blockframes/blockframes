@@ -1,5 +1,6 @@
-import { BlockframesSnapshot, db } from './internals/firebase';
+import { db } from './internals/firebase';
 import { Bucket, Term } from '@blockframes/model';
+import { BlockframesSnapshot } from '@blockframes/firebase-utils';
 
 export async function onTermDelete(termSnapshot: BlockframesSnapshot<Term>) {
 

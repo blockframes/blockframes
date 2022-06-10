@@ -23,8 +23,8 @@ export interface OrgMedias {
 };
 
 /** Document model of an Organization */
-export interface OrganizationBase<D> extends PublicOrganization {
-  _meta?: DocumentMeta<D>;
+export interface Organization extends PublicOrganization {
+  _meta?: DocumentMeta;
   addresses: AddressSet;
   appAccess: OrgAppAccess;
   description?: string;
@@ -57,9 +57,9 @@ export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.svg';
 
 
 /** A factory function that creates an Organization. */
-function createOrganizationBase(
-  params: Partial<OrganizationBase<Date>> = {}
-): OrganizationBase<Date> {
+export function createOrganization(
+  params: Partial<Organization> = {}
+): Organization {
   return {
     id: params.id ? params.id : '',
     description: '',
@@ -114,7 +114,7 @@ export function orgName(org: Partial<PublicOrganization>, type: 'public' | 'full
  * This check if org have access to a specific module in at least one app
  * @param org
  */
-export function canAccessModule(module: Module, org: OrganizationBase<unknown>, _app?: App): boolean {
+export function canAccessModule(module: Module, org: Organization, _app?: App): boolean {
   if (_app) {
     return org?.appAccess[_app]?.[module];
   } else {
@@ -124,8 +124,6 @@ export function canAccessModule(module: Module, org: OrganizationBase<unknown>, 
 
 export type AppStatus = 'none' | 'requested' | 'accepted';
 
-export type Organization = OrganizationBase<Date>;
-
 export const organizationRoles = {
   catalog: { dashboard: 'Seller', marketplace: 'Buyer' },
   festival: { dashboard: 'Sales Agent', marketplace: 'Buyer' },
@@ -134,13 +132,6 @@ export const organizationRoles = {
 
 export interface OrganizationForm {
   name: string;
-}
-
-/** A factory function that creates an Organization. */
-export function createOrganization(
-  params: Partial<Organization> = {}
-): Organization {
-  return createOrganizationBase(params) as Organization;
 }
 
 /** Convert an organization object into a public organization */
@@ -190,7 +181,7 @@ export function createLocation(params: Partial<Location> = {}): Location {
  * getOrgAppAccess(orgA, 'festival'); // ['festival', 'catalog']
  */
 export function getOrgAppAccess(
-  org: OrganizationBase<Date>,
+  org: Organization,
   first: App = 'festival'
 ): App[] {
   const apps: App[] = [];
@@ -220,7 +211,7 @@ export function getOrgAppAccess(
  * getOrgModuleAccess(orgB); // ['marketplace']
  */
 export function getOrgModuleAccess(
-  org: OrganizationBase<Date>,
+  org: Organization,
   _a?: App
 ): Module[] {
   const allowedModules = {} as Record<Module, boolean>;

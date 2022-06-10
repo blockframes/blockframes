@@ -1,4 +1,4 @@
-import { DocumentMeta } from './meta';
+import { createInternalDocumentMeta, DocumentMeta } from './meta';
 import { PublicUser } from './user';
 import { PublicOrganization } from './organisation';
 import { PublicInvitation } from './invitation';
@@ -74,8 +74,8 @@ export function isAppNotification(type: NotificationTypes, app: App) {
 }
 
 /** Generic informations for a Notification. */
-interface NotificationBase<D> {
-  _meta: DocumentMeta<D>;
+export interface Notification {
+  _meta: DocumentMeta;
   id: string;
   /** @dev Recipient of the notification */
   toUserId: string;
@@ -101,15 +101,21 @@ interface NotificationBase<D> {
   },
   app?: {
     isRead: boolean;
-  }
-}
-
-export type NotificationDocument = NotificationBase<Date>; // TODO #8006 
-
-export interface Notification extends NotificationBase<Date> { // TODO #8006 
-  message: string;
+  },
+  message?: string;
   imgRef?: StorageFile;
   placeholderUrl?: string;
   url?: string;
   actionText?: string;
+}
+
+/** Create a Notification with required and generic information. */
+export function createNotification(notification: Partial<Notification> = {}): Notification {
+  return {
+    id: notification.id,
+    _meta: createInternalDocumentMeta(),
+    type: notification.type,
+    toUserId: '',
+    ...notification
+  };
 }

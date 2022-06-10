@@ -3,7 +3,6 @@ import { Organization, PublicOrganization } from './organisation';
 import { PublicUser } from './user';
 import { Movie } from './movie';
 import { Event, Screening } from './event';
-import { Timestamp } from './timestamp';
 import { Analytics } from './analytics';
 
 /**
@@ -16,8 +15,8 @@ import { Analytics } from './analytics';
  *  If user that received an email invitation and
  *  created an account, we will then be able to replace email by the coresponding new user.
  * */
-export interface InvitationBase<D extends Timestamp | Date> extends PublicInvitation {
-  date: D;
+export interface Invitation extends PublicInvitation {
+  date: Date;
   /** @dev An invitation is created by a user or an org (fromUser or fromOrg) */
   fromOrg?: PublicOrganization,
   fromUser?: PublicUser,
@@ -42,13 +41,10 @@ export interface PublicInvitation {
   status: InvitationStatus;
 }
 
-/** Specific types of Invitation, both used in firebase functions. */
-export type InvitationDocument = InvitationBase<Timestamp>;
-
 export type InvitationMode = 'request' | 'invitation';
 
 /** Create an Invitation */
-export function createInvitation(params: Partial<InvitationBase<Date>> = {}): InvitationBase<Date> {
+export function createInvitation(params: Partial<Invitation> = {}): Invitation {
   return {
     id: '',
     mode: 'invitation',   // We need a default value for backend-function strict mode
@@ -75,8 +71,6 @@ export function createPublicInvitation(invitation: Invitation) {
 export function filterInvitation(invitation: Invitation, app: App) {
   return invitation.type === 'attendEvent' ? app === 'festival' : true;
 }
-
-export type Invitation = InvitationBase<Date>;
 
 export interface InvitationDetailed extends Invitation {
   org: Organization;

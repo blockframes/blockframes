@@ -7,6 +7,7 @@ import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } fro
 import { IMaintenanceDoc } from '@blockframes/model';
 import { logErrors } from './sentry';
 import { toDate } from '@blockframes/firebase-utils/firebase-utils';
+import { BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils/types';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -44,18 +45,6 @@ db.collection(META_COLLECTION_NAME)
 ///////////////////////////////////
 // DOCUMENT ON-CHANGES FUNCTIONS //
 ///////////////////////////////////
-
-export interface BlockframesSnapshot<T = admin.firestore.DocumentData> {
-  id: string,
-  exists: boolean,
-  ref: admin.firestore.DocumentReference<T>,
-  data(): T | undefined,
-}
-
-export interface BlockframesChange<T = admin.firestore.DocumentData> {
-  before: BlockframesSnapshot<T>,
-  after: BlockframesSnapshot<T>,
-}
 
 function createBlockframesSnapshot(snap: admin.firestore.DocumentSnapshot): BlockframesSnapshot {
   return {

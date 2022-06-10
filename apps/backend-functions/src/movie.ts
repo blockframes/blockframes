@@ -1,5 +1,5 @@
-import { BlockframesChange, BlockframesSnapshot, db } from './internals/firebase';
-import { triggerNotifications, createNotification } from './notification';
+import { db } from './internals/firebase';
+import { triggerNotifications } from './notification';
 import { getOrganizationsOfMovie } from './data/internals';
 import { cleanMovieMedias, moveMovieMedia } from './media';
 import { EventContext } from 'firebase-functions';
@@ -21,13 +21,14 @@ import {
   getAllAppsExcept,
   getMovieAppAccess,
   createInternalDocumentMeta,
-  createPublicUser
+  createPublicUser,
+  createNotification
 } from '@blockframes/model';
-import { getDocument } from '@blockframes/firebase-utils';
+import { BlockframesChange, BlockframesSnapshot, getDocument } from '@blockframes/firebase-utils';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
-type AppConfigMap = Partial<{ [app in App]: MovieAppConfig<Date> }>;
+type AppConfigMap = Partial<{ [app in App]: MovieAppConfig }>;
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(snap: BlockframesSnapshot<Movie>) {

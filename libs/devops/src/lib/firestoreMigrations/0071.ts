@@ -1,6 +1,5 @@
-import { Timestamp, Term } from '@blockframes/model';
-import firestore from 'firebase/firestore';
-import { Firestore, runChunks } from '@blockframes/firebase-utils';
+import { Term } from '@blockframes/model';
+import { Firestore, runChunks, toDate } from '@blockframes/firebase-utils';
 
 /**
  * Update time in terms duration
@@ -11,17 +10,17 @@ export async function upgrade(db: Firestore) {
   const terms = await db.collection('terms').get();
 
   return runChunks(terms.docs, async (doc) => {
-    const term = doc.data() as Term<Timestamp>;
+    const term = toDate(doc.data()) as Term;
 
 
-    const from = term.duration.from.toDate();
+    const from = term.duration.from;
     from.setHours(0, 0, 0, 0);
-    term.duration.from = firestore.Timestamp.fromDate(from);
+    term.duration.from = from;
 
 
-    const to = term.duration.to.toDate();
+    const to = term.duration.to;
     to.setHours(0, 0, 0, 0);
-    term.duration.to = firestore.Timestamp.fromDate(to);
+    term.duration.to = to;
 
 
     await doc.ref.set(term);

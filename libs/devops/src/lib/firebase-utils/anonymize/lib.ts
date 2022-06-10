@@ -5,7 +5,7 @@ import {
   User,
   PublicUser,
   createPublicUser,
-  NotificationDocument,
+  Notification,
   createPublicOrganization,
   Organization,
   PublicOrganization,
@@ -96,7 +96,7 @@ function processInvitation(i: Invitation): Invitation {
   };
 }
 
-function processNotification(n: NotificationDocument): NotificationDocument {
+function processNotification(n: Notification): Notification {
   return {
     ...n,
     organization: updateOrg(n.organization),
@@ -188,7 +188,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
       // INVITATIONS
       return { docPath, content: processInvitation(doc) };
     }
-    if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'toUserId')) {
+    if (docPath.includes('notifications/') && hasKeys<Notification>(doc, 'toUserId')) {
       // NOTIFICATIONS
       return { docPath, content: processNotification(doc) };
     }

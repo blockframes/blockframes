@@ -1,15 +1,9 @@
 import { difference } from 'lodash';
-
-/**
- * Organization-related code,
- *
- * Right now this is solely used to update our algolia index (full-text search on org names).
- */
-import { BlockframesChange, BlockframesSnapshot, db } from './internals/firebase';
-import { getUser } from "./internals/utils";
+import { db } from './internals/firebase';
+import { getUser } from './internals/utils';
 import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
-import { triggerNotifications, createNotification } from './notification';
+import { triggerNotifications } from './notification';
 import { getMailSender } from '@blockframes/utils/apps';
 import { getAdminIds } from './data/internals';
 import { cleanOrgMedias } from './media';
@@ -18,7 +12,7 @@ import { algolia, deleteObject, storeSearchableOrg, storeSearchableUser } from '
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import {
   User,
-  NotificationDocument,
+  Notification,
   NotificationTypes,
   PublicUser,
   PermissionsDocument,
@@ -30,10 +24,11 @@ import {
   Organization,
   createPublicOrganization,
   createInternalDocumentMeta,
-  createPublicUser
+  createPublicUser,
+  createNotification
 } from '@blockframes/model';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { getDocument } from '@blockframes/firebase-utils';
+import { BlockframesChange, BlockframesSnapshot, getDocument } from '@blockframes/firebase-utils';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: Organization, user: PublicUser) {
@@ -259,7 +254,7 @@ export const accessToAppChanged = async (
   const adminIds = await getAdminIds(data.orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
   const organization = await getDocument<Organization>(`orgs/${data.orgId}`);
-  const notifications: NotificationDocument[] = [];
+  const notifications: Notification[] = [];
   admins.map(async admin => {
     const notification = createNotification({
       toUserId: admin.uid,

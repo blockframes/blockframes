@@ -1,6 +1,5 @@
-import { PublicUser, PermissionsDocument, OrganizationDocument } from '@blockframes/model';
+import { PublicUser, PermissionsDocument, Organization } from '@blockframes/model';
 import { fakeUserData } from '@blockframes/testing/cypress/browser';
-import { Timestamp } from 'firebase/firestore';
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
@@ -22,7 +21,7 @@ export const user: PublicUser = {
   },
 };
 
-export const org: OrganizationDocument = {
+export const org: Organization = {
   id: orgId,
   denomination: {
     public: null,
@@ -33,7 +32,7 @@ export const org: OrganizationDocument = {
   status: 'accepted',
   activity: 'actor',
   _meta: {
-    createdAt: Timestamp.now(),
+    createdAt: new Date(),
     createdFrom: 'festival',
     createdBy: adminUid,
   },

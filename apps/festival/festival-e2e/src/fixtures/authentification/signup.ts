@@ -1,6 +1,5 @@
-import { PublicUser, PermissionsDocument, OrganizationDocument } from '@blockframes/model';
+import { PublicUser, PermissionsDocument, Organization } from '@blockframes/model';
 import { createFakeUserDataArray } from '@blockframes/testing/cypress/browser';
-import { Timestamp } from 'firebase/firestore';
 
 const newUserUid = '0-e2e-newUserUid';
 const marketplaceOrgAdminUid = '0-e2e-marketplaceOrgAdminUid';
@@ -46,7 +45,7 @@ interface E2EOrganization {
   dashboardAccess: boolean;
 }
 
-const e2eOrg = (data: E2EOrganization): OrganizationDocument => {
+const e2eOrg = (data: E2EOrganization): Organization => {
   const { id, name, userIds, email, dashboardAccess } = data;
   return {
     id,
@@ -59,7 +58,7 @@ const e2eOrg = (data: E2EOrganization): OrganizationDocument => {
     status: 'accepted',
     activity: 'actor',
     _meta: {
-      createdAt: Timestamp.now(),
+      createdAt: new Date(),
       createdFrom: 'festival',
       createdBy: marketplaceOrgAdminUid,
     },

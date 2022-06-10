@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  EventBase,
   EventTypes,
   Event,
   ScreeningEvent,
@@ -9,7 +8,6 @@ import {
   isMeeting,
   isScreening,
   SlateEvent,
-  Timestamp,
   EventMeta
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -87,7 +85,7 @@ export class EventService extends BlockframesCollection<Event> {
   }
 
   /** Verify if the current user / organization is owner of an event */
-  isOwner(event: EventBase<Date | Timestamp, unknown>) {
+  isOwner(event: Event<unknown>) {
     return event?.ownerOrgId === this.orgService.org?.id;
   }
 
@@ -111,9 +109,9 @@ export class EventService extends BlockframesCollection<Event> {
     return e;
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<Event<Timestamp>>): Event<Date> {
-    const event = super.fromFirestore(snapshot) as Event<Date>;
-    return createCalendarEvent<Date>(event, this.isOwner(event));
+  protected fromFirestore(snapshot: DocumentSnapshot<Event>): Event {
+    const event = super.fromFirestore(snapshot) as Event;
+    return createCalendarEvent(event, this.isOwner(event));
   }
 
   /** Query events based on types */

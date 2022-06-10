@@ -1,18 +1,18 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { BlockframesChange, BlockframesSnapshot, db } from './internals/firebase';
+import { db } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils/algolia';
-import { getCollection, getDocument, getDocumentRef } from '@blockframes/firebase-utils/firebase-utils';
+import { getCollection, getDocument, getDocumentRef, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 import { getMailSender, applicationUrl } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { production } from './environments/environment';
 import { cleanUserMedias } from './media';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { User, PublicUser, InvitationDocument, PermissionsDocument, App, ErrorResultResponse, Organization } from '@blockframes/model';
+import { User, PublicUser, Invitation, PermissionsDocument, App, ErrorResultResponse, Organization } from '@blockframes/model';
 import { registerToNewsletters, updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 
@@ -208,7 +208,7 @@ export async function onUserDelete(userSnapshot: BlockframesSnapshot<PublicUser>
   }
 
   // remove all invitations related to user
-  const invitations = await getCollection<InvitationDocument>(`invitations`)
+  const invitations = await getCollection<Invitation>(`invitations`)
   invitations
     .filter(invitation => invitation.fromUser?.uid === user.uid || invitation.toUser?.uid === user.uid)
     .map(invitation => invitation.id)

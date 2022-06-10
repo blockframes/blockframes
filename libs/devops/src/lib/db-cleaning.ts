@@ -1,5 +1,5 @@
 import {
-  NotificationDocument,
+  Notification,
   PublicUser,
   PublicOrganization,
   PermissionsDocument,
@@ -110,7 +110,7 @@ export function cleanNotifications(
   return runChunks(
     notifications.docs,
     async (doc: QueryDocumentSnapshot) => {
-      const notification = toDate(doc.data()) as NotificationDocument;
+      const notification = toDate(doc.data()) as Notification;
       const outdatedNotification = !isNotificationValid(notification, existingIds);
       if (outdatedNotification) {
         await doc.ref.delete();
@@ -125,7 +125,7 @@ export function cleanNotifications(
 
 async function cleanOneNotification(
   doc: QueryDocumentSnapshot,
-  notification: NotificationDocument
+  notification: Notification
 ) {
   if (notification.organization) {
     const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
@@ -380,7 +380,7 @@ export function cleanDocsIndex(
  * @param notification the notification to check
  * @param existingIds the ids to compare with notification fields
  */
-function isNotificationValid(notification: NotificationDocument, existingIds: string[]): boolean {
+function isNotificationValid(notification: Notification, existingIds: string[]): boolean {
   if (!existingIds.includes(notification.toUserId)) return false;
 
   // Cleaning notifications more than n days

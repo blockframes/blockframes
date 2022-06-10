@@ -1,10 +1,9 @@
 import { DocumentMeta, createDocumentMeta } from './meta';
 import type { Media, Territory, ContractStatus } from './static';
-import { Timestamp } from './timestamp';
 import { createMailTerm, Duration } from './terms';
 import { BucketContract } from './bucket';
 
-export function createMailContract(contract: BucketContract<Date>) {
+export function createMailContract(contract: BucketContract) {
   const formatter = new Intl.NumberFormat('en-US');
   const price = contract.price ? formatter.format(contract.price) : '';
 
@@ -15,14 +14,14 @@ export function createMailContract(contract: BucketContract<Date>) {
   });
 }
 
-export interface Holdback<D extends Timestamp | Date = Date> {
+export interface Holdback {
   territories: Territory[];
   medias: Media[];
-  duration: Duration<D>;
+  duration: Duration;
 }
 
-export interface Contract<D extends Timestamp | Date = Date> {
-  _meta: DocumentMeta<D>;
+export interface Contract {
+  _meta: DocumentMeta;
   id: string;
   type: 'mandate' | 'sale';
   status: ContractStatus;
@@ -43,11 +42,11 @@ export interface Contract<D extends Timestamp | Date = Date> {
   stakeholders: string[];
 }
 
-export interface Mandate<D extends Timestamp | Date = Date> extends Contract<D> {
+export interface Mandate extends Contract {
   type: 'mandate';
 }
 
-export interface Sale<D extends Timestamp | Date = Date> extends Contract<D> {
+export interface Sale extends Contract {
   type: 'sale';
   /** Create the anccestors organization when you create the sale */
   ancestors: string[]; // ??? The orgs that have a parent contract with the
@@ -56,14 +55,12 @@ export interface Sale<D extends Timestamp | Date = Date> extends Contract<D> {
   specificity?: string;
   delivery?: string;
   declineReason?: string;
-  holdbacks: Holdback<D>[];
+  holdbacks: Holdback[];
 }
-
-export type ContractDocument = Mandate<Timestamp> | Sale<Timestamp>;
 
 export type MailContract = ReturnType<typeof createMailContract>;
 
-export function createHoldback(params: Partial<Holdback<Date>> = {}): Holdback {
+export function createHoldback(params: Partial<Holdback> = {}): Holdback {
   return {
     territories: [],
     medias: [],

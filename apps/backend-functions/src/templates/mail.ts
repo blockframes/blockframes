@@ -373,7 +373,7 @@ export function contractCreatedEmail(
 }
 
 /** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
-export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: Organization, bucket: Bucket<Date>): EmailTemplateRequest {
+export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: Organization, bucket: Bucket): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMM, yyyy');
   const mailBucket = getBucketEmailData(bucket);
   const data = { org, bucket: mailBucket, user: toUser, baseUrl: appUrl.content, date };
@@ -382,7 +382,7 @@ export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 }
 
 /**To inform buyer that his offer has been successfully created. */
-export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: Organization, offer: Offer, bucket: Bucket<Date>): EmailTemplateRequest {
+export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: Organization, offer: Offer, bucket: Bucket): EmailTemplateRequest {
   const mailBucket = getBucketEmailData(bucket);
 
   const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;

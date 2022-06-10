@@ -1,17 +1,17 @@
 import { App } from './static';
 
-export interface DocumentMeta<D> {
+export interface DocumentMeta {
   createdBy: string,
   updatedBy?: string,
   deletedBy?: string,
-  createdAt: D,
-  updatedAt?: D,
-  deletedAt?: D,
+  createdAt: Date,
+  updatedAt?: Date,
+  deletedAt?: Date,
   createdFrom?: App,
   emailVerified?: boolean
 }
 
-export function createDocumentMeta(meta: Partial<DocumentMeta<Date>> = {}): DocumentMeta<Date> {
+export function createDocumentMeta(meta: Partial<DocumentMeta> = {}): DocumentMeta {
   return {
     createdBy: '',
     createdAt: new Date(),
@@ -19,6 +19,6 @@ export function createDocumentMeta(meta: Partial<DocumentMeta<Date>> = {}): Docu
   }
 }
 
-export function createInternalDocumentMeta(meta: Partial<DocumentMeta<Date>> = {}): DocumentMeta<Date> {
+export function createInternalDocumentMeta(meta: Partial<DocumentMeta> = {}): DocumentMeta {
   return createDocumentMeta({ createdBy: 'internal', ...meta });
 }

@@ -1,10 +1,10 @@
-import { BlockframesChange, BlockframesSnapshot, db } from './internals/firebase';
+import { db } from './internals/firebase';
 import { EventContext } from 'firebase-functions';
 import { centralOrgId } from '@env';
-import { Contract, Negotiation, Organization, Sale, NotificationTypes, Offer, ContractStatus, createInternalDocumentMeta } from '@blockframes/model';
-import { createNotification, triggerNotifications } from './notification';
+import { Contract, Negotiation, Organization, Sale, NotificationTypes, Offer, ContractStatus, createInternalDocumentMeta, createNotification } from '@blockframes/model';
+import { triggerNotifications } from './notification';
 import { getReviewer, isInitial } from '@blockframes/contract/negotiation/utils'
-import { getDocument, queryDocument, queryDocuments } from '@blockframes/firebase-utils/firebase-utils';
+import { getDocument, queryDocument, queryDocuments, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 
 // KEEP THE OFFER STATUS IN SYNC WITH IT'S CONTRACTS AND NEGOTIATIONS
 async function updateOfferStatus(contract: Contract) {
@@ -51,7 +51,7 @@ async function updateOfferStatus(contract: Contract) {
   })
 }
 
-export async function onNegotiationCreated(negotiationSnapshot: BlockframesSnapshot<Negotiation<Date>>) {
+export async function onNegotiationCreated(negotiationSnapshot: BlockframesSnapshot<Negotiation>) {
   const negotiation = negotiationSnapshot.data();
   const _meta = negotiation._meta;
   const initial = negotiation.initial;
