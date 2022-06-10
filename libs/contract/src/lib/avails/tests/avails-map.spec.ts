@@ -4,7 +4,7 @@ import {
   availFrance, availsSVODArgentina, availsPayTVArgentina,
   availsGermany, availsBelgium, availsExistingEndedSales,
   availsOngoingSales, availsTerritoryWithExclusivity, availsTerritoryWithoutExclusivity,
-  availsFranceLuxembourg, availsAllButSouthKorea, availsPayTV, availsPlanes,
+  availsFranceLuxembourg, availsAllButSouthKorea, availsPayTV, availsInflight,
 } from './../fixtures/availsFilters';
 import {
   mandateMovie1,
@@ -31,7 +31,7 @@ describe('Test territoryAvailabilities pure function', () => {
           from: new Date('01/01/2020'),
           to: new Date('01/01/2030')
         },
-        medias: ['theatrical'],
+        medias: ['educational'],
         territories: ['france', 'germany', 'greece'],
         exclusive: true
       }],
@@ -48,7 +48,7 @@ describe('Test territoryAvailabilities pure function', () => {
           from: new Date('01/01/2020'),
           to: new Date('01/01/2030')
         },
-        medias: ['theatrical'],
+        medias: ['educational'],
         territories: ['germany'],
         exclusive: true
       }],
@@ -66,7 +66,7 @@ describe('Test territoryAvailabilities pure function', () => {
           from: new Date('06/01/2021'),
           to: new Date('12/01/2021')
         },
-        medias: ['theatrical'],
+        medias: ['educational'],
         territories: ['greece'],
         exclusive: true
       }],
@@ -205,8 +205,8 @@ describe('Test terms are out of movie mandate', () => {
     expect(markers.available.find(m => m.slug === 'angola')).not.toBe(undefined);
   })
 
-  it('Check availability on china with planes media', () => {
-    const data = { avails: availsPlanes, mandates: [mandateMovie6], sales: [], bucketContracts: [] };
+  it('Check availability on china with inflight media', () => {
+    const data = { avails: availsInflight, mandates: [mandateMovie6], sales: [], bucketContracts: [] };
     const markers = territoryAvailabilities(data);
     expect(markers.available.find(m => m.slug === 'china')).not.toBe(undefined);
     expect(markers.available.find(m => m.slug === 'brazil')).not.toBe(undefined);

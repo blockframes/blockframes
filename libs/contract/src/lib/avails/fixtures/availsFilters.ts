@@ -8,7 +8,7 @@ export const availDetailsExclusive: AvailsFilter = {
   },
   exclusive: true,
   territories: [],
-  medias: ['theatrical']
+  medias: ['educational']
 };
 
 export const availSouthKorea: AvailsFilter = {
@@ -38,7 +38,7 @@ export const availFrance: AvailsFilter = {
   },
   exclusive: false,
   territories: ['france'],
-  medias: ['planes']
+  medias: ['inflight']
 };
 
 export const availsExistingEndedSales: AvailsFilter = {
@@ -189,7 +189,7 @@ export const availsListFrance: AvailsFilter = {
   },
   exclusive: false,
   territories: ['france'],
-  medias: ['planes']
+  medias: ['inflight']
 };
 
 export const availsListGermanyRussiaCzech: AvailsFilter = {
@@ -282,14 +282,14 @@ export const availsPayTV: AvailsFilter = {
   medias: ['payTv']
 };
 
-export const availsPlanes: AvailsFilter = {
+export const availsInflight: AvailsFilter = {
   duration: {
     from: new Date('02/28/2022'),
     to: new Date('02/23/2023'),
   },
   exclusive: true,
   territories: [],
-  medias: ['planes']
+  medias: ['inflight']
 };
 
 
@@ -300,7 +300,7 @@ export const availsBrewster1: AvailsFilter = {
   },
   exclusive: true,
   territories: ['france', 'china'],
-  medias: ['planes']
+  medias: ['inflight']
 };
 
 export const availsBrewster2: AvailsFilter = {
@@ -330,5 +330,5 @@ export const availsBrewster4: AvailsFilter = {
   },
   exclusive: true,
   territories: ['france', 'china'],
-  medias: ['planes', 'payTv']
+  medias: ['inflight', 'payTv']
 };
