@@ -6,12 +6,13 @@ import { MetricCardListComponent } from './metric-card-list.component';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [
     CommonModule,
     MatTooltipModule,
-
+    MatButtonModule,
     // Material
     MatIconModule
   ],

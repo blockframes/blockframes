@@ -148,10 +148,6 @@ export class HomeComponent {
 
   public selectCountry(country:string){
     scrollIntoView(this.tableTitle.nativeElement);
-    const scrollDuration = country ? 1000 : 0;
-    setTimeout(() => {
-      this.selectedCountry = country;
-      this.cdr.markForCheck();
-    }, scrollDuration);
+    this.selectedCountry = country;
   }
 }

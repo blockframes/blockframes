@@ -1,10 +1,10 @@
-<mat-icon
-  class="refresh_icon"
-  svgIcon="refresh_filters"
-  *ngIf="showReset"
-  matTooltip="Reset selection"
-  (click)="toggleSelect('')"
-></mat-icon>
+<article>
+  <ng-container *ngIf="selected">
+    <button mat-icon-button (click)="toggleSelect('')" matTooltip="Reset selection" class="refresh_icon">
+      <mat-icon svgIcon="refresh_filters"></mat-icon>
+    </button>
+  </ng-container>
+</article>
 <ul>
   <li *ngFor="let card of cards">
     <button (click)="toggleSelect(card.title)" class="surface mat-body-2" [ngClass]="{ 'selected': card.selected, 'selectable': selectable }">
