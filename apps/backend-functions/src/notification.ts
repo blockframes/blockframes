@@ -322,6 +322,7 @@ export async function onNotificationCreate(snap: BlockframesSnapshot<Notificatio
         break;
     }
 
+    // ! TODO  #8376 Don't do this - unify instantiation of Firestore
     const db = admin.firestore();
     await db.collection('notifications').doc(notification.id).set({ email: notification.email }, { merge: true });
   }
