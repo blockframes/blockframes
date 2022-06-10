@@ -12,10 +12,10 @@ import {
   displayName,
   EventName,
 } from '@blockframes/model';
-import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
+import { filters } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
-import { aggregatePerUser, counter } from '@blockframes/analytics/utils';
+import { aggregatePerUser, countedToAnalyticData, counter } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { NavigationService } from "@blockframes/ui/navigation.service";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
@@ -121,11 +121,13 @@ export class TitleAnalyticsComponent {
   );
 
   orgActivity$ = this.titleAnalytics$.pipe(
-    map(analytics => counter(analytics, 'org.activity', 'orgActivity'))
+    map(analytics => counter(analytics, 'org.activity')),
+    map(counted => countedToAnalyticData(counted, 'orgActivity'))
   );
 
   territoryActivity$ = this.titleAnalytics$.pipe(
-    map(analytics => counter(analytics, 'org.addresses.main.country', 'territories')),
+    map(analytics => counter(analytics, 'org.addresses.main.country')),
+    map(counted => countedToAnalyticData(counted, 'territories'))
   );
 
   buyerAnalytics$ = this.titleAnalytics$.pipe(
@@ -133,10 +135,9 @@ export class TitleAnalyticsComponent {
   );
 
   filters = {
-    orgActivity: getStaticModelFilter('orgActivity'),
-    territories: getStaticModelFilter('territories'),
     name: nameFilter,
-    email: emailFilter
+    email: emailFilter,
+    ...filters
   };
   filterValue?: string;
 
@@ -178,7 +179,7 @@ export class TitleAnalyticsComponent {
     private navService: NavigationService,
     private eventService: EventService,
     private invitationService: InvitationService,
-  ) { }
+  ) {}
 
   goBack() {
     this.navService.goBack(1);
