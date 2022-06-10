@@ -9,7 +9,7 @@ const nonOverlappingTerm: Term<Date> = {
     from: new Date('01/01/2024'),
     to: new Date('12/31/2026')
   },
-  medias: ['planes'],
+  medias: ['inflight'],
   territories: ['japan'],
   exclusive: true,
   criteria: [],
