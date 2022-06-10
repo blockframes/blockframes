@@ -11,6 +11,7 @@ import {
   isScreening,
   displayName,
   EventName,
+  getGuest,
 } from '@blockframes/model';
 import { filters } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -21,7 +22,6 @@ import { NavigationService } from "@blockframes/ui/navigation.service";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
 import { eventTime } from "@blockframes/event/pipes/event-time.pipe";
-import { getGuest } from "@blockframes/invitation/pipes/guest.pipe";
 import { InvitationService } from "@blockframes/invitation/service";
 import { EventService } from "@blockframes/event/service";
 import { OrganizationService } from '@blockframes/organization/service';

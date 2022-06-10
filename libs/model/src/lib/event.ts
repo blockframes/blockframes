@@ -15,6 +15,12 @@ export interface MeetingAttendee extends Person {
   status: AttendeeStatus,
 }
 
+export interface ScreeningAttendee extends Person { //TODO : #7555
+  uid: string;
+  email: string;
+  status: 'attended'; //TODO: #7555 may be used later (attending status in screenings statistics for exemple)
+}
+
 export interface Meeting {
   organizerUid: string;
   description: string;
@@ -47,6 +53,7 @@ export interface Screening {
   titleId: string;
   description: string;
   organizerUid: string;
+  attendees: Record<string, ScreeningAttendee>;
 }
 
 // This variable define the duration (in seconds) of a video link before it expires
@@ -134,6 +141,7 @@ export function createScreening(screening: Partial<Screening>): Screening {
     titleId: '',
     description: '',
     organizerUid: '',
+    attendees: {},
     ...screening,
   };
 }
@@ -183,6 +191,14 @@ export function createMeetingAttendee(
     firstName: user.firstName,
     lastName: user.lastName,
     status,
+  };
+}
+
+export function createScreeningAttendee(user: User | AnonymousCredentials): ScreeningAttendee {
+  return {
+    uid: user.uid,
+    email: user.email,
+    status: 'attended'
   };
 }
 

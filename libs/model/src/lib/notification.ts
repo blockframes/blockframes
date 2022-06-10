@@ -35,6 +35,8 @@ export const notifications = {
     'invitationToAttendSlateCreated',
     'screeningRequested',
     'screeningRequestSent',
+    'userMissedScreening',
+    'userAttendedScreening',
   ] as const,
   shared: [
     // Notifications relative to movies
