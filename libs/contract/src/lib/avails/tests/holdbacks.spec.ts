@@ -32,7 +32,7 @@ const nonCollidingMediaA: Media[] = [
   'payTv', 'freeTv', 'payPerView', 'est', 'nVod', 'aVod', 'fVod',
 ]
 const nonCollidingMediaB: Media[] = [
-  'theatrical', 'video', 'planes', 'boats', 'hotels', 'educational', 'rental',
+  'inflight', 'boats', 'hotels', 'educational', 'rental',
 ]
 const collidingMediaA = nonCollidingMediaA
 const collidingMediaB = [...nonCollidingMediaB, collidingMediaA[0]]
