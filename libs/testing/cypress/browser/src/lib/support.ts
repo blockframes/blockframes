@@ -1,3 +1,6 @@
+import { OrgActivity, Territory, PublicUser } from '@blockframes/model';
+import { browserAuth } from '@blockframes/testing/cypress/browser';
+import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 
 export function awaitElementDeletion(selector: string, timeout?: number) {
@@ -64,3 +67,57 @@ export function interceptEmail(option: InterceptOption) {
 export function deleteEmail(id: string) {
   return cy.mailosaurDeleteMessage(id);
 }
+
+//* AUTHENTIFICATION *//
+
+export function fillCommonInputs(user: PublicUser) {
+  get('email').type(user.email);
+  get('first-name').type(user.firstName);
+  get('last-name').type(user.lastName);
+  get('password').type(USER_FIXTURES_PASSWORD);
+  get('password-confirm').type(USER_FIXTURES_PASSWORD);
+  check('terms');
+  check('gdpr');
+}
+
+export function addNewCompany(data: { name: string; activity: OrgActivity; country: Territory }) {
+  const { name, activity, country } = data;
+  get('org').type(name);
+  get('new-org').click();
+  get('activity').click();
+  getInList('activity_', activity);
+  get('activity').should('contain', activity);
+  get('country').click();
+  getInList('country_', country);
+  get('country').should('contain', country);
+  get('role').contains('Buyer').click();
+}
+
+export function selectCompany(orgName: string) {
+  get('org').type(orgName);
+  getInList('org_', orgName);
+}
+
+export function verifyInvitation(orgAdminEmail: string, user: PublicUser, expectedApp?: 'marketplace' | 'dashboard') {
+  browserAuth.signinWithEmailAndPassword(orgAdminEmail);
+  cy.visit('');
+  assertUrlIncludes(`${expectedApp}/home`);
+  if (expectedApp == 'marketplace') get('skip-preferences').click();
+  get('invitations-link').click();
+  get('invitation').first().should('contain', `${user.firstName} ${user.lastName} wants to join your organization.`);
+  get('invitation-status').first().should('contain', 'Accepted');
+}
+
+//* ------------------------------------- *//
+
+//* MAINTENANCE *//
+
+export function refreshIfMaintenance() {
+  cy.get('festival-root').then($el => {
+    const $children = $el.children();
+    const childrenTagNames = $children.toArray().map(child => child.tagName);
+    if (childrenTagNames.includes('blockframes-maintenance'.toUpperCase())) get('maintenance-refresh').click();
+  });
+}
+
+//* ------------------------------------- *//

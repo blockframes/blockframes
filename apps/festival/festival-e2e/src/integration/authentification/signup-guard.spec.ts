@@ -9,17 +9,14 @@ import {
   getInList,
   check,
   uncheck,
+  // cypress specific functions
+  addNewCompany,
+  fillCommonInputs,
 } from '@blockframes/testing/cypress/browser';
-import {
-  OrgActivity,
-  Territory,
-  PublicUser,
-} from '@blockframes/model';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { newUser, newOrg } from '../../fixtures/authentification/signup';
+import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 
 describe('Signup', () => {
-
   beforeEach(() => {
     cy.visit('');
     firestore.clearTestData();
@@ -32,12 +29,12 @@ describe('Signup', () => {
     maintenance.start();
     adminAuth.createUser({ uid: newUser.uid, email: newUser.email });
     adminAuth.updateUser({ uid: newUser.uid, update: { emailVerified: true } });
-    firestore.create([{[`users/${newUser.uid}`]: newUser}]);
+    firestore.create([{ [`users/${newUser.uid}`]: newUser }]);
     maintenance.end();
     cy.visit('auth/identity');
     get('cookies').click();
     fillCommonInputs(newUser);
-    addNewCompany(newOrg)
+    addNewCompany(newOrg);
     get('submit').click();
     get('existing-email').should('exist');
   });
@@ -162,27 +159,3 @@ describe('Signup', () => {
     get('submit').should('be.enabled');
   });
 });
-
-
-//* JS Functions *//
-
-function fillCommonInputs(user: PublicUser) {
-  get('email').type(user.email);
-  get('first-name').type(user.firstName);
-  get('last-name').type(user.lastName);
-  get('password').type(USER_FIXTURES_PASSWORD);
-  get('password-confirm').type(USER_FIXTURES_PASSWORD);
-  check('terms');
-  check('gdpr');
-}
-
-function addNewCompany(data: { name: string; activity: OrgActivity; country: Territory }) {
-  const { name, activity, country } = data;
-  get('org').type(name);
-  get('new-org').click();
-  get('activity').click();
-  getInList('activity_', activity);
-  get('country').click();
-  getInList('country_', country);
-  get('role').contains('Buyer').click();
-}
