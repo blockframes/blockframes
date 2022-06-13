@@ -55,7 +55,7 @@
     </section>
     
     <ng-template #showVideo>
-      <article class="screen">
+      <article *ngIf="fileRef$ | async as fileRef" class="screen">
         <video-viewer [eventId]="event.id" [ref]="fileRef" class="overlay" (stateChange)="isPlaying = $event === 'play'"></video-viewer>
       </article>
     </ng-template>
