@@ -355,7 +355,7 @@ describe('Test terms out of movie mandates', () => {
     assertDate(to, mandateTo);
   });
 
-  it('Check exclusive on planes in France and China', () => {
+  it('Check exclusive on inflight in France and China', () => {
     const { available: [{ from, to }] } = durationAvailabilities(availsBrewster1, [mandateMovie7], [sale1Movie7, sale2Movie7], []);
     assertDate(to, new Date('12/31/2026'));
     assertDate(from, new Date('01/01/2025'));

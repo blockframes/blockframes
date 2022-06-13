@@ -11,7 +11,7 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { TwilioService } from '@blockframes/utils/twilio';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getFileExtension } from '@blockframes/utils/file-sanitizer';
-import { ErrorResultResponse, extensionToType } from '@blockframes/model';
+import { createScreeningAttendee, ErrorResultResponse, extensionToType } from '@blockframes/model';
 import { MediaService } from '@blockframes/media/service';
 import { InvitationService } from '@blockframes/invitation/service';
 import { filter, pluck, scan, switchMap } from 'rxjs/operators';
@@ -52,7 +52,7 @@ export class SessionComponent implements OnInit, OnDestroy {
   public showSession = true;
   public mediaContainerSize: string;
   public visioContainerSize: string;
-  public fileRef: StorageVideo;
+  public fileRef$ = new BehaviorSubject(null);
 
   public creatingControl$ = new BehaviorSubject(false);
 
@@ -209,9 +209,14 @@ export class SessionComponent implements OnInit, OnDestroy {
         // SCREENING
       } else if (isScreening(event)) {
         this.dynTitle.setPageTitle(event.title, 'Screening');
+        // create attendee in event
+        const attendee = createScreeningAttendee(this.authService.anonymouseOrRegularProfile);
+        const meta: Screening = { ...event.meta, attendees: { ...event.meta.attendees, [this.authService.uid]: attendee } };
+        await this.service.update(event.id, { meta });
+
         if ((event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
-          this.fileRef = movie.promotional.videos?.screener;
+          this.fileRef$.next(movie.promotional.videos?.screener);
           this.trackWatchTime(event);
         }
 
@@ -220,7 +225,7 @@ export class SessionComponent implements OnInit, OnDestroy {
         this.dynTitle.setPageTitle(event.title, 'Slate');
         if ((event.meta as Slate).videoId) {
           const org = await this.orgService.getValue(event.ownerOrgId);
-          this.fileRef = org.documents.videos.find(v => v.fileId === event.meta.videoId);
+          this.fileRef$.next(org.documents.videos.find(v => v.fileId === event.meta.videoId));
           this.trackWatchTime(event);
         }
       }
