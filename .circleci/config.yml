@@ -314,7 +314,7 @@ jobs:
   festival-e2e:
     executor: blockframes-ci
     environment:
-      PROJECT_ID: demo-blockframes
+      PROJECT_ID: blockframes-ci
     steps:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=e2e
