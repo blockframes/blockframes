@@ -86,3 +86,19 @@ export interface InvitationWithAnalytics extends Invitation {
   analytics: Analytics[];
 };
 
+type Guest<type> = type extends 'user' ? Invitation['toUser'] : Invitation['toOrg'];
+
+/**
+ * Get the guest of an invitation
+ */
+ export function getGuest(invitation: Invitation | InvitationDocument, guestType: 'user'): (Invitation| InvitationDocument)['toUser']
+ export function getGuest(invitation: Invitation | InvitationDocument, guestType: 'org'): (Invitation | InvitationDocument)['toOrg']
+ export function getGuest(invitation: Invitation | InvitationDocument, guestType: 'user' | 'org' = 'user'): Guest<typeof guestType> {
+   const { fromOrg, fromUser, toOrg, toUser, mode } = invitation;
+   if (mode === 'invitation') {
+     return guestType === 'user' ? toUser : toOrg;
+   }
+   if (mode === 'request') {
+     return guestType === 'user' ? fromUser : fromOrg;
+   }
+ }

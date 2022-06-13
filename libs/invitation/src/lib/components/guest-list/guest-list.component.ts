@@ -1,11 +1,10 @@
 import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChild, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { getGuest } from '../../pipes/guest.pipe';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { algolia } from '@env';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Invitation, InvitationStatus } from '@blockframes/model';
+import { getGuest, Invitation, InvitationStatus } from '@blockframes/model';
 
 function filterGuest(invitation: Invitation, search: string) {
   return invitation.toUser?.email.toLowerCase().includes(search)
