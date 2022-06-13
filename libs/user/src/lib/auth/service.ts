@@ -8,7 +8,6 @@ import { intercomId, production } from '@env';
 import { BehaviorSubject, firstValueFrom, Observable, of, Subject, Subscription } from 'rxjs';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { IpService } from '@blockframes/utils/ip';
-import { OrgEmailData } from '@blockframes/utils/emails/utils';
 import { getAnalytics, setUserProperties } from 'firebase/analytics';
 import {
   confirmPasswordReset,
@@ -20,7 +19,7 @@ import {
   UserCredential,
   verifyPasswordResetCode
 } from 'firebase/auth';
-import { ErrorResultResponse } from '@blockframes/model';
+import { ErrorResultResponse, OrgEmailData } from '@blockframes/model';
 import { BlockframesAuth } from '@blockframes/utils/abstract-service';
 import { CallableFunctions, fromRef } from 'ngfire';
 import { doc, DocumentReference, getDoc, writeBatch } from 'firebase/firestore';

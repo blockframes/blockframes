@@ -1,15 +1,22 @@
 import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey, projectId } from '../environments/environment';
 import { groupIds } from '@blockframes/utils/emails/ids';
-export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
-import { emailErrorCodes, EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
+import type { CallableContext } from 'firebase-functions/lib/providers/https';
 import * as admin from 'firebase-admin';
 import { getMailSender, appLogo, applicationUrl, AppLogoValue } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { logger } from 'firebase-functions';
-import { App, appDescription, appName, AppNameValue, ErrorResultResponse } from '@blockframes/model';
+import {
+  App,
+  appDescription,
+  appName,
+  AppNameValue,
+  ErrorResultResponse,
+  EmailTemplateRequest,
+  emailErrorCodes,
+  EmailRequest,
+} from '@blockframes/model';
 
 interface AppMailSetting {
   description: string;

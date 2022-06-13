@@ -3,7 +3,7 @@ import { getUser } from "./internals/utils";
 import { db } from './internals/firebase'
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
-import { 
+import {
   createPublicUser,
   PublicUser,
   OrganizationDocument,
@@ -18,11 +18,11 @@ import {
   InvitationBase,
   AlgoliaOrganization,
   App,
-  ErrorResultResponse
+  ErrorResultResponse,
+  getEventEmailData,
 } from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { Change } from 'firebase-functions';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils/algolia';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';

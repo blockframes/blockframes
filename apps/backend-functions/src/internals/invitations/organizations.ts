@@ -6,9 +6,14 @@ import { userJoinedAnOrganization } from '../../templates/mail';
 import { getAdminIds, getDocument, getOrgAppKey, createPublicOrganizationDocument, createPublicUserDocument, createDocumentMeta } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 import { applicationUrl } from '@blockframes/utils/apps';
-import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { InvitationDocument, InvitationOrUndefined, OrganizationDocument } from '@blockframes/model';
+import {
+  getOrgEmailData,
+  getUserEmailData,
+  InvitationDocument,
+  InvitationOrUndefined,
+  OrganizationDocument,
+} from '@blockframes/model';
 
 async function addUserToOrg(userId: string, organizationId: string) {
   const db = admin.firestore();

@@ -18,17 +18,15 @@ import {
   NegotiationDocument,
   Offer,
   App,
-  appName
-} from '@blockframes/model';
-import { sendMailFromTemplate } from './internals/email';
-import {
+  appName,
   emailErrorCodes,
   EventEmailData,
   getEventEmailData,
   getMovieEmailData,
   getOrgEmailData,
   getUserEmailData
-} from '@blockframes/utils/emails/utils';
+} from '@blockframes/model';
+import { sendMailFromTemplate } from './internals/email';
 import {
   reminderEventToUser,
   userJoinedYourOrganization,
@@ -825,7 +823,7 @@ async function missedScreeningEmail(recipient: User, notification: NotificationD
     org : getOrgEmailData(orgDoc),
     event: getEventEmailData({event, orgName: orgDoc.denomination.full, email: recipient.email}),
     pageUrl: `${appUrl.market}/c/o/marketplace/title/${event.meta.titleId}/main`
-  } 
+  }
   const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.missedScreening, data };
 
   await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
@@ -844,8 +842,8 @@ async function attendedScreeningEmail(recipient: User, notification: Notificatio
     movie: getMovieEmailData(movie),
     event: getEventEmailData({event, orgName: orgDoc.denomination.full, email: recipient.email}),
     pageUrl: `${appUrl.market}/c/o/marketplace/title/${event.meta.titleId}/main`
-  } 
+  }
   const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.attendedScreening, data };
-  
+
   await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
 }

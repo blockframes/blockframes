@@ -11,8 +11,7 @@ import { UserService } from '@blockframes/user/service';
 import { supportMailosaur } from '@blockframes/utils/constants';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { SendgridService } from '@blockframes/utils/emails/sendgrid.service';
-import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
-import { ErrorResultResponse } from '@blockframes/model';
+import { ErrorResultResponse, getUserEmailData, OrgEmailData } from '@blockframes/model';
 import { Observable } from 'rxjs';
 
 interface EmailData {
