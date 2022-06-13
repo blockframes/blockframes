@@ -248,6 +248,9 @@ export class TitleAnalyticsComponent {
   }
 
   public viewBuyerActivity(analytic: AggregatedAnalytic) {
-    this.router.navigate([`../../buyer/${analytic.user.uid}`], { relativeTo: this.route })
+    this.router.navigate(
+      [`../../buyer/`, analytic.user.uid],
+      { relativeTo: this.route }
+    );
   }
 }
