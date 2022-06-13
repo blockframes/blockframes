@@ -173,14 +173,14 @@ export class TitleAnalyticsComponent {
   constructor(
     private movieService: MovieService,
     private route: ActivatedRoute,
-    private router:Router,
+    private router: Router,
     private analyticsService: AnalyticsService,
     private userService: UserService,
     private orgService: OrganizationService,
     private navService: NavigationService,
     private eventService: EventService,
     private invitationService: InvitationService,
-  ) {}
+  ) { }
 
   goBack() {
     this.navService.goBack(1);
@@ -247,7 +247,7 @@ export class TitleAnalyticsComponent {
     return orgId ? this.orgService.valueChanges(orgId) : of(undefined);
   }
 
-  public viewBuyerActivity(analytic:AggregatedAnalytic){
-    this.router.navigate([`../../buyer/${analytic.user.uid}`], {relativeTo:this.route})
+  public viewBuyerActivity(analytic: AggregatedAnalytic) {
+    this.router.navigate([`../../buyer/${analytic.user.uid}`], { relativeTo: this.route })
   }
 }

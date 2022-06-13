@@ -1,9 +1,7 @@
 <article>
-  <ng-container *ngIf="selected">
-    <button mat-icon-button (click)="toggleSelect('')" matTooltip="Reset selection" class="refresh_icon">
-      <mat-icon svgIcon="refresh_filters"></mat-icon>
-    </button>
-  </ng-container>
+  <button *ngIf="selected" mat-icon-button (click)="toggleSelect('')" matTooltip="Reset selection" class="refresh_icon">
+    <mat-icon svgIcon="refresh_filters"></mat-icon>
+  </button>
 </article>
 <ul>
   <li *ngFor="let card of cards">

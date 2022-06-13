@@ -135,7 +135,7 @@ export class HomeComponent {
     @Inject(APP) public app: App,
     private router: Router,
     private route: ActivatedRoute,
-    private cdr:ChangeDetectorRef
+    private cdr: ChangeDetectorRef
   ) { }
 
   public showBuyer(row: AggregatedAnalytic) {
@@ -146,7 +146,7 @@ export class HomeComponent {
     return this.intercom.show();
   }
 
-  public selectCountry(country:string){
+  public selectCountry(country: string) {
     scrollIntoView(this.tableTitle.nativeElement);
     this.selectedCountry = country;
   }
