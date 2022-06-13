@@ -6,6 +6,7 @@ import requiredVars from 'tools/mandatory-env-vars.json';
 import { resolve } from 'path';
 import { firebase as firebaseProd } from 'env/env.blockframes';
 import { OrganizationDocument, App } from '@blockframes/model';
+import { getAuth, getDb, getStorage, initAdmin } from './initialize';
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -70,35 +71,13 @@ interface AdminServices {
 export function loadAdminServices(): AdminServices {
   config();
 
-  if (!admin.apps.length) {
-    admin.initializeApp({
-      ...firebase(),
-      credential: admin.credential.applicationDefault(),
-    });
-  }
-
   return {
-    getCI,
-    auth: admin.auth(),
-    db: admin.firestore(),
+    getCI: () => initAdmin(firebaseCI(), 'CI-app') ,
+    auth: getAuth(),
+    db: getDb(),
     firebaseConfig: firebase(),
-    storage: admin.storage(),
+    storage: getStorage(),
   };
-}
-
-let ci: admin.app.App;
-
-function getCI() {
-  if (!ci) {
-    ci = admin.initializeApp(
-      {
-        projectId: firebaseCI().projectId,
-        credential: admin.credential.applicationDefault(),
-      },
-      'CI-app'
-    );
-  }
-  return ci;
 }
 
 export const sleep = (ms: number) => new Promise<void>(res => setTimeout(res, ms));
