@@ -28,8 +28,11 @@
 
   <article>
     <header>
-      <h3>Buyer was interested in these titles</h3>
-      <button mat-flat-button (click)="exportAnalytics()">Export Analytics</button>
+      <h3>Buyer was interested in these Titles</h3>
+      <button mat-button color="primary" (click)="exportAnalytics()">
+        <mat-icon svgIcon="cloud_download"></mat-icon>
+        <span>Export Analytics</span>
+      </button>
     </header>
 
     <bf-table [source]="filtered$ | async" pagination="5" useFilter>
@@ -79,7 +82,10 @@
   <article>
     <header>
       <h4>Attended Screenings</h4>
-      <button mat-flat-button (click)="exportScreenerAnalytics()">Export to CSV</button>
+      <button mat-button color="primary" (click)="exportScreenerAnalytics()">
+        <mat-icon svgIcon="cloud_download"></mat-icon>
+        <span>Export Analytics in .CSV</span>
+      </button>
     </header>
     <bf-table [source]="invitations$ | async" pagination="5">
       <ng-template colRef="event.movie.title.international" label="Title" let-title sort>
