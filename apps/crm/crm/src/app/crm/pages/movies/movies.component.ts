@@ -8,6 +8,7 @@ import { EventService } from '@blockframes/event/service';
 import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 import { where } from 'firebase/firestore';
+import { format } from 'date-fns';
 
 interface CrmMovie extends Movie {
   org: Organization;
@@ -30,7 +31,7 @@ export class MoviesComponent implements OnInit {
     private eventService: EventService,
     private cdr: ChangeDetectorRef,
     private router: Router
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.movies$ = combineLatest([
@@ -77,7 +78,9 @@ export class MoviesComponent implements OnInit {
         'festival access': m.app.festival.access ? 'yes' : 'no',
         'financiers status': m.app.financiers.status,
         'financiers access': m.app.financiers.access ? 'yes' : 'no',
-        screeningCount: `${m.screeningCount}`,
+        'screeningCount': m.screeningCount,
+        'creation date': format(m._meta.createdAt, 'MM/dd/yyyy'),
+        'last modification date': m._meta.updatedAt ? format(m._meta.updatedAt, 'MM/dd/yyyy') : '--'
       }));
 
       downloadCsvFromJson(exportedRows, 'movies-list');
