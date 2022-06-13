@@ -1,17 +1,12 @@
 import {
+  CrmMovie,
   displayName,
   InvitationDetailed,
   Movie,
-  Organization,
   Person,
   Scope,
   staticModel
 } from '@blockframes/model';
-
-interface CrmMovie extends Movie {
-  org: Organization;
-  screeningCount: number;
-}
 
 export function getStaticModelFilter(scope: Scope) {
   return (input: string, value: string) => {
