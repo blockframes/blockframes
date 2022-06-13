@@ -67,10 +67,13 @@
   </article>
 
   <article class="surface graphs">
-    <analytics-bar-chart [data]="totalAnalyticsPerTitle$ | async"></analytics-bar-chart>
+    <analytics-bar-chart [data]="totalAnalyticsPerTitle$ | async">
+      <p>Learn what Titles this particular Buyer viewed</p>
+    </analytics-bar-chart>
     <analytics-pie-chart class="surface" [data]="aggregatedPerGenre$ | async">
       <mat-icon svgIcon="theater_comedy"></mat-icon>
       <h5>Genres Tendancy</h5>
+      <p>This Buyer was mostly interested in these Genres</p>
     </analytics-pie-chart>
   </article>
 
