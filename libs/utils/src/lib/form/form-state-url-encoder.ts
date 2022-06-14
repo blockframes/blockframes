@@ -1,6 +1,7 @@
 import { ActivatedRoute, Router } from "@angular/router"
 
 
+
 /**
  * Decode the app url and save it as form state
  */
@@ -12,6 +13,15 @@ export function decodeUrl<T=any>(route: ActivatedRoute): T {
   } catch (err) {
     console.warn(err);
   }
+}
+
+/**
+ * Get the date of the decoded url and set it 
+ */
+export function decodeDate(date: string | Date): Date {
+  if (!date || date === 'now') return new Date();
+  // Add more date magic string later ('nextYear', 'lastYear', ...)
+  return new Date(date);
 }
 
 /**
