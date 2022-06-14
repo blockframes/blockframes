@@ -25,7 +25,6 @@
     displayAll="All Rights"
     required
     placeholder="Specify right(s) to filter"
-    [withoutValues]="['theatrical']"
     test-id="medias">
   </static-group>
   <mat-error *ngIf="form.hasError('required', 'medias')">
