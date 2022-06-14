@@ -11,10 +11,10 @@
   <ng-template label="Event Title" colRef="event.title" let-title>
     {{ title }}
   </ng-template>
-  <ng-template colRef="event.start" label="Event start" let-start [sort]="sorts.defaultSort">
+  <ng-template colRef="event.start" label="Event start" let-start sort>
     {{ start | date: 'medium'}}
   </ng-template>
-  <ng-template colRef="event.end" label="Event end" let-end [sort]="sorts.defaultSort">
+  <ng-template colRef="event.end" label="Event end" let-end sort>
     {{ end | date: 'medium'}}
   </ng-template>
   <ng-template label="Event Type" colRef="event.type" let-type sort>
@@ -44,7 +44,7 @@
     </ng-container>
     <ng-template #noOrg>--</ng-template>
   </ng-template>
-  <ng-template colRef="date" label="Invitation date" let-date [sort]="sorts.defaultSort">
+  <ng-template colRef="date" label="Invitation date" let-date sort>
     {{ date | date: 'medium'}}
   </ng-template>
   <ng-template colRef="mode" label="Mode" let-mode sort>

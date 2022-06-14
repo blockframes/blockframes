@@ -17,10 +17,10 @@
     <ng-template colRef="type" label="Type" let-type sort>
       {{type}}
     </ng-template>
-    <ng-template colRef="start" label="Start" let-start [sort]="sorts.defaultSort">
+    <ng-template colRef="start" label="Start" let-start sort>
       {{ start | date: 'medium'}}
     </ng-template>
-    <ng-template colRef="end" label="End" let-end [sort]="sorts.defaultSort">
+    <ng-template colRef="end" label="End" let-end sort>
       {{ end | date: 'medium'}}
     </ng-template>
     <ng-template colRef="hostedBy" label="Hosted by" let-hostedBy sort>
