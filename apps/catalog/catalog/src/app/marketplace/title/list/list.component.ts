@@ -21,12 +21,11 @@ import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie } from '@blockfr
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
-import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
-import { add, isPast } from 'date-fns';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -98,12 +97,8 @@ export class ListComponent implements OnDestroy, OnInit {
       avails = {}
     } = decodeUrl(this.route);
 
-    const currentDate = new Date();
-    const nextYear = add(new Date(), { years: 1 });
-
-    if (avails.duration?.from) avails.duration.from = isPast(new Date(avails.duration.from)) ? currentDate : new Date(avails.duration.from);
-    if (avails.duration?.to === "nextYear") avails.duration.to = nextYear;
-    else if (avails.duration?.to) new Date(avails.duration.to);
+    if (avails.duration?.from) avails.duration.from = decodeDate(avails.duration.from);
+    if (avails.duration?.from) avails.duration.to = decodeDate(avails.duration.to);
 
     // patch everything
     this.searchForm.patchValue(search);
