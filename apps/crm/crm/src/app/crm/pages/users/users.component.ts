@@ -7,6 +7,7 @@ import { AnalyticsService } from '@blockframes/analytics/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { map } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
+import { sorts } from '@blockframes/ui/list/table/sorts';
 
 interface CrmUser extends User {
   firstConnection: Date;
@@ -27,6 +28,7 @@ export class UsersComponent implements OnInit {
   public users$?: Observable<CrmUser[]>;
   public exporting = false;
   public app = getAllAppsExcept(['crm']);
+  public sorts = sorts;
 
   constructor(
     private userService: UserService,
