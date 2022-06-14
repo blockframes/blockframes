@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Movie, Organization, orgName, isScreening, CrmMovie } from '@blockframes/model';
+import { Movie, orgName, isScreening, CrmMovie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -10,6 +10,7 @@ import { Observable, combineLatest } from 'rxjs';
 import { where } from 'firebase/firestore';
 import { sorts } from '@blockframes/ui/list/table/sorts';
 import { filters } from '@blockframes/ui/list/table/filters';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'crm-movies',
@@ -29,7 +30,7 @@ export class MoviesComponent implements OnInit {
     private eventService: EventService,
     private cdr: ChangeDetectorRef,
     private router: Router
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.movies$ = combineLatest([
@@ -76,7 +77,9 @@ export class MoviesComponent implements OnInit {
         'festival access': m.app.festival.access ? 'yes' : 'no',
         'financiers status': m.app.financiers.status,
         'financiers access': m.app.financiers.access ? 'yes' : 'no',
-        screeningCount: `${m.screeningCount}`,
+        'screeningCount': m.screeningCount,
+        'creation date': format(m._meta.createdAt, 'MM/dd/yyyy'),
+        'last modification date': m._meta.updatedAt ? format(m._meta.updatedAt, 'MM/dd/yyyy') : '--'
       }));
 
       downloadCsvFromJson(exportedRows, 'movies-list');
