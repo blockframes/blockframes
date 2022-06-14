@@ -44,11 +44,11 @@
     <ng-template colRef="isSecret" label="Hidden on Marketplace" let-isSecret sort>
       {{isSecret}}
     </ng-template>
-    <ng-template colRef label="Action" let-event sticky>
-      <a mat-icon-button [routerLink]="['/c/o/dashboard/crm/event', event.id]">
+    <ng-template colRef="id" label="Action" let-eventId sticky>
+      <a mat-icon-button [routerLink]="['/c/o/dashboard/crm/event', eventId]">
         <mat-icon svgIcon="visibility"></mat-icon>
       </a>
-      <button mat-icon-button [cdkCopyToClipboard]="event.id" (click)="$event.stopPropagation()">
+      <button mat-icon-button [cdkCopyToClipboard]="eventId" (click)="$event.stopPropagation()">
         <mat-icon svgIcon="file_copy"></mat-icon>
       </button>
     </ng-template>

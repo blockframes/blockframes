@@ -25,11 +25,11 @@
         (updatedToMember)="updatedToMember.emit(uid)">
       </member-permissions>
     </ng-template>
-    <ng-template *ngIf="showActions" colRef label="Actions" let-user>
+    <ng-template *ngIf="showActions" colRef="uid" label="Actions" let-uid let-user="item">
       <a mat-icon-button [routerLink]="user.edit?.link">
         <mat-icon svgIcon="edit"></mat-icon>
       </a>
-      <button mat-icon-button [cdkCopyToClipboard]="user.uid" (click)="$event.stopPropagation()">
+      <button mat-icon-button [cdkCopyToClipboard]="uid" (click)="$event.stopPropagation()">
         <mat-icon svgIcon="file_copy"></mat-icon>
       </button>
     </ng-template>
