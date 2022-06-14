@@ -15,7 +15,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 export class OrganizationCardComponent implements OnInit {
 
   @Input() org: Organization;
-  @Input() @boolean showMovieIcon = true
+  @Input() @boolean hideIcons = false;
 
   public orgMovieCount$: Observable<number>;
 

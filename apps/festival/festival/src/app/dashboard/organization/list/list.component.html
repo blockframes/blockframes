@@ -41,7 +41,7 @@
   </list-filter>
 
   <ng-template listPageCard let-org>
-    <org-card [org]="org" showMovieIcon="false"></org-card>
+    <org-card [org]="org" hideIcons></org-card>
   </ng-template>
 
   <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
