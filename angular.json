@@ -1069,13 +1069,7 @@
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true,
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-staging.ts"
-                }
-              ]
+              "buildOptimizer": true
             }
           }
         },

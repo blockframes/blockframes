@@ -61,8 +61,7 @@ export function toCards(aggregated: AggregatedAnalytic): MetricCard[] {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetricCardListComponent {
-  private selected = '';
-
+  public selected = '';
   @Input() cards: MetricCard[];
   @Input() @boolean selectable = false;
 
