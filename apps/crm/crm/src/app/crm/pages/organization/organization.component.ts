@@ -18,7 +18,6 @@ import { BucketService } from '@blockframes/contract/bucket/service';
 import { where } from 'firebase/firestore';
 import { PermissionsService } from '@blockframes/permissions/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { sorts } from '@blockframes/ui/list/table/sorts';
 
 @Component({
   selector: 'crm-organization',
@@ -35,7 +34,6 @@ export class OrganizationComponent implements OnInit {
   public notifyCheckbox = new FormControl(true);
   public storagePath: string;
   public apps = getAllAppsExcept(['crm']);
-  public sorts = sorts;
 
   public invitationsFromOrganization$: Observable<Invitation[]>;
   public invitationsToJoinOrganization$: Observable<Invitation[]>;

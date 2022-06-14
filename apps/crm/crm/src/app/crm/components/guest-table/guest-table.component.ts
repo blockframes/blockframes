@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { getGuest, Invitation, InvitationDetailed } from '@blockframes/model';
-import { sorts } from '@blockframes/ui/list/table/sorts';
 
 @Component({
   selector: 'invitation-guest-table',
@@ -10,7 +9,6 @@ import { sorts } from '@blockframes/ui/list/table/sorts';
 })
 export class GuestTableComponent {
   public _invitations: Invitation[] | InvitationDetailed[];
-  public sorts = sorts;
 
   @Input() set invitations(invitations: InvitationDetailed[]) {
     if (invitations) {

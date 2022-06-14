@@ -5,7 +5,6 @@ import { InvitationService } from '@blockframes/invitation/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { orgName, toLabel } from '@blockframes/model';
 import { where } from 'firebase/firestore';
-import { sorts } from '@blockframes/ui/list/table/sorts';
 
 @Component({
   selector: 'crm-events',
@@ -16,7 +15,6 @@ import { sorts } from '@blockframes/ui/list/table/sorts';
 export class EventsComponent implements OnInit {
   public rows = [];
   public eventListLoaded = false;
-  public sorts = sorts;
 
   constructor(
     private eventService: EventService,
