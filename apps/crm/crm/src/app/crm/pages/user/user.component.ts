@@ -16,8 +16,6 @@ import { joinWith, CallableFunctions } from 'ngfire';
 import { map } from 'rxjs/operators';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { AuthService } from '@blockframes/auth/service';
-import { filters } from '@blockframes/ui/list/table/filters';
-import { sorts } from '@blockframes/ui/list/table/sorts';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
@@ -39,8 +37,6 @@ export class UserComponent implements OnInit {
   public userForm: UserCrmForm;
   public invitations: Observable<Invitation[]>;
   private originalOrgValue: string;
-  public filters = filters;
-  public sorts = sorts;
 
   public dashboardURL: SafeResourceUrl
 
