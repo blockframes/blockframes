@@ -21,7 +21,7 @@
     </div>
   </mat-tab>
   <mat-tab>
-    <ng-template mat-tab-label>
+    <ng-template *ngIf="showMovieIcon" mat-tab-label>
       <mat-icon svgIcon="movie"></mat-icon>
     </ng-template>
     <!-- We want to use slice to be sure to have 3 elements/placeholders -->
