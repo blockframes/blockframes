@@ -32,16 +32,16 @@ export const filters = {
   },
   // #8355 - TODO: merge these three in one
   crmMovieOrgName: (input: string, _, movie: CrmMovie) => {
-    if (!movie?.org?.denomination?.public) return false;
-    return movie.org.denomination.public.toLocaleLowerCase().includes(input);
+    if (!movie?.org?.name) return false;
+    return movie.org.name.toLocaleLowerCase().includes(input);
   },
   invitationListOrgName: (input: string, _, invitation: InvitationDetailed) => {
-    if (!invitation?.org?.denomination.public) return false;
-    return invitation.org.denomination.public.toLocaleLowerCase().includes(input);
+    if (!invitation?.org?.name) return false;
+    return invitation.org.name.toLocaleLowerCase().includes(input);
   },
   invitationListGuestOrgName: (input: string, _, invitation: InvitationDetailed) => {
-    if (!invitation?.guestOrg?.denomination.public) return false;
-    return invitation.guestOrg.denomination.public.toLocaleLowerCase().includes(input);
+    if (!invitation?.guestOrg?.name) return false;
+    return invitation.guestOrg.name.toLocaleLowerCase().includes(input);
   },
   territories: getStaticModelFilter('territories'),
   orgActivity: getStaticModelFilter('orgActivity')

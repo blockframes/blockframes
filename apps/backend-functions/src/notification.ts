@@ -822,7 +822,7 @@ async function missedScreeningEmail(recipient: User, notification: NotificationD
   const data = {
     user: getUserEmailData(recipient),
     org : getOrgEmailData(orgDoc),
-    event: getEventEmailData({event, orgName: orgDoc.denomination.full, email: recipient.email}),
+    event: getEventEmailData({event, orgName: orgDoc.name, email: recipient.email}),
     pageUrl: `${appUrl.market}/c/o/marketplace/title/${event.meta.titleId}/main`
   } 
   const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.missedScreening, data };
@@ -841,7 +841,7 @@ async function attendedScreeningEmail(recipient: User, notification: Notificatio
     user: getUserEmailData(recipient),
     org: getOrgEmailData(orgDoc),
     movie: getMovieEmailData(movie),
-    event: getEventEmailData({event, orgName: orgDoc.denomination.full, email: recipient.email}),
+    event: getEventEmailData({event, orgName: orgDoc.name, email: recipient.email}),
     pageUrl: `${appUrl.market}/c/o/marketplace/title/${event.meta.titleId}/main`
   } 
   const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.attendedScreening, data };
