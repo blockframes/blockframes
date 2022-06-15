@@ -22,14 +22,14 @@ ul {
       background-color: var(--primary-lighter);
       border-radius: 4px;
       padding: 8px 0;
-    
+
       mat-icon {
         display: block;
         margin: auto;
         color: var(--primary-lighter-contrast);
       }
     }
-    
+
     p {
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -41,4 +41,14 @@ ul {
 .selected {
   outline: 1px solid var(--primary);
   border: 1px solid var(--primary);
+}
+
+.refresh_icon {
+  display: block;
+  margin-left: auto;
+  margin-bottom: 16px;
+}
+
+div {
+  min-height: 45px;
 }
