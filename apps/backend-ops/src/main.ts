@@ -44,6 +44,7 @@ import {
   functionsConfigMap
 } from '@blockframes/devops';
 import { join } from 'node:path';
+import { dbStatsScript } from './db-stats-script';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -160,6 +161,9 @@ async function runCommand() {
       break;
     case 'writeRuntimeConfig':
       writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
+      break;
+    case 'db-stats-script':
+      await dbStatsScript();
       break;
     default:
       return Promise.reject('Command Args not detected... exiting..');
