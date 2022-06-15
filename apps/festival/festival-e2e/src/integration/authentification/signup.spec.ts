@@ -1,44 +1,34 @@
 import {
   // plugins
   adminAuth,
+  algolia,
   browserAuth,
   firestore,
   maintenance,
   // cypress commands
   get,
-  getInList,
-  check,
-  uncheck,
   assertUrl,
   assertUrlIncludes,
+  // cypress specific functions
+  addNewCompany,
+  fillCommonInputs,
+  selectCompany,
+  verifyInvitation,
   // cypress tasks
   interceptEmail,
   deleteEmail,
+  // firebase-utils
+  deleteOrg,
+  deleteUser,
+  validateUser,
+  validateOrg,
+  validateInvitation,
+  deleteInvitation,
 } from '@blockframes/testing/cypress/browser';
-import { User, Organization, OrgActivity, Territory, PublicUser } from '@blockframes/model';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
-
 import { newUser, newOrg, marketplaceData, dashboardData } from '../../fixtures/authentification/signup';
-import { UserRecord } from '@blockframes/firebase-utils/types';
-import { WhereFilterOp } from 'firebase/firestore';
+import { territories, orgActivity } from '@blockframes/model';
+import { capitalize } from '@blockframes/utils/helpers';
 
-function deleteUserIfExists(userEmail: string) {
-  const query = { collection: 'users', field: 'email', operator: '==' as WhereFilterOp, value: userEmail }
-  firestore.queryData(query).then((users: User[]) => {
-    if (!users.length) return cy.log(`No previous user with ${userEmail}`);
-    firestore.delete([`users/${users[0].uid}`]);
-  });
-}
-
-function deleteOrgIfExists(orgName: string) {
-  const query = { collection: 'orgs', field: 'denomination.full', operator: '==' as WhereFilterOp, value: orgName }
-  firestore.queryData(query).then((orgs: Organization[]) => {
-      if (!orgs.length) return cy.log(`No previous organization named ${orgName}`);
-      firestore.delete([`orgs/${orgs[0].id}`]);
-    });
-}
-
-//? to be used when signing up with known organisation
 const marketplaceInjectedData = {
   [`users/${marketplaceData.orgAdmin.uid}`]: marketplaceData.orgAdmin,
   [`orgs/${marketplaceData.org.id}`]: marketplaceData.org,
@@ -49,7 +39,6 @@ const dashboardInjectedData = {
   [`orgs/${dashboardData.org.id}`]: dashboardData.org,
   [`permissions/${dashboardData.permissions.id}`]: dashboardData.permissions,
 };
-//?-------------------
 
 describe('Signup', () => {
   beforeEach(() => {
@@ -57,12 +46,12 @@ describe('Signup', () => {
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
     browserAuth.clearBrowserAuth();
-    cy.visit('auth/identity');
   });
 
   it('User from new company can signup', () => {
-    deleteOrgIfExists(newOrg.name);
-    deleteUserIfExists(newUser.email);
+    deleteOrg(newOrg.name);
+    deleteUser(newUser.email);
+    cy.visit('auth/identity');
     get('cookies').click();
     fillCommonInputs(newUser);
     addNewCompany(newOrg);
@@ -79,45 +68,77 @@ describe('Signup', () => {
     get('email-pending').should('exist');
     get('org-approval-pending').should('exist');
     cy.log('waiting for user confirmation and organisation approval');
-    adminAuth.getUser(newUser.email).then((user: UserRecord) => {
-      adminAuth.updateUser({ uid: user.uid, update: { emailVerified: true } });
-      firestore.update([{ docPath: `users/${user.uid}`, field: '_meta.emailVerified', value: true }]);
-    });
-    firestore
-      .queryData({ collection: 'orgs', field: 'denomination.full', operator: '==', value: newOrg.name })
-      .then((orgs: Organization[]) => {
-        const [newOrg] = orgs;
-        firestore.update([{ docPath: `orgs/${newOrg.id}`, field: 'status', value: 'accepted' }]);
-      });
+    validateUser(newUser.email);
+    validateOrg(newOrg.name);
     get('org-approval-ok').should('exist');
     get('email-ok').should('exist');
     get('refresh').click();
     assertUrlIncludes('c/o/marketplace/home');
     get('skip-preferences').click();
   });
+
+  it('User from a known organization with access to festival marketplace can signup', () => {
+    const { org, orgAdmin } = marketplaceData;
+    deleteUser(newUser.email);
+    deleteInvitation(newUser.email);
+    algolia.storeOrganization(org);
+    maintenance.start();
+    adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email });
+    adminAuth.updateUser({ uid: orgAdmin.uid, update: { emailVerified: true } });
+    firestore.create([marketplaceInjectedData]);
+    maintenance.end();
+    cy.visit('auth/identity');
+    get('cookies').click();
+    fillCommonInputs(newUser);
+    selectCompany(marketplaceData.org.denomination.full);
+    get('activity').should('contain', orgActivity[org.activity]);
+    get('country').should('contain', capitalize(territories[org.addresses.main.country]));
+    get('submit').click();
+    interceptEmail({ sentTo: newUser.email }).then(mail => deleteEmail(mail.id));
+    interceptEmail({ body: `${newUser.email}` }).then(mail => deleteEmail(mail.id));
+    cy.log('all mails received');
+    assertUrl('c/organization/join-congratulations');
+    validateUser(newUser.email);
+    get('email-ok').should('exist');
+    validateInvitation(newUser.email);
+    get('org-approval-ok').should('exist');
+    get('refresh').click();
+    assertUrlIncludes('c/o/marketplace/home');
+    get('skip-preferences').click();
+    browserAuth.clearBrowserAuth();
+    cy.visit('');
+    verifyInvitation(orgAdmin.email, newUser, 'marketplace');
+  });
+
+  it('User from a known organization with access to festival dashboard can signup', () => {
+    const { org, orgAdmin } = dashboardData;
+    deleteUser(newUser.email);
+    deleteInvitation(newUser.email);
+    algolia.storeOrganization(org);
+    maintenance.start();
+    adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email });
+    adminAuth.updateUser({ uid: orgAdmin.uid, update: { emailVerified: true } });
+    firestore.create([dashboardInjectedData]);
+    maintenance.end();
+    cy.visit('auth/identity');
+    get('cookies').click();
+    fillCommonInputs(newUser);
+    selectCompany(dashboardData.org.denomination.full);
+    get('activity').should('contain', orgActivity[org.activity]);
+    get('country').should('contain', capitalize(territories[org.addresses.main.country]));
+    get('submit').click();
+    interceptEmail({ sentTo: newUser.email }).then(mail => deleteEmail(mail.id));
+    interceptEmail({ body: `${newUser.email}` }).then(mail => deleteEmail(mail.id));
+    cy.log('all mails received');
+    assertUrl('c/organization/join-congratulations');
+    validateUser(newUser.email);
+    get('email-ok').should('exist');
+    validateInvitation(newUser.email);
+    get('org-approval-ok').should('exist');
+    get('refresh').click();
+    assertUrlIncludes('c/o/dashboard/home');
+    browserAuth.clearBrowserAuth();
+    cy.visit('');
+    verifyInvitation(orgAdmin.email, newUser, 'dashboard');
+  });
 });
-
-//* JS Functions *//
-
-function fillCommonInputs(user: PublicUser) {
-  get('email').type(user.email);
-  get('first-name').type(user.firstName);
-  get('last-name').type(user.lastName);
-  get('password').type(USER_FIXTURES_PASSWORD);
-  get('password-confirm').type(USER_FIXTURES_PASSWORD);
-  check('terms');
-  check('gdpr');
-}
-
-function addNewCompany(data: { name: string; activity: OrgActivity; country: Territory }) {
-  const { name, activity, country } = data;
-  get('org').type(name);
-  get('new-org').click();
-  get('activity').click();
-  getInList('activity_', activity);
-  get('activity').should('contain', activity);
-  get('country').click();
-  getInList('country_', country);
-  get('country').should('contain', country);
-  get('role').contains('Buyer').click();
-}

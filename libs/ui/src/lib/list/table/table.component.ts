@@ -24,12 +24,15 @@ import { removeAccent } from '@blockframes/model';
 
 /** Ascending sorting */
 function sortValue<T>(a: T, b: T) {
-  if (typeof a === 'string' && typeof b === 'string') return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
+  if (a instanceof Date && b instanceof Date) return a.getTime() - b.getTime();
+  if (typeof a === 'string' && typeof b === 'string') return a.localeCompare(b);
   if (typeof a === 'number' && typeof b === 'number') return a - b;
   if (typeof a === 'boolean' && typeof b === 'boolean') {
     if (a && b) return 0;
     return a ? 1 : -1;
   }
+  if (!a) return 1;
+  if (!b) return -1;
   return 0;
 }
 
@@ -38,7 +41,7 @@ function filterTable<T>(data: T[], value: string, columns: QueryList<ColumnDirec
   const input = removeAccent(value.toLowerCase());
   return data.filter(row => {
     return columns.some(column => {
-      const value = removeAccent(getDeepValue(row, column.name));
+      const value = column.name ? removeAccent(getDeepValue(row, column.name)) : row;
       return column.filter(input, value, row);
     });
   });

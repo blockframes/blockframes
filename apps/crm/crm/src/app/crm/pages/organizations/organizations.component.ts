@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
 import { Organization, getAllAppsExcept, appName, modules } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { filters } from '@blockframes/ui/list/table/filters';
 
 @Component({
   selector: 'crm-organizations',
@@ -16,6 +17,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 export class OrganizationsComponent {
   public orgs$ = this.service.valueChanges();
   public apps = getAllAppsExcept(['crm']);
+  public filters = filters;
 
   constructor(
     private service: OrganizationService,

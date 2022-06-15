@@ -430,6 +430,7 @@ service cloud.firestore {
               (
                 isRequestFieldValueEqualTo(['meta', 'attendees', userId(), 'status'], 'requesting')
                 || isRequestFieldValueEqualTo(['meta', 'attendees', userId(), 'status'], 'ended')
+                || isRequestFieldValueEqualTo(['meta', 'attendees', userId(), 'status'], 'attended')
                 || isRemovingField(['meta', 'attendees', userId()])
               )
               && isOnlyChangingAttendeeStatus()

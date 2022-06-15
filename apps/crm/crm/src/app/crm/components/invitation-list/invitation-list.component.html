@@ -2,7 +2,7 @@
   <ng-template colRef="id" label="Id" let-invitId>
     {{ invitId }}
   </ng-template>
-  <ng-template colRef="org" label="Organization" let-org>
+  <ng-template colRef="org" label="Organization" let-org [filter]="filters.invitationListOrgName">
     <a [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
       <span>{{ org.name }} </span>
       <mat-icon svgIcon="visibility"></mat-icon>
@@ -17,7 +17,7 @@
   <ng-template colRef="event.end" label="Event end" let-end sort>
     {{ end | date: 'medium'}}
   </ng-template>
-  <ng-template label="Event Type" colRef="event.type" let-type>
+  <ng-template label="Event Type" colRef="event.type" let-type sort>
     {{ type | titlecase }}
   </ng-template>
   <ng-template colRef="movie" label="Movie" let-movie>
@@ -35,7 +35,7 @@
   <ng-template colRef="event.accessibility" label="Accessibility" let-accessibility sort>
     {{ accessibility | toLabel:'accessibility' }}
   </ng-template>
-  <ng-template colRef="guestOrg" label="Guest org" let-guestOrg>
+  <ng-template colRef="guestOrg" label="Guest org" let-guestOrg [filter]="filters.invitationListGuestOrgName">
     <ng-container *ngIf="guestOrg else noOrg">
       <a [routerLink]="['/c/o/dashboard/crm/organization', guestOrg.id]">
         <span>{{ guestOrg.name }} </span>

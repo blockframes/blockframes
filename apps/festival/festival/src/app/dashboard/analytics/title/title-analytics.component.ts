@@ -11,8 +11,9 @@ import {
   isScreening,
   displayName,
   EventName,
+  getGuest,
 } from '@blockframes/model';
-import { getStaticModelFilter } from "@blockframes/ui/list/table/filters";
+import { filters } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
 import { aggregatePerUser, countedToAnalyticData, counter } from '@blockframes/analytics/utils';
@@ -21,7 +22,6 @@ import { NavigationService } from "@blockframes/ui/navigation.service";
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
 import { eventTime } from "@blockframes/event/pipes/event-time.pipe";
-import { getGuest } from "@blockframes/invitation/pipes/guest.pipe";
 import { InvitationService } from "@blockframes/invitation/service";
 import { EventService } from "@blockframes/event/service";
 import { OrganizationService } from '@blockframes/organization/service';
@@ -135,10 +135,9 @@ export class TitleAnalyticsComponent {
   );
 
   filters = {
-    orgActivity: getStaticModelFilter('orgActivity'),
-    territories: getStaticModelFilter('territories'),
     name: nameFilter,
-    email: emailFilter
+    email: emailFilter,
+    ...filters
   };
   filterValue?: string;
 
@@ -180,7 +179,7 @@ export class TitleAnalyticsComponent {
     private navService: NavigationService,
     private eventService: EventService,
     private invitationService: InvitationService,
-  ) { }
+  ) {}
 
   goBack() {
     this.navService.goBack(1);
