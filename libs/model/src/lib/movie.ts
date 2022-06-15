@@ -37,6 +37,7 @@ import type { DocumentMeta } from './meta';
 import type { Timestamp } from './timestamp';
 import { productionStatus } from './static';
 import { getAllAppsExcept } from './apps';
+import { Organization } from './organisation';
 
 //////////////////
 // MOVIE OBJECT //
@@ -264,6 +265,11 @@ export type Movie = MovieBase<Date>;
 
 export interface SyncMovieAnalyticsOptions {
   filterBy: (movie: Movie) => boolean;
+}
+
+export interface CrmMovie extends Movie {
+  org: Organization;
+  screeningCount: number;
 }
 
 /** A factory function that creates Movie */

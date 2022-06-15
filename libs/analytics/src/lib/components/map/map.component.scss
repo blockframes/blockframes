@@ -20,11 +20,11 @@ section.horizontal {
   width: 100%;
   display: flex;
   flex-direction: row-reverse;
-  gap: 24px;
+  gap: 32px;
 }
 
-mat-list.horizontal {
-  width: 25%;
+aside.horizontal {
+  width: 100%;
 }
 
 img {
@@ -60,5 +60,11 @@ mat-spinner {
 @include layout-bp(lt-md) {
   section.horizontal {
     flex-direction: column;
+  }
+}
+
+@include layout-bp(gt-sm) {
+  aside.horizontal {
+    width: 33%;
   }
 }
