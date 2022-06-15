@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Movie, Organization, orgName, isScreening } from '@blockframes/model';
+import { Movie, orgName, isScreening, CrmMovie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -8,12 +8,9 @@ import { EventService } from '@blockframes/event/service';
 import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 import { where } from 'firebase/firestore';
+import { sorts } from '@blockframes/ui/list/table/sorts';
+import { filters } from '@blockframes/ui/list/table/filters';
 import { format } from 'date-fns';
-
-interface CrmMovie extends Movie {
-  org: Organization;
-  screeningCount: number;
-}
 
 @Component({
   selector: 'crm-movies',
@@ -24,6 +21,8 @@ interface CrmMovie extends Movie {
 export class MoviesComponent implements OnInit {
   public movies$?: Observable<CrmMovie[]>;
   public exporting = false;
+  public sorts = sorts;
+  public filters = filters;
 
   constructor(
     private movieService: MovieService,
