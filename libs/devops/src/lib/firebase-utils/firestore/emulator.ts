@@ -386,23 +386,25 @@ export function writeRuntimeConfig(values: { [key: string]: string }, path: stri
   const runtimeObj = {};
 
   const projectId = process.env['PROJECT_ID'];
-  function getKeyName(key: string, projectId: string) {
-    if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(projectId)}_${key}`)) {
-      return `${camelCase(projectId)}_${key}`;
-    }
-    return key;
-  }
   const isDemo = projectId === 'demo-blockframes';
 
   Object.entries(values).forEach(([key, value]) => {
-    const foundValue = process.env[getKeyName(value, projectId)];
-    const demoValue = isDemo && process.env[getKeyName(value, 'blockframes-ci')];
+    const foundValue = process.env[getKeyName(value, projectId, isDemo)];
     const fallbackValue = 'missing-env-value';
-    set(runtimeObj, key, foundValue || demoValue || fallbackValue);
+    set(runtimeObj, key, foundValue || fallbackValue);
   });
-  console.log('Written runtimeconfig.json:')
-  console.dir(runtimeObj);
   return writeFileSync(path, JSON.stringify(runtimeObj, null, 4));
+}
+
+function getKeyName(key: string, projectId: string, demo: boolean) {
+  if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(projectId)}_${key}`)) {
+    return `${camelCase(projectId)}_${key}`;
+  }
+  if (demo && Object.prototype.hasOwnProperty.call(process.env, `${camelCase('blockframes-ci')}_${key}`)) {
+    return `${camelCase('blockframes-ci')}_${key}`;
+  }
+
+  return key;
 }
 
 /**

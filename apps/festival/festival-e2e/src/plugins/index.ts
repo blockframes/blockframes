@@ -1,6 +1,4 @@
 ﻿import 'tsconfig-paths/register';
-//TODO define proper way to import next line #8071
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { testingCypress } from '@blockframes/testing/cypress/node';
 import { install } from 'cypress-log-to-output';
 

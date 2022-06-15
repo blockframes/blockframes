@@ -1,3 +1,7 @@
+import 'tsconfig-paths/register';
+import { testingCypress } from '@blockframes/testing/cypress/node';
+import { install } from 'cypress-log-to-output';
+
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
 //
@@ -10,12 +14,25 @@
 
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
+export default (async (on, config) => {
+  // `on` is used to hook into various events Cypress emits
+  // `config` is the resolved Cypress config
 
-module.exports = (on, config) => {
+  console.log('Node version:', process.version);
+  console.log('Config: ', config);
+
+  // works by calling : npx cross-env nx e2e festival-e2e --configuration=emulator-incognito
+  // see angular.json at the root of the project
   on('before:browser:launch', (browser, launchOptions) => {
     if (browser.name === 'chrome' && config.env.incognito) {
       launchOptions.args.push('--incognito');
     }
     return launchOptions;
   });
-};
+
+  on('task', testingCypress(config));
+
+  install(on);
+
+  // * Returning config here (or promise) changes config.
+}) as Cypress.PluginConfig;
