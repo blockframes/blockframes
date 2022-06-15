@@ -44,7 +44,7 @@ export const getPrivateVideoUrl = async (
   }
 
   const access = await isAllowedToAccessMedia(data.video, context.auth.uid, data.eventId, data.email);
-
+  console.log('bruce access granted', access)
   if (!access) {
     return {
       error: 'UNAUTHORIZED',
@@ -165,5 +165,7 @@ export const getPlayerUrl = async (
   const signature = md5.update(toSign).digest('hex');
 
   const signedUrl = `https://cdn.jwplayer.com/libraries/${playerId}.js?exp=${expires}&sig=${signature}`;
+
+  console.log('bruce signedUrl', signedUrl)
   return signedUrl;
 };

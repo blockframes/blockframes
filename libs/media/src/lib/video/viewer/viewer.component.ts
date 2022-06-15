@@ -112,7 +112,10 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
         email: anonymousCredentials?.email
       });
 
+      console.log('bruce private', error, result)
+
       if (error) {
+        console.log('bruce, erroMessage', error)
         throw new Error(errorMessage);
       } else {
 
