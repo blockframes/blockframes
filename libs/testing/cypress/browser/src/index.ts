@@ -11,6 +11,7 @@ export { events };
 import * as festival from './lib/festival';
 export { festival };
 export * from './lib/firestore';
+export * from './lib/firestore-utils';
 export * from './lib/helpers';
 export * from './lib/maintenance';
 export * from './lib/support';

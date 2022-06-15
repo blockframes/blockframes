@@ -4,12 +4,14 @@ import {
   browserAuth,
   firestore,
   maintenance,
+  // cypress specific functions
+  refreshIfMaintenance,
   // cypress commands
   get,
   assertUrlIncludes,
 } from '@blockframes/testing/cypress/browser';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { user, org, permissions } from '../../fixtures/authentification/login';
+import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -28,7 +30,7 @@ describe('Login tests', () => {
     adminAuth.updateUser({ uid: user.uid, update: { emailVerified: true } });
     firestore.create([injectedData]);
     maintenance.end();
-    cypress.refreshIfMaintenance();
+    refreshIfMaintenance();
     get('login').click();
     assertUrlIncludes('/connexion');
     get('signin-email').type(user.email);
@@ -37,13 +39,3 @@ describe('Login tests', () => {
     get('skip-preferences').should('exist');
   });
 });
-
-const cypress = {
-  refreshIfMaintenance() {
-    cy.get('festival-root').then($el => {
-      const $children = $el.children();
-      const childrenTagNames = $children.toArray().map(child => child.tagName);
-      if (childrenTagNames.includes('blockframes-maintenance'.toUpperCase())) get('maintenance-refresh').click();
-    });
-  },
-};
