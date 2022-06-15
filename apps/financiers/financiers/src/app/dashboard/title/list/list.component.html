@@ -16,9 +16,9 @@
     </header>
 
     <bf-table [source]="titles" useFilter pagination="50">
-      <ng-template colRef label="Title" let-movie sort defaultSort [filter]="filters.movieTitle">
-        <a [routerLink]="movie.id" [matTooltip]="movie.title.international">
-          <u>{{ movie.title.international | maxLength:50 }}</u>
+      <ng-template colRef="title.international" label="Title" let-title let-movie="item" sort defaultSort [filter]="filters.movieTitle">
+        <a [routerLink]="movie.id" [matTooltip]="title">
+          <u>{{ title | maxLength:50 }}</u>
         </a>
       </ng-template>
       <ng-template colRef="productionStatus" label="Production Status" let-prod>{{ prod | toLabel: 'productionStatus'
