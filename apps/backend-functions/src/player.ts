@@ -164,6 +164,9 @@ export const getPlayerUrl = async (
 
   const signature = md5.update(toSign).digest('hex');
 
+  console.log('playerId', playerId)
+  console.log('bruce test', (jwplayerSecret as string).slice((jwplayerSecret as string).length- 5 , (jwplayerSecret as string).length));
+
   const signedUrl = `https://cdn.jwplayer.com/libraries/${playerId}.js?exp=${expires}&sig=${signature}`;
 
   console.log('bruce signedUrl', signedUrl)
