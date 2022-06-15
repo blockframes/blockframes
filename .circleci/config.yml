@@ -301,6 +301,7 @@ jobs:
           path: dist/cypress/apps
   festival-e2e:
     executor: blockframes-ci
+    resource_class: xlarge
     steps:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=e2e
