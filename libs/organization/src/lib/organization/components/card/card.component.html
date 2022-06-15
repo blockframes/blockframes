@@ -12,15 +12,6 @@
   </p>
 </div>
 <mat-tab-group *ngIf="!hideIcons" headerPosition="below" mat-align-tabs="center" [disablePagination]="true">
-  <div>
-    <p class="mat-caption">{{ (org.addresses.main.country | toLabel: 'territories') || "-" }}</p>
-    <p class="mat-caption" i18n *ngIf="(orgMovieCount$ | async) as count">
-      {{ count }} film{ count, plural, =1 {} other {s} } in {{ app === 'catalog' ? 'catalog' : 'line-up' }}
-    </p>
-    <p class="mat-caption" i18n>
-      {{ org.userIds.length }} employee{ org.userIds.length, plural, =1 {} other {s} }
-    </p>
-  </div>
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon svgIcon="account_circle"></mat-icon>
