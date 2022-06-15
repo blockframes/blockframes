@@ -119,7 +119,7 @@ export class BucketService extends BlockframesCollection<Bucket> {
   async addBatchTerms(availsResults: AddTermConfig[]) {
     const orgId = this.orgService.org.id;
     let bucket = await this.getActive();
-    if (!bucket) bucket = createBucket({ id: orgId });
+    if (!bucket.id) bucket = createBucket({ id: orgId });
 
     for (const { titleId, parentTermId, avail } of availsResults) {
       const term = createBucketTerm(avail);
