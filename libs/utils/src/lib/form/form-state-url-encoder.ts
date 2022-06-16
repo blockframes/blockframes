@@ -18,7 +18,7 @@ export function decodeUrl<T = any>(route: ActivatedRoute): T {
  */
 export function decodeDate(date: string | Date): Date {
   if (!date || date === 'now') return new Date();
-  // Add more date magic string later ('nextYear', 'lastYear', ...)
+  // Issue #8655: Add more date magic string later ('nextYear', 'lastYear', ...)
   return new Date(date);
 }
 
