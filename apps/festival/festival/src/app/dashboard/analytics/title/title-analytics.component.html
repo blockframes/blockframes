@@ -111,7 +111,7 @@
     <ng-container *ngIf="invitations$ | async as invitations">
       <header>
         <h5>Attendees</h5>
-        <button mat-button [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export to .CSV</button>
+        <button mat-button color="primary" [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export to .CSV</button>
       </header>
       <bf-table class="screenings" [source]="invitations" clickable useFilter pagination="5">
         <ng-template colRef label="Name" let-invitation="item" sort defaultSort [filter]="filters.name">

@@ -87,7 +87,7 @@
       <h4>Attended Screenings</h4>
       <button mat-button color="primary" (click)="exportScreenerAnalytics()">
         <mat-icon svgIcon="cloud_download"></mat-icon>
-        <span>Export Analytics in .CSV</span>
+        <span>Export Analytics to .CSV</span>
       </button>
     </header>
     <bf-table [source]="invitations$ | async" pagination="5">
