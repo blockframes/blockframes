@@ -1,5 +1,6 @@
+export * from './algolia';
 export * from './auth';
-export * from './db';
+export * from './firestore';
 export * from './festival';
 
 export function log(message: any) {

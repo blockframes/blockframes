@@ -131,13 +131,13 @@
 </section>
 
 <bf-table *ngIf="invitations | async as invitations" [source]="invitations" useFilter pagination="50">
-  <ng-template colRef label="Date Created" let-event sort>
+  <ng-template colRef="date" label="Date Created" let-date let-event="item" sort>
     <a [routerLink]="getLink(event)">
-      <u>{{ event.date | date: 'short' }}</u>
+      <u>{{ date | date: 'short' }}</u>
     </a>
   </ng-template>
-  <ng-template colRef="event" label="Event Name" let-event sort>
-    {{ event.title }}
+  <ng-template colRef="event.title" label="Event Name" let-title sort>
+    {{ title }}
   </ng-template>
   <ng-template colRef="mode" label="Mode" let-mode sort>
     {{mode}}
@@ -154,11 +154,11 @@
   <ng-template colRef="status" label="Status" let-status sort>
     {{status}}
   </ng-template>
-  <ng-template colRef label="Action" let-event sticky>
+  <ng-template colRef="eventId" label="Action" let-eventId let-event="item" sticky>
     <a [routerLink]="getLink(event)" mat-icon-button matTooltip="Open">
       <mat-icon svgIcon="visibility"></mat-icon>
     </a>
-    <button mat-icon-button [cdkCopyToClipboard]="event.eventId" (click)="$event.stopPropagation()">
+    <button mat-icon-button [cdkCopyToClipboard]="eventId" (click)="$event.stopPropagation()">
       <mat-icon svgIcon="file_copy"></mat-icon>
     </button>
   </ng-template>

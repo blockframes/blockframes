@@ -1,5 +1,8 @@
 import { db } from '../testing-cypress';
 import { createUser, createOrganization, createPermissions, ModuleAccess, App } from '@blockframes/model';
+import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME } from '@blockframes/utils/maintenance';
+import { WhereFilterOp } from 'firebase/firestore';
+import * as admin from 'firebase-admin';
 
 export async function getRandomEmail() {
   const { email } = await getRandomUser();
@@ -58,9 +61,11 @@ export async function getRandomOrgAdmin(orgId: string) {
   return createUser(adminRef.data());
 }
 
-export function deleteUser(userId: string) {
+// function commented because an existing test depends on it, and it has the same name as a new crud function
+// will be deleting shortly
+/* export function deleteUser(userId: string) {
   return db.doc(`users/${userId}`).delete();
-}
+} */
 
 export async function getOrgByName(orgName: string) {
   const userQuery = await db.collection('orgs').where('denomination.full', '==', orgName).get();
@@ -76,6 +81,7 @@ export function deleteOrg(orgId: string) {
 //* LIGHT PLUGIN*----------------------------------------------------------------
 
 const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
+const maintenancePath = `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`;
 
 //* IMPORT DATA*-----------------------------------------------------------------
 
@@ -85,11 +91,22 @@ export async function importData(data: Record<string, object>[]) {
     Object.entries(document).map(([path, content]) => {
       if (!isDocumentPath(path))
         throw new Error('Document path mandatory, like [collectionPath/DocumentPath]. Got ' + JSON.stringify(path));
-      content['_meta'] = { e2e: true };
+      if (path === maintenancePath)
+        content = {
+          startedAt: !content['startedAt'] ? null : toTimestamp(content['startedAt']),
+          endedAt: !content['endedAt'] ? null : toTimestamp(content['endedAt']),
+        };
+      else if ('_meta' in content) content['_meta']['e2e'] = true;
+      else content['_meta'] = { e2e: true };
       createAll.push(db.doc(path).set(content));
     });
   }
   return Promise.all(createAll);
+}
+
+function toTimestamp(stringifiedTimestamp: string) {
+  const { seconds, nanoseconds } = JSON.parse(stringifiedTimestamp);
+  return new admin.firestore.Timestamp(seconds, nanoseconds);
 }
 
 //* DELETE DATA*----------------------------------------------------------------
@@ -184,6 +201,12 @@ const subcollectionsDataOf = async (path: string) => {
   return result;
 };
 
+export async function queryData(data: { collection: string; field: string; operator: WhereFilterOp; value: unknown }) {
+  const { collection, field, operator, value } = data;
+  const snapshot = await db.collection(collection).where(field, operator, value).get();
+  return snapshot.docs.map(doc => doc.data());
+}
+
 //* UPDATE DATA*-----------------------------------------------------------------
 
 export async function updateData(data: { docPath: string; field: string; value: unknown }[]) {
@@ -192,7 +215,7 @@ export async function updateData(data: { docPath: string; field: string; value: 
     const { docPath, field, value } = update;
     if (!isDocumentPath(docPath))
       throw new Error('Document path mandatory, like [collectionPath/DocumentPath]. Got ' + JSON.stringify(docPath));
-      const docRef = db.doc(docPath);
+    const docRef = db.doc(docPath);
     updateAll.push(docRef.update({ [field]: value }));
   }
   return Promise.all(updateAll);

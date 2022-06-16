@@ -1,4 +1,20 @@
-<h1>Buyers' Activity</h1>
+<section class="surface">
+  <header>
+    <h1>Buyers' Activities</h1>
+    <a mat-button routerLink="../title">
+      <span>See Titles' Activities</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </a>
+  </header>
+  <a mat-button routerLink="..">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+    <span>Back to Dashboard</span>
+  </a>
+  <article>
+    <analytics-pie-chart class="surface" [data]="orgActivity$ | async"></analytics-pie-chart>
+    <analytics-metric-card-list [cards]="aggregatedCards$ | async"></analytics-metric-card-list>
+  </article>
+</section>
 
 <bf-table [source]="buyersAnalytics$ | async" pagination="5" useFilter clickable (rowClick)="goToBuyer($event)">
   <ng-template colRef="user" label="Name" let-user sort>
@@ -12,6 +28,9 @@
   </ng-template>
   <ng-template colRef="org.activity" label="Activity" let-activity sort>
     {{ activity | toLabel:'orgActivity' }}
+  </ng-template>
+  <ng-template colRef="pageView" label="# Title Page Views" let-pageView sort>
+    {{ pageView }}
   </ng-template>
   <ng-template colRef="addedToWishlist" label="Titles in Wishlist" let-wishlist sort>
     {{ wishlist }}

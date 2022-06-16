@@ -28,8 +28,11 @@
 
   <article>
     <header>
-      <h3>Buyer was interested in these titles</h3>
-      <button mat-flat-button (click)="exportAnalytics()">Export Analytics</button>
+      <h3>Buyer was interested in these Titles</h3>
+      <button mat-button color="primary" (click)="exportAnalytics()">
+        <mat-icon svgIcon="cloud_download"></mat-icon>
+        <span>Export Analytics</span>
+      </button>
     </header>
 
     <bf-table [source]="filtered$ | async" pagination="5" useFilter>
@@ -44,6 +47,9 @@
       </ng-template>
       <ng-template colRef="title.originalLanguages" label="Original Language" let-languages sort>
         {{ languages | toLabel:'languages' }}
+      </ng-template>
+      <ng-template colRef="pageView" label="# Views" let-pageView sort>
+        {{ pageView }}
       </ng-template>
       <ng-template colRef label="In wishlist" let-wishlist sort>
         {{ inWishlist(wishlist) ? 'Yes' : '-' }}
@@ -61,20 +67,28 @@
   </article>
 
   <article class="surface graphs">
-    <analytics-bar-chart [data]="totalAnalyticsPerTitle$ | async"></analytics-bar-chart>
+    <analytics-bar-chart [data]="totalAnalyticsPerTitle$ | async">
+      <p>Learn what Titles this particular Buyer viewed</p>
+    </analytics-bar-chart>
     <analytics-pie-chart class="surface" [data]="aggregatedPerGenre$ | async">
       <mat-icon svgIcon="theater_comedy"></mat-icon>
       <h5>Genres Tendancy</h5>
+      <p>This Buyer was mostly interested in these Genres</p>
     </analytics-pie-chart>
   </article>
 
   <article>
     <h3>Screenings Buyer has participated</h3>
     <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
+  </article>
 
+  <article>
     <header>
       <h4>Attended Screenings</h4>
-      <button mat-flat-button (click)="exportScreenerAnalytics()">Export to CSV</button>
+      <button mat-button color="primary" (click)="exportScreenerAnalytics()">
+        <mat-icon svgIcon="cloud_download"></mat-icon>
+        <span>Export Analytics in .CSV</span>
+      </button>
     </header>
     <bf-table [source]="invitations$ | async" pagination="5">
       <ng-template colRef="event.movie.title.international" label="Title" let-title sort>

@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Blockframes
@@ -17,6 +17,8 @@ import {
 import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
+import { filters } from '@blockframes/ui/list/table/filters';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter, distinctUntilChanged } from 'rxjs/operators';
@@ -35,6 +37,7 @@ import { joinWith } from 'ngfire';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
+  @ViewChild('tableTitle') tableTitle: ElementRef;
   public selectedCountry?: string;
   public titles$ = this.orgService.currentOrg$.pipe(
     switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
@@ -108,7 +111,7 @@ export class HomeComponent {
         return aggregate(analyticsOfUser, { user, org });
       });
     }),
-    map(users => users.sort((userA, userB) => userA.total - userB.total))
+    map(users => users.sort((userA, userB) => userB.total - userA.total))
   );
 
 
@@ -118,6 +121,8 @@ export class HomeComponent {
     'promoReelOpened',
     'screeningRequested',
   ];
+
+  filters = filters;
 
   constructor(
     private analyticsService: AnalyticsService,
@@ -137,5 +142,10 @@ export class HomeComponent {
 
   public openIntercom(): void {
     return this.intercom.show();
+  }
+
+  public selectCountry(country: string) {
+    scrollIntoView(this.tableTitle.nativeElement);
+    this.selectedCountry = country;
   }
 }

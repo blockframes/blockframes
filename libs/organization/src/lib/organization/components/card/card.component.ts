@@ -4,6 +4,7 @@ import { Organization, App } from '@blockframes/model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { APP } from '@blockframes/utils/routes/utils';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: 'org-card',
@@ -14,6 +15,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 export class OrganizationCardComponent implements OnInit {
 
   @Input() org: Organization;
+  @Input() @boolean hideIcons = false;
 
   public orgMovieCount$: Observable<number>;
 

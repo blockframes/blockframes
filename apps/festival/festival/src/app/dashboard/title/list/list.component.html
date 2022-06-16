@@ -21,14 +21,14 @@
     </header>
 
     <bf-table [source]="result$ | async" pagination="50" useFilter>
-      <ng-template colRef label="Title" let-movie sort [filter]="filters.movieTitle">
-        <a [routerLink]="movie.id" [matTooltip]="movie.title.international">
-          <u>{{ movie.title.international | maxLength:50 }}</u>
+      <ng-template colRef="title.international" label="Title" let-title let-movie="item" sort [filter]="filters.movieTitle">
+        <a [routerLink]="movie.id" [matTooltip]="title">
+          <u>{{ title | maxLength:50 }}</u>
         </a>
       </ng-template>
-      <ng-template colRef label="Director(s)" let-movie [filter]="filters.movieDirectors">
-        <span (click)="openDetails('Director\'s', movie.directors)">
-          {{ movie.directors | displayName | maxLength:50 }}
+      <ng-template colRef="directors" label="Director(s)" let-directors [filter]="filters.movieDirectors">
+        <span (click)="openDetails('Director\'s', directors)">
+          {{ directors | displayName | maxLength:50 }}
         </span>
       </ng-template>
       <ng-template colRef="productionStatus" label="Production Status" let-prod sort>
