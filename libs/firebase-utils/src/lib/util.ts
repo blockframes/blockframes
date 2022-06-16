@@ -6,6 +6,7 @@ import requiredVars from 'tools/mandatory-env-vars.json';
 import { resolve } from 'path';
 import { firebase as firebaseProd } from 'env/env.blockframes';
 import { OrganizationDocument, App } from '@blockframes/model';
+import { getKeyName } from '@blockframes/devops'
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -40,7 +41,8 @@ export interface DbRecord {
 let missingVarsMessageShown = false;
 
 export function warnMissingVars(): void | never {
-  if (process.env['PROJECT_ID'] !== firebase().projectId) {
+  const projectId = process.env['PROJECT_ID'];
+  if (projectId !== firebase().projectId) {
     console.warn(
       'WARNING! Your PROJECT_ID in your shell environment does not match your'
       + 'Firebase project ID found in your Firebase configuration!'
@@ -52,9 +54,10 @@ export function warnMissingVars(): void | never {
     console.warn(`Please ensure the following variable is set in .env : ${key}`);
     console.warn(`More info: ${msg}\n`);
   };
+  const isDemo = projectId === 'demo-blockframes' // TODO: This id should be configured in one spot
   // Use '||' instead of '??' to detect empty string
   if (!missingVarsMessageShown) requiredVars.map(
-    ({ key, msg }: { key: string; msg: string }) => process.env?.[key] || warn(key, msg) // TODO #7858 warnMissingVars should check for prefixed env vars
+    ({ key, msg }: { key: string; msg: string }) => process.env[getKeyName(key, projectId, isDemo)] || warn(key, msg)
   );
   missingVarsMessageShown = true;
 }

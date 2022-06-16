@@ -396,7 +396,7 @@ export function writeRuntimeConfig(values: { [key: string]: string }, path: stri
   return writeFileSync(path, JSON.stringify(runtimeObj, null, 4));
 }
 
-function getKeyName(key: string, projectId: string, demo: boolean) {
+export function getKeyName(key: string, projectId: string, demo?: boolean) {
   if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(projectId)}_${key}`)) {
     return `${camelCase(projectId)}_${key}`;
   }
