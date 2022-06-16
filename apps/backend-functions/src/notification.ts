@@ -111,7 +111,11 @@ async function appendNotificationSettings(notification: NotificationDocument) {
     'invitationToAttendMeetingCreated',
 
     // user does not have access to app yet, notification only used to send email
-    'requestFromUserToJoinOrgPending'
+    'requestFromUserToJoinOrgPending',
+
+    //these notifications are used to send emails after a screening, not to be displayed in front
+    'userMissedScreening',
+    'userAttendedScreening'
   ];
 
   if (notificationsForInvitations.includes(notification.type)) {

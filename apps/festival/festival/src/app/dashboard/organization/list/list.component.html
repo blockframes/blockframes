@@ -9,7 +9,7 @@
   </list-page-app-bar>
 
   <list-page-title>
-    <h1 class="mat-display-2 page-title">Buyer List</h1>
+    <h1 class="mat-display-2 page-title">Buyers</h1>
   </list-page-title>
 
   <list-page-search>
@@ -41,7 +41,7 @@
   </list-filter>
 
   <ng-template listPageCard let-org>
-    <org-card [org]="org"></org-card>
+    <org-card [org]="org" hideIcons></org-card>
   </ng-template>
 
   <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
