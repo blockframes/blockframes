@@ -7,6 +7,7 @@
   "supportFile": "./src/support/index.ts",
   "video": true,
   "videosFolder": "../../../dist/cypress/apps/festival/festival-e2e/videos",
+  "videoCompression": false,
   "screenshotsFolder": "../../../dist/cypress/apps/festival/festival-e2e/screenshots",
   "chromeWebSecurity": false,
   "defaultCommandTimeout": 10000,
