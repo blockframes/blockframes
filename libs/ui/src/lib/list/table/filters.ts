@@ -26,9 +26,9 @@ export const filters = {
     return movie.directors.map(director => displayName(director))
       .some(name => name.toLocaleLowerCase().includes(input));
   },
-  movieTitle: (input: string, movie: Movie) => {
-    if (!movie?.title?.international) return false;
-    return movie.title.international.toLocaleLowerCase().includes(input);
+  movieTitle: (input: string, title: string) => {
+    if (!title) return false;
+    return title.toLocaleLowerCase().includes(input);
   },
   // #8355 - TODO: merge these three in one
   crmMovieOrgName: (input: string, _, movie: CrmMovie) => {
