@@ -35,6 +35,7 @@ import type {
 } from './identity';
 import type { DocumentMeta } from './meta';
 import { getAllAppsExcept } from './apps';
+import { Organization } from './organisation';
 
 //////////////////
 // MOVIE OBJECT //
@@ -248,6 +249,11 @@ export interface MovieGoalsAudience {
 
 export interface SyncMovieAnalyticsOptions {
   filterBy: (movie: Movie) => boolean;
+}
+
+export interface CrmMovie extends Movie {
+  org: Organization;
+  screeningCount: number;
 }
 
 /** A factory function that creates Movie */

@@ -1,4 +1,4 @@
-import { PublicUser, PermissionsDocument, Organization } from '@blockframes/model';
+import { e2eUser, e2eOrg, e2ePermissions } from '@blockframes/testing/cypress/browser';
 import { createFakeUserDataArray } from '@blockframes/testing/cypress/browser';
 
 const newUserUid = '0-e2e-newUserUid';
@@ -7,121 +7,6 @@ const dashboardOrgAdminUid = '0-e2e-dashboardOrgAdminUid';
 const marketplaceOrgId = '0-e2e-marketplaceOrgId';
 const dashboardOrgId = '0-e2e-dashboardOrgId';
 const [newUserData, marketplaceOrgAdminData, dashboardOrgAdminData] = createFakeUserDataArray(3);
-const now = new Date();
-
-//* Creation consts
-
-interface E2EUser {
-  uid: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  orgId?: string;
-}
-
-const e2eUser = (data: E2EUser): PublicUser => {
-  const { uid, firstName, lastName, email, orgId } = data;
-  return {
-    uid,
-    firstName,
-    lastName,
-    email,
-    orgId,
-    hideEmail: false,
-    _meta: {
-      emailVerified: true,
-      createdFrom: 'festival',
-      createdBy: 'anonymous',
-      createdAt: now,
-    },
-  };
-};
-
-interface E2EOrganization {
-  id: string;
-  name: string;
-  userIds: string[];
-  email: string;
-  dashboardAccess: boolean;
-}
-
-const e2eOrg = (data: E2EOrganization): Organization => {
-  const { id, name, userIds, email, dashboardAccess } = data;
-  return {
-    id,
-    denomination: {
-      public: null,
-      full: name,
-    },
-    userIds,
-    email,
-    status: 'accepted',
-    activity: 'actor',
-    _meta: {
-      createdAt: new Date(),
-      createdFrom: 'festival',
-      createdBy: marketplaceOrgAdminUid,
-    },
-    appAccess: {
-      festival: {
-        marketplace: true,
-        dashboard: dashboardAccess,
-      },
-      catalog: {
-        marketplace: false,
-        dashboard: false,
-      },
-      crm: {
-        marketplace: false,
-        dashboard: false,
-      },
-      financiers: {
-        marketplace: false,
-        dashboard: false,
-      },
-    },
-    fiscalNumber: '',
-    wishlist: [],
-    description: '',
-    addresses: {
-      main: {
-        zipCode: null,
-        country: 'france',
-        city: null,
-        phoneNumber: null,
-        street: null,
-        region: null,
-      },
-    },
-    documents: {
-      notes: [],
-      videos: [],
-    },
-    logo: {
-      docId: '',
-      privacy: 'public',
-      storagePath: '',
-      collection: 'movies',
-      field: '',
-    },
-  };
-};
-
-const e2ePermissions = (data: { id: string; adminUid: string }): PermissionsDocument => {
-  const { id, adminUid } = data;
-  return {
-    id,
-    roles: {
-      [adminUid]: 'superAdmin',
-    },
-    canCreate: [],
-    canDelete: [],
-    canRead: [],
-    canUpdate: [],
-  };
-};
-
-//* FIXTURES *//
 
 //* New user
 
@@ -138,7 +23,10 @@ export const newOrg = {
   activity: newUserData.company.activity,
 };
 
-//* Marketplace admin, org and permissions
+//* ------------------------------------- *//
+
+//* Marketplace admin, org and permissions *//
+
 const marketplaceOrgAdmin = e2eUser({
   uid: marketplaceOrgAdminUid,
   firstName: marketplaceOrgAdminData.firstName,
@@ -166,7 +54,10 @@ export const marketplaceData = {
   permissions: marketplaceOrgPermissions,
 };
 
-//* Dashboard admin, org and permissions
+//* ------------------------------------- *//
+
+//* Dashboard admin, org and permissions *//
+
 const dashboardOrgAdmin = e2eUser({
   uid: dashboardOrgAdminUid,
   firstName: dashboardOrgAdminData.firstName,
@@ -193,3 +84,5 @@ export const dashboardData = {
   org: dashboardOrg,
   permissions: dashboardOrgPermissions,
 };
+
+//* ------------------------------------- *//
