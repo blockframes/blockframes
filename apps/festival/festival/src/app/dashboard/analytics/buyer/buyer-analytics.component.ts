@@ -57,6 +57,9 @@ function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
 
 function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attended = invitations.filter(invitation => invitation.watchTime);
+  const time = invitations.length ? Math.round(sum(attended, inv => inv.watchTime) / invitations.length) : 0;
+  const watchtimeMinutes = Math.floor(time / 60);
+  const watchtimeSeconds = time % 60;
   return [
     {
       title: 'Invitations',
@@ -75,7 +78,7 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
     },
     {
       title: 'Average watch time',
-      value: sum(attended, inv => inv.watchTime) / invitations.length || 0,
+      value: `${watchtimeMinutes}min ${watchtimeSeconds}s`,
       icon: 'access_time'
     }
   ];
