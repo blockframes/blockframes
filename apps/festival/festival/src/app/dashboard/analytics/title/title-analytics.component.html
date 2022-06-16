@@ -106,7 +106,7 @@
     </ng-container>
   </header>
   <article class="surface">
-    <p>"O" means the user left the screening right away.</p>
+    <p>"0" means the user left the screening right away.</p>
     <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
     <ng-container *ngIf="invitations$ | async as invitations">
       <header>
