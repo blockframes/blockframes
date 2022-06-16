@@ -10,7 +10,7 @@ import {
 
 export function getStaticModelFilter(scope: Scope) {
   return (input: string, value: string) => {
-    if (typeof value !== 'string') return false;
+    if (typeof value !== 'string' || !value) return false;
     const label = staticModel[scope][value];
     return label.toLowerCase().includes(input);
   };
