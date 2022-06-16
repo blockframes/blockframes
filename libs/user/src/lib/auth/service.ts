@@ -42,7 +42,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
 
   profile$: Observable<User> = this.profile$.pipe(
     tap((user) => (this.profile = user))
-  )
+  );
 
   // Firebase Auth User Object and User object in Firestore DB (profile)
   auth$: Observable<{ uid: string, isAnonymous: boolean, emailVerified: boolean, profile?: User }> = this.user$.pipe(
