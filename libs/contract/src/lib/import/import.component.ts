@@ -15,7 +15,7 @@ export class ContractImportComponent {
   sheetTab?: SheetTab;
   public templateUrl = this.app === 'catalog'
     ? '/assets/templates/import-contracts-seller-template.xlsm'
-    : '/assets/templates/import-contracts-template.xlsm';
+    : '/assets/templates/import-contracts-admin-template.xlsm';
 
   constructor(
     @Optional() private intercom: Intercom,
