@@ -41,7 +41,9 @@ import {
   keepAlive,
   generateFixtures,
   writeRuntimeConfig,
-  functionsConfigMap
+  functionsConfigMap,
+  clearDb,
+  startEmulatorsForUnitTests
 } from '@blockframes/devops';
 import { join } from 'node:path';
 
@@ -63,6 +65,12 @@ async function runCommand() {
       break;
     case 'importEmulator':
       await importEmulatorFromBucket({ importFrom: arg1 });
+      break;
+    case 'log':
+      console.log(...flags);
+      break;
+    case 'emulatorsUnitTests':
+      await startEmulatorsForUnitTests({ execCommand: arg1 });
       break;
     case 'startEmulators':
     case 'emulators':
@@ -145,6 +153,9 @@ async function runCommand() {
       break;
     case 'createUsers':
       await createUsers();
+      break;
+    case 'clearDb':
+      await clearDb(db, false);
       break;
     case 'upgradeAlgoliaOrgs':
       await upgradeAlgoliaOrgs();
