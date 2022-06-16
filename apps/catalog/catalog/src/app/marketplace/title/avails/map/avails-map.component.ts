@@ -4,7 +4,7 @@ import { map, shareReplay, throttleTime } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
-import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import {
   AvailableTerritoryMarker,
   BucketTerritoryMarker,
@@ -123,8 +123,8 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   ngAfterViewInit() {
     const decodedData = decodeUrl<MapAvailsFilter>(this.route);
     if (!decodedData.medias) decodedData.medias = [];
-    if (decodedData.duration?.from) decodedData.duration.from = new Date(decodedData.duration.from);
-    if (decodedData.duration?.to) decodedData.duration.to = new Date(decodedData.duration.to);
+    if (decodedData.duration?.from) decodedData.duration.from = decodeDate(decodedData.duration.from);
+    if (decodedData.duration?.to) decodedData.duration.to = decodeDate(decodedData.duration.to);
 
     this.availsForm.patchValue(decodedData);
     this.availsForm.valueChanges.pipe(throttleTime(1000)).subscribe((formState) => {

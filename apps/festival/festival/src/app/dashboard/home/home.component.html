@@ -99,8 +99,8 @@
             <ng-template colRef="user.email" label="Email" let-email sort>
               {{ email }}
             </ng-template>
-            <ng-template colRef="org.denomination.public" label="Company name" let-name sort>
-              {{ name }}
+            <ng-template colRef="org" label="Company name" let-org sort>
+              {{ org | orgName }}
             </ng-template>
             <ng-template colRef="org.addresses.main.country" label="Country" let-country sort [filter]="filters.territories">
               {{ country | toLabel:'territories' }}
@@ -125,7 +125,10 @@
             </ng-template>
           </bf-table>
 
-          <a mat-button class="link_buttons" routerLink="buyer">View All Buyers' Activities</a>
+          <a mat-button class="link_buttons" routerLink="buyer">
+            <span>View All Buyers' Activities</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </a>
         </section>
       </ng-container>
     </ng-container>
