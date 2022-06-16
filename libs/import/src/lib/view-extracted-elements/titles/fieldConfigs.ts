@@ -155,7 +155,7 @@ export function getFieldConfigs(
     },
       /* e */ 'title.series': (value: string, data: Partial<FieldsConfig>) => {
       if (!value && data.contentType === 'tv') throw optionalWarning('Season Number');
-      if (value === '') return null;
+      if (!value) return null;
       const series = Number(value);
       if (isNaN(series)) throw wrongValueError(value, 'Season Number');
       return series;
