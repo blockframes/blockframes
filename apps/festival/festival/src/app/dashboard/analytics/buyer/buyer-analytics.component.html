@@ -5,13 +5,13 @@
 
   <ng-container *ngIf="user$ | async as user">
     <article>
-      <a [routerLink]="['/c/o/marketplace/organization/', user.orgId]">
-        <img [ref]="user.org.logo" asset="empty_organization.svg" type="logo" alt="Organizaiton Logo">
-      </a>
+      <img [ref]="user.org.logo" asset="empty_organization.svg" type="logo" alt="Organizaiton Logo">
 
       <div>
         <h4>{{ user | displayName }}</h4>
-        <h1>{{ user.org | orgName }}</h1>
+        <a [routerLink]="['/c/o/dashboard/organization/', user.orgId]">
+          <h1>{{ user.org | orgName }}</h1>
+        </a>
         <h5>{{ user.org.activity | toLabel:'orgActivity' }}</h5>
 
         <a mat-button [href]="'mailto:' + user.email">
