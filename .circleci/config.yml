@@ -315,7 +315,6 @@ jobs:
     executor: blockframes-ci
     environment:
       PROJECT_ID: demo-blockframes
-    resource_class: xlarge
     steps:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=e2e
