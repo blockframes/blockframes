@@ -12,7 +12,6 @@
     "demo3": "blockframes-demo-3",
     "demo4": "blockframes-demo-4",
     "demo5": "blockframes-demo-5",
-    "ci": "blockframes-ci",
     "remco": "blockframes-remco",
     "springfield": "blockframes-yonga",
     "antoine": "blockframes-antoine-9e16b",
@@ -43,25 +42,6 @@
         ],
         "cms": [
           "blockframes-cms"
-        ]
-      }
-    },
-    "blockframes-ci": {
-      "hosting": {
-        "catalog": [
-          "blockframes-ci"
-        ],
-        "festival": [
-          "blockframes-ci-festival"
-        ],
-        "crm": [
-          "blockframes-ci-crm"
-        ],
-        "financiers": [
-          "blockframes-ci-financiers"
-        ],
-        "cms": [
-          "blockframes-ci-cms"
         ]
       }
     },

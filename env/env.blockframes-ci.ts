@@ -4,10 +4,10 @@
 // ========
 
 export const appUrl = {
-  content: 'https://blockframes-ci.web.app',
-  market: 'http://blockframes-ci-festival.web.app',
-  financiers: 'http://blockframes-ci-financiers.web.app',
-  crm: 'https://blockframes-ci-crm.web.app',
+  content: 'http://localhost:4200',
+  market: 'http://localhost:4200',
+  financiers: 'http://localhost:4200',
+  crm: 'http://localhost:4200',
 }
 
 const firebaseConfig = {
