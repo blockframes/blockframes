@@ -11,5 +11,5 @@
     "nodesmith",
     "twilio"
   ],
-  "editor.formatOnSave": false
+  "editor.formatOnSave": false,
 }
