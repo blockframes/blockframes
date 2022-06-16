@@ -1,11 +1,9 @@
 import { ActivatedRoute, Router } from "@angular/router"
 
-
-
 /**
  * Decode the app url and save it as form state
  */
-export function decodeUrl<T=any>(route: ActivatedRoute): T {
+export function decodeUrl<T = any>(route: ActivatedRoute): T {
   const { formValue } = route.snapshot.queryParams;
   try {
     const fromUrl = decodeURIComponent(formValue ?? '{}');
