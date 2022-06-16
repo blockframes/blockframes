@@ -313,6 +313,7 @@ jobs:
           path: dist/cypress/apps
   festival-e2e:
     executor: blockframes-ci
+    resource_class: xlarge
     environment:
       PROJECT_ID: demo-blockframes
     steps:
