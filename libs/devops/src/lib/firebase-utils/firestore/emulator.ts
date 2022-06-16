@@ -124,7 +124,7 @@ export async function firebaseEmulatorExec({
     await ensureSafeEmulatorBackupPath(importPath)
   }
 
-  if (isOrHasValue(emulators, 'firestore') && isEmulatorBackupDir(importPath)) {
+  if (isOrHasValue(emulators, 'firestore') && importPath && isEmulatorBackupDir(importPath)) {
     if (emulatorBackupDirHasFirestore(importPath)) {
       console.log('Firestore backup detected correctly.');
     } else {
@@ -386,33 +386,43 @@ export function writeRuntimeConfig(values: { [key: string]: string }, path: stri
   const runtimeObj = {};
 
   const projectId = process.env['PROJECT_ID'];
-  function getKeyName(key: string) {
-    if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(projectId)}_${key}`)) {
-      return `${camelCase(projectId)}_${key}`;
-    }
-    return key;
+  const isDemo = projectId === 'demo-blockframes';
+
+  Object.entries(values).forEach(([key, value]) => {
+    const foundValue = process.env[getKeyName(value, projectId, isDemo)];
+    const fallbackValue = 'missing-env-value';
+    set(runtimeObj, key, foundValue || fallbackValue);
+  });
+  return writeFileSync(path, JSON.stringify(runtimeObj, null, 4));
+}
+
+function getKeyName(key: string, projectId: string, demo: boolean) {
+  if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(projectId)}_${key}`)) {
+    return `${camelCase(projectId)}_${key}`;
+  }
+  if (demo && Object.prototype.hasOwnProperty.call(process.env, `${camelCase('blockframes-ci')}_${key}`)) {
+    return `${camelCase('blockframes-ci')}_${key}`;
   }
 
-  Object.entries(values).forEach(([key, value]) => set(runtimeObj, key, process.env[getKeyName(value)] || 'missing-env-value'));
-  return writeFileSync(path, JSON.stringify(runtimeObj, null, 4));
+  return key;
 }
 
 /**
  * This tuple array maps field names to the environment variable key to set them to for runtimeconfig.json and
  * firebase secrets
  */
-export const functionsConfigMap: Record<string, string> = {
-  'sendgrid.api_key': 'SENDGRID_API_KEY',// @see https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0
-  'jwplayer.key': 'JWPLAYER_KEY',// @see https://www.notion.so/cascade8/Setup-JWPlayer-2276fce57b464b329f0b6d2e7c6d9f1d
+export const functionsConfigMap: { [key: string]: string } = {
+  'sendgrid.api_key': 'SENDGRID_API_KEY', // @see https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0
+  'jwplayer.key': 'JWPLAYER_KEY', // @see https://www.notion.so/cascade8/Setup-JWPlayer-2276fce57b464b329f0b6d2e7c6d9f1d
   'jwplayer.secret': 'JWPLAYER_SECRET',
   'jwplayer.apiv2secret': 'JWPLAYER_APIV2SECRET',
   'algolia.api_key': 'ALGOLIA_API_KEY',
-  'imgix.token': 'IMGIX_TOKEN',// @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
+  'imgix.token': 'IMGIX_TOKEN', // @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
   'twilio.account.sid': 'TWILIO_ACCOUNT_SID',
   'twilio.account.secret': 'TWILIO_ACCOUNT_SECRET',
   'twilio.api.key.secret': 'TWILIO_API_KEY_SECRET',
   'twilio.api.key.sid': 'TWILIO_API_KEY_SID',
   'mailchimp.api_key': 'MAILCHIMP_API_KEY',
   'mailchimp.server': 'MAILCHIMP_SERVER',
-  'mailchimp.list_id': 'MAILCHIMP_LIST_ID'
-}
+  'mailchimp.list_id': 'MAILCHIMP_LIST_ID',
+};
