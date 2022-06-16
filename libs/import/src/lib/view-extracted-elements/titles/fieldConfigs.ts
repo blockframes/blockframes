@@ -162,7 +162,7 @@ export function getFieldConfigs(
     },
       /* f */ 'runningTime.episodeCount': (value: string, data: Partial<FieldsConfig>) => {
       if (!value && data.contentType === 'tv') throw optionalWarning('Number of Episodes');
-      if (value === '') return null;
+      if (!value) return null;
       const count = Number(value);
       if (isNaN(count)) throw wrongValueError(value, 'Number of Episodes');
       return count;
