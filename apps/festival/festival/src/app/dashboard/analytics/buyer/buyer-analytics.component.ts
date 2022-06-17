@@ -170,6 +170,10 @@ export class BuyerAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
+  hasInvitations$ = this.invitations$.pipe(
+    map(invitations => invitations.length)
+  );
+
   aggregatedScreeningCards$: Observable<MetricCard[]> = this.invitations$.pipe(
     map(toScreenerCards)
   );
