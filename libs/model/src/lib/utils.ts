@@ -37,7 +37,7 @@ export function titleCase(text: string) {
 }
 
 export function displayName(person: Person) {
-  return `${titleCase(person.firstName)} ${titleCase(person.lastName)}`;
+  return `${titleCase(person.firstName).trim()} ${titleCase(person.lastName).trim()}`;
 }
 
 /**
