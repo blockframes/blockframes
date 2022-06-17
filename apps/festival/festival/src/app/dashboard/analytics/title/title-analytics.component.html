@@ -5,7 +5,7 @@
 
   <ng-container *ngIf="title$ | async as title">
     <article fxLayout fxLayoutGap="24px">
-      <a [routerLink]="['/c/o/marketplace/title/', title.id]">
+      <a [routerLink]="['/c/o/dashboard/title/', title.id]">
         <img fxHide.lt-md [ref]="title.poster" asset="empty_poster.svg" alt="Movie Poster" class="poster">
       </a>
 
@@ -13,7 +13,7 @@
         <p class="mat-body-1">{{ title.directors | displayName }}</p>
         <div fxLayout fxLayoutAlign="space-between">
           <h1 class="mat-display-1">{{ title.title.international }}</h1>
-          <a mat-button [routerLink]="['/c/o/marketplace/title/', title.id]" class="film-page-button">See Film Page</a>
+          <a mat-button [routerLink]="['/c/o/dashboard/title/', title.id]" class="film-page-button">See Film Page</a>
         </div>
         <h6>{{ title.genres | toLabel: 'genres' }}</h6>
       </div>
@@ -111,7 +111,7 @@
     <ng-container *ngIf="invitations$ | async as invitations">
       <header>
         <h5>Attendees</h5>
-        <button mat-button [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export to .CSV</button>
+        <button mat-button color="primary" [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export to .CSV</button>
       </header>
       <bf-table class="screenings" [source]="invitations" clickable useFilter pagination="5">
         <ng-template colRef label="Name" let-invitation="item" sort defaultSort [filter]="filters.name">

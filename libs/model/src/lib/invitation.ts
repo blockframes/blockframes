@@ -5,6 +5,7 @@ import { Movie } from './movie';
 import { Event, Screening } from './event';
 import { Timestamp } from './timestamp';
 import { Analytics } from './analytics';
+import { sum } from './utils';
 
 /**
  * Raw type for Invitation.
@@ -91,14 +92,19 @@ type Guest<type> = type extends 'user' ? Invitation['toUser'] : Invitation['toOr
 /**
  * Get the guest of an invitation
  */
- export function getGuest(invitation: Invitation | InvitationDocument, guestType: 'user'): (Invitation| InvitationDocument)['toUser']
- export function getGuest(invitation: Invitation | InvitationDocument, guestType: 'org'): (Invitation | InvitationDocument)['toOrg']
- export function getGuest(invitation: Invitation | InvitationDocument, guestType: 'user' | 'org' = 'user'): Guest<typeof guestType> {
-   const { fromOrg, fromUser, toOrg, toUser, mode } = invitation;
-   if (mode === 'invitation') {
-     return guestType === 'user' ? toUser : toOrg;
-   }
-   if (mode === 'request') {
-     return guestType === 'user' ? fromUser : fromOrg;
-   }
- }
+export function getGuest(invitation: Invitation | InvitationDocument, guestType: 'user'): (Invitation | InvitationDocument)['toUser']
+export function getGuest(invitation: Invitation | InvitationDocument, guestType: 'org'): (Invitation | InvitationDocument)['toOrg']
+export function getGuest(invitation: Invitation | InvitationDocument, guestType: 'user' | 'org' = 'user'): Guest<typeof guestType> {
+  const { fromOrg, fromUser, toOrg, toUser, mode } = invitation;
+  if (mode === 'invitation') {
+    return guestType === 'user' ? toUser : toOrg;
+  }
+  if (mode === 'request') {
+    return guestType === 'user' ? fromUser : fromOrg;
+  }
+}
+
+export function averageWatchtime(list: { watchTime?: number }[]) {
+  const totalWatchTime = sum(list, inv => inv.watchTime);
+  return Math.round(totalWatchTime / list.length) || 0;
+}
