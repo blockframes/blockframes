@@ -1,5 +1,6 @@
 import { OrgActivity, Territory, PublicUser, Module } from '@blockframes/model';
 import { browserAuth } from '@blockframes/testing/cypress/browser';
+import { startOfWeek, add, isPast, isFuture } from 'date-fns';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 
@@ -26,7 +27,11 @@ export function get(selector: string) {
   return cy.get(`[test-id="${selector}"]`);
 }
 
-function getAllStartingWith(selector: string) {
+export function getByClass(selector: string) {
+  return cy.get(`.${selector}`);
+}
+
+export function getAllStartingWith(selector: string) {
   return cy.get(`[test-id^="${selector}"]`);
 }
 
@@ -106,6 +111,51 @@ export function verifyInvitation(orgAdminEmail: string, user: PublicUser, expect
   get('invitations-link').click();
   get('invitation').first().should('contain', `${user.firstName} ${user.lastName} wants to join your organization.`);
   get('invitation-status').first().should('contain', 'Accepted');
+}
+
+//* ------------------------------------- *//
+
+//* DASHBOARD *//
+
+export function createFutureSlot() {
+  const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
+  do {
+    slot.day = new Date().getDay() + Math.floor(Math.random() * (7 - new Date().getDay()));
+    slot.hours = Math.floor(Math.random() * 24);
+    slot.minutes = Math.random() < 0.5 ? 0 : 30;
+  } while (!isFuture(add(startOfWeek(new Date()), { days: slot.day, hours: slot.hours, minutes: slot.minutes })));
+  return slot;
+}
+
+// not used yet, need to wait for issue #8203 to be resolved
+export function createPastSlot() {
+  const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
+  do {
+    slot.day = Math.floor(Math.random() * new Date().getDay());
+    slot.hours = Math.floor(Math.random() * 24);
+    slot.minutes = Math.random() < 0.5 ? 0 : 30;
+  } while (!isPast(add(startOfWeek(new Date()), { days: slot.day, hours: slot.hours, minutes: slot.minutes })));
+  return slot;
+}
+
+export function getCurrentWeekDays() {
+  const d = new Date();
+  const weekDays: { day: string; date: string }[] = [];
+  d.setDate(d.getDate() - d.getDay());
+  for (let i = 0; i < 7; i++) {
+    weekDays.push({
+      day: d.toLocaleString('en-us', { weekday: 'long' }),
+      date: `${new Date(d).toLocaleString('en-us', { month: 'short' })} ${new Date(d).getDate()}`,
+    });
+    d.setDate(d.getDate() + 1);
+  }
+  return weekDays;
+}
+
+export interface EventSlot {
+  day: number;
+  hours: number;
+  minutes: 0 | 30;
 }
 
 //* ------------------------------------- *//
