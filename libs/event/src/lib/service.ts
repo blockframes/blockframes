@@ -60,7 +60,7 @@ export class EventService extends BlockframesCollection<Event> {
 
   private movieQuery(titleId: string) { // see #7706
     return [
-      where('id', '==', titleId), 
+      where('id', '==', titleId),
       where(`app.${this.app}.status`, '==', 'accepted'),
       where(`app.${this.app}.access`, '==', true)
     ];
@@ -72,7 +72,10 @@ export class EventService extends BlockframesCollection<Event> {
         org: ({ ownerOrgId }: Event<Meta>) => this.orgService.valueChanges(ownerOrgId),
         movie: (event: Event<Meta>) => {
           if (isScreening(event)) {
-            return event.meta.titleId ? this.movieService.valueChanges(this.movieQuery(event.meta.titleId)) : undefined;
+            return event.meta.titleId ? this.movieService
+              .valueChanges(this.movieQuery(event.meta.titleId))
+              .pipe(map(movies => movies?.length ? movies[0] : undefined))
+              : undefined;
           }
         },
         organizedBy: (event: Event<Meta>) => {
