@@ -6,7 +6,7 @@ header {
   background-size: cover;
 
   .overlay {
-    padding: 24px 24px 48px 24px;
+    padding: 48px 24px 48px 24px;
     background-image: linear-gradient(to right, black, transparent);
 
     .movie-info{
@@ -14,7 +14,7 @@ header {
       gap: 20px;
 
       .poster {
-        height: 240px;
+        height: 320px;
       }
 
       .movie-details {
