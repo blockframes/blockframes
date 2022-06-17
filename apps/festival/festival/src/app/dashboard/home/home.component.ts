@@ -137,7 +137,7 @@ export class HomeComponent {
   ) { }
 
   public showBuyer(row: AggregatedAnalytic) {
-    this.router.navigate([`/c/o/dashboard/home/buyer/${row.user.uid}`], { relativeTo: this.route })
+    this.router.navigate(['buyer', row.user.uid], { relativeTo: this.route })
   }
 
   public openIntercom(): void {
