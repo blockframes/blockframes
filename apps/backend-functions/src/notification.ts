@@ -110,7 +110,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
     'invitationToAttendSlateCreated',
     'invitationToAttendMeetingCreated',
 
-    // otifications only used to send email
+    // notifications only used to send email
     'requestFromUserToJoinOrgPending',
     'userRequestAppAccess',
 
