@@ -136,7 +136,7 @@ export class HomeComponent {
     private route: ActivatedRoute
   ) { }
 
-  async showBuyer(row: AggregatedAnalytic) {
+  showBuyer(row: AggregatedAnalytic) {
     this.router.navigate(['buyer', row.user.uid], { relativeTo: this.route });
   }
 
