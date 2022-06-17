@@ -12,15 +12,14 @@ import { functionsConfigMap } from '@blockframes/devops';
 const args = process.argv.slice(2);
 const [arg] = args;
 
-if (arg) console.log('The following args were detected:', args)
-
+if (arg) console.log('The following args were detected:', args);
 
 /**
  * This is temporary because key names are hardcoded.
  * Future versions will not hardcode this.
  * But need to figure out how to indicate nested objects (more underscores?)
  */
-function getKeyValFormat(env?: string): string[] {
+function getKeyValFormat(env: string): string[] {
   /**
    * This generates the statement line used to set function config values in Firebase Functions
    */

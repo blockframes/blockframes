@@ -47,9 +47,9 @@ export function warnMissingVars(): void | never {
   if (projectId !== firebase().projectId) {
     console.warn(
       'WARNING! Your PROJECT_ID in your shell environment does not match your' +
-        'Firebase project ID found in your Firebase configuration!' +
-        'Please use the "use" command to reset this unless you know what you\'re doing.' +
-        '\nIf you are using a demo project ID for emulator, this is to be expected.'
+      'Firebase project ID found in your Firebase configuration!' +
+      'Please use the "use" command to reset this unless you know what you\'re doing.' +
+      '\nIf you are using a demo project ID for emulator, this is to be expected.'
     );
   }
   const warn = (key: string, msg: string) => {
@@ -57,10 +57,9 @@ export function warnMissingVars(): void | never {
     console.warn(`More info: ${msg}\n`);
   };
   // Use '||' instead of '??' to detect empty string
-  if (!missingVarsMessageShown)
-    requiredVars.map(
-      ({ key, msg }: { key: string; msg: string }) => process.env[getKeyName(key, projectId, isDemo(projectId))] || warn(key, msg)
-    );
+  if (!missingVarsMessageShown) requiredVars.map(
+    ({ key, msg }: { key: string; msg: string }) => process.env[getKeyName(key, projectId, isDemo(projectId))] || warn(key, msg)
+  );
   missingVarsMessageShown = true;
 }
 
