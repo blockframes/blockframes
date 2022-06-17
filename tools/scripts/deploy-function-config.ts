@@ -4,10 +4,10 @@ config();
 
 import * as firebaseTools from 'firebase-tools';
 import { loadSecretsFile, absSecretPath, absTemplatePath } from './lib';
-import { warnMissingVars } from '@blockframes/firebase-utils';
+import { getKeyName, warnMissingVars } from '@blockframes/firebase-utils';
 import { existsSync } from 'fs';
 import { execSync } from 'child_process'
-import { functionsConfigMap, getKeyName } from '@blockframes/devops';
+import { functionsConfigMap } from '@blockframes/devops';
 
 const args = process.argv.slice(2);
 const [arg] = args;
@@ -20,16 +20,15 @@ if (arg) console.log('The following args were detected:', args)
  * Future versions will not hardcode this.
  * But need to figure out how to indicate nested objects (more underscores?)
  */
-export function getKeyValFormat(env?: string): string[] {
-
+function getKeyValFormat(env?: string): string[] {
   /**
    * This generates the statement line used to set function config values in Firebase Functions
    */
   function getSettingStatement([fieldPath, envKey]) {
-    return `${fieldPath}="${process.env[getKeyName(envKey, env)]}"`
+    return `${fieldPath}="${process.env[getKeyName(envKey, env)]}"`;
   }
 
-  return Object.entries(functionsConfigMap).map(getSettingStatement)
+  return Object.entries(functionsConfigMap).map(getSettingStatement);
 }
 
 async function setFirebaseConfig() {

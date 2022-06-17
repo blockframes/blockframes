@@ -6,7 +6,7 @@ import requiredVars from 'tools/mandatory-env-vars.json';
 import { resolve } from 'path';
 import { firebase as firebaseProd } from 'env/env.blockframes';
 import { OrganizationDocument, App } from '@blockframes/model';
-import { getKeyName } from '@blockframes/devops'
+import { camelCase } from 'lodash';
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -22,14 +22,14 @@ export async function* getCollectionInBatches<K>(ref: admin.firestore.Collection
 
   function getDocs(querySnap: FirebaseFirestore.QuerySnapshot) {
     return querySnap.docs.map((snap, i, arr) => {
-      if (i === (arr.length - 1)) lastSnapshot = snap;
+      if (i === arr.length - 1) lastSnapshot = snap;
       return snap.data() as K;
-    })
+    });
   }
 
   while (!querySnapshot.empty) {
     yield getDocs(querySnapshot);
-    querySnapshot = await ref.orderBy(orderBy).startAfter(lastSnapshot).limit(batchSize).get()
+    querySnapshot = await ref.orderBy(orderBy).startAfter(lastSnapshot).limit(batchSize).get();
   }
 }
 
@@ -38,28 +38,41 @@ export interface DbRecord {
   content: { [key: string]: any };
 }
 
+export const isDemo = str => str === 'demo-blockframes';
+
 let missingVarsMessageShown = false;
 
 export function warnMissingVars(): void | never {
   const projectId = process.env['PROJECT_ID'];
   if (projectId !== firebase().projectId) {
     console.warn(
-      'WARNING! Your PROJECT_ID in your shell environment does not match your'
-      + 'Firebase project ID found in your Firebase configuration!'
-      + 'Please use the "use" command to reset this unless you know what you\'re doing.'
-      + '\nIf you are using a demo project ID for emulator, this is to be expected.'
+      'WARNING! Your PROJECT_ID in your shell environment does not match your' +
+        'Firebase project ID found in your Firebase configuration!' +
+        'Please use the "use" command to reset this unless you know what you\'re doing.' +
+        '\nIf you are using a demo project ID for emulator, this is to be expected.'
     );
   }
   const warn = (key: string, msg: string) => {
     console.warn(`Please ensure the following variable is set in .env : ${key}`);
     console.warn(`More info: ${msg}\n`);
   };
-  const isDemo = projectId === 'demo-blockframes' // TODO: This id should be configured in one spot
   // Use '||' instead of '??' to detect empty string
-  if (!missingVarsMessageShown) requiredVars.map(
-    ({ key, msg }: { key: string; msg: string }) => process.env[getKeyName(key, projectId, isDemo)] || warn(key, msg)
-  );
+  if (!missingVarsMessageShown)
+    requiredVars.map(
+      ({ key, msg }: { key: string; msg: string }) => process.env[getKeyName(key, projectId, isDemo(projectId))] || warn(key, msg)
+    );
   missingVarsMessageShown = true;
+}
+
+export function getKeyName(key: string, projectId: string, demo?: boolean) {
+  if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(projectId)}_${key}`)) {
+    return `${camelCase(projectId)}_${key}`;
+  }
+  if (demo && Object.prototype.hasOwnProperty.call(process.env, `${camelCase('blockframes-ci')}_${key}`)) {
+    return `${camelCase('blockframes-ci')}_${key}`;
+  }
+
+  return key;
 }
 
 interface AdminServices {
@@ -118,8 +131,7 @@ export function getServiceAccountObj(keyFile: string): admin.ServiceAccount {
 }
 
 export async function hasAcceptedMovies(org: OrganizationDocument, appli: App, db = loadAdminServices().db) {
-  const moviesColRef = await db.collection('movies')
-    .where('orgIds', 'array-contains', org.id).get();
+  const moviesColRef = await db.collection('movies').where('orgIds', 'array-contains', org.id).get();
   const movies = moviesColRef.docs.map(doc => doc.data());
   return movies.some(movie => movie?.app?.[appli].status === 'accepted' && movie?.app?.[appli].access);
 }
@@ -145,7 +157,7 @@ export async function removeAllSubcollections(
   for (const x of subCollections) {
     if (options.verbose) console.log(`deleting sub collection : ${x.path}`);
     const documents = await db.collection(x.path).listDocuments();
-    documents.forEach(ref => batch.delete(ref))
+    documents.forEach(ref => batch.delete(ref));
   }
   return batch;
 }

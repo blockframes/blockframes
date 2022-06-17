@@ -4,11 +4,11 @@ import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
 import { join, resolve, sep } from 'path';
 import { getFirestoreExportDirname } from './export';
-import { sleep, throwOnProduction } from '@blockframes/firebase-utils';
+import { getKeyName, isDemo, sleep, throwOnProduction } from '@blockframes/firebase-utils';
 import { promises } from 'fs';
-import { set, camelCase } from 'lodash';
-import type { auth as authType } from 'firebase-admin';
+import { set } from 'lodash';
 import { awaitProcOutput, gsutilTransfer, runShellCommand, runShellCommandUntil } from '../commands';
+import type { auth as authType } from 'firebase-admin';
 
 const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
 const emulatorMetadataFilename = 'firebase-export-metadata.json';
@@ -386,25 +386,13 @@ export function writeRuntimeConfig(values: { [key: string]: string }, path: stri
   const runtimeObj = {};
 
   const projectId = process.env['PROJECT_ID'];
-  const isDemo = projectId === 'demo-blockframes';
 
   Object.entries(values).forEach(([key, value]) => {
-    const foundValue = process.env[getKeyName(value, projectId, isDemo)];
+    const foundValue = process.env[getKeyName(value, projectId, isDemo(projectId))];
     const fallbackValue = 'missing-env-value';
     set(runtimeObj, key, foundValue || fallbackValue);
   });
   return writeFileSync(path, JSON.stringify(runtimeObj, null, 4));
-}
-
-export function getKeyName(key: string, projectId: string, demo?: boolean) {
-  if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(projectId)}_${key}`)) {
-    return `${camelCase(projectId)}_${key}`;
-  }
-  if (demo && Object.prototype.hasOwnProperty.call(process.env, `${camelCase('blockframes-ci')}_${key}`)) {
-    return `${camelCase('blockframes-ci')}_${key}`;
-  }
-
-  return key;
 }
 
 /**
