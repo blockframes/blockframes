@@ -36,6 +36,9 @@ export async function formatTitle(
   for (const result of results) {
     const { data, errors } = result;
 
+    data.audience.goals = data.audience.goals.filter(goal => goal);
+    data.audience.targets = data.audience.targets.filter(target => target);
+
     if (!data.stakeholders) {
       errors.push(getOptionalWarning('Stakeholders'));
     }
