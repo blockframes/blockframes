@@ -136,8 +136,8 @@ export class HomeComponent {
     private route: ActivatedRoute
   ) { }
 
-  public showBuyer(row: AggregatedAnalytic) {
-    this.router.navigate(['buyer', row.user.uid], { relativeTo: this.route })
+  async showBuyer(row: AggregatedAnalytic) {
+    this.router.navigate(['buyer', row.user.uid], { relativeTo: this.route });
   }
 
   public openIntercom(): void {
