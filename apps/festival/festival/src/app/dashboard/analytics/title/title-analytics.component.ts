@@ -12,6 +12,7 @@ import {
   displayName,
   EventName,
   getGuest,
+  averageWatchtime,
 } from '@blockframes/model';
 import { filters } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -36,8 +37,7 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
   const attendees = invitations.filter(invitation => invitation.watchTime);
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
 
-
-  const averageWatchTime = Math.round(sum(attendees, inv => inv.watchTime) / attendees.length) || 0;
+  const averageWatchTime = averageWatchtime(attendees);
   const parsedTime = `${Math.floor(averageWatchTime / 60)}min ${averageWatchTime % 60}s`;
   const participationRate = Math.round(attendees.length / accepted.length) * 100;
   const acceptationRate = Math.round(accepted.length / invitations.length) * 100;

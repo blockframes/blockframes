@@ -1,6 +1,7 @@
 import {
   InvitationWithScreening,
   InvitationWithAnalytics,
+  averageWatchtime,
 } from "@blockframes/model";
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -57,8 +58,7 @@ function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
 
 function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attended = invitations.filter(invitation => invitation.watchTime);
-  const totalWatchTime = sum(attended, inv => inv.watchTime);
-  const averageWatchTime = Math.round(totalWatchTime / attended.length) || 0;
+  const averageWatchTime = averageWatchtime(attended);
 
   return [
     {

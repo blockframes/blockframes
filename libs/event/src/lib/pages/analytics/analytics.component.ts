@@ -19,7 +19,8 @@ import {
   EventMeta,
   territories,
   orgActivity,
-  invitationStatus
+  invitationStatus,
+  averageWatchtime
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MovieService } from '@blockframes/movie/service';
@@ -111,8 +112,7 @@ export class AnalyticsComponent implements OnInit {
 
         // if event is a screening or a slate presentation we add the watch time column to the table
         // and we compute the average watch time
-        const totalWatchTime = sum(this.acceptedAnalytics, a => a.watchTime);
-        this.averageWatchTime = totalWatchTime / this.acceptedAnalytics.length;
+        this.averageWatchTime = averageWatchtime(this.acceptedAnalytics);
 
         this.cdr.markForCheck();
       })
