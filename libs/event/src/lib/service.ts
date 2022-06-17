@@ -60,7 +60,7 @@ export class EventService extends BlockframesCollection<Event> {
 
   private movieQuery(titleId: string) { // see #7706
     return [
-      where('id', '==', titleId), 
+      where('id', '==', titleId),
       where(`app.${this.app}.status`, '==', 'accepted'),
       where(`app.${this.app}.access`, '==', true)
     ];
@@ -81,7 +81,7 @@ export class EventService extends BlockframesCollection<Event> {
           }
         }
       })
-    )
+    ).pipe(map(d => ({ ...d, movie: d.movie && d.movie.length ? d.movie[0] : undefined })))
   };
 
   constructor(
