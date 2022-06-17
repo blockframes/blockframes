@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import {
   AggregatedAnalytic,
   Analytics,
-  sum,
   InvitationWithAnalytics,
   Invitation,
   toLabel,

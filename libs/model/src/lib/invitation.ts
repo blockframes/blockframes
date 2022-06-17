@@ -104,7 +104,7 @@ export function getGuest(invitation: Invitation | InvitationDocument, guestType:
   }
 }
 
-export function averageWatchtime(els: { watchTime?: number }[]) {
-  const totalWatchTime = sum(els, inv => inv.watchTime);
-  return Math.round(totalWatchTime / els.length) || 0;
+export function averageWatchtime(list: { watchTime?: number }[]) {
+  const totalWatchTime = sum(list, inv => inv.watchTime);
+  return Math.round(totalWatchTime / list.length) || 0;
 }
