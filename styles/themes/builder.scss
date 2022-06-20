@@ -83,7 +83,7 @@
     disabled-button-toggle: map.get($background, 500),
     unselected-chip: map.get($background, 500),
     disabled-list-option: map.get($background, 500),
-    tooltip: rgba(map.get($background, 500), 0.9),
+    tooltip: map.get($foreground, 700),
   );
 
   ////////////////
@@ -185,6 +185,7 @@
   @include dialog.color($theme);
   @include datepicker.color($theme);
   @include table.color($theme);
+  @include tooltip.color($theme);
 
   $config: mat.get-color-config($theme);
   $background: map.get($config, 'background');
