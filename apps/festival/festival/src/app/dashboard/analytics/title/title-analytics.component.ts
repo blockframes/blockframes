@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 import {
   AggregatedAnalytic,
   Analytics,
-  sum,
   InvitationWithAnalytics,
   Invitation,
   toLabel,
@@ -12,6 +11,7 @@ import {
   displayName,
   EventName,
   getGuest,
+  averageWatchtime,
 } from '@blockframes/model';
 import { filters } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -36,8 +36,8 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
   const attendees = invitations.filter(invitation => invitation.watchTime);
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
 
-  const averageWatchTime = Math.round(sum(attendees, inv => inv.watchTime) / invitations.length) || 0;
-  const parsedTime = `${Math.floor(averageWatchTime / 60)} min ${averageWatchTime % 60} s`;
+  const averageWatchTime = averageWatchtime(attendees);
+  const parsedTime = `${Math.floor(averageWatchTime / 60)}min ${averageWatchTime % 60}s`;
   const participationRate = Math.round(attendees.length / accepted.length) * 100;
   const acceptationRate = Math.round(accepted.length / invitations.length) * 100;
   const traction = Math.round(screeningRequests.length / invitations.length) * 100;
@@ -173,13 +173,14 @@ export class TitleAnalyticsComponent {
   constructor(
     private movieService: MovieService,
     private route: ActivatedRoute,
+    private router: Router,
     private analyticsService: AnalyticsService,
     private userService: UserService,
     private orgService: OrganizationService,
     private navService: NavigationService,
     private eventService: EventService,
     private invitationService: InvitationService,
-  ) {}
+  ) { }
 
   goBack() {
     this.navService.goBack(1);
@@ -244,5 +245,12 @@ export class TitleAnalyticsComponent {
   private getOrg(invitation: Invitation) {
     const orgId = getGuest(invitation, 'user').orgId;
     return orgId ? this.orgService.valueChanges(orgId) : of(undefined);
+  }
+
+  public viewBuyerActivity(analytic: AggregatedAnalytic) {
+    this.router.navigate(
+      [`../../buyer/`, analytic.user.uid],
+      { relativeTo: this.route }
+    );
   }
 }
