@@ -24,7 +24,7 @@ export const events: VanityMetricEvent[] = [
   },
   {
     name: 'promoReelOpened',
-    title: 'Promoreel Opened',
+    title: 'Video Plays',
     icon: 'star_fill'
   },
   {
