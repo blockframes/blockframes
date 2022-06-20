@@ -41,7 +41,7 @@ const eventNameLabel: Record<EventName, string> = {
   addedToWishlist: 'Added to Wishlist',
   askingPriceRequested: 'Asking Price Requested',
   pageView: 'Page Views',
-  promoReelOpened: 'Promoreel Opened',
+  promoReelOpened: 'Video Plays',
   removedFromWishlist: 'Removed from Wishlist',
   screeningRequested: 'Screening Requested'
 }

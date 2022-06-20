@@ -206,7 +206,7 @@ export class BuyerAnalyticsComponent {
       'Countries of Origin': toLabel(aggregated.title.originCountries, 'territories'),
       'Original Languages': toLabel(aggregated.title.originalLanguages, 'languages'),
       'In wishlist': this.inWishlist(aggregated) ? 'Yes' : 'No',
-      'Promotional Elements': aggregated.promoReelOpened,
+      'Video Plays': aggregated.promoReelOpened,
       'Screening Requests': aggregated.screeningRequested,
       'Asking Price Requested': aggregated.askingPriceRequested
     }));
