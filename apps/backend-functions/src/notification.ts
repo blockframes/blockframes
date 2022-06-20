@@ -102,7 +102,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
   }
 
   // Theses notifications are never displayed in front
-  const notificationsForInvitations: NotificationTypes[] = [
+  const notificationsHiddenFromFront: NotificationTypes[] = [
     // we already have an invitation that will always be displayed instead
     'requestFromUserToJoinOrgCreate',
     'requestToAttendEventCreated',
@@ -110,15 +110,16 @@ async function appendNotificationSettings(notification: NotificationDocument) {
     'invitationToAttendSlateCreated',
     'invitationToAttendMeetingCreated',
 
-    // user does not have access to app yet, notification only used to send email
+    // notifications only used to send email
     'requestFromUserToJoinOrgPending',
+    'userRequestAppAccess',
 
-    //these notifications are used to send emails after a screening, not to be displayed in front
+    // these notifications are used to send emails after a screening, not to be displayed in front
     'userMissedScreening',
     'userAttendedScreening'
   ];
 
-  if (notificationsForInvitations.includes(notification.type)) {
+  if (notificationsHiddenFromFront.includes(notification.type)) {
     delete notification.app;
   }
 

@@ -562,12 +562,14 @@ export function getFieldConfigs(
     },
       /* e */ 'title.series': (value: string, data: Partial<FieldsConfig>) => {
       if (!value && data.contentType === 'tv') throw optionalWarning('Season Number');
+      if (!value) return null;
       const series = Number(value);
       if (isNaN(series)) throw wrongValueError(value, 'Season Number');
       return series;
     },
       /* f */ 'runningTime.episodeCount': (value: string, data: Partial<FieldsConfig>) => {
       if (!value && data.contentType === 'tv') throw optionalWarning('Number of Episodes');
+      if (!value) return null;
       const count = Number(value);
       if (isNaN(count)) throw wrongValueError(value, 'Number of Episodes');
       return count;
