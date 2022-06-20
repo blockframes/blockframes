@@ -87,14 +87,12 @@
     <missing-control [control]="movie.review" [link]="link" fragment="reviews">
       <ng-template let-reviews="control">
         <ng-container *ngFor="let review of reviews.controls">
-
           <li>
             <strong>
               <missing-control [control]="review.get('journalName')" [link]="link" fragment="reviews"></missing-control>
             </strong>
-            <span>&nbsp;</span>
-            <missing-control [control]="review.get('revueLink')" fragment="reviews"></missing-control>
-            "<missing-control [control]="review.get('criticQuote')" [link]="link" fragment="reviews"></missing-control>"
+            <ol><strong>Link - </strong><missing-control [control]="review.get('revueLink')" fragment="reviews"></missing-control></ol>
+            <ol><strong>Quote - </strong>"<missing-control [control]="review.get('criticQuote')" [link]="link" fragment="reviews"></missing-control>"</ol>
           </li>
         </ng-container>
       </ng-template>
