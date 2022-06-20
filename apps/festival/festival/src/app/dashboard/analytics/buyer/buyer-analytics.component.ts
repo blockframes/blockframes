@@ -59,6 +59,8 @@ function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
 function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attended = invitations.filter(invitation => invitation.watchTime);
   const averageWatchTime = averageWatchtime(attended);
+  const invitationsCount = invitations.filter(i => i.mode === 'invitation').length;
+  const requestsCount = invitations.filter(i => i.mode === 'request').length;
 
   const watchTime = {
     min: Math.floor(averageWatchTime / 60),
@@ -68,7 +70,7 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
   return [
     {
       title: 'Invitations',
-      value: invitations.length,
+      value: invitationsCount,
       icon: 'badge'
     },
     {
@@ -78,7 +80,7 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
     },
     {
       title: 'Requests',
-      value: sum(invitations, inv => inv.analytics.length),
+      value: requestsCount,
       icon: 'ask_screening_2'
     },
     {
