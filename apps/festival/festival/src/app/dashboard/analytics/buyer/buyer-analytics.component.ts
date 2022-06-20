@@ -206,6 +206,8 @@ export class BuyerAnalyticsComponent {
       'Countries of Origin': toLabel(aggregated.title.originCountries, 'territories'),
       'Original Languages': toLabel(aggregated.title.originalLanguages, 'languages'),
       'In wishlist': this.inWishlist(aggregated) ? 'Yes' : 'No',
+      //#8693 Currently we rename on the ui from promo reels/elements to video plays.
+      //This should be reverted to promo elements once above issue is resolved.
       'Video Plays': aggregated.promoReelOpened,
       'Screening Requests': aggregated.screeningRequested,
       'Asking Price Requested': aggregated.askingPriceRequested
