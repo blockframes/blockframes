@@ -58,14 +58,6 @@ export class EventService extends BlockframesCollection<Event> {
     },
   };
 
-  private movieQuery(titleId: string) { // see #7706
-    return [
-      where('id', '==', titleId),
-      where(`app.${this.app}.status`, '==', 'accepted'),
-      where(`app.${this.app}.access`, '==', true)
-    ];
-  };
-
   private eventQuery = <Meta extends EventMeta = unknown>(id: string) => {
     return this.valueChanges<Event<Meta>>(id).pipe(
       joinWith({
