@@ -60,6 +60,11 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
   const attended = invitations.filter(invitation => invitation.watchTime);
   const averageWatchTime = averageWatchtime(attended);
 
+  const watchTime = {
+    min: Math.floor(averageWatchTime / 60),
+    sec: averageWatchTime % 60
+  }
+
   return [
     {
       title: 'Invitations',
@@ -78,7 +83,7 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
     },
     {
       title: 'Average watch time',
-      value: `${Math.floor(averageWatchTime / 60)}min ${averageWatchTime % 60}s`,
+      value: `${watchTime.min}min ${watchTime.sec}s`,
       icon: 'access_time'
     }
   ];

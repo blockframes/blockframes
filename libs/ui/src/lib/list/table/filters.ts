@@ -22,7 +22,7 @@ export const filters = {
     return name.includes(input);
   },
   movieDirectors: (input: string, directors: Director[]) => {
-    if (!directors || !directors.length) return false;
+    if (!directors?.length) return false;
     return directors.map(director => displayName(director))
       .some(name => name.toLocaleLowerCase().includes(input));
   },
