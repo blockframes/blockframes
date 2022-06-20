@@ -25,6 +25,7 @@ import { HasAppStatusModule } from '@blockframes/movie/pipes/has-app-status.pipe
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { MapModule } from "@blockframes/ui/map";
 import { DisplayNameModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { OrgNameModule } from '@blockframes/organization/pipes';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -44,6 +45,7 @@ import { DisplayNameModule, MaxLengthModule, ToLabelModule } from '@blockframes/
     ToLabelModule,
     TableModule,
     MaxLengthModule,
+    OrgNameModule,
 
     // Material
     MatButtonModule,

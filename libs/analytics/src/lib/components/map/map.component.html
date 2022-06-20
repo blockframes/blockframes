@@ -1,7 +1,7 @@
 <header>
   <ng-content select="mat-icon"></ng-content>
   <ng-content select="h3, h5"></ng-content>
-  <button mat-icon-button *ngIf="selected" (click)="toggleSelect(selected)" matTooltip="Remove selection">
+  <button mat-icon-button *ngIf="selected" (click)="toggleSelect(selected)" matTooltip="Reset to World">
     <mat-icon svgIcon="refresh_filters"></mat-icon>
   </button>
 </header>
@@ -60,13 +60,16 @@
       </mat-list>
     </aside>
   </world-map>
-  <mat-list [ngClass]="{horizontal}">
-    <mat-list-item *ngFor="let country of top">
-      <span matLine>{{ country.label }}</span>
-      <span>{{ country.count }}</span>
-      <mat-divider></mat-divider>
-    </mat-list-item>
-  </mat-list>
+  <aside [ngClass]="{horizontal}">
+    <ng-content select="[listTitle]"></ng-content>
+    <mat-list>
+      <mat-list-item *ngFor="let country of top">
+        <span matLine>{{ country.label }}</span>
+        <span>{{ country.count }}</span>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </aside>
 </section>
 
 <ng-template #empty>

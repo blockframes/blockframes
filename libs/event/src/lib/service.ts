@@ -15,7 +15,7 @@ import {
 import { OrganizationService } from '@blockframes/organization/service';
 import { PermissionsService } from '@blockframes/permissions/service';
 import { Observable, combineLatest, of } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
 import { production } from '@env';
 import { DocumentSnapshot, QueryConstraint, where } from 'firebase/firestore';
 import { WriteOptions } from 'ngfire';
@@ -64,7 +64,10 @@ export class EventService extends BlockframesCollection<Event> {
         org: ({ ownerOrgId }: Event<Meta>) => this.orgService.valueChanges(ownerOrgId),
         movie: (event: Event<Meta>) => {
           if (isScreening(event)) {
-            return event.meta.titleId ? this.movieService.valueChanges(event.meta.titleId) : undefined;
+            if (!event.meta.titleId) return;
+            return this.movieService.valueChanges(event.meta.titleId).pipe(
+              catchError(() => of(undefined))
+            )
           }
         },
         organizedBy: (event: Event<Meta>) => {

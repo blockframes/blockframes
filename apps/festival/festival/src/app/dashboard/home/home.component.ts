@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, Inject, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Blockframes
@@ -18,6 +18,7 @@ import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytic
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 import { filters } from '@blockframes/ui/list/table/filters';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter, distinctUntilChanged } from 'rxjs/operators';
@@ -36,6 +37,7 @@ import { joinWith } from 'ngfire';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
+  @ViewChild('tableTitle') tableTitle: ElementRef;
   public selectedCountry?: string;
   public titles$ = this.orgService.currentOrg$.pipe(
     switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
@@ -134,11 +136,16 @@ export class HomeComponent {
     private route: ActivatedRoute
   ) { }
 
-  public showBuyer(row: AggregatedAnalytic) {
-    this.router.navigate([`/c/o/dashboard/home/buyer/${row.user.uid}`], { relativeTo: this.route })
+  showBuyer(row: AggregatedAnalytic) {
+    this.router.navigate(['buyer', row.user.uid], { relativeTo: this.route });
   }
 
   public openIntercom(): void {
     return this.intercom.show();
+  }
+
+  public selectCountry(country: string) {
+    scrollIntoView(this.tableTitle.nativeElement);
+    this.selectedCountry = country;
   }
 }
