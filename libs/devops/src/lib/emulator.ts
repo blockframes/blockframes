@@ -109,6 +109,23 @@ export async function startEmulators({ importFrom = 'defaultImport' }: StartEmul
   }
 }
 
+export async function startEmulatorsForUnitTests({ execCommand }: { execCommand?: string; } = {}) {
+  let proc: ChildProcess;
+  try {
+    proc = await firebaseEmulatorExec({
+      execCommand,
+      emulators: [
+        'auth',
+        'firestore',
+      ],
+      exportData: false,
+    });
+    await awaitProcessExit(proc);
+  } catch (e) {
+    await shutdownEmulator(proc)
+    throw e;
+  }
+}
 /**
  * This creates users in Auth emulator from a running instance of the Firestore emulator
  * By keeping this clean and separate, we don't need to launch functions emulator when this is happening,

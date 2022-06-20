@@ -2,7 +2,7 @@ import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { User } from 'firebase/auth';
 
 export const adminAuth = {
-  createUser(data: { uid: string; email: string }) {
+  createUser(data: { uid: string; email: string; emailVerified: boolean }) {
     return cy.task('createUser', { ...data, password: USER_FIXTURES_PASSWORD });
   },
 
