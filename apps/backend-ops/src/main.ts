@@ -134,7 +134,7 @@ async function runCommand() {
       await healthCheck();
       break;
     case 'migrate':
-      await migrate();
+      await migrate({ withMaintenance: true });
       break;
     case 'syncAuthEmulatorWithFirestoreEmulator':
       await syncAuthEmulatorWithFirestoreEmulator({ importFrom: arg1 });

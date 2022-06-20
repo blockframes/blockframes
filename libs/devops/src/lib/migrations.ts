@@ -45,12 +45,14 @@ export async function migrate({
   withBackup = true,
   db = loadAdminServices().db,
   storage = loadAdminServices().storage,
-  performMigrationCheck = true
+  performMigrationCheck = true,
+  withMaintenance = false
 }: {
   withBackup?: boolean;
   db?: FirebaseFirestore.Firestore;
   storage?: import('firebase-admin').storage.Storage;
-  performMigrationCheck?: boolean
+  performMigrationCheck?: boolean,
+  withMaintenance?: boolean
 } = {}) {
 
   if (performMigrationCheck && !await isMigrationRequired(db)) {
@@ -58,7 +60,7 @@ export async function migrate({
     return;
   }
 
-  await startMaintenance(db);
+  if (withMaintenance) await startMaintenance(db);
   console.info('Start the migration process...');
 
   const backupDir = `pre-migration-${getFirestoreExportDirname(new Date())}`;
@@ -91,7 +93,7 @@ export async function migrate({
     }
 
     await updateDBVersion(db, lastVersion);
-    await endMaintenance(db);
+    if (withMaintenance) await endMaintenance(db);
   } catch (e) {
     console.error(e);
     if (withBackup) {
