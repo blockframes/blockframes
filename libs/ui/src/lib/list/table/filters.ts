@@ -3,6 +3,7 @@ import {
   displayName,
   InvitationDetailed,
   Movie,
+  Organization,
   Person,
   Scope,
   staticModel
@@ -30,18 +31,9 @@ export const filters = {
     if (!movie?.title?.international) return false;
     return movie.title.international.toLocaleLowerCase().includes(input);
   },
-  // #8355 - TODO: merge these three in one
-  crmMovieOrgName: (input: string, _, movie: CrmMovie) => {
-    if (!movie?.org?.name) return false;
-    return movie.org.name.toLocaleLowerCase().includes(input);
-  },
-  invitationListOrgName: (input: string, _, invitation: InvitationDetailed) => {
-    if (!invitation?.org?.name) return false;
-    return invitation.org.name.toLocaleLowerCase().includes(input);
-  },
-  invitationListGuestOrgName: (input: string, _, invitation: InvitationDetailed) => {
-    if (!invitation?.guestOrg?.name) return false;
-    return invitation.guestOrg.name.toLocaleLowerCase().includes(input);
+  orgName: (input: string, org: Organization) => {
+    if (!org?.name) return false;
+    return org.name.toLocaleLowerCase().includes(input);
   },
   territories: getStaticModelFilter('territories'),
   orgActivity: getStaticModelFilter('orgActivity')

@@ -28,7 +28,7 @@
       <ng-template colRef="title.international" label="International title" sort let-title>
         {{ title }}
       </ng-template>
-      <ng-template colRef="org" label="Organization" let-org [sort]="sorts.byOrgName" [filter]="filters.crmMovieOrgName">
+      <ng-template colRef="org" label="Organization" let-org [sort]="sorts.byOrgName" [filter]="filters.orgName">
         <a *ngIf="org else noOrg" [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
           <span>{{ org.name }} </span>
           <mat-icon svgIcon="visibility"></mat-icon>
