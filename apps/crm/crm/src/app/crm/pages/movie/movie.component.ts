@@ -21,15 +21,6 @@ import { aggregatePerUser } from '@blockframes/analytics/utils';
 import { joinWith } from 'ngfire';
 import { UserService } from '@blockframes/user/service';
 
-const eventLabel: Record<EventName, string> = {
-  addedToWishlist: 'Added to Wishlist',
-  askingPriceRequested: 'Asking Price Requested',
-  pageView: 'Page Views',
-  promoReelOpened: 'Promoreel Opened',
-  removedFromWishlist: 'Removed from Wishlist',
-  screeningRequested: 'Screening Requested'
-}
-
 @Component({
   selector: 'crm-movie',
   templateUrl: './movie.component.html',
@@ -46,7 +37,6 @@ export class MovieComponent implements OnInit {
   public apps = getAllAppsExcept(['crm']);
 
   public analytics$: Observable<AggregatedAnalytic[]>;
-  public eventLabel = eventLabel;
 
   constructor(
     private analytics: AnalyticsService,
