@@ -107,7 +107,7 @@ async function appendNotificationSettings(notification: Notification) {
   }
 
   // Theses notifications are never displayed in front
-  const notificationsForInvitations: NotificationTypes[] = [
+  const serverOnlyNotifications: NotificationTypes[] = [
     // we already have an invitation that will always be displayed instead
     'requestFromUserToJoinOrgCreate',
     'requestToAttendEventCreated',
@@ -115,11 +115,16 @@ async function appendNotificationSettings(notification: Notification) {
     'invitationToAttendSlateCreated',
     'invitationToAttendMeetingCreated',
 
-    // user does not have access to app yet, notification only used to send email
-    'requestFromUserToJoinOrgPending'
+    // notifications only used to send email
+    'requestFromUserToJoinOrgPending',
+    'userRequestAppAccess',
+
+    // these notifications are used to send emails after a screening, not to be displayed in front
+    'userMissedScreening',
+    'userAttendedScreening'
   ];
 
-  if (notificationsForInvitations.includes(notification.type)) {
+  if (serverOnlyNotifications.includes(notification.type)) {
     delete notification.app;
   }
 
@@ -815,7 +820,7 @@ async function missedScreeningEmail(recipient: User, notification: Notification)
   const data = {
     user: getUserEmailData(recipient),
     org: getOrgEmailData(orgDoc),
-    event: getEventEmailData({ event, orgName: orgDoc.denomination.full, email: recipient.email }),
+    event: getEventEmailData({ event, orgName: orgDoc.denomination.full, email: recipient.email, attachment: false }),
     pageUrl: `${appUrl.market}/c/o/marketplace/title/${event.meta.titleId}/main`
   }
   const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.missedScreening, data };
@@ -834,7 +839,7 @@ async function attendedScreeningEmail(recipient: User, notification: Notificatio
     user: getUserEmailData(recipient),
     org: getOrgEmailData(orgDoc),
     movie: getMovieEmailData(movie),
-    event: getEventEmailData({ event, orgName: orgDoc.denomination.full, email: recipient.email }),
+    event: getEventEmailData({ event, orgName: orgDoc.denomination.full, email: recipient.email, attachment: false }),
     pageUrl: `${appUrl.market}/c/o/marketplace/title/${event.meta.titleId}/main`
   }
   const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.attendedScreening, data };

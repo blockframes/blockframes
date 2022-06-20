@@ -4,6 +4,7 @@ import { PublicUser } from './user';
 import { Movie } from './movie';
 import { Event, Screening } from './event';
 import { Analytics } from './analytics';
+import { sum } from './utils';
 
 /**
  * Raw type for Invitation.
@@ -103,4 +104,9 @@ export function getGuest(invitation: Invitation, guestType: 'user' | 'org' = 'us
   if (mode === 'request') {
     return guestType === 'user' ? fromUser : fromOrg;
   }
+}
+
+export function averageWatchtime(list: { watchTime?: number }[]) {
+  const totalWatchTime = sum(list, inv => inv.watchTime);
+  return Math.round(totalWatchTime / list.length) || 0;
 }

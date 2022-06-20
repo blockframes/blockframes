@@ -31,7 +31,7 @@
           <u>{{ title | maxLength:50 }}</u>
         </a>
       </ng-template>
-      <ng-template colRef="directors" label="Director(s)" let-directors>
+      <ng-template colRef="directors" label="Director(s)" let-directors [filter]="filters.movieDirectors">
         <span (click)="openDetails('Director\'s', directors)">
           {{ directors | displayName | maxLength:50 }}
         </span>
