@@ -2,7 +2,7 @@ import { db } from './internals/firebase';
 import { Change, EventContext } from 'firebase-functions';
 import { createDocumentMeta, getDocument } from './data/internals';
 import { centralOrgId } from '@env';
-import { Contract, Negotiation, Organization, Sale, NotificationTypes, Offer, Timestamp, DocumentMeta, ContractStatus } from '@blockframes/model';
+import { ContractStatus, Contract, Negotiation, Organization, Sale, NotificationTypes, Offer, Timestamp, DocumentMeta } from '@blockframes/model';
 import { createNotification, triggerNotifications } from './notification';
 import { getReviewer, isInitial } from '@blockframes/contract/negotiation/utils'
 

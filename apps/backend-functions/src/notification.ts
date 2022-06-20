@@ -102,7 +102,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
   }
 
   // Theses notifications are never displayed in front
-  const notificationsHiddenFromFront: NotificationTypes[] = [
+  const serverOnlyNotifications: NotificationTypes[] = [
     // we already have an invitation that will always be displayed instead
     'requestFromUserToJoinOrgCreate',
     'requestToAttendEventCreated',
@@ -119,7 +119,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
     'userAttendedScreening'
   ];
 
-  if (notificationsHiddenFromFront.includes(notification.type)) {
+  if (serverOnlyNotifications.includes(notification.type)) {
     delete notification.app;
   }
 

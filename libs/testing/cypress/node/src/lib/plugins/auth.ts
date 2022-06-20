@@ -3,7 +3,7 @@ import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 import { User } from 'firebase/auth';
 
-export async function createUser(data: { uid: string; email: string }) {
+export async function createUser(data: { uid: string; email: string; emailVerified: boolean }) {
   return await auth.createUser({ ...data, password: USER_FIXTURES_PASSWORD });
 }
 
@@ -30,8 +30,7 @@ export async function deleteAllTestUsers() {
   const users = list.users;
   const uids: string[] = [];
   for (const user of users) {
-    if (!user.email) console.warn(`Found a user with no mail : uid ${user.uid}`);
-    if (user.email.includes(`@${serverId}.mailosaur.net`)) uids.push(user.uid);
+    if (!user.email || user.email.includes(`@${serverId}.mailosaur.net`)) uids.push(user.uid);
   }
   return await auth.deleteUsers(uids);
 }
