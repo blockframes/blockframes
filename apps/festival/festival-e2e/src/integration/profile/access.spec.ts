@@ -11,7 +11,6 @@ import {
   assertUrlIncludes,
 } from '@blockframes/testing/cypress/browser';
 import { user, org, permissions } from '../../fixtures/authentification/login';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -26,16 +25,14 @@ describe('Login tests', () => {
     maintenance.start();
     adminAuth.deleteAllTestUsers();
     firestore.clearTestData();
-    adminAuth.createUser({ uid: user.uid, email: user.email });
-    adminAuth.updateUser({ uid: user.uid, update: { emailVerified: true } });
+    adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     firestore.create([injectedData]);
     maintenance.end();
     refreshIfMaintenance();
-    get('login').click();
-    assertUrlIncludes('/connexion');
-    get('signin-email').type(user.email);
-    get('password').type(USER_FIXTURES_PASSWORD);
-    get('submit').click();
-    get('skip-preferences').should('exist');
+    browserAuth.signinWithEmailAndPassword(user.email);
+    get('skip-preferences').click();
+    get('auth-user').click();
+    get('profile').click();
+    assertUrlIncludes('c/o/account/profile/view/settings');
   });
 });

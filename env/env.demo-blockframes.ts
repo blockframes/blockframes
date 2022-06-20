@@ -11,13 +11,13 @@ export const appUrl = {
 }
 
 const firebaseConfig = {
-  apiKey: '',
+  apiKey: 'fake-key',
   authDomain: '',
   databaseURL: '',
   projectId: 'demo-blockframes',
-  storageBucket: '',
+  storageBucket: 'blockframes-ci',
   messagingSenderId: '',
-  appId: '',
+  appId: 'fake-key',
   measurementId: ''
 };
 
@@ -26,6 +26,26 @@ export const firebaseRegion = 'europe-west1';
 export function firebase(app?: string) {
   return firebaseConfig
 }
+
+// Algolia
+// =======
+// ! CI ALGOLIA VALUES - needed for test runs
+export const algolia = {
+  appId: '8E9YO1I9HB',
+  searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
+  indexNameOrganizations: {
+    festival: 'ci_festival_org',
+    financiers: 'ci_financiers_org',
+    catalog: 'ci_catalog_org'
+  },
+  indexNameMovies: {
+    festival: 'ci_festival_movies',
+    financiers: 'ci_financiers_movies',
+    catalog: 'ci_catalog_movies',
+  },
+  indexNameUsers: 'ci_users',
+};
+
 
 // Support emails
 // =======
@@ -68,6 +88,7 @@ export const sentryDsn = undefined;
 // BigQuery
 // ========
 
+export const bigQueryAnalyticsTable = '';
 
 // Data Studio
 // ========
@@ -88,8 +109,8 @@ export const centralOrgId = {
 // =======
 
 export const backupBucket = 'ci-backups-blockframes';
-export const heavyChunkSize = 15;
-export const chunkSize = 30;
+export const heavyChunkSize = 25;
+export const chunkSize = 50;
 
 // JwPlayer
 // @see https://dashboard.jwplayer.com/#/content/detail?key=7R9ttesP&property=75507f12-83b6-11ea-ab11-3e60acbe08db&spotlight=default&tab=metadata&view=list
@@ -97,22 +118,3 @@ export const chunkSize = 30;
 
 export const playerId = 'LVeBD5vf';
 export const testVideoId = 'YlSFNnkR';
-
-export const bigQueryAnalyticsTable = '';
-
-// ! CI ALGOLIA VALUES - use this as a testing env? same for imgix, twilio, mailchimp...
-export const algolia = {
-  appId: '8E9YO1I9HB',
-  searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
-  indexNameOrganizations: {
-    festival: 'ci_festival_org',
-    financiers: 'ci_financiers_org',
-    catalog: 'ci_catalog_org'
-  },
-  indexNameMovies: {
-    festival: 'ci_festival_movies',
-    financiers: 'ci_financiers_movies',
-    catalog: 'ci_catalog_movies',
-  },
-  indexNameUsers: 'ci_users',
-};
