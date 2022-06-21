@@ -22,8 +22,8 @@ export class AnalyticsMapComponent {
   selected: TerritoryISOA3Value;
   top: AnalyticData[] = [];
 
-  _topCount = new BehaviorSubject(3);
-  _data = new Subject<AnalyticData[]>();
+  private _topCount = new BehaviorSubject(3);
+  private _data = new Subject<AnalyticData[]>();
 
 
 
