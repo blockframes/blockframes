@@ -61,7 +61,7 @@ export class ProfileComponent implements OnInit {
       if (err.message === 'auth/invalid-form') {
         this.snackBar.open('Your profile information are not valid.', 'close', { duration: 2000 });
       } else if (err.message === 'auth/invalid-password') {
-        this.snackBar.open('Your information to change your password are not valid.', 'close', { duration: 2000 });
+        this.snackBar.open('Your information to modify your password is invalid.', 'close', { duration: 2000 });
       } else if (err.message.includes('auth/wrong-password')) {
         this.snackBar.open('Your current password is not valid.', 'close', { duration: 2000 });
       } else if (err.message.includes('auth/too-many-requests')) {
