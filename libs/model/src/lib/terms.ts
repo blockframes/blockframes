@@ -1,10 +1,9 @@
 import { Media, Territory, staticModel } from './static';
-import { Timestamp } from './timestamp';
 import { format } from 'date-fns';
 import { LanguageRecord } from './movie';
 import { toLanguageVersionString } from './utils';
 
-export function createMailTerm(terms: BucketTerm<Timestamp>[]) {
+export function createMailTerm(terms: BucketTerm[]) {
   return terms.map((term) => ({
     ...term,
     territories: term.territories
@@ -12,8 +11,8 @@ export function createMailTerm(terms: BucketTerm<Timestamp>[]) {
       .join(', '),
     medias: term.medias.map((media) => staticModel['medias'][media] ?? media).join(', '),
     duration: {
-      from: format(term.duration.from.toDate(), 'dd MMM, yyyy'),
-      to: format(term.duration.to.toDate(), 'dd MMM, yyyy'),
+      from: format(term.duration.from, 'dd MMM, yyyy'),
+      to: format(term.duration.to, 'dd MMM, yyyy'),
     },
     languages: toLanguageVersionString(term.languages),
     exclusive: term.exclusive ? 'Exclusive' : 'Non exclusive',
@@ -22,14 +21,14 @@ export function createMailTerm(terms: BucketTerm<Timestamp>[]) {
 
 export type MailTerm = ReturnType<typeof createMailTerm>[number];
 
-export interface Duration<T extends Date | Timestamp = Date> {
-  from: T;
-  to: T;
+export interface Duration {
+  from: Date;
+  to: Date;
 }
 
-export interface BucketTerm<T extends Date | Timestamp = Date> {
+export interface BucketTerm {
   medias: Media[];
-  duration: Duration<T>;
+  duration: Duration;
   territories: Territory[];
   exclusive: boolean;
   languages: LanguageRecord;
@@ -42,16 +41,14 @@ export interface BucketTerm<T extends Date | Timestamp = Date> {
  * - exclusivity should be the same
  * - duration cannot be splitted
  */
-export interface Term<T extends Date | Timestamp = Date> extends BucketTerm<T> {
+export interface Term extends BucketTerm {
   id: string;
   contractId: string;
   criteria: unknown[];
   licensedOriginal: boolean;
 }
 
-export type TermDocument = Term<Timestamp>;
-
-export function createTerm(params: Partial<Term<Date>> = {}): Term<Date> {
+export function createTerm(params: Partial<Term> = {}): Term {
   return {
     id: '',
     contractId: '',

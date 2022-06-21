@@ -1,6 +1,6 @@
 import { BigQuery } from '@google-cloud/bigquery';
 import { Analytics, createTitleMeta, createDocumentMeta  } from '@blockframes/model';
-import { MovieDocument } from '@blockframes/model';
+import { Movie } from '@blockframes/model';
 import { MovieAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
 import { bigQueryAnalyticsTable, firebase } from '@env';
 import { Firestore, getCollection, getCollectionInBatches } from '@blockframes/firebase-utils';
@@ -118,7 +118,7 @@ export async function upgrade(db: Firestore) {
   const [[pageViews], [otherEvents], titles] = await Promise.all([
     executeQuery(page_view_query),
     executeQuery(events_query),
-    getCollection<MovieDocument>(`movies`)
+    getCollection<Movie>(`movies`)
   ]).catch(error => {
     if (error.errors?.length) {
       if (error.errors.some(error => error.reason === 'notFound')) {

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MaintenanceService } from './maintenance.service';
+import { MaintenanceService } from './service';
 import { startWith } from 'rxjs/operators';
 
 @Component({

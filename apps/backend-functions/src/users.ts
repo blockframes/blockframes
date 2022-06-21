@@ -5,15 +5,14 @@ import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreati
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils/algolia';
-import { getCollection } from '@blockframes/firebase-utils/firebase-utils';
-import { getDocument } from './data/internals';
+import { getCollection, getDocument, getDocumentSnap, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 import { getMailSender, applicationUrl } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { production } from './environments/environment';
 import { cleanUserMedias } from './media';
 import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { User, OrganizationDocument, PublicUser, InvitationDocument, PermissionsDocument, App, ErrorResultResponse } from '@blockframes/model';
+import { User, PublicUser, Invitation, PermissionsDocument, App, ErrorResultResponse, Organization } from '@blockframes/model';
 import { registerToNewsletters, updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 
@@ -116,15 +115,15 @@ export const onUserCreate = async (user: UserRecord) => {
   return storeSearchableUser(userData);
 };
 
-export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnapshot) {
-  const after = snap.data() as PublicUser;
+export async function onUserCreateDocument(snap: BlockframesSnapshot<PublicUser>) {
+  const after = snap.data();
   if (after.firstName) { await initUser(after); }
   return true;
 }
 
-export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>) {
-  const before = change.before.data() as User;
-  const after = change.after.data() as User;
+export async function onUserUpdate(change: BlockframesChange<User>) {
+  const before = change.before.data();
+  const after = change.after.data();
   if ((before.firstName === undefined || before.firstName === '') && !!after.firstName) {
     await initUser(after);
   }
@@ -177,9 +176,9 @@ async function initUser(user: PublicUser) {
   return Promise.all(promises);
 }
 
-export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>) {
+export async function onUserDelete(userSnapshot: BlockframesSnapshot<PublicUser>) {
 
-  const user = userSnapshot.data() as PublicUser;
+  const user = userSnapshot.data();
 
   // update Algolia index
   deleteObject(algolia.indexNameUsers, userSnapshot.id);
@@ -191,11 +190,11 @@ export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnaps
 
   // remove id from org array
   if (user.orgId) {
-    const orgRef = db.doc(`orgs/${user.orgId}`);
-    const orgDoc = await orgRef.get();
-    const org = orgDoc.data() as OrganizationDocument
+    const orgPath = `orgs/${user.orgId}`;
+    const { ref } = await getDocumentSnap(orgPath);
+    const org = await getDocument<Organization>(orgPath);
     const userIds = org.userIds.filter(userId => userId !== user.uid);
-    orgRef.update({ userIds });
+    ref.update({ userIds });
   }
 
   // remove permissions
@@ -209,7 +208,7 @@ export async function onUserDelete(userSnapshot: FirebaseFirestore.DocumentSnaps
   }
 
   // remove all invitations related to user
-  const invitations = await getCollection<InvitationDocument>(`invitations`)
+  const invitations = await getCollection<Invitation>(`invitations`)
   invitations
     .filter(invitation => invitation.fromUser?.uid === user.uid || invitation.toUser?.uid === user.uid)
     .map(invitation => invitation.id)

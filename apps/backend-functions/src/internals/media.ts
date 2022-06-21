@@ -4,37 +4,36 @@ import { get } from 'lodash';
 import * as admin from 'firebase-admin';
 
 // Blockframes dependencies
-import { getDocument } from '../data/internals';
 import {
   StorageFile,
   createPublicUser,
-  MovieDocument,
-  EventDocument,
+  Event,
   EventMeta,
   Meeting,
   Screening,
   Slate,
-  Privacy
+  Privacy,
+  Movie,
+  User
 } from '@blockframes/model';
+import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
 
 // Internal dependencies
 import { isUserInvitedToEvent } from './invitations/events';
 
+
 export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string, email?: string): Promise<boolean> {
-  const db = admin.firestore();
-  const eventData = eventId ? await getDocument<EventDocument<EventMeta>>(`events/${eventId}`) : undefined;
+  const eventData = eventId ? await getDocument<Event<EventMeta>>(`events/${eventId}`) : undefined;
 
   let userDoc = createPublicUser({ uid, email });
-  const user = await db.collection('users').doc(uid).get();
-  if (user.exists) {
-    userDoc = createPublicUser(user.data());
-  }
+  const user = await getDocument<User>(`users/${uid}`);
+  if (user) { userDoc = createPublicUser(user);}
 
   if ((!eventData || eventData?.accessibility === 'private') && !userDoc.orgId) {
     return false;
   }
 
-  const blockframesAdmin = await db.collection('blockframesAdmin').doc(uid).get();
+  const blockframesAdmin = await getDocumentSnap(`blockframesAdmin/${uid}`);
   if (blockframesAdmin.exists) { return true; }
 
   // We should not trust `privacy` & `storagePath` that comes from the parameters
@@ -73,9 +72,9 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
       break;
     case 'movies':
       {
-        const movieSnap = await db.collection('movies').doc(file.docId).get();
+        const movieSnap = await getDocumentSnap(`movies/${file.docId}`);
         if (!movieSnap.exists) { return false; }
-        const movie = movieSnap.data() as MovieDocument;
+        const movie = await getDocument<Movie>(`movies/${file.docId}`);
         canAccess = movie.orgIds.some(id => userDoc.orgId === id);
         break;
       }
@@ -88,10 +87,10 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
   // but he might be invited to an event where the file is shared
   if (!canAccess && eventData?.id) {
 
-    const now = admin.firestore.Timestamp.now();
+    const now = Date.now();
 
     // check if meeting is ongoing (not too early nor too late)
-    if (now.seconds < eventData.start.seconds || now.seconds > eventData.end.seconds) {
+    if (now < eventData.start.getTime() || now > eventData.end.getTime()) {
       return false;
     }
 
