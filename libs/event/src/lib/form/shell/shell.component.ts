@@ -185,8 +185,9 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     this.errorChipMessage = !videoId ? 'Video file missing' : '';
     this.cdr.markForCheck();
   }
-  
+
   public explain() {
-    this.dialog.open(ExplanationComponent, { data: createModalData({}), autoFocus: false });
+    this.dialog.open(ExplanationComponent, { data: createModalData({ type: this.form.value.type }), autoFocus: false, });
   }
+
 }
