@@ -38,6 +38,10 @@
         <a mat-tab-link [routerLink]="tab.path" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">
           {{ tab.label }}</a>
       </ng-container>
+      <button mat-button class="explanation" (click)="explain()">
+        <mat-icon svgIcon="info"></mat-icon>
+        <span>Learn how it works</span>
+      </button>
     </nav>
   </form>
 

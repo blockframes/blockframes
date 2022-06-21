@@ -15,6 +15,7 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { App } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { ExplanationComponent } from '../../explanation/explanation.component';
 
 const statisticsTab = { path: 'statistics', label: 'Attendance' };
 
@@ -183,5 +184,9 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   checkSlateVideoMissing(videoId: string) {
     this.errorChipMessage = !videoId ? 'Video file missing' : '';
     this.cdr.markForCheck();
+  }
+  
+  public explain() {
+    this.dialog.open(ExplanationComponent, { data: createModalData({}), autoFocus: false });
   }
 }
