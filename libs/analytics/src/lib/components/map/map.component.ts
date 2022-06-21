@@ -29,7 +29,7 @@ export class AnalyticsMapComponent {
 
   @Input() @boolean showLegend = false;
   @Input() @boolean horizontal = false;
-  @Input() set topCount(count:number){
+  @Input() set topCount(count: number) {
     this._topCount.next(count);
   }
   @Input() set data(data: AnalyticData[]) {
@@ -39,14 +39,14 @@ export class AnalyticsMapComponent {
   @Input() @boolean selectable = false;
   @Output() selection: EventEmitter<string> = new EventEmitter();
 
-  constructor(){
+  constructor() {
     combineLatest([
       this._data.asObservable(),
       this._topCount.asObservable()
-    ]).subscribe(([data,topCount]) => this.getTopCountries(data, topCount));
+    ]).subscribe(([data, topCount]) => this.getTopCountries(data, topCount));
   }
 
-  getTopCountries(data:AnalyticData[], count:number){
+  getTopCountries(data: AnalyticData[], count: number) {
     if (!data) return;
     this.isLoading = false;
 
