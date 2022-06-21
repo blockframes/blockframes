@@ -67,8 +67,8 @@
               </mat-select>
             </mat-form-field>
 
-            <span *ngIf="movie.app[app].acceptedAt">Accepted at {{ movie.app[app].acceptedAt | toDate | date: 'medium'}}</span>
-            <span *ngIf="movie.app[app].refusedAt">Refused at {{ movie.app[app].refusedAt | toDate | date: 'medium'}}</span>
+            <span *ngIf="movie.app[app].acceptedAt">Accepted at {{ movie.app[app].acceptedAt | date: 'medium'}}</span>
+            <span *ngIf="movie.app[app].refusedAt">Refused at {{ movie.app[app].refusedAt | date: 'medium'}}</span>
           </div>
         </fieldset>
         <div fxLayoutAlign="end end" fxLayoutGap="16px" align="end">

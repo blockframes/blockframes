@@ -1,8 +1,6 @@
-import type { Timestamp } from './timestamp';
-
 export interface IMaintenanceDoc {
-  endedAt: Timestamp;
-  startedAt: Timestamp;
+  endedAt: Date;
+  startedAt: Date;
 }
 
 export interface IVersionDoc {
