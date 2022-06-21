@@ -1,14 +1,15 @@
 import {
-  displayName, Movie,
+  Director,
+  displayName,
   Organization,
   Person,
   Scope,
   staticModel
 } from '@blockframes/model';
 
-export function getStaticModelFilter(scope: Scope) {
+function getStaticModelFilter(scope: Scope) {
   return (input: string, value: string) => {
-    if (typeof value !== 'string') return false;
+    if (typeof value !== 'string' || !value) return false;
     const label = staticModel[scope][value];
     return label.toLowerCase().includes(input);
   };
@@ -19,14 +20,14 @@ export const filters = {
     const name = displayName(user).toLowerCase();
     return name.includes(input);
   },
-  movieDirectors: (input: string, movie: Movie) => {
-    if (!movie?.directors) return false;
-    return movie.directors.map(director => displayName(director))
+  movieDirectors: (input: string, directors: Director[]) => {
+    if (!directors?.length) return false;
+    return directors.map(director => displayName(director))
       .some(name => name.toLocaleLowerCase().includes(input));
   },
-  movieTitle: (input: string, movie: Movie) => {
-    if (!movie?.title?.international) return false;
-    return movie.title.international.toLocaleLowerCase().includes(input);
+  movieTitle: (input: string, title: string) => {
+    if (!title) return false;
+    return title.toLocaleLowerCase().includes(input);
   },
   orgName: (input: string, org: Organization) => {
     if (!org?.name) return false;

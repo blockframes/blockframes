@@ -5,9 +5,7 @@
 
   <ng-container *ngIf="user$ | async as user">
     <article>
-      <a [routerLink]="['/c/o/marketplace/organization/', user.orgId]">
-        <img [ref]="user.org.logo" asset="empty_organization.svg" type="logo" alt="Organizaiton Logo">
-      </a>
+      <img [ref]="user.org.logo" asset="profil_user.svg" alt="Organization Logo">
 
       <div>
         <h4>{{ user | displayName }}</h4>
@@ -28,8 +26,11 @@
 
   <article>
     <header>
-      <h3>Buyer was interested in these titles</h3>
-      <button mat-flat-button (click)="exportAnalytics()">Export Analytics</button>
+      <h3>Buyer was interested in these Titles</h3>
+      <button mat-button color="primary" (click)="exportAnalytics()">
+        <mat-icon svgIcon="cloud_download"></mat-icon>
+        <span>Export Analytics</span>
+      </button>
     </header>
 
     <bf-table [source]="filtered$ | async" pagination="5" useFilter>
@@ -51,8 +52,8 @@
       <ng-template colRef label="In wishlist" let-wishlist sort>
         {{ inWishlist(wishlist) ? 'Yes' : '-' }}
       </ng-template>
-      <ng-template colRef="promoReelOpened" label="Promotional Elements" let-promoReelOpened sort>
-        {{ promoReelOpened }}
+      <ng-template colRef="promoReelOpened" label="Video Plays" let-videoPlays sort>
+        {{ videoPlays }}
       </ng-template>
       <ng-template colRef="screeningRequested" label="Screening Requests" let-screeningRequested sort>
         {{ screeningRequested }}
@@ -64,39 +65,47 @@
   </article>
 
   <article class="surface graphs">
-    <analytics-bar-chart [data]="totalAnalyticsPerTitle$ | async"></analytics-bar-chart>
+    <analytics-bar-chart [data]="totalAnalyticsPerTitle$ | async">
+      <p class="mat-caption">Learn what Titles this particular Buyer viewed</p>
+    </analytics-bar-chart>
     <analytics-pie-chart class="surface" [data]="aggregatedPerGenre$ | async">
       <mat-icon svgIcon="theater_comedy"></mat-icon>
       <h5>Genres Tendancy</h5>
+      <p class="mat-caption">This Buyer was mostly interested in these Genres</p>
     </analytics-pie-chart>
   </article>
 
-  <article>
-    <h3>Screenings Buyer has participated</h3>
-    <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
-  </article>
+  <ng-container *ngIf="hasInvitations$ | async">
+    <article>
+      <h3>Screenings Buyer has participated</h3>
+      <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
+    </article>
 
-  <article>
-    <header>
-      <h4>Attended Screenings</h4>
-      <button mat-flat-button (click)="exportScreenerAnalytics()">Export to CSV</button>
-    </header>
-    <bf-table [source]="invitations$ | async" pagination="5">
-      <ng-template colRef="event.movie.title.international" label="Title" let-title sort>
-        {{ title | maxLength: 50 }}
-      </ng-template>
-      <ng-template colRef="status" label="Invitation" let-status sort>
-        {{ status | titlecase }}
-      </ng-template>
-      <ng-template colRef="mode" label="Request to Participate" let-mode sort>
-        {{ mode | titlecase }}
-      </ng-template>
-      <ng-template colRef="analytics.length" label="Screening Requests" let-requests sort>
-        {{ requests }}
-      </ng-template>
-      <ng-template colRef="watchTime" label="Watch Time" let-watchTime>
-        {{ watchTime * 1000 | duration: '0min' }}
-      </ng-template>
-    </bf-table>
-  </article>
+    <article>
+      <header>
+        <h4>Attended Screenings</h4>
+        <button mat-button color="primary" (click)="exportScreenerAnalytics()">
+          <mat-icon svgIcon="cloud_download"></mat-icon>
+          <span>Export Analytics to .CSV</span>
+        </button>
+      </header>
+      <bf-table [source]="invitations$ | async" pagination="5">
+        <ng-template colRef="event.movie.title.international" label="Title" let-title sort>
+          {{ title | maxLength: 50 }}
+        </ng-template>
+        <ng-template colRef="status" label="Invitation" let-status sort>
+          {{ status | titlecase }}
+        </ng-template>
+        <ng-template colRef="mode" label="Request to Participate" let-mode sort>
+          {{ mode | titlecase }}
+        </ng-template>
+        <ng-template colRef="analytics.length" label="Screening Requests" let-requests sort>
+          {{ requests }}
+        </ng-template>
+        <ng-template colRef="watchTime" label="Watch Time" let-watchTime>
+          {{ watchTime * 1000 | duration: '0min' }}
+        </ng-template>
+      </bf-table>
+    </article>
+</ng-container>
 </section>

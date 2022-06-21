@@ -72,17 +72,19 @@
           <analytics-map
             class="margin-bottom"
             [data]="activeCountries$ | async"
-            (selection)="selectedCountry = $event"
+            (selection)="selectCountry($event)"
             [topCount]="5"
             horizontal
             showLegend
             selectable
           >
-            <mat-icon svgIcon="buyer_insights"></mat-icon>
-            <h3>Buyers' Insights</h3>
+            <mat-icon class="title_margin" svgIcon="buyer_insights"></mat-icon>
+            <h3 class="title_margin">Buyers' Insights</h3>
+            <!-- #8696 h4 should be "TOP 5 COUNTRIES" line 76 above -->
+            <h4 listTitle>TOP COUNTRIES</h4>
           </analytics-map>
 
-          <h3>Most active buyers</h3>
+          <h3 #tableTitle>Most Active Buyers</h3>
           <bf-table
             [source]="activeBuyers$ | async"
             [filterValue]="selectedCountry"
@@ -113,8 +115,8 @@
             <ng-template colRef="addedToWishlist" label="Titles in Wishlist" let-wishlist sort>
               {{ wishlist }}
             </ng-template>
-            <ng-template colRef="promoReelOpened" label="Promotional Elements" let-promoReelOpened sort>
-              {{ promoReelOpened }}
+            <ng-template colRef="promoReelOpened" label="Video Plays" let-videoPlays sort>
+              {{ videoPlays }}
             </ng-template>
             <ng-template colRef="screeningRequested" label="Screening Requests" let-screeningRequested sort>
               {{ screeningRequested }}
@@ -124,7 +126,10 @@
             </ng-template>
           </bf-table>
 
-          <a mat-button class="link_buttons" routerLink="buyer">View All Buyers' Activities</a>
+          <a mat-button class="link_buttons" routerLink="buyer">
+            <span>View All Buyers' Activities</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </a>
         </section>
       </ng-container>
     </ng-container>

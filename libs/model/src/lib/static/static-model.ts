@@ -437,6 +437,7 @@ export const orgActivity = {
   talentAgency: 'Talent Agency',
   technical: 'Technical',
   tvBroadcast: 'Television Broadcast',
+  theatricalExhibition: 'Theatrical Exhibition',
   vodPlatform: 'VOD Platform',
   other: 'Other',
 } as const

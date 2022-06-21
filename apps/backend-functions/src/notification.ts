@@ -101,7 +101,7 @@ async function appendNotificationSettings(notification: NotificationDocument) {
   }
 
   // Theses notifications are never displayed in front
-  const notificationsForInvitations: NotificationTypes[] = [
+  const serverOnlyNotifications: NotificationTypes[] = [
     // we already have an invitation that will always be displayed instead
     'requestFromUserToJoinOrgCreate',
     'requestToAttendEventCreated',
@@ -109,11 +109,16 @@ async function appendNotificationSettings(notification: NotificationDocument) {
     'invitationToAttendSlateCreated',
     'invitationToAttendMeetingCreated',
 
-    // user does not have access to app yet, notification only used to send email
-    'requestFromUserToJoinOrgPending'
+    // notifications only used to send email
+    'requestFromUserToJoinOrgPending',
+    'userRequestAppAccess',
+
+    // these notifications are used to send emails after a screening, not to be displayed in front
+    'userMissedScreening',
+    'userAttendedScreening'
   ];
 
-  if (notificationsForInvitations.includes(notification.type)) {
+  if (serverOnlyNotifications.includes(notification.type)) {
     delete notification.app;
   }
 
@@ -324,7 +329,7 @@ export async function onNotificationCreate(snap: FirebaseFirestore.DocumentSnaps
         await attendedScreeningEmail(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
-      break;
+        break;
       default:
         notification.email.error = emailErrorCodes.noTemplate.code;
         break;
@@ -821,10 +826,10 @@ async function missedScreeningEmail(recipient: User, notification: NotificationD
 
   const data = {
     user: getUserEmailData(recipient),
-    org : getOrgEmailData(orgDoc),
-    event: getEventEmailData({event, orgName: orgDoc.name, email: recipient.email}),
+    org: getOrgEmailData(orgDoc),
+    event: getEventEmailData({ event, orgName: orgDoc.name, email: recipient.email, attachment: false }),
     pageUrl: `${appUrl.market}/c/o/marketplace/title/${event.meta.titleId}/main`
-  } 
+  }
   const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.missedScreening, data };
 
   await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
@@ -841,10 +846,10 @@ async function attendedScreeningEmail(recipient: User, notification: Notificatio
     user: getUserEmailData(recipient),
     org: getOrgEmailData(orgDoc),
     movie: getMovieEmailData(movie),
-    event: getEventEmailData({event, orgName: orgDoc.name, email: recipient.email}),
+    event: getEventEmailData({ event, orgName: orgDoc.name, email: recipient.email, attachment: false }),
     pageUrl: `${appUrl.market}/c/o/marketplace/title/${event.meta.titleId}/main`
-  } 
+  }
   const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.attendedScreening, data };
-  
+
   await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
 }

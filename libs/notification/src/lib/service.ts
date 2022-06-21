@@ -280,7 +280,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}/c/o/dashboard/event/new/edit?titleId=${notification.docId}`,
-          actionText: 'Answer Request',
+          actionText: 'Organize Screening',
         };
       }
       case 'screeningRequestSent': {

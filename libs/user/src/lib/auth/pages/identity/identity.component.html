@@ -97,7 +97,7 @@
           </div>
         </ng-container>
 
-        <password-input
+        <password-input *ngIf="form.get('password').enabled"
           [control]="form.get('password')"
           placeholder="New Password"
           label="Password"
@@ -119,7 +119,7 @@
           </mat-error>
         </password-input>
 
-        <password-input
+        <password-input *ngIf="form.get('confirm').enabled"
           [control]="form.get('confirm')"
           [errorStateMatcher]="passwordsMatcher"
           placeholder="New Password Confirmation"
