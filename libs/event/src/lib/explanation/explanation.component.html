@@ -1,0 +1,27 @@
+<global-modal>
+  <section>
+    <h1>How It Works</h1>
+
+    <mat-tab-group>
+      <mat-tab label="Screening">
+        <ng-template matTabContent>
+          <p><strong>Screening</strong> view will show the territories that are available according to your search on a map. You just need to point out the dates, terms and exclusivity you need.</p>
+          <video controls src="assets/videos/screening_set_up.mp4"></video>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Meeting">
+        <ng-template matTabContent>
+          <p><strong>Meeting</strong> view will show the calendar with availabilities for the territories and rights you've pointed out. Just select the start and end date and your term will be created.</p>
+          <video controls src="assets/videos/meeting_set_up.mp4"></video>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+
+    <div mat-dialog-actions fxLayout="column" class="actions">
+      <button mat-flat-button color="primary" (click)="close()">GOT IT!</button>
+      <button mat-button color="primary" (click)="openIntercom()">
+        Ask a question
+      </button>
+    </div>
+  </section>
+</global-modal>
