@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
 import { AnalyticData } from "@blockframes/model";
+import { trimString } from "@blockframes/utils/pipes";
 
 import {
   ApexAxisChartSeries,
@@ -70,10 +71,10 @@ export class BarChartComponent {
 
   @Input() set data(analytics: AnalyticData[]) {
     if (!analytics) return;
-    
+
     const data = Object.values(analytics).map(d => d.count);
     this.barChartOptions.series = data.length ? [{ data }] : [];
-    this.barChartOptions.labels = Object.values(analytics).map(d => d.label);
+    this.barChartOptions.labels = Object.values(analytics).map(d => trimString(d.label, 16, false));
 
     this.chart?.updateOptions(this.barChartOptions);
     this.isLoading = false;
