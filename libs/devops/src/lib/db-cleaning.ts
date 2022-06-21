@@ -1,16 +1,16 @@
 import {
-  NotificationDocument,
+  Notification,
   PublicUser,
-  OrganizationDocument,
   PublicOrganization,
-  MovieDocument,
   PermissionsDocument,
-  InvitationDocument,
   createStorageFile,
-  getAllAppsExcept
+  getAllAppsExcept,
+  Invitation,
+  Movie,
+  Organization
 } from '@blockframes/model';
 import { removeUnexpectedUsers } from './users';
-import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections, UserRecord, loadAdminServices } from '@blockframes/firebase-utils';
+import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections, UserRecord, loadAdminServices, toDate } from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
 import { deleteSelectedUsers } from 'libs/testing/unit-tests/src/lib/firebase';
@@ -110,7 +110,7 @@ export function cleanNotifications(
   return runChunks(
     notifications.docs,
     async (doc: QueryDocumentSnapshot) => {
-      const notification = doc.data() as NotificationDocument;
+      const notification = toDate<Notification>(doc.data());
       const outdatedNotification = !isNotificationValid(notification, existingIds);
       if (outdatedNotification) {
         await doc.ref.delete();
@@ -125,7 +125,7 @@ export function cleanNotifications(
 
 async function cleanOneNotification(
   doc: QueryDocumentSnapshot,
-  notification: NotificationDocument
+  notification: Notification
 ) {
   if (notification.organization) {
     const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
@@ -147,7 +147,7 @@ export function cleanInvitations(
   return runChunks(
     invitations.docs,
     async (doc: QueryDocumentSnapshot) => {
-      const invitation = doc.data() as InvitationDocument;
+      const invitation = toDate<Invitation>(doc.data());
       const outdatedInvitation = !isInvitationValid(invitation, existingIds);
       if (outdatedInvitation) {
         await doc.ref.delete();
@@ -160,7 +160,7 @@ export function cleanInvitations(
   );
 }
 
-async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: InvitationDocument) {
+async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: Invitation) {
   if (invitation.fromOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
     invitation.fromOrg.logo = d?.logo || EMPTY_MEDIA;
@@ -195,12 +195,12 @@ export async function cleanUsers(
 ) {
   if (options.dryRun) verbose = true;
   // Check if auth users have their record on DB
-  await removeUnexpectedUsers(users.docs.map(u => u.data() as PublicUser), auth, options);
+  await removeUnexpectedUsers(users.docs.map(u => toDate<PublicUser>(u.data())), auth, options);
 
   const authUsersToDelete: string[] = [];
 
   await runChunks(users.docs, async (userDoc: FirebaseFirestore.DocumentSnapshot) => {
-    const user = userDoc.data() as PublicUser;
+    const user = toDate<PublicUser>(userDoc.data());
 
     // Check if a DB user have a record in Auth.
     const authUser: UserRecord = await auth.getUserByEmail(user.email).catch(() => undefined);
@@ -245,14 +245,9 @@ export function cleanOrganizations(
   return runChunks(
     organizations.docs,
     async (orgDoc) => {
-      const org = orgDoc.data();
+      const org = toDate<Organization>(orgDoc.data());
 
-      if (org.members) {
-        delete org.members;
-        await orgDoc.ref.set(org);
-      }
-
-      const { userIds = [], wishlist = [] } = org as OrganizationDocument;
+      const { userIds = [], wishlist = [] } = org as Organization;
 
       const validUserIds = Array.from(
         new Set(userIds.filter((userId) => existingUserIds.includes(userId)))
@@ -269,7 +264,7 @@ export function cleanOrganizations(
 
       const existingAndValidMovieIds = existingMovies.docs
         .filter((m) => {
-          const movie = m.data();
+          const movie = toDate<Movie>(m.data());
           return getAllAppsExcept(['crm']).some((a) => movie.app[a].status === 'accepted');
         })
         .map((m) => m.id);
@@ -329,7 +324,7 @@ export function cleanMovies(
   return runChunks(
     movies.docs,
     async (movieDoc) => {
-      const movie = movieDoc.data() as MovieDocument;
+      const movie = toDate<Movie>(movieDoc.data());
 
       let updateDoc = false;
 
@@ -380,11 +375,11 @@ export function cleanDocsIndex(
  * @param notification the notification to check
  * @param existingIds the ids to compare with notification fields
  */
-function isNotificationValid(notification: NotificationDocument, existingIds: string[]): boolean {
+function isNotificationValid(notification: Notification, existingIds: string[]): boolean {
   if (!existingIds.includes(notification.toUserId)) return false;
 
   // Cleaning notifications more than n days
-  const notificationTimestamp = notification._meta.createdAt.toMillis();
+  const notificationTimestamp = notification._meta.createdAt.getTime();
   if (notificationTimestamp < subDays(Date.now(), numberOfDaysToKeepNotifications).getTime()) {
     return false;
   }
@@ -406,7 +401,7 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
  * @param invitation the invitation to check
  * @param existingIds the ids to compare with invitation fields
  */
-function isInvitationValid(invitation: InvitationDocument, existingIds: string[]): boolean {
+function isInvitationValid(invitation: Invitation, existingIds: string[]): boolean {
   switch (invitation.type) {
     case 'attendEvent':
       return (
@@ -419,7 +414,7 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
       );
     case 'joinOrganization': {
       // Cleaning not pending invitations older than n days
-      const invitationTimestamp = invitation.date.toMillis();
+      const invitationTimestamp = invitation.date.getTime();
       if (
         invitation.status !== 'pending' &&
         invitationTimestamp < subDays(Date.now(), numberOfDaysToKeepNotifications).getTime()

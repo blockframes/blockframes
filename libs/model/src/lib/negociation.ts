@@ -1,11 +1,10 @@
 import { BucketContract } from './bucket';
-import { Timestamp } from './timestamp';
 import { DocumentMeta } from './meta';
 import { MovieCurrency, NegotiationStatus } from './static';
 
 // We extends the BucketContract with some information for rules
-export interface Negotiation<T extends Date | Timestamp = Date> extends BucketContract<T> {
-  _meta: DocumentMeta<T>;
+export interface Negotiation extends BucketContract {
+  _meta: DocumentMeta;
   id: string;
   /** Id of the org that created the negotiation */
   createdByOrg: string;
@@ -17,8 +16,6 @@ export interface Negotiation<T extends Date | Timestamp = Date> extends BucketCo
   buyerId: string;
   declineReason?: string;
   status: NegotiationStatus;
-  initial: T;
+  initial: Date;
   currency: MovieCurrency
 }
-
-export type NegotiationDocument = Negotiation<Timestamp>;

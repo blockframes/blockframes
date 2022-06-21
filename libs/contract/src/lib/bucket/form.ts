@@ -99,7 +99,7 @@ function toBucketTerm(
 
 function toBucketContract(
   contract: Mandate,
-  term: Term<Date>,
+  term: Term,
   avails: AvailsFilter | MapAvailsFilter | CalendarAvailsFilter
 ): BucketContract {
   return createBucketContract({
