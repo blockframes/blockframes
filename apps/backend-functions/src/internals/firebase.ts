@@ -55,21 +55,22 @@ function createBlockframesSnapshot(snap: admin.firestore.DocumentSnapshot): Bloc
   }
 }
 
-export const convertToDate = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
+const stateChangeToDate = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
   return async (...args: Parameters<T>) => {
-    const firstArg = args.shift();
-    if (firstArg instanceof Change) {
-      const changes: BlockframesChange = {
-        before: createBlockframesSnapshot(firstArg.before),
-        after: createBlockframesSnapshot(firstArg.after)
-      }
-      return f(changes, ...args);
-    } else if (firstArg instanceof admin.firestore.QueryDocumentSnapshot) {
-      const snapshot = createBlockframesSnapshot(firstArg);
-      return f(snapshot, ...args);
+    const firstArg: Change<any> = args.shift();
+    const changes: BlockframesChange = {
+      before: createBlockframesSnapshot(firstArg.before),
+      after: createBlockframesSnapshot(firstArg.after)
     }
+    return f(changes, ...args);
+  }
+};
 
-    return f(firstArg, ...args);
+const snapshotToDate = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
+  return async (...args: Parameters<T>) => {
+    const firstArg: admin.firestore.QueryDocumentSnapshot = args.shift();
+    const snapshot = createBlockframesSnapshot(firstArg);
+    return f(snapshot, ...args);
   }
 };
 
@@ -84,25 +85,25 @@ type FunctionType = (...args: any[]) => any;
 export function onDocumentWrite(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
   return functions(config).firestore
     .document(docPath)
-    .onWrite(skipInMaintenance(logErrors(convertToDate(fn))));
+    .onWrite(skipInMaintenance(logErrors(stateChangeToDate(fn))));
 }
 
 export function onDocumentUpdate(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
   return functions(config).firestore
     .document(docPath)
-    .onUpdate(skipInMaintenance(logErrors(convertToDate(fn))));
+    .onUpdate(skipInMaintenance(logErrors(stateChangeToDate(fn))));
 }
 
 export function onDocumentDelete(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
   return functions(config).firestore
     .document(docPath)
-    .onDelete(skipInMaintenance(logErrors(convertToDate(fn))))
+    .onDelete(skipInMaintenance(logErrors(snapshotToDate(fn))))
 }
 
 export function onDocumentCreate(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
   return functions(config).firestore
     .document(docPath)
-    .onCreate(skipInMaintenance(logErrors(convertToDate(fn))));
+    .onCreate(skipInMaintenance(logErrors(snapshotToDate(fn))));
 }
 
 /**
