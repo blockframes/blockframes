@@ -110,7 +110,7 @@ export function cleanNotifications(
   return runChunks(
     notifications.docs,
     async (doc: QueryDocumentSnapshot) => {
-      const notification = toDate(doc.data()) as Notification;
+      const notification = toDate<Notification>(doc.data());
       const outdatedNotification = !isNotificationValid(notification, existingIds);
       if (outdatedNotification) {
         await doc.ref.delete();
@@ -147,7 +147,7 @@ export function cleanInvitations(
   return runChunks(
     invitations.docs,
     async (doc: QueryDocumentSnapshot) => {
-      const invitation = toDate(doc.data()) as Invitation;
+      const invitation = toDate<Invitation>(doc.data());
       const outdatedInvitation = !isInvitationValid(invitation, existingIds);
       if (outdatedInvitation) {
         await doc.ref.delete();
@@ -195,12 +195,12 @@ export async function cleanUsers(
 ) {
   if (options.dryRun) verbose = true;
   // Check if auth users have their record on DB
-  await removeUnexpectedUsers(users.docs.map(u => toDate(u.data()) as PublicUser), auth, options);
+  await removeUnexpectedUsers(users.docs.map(u => toDate<PublicUser>(u.data())), auth, options);
 
   const authUsersToDelete: string[] = [];
 
   await runChunks(users.docs, async (userDoc: FirebaseFirestore.DocumentSnapshot) => {
-    const user = toDate(userDoc.data()) as PublicUser;
+    const user = toDate<PublicUser>(userDoc.data());
 
     // Check if a DB user have a record in Auth.
     const authUser: UserRecord = await auth.getUserByEmail(user.email).catch(() => undefined);
@@ -245,10 +245,10 @@ export function cleanOrganizations(
   return runChunks(
     organizations.docs,
     async (orgDoc) => {
-      const org = toDate(orgDoc.data());
+      const org = toDate<Organization>(orgDoc.data());
 
-      if (org.members) {
-        delete org.members;
+      if ((org as any).members) {
+        delete (org as any).members;
         await orgDoc.ref.set(org);
       }
 
@@ -269,7 +269,7 @@ export function cleanOrganizations(
 
       const existingAndValidMovieIds = existingMovies.docs
         .filter((m) => {
-          const movie = toDate(m.data()) as Movie;
+          const movie = toDate<Movie>(m.data());
           return getAllAppsExcept(['crm']).some((a) => movie.app[a].status === 'accepted');
         })
         .map((m) => m.id);
@@ -329,7 +329,7 @@ export function cleanMovies(
   return runChunks(
     movies.docs,
     async (movieDoc) => {
-      const movie = toDate(movieDoc.data()) as Movie;
+      const movie = toDate<Movie>(movieDoc.data());
 
       let updateDoc = false;
 

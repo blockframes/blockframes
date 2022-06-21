@@ -2,7 +2,7 @@ import * as admin from 'firebase-admin';
 import { chunk } from 'lodash';
 import * as env from '@env';
 
-export function toDate<D>(target: D): D {
+export function toDate<D>(target: admin.firestore.DocumentData): D {
   if (!target) return;
   if (typeof target !== 'object') return target;
   for (const key in target) {
@@ -10,7 +10,7 @@ export function toDate<D>(target: D): D {
     if (!value || typeof value !== 'object') continue;
     if (!!value['_seconds'] && value['_nanoseconds'] >= 0) {
       try {
-        target[key] = (value as any).toDate();
+        target[key] = value.toDate();
       } catch (_) {
         console.log(`${key} is not a Firebase Timestamp`);
       }
@@ -18,7 +18,7 @@ export function toDate<D>(target: D): D {
     }
     toDate(value);
   }
-  return target;
+  return target as D;
 }
 
 export function getDocumentSnap(path: string, db = admin.firestore(), tx?: FirebaseFirestore.Transaction): Promise<FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>> {
@@ -27,17 +27,17 @@ export function getDocumentSnap(path: string, db = admin.firestore(), tx?: Fireb
 }
 
 export function getDocument<T>(path: string, db?: admin.firestore.Firestore, tx?: FirebaseFirestore.Transaction): Promise<T> {
-  return getDocumentSnap(path, db, tx).then(doc => toDate(doc.data()) as T);
+  return getDocumentSnap(path, db, tx).then(doc => toDate<T>(doc.data()));
 }
 
 export async function queryDocument<T>(query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>, tx?: FirebaseFirestore.Transaction): Promise<T> {
   const snap = tx ? await tx.get(query.limit(1)) : await query.limit(1).get();
-  return toDate(snap.docs[0].data()) as T;
+  return toDate<T>(snap.docs[0].data());
 }
 
 export async function queryDocuments<T>(query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>, tx?: FirebaseFirestore.Transaction): Promise<T[]> {
   const snap = tx ? await tx.get(query) : await query.get();
-  return snap.docs.map(doc => toDate(doc.data()) as T);
+  return snap.docs.map(doc => toDate<T>(doc.data()));
 }
 
 export function getCollectionRef(path: string): Promise<FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>> {
@@ -46,7 +46,7 @@ export function getCollectionRef(path: string): Promise<FirebaseFirestore.QueryS
 }
 
 export function getCollection<T>(path: string): Promise<T[]> {
-  return getCollectionRef(path).then(collection => collection.docs.map(doc => toDate(doc.data()) as T));
+  return getCollectionRef(path).then(collection => collection.docs.map(doc => toDate<T>(doc.data())));
 }
 
 type AsyncReturnType<T extends (args: any) => Promise<any>> =

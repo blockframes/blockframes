@@ -25,7 +25,7 @@ export async function* getCollectionInBatches<K>(ref: admin.firestore.Collection
   function getDocs(querySnap: FirebaseFirestore.QuerySnapshot) {
     return querySnap.docs.map((snap, i, arr) => {
       if (i === arr.length - 1) lastSnapshot = snap;
-      return toDate(snap.data()) as K;
+      return toDate<K>(snap.data());
     })
   }
 
