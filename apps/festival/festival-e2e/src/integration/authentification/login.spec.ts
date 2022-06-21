@@ -26,8 +26,7 @@ describe('Login tests', () => {
     maintenance.start();
     adminAuth.deleteAllTestUsers();
     firestore.clearTestData();
-    adminAuth.createUser({ uid: user.uid, email: user.email });
-    adminAuth.updateUser({ uid: user.uid, update: { emailVerified: true } });
+    adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     firestore.create([injectedData]);
     maintenance.end();
     refreshIfMaintenance();

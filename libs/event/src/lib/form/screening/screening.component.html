@@ -13,8 +13,8 @@
     <!-- Title -->
     <mat-form-field appearance="outline">
       <mat-label>Select the Title to display</mat-label>
-      <mat-select formControlName="titleId" (selectionChange)="checkTitleAndScreener($event.value)">
-        <mat-option *ngFor="let title of titles" [value]="title.id">
+      <mat-select formControlName="titleId" (selectionChange)="checkTitleAndScreener($event.value)" test-id="title">
+        <mat-option *ngFor="let title of titles; let i = index" [value]="title.id" [attr.test-id]="'title_' + i">
           {{ title.title.international }}
         </mat-option>
       </mat-select>
@@ -30,7 +30,8 @@
         cdkTextareaAutosize
         #autosize="cdkTextareaAutosize"
         cdkAutosizeMinRows="4"
-        maxlength="500"></textarea>
+        maxlength="500"
+        test-id="description"></textarea>
       <mat-hint>Limited to 500 characters.</mat-hint>
     </mat-form-field>
   </ng-container>

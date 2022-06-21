@@ -1,5 +1,5 @@
 import { e2eUser, e2eOrg, e2ePermissions, fakeUserData } from '@blockframes/testing/cypress/browser';
-import { Organization, User, createMovie, EventTypes } from '@blockframes/model';
+import { Organization, User, createMovie, Movie, EventTypes } from '@blockframes/model';
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
@@ -18,7 +18,7 @@ export const org = e2eOrg({
   name: userData.company.name,
   userIds: [adminUid],
   email: userData.email,
-  dashboardAccess: false,
+  dashboardAccess: true,
 });
 
 export const permissions = e2ePermissions({
@@ -26,64 +26,215 @@ export const permissions = e2ePermissions({
   adminUid: adminUid,
 });
 
-export const movies = createMovie({
+export const movie2: Movie = createMovie({
+  id: '0-e2e-movie2',
+  _type: 'movies',
+  // Mandatory fields
+  contentType: 'movie',
+  directors: [],
+  genres: [],
+  originalLanguages: [],
+  originCountries: [],
+  synopsis: 'This is a movie for e2e tests',
+  orgIds: [orgId],
+  title: {
+    original: 'Movie test2',
+    international: 'Movie test2',
+  },
+  app: {
+    festival: {
+      access: true,
+      refusedAt: null,
+      acceptedAt: new Date(),
+      status: 'accepted',
+    },
+  },
+});
+
+export const movie1: Movie = {
+  keywords: [],
+  release: {
+    year: 2022,
+    status: 'estimated',
+  },
+  rating: [],
+  shooting: {
+    dates: {
+      planned: {},
+    },
+    locations: [],
+  },
+  estimatedBudget: null,
+  _meta: {
+    updatedBy: 'adminUid',
+    createdAt: new Date(),
+    createdBy: 'adminUid',
+    updatedAt: new Date(),
+  },
+  cast: [
+    {
+      lastName: 'Williamson',
+      firstName: 'Fred',
+      status: 'confirmed',
+    },
+    {
+      lastName: 'Möller',
+      firstName: 'Mike',
+    },
+    {
+      lastName: 'Lamas',
+      firstName: 'Lorenzo',
+    },
+  ],
+  review: [],
+  productionStatus: 'finished',
   id: '0-e2e-movie1',
-})
-/*
-  // Every field concerning the document
-  _type: 'movies';
-  _meta?: DocumentMeta<D>;
-  id: string;
-
-  // Only section left
-  promotional: MoviePromotionalElements;
-
-  // Every field concerning the movie
-  app: Partial<{ [app in App]: MovieAppConfig<D> }>; //! required
-  audience?: MovieGoalsAudience;
-  banner?: StorageFile;
-  boxOffice?: BoxOffice[];
-  cast?: Cast[];
-  certifications?: Certification[];
-  color?: Color;
-  contentType: ContentType; //! required
-  crew?: Crew[];
-  directors: Director[]; //! required
-  estimatedBudget?: NumberRange;
-  expectedPremiere?: MovieExpectedPremiereRaw<D>;
-  format?: MovieFormat;
-  formatQuality?: MovieFormatQuality;
-  genres: Genre[]; //! required
-  customGenres?: string[];
-  internalRef?: string;
-  isOriginalVersionAvailable: boolean;
-  keyAssets?: string;
-  keywords?: string[];
-  languages?: LanguageRecord;
-  logline?: string;
-  originalLanguages: Language[]; //! required
-  originalRelease?: MovieOriginalReleaseRaw<D>[];
-  originCountries: Territory[]; //! required
-  poster?: StorageFile;
-  prizes?: Prize[];
-  customPrizes?: Prize[];
-  producers?: Producer[];
-  productionStatus?: ProductionStatus;
-  rating?: MovieRating[];
-  release: MovieRelease; //! required
-  review?: MovieReview[];
-  runningTime?: MovieRunningTime;
-  scoring?: Scoring;
-  shooting?: MovieShooting;
-  soundFormat?: SoundFormat;
-  stakeholders?: MovieStakeholders;
-  synopsis: string; //! required
-  title: Title; //! required
-  orgIds: string[]; //! required
-  campaignStarted: D;
-
-  //CATALOG specific
-  delivery?: {
-    file: StorageFile;
-  };
-  */
+  contentType: 'movie',
+  promotional: {
+    notes: [],
+    presentation_deck: {
+      docId: '',
+      privacy: 'public',
+      storagePath: '',
+      collection: 'movies',
+      field: '',
+    },
+    videos: {
+      salesPitch: {
+        docId: '',
+        privacy: 'public',
+        storagePath: '',
+        collection: 'movies',
+        field: '',
+        jwPlayerId: '',
+      },
+      screener: {
+        docId: '',
+        privacy: 'public',
+        storagePath: '',
+        collection: 'movies',
+        field: '',
+        jwPlayerId: 'YlSFNnkR',
+      },
+      otherVideos: [],
+    },
+    scenario: {
+      docId: '',
+      privacy: 'public',
+      storagePath: '',
+      collection: 'movies',
+      field: '',
+    },
+    still_photo: [],
+    moodboard: {
+      docId: '',
+      privacy: 'public',
+      storagePath: '',
+      collection: 'movies',
+      field: '',
+    },
+  },
+  app: {
+    financiers: {
+      access: false,
+      refusedAt: null,
+      status: 'draft',
+      acceptedAt: null,
+    },
+    festival: {
+      access: true,
+      refusedAt: null,
+      acceptedAt: new Date(),
+      status: 'accepted',
+    },
+    catalog: {
+      access: false,
+      refusedAt: null,
+      acceptedAt: null,
+      status: 'draft',
+    },
+  },
+  audience: {
+    targets: [null],
+    goals: [null],
+  },
+  originCountries: ['germany', 'united-states-of-america'],
+  format: null,
+  runningTime: {
+    time: 85,
+    status: 'confirmed',
+  },
+  customPrizes: [],
+  originalLanguages: ['english', 'german'],
+  soundFormat: null,
+  prizes: [],
+  boxOffice: [],
+  poster: {
+    docId: '',
+    privacy: 'public',
+    storagePath: '',
+    collection: 'movies',
+    field: '',
+  },
+  isOriginalVersionAvailable: null,
+  color: null,
+  directors: [
+    {
+      lastName: 'Sentner',
+      firstName: 'Nico',
+    },
+  ],
+  expectedPremiere: {
+    date: null,
+    event: '',
+  },
+  campaignStarted: null,
+  stakeholders: {
+    broadcasterCoproducer: [],
+    financier: [],
+    productionCompany: [],
+    distributor: [],
+    coProductionCompany: [],
+    laboratory: [],
+    lineProducer: [],
+    salesAgent: [],
+  },
+  title: {
+    original: 'Movie test',
+    international: 'Movie test',
+  },
+  crew: [],
+  logline: '',
+  orgIds: [orgId],
+  originalRelease: [],
+  genres: ['thriller'],
+  formatQuality: null,
+  scoring: null,
+  languages: {
+    german: {
+      caption: false,
+      dubbed: false,
+      subtitle: true,
+    },
+    english: {
+      caption: false,
+      dubbed: false,
+      subtitle: true,
+    },
+  },
+  _type: 'movies',
+  banner: {
+    docId: '',
+    privacy: 'public',
+    storagePath: '',
+    collection: 'movies',
+    field: '',
+  },
+  synopsis:
+    'Trapped inside an old mining complex, among the ruins of Chernobyl, a group of international mercenaries must band together to take their last stand.',
+  certifications: [],
+  customGenres: [],
+  producers: [],
+  internalRef: '',
+  keyAssets: '',
+};
