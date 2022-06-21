@@ -43,8 +43,8 @@ export class MarketplaceFinancingComponent {
     switchMap((id: string) => this.service.valueChanges(id)),
     tap(campaign => this.totalFundings = getTotalFundings(campaign.fundings))
   );
-  public access: Access<Date>;
-  accessConsent: Observable<Access<Date>>;
+  public access: Access;
+  accessConsent: Observable<Access>;
   budgetData = budgetData;
   formatter = {
     currency: (campaign: Campaign) => ({

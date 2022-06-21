@@ -8,6 +8,6 @@ export interface Offer {
   specificity: string;
   status: OfferStatus;
   currency: MovieCurrency;
-  _meta: DocumentMeta<Date>;
+  _meta: DocumentMeta;
   delivery: string;
 }

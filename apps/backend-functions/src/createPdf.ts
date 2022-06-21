@@ -1,10 +1,10 @@
-import { festival, MovieDocument, App } from '@blockframes/model';
+import { festival, App, Movie } from '@blockframes/model';
 import { toLanguageVersionString, toLabel } from '@blockframes/model';
 import { Response } from 'firebase-functions';
-import { db } from './internals/firebase';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { PdfRequest } from '@blockframes/utils/pdf/pdf.interfaces';
 import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
+import { getDocument } from '@blockframes/firebase-utils';
 
 interface PdfTitleData {
   title: string;
@@ -47,9 +47,9 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
   }
 
   const appUrl = applicationUrl[app];
-  const promises = titleIds.map((id) => db.collection('movies').doc(id).get());
+  const promises = titleIds.map((id) => getDocument<Movie>(`movies/${id}`));
   const docs = await Promise.all(promises);
-  const titles = docs.map((r) => r.data() as MovieDocument).filter((m) => !!m);
+  const titles = docs.filter((m) => !!m);
 
   const data: PdfTitleData[] = titles.map((m) => {
     const prizes = m.prizes.concat(m.customPrizes).map((p) => ({

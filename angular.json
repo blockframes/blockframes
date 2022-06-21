@@ -241,7 +241,7 @@
                 }
               ],
               "serviceWorker": true,
-              "ngswConfigPath": "apps/catalog/catalog/ngsw-config.json"
+              "ngswConfigPath": "ngsw-config.json"
             }
           }
         },
@@ -898,7 +898,7 @@
                 }
               ],
               "serviceWorker": true,
-              "ngswConfigPath": "apps/financiers/financiers/ngsw-config.json"
+              "ngswConfigPath": "ngsw-config.json"
             }
           }
         },
@@ -1069,13 +1069,7 @@
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true,
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.blockframes-staging.ts"
-                }
-              ]
+              "buildOptimizer": true
             }
           }
         },
