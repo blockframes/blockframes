@@ -8,7 +8,7 @@ import { readFileSync } from 'fs';
 import { Observable, of } from 'rxjs';
 import { UserService } from '@blockframes/user/service';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { createInvitation, createUser, InvitationDocument } from '@blockframes/model';
+import { createInvitation, createUser, Invitation } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
 import { FIREBASE_CONFIG, FirestoreService, FIRESTORE_SETTINGS } from 'ngfire';
@@ -115,7 +115,7 @@ describe('Invitations Test Suite', () => {
       date: new Date()
     });
     const invitation = await getDoc(ref);
-    expect((invitation.data() as InvitationDocument).status).toBe('accepted');
+    expect((invitation.data() as Invitation).status).toBe('accepted');
   });
 
   it('Should invitation status become declined', async () => {
@@ -129,7 +129,7 @@ describe('Invitations Test Suite', () => {
       date: new Date()
     });
     const invitation = await getDoc(ref);
-    expect((invitation.data() as InvitationDocument).status).toBe('declined');
+    expect((invitation.data() as Invitation).status).toBe('declined');
   });
 
   it('Should create invitation request', async () => {

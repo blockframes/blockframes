@@ -5,7 +5,7 @@ import {
   User,
   PublicUser,
   createPublicUser,
-  NotificationDocument,
+  Notification,
   createPublicOrganization,
   Organization,
   PublicOrganization,
@@ -22,7 +22,6 @@ import {
 } from '@blockframes/firebase-utils';
 import { firebase, testVideoId } from '@env';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
-import { firestore } from 'firebase-admin';
 import { Queue } from '../../internals/queue';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
@@ -97,7 +96,7 @@ function processInvitation(i: Invitation): Invitation {
   };
 }
 
-function processNotification(n: NotificationDocument): NotificationDocument {
+function processNotification(n: Notification): Notification {
   return {
     ...n,
     organization: updateOrg(n.organization),
@@ -156,7 +155,7 @@ function processMovie(movie: Movie): Movie {
 
 function processMaintenanceDoc(doc: IMaintenanceDoc) {
   if (doc.startedAt && !doc.endedAt) return doc;
-  return { endedAt: null, startedAt: firestore.Timestamp.now() };  // TODO #7273 #8006
+  return { endedAt: null, startedAt: new Date() };
 }
 
 export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
@@ -189,7 +188,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
       // INVITATIONS
       return { docPath, content: processInvitation(doc) };
     }
-    if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'toUserId')) {
+    if (docPath.includes('notifications/') && hasKeys<Notification>(doc, 'toUserId')) {
       // NOTIFICATIONS
       return { docPath, content: processNotification(doc) };
     }

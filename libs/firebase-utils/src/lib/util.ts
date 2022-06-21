@@ -5,7 +5,9 @@ import { config } from 'dotenv';
 import requiredVars from 'tools/mandatory-env-vars.json';
 import { resolve } from 'path';
 import { firebase as firebaseProd } from 'env/env.blockframes';
-import { OrganizationDocument, App } from '@blockframes/model';
+import { App, Organization } from '@blockframes/model';
+import { toDate } from './firebase-utils';
+import { BlockframesSnapshot } from './types';
 import { camelCase } from 'lodash';
 
 /**
@@ -23,8 +25,8 @@ export async function* getCollectionInBatches<K>(ref: admin.firestore.Collection
   function getDocs(querySnap: FirebaseFirestore.QuerySnapshot) {
     return querySnap.docs.map((snap, i, arr) => {
       if (i === arr.length - 1) lastSnapshot = snap;
-      return snap.data() as K;
-    });
+      return toDate<K>(snap.data());
+    })
   }
 
   while (!querySnapshot.empty) {
@@ -129,7 +131,7 @@ export function getServiceAccountObj(keyFile: string): admin.ServiceAccount {
   }
 }
 
-export async function hasAcceptedMovies(org: OrganizationDocument, appli: App, db = loadAdminServices().db) {
+export async function hasAcceptedMovies(org: Organization, appli: App, db = loadAdminServices().db) {
   const moviesColRef = await db.collection('movies').where('orgIds', 'array-contains', org.id).get();
   const movies = moviesColRef.docs.map(doc => doc.data());
   return movies.some(movie => movie?.app?.[appli].status === 'accepted' && movie?.app?.[appli].access);
@@ -146,7 +148,7 @@ export function throwOnProduction(): never | void {
  * @param batch
  */
 export async function removeAllSubcollections(
-  snapshot: FirebaseFirestore.DocumentSnapshot,
+  snapshot: FirebaseFirestore.DocumentSnapshot | BlockframesSnapshot,
   batch: FirebaseFirestore.WriteBatch,
   db = admin.firestore(),
   options = { verbose: true }

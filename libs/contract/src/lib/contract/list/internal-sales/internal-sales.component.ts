@@ -8,11 +8,11 @@ import { isInitial } from '@blockframes/contract/negotiation/utils';
 import { capitalize } from '@blockframes/utils/helpers';
 import { Contract, ContractStatus, Sale, Negotiation } from '@blockframes/model';
 
-interface InternalSale extends Sale<Date> {
+interface InternalSale extends Sale {
   licensor: string;
   licensee: string;
   title: string;
-  negotiation: Negotiation<Date>
+  negotiation: Negotiation
 }
 
 @Component({

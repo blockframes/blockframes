@@ -4,9 +4,9 @@ import { File as GFile } from '@google-cloud/storage';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { jwplayerApiV2 } from '@blockframes/firebase-utils/jwplayer-api';
 import { StorageVideo, linkDuration, ErrorResultResponse } from '@blockframes/model';
-import { getDocument } from './data/internals';
 import { isAllowedToAccessMedia } from './internals/media';
 import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, production, playerId } from './environments/environment';
+import { getDocument } from '@blockframes/firebase-utils';
 
 export interface ReadVideoParams {
 

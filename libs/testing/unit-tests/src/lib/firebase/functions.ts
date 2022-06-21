@@ -101,9 +101,6 @@ export function populate(collection: string, set: any[]) {
   const db = admin.firestore();
   return runChunks(set, async (d) => {
     const docRef = db.collection(collection).doc(d.id || d.uid);
-    if (d.date?._seconds) { d.date = new Date(d.date._seconds * 1000) };
-    if (d.end?._seconds) { d.end = new Date(d.end._seconds * 1000) };
-    if (d._meta?.createdAt?._seconds) { d._meta.createdAt = new Date(d._meta.createdAt._seconds * 1000) };
     await docRef.set(d);
   }, 50, false)
 }

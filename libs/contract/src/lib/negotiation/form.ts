@@ -5,7 +5,7 @@ import { BucketTerm, Term, Negotiation } from "@blockframes/model";
 
 type NegotiationFormState = {
   price: number,
-  terms: BucketTerm<Date>[]
+  terms: BucketTerm[]
 }
 
 // We want the NegotiationFrom to manage Term & BucketTerm
