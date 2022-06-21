@@ -25,8 +25,6 @@ export class AnalyticsMapComponent {
   private _topCount = new BehaviorSubject(3);
   private _data = new Subject<AnalyticData[]>();
 
-
-
   @Input() @boolean showLegend = false;
   @Input() @boolean horizontal = false;
   @Input() set topCount(count: number) {
