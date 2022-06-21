@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { Territory, TerritoryISOA3Value, parseToAll, territoriesISOA3, staticModel, AnalyticData } from '@blockframes/model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
 
 const territories = parseToAll('territories', 'world') as Territory[];
 
@@ -21,11 +22,31 @@ export class AnalyticsMapComponent {
   selected: TerritoryISOA3Value;
   top: AnalyticData[] = [];
 
+  _topCount = new BehaviorSubject(3);
+  _data = new Subject<AnalyticData[]>();
 
-  @Input() topCount = 3;
+
+
   @Input() @boolean showLegend = false;
   @Input() @boolean horizontal = false;
+  @Input() set topCount(count:number){
+    this._topCount.next(count);
+  }
   @Input() set data(data: AnalyticData[]) {
+    this._data.next(data);
+  }
+
+  @Input() @boolean selectable = false;
+  @Output() selection: EventEmitter<string> = new EventEmitter();
+
+  constructor(){
+    combineLatest([
+      this._data.asObservable(),
+      this._topCount.asObservable()
+    ]).subscribe(([data,topCount]) => this.getTopCountries(data, topCount));
+  }
+
+  getTopCountries(data:AnalyticData[], count:number){
     if (!data) return;
     this.isLoading = false;
 
@@ -48,11 +69,8 @@ export class AnalyticsMapComponent {
     }
 
     const sorted = data.sort((a, b) => b.count - a.count);
-    this.top = sorted.splice(0, this.topCount);
+    this.top = sorted.splice(0, count);
   }
-
-  @Input() @boolean selectable = false;
-  @Output() selection: EventEmitter<string> = new EventEmitter();
 
   toggleSelect(isoA3: TerritoryISOA3Value) {
     if (!this.selectable) return;
