@@ -247,11 +247,6 @@ export function cleanOrganizations(
     async (orgDoc) => {
       const org = toDate<Organization>(orgDoc.data());
 
-      if ((org as any).members) {
-        delete (org as any).members;
-        await orgDoc.ref.set(org);
-      }
-
       const { userIds = [], wishlist = [] } = org as Organization;
 
       const validUserIds = Array.from(

@@ -421,8 +421,8 @@ describe('DB cleaning script', () => {
     ];
 
     const testOrgs = [
-      { id: 'org-A', email: 'org-A@fake.com', members: [testUsers[0]], userIds: [testUsers[0].uid] },
-      { id: 'org-B', email: 'org-B@fake.com', members: [testUsers[1]], userIds: [testUsers[1].uid, 'fakeUid'], wishlist: [] },
+      { id: 'org-A', email: 'org-A@fake.com', userIds: [testUsers[0].uid] },
+      { id: 'org-B', email: 'org-B@fake.com', userIds: [testUsers[1].uid, 'fakeUid'], wishlist: [] },
       { id: 'org-C', email: 'org-C@fake.com', userIds: [testUsers[2].uid], wishlist: ['mov-C', 'mov-D', 'mov-A'] },
       { id: 'org-D', email: 'org-D@fake.com', userIds: [testUsers[3].uid], wishlist: ['mov-B'] }
     ];
@@ -1320,9 +1320,6 @@ function isOrgClean(
   existingMovies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 ) {
   const o = doc.data();
-  if (o.members !== undefined) {
-    return false;
-  }
 
   const existingAndValidMovieIds = existingMovies.docs.filter(m => {
     const movie = m.data();
