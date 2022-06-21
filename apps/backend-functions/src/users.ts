@@ -5,7 +5,7 @@ import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreati
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils/algolia';
-import { getCollection, getDocument, getDocumentRef, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
+import { getCollection, getDocument, getDocumentSnap, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 import { getMailSender, applicationUrl } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { production } from './environments/environment';
@@ -191,7 +191,7 @@ export async function onUserDelete(userSnapshot: BlockframesSnapshot<PublicUser>
   // remove id from org array
   if (user.orgId) {
     const orgPath = `orgs/${user.orgId}`;
-    const { ref } = await getDocumentRef(orgPath);
+    const { ref } = await getDocumentSnap(orgPath);
     const org = await getDocument<Organization>(orgPath);
     const userIds = org.userIds.filter(userId => userId !== user.uid);
     ref.update({ userIds });

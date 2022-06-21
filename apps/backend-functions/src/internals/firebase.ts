@@ -51,7 +51,7 @@ function createBlockframesSnapshot(snap: admin.firestore.DocumentSnapshot): Bloc
     id: snap.id,
     exists: snap.exists,
     ref: snap.ref,
-    data: () => snap.data() ? toDate(snap.data()) : undefined
+    data: () => toDate(snap.data())
   }
 }
 

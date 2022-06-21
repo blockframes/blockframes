@@ -8,7 +8,7 @@ import { firebaseRegion } from './internals/utils';
 import { getUser } from './internals/utils';
 import { Request, Response } from 'firebase-functions';
 import { isUserInvitedToEvent } from './internals/invitations/events';
-import { getDocument, getDocumentRef } from '@blockframes/firebase-utils';
+import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
 
 export interface RequestAccessToken {
   eventId: string,
@@ -125,7 +125,7 @@ export const twilioWebhook = async (req: Request, res: Response) => {
 
     const eventId = req.body.RoomName;
     const eventPath = `events/${eventId}`;
-    const eventSnap = await getDocumentRef(eventPath);
+    const eventSnap = await getDocumentSnap(eventPath);
     if (!eventSnap.exists) {
       res.status(200).send();
       return;

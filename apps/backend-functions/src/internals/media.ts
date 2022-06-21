@@ -16,7 +16,7 @@ import {
   Movie,
   User
 } from '@blockframes/model';
-import { getDocument, getDocumentRef } from '@blockframes/firebase-utils';
+import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
 
 // Internal dependencies
 import { isUserInvitedToEvent } from './invitations/events';
@@ -33,7 +33,7 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
     return false;
   }
 
-  const blockframesAdmin = await getDocumentRef(`blockframesAdmin/${uid}`);
+  const blockframesAdmin = await getDocumentSnap(`blockframesAdmin/${uid}`);
   if (blockframesAdmin.exists) { return true; }
 
   // We should not trust `privacy` & `storagePath` that comes from the parameters
@@ -72,7 +72,7 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
       break;
     case 'movies':
       {
-        const movieSnap = await getDocumentRef(`movies/${file.docId}`);
+        const movieSnap = await getDocumentSnap(`movies/${file.docId}`);
         if (!movieSnap.exists) { return false; }
         const movie = await getDocument<Movie>(`movies/${file.docId}`);
         canAccess = movie.orgIds.some(id => userDoc.orgId === id);
@@ -87,10 +87,10 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
   // but he might be invited to an event where the file is shared
   if (!canAccess && eventData?.id) {
 
-    const now = new Date();
+    const now = Date.now();
 
     // check if meeting is ongoing (not too early nor too late)
-    if (now.getTime() < eventData.start.getTime() || now.getTime() > eventData.end.getTime()) {
+    if (now < eventData.start.getTime() || now > eventData.end.getTime()) {
       return false;
     }
 

@@ -843,7 +843,7 @@ function createShootingFormControl(entity?: Partial<MovieShooting>) {
 // ------------------------------
 
 function createShootingDateFormControl(entity?: Partial<MovieShootingDate>) {
-  const { completed, progress, planned } = createMovieShootingDate(entity);
+  const { completed, progress, planned } = entity;
   return {
     completed: new FormControl(completed),
     progress: new FormControl(progress),
@@ -857,12 +857,6 @@ export class ShootingDateForm extends FormEntity<ShootingDateFormControl> {
   constructor(shootingDate?: Partial<MovieShootingDate>) {
     super(createShootingDateFormControl(shootingDate));
   }
-}
-
-export function createMovieShootingDate(
-  params: Partial<MovieShootingDate> = {}
-): MovieShootingDate {
-  return {...params};
 }
 
 // ---------------------------------

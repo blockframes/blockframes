@@ -3,6 +3,7 @@ import { chunk } from 'lodash';
 import * as env from '@env';
 
 export function toDate<D>(target: D): D {
+  if (!target) return;
   if (typeof target !== 'object') return target;
   for (const key in target) {
     const value = target[key];
@@ -20,13 +21,13 @@ export function toDate<D>(target: D): D {
   return target;
 }
 
-export function getDocumentRef(path: string, db = admin.firestore(), tx?: FirebaseFirestore.Transaction): Promise<FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>> {
+export function getDocumentSnap(path: string, db = admin.firestore(), tx?: FirebaseFirestore.Transaction): Promise<FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>> {
   const ref = db.doc(path);
   return tx ? tx.get(ref) : db.doc(path).get();
 }
 
 export function getDocument<T>(path: string, db?: admin.firestore.Firestore, tx?: FirebaseFirestore.Transaction): Promise<T> {
-  return getDocumentRef(path, db, tx).then(doc => toDate(doc.data()) as T);
+  return getDocumentSnap(path, db, tx).then(doc => toDate(doc.data()) as T);
 }
 
 export async function queryDocument<T>(query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>, tx?: FirebaseFirestore.Transaction): Promise<T> {

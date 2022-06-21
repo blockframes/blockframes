@@ -9,7 +9,7 @@ import { applicationUrl } from '@blockframes/utils/apps';
 import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { createInternalDocumentMeta, createNotification, createPublicOrganization, createPublicUser, Invitation, Organization } from '@blockframes/model';
-import { getDocument, getDocumentRef } from '@blockframes/firebase-utils';
+import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
 
 async function addUserToOrg(userId: string, organizationId: string) {
   const db = admin.firestore();
@@ -21,9 +21,9 @@ async function addUserToOrg(userId: string, organizationId: string) {
 
   return db.runTransaction(async tx => {
     const [user, organization, permission] = await Promise.all([
-      getDocumentRef(`users/${userId}`, db, tx),
-      getDocumentRef(`orgs/${organizationId}`, db, tx),
-      getDocumentRef(`permissions/${organizationId}`, db, tx)
+      getDocumentSnap(`users/${userId}`, db, tx),
+      getDocumentSnap(`orgs/${organizationId}`, db, tx),
+      getDocumentSnap(`permissions/${organizationId}`, db, tx)
     ]);
 
     const userData = user.data();
