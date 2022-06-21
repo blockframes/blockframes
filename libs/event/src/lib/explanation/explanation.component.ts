@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Optional } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { ChangeDetectionStrategy, Component, Inject, Input, Optional } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Intercom } from 'ng-intercom';
 
 @Component({
@@ -12,7 +12,8 @@ export class ExplanationComponent {
 
   constructor(
     @Optional() private intercom: Intercom,
-    private dialogRef: MatDialogRef<ExplanationComponent>
+    private dialogRef: MatDialogRef<ExplanationComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { type: string },
   ) { }
 
   close() {
@@ -22,4 +23,5 @@ export class ExplanationComponent {
   public openIntercom(): void {
     return this.intercom.show();
   }
+
 }

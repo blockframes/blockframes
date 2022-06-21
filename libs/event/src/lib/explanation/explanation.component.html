@@ -2,20 +2,14 @@
   <section>
     <h1>How It Works</h1>
 
-    <mat-tab-group>
-      <mat-tab label="Screening">
-        <ng-template matTabContent>
-          <p><strong>Screening</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis augue vel ligula porttitor, sed ultrices tellus tincidunt. Donec nec lobortis nibh, et faucibus libero.</p>
-          <video controls src="assets/videos/screening_set_up.mp4"></video>
-        </ng-template>
-      </mat-tab>
-      <mat-tab label="Meeting">
-        <ng-template matTabContent>
-          <p><strong>Meeting</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis augue vel ligula porttitor, sed ultrices tellus tincidunt. Donec nec lobortis nibh, et faucibus libero.</p>
-          <video controls src="assets/videos/meeting_set_up.mp4"></video>
-        </ng-template>
-      </mat-tab>
-    </mat-tab-group>
+    <ng-container *ngIf="data.type === 'screening'; else meeting">
+      <p><strong>Screening</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis augue vel ligula porttitor, sed ultrices tellus tincidunt. Donec nec lobortis nibh, et faucibus libero.</p>
+      <video controls src="assets/videos/screening_set_up.mp4"></video>    
+    </ng-container>
+    <ng-template #meeting>
+      <p><strong>Meeting</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis augue vel ligula porttitor, sed ultrices tellus tincidunt. Donec nec lobortis nibh, et faucibus libero.</p>
+      <video controls src="assets/videos/meeting_set_up.mp4"></video>
+    </ng-template>
 
     <div mat-dialog-actions class="actions">
       <button mat-flat-button color="primary" (click)="close()">GOT IT!</button>
