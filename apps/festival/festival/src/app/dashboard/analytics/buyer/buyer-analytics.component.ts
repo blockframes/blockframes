@@ -1,6 +1,7 @@
 import {
   InvitationWithScreening,
   InvitationWithAnalytics,
+  averageWatchtime,
 } from "@blockframes/model";
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -57,10 +58,19 @@ function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
 
 function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
   const attended = invitations.filter(invitation => invitation.watchTime);
+  const averageWatchTime = averageWatchtime(attended);
+  const invitationsCount = invitations.filter(i => i.mode === 'invitation').length;
+  const requestsCount = invitations.filter(i => i.mode === 'request').length;
+
+  const watchTime = {
+    min: Math.floor(averageWatchTime / 60),
+    sec: averageWatchTime % 60
+  }
+
   return [
     {
       title: 'Invitations',
-      value: invitations.length,
+      value: invitationsCount,
       icon: 'badge'
     },
     {
@@ -70,12 +80,12 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
     },
     {
       title: 'Requests',
-      value: sum(invitations, inv => inv.analytics.length),
+      value: requestsCount,
       icon: 'ask_screening_2'
     },
     {
       title: 'Average watch time',
-      value: sum(attended, inv => inv.watchTime) / invitations.length || 0,
+      value: `${watchTime.min}min ${watchTime.sec}s`,
       icon: 'access_time'
     }
   ];
@@ -167,6 +177,10 @@ export class BuyerAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
+  hasInvitations$ = this.invitations$.pipe(
+    map(invitations => invitations.length)
+  );
+
   aggregatedScreeningCards$: Observable<MetricCard[]> = this.invitations$.pipe(
     map(toScreenerCards)
   );
@@ -199,7 +213,9 @@ export class BuyerAnalyticsComponent {
       'Countries of Origin': toLabel(aggregated.title.originCountries, 'territories'),
       'Original Languages': toLabel(aggregated.title.originalLanguages, 'languages'),
       'In wishlist': this.inWishlist(aggregated) ? 'Yes' : 'No',
-      'Promotional Elements': aggregated.promoReelOpened,
+      //#8693 Currently we rename on the ui from promo reels/elements to video plays.
+      //This should be reverted to promo elements once above issue is resolved.
+      'Video Plays': aggregated.promoReelOpened,
       'Screening Requests': aggregated.screeningRequested,
       'Asking Price Requested': aggregated.askingPriceRequested
     }));
