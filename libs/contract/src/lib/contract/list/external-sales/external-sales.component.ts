@@ -3,7 +3,7 @@ import { Contract, Sale } from '@blockframes/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
-interface ExternalSale extends Sale<Date> {
+interface ExternalSale extends Sale {
   licensor: string;
   licensee: string;
   title: string;

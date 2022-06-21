@@ -1,12 +1,10 @@
 import { AccessibilityTypes, EventTypes } from './static';
-import { toDate } from '@blockframes/utils/helpers';
 import { CalendarEvent } from 'angular-calendar';
 import { Organization } from './organisation';
 import { Movie } from './movie';
 import { User } from './user';
 import { StorageFile } from './media';
 import { AnonymousCredentials, Person } from './identity';
-import { Timestamp } from './timestamp';
 
 // Event types
 export type EventMeta = Meeting | Screening | Slate | unknown;
@@ -58,33 +56,18 @@ export interface Screening {
   attendees: Record<string, ScreeningAttendee>;
 }
 
-export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = Record<string, unknown>> {
+// This variable define the duration (in seconds) of a video link before it expires
+export const linkDuration = 60 * 60 * 5; // 5 hours in seconds = 60 seconds * 60 minutes * 5 = 18 000 seconds
+
+// Event
+export interface Event<Meta extends EventMeta = unknown> extends CalendarEvent<Meta> {
   id: string;
   ownerOrgId: string;
   accessibility: AccessibilityTypes;
   isSecret: boolean;
   type: EventTypes;
   title: string;
-  start: D;
-  end: D;
-  allDay: boolean,
-  meta: Meta;
-}
-
-// firestore documents
-export type EventDocument<Meta> = EventBase<Timestamp, Meta>;
-export type MeetingEventDocument = EventDocument<Meeting>;
-export type ScreeningEventDocument = EventDocument<Screening>;
-export type SlateEventDocument = EventDocument<Screening>;
-
-// This variable define the duration (in seconds) of a video link before it expires
-export const linkDuration = 60 * 60 * 5; // 5 hours in seconds = 60 seconds * 60 minutes * 5 = 18 000 seconds
-
-// Event
-export interface Event<Meta extends EventMeta = unknown>
-  extends EventBase<Date, Meta>,
-  CalendarEvent<Meta> {
-  id: string;
+  start: Date;
   isOwner: boolean;
   allDay: boolean;
   end: Date;
@@ -97,7 +80,7 @@ export interface Event<Meta extends EventMeta = unknown>
 }
 
 export function createEvent<Meta extends EventMeta>(
-  params: Partial<EventBase<Date | Timestamp, Meta>> = {}
+  params: Partial<Event<Meta>> = {}
 ): Event<Meta> {
   const meta: EventMeta = isMeeting(params as Event)
     ? createMeeting(params.meta)
@@ -117,8 +100,8 @@ export function createEvent<Meta extends EventMeta>(
     allDay: false,
     isOwner: false,
     ...params,
-    start: toDate(params.start || new Date()),
-    end: toDate(params.end || new Date()),
+    start: params.start || new Date(),
+    end: params.end || new Date(),
     meta: meta as Meta,
   };
 }
@@ -187,10 +170,10 @@ export function createSlate(slate: Partial<Slate>): Slate {
 }
 
 // Calendar Event
-export function createCalendarEvent<M>(
-  event: Partial<EventBase<Date | Timestamp, M>>,
+export function createCalendarEvent(
+  event: Partial<Event>,
   isOwner: boolean
-): Event<M> {
+): Event {
   return {
     ...createEvent(event),
     isOwner,

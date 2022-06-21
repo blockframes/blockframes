@@ -25,7 +25,7 @@ export interface BaseAvailsFilter {
   exclusive: boolean
 }
 
-export interface FullMandate extends Mandate<Date> {
+export interface FullMandate extends Mandate {
   terms: Term[];
 }
 
@@ -35,12 +35,12 @@ export interface AvailSearchResult<A extends BaseAvailsFilter> {
   avail?: A;
 }
 
-export interface FullSale extends Sale<Date> {
+export interface FullSale extends Sale {
   terms: Term[];
 }
 
 interface AvailResult<A extends BaseAvailsFilter> {
-  periodAvailable: Duration<Date> | null;
+  periodAvailable: Duration | null;
   available: AvailSearchResult<A>[];
   sales: FullSale[];
 }
@@ -93,8 +93,8 @@ interface SearchAvailsConfig<A extends BaseAvailsFilter> {
   avails: A,
   mandates: FullMandate[],
   sales?: FullSale[],
-  mandateFilterFn: (term: Term<Date>, avail: A) => boolean,
-  saleFilterFn?: (term: Term<Date>, avail: A) => boolean
+  mandateFilterFn: (term: Term, avail: A) => boolean,
+  saleFilterFn?: (term: Term, avail: A) => boolean
 };
 
 function combineAvailResults<A extends CalendarAvailsFilter | AvailsFilter>(results: AvailResult<A>[]) {
@@ -230,7 +230,7 @@ export interface AvailsFilter extends BaseAvailsFilter {
   territories: Territory[],
 }
 
-function isAvailAllInTerm(term: Term<Date>, avails: AvailsFilter) {
+function isAvailAllInTerm(term: Term, avails: AvailsFilter) {
   const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
   if (!exclusivityCheck) return false;
   const durationCheck = allOf(avails.duration).in(term.duration);
@@ -240,7 +240,7 @@ function isAvailAllInTerm(term: Term<Date>, avails: AvailsFilter) {
   return allOf(avails.territories).in(term.territories);
 }
 
-function isListAvailPartiallyInTerm(term: BucketTerm<Date>, avails: AvailsFilter) {
+function isListAvailPartiallyInTerm(term: BucketTerm, avails: AvailsFilter) {
   const exclusivityCheck = exclusivitySomeOf(avails.exclusive).in(term.exclusive);
   if (!exclusivityCheck) return false;
   const mediaCheck = someOf(avails.medias).in(term.medias);
@@ -337,13 +337,13 @@ interface NotLicensedTerritoryMarker extends TerritoryMarkerBase {
 export interface AvailableTerritoryMarker extends TerritoryMarkerBase {
   type: 'available',
   contract: Mandate,
-  term: Term<Date>,
+  term: Term,
 }
 
 interface SoldTerritoryMarker extends TerritoryMarkerBase {
   type: 'sold',
   contract: Sale,
-  term: Term<Date>,
+  term: Term,
 }
 
 export interface BucketTerritoryMarker extends TerritoryMarkerBase {
@@ -543,7 +543,7 @@ export interface DurationMarker {
   from: Date,
   to: Date,
   contract?: Mandate,
-  term?: Term<Date>,
+  term?: Term,
   avail?: CalendarAvailsFilter,
 }
 
@@ -577,7 +577,7 @@ export function getMatchingCalendarAvailabilities(avails: CalendarAvailsFilter, 
   return getMatchingAvailabilities(options);
 }
 
-export function isCalendarAvailPartiallyInTerm(term: Term<Date>, avail: CalendarAvailsFilter) {
+export function isCalendarAvailPartiallyInTerm(term: Term, avail: CalendarAvailsFilter) {
   const exclusivityCheck = exclusivitySomeOf(avail.exclusive).in(term.exclusive);
   if (!exclusivityCheck) return false;
   const mediaCheck = someOf(avail.medias).in(term.medias);
