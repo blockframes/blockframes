@@ -9,7 +9,7 @@ async function predeploy() {
     // * run predeploy hooks
     await runShellCommand('npm run lint:backend-functions');
     await runShellCommand('npm run build:backend-functions');
-    await runShellCommand('npm run deploy:functions:config');
+    await runShellCommand(`npm run deploy:functions:config ${process.env['PROJECT_ID']}`);
   } else {
     console.log('Env variable "SKIP_PREDEPLOY_HOOKS" is set, skipping pre-deploy hooks...');
   }
