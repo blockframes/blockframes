@@ -3,7 +3,7 @@ import {
   InvitationWithAnalytics,
   averageWatchtime,
 } from "@blockframes/model";
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
@@ -33,10 +33,11 @@ import {
   Observable,
   pluck,
   shareReplay,
-  switchMap
+  switchMap,
 } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/service';
 import { EventService } from '@blockframes/event/service';
+import { scrollIntoView } from "@blockframes/utils/browser/utils";
 
 interface MovieWithAnalytics extends Movie { analytics: Analytics<'title'>[]; };
 
@@ -101,8 +102,8 @@ function fromUser(invitation: Invitation, uid: string) {
   styleUrls: ['./buyer-analytics.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BuyerAnalyticsComponent {
-
+export class BuyerAnalyticsComponent implements AfterViewInit {
+  @ViewChild('header') header: ElementRef;
   userId$: Observable<string> = this.route.params.pipe(
     pluck('userId')
   );
@@ -196,6 +197,12 @@ export class BuyerAnalyticsComponent {
     private userService: UserService,
     @Inject(APP) public app: App
   ) { }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      scrollIntoView(this.header.nativeElement);
+    });
+  }
 
   goBack() {
     this.navService.goBack(1);
