@@ -274,6 +274,10 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
     this.hidden[group.label] = !this.hidden[group.label];
   }
 
+  cancelSpace(event: KeyboardEvent) {
+    if (event.key === ' ') event.stopPropagation();
+  }
+
 }
 
 

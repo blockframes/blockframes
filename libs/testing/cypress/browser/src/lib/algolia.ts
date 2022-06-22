@@ -1,7 +1,7 @@
-import { OrganizationDocument } from '@blockframes/model';
+import { Organization } from '@blockframes/model';
 
 export const algolia = {
-  storeOrganization(org: OrganizationDocument) {
+  storeOrganization(org: Organization) {
     return cy.task('storeOrganization', org);
   }
 }

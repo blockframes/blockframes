@@ -1,7 +1,7 @@
 import { db } from './internals/firebase';
-import { getDocument } from './data/internals';
-import { Movie, Offer, User, staticModel } from '@blockframes/model';
-import { createNotification, triggerNotifications } from './notification';
+import { Movie, Offer, User, staticModel, createNotification } from '@blockframes/model';
+import { triggerNotifications } from './notification';
+import { getDocument, BlockframesSnapshot } from '@blockframes/firebase-utils';
 // #7946 this may be reactivated later
 // import { templateIds } from '@blockframes/utils/emails/ids';
 // import { Change } from 'firebase-functions';
@@ -14,8 +14,8 @@ import { createNotification, triggerNotifications } from './notification';
 // import { appUrl, supportEmails } from '@env';
 
 
-export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<void> {
-  const offer = snap.data() as Offer;
+export async function onOfferCreate(snap: BlockframesSnapshot<Offer>): Promise<void> {
+  const offer = snap.data();
   const orgId = offer.buyerId;
   const bucket = await getDocument<any>(`buckets/${orgId}`);
   
@@ -41,7 +41,7 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
 }
 
 // #7946 this may be reactivated later
-// export async function onOfferUpdate(change: Change<FirebaseFirestore.DocumentSnapshot>) {
+// export async function onOfferUpdate(change: BlockframesChange<Offer>) {
 //   const before = change.before;
 //   const after = change.after;
 
@@ -49,8 +49,8 @@ export async function onOfferCreate(snap: FirebaseFirestore.DocumentSnapshot): P
 //     throw new Error('Parameter "change" not found');
 //   }
 
-//   const offerBefore = before.data() as Offer;
-//   const offerAfter = after.data() as Offer;
+//   const offerBefore = before.data();
+//   const offerAfter = after.data();
 
 //   const statusHasChanged = offerBefore.status !== offerAfter.status;
 //   const isOfferDeclinedOrAccepted = ['accepted', 'declined'].includes(offerAfter.status);

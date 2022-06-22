@@ -62,7 +62,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
    *
    * _(term = continuous subdivision of a contract, a contract is composed of one or more terms)_
   */
-  public mandateTerms$ = new ReplaySubject<Term<Date>[]>();
+  public mandateTerms$ = new ReplaySubject<Term[]>();
 
   /** Raw sales, straight from the db
    *
@@ -74,7 +74,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
    *
    * _(term = continuous subdivision of a contract, a contract is composed of one or more terms)_
   */
-  public salesTerms$ = new ReplaySubject<Term<Date>[]>();
+  public salesTerms$ = new ReplaySubject<Term[]>();
 
   /** Selected terms in the local bucket form, those where available terms that have been selected by the user */
   public terms$ = this.movie$.pipe(

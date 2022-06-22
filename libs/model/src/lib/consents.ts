@@ -1,13 +1,13 @@
 export type ConsentType = 'access' | 'share';
 
-export interface Consents<D> {
-  access: Access<D>[],
+export interface Consents {
+  access: Access[],
   id: string, // Id of consents document should be the orgId or uId
-  share: Share<D>[]
+  share: Share[]
 }
 
-export interface Access<D> {
-  date: D,
+export interface Access {
+  date: Date,
   docId: string,
   email: string,
   filePath: string,
@@ -17,8 +17,8 @@ export interface Access<D> {
   userId: string
 }
 
-export interface Share<D> {
-  date: D,
+export interface Share {
+  date: Date,
   docId: string,
   email: string,
   firstName: string,
@@ -27,7 +27,7 @@ export interface Share<D> {
   userId: string
 }
 
-export function createAccess(access: Partial<Access<Date>> = {}): Access<Date> {
+export function createAccess(access: Partial<Access> = {}): Access {
   return {
     docId: '',
     email: '',
@@ -41,7 +41,7 @@ export function createAccess(access: Partial<Access<Date>> = {}): Access<Date> {
   };
 }
 
-export function createShare(share: Partial<Share<Date>> = {}): Share<Date> {
+export function createShare(share: Partial<Share> = {}): Share {
   return {
     docId: '',
     email: '',
@@ -54,7 +54,7 @@ export function createShare(share: Partial<Share<Date>> = {}): Share<Date> {
   };
 }
 
-export function createConsent(consent: Partial<Consents<Date>> = {}): Consents<Date> {
+export function createConsent(consent: Partial<Consents> = {}): Consents {
   return {
     access: [],
     id: '',

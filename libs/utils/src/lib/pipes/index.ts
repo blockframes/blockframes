@@ -13,7 +13,6 @@ export * from './sanitize.pipe';
 export * from './app.pipe';
 export * from './form.pipe';
 export * from './number.pipe';
-export * from './date.pipe';
 export * from './url.pipe';
 export * from './cms.pipe';
 export * from './sort-array.pipe';
