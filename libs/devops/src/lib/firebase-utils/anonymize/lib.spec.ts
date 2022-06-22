@@ -211,7 +211,7 @@ describe('Test _META anonymization function', () => {
     };
 
     const doc = anonymizeDocument(titleRecord);
-    expect(doc.content.startedAt.seconds).toBeDefined();
+    expect(doc.content.startedAt.getTime()).toBeDefined();
     expect(doc.content.endedAt).toBe(null)
   });
 });
