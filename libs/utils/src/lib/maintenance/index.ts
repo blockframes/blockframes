@@ -25,8 +25,8 @@ export function _isInMaintenance(maintenanceDoc: IMaintenanceDoc, delay = EIGHT_
       // Wait `delay` minutes before allowing any operation on the db.
       // this prevents triggering firebase events.
       // NOTE: this is hack-ish but good enough for our needs! we'll revisit this later.
-      const now = Date.now(); // TODO #7273 re-use timestamp?
-      return maintenanceDoc.endedAt.toMillis() + delay > now;
+      const now = Date.now();
+      return maintenanceDoc.endedAt.getTime() + delay > now;
     }
 
     // We shouldn't throw here else if this happen it create cache issues

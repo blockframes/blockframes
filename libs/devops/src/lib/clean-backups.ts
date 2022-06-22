@@ -17,8 +17,8 @@ export async function cleanBackups({ bucketName, maxDays }: { bucketName: string
 
     const [day, month, year] = dir.split('-').slice(-3);
     const date = new Date(`${month}-${day}-${year}`);
-    const now = new Date();
-    const elapsed = now.getTime() - date.getTime();
+    const now = Date.now();
+    const elapsed = now - date.getTime();
     return elapsed > maxMilliseconds;
   });
 

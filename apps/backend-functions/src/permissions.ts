@@ -1,3 +1,4 @@
+import { BlockframesSnapshot } from '@blockframes/firebase-utils';
 import { removeAllSubcollections } from '@blockframes/firebase-utils/util';
 import { EventContext } from 'firebase-functions';
 import { db } from './internals/firebase';
@@ -9,7 +10,7 @@ import { db } from './internals/firebase';
  *
  */
 export async function onDocumentPermissionCreate(
-  _: FirebaseFirestore.DocumentSnapshot,
+  _: BlockframesSnapshot,
   context: EventContext
 ) {
   const { docID, orgID } = context.params;
@@ -18,7 +19,7 @@ export async function onDocumentPermissionCreate(
   return db.doc(`docsIndex/${docID}`).set({ authorOrgId: orgID }, { merge: true });
 }
 
-export async function onPermissionDelete(snap: FirebaseFirestore.DocumentSnapshot) {
+export async function onPermissionDelete(snap: BlockframesSnapshot) {
   const batch = db.batch();
 
   // Delete sub-collections (documentPermissions)

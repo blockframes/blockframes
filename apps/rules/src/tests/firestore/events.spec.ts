@@ -1,7 +1,7 @@
 ﻿import { assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
 import { deleteApp, getApps } from 'firebase/app';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
-import { EventDocument, Meeting, MeetingAttendee } from '@blockframes/model';
+import { Event, Meeting, MeetingAttendee } from '@blockframes/model';
 
 describe('Events Rules Tests', () => {
   const projectId = `evrules-spec-${Date.now()}`;
@@ -63,7 +63,7 @@ describe('Events Rules Tests', () => {
     test('user with valid org, ownerOrgId as orgId should be able to allow user access to meeting event', async () => {
       const docRef = db.doc('events/E003');
       const doc = await docRef.get()
-      const event = doc.data() as EventDocument<Meeting>;
+      const event = doc.data() as Event<Meeting>;
 
       // Load our test set
       const credentials = {
@@ -127,7 +127,7 @@ describe('Events Rules Tests', () => {
     it('user can request to enter meeting room', async () => {
       const docRef = db.doc('events/E003');
       const doc = await docRef.get()
-      const event = doc.data() as EventDocument<Meeting>;
+      const event = doc.data() as Event<Meeting>;
 
       // Load our test set
       const credentials = {
@@ -144,7 +144,7 @@ describe('Events Rules Tests', () => {
     it('user can leave meeting room', async () => {
       const docRef = db.doc('events/E003');
       const doc = await docRef.get()
-      const event = doc.data() as EventDocument<Meeting>;
+      const event = doc.data() as Event<Meeting>;
 
       // Load our test set
       const credentials = {
@@ -161,7 +161,7 @@ describe('Events Rules Tests', () => {
     it('user cannot allow himself into meeting room', async () => {
       const docRef = db.doc('events/E003');
       const doc = await docRef.get()
-      const event = doc.data() as EventDocument<Meeting>;
+      const event = doc.data() as Event<Meeting>;
 
       // Load our test set
       const credentials = {
