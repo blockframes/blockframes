@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Territory, TerritoryISOA3Value, parseToAll, territoriesISOA3, staticModel, AnalyticData } from '@blockframes/model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
 
 const territories = parseToAll('territories', 'world') as Territory[];
 
@@ -12,7 +12,7 @@ const territories = parseToAll('territories', 'world') as Territory[];
   styleUrls: ['./map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AnalyticsMapComponent {
+export class AnalyticsMapComponent implements OnDestroy{
   isLoading = true;
 
   zero: TerritoryISOA3Value[] = [];
@@ -24,6 +24,7 @@ export class AnalyticsMapComponent {
 
   private _topCount = new BehaviorSubject(3);
   private _data = new Subject<AnalyticData[]>();
+  private sub: Subscription;
 
   @Input() @boolean showLegend = false;
   @Input() @boolean horizontal = false;
@@ -38,13 +39,17 @@ export class AnalyticsMapComponent {
   @Output() selection: EventEmitter<string> = new EventEmitter();
 
   constructor() {
-    combineLatest([
+    this.sub = combineLatest([
       this._data.asObservable(),
       this._topCount.asObservable()
     ]).subscribe(([data, topCount]) => this.getTopCountries(data, topCount));
   }
 
-  getTopCountries(data: AnalyticData[], count: number) {
+  ngOnDestroy(): void {
+      this.sub.unsubscribe();
+  }
+
+  private getTopCountries(data: AnalyticData[], count: number) {
     if (!data) return;
     this.isLoading = false;
 
