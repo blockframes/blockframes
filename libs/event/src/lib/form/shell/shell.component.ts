@@ -15,7 +15,7 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { App } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { ExplanationComponent } from '../../explanation/explanation.component';
+import { ExplanationComponent } from '../../components/explanation/explanation.component';
 
 const statisticsTab = { path: 'statistics', label: 'Attendance' };
 

@@ -9,7 +9,7 @@ import { AppBarModule } from '@blockframes/ui/app-bar';
 import { AgendaExportModule } from '@blockframes/event/components/agenda-export/agenda-export.module';
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
-import { ExplanationModule } from '../../explanation/explanation.module';
+import { ExplanationModule } from '../../components/explanation/explanation.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
