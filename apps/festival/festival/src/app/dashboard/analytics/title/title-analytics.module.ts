@@ -21,6 +21,7 @@ import { GuestPipeModule } from '@blockframes/invitation/pipes/guest.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LineChartModule } from '@blockframes/analytics/components/line-chart/line-chart.module';
 import { OrgNameModule } from '@blockframes/organization/pipes';
+import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { OrgNameModule } from '@blockframes/organization/pipes';
     GuestPipeModule,
     LineChartModule,
     OrgNameModule,
+    DurationModule,
 
     // Material
     MatButtonModule,
