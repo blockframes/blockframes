@@ -49,7 +49,7 @@ export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string 
   console.log('DB imported!');
 
   console.info('Syncing users from db...');
-  await syncUsers(db, auth);
+  await syncUsers({ db, auth });
   console.info('Users synced!');
 
   console.info('Syncing storage with blockframes-ci...');
@@ -93,7 +93,7 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.info('Syncing users from db...');
-  await syncUsers(db, auth);
+  await syncUsers({ db, auth });
   console.info('Users synced!');
 
   console.info('Syncing storage with blockframes-ci...');

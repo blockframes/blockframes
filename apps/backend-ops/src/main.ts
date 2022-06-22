@@ -140,7 +140,7 @@ async function runCommand() {
       await syncAuthEmulatorWithFirestoreEmulator({ importFrom: arg1 });
       break;
     case 'syncUsers':
-      await syncUsers();
+      await syncUsers({ withMaintenance: true });
       break;
     case 'printUsers':
       await printUsers();

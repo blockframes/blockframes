@@ -145,7 +145,7 @@ export async function syncAuthEmulatorWithFirestoreEmulator({ importFrom = 'defa
     const auth = connectAuthEmulator();
     const db = connectFirestoreEmulator();
     await startMaintenance(db);
-    await syncUsers(db, auth);
+    await syncUsers({ db, auth });
     await endMaintenance(db);
     await shutdownEmulator(proc);
   } catch (e) {
@@ -200,7 +200,7 @@ async function anonDbProcess() {
   console.log('Anonymization complete!')
 
   console.info('Syncing users from db...');
-  const p1 = syncUsers(db);
+  const p1 = syncUsers({ db });
 
   console.info('Syncing storage with production backup stored in blockframes-ci...');
   const p2 = restoreStorageFromCi(getCI());
