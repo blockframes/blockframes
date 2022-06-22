@@ -1,24 +1,27 @@
 import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from './utils';
-import { createNotification, triggerNotifications } from '../../notification';
-import { createDocumentMeta, createPublicInvitationDocument, getAdminIds, getDocument } from '../../data/internals';
+import { triggerNotifications } from '../../notification';
+import { getAdminIds } from '../../data/internals';
 import * as admin from 'firebase-admin';
 import {
-  OrganizationDocument,
-  EventDocument,
+  Event,
   EventMeta,
   Meeting,
   Screening,
-  NotificationDocument,
+  Notification,
   NotificationTypes,
-  InvitationDocument,
-  InvitationOrUndefined,
+  Invitation,
+  createPublicInvitation,
+  createInternalDocumentMeta,
+  Organization,
+  createNotification,
   getGuest,
 } from '@blockframes/model';
+import { getDocument, queryDocuments } from '@blockframes/firebase-utils';
 
 /**
  * Handles notifications and emails when an invitation to an event is created.
  */
-async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
+async function onInvitationToAnEventCreate(invitation: Invitation) {
   const db = admin.firestore();
   if (!invitation.eventId) {
     console.log('eventId is not defined');
@@ -26,14 +29,14 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
   }
 
   // Fetch event and verify if it exists
-  const event = await getDocument(`events/${invitation.eventId}`) as EventDocument<Meeting | Screening>;
+  const event = await getDocument<Event<Meeting | Screening>>(`events/${invitation.eventId}`);
   if (!event) {
     throw new Error(`Event ${invitation.eventId} doesn't exist !`);
   }
 
   if (invitation.mode === 'request' && event?.accessibility === 'public') {
     // This will then trigger "onInvitationToAnEventAccepted" and send in-app notification to 'fromUser'
-    return await db.doc(`invitations/${invitation.id}`).set({ status: 'accepted' }, { merge: true });
+    return db.doc(`invitations/${invitation.id}`).set({ status: 'accepted' }, { merge: true });
   }
 
   // Retreive notification recipient
@@ -71,9 +74,9 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
         toUserId: recipient,
         organization: invitation.fromOrg,
         docId: invitation.eventId,
-        invitation: createPublicInvitationDocument(invitation),
+        invitation: createPublicInvitation(invitation),
         type: event.type === 'meeting' ? 'invitationToAttendMeetingCreated' : event.type === 'screening' ? 'invitationToAttendScreeningCreated' : 'invitationToAttendSlateCreated',
-        _meta: createDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
+        _meta: createInternalDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
       }));
     });
 
@@ -86,9 +89,9 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
       toUserId: invitation.fromUser.uid,
       user: invitation.fromUser,
       docId: invitation.eventId,
-      invitation: createPublicInvitationDocument(invitation),
+      invitation: createPublicInvitation(invitation),
       type: 'requestToAttendEventSent',
-      _meta: createDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
+      _meta: createInternalDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
     }));
 
     // Notification to request recipients
@@ -97,9 +100,9 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
         toUserId: recipient,
         user: invitation.fromUser,
         docId: invitation.eventId,
-        invitation: createPublicInvitationDocument(invitation),
+        invitation: createPublicInvitation(invitation),
         type: 'requestToAttendEventCreated',
-        _meta: createDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
+        _meta: createInternalDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
       }));
     });
 
@@ -113,25 +116,25 @@ async function onInvitationToAnEventCreate(invitation: InvitationDocument) {
 /**
  * Handles notifications when an invitation to an event is updated (accepted or rejected).
  */
-async function onInvitationToAnEventAcceptedOrRejected(invitation: InvitationDocument) {
+async function onInvitationToAnEventAcceptedOrRejected(invitation: Invitation) {
 
-  const notifications: NotificationDocument[] = [];
+  const notifications: Notification[] = [];
 
   if (!!invitation.fromUser && invitation.mode === 'request') {
     const notification = createNotification({
       toUserId: invitation.fromUser.uid,
       docId: invitation.eventId,
-      invitation: createPublicInvitationDocument(invitation),
+      invitation: createPublicInvitation(invitation),
       type: 'requestToAttendEventUpdated',
       organization: invitation.toOrg, // The subject that have accepted or rejected the request
-      _meta: createDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
+      _meta: createInternalDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
     });
     notifications.push(notification);
   } else if (!!invitation.fromOrg && invitation.mode === 'invitation') {
-    const org = await getDocument<OrganizationDocument>(`orgs/${invitation.fromOrg.id}`);
+    const org = await getDocument<Organization>(`orgs/${invitation.fromOrg.id}`);
     const ids = await getAdminIds(org.id);
 
-    const event = await getDocument(`events/${invitation.eventId}`) as EventDocument<Meeting | Screening>;
+    const event = await getDocument<Event<Meeting | Screening>>(`events/${invitation.eventId}`);
     if (event.meta?.organizerUid) {
       ids.push(event.meta?.organizerUid);
     }
@@ -139,10 +142,10 @@ async function onInvitationToAnEventAcceptedOrRejected(invitation: InvitationDoc
       const notification = createNotification({
         toUserId,
         docId: invitation.eventId,
-        invitation: createPublicInvitationDocument(invitation),
+        invitation: createPublicInvitation(invitation),
         type: 'invitationToAttendEventUpdated',
         user: invitation.toUser, // The subject that have accepted or rejected the invitation
-        _meta: createDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
+        _meta: createInternalDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
       });
 
       notifications.push(notification);
@@ -159,9 +162,9 @@ async function onInvitationToAnEventAcceptedOrRejected(invitation: InvitationDoc
  * was 'created', 'accepted' or 'rejected'.
  */
 export async function onInvitationToAnEventUpdate(
-  before: InvitationOrUndefined,
-  after: InvitationDocument,
-  invitation: InvitationDocument
+  before: Invitation,
+  after: Invitation,
+  invitation: Invitation
 ) {
   if (wasCreated(before, after)) {
     return onInvitationToAnEventCreate(invitation);
@@ -184,9 +187,9 @@ export async function createNotificationsForEventsToStart() {
   const eventsHourCollection = await fetchEventStartingIn(halfHour, oneHour);
 
   // 2 Fetch attendees (invitations accepted)
-  const invitationsDay = await fetchAttendeesToEvent(eventsDayCollection.docs);
-  const invitationsDayPending = await fetchAttendeesToEvent(eventsDayCollection.docs, true);
-  const invitationsHour = await fetchAttendeesToEvent(eventsHourCollection.docs);
+  const invitationsDay = await fetchAttendeesToEvent(eventsDayCollection);
+  const invitationsDayPending = await fetchAttendeesToEvent(eventsDayCollection, true);
+  const invitationsHour = await fetchAttendeesToEvent(eventsHourCollection);
 
   // 3 Create notifications if not already exists
   const notificationsDays = await createNotificationIfNotExists(invitationsDay, 'oneDayReminder');
@@ -199,8 +202,8 @@ export async function createNotificationsForEventsToStart() {
 
 export async function createNotificationsForFinishedScreenings() {
   const halfAnHour = 1800 * 1000;
-  const screenings = await fetchFinishedScreenings(halfAnHour); 
-  const notifications: NotificationDocument[] = [];
+  const screenings = await fetchFinishedScreenings(halfAnHour);
+  const notifications: Notification[] = [];
 
   for (const screening of screenings) {
     const attendees = screening.meta.attendees ? Object.keys(screening.meta.attendees) : [];
@@ -211,36 +214,36 @@ export async function createNotificationsForFinishedScreenings() {
       const notificationType = attendees.includes(userId) ? 'userAttendedScreening' : 'userMissedScreening';
       const [notification] = await createNotificationIfNotExists([invitation], notificationType);
       notifications.push(notification);
-    } 
+    }
   }
   return notifications.length ? triggerNotifications(notifications) : undefined;
 }
 
 /** Fetch event collection with a start and an end range search */
-async function fetchEventStartingIn(from: number, to: number) {
+function fetchEventStartingIn(from: number, to: number) {
   const db = admin.firestore();
-  return await db.collection('events')
+  const query = db.collection('events')
     .where('start', '>=', new Date(Date.now() + from))
-    .where('start', '<', new Date(Date.now() + to))
-    .get();
+    .where('start', '<', new Date(Date.now() + to));
+
+  return queryDocuments<Event>(query);
 }
 
 /** Fetch screenings finished since a specific time */
 async function fetchFinishedScreenings(since: number) {
   const db = admin.firestore();
-  const eventsCollection = await db.collection('events') //TODO #8006
+  const query = await db.collection('events')
     .where('type', '==', 'screening')
     .where('end', '>=', new Date(Date.now() - since))
-    .where('end', '<', new Date())
-    .get();
-  return eventsCollection.docs.map(doc => doc.data() as EventDocument<Screening>);
+    .where('end', '<', new Date());
+
+  return queryDocuments<Event<Screening>>(query);
 }
 
 /** Fetch invitations related to an event */
-async function fetchEventInvitations(eventId: string) { //TODO #8006
+function fetchEventInvitations(eventId: string) {
   const db = admin.firestore();
-  const invitationsDocs = await db.collection('invitations').where('eventId', '==', eventId).get();
-  return invitationsDocs.docs.map(doc => doc.data() as InvitationDocument);
+  return queryDocuments<Invitation>(db.collection('invitations').where('eventId', '==', eventId));
 }
 
 /**
@@ -248,25 +251,23 @@ async function fetchEventInvitations(eventId: string) { //TODO #8006
  * @param collectionDocs Event docs
  * @param pendingInvites Set true for invitations that are pending invites (not requests)
  */
-async function fetchAttendeesToEvent(collectionDocs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[], pendingInvites = false) {
+async function fetchAttendeesToEvent(events: Event[], pendingInvites = false) {
   const db = admin.firestore();
-  const invitations: InvitationDocument[] = [];
 
-  const docsIds: string[] = collectionDocs.map(doc => doc.data().id);
-  const promises = pendingInvites
-    ? docsIds.map(id => db.collection('invitations').where('eventId', '==', id).where('mode', '==', 'invitation').where('status', '==', 'pending').get())
-    : docsIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted').get())
-  const invitationsSnaps = await Promise.all(promises);
-  invitationsSnaps.forEach(snap => snap.docs.forEach(doc => invitations.push(doc.data() as InvitationDocument)));
+  const docsIds: string[] = events.map(event => event.id);
+  const queries = pendingInvites
+    ? docsIds.map(id => db.collection('invitations').where('eventId', '==', id).where('mode', '==', 'invitation').where('status', '==', 'pending'))
+    : docsIds.map(id => db.collection('invitations').where('eventId', '==', id).where('status', '==', 'accepted'));
 
-  return invitations;
+  const invitations = await Promise.all(queries.map(q => queryDocuments<Invitation>(q)));
+  return invitations.flat();
 }
 
 /**
  * Look after notification already existing for one user and one event
  * Return an array of new notifications to create
  */
-async function createNotificationIfNotExists(invitations: InvitationDocument[], notificationType: NotificationTypes) {
+async function createNotificationIfNotExists(invitations: Invitation[], notificationType: NotificationTypes) {
   const notifications = [];
   const db = admin.firestore();
 
@@ -284,7 +285,7 @@ async function createNotificationIfNotExists(invitations: InvitationDocument[], 
         toUserId,
         docId: invitation.eventId,
         type: notificationType,
-        _meta: createDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
+        _meta: createInternalDocumentMeta({ createdFrom: 'festival' }) // Events are only on festival
       }));
     }
   }
@@ -298,7 +299,7 @@ async function createNotificationIfNotExists(invitations: InvitationDocument[], 
  * @param event
  * @param email
  */
-export async function isUserInvitedToEvent(userId: string, event: EventDocument<EventMeta>, email?: string) {
+export async function isUserInvitedToEvent(userId: string, event: Event<EventMeta>, email?: string) {
   const db = admin.firestore();
 
   if (event.accessibility === 'public') return true;

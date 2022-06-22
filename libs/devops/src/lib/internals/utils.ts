@@ -1,3 +1,4 @@
+import { toDate } from "@blockframes/firebase-utils";
 import { getValue } from "@blockframes/utils/helpers";
 import { isString } from "lodash";
 
@@ -136,7 +137,7 @@ export async function loadAllCollections(db: FirebaseFirestore.Firestore): Promi
   const dbData: DatabaseData = {};
   filteredCollections.forEach((name, index) => dbData[name] = {
     name,
-    documents: data[index].docs.map(d => d.data()),
+    documents: data[index].docs.map(d => toDate(d.data())),
     refs: data[index]
   } as CollectionData);
 

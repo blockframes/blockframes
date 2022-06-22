@@ -56,7 +56,7 @@ export class CatalogAvailsShellComponent {
     return contracts$.pipe(
       switchMap((contract) => {
         const list = contract.flatMap((movie) => movie.termIds);
-        if (list.length === 0) return of([]) as Observable<Term<Date>[]>;
+        if (list.length === 0) return of([]) as Observable<Term[]>;
         return this.termsService.valueChanges(list);
       })
     );

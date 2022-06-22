@@ -1,8 +1,8 @@
 import { db } from './internals/firebase';
-import { triggerNotifications, createNotification } from './notification';
-import { createDocumentMeta, createPublicUserDocument, getDocument, getOrganizationsOfMovie } from './data/internals';
+import { triggerNotifications } from './notification';
+import { getOrganizationsOfMovie } from './data/internals';
 import { cleanMovieMedias, moveMovieMedia } from './media';
-import { Change, EventContext } from 'firebase-functions';
+import { EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils/algolia';
 import { getMailSender } from '@blockframes/utils/apps';
 import { sendMovieSubmittedEmail } from './templates/mail';
@@ -16,21 +16,23 @@ import {
   orgName,
   MovieAppConfig,
   PublicUser,
-  MovieDocument,
   createDocPermissions,
-  Timestamp,
   App,
   getAllAppsExcept,
-  getMovieAppAccess
+  getMovieAppAccess,
+  createInternalDocumentMeta,
+  createPublicUser,
+  createNotification
 } from '@blockframes/model';
+import { BlockframesChange, BlockframesSnapshot, getDocument } from '@blockframes/firebase-utils';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
-type AppConfigMap = Partial<{ [app in App]: MovieAppConfig<Timestamp> }>;
+type AppConfigMap = Partial<{ [app in App]: MovieAppConfig }>;
 
 /** Function triggered when a document is added into movies collection. */
-export async function onMovieCreate(snap: FirebaseFirestore.DocumentSnapshot) {
-  const movie = snap.data() as MovieDocument;
+export async function onMovieCreate(snap: BlockframesSnapshot<Movie>) {
+  const movie = snap.data();
 
   if (!movie) {
     console.error('Invalid movie data:', movie);
@@ -46,8 +48,8 @@ export async function onMovieCreate(snap: FirebaseFirestore.DocumentSnapshot) {
 }
 
 /** Remove a movie and send notifications to all users of concerned organizations. */
-export async function onMovieDelete(snap: FirebaseFirestore.DocumentSnapshot, context: EventContext) {
-  const movie = snap.data() as MovieDocument;
+export async function onMovieDelete(snap: BlockframesSnapshot<Movie>, context: EventContext) {
+  const movie = snap.data();
 
   await cleanMovieMedias(movie);
 
@@ -119,9 +121,9 @@ export async function onMovieDelete(snap: FirebaseFirestore.DocumentSnapshot, co
   console.log(`Movie ${movie.id} removed`);
 }
 
-export async function onMovieUpdate(change: Change<FirebaseFirestore.DocumentSnapshot>) {
-  const before = change.before.data() as MovieDocument;
-  const after = change.after.data() as MovieDocument;
+export async function onMovieUpdate(change: BlockframesChange<Movie>) {
+  const before = change.before.data();
+  const after = change.after.data();
   if (!after) {
     return;
   }
@@ -143,14 +145,14 @@ export async function onMovieUpdate(change: Change<FirebaseFirestore.DocumentSna
 
     // Notification to users related to current movie
     const notifications = organizations
-      .filter((organizationDocument) => !!organizationDocument?.userIds?.length)
+      .filter((organization) => !!organization?.userIds?.length)
       .reduce((ids: string[], org) => ids.concat(org.userIds), [])
       .map((toUserId) =>
         createNotification({
           toUserId,
           type: 'movieSubmitted',
           docId: after.id,
-          _meta: createDocumentMeta({ createdFrom: appAccess }),
+          _meta: createInternalDocumentMeta({ createdFrom: appAccess }),
         })
       );
 
@@ -160,14 +162,14 @@ export async function onMovieUpdate(change: Change<FirebaseFirestore.DocumentSna
   if (isMovieAccepted) {
     // When Archipel Content accept the movie
     const notifications = organizations
-      .filter((organizationDocument) => !!organizationDocument?.userIds?.length)
+      .filter((organization) => !!organization?.userIds?.length)
       .reduce((ids: string[], org) => ids.concat(org.userIds), [])
       .map((toUserId) => {
         return createNotification({
           toUserId,
           type: 'movieAccepted',
           docId: after.id,
-          _meta: createDocumentMeta({ createdFrom: appAccess }),
+          _meta: createInternalDocumentMeta({ createdFrom: appAccess }),
         });
       });
 
@@ -223,8 +225,8 @@ export async function createAskingPriceRequest(
         type: 'movieAskingPriceRequested',
         docId: movieId,
         data: { territories, message },
-        user: createPublicUserDocument(user),
-        _meta: createDocumentMeta({ createdFrom: 'festival' }),
+        user: createPublicUser(user),
+        _meta: createInternalDocumentMeta({ createdFrom: 'festival' }),
       })
     );
 
@@ -238,8 +240,8 @@ export async function createAskingPriceRequest(
     type: 'movieAskingPriceRequestSent',
     docId: movieId,
     data: { territories, message },
-    user: createPublicUserDocument(user),
-    _meta: createDocumentMeta({ createdFrom: 'festival' }),
+    user: createPublicUser(user),
+    _meta: createInternalDocumentMeta({ createdFrom: 'festival' }),
   });
   triggerNotifications([notification]);
 }
@@ -288,7 +290,7 @@ function isAccepted(previousAppConfig: AppConfigMap, currentAppConfig: AppConfig
   });
 }
 
-async function removeMovieFromWishlists(movie: MovieDocument, batch?: FirebaseFirestore.WriteBatch) {
+async function removeMovieFromWishlists(movie: Movie, batch?: FirebaseFirestore.WriteBatch) {
   const collection = db.collection('orgs');
   const orgsWithWishlists = await collection.where('wishlist', 'array-contains', movie.id).get();
   const updates: Promise<FirebaseFirestore.WriteResult>[] = [];

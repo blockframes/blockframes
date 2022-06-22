@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy, Optional } from '@angular/core';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta, Timestamp, AnonymousCredentials, AnonymousRole, App } from '@blockframes/model';
+import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta, AnonymousCredentials, AnonymousRole, App } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
@@ -53,7 +53,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
 
       // TODO #6113 once we have a custom email verified page, we can update the users' meta there
       if (userAuth?.emailVerified && profile && !profile._meta?.emailVerified) {
-        const _meta: DocumentMeta<Date | Timestamp> = {
+        const _meta: DocumentMeta = {
           ...profile._meta,
           emailVerified: true
         }
@@ -181,7 +181,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
   override createProfile(user: Partial<User>, ctx: {
     firstName: string,
     lastName: string,
-    _meta: DocumentMeta<Date>,
+    _meta: DocumentMeta,
     privacyPolicy: PrivacyPolicy
     hideEmail: boolean
   }) {
