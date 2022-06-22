@@ -32,7 +32,7 @@
       </section>
       <event-details-edit [form]="form" showPrivacy></event-details-edit>
     </mat-card>
-    <div class="container-nav-button">
+    <div>
       <nav mat-tab-nav-bar>
         <ng-container *ngFor="let tab of (tabs$ |async)">
           <a mat-tab-link [routerLink]="tab.path" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">

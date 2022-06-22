@@ -37,7 +37,9 @@ mat-spinner {
   margin-top: 48px;
 }
 
-.container-nav-button {
-  display: flex;
-  place-content: space-between;
+form {
+  div {
+    display: flex;
+    justify-content: space-between;
+  }
 }

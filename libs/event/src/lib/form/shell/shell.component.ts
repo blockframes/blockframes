@@ -187,7 +187,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   }
 
   public explain() {
-    this.dialog.open(ExplanationComponent, { data: createModalData({ type: this.form.value.type }), autoFocus: false, });
+    this.dialog.open(ExplanationComponent, { data: createModalData({ type: this.form.value.type }), autoFocus: false });
   }
 
 }
