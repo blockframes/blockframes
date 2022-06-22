@@ -46,7 +46,7 @@ export class AnalyticsMapComponent implements OnDestroy{
   }
 
   ngOnDestroy(): void {
-      this.sub.unsubscribe();
+    this.sub.unsubscribe();
   }
 
   private getTopCountries(data: AnalyticData[], count: number) {
