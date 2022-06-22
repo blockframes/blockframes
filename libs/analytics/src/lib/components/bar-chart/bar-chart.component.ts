@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
-import { AnalyticData } from "@blockframes/model";
-import { trimString } from "@blockframes/utils/pipes";
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { AnalyticData } from '@blockframes/model';
+import { trimString } from '@blockframes/utils/pipes';
 
 import {
   ApexAxisChartSeries,
@@ -11,7 +11,7 @@ import {
   ApexTooltip,
   ApexLegend,
   ApexYAxis
-} from "ng-apexcharts";
+} from 'ng-apexcharts';
 
 interface BarChartOptions {
   series: ApexAxisChartSeries;
@@ -74,7 +74,7 @@ export class BarChartComponent {
 
     const data = Object.values(analytics).map(d => d.count);
     this.barChartOptions.series = data.length ? [{ data }] : [];
-    this.barChartOptions.labels = Object.values(analytics).map(d => trimString(d.label, 16, false));
+    this.barChartOptions.labels = Object.values(analytics).map(d => trimString(d.label, 16));
 
     this.chart?.updateOptions(this.barChartOptions);
     this.isLoading = false;

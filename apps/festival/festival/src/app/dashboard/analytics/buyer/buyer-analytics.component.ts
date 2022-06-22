@@ -201,7 +201,7 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     setTimeout(() => {
       scrollIntoView(this.header.nativeElement);
-    })
+    });
   }
 
   goBack() {
