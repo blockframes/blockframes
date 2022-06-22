@@ -37,7 +37,7 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
 
   const averageWatchTime = averageWatchtime(attendees);
-  const parsedTime = convertToTimeString(averageWatchTime * 1000) || '0min';
+  const parsedTime = convertToTimeString(averageWatchTime * 1000) || '0s';
   const participationRate = Math.round(attendees.length / accepted.length) * 100;
   const acceptationRate = Math.round(accepted.length / invitations.length) * 100;
   const traction = Math.round(screeningRequests.length / invitations.length) * 100;

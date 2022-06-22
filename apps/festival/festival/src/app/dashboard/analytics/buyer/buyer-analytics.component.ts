@@ -63,7 +63,7 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
   const invitationsCount = invitations.filter(i => i.mode === 'invitation').length;
   const requestsCount = invitations.filter(i => i.mode === 'request').length;
 
-  const watchTime = convertToTimeString(averageWatchTime * 1000) || '0min';
+  const watchTime = convertToTimeString(averageWatchTime * 1000) || '0s';
 
   return [
     {
