@@ -19,7 +19,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { aggregatePerUser, countedToAnalyticData, counter } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { NavigationService } from "@blockframes/ui/navigation.service";
-import { downloadCsvFromJson } from "@blockframes/utils/helpers";
+import { convertToTimeString, downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
 import { eventTime } from "@blockframes/event/pipes/event-time.pipe";
 import { InvitationService } from "@blockframes/invitation/service";
@@ -37,7 +37,7 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
 
   const averageWatchTime = averageWatchtime(attendees);
-  const parsedTime = `${Math.floor(averageWatchTime / 60)}min ${averageWatchTime % 60}s`;
+  const parsedTime = convertToTimeString(averageWatchTime * 1000) || '0s';
   const participationRate = Math.round(attendees.length / accepted.length) * 100;
   const acceptationRate = Math.round(accepted.length / invitations.length) * 100;
   const traction = Math.round(screeningRequests.length / invitations.length) * 100;
@@ -53,7 +53,7 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
       icon: 'group'
     },
     {
-      title: 'Average watch time',
+      title: 'Average Watch Time',
       value: parsedTime,
       icon: 'timer'
     },
