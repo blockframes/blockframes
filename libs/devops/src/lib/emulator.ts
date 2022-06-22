@@ -269,24 +269,3 @@ export async function anonymizeLatestProdDb() {
 export async function uploadBackup({ localRelPath, remoteDir }: { localRelPath?: string; remoteDir?: string; } = {}) {
   await uploadDbBackupToBucket({ bucketName: backupBucket, localPath: localRelPath, remoteDir });
 }
-
-/**
- * This function will launch the emulator and switch on maintenance mode, then exit
- * @param param0 settings object
- * Provide a local path to the firestore export dir for which to switch on maintenance mode
- */
-export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
-  const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
-  let emulatorProcess: ChildProcess;
-  try {
-    emulatorProcess = await firebaseEmulatorExec({
-      emulators: 'firestore',
-      importPath: emulatorPath,
-      exportData: true,
-    });
-    const db = connectFirestoreEmulator();
-    startMaintenance(db);
-  } finally {
-    await shutdownEmulator(emulatorProcess);
-  }
-}

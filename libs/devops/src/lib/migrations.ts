@@ -6,7 +6,7 @@ import { importFirestore } from './admin';
 import { Firestore, loadAdminServices, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
 import { last } from 'lodash';
-import { dbVersionDoc } from '@blockframes/utils/maintenance';
+import { dbVersionDoc, DB_DOCUMENT_NAME, META_COLLECTION_NAME } from '@blockframes/utils/maintenance';
 import { exportFirestoreToBucketBeta, getFirestoreExportDirname } from './firebase-utils';
 import { isMigrationRequired } from './tools';
 
@@ -22,7 +22,7 @@ export async function loadDBVersion(db: Firestore): Promise<number> {
 }
 
 export async function updateDBVersion(db: Firestore, version: number) {
-  const versionRef = db.collection('_META').doc('_VERSION');
+  const versionRef = db.collection(META_COLLECTION_NAME).doc(DB_DOCUMENT_NAME);
   const doc = await versionRef.get();
 
   if (!doc.exists) {
