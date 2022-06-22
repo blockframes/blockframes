@@ -235,12 +235,19 @@ export class IdentityComponent implements OnInit, OnDestroy {
    */
   private async createUser(user: { email, password, firstName, lastName, hideEmail }) {
     const privacyPolicy = await this.authService.getPrivacyPolicy();
+    const legalTerms = {
+      privacyPolicy: true,
+      tc: {
+        [this.app]: true
+      }
+    }
     const ctx = {
       firstName: user.firstName,
       lastName: user.lastName,
       hideEmail: user.hideEmail,
       _meta: { createdFrom: this.app },
-      privacyPolicy
+      privacyPolicy,
+      legalTerms
     };
     const credentials = await this.authService.signup(user.email.trim(), user.password, { ctx });
     return createPublicUser({
@@ -249,6 +256,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       email: user.email,
       uid: credentials.user.uid,
       hideEmail: user.hideEmail,
+      legalTerms
     });
   }
 

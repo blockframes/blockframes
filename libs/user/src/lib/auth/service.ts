@@ -183,7 +183,14 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
     lastName: string,
     _meta: DocumentMeta,
     privacyPolicy: PrivacyPolicy
-    hideEmail: boolean
+    hideEmail: boolean,
+    legalTerms: {
+      privacyPolicy: boolean,
+      tc: {
+        festival: boolean,
+        catalog: boolean
+      }
+    }
   }) {
     return {
       _meta: createDocumentMeta({ emailVerified: false, ...ctx._meta }),
@@ -192,7 +199,14 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
       firstName: ctx.firstName,
       lastName: ctx.lastName,
       privacyPolicy: ctx.privacyPolicy,
-      hideEmail: ctx.hideEmail
+      hideEmail: ctx.hideEmail,
+      legalTerms: {
+        privacyPolicy: ctx.legalTerms.privacyPolicy ?? false,
+        tc: {
+          festival: ctx.legalTerms.tc.festival ?? false,
+          catalog: ctx.legalTerms.tc.catalog ?? false
+        }
+      }
     };
   }
 

@@ -1,0 +1,28 @@
+<main bgAsset="rocket_background.svg">
+  <a app-logo routerLink="/"></a>
+
+  <h1>Almost there!</h1>
+  <section class="surface">
+    <p>
+      Before you access our Application you need to accept our Terms & Conditions and agree with our Privacy Policy
+    </p>
+  
+    <form [formGroup]="form" (ngSubmit)="accept()">
+      <mat-checkbox color="primary" formControlName="termsOfUse">
+        <span class="mat-caption">I hereby accept {{ app | appName }}&nbsp;
+          <a target="_blank" routerLink="/auth/terms">Terms and Conditions</a>.
+        </span>
+      </mat-checkbox>
+  
+      <mat-checkbox color="primary" formControlName="privacyPolicy">
+        <span class="mat-caption">I hereby accept the Processing of my Personal Data and declare to know&nbsp;
+          <a target="_blank" routerLink="/auth/privacy">the Conditions of such Processing and my rights under GDPR Regulation</a>.
+        </span>
+      </mat-checkbox>
+      <div>
+        <button mat-flat-button color="accent" type="submit" [disabled]="!form.get('termsOfUse').value || !form.get('privacyPolicy').value">Access Platform</button>
+        <button mat-button (click)="openIntercom()">Contact Us</button>  
+      </div>
+    </form>
+  </section>
+</main>
