@@ -29,19 +29,19 @@ export class CheckPolicyAndTermsComponent implements OnInit {
 
   async ngOnInit() {
     const profile = await firstValueFrom(this.service.profile$);
-    this.form.get('termsOfUse').setValue(profile.legalTerms?.tc[this.app]);
-    this.form.get('privacyPolicy').setValue(profile.legalTerms?.privacyPolicy);
+    this.form.get('termsOfUse').setValue(profile.termsAndConditions?.[this.app]?.date >= new Date(this.service.privacyPolicyDate));
+    this.form.get('privacyPolicy').setValue(profile.privacyPolicy?.date >= new Date(this.service.privacyPolicyDate));
   }
 
   async accept() {
     const uid = this.service.uid;
-    const legalTerms = {
-      privacyPolicy: this.form.get('privacyPolicy').value,
-      tc: {
-        [this.app]: this.form.get('termsOfUse').value
-      }
-    }
-    await this.service.update({ uid, legalTerms });
+    const legalTerms = await this.service.getLegalTerms();
+    const privacyPolicy = legalTerms;
+    const termsAndConditions = {
+      [this.app]: legalTerms
+    };
+
+    await this.service.update({ uid, termsAndConditions, privacyPolicy });
     this.router.navigate(['/']);
   }
 

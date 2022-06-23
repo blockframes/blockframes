@@ -1,12 +1,13 @@
 @import "@angular/flex-layout/mq";
 
-main {
+:host {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: auto;
   min-height: 100vh;
+  background-image: url("/assets/images/light/rocket_background.svg");
   background-color: var(--background-card);
   background-position: right bottom;
   background-size: 70%;

@@ -1,6 +1,6 @@
 import { createStorageFile, StorageFile } from './media';
 import type { DocumentMeta } from './meta';
-import type { Genre, Language, Media, Territory } from './static';
+import type { App, Genre, Language, Media, Territory } from './static';
 import type { NotificationTypes } from './notification';
 import type { UserRole } from './permissions';
 
@@ -14,12 +14,13 @@ export interface User extends PublicUser {
   position: string;
   orgId: string;
   avatar: StorageFile;
-  privacyPolicy: PrivacyPolicy;
+  privacyPolicy: LegalTerms;
+  termsAndConditions?: Partial<Record<App, LegalTerms>>;
   settings?: UserSettings;
   preferences?: Preferences;
 }
 
-export interface PrivacyPolicy {
+export interface LegalTerms {
   date: Date;
   ip: string;
 }
@@ -45,13 +46,6 @@ export interface PublicUser {
   lastName?: string;
   orgId?: string;
   hideEmail: boolean;
-  legalTerms?: {
-    privacyPolicy: boolean;
-    tc: {
-      festival?: boolean;
-      catalog?: boolean;
-    }
-  }
 }
 
 export interface Preferences {
@@ -70,13 +64,6 @@ export function createPublicUser(user: Partial<User> = {}): PublicUser {
     lastName: user.lastName ?? '',
     orgId: user.orgId ?? '',
     hideEmail: user.hideEmail ?? false,
-    legalTerms: {
-      privacyPolicy: user.legalTerms.privacyPolicy ?? false,
-      tc: {
-        festival: user.legalTerms.tc.festival ?? false,
-        catalog: user.legalTerms.tc.catalog ?? false
-      }
-    }
   };
 }
 
