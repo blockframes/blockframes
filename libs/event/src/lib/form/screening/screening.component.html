@@ -18,8 +18,9 @@
           {{ title.title.international }}
         </mat-option>
       </mat-select>
-      <mat-hint id="missing-screener" *ngIf="screenerMissing || titleMissing">{{titleMissing ? 'No Title selected' : 'This Title has no Screener attached.'}}</mat-hint>
-    </mat-form-field>
+      <mat-hint id="missing-screener" *ngIf="screenerMissing || titleMissing" test-id="missing-screener">
+        {{titleMissing ? 'No Title selected' : 'This Title has no Screener attached.'}}</mat-hint>
+      </mat-form-field>
 
     <!-- Description -->
     <mat-form-field appearance="outline">

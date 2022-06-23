@@ -1,8 +1,9 @@
-import { OrgActivity, Territory, PublicUser, Module } from '@blockframes/model';
+import { OrgActivity, Territory, PublicUser, Module, EventTypes, eventTypes, AccessibilityTypes } from '@blockframes/model';
 import { browserAuth } from '@blockframes/testing/cypress/browser';
 import { startOfWeek, add, isPast, isFuture } from 'date-fns';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
+import { capitalize } from '@blockframes/utils/helpers';
 
 export function awaitElementDeletion(selector: string, timeout?: number) {
   const settings = { timeout };
@@ -38,6 +39,7 @@ export function getAllStartingWith(selector: string) {
 export function getInList(selectorStart: string, option: string) {
   getAllStartingWith(selectorStart).each($el => {
     // loops between all options
+    cy.log($el[0].innerText, option, $el[0].innerText === option);
     if ($el[0].innerText === option) $el.trigger('click');
   });
 }
@@ -71,6 +73,13 @@ export function interceptEmail(option: InterceptOption) {
 
 export function deleteEmail(id: string) {
   return cy.mailosaurDeleteMessage(id);
+}
+
+export function connectOtherUser(email: string) {
+  browserAuth.clearBrowserAuth();
+  cy.visit('');
+  browserAuth.signinWithEmailAndPassword(email);
+  cy.visit('');
 }
 
 //* AUTHENTIFICATION *//
@@ -117,6 +126,8 @@ export function verifyInvitation(orgAdminEmail: string, user: PublicUser, expect
 
 //* DASHBOARD *//
 
+//* js functions
+
 export function createFutureSlot() {
   const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
   do {
@@ -156,6 +167,67 @@ export interface EventSlot {
   day: number;
   hours: number;
   minutes: 0 | 30;
+}
+
+//* cypress commands
+
+export function selectSlot(time: EventSlot) {
+  const { day, hours, minutes } = time;
+  return cy
+    .get('.cal-day-column')
+    .eq(day)
+    .find('.cal-hour')
+    .eq(hours)
+    .children()
+    .eq(!minutes ? 0 : 1)
+    .click();
+}
+
+export function getEventSlot(time: EventSlot) {
+  const { day, hours, minutes } = time;
+  //30 minutes are 30px high, an hour 60px
+  let topOffset = hours * 60;
+  if (minutes === 30) topOffset += 30;
+  return cy.get('.cal-day-column').eq(day).find('.cal-events-container').find(`[style^="top: ${topOffset}px"]`);
+}
+
+export function fillDashboardCalendarPopin(event: { type: EventTypes; title: string }) {
+  const { type, title } = event;
+  get('event-type').click();
+  getInList('type_', eventTypes[type]);
+  get('event-title-modal').clear().type(title);
+  get('more-details').click();
+}
+
+export function fillDashboardCalendarDetails(event: {
+  movie: string;
+  title: string;
+  accessibility: AccessibilityTypes;
+  secret?: boolean;
+}) {
+  const { movie, title, accessibility, secret } = event;
+  get('title').click();
+  cy.contains(movie);
+  //get('title_1').should('be.visible');
+  getInList('title_', movie);
+  get('description').type(`Description : ${title}`);
+  get(accessibility).click();
+  if (secret) check('secret');
+  get('event-save').click();
+}
+
+export function verifyScreening(data: { title: string; accessibility: AccessibilityTypes; expected: boolean }) {
+  const { title, accessibility, expected } = data;
+  getAllStartingWith('event_').then(events => {
+    let eventFound = false;
+    events.toArray().map(event => {
+      if (event.textContent.includes(title)) {
+        expect(event.textContent).to.include(`${capitalize(accessibility)} Screening`);
+        eventFound = true;
+      }
+    });
+    expected ? expect(eventFound).to.be.true : expect(eventFound).to.be.false;
+  });
 }
 
 //* ------------------------------------- *//

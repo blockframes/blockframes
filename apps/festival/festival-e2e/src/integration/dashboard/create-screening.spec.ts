@@ -5,81 +5,139 @@ import {
   firestore,
   maintenance,
   // cypress commands
+  assertUrlIncludes,
   get,
-  getByClass,
   getInList,
-  check,
-  uncheck,
+  // cypress dashboard specific cpmmands
+  connectOtherUser,
+  getEventSlot,
+  selectSlot,
+  fillDashboardCalendarPopin,
+  fillDashboardCalendarDetails,
+  verifyScreening,
   // cypress specific functions
   createFutureSlot,
-  getCurrentWeekDays,
-  // cypress specific interface
-  EventSlot,
 } from '@blockframes/testing/cypress/browser';
-import { Organization, User, Movie, EventTypes } from '@blockframes/model';
-import { user, org, permissions, movie1, movie2 } from '../../fixtures/dashboard/create-event';
+import {
+  dashboardUser,
+  marketplaceUser,
+  dashboardOrg,
+  marketplaceOrg,
+  dashboardPermissions,
+  marketplacePermissions,
+  screenerMovie,
+  noScreenerMovie,
+  dashboardDocumentPermissions,
+  dummyEvent,
+} from '../../fixtures/dashboard/create-event';
 
 const injectedData = {
-  [`users/${user.uid}`]: user,
-  [`orgs/${org.id}`]: org,
-  [`permissions/${org.id}`]: permissions,
-  [`movies/${movie1.id}`]: movie1,
-  [`movies/${movie2.id}`]: movie2,
+  // dashboard user
+  [`users/${dashboardUser.uid}`]: dashboardUser,
+  [`orgs/${dashboardOrg.id}`]: dashboardOrg,
+  [`permissions/${dashboardOrg.id}`]: dashboardPermissions,
+  // marketplace user
+  [`users/${marketplaceUser.uid}`]: marketplaceUser,
+  [`orgs/${marketplaceOrg.id}`]: marketplaceOrg,
+  [`permissions/${marketplaceOrg.id}`]: marketplacePermissions,
+  // movies
+  [`movies/${screenerMovie.id}`]: screenerMovie,
+  [`movies/${noScreenerMovie.id}`]: noScreenerMovie,
+  // events
+  [`events/${dummyEvent.id}`]: dummyEvent,
+  // document permissions
+  [`permissions/${dashboardOrg.id}/documentPermissions/${dashboardDocumentPermissions.id}`]: dashboardDocumentPermissions,
 };
 
 describe('Screenings', () => {
   beforeEach(() => {
     cy.visit('');
     firestore.clearTestData();
+    firestore.deleteOrgEvents(dashboardOrg.id);
     adminAuth.deleteAllTestUsers();
     maintenance.start();
     firestore.create([injectedData]);
     maintenance.end();
-    adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
+    adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true });
+    adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true });
     browserAuth.clearBrowserAuth();
     cy.visit('');
-    browserAuth.signinWithEmailAndPassword(user.email);
+    browserAuth.signinWithEmailAndPassword(dashboardUser.email);
     cy.visit('');
     get('calendar').click();
+    get('cookies').click();
   });
 
-  it('adds a future public screening event', () => {
+  it('create future public screening event, check if visible in market place, testing also noScreener behaviour', () => {
+    const screenerTitle = screenerMovie.title.international;
+    const noScreenerTitle = noScreenerMovie.title.international;
     const futureSlot = createFutureSlot();
-    const eventTitle = `Admin public screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${movie1.title.international}`;
+    const eventTitle = `Admin public screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
+    // create event
     selectSlot(futureSlot);
-    get('event-type').click();
-    getInList('type_', 'Screening');
-    get('event-title-modal').clear().type(eventTitle);
-    get('more-details').click();
-    get('warning-chip').should('exist');
-    get('title').click();
-    getInList('title_', movie1.title.international);
-    get('description').type(`Description : ${eventTitle}`);
-    get('public').click();
-    get('event-save').should('be.enabled');
-    get('event-save').click();
+    fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
+    fillDashboardCalendarDetails({ movie: screenerTitle, title: eventTitle, accessibility: 'public' });
     get('event-save-disabled').should('be.disabled');
+    get('missing-screener').should('not.exist');
+    get('warning-chip').should('not.exist');
+    // change movie to check noScreener behaviour
+    get('title').click();
+    getInList('title_', noScreenerTitle);
+    get('event-save').click();
+    get('warning-chip').should('exist');
+    get('missing-screener').should('exist');
     get('arrow-back').click();
-    getEventSlot(futureSlot).should('contain', movie1.title.international);
+    getEventSlot(futureSlot).should('contain', noScreenerTitle);
+    connectOtherUser(marketplaceUser.email);
+    get('skip-preferences').click();
+    get('screenings').click();
+    assertUrlIncludes('c/o/marketplace/event');
+    verifyScreening({ title: eventTitle, accessibility: 'public', expected: true });
+  });
+
+  it('create future private screening event and check if visible in market place', () => {
+    const screenerTitle = screenerMovie.title.international;
+    const futureSlot = createFutureSlot();
+    const eventTitle = `Admin private screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
+    // create event
+    selectSlot(futureSlot);
+    fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
+    fillDashboardCalendarDetails({ movie: screenerTitle, title: eventTitle, accessibility: 'private' });
+    connectOtherUser(marketplaceUser.email);
+    get('skip-preferences').click();
+    get('screenings').click();
+    assertUrlIncludes('c/o/marketplace/event');
+    verifyScreening({ title: eventTitle, accessibility: 'private', expected: true });
+  });
+
+  it('create future protected screening event and check if visible in market place', () => {
+    const screenerTitle = screenerMovie.title.international;
+    const futureSlot = createFutureSlot();
+    const eventTitle = `Admin protected screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
+    // create event
+    selectSlot(futureSlot);
+    fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
+    fillDashboardCalendarDetails({ movie: screenerTitle, title: eventTitle, accessibility: 'protected' });
+    connectOtherUser(marketplaceUser.email);
+    get('skip-preferences').click();
+    get('screenings').click();
+    assertUrlIncludes('c/o/marketplace/event');
+    verifyScreening({ title: eventTitle, accessibility: 'protected', expected: true });
+  });
+
+  it('create future secret public screening event and check if visible in market place', () => {
+    // create event
+    const screenerTitle = screenerMovie.title.international;
+    const futureSlot = createFutureSlot();
+    const eventTitle = `Admin public screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
+    selectSlot(futureSlot);
+    fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
+    fillDashboardCalendarDetails({ movie: screenerTitle, title: eventTitle, accessibility: 'public', secret: true });
+    connectOtherUser(marketplaceUser.email);
+    get('skip-preferences').click();
+    get('screenings').click();
+    assertUrlIncludes('c/o/marketplace/event');
+    verifyScreening({ title: dummyEvent.title, accessibility: 'public', expected: true });
+    verifyScreening({ title: eventTitle, accessibility: 'public', expected: false });
   });
 });
-
-function selectSlot(time: EventSlot) {
-  const { day, hours, minutes } = time;
-  return cy
-    .get('.cal-day-column')
-    .eq(day)
-    .find('.cal-hour')
-    .eq(hours)
-    .children()
-    .eq(!minutes ? 0 : 1)
-    .click();
-}
-
-function getEventSlot(time: EventSlot) {
-  const { day, hours, minutes } = time;
-  //30 minutes are 30px high, an hour 60px
-  let topOffset = hours * 60;
-  if (minutes === 30) topOffset += 30;
-  return cy.get('.cal-day-column').eq(day).find('.cal-events-container').find(`[style^="top: ${topOffset}px"]`);
-}

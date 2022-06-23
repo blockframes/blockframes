@@ -80,6 +80,7 @@ export function deleteOrg(orgId: string) {
 //* LIGHT PLUGIN*----------------------------------------------------------------
 
 const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
+const isEventsPath = (path: string) => path.split('/')[0] === 'events';
 const maintenancePath = `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`;
 
 //* IMPORT DATA*-----------------------------------------------------------------
@@ -95,7 +96,14 @@ export async function importData(data: Record<string, object>[]) {
           startedAt: !content['startedAt'] ? null : new Date(content['startedAt']),
           endedAt: !content['endedAt'] ? null : new Date(content['endedAt']),
         };
-      else if ('_meta' in content) content['_meta']['e2e'] = true;
+      else if (isEventsPath(path)) {
+        content = {
+          ...content,
+          start: new Date(content['start']),
+          end: new Date(content['end']),
+          _meta: { e2e: true },
+        };
+      } else if ('_meta' in content) content['_meta']['e2e'] = true;
       else content['_meta'] = { e2e: true };
       createAll.push(db.doc(path).set(content));
     });

@@ -1,45 +1,109 @@
-import { e2eUser, e2eOrg, e2ePermissions, fakeUserData } from '@blockframes/testing/cypress/browser';
-import { Organization, User, createMovie, Movie, EventTypes } from '@blockframes/model';
+import { e2eUser, e2eOrg, e2ePermissions, createFakeUserDataArray } from '@blockframes/testing/cypress/browser';
+import { createMovie, createMoviePromotional, createMovieVideo, DocPermissionsDocument, Event } from '@blockframes/model';
 
-const adminUid = '0-e2e-orgAdminUid';
-const orgId = '0-e2e-orgId';
-const userData = fakeUserData();
+const dashboardAdminUid = '0-e2e-dashboardAdminUid';
+const marketplaceUserUid = '0-e2e-marketplaceUserUid';
+const dashboardOrgId = '0-e2e-dashboardOrgId';
+const marketplaceOrgId = '0-e2e-marketplaceOrgId';
+const [dashboardUserData, marketplaceUserData] = createFakeUserDataArray(2);
+const dummyEventId = '0-e2e-dummyEvent';
 
-export const user = e2eUser({
-  uid: adminUid,
-  firstName: userData.firstName,
-  lastName: userData.lastName,
-  email: userData.email,
-  orgId: orgId,
+//* dashboard user *//
+
+export const dashboardUser = e2eUser({
+  uid: dashboardAdminUid,
+  firstName: dashboardUserData.firstName,
+  lastName: dashboardUserData.lastName,
+  email: dashboardUserData.email,
+  orgId: dashboardOrgId,
 });
 
-export const org = e2eOrg({
-  id: orgId,
-  name: userData.company.name,
-  userIds: [adminUid],
-  email: userData.email,
+export const dashboardOrg = e2eOrg({
+  id: dashboardOrgId,
+  name: dashboardUserData.company.name,
+  userIds: [dashboardAdminUid],
+  email: dashboardUserData.email,
   dashboardAccess: true,
 });
 
-export const permissions = e2ePermissions({
-  id: orgId,
-  adminUid: adminUid,
+export const dashboardPermissions = e2ePermissions({
+  id: dashboardOrgId,
+  adminUid: dashboardAdminUid,
 });
 
-export const movie2: Movie = createMovie({
-  id: '0-e2e-movie2',
+export const dashboardDocumentPermissions: DocPermissionsDocument = {
+  id: dummyEventId,
+  ownerId: dashboardOrgId,
+  canCreate: true,
+  canDelete: true,
+  canRead: true,
+  canUpdate: true,
+  isAdmin: true,
+};
+
+//* marketplace user *//
+
+export const marketplaceUser = e2eUser({
+  uid: marketplaceUserUid,
+  firstName: marketplaceUserData.firstName,
+  lastName: marketplaceUserData.lastName,
+  email: marketplaceUserData.email,
+  orgId: marketplaceOrgId,
+});
+
+export const marketplaceOrg = e2eOrg({
+  id: marketplaceOrgId,
+  name: marketplaceUserData.company.name,
+  userIds: [marketplaceUserUid],
+  email: marketplaceUserData.email,
+  dashboardAccess: false,
+});
+
+export const marketplacePermissions = e2ePermissions({
+  id: marketplaceOrgId,
+  adminUid: marketplaceUserUid,
+});
+
+//* movies *//
+
+export const screenerMovie = createMovie({
+  id: '0-e2e-screenerMovie',
   _type: 'movies',
-  // Mandatory fields
   contentType: 'movie',
   directors: [],
   genres: [],
   originalLanguages: [],
   originCountries: [],
-  synopsis: 'This is a movie for e2e tests',
-  orgIds: [orgId],
+  synopsis: 'This is a movie for e2e tests, which contains a screener',
+  orgIds: [dashboardOrgId],
   title: {
-    original: 'Movie test2',
-    international: 'Movie test2',
+    original: 'screenerMovie',
+    international: 'screenerMovie',
+  },
+  app: {
+    festival: {
+      access: true,
+      refusedAt: null,
+      acceptedAt: new Date(),
+      status: 'accepted',
+    },
+  },
+  promotional: createMoviePromotional({ videos: { screener: createMovieVideo({ jwPlayerId: 'YlSFNnkR' }) } }),
+});
+
+export const noScreenerMovie = createMovie({
+  id: '0-e2e-noScreenerMovie',
+  _type: 'movies',
+  contentType: 'movie',
+  directors: [],
+  genres: [],
+  originalLanguages: [],
+  originCountries: [],
+  synopsis: 'This is a movie for e2e tests, which does not contain a screener',
+  orgIds: [dashboardOrgId],
+  title: {
+    original: 'noScreenerMovie',
+    international: 'noScreenerMovie',
   },
   app: {
     festival: {
@@ -51,190 +115,32 @@ export const movie2: Movie = createMovie({
   },
 });
 
-export const movie1: Movie = {
-  keywords: [],
-  release: {
-    year: 2022,
-    status: 'estimated',
+//* events *//
+
+const dummyEventTime = () => {
+  const date = new Date();
+  date.setDate(date.getDate() + 7);
+  date.setHours(12, 0, 0, 0);
+  const start = new Date(date);
+  date.setHours(12, 30, 0, 0);
+  const end = new Date(date);
+  return { start, end };
+};
+
+export const dummyEvent: Event = {
+  id: dummyEventId,
+  accessibility: 'public',
+  allDay: false,
+  isSecret: false,
+  meta: {
+    titleId: noScreenerMovie.id,
+    organizerUid: dashboardAdminUid,
+    description: '',
   },
-  rating: [],
-  shooting: {
-    dates: {
-      planned: {},
-    },
-    locations: [],
-  },
-  estimatedBudget: null,
-  _meta: {
-    updatedBy: 'adminUid',
-    createdAt: new Date(),
-    createdBy: 'adminUid',
-    updatedAt: new Date(),
-  },
-  cast: [
-    {
-      lastName: 'Williamson',
-      firstName: 'Fred',
-      status: 'confirmed',
-    },
-    {
-      lastName: 'Möller',
-      firstName: 'Mike',
-    },
-    {
-      lastName: 'Lamas',
-      firstName: 'Lorenzo',
-    },
-  ],
-  review: [],
-  productionStatus: 'finished',
-  id: '0-e2e-movie1',
-  contentType: 'movie',
-  promotional: {
-    notes: [],
-    presentation_deck: {
-      docId: '',
-      privacy: 'public',
-      storagePath: '',
-      collection: 'movies',
-      field: '',
-    },
-    videos: {
-      salesPitch: {
-        docId: '',
-        privacy: 'public',
-        storagePath: '',
-        collection: 'movies',
-        field: '',
-        jwPlayerId: '',
-      },
-      screener: {
-        docId: '',
-        privacy: 'public',
-        storagePath: '',
-        collection: 'movies',
-        field: '',
-        jwPlayerId: 'YlSFNnkR',
-      },
-      otherVideos: [],
-    },
-    scenario: {
-      docId: '',
-      privacy: 'public',
-      storagePath: '',
-      collection: 'movies',
-      field: '',
-    },
-    still_photo: [],
-    moodboard: {
-      docId: '',
-      privacy: 'public',
-      storagePath: '',
-      collection: 'movies',
-      field: '',
-    },
-  },
-  app: {
-    financiers: {
-      access: false,
-      refusedAt: null,
-      status: 'draft',
-      acceptedAt: null,
-    },
-    festival: {
-      access: true,
-      refusedAt: null,
-      acceptedAt: new Date(),
-      status: 'accepted',
-    },
-    catalog: {
-      access: false,
-      refusedAt: null,
-      acceptedAt: null,
-      status: 'draft',
-    },
-  },
-  audience: {
-    targets: [null],
-    goals: [null],
-  },
-  originCountries: ['germany', 'united-states-of-america'],
-  format: null,
-  runningTime: {
-    time: 85,
-    status: 'confirmed',
-  },
-  customPrizes: [],
-  originalLanguages: ['english', 'german'],
-  soundFormat: null,
-  prizes: [],
-  boxOffice: [],
-  poster: {
-    docId: '',
-    privacy: 'public',
-    storagePath: '',
-    collection: 'movies',
-    field: '',
-  },
-  isOriginalVersionAvailable: null,
-  color: null,
-  directors: [
-    {
-      lastName: 'Sentner',
-      firstName: 'Nico',
-    },
-  ],
-  expectedPremiere: {
-    date: null,
-    event: '',
-  },
-  campaignStarted: null,
-  stakeholders: {
-    broadcasterCoproducer: [],
-    financier: [],
-    productionCompany: [],
-    distributor: [],
-    coProductionCompany: [],
-    laboratory: [],
-    lineProducer: [],
-    salesAgent: [],
-  },
-  title: {
-    original: 'Movie test',
-    international: 'Movie test',
-  },
-  crew: [],
-  logline: '',
-  orgIds: [orgId],
-  originalRelease: [],
-  genres: ['thriller'],
-  formatQuality: null,
-  scoring: null,
-  languages: {
-    german: {
-      caption: false,
-      dubbed: false,
-      subtitle: true,
-    },
-    english: {
-      caption: false,
-      dubbed: false,
-      subtitle: true,
-    },
-  },
-  _type: 'movies',
-  banner: {
-    docId: '',
-    privacy: 'public',
-    storagePath: '',
-    collection: 'movies',
-    field: '',
-  },
-  synopsis:
-    'Trapped inside an old mining complex, among the ruins of Chernobyl, a group of international mercenaries must band together to take their last stand.',
-  certifications: [],
-  customGenres: [],
-  producers: [],
-  internalRef: '',
-  keyAssets: '',
+  ownerOrgId: dashboardOrgId,
+  title: 'dummy injected event',
+  type: 'screening',
+  isOwner: true,
+  start: dummyEventTime().start,
+  end: dummyEventTime().end,
 };
