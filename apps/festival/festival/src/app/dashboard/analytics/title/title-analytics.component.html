@@ -101,8 +101,9 @@
     <h3>Last Screenings</h3>
     <mat-icon svgIcon="info" matTooltip="Statistics are updated in real time."></mat-icon>
     <ng-container *ngIf="ongoingScreenings$ | async as events">
-      <a ongoing-event-button routerLink="/c/o/dashboard/event/{{events[0].id}}/statistics">Ongoing
-        Screenings</a>
+      <a ongoing-event-button routerLink="/c/o/dashboard/event/{{events[0].id}}/statistics">
+        Ongoing Screenings
+      </a>
     </ng-container>
   </header>
   <article class="surface">

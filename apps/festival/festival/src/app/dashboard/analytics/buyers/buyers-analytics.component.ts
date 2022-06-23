@@ -36,6 +36,14 @@ export class BuyersAnalyticsComponent {
       users: ({ uids }) => this.userService.valueChanges(uids),
       orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
     }, { shouldAwait: true }),
+    map(({ orgs, analytics, users, ...rest }) => {
+      const buyerOrg = orgs.filter(org => !org.appAccess.festival.dashboard);
+      const buyerOrgIds = buyerOrg.map(({ id }) => id);
+      const buyerAnalytics = analytics.filter(({ meta }) => buyerOrgIds.includes(meta.orgId))
+      const buyerUsers = buyerAnalytics.map(({ meta }) => meta.uid);
+      const filteredUsers = users.filter(({ uid }) => buyerUsers.includes(uid));
+      return { ...rest, users: filteredUsers, orgs: buyerOrg, analytics: buyerAnalytics };
+    }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
