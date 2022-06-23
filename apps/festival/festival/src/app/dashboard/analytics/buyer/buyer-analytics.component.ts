@@ -3,7 +3,7 @@ import {
   InvitationWithAnalytics,
   averageWatchtime,
 } from "@blockframes/model";
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
@@ -21,9 +21,9 @@ import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { UserService } from '@blockframes/user/service';
-import { App, sum, toLabel } from '@blockframes/model';
+import { App, toLabel } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
-import { downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { convertToTimeString, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { joinWith } from 'ngfire';
 import {
   BehaviorSubject,
@@ -33,10 +33,11 @@ import {
   Observable,
   pluck,
   shareReplay,
-  switchMap
+  switchMap,
 } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/service';
 import { EventService } from '@blockframes/event/service';
+import { scrollIntoView } from "@blockframes/utils/browser/utils";
 
 interface MovieWithAnalytics extends Movie { analytics: Analytics<'title'>[]; };
 
@@ -62,10 +63,7 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
   const invitationsCount = invitations.filter(i => i.mode === 'invitation').length;
   const requestsCount = invitations.filter(i => i.mode === 'request').length;
 
-  const watchTime = {
-    min: Math.floor(averageWatchTime / 60),
-    sec: averageWatchTime % 60
-  }
+  const watchTime = convertToTimeString(averageWatchTime * 1000) || '0s';
 
   return [
     {
@@ -84,8 +82,8 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
       icon: 'ask_screening_2'
     },
     {
-      title: 'Average watch time',
-      value: `${watchTime.min}min ${watchTime.sec}s`,
+      title: 'Average Watch Time',
+      value: watchTime,
       icon: 'access_time'
     }
   ];
@@ -101,8 +99,8 @@ function fromUser(invitation: Invitation, uid: string) {
   styleUrls: ['./buyer-analytics.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BuyerAnalyticsComponent {
-
+export class BuyerAnalyticsComponent implements AfterViewInit {
+  @ViewChild('header') header: ElementRef;
   userId$: Observable<string> = this.route.params.pipe(
     pluck('userId')
   );
@@ -196,6 +194,12 @@ export class BuyerAnalyticsComponent {
     private userService: UserService,
     @Inject(APP) public app: App
   ) { }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      scrollIntoView(this.header.nativeElement);
+    });
+  }
 
   goBack() {
     this.navService.goBack(1);
