@@ -1,14 +1,25 @@
+@import "@angular/flex-layout/mq";
+
 :host {
   width: 100vw;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  background-image: url("/assets/images/light/stars_wallpaper.svg");
-  background-position: center;
-  background-repeat: no-repeat;
+
+  main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-image: url("/assets/images/light/stars_wallpaper.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    section {
+      margin: auto;
+      text-align: center;
+      width: fit-content;
+    }
+  }
+
   
   a[app-logo] {
     position: absolute;
@@ -46,5 +57,32 @@
         color: var(--primary);
       }
     } 
+  }
+}
+
+@include layout-bp(xs) {
+  :host {
+    main {
+      width: 90%;
+      margin-inline: auto;
+
+      section {
+        padding: 24px 0;
+      }
+    }
+    a[app-logo] {
+      position: relative;
+      left: 0;
+      top: 0;
+      height: 48px;
+      margin-bottom: 32px;
+    }
+    .surface {
+      padding: 0;
+      background: none;
+      border: none;
+      border-radius: 0;
+    }
+    mat-divider { width: 80%; }
   }
 }
