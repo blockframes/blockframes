@@ -20,7 +20,6 @@ import { MetricCardListModule } from '@blockframes/analytics/components/metric-c
 import { GuestPipeModule } from '@blockframes/invitation/pipes/guest.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LineChartModule } from '@blockframes/analytics/components/line-chart/line-chart.module';
-import { OrgNameModule } from '@blockframes/organization/pipes';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 
 @NgModule({
@@ -38,7 +37,6 @@ import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
     OngoingButtonModule,
     GuestPipeModule,
     LineChartModule,
-    OrgNameModule,
     DurationModule,
 
     // Material
