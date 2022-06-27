@@ -2,20 +2,19 @@ import type { MovieCurrency } from './static';
 import { createHoldback, MailContract, Holdback } from './contract';
 import { BucketTerm } from './terms';
 import { createLanguageKey } from './movie';
-import { Timestamp } from './timestamp';
 
-export interface Bucket<T extends Date | Timestamp = Date> {
+export interface Bucket {
   id: string;
   currency: MovieCurrency;
   /** One contract per orgId / titleId / parent terms Id */
-  contracts: BucketContract<T>[];
+  contracts: BucketContract[];
   specificity: string;
   delivery: string;
   /** Needed to show user in email to business team */
   uid?: string;
 }
 
-export interface BucketContract<T extends Date | Timestamp = Date> {
+export interface BucketContract {
   titleId: string;
   /** The orgId that own the contract (mandate in this case) that  */
   orgId: string;
@@ -24,9 +23,9 @@ export interface BucketContract<T extends Date | Timestamp = Date> {
   /** Parent terms on which the contract is create. */
   parentTermId: string;
   /** List of sub terms derived from the parent terms that the buyer want to buy */
-  terms: BucketTerm<T>[];
+  terms: BucketTerm[];
   specificity: string;
-  holdbacks: Holdback<Date>[];
+  holdbacks: Holdback[];
 }
 
 //To be used for sending mails.

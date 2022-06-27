@@ -21,7 +21,7 @@ import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie } from '@blockfr
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
-import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -97,8 +97,8 @@ export class ListComponent implements OnDestroy, OnInit {
       avails = {}
     } = decodeUrl(this.route);
 
-    if (avails.duration?.from) avails.duration.from = new Date(avails.duration.from);
-    if (avails.duration?.to) avails.duration.to = new Date(avails.duration.to);
+    if (avails.duration?.from) avails.duration.from = decodeDate(avails.duration.from);
+    if (avails.duration?.to) avails.duration.to = decodeDate(avails.duration.to);
 
     // patch everything
     this.searchForm.patchValue(search);

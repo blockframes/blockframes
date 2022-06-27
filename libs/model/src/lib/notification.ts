@@ -1,10 +1,9 @@
-import { DocumentMeta } from './meta';
+import { createInternalDocumentMeta, DocumentMeta } from './meta';
 import { PublicUser } from './user';
 import { PublicOrganization } from './organisation';
 import { PublicInvitation } from './invitation';
 import { Bucket } from './bucket';
 import { StorageFile } from './media';
-import { Timestamp } from './timestamp';
 import { App } from './static';
 import { EmailErrorCodes } from './emails';
 
@@ -77,8 +76,8 @@ export function isAppNotification(type: NotificationTypes, app: App) {
 }
 
 /** Generic informations for a Notification. */
-interface NotificationBase<D> {
-  _meta: DocumentMeta<D>;
+export interface Notification {
+  _meta: DocumentMeta;
   id: string;
   /** @dev Recipient of the notification */
   toUserId: string;
@@ -93,7 +92,7 @@ interface NotificationBase<D> {
   offerId?: string,
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
-  bucket?: Bucket<Timestamp>;
+  bucket?: Bucket;
   appAccess?: App;
   data?: Record<string, string>;
   /** @dev Type of the notification */
@@ -104,15 +103,21 @@ interface NotificationBase<D> {
   },
   app?: {
     isRead: boolean;
-  }
-}
-
-export type NotificationDocument = NotificationBase<Timestamp>;
-
-export interface Notification extends NotificationBase<Date> {
-  message: string;
+  },
+  message?: string;
   imgRef?: StorageFile;
   placeholderUrl?: string;
   url?: string;
   actionText?: string;
+}
+
+/** Create a Notification with required and generic information. */
+export function createNotification(notification: Partial<Notification> = {}): Notification {
+  return {
+    id: notification.id,
+    _meta: createInternalDocumentMeta(),
+    type: notification.type,
+    toUserId: '',
+    ...notification
+  };
 }

@@ -14,8 +14,8 @@ import {
   StorageVideo,
   PublicUser,
   User,
-  OrganizationDocument,
-  MovieDocument
+  Movie,
+  Organization
 } from '@blockframes/model';
 import { tempUploadDir } from '@blockframes/utils/file-sanitizer';
 import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
@@ -27,6 +27,7 @@ import { db } from './internals/firebase';
 import { isAllowedToAccessMedia } from './internals/media';
 import { testVideoId } from '@env';
 import { getDeepValue } from './internals/utils';
+import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
 
 
 /**
@@ -93,16 +94,17 @@ export async function linkFile(data: storage.ObjectMetadata) {
           case 'movies':
           case 'campaigns': {
             // only users members of orgs which are part of a movie, are allowed to upload to this movie/campaign
-            const userRef = db.collection('users').doc(uploaderUid);
-            const userSnap = await transaction.get(userRef);
+            const userSnap = await getDocumentSnap(`users/${uploaderUid}`);
             await assertFile(userSnap.exists, notAllowedError);
 
-            const movieRef = db.collection('movies').doc(metadata.docId);
-            const movieSnap = await transaction.get(movieRef);
+            const movieSnap = await getDocumentSnap(`movies/${metadata.docId}`);
             await assertFile(movieSnap.exists, notAllowedError);
 
-            const user = userSnap.data() as User;
-            const movie = movieSnap.data() as MovieDocument;
+            const [user, movie] = await Promise.all([
+              getDocument<User>(`users/${uploaderUid}`),
+              getDocument<Movie>(`movies/${metadata.docId}`)
+            ]);
+
             const isAllowed = movie.orgIds.some(orgId => orgId === user.orgId);
             await assertFile(isAllowed, notAllowedError);
             break;
@@ -304,7 +306,7 @@ export async function cleanUserMedias(before: PublicUser, after?: PublicUser): P
   }
 }
 
-export async function cleanOrgMedias(before: OrganizationDocument, after?: OrganizationDocument): Promise<void> {
+export async function cleanOrgMedias(before: Organization, after?: Organization): Promise<void> {
   const mediaToDelete: StorageFile[] = [];
   if (after) { // Updating
     if (needsToBeCleaned(before.logo, after.logo)) {
@@ -342,7 +344,7 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
   await Promise.all(mediaToDelete.map(m => deleteMedia(m)));
 }
 
-export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocument): Promise<void> {
+export async function cleanMovieMedias(before: Movie, after?: Movie): Promise<void> {
 
   const mediaToDelete: StorageFile[] = [];
   if (after) { // Updating
@@ -468,7 +470,7 @@ export const moveMedia = async (before: StorageFile, after: StorageFile) => {
   }
 }
 
-export async function moveMovieMedia(before: MovieDocument, after: MovieDocument): Promise<void> {
+export async function moveMovieMedia(before: Movie, after: Movie): Promise<void> {
 
   const paths = [
     'promotional.videos.salesPitch',

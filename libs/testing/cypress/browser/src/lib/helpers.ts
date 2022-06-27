@@ -1,7 +1,6 @@
-import { PublicUser, PermissionsDocument, OrganizationDocument } from '@blockframes/model';
+import { PublicUser, PermissionsDocument, Organization } from '@blockframes/model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
-import { Timestamp } from 'firebase/firestore';
 import faker from '@faker-js/faker';
 const now = new Date();
 
@@ -71,7 +70,7 @@ interface E2EOrganization {
   dashboardAccess: boolean;
 }
 
-export const e2eOrg = (data: E2EOrganization): OrganizationDocument => {
+export const e2eOrg = (data: E2EOrganization): Organization => {
   const { id, name, userIds, email, dashboardAccess } = data;
   return {
     id,
@@ -84,8 +83,7 @@ export const e2eOrg = (data: E2EOrganization): OrganizationDocument => {
     status: 'accepted',
     activity: 'actor',
     _meta: {
-      // TODO #8006 : remove timestamp use
-      createdAt: Timestamp.now(),
+      createdAt: now,
       createdFrom: 'festival',
       createdBy: 'e2e-test',
     },

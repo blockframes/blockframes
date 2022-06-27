@@ -6,7 +6,7 @@ import { ListComponent } from './list.component';
 
 // Blockframes
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe'
-import { DisplayNameModule, JoinPipeModule, ToDateModule, ToLabelModule, TotalPipeModule } from '@blockframes/utils/pipes';
+import { DisplayNameModule, JoinPipeModule, ToLabelModule, TotalPipeModule } from '@blockframes/utils/pipes';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
@@ -34,7 +34,6 @@ import { RouterModule } from '@angular/router';
     FilterByModule,
     DisplayNameModule,
     NoTitleModule,
-    ToDateModule,
     JoinPipeModule,
     GetTitlePipeModule,
     MaxLengthModule,

@@ -54,7 +54,6 @@ import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
 import { FormValue } from '@blockframes/utils/form';
-import { toDate } from '@blockframes/utils/helpers';
 
 function createMovieControls(movie: Partial<Movie>) {
   const entity = createMovie(movie);
@@ -573,12 +572,12 @@ type RunningTimeFormControl = ReturnType<typeof createRunningTimeFormControl>;
 // ------------------------------
 
 export class MovieAppConfigForm extends FormEntity<MovieAppConfigControl> {
-  constructor(app?: Partial<{ [app in App]: MovieAppConfig<Date> }>) {
+  constructor(app?: Partial<{ [app in App]: MovieAppConfig }>) {
     super(createMovieAppConfigFormControl(app));
   }
 }
 
-function createMovieAppConfigFormControl(app?: Partial<{ [app in App]: MovieAppConfig<Date> }>) {
+function createMovieAppConfigFormControl(app?: Partial<{ [app in App]: MovieAppConfig }>) {
   const apps = {};
   for (const a in app) {
     apps[a] = new AppConfigForm(app[a]);
@@ -593,12 +592,12 @@ type MovieAppConfigControl = ReturnType<typeof createMovieAppConfigFormControl>;
 // ------------------------------
 
 export class AppConfigForm extends FormEntity<AppConfigControl> {
-  constructor(appAccess?: Partial<MovieAppConfig<Date>>) {
+  constructor(appAccess?: Partial<MovieAppConfig>) {
     super(createAppConfigFormControl(appAccess));
   }
 }
 
-function createAppConfigFormControl(appAccess?: Partial<MovieAppConfig<Date>>) {
+function createAppConfigFormControl(appAccess?: Partial<MovieAppConfig>) {
   const { acceptedAt, access, refusedAt, status } = createAppConfig(appAccess);
   return {
     acceptedAt: new FormControl(acceptedAt),
@@ -758,7 +757,7 @@ export function createMovieOriginalRelease(
   return {
     country: null,
     ...params,
-    date: toDate(params.date),
+    date: params.date,
   };
 }
 
@@ -844,7 +843,7 @@ function createShootingFormControl(entity?: Partial<MovieShooting>) {
 // ------------------------------
 
 function createShootingDateFormControl(entity?: Partial<MovieShootingDate>) {
-  const { completed, progress, planned } = createMovieShootingDate(entity);
+  const { completed, progress, planned } = entity;
   return {
     completed: new FormControl(completed),
     progress: new FormControl(progress),
@@ -858,16 +857,6 @@ export class ShootingDateForm extends FormEntity<ShootingDateFormControl> {
   constructor(shootingDate?: Partial<MovieShootingDate>) {
     super(createShootingDateFormControl(shootingDate));
   }
-}
-
-export function createMovieShootingDate(
-  params: Partial<MovieShootingDate> = {}
-): MovieShootingDate {
-  return {
-    ...params,
-    completed: toDate(params.completed),
-    progress: toDate(params.progress),
-  };
 }
 
 // ---------------------------------

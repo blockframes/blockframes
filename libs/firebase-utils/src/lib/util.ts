@@ -5,8 +5,11 @@ import { config } from 'dotenv';
 import requiredVars from 'tools/mandatory-env-vars.json';
 import { resolve } from 'path';
 import { firebase as firebaseProd } from 'env/env.blockframes';
-import { OrganizationDocument, App } from '@blockframes/model';
 import { getAuth, getDb, getStorage, initAdmin } from './initialize';
+import { App, Organization } from '@blockframes/model';
+import { toDate } from './firebase-utils';
+import { BlockframesSnapshot } from './types';
+import { camelCase } from 'lodash';
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -22,14 +25,14 @@ export async function* getCollectionInBatches<K>(ref: admin.firestore.Collection
 
   function getDocs(querySnap: FirebaseFirestore.QuerySnapshot) {
     return querySnap.docs.map((snap, i, arr) => {
-      if (i === (arr.length - 1)) lastSnapshot = snap;
-      return snap.data() as K;
+      if (i === arr.length - 1) lastSnapshot = snap;
+      return toDate<K>(snap.data());
     })
   }
 
   while (!querySnapshot.empty) {
     yield getDocs(querySnapshot);
-    querySnapshot = await ref.orderBy(orderBy).startAfter(lastSnapshot).limit(batchSize).get()
+    querySnapshot = await ref.orderBy(orderBy).startAfter(lastSnapshot).limit(batchSize).get();
   }
 }
 
@@ -38,15 +41,18 @@ export interface DbRecord {
   content: { [key: string]: any };
 }
 
+export const isDemo = str => str === 'demo-blockframes';
+
 let missingVarsMessageShown = false;
 
 export function warnMissingVars(): void | never {
-  if (process.env['PROJECT_ID'] !== firebase().projectId) {
+  const projectId = process.env['PROJECT_ID'];
+  if (projectId !== firebase().projectId) {
     console.warn(
-      'WARNING! Your PROJECT_ID in your shell environment does not match your'
-      + 'Firebase project ID found in your Firebase configuration!'
-      + 'Please use the "use" command to reset this unless you know what you\'re doing.'
-      + '\nIf you are using a demo project ID for emulator, this is to be expected.'
+      'WARNING! Your PROJECT_ID in your shell environment does not match your' +
+      'Firebase project ID found in your Firebase configuration!' +
+      'Please use the "use" command to reset this unless you know what you\'re doing.' +
+      '\nIf you are using a demo project ID for emulator, this is to be expected.'
     );
   }
   const warn = (key: string, msg: string) => {
@@ -55,9 +61,20 @@ export function warnMissingVars(): void | never {
   };
   // Use '||' instead of '??' to detect empty string
   if (!missingVarsMessageShown) requiredVars.map(
-    ({ key, msg }: { key: string; msg: string }) => process.env?.[key] || warn(key, msg) // TODO #7858 warnMissingVars should check for prefixed env vars
+    ({ key, msg }: { key: string; msg: string }) => process.env[getKeyName(key, projectId, isDemo(projectId))] || warn(key, msg)
   );
   missingVarsMessageShown = true;
+}
+
+export function getKeyName(key: string, projectId: string, demo?: boolean) {
+  if (Object.prototype.hasOwnProperty.call(process.env, `${camelCase(projectId)}_${key}`)) {
+    return `${camelCase(projectId)}_${key}`;
+  }
+  if (demo && Object.prototype.hasOwnProperty.call(process.env, `${camelCase('blockframes-ci')}_${key}`)) {
+    return `${camelCase('blockframes-ci')}_${key}`;
+  }
+
+  return key;
 }
 
 interface AdminServices {
@@ -93,9 +110,8 @@ export function getServiceAccountObj(keyFile: string): admin.ServiceAccount {
   }
 }
 
-export async function hasAcceptedMovies(org: OrganizationDocument, appli: App, db = loadAdminServices().db) {
-  const moviesColRef = await db.collection('movies')
-    .where('orgIds', 'array-contains', org.id).get();
+export async function hasAcceptedMovies(org: Organization, appli: App, db = loadAdminServices().db) {
+  const moviesColRef = await db.collection('movies').where('orgIds', 'array-contains', org.id).get();
   const movies = moviesColRef.docs.map(doc => doc.data());
   return movies.some(movie => movie?.app?.[appli].status === 'accepted' && movie?.app?.[appli].access);
 }
@@ -111,7 +127,7 @@ export function throwOnProduction(): never | void {
  * @param batch
  */
 export async function removeAllSubcollections(
-  snapshot: FirebaseFirestore.DocumentSnapshot,
+  snapshot: FirebaseFirestore.DocumentSnapshot | BlockframesSnapshot,
   batch: FirebaseFirestore.WriteBatch,
   db = admin.firestore(),
   options = { verbose: true }
@@ -121,7 +137,7 @@ export async function removeAllSubcollections(
   for (const x of subCollections) {
     if (options.verbose) console.log(`deleting sub collection : ${x.path}`);
     const documents = await db.collection(x.path).listDocuments();
-    documents.forEach(ref => batch.delete(ref))
+    documents.forEach(ref => batch.delete(ref));
   }
   return batch;
 }

@@ -1,4 +1,4 @@
-import { PublicUser, MovieDocument, OrganizationDocument } from '@blockframes/model';
+import { PublicUser, Organization, Movie } from '@blockframes/model';
 import { getDocument, runChunks } from '@blockframes/firebase-utils';
 import type { Bucket, File as GFile } from '@google-cloud/storage';
 
@@ -47,7 +47,7 @@ export async function cleanMovieDir(bucket: Bucket) {
     } else {
       const movieId = f.name.split('/')[2];
       // We check if the file is used before removing it
-      const movie = await getDocument<MovieDocument>(`movies/${movieId}`);
+      const movie = await getDocument<Movie>(`movies/${movieId}`);
       if (!movie && (await f.delete())) {
         deleted++;
       }
@@ -74,7 +74,7 @@ export async function cleanMoviesDir(bucket: Bucket) {
       }
     } else {
       const movieId = f.name.split('/')[2];
-      const movie = await getDocument<MovieDocument>(`movies/${movieId}`);
+      const movie = await getDocument<Movie>(`movies/${movieId}`);
       if (!movie && (await f.delete())) {
         deleted++;
       }
@@ -107,7 +107,7 @@ export async function cleanOrgsDir(bucket: Bucket) {
       }
     } else {
       const orgId = f.name.split('/')[2];
-      const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
+      const org = await getDocument<Organization>(`orgs/${orgId}`);
       if (!org && (await f.delete())) {
         deleted++;
       }

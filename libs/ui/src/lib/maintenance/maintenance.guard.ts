@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
-import { MaintenanceService } from './maintenance.service';
+import { MaintenanceService } from './service';
 import { map, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
