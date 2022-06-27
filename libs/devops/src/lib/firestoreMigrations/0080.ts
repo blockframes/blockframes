@@ -2,7 +2,7 @@ import { Firestore, runChunks } from '@blockframes/firebase-utils';
 import { Organization, Invitation, Notification, PublicOrganization } from '@blockframes/model';
 
 // Array for special Organizations
-const specialOrgs = [
+const specialOrgs: { id: string, field: 'public' | 'full'}[] = [
   { id: 'BsQS0gTqFJ1mpkJVZjNf', field: 'full' },
   { id: 'D453XC3B8VEP64RLDbac', field: 'full' },
   { id: 'AQRsAqOCjozQdLEkSWxb', field: 'full' },
@@ -12,7 +12,7 @@ const specialOrgs = [
   { id: 'VJFAyk8QTJkzilFzIM9d', field: 'full' },
   { id: 'qSKCCJxDPiYenuO6tcSi', field: 'public' },
   { id: 'XDAqvNGZJAaxw8LGyq4f', field: 'full' }
-] as { id: string, field: 'public' | 'full'}[];
+];
 
 /**
  * Update name from organizations, invitations and notifications documents
