@@ -8,30 +8,31 @@ import { templateIds } from '@blockframes/utils/emails/ids';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
 import {
   PublicUser,
-  OrganizationDocument,
   PublicOrganization,
-  MovieDocument,
-  ContractDocument,
-  NegotiationDocument,
   Offer,
   Bucket,
-  Timestamp,
   App,
   appName,
   Module,
+  Movie,
+  Organization,
+  Negotiation,
+  Contract
+} from '@blockframes/model';
+import { format } from 'date-fns';
+import { supportMailosaur } from '@blockframes/utils/constants';
+import {
   EmailRequest,
   EmailTemplateRequest,
   EventEmailData,
-  OrgEmailData,
-  UserEmailData,
+  getBucketEmailData,
   getMovieEmailData,
+  getNegotiationEmailData,
   getOfferEmailData,
   MovieEmailData,
-  getBucketEmailData,
-  getNegotiationEmailData,
-} from '@blockframes/model';
-import { format } from "date-fns";
-import { supportMailosaur } from '@blockframes/utils/constants';
+  OrgEmailData,
+  UserEmailData,
+} from '@blockframes/utils/emails/utils';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -310,7 +311,7 @@ export function screeningRequestedToSeller(
   toUser: UserEmailData,
   buyer: UserEmailData,
   org: OrgEmailData,
-  movie: MovieDocument,
+  movie: Movie,
 ): EmailTemplateRequest {
   const data = {
     user: toUser,
@@ -356,8 +357,8 @@ export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieE
 
 /** Inform user of org whose movie is being bought */
 export function contractCreatedEmail(
-  toUser: UserEmailData, title: MovieDocument, contract: ContractDocument,
-  negotiation: NegotiationDocument, buyerOrg: OrganizationDocument
+  toUser: UserEmailData, title: Movie, contract: Contract,
+  negotiation: Negotiation, buyerOrg: Organization
 ): EmailTemplateRequest {
   const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
   const data = {
@@ -373,7 +374,7 @@ export function contractCreatedEmail(
 }
 
 /** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
-export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, bucket: Bucket<Timestamp>): EmailTemplateRequest {
+export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: Organization, bucket: Bucket): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMM, yyyy');
   const mailBucket = getBucketEmailData(bucket);
   const data = { org, bucket: mailBucket, user: toUser, baseUrl: appUrl.content, date };
@@ -382,7 +383,7 @@ export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 }
 
 /**To inform buyer that his offer has been successfully created. */
-export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrganizationDocument, offer: Offer, bucket: Bucket<Timestamp>): EmailTemplateRequest {
+export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: Organization, offer: Offer, bucket: Bucket): EmailTemplateRequest {
   const mailBucket = getBucketEmailData(bucket);
 
   const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
@@ -399,8 +400,8 @@ export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 }
 
 export function counterOfferRecipientEmail(
-  toUser: UserEmailData, senderOrg: OrganizationDocument, offerId: string,
-  title: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
+  toUser: UserEmailData, senderOrg: Organization, offerId: string,
+  title: Movie, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const pageURL = options.isMailRecipientBuyer
     ? `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`
@@ -416,8 +417,8 @@ export function counterOfferRecipientEmail(
 }
 
 export function counterOfferSenderEmail(
-  toUser: UserEmailData, org: OrganizationDocument, offerId: string,
-  negotiation: NegotiationDocument, title: MovieDocument, contractId: string, options: { isMailRecipientBuyer: boolean }
+  toUser: UserEmailData, org: Organization, offerId: string,
+  negotiation: Negotiation, title: Movie, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const pageURL = options.isMailRecipientBuyer
     ? `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`
@@ -436,7 +437,7 @@ export function counterOfferSenderEmail(
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
 }
 
-export function toAdminCounterOfferEmail(title: MovieDocument, offerId: string): EmailTemplateRequest {
+export function toAdminCounterOfferEmail(title: Movie, offerId: string): EmailTemplateRequest {
   const pageURL = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
 
   const data = {
@@ -513,7 +514,7 @@ const userFirstConnexionTemplate = (user: PublicUser) =>
   `;
 
 /** Generates a transactional email request to let cascade8 admin know that a new org have been created. */
-export function organizationCreated(org: OrganizationDocument): EmailRequest {
+export function organizationCreated(org: Organization): EmailRequest {
   const supportEmail = getSupportEmail(org._meta.createdFrom);
 
   return {
@@ -527,7 +528,7 @@ export function organizationCreated(org: OrganizationDocument): EmailRequest {
  * Generates a transactional email request to let cascade8 admin know that a new org is waiting for app access.
  * It sends an email to admin to accept or reject the request
  */
-export function organizationRequestedAccessToApp(org: OrganizationDocument, app: App, module: Module): EmailRequest {
+export function organizationRequestedAccessToApp(org: Organization, app: App, module: Module): EmailRequest {
   return {
     to: getSupportEmail(org._meta.createdFrom),
     subject: 'An organization requested access to an app',
@@ -574,7 +575,7 @@ export function sendContactEmail(userName: string, userMail: string, subject: st
 }
 
 /** Send an email to supportEmails.[app](catalog & MF only) when a movie is submitted*/
-export function sendMovieSubmittedEmail(app: App, movie: MovieDocument) {
+export function sendMovieSubmittedEmail(app: App, movie: Movie) {
   return {
     to: getSupportEmail(app),
     subject: 'A movie has been submitted.',

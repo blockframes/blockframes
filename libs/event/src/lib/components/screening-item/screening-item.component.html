@@ -2,7 +2,7 @@
   <a matRipple [routerLink]="['/event', event.id, 'r', 'i']">
     <img
     [ref]="(event.meta.titleId | getTitle | async)?.poster"
-    asset="empty_poster.svg"
+    [asset]="event.type === 'slate' ? 'empty_slate.svg' : 'empty_poster.svg'"
     width="225px"
     height="300px"
     alt="Movie poster of the screening">

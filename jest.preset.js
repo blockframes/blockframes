@@ -10,4 +10,8 @@ module.exports = {
   resolver: '@nrwl/jest/plugins/resolver',
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageReporters: ['html'],
+  reporters: ['default', ['jest-junit', {
+    uniqueOutputName: 'true',
+    outputDirectory: 'dist/jest-test-results/'
+  }]],
 };

@@ -1,4 +1,3 @@
-import { toDate } from '@blockframes/utils/helpers';
 import { createStorageFile, StorageFile, StorageVideo } from './media';
 import {
   MovieLanguageType,
@@ -25,6 +24,7 @@ import {
   ScreeningStatus,
   App,
   app,
+  productionStatus
 } from './static';
 import type {
   Producer,
@@ -34,26 +34,25 @@ import type {
   Director,
 } from './identity';
 import type { DocumentMeta } from './meta';
-import type { Timestamp } from './timestamp';
-import { productionStatus } from './static';
 import { getAllAppsExcept } from './apps';
+import { Organization } from './organisation';
 
 //////////////////
 // MOVIE OBJECT //
 //////////////////
 
 /** Generic interface of a Movie */
-export interface MovieBase<D> {
+export interface Movie {
   // Every field concerning the document
   _type: 'movies';
-  _meta?: DocumentMeta<D>;
+  _meta?: DocumentMeta;
   id: string;
 
   // Only section left
   promotional: MoviePromotionalElements;
 
   // Every field concerning the movie
-  app: Partial<{ [app in App]: MovieAppConfig<D> }>; //! required
+  app: Partial<{ [app in App]: MovieAppConfig }>; //! required
   audience?: MovieGoalsAudience;
   banner?: StorageFile;
   boxOffice?: BoxOffice[];
@@ -64,7 +63,7 @@ export interface MovieBase<D> {
   crew?: Crew[];
   directors: Director[]; //! required
   estimatedBudget?: NumberRange;
-  expectedPremiere?: MovieExpectedPremiereRaw<D>;
+  expectedPremiere?: MovieExpectedPremiere;
   format?: MovieFormat;
   formatQuality?: MovieFormatQuality;
   genres: Genre[]; //! required
@@ -76,7 +75,7 @@ export interface MovieBase<D> {
   languages?: LanguageRecord;
   logline?: string;
   originalLanguages: Language[]; //! required
-  originalRelease?: MovieOriginalReleaseRaw<D>[];
+  originalRelease?: MovieOriginalRelease[];
   originCountries: Territory[]; //! required
   poster?: StorageFile;
   prizes?: Prize[];
@@ -94,16 +93,13 @@ export interface MovieBase<D> {
   synopsis: string; //! required
   title: Title; //! required
   orgIds: string[]; //! required
-  campaignStarted: D;
+  campaignStarted: Date;
 
   //CATALOG specific
   delivery?: {
     file: StorageFile;
   };
 }
-
-/** Document model of a Movie */
-export type MovieDocument = MovieBase<Timestamp>;
 
 export interface MovieVideos {
   screener?: MovieVideo; // Main screener
@@ -133,14 +129,14 @@ export interface MoviePromotionalElements {
 ////////////////////
 // MOVIE DETAILS //
 ////////////////////
-export interface MovieAppConfig<D> {
-  acceptedAt: D;
+export interface MovieAppConfig {
+  acceptedAt: Date;
   access: boolean;
-  refusedAt: D;
+  refusedAt: Date;
   status: StoreStatus;
 }
 
-export type MovieAppConfigRecord = Record<App, MovieAppConfig<Date>>;
+export type MovieAppConfigRecord = Record<App, MovieAppConfig>;
 
 export interface Prize {
   name: string;
@@ -170,13 +166,11 @@ export interface MovieLanguageSpecification {
 
 export type LanguageRecord = Partial<{ [language in Language]: MovieLanguageSpecification }>;
 
-export interface MovieOriginalReleaseRaw<D> {
-  date: D;
+export interface MovieOriginalRelease {
+  date: Date;
   country: Territory;
   media?: MediaValue;
 }
-
-export type MovieOriginalRelease = MovieOriginalReleaseRaw<Date>;
 
 export interface MovieRating {
   country: Territory;
@@ -214,25 +208,21 @@ export interface MovieRunningTime {
   episodeCount?: number;
 }
 
-export interface MovieShootingRaw<D> {
-  dates?: MovieShootingDateRaw<D>;
+export interface MovieShooting {
+  dates?: MovieShootingDate;
   locations?: MovieShootingLocations[];
 }
-
-export type MovieShooting = MovieShootingRaw<Date>;
 
 export interface MovieShootingLocations {
   cities?: string[];
   country?: Territory;
 }
 
-export interface MovieShootingDateRaw<D> {
-  completed?: D;
-  progress?: D;
+export interface MovieShootingDate {
+  completed?: Date;
+  progress?: Date;
   planned?: MoviePlannedShootingDateRange;
 }
-
-export type MovieShootingDate = MovieShootingDateRaw<Date>;
 
 export type MovieNote = { firstName: string; lastName: string; role: string } & StorageFile;
 
@@ -247,23 +237,23 @@ export interface MoviePlannedShooting {
   year?: number;
 }
 
-export interface MovieExpectedPremiereRaw<D> {
-  date?: D;
+export interface MovieExpectedPremiere {
+  date?: Date;
   event?: string;
 }
-
-export type MovieExpectedPremiere = MovieExpectedPremiereRaw<Date>;
 
 export interface MovieGoalsAudience {
   targets: string[];
   goals: SocialGoal[];
 }
 
-// Export for other files
-export type Movie = MovieBase<Date>;
-
 export interface SyncMovieAnalyticsOptions {
   filterBy: (movie: Movie) => boolean;
+}
+
+export interface CrmMovie extends Movie {
+  org: Organization;
+  screeningCount: number;
 }
 
 /** A factory function that creates Movie */
@@ -307,7 +297,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     ...params,
     app: createMovieAppConfig(params.app),
     expectedPremiere: createExpectedPremiere(params.expectedPremiere),
-    campaignStarted: params.campaignStarted ? toDate(params.campaignStarted) : null,
+    campaignStarted: params.campaignStarted || null,
     banner: createStorageFile(params?.banner),
     audience: createAudienceGoals(params.audience),
     languages: createLanguageKey(params.languages ? params.languages : {}),
@@ -349,17 +339,17 @@ export function createMovieLanguageSpecification(params: Partial<MovieLanguageSp
   };
 }
 
-export function createAppConfig(params: Partial<MovieAppConfig<Date>>): MovieAppConfig<Date> {
+export function createAppConfig(params: Partial<MovieAppConfig>): MovieAppConfig {
   return {
     status: 'draft',
     access: false,
     ...params,
-    acceptedAt: toDate(params?.acceptedAt),
-    refusedAt: toDate(params?.refusedAt),
+    acceptedAt: params?.acceptedAt,
+    refusedAt: params?.refusedAt,
   };
 }
 
-export function createMovieAppConfig(_appAccess: Partial<{ [app in App]: MovieAppConfig<Date> }> = {}): MovieAppConfigRecord {
+export function createMovieAppConfig(_appAccess: Partial<{ [app in App]: MovieAppConfig }> = {}): MovieAppConfigRecord {
   const appAccess = {};
   const apps = getAllAppsExcept(['crm']);
   for (const a of apps) {
@@ -390,7 +380,7 @@ export function createMovieOriginalRelease(params: Partial<MovieOriginalRelease>
   return {
     country: null,
     ...params,
-    date: toDate(params.date),
+    date: params.date,
   };
 }
 
@@ -476,7 +466,7 @@ export function createExpectedPremiere(params: Partial<MovieExpectedPremiere> = 
   return {
     event: '',
     ...params,
-    date: toDate(params.date),
+    date: params.date,
   };
 }
 
@@ -536,12 +526,12 @@ export function hasAppStatus(app: App, status: StoreStatus[]) {
 }
 
 /** Return an array of the app access of the movie */
-export function getMovieAppAccess(movie: MovieDocument | MovieBase<Date>): App[] {
+export function getMovieAppAccess(movie: Movie): App[] {
   return app.filter((a) => !['crm'].includes(a) && movie.app[a].access);
 }
 
 /** Return true if the movie has the status passed in parameter for at least one application */
-export function checkMovieStatus(movie: MovieDocument | MovieBase<Date>, status: StoreStatus) {
+export function checkMovieStatus(movie: Movie, status: StoreStatus) {
   return Object.keys(movie.app).some((a) => movie.app[a].status === status);
 }
 

@@ -1,19 +1,22 @@
 import * as admin from 'firebase-admin';
-import { getUser } from "./../utils";
-import { triggerNotifications, createNotification } from './../../notification';
+import { getUser } from './../utils';
+import { triggerNotifications } from './../../notification';
 import { sendMailFromTemplate } from './../email';
 import { userJoinedAnOrganization } from '../../templates/mail';
-import { getAdminIds, getDocument, getOrgAppKey, createPublicOrganizationDocument, createPublicUserDocument, createDocumentMeta } from '../../data/internals';
+import { getAdminIds, getOrgAppKey } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import {
-  getOrgEmailData,
-  getUserEmailData,
-  InvitationDocument,
-  InvitationOrUndefined,
-  OrganizationDocument,
+  createInternalDocumentMeta,
+  createNotification,
+  createPublicOrganization,
+  createPublicUser,
+  Invitation,
+  Organization,
 } from '@blockframes/model';
+import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
+import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 
 async function addUserToOrg(userId: string, organizationId: string) {
   const db = admin.firestore();
@@ -23,15 +26,11 @@ async function addUserToOrg(userId: string, organizationId: string) {
 
   console.debug('add user:', userId, 'to org:', organizationId);
 
-  const userRef = db.collection('users').doc(userId);
-  const organizationRef = db.collection('orgs').doc(organizationId);
-  const permissionsRef = db.collection('permissions').doc(organizationId);
-
   return db.runTransaction(async tx => {
     const [user, organization, permission] = await Promise.all([
-      tx.get(userRef),
-      tx.get(organizationRef),
-      tx.get(permissionsRef)
+      getDocumentSnap(`users/${userId}`, db, tx),
+      getDocumentSnap(`orgs/${organizationId}`, db, tx),
+      getDocumentSnap(`permissions/${organizationId}`, db, tx)
     ]);
 
     const userData = user.data();
@@ -53,20 +52,20 @@ async function addUserToOrg(userId: string, organizationId: string) {
 
     return Promise.all([
       // Update user's orgId
-      tx.set(userRef, { ...userData, orgId: organizationId }),
+      tx.set(user.ref, { ...userData, orgId: organizationId }),
       // Update organization
-      tx.set(organizationRef, {
+      tx.set(organization.ref, {
         ...organizationData,
         userIds: Array.from(new Set([...organizationData.userIds, userId]))
       }),
       // Update Permissions
-      tx.set(permissionsRef, { ...permissionData, roles: permissionData.roles })
+      tx.set(permission.ref, { ...permissionData, roles: permissionData.roles })
     ]);
   });
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
-async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationDocument) {
+async function onInvitationToOrgAccept({ toUser, fromOrg }: Invitation) {
   if (!toUser || !fromOrg) {
     console.error('No user or org provided');
     return;
@@ -76,23 +75,23 @@ async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationDocument) 
 }
 
 /** Send a notification to admins of organization to notify them that the invitation is declined. */
-async function onInvitationToOrgDecline(invitation: InvitationDocument) {
+async function onInvitationToOrgDecline(invitation: Invitation) {
   if (!invitation.fromUser || !invitation.toOrg) {
     console.error('No user or org provided');
     return;
   }
 
-  const org = await getDocument<OrganizationDocument>(`orgs/${invitation.toOrg.id}`);
+  const org = await getDocument<Organization>(`orgs/${invitation.toOrg.id}`);
   const adminIds = await getAdminIds(org.id);
   const appAccess = await getOrgAppKey(org);
 
   const notifications = adminIds.map(toAdminId =>
     createNotification({
       toUserId: toAdminId,
-      user: createPublicUserDocument(invitation.toUser),
-      organization: createPublicOrganizationDocument(invitation.fromOrg),
+      user: createPublicUser(invitation.toUser),
+      organization: createPublicOrganization(invitation.fromOrg),
       type: 'invitationToJoinOrgDeclined',
-      _meta: createDocumentMeta({ createdFrom: appAccess })
+      _meta: createInternalDocumentMeta({ createdFrom: appAccess })
     })
   );
 
@@ -104,7 +103,7 @@ async function onInvitationToOrgDecline(invitation: InvitationDocument) {
 async function onRequestFromUserToJoinOrgCreate({
   toOrg,
   fromUser
-}: InvitationDocument) {
+}: Invitation) {
   if (!fromUser || !toOrg) {
     console.error('No user or org provided');
     return;
@@ -116,7 +115,7 @@ async function onRequestFromUserToJoinOrgCreate({
     throw new Error(`no email for userId: ${fromUser.uid}`);
   }
 
-  const org = await getDocument<OrganizationDocument>(`orgs/${toOrg.id}`);
+  const org = await getDocument<Organization>(`orgs/${toOrg.id}`);
   const adminIds = await getAdminIds(org.id);
   const fromApp = userData._meta.createdFrom;
 
@@ -124,10 +123,10 @@ async function onRequestFromUserToJoinOrgCreate({
   const notifications = adminIds.map(toUserId =>
     createNotification({
       toUserId,
-      user: createPublicUserDocument(userData),
-      organization: createPublicOrganizationDocument(org),
+      user: createPublicUser(userData),
+      organization: createPublicOrganization(org),
       type: 'requestFromUserToJoinOrgCreate',
-      _meta: createDocumentMeta({ createdFrom: fromApp })
+      _meta: createInternalDocumentMeta({ createdFrom: fromApp })
     })
   );
 
@@ -135,10 +134,10 @@ async function onRequestFromUserToJoinOrgCreate({
   notifications.push(
     createNotification({
       toUserId: userData.uid,
-      user: createPublicUserDocument(userData),
-      organization: createPublicOrganizationDocument(org),
+      user: createPublicUser(userData),
+      organization: createPublicOrganization(org),
       type: 'requestFromUserToJoinOrgPending',
-      _meta: createDocumentMeta({ createdFrom: fromApp })
+      _meta: createInternalDocumentMeta({ createdFrom: fromApp })
     }))
 
   return triggerNotifications(notifications);
@@ -148,7 +147,7 @@ async function onRequestFromUserToJoinOrgCreate({
 async function onRequestFromUserToJoinOrgAccept({
   toOrg,
   fromUser
-}: InvitationDocument) {
+}: Invitation) {
   if (!fromUser || !toOrg) {
     console.error('No user or org provided');
     return;
@@ -168,9 +167,9 @@ async function onRequestFromUserToJoinOrgAccept({
 * was 'created' or 'accepted'.
 */
 export async function onInvitationToJoinOrgUpdate(
-  before: InvitationOrUndefined,
-  after: InvitationDocument,
-  invitation: InvitationDocument
+  before: Invitation,
+  after: Invitation,
+  invitation: Invitation
 ) {
   if (wasAccepted(before, after)) {
     return onInvitationToOrgAccept(invitation);
@@ -185,9 +184,9 @@ export async function onInvitationToJoinOrgUpdate(
 * was 'created' or 'accepted'.
 */
 export async function onRequestToJoinOrgUpdate(
-  before: InvitationOrUndefined,
-  after: InvitationDocument,
-  invitation: InvitationDocument
+  before: Invitation,
+  after: Invitation,
+  invitation: Invitation
 ) {
   if (wasCreated(before, after)) {
     return onRequestFromUserToJoinOrgCreate(invitation);

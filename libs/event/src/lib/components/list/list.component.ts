@@ -1,7 +1,7 @@
 import { Component, Input, TemplateRef, ContentChild, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { ascTimeFrames } from '@blockframes/utils/pipes/filter-by-date.pipe';
 import { slideUpList } from '@blockframes/utils/animations/fade';
-import { EventBase } from '@blockframes/model';
+import { Event } from '@blockframes/model';
 
 @Component({
   selector: 'event-list',
@@ -14,7 +14,7 @@ export class ListComponent {
   @HostBinding('@slideUpList') animation = true;
   timeFrames = ascTimeFrames;
 
-  @Input() events: EventBase<Date>[];
+  @Input() events: Event[];
   @ContentChild(TemplateRef) itemTemplate: TemplateRef<unknown>;
 
 }

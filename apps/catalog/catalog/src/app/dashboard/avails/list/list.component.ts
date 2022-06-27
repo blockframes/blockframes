@@ -19,7 +19,7 @@ import { TermService } from '@blockframes/contract/term/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { IncomeService } from '@blockframes/contract/income/service';
-import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import {
   AvailsFilter,
@@ -155,8 +155,8 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     const decodedData: Partial<AvailsFilter> = decodeUrl(this.route);
     if (!decodedData.territories) decodedData.territories = [];
     if (!decodedData.medias) decodedData.medias = [];
-    if (decodedData.duration?.from) decodedData.duration.from = new Date(decodedData.duration.from);
-    if (decodedData.duration?.to) decodedData.duration.to = new Date(decodedData.duration.to);
+    if (decodedData.duration?.from) decodedData.duration.from = decodeDate(decodedData.duration.from);
+    if (decodedData.duration?.to) decodedData.duration.to = decodeDate(decodedData.duration.to);
     this.availsForm.patchValue(decodedData);
     this.sub = this.availsForm.valueChanges.pipe(throttleTime(1000)).subscribe((formState) => {
       encodeUrl<AvailsFilter>(this.router, this.route, formState as AvailsFilter);

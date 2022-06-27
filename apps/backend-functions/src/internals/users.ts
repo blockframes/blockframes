@@ -1,25 +1,25 @@
 
 import { getMailSender, applicationUrl } from '@blockframes/utils/apps';
 import { generate as passwordGenerator } from 'generate-password';
-import { createDocumentMeta, createPublicUserDocument, getDocument } from '../data/internals';
 import { userInvite, userFirstConnexion } from '../templates/mail';
 import { groupIds, templateIds } from '@blockframes/utils/emails/ids';
 import { auth, db } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
 import {
-  EventEmailData,
-  getOrgEmailData,
-  getUserEmailData,
-  OrganizationDocument,
   PublicOrganization,
   InvitationMode,
   InvitationStatus,
   InvitationType,
   PublicUser,
   App,
+  createInternalDocumentMeta,
+  Organization,
+  createPublicUser,
 } from '@blockframes/model';
+import { EventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { logger } from 'firebase-functions';
 import { hasUserAnOrgOrIsAlreadyInvited } from '../invitation';
+import { getDocument } from '@blockframes/firebase-utils';
 
 interface UserProposal {
   uid: string;
@@ -75,7 +75,7 @@ export const getOrInviteUserByMail = async (
       const toUser = getUserEmailData(newUser.user, newUser.password);
 
       // User does not exists, send him an email.
-      const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
+      const fromOrg = await getDocument<Organization>(`orgs/${fromOrgId}`);
       const orgEmailData = getOrgEmailData(fromOrg);
       const urlToUse = applicationUrl[app];
 
@@ -126,10 +126,10 @@ export const createUserFromEmail = async (email: string, createdFrom: App = 'fes
 
   // We don't have the time to wait for the trigger onUserCreate,
   // So we create it here first.
-  const userDb = { uid: user.uid, email, _meta: createDocumentMeta({ createdFrom, emailVerified: true }) };
+  const userDb = { uid: user.uid, email, _meta: createInternalDocumentMeta({ createdFrom, emailVerified: true }) };
   await db.collection('users').doc(userDb.uid).set(userDb);
 
-  return { user: createPublicUserDocument(userDb), password };
+  return { user: createPublicUser(userDb), password };
 };
 
 /**
