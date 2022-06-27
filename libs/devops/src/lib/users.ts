@@ -11,6 +11,7 @@ import * as env from '@env';
 import { PublicUser, User } from '@blockframes/model';
 import { subMonths } from 'date-fns';
 import { USER_FIXTURES_PASSWORD } from './firebase-utils/anonymize/util';
+import * as admin from 'firebase-admin';
 
 export const { storageBucket } = env.firebase();
 
@@ -116,12 +117,20 @@ async function getUsersFromDb(db: FirebaseFirestore.Firestore) {
  * Read users from local Firestore
  * and creates them in Auth
  */
-export async function syncUsers(db = loadAdminServices().db, auth = loadAdminServices().auth) {
-  await startMaintenance(db);
+export async function syncUsers({
+  db = loadAdminServices().db,
+  auth = loadAdminServices().auth,
+  withMaintenance = false
+}: {
+  db?: FirebaseFirestore.Firestore;
+  auth?: admin.auth.Auth;
+  withMaintenance?: boolean
+} = {}) {
+  if (withMaintenance) await startMaintenance(db);
   const expectedUsers = await getUsersFromDb(db);
   await deleteAllUsers(auth);
   await importAllUsers(auth, expectedUsers);
-  await endMaintenance(db);
+  if (withMaintenance) await endMaintenance(db);
 }
 
 export async function printUsers() {
