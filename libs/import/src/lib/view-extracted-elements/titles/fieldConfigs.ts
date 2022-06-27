@@ -115,7 +115,7 @@ export interface FieldsConfig {
     caption: boolean;
   }[];
   salesPitch: string;
-  app: Partial<{ [app in App]: MovieAppConfig<Date> }>;
+  app: Partial<{ [app in App]: MovieAppConfig }>;
   orgIds: string[];
 }
 
@@ -480,7 +480,7 @@ export function getFieldConfigs(
 
       // ! ADMIN
       /* bm */ 'app.catalog': (value: string) => {
-      const defaultAccess: MovieAppConfig<Date> = {
+      const defaultAccess: MovieAppConfig = {
         status: 'draft',
         access: 'catalog' === currentApp,
         acceptedAt: null,
@@ -496,7 +496,7 @@ export function getFieldConfigs(
       return { status, access: true, acceptedAt: null, refusedAt: null };
     },
       /* bn */ 'app.festival': (value: string) => {
-      const defaultAccess: MovieAppConfig<Date> = {
+      const defaultAccess: MovieAppConfig = {
         status: 'draft',
         access: 'festival' === currentApp,
         acceptedAt: null,
@@ -512,7 +512,7 @@ export function getFieldConfigs(
       return { status, access: true, acceptedAt: null, refusedAt: null };
     },
       /* bo */ 'app.financiers': (value: string) => {
-      const defaultAccess: MovieAppConfig<Date> = {
+      const defaultAccess: MovieAppConfig = {
         status: 'draft',
         access: 'financiers' === currentApp,
         acceptedAt: null,

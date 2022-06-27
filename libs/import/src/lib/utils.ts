@@ -37,7 +37,7 @@ export interface MovieImportState extends ImportState {
 export interface ContractsImportState extends ImportState {
   newContract: boolean;
   contract: Sale | Mandate;
-  terms: Term<Date>[];
+  terms: Term[];
 }
 
 export interface OrganizationsImportState extends ImportState {

@@ -1,45 +1,44 @@
 import { difference } from 'lodash';
-
-/**
- * Organization-related code,
- *
- * Right now this is solely used to update our algolia index (full-text search on org names).
- */
 import { db } from './internals/firebase';
-import { getUser } from "./internals/utils";
+import { getUser } from './internals/utils';
 import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
-import { triggerNotifications, createNotification } from './notification';
+import { triggerNotifications } from './notification';
 import { getMailSender } from '@blockframes/utils/apps';
-import { getAdminIds, createPublicOrganizationDocument, createPublicUserDocument, getDocument, createDocumentMeta } from './data/internals';
+import { getAdminIds } from './data/internals';
 import { cleanOrgMedias } from './media';
-import { Change, EventContext } from 'firebase-functions';
+import { EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, storeSearchableUser } from '@blockframes/firebase-utils/algolia';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import {
   User,
-  NotificationDocument,
+  Notification,
   NotificationTypes,
-  OrganizationDocument,
   PublicUser,
   PermissionsDocument,
   app,
   App,
   getOrgAppAccess,
   Module,
-  ErrorResultResponse
+  ErrorResultResponse,
+  Organization,
+  createPublicOrganization,
+  createInternalDocumentMeta,
+  createPublicUser,
+  createNotification
 } from '@blockframes/model';
 import { groupIds } from '@blockframes/utils/emails/ids';
+import { BlockframesChange, BlockframesSnapshot, getDocument } from '@blockframes/firebase-utils';
 
 /** Create a notification with user and org. */
-function notifyUser(toUserId: string, notificationType: NotificationTypes, org: OrganizationDocument, user: PublicUser) {
+function notifyUser(toUserId: string, notificationType: NotificationTypes, org: Organization, user: PublicUser) {
   const createdFrom = getOrgAppAccess(org);
   return createNotification({
     toUserId,
     type: notificationType,
-    user: createPublicUserDocument(user),
-    organization: createPublicOrganizationDocument(org),
-    _meta: createDocumentMeta({ createdFrom: createdFrom[0] })
+    user: createPublicUser(user),
+    organization: createPublicOrganization(org),
+    _meta: createInternalDocumentMeta({ createdFrom: createdFrom[0] })
   });
 }
 
@@ -60,7 +59,7 @@ async function removeMemberPermissionsAndOrgId(user: PublicUser) {
 }
 
 /** Send notifications to all org's members when a member is added or removed. */
-async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: OrganizationDocument) {
+async function notifyOnOrgMemberChanges(before: Organization, after: Organization) {
   // Member added
   if (before.userIds.length < after.userIds.length) {
     const userAddedId = difference(after.userIds, before.userIds)[0];
@@ -91,8 +90,8 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
   }
 }
 
-export function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot) {
-  const org = snap.data() as OrganizationDocument;
+export function onOrganizationCreate(snap: BlockframesSnapshot<Organization>) {
+  const org = snap.data();
   if (org.status === 'accepted') return;
 
   if (!org?.name) {
@@ -110,9 +109,9 @@ export function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot) {
   ]);
 }
 
-export async function onOrganizationUpdate(change: Change<FirebaseFirestore.DocumentSnapshot>) {
-  const before = change.before.data() as OrganizationDocument;
-  const after = change.after.data() as OrganizationDocument;
+export async function onOrganizationUpdate(change: BlockframesChange<Organization>) {
+  const before = change.before.data();
+  const after = change.after.data();
 
   if (!before || !after || !after.name) {
     console.error('Invalid org data, before:', before, 'after:', after);
@@ -144,9 +143,9 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
     const notification = createNotification({
       // At this moment, the organization was just created, so we are sure to have only one userId in the array
       toUserId: after.userIds[0],
-      organization: createPublicOrganizationDocument(before),
+      organization: createPublicOrganization(before),
       type: 'organizationAcceptedByArchipelContent',
-      _meta: createDocumentMeta({ createdFrom: appAccess[0] })
+      _meta: createInternalDocumentMeta({ createdFrom: appAccess[0] })
     });
     await triggerNotifications([notification]);
   }
@@ -165,11 +164,11 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
 }
 
 export async function onOrganizationDelete(
-  orgSnapshot: FirebaseFirestore.DocumentSnapshot<OrganizationDocument>,
+  orgSnapshot: BlockframesSnapshot<Organization>,
   context: EventContext
 ) {
 
-  const org = orgSnapshot.data() as OrganizationDocument;
+  const org = orgSnapshot.data();
 
   // Reset the orgId field on user document
   for (const userId of org.userIds) {
@@ -253,13 +252,13 @@ export const accessToAppChanged = async (
 
   const adminIds = await getAdminIds(data.orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
-  const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
-  const notifications: NotificationDocument[] = [];
+  const organization = await getDocument<Organization>(`orgs/${data.orgId}`);
+  const notifications: Notification[] = [];
   admins.map(async admin => {
     const notification = createNotification({
       toUserId: admin.uid,
       docId: admin.orgId,
-      organization: createPublicOrganizationDocument(organization),
+      organization: createPublicOrganization(organization),
       appAccess: data.app,
       type: 'orgAppAccessChanged'
     });
@@ -278,16 +277,16 @@ export const accessToAppChanged = async (
 /** Send an email to C8 Admins when an organization requests to access to a new platform */
 export const onRequestFromOrgToAccessApp = async (data: { app: App, module: Module, orgId: string }, context?: CallableContext) => {
   if (!!context.auth.uid && !!data.app && !!data.orgId && !!data.module) {
-    const organization = await getDocument<OrganizationDocument>(`orgs/${data.orgId}`);
+    const organization = await getDocument<Organization>(`orgs/${data.orgId}`);
     const mailRequest = organizationRequestedAccessToApp(organization, data.app, data.module);
     const from = getMailSender(data.app);
     const userDocument = await getDocument<User>(`users/${context.auth.uid}`);
 
     const notification = createNotification({
       toUserId: context.auth.uid,
-      organization: createPublicOrganizationDocument(organization),
-      user: createPublicUserDocument(userDocument),
-      _meta: createDocumentMeta({ createdFrom: data.app }),
+      organization: createPublicOrganization(organization),
+      user: createPublicUser(userDocument),
+      _meta: createInternalDocumentMeta({ createdFrom: data.app }),
       type: 'userRequestAppAccess'
     });
     await triggerNotifications([notification]);

@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Territory, TerritoryISOA3Value, parseToAll, territoriesISOA3, staticModel, AnalyticData } from '@blockframes/model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
 
 const territories = parseToAll('territories', 'world') as Territory[];
 
@@ -11,7 +12,7 @@ const territories = parseToAll('territories', 'world') as Territory[];
   styleUrls: ['./map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AnalyticsMapComponent {
+export class AnalyticsMapComponent implements OnDestroy{
   isLoading = true;
 
   zero: TerritoryISOA3Value[] = [];
@@ -21,11 +22,34 @@ export class AnalyticsMapComponent {
   selected: TerritoryISOA3Value;
   top: AnalyticData[] = [];
 
+  private _topCount = new BehaviorSubject(3);
+  private _data = new Subject<AnalyticData[]>();
+  private sub: Subscription;
 
-  @Input() topCount = 3;
   @Input() @boolean showLegend = false;
   @Input() @boolean horizontal = false;
+  @Input() set topCount(count: number) {
+    this._topCount.next(count);
+  }
   @Input() set data(data: AnalyticData[]) {
+    this._data.next(data);
+  }
+
+  @Input() @boolean selectable = false;
+  @Output() selection: EventEmitter<string> = new EventEmitter();
+
+  constructor() {
+    this.sub = combineLatest([
+      this._data.asObservable(),
+      this._topCount.asObservable()
+    ]).subscribe(([data, topCount]) => this.getTopCountries(data, topCount));
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
+
+  private getTopCountries(data: AnalyticData[], count: number) {
     if (!data) return;
     this.isLoading = false;
 
@@ -48,11 +72,8 @@ export class AnalyticsMapComponent {
     }
 
     const sorted = data.sort((a, b) => b.count - a.count);
-    this.top = sorted.splice(0, this.topCount);
+    this.top = sorted.splice(0, count);
   }
-
-  @Input() @boolean selectable = false;
-  @Output() selection: EventEmitter<string> = new EventEmitter();
 
   toggleSelect(isoA3: TerritoryISOA3Value) {
     if (!this.selectable) return;

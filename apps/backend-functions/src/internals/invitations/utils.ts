@@ -1,18 +1,18 @@
-import { InvitationDocument, InvitationOrUndefined, invitationStatus } from '@blockframes/model';
+import { Invitation, invitationStatus } from '@blockframes/model';
 import * as admin from 'firebase-admin';
 
 /** Checks if an invitation just got accepted. */
-export function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
+export function wasAccepted(before: Invitation, after: Invitation) {
   return before?.status === 'pending' && after?.status === 'accepted';
 }
 
 /** Checks if an invitation just got declined. */
-export function wasDeclined(before: InvitationDocument, after: InvitationDocument) {
+export function wasDeclined(before: Invitation, after: Invitation) {
   return before?.status === 'pending' && after?.status === 'declined';
 }
 
 /** Checks if an invitation just got created. */
-export function wasCreated(before: InvitationOrUndefined, after: InvitationDocument) {
+export function wasCreated(before: Invitation, after: Invitation) {
   return !before && !!after;
 }
 
