@@ -21,7 +21,7 @@ import { loadAdminServices, getCollectionRef } from '@blockframes/firebase-utils
 import { removeUnexpectedUsers } from './users';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { createPermissions, PermissionsDocument, PublicUser, getAllAppsExcept } from '@blockframes/model';
-import { addDays, subDays, subMonths, subYears } from 'date-fns';
+import { addDays, addSeconds, subDays, subMonths, subSeconds, subYears } from 'date-fns';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>;
 let db: FirebaseFirestore.Firestore;
@@ -421,8 +421,8 @@ describe('DB cleaning script', () => {
     ];
 
     const testOrgs = [
-      { id: 'org-A', email: 'org-A@fake.com', members: [testUsers[0]], userIds: [testUsers[0].uid] },
-      { id: 'org-B', email: 'org-B@fake.com', members: [testUsers[1]], userIds: [testUsers[1].uid, 'fakeUid'], wishlist: [] },
+      { id: 'org-A', email: 'org-A@fake.com', userIds: [testUsers[0].uid] },
+      { id: 'org-B', email: 'org-B@fake.com', userIds: [testUsers[1].uid, 'fakeUid'], wishlist: [] },
       { id: 'org-C', email: 'org-C@fake.com', userIds: [testUsers[2].uid], wishlist: ['mov-C', 'mov-D', 'mov-A'] },
       { id: 'org-D', email: 'org-D@fake.com', userIds: [testUsers[3].uid], wishlist: ['mov-B'] }
     ];
@@ -626,7 +626,7 @@ describe('DB cleaning script', () => {
         id: 'notif-A',
         toUserId: 'A',
         // Should be kept
-        _meta: { createdAt: { _seconds: now.getTime() / 1000 } },
+        _meta: { createdAt: now },
         type: 'requestToAttendEventSent',
         docId: 'A',
         user: { uid: 'A' }
@@ -635,7 +635,7 @@ describe('DB cleaning script', () => {
         id: 'notif-B',
         toUserId: 'A',
         // Just to the limit, should be kept
-        _meta: { createdAt: { _seconds: 30 + subDays(now, numberOfDaysToKeepNotifications).getTime() / 1000 } },
+        _meta: { createdAt: subDays(addSeconds(now, 30), numberOfDaysToKeepNotifications) },
         type: 'requestToAttendEventSent',
         docId: 'A',
         user: { uid: 'A' }
@@ -644,7 +644,7 @@ describe('DB cleaning script', () => {
         id: 'notif-C',
         toUserId: 'A',
         // Should be removed
-        _meta: { createdAt: { _seconds: subDays(now, numberOfDaysToKeepNotifications + 1).getTime() / 1000 } },
+        _meta: { createdAt: subDays(now, numberOfDaysToKeepNotifications + 1) },
         type: 'requestToAttendEventSent',
         docId: 'A',
         user: { uid: 'A' }
@@ -677,9 +677,7 @@ describe('DB cleaning script', () => {
   });
 
   it('should keep notifications related to existing users, invitations, events, offers, movies and orgs ', async () => {
-    const currentTimestamp = new Date().getTime() / 1000;
-
-    const _meta = { createdAt: { _seconds: currentTimestamp } };
+    const _meta = { createdAt: new Date() };
 
     const testNotifications = [
       // Valid ones
@@ -771,12 +769,12 @@ describe('DB cleaning script', () => {
   });
 
   it('should update notifications with related documents data', async () => {
-    const currentTimestamp = new Date().getTime() / 1000;
+    const now = new Date();
     const testNotifications = [
       {
         id: 'notif-A',
         toUserId: 'A',
-        _meta: { createdAt: { _seconds: currentTimestamp } },
+        _meta: { createdAt: now },
         type: 'requestToAttendEventSent',
         docId: 'A',
         user: { uid: 'A' }
@@ -784,7 +782,7 @@ describe('DB cleaning script', () => {
       {
         id: 'notif-B',
         toUserId: 'B',
-        _meta: { createdAt: { _seconds: currentTimestamp } },
+        _meta: { createdAt: now },
         type: 'requestToAttendEventSent',
         docId: 'A',
         user: { uid: 'B' }
@@ -792,7 +790,7 @@ describe('DB cleaning script', () => {
       {
         id: 'notif-C',
         toUserId: 'B',
-        _meta: { createdAt: { _seconds: currentTimestamp } },
+        _meta: { createdAt: now },
         type: 'organizationAcceptedByArchipelContent',
         organization: { id: 'org-A' }
       },
@@ -833,7 +831,6 @@ describe('DB cleaning script', () => {
   });
 
   it('should delete invitations to a deleted event and keep outdated but valid events', async () => {
-    const currentTimestamp = new Date().getTime() / 1000;
     const testInvitations = [
       {
         id: 'invit-A',
@@ -869,7 +866,7 @@ describe('DB cleaning script', () => {
       {
         id: 'event-B',
         // Outdated by 30 seconds, but should be kept since we keep old invitations to make some stats
-        end: { _seconds: currentTimestamp - 30 },
+        end: subSeconds(new Date(), 30),
       }
     ];
 
@@ -916,7 +913,7 @@ describe('DB cleaning script', () => {
         id: 'invit-A',
         status: 'pending',
         // Should be kept even if date is passed because of the pending status
-        date: { _seconds: subDays(now, numberOfDaysToKeepNotifications + 1).getTime() / 1000 },
+        date: subDays(now, numberOfDaysToKeepNotifications + 1),
         type: 'joinOrganization',
         fromOrg: { id: 'org-A' },
         toUser: { uid: 'A' },
@@ -925,7 +922,7 @@ describe('DB cleaning script', () => {
         id: 'invit-B',
         status: 'accepted',
         // Should be removed
-        date: { _seconds: subDays(now, numberOfDaysToKeepNotifications + 1).getTime() / 1000 },
+        date: subDays(now, numberOfDaysToKeepNotifications + 1),
         type: 'joinOrganization',
         toOrg: { id: 'org-A' },
         fromUser: { uid: 'A' },
@@ -934,7 +931,7 @@ describe('DB cleaning script', () => {
         id: 'invit-C',
         status: 'accepted',
         // Just to the limit, should be kept
-        date: { _seconds: 30 + subDays(now, numberOfDaysToKeepNotifications).getTime() / 1000 },
+        date: subDays(addSeconds(now, 30), numberOfDaysToKeepNotifications),
         type: 'joinOrganization',
         toOrg: { id: 'org-A' },
         fromUser: { uid: 'A' },
@@ -971,13 +968,13 @@ describe('DB cleaning script', () => {
   });
 
   it('should update invitations with related documents data', async () => {
-    const currentTimestamp = new Date().getTime() / 1000;
+    const now = new Date();
 
     const testInvitations = [
       {
         id: 'invit-A',
         status: 'pending',
-        date: { _seconds: currentTimestamp },
+        date: now,
         type: 'joinOrganization',
         fromOrg: { id: 'org-A', watermark: 'test' },
         toUser: { uid: 'A' },
@@ -985,7 +982,7 @@ describe('DB cleaning script', () => {
       {
         id: 'invit-B',
         status: 'accepted',
-        date: { _seconds: currentTimestamp },
+        date: now,
         type: 'joinOrganization',
         toOrg: { id: 'org-A' },
         fromUser: { uid: 'A', watermark: 'test' },
@@ -993,7 +990,7 @@ describe('DB cleaning script', () => {
       {
         id: 'invit-C',
         status: 'accepted',
-        date: { _seconds: currentTimestamp },
+        date: now,
         type: 'joinOrganization',
         toOrg: { id: 'org-A' },
         fromUser: { uid: 'B' },
@@ -1323,9 +1320,6 @@ function isOrgClean(
   existingMovies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 ) {
   const o = doc.data();
-  if (o.members !== undefined) {
-    return false;
-  }
 
   const existingAndValidMovieIds = existingMovies.docs.filter(m => {
     const movie = m.data();

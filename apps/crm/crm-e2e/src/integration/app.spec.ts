@@ -1,13 +1,8 @@
-﻿import { SEC } from '@blockframes/e2e/utils';
+import { get } from '@blockframes/testing/cypress/browser';
 
-describe('crm-crm', () => {
-  beforeEach(() => {
-    cy.wait(1 * SEC);
-    cy.visit('/');
-    cy.wait(1 * SEC);
-  });
-
-  it('TBD Test', () => {
-    cy.wait(1 * SEC);
+describe('Landing', () => {
+  it('landing page is accessible', () => {
+    cy.visit('');
+    get('landing-crm').should('exist');
   });
 });

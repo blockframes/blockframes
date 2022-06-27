@@ -10,13 +10,13 @@ import {
 } from '@blockframes/firebase-utils';
 import { algolia } from '@env';
 import {
-  OrganizationDocument,
-  MovieDocument,
   PublicUser,
   Campaign,
   AlgoliaConfig,
   App,
-  getAllAppsExcept
+  getAllAppsExcept,
+  Organization,
+  Movie
 } from '@blockframes/model';
 
 type AlgoliaApp = Exclude<App, 'crm'>;
@@ -46,7 +46,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = loadAdminS
       process.env['ALGOLIA_API_KEY']
     );
 
-    const orgsIterator = getCollectionInBatches<OrganizationDocument>(
+    const orgsIterator = getCollectionInBatches<Organization>(
       db.collection('orgs'),
       'id',
       300
@@ -77,7 +77,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = loadAdminServic
       process.env['ALGOLIA_API_KEY']
     );
 
-    const moviesIterator = getCollectionInBatches<MovieDocument>(
+    const moviesIterator = getCollectionInBatches<Movie>(
       db.collection('movies'),
       'id',
       300
@@ -86,8 +86,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = loadAdminServic
     for await (const movies of moviesIterator) {
       const promises = movies.map(async (movie) => {
         try {
-          const orgsDocs = await Promise.all(movie.orgIds.map((id) => db.doc(`orgs/${id}`).get()));
-          const orgs = orgsDocs.map((doc) => doc.data() as OrganizationDocument);
+          const orgs = await Promise.all(movie.orgIds.map((id) => getDocument<Organization>(`orgs/${id}`)));
 
           if (!orgs.length) {
             console.error(`Movie ${movie.id} is not part of any orgs`);

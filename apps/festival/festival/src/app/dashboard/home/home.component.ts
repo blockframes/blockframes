@@ -53,6 +53,9 @@ export class HomeComponent {
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
     }, { shouldAwait: true }),
+    map(analyticsWithOrg => {
+      return analyticsWithOrg.filter(({ org }) => !org.appAccess.festival.dashboard);
+    }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 

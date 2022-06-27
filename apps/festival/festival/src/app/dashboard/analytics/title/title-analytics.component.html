@@ -101,8 +101,9 @@
     <h3>Last Screenings</h3>
     <mat-icon svgIcon="info" matTooltip="Statistics are updated in real time."></mat-icon>
     <ng-container *ngIf="ongoingScreenings$ | async as events">
-      <a ongoing-event-button routerLink="/c/o/dashboard/event/{{events[0].id}}/statistics">Ongoing
-        Screenings</a>
+      <a ongoing-event-button routerLink="/c/o/dashboard/event/{{events[0].id}}/statistics">
+        Ongoing Screenings
+      </a>
     </ng-container>
   </header>
   <article class="surface">
@@ -113,7 +114,7 @@
         <h5>Attendees</h5>
         <button mat-button color="primary" [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export to .CSV</button>
       </header>
-      <bf-table class="screenings" [source]="invitations" clickable useFilter pagination="5">
+      <bf-table class="screenings" [source]="invitations" clickable useFilter pagination="5" (rowClick)="goToBuyer($event)">
         <ng-template colRef label="Name" let-invitation="item" sort defaultSort [filter]="filters.name">
           <b>{{ invitation | guest:'user' | displayName }}</b>
         </ng-template>
@@ -133,8 +134,8 @@
           </span>
           <ng-template #noCountry>-</ng-template>
         </ng-template>
-        <ng-template colRef="watchTime" label="Watchtime" let-watchtime sort defaultSort>
-          <span>{{ watchtime || 0 }} S</span>
+        <ng-template colRef="watchTime" label="Watch Time" let-watchtime sort defaultSort>
+          <span>{{ watchtime * 1000 | duration: '0s' }}</span>
         </ng-template>
       </bf-table>
     </ng-container>

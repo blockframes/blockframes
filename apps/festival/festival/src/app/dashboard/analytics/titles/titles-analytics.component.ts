@@ -46,7 +46,7 @@ export class TitlesAnalyticsComponent {
 
   titlesAnalytics$ = this.service.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
     joinWith({
-      analytics: title => this.analytics.getTitleAnalytics({ titleId: title.id }),
+      analytics: title => this.getTitleAnalytics(title.id),
       events: title => this.eventService.valueChanges([
         where('type', '==', 'screening'),
         where('meta.titleId', '==', title.id)
@@ -64,6 +64,17 @@ export class TitlesAnalyticsComponent {
     private orgService: OrganizationService,
     @Inject(APP) public app: App
   ) { }
+
+  getTitleAnalytics(titleId:string){
+    return this.analytics.getTitleAnalytics({ titleId }).pipe(
+      joinWith({
+        org: ({meta}) => this.orgService.valueChanges(meta.orgId)
+      }, {shouldAwait:true}),
+      map(analyticsWithOrg => {
+        return analyticsWithOrg.filter(({ org }) => !org.appAccess.festival.dashboard);
+      })
+    );
+  }
 
   goToTitle(data: AggregatedAnalytic) {
     this.router.navigate([data.title.id], { relativeTo: this.route });

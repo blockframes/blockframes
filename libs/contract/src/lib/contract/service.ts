@@ -26,7 +26,6 @@ export class ContractService extends BlockframesCollection<Sale | Mandate> {
   }
 
   /**
-   * This converts the ContractDocument into an Organization
    * @param contract
    */
   protected fromFirestore(document: DocumentSnapshot<Sale | Mandate>): Sale | Mandate {

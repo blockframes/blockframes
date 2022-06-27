@@ -1,7 +1,7 @@
-import { FormControl, Validators } from "@angular/forms";
-import { FormStaticValue, FormEntity } from "@blockframes/utils/form";
-import { AddressSet, createAddressSet, createOrganization, Organization, Location, createLocation } from "@blockframes/model";
-import { StorageFileForm } from "@blockframes/media/form/media.form";
+import { FormControl, Validators } from '@angular/forms';
+import { FormStaticValue, FormEntity } from '@blockframes/utils/form';
+import { AddressSet, createAddressSet, createOrganization, Organization, Location, createLocation } from '@blockframes/model';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { OrganizationMediasForm } from './medias.form';
 
 export class OrganizationAddressesForm extends FormEntity<OrganizationAddressesControl>{

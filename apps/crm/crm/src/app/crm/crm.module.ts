@@ -20,7 +20,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { UploadWidgetModule } from '@blockframes/media/file/upload-widget/upload-widget.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
-import { AppPipeModule, ToLabelModule, DisplayNameModule, MaxLengthModule, ToDateModule, JoinPipeModule, ToGroupLabelPipeModule } from '@blockframes/utils/pipes';
+import { AppPipeModule, ToLabelModule, DisplayNameModule, MaxLengthModule, JoinPipeModule, ToGroupLabelPipeModule } from '@blockframes/utils/pipes';
 import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { OverviewModule } from './pages/overview/overview.module';
@@ -109,7 +109,6 @@ export const panelRoutes: Routes = [
     AppPipeModule,
     MoviePictureUploadModule,
     StaticSelectModule,
-    ToDateModule,
     DashboardModule,
     BreadCrumbModule,
     FormListModule,

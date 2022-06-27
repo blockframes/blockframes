@@ -3,50 +3,14 @@
  *
  * This code deals directly with the low level parts of firebase,
  */
-import * as admin from 'firebase-admin';
-import { App, getOrgAppAccess } from '@blockframes/model';
 import { getDocument } from '@blockframes/firebase-utils/firebase-utils';
-import { createStorageFile, OrganizationDocument, PublicUser, InvitationDocument, PublicInvitation, PermissionsDocument, DocumentMeta } from '@blockframes/model';
-
-export { getDocument };
-
-export function createPublicOrganizationDocument(org: Partial<OrganizationDocument>) {
-  return {
-    id: org.id ?? '',
-    name: org.name,
-    logo: createStorageFile(org.logo),
-    activity: org.activity ?? null,
-  }
-}
-
-export function createPublicInvitationDocument(invitation: InvitationDocument) {
-  return {
-    id: invitation.id ?? '',
-    type: invitation.type ?? '',
-    mode: invitation.mode ?? '',
-    status: invitation.status ?? '',
-  } as PublicInvitation
-}
-
-export function createPublicUserDocument(user: Partial<PublicUser> = {}) {
-  return {
-    uid: user.uid,
-    email: user.email,
-    avatar: createStorageFile(user.avatar),
-    firstName: user.firstName ?? '',
-    lastName: user.lastName ?? '',
-    orgId: user.orgId ?? '',
-    hideEmail: user.hideEmail ?? false
-  }
-}
-
-export function createDocumentMeta(meta: Partial<DocumentMeta<any>> = {}): DocumentMeta<any> { // TODO #7273 #8006 any
-  return {
-    createdBy: 'internal',
-    createdAt: admin.firestore.Timestamp.now(),
-    ...meta
-  }
-}
+import {
+  PermissionsDocument,
+  App,
+  getOrgAppAccess,
+  Organization,
+  Movie,
+} from '@blockframes/model';
 
 /**
  * Gets all the organizations of a movie document
@@ -54,12 +18,9 @@ export function createDocumentMeta(meta: Partial<DocumentMeta<any>> = {}): Docum
  * @returns the organizations that have movie id in organization.movieIds
  */
 export async function getOrganizationsOfMovie(movieId: string) {
-  const db = admin.firestore();
-  const movie = await db.doc(`movies/${movieId}`).get();
-  const orgIds = movie.data().orgIds;
-  const promises = orgIds.map(id => db.doc(`orgs/${id}`).get())
-  const orgs = await Promise.all(promises);
-  return orgs.map((orgDoc: FirebaseFirestore.DocumentSnapshot<OrganizationDocument>) => orgDoc.data())
+  const { orgIds } = await getDocument<Movie>(`movies/${movieId}`);
+  const promises = orgIds.map(id => getDocument<Organization>(`orgs/${id}`));
+  return Promise.all(promises);
 }
 
 /** Retrieve the list of superAdmins and admins of an organization */
@@ -83,9 +44,9 @@ export async function getAdminIds(organizationId: string): Promise<string[]> { /
  * Return the first app name that an org have access to
  * @param _org
  */
-export async function getOrgAppKey(_org: OrganizationDocument | string): Promise<App> {
+export async function getOrgAppKey(_org: Organization | string): Promise<App> {
   if (typeof _org === 'string') {
-    const org = await getDocument<OrganizationDocument>(`orgs/${_org}`);
+    const org = await getDocument<Organization>(`orgs/${_org}`);
     return getOrgAppAccess(org)[0];
   } else {
     return getOrgAppAccess(_org)[0];

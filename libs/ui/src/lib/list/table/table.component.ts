@@ -31,8 +31,8 @@ function sortValue<T>(a: T, b: T) {
     if (a && b) return 0;
     return a ? 1 : -1;
   }
-  if (!a) return 1;
-  if (!b) return -1;
+  if (!a) return -1;
+  if (!b) return 1;
   return 0;
 }
 

@@ -1,9 +1,8 @@
 import { db } from './internals/firebase';
-import { Change } from 'firebase-functions';
-import { createNotification, triggerNotifications } from './notification';
-import { createDocumentMeta, getDocument } from './data/internals';
+import { triggerNotifications } from './notification';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
-import { Organization, NotificationDocument, Sale, Contract, Negotiation, Timestamp } from '@blockframes/model';
+import { Organization, Notification, Sale, Contract, Negotiation, createInternalDocumentMeta, createNotification } from '@blockframes/model';
+import { queryDocument, getDocument, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 
 interface ContractNotificationType {
   sender: 'myOrgAcceptedAContract' | 'myOrgDeclinedAContract', //org who accepted/declined a contract
@@ -11,9 +10,8 @@ interface ContractNotificationType {
 }
 type ContractNotificationValues = ContractNotificationType[keyof ContractNotificationType];
 
-export async function onContractDelete(contractSnapshot: FirebaseFirestore.DocumentSnapshot<Contract>) {
-
-  const contract = contractSnapshot.data() as Contract;
+export async function onContractDelete(contractSnapshot: BlockframesSnapshot<Contract>) {
+  const contract = contractSnapshot.data();
 
   // Delete terms belonging to contract
   const termsCollectionRef = db.collection('terms').where('contractId', '==', contract.id);
@@ -49,7 +47,7 @@ async function deleteCurrentTerms(ref: FirebaseFirestore.Query) {
   return Promise.all(deletions);
 }
 
-async function createTerms(contractId: string, negotiation: Negotiation<Timestamp>, tx: FirebaseFirestore.Transaction) {
+async function createTerms(contractId: string, negotiation: Negotiation, tx: FirebaseFirestore.Transaction) {
   const termsCollection = db.collection('terms');
   const terms = negotiation.terms
     .map(t => ({ ...t, contractId, id: termsCollection.doc().id }));
@@ -59,7 +57,7 @@ async function createTerms(contractId: string, negotiation: Negotiation<Timestam
   return terms.map(datum => datum.id);
 }
 
-async function createIncome(sale: Sale, negotiation: Negotiation<Timestamp>, tx: FirebaseFirestore.Transaction) {
+async function createIncome(sale: Sale, negotiation: Negotiation, tx: FirebaseFirestore.Transaction) {
   const doc = db.doc(`incomes/${sale.id}`);
   return tx.set(doc, {
     status: 'pending',
@@ -71,7 +69,7 @@ async function createIncome(sale: Sale, negotiation: Negotiation<Timestamp>, tx:
 }
 
 async function getContractNotifications(
-  contractId: string, offerId: string, negotiation: Negotiation<Timestamp>, types: Partial<ContractNotificationType>
+  contractId: string, offerId: string, negotiation: Negotiation, types: Partial<ContractNotificationType>
 ) {
 
   const sendOrgNotifications = (type: ContractNotificationValues) => (org: Organization) => {
@@ -81,11 +79,11 @@ async function getContractNotifications(
       offerId,
       type,
       docPath: `contracts/${contractId}/negotiations/${negotiation.id}`,
-      _meta: createDocumentMeta({ createdFrom: 'catalog' })
+      _meta: createInternalDocumentMeta({ createdFrom: 'catalog' })
     }));
   };
 
-  const promises: Promise<NotificationDocument[]>[] = [];
+  const promises: Promise<Notification[]>[] = [];
 
   if (types.sender) {
     const orgId = getReviewer(negotiation);
@@ -103,7 +101,7 @@ async function getContractNotifications(
   return notifications.flat();
 }
 
-async function sendContractUpdatedNotification(before: Sale, after: Sale, negotiation: Negotiation<Timestamp>) {
+async function sendContractUpdatedNotification(before: Sale, after: Sale, negotiation: Negotiation) {
   if (before.status === after.status) return;
   let params: Partial<ContractNotificationType>;
   if (after.status === 'accepted') {
@@ -118,10 +116,7 @@ async function sendContractUpdatedNotification(before: Sale, after: Sale, negoti
   return triggerNotifications(notifications);
 }
 
-export async function onContractUpdate(
-  change: Change<FirebaseFirestore.DocumentSnapshot>
-) {
-
+export async function onContractUpdate(change: BlockframesChange<Sale>) {
   const before = change.before;
   const after = change.after;
 
@@ -129,16 +124,15 @@ export async function onContractUpdate(
     throw new Error('Parameter "change" not found');
   }
 
-  const contractBefore = before.data() as Sale;
-  const contractAfter = after.data() as Sale;
+  const contractBefore = before.data();
+  const contractAfter = after.data();
 
   const isSale = contractBefore.type === contractAfter.type && contractBefore.type === 'sale' // contract is of type 'sale'
   const statusHasChanged = contractBefore.status !== contractAfter.status // contract status has changed
   const { status, id } = contractAfter;
   const saleRef = change.after.ref;
   const negotiationRef = saleRef.collection('negotiations').orderBy('_meta.createdAt', 'desc').limit(1);
-  const negotiation = await negotiationRef.get()
-    .then(snap => snap.docs[0]?.data()) as Negotiation<Timestamp>;
+  const negotiation = await queryDocument<Negotiation>(negotiationRef)
 
   if (!negotiation) return;
 

@@ -2,8 +2,6 @@ import algoliasearch from 'algoliasearch';
 import { algolia as algoliaClient, centralOrgId } from '@env';
 import * as functions from 'firebase-functions';
 import {
-  MovieDocument,
-  OrganizationDocument,
   PublicUser,
   festival,
   Language,
@@ -13,7 +11,9 @@ import {
   AlgoliaConfig,
   getOrgModuleAccess,
   getMovieAppAccess,
-  getOrgAppAccess
+  getOrgAppAccess,
+  Movie,
+  Organization
 } from '@blockframes/model';
 import { hasAcceptedMovies, loadAdminServices } from './util';
 
@@ -62,7 +62,7 @@ export function setIndexConfiguration(indexName: string, config: AlgoliaConfig, 
 //           ORGANIZATIONS
 // ------------------------------------
 
-export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string, db = loadAdminServices().db): Promise<any> {
+export function storeSearchableOrg(org: Organization, adminKey?: string, db = loadAdminServices().db): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -85,7 +85,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string,
   return Promise.all(promises);
 }
 
-export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrganization {
+export function createAlgoliaOrganization(org: Organization): AlgoliaOrganization {
   return {
     objectID: org.id,
     name: org.name,
@@ -103,7 +103,7 @@ export function createAlgoliaOrganization(org: OrganizationDocument): AlgoliaOrg
 // ------------------------------------
 
 export function storeSearchableMovie(
-  movie: MovieDocument,
+  movie: Movie,
   organizationNames: string[],
   adminKey?: string
 ): Promise<any> {

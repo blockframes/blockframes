@@ -1,4 +1,4 @@
-﻿import { region, RuntimeOptions } from 'firebase-functions';
+﻿import { Change, region, RuntimeOptions } from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { firebaseRegion, production } from '@env';
 export const functions = (config = defaultConfig) => region(firebaseRegion).runWith(config);
@@ -6,6 +6,8 @@ import { isInMaintenance } from '@blockframes/firebase-utils/maintenance';
 import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
 import { IMaintenanceDoc } from '@blockframes/model';
 import { logErrors } from './sentry';
+import { toDate } from '@blockframes/firebase-utils/firebase-utils';
+import { BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils/types';
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -13,8 +15,6 @@ if (!admin.apps.length) {
 export const db = admin.firestore();
 export const auth = admin.auth();
 export const storage = admin.storage();
-
-export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const skipInMaintenance = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
@@ -34,7 +34,7 @@ db.collection(META_COLLECTION_NAME)
   .doc(MAINTENANCE_DOCUMENT_NAME)
   .onSnapshot(
     (snap) => {
-      const maintenanceDoc = snap.data() as IMaintenanceDoc;
+      const maintenanceDoc = toDate<IMaintenanceDoc>(snap.data());
       maintenanceActive = _isInMaintenance(maintenanceDoc, 0);
     },
     // If there is an error, revert back to old method to prevent stuck functions
@@ -45,6 +45,34 @@ db.collection(META_COLLECTION_NAME)
 ///////////////////////////////////
 // DOCUMENT ON-CHANGES FUNCTIONS //
 ///////////////////////////////////
+
+function createBlockframesSnapshot(snap: admin.firestore.DocumentSnapshot): BlockframesSnapshot {
+  return {
+    id: snap.id,
+    exists: snap.exists,
+    ref: snap.ref,
+    data: () => toDate(snap.data())
+  }
+}
+
+const stateChangeToDate = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
+  return async (...args: Parameters<T>) => {
+    const firstArg: Change<any> = args.shift();
+    const changes: BlockframesChange = {
+      before: createBlockframesSnapshot(firstArg.before),
+      after: createBlockframesSnapshot(firstArg.after)
+    }
+    return f(changes, ...args);
+  }
+};
+
+const snapshotToDate = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
+  return async (...args: Parameters<T>) => {
+    const firstArg: admin.firestore.QueryDocumentSnapshot = args.shift();
+    const snapshot = createBlockframesSnapshot(firstArg);
+    return f(snapshot, ...args);
+  }
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FunctionType = (...args: any[]) => any;
@@ -57,25 +85,25 @@ type FunctionType = (...args: any[]) => any;
 export function onDocumentWrite(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
   return functions(config).firestore
     .document(docPath)
-    .onWrite(skipInMaintenance(logErrors(fn)));
+    .onWrite(skipInMaintenance(logErrors(stateChangeToDate(fn))));
 }
 
 export function onDocumentUpdate(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
   return functions(config).firestore
     .document(docPath)
-    .onUpdate(skipInMaintenance(logErrors(fn)));
+    .onUpdate(skipInMaintenance(logErrors(stateChangeToDate(fn))));
 }
 
 export function onDocumentDelete(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
   return functions(config).firestore
     .document(docPath)
-    .onDelete(skipInMaintenance(fn))
+    .onDelete(skipInMaintenance(logErrors(snapshotToDate(fn))))
 }
 
 export function onDocumentCreate(docPath: string, fn: FunctionType, config: RuntimeOptions = defaultConfig) {
   return functions(config).firestore
     .document(docPath)
-    .onCreate(skipInMaintenance(logErrors(fn)));
+    .onCreate(skipInMaintenance(logErrors(snapshotToDate(fn))));
 }
 
 /**

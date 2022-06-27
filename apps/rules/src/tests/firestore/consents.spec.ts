@@ -22,7 +22,7 @@ describe('Consents Rules Tests', () => {
     test('should not be able to write consent collection', async () => {
       const newConsentId = 'CI-007';
       const consentRef = db.doc(`consents/${newConsentId}`);
-      const createdConsent: Partial<Consents<Date>> = {
+      const createdConsent: Partial<Consents> = {
         id: newConsentId,
         access: [],
         share: [],
