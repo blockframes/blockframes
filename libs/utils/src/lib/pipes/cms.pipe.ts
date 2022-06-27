@@ -3,7 +3,7 @@ import { EventService } from '@blockframes/event/service';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { limit, limitToLast, orderBy, startAt, where } from 'firebase/firestore';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { of, catchError, distinctUntilChanged } from 'rxjs';
 
 function getQueryConstraints(section: { query: any[] }) {
   return section.query.map((params) => {
@@ -55,7 +55,8 @@ export class HomeQueryOrgsPipe implements PipeTransform {
       );
     } else {
       return this.service.valueChanges(section.orgIds).pipe(
-        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+        catchError(() => of(undefined))
       );
     }
   }
