@@ -1,6 +1,5 @@
 export * from './lib/admin';
 export * from './lib/algolia';
-export * from './lib/backup';
 export * from './lib/clean-backups';
 export * from './lib/db-cleaning';
 export * from './lib/db-shrink';
