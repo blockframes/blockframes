@@ -21,9 +21,9 @@ import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { UserService } from '@blockframes/user/service';
-import { App, sum, toLabel } from '@blockframes/model';
+import { App, toLabel } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
-import { downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { convertToTimeString, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { joinWith } from 'ngfire';
 import {
   BehaviorSubject,
@@ -63,10 +63,7 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
   const invitationsCount = invitations.filter(i => i.mode === 'invitation').length;
   const requestsCount = invitations.filter(i => i.mode === 'request').length;
 
-  const watchTime = {
-    min: Math.floor(averageWatchTime / 60),
-    sec: averageWatchTime % 60
-  }
+  const watchTime = convertToTimeString(averageWatchTime * 1000) || '0s';
 
   return [
     {
@@ -85,8 +82,8 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
       icon: 'ask_screening_2'
     },
     {
-      title: 'Average watch time',
-      value: `${watchTime.min}min ${watchTime.sec}s`,
+      title: 'Average Watch Time',
+      value: watchTime,
       icon: 'access_time'
     }
   ];

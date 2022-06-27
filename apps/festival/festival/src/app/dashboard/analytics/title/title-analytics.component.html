@@ -133,8 +133,8 @@
           </span>
           <ng-template #noCountry>-</ng-template>
         </ng-template>
-        <ng-template colRef="watchTime" label="Watchtime" let-watchtime sort defaultSort>
-          <span>{{ watchtime || 0 }} S</span>
+        <ng-template colRef="watchTime" label="Watch Time" let-watchtime sort defaultSort>
+          <span>{{ watchtime * 1000 | duration: '0s' }}</span>
         </ng-template>
       </bf-table>
     </ng-container>
