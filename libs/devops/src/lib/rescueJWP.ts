@@ -1,10 +1,9 @@
-import { getCollection, jwplayerApiV2 } from '@blockframes/firebase-utils';
+import { getCollection, getStorage, jwplayerApiV2 } from '@blockframes/firebase-utils';
 import { StorageVideo, MovieVideo, Movie } from '@blockframes/model';
 import { delay } from '@blockframes/utils/helpers';
-import * as admin from 'firebase-admin';
 
 async function storageFileExist(path: string) {
-  const storage = admin.storage();
+  const storage = getStorage()
   const file = await storage.bucket().file(path);
 
   // for more info check

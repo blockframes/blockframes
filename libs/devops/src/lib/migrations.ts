@@ -3,12 +3,13 @@
  * to the LAST version.
  */
 import { importFirestore } from './admin';
-import { Firestore, loadAdminServices, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { Firestore, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
 import { last } from 'lodash';
 import { dbVersionDoc } from '@blockframes/utils/maintenance';
 import { exportFirestoreToBucketBeta, getFirestoreExportDirname } from './firebase-utils';
 import { isMigrationRequired } from './tools';
+import { getDb, getStorage } from '@blockframes/firebase-utils/initialize';
 
 export const VERSION_ZERO = 2;
 
@@ -43,8 +44,8 @@ export function selectAndOrderMigrations(afterVersion: number): IMigrationWithVe
 
 export async function migrate({
   withBackup = true,
-  db = loadAdminServices().db,
-  storage = loadAdminServices().storage,
+  db = getDb(),
+  storage = getStorage(),
   performMigrationCheck = true
 }: {
   withBackup?: boolean;

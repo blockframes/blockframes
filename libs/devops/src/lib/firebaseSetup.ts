@@ -2,14 +2,8 @@ import { syncUsers } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { importFirestore } from './admin';
+import { endMaintenance, startMaintenance } from '@blockframes/firebase-utils';
 import {
-  endMaintenance,
-  loadAdminServices,
-  startMaintenance,
-} from '@blockframes/firebase-utils';
-import {
-  connectAuthEmulator,
-  connectFirestoreEmulator,
   defaultEmulatorBackupPath,
   firebaseEmulatorExec,
   importFirestoreEmulatorBackup,
@@ -23,12 +17,15 @@ import { ensureMaintenanceMode, isMigrationRequired } from './tools';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import { copyFirestoreExportFromCiBucket, latestAnonDbDir, restoreAnonStorageFromCI } from './firebase-utils';
+import { getAuth, getAuthEmulator, getDb, getFirestoreEmulator, getStorage } from '@blockframes/firebase-utils/initialize';
 
 const { storageBucket } = firebase();
 
 export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string } = {}) {
 
-  const { storage, db, auth } = loadAdminServices();
+  const storage = getStorage();
+  const db = getDb();
+  const auth = getAuth();
 
   await startMaintenance(db);
 
@@ -87,9 +84,9 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
     importPath: defaultEmulatorBackupPath,
     exportData: true,
   });
-  const { storage } = loadAdminServices();
-  const db = connectFirestoreEmulator();
-  const auth = connectAuthEmulator();
+  const storage = getStorage();
+  const db = getFirestoreEmulator();
+  const auth = getAuthEmulator();
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.info('Syncing users from db...');
@@ -120,7 +117,9 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
 }
 
 export async function upgrade() {
-  const { db, auth, storage } = loadAdminServices();
+  const db = getDb();
+  const auth = getAuth();
+  const storage = getStorage();
 
   if (!await isMigrationRequired(db)) {
     console.log('Skipping upgrade because migration is not required...');
@@ -150,12 +149,12 @@ export async function upgrade() {
 }
 
 export async function upgradeEmulators() {
-  const db = connectFirestoreEmulator();
+  const db = getFirestoreEmulator();
   if (!await isMigrationRequired(db)) {
     console.log('Skipping upgrade because migration is not required...');
     return;
   }
-  const { storage } = loadAdminServices();
+  const storage = getStorage();
   // const auth = connectAuthEmulator();
   const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 

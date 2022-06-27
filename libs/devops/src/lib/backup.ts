@@ -1,6 +1,6 @@
 import { backupBucket, firebase } from '@env';
 import { enableMaintenanceInEmulator } from './emulator';
-import { endMaintenance, loadAdminServices, startMaintenance } from '@blockframes/firebase-utils';
+import { endMaintenance, getAuth, getDb, getStorage, startMaintenance } from '@blockframes/firebase-utils';
 import { defaultEmulatorBackupPath, importFirestoreEmulatorBackup, uploadDbBackupToBucket } from './firebase-utils/firestore/emulator';
 import { deleteAllUsers } from '@blockframes/testing/unit-tests';
 import { ensureMaintenanceMode } from './tools';
@@ -46,7 +46,9 @@ export async function backupLiveEnv(dirName?: string) {
  */
 export async function restoreLiveEnv(dirName?: string) {
 
-  const { storage, db, auth } = loadAdminServices();
+  const db = getDb();
+  const auth = getAuth();
+  const storage = getStorage();
 
   await startMaintenance(db);
 

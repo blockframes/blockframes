@@ -1,8 +1,12 @@
 import {
   getServiceAccountObj,
-  loadAdminServices,
   startMaintenance,
   endMaintenance,
+  getAuth,
+  getAuthEmulator,
+  getFirestoreEmulator,
+  getStorage,
+  initAdmin,
 } from '@blockframes/firebase-utils';
 import {
   shutdownEmulator,
@@ -11,8 +15,6 @@ import {
   uploadDbBackupToBucket,
   getFirestoreExportPath,
   firebaseEmulatorExec,
-  connectAuthEmulator,
-  connectFirestoreEmulator,
 } from './firebase-utils/firestore/emulator';
 import { ChildProcess } from 'child_process';
 import { join, resolve } from 'path';
@@ -34,6 +36,7 @@ import {
   runAnonymization,
   getBackupBucket
 } from './firebase-utils';
+import { firebase as firebaseCI } from 'env/env.blockframes-ci'
 
 interface ImportEmulatorOptions {
   importFrom: string,
@@ -49,7 +52,7 @@ interface ImportEmulatorOptions {
  * of date-formatted directory names in the env's backup bucket (if there are multiple dated backups)
  */
 export async function importEmulatorFromBucket({ importFrom }: ImportEmulatorOptions) {
-  const bucketUrl = importFrom || await getLatestFolderURL(loadAdminServices().storage.bucket(backupBucket), 'firestore');
+  const bucketUrl = importFrom || await getLatestFolderURL(getStorage().bucket(backupBucket), 'firestore');
   await importFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
   let proc: ChildProcess;
   try {
@@ -142,8 +145,8 @@ export async function syncAuthEmulatorWithFirestoreEmulator({ importFrom = 'defa
       importPath: emulatorPath,
       exportData: true,
     });
-    const auth = connectAuthEmulator();
-    const db = connectFirestoreEmulator();
+    const auth = getAuthEmulator();
+    const db = getFirestoreEmulator();
     await startMaintenance(db);
     await syncUsers(db, auth);
     await endMaintenance(db);
@@ -162,7 +165,7 @@ export async function downloadProdDbBackup(localPath?: string) {
   if (!('FIREBASE_PRODUCTION_SERVICE_ACCOUNT' in process.env)) {
     throw new Error('Key "FIREBASE_PRODUCTION_SERVICE_ACCOUNT" does not exist in .env');
   }
-  const cert = getServiceAccountObj(process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUNT);
+  const cert = getServiceAccountObj(process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUNT) as unknown as string;
 
   const prodApp = admin.initializeApp(
     {
@@ -185,8 +188,10 @@ export async function downloadProdDbBackup(localPath?: string) {
  * This function will run db anonymization on a locally running Firestore emulator database
  */
 async function anonDbProcess() {
-  const db = connectFirestoreEmulator();
-  const { getCI, storage, auth } = loadAdminServices();
+  const db = getFirestoreEmulator();
+  const storage = getStorage();
+  const auth = getAuth()
+  const ciApp = initAdmin(firebaseCI(), 'CI env')
   const o = await db.listCollections();
   if (!o.length) throw Error('THERE IS NO DB TO PROCESS - DANGER!');
   console.log(o.map((snap) => snap.id));
@@ -203,7 +208,7 @@ async function anonDbProcess() {
   const p1 = syncUsers(db);
 
   console.info('Syncing storage with production backup stored in blockframes-ci...');
-  const p2 = restoreStorageFromCi(getCI());
+  const p2 = restoreStorageFromCi(ciApp);
 
   await Promise.all([p1, p2]);
   console.info('Storage synced!');
@@ -284,7 +289,7 @@ export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport'
       importPath: emulatorPath,
       exportData: true,
     });
-    const db = connectFirestoreEmulator();
+    const db = getFirestoreEmulator();
     startMaintenance(db);
   } finally {
     await shutdownEmulator(emulatorProcess);

@@ -10,10 +10,19 @@ import {
   Organization
 } from '@blockframes/model';
 import { removeUnexpectedUsers } from './users';
-import { Auth, QueryDocumentSnapshot, getDocument, runChunks, removeAllSubcollections, UserRecord, loadAdminServices, toDate } from '@blockframes/firebase-utils';
+import {
+  Auth,
+  QueryDocumentSnapshot,
+  getDocument,
+  runChunks,
+  removeAllSubcollections,
+  UserRecord,
+  toDate,
+  getAuth
+} from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
-import { deleteSelectedUsers } from 'libs/testing/unit-tests/src/lib/firebase';
+import { deleteSelectedUsers } from '@blockframes/testing/unit-tests';
 import { subDays, subYears } from 'date-fns';
 
 export const numberOfDaysToKeepNotifications = 14;
@@ -43,8 +52,7 @@ export async function cleanDeprecatedData(
   return true;
 }
 
-export async function auditUsers(db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
-  if (!auth) auth = loadAdminServices().auth;
+export async function auditUsers(db: FirebaseFirestore.Firestore, auth = getAuth()) {
 
   const { dbData } = await loadAllCollections(db);
 

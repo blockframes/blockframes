@@ -1,5 +1,4 @@
 import {
-  loadAdminServices,
   getCollectionInBatches,
   clearIndex,
   setIndexConfiguration,
@@ -19,10 +18,11 @@ import {
   Organization,
   Movie
 } from '@blockframes/model';
+import { getDb } from '@blockframes/firebase-utils/initialize';
 
 type AlgoliaApp = Exclude<App, 'crm'>;
 
-export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = loadAdminServices().db) {
+export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = getDb()) {
   if (!appConfig) {
     const promises = (<AlgoliaApp[]>getAllAppsExcept(['crm'])).map((app) => upgradeAlgoliaOrgs(app, db));
     await Promise.all(promises);
@@ -63,7 +63,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = loadAdminS
   }
 }
 
-export async function upgradeAlgoliaMovies(appConfig?: App, db = loadAdminServices().db) {
+export async function upgradeAlgoliaMovies(appConfig?: App, db = getDb()) {
   if (!appConfig) {
     const promises = getAllAppsExcept(['crm']).map((app) => upgradeAlgoliaMovies(app, db));
     await Promise.all(promises);
@@ -117,7 +117,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = loadAdminServic
   }
 }
 
-export async function upgradeAlgoliaUsers(db = loadAdminServices().db) {
+export async function upgradeAlgoliaUsers(db = getDb()) {
   // reset config, clear index and fill it up from the db (which is the only source of truth)
   const config: AlgoliaConfig = {
     searchableAttributes: ['email', 'firstName', 'lastName', 'orgNames'],

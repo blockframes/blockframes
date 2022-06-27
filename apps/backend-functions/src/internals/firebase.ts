@@ -8,13 +8,11 @@ import { IMaintenanceDoc } from '@blockframes/model';
 import { logErrors } from './sentry';
 import { toDate } from '@blockframes/firebase-utils/firebase-utils';
 import { BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils/types';
+import { getAuth, getDb, getStorage } from '@blockframes/firebase-utils';
 
-if (!admin.apps.length) {
-  admin.initializeApp();
-}
-export const db = admin.firestore();
-export const auth = admin.auth();
-export const storage = admin.storage();
+export const db = getDb()
+export const auth = getAuth()
+export const storage = getStorage()
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const skipInMaintenance = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {

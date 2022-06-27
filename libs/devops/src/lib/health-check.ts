@@ -1,14 +1,16 @@
-import { loadAdminServices } from '@blockframes/firebase-utils';
 import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { backupBucket } from 'env/env.blockframes-ci'
 import type { Bucket } from '@google-cloud/storage';
 import type { firestore, storage } from 'firebase-admin';
 import { latestAnonDbDir, CI_STORAGE_BACKUP, getBackupBucket } from './firebase-utils';
+import { getDb, getStorage, initAdmin } from '@blockframes/firebase-utils/initialize';
+import { firebase as firebaseCI }  from 'env/env.blockframes-ci'
 
 export async function healthCheck() {
-  // tslint:disable-next-line: no-shadowed-variable
-  const { db, storage, getCI } = loadAdminServices();
+  const db = getDb();
+  const storage = getStorage();
+  const getCI = initAdmin(firebaseCI(), 'CI')
   // * Do we have storage CRUD access to our own storage backup bucket?
   const backupStorageAccess = await checkBackupBucketAccess(storage)
   console.log(`Local Backup Bucket - CREATE FILE: ${backupStorageAccess.create ? 'ALLOW' : 'DENY'}`)
@@ -22,12 +24,12 @@ export async function healthCheck() {
   console.log(`Local tmp Folder - READ: ${fileAccess.read ? 'ALLOW' : 'DENY'}`)
 
   // * Do we have get access to CI storage db backups?
-  const CIAccess = await checkCIBucketAccess(getCI().storage())
+  const CIAccess = await checkCIBucketAccess(getCI.storage())
   console.log(`CI Backup Bucket - GET FILE: ${CIAccess.get ? 'ALLOW' : 'DENY'}`)
   console.log(`CI Backup Bucket - LIST FILE: ${CIAccess.list ? 'ALLOW' : 'DENY'}`)
 
   // * Do we have get access to CI storage backups?
-  const CIStorageBackupAccess = await checkCIStorageBackupBucketAccess(getCI().storage())
+  const CIStorageBackupAccess = await checkCIStorageBackupBucketAccess(getCI.storage())
   console.log(`CI Storage Backup Bucket - GET FILE: ${CIStorageBackupAccess.get ? 'ALLOW' : 'DENY'}`)
   console.log(`CI Storage Backup Bucket - LIST FILE: ${CIStorageBackupAccess.list ? 'ALLOW' : 'DENY'}`)
 

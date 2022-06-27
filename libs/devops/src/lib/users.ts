@@ -4,13 +4,14 @@
  * This module provides functions to trigger a firestore restore and test user creations.
  */
 import { differenceBy } from 'lodash';
-import { loadAdminServices, getCollectionInBatches, sleep, startMaintenance, endMaintenance, Auth, UserRecord } from '@blockframes/firebase-utils';
+import { getCollectionInBatches, sleep, startMaintenance, endMaintenance, Auth, UserRecord } from '@blockframes/firebase-utils';
 import readline from 'readline';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/unit-tests';
 import * as env from '@env';
 import { PublicUser, User } from '@blockframes/model';
 import { subMonths } from 'date-fns';
 import { USER_FIXTURES_PASSWORD } from './firebase-utils/anonymize/util';
+import { getAuth, getDb } from '@blockframes/firebase-utils/initialize';
 
 export const { storageBucket } = env.firebase();
 
@@ -116,7 +117,7 @@ async function getUsersFromDb(db: FirebaseFirestore.Firestore) {
  * Read users from local Firestore
  * and creates them in Auth
  */
-export async function syncUsers(db = loadAdminServices().db, auth = loadAdminServices().auth) {
+export async function syncUsers(db = getDb(), auth = getAuth()) {
   await startMaintenance(db);
   const expectedUsers = await getUsersFromDb(db);
   await deleteAllUsers(auth);
@@ -125,7 +126,7 @@ export async function syncUsers(db = loadAdminServices().db, auth = loadAdminSer
 }
 
 export async function printUsers() {
-  const { auth } = loadAdminServices();
+  const auth = getAuth()
 
   let pageToken;
 
@@ -141,7 +142,8 @@ export async function printUsers() {
 }
 
 export async function clearUsers() {
-  const { auth, db } = loadAdminServices();
+  const db = getDb();
+  const auth = getAuth();
   await startMaintenance(db);
   // clear users is equivalent to "we expect no users", we can reuse the code.
   await deleteAllUsers(auth);
@@ -190,7 +192,8 @@ function readUsersFromSTDIN(): Promise<UserConfig[]> {
 }
 
 export async function createUsers() {
-  const { auth, db } = loadAdminServices();
+  const db = getDb();
+  const auth = getAuth();
   await startMaintenance(db);
   const users = await readUsersFromSTDIN();
   await createAllUsers(users, auth);

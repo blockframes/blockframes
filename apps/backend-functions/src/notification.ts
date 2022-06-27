@@ -65,7 +65,7 @@ import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
 import { appUrl, supportEmails } from './environments/environment';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
-import { getDocument, BlockframesSnapshot } from '@blockframes/firebase-utils';
+import { getDocument, BlockframesSnapshot, getDb } from '@blockframes/firebase-utils';
 // #7946 this may be reactivated later
 // import { movieCurrencies, createMailContract, MailContract } from '@blockframes/model';
 
@@ -74,7 +74,7 @@ const eventAppKey: App = 'festival';
 
 /** Takes one or more notifications and add them on the notifications collection */
 export async function triggerNotifications(notifications: Notification[]) {
-  const db = admin.firestore();
+  const db = getDb()
   const batch = db.batch();
 
   for (const n of notifications) {
@@ -327,8 +327,7 @@ export async function onNotificationCreate(snap: BlockframesSnapshot<Notificatio
         break;
     }
 
-    // ! TODO  #8376 Don't do this - unify instantiation of Firestore
-    const db = admin.firestore();
+    const db = getDb()
     await db.collection('notifications').doc(notification.id).set({ email: notification.email }, { merge: true });
   }
 }
