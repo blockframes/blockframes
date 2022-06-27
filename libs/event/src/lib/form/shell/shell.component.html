@@ -40,7 +40,7 @@
           </a>
         </ng-container>
       </nav>
-      <button mat-button (click)="explain()">
+      <button *ngIf="form.value.type !== 'slate'" mat-button (click)="explain()">
         <mat-icon svgIcon="info"></mat-icon>
         <span>Learn how it works</span>
       </button>
