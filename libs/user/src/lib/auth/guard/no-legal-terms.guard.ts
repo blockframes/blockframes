@@ -8,7 +8,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 @Injectable({
   providedIn: 'root'
 })
-export class LegalTermsGuard implements CanActivate  {
+export class NoLegalTermsGuard implements CanActivate  {
 
   constructor(
     private router: Router,
@@ -27,9 +27,9 @@ export class LegalTermsGuard implements CanActivate  {
           !user.termsAndConditions?.[this.app]?.date ||
           user.termsAndConditions?.[this.app]?.date < this.service.termsAndConditionsDate[this.app])
           ) {
-          return this.router.createUrlTree(['/auth/checkPrivacyAndTerms']);
+          return true;
         }
-        return true;
+        return this.router.createUrlTree(['/c/o']);
       })
     );
   }

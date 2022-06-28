@@ -28,10 +28,11 @@ import { doc, DocumentReference, getDoc, writeBatch } from 'firebase/firestore';
 @Injectable({ providedIn: 'root' })
 export class AuthService extends BlockframesAuth<User> implements OnDestroy {
   // If we update the privacy policy or the T&C, we need the update the publishing dates
-  readonly privacyPolicyDate = 'Thu Jun 23 2022 15:14:36 GMT+0200';
+  readonly privacyPolicyDate = new Date('Thu Jun 23 2022 15:14:36 GMT+0200');
   readonly termsAndConditionsDate = {
-    festival: 'Thu Jun 23 2022 15:14:36 GMT+0200',
-    catalog: 'Thu Jun 23 2022 15:14:36 GMT+0200',
+    festival: new Date('Thu Jun 23 2022 15:14:36 GMT+0200'),
+    catalog: new Date('Thu Jun 23 2022 15:14:36 GMT+0200'),
+    financiers: new Date('Thu Jun 23 2022 15:14:36 GMT+0200'),
 } ;
   readonly path = 'users';
 
@@ -188,15 +189,9 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
     firstName: string,
     lastName: string,
     _meta: DocumentMeta,
-    privacyPolicy: LegalTerms
+    privacyPolicy: LegalTerms,
     hideEmail: boolean,
-    legalTerms: {
-      privacyPolicy: boolean,
-      tc: {
-        festival: boolean,
-        catalog: boolean
-      }
-    }
+    termsAndConditions: Partial<Record<App, LegalTerms>>
   }) {
     return {
       _meta: createDocumentMeta({ emailVerified: false, ...ctx._meta }),
@@ -206,13 +201,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
       lastName: ctx.lastName,
       privacyPolicy: ctx.privacyPolicy,
       hideEmail: ctx.hideEmail,
-      legalTerms: {
-        privacyPolicy: ctx.legalTerms.privacyPolicy ?? false,
-        tc: {
-          festival: ctx.legalTerms.tc.festival ?? false,
-          catalog: ctx.legalTerms.tc.catalog ?? false
-        }
-      }
+      termsAndConditions: ctx.termsAndConditions
     };
   }
 

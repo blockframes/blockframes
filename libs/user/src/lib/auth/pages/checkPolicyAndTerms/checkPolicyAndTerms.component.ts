@@ -1,11 +1,11 @@
 import { Component, ChangeDetectionStrategy, Inject, Optional, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from '../../service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'checkPolicyAndTerms-view',
@@ -29,20 +29,21 @@ export class CheckPolicyAndTermsComponent implements OnInit {
 
   async ngOnInit() {
     const profile = await firstValueFrom(this.service.profile$);
-    this.form.get('termsOfUse').setValue(profile.termsAndConditions?.[this.app]?.date >= new Date(this.service.privacyPolicyDate));
-    this.form.get('privacyPolicy').setValue(profile.privacyPolicy?.date >= new Date(this.service.privacyPolicyDate));
+    const isPrivacyAccepted = profile.privacyPolicy?.date >= new Date(this.service.privacyPolicyDate);
+    const isTCAccepted = profile.termsAndConditions?.[this.app]?.date >= new Date(this.service.privacyPolicyDate)
+      this.form.get('termsOfUse').setValue(isTCAccepted);
+      this.form.get('privacyPolicy').setValue(isPrivacyAccepted);
   }
 
   async accept() {
-    const uid = this.service.uid;
     const legalTerms = await this.service.getLegalTerms();
     const privacyPolicy = legalTerms;
     const termsAndConditions = {
       [this.app]: legalTerms
     };
 
-    await this.service.update({ uid, termsAndConditions, privacyPolicy });
-    this.router.navigate(['/']);
+    await this.service.update({ termsAndConditions, privacyPolicy });
+    this.router.navigate(['/c/o'])
   }
 
   public openIntercom(): void {

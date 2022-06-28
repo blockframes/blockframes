@@ -10,7 +10,8 @@ import {
   Organization,
   PublicOrganization,
   Invitation,
-  IMaintenanceDoc
+  IMaintenanceDoc,
+  app
 } from '@blockframes/model';
 import {
   DbRecord,
@@ -71,8 +72,13 @@ function processUser<T extends User | PublicUser>(u: T): T {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
   const email = fakeEmail(firstName);
-  const privacyPolicy = { date: new Date(), ip: fakeIp() };
-  return { ...u, firstName, lastName, email, privacyPolicy };
+  const legalTerms = { date: new Date(), ip: fakeIp() };
+  const privacyPolicy = legalTerms;
+  const termsAndConditions = {};
+  for (const appName of app) {
+    termsAndConditions[appName] = legalTerms;
+  }
+  return { ...u, firstName, lastName, email, privacyPolicy, termsAndConditions };
 }
 
 function processOrg<T extends Organization | PublicOrganization>(o: T): T {
