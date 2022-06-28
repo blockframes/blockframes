@@ -6,6 +6,11 @@ import { Event, Screening } from './event';
 import { Analytics } from './analytics';
 import { sum } from './utils';
 
+export interface WatchInfos {
+  duration: number; // Watch duration in secondes
+  date: Date; // Last watch date
+}
+
 /**
  * Raw type for Invitation.
  *
@@ -30,8 +35,8 @@ export interface Invitation extends PublicInvitation {
   eventId?: string;
   message?: string;
 
-  /** Watch time in secondes, only used for 'screening' events */
-  watchTime?: number;
+  /** Watch information only used for 'screening' and slates events */
+  watchInfos?: WatchInfos;
 }
 
 /** Public interface of an invitation (for notifications). */
@@ -106,7 +111,7 @@ export function getGuest(invitation: Invitation, guestType: 'user' | 'org' = 'us
   }
 }
 
-export function averageWatchtime(list: { watchTime?: number }[]) {
-  const totalWatchTime = sum(list, inv => inv.watchTime);
-  return Math.round(totalWatchTime / list.length) || 0;
+export function averageWatchDuration(list: { watchInfos?: WatchInfos }[]) {
+  const totalWatchDuration = sum(list, inv => inv.watchInfos?.duration);
+  return Math.round(totalWatchDuration / list.length) || 0;
 }
