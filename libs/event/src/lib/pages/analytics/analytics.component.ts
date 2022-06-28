@@ -200,7 +200,7 @@ export class AnalyticsComponent implements OnInit {
         orgName ? orgName : '-',
         activity ? orgActivity[activity] : '-',
         orgCountry ? territories[orgCountry] : '-',
-        watchInfos?.duration ? `${convertToTimeString(watchInfos.duration * 1000)}` : '0s',
+        convertToTimeString(watchInfos.duration * 1000),
         watchInfos?.date ? formatDate(watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '-'
       ]);
     });

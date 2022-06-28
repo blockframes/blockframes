@@ -37,7 +37,7 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
 
   const avgWatchDuration = averageWatchDuration(attendees);
-  const parsedTime = convertToTimeString(avgWatchDuration * 1000) || '0s';
+  const parsedTime = convertToTimeString(avgWatchDuration * 1000);
   const participationRate = Math.round(attendees.length / accepted.length) * 100;
   const acceptationRate = Math.round(accepted.length / invitations.length) * 100;
   const traction = Math.round(screeningRequests.length / invitations.length) * 100;
@@ -214,7 +214,7 @@ export class TitleAnalyticsComponent {
         'Company Name': invitation.guestOrg?.denomination?.public ?? '-',
         'Activity': activity ? toLabel(activity, 'orgActivity') : '-',
         'Country': country ? toLabel(country, 'territories') : '-',
-        'Watch Time': invitation.watchInfos?.duration ? convertToTimeString(invitation.watchInfos?.duration * 1000) : '0s',
+        'Watch Time': convertToTimeString(invitation.watchInfos?.duration * 1000),
         'Watching Ended': invitation.watchInfos?.date ? formatDate(invitation.watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '-'
       }
     });

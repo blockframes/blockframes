@@ -16,7 +16,7 @@
               <mat-icon svgIcon="access_time"></mat-icon>
               <span class="mat-body-2">Average Watch Time</span>
             </span>
-            <h2>{{ avgWatchDuration * 1000 | duration: '0s' }}</h2>
+            <h2>{{ avgWatchDuration * 1000 | duration }}</h2>
           </mat-card>
         </span>
         <mat-card>
@@ -38,7 +38,7 @@
             <ng-template colRef="orgName" label="Company Name" let-orgName sort>{{ orgName || dataMissing }}</ng-template>
             <ng-template colRef="orgActivity" label="Company Activity" let-orgActivity>{{ orgActivity ? (orgActivity | toLabel: 'orgActivity') : dataMissing }}</ng-template>
             <ng-template colRef="orgCountry" label="Country" let-orgCountry>{{ orgCountry ? (orgCountry | toLabel: 'territories') : dataMissing }}</ng-template>
-            <ng-template colRef="watchInfos.duration" label="Watch Time" let-duration sort>{{ duration * 1000 | duration: '0s' }}</ng-template>
+            <ng-template colRef="watchInfos.duration" label="Watch Time" let-duration sort>{{ duration * 1000 | duration }}</ng-template>
             <ng-template colRef="watchInfos.date" label="Watching Status" let-date sort>
               <bf-tag *ngIf="date | isWatchingNow">Watching Now</bf-tag>
             </ng-template>

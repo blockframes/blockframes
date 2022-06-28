@@ -82,7 +82,7 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
     },
     {
       title: 'Average Watch Time',
-      value: convertToTimeString(avgWatchDuration * 1000) || '0s',
+      value: convertToTimeString(avgWatchDuration * 1000),
       icon: 'access_time'
     }
   ];
@@ -233,7 +233,7 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
       'Invitation': invitation.status,
       'Request to participate': invitation.mode,
       'Screening Requests': invitation.analytics?.length,
-      'Watch Time': invitation.watchInfos?.duration ? convertToTimeString(invitation.watchInfos?.duration * 1000) : '0s',
+      'Watch Time': convertToTimeString(invitation.watchInfos?.duration * 1000),
       'Watching Ended': invitation.watchInfos?.date ? formatDate(invitation.watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '-'
     }));
     downloadCsvFromJson(analytics, 'buyer-screener-analytics')
