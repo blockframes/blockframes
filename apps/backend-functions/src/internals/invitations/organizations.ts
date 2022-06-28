@@ -67,30 +67,6 @@ async function onInvitationToOrgAccept({ toUser, fromOrg }: Invitation) {
   return addUserToOrg(toUser.uid, fromOrg.id);
 }
 
-/** Send a notification to admins of organization to notify them that the invitation is declined. */
-async function onInvitationToOrgDecline(invitation: Invitation) {
-  if (!invitation.fromUser || !invitation.toOrg) {
-    console.error('No user or org provided');
-    return;
-  }
-
-  const org = await getDocument<Organization>(`orgs/${invitation.toOrg.id}`);
-  const adminIds = await getAdminIds(org.id);
-  const appAccess = await getOrgAppKey(org);
-
-  const notifications = adminIds.map(toAdminId =>
-    createNotification({
-      toUserId: toAdminId,
-      user: createPublicUser(invitation.toUser),
-      organization: createPublicOrganization(invitation.fromOrg),
-      type: 'invitationToJoinOrgDeclined',
-      _meta: createInternalDocumentMeta({ createdFrom: appAccess })
-    })
-  );
-
-  return triggerNotifications(notifications);
-}
-
 /** create a notification/email to sender and org member(s) when
  * a request from user to join org is created. */
 async function onRequestFromUserToJoinOrgCreate({
@@ -166,8 +142,6 @@ export async function onInvitationToJoinOrgUpdate(
 ) {
   if (wasAccepted(before, after)) {
     return onInvitationToOrgAccept(invitation);
-  } else if (wasDeclined(before, after)) {
-    return onInvitationToOrgDecline(invitation);
   }
 }
 

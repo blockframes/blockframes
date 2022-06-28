@@ -95,17 +95,6 @@ export class NotificationService extends BlockframesCollection<Notification> {
             notification.organization.id
           }/view/members`,
         };
-      case 'invitationToJoinOrgDeclined':
-        return {
-          ...notification,
-          _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
-          message: `Your invitation to ${displayUserName} to join your organization was refused.`,
-          imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl[this.app]}/c/o/organization/${
-            notification.organization.id
-          }/view/members`,
-        };
       case 'orgMemberUpdated': {
         const org = await this.orgService.load(notification.organization.id);
         const message = org.userIds.includes(notification.user.uid)
