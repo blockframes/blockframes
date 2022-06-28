@@ -115,7 +115,7 @@ export interface FieldsConfig {
     caption: boolean;
   }[];
   salesPitch: string;
-  app: Partial<{ [app in App]: MovieAppConfig<Date> }>;
+  app: Partial<{ [app in App]: MovieAppConfig }>;
   orgIds: string[];
 }
 
@@ -155,12 +155,14 @@ export function getFieldConfigs(
     },
       /* e */ 'title.series': (value: string, data: Partial<FieldsConfig>) => {
       if (!value && data.contentType === 'tv') throw optionalWarning('Season Number');
+      if (!value) return null;
       const series = Number(value);
       if (isNaN(series)) throw wrongValueError(value, 'Season Number');
       return series;
     },
       /* f */ 'runningTime.episodeCount': (value: string, data: Partial<FieldsConfig>) => {
       if (!value && data.contentType === 'tv') throw optionalWarning('Number of Episodes');
+      if (!value) return null;
       const count = Number(value);
       if (isNaN(count)) throw wrongValueError(value, 'Number of Episodes');
       return count;
@@ -478,7 +480,7 @@ export function getFieldConfigs(
 
       // ! ADMIN
       /* bm */ 'app.catalog': (value: string) => {
-      const defaultAccess: MovieAppConfig<Date> = {
+      const defaultAccess: MovieAppConfig = {
         status: 'draft',
         access: 'catalog' === currentApp,
         acceptedAt: null,
@@ -494,7 +496,7 @@ export function getFieldConfigs(
       return { status, access: true, acceptedAt: null, refusedAt: null };
     },
       /* bn */ 'app.festival': (value: string) => {
-      const defaultAccess: MovieAppConfig<Date> = {
+      const defaultAccess: MovieAppConfig = {
         status: 'draft',
         access: 'festival' === currentApp,
         acceptedAt: null,
@@ -510,7 +512,7 @@ export function getFieldConfigs(
       return { status, access: true, acceptedAt: null, refusedAt: null };
     },
       /* bo */ 'app.financiers': (value: string) => {
-      const defaultAccess: MovieAppConfig<Date> = {
+      const defaultAccess: MovieAppConfig = {
         status: 'draft',
         access: 'financiers' === currentApp,
         acceptedAt: null,
@@ -560,12 +562,14 @@ export function getFieldConfigs(
     },
       /* e */ 'title.series': (value: string, data: Partial<FieldsConfig>) => {
       if (!value && data.contentType === 'tv') throw optionalWarning('Season Number');
+      if (!value) return null;
       const series = Number(value);
       if (isNaN(series)) throw wrongValueError(value, 'Season Number');
       return series;
     },
       /* f */ 'runningTime.episodeCount': (value: string, data: Partial<FieldsConfig>) => {
       if (!value && data.contentType === 'tv') throw optionalWarning('Number of Episodes');
+      if (!value) return null;
       const count = Number(value);
       if (isNaN(count)) throw wrongValueError(value, 'Number of Episodes');
       return count;

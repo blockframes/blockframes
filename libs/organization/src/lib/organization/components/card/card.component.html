@@ -5,12 +5,18 @@
   <h5>{{ org | orgName }}</h5>
   <span class="mat-body-2">{{ (org.activity | toLabel: 'orgActivity') || "-" }}</span>
 </header>
-<mat-tab-group headerPosition="below" mat-align-tabs="center" [disablePagination]="true">
+<div *ngIf="hideTabs">
+  <p class="mat-caption">{{ (org.addresses.main.country | toLabel: 'territories') || "-" }}</p>
+  <p class="mat-caption" i18n>
+    {{ org.userIds.length }} employee{ org.userIds.length, plural, =1 {} other {s} }
+  </p>
+</div>
+<mat-tab-group *ngIf="!hideTabs" headerPosition="below" mat-align-tabs="center" [disablePagination]="true">
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon svgIcon="account_circle"></mat-icon>
     </ng-template>
-    <div class="tab-content">
+    <div>
       <p class="mat-caption">{{ (org.addresses.main.country | toLabel: 'territories') || "-" }}</p>
       <p class="mat-caption" i18n *ngIf="(orgMovieCount$ | async) as count">
         {{ count }} film{ count, plural, =1 {} other {s} } in {{ app === 'catalog' ? 'catalog' : 'line-up' }}
@@ -25,7 +31,7 @@
       <mat-icon svgIcon="movie"></mat-icon>
     </ng-template>
     <!-- We want to use slice to be sure to have 3 elements/placeholders -->
-    <div class="tab-content" *ngIf="org.id | orgMovies:3 | async as movies">
+    <div *ngIf="org.id | orgMovies:3 | async as movies">
       <p class="mat-caption">{{ movies[0]?.title.international || "-"}}</p>
       <p class="mat-caption">{{ movies[1]?.title.international || "-"}}</p>
       <p class="mat-caption">{{ movies[2]?.title.international || "-"}}</p>

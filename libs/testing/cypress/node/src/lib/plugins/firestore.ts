@@ -2,7 +2,6 @@ import { db } from '../testing-cypress';
 import { createUser, createOrganization, createPermissions, ModuleAccess, App } from '@blockframes/model';
 import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME } from '@blockframes/utils/maintenance';
 import { WhereFilterOp } from 'firebase/firestore';
-import * as admin from 'firebase-admin';
 
 export async function getRandomEmail() {
   const { email } = await getRandomUser();
@@ -93,8 +92,8 @@ export async function importData(data: Record<string, object>[]) {
         throw new Error('Document path mandatory, like [collectionPath/DocumentPath]. Got ' + JSON.stringify(path));
       if (path === maintenancePath)
         content = {
-          startedAt: !content['startedAt'] ? null : toTimestamp(content['startedAt']),
-          endedAt: !content['endedAt'] ? null : toTimestamp(content['endedAt']),
+          startedAt: !content['startedAt'] ? null : new Date(content['startedAt']),
+          endedAt: !content['endedAt'] ? null : new Date(content['endedAt']),
         };
       else if ('_meta' in content) content['_meta']['e2e'] = true;
       else content['_meta'] = { e2e: true };
@@ -102,11 +101,6 @@ export async function importData(data: Record<string, object>[]) {
     });
   }
   return Promise.all(createAll);
-}
-
-function toTimestamp(stringifiedTimestamp: string) {
-  const { seconds, nanoseconds } = JSON.parse(stringifiedTimestamp);
-  return new admin.firestore.Timestamp(seconds, nanoseconds);
 }
 
 //* DELETE DATA*----------------------------------------------------------------

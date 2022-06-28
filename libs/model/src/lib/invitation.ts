@@ -3,8 +3,13 @@ import { Organization, PublicOrganization } from './organisation';
 import { PublicUser } from './user';
 import { Movie } from './movie';
 import { Event, Screening } from './event';
-import { Timestamp } from './timestamp';
 import { Analytics } from './analytics';
+import { sum } from './utils';
+
+export interface WatchInfos {
+  duration: number; // Watch duration in secondes
+  date: Date; // Last watch date
+}
 
 /**
  * Raw type for Invitation.
@@ -16,8 +21,8 @@ import { Analytics } from './analytics';
  *  If user that received an email invitation and
  *  created an account, we will then be able to replace email by the coresponding new user.
  * */
-export interface InvitationBase<D extends Timestamp | Date> extends PublicInvitation {
-  date: D;
+export interface Invitation extends PublicInvitation {
+  date: Date;
   /** @dev An invitation is created by a user or an org (fromUser or fromOrg) */
   fromOrg?: PublicOrganization,
   fromUser?: PublicUser,
@@ -30,8 +35,8 @@ export interface InvitationBase<D extends Timestamp | Date> extends PublicInvita
   eventId?: string;
   message?: string;
 
-  /** Watch time in secondes, only used for 'screening' events */
-  watchTime?: number;
+  /** Watch information only used for 'screening' and slates events */
+  watchInfos?: WatchInfos;
 }
 
 /** Public interface of an invitation (for notifications). */
@@ -42,14 +47,10 @@ export interface PublicInvitation {
   status: InvitationStatus;
 }
 
-/** Specific types of Invitation, both used in firebase functions. */
-export type InvitationDocument = InvitationBase<Timestamp>;
-export type InvitationOrUndefined = InvitationDocument | undefined;
-
 export type InvitationMode = 'request' | 'invitation';
 
 /** Create an Invitation */
-export function createInvitation(params: Partial<InvitationBase<Date>> = {}): InvitationBase<Date> {
+export function createInvitation(params: Partial<Invitation> = {}): Invitation {
   return {
     id: '',
     mode: 'invitation',   // We need a default value for backend-function strict mode
@@ -60,15 +61,22 @@ export function createInvitation(params: Partial<InvitationBase<Date>> = {}): In
   };
 }
 
-/*
+export function createPublicInvitation(invitation: Invitation) {
+  return {
+    id: invitation.id ?? '',
+    type: invitation.type ?? '',
+    mode: invitation.mode ?? '',
+    status: invitation.status ?? '',
+  } as PublicInvitation
+}
+
+/* 
   We want to display attendEvent invitation in festival only
   JoinOrganisation must be displayed on every app
 */
 export function filterInvitation(invitation: Invitation, app: App) {
   return invitation.type === 'attendEvent' ? app === 'festival' : true;
 }
-
-export type Invitation = InvitationBase<Date>;
 
 export interface InvitationDetailed extends Invitation {
   org: Organization;
@@ -91,14 +99,19 @@ type Guest<type> = type extends 'user' ? Invitation['toUser'] : Invitation['toOr
 /**
  * Get the guest of an invitation
  */
- export function getGuest(invitation: Invitation | InvitationDocument, guestType: 'user'): (Invitation| InvitationDocument)['toUser']
- export function getGuest(invitation: Invitation | InvitationDocument, guestType: 'org'): (Invitation | InvitationDocument)['toOrg']
- export function getGuest(invitation: Invitation | InvitationDocument, guestType: 'user' | 'org' = 'user'): Guest<typeof guestType> {
-   const { fromOrg, fromUser, toOrg, toUser, mode } = invitation;
-   if (mode === 'invitation') {
-     return guestType === 'user' ? toUser : toOrg;
-   }
-   if (mode === 'request') {
-     return guestType === 'user' ? fromUser : fromOrg;
-   }
- }
+export function getGuest(invitation: Invitation, guestType: 'user'): (Invitation)['toUser']
+export function getGuest(invitation: Invitation, guestType: 'org'): (Invitation)['toOrg']
+export function getGuest(invitation: Invitation, guestType: 'user' | 'org' = 'user'): Guest<typeof guestType> {
+  const { fromOrg, fromUser, toOrg, toUser, mode } = invitation;
+  if (mode === 'invitation') {
+    return guestType === 'user' ? toUser : toOrg;
+  }
+  if (mode === 'request') {
+    return guestType === 'user' ? fromUser : fromOrg;
+  }
+}
+
+export function averageWatchDuration(list: { watchInfos?: WatchInfos }[]) {
+  const totalWatchDuration = sum(list, inv => inv.watchInfos?.duration);
+  return Math.round(totalWatchDuration / list.length) || 0;
+}

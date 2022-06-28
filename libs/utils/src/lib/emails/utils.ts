@@ -3,31 +3,30 @@ import { AttachmentData } from '@sendgrid/helpers/classes/attachment';
 import { sendgridEmailsFrom } from '../apps';
 import { differenceInDays, differenceInHours, differenceInMinutes, format, millisecondsInHour } from 'date-fns';
 import {
-  EventDocument,
+  Event,
   EventMeta,
-  MeetingEventDocument,
-  ScreeningEventDocument,
   User,
-  OrganizationDocument,
   orgName,
   MailBucket,
-  MovieDocument,
   Bucket,
-  Timestamp,
   createMailContract,
   MailTerm,
   staticModel,
-  NegotiationDocument,
   createMailTerm,
   App,
   AccessibilityTypes,
-  ContractDocument,
   Offer,
   movieCurrenciesSymbols,
-  SlateEventDocument,
   EventTypesValue,
   eventTypes,
   toLabel,
+  Negotiation,
+  Movie,
+  Contract,
+  Organization,
+  MeetingEvent,
+  ScreeningEvent,
+  SlateEvent,
   EmailErrorCodes
 } from '@blockframes/model';
 import { toIcsFile } from '../agenda/utils';
@@ -45,7 +44,7 @@ export interface EmailTemplateRequest {
   to: string;
   templateId: string;
   data: {
-    org?: OrgEmailData | OrganizationDocument; // @TODO #7491 template d-94a20b20085842f68fb2d64fe325638a uses OrganizationDocument but it should use OrgEmailData instead
+    org?: OrgEmailData | Organization; // @TODO #7491 template d-94a20b20085842f68fb2d64fe325638a uses Organization but it should use OrgEmailData instead
     user?: UserEmailData;
     userSubject?: UserEmailData;
     event?: EventEmailData;
@@ -54,10 +53,10 @@ export interface EmailTemplateRequest {
     bucket?: MailBucket;
     baseUrl?: string;
     date?: string;
-    movie?: MovieEmailData | MovieDocument;
+    movie?: MovieEmailData | Movie;
     offer?: OfferEmailData;
     buyer?: UserEmailData;
-    contract?: ContractDocument;
+    contract?: Contract;
     territories?: string;
     contractId?: string;
     negotiation?: NegotiationEmailData;
@@ -165,7 +164,7 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
 }
 
 interface EventEmailParameters {
-  event: EventDocument<EventMeta>;
+  event: Event<EventMeta>;
   orgName: string;
   attachment?: boolean;
   email?: string;
@@ -174,8 +173,8 @@ interface EventEmailParameters {
 
 export function getEventEmailData({ event, orgName, attachment = true, email, invitationId }: EventEmailParameters): EventEmailData {
 
-  const eventStartDate = new Date(event.start.toDate());
-  const eventEndDate = new Date(event.end.toDate());
+  const eventStartDate = event.start;
+  const eventEndDate = event.end;
   const eventUrlParams = email && invitationId ? `?email=${encodeURIComponent(email)}&i=${invitationId}` : '';
 
   /**
@@ -221,8 +220,8 @@ function getEventDuration(start: Date, end: Date): string {
   }
 }
 
-function getEventEmailAttachment(event: EventDocument<EventMeta>, orgName: string): AttachmentData {
-  const icsEvent = createIcsFromEventDocument(event, orgName);
+function getEventEmailAttachment(event: Event<EventMeta>, orgName: string): AttachmentData {
+  const icsEvent = createIcsFromEvent(event, orgName);
   return {
     filename: 'invite.ics',
     content: Buffer.from(toIcsFile([icsEvent])).toString('base64'),
@@ -231,19 +230,19 @@ function getEventEmailAttachment(event: EventDocument<EventMeta>, orgName: strin
   };
 }
 
-function createIcsFromEventDocument(e: EventDocument<EventMeta>, orgName: string): IcsEvent {
+function createIcsFromEvent(e: Event<EventMeta>, orgName: string): IcsEvent {
   if (!['meeting', 'screening', 'slate'].includes(e.type)) return;
   const event = e.type == 'meeting'
-    ? e as MeetingEventDocument
+    ? e as MeetingEvent
     : e.type == 'screening'
-      ? e as ScreeningEventDocument
-      : e as SlateEventDocument;
+      ? e as ScreeningEvent
+      : e as SlateEvent;
 
   return {
     id: event.id,
     title: event.title,
-    start: event.start.toDate(),
-    end: event.end.toDate(),
+    start: event.start,
+    end: event.end,
     description: event.meta.description,
     organizer: {
       name: orgName,
@@ -252,7 +251,7 @@ function createIcsFromEventDocument(e: EventDocument<EventMeta>, orgName: string
   }
 }
 
-export function getOrgEmailData(org: Partial<OrganizationDocument>): OrgEmailData {
+export function getOrgEmailData(org: Partial<Organization>): OrgEmailData {
   return {
     id: org.id,
     denomination: orgName(org, 'full'),
@@ -277,7 +276,7 @@ export function getOfferEmailData(offer: Partial<Offer>): OfferEmailData {
   }
 }
 
-export function getMovieEmailData(movie: Partial<MovieDocument>): MovieEmailData {
+export function getMovieEmailData(movie: Partial<Movie>): MovieEmailData {
   return {
     id: movie.id,
     title: {
@@ -286,7 +285,7 @@ export function getMovieEmailData(movie: Partial<MovieDocument>): MovieEmailData
   }
 }
 
-export function getNegotiationEmailData(negotiation: Partial<NegotiationDocument>): NegotiationEmailData {
+export function getNegotiationEmailData(negotiation: Partial<Negotiation>): NegotiationEmailData {
   const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
   const formatter = new Intl.NumberFormat('en-US');
   const price = negotiation.price ? formatter.format(negotiation.price) : '';
@@ -299,7 +298,7 @@ export function getNegotiationEmailData(negotiation: Partial<NegotiationDocument
   };
 }
 
-export function getBucketEmailData(bucket: Bucket<Timestamp>): MailBucket {
+export function getBucketEmailData(bucket: Bucket): MailBucket {
   const currencyKey = getKeyIfExists('movieCurrencies', bucket.currency);
   const contracts = bucket.contracts.map(contract => createMailContract(contract));
 

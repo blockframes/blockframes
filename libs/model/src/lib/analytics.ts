@@ -25,7 +25,7 @@ export interface Analytics<type extends AnalyticsTypes = AnalyticsTypes> {
   name: EventName;
   type: type;
   meta: AnalyticsTypeRecord[type];
-  _meta?: DocumentMeta<Date>;
+  _meta?: DocumentMeta;
 }
 
 export interface MetaTitle {

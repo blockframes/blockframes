@@ -5,7 +5,7 @@ import { combineLatest, Subscription } from "rxjs";
 import { first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
 import { medias, TerritoryValue } from '@blockframes/model';
 import { downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { decodeDate, decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { filterContractsByTitle, MapAvailsFilter, territoryAvailabilities } from "@blockframes/contract/avails/avails";
 import { CatalogAvailsShellComponent } from "../shell/shell.component";
 import { toGroupLabel } from "@blockframes/utils/pipes/group-label.pipe";
@@ -70,8 +70,8 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     const decodedData = decodeUrl<Partial<MapAvailsFilter>>(this.route);
     if (!decodedData.medias) decodedData.medias = [];
-    if (decodedData.duration?.from) decodedData.duration.from = new Date(decodedData.duration.from);
-    if (decodedData.duration?.to) decodedData.duration.to = new Date(decodedData.duration.to);
+    if (decodedData.duration?.from) decodedData.duration.from = decodeDate(decodedData.duration.from);
+    if (decodedData.duration?.to) decodedData.duration.to = decodeDate(decodedData.duration.to);
 
     this.availsForm.patchValue(decodedData);
     this.sub = this.availsForm.valueChanges.pipe(

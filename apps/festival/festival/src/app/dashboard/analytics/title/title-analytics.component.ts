@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import {
   AggregatedAnalytic,
   Analytics,
-  sum,
   InvitationWithAnalytics,
   Invitation,
   toLabel,
@@ -12,6 +11,7 @@ import {
   displayName,
   EventName,
   getGuest,
+  averageWatchDuration,
 } from '@blockframes/model';
 import { filters } from "@blockframes/ui/list/table/filters";
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -19,7 +19,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { aggregatePerUser, countedToAnalyticData, counter } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { NavigationService } from "@blockframes/ui/navigation.service";
-import { downloadCsvFromJson } from "@blockframes/utils/helpers";
+import { convertToTimeString, downloadCsvFromJson } from "@blockframes/utils/helpers";
 import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
 import { eventTime } from "@blockframes/event/pipes/event-time.pipe";
 import { InvitationService } from "@blockframes/invitation/service";
@@ -27,17 +27,17 @@ import { EventService } from "@blockframes/event/service";
 import { OrganizationService } from '@blockframes/organization/service';
 import { displayPerson } from "@blockframes/utils/pipes";
 
-import { filter, map, pluck, shareReplay, switchMap } from "rxjs/operators";
-import { combineLatest, firstValueFrom, Observable, of } from "rxjs";
+import { combineLatest, firstValueFrom, Observable, of, filter, map, pluck, shareReplay, switchMap } from "rxjs";
 import { joinWith } from 'ngfire';
+import { formatDate } from '@angular/common';
 
 
 function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
-  const attendees = invitations.filter(invitation => invitation.watchTime);
+  const attendees = invitations.filter(invitation => invitation.watchInfos?.duration);
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
 
-  const averageWatchTime = Math.round(sum(attendees, inv => inv.watchTime) / invitations.length) || 0;
-  const parsedTime = `${Math.floor(averageWatchTime / 60)} min ${averageWatchTime % 60} s`;
+  const avgWatchDuration = averageWatchDuration(attendees);
+  const parsedTime = convertToTimeString(avgWatchDuration * 1000);
   const participationRate = Math.round(attendees.length / accepted.length) * 100;
   const acceptationRate = Math.round(accepted.length / invitations.length) * 100;
   const traction = Math.round(screeningRequests.length / invitations.length) * 100;
@@ -53,7 +53,7 @@ function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: P
       icon: 'group'
     },
     {
-      title: 'Average watch time',
+      title: 'Average Watch Time',
       value: parsedTime,
       icon: 'timer'
     },
@@ -117,6 +117,9 @@ export class TitleAnalyticsComponent {
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId),
       user: analytic => this.userService.valueChanges(analytic.meta.uid)
     }, { shouldAwait: true }),
+    map(analyticsWithOrg => {
+      return analyticsWithOrg.filter(({ org }) => !org.appAccess.festival.dashboard);
+    }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -173,13 +176,14 @@ export class TitleAnalyticsComponent {
   constructor(
     private movieService: MovieService,
     private route: ActivatedRoute,
+    private router: Router,
     private analyticsService: AnalyticsService,
     private userService: UserService,
     private orgService: OrganizationService,
     private navService: NavigationService,
     private eventService: EventService,
     private invitationService: InvitationService,
-  ) {}
+  ) { }
 
   goBack() {
     this.navService.goBack(1);
@@ -210,7 +214,8 @@ export class TitleAnalyticsComponent {
         'Company Name': invitation.guestOrg?.denomination?.public ?? '-',
         'Activity': activity ? toLabel(activity, 'orgActivity') : '-',
         'Country': country ? toLabel(country, 'territories') : '-',
-        'Watchtime': `${invitation.watchTime ?? 0}s`
+        'Watch Time': convertToTimeString(invitation.watchInfos?.duration * 1000),
+        'Watching Ended': invitation.watchInfos?.date ? formatDate(invitation.watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '-'
       }
     });
     downloadCsvFromJson(analytics, 'screener-analytics')
@@ -244,5 +249,20 @@ export class TitleAnalyticsComponent {
   private getOrg(invitation: Invitation) {
     const orgId = getGuest(invitation, 'user').orgId;
     return orgId ? this.orgService.valueChanges(orgId) : of(undefined);
+  }
+
+  public viewBuyerActivity(analytic: AggregatedAnalytic) {
+    this.router.navigate(
+      [`../../buyer/`, analytic.user.uid],
+      { relativeTo: this.route }
+    );
+  }
+
+  public goToBuyer(invitation: Invitation) {
+    const user = getGuest(invitation, 'user');
+    this.router.navigate(
+      [`../../buyer/`, user.uid],
+      { relativeTo: this.route }
+    );
   }
 }

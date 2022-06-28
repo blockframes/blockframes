@@ -1,4 +1,3 @@
-import { Timestamp } from 'firebase/firestore';
 import { staticModel, Scope, GetKeys, Organization } from '@blockframes/model';
 
 function isObject(item: unknown) {
@@ -25,28 +24,6 @@ export function mergeDeep<T>(target: T, source: Partial<T>): T {
     });
   }
   return output;
-}
-
-/** Checks if the date is a firestore Timestamp. */
-function isTimeStamp(
-  date: Timestamp | Date
-): date is Timestamp {
-  return date && date instanceof Timestamp; // TODO #8250
-}
-
-/** Takes a Date, a string or a Timestamp and returns it as a Date. */
-export function toDate(date: Timestamp | Date): Date { // TODO #8280 remove
-  if (isTimeStamp(date)) {
-    return date.toDate();
-  }
-  if (typeof date === 'string' || typeof date === 'number') {
-    return new Date(date);
-  }
-  if (!date) {
-    // Return null to avoid undefined error with firestore
-    return null;
-  }
-  return date;
 }
 
 /**
@@ -174,5 +151,5 @@ export function convertToTimeString(time: number) {
   const minuteStr = minute > 0 ? `${minute}min` : '';
   const secondStr = second > 0 ? `${second}s` : '';
 
-  return `${dayStr}${hourStr}${minuteStr}${secondStr}`;
+  return `${dayStr}${hourStr}${minuteStr}${secondStr}` || '0s';
 }

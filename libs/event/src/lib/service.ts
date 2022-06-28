@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  EventBase,
   EventTypes,
   Event,
   ScreeningEvent,
@@ -9,13 +8,12 @@ import {
   isMeeting,
   isScreening,
   SlateEvent,
-  Timestamp,
   EventMeta
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { PermissionsService } from '@blockframes/permissions/service';
 import { Observable, combineLatest, of } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
 import { production } from '@env';
 import { DocumentSnapshot, QueryConstraint, where } from 'firebase/firestore';
 import { WriteOptions } from 'ngfire';
@@ -64,7 +62,10 @@ export class EventService extends BlockframesCollection<Event> {
         org: ({ ownerOrgId }: Event<Meta>) => this.orgService.valueChanges(ownerOrgId),
         movie: (event: Event<Meta>) => {
           if (isScreening(event)) {
-            return event.meta.titleId ? this.movieService.valueChanges(event.meta.titleId) : undefined;
+            if (!event.meta.titleId) return;
+            return this.movieService.valueChanges(event.meta.titleId).pipe(
+              catchError(() => of(undefined))
+            )
           }
         },
         organizedBy: (event: Event<Meta>) => {
@@ -87,7 +88,7 @@ export class EventService extends BlockframesCollection<Event> {
   }
 
   /** Verify if the current user / organization is owner of an event */
-  isOwner(event: EventBase<Date | Timestamp, unknown>) {
+  isOwner(event: Event<unknown>) {
     return event?.ownerOrgId === this.orgService.org?.id;
   }
 
@@ -111,9 +112,9 @@ export class EventService extends BlockframesCollection<Event> {
     return e;
   }
 
-  protected fromFirestore(snapshot: DocumentSnapshot<Event<Timestamp>>): Event<Date> {
-    const event = super.fromFirestore(snapshot) as Event<Date>;
-    return createCalendarEvent<Date>(event, this.isOwner(event));
+  protected fromFirestore(snapshot: DocumentSnapshot<Event>): Event {
+    const event = super.fromFirestore(snapshot) as Event;
+    return createCalendarEvent(event, this.isOwner(event));
   }
 
   /** Query events based on types */

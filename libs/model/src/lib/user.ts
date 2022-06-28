@@ -3,7 +3,6 @@ import type { DocumentMeta } from './meta';
 import type { Genre, Language, Media, Territory } from './static';
 import type { NotificationTypes } from './notification';
 import type { UserRole } from './permissions';
-import type { Timestamp } from './timestamp';
 
 export interface User extends PublicUser {
   financing: {
@@ -38,7 +37,7 @@ export type NotificationSettings = Partial<Record<NotificationTypes, Notificatio
 
 /** A user interface with public information */
 export interface PublicUser {
-  _meta?: DocumentMeta<Date | Timestamp>;
+  _meta?: DocumentMeta;
   uid: string;
   email: string;
   avatar?: StorageFile;
@@ -97,6 +96,6 @@ export function createUser(user: Partial<User> = {}) {
 }
 
 /** Verify if the user exists and has a name and surname. */
-export function hasDisplayName(user: User): boolean {
+export function hasDisplayName(user: User | PublicUser): boolean {
   return !!user && !!user.firstName && !!user.lastName;
 }

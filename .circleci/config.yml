@@ -67,11 +67,10 @@ commands:
   select_environment:
     description: Configure tools to use a project ID
     steps:
-      - run: npm run backend-ops use ${PROJECT_ID}
-      - run: . ./.env && echo "export PROJECT_ID=\"$PROJECT_ID\"" >> $BASH_ENV
+      - run: npm start use ${PROJECT_ID}
+      - run: . ./.env && echo "export PROJECT_ID=\"$PROJECT_ID\"" >> $BASH_ENV # ! These are here so vars set in .env are avail in shell env
       - run: . ./.env && echo "export GOOGLE_APPLICATION_CREDENTIALS=\"$GOOGLE_APPLICATION_CREDENTIALS\"" >> $BASH_ENV
       - run: gcloud info
-      - run: gsutil ls
   checkout_project:
     description: 'Checkout the project with caching'
     steps:
@@ -88,7 +87,7 @@ commands:
             - dependencies-{{ .Environment.CACHE_VERSION }}
             - dependencies-
       - run: touch .env # dotenv will crash without this
-      - run: cp env/env.blockframes-ci.ts env/env.ts # required for the typechecking & file rewrite to work
+      - run: cp env/env.demo-blockframes.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm install --no-save
       - run: npx cypress install
       - run: git gc
@@ -164,9 +163,10 @@ orbs:
 executors:
   blockframes-ci:
     docker:
-      - image: blockframes/ci:node-16
+      - image: blockframes/ci:demo-env
         environment:
-          NODE_OPTIONS="--max-old-space-size=8192"
+          NODE_OPTIONS: '--max-old-space-size=8192'
+          PROJECT_ID: blockframes-ci
     working_directory: ~/repo
     resource_class: large
 jobs:
@@ -231,11 +231,15 @@ jobs:
       - run: npm run affected:lint
   unit-test-commits:
     executor: blockframes-ci
+    environment:
+      PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
       - run:
           command: npm run affected:test
           no_output_timeout: 15m
+      - store_artifacts:
+          path: dist/jest-test-results/
   deploy-to-prod:
     executor: blockframes-ci
     environment:
@@ -281,26 +285,37 @@ jobs:
       - run: gcloud firestore export "gs://blockframes-backups/firestore-backup-$(date +%d-%m-%Y)/"
   crm-e2e:
     executor: blockframes-ci
+    environment:
+      PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,cms-e2e
+      - store_test_results:
+          path: dist/test-reports/
       - store_artifacts:
           path: dist/cypress/apps
   cms-e2e:
     executor: blockframes-ci
+    environment:
+      PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,crm-e2e
+      - store_test_results:
+          path: dist/test-reports/
       - store_artifacts:
           path: dist/cypress/apps
   festival-e2e:
     executor: blockframes-ci
+    resource_class: xlarge
+    environment:
+      PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=e2e
@@ -309,26 +324,36 @@ jobs:
       - run:
           command: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e,cms-e2e
           no_output_timeout: 30m
+      - store_test_results:
+          path: dist/test-reports/
       - store_artifacts:
           path: dist/cypress/apps
   financiers-e2e:
     executor: blockframes-ci
+    environment:
+      PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e,cms-e2e
+      - store_test_results:
+          path: dist/test-reports/
       - store_artifacts:
           path: dist/cypress/apps
   catalog-e2e:
     executor: blockframes-ci
+    environment:
+      PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e,cms-e2e
+      - store_test_results:
+          path: dist/test-reports/
       - store_artifacts:
           path: dist/cypress/apps
   prepare-emulators:

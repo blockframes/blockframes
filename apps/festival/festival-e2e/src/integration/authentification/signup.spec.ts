@@ -83,8 +83,7 @@ describe('Signup', () => {
     deleteInvitation(newUser.email);
     algolia.storeOrganization(org);
     maintenance.start();
-    adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email });
-    adminAuth.updateUser({ uid: orgAdmin.uid, update: { emailVerified: true } });
+    adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email, emailVerified: true });
     firestore.create([marketplaceInjectedData]);
     maintenance.end();
     cy.visit('auth/identity');
@@ -116,8 +115,7 @@ describe('Signup', () => {
     deleteInvitation(newUser.email);
     algolia.storeOrganization(org);
     maintenance.start();
-    adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email });
-    adminAuth.updateUser({ uid: orgAdmin.uid, update: { emailVerified: true } });
+    adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email, emailVerified: true });
     firestore.create([dashboardInjectedData]);
     maintenance.end();
     cy.visit('auth/identity');

@@ -1,4 +1,3 @@
-import * as admin from 'firebase-admin';
 import {
   MAINTENANCE_DOCUMENT_NAME,
   META_COLLECTION_NAME,
@@ -6,6 +5,7 @@ import {
 } from '@blockframes/utils/maintenance';
 import { loadAdminServices } from './util';
 import { IMaintenanceDoc } from '@blockframes/model';
+import { toDate } from './firebase-utils';
 
 const maintenanceRef = (db?: FirebaseFirestore.Firestore) => {
   if (!db) db = loadAdminServices().db;
@@ -13,12 +13,8 @@ const maintenanceRef = (db?: FirebaseFirestore.Firestore) => {
 };
 
 export function startMaintenance(db?: FirebaseFirestore.Firestore) {
-  if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) {
-    console.warn('Warning: startMaintenance() called but BLOCKFRAMES_MAINTENANCE_DISABLED is set to true. Maintenance mode is disabled...');
-    return;
-  }
   return maintenanceRef(db).set(
-    { startedAt: admin.firestore.FieldValue.serverTimestamp(), endedAt: null },
+    { startedAt: new Date(), endedAt: null },
     { merge: true }
   );
 }
@@ -29,12 +25,10 @@ export function startMaintenance(db?: FirebaseFirestore.Firestore) {
  * @param ago if set, will offset endedAt time into the past - seconds
  */
 export function endMaintenance(db?: FirebaseFirestore.Firestore, ago?: number) {
-  if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) return;
-
-  let endedAt = admin.firestore.FieldValue.serverTimestamp();
+  let endedAt = new Date();
   if (ago) {
     const time = new Date(new Date().getTime() - ago);
-    endedAt = admin.firestore.Timestamp.fromDate(time);
+    endedAt = time;
   }
   return maintenanceRef(db).set({ endedAt, startedAt: null }, { merge: false });
 }
@@ -48,7 +42,7 @@ export async function isInMaintenance(db?: FirebaseFirestore.Firestore): Promise
     // we force maintenance mode to true.
     if (!doc.exists) return true;
 
-    return _isInMaintenance(doc.data() as IMaintenanceDoc, 0);
+    return _isInMaintenance(toDate<IMaintenanceDoc>(doc.data()), 0);
   } catch (e) {
     throw new Error(`Error while checking if app is in maintenance mode: ${e.message}`);
   }

@@ -13,6 +13,8 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { BarChartModule } from '@blockframes/analytics/components/bar-chart/bar-chart.module';
 import { PieChartModule } from '@blockframes/analytics/components/pie-chart/pie-chart.module';
+import { IsWatchingNowPipeModule } from '@blockframes/event/pipes/is-watching-now.pipe';
+import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -33,6 +35,8 @@ import { MatButtonModule } from '@angular/material/button';
     DurationModule,
     BarChartModule,
     PieChartModule,
+    IsWatchingNowPipeModule,
+    TagModule,
     // Material
     MatIconModule,
     MatCardModule,

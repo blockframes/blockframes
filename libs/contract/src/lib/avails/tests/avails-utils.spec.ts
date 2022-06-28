@@ -2,7 +2,7 @@ import { Term } from '@blockframes/model'
 import { availsBrewster3 } from '../fixtures/availsFilters';
 import { isCalendarAvailPartiallyInTerm } from '../avails'
 
-const nonOverlappingTerm: Term<Date> = {
+const nonOverlappingTerm: Term = {
   id: 'term',
   contractId: 'sale2Movie7',
   duration: {
@@ -17,7 +17,7 @@ const nonOverlappingTerm: Term<Date> = {
   licensedOriginal: true
 };
 
-const overlappingTerm: Term<Date> = {
+const overlappingTerm: Term = {
   id: 'term1',
   contractId: 'sale2Movie7',
   duration: {

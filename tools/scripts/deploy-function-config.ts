@@ -4,45 +4,30 @@ config();
 
 import * as firebaseTools from 'firebase-tools';
 import { loadSecretsFile, absSecretPath, absTemplatePath } from './lib';
-import { warnMissingVars } from '@blockframes/firebase-utils';
+import { getKeyName, warnMissingVars } from '@blockframes/firebase-utils';
 import { existsSync } from 'fs';
 import { execSync } from 'child_process'
-import camelcase from 'camelcase'
 import { functionsConfigMap } from '@blockframes/devops';
 
 const args = process.argv.slice(2);
 const [arg] = args;
 
-if (arg) console.log('The following args were detected:', args)
-
+if (arg) console.log('The following args were detected:', args);
 
 /**
  * This is temporary because key names are hardcoded.
  * Future versions will not hardcode this.
  * But need to figure out how to indicate nested objects (more underscores?)
  */
-function getKeyValFormat(env?: string): string[] {
-  const formatEnvKey = (key: string) => `${env ? camelcase(env) : ''}_${key}`
-  /**
-   * This nested function will check to see if a key exists in process.env when prefixed
-   * with a particular env name & default to base key if not set
-   * @param key environment variable keyname
-   */
-  function getKeyName(key: string) {
-    if (env && process.env.hasOwnProperty(formatEnvKey(key))) {
-      return formatEnvKey(key);
-    }
-    return key;
-  }
-
+function getKeyValFormat(env: string): string[] {
   /**
    * This generates the statement line used to set function config values in Firebase Functions
    */
   function getSettingStatement([fieldPath, envKey]) {
-    return `${fieldPath}="${process.env[getKeyName(envKey)]}"`
+    return `${fieldPath}="${process.env[getKeyName(envKey, env)]}"`;
   }
 
-  return Object.entries(functionsConfigMap).map(getSettingStatement)
+  return Object.entries(functionsConfigMap).map(getSettingStatement);
 }
 
 async function setFirebaseConfig() {
