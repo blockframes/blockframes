@@ -32,6 +32,7 @@ import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-err
 // Guards
 import { IdentityGuard } from './guard/identity.guard';
 import { NoAuthGuard } from './guard/no-auth.guard';
+import { NoLegalTermsGuard } from './guard/no-legal-terms.guard';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'connexion', pathMatch: 'full' },
@@ -50,6 +51,7 @@ export const AuthRoutes: Routes = [
   },
   {
     path: 'checkPrivacyAndTerms',
+    canActivate: [NoLegalTermsGuard],
     loadChildren: () => import('./pages/checkPolicyAndTerms/checkPolicyAndTerms.module').then(m => m.CheckPolicyAndTermsModule)
   },
   {

@@ -1,5 +1,4 @@
 import { OrgActivity, Territory, PublicUser, Module } from '@blockframes/model';
-import { browserAuth } from '@blockframes/testing/cypress/browser';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 

@@ -98,7 +98,7 @@ export function createRoutes({ appsRoutes, landing, events }: RouteOptions) {
     }]
 }
 
-// Used for CMS & CRM
+// Used for CMS
 // Strip out the notifications / invitations
 export function createAdminRoutes({ appsRoutes }: RouteOptions) {
   return [

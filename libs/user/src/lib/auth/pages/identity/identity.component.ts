@@ -238,7 +238,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     const privacyPolicy = legalTerms;
     const termsAndConditions = {
       [this.app]: legalTerms
-    }
+    };
 
     const ctx = {
       firstName: user.firstName,
@@ -255,6 +255,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
       email: user.email,
       uid: credentials.user.uid,
       hideEmail: user.hideEmail,
+      privacyPolicy,
+      termsAndConditions
     });
   }
 
@@ -264,13 +266,19 @@ export class IdentityComponent implements OnInit, OnDestroy {
   * @returns PublicUser
   */
   private async createUserFromAnonymous(user: { email, password, firstName, lastName, hideEmail }) {
-    const privacyPolicy = await this.authService.getLegalTerms();
+    const legalTerms = await this.authService.getLegalTerms();
+    const privacyPolicy = legalTerms;
+    const termsAndConditions = {
+      [this.app]: legalTerms
+    };
+    
     const ctx = {
       firstName: user.firstName,
       lastName: user.lastName,
       _meta: { createdFrom: this.app, createdBy: 'anonymous', },
       hideEmail: user.hideEmail,
-      privacyPolicy
+      privacyPolicy,
+      termsAndConditions
     };
     const credentials = await this.authService.signupFromAnonymous(user.email.trim(), user.password, { ctx });
     return createPublicUser({
@@ -279,6 +287,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
       email: user.email,
       uid: credentials.user.uid,
       hideEmail: user.hideEmail,
+      privacyPolicy,
+      termsAndConditions
     });
   }
 
