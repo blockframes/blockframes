@@ -1,9 +1,77 @@
 import { getCollection } from '@blockframes/firebase-utils';
-import { Contract, Movie } from '@blockframes/model';
+import { Contract, Movie, Term } from '@blockframes/model';
 
 
 export async function dbStatsScript() {
 
+  await camille28062022Terms();
+}
+
+async function camille28062022Contracts() {
+  const contracts = await getCollection<Contract>('contracts');
+
+  let line: string[] = [];
+
+  line.push(`id`);
+  line.push(`sellerId`);
+  line.push(`parentTermId`);
+  line.push(`status`);
+  line.push(`status`);
+  line.push(`titleId`);
+  line.push(`type`);
+  printCSVline(line);
+  
+  contracts.forEach(c => {
+    line = [];
+    line.push(c.id);
+    line.push(c.sellerId);
+    line.push(c.parentTermId);
+    line.push(c.status);
+    line.push(c.termIds?.join(' '));
+    line.push(c.titleId);
+    line.push(c.type);
+    printCSVline(line);
+  });
+
+}
+
+async function camille28062022Terms() {
+  const terms = await getCollection<Term>('terms');
+
+  let line: string[] = [];
+
+  line.push(`id`);
+  line.push(`contractId`);
+  line.push(`duration from`);
+  line.push(`duration to`);
+  line.push(`exclusive`);
+  line.push(`medias`);
+  line.push(`territories`);
+
+  printCSVline(line);
+  
+  terms.forEach(t => {
+    line = [];
+    line.push(t.id);
+    line.push(t.contractId);
+    line.push(t.duration.from.toISOString());
+    line.push(t.duration.to.toISOString());
+    line.push(t.exclusive ? 'yes': 'no');
+    line.push(t.medias.join(' '));
+    line.push(t.territories.join(' '));
+
+    printCSVline(line);
+  });
+
+}
+
+
+
+function printCSVline(str: string[]) {
+  console.log(str.join(';'));
+}
+
+async function vincent1602022() {
   const movies = await getCollection<Movie>('movies');
 
   const contracts = await getCollection<Contract>('contracts');
@@ -60,7 +128,6 @@ export async function dbStatsScript() {
   // Release year <= 2020
   const releaseYearUnder2020 = moviesOnFestival.filter(m => m.release.year <= 2020);
   logData('Movies Release year <= 2020 (release.year < 2020)', releaseYearUnder2020);
-
 }
 
 
