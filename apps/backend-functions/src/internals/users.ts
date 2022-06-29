@@ -15,8 +15,9 @@ import {
   createInternalDocumentMeta,
   Organization,
   createPublicUser,
+  getUserEmailData,
 } from '@blockframes/model';
-import { EventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
+import { EventEmailData, getOrgEmailData } from '@blockframes/utils/emails/utils';
 import { logger } from 'firebase-functions';
 import { hasUserAnOrgOrIsAlreadyInvited } from '../invitation';
 import { getDocument } from '@blockframes/firebase-utils';

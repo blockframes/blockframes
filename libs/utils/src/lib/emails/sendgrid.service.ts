@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CallableFunctions } from 'ngfire';
-import { EmailParameters, EmailAdminParameters, ErrorResultResponse } from '@blockframes/model';
+import { ErrorResultResponse } from '@blockframes/model';
+import { EmailAdminParameters, EmailParameters } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class SendgridService {

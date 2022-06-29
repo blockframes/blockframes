@@ -13,10 +13,10 @@ import {
   appName,
   AppNameValue,
   ErrorResultResponse,
-  EmailTemplateRequest,
   emailErrorCodes,
   EmailRequest,
 } from '@blockframes/model';
+import { EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 
 interface AppMailSetting {
   description: string;

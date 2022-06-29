@@ -19,10 +19,11 @@ import {
   ErrorResultResponse,
   Invitation,
   Organization,
+  getUserEmailData,
+  OrgEmailData,
 } from '@blockframes/model';
 import { registerToNewsletters, updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
-import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;

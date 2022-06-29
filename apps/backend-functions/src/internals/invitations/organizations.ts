@@ -12,11 +12,12 @@ import {
   createNotification,
   createPublicOrganization,
   createPublicUser,
+  getUserEmailData,
   Invitation,
   Organization,
 } from '@blockframes/model';
 import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
-import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
+import { getOrgEmailData } from '@blockframes/utils/emails/utils';
 
 async function addUserToOrg(userId: string, organizationId: string) {
   const db = admin.firestore();

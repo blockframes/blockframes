@@ -17,21 +17,21 @@ import {
   Movie,
   Organization,
   Negotiation,
-  Contract
+  Contract,
+  UserEmailData,
+  OrgEmailData,
+  MovieEmailData,
+  getOfferEmailData,
+  EmailRequest
 } from '@blockframes/model';
 import { format } from 'date-fns';
 import { supportMailosaur } from '@blockframes/utils/constants';
 import {
-  EmailRequest,
   EmailTemplateRequest,
   EventEmailData,
   getBucketEmailData,
   getMovieEmailData,
   getNegotiationEmailData,
-  getOfferEmailData,
-  MovieEmailData,
-  OrgEmailData,
-  UserEmailData,
 } from '@blockframes/utils/emails/utils';
 
 const ORG_HOME = '/c/o/organization/';
