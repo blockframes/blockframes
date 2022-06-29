@@ -7,8 +7,12 @@ p {
   margin: 32px 0;
 }
 
-.actions {
+div {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
   margin-top: 32px;
+  gap: 16px;
 }
 
 video {

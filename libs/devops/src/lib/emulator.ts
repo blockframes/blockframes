@@ -148,7 +148,7 @@ export async function syncAuthEmulatorWithFirestoreEmulator({ importFrom = 'defa
     const auth = getAuthEmulator();
     const db = getFirestoreEmulator();
     await startMaintenance(db);
-    await syncUsers(db, auth);
+    await syncUsers({ db, auth });
     await endMaintenance(db);
     await shutdownEmulator(proc);
   } catch (e) {
@@ -205,7 +205,7 @@ async function anonDbProcess() {
   console.log('Anonymization complete!')
 
   console.info('Syncing users from db...');
-  const p1 = syncUsers(db);
+  const p1 = syncUsers({ db });
 
   console.info('Syncing storage with production backup stored in blockframes-ci...');
   const p2 = restoreStorageFromCi(ciApp);
@@ -273,25 +273,4 @@ export async function anonymizeLatestProdDb() {
  */
 export async function uploadBackup({ localRelPath, remoteDir }: { localRelPath?: string; remoteDir?: string; } = {}) {
   await uploadDbBackupToBucket({ bucketName: backupBucket, localPath: localRelPath, remoteDir });
-}
-
-/**
- * This function will launch the emulator and switch on maintenance mode, then exit
- * @param param0 settings object
- * Provide a local path to the firestore export dir for which to switch on maintenance mode
- */
-export async function enableMaintenanceInEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions) {
-  const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : join(process.cwd(), importFrom);
-  let emulatorProcess: ChildProcess;
-  try {
-    emulatorProcess = await firebaseEmulatorExec({
-      emulators: 'firestore',
-      importPath: emulatorPath,
-      exportData: true,
-    });
-    const db = getFirestoreEmulator();
-    startMaintenance(db);
-  } finally {
-    await shutdownEmulator(emulatorProcess);
-  }
 }

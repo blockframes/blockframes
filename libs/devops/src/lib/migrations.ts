@@ -6,7 +6,7 @@ import { importFirestore } from './admin';
 import { Firestore, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
 import { last } from 'lodash';
-import { dbVersionDoc } from '@blockframes/utils/maintenance';
+import { dbVersionDoc, DB_DOCUMENT_NAME, META_COLLECTION_NAME } from '@blockframes/utils/maintenance';
 import { exportFirestoreToBucketBeta, getFirestoreExportDirname } from './firebase-utils';
 import { isMigrationRequired } from './tools';
 import { getDb, getStorage } from '@blockframes/firebase-utils/initialize';
@@ -23,7 +23,7 @@ export async function loadDBVersion(db: Firestore): Promise<number> {
 }
 
 export async function updateDBVersion(db: Firestore, version: number) {
-  const versionRef = db.collection('_META').doc('_VERSION');
+  const versionRef = db.collection(META_COLLECTION_NAME).doc(DB_DOCUMENT_NAME);
   const doc = await versionRef.get();
 
   if (!doc.exists) {
@@ -46,12 +46,14 @@ export async function migrate({
   withBackup = true,
   db = getDb(),
   storage = getStorage(),
-  performMigrationCheck = true
+  performMigrationCheck = true,
+  withMaintenance = false
 }: {
   withBackup?: boolean;
   db?: FirebaseFirestore.Firestore;
   storage?: import('firebase-admin').storage.Storage;
-  performMigrationCheck?: boolean
+  performMigrationCheck?: boolean,
+  withMaintenance?: boolean
 } = {}) {
 
   if (performMigrationCheck && !await isMigrationRequired(db)) {
@@ -59,7 +61,7 @@ export async function migrate({
     return;
   }
 
-  await startMaintenance(db);
+  if (withMaintenance) await startMaintenance(db);
   console.info('Start the migration process...');
 
   const backupDir = `pre-migration-${getFirestoreExportDirname(new Date())}`;
@@ -92,7 +94,7 @@ export async function migrate({
     }
 
     await updateDBVersion(db, lastVersion);
-    await endMaintenance(db);
+    if (withMaintenance) await endMaintenance(db);
   } catch (e) {
     console.error(e);
     if (withBackup) {

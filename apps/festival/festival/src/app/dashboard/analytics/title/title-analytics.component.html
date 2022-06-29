@@ -134,8 +134,11 @@
           </span>
           <ng-template #noCountry>-</ng-template>
         </ng-template>
-        <ng-template colRef="watchTime" label="Watch Time" let-watchtime sort defaultSort>
-          <span>{{ watchtime * 1000 | duration: '0s' }}</span>
+        <ng-template colRef="watchInfos.duration" label="Watch Time" let-watchtime sort defaultSort>
+          <span>{{ watchtime * 1000 | duration }}</span>
+        </ng-template>
+        <ng-template colRef="watchInfos.date" label="Watching Status" let-date sort defaultSort>
+          <bf-tag *ngIf="date | isWatchingNow">Watching Now</bf-tag>
         </ng-template>
       </bf-table>
     </ng-container>

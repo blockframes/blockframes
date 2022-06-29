@@ -104,8 +104,11 @@
         <ng-template colRef="analytics.length" label="Screening Requests" let-requests sort>
           {{ requests }}
         </ng-template>
-        <ng-template colRef="watchTime" label="Watch Time" let-watchTime sort>
-          {{ watchTime * 1000 | duration: '0s' }}
+        <ng-template colRef="watchInfos.duration" label="Watch Time" let-watchTime sort>
+          {{ watchTime * 1000 | duration }}
+        </ng-template>
+        <ng-template colRef="watchInfos.date" label="Watching Status" let-date sort>
+          <bf-tag *ngIf="date | isWatchingNow">Watching Now</bf-tag>
         </ng-template>
       </bf-table>
     </article>

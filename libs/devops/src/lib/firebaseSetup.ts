@@ -27,9 +27,7 @@ export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string 
   const db = getDb();
   const auth = getAuth();
 
-  await startMaintenance(db);
-
-  const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
+  const maintenanceInsurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.log('Copying AnonDb from CI...');
   await copyFirestoreExportFromCiBucket(dbBackupURL);
@@ -46,7 +44,7 @@ export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string 
   console.log('DB imported!');
 
   console.info('Syncing users from db...');
-  await syncUsers(db, auth);
+  await syncUsers({ db, auth });
   console.info('Users synced!');
 
   console.info('Syncing storage with blockframes-ci...');
@@ -67,10 +65,8 @@ export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string 
   await upgradeAlgoliaUsers(db);
   console.info('Algolia ready for testing!');
 
-  insurance(); // Switch off maintenance insurance
-
+  maintenanceInsurance(); // Switch off maintenance insurance
   await endMaintenance(db, EIGHT_MINUTES_IN_MS);
-
 }
 
 export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string } = {}) {
@@ -87,10 +83,10 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
   const storage = getStorage();
   const db = getFirestoreEmulator();
   const auth = getAuthEmulator();
-  const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
+  const maintenanceInsurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.info('Syncing users from db...');
-  await syncUsers(db, auth);
+  await syncUsers({ db, auth });
   console.info('Users synced!');
 
   console.info('Syncing storage with blockframes-ci...');
@@ -111,7 +107,7 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
   await upgradeAlgoliaUsers(db);
   console.info('Algolia ready for testing!');
 
-  insurance(); // Switch off maintenance insurance
+  maintenanceInsurance(); // Switch off maintenance insurance
   await endMaintenance(db, EIGHT_MINUTES_IN_MS);
   await shutdownEmulator(proc);
 }
@@ -156,19 +152,11 @@ export async function upgradeEmulators() {
   }
   const storage = getStorage();
   // const auth = connectAuthEmulator();
-  const insurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
+  const maintenanceInsurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.info('Preparing the database...');
   await migrate({ withBackup: false, db, storage, performMigrationCheck: false });
   console.info('Database ready for deploy!');
-
-  // console.info('Cleaning unused db data...');
-  // await cleanDeprecatedData(db, auth);
-  // console.info('DB data clean and fresh!');
-
-  // console.info('Cleaning unused storage data...');
-  // await cleanStorage(storage.bucket(storageBucket));
-  // console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs(null, db);
@@ -176,6 +164,6 @@ export async function upgradeEmulators() {
   await upgradeAlgoliaUsers(db);
   console.info('Algolia ready for testing!');
 
-  insurance(); // Switch off maintenance insurance
+  maintenanceInsurance(); // Switch off maintenance insurance
   await endMaintenance(db, EIGHT_MINUTES_IN_MS);
 }

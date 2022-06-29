@@ -8,7 +8,6 @@ import {
   exportFirestoreToBucketBeta,
   healthCheck,
   migrate,
-  disableMaintenanceMode,
   displayCredentials,
   upgradeAlgoliaMovies,
   upgradeAlgoliaOrgs,
@@ -23,12 +22,9 @@ import {
   downloadProdDbBackup,
   importEmulatorFromBucket,
   loadEmulator,
-  enableMaintenanceInEmulator,
   uploadBackup,
   startEmulators,
   syncAuthEmulatorWithFirestoreEmulator,
-  backupLiveEnv,
-  restoreLiveEnv,
   rescueJWP,
   loadAndShrinkLatestAnonDbAndUpload,
   cleanBackups,
@@ -95,9 +91,6 @@ async function runCommand() {
     case 'uploadToBucket':
       await uploadBackup({ remoteDir: arg1, localRelPath: arg2 });
       break;
-    case 'enableMaintenanceInEmulator':
-      await enableMaintenanceInEmulator({ importFrom: arg1 });
-      break;
     case 'use':
       await selectEnvironment(arg1);
       break;
@@ -114,17 +107,11 @@ async function runCommand() {
       await upgradeEmulators();
       break;
     case 'exportFirestore':
-      await exportFirestoreToBucketBeta(arg1)
+      await exportFirestoreToBucketBeta(arg1);
       break;
     case 'importFirestore':
-      await importFirestore(arg1)
+      await importFirestore(arg1);
       break;
-    case 'restoreEnv':
-      await restoreLiveEnv();
-      break
-    case 'backupEnv':
-      await backupLiveEnv()
-      break
     case 'startMaintenance':
       await startMaintenance();
       break;
@@ -135,13 +122,13 @@ async function runCommand() {
       await healthCheck();
       break;
     case 'migrate':
-      await migrate();
+      await migrate({ withMaintenance: true });
       break;
     case 'syncAuthEmulatorWithFirestoreEmulator':
       await syncAuthEmulatorWithFirestoreEmulator({ importFrom: arg1 });
       break;
     case 'syncUsers':
-      await syncUsers();
+      await syncUsers({ withMaintenance: true });
       break;
     case 'printUsers':
       await printUsers();
@@ -176,15 +163,6 @@ async function runCommand() {
     default:
       return Promise.reject('Command Args not detected... exiting..');
   }
-}
-
-function hasFlag(compare: string) {
-  return flags.some(flag => flag === compare) || flags.some(flag => flag === `--${compare}`);
-}
-
-if (hasFlag('skipMaintenance')) {
-  console.warn('WARNING! BLOCKFRAMES_MAINTENANCE_DISABLED is set to true');
-  disableMaintenanceMode();
 }
 
 const consoleMsg = `Time running command "${cmd}"`;

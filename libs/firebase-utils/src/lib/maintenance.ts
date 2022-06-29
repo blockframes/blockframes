@@ -12,10 +12,6 @@ const maintenanceRef = (db = getDb()) => {
 };
 
 export function startMaintenance(db?: FirebaseFirestore.Firestore) {
-  if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) {
-    console.warn('Warning: startMaintenance() called but BLOCKFRAMES_MAINTENANCE_DISABLED is set to true. Maintenance mode is disabled...');
-    return;
-  }
   return maintenanceRef(db).set(
     { startedAt: new Date(), endedAt: null },
     { merge: true }
@@ -28,8 +24,6 @@ export function startMaintenance(db?: FirebaseFirestore.Firestore) {
  * @param ago if set, will offset endedAt time into the past - seconds
  */
 export function endMaintenance(db?: FirebaseFirestore.Firestore, ago?: number) {
-  if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) return;
-
   let endedAt = new Date();
   if (ago) {
     const time = new Date(new Date().getTime() - ago);
