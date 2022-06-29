@@ -350,6 +350,7 @@ jobs:
           path: dist/cypress/apps
   catalog-e2e:
     executor: blockframes-ci
+    resource_class: xlarge
     environment:
       PROJECT_ID: demo-blockframes
     steps:
@@ -357,9 +358,7 @@ jobs:
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
-      - run:
-          command: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e,cms-e2e
-          no_output_timeout: 15m
+      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e,cms-e2e
       - store_test_results:
           path: dist/test-reports/
       - store_artifacts:
