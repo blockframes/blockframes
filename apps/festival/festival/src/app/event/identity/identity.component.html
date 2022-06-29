@@ -4,12 +4,12 @@
 
 <article>
   <menu>
-    <button fxFlexAlign="start" mat-icon-button color="black" (click)="goBack()">
+    <button mat-icon-button color="black" (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </button>
   </menu>
 
-  <form fxLayout="column" [formGroup]="form" (ngSubmit)="validateIdentity()">
+  <form [formGroup]="form" (ngSubmit)="validateIdentity()">
     <h1>Welcome to Archipel Market!</h1>
     <p class="mat-body-1">Please fill in your first and last name <br> to identify yourself.</p>
 
