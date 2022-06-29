@@ -36,3 +36,10 @@ form {
 mat-spinner {
   margin-top: 48px;
 }
+
+form {
+  div {
+    display: flex;
+    justify-content: space-between;
+  }
+}
