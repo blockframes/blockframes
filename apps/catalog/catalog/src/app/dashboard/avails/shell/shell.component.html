@@ -1,20 +1,25 @@
 <ng-container *ngIf="terms$ | async as terms; else loading">
-  <header fxLayout="column" fxLayoutAlign="start start">
-    <a mat-icon-button fxLayout="row" fxLayoutAlign="center center" routerLink="/c/o/dashboard/avails">
-      <mat-icon svgIcon="arrow_back"></mat-icon>
-    </a>
-    <a *ngIf="movie$|async as movie" routerLink="/c/o/dashboard/title/{{movie.id}}">
-      <h2>{{movie.title.international}}</h2>
-    </a>
-  </header>
+  <ng-container *ngIf="movie$|async as movie">
+    <header fxLayout fxLayoutAlign="space-between start">
+      <div fxLayout fxLayoutAlign="center center">
+        <a mat-icon-button fxLayout fxLayoutAlign="center center" routerLink="/c/o/dashboard/avails">
+          <mat-icon svgIcon="arrow_back"></mat-icon>
+        </a>
+        <a routerLink="/c/o/dashboard/title/{{movie.id}}">
+          <h2>{{movie.title.international}}</h2>
+        </a>
+      </div>
+      <a mat-button [routerLink]="['/c/o/dashboard/avails/select', movie.id]" color="primary">Manage avails</a>
+    </header>
 
-  <section class="surface">
-    <nav fxLayout fxLayoutAlign="center center" fxLayoutGap="16px">
-      <a mat-flat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
-      <a mat-flat-button routerLink="calendar" routerLinkActive="mat-primary">Single Territory</a>
-    </nav>
-    <router-outlet></router-outlet>
-  </section>
+    <section class="surface">
+      <nav fxLayout fxLayoutAlign="center center" fxLayoutGap="16px">
+        <a mat-flat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
+        <a mat-flat-button routerLink="calendar" routerLinkActive="mat-primary">Single Territory</a>
+      </nav>
+      <router-outlet></router-outlet>
+    </section>
+  </ng-container>
 </ng-container>
 
 <ng-template #loading>
