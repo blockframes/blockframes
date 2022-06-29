@@ -12,11 +12,11 @@ async function camille28062022Contracts() {
 
   let line: string[] = [];
 
-  line.push(`id`);
+  line.push(`contractId`);
   line.push(`sellerId`);
   line.push(`parentTermId`);
   line.push(`status`);
-  line.push(`status`);
+  line.push(`termIds`);
   line.push(`titleId`);
   line.push(`type`);
   printCSVline(line);
@@ -40,7 +40,7 @@ async function camille28062022Terms() {
 
   let line: string[] = [];
 
-  line.push(`id`);
+  line.push(`termId`);
   line.push(`contractId`);
   line.push(`duration from`);
   line.push(`duration to`);
