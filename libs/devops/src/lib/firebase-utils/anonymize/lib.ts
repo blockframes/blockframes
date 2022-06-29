@@ -11,7 +11,8 @@ import {
   PublicOrganization,
   Invitation,
   IMaintenanceDoc,
-  app
+  app,
+  getAllAppsExcept
 } from '@blockframes/model';
 import {
   DbRecord,
@@ -24,6 +25,7 @@ import {
 import { firebase, testVideoId } from '@env';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { Queue } from '../../internals/queue';
+import { META_COLLECTION_NAME } from '@blockframes/utils/maintenance';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
@@ -75,7 +77,8 @@ function processUser<T extends User | PublicUser>(u: T): T {
   const legalTerms = { date: new Date(), ip: fakeIp() };
   const privacyPolicy = legalTerms;
   const termsAndConditions = {};
-  for (const appName of app) {
+  const apps = getAllAppsExcept(['crm']);
+  for (const appName of apps) {
     termsAndConditions[appName] = legalTerms;
   }
   return { ...u, firstName, lastName, email, privacyPolicy, termsAndConditions };
@@ -202,7 +205,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
       if (hasKeys<Movie>(doc, 'title')) return { docPath, content: processMovie(doc) };
       return { docPath, content: doc };
     }
-    if (docPath.includes('_META')) {
+    if (docPath.includes(META_COLLECTION_NAME)) {
       // Always set maintenance
       if (hasKeys<IMaintenanceDoc>(doc, 'endedAt')) return { docPath, content: processMaintenanceDoc(doc) };
       return { docPath, content: doc };

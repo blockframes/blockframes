@@ -254,9 +254,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       lastName: user.lastName,
       email: user.email,
       uid: credentials.user.uid,
-      hideEmail: user.hideEmail,
-      privacyPolicy,
-      termsAndConditions
+      hideEmail: user.hideEmail
     });
   }
 
@@ -271,7 +269,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     const termsAndConditions = {
       [this.app]: legalTerms
     };
-    
+
     const ctx = {
       firstName: user.firstName,
       lastName: user.lastName,
@@ -286,9 +284,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       lastName: user.lastName,
       email: user.email,
       uid: credentials.user.uid,
-      hideEmail: user.hideEmail,
-      privacyPolicy,
-      termsAndConditions
+      hideEmail: user.hideEmail
     });
   }
 

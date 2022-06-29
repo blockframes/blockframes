@@ -20,7 +20,6 @@ import { OpenPreviewModule } from '@blockframes/ui/open-preview/open-preview.mod
 // Blockframes Utils
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
-import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { VersionPipeModule } from '@blockframes/utils/pipes/version.pipe';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 import { JoinPipeModule } from '@blockframes/utils/pipes/join.pipe';
@@ -77,7 +76,6 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
     RunningTimePipeModule,
     FileNameModule,
     FlexLayoutModule,
-    DurationModule,
     HasStatusModule,
     MaxLengthModule,
     FilmographyPipeModule,

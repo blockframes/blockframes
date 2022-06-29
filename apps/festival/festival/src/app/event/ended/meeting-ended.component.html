@@ -8,7 +8,7 @@
   <section>
     <h2>You just left the Meeting.</h2>
 
-    <h4 *ngIf="duration | duration: '' as pipedDuration">It lasted {{ pipedDuration }}.</h4>
+    <h4 *ngIf="duration | duration as pipedDuration">It lasted {{ pipedDuration }}.</h4>
 
     <ng-container *ngIf="attendees$ | async as attendees">
       <h3>There were {{attendees.length}} attendee{attendees.length, plural, =1 {} other {s}}</h3>

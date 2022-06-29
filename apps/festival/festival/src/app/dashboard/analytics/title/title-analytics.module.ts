@@ -21,6 +21,9 @@ import { GuestPipeModule } from '@blockframes/invitation/pipes/guest.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LineChartModule } from '@blockframes/analytics/components/line-chart/line-chart.module';
 import { OrgNameModule } from '@blockframes/organization/pipes';
+import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
+import { IsWatchingNowPipeModule } from '@blockframes/event/pipes/is-watching-now.pipe';
+import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 @NgModule({
   imports: [
@@ -38,6 +41,9 @@ import { OrgNameModule } from '@blockframes/organization/pipes';
     GuestPipeModule,
     LineChartModule,
     OrgNameModule,
+    DurationModule,
+    IsWatchingNowPipeModule,
+    TagModule,
 
     // Material
     MatButtonModule,

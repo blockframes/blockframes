@@ -28,11 +28,11 @@ import { doc, DocumentReference, getDoc, writeBatch } from 'firebase/firestore';
 @Injectable({ providedIn: 'root' })
 export class AuthService extends BlockframesAuth<User> implements OnDestroy {
   // If we update the privacy policy or the T&C, we need the update the publishing dates
-  readonly privacyPolicyDate = new Date('Thu Jun 23 2022 15:14:36 GMT+0200');
-  readonly termsAndConditionsDate = {
-    festival: new Date('Thu Jun 23 2022 15:14:36 GMT+0200'),
-    catalog: new Date('Thu Jun 23 2022 15:14:36 GMT+0200'),
-    financiers: new Date('Thu Jun 23 2022 15:14:36 GMT+0200'),
+  readonly privacyPolicyDate = new Date('02/28/2022');
+  readonly termsAndConditionsDate: Partial<Record<App, Date>> = {
+    festival: new Date('02/28/2022'),
+    catalog: new Date('02/28/2022'),
+    financiers: new Date('02/28/2022'),
 } ;
   readonly path = 'users';
 

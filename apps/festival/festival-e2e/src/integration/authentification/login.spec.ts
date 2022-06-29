@@ -21,15 +21,15 @@ const injectedData = {
 };
 
 describe('Login tests', () => {
-  it('login', () => {
+  it('login and accept Terms and Privacy Policy', () => {
     cy.visit('');
     browserAuth.clearBrowserAuth();
     maintenance.start();
     adminAuth.deleteAllTestUsers();
     firestore.clearTestData();
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
-    firestore.update([{docPath: `users/${user.uid}`, field: 'termsAndConditions', value: {} }])
     firestore.create([injectedData]);
+    firestore.update([{docPath: `users/${user.uid}`, field: 'termsAndConditions', value: {} }])
     maintenance.end();
     refreshIfMaintenance();
     get('login').click();
