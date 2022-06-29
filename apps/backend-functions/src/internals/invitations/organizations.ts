@@ -4,7 +4,7 @@ import { triggerNotifications } from './../../notification';
 import { sendMailFromTemplate } from './../email';
 import { userJoinedAnOrganization } from '../../templates/mail';
 import { getAdminIds, getOrgAppKey } from '../../data/internals';
-import { wasAccepted, wasDeclined, wasCreated } from './utils';
+import { wasAccepted, wasCreated } from './utils';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
