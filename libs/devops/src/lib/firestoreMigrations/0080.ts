@@ -2,7 +2,7 @@ import { Firestore, runChunks } from '@blockframes/firebase-utils';
 import { Organization, Invitation, Notification, PublicOrganization } from '@blockframes/model';
 
 // Array for special Organizations
-const specialOrgs = [
+const specialOrgs: { id: string, field: 'public' | 'full'}[] = [
   { id: 'BsQS0gTqFJ1mpkJVZjNf', field: 'full' },
   { id: 'D453XC3B8VEP64RLDbac', field: 'full' },
   { id: 'AQRsAqOCjozQdLEkSWxb', field: 'full' },
@@ -12,7 +12,7 @@ const specialOrgs = [
   { id: 'VJFAyk8QTJkzilFzIM9d', field: 'full' },
   { id: 'qSKCCJxDPiYenuO6tcSi', field: 'public' },
   { id: 'XDAqvNGZJAaxw8LGyq4f', field: 'full' }
-] as { id: string, field: 'public' | 'full'}[];
+];
 
 /**
  * Update name from organizations, invitations and notifications documents
@@ -34,6 +34,8 @@ async function migrateOrganizations(db: Firestore) {
   return runChunks(orgs.docs, async (doc) => {
     const org = doc.data() as Organization;
 
+    if (!(org as any)?.denomination) return false;
+
     const { updatedOrg , update } = updateOrganization(org);
 
     // Delete fiscal number and bank accounts
@@ -52,6 +54,8 @@ async function migrateInvitations(db: Firestore) {
     const type = invitationBase?.fromOrg ? 'fromOrg' : 'toOrg';
     const organization = invitationBase[type];
 
+    if (!(organization as any)?.denomination) return false;
+
     const { updatedOrg, update } = updateOrganization(organization);
     invitationBase[type] = updatedOrg;
 
@@ -69,6 +73,8 @@ async function migrateNotifications(db: Firestore) {
     if (!notificationBase?.organization?.name) return false;
 
     const organization = notificationBase.organization;
+
+    if (!(organization as any)?.denomination) return false;
 
     const { updatedOrg, update } = updateOrganization(organization);
     notificationBase.organization = updatedOrg;

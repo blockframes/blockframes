@@ -41,7 +41,6 @@ import {
   requestToAttendEventFromUserSent,
   userLeftYourOrganization,
   requestToAttendEventFromUserRefused,
-  invitationToJoinOrgDeclined,
   invitationToEventFromOrgUpdated,
   userJoinOrgPendingRequest,
   adminOfferCreatedConfirmationEmail,
@@ -148,11 +147,6 @@ export async function onNotificationCreate(snap: BlockframesSnapshot<Notificatio
         break;
       case 'orgAppAccessChanged':
         await sendOrgAppAccessChangedEmail(recipient, notification)
-          .then(() => notification.email.isSent = true)
-          .catch(e => notification.email.error = e.message)
-        break;
-      case 'invitationToJoinOrgDeclined':
-        await sendInvitationDeclinedToJoinOrgEmail(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message)
         break;
@@ -590,16 +584,6 @@ async function sendRequestToAttendSentEmail(recipient: User, notification: Notif
 
   const app = notification._meta.createdFrom;
   const template = requestToAttendEventFromUserSent(toUser, eventEmailData, organizerOrg);
-  await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
-}
-
-/** Let admins knows their invitation to an user to join their org has been declined */
-async function sendInvitationDeclinedToJoinOrgEmail(recipient: User, notification: Notification) {
-  const userSubject = getUserEmailData(notification.user)
-  const toAdmin = getUserEmailData(recipient);
-
-  const app = notification._meta.createdFrom;
-  const template = invitationToJoinOrgDeclined(toAdmin, userSubject);
   await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 

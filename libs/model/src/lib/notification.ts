@@ -48,7 +48,6 @@ export const notifications = {
     'requestFromUserToJoinOrgDeclined', // Notification is only disabled but not send anymore. See TODO #8026
     'orgMemberUpdated', 
     'requestFromUserToJoinOrgPending', // Notification sent to the user that made the request
-    'invitationToJoinOrgDeclined',
     // Other notifications
     'organizationAcceptedByArchipelContent',
     'orgAppAccessChanged',
