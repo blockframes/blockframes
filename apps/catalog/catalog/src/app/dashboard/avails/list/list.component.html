@@ -1,4 +1,7 @@
-<h2>Availabilities</h2>
+<header>
+  <h2>Availabilities</h2>
+  <a mat-stroked-button routerLink="select">Add avails</a>
+</header>
 
 <section class="surface" fxLayout="column" fxLayoutGap="16px">
   <h3>Search Criteria</h3>
@@ -51,5 +54,6 @@
       Oops! it looks like there's no result corresponding to your search criteria.
     </p>
     <img asset="empty_contract.svg" alt="Image, you have no contracts yet">
+    <a mat-flat-button routerLink="select" color="primary" >Add avails</a>
   </section>
 </ng-template>
