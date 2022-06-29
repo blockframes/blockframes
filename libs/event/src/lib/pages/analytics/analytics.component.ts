@@ -19,7 +19,10 @@ import {
   territories,
   orgActivity,
   invitationStatus,
-  averageWatchtime
+  averageWatchDuration,
+  WatchInfos,
+  getGuest,
+  hasDisplayName
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MovieService } from '@blockframes/movie/service';
@@ -34,13 +37,13 @@ import {
   exportSpreadsheet
 } from '@blockframes/utils/spreadsheet';
 
-interface WatchTimeInfo {
+interface EventAnalytics {
   name: string, // firstName + lastName
   email: string,
   orgName?: string,
   orgActivity?: string,
   orgCountry?: string,
-  watchTime?: number, // in seconds
+  watchInfos?: WatchInfos,
   status: InvitationStatus
 }
 
@@ -55,10 +58,10 @@ interface WatchTimeInfo {
 })
 export class AnalyticsComponent implements OnInit {
   event$: Observable<Event<EventMeta>>;
-  private analytics: WatchTimeInfo[];
-  public acceptedAnalytics: WatchTimeInfo[];
+  private analytics: EventAnalytics[];
+  public acceptedAnalytics: EventAnalytics[];
   public exporting = false;
-  public averageWatchTime = 0; // in seconds
+  public avgWatchDuration = 0; // in seconds
   public dataMissing = '(Not Registered)';
   private eventInvitations: Invitation[];
   private event: Event<EventMeta>;
@@ -71,7 +74,7 @@ export class AnalyticsComponent implements OnInit {
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
     private orgService: OrganizationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Event', 'Event Statistics');
@@ -92,12 +95,15 @@ export class AnalyticsComponent implements OnInit {
         const orgs = await Promise.all(orgIds.map(orgId => this.orgService.getValue(orgId)));
 
         this.analytics = this.eventInvitations.map(i => {
-          const user = i.fromUser || i.toUser;
-          const name = user.lastName && user.firstName ? `${user.firstName} ${user.lastName}` : this.dataMissing;
+          const user = getGuest(i, 'user');
+          const name = hasDisplayName(user) ? `${user.firstName} ${user.lastName}` : this.dataMissing;
           const org = orgs.find(o => o.id === user.orgId);
           return {
             email: user.email,
-            watchTime: i.watchTime || 0,
+            watchInfos: {
+              duration: i.watchInfos?.duration || 0,
+              date: i.watchInfos.date
+            },
             name,
             orgName: org.name,
             orgActivity: org?.activity,
@@ -106,11 +112,11 @@ export class AnalyticsComponent implements OnInit {
           };
         });
         // Create same analytics but only with 'accepted' status and with a Watchtime > 0
-        this.acceptedAnalytics = this.analytics.filter(({ status, watchTime }) => status === 'accepted' && watchTime !== 0);
+        this.acceptedAnalytics = this.analytics.filter(({ status, watchInfos }) => status === 'accepted' && watchInfos.duration !== 0);
 
         // if event is a screening or a slate presentation we add the watch time column to the table
         // and we compute the average watch time
-        this.averageWatchTime = averageWatchtime(this.acceptedAnalytics);
+        this.avgWatchDuration = averageWatchDuration(this.acceptedAnalytics);
 
         this.cdr.markForCheck();
       })
@@ -164,35 +170,37 @@ export class AnalyticsComponent implements OnInit {
       if (mode === 'request') invitationsModeCounter.request++;
     });
 
-    const avgWatchTime = convertToTimeString(this.averageWatchTime * 1000);
+    const avgWatchDurationGlobal = convertToTimeString(this.avgWatchDuration * 1000);
 
     // Create data for Archipel Event Summary Tab - With Merge
     const summaryData = new ExcelData();
-    summaryData.addLine([`${staticticsTitle} - Archipel Market Screening Report`], { merge: [{ start: 'A', end: 'F' }] });
+    summaryData.addLine([`${staticticsTitle} - Archipel Market Screening Report`], { merge: [{ start: 'A', end: 'G' }] });
     summaryData.addLine([eventStart]);
     summaryData.addBlankLine();
-    summaryData.addLine(['Total number of guests', null, null, null, null, this.eventInvitations.length]);
+    summaryData.addLine(['Total number of guests', null, null, null, null, null, this.eventInvitations.length]);
     summaryData.addLine([
       'Answers',
       null,
       null,
       null,
       null,
+      null,
       `${invitationsStatusCounter.accepted} accepted, ${invitationsStatusCounter.pending} unanswered, ${invitationsStatusCounter.declined} declined`
     ]);
-    summaryData.addLine(['Number of attendees', null, null, null, null, this.acceptedAnalytics.length]);
-    summaryData.addLine(['Average watchtime', null, null, null, null, `${avgWatchTime}`]);
+    summaryData.addLine(['Number of attendees', null, null, null, null, null, this.acceptedAnalytics.length]);
+    summaryData.addLine(['Average watchtime', null, null, null, null, null, `${avgWatchDurationGlobal}`]);
     summaryData.addBlankLine();
-    summaryData.addLine(['NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME']);
+    summaryData.addLine(['NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME', 'WATCHING ENDED']);
 
-    this.acceptedAnalytics.forEach(({ watchTime, email, name, orgActivity: activity, orgCountry, orgName }) => {
+    this.acceptedAnalytics.forEach(({ watchInfos, email, name, orgActivity: activity, orgCountry, orgName }) => {
       summaryData.addLine([
         name,
         email,
         orgName || '-',
         activity ? orgActivity[activity] : '-',
         orgCountry ? territories[orgCountry] : '-',
-        watchTime ? `${convertToTimeString(watchTime * 1000)}` : '-'
+        convertToTimeString(watchInfos.duration * 1000),
+        watchInfos?.date ? formatDate(watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '-'
       ]);
     });
 

@@ -151,5 +151,5 @@ export function convertToTimeString(time: number) {
   const minuteStr = minute > 0 ? `${minute}min` : '';
   const secondStr = second > 0 ? `${second}s` : '';
 
-  return `${dayStr}${hourStr}${minuteStr}${secondStr}`;
+  return `${dayStr}${hourStr}${minuteStr}${secondStr}` || '0s';
 }

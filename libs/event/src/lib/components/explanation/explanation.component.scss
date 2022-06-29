@@ -1,0 +1,20 @@
+h1 {
+  text-align: center;
+}
+
+p {
+  text-align: center;
+  margin: 32px 0;
+}
+
+div {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  margin-top: 32px;
+  gap: 16px;
+}
+
+video {
+  width: 100%;
+}
