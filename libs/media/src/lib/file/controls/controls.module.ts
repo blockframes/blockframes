@@ -9,7 +9,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
-import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 
 import { PdfControlModule } from '../../pdf/control/control.module';
 import { VideoControlModule } from '../../video/control/control.module';
@@ -28,7 +27,6 @@ import { FileControlsComponent } from './controls.component';
     MatSliderModule,
 
     FileNameModule,
-    DurationModule,
     PdfControlModule,
     VideoControlModule,
   ],

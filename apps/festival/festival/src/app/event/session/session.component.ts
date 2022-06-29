@@ -254,13 +254,13 @@ export class SessionComponent implements OnInit, OnDestroy {
 
         this.watchTimeInterval = interval(1000).pipe(
           filter(() => !!this.isPlaying),
-          scan(watchTime => watchTime + 1, invitation.watchTime ?? 0),
-          finalizeWithValue(watchTime => {
-            if (watchTime !== undefined) this.invitationService.update(invitation.id, { watchTime });
+          scan(duration => duration + 1, invitation.watchInfos?.duration ?? 0),
+          finalizeWithValue(duration => {
+            if (duration !== undefined) this.invitationService.update(invitation.id, { watchInfos: { duration, date: new Date() } });
           }),
-          filter(watchTime => watchTime % 60 === 0),
-        ).subscribe(watchTime => {
-          this.invitationService.update(invitation.id, { watchTime });
+          filter(duration => duration % 60 === 0),
+        ).subscribe(duration => {
+          this.invitationService.update(invitation.id, { watchInfos: { duration, date: new Date() } });
         });
       }
     }

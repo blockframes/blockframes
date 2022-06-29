@@ -136,7 +136,7 @@ service cloud.firestore {
         && notInMaintenance();
     	allow update: if  (
         isNotUpdatingCommonInvitationFields() && (
-          isOnlyChangingInvitationWatchTime()
+          isOnlyChangingInvitationWatchInfos()
           || isOnlyChangingInvitationStatus()
         )
       ) && notInMaintenance();
@@ -183,11 +183,12 @@ service cloud.firestore {
     function isOnlyChangingInvitationStatus() {
       return (
         isInvitationRecipient()
-        && isNotUpdatingField(['watchTime'])
+        && isNotUpdatingField(['watchInfos', 'duration'])
+        && isNotUpdatingField(['watchInfos', 'date'])
       );
     }
 
-    function isOnlyChangingInvitationWatchTime() {
+    function isOnlyChangingInvitationWatchInfos() {
       return (
         existingData().type == 'attendEvent'
         && isNotUpdatingField(['status'])
