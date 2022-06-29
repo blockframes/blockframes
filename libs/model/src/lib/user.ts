@@ -96,6 +96,6 @@ export function createUser(user: Partial<User> = {}) {
 }
 
 /** Verify if the user exists and has a name and surname. */
-export function hasDisplayName(user: User): boolean {
+export function hasDisplayName(user: User | PublicUser): boolean {
   return !!user && !!user.firstName && !!user.lastName;
 }
