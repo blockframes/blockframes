@@ -292,7 +292,9 @@ jobs:
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
-      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,cms-e2e
+      - run:
+          command: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,cms-e2e
+          no_output_timeout: 15m
       - store_test_results:
           path: dist/test-reports/
       - store_artifacts:
@@ -306,7 +308,9 @@ jobs:
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
-      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,crm-e2e
+      - run:
+          command: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,crm-e2e
+          no_output_timeout: 15m
       - store_test_results:
           path: dist/test-reports/
       - store_artifacts:
@@ -337,7 +341,9 @@ jobs:
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
-      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e,cms-e2e
+      - run:
+          command: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e,cms-e2e
+          no_output_timeout: 15m
       - store_test_results:
           path: dist/test-reports/
       - store_artifacts:
@@ -351,7 +357,9 @@ jobs:
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
-      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e,cms-e2e
+      - run:
+          command: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e,cms-e2e
+          no_output_timeout: 15m
       - store_test_results:
           path: dist/test-reports/
       - store_artifacts:
