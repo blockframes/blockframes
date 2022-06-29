@@ -3,7 +3,6 @@ import { EventComponent } from './event.component';
 import { AsideModule } from './../marketplace/layout/aside/aside.module';
 import { EventLayoutModule } from '@blockframes/ui/layout/event/event.module';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-banner.module';
 
@@ -113,7 +112,6 @@ const routes: Routes = [
   imports: [
     RouterModule.forChild(routes),
     CommonModule,
-    FlexLayoutModule,
     EventLayoutModule,
     AsideModule,
     ImageModule,

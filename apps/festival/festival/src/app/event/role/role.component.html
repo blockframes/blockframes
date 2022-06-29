@@ -1,23 +1,22 @@
-<main>
-  <section>
-    <a app-logo routerLink="/"></a>
-    <div class="surface">
-      <h1>Welcome</h1>
-      <h2>to the Archipel Market Platform</h2>
-      <p class="mat-body-1">You are here as a:</p>
-      <div fxLayout fxLayoutGap="80px"  fxLayout.xs="column" fxLayoutGap.xs="40px" fxLayoutAlign.xs="center center">
-        <button color="warn" (click)="update('organizer')">
-          <img [asset]="'event_organizer.svg'" alt="organizer image">
-          <h5>Organizer</h5>
-        </button>
+<header>
+  <a app-logo routerLink="/"></a>
+</header>
 
-        <mat-divider fxHide fxShow.xs></mat-divider>
+<article>
+  <h1>Welcome</h1>
+  <h2>to the Archipel Market Platform</h2>
+  <p class="mat-body-1">You are here as a:</p>
+  <menu>
+    <button (click)="update('organizer')">
+      <img asset="event_organizer.svg" alt="">
+      <h5>Organizer</h5>
+    </button>
 
-        <button color="primary" (click)="update('guest')">
-          <img [asset]="'event_guest.svg'" alt="guest image">
-          <h5>Guest</h5>
-        </button>
-      </div>
-    </div>
-  </section>
-</main>
+    <hr>
+
+    <button (click)="update('guest')">
+      <img asset="event_guest.svg" alt="">
+      <h5>Guest</h5>
+    </button>
+  </menu>
+</article>
