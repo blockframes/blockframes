@@ -186,7 +186,7 @@ export function exclusivityAllOf(availsExclusivity: boolean) {
  */
 export function exclusivitySomeOf(availsExclusivity: boolean) {
 
-  //                                Avail
+  //                                Avail form
   //                     | Exclusive | Non-Exclusive |
   //                -----|-----------|---------------|
   //           Exclusive |     ✅    |       ✅     |
