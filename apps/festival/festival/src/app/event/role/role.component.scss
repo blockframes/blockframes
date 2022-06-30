@@ -1,23 +1,17 @@
+@use 'surface';
+@import '@angular/flex-layout/mq';
+
 :host {
   width: 100vw;
-  height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  position: relative;
+  align-items: center;
   background-image: url("/assets/images/light/stars_wallpaper.svg");
   background-position: center;
   background-repeat: no-repeat;
-  
-  a[app-logo] {
-    position: absolute;
-    top: 40px;
-    left: 40px;
-  }
 
-  .surface {
-    padding: 56px;
+  article {
     text-align: center;
 
     h2 {
@@ -27,24 +21,83 @@
     p {
       margin-bottom: 24px;
     }
-    
-    button {
-      background-color: transparent;
-      border: none;
-      width: 215px;
-      height: 215px;
-      border-radius: 100%;
-      cursor: pointer;
 
-      img {
-        width: 80%;
+    menu {
+      display: flex;
+      margin: 0;
+      padding: 0;
+      
+      button {
+        background-color: transparent;
+        border: none;
+        width: 215px;
+        height: 215px;
+        border-radius: 100%;
+        cursor: pointer;
+  
+        &:hover {
+          background-color: var(--background-hover);
+        }
+        img {
+          width: 80%;
+        }
+        h5 {
+          color: var(--primary);
+        }
       }
-      &:hover {
-        background-color: var(--background-hover);
+    }
+  }
+}
+
+@include layout-bp(gt-xs) {
+  :host {
+    height: 100vh;
+    position: relative;
+
+    header {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+    }
+
+    article {
+      @include surface.surface;
+      padding: 56px;
+
+      menu {
+        flex-direction: row;
+        gap: 80px;
+          
+        hr {
+          display: none;
+        }
       }
-      h5 {
-        color: var(--primary);
+    }
+  }
+}
+
+@include layout-bp(xs) {
+  :host {
+    gap: 32px;
+    padding: 32px;
+
+    header {
+      align-self: center;
+
+      a[app-logo] {
+        height: 48px;
       }
-    } 
+    }
+    article {
+      menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+
+        hr {
+          width: 100%;
+        }
+      }
+    }
   }
 }

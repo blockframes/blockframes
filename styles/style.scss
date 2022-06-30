@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@use './surface';
 
 :root {
   --layout-margin: 24px;
@@ -104,6 +105,11 @@ main {
       outline: none;
     }
   }
+}
+
+.surface {
+  padding: 24px;
+  @include surface.surface;
 }
 
 body {
