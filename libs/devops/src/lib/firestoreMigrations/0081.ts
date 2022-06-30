@@ -2,7 +2,7 @@ import { Firestore, runChunks } from '@blockframes/firebase-utils';
 import { Organization, Invitation, Notification, PublicOrganization } from '@blockframes/model';
 
 // Array for special Organizations
-const specialOrgs: { id: string, field: 'public' | 'full'}[] = [
+const specialOrgs: { id: string, field: 'public' | 'full' }[] = [
   { id: 'BsQS0gTqFJ1mpkJVZjNf', field: 'full' },
   { id: 'D453XC3B8VEP64RLDbac', field: 'full' },
   { id: 'AQRsAqOCjozQdLEkSWxb', field: 'full' },
@@ -36,7 +36,7 @@ async function migrateOrganizations(db: Firestore) {
 
     if (!(org as any)?.denomination) return false;
 
-    const { updatedOrg , update } = updateOrganization(org);
+    const { updatedOrg, update } = updateOrganization(org);
 
     // Delete fiscal number and bank accounts
     delete (updatedOrg as any)?.fiscalNumber;
@@ -83,8 +83,8 @@ async function migrateNotifications(db: Firestore) {
 
 function updateOrganization(org: Organization | PublicOrganization) {
   let update = false;
-  const fullName = (org as any).denomination.full;
-  const publicName = (org as any).denomination.public;
+  const fullName: string = (org as any).denomination.full;
+  const publicName: string = (org as any).denomination.public;
 
   // If org is part of specialOrgs
   const specialOrgsIds = specialOrgs.map(org => org.id);
@@ -96,24 +96,23 @@ function updateOrganization(org: Organization | PublicOrganization) {
     update = true;
   }
 
-  // If org denomination public === full
-  else if (fullName === publicName) {
-    delete (org as any).denomination;
-    org.name = fullName;
-    update = true;
-  }
-
   // If org have a value on full but not in public
-  else if (fullName.length && !publicName.length) {
+  else if (fullName?.length && !publicName?.length) {
     delete (org as any).denomination;
     org.name = fullName;
     update = true;
   }
 
   // If org have a value on public but not in full
-  else if (publicName.length && !fullName.length) {
+  else if (publicName?.length && !fullName?.length) {
     delete (org as any).denomination;
     org.name = publicName;
+    update = true;
+  }
+
+  else {
+    delete (org as any).denomination;
+    org.name = fullName;
     update = true;
   }
 
