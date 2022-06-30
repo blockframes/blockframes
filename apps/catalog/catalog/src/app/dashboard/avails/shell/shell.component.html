@@ -1,7 +1,7 @@
 <ng-container *ngIf="movie$ | async as movie; else loading">
-  <header fxLayout fxLayoutAlign="space-between start">
-    <div fxLayout fxLayoutAlign="center center">
-      <a mat-icon-button fxLayout fxLayoutAlign="center center" routerLink="/c/o/dashboard/avails">
+  <header>
+    <div class="center">
+      <a mat-icon-button routerLink="/c/o/dashboard/avails">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
       <a routerLink="/c/o/dashboard/title/{{movie.id}}">
@@ -12,7 +12,7 @@
   </header>
 
   <section class="surface">
-    <nav fxLayout fxLayoutAlign="center center" fxLayoutGap="16px">
+    <nav class="center">
       <a mat-flat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
       <a mat-flat-button routerLink="calendar" routerLinkActive="mat-primary">Single Territory</a>
     </nav>

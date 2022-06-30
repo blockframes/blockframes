@@ -41,10 +41,6 @@ export class CatalogAvailsShellComponent {
 
   public salesTerms$ = this.getTerms(this.sales$);
 
-  public terms$ = combineLatest([this.mandateTerms$, this.salesTerms$]).pipe(
-    map((terms) => terms.flat())
-  );
-
   constructor(
     private route: ActivatedRoute,
     private termsService: TermService,
