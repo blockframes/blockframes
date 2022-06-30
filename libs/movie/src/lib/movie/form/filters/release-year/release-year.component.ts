@@ -17,14 +17,22 @@ export class ReleaseYearFilterComponent implements OnInit, OnDestroy {
 
   @Input() form: FormControl;
 
-  private sub: Subscription;
+  private subForm: Subscription;
+  private subInverted: Subscription;
 
-  invert = (value: number) => this.maxReleaseYear - value + this.minReleaseYear;
+  invert = (value: number) => {
+    value === undefined ? value = 0 : value
+    return this.maxReleaseYear - value + this.minReleaseYear;
+  }
 
   ngOnInit() {
     this.inverted.setValue(this.invert(this.form.value));
 
-    this.sub = this.inverted.valueChanges.pipe(
+    this.subForm = this.form.valueChanges.subscribe(val => {
+      this.inverted.setValue(this.invert(val));
+    });
+
+    this.subInverted = this.inverted.valueChanges.pipe(
       distinctUntilChanged(),
       map(this.invert)
     ).subscribe(value => {
@@ -34,6 +42,7 @@ export class ReleaseYearFilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subForm.unsubscribe();
+    this.subInverted.unsubscribe();
   }
 }

@@ -4,6 +4,7 @@ import {
   Component,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
+  Inject,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -17,7 +18,7 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareRe
 // Blockframes
 import { centralOrgId } from '@env';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie } from '@blockframes/model';
+import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie, App } from '@blockframes/model';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
@@ -26,6 +27,8 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
+import { APP } from '@blockframes/utils/routes/utils';
+import { FormEntity, FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -57,7 +60,9 @@ export class ListComponent implements OnDestroy, OnInit {
     private snackbar: MatSnackBar,
     private bucketService: BucketService,
     private router: Router,
-    private pdfService: PdfService
+    private pdfService: PdfService,
+    @Inject(APP) public app: App,
+
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -100,13 +105,7 @@ export class ListComponent implements OnDestroy, OnInit {
     if (avails.duration?.from) avails.duration.from = decodeDate(avails.duration.from);
     if (avails.duration?.to) avails.duration.to = decodeDate(avails.duration.to);
 
-    // patch everything
-    this.searchForm.patchValue(search);
-
-    // ensure FromList are also patched
-    this.searchForm.genres.patchAllValue(search?.genres);
-    this.searchForm.originCountries.patchAllValue(search?.originCountries);
-
+    this.patchSearchValues(search)
     this.availsForm.patchValue(avails);
 
     const search$ = combineLatest([
@@ -124,7 +123,11 @@ export class ListComponent implements OnDestroy, OnInit {
         genres: search.genres,
         originCountries: search.originCountries,
         contentType: search.contentType,
-        release: search.release
+        release: search.release,
+        languages: search.languages.languages,
+        versions: search.languages.versions,
+        minReleaseYear: search.minReleaseYear,
+        runningTime: search.runningTime
       },
       avails,
     }));
@@ -190,5 +193,33 @@ export class ListComponent implements OnDestroy, OnInit {
     await this.pdfService.download(movies.map(m => m.objectID));
     snackbarRef.dismiss();
     this.exporting = false;
+  }
+
+  patchSearchValues(search) {
+    console.log('search --->', search)
+    const languages = this.searchForm.languages.get('languages') as FormList<any>
+    const versions = this.searchForm.languages.get('versions') as FormEntity<any>
+
+    // patch everything
+    this.searchForm.patchValue(search);
+
+    // ensure FromList are also patched
+    this.searchForm.genres.patchAllValue(search?.genres);
+    this.searchForm.originCountries.patchAllValue(search?.originCountries);
+    languages.patchAllValue(search?.languages);
+    versions.patchValue(search?.versions);
+    this.searchForm.minReleaseYear.patchValue(search?.minReleaseYear);
+    this.searchForm.runningTime.patchValue(search?.runningTime);
+  }
+
+  save() {
+    const routeParams = decodeUrl(this.route);
+    localStorage.setItem(`${this.app}-Library`, JSON.stringify(routeParams));
+  }
+  load() {
+    const dataStorage = localStorage.getItem(`${this.app}-Library`);
+    const parseData = JSON.parse(dataStorage)
+    this.availsForm.patchValue(parseData.avails);
+    this.patchSearchValues(parseData.search)
   }
 }
