@@ -8,6 +8,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { IsWatchingNowPipeModule } from '@blockframes/event/pipes/is-watching-now.pipe';
+import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 // Angular
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -29,6 +31,8 @@ import { MatButtonModule } from '@angular/material/button';
     DurationModule,
     MatProgressSpinnerModule,
     EventFromShellModule,
+    IsWatchingNowPipeModule,
+    TagModule,
     RouterModule.forChild([{ path: '', component: AnalyticsComponent }]),
   ]
 })
