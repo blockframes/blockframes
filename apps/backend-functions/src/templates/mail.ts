@@ -373,7 +373,7 @@ export function contractCreatedEmail(
 }
 
 /** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
-export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: Organization, bucket: Bucket): EmailTemplateRequest {
+export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrgEmailData, bucket: Bucket): EmailTemplateRequest {
   const date = format(new Date(), 'dd MMM, yyyy');
   const mailBucket = getBucketEmailData(bucket);
   const data = { org, bucket: mailBucket, user: toUser, baseUrl: appUrl.content, date };
@@ -382,7 +382,7 @@ export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 }
 
 /**To inform buyer that his offer has been successfully created. */
-export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: Organization, offer: Offer, bucket: Bucket): EmailTemplateRequest {
+export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrgEmailData, offer: Offer, bucket: Bucket): EmailTemplateRequest {
   const mailBucket = getBucketEmailData(bucket);
 
   const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
@@ -399,7 +399,7 @@ export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 }
 
 export function counterOfferRecipientEmail(
-  toUser: UserEmailData, senderOrg: Organization, offerId: string,
+  toUser: UserEmailData, senderOrg: OrgEmailData, offerId: string,
   title: Movie, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const pageURL = options.isMailRecipientBuyer
@@ -416,7 +416,7 @@ export function counterOfferRecipientEmail(
 }
 
 export function counterOfferSenderEmail(
-  toUser: UserEmailData, org: Organization, offerId: string,
+  toUser: UserEmailData, org: OrgEmailData, offerId: string,
   negotiation: Negotiation, title: Movie, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
   const pageURL = options.isMailRecipientBuyer

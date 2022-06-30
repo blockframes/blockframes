@@ -44,7 +44,7 @@ export interface EmailTemplateRequest {
   to: string;
   templateId: string;
   data: {
-    org?: OrgEmailData | Organization; // @TODO #7491 template d-94a20b20085842f68fb2d64fe325638a uses Organization but it should use OrgEmailData instead
+    org?: OrgEmailData; // @TODO #7491 template d-94a20b20085842f68fb2d64fe325638a uses Organization but it should use OrgEmailData instead
     user?: UserEmailData;
     userSubject?: UserEmailData;
     event?: EventEmailData;
