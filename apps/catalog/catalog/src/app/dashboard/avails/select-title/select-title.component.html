@@ -10,9 +10,9 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Select Title</mat-label>
-      <mat-select [value]="titleId" (selectionChange)="titleId = $event.value">
+      <mat-select [value]="titleId" (selectionChange)="titleId = $event.value" >
         <mat-option *ngFor="let title of titles" [value]="title.id">
-          {{ title.title.international }} ({{title.status}})
+          {{ title.title.international }} ({{title.app.catalog.status | toLabel: 'storeStatus'}})
         </mat-option>
       </mat-select>
     </mat-form-field>

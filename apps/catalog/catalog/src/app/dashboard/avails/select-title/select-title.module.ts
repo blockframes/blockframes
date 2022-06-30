@@ -8,6 +8,7 @@ import { CatalogAvailsSelectTitleComponent } from "./select-title.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from "@angular/material/select";
 import { EmptyMovieModule } from "@blockframes/ui/dashboard/components/empty-movie/empty-movie.module";
+import { ToLabelModule } from "@blockframes/utils/pipes";
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { EmptyMovieModule } from "@blockframes/ui/dashboard/components/empty-mov
   imports: [
     CommonModule,
     EmptyMovieModule,
+    ToLabelModule,
 
     //Material
     MatProgressSpinnerModule,
