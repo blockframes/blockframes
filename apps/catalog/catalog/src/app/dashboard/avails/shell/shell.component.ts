@@ -45,6 +45,11 @@ export class CatalogAvailsShellComponent {
     map((terms) => terms.flat())
   );
 
+  public data$ = combineLatest([
+    this.terms$,
+    this.movie$
+  ]).pipe(map(([term, movie]) => ({term, movie})));
+
   constructor(
     private route: ActivatedRoute,
     private termsService: TermService,
