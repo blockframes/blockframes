@@ -16,13 +16,7 @@ mat-form-field{
   align-self: stretch;
 }
 
-.center{
+section{
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-}
-
-.column{
-  flex-direction: column;
+  place-content: center;
 }
