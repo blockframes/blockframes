@@ -1,5 +1,5 @@
 <a class="arrow_back" mat-icon-button routerLink="..">
-  <mat-icon svgIcon="arrow_back" [matTooltip]="'Go back'"></mat-icon>
+  <mat-icon svgIcon="arrow_back" matTooltip="Go back"></mat-icon>
 </a>
 
 <ng-container *ngIf="titles$ | async as titles; else loading">
@@ -12,7 +12,7 @@
       <mat-label>Select Title</mat-label>
       <mat-select [value]="titleId" (selectionChange)="titleId = $event.value">
         <mat-option *ngFor="let title of titles" [value]="title.id">
-          {{ title.title.international }}
+          {{ title.title.international }} ({{title.status}})
         </mat-option>
       </mat-select>
     </mat-form-field>

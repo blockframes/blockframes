@@ -7,7 +7,7 @@ import {
 import { QueryConstraint, where } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { MovieService } from '@blockframes/movie/service';
-import { Income } from '@blockframes/model';
+import { Income, storeStatus } from '@blockframes/model';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { FullSale } from '@blockframes/contract/avails/avails';
@@ -25,10 +25,11 @@ const titleQuery = (orgId: string): QueryConstraint[] => [
   styleUrls: ['./select-title.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CatalogAvailsSelectTitleComponent implements OnInit {
+export class CatalogAvailsSelectTitleComponent {
   public availsForm = new AvailsForm();
   private orgId = this.orgService.org.id;
-  public titleId:string;
+  public titleId: string;
+  public storeStatus = storeStatus;
 
   public titles$ = this.titleService.valueChanges(titleQuery(this.orgId));
 
@@ -37,9 +38,7 @@ export class CatalogAvailsSelectTitleComponent implements OnInit {
     private dynTitleService: DynamicTitleService,
     private router: Router,
     private orgService: OrganizationService
-  ) { }
-
-  ngOnInit() {
+  ) {
     this.dynTitleService.setPageTitle('My Avails');
   }
 }
