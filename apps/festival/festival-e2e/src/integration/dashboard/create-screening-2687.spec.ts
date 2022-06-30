@@ -64,7 +64,7 @@ describe.skip('User create a screening', () => {
   })
 
   it('Invitee1, Verify screening page and created screenings', () => {
-    const OrgName = orgsFixture.getByID(EVENTS[0].org.id).name;
+    const orgName = orgsFixture.getByID(EVENTS[0].org.id).name;
     const event1 = EVENTS[0].event;
     const event2 = EVENTS[1].event;
 
@@ -76,10 +76,10 @@ describe.skip('User create a screening', () => {
 
     const p1 = new FestivalMarketplaceHomePage();
     p1.clickOnMenu();
-    cy.log(`Navigating to [${OrgName}] screening schedule`);
+    cy.log(`Navigating to [${orgName}] screening schedule`);
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
-    p2.searchPartner(OrgName);
-    const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
+    p2.searchPartner(orgName);
+    const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(orgName);
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
     cy.log('=>Test Screenings are listed');
     p4.assertScreeningsExists(eventNames);
@@ -100,7 +100,7 @@ describe.skip('User create a screening', () => {
   });
 
   it('Invitee adds public screening to his calendar', () => {
-    const OrgName = orgsFixture.getByID(EVENTS[0].org.id).name;
+    const orgName = orgsFixture.getByID(EVENTS[0].org.id).name;
     //Screening event prefixed 2 created above.
     const screeningEvent = EVENTS[0].event + '2';
     const movieTitle = EVENTS[0].movie.title.international;
@@ -115,9 +115,9 @@ describe.skip('User create a screening', () => {
     cy.wait(10 * SEC);
 
     //Search for Partner Org and go the screenings
-    cy.log(`Seek out partner: ${OrgName}`);
-    p2.searchPartner(OrgName);
-    const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
+    cy.log(`Seek out partner: ${orgName}`);
+    p2.searchPartner(orgName);
+    const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(orgName);
 
     //Check if public screening exists and request it.
     cy.log(`[A]: schedule screening of {${screeningEvent}}`);
@@ -134,7 +134,7 @@ describe.skip('User create a screening', () => {
     const pn: FestivalMarketplaceNotificationsPage = p1.goToNotifications();
     // Wait notifications
     cy.wait(3 * SEC);
-    cy.log(`=>Test Notification from {${OrgName}} exists`);
-    pn.verifyNotification(OrgName, true);
+    cy.log(`=>Test Notification from {${orgName}} exists`);
+    pn.verifyNotification(orgName, true);
   });
 });
