@@ -5,7 +5,7 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { TermService } from '@blockframes/contract/term/service';
 import { MovieService } from '@blockframes/movie/service';
 import { Contract, isMandate, isSale, Movie, Term } from '@blockframes/model';
-import { combineLatest, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { where } from 'firebase/firestore';
 
