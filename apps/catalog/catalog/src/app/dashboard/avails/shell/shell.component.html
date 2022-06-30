@@ -1,6 +1,6 @@
 <ng-container *ngIf="movie$ | async as movie; else loading">
   <header>
-    <div class="center">
+    <div>
       <a mat-icon-button routerLink="/c/o/dashboard/avails">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
@@ -12,7 +12,7 @@
   </header>
 
   <section class="surface">
-    <nav class="center">
+    <nav>
       <a mat-flat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
       <a mat-flat-button routerLink="calendar" routerLinkActive="mat-primary">Single Territory</a>
     </nav>
