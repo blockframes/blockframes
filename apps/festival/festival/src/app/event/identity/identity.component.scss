@@ -1,5 +1,5 @@
 @use 'surface';
-@import "@angular/flex-layout/mq";
+@import '@angular/flex-layout/mq';
 
 :host {
   width: 100vw;
@@ -32,7 +32,7 @@
         margin-bottom: 24px;
       }
 
-      article {
+      div {
         display: flex;
         margin-block: 16px;
       }
@@ -63,7 +63,7 @@
       form {
         padding: 40px;
 
-        article {
+        div {
           flex-direction: row;
           gap: 16px;
 
@@ -97,7 +97,7 @@
       }
 
       form {
-        article {
+        div {
           flex-direction: column;
         }
       }
