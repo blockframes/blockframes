@@ -25,18 +25,11 @@
 </ng-container>
 
 <ng-template #loading>
-  <section fxLayout fxLayoutAlign="center center">
-    <mat-spinner fxLayoutAlign="center center"></mat-spinner>
+  <section class="center">
+    <mat-spinner class="center"></mat-spinner>
   </section>
 </ng-template>
 
 <ng-template #noTitles>
-  <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16">
-    <h1>No results found</h1>
-    <p>
-      Oops! it looks like there's no result corresponding to your search criteria.
-    </p>
-    <img asset="empty_contract.svg" alt="Image, you have no contracts yet">
-    <a mat-flat-button routerLink="select" color="primary" >Add avails</a>
-  </section>
+  <dashboard-empty-movie></dashboard-empty-movie>
 </ng-template>

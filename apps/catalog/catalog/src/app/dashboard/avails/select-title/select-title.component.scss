@@ -15,3 +15,14 @@ mat-form-field{
   margin-inline: auto;
   align-self: stretch;
 }
+
+.center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.column{
+  flex-direction: column;
+}
