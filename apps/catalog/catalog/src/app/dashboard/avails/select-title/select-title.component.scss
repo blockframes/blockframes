@@ -1,0 +1,17 @@
+:host {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.arrow_back {
+  align-self: flex-start;
+}
+
+mat-form-field{
+  width: 80%;
+  margin-inline: auto;
+  align-self: stretch;
+}
