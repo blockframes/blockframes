@@ -53,7 +53,22 @@ describe('Test USERS anonymization function', () => {
         firstName: `Foo`,
         lastName: 'Bar',
         privacyPolicy: {
-          ip: '127.0.0.1'
+          ip: '127.0.0.1',
+          date: new Date()
+        },
+        termsAndConditions: {
+          festival: {
+            ip: '127.0.0.1',
+            date: new Date()
+          },
+          catalog: {
+            ip: '127.0.0.1',
+            date: new Date()
+          },
+          financiers: {
+            ip: '127.0.0.1',
+            date: new Date()
+          },
         }
       }
     };
@@ -65,6 +80,9 @@ describe('Test USERS anonymization function', () => {
     expect(doc.content.lastName).not.toEqual(userRecord.content.lastName);
     expect(doc.content.privacyPolicy).toBeDefined();
     expect(doc.content.privacyPolicy.ip).not.toEqual(userRecord.content.privacyPolicy.ip);
+    expect(doc.content.termsAndConditions.festival.ip).not.toEqual(userRecord.content.termsAndConditions.festival.ip);
+    expect(doc.content.termsAndConditions.catalog.ip).not.toEqual(userRecord.content.termsAndConditions.catalog.ip);
+    expect(doc.content.termsAndConditions.financiers.ip).not.toEqual(userRecord.content.termsAndConditions.financiers.ip);
   });
 });
 
