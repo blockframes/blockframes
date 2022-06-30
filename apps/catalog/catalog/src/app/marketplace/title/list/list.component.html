@@ -60,6 +60,12 @@
       <filter-running-time [form]="searchForm.runningTime"></filter-running-time>
     </ng-template>
 
+    <button mat-icon-button (click)="save()" matTooltip="Save New Research">
+      <mat-icon svgIcon="bookmark_border" ></mat-icon>
+    </button>
+    <button mat-icon-button (click)="load()" matTooltip="Load Research">
+      <mat-icon svgIcon="folder_open"></mat-icon>
+    </button>
     <button mat-button class="refresh translucent" (click)="clear()" matTooltip="Clear all filters">
       <mat-icon svgIcon="refresh_filters"></mat-icon>
       <span>Clear Filters</span>
