@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EventRoleComponent } from './role.component';
 import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -16,7 +15,6 @@ import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
   declarations: [EventRoleComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
     MatButtonModule,
     MatCardModule,
     ImageModule,
