@@ -7,7 +7,7 @@ import {
   EventMeta,
   User,
   orgName,
-  MailBucket,
+  BucketEmailData,
   Bucket,
   createMailContract,
   MailTerm,
@@ -50,7 +50,7 @@ export interface EmailTemplateRequest {
     event?: EventEmailData;
     eventUrl?: string;
     pageURL?: string;
-    bucket?: MailBucket;
+    bucket?: BucketEmailData;
     baseUrl?: string;
     date?: string;
     movie?: MovieEmailData | Movie;
@@ -298,7 +298,7 @@ export function getNegotiationEmailData(negotiation: Partial<Negotiation>): Nego
   };
 }
 
-export function getBucketEmailData(bucket: Bucket): MailBucket {
+export function getBucketEmailData(bucket: Bucket): BucketEmailData {
   const currencyKey = getKeyIfExists('movieCurrencies', bucket.currency);
   const contracts = bucket.contracts.map(contract => createMailContract(contract));
 

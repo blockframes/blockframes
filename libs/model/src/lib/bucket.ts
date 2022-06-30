@@ -29,7 +29,7 @@ export interface BucketContract {
 }
 
 //To be used for sending mails.
-export interface MailBucket {
+export interface BucketEmailData {
   id: string;
   currency: string;
   /** One contract per orgId / titleId / parent terms Id */
