@@ -57,14 +57,14 @@ function getSupportEmail(app?: App) {
 export function userVerifyEmail(email: string, user: UserEmailData, link: string): EmailTemplateRequest {
   const data = {
     user,
-    pageURL: link
+    pageUrl: link
   };
   return { to: email, templateId: templateIds.user.verifyEmail, data };
 }
 
 export function accountCreationEmail(email: string, link: string, user: UserEmailData): EmailTemplateRequest {
   const data = {
-    pageURL: link,
+    pageUrl: link,
     user
   };
   return { to: email, templateId: templateIds.user.welcomeMessage, data };
@@ -72,7 +72,7 @@ export function accountCreationEmail(email: string, link: string, user: UserEmai
 
 export function userResetPassword(email: string, link: string, app: App): EmailTemplateRequest {
   const data = {
-    pageURL: link
+    pageUrl: link
   };
   const templateId = app === 'crm' ? templateIds.user.resetPasswordFromCRM : templateIds.user.resetPassword;
   return { to: email, templateId, data };
@@ -88,20 +88,20 @@ export function appAccessEmail(email: string, user: UserEmailData): EmailTemplat
  * @param email
  * @param password
  * @param orgName
- * @param pageURL
+ * @param pageUrl
  * @param templateId
  */
 export function userInvite(
   toUser: UserEmailData,
   org: OrgEmailData,
-  pageURL: string = appUrl.market,
+  pageUrl: string = appUrl.market,
   templateId: string = templateIds.user.credentials.joinOrganization,
   event?: EventEmailData
 ): EmailTemplateRequest {
   const data = {
     user: toUser,
     org,
-    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}?code=${encodeURIComponent(toUser.password)}&email=${encodeURIComponent(toUser.email)}`,
+    pageUrl: `${pageUrl}${USER_CREDENTIAL_INVITATION}?code=${encodeURIComponent(toUser.password)}&email=${encodeURIComponent(toUser.email)}`,
     event,
   };
   return { to: toUser.email, templateId, data };
@@ -111,7 +111,7 @@ export function userInvite(
 export function organizationWasAccepted(toUser: UserEmailData, url: string = appUrl.market): EmailTemplateRequest {
   const data = {
     user: toUser,
-    pageURL: `${url}/c/o`
+    pageUrl: `${url}/c/o`
   };
   return { to: toUser.email, templateId: templateIds.org.accepted, data };
 }
@@ -138,7 +138,7 @@ export function organizationAppAccessChanged(toAdmin: UserEmailData, url: string
 /** Send email to an user to inform him that he joined an org */
 export function userJoinedAnOrganization(toUser: UserEmailData, url: string = appUrl.market, org: OrgEmailData,): EmailTemplateRequest {
   const data = {
-    pageURL: `${url}/c/o`,
+    pageUrl: `${url}/c/o`,
     user: toUser,
     org
   };
@@ -174,7 +174,7 @@ export function userLeftYourOrganization(toAdmin: UserEmailData, userSubject: Us
     user: toAdmin,
     userSubject,
     org,
-    pageURL: `${ORG_HOME}${org.id}/view/members`
+    pageUrl: `${ORG_HOME}${org.id}/view/members`
   };
   return { to: toAdmin.email, templateId: templateIds.org.memberRemoved, data };
 }
@@ -185,7 +185,7 @@ export function userRequestedToJoinYourOrg(toAdmin: UserEmailData, userSubject: 
     user: toAdmin,
     userSubject,
     org,
-    pageURL: `${url}${ORG_HOME}${org.id}/view/members`
+    pageUrl: `${url}${ORG_HOME}${org.id}/view/members`
   };
   return { to: toAdmin.email, templateId: templateIds.request.joinOrganization.created, data };
 }
@@ -202,7 +202,7 @@ export function invitationToEventFromOrg(
     user: toUser,
     org,
     event,
-    pageURL: `${url}/${link}`,
+    pageUrl: `${url}/${link}`,
   };
   return { to: toUser.email, templateId: templateIds.invitation.attendEvent.created, data };
 }
@@ -241,7 +241,7 @@ export function requestToAttendEventFromUser(
     userSubject,
     org: userOrg,
     event,
-    pageURL: `${url}/${link}`
+    pageUrl: `${url}/${link}`
   };
   return { to: toAdmin.email, templateId: templateIds.request.attendEvent.created, data };
 }
@@ -317,7 +317,7 @@ export function screeningRequestedToSeller(
     buyer,
     org,
     movie,
-    pageURL: `${appUrl.market}/c/o/dashboard/event/new/edit?titleId=${movie.id}`
+    pageUrl: `${appUrl.market}/c/o/dashboard/event/new/edit?titleId=${movie.id}`
   };
   return { to: toUser.email, templateId: templateIds.event.screeningRequested, data };
 }
@@ -336,7 +336,7 @@ export function movieAskingPriceRequested(toUser: UserEmailData, fromBuyer: User
     movie,
     territories,
     message,
-    pageURL: `mailto:${fromBuyer.email}?subject=Interest in ${movie.title.international} via Archipel Market`
+    pageUrl: `mailto:${fromBuyer.email}?subject=Interest in ${movie.title.international} via Archipel Market`
   };
   return { to: toUser.email, templateId: templateIds.movie.askingPriceRequested, data };
 }
@@ -348,7 +348,7 @@ export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieE
     orgNames,
     territories,
     message,
-    pageURL: `${appUrl.market}/c/o/marketplace/title/${movie.id}`
+    pageUrl: `${appUrl.market}/c/o/marketplace/title/${movie.id}`
   }
 
   return { to: toUser.email, templateId: templateIds.movie.askingPriceRequestSent, data };
@@ -359,14 +359,14 @@ export function contractCreatedEmail(
   toUser: UserEmailData, title: Movie, contract: Contract,
   negotiation: Negotiation, buyerOrg: Organization
 ): EmailTemplateRequest {
-  const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
+  const pageUrl = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
   const data = {
     user: toUser,
     app: { name: appName.catalog },
     movie: getMovieEmailData(title),
     contract,
     negotiation: getNegotiationEmailData(negotiation),
-    pageURL,
+    pageUrl,
     buyerOrg,
   };
   return { to: toUser.email, templateId: templateIds.contract.created, data };
@@ -385,12 +385,12 @@ export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrgEmailData, offer: Offer, bucket: Bucket): EmailTemplateRequest {
   const mailBucket = getBucketEmailData(bucket);
 
-  const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
+  const pageUrl = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
   const data = {
     app: { name: appName.catalog },
     bucket: mailBucket,
     user: toUser,
-    pageURL,
+    pageUrl,
     baseUrl: appUrl.content,
     offer: getOfferEmailData(offer),
     org
@@ -402,13 +402,13 @@ export function counterOfferRecipientEmail(
   toUser: UserEmailData, senderOrg: OrgEmailData, offerId: string,
   title: Movie, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
-  const pageURL = options.isMailRecipientBuyer
+  const pageUrl = options.isMailRecipientBuyer
     ? `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`
     : `${appUrl.content}/c/o/dashboard/sales/${contractId}/view`;
   const data = {
     user: toUser,
     org: senderOrg,
-    pageURL,
+    pageUrl,
     movie: getMovieEmailData(title),
     app: { name: appName.catalog }
   };
@@ -419,13 +419,13 @@ export function counterOfferSenderEmail(
   toUser: UserEmailData, org: OrgEmailData, offerId: string,
   negotiation: Negotiation, title: Movie, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
-  const pageURL = options.isMailRecipientBuyer
+  const pageUrl = options.isMailRecipientBuyer
     ? `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`
     : `${appUrl.content}/c/o/dashboard/sales/${contractId}/view`;
 
   const data = {
     user: toUser,
-    pageURL,
+    pageUrl,
     offerId,
     org,
     contractId,
@@ -437,11 +437,11 @@ export function counterOfferSenderEmail(
 }
 
 export function toAdminCounterOfferEmail(title: Movie, offerId: string): EmailTemplateRequest {
-  const pageURL = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
+  const pageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
 
   const data = {
     movie: getMovieEmailData(title),
-    pageURL
+    pageUrl
   };
   return { to: supportEmails.catalog, templateId: templateIds.negotiation.toAdminCounterOffer, data };
 }
@@ -453,12 +453,12 @@ export function toAdminCounterOfferEmail(title: Movie, offerId: string): EmailTe
 // ): EmailTemplateRequest {
 //   const isOfferAccepted = offer.status === 'accepted';
 //   const acceptedContracts = contracts.filter(contract => contract.status === 'accepted');
-//   const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
+//   const pageUrl = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
 //   const data = {
 //     contracts: isOfferAccepted ? acceptedContracts : contracts,
 //     offer,
 //     user,
-//     pageURL,
+//     pageUrl,
 //     app: { name: appName.catalog }
 //   };
 //   // const templateId = isOfferAccepted ? templateIds.offer.allContractsAccepted : templateIds.offer.allContractsDeclined;
@@ -469,10 +469,10 @@ export function toAdminCounterOfferEmail(title: Movie, offerId: string): EmailTe
 //   user: UserEmailData, offerId: string, contract: ContractDocument, negotiation: MailContract,
 //   title: string
 // ): EmailTemplateRequest {
-//   const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
+//   const pageUrl = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
 //   const data = {
 //     contract, offerId, user, negotiation,
-//     title, pageURL, app: { name: appName.catalog }
+//     title, pageUrl, app: { name: appName.catalog }
 //   };
 //   const templateId = templateIds.offer.underSignature;
 //   return { to: user.email, templateId, data };

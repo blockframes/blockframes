@@ -49,7 +49,7 @@ export interface EmailTemplateRequest {
     userSubject?: UserEmailData;
     event?: EventEmailData;
     eventUrl?: string;
-    pageURL?: string;
+    pageUrl?: string;
     bucket?: BucketEmailData;
     baseUrl?: string;
     date?: string;

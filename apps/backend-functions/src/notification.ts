@@ -713,7 +713,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
     contract, title, app, isRecipientBuyer, toUser, recipientOrg, counterOfferSenderOrg
   } = await getNegotiationUpdatedEmailData(recipient, notification);
 
-  const pageURL = isRecipientBuyer
+  const pageUrl = isRecipientBuyer
     ? `${appUrl.content}/c/o/marketplace/offer/${contract.offerId}/${contract.id}`
     : `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
 
@@ -728,7 +728,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
     org: getOrgEmailData(recipientOrg),
     contract,
     movie: getMovieEmailData(title),
-    pageURL,
+    pageUrl,
     crmPageUrl,
     termsUrl,
     app: { name: appName.catalog }
