@@ -5,8 +5,8 @@
 <ng-container *ngIf="titles$ | async as titles; else loading">
   <ng-container *ngIf="titles.length; else noTitles">
     <h2>Select Title you want to add Avails to</h2>
-    <p>You can add the Avails to a Title with any status ( published, submitted, draft )</p>
-    <p>Nevertheless, your Buyers will be able to refine their search only when your selected Title is published.</p>
+    <p>You can add the Avails to a Title with any status (published, submitted, draft)</p>
+    <p>Nevertheless, your Buyers will be able to refine their search only if your selected Title is published.</p>
 
     <mat-form-field appearance="fill">
       <mat-label>Select Title</mat-label>
