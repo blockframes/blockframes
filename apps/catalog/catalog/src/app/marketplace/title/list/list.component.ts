@@ -196,7 +196,6 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   patchSearchValues(search) {
-    console.log('search --->', search)
     const languages = this.searchForm.languages.get('languages') as FormList<any>
     const versions = this.searchForm.languages.get('versions') as FormEntity<any>
 
@@ -216,9 +215,12 @@ export class ListComponent implements OnDestroy, OnInit {
     const routeParams = decodeUrl(this.route);
     localStorage.setItem(`${this.app}-Library`, JSON.stringify(routeParams));
   }
+
   load() {
     const dataStorage = localStorage.getItem(`${this.app}-Library`);
     const parseData = JSON.parse(dataStorage)
+    parseData.avails.duration.from = new Date(parseData.avails.duration.from);
+    parseData.avails.duration.to = new Date(parseData.avails.duration.to);
     this.availsForm.patchValue(parseData.avails);
     this.patchSearchValues(parseData.search)
   }
