@@ -152,7 +152,7 @@ export class OrganizationComponent implements OnInit {
     const simulation = await this.simulateDeletion(this.orgId);
     this.dialog.open(ConfirmInputComponent, {
       data: createModalData({
-        title: `You are currently deleting '${this.org.denomination.full}' from Archipel, are you sure?`,
+        title: `You are currently deleting '${this.org.name}' from Archipel, are you sure?`,
         text: "If yes, please write 'HARD DELETE' inside the form below.",
         warning: 'You will also delete everything regarding this organization',
         simulation,

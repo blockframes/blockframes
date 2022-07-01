@@ -30,10 +30,6 @@ function queryConstraints(orgId: string, options: { internal?: boolean }) {
   ]
 }
 
-function getFullName(seller: Organization) {
-  return seller.denomination.full;
-}
-
 @Component({
   selector: 'catalog-sale-list',
   templateUrl: './list.component.html',
@@ -45,8 +41,8 @@ export class SaleListComponent implements OnInit {
 
   public internalSales$ = this.contractService.valueChanges(queryConstraints(this.orgId, { internal: true })).pipe(
     joinWith({
-      licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
-      licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(getFullName)),
+      licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(org => org.name)),
+      licensee: (sale: Sale) => this.orgService.valueChanges(sale.buyerId).pipe(map(org => org.name)),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
       negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id)
     }),
@@ -54,7 +50,7 @@ export class SaleListComponent implements OnInit {
 
   public externalSales$ = this.contractService.valueChanges(queryConstraints(this.orgId, { internal: false })).pipe(
     joinWith({
-      licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName)),
+      licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(org => org.name)),
       licensee: () => of('External'),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
       price: (sale: Sale) => this.incomeService.valueChanges(sale.id),

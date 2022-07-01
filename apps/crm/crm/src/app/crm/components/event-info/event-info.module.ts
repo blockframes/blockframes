@@ -10,7 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
 
 // Modules
 import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { GoToModule } from '../go-to/go-to.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { AgendaExportModule } from '@blockframes/event/components/agenda-export/agenda-export.module';
@@ -33,7 +32,6 @@ import { EventInfoComponent } from './event-info.component';
 
     // Material
     MatCardModule,
-    OrgNameModule,
     MatIconModule
   ]
 })

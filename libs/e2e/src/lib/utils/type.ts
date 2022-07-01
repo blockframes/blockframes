@@ -10,12 +10,8 @@ export interface Organization {
   id: string;
   email: string;
   address: Location;
-  denomination: {
-    full: string;
-    public: string;
-  }
+  name: string;
   activity: string;
-  fiscalNumber: string;
 }
 
 export interface Location {

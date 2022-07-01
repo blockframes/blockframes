@@ -15,7 +15,7 @@ import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 import { OfferPipeModule } from '@blockframes/contract/offer/pipe';
-import { GetOrgPipeModule, OrgNameModule } from '@blockframes/organization/pipes';
+import { GetOrgPipeModule } from '@blockframes/organization/pipes';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -50,7 +50,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FilterByModule,
     NegotiationPipeModule,
     GetOrgPipeModule,
-    OrgNameModule,
     LetModule,
 
     // Material
