@@ -1,5 +1,5 @@
 <a class="arrow_back" mat-icon-button routerLink="..">
-  <mat-icon svgIcon="arrow_back" [matTooltip]="'Go back'"></mat-icon>
+  <mat-icon svgIcon="arrow_back" matTooltip="Go back"></mat-icon>
 </a>
 
 <ng-container *ngIf="titles$ | async as titles; else loading">
@@ -10,9 +10,9 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Select Title</mat-label>
-      <mat-select [value]="titleId" (selectionChange)="titleId = $event.value">
+      <mat-select [value]="titleId" (selectionChange)="titleId = $event.value" >
         <mat-option *ngFor="let title of titles" [value]="title.id">
-          {{ title.title.international }}
+          {{ title.title.international }} ({{title.app.catalog.status | toLabel: 'storeStatus'}})
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -25,18 +25,11 @@
 </ng-container>
 
 <ng-template #loading>
-  <section fxLayout fxLayoutAlign="center center">
-    <mat-spinner fxLayoutAlign="center center"></mat-spinner>
+  <section>
+    <mat-spinner></mat-spinner>
   </section>
 </ng-template>
 
 <ng-template #noTitles>
-  <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16">
-    <h1>No results found</h1>
-    <p>
-      Oops! it looks like there's no result corresponding to your search criteria.
-    </p>
-    <img asset="empty_contract.svg" alt="Image, you have no contracts yet">
-    <a mat-flat-button routerLink="select" color="primary" >Add avails</a>
-  </section>
+  <dashboard-empty-movie></dashboard-empty-movie>
 </ng-template>

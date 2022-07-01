@@ -1,17 +1,14 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { FlexLayoutModule } from "@angular/flex-layout";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { RouterModule } from "@angular/router";
-import { AvailsFilterModule } from "@blockframes/contract/avails/filter/filter.module";
-import { ImageModule } from "@blockframes/media/image/directives/image.module";
-import { TableModule } from "@blockframes/ui/list/table/table.module";
-import { MaxLengthModule } from "@blockframes/utils/pipes";
 import { CatalogAvailsSelectTitleComponent } from "./select-title.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from "@angular/material/select";
+import { EmptyMovieModule } from "@blockframes/ui/dashboard/components/empty-movie/empty-movie.module";
+import { ToLabelModule } from "@blockframes/utils/pipes";
 
 @NgModule({
   declarations: [
@@ -19,11 +16,8 @@ import { MatSelectModule } from "@angular/material/select";
   ],
   imports: [
     CommonModule,
-    MaxLengthModule,
-    FlexLayoutModule,
-    TableModule,
-    ImageModule,
-    AvailsFilterModule,
+    EmptyMovieModule,
+    ToLabelModule,
 
     //Material
     MatProgressSpinnerModule,
