@@ -5,9 +5,6 @@ import type { NotificationTypes } from './notification';
 import type { UserRole } from './permissions';
 
 export interface User extends PublicUser {
-  financing: {
-    rank: string;
-  };
   firstName: string;
   lastName: string;
   phoneNumber: string;

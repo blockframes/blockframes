@@ -65,9 +65,6 @@ export const e2eUser = (data: E2EUser): User => {
     },
     phoneNumber: '',
     position: '',
-    financing: {
-      rank: ''
-    },
     avatar: null,
     _meta: {
       emailVerified: true,
