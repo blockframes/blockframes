@@ -45,22 +45,6 @@ function fakeIp() {
   return randomNumber() + 1 + '.' + randomNumber() + '.' + randomNumber() + '.' + randomNumber();
 }
 
-function fakeFiscalNumber() {
-  const fakeValues = ['FR', 'EN', 'PL', 'GB', 'AL'];
-  const start = fakeValues[Math.floor(Math.random() * fakeValues.length)];
-  return (
-    start +
-    ' ' +
-    randomNumber() +
-    '-' +
-    randomNumber() +
-    '-' +
-    randomNumber() +
-    '-' +
-    randomNumber()
-  );
-}
-
 function hasKeys<T extends Record<string, any>>(
   doc: Record<string, any>,
   ...keys: (keyof T)[]
@@ -77,13 +61,9 @@ function processUser<T extends User | PublicUser>(u: T): T {
 }
 
 function processOrg<T extends Organization | PublicOrganization>(o: T): T {
-  const companyName = faker.company.companyName();
-  const denomination = { full: companyName, public: companyName };
-  const email = fakeEmail(companyName);
-  const org = { ...o, denomination, email } as any;
-  if (org.fiscalNumber) {
-    org.fiscalNumber = fakeFiscalNumber();
-  }
+  const name = faker.company.companyName();
+  const email = fakeEmail(name);
+  const org = { ...o, name, email } as any;
   return org;
 }
 
@@ -120,12 +100,12 @@ function updateUser(user: User | PublicUser | Partial<User>, toPublicUser = fals
 
 function updateOrg(org: Organization | PublicOrganization) {
   if (!org) return;
-  if (hasKeys<PublicOrganization>(org, 'denomination') && !hasKeys<Organization>(org, 'email')) {
+  if (hasKeys<PublicOrganization>(org, 'name') && !hasKeys<Organization>(org, 'email')) {
     // Is public
     const newOrg = orgCache?.[org.id] || (orgCache[org.id] = processOrg(org));
     return createPublicOrganization(newOrg);
   }
-  if (hasKeys<Organization>(org, 'email') || hasKeys<Organization>(org, 'fiscalNumber')) {
+  if (hasKeys<Organization>(org, 'email')) {
     return orgCache?.[org.id] || (orgCache[org.id] = processOrg(org));
   }
   throw Error(`Unable to process org: ${JSON.stringify(org, null, 4)}`);
@@ -181,7 +161,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
       // USERS
       return { docPath, content: updateUser(doc) };
     }
-    if (docPath.includes('orgs/') && hasKeys<Organization>(doc, 'id', 'denomination')) {
+    if (docPath.includes('orgs/') && hasKeys<Organization>(doc, 'id', 'name')) {
       // ORGS
       return { docPath, content: updateOrg(doc) };
     }

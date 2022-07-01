@@ -73,7 +73,7 @@ export async function getOrgId(
 
   if (cache[name]) return cache[name];
 
-  const orgs = await orgService.getValue([where('denomination.full', '==', name)]);
+  const orgs = await orgService.getValue([where('name', '==', name)]);
   const result = orgs.length === 1 ? orgs[0].id : '';
   cache[name] = result;
   return result;

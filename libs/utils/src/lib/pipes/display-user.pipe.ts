@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrganizationService } from '@blockframes/organization/service';
-import { Organization, orgName, PublicUser, displayName } from '@blockframes/model';
+import { Organization, PublicUser, displayName } from '@blockframes/model';
 
 /**
  * This pipe is used to display the firstname and lastname of the user but also the organization in parenthesis.
@@ -19,7 +19,7 @@ export class DisplayUserPipe implements PipeTransform {
     const getUserName = async (user: PublicUser) => {
       if (user.orgId) {
         const org = await this.getOrg(user.orgId);
-        return `${displayName(user)} (${orgName(org)})`;
+        return `${displayName(user)} (${org.name})`;
       } else {
         return displayName(user);
       }

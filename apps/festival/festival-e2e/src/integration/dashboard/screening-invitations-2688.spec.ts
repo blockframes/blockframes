@@ -114,7 +114,7 @@ describe('Organiser invites other users to private screening', () => {
 
       festival.selectSalesAgents();
 
-      festival.clickOnOrganization(org.denomination.public);
+      festival.clickOnOrganization(org.name);
 
       festival.clickOnScreeningSchedule();
 

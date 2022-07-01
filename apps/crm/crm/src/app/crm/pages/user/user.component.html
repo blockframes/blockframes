@@ -22,7 +22,7 @@
         <ul>
           <li *ngIf="userOrg">
             <b>Organization : </b>
-            <span>{{ userOrg | orgName:'long' }}</span>
+            <span>{{ userOrg.name }}</span>
             <button mat-icon-button color="primary" [routerLink]="['/c/o/dashboard/crm/organization', userOrg.id]">
               <mat-icon svgIcon="visibility"></mat-icon>
             </button>
@@ -145,11 +145,11 @@
   <ng-template colRef="type" label="Type" let-type sort>
     {{type}}
   </ng-template>
-  <ng-template colRef="fromOrg.denomination.full" label="From Organization" let-full sort>
-    {{full}}
+  <ng-template colRef="fromOrg.name" label="From Organization" let-fromOrgName sort>
+    {{fromOrgName}}
   </ng-template>
-  <ng-template colRef="toOrg.denomination.full" label="To Organization" let-full sort>
-    {{full}}
+  <ng-template colRef="toOrg.name" label="To Organization" let-toOrgName sort>
+    {{toOrgName}}
   </ng-template>
   <ng-template colRef="status" label="Status" let-status sort>
     {{status}}

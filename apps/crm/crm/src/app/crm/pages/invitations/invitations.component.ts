@@ -4,7 +4,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { EventService } from '@blockframes/event/service';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { getHost } from '@blockframes/invitation/pipes/host.pipe';
-import { Movie, Organization, orgName, Event, isScreening, InvitationDetailed, getGuest } from '@blockframes/model';
+import { Movie, Organization, Event, isScreening, InvitationDetailed, getGuest } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
 
@@ -79,7 +79,7 @@ export class InvitationsComponent implements OnInit {
       'event name': i.event.title,
       'start date': i.event.start,
       'end date': i.event.end,
-      'host organization': orgName(i.org),
+      'host organization': i.org.name,
       'host org id': i.org.id,
       'event type': i.event.type,
       title: i.movie ? i.movie.title.international : '--',
@@ -88,7 +88,7 @@ export class InvitationsComponent implements OnInit {
       'guest email': getGuest(i, 'user').email,
       'guest first name': getGuest(i, 'user').firstName || '--',
       'guest last name': getGuest(i, 'user').lastName || '--',
-      'guest organization': i.guestOrg ? orgName(i.guestOrg) : '--',
+      'guest organization': i.guestOrg?.name || '--',
       'invitation mode': i.mode,
       'invitation status': i.status,
     }));

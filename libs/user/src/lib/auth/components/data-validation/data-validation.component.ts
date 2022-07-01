@@ -3,7 +3,7 @@ import { AuthService } from '@blockframes/auth/service';
 import { App, getOrgModuleAccess, Organization, hasDisplayName } from '@blockframes/model';
 import { BehaviorSubject } from 'rxjs';
 import { Intercom } from 'ng-intercom';
-import { delay, hasDenomination } from '@blockframes/utils/helpers';
+import { delay, hasName } from '@blockframes/utils/helpers';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
 import { CallableFunctions } from 'ngfire';
@@ -16,7 +16,7 @@ import { CallableFunctions } from 'ngfire';
 })
 export class AuthDataValidationComponent implements OnInit {
   @Input() set organization(org: Organization) {
-    this.orgData = hasDenomination(org);
+    this.orgData = hasName(org);
     const isUserInOrg = org.userIds.includes(this.user.uid);
     const isOrgAccepted = org.status === "accepted";
     const orgHaveAccesToAtLeastOneModule = !!getOrgModuleAccess(org, this.app).length;
