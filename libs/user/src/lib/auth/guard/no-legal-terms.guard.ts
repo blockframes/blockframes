@@ -20,15 +20,17 @@ export class NoLegalTermsGuard implements CanActivate  {
     return this.service.profile$.pipe(
       switchMap(() => this.service.getValue()),
       map(user  => {
-        if (
-          this.app !== 'crm' && (
-          !user.privacyPolicy?.date || 
-          user.privacyPolicy?.date < this.service.privacyPolicyDate ||
-          !user.termsAndConditions?.[this.app]?.date ||
-          user.termsAndConditions?.[this.app]?.date < this.service.termsAndConditionsDate[this.app])
-          ) {
-          return true;
-        }
+        if (this.app === 'crm') return this.router.createUrlTree(['/c/o']);
+
+        const latestPrivacyPolicy = this.service.privacyPolicyDate;
+        const latestTermsAndConditions = this.service.termsAndConditionsDate[this.app];
+        const userPrivacyPolicy = user.privacyPolicy?.date;
+        const userTermsAndConditions = user.termsAndConditions?.[this.app]?.date;
+
+        const invalidPrivacyPolicy = !userPrivacyPolicy || userPrivacyPolicy < latestPrivacyPolicy;
+        const invalidTermsAndConditions = !userTermsAndConditions || userTermsAndConditions < latestTermsAndConditions;
+        
+        if (invalidPrivacyPolicy || invalidTermsAndConditions) return true;
         return this.router.createUrlTree(['/c/o']);
       })
     );

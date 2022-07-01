@@ -7,6 +7,7 @@
   align-items: center;
   height: auto;
   min-height: 100vh;
+  padding-top: 48px;
   background-image: url("/assets/images/light/rocket_background.svg");
   background-color: var(--background-card);
   background-position: right bottom;
@@ -48,13 +49,13 @@ form {
 }
 
 @include layout-bp(lt-md) {
-  section {
+  .surface {
     width: 70%;
   }
 }
 
 @include layout-bp(lt-sm) {
-  section {
+  .surface {
     width: 95%;
   }
 }

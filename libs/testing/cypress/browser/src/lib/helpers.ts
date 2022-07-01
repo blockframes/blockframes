@@ -1,4 +1,4 @@
-import { PublicUser, PermissionsDocument, Organization, User } from '@blockframes/model';
+import { PermissionsDocument, Organization, User } from '@blockframes/model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 import faker from '@faker-js/faker';
@@ -60,7 +60,8 @@ export const e2eUser = (data: E2EUser): User => {
     privacyPolicy: legalTerms,
     termsAndConditions: {
       festival: legalTerms,
-      catalog: legalTerms
+      catalog: legalTerms,
+      financiers: legalTerms
     },
     phoneNumber: '',
     position: '',

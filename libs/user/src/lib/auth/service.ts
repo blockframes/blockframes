@@ -33,7 +33,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
     festival: new Date('02/28/2022'),
     catalog: new Date('02/28/2022'),
     financiers: new Date('02/28/2022'),
-} ;
+  };
   readonly path = 'users';
 
   readonly idKey: 'uid';

@@ -311,12 +311,17 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     // User is updated only if user was asked to fill firstName & lastName
     if (this.form.get('lastName').enabled && this.form.get('firstName').enabled) {
-      const privacyPolicy = await this.authService.getLegalTerms();
+      const legalTerms = await this.authService.getLegalTerms();
+      const privacyPolicy = legalTerms;
+      const termsAndConditions = {
+        [this.app]: legalTerms
+      }
       await this.authService.update({
         _meta: createDocumentMeta({ createdFrom: this.app }),
         firstName,
         lastName,
-        privacyPolicy: privacyPolicy,
+        privacyPolicy,
+        termsAndConditions
       });
     }
 

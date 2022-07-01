@@ -30,20 +30,22 @@ export class CheckPolicyAndTermsComponent implements OnInit {
   async ngOnInit() {
     const profile = await firstValueFrom(this.service.profile$);
     const isPrivacyAccepted = profile.privacyPolicy?.date >= new Date(this.service.privacyPolicyDate);
-    const isTCAccepted = profile.termsAndConditions?.[this.app]?.date >= new Date(this.service.privacyPolicyDate)
-      this.form.get('termsOfUse').setValue(isTCAccepted);
-      this.form.get('privacyPolicy').setValue(isPrivacyAccepted);
+    const isTCAccepted = profile.termsAndConditions?.[this.app]?.date >= new Date(this.service.privacyPolicyDate);
+    this.form.get('termsOfUse').setValue(isTCAccepted);
+    this.form.get('privacyPolicy').setValue(isPrivacyAccepted);
   }
 
   async accept() {
+    const profile = await firstValueFrom(this.service.profile$);
     const legalTerms = await this.service.getLegalTerms();
     const privacyPolicy = legalTerms;
     const termsAndConditions = {
+      ...profile.termsAndConditions,
       [this.app]: legalTerms
     };
 
     await this.service.update({ termsAndConditions, privacyPolicy });
-    this.router.navigate(['/c/o'])
+    this.router.navigate(['/c/o']);
   }
 
   public openIntercom(): void {

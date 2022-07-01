@@ -11,7 +11,6 @@ import {
   PublicOrganization,
   Invitation,
   IMaintenanceDoc,
-  app,
   getAllAppsExcept
 } from '@blockframes/model';
 import {
