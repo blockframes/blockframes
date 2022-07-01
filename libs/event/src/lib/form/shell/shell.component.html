@@ -32,13 +32,19 @@
       </section>
       <event-details-edit [form]="form" showPrivacy></event-details-edit>
     </mat-card>
-
-    <nav mat-tab-nav-bar>
-      <ng-container *ngFor="let tab of (tabs$ |async)">
-        <a mat-tab-link [routerLink]="tab.path" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">
-          {{ tab.label }}</a>
-      </ng-container>
-    </nav>
+    <div>
+      <nav mat-tab-nav-bar>
+        <ng-container *ngFor="let tab of (tabs$ |async)">
+          <a mat-tab-link [routerLink]="tab.path" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">
+            {{ tab.label }}
+          </a>
+        </ng-container>
+      </nav>
+      <button *ngIf="form.value.type !== 'slate'" mat-button (click)="explain()">
+        <mat-icon svgIcon="info"></mat-icon>
+        <span>Learn how it works</span>
+      </button>
+    </div>
   </form>
 
   <div class="routerContainer" [@routeAnimation]="animationOutlet(outlet)">

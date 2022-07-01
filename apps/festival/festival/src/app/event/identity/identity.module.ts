@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EventIdenityComponent } from './identity.component';
 import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Material
@@ -19,7 +18,6 @@ import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
   declarations: [EventIdenityComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
     ReactiveFormsModule,
     MatButtonModule,
     MatFormFieldModule,
