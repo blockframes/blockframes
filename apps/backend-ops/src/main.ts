@@ -41,7 +41,7 @@ import {
   clearDb,
   startEmulatorsForUnitTests
 } from '@blockframes/devops';
-import { join } from 'node:path';
+import { join } from 'path';
 import { getDb } from '@blockframes/firebase-utils/initialize';
 
 const args = process.argv.slice(2);

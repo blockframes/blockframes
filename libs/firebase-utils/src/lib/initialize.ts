@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as firebaseConfig from 'firebase.json';
 import { readFileSync } from 'fs';
-import { join, resolve } from 'node:path';
+import { join, resolve } from 'path';
 import { firebase } from '@env';
 
 export const SAK_KEY = 'GOOGLE_APPLICATION_CREDENTIALS';
