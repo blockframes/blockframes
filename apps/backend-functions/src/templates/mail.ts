@@ -348,7 +348,7 @@ export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieE
 /** Inform user of org whose movie is being bought */
 export function contractCreatedEmail(
   toUser: UserEmailData, title: Movie, contract: Contract,
-  negotiation: Negotiation, buyerOrg: Organization
+  negotiation: Negotiation, buyerOrg: OrgEmailData
 ): EmailTemplateRequest {
   const pageUrl = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
   const data = {
