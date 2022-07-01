@@ -54,8 +54,8 @@
     <ng-template colRef="user.email" label="Email address" let-email sort>
       {{ email }}
     </ng-template>
-    <ng-template colRef="org" label="Company name" let-org sort>
-      {{ org | orgName }}
+    <ng-template colRef="org.name" label="Company name" let-name sort>
+      {{ name }}
     </ng-template>
     <ng-template colRef="org.activity" label="Activity" let-activity sort [filter]="filters.orgActivity">
       {{ activity | toLabel:'orgActivity' }}
@@ -121,7 +121,7 @@
         <ng-template colRef label="Email" let-invitation="item" sort defaultSort [filter]="filters.email">
           <span>{{ (invitation | guest: 'user').email }}</span>
         </ng-template>
-        <ng-template colRef="guestOrg.denomination.public" label="Company Name" let-name sort defaultSort>
+        <ng-template colRef="guestOrg.name" label="Company Name" let-name sort defaultSort>
           <span>{{ name ?? '-' }}</span>
         </ng-template>
         <ng-template colRef="guestOrg.activity" label="Activity" let-activity sort defaultSort [filter]="filters.orgActivity">

@@ -4,7 +4,7 @@
       <img [ref]="org.logo" asset="empty_organization.svg" alt="organization logo">
     </a>
     <div>
-      <p class="org-name">{{ org | orgName }}</p>
+      <p class="org-name">{{ org.name }}</p>
       <ng-container *ngIf="org.id | orgMovies | async as orgMovies">
         <p class="mat-caption">{{ orgMovies.length }} films</p>
       </ng-container>

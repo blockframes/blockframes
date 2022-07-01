@@ -6,7 +6,6 @@ import {
   Event,
   EventMeta,
   User,
-  orgName,
   MailBucket,
   Bucket,
   createMailContract,
@@ -44,7 +43,7 @@ export interface EmailTemplateRequest {
   to: string;
   templateId: string;
   data: {
-    org?: OrgEmailData | Organization; // @TODO #7491 template d-94a20b20085842f68fb2d64fe325638a uses Organization but it should use OrgEmailData instead
+    org?: OrgEmailData | Organization; // @TODO #7491 template d-f45a08ce5be94e368f868579fa72afa8 uses Organization but it should use OrgEmailData instead
     user?: UserEmailData;
     userSubject?: UserEmailData;
     event?: EventEmailData;
@@ -97,7 +96,7 @@ export interface EventEmailData {
 }
 
 export interface OrgEmailData {
-  denomination: string;
+  name: string;
   email: string;
   id: string;
   country?: string;
@@ -254,7 +253,7 @@ function createIcsFromEvent(e: Event<EventMeta>, orgName: string): IcsEvent {
 export function getOrgEmailData(org: Partial<Organization>): OrgEmailData {
   return {
     id: org.id,
-    denomination: orgName(org, 'full'),
+    name: org.name,
     email: org.email || '',
     country: toLabel(org.addresses?.main?.country, 'territories')
   }

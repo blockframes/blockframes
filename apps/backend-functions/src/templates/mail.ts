@@ -159,15 +159,6 @@ export function userJoinedYourOrganization(
   return { to: toUser.email, templateId: templateIds.org.memberAdded, data };
 }
 
-/** Send email to org admins to inform them that an user declined their invitation to join his org */
-export function invitationToJoinOrgDeclined(toAdmin: UserEmailData, userSubject: UserEmailData): EmailTemplateRequest {
-  const data = {
-    user: toAdmin,
-    userSubject,
-  };
-  return { to: toAdmin.email, templateId: templateIds.invitation.organization.declined, data };
-}
-
 /** Send email to org admin to inform him that an user has left his org */
 export function userLeftYourOrganization(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
   const data = {
@@ -496,7 +487,7 @@ const organizationCreatedTemplate = (orgId: string) =>
  */
 const organizationRequestAccessToAppTemplate = (org: PublicOrganization, app: App, module: Module) =>
   `
-  Organization '${org.denomination.full}' requested access to ${module} module of app ${appName[app]},
+  Organization '${org.name}' requested access to ${module} module of app ${appName[app]},
 
   Visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${org.id} or go to ${ADMIN_ACCEPT_ORG_PATH}/${org.id} to enable it.
   `;
@@ -518,7 +509,7 @@ export function organizationCreated(org: Organization): EmailRequest {
 
   return {
     to: supportEmail,
-    subject: `${appName[org._meta.createdFrom]} - ${org.denomination.full} was created and needs a review`,
+    subject: `${appName[org._meta.createdFrom]} - ${org.name} was created and needs a review`,
     text: organizationCreatedTemplate(org.id)
   };
 }

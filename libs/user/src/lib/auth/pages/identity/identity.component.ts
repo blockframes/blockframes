@@ -120,7 +120,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
   public setOrg(result: AlgoliaOrganization) {
     const orgFromAlgolia = createOrganization({
-      denomination: { full: result.name },
+      name: result.name,
       addresses: { main: createLocation({ country: result.country }) },
       activity: result.activity
     });
@@ -132,7 +132,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   public createOrg(orgName: string) {
-    this.orgForm.reset({ denomination: { full: orgName } });
+    this.orgForm.reset({ name: orgName });
     this.orgForm.enable();
     this.existingOrgId = '';
   }
@@ -192,7 +192,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.snackBar.open('Your account has been created and request to join org sent ! ', 'close', { duration: 8000 });
       return this.router.navigate(['c/organization/join-congratulations']);
     } else {
-      const { denomination, addresses, activity, appAccess } = this.orgForm.value;
+      const { name, addresses, activity, appAccess } = this.orgForm.value;
 
 
       /**
@@ -206,9 +206,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.isAnonymous = (await this.authService.user).isAnonymous;
 
       // Check if the org name is already existing
-      const orgId = await this.orgService.getOrgIdFromName(denomination.full);
+      const orgId = await this.orgService.getOrgIdFromName(name);
       if (orgId) {
-        this.orgForm.get('denomination').setErrors({ notUnique: true });
+        this.orgForm.get('name').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
         this.creating = false;
         this.cdr.markForCheck();
@@ -219,7 +219,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.publicUser = await this.createUserFromAnonymous(this.form.value);
 
       // Create the org
-      const org = createOrganization({ denomination, addresses, activity });
+      const org = createOrganization({ name, addresses, activity });
       org.appAccess[this.app][appAccess] = true;
       await this.orgService.addOrganization(org, this.app, this.publicUser);
 
@@ -346,19 +346,19 @@ export class IdentityComponent implements OnInit, OnDestroy {
       return this.router.navigate(['c/organization/join-congratulations']);
     } else {
       // User decided to create his own org and is redirected to waiting room
-      const { denomination, addresses, activity, appAccess } = this.orgForm.value;
+      const { name, addresses, activity, appAccess } = this.orgForm.value;
 
       // Check if the org name is already existing
-      const orgId = await this.orgService.getOrgIdFromName(denomination.full);
+      const orgId = await this.orgService.getOrgIdFromName(name);
       if (orgId) {
-        this.orgForm.get('denomination').setErrors({ notUnique: true });
+        this.orgForm.get('name').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
         this.creating = false;
         this.cdr.markForCheck();
         return;
       }
 
-      const org = createOrganization({ denomination, addresses, activity });
+      const org = createOrganization({ name, addresses, activity });
 
       org.appAccess[this.app][appAccess] = true;
       await this.orgService.addOrganization(org, this.app, this.authService.profile);

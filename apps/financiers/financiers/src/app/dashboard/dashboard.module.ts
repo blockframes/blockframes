@@ -8,7 +8,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Blockframes
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
@@ -105,7 +104,6 @@ const routes: Routes = [{
     FlexLayoutModule,
     DashboardLayoutModule,
     ImageModule,
-    OrgNameModule,
     ToLabelModule,
     OrgAccessModule,
     MovieFormShellModule,

@@ -91,10 +91,7 @@ export const e2eOrg = (data: E2EOrganization): Organization => {
   const { id, name, userIds, email, dashboardAccess } = data;
   return {
     id,
-    denomination: {
-      public: null,
-      full: name,
-    },
+    name,
     userIds,
     email,
     status: 'accepted',
@@ -122,7 +119,6 @@ export const e2eOrg = (data: E2EOrganization): Organization => {
         dashboard: false,
       },
     },
-    fiscalNumber: '',
     wishlist: [],
     description: '',
     addresses: {
