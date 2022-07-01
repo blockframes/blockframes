@@ -1,4 +1,5 @@
-import { adminAuth, firestore } from '@blockframes/testing/cypress/browser';
+import { adminAuth } from './adminAuth';
+import { firestore } from './firestore';
 import { User, Organization, Invitation } from '@blockframes/model';
 import { UserRecord } from '@blockframes/firebase-utils/types';
 import { WhereFilterOp } from 'firebase/firestore';
@@ -12,7 +13,7 @@ export function deleteUser(userEmail: string) {
 }
 
 export function deleteOrg(orgName: string) {
-  const query = { collection: 'orgs', field: 'denomination.full', operator: '==' as WhereFilterOp, value: orgName };
+  const query = { collection: 'orgs', field: 'name', operator: '==' as WhereFilterOp, value: orgName };
   firestore.queryData(query).then((orgs: Organization[]) => {
     if (!orgs.length) return cy.log(`No previous organization named ${orgName}`);
     firestore.delete([`orgs/${orgs[0].id}`]);
@@ -36,7 +37,7 @@ export function validateUser(userEmail: string) {
 
 export function validateOrg(orgName: string) {
   firestore
-    .queryData({ collection: 'orgs', field: 'denomination.full', operator: '==', value: orgName })
+    .queryData({ collection: 'orgs', field: 'name', operator: '==', value: orgName })
     .then((orgs: Organization[]) => {
       const [org] = orgs;
       firestore.update([{ docPath: `orgs/${org.id}`, field: 'status', value: 'accepted' }]);

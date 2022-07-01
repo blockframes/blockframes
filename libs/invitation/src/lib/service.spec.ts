@@ -31,7 +31,7 @@ const invitationParamsOrg = {
   date: today,
   toOrg: {
     id: 'orgId',
-    denomination: { full: 'MyOrg' },
+    name: 'MyOrg',
     logo: undefined
   },
 };

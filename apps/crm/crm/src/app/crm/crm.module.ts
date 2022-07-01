@@ -21,7 +21,6 @@ import { UploadWidgetModule } from '@blockframes/media/file/upload-widget/upload
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { AppPipeModule, ToLabelModule, DisplayNameModule, MaxLengthModule, JoinPipeModule, ToGroupLabelPipeModule } from '@blockframes/utils/pipes';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { OverviewModule } from './pages/overview/overview.module';
@@ -99,7 +98,6 @@ export const panelRoutes: Routes = [
     ToLabelModule,
     ToGroupLabelPipeModule,
     JoinPipeModule,
-    OrgNameModule,
     MemberPermissionsModule,
     MovieHeaderModule,
     OverviewModule,

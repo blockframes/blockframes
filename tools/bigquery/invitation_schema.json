@@ -33,14 +33,8 @@
           "type": "string"
         },
         {
-          "name": "denomination",
-          "type": "map",
-          "fields": [
-            {
-              "name": "full",
-              "type": "string"
-            }
-          ]
+          "name": "name",
+          "type": "string"
         }
       ]
     },
@@ -97,14 +91,8 @@
           "type": "string"
         },
         {
-          "name": "denomination",
-          "type": "map",
-          "fields": [
-            {
-              "name": "full",
-              "type": "string"
-            }
-          ]
+          "name": "name",
+          "type": "string"
         }
       ]
     }

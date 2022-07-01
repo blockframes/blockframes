@@ -3,7 +3,7 @@
     <article fxLayout fxLayoutAlign="space-around start">
       <img [ref]="org.logo" type="logo" asset="empty_organization.svg" alt="organization logo">
       <div class="org-info">
-        <h1>{{ org | orgName }}</h1>
+        <h1>{{ org.name }}</h1>
         <h3>{{ org.activity | toLabel: 'orgActivity' }}</h3>
         <p class="mat-body-2">{{ org | orgAddress }}</p>
       </div>

@@ -9,7 +9,6 @@ import {
 } from '@blockframes/firebase-utils';
 import { algolia } from '@env';
 import {
-  orgName,
   PublicUser,
   Campaign,
   AlgoliaConfig,
@@ -87,16 +86,16 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = getDb()) {
     for await (const movies of moviesIterator) {
       const promises = movies.map(async (movie) => {
         try {
-          const orgs = await Promise.all(movie.orgIds.map((id) => getDocument<Organization>(`orgs/${id}`)));
+          const orgs = await Promise.all(movie.orgIds.map((id) => getDocument<Organization>(`orgs/${id}`, db)));
 
           if (!orgs.length) {
             console.error(`Movie ${movie.id} is not part of any orgs`);
           }
 
-          const organizationNames = orgs.map((org) => orgName(org));
+          const organizationNames = orgs.map((org) => org.name);
 
           if (appConfig === 'financiers') {
-            const campaign = await getDocument<Campaign>(`campaign/${movie.id}`);
+            const campaign = await getDocument<Campaign>(`campaign/${movie.id}`, db);
             if (campaign?.minPledge) {
               movie['minPledge'] = campaign.minPledge;
             }
