@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { firebase } from '@env';
 import { AuthService } from '@blockframes/auth/service';
 import { firstValueFrom } from 'rxjs';
+import { MyapimoviesService } from '@blockframes/utils/myapimovies/myapimovies.service';
 
 @Component({
   selector: 'crm-dev-area',
@@ -16,6 +17,7 @@ export class DevAreaComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private myapimoviesService: MyapimoviesService,
     private cdRef: ChangeDetectorRef
   ) { }
 
@@ -23,6 +25,16 @@ export class DevAreaComponent implements OnInit {
     this.token = await firstValueFrom(this.authService.user$)
       .then(user => user.getIdToken());
     this.cdRef.markForCheck();
+
+
+    const movie = await this.myapimoviesService.movie('tt0107290');
+    console.log(movie);
+
+    const genres = await this.myapimoviesService.genres('tt0107290');
+    console.log(genres);
+
+    //const health = await this.myapimoviesService.health();
+    //console.log(health);
   }
 
 }
