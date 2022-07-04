@@ -1,8 +1,6 @@
-import { MailTerm } from "./terms";
-import { User } from "./user";
-import { Offer } from "./offer";
-
-export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
+import { MailTerm } from './terms';
+import { User } from './user';
+import { Offer } from './offer';
 
 export interface OrgEmailData {
   denomination: string;
@@ -50,31 +48,12 @@ export interface NegotiationEmailData {
   terms: MailTerm[];
 }
 
-export const emailErrorCodes = {
-  unauthorized: {
-    code: 'E01-unauthorized' as EmailErrorCodes,
-    message: 'API key is not authorized to send mails. Please visit: https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0'
-  },
-  general: {
-    code: 'E02-general-error' as EmailErrorCodes,
-    message: 'Unexpected error while sending email',
-  },
-  missingKey: {
-    code: 'E03-missing-api-key' as EmailErrorCodes,
-    message: 'No sendgrid API key set'
-  },
-  noTemplate: {
-    code: 'E04-no-template-available' as EmailErrorCodes,
-    message: 'There is no existing template for this email',
-  }
-};
-
 export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailRequest {
   return {
     to: 'foo@bar.com',
     subject: 'Default email subject',
-    text: 'This is not spam, I\'m just a lazy developer testing emails and forgot to change default message.',
-    ...params
+    text: "This is not spam, I'm just a lazy developer testing emails and forgot to change default message.",
+    ...params,
   };
 }
 export function getUserEmailData(user: Partial<User>, password?: string): UserEmailData {
@@ -83,12 +62,12 @@ export function getUserEmailData(user: Partial<User>, password?: string): UserEm
     lastName: user.lastName || '',
     email: user.email || '',
     password,
-    isRegistered: !!user.orgId
-  }
+    isRegistered: !!user.orgId,
+  };
 }
 
 export function getOfferEmailData(offer: Partial<Offer>): OfferEmailData {
   return {
-    id: offer.id
-  }
+    id: offer.id,
+  };
 }

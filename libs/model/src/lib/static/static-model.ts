@@ -1332,6 +1332,27 @@ export const staticModel = {
   accessibility
 };
 
+export const emailErrorCodes = {
+  unauthorized: {
+    code: 'E01-unauthorized' as EmailErrorCodes,
+    message: 'API key is not authorized to send mails. Please visit: https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0'
+  },
+  general: {
+    code: 'E02-general-error' as EmailErrorCodes,
+    message: 'Unexpected error while sending email',
+  },
+  missingKey: {
+    code: 'E03-missing-api-key' as EmailErrorCodes,
+    message: 'No sendgrid API key set'
+  },
+  noTemplate: {
+    code: 'E04-no-template-available' as EmailErrorCodes,
+    message: 'There is no existing template for this email',
+  }
+};
+
+export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
+
 export type StaticModel = typeof staticModel;
 export type Scope = keyof StaticModel;
 export type GetKeys<S extends Scope> = keyof StaticModel[S];
