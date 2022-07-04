@@ -5,11 +5,11 @@ import { Negotiation } from './negociation';
 import { Movie } from './movie';
 import { Organization } from './organisation';
 import { toLabel } from './utils';
-import { appName, eventTypes, movieCurrenciesSymbols, staticModel } from './static/static-model';
+import { eventTypes, movieCurrenciesSymbols, staticModel } from './static/static-model';
 import { Bucket, MailBucket } from './bucket';
 import { Contract, createMailContract } from './contract';
 import { AccessibilityTypes, App, EventTypesValue } from './static/types';
-import { EventMeta, Event, IcsEvent, isScreening, isMeeting, isSlate } from './event';
+import { EventMeta, Event, createIcsFromEvent, toIcsFile } from './event';
 import { differenceInDays, differenceInHours, differenceInMinutes, format, millisecondsInHour } from 'date-fns';
 
 export interface OrgEmailData {
@@ -251,53 +251,4 @@ export function getEventEmailData({ event, orgName, attachment = true, email, in
     calendar: attachment ? getEventEmailAttachment(event, organizerEmail, orgName, applicationUrl) : undefined,
     duration: getEventDuration(eventStartDate, eventEndDate)
   }
-}
-
-export function createIcsFromEvent(e: Event, organizerEmail: string, orgName?: string): IcsEvent {
-  const event = isScreening(e) || isMeeting(e) || isSlate(e) ? e : undefined;
-  if (!event) return;
-  return {
-    id: event.id,
-    title: event.title,
-    start: event.start,
-    end: event.end,
-    description: event.meta.description,
-    organizer: {
-      name: orgName,
-      email: organizerEmail
-    }
-  }
-}
-
-const header = `BEGIN:VCALENDAR\nVERSION:2.0\nCALSCALE:GREGORIAN\nX-WR-CALNAME:${appName.festival}`;
-const footer = 'END:VCALENDAR';
-
-export function toIcsFile(events: IcsEvent[], applicationUrl: string) {
-
-  const eventsData = events.map(event => {
-    const eventData: string[] = [];
-    eventData.push(`SUMMARY:${event.title}`);
-    eventData.push(`DTSTART:${toIcsDate(event.start)}`);
-    eventData.push(`DTEND:${toIcsDate(event.end)}`);
-    eventData.push(`LOCATION: ${appName.festival}`);
-    eventData.push(`DESCRIPTION: ${event.description}${event.description ? ' - ' : ''}${applicationUrl}/event/${event.id}/r/i`);
-    eventData.push(`ORGANIZER;CN="${event.organizer.name}":MAILTO:${event.organizer.email}`);
-
-    return ['BEGIN:VEVENT'] // Event start tag
-      .concat(eventData)
-      .concat(['STATUS:CONFIRMED', 'SEQUENCE:3', 'END:VEVENT']) // Event end tags
-      .join('\n');
-  });
-
-  return `${header}\n${eventsData.join('\n')}\n${footer}`;
-}
-
-export const toIcsDate = (date: Date): string => {
-  if (!date) return '';
-  const y = date.getUTCFullYear();
-  const m = `${date.getUTCMonth() < 9 ? '0' : ''}${date.getUTCMonth() + 1}`;
-  const d = `${date.getUTCDate() < 10 ? '0' : ''}${date.getUTCDate()}`;
-  const hh = `${date.getUTCHours() < 10 ? '0' : ''}${date.getUTCHours()}`;
-  const mm = `${date.getUTCMinutes() < 10 ? '0' : ''}${date.getUTCMinutes()}`;
-  return `${y}${m}${d}T${hh}${mm}00Z`;
 }
