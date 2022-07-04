@@ -4,7 +4,6 @@
  * https://www.notion.so/cascade8/Email-Data-Object-8ed9d64e8cd4490ea7bc0e469c04043e
  */
 import { supportEmails, appUrl, e2eMode } from '../environments/environment';
-import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
 import {
@@ -18,18 +17,18 @@ import {
   Movie,
   Organization,
   Negotiation,
-  Contract
-} from '@blockframes/model';
-import {
-  EventEmailData,
-  OrgEmailData,
+  Contract,
   UserEmailData,
-  getMovieEmailData,
-  getOfferEmailData,
+  OrgEmailData,
   MovieEmailData,
+  getOfferEmailData,
+  EmailRequest,
+  getMovieEmailData,
+  getNegotiationEmailData,
   getBucketEmailData,
-  getNegotiationEmailData
-} from '@blockframes/utils/emails/utils';
+  EventEmailData,
+  EmailTemplateRequest
+} from '@blockframes/model';
 import { format } from 'date-fns';
 import { supportMailosaur } from '@blockframes/utils/constants';
 

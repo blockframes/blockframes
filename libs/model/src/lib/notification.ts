@@ -4,8 +4,7 @@ import { PublicOrganization } from './organisation';
 import { PublicInvitation } from './invitation';
 import { Bucket } from './bucket';
 import { StorageFile } from './media';
-import { App } from './static';
-import { EmailErrorCodes } from './emails';
+import { App, EmailErrorCode } from './static';
 
 export const notifications = {
   catalog: [
@@ -98,7 +97,7 @@ export interface Notification {
   type: NotificationTypes;
   email?: {
     isSent: boolean;
-    error?: EmailErrorCodes;
+    error?: EmailErrorCode;
   },
   app?: {
     isRead: boolean;
