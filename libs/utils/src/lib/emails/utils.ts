@@ -6,17 +6,10 @@ import {
   Event,
   EventMeta,
   MailBucket,
-  Bucket,
-  createMailContract,
-  staticModel,
-  createMailTerm,
   App,
   AccessibilityTypes,
-  movieCurrenciesSymbols,
   EventTypesValue,
   eventTypes,
-  toLabel,
-  Negotiation,
   Movie,
   Contract,
   Organization,
@@ -32,9 +25,6 @@ import {
 } from '@blockframes/model';
 import { toIcsFile } from '../agenda/utils';
 import { IcsEvent } from '../agenda/agenda.interfaces';
-import { getKeyIfExists } from '../helpers';
-
-
 
 export interface EmailTemplateRequest {
   to: string;
@@ -91,9 +81,6 @@ export interface EventEmailData {
   calendar: AttachmentData;
   duration: string;
 }
-
-
-
 
 interface EventEmailParameters {
   event: Event<EventMeta>;
@@ -183,45 +170,4 @@ function createIcsFromEvent(e: Event<EventMeta>, orgName: string): IcsEvent {
   }
 }
 
-export function getOrgEmailData(org: Partial<Organization>): OrgEmailData {
-  return {
-    id: org.id,
-    name: org.name,
-    email: org.email || '',
-    country: toLabel(org.addresses?.main?.country, 'territories')
-  }
-}
 
-
-export function getMovieEmailData(movie: Partial<Movie>): MovieEmailData {
-  return {
-    id: movie.id,
-    title: {
-      international: movie.title.international,
-    }
-  }
-}
-
-export function getNegotiationEmailData(negotiation: Partial<Negotiation>): NegotiationEmailData {
-  const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
-  const formatter = new Intl.NumberFormat('en-US');
-  const price = negotiation.price ? formatter.format(negotiation.price) : '';
-  const terms = createMailTerm(negotiation.terms);
-
-  return {
-    price,
-    currency,
-    terms
-  };
-}
-
-export function getBucketEmailData(bucket: Bucket): MailBucket {
-  const currencyKey = getKeyIfExists('movieCurrencies', bucket.currency);
-  const contracts = bucket.contracts.map(contract => createMailContract(contract));
-
-  return {
-    ...bucket,
-    contracts,
-    currency: movieCurrenciesSymbols[currencyKey]
-  };
-}

@@ -22,16 +22,16 @@ import {
   OrgEmailData,
   MovieEmailData,
   getOfferEmailData,
-  EmailRequest
+  EmailRequest,
+  getMovieEmailData,
+  getNegotiationEmailData,
+  getBucketEmailData
 } from '@blockframes/model';
 import { format } from 'date-fns';
 import { supportMailosaur } from '@blockframes/utils/constants';
 import {
   EmailTemplateRequest,
   EventEmailData,
-  getBucketEmailData,
-  getMovieEmailData,
-  getNegotiationEmailData,
 } from '@blockframes/utils/emails/utils';
 
 const ORG_HOME = '/c/o/organization/';

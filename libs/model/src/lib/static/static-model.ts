@@ -237,12 +237,12 @@ export const medias = {
   aVod: 'A-VOD',
   fVod: 'F-VOD',
   sVod: 'S-VOD',
-  tVod : 'T-VOD',
+  tVod: 'T-VOD',
   inflight: 'Inflight',
   boats: 'Boats',
   hotels: 'Hotels',
   educational: 'Educational',
-  festival : 'Festival',
+  festival: 'Festival',
   rental: 'Rental',
   through: 'Sell Through',
 } as const
@@ -1332,26 +1332,26 @@ export const staticModel = {
   accessibility
 };
 
-export const emailErrorCodes = {
+export const emailErrorCode = ['E01-unauthorized', 'E02-general-error', 'E03-missing-api-key', 'E04-no-template-available'] as const;
+
+export const emailErrorCodes: Record<string, { code: typeof emailErrorCode[number], message: string }> = {
   unauthorized: {
-    code: 'E01-unauthorized' as EmailErrorCodes,
+    code: 'E01-unauthorized',
     message: 'API key is not authorized to send mails. Please visit: https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0'
   },
   general: {
-    code: 'E02-general-error' as EmailErrorCodes,
+    code: 'E02-general-error',
     message: 'Unexpected error while sending email',
   },
   missingKey: {
-    code: 'E03-missing-api-key' as EmailErrorCodes,
+    code: 'E03-missing-api-key',
     message: 'No sendgrid API key set'
   },
   noTemplate: {
-    code: 'E04-no-template-available' as EmailErrorCodes,
+    code: 'E04-no-template-available',
     message: 'There is no existing template for this email',
   }
 };
-
-export type EmailErrorCodes = 'E01-unauthorized' | 'E02-general-error' | 'E03-missing-api-key' | 'E04-no-template-available';
 
 export type StaticModel = typeof staticModel;
 export type Scope = keyof StaticModel;

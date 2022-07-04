@@ -16,8 +16,9 @@ import {
   Organization,
   createPublicUser,
   getUserEmailData,
+  getOrgEmailData
 } from '@blockframes/model';
-import { EventEmailData, getOrgEmailData } from '@blockframes/utils/emails/utils';
+import { EventEmailData } from '@blockframes/utils/emails/utils';
 import { logger } from 'firebase-functions';
 import { hasUserAnOrgOrIsAlreadyInvited } from '../invitation';
 import { getDocument } from '@blockframes/firebase-utils';

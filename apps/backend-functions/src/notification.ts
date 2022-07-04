@@ -19,7 +19,9 @@ import {
   Movie,
   Organization,
   emailErrorCodes,
-  getUserEmailData
+  getUserEmailData,
+  getOrgEmailData,
+  getMovieEmailData
 } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
 import {
@@ -61,8 +63,6 @@ import { getDocument, BlockframesSnapshot } from '@blockframes/firebase-utils';
 import {
   EventEmailData,
   getEventEmailData,
-  getMovieEmailData,
-  getOrgEmailData,
 } from '@blockframes/utils/emails/utils';
 // #7946 this may be reactivated later
 // import { movieCurrencies, createMailContract, MailContract } from '@blockframes/model';

@@ -1,9 +1,16 @@
-import { MailTerm } from './terms';
+import { createMailTerm, MailTerm } from './terms';
 import { User } from './user';
 import { Offer } from './offer';
+import { Negotiation } from './negociation';
+import { Movie } from './movie';
+import { Organization } from './organisation';
+import { toLabel } from './utils';
+import { movieCurrenciesSymbols, staticModel } from './static/static-model';
+import { Bucket, MailBucket } from './bucket';
+import { createMailContract } from './contract';
 
 export interface OrgEmailData {
-  denomination: string;
+  name: string;
   email: string;
   id: string;
   country?: string;
@@ -56,6 +63,7 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
     ...params,
   };
 }
+
 export function getUserEmailData(user: Partial<User>, password?: string): UserEmailData {
   return {
     firstName: user.firstName || '',
@@ -69,5 +77,46 @@ export function getUserEmailData(user: Partial<User>, password?: string): UserEm
 export function getOfferEmailData(offer: Partial<Offer>): OfferEmailData {
   return {
     id: offer.id,
+  };
+}
+
+export function getOrgEmailData(org: Partial<Organization>): OrgEmailData {
+  return {
+    id: org.id,
+    name: org.name,
+    email: org.email || '',
+    country: toLabel(org.addresses?.main?.country, 'territories')
+  }
+}
+
+export function getMovieEmailData(movie: Partial<Movie>): MovieEmailData {
+  return {
+    id: movie.id,
+    title: {
+      international: movie.title.international,
+    }
+  }
+}
+
+export function getNegotiationEmailData(negotiation: Partial<Negotiation>): NegotiationEmailData {
+  const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
+  const formatter = new Intl.NumberFormat('en-US');
+  const price = negotiation.price ? formatter.format(negotiation.price) : '';
+  const terms = createMailTerm(negotiation.terms);
+
+  return {
+    price,
+    currency,
+    terms
+  };
+}
+
+export function getBucketEmailData(bucket: Bucket): MailBucket {
+  const contracts = bucket.contracts.map(contract => createMailContract(contract));
+
+  return {
+    ...bucket,
+    contracts,
+    currency: movieCurrenciesSymbols[bucket.currency]
   };
 }
