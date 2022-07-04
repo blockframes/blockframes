@@ -2,7 +2,6 @@ import algoliasearch from 'algoliasearch';
 import { algolia as algoliaClient, centralOrgId } from '@env';
 import * as functions from 'firebase-functions';
 import {
-  orgName,
   PublicUser,
   festival,
   Language,
@@ -89,7 +88,7 @@ export function storeSearchableOrg(org: Organization, adminKey?: string, db = lo
 export function createAlgoliaOrganization(org: Organization): AlgoliaOrganization {
   return {
     objectID: org.id,
-    name: orgName(org),
+    name: org.name,
     appModule: getOrgModuleAccess(org),
     country: org.addresses.main.country,
     isAccepted: org.status === 'accepted',
@@ -219,7 +218,7 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string, d
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
       avatar: user.avatar?.storagePath ?? '',
-      orgName: orgData ? orgName(orgData) : '',
+      orgName: orgData ? orgData.name : '',
     };
 
     return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);

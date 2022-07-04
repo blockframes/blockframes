@@ -62,7 +62,7 @@ export class OrganizationCreateComponent {
     }
 
     const orgEmailData: OrgEmailData = {
-      denomination: this.form.get('denomination').get('full').value,
+      name: this.form.get('name').value,
       id: '',
       email: this.form.get('email').value
     }

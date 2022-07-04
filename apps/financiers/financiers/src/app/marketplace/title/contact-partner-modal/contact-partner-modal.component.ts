@@ -57,7 +57,7 @@ export class ContactPartnerModalComponent {
 
       const org = this.orgService.org;
       const orgUserSubject: OrgEmailData = {
-        denomination: org.denomination.full ?? org.denomination.public,
+        name: org.name,
         id: org.id || '',
         email: org.email || ''
       }

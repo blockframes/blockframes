@@ -6,7 +6,6 @@ import { FileExplorerComponent, GetDirPipe } from './explorer.component';
 
 // Blockframes
 import { MaxLengthModule } from '@blockframes/utils/pipes';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { FileUploaderModule } from '../file-uploader/file-uploader.module';
 import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { FileNameModule } from '@blockframes/utils/pipes';
@@ -34,7 +33,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
     // Blockframes
     MaxLengthModule,
-    OrgNameModule,
     FileUploaderModule,
     ImageUploaderModule,
     FileNameModule,

@@ -24,8 +24,8 @@
     <ng-template colRef="status" let-status sort>
       <bf-tag>{{ status }}</bf-tag>
     </ng-template>
-    <ng-template colRef="denomination.full" label="Organization Name" sort let-fullName>
-      {{ fullName }}
+    <ng-template colRef="name" label="Organization Name" sort let-name>
+      {{ name }}
     </ng-template>
     <ng-template colRef="addresses.main.country" label="Country" let-country sort [filter]="filters.territories">
       {{ (country | toLabel:'territories') || '--' }}

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '@blockframes/auth/service';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {
-  orgName,
   Movie,
   Event,
   isMeeting,
@@ -90,17 +89,6 @@ export class NotificationService extends BlockframesCollection<Notification> {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message: `${displayUserName}'s request to join your organization was refused.`,
-          imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl[this.app]}/c/o/organization/${
-            notification.organization.id
-          }/view/members`,
-        };
-      case 'invitationToJoinOrgDeclined':
-        return {
-          ...notification,
-          _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
-          message: `Your invitation to ${displayUserName} to join your organization was refused.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${
@@ -197,7 +185,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const movie = await this.movieService.load(titleId);
         const imgRef = this.getPoster(movie);
         const org = await this.orgService.load(event.ownerOrgId);
-        const message = `REMINDER - ${org.denomination.full}'s ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" is about to start.`;
+        const message = `REMINDER - ${org.name}'s ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" is about to start.`;
 
         return {
           ...notification,
@@ -214,7 +202,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const movie = await this.movieService.load(titleId);
         const imgRef = this.getPoster(movie);
         const org = await this.orgService.load(event.ownerOrgId);
-        const message = `REMINDER - ${org.denomination.full}'s ${eventTypes[event.type]} "<a href="/event/${
+        const message = `REMINDER - ${org.name}'s ${eventTypes[event.type]} "<a href="/event/${
           event.id
         }" target="_blank">${event.title}</a>" will start tomorrow at ${format(
           event.start,
@@ -453,14 +441,14 @@ export class NotificationService extends BlockframesCollection<Notification> {
     // Adding user data to the notification of meeting events
     if (event && isMeeting(event) && notification.organization) {
       const user = await this.userService.load(event.meta.organizerUid);
-      const organizationName = orgName(notification.organization);
+      const organizationName = notification.organization.name;
       subject = `${user.firstName} ${user.lastName} (${organizationName})`;
     } else if (notification.organization) {
-      subject = orgName(notification.organization);
+      subject = notification.organization.name;
     } else if (notification.user && notification.user.lastName && notification.user.firstName) {
       if (notification.user.orgId) {
         const org = await this.orgService.load(notification.user.orgId);
-        subject = `${displayName(notification.user)} (${orgName(org)})`;
+        subject = `${displayName(notification.user)} (${org.name})`;
       } else subject = displayName(notification.user);
     } else if (notification.user && notification.user.email) {
       subject = notification.user.email;
@@ -487,7 +475,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
   public async nameToDisplay(notification: Notification, contract: Contract) {
     if (contract.buyerUserId === notification.toUserId) {
       const org = await this.orgService.load(contract.sellerId);
-      return orgName(org);
+      return org.name;
     } else {
       const user = await this.userService.load(contract.buyerUserId);
       return displayName(user);

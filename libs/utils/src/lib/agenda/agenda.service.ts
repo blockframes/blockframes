@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { orgName, Event, isMeeting, isScreening, isSlate } from "@blockframes/model";
+import { Injectable } from '@angular/core';
+import { Event, isMeeting, isScreening, isSlate } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
-import { sendgridEmailsFrom } from "../apps";
-import { IcsEvent } from "./agenda.interfaces";
-import { downloadIcs, toGoogleLink } from "./utils";
+import { sendgridEmailsFrom } from '../apps';
+import { IcsEvent } from './agenda.interfaces';
+import { downloadIcs, toGoogleLink } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class AgendaService {
@@ -17,7 +17,7 @@ export class AgendaService {
     const filename = events.length > 1 ? 'events.ics' : `${events[0].title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
     const promises = events.map(async event => {
       const ownerOrg = await this.orgService.getValue(event.ownerOrgId);
-      return createIcsFromEvent(event, orgName(ownerOrg, 'full'));
+      return createIcsFromEvent(event, ownerOrg.name);
     }).filter(e => !!e);
 
     const icsEvents = await Promise.all(promises);
