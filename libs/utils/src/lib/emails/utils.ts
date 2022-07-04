@@ -52,7 +52,7 @@ export interface EmailTemplateRequest {
     bucket?: BucketEmailData;
     baseUrl?: string;
     date?: string;
-    movie?: MovieEmailData | Movie;
+    movie?: MovieEmailData;
     offer?: OfferEmailData;
     buyer?: UserEmailData;
     contract?: Contract;

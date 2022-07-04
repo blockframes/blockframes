@@ -301,7 +301,7 @@ export function screeningRequestedToSeller(
   toUser: UserEmailData,
   buyer: UserEmailData,
   org: OrgEmailData,
-  movie: Movie,
+  movie: MovieEmailData,
 ): EmailTemplateRequest {
   const data = {
     user: toUser,

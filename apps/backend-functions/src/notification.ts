@@ -450,7 +450,7 @@ async function sendScreeningRequested(recipient: User, notification: Notificatio
     toUser,
     getUserEmailData(requestor),
     getOrgEmailData(buyerOrg),
-    movie
+    getMovieEmailData(movie)
   );
   await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
 }
