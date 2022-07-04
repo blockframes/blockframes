@@ -24,7 +24,7 @@ import {
   getGuest,
   hasDisplayName
 } from '@blockframes/model';
-import { toScreenerCards } from '@blockframes/analytics/utils';
+import { MetricCard, toScreenerCards } from '@blockframes/analytics/utils';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
@@ -38,7 +38,6 @@ import {
   exportSpreadsheet
 } from '@blockframes/utils/spreadsheet';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
-import { MetricCard } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
 
 interface EventAnalytics {
   name: string, // firstName + lastName

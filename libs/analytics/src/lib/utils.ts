@@ -9,11 +9,12 @@ import {
   AnalyticData,
   Invitation,
   averageWatchDuration,
-  InvitationWithAnalytics
+  InvitationWithAnalytics,
+  EventName
 } from '@blockframes/model';
 import { convertToTimeString } from '@blockframes/utils/helpers';
 import { getDeepValue } from '@blockframes/utils/pipes';
-import { MetricCard } from './components/metric-card-list/metric-card-list.component';
+import { IconSvg } from '@blockframes/ui/icon.service';
 
 /**
  * Counts number of occurances
@@ -79,6 +80,13 @@ export function aggregatePerUser(analytics: (Analytics<'title'> & { user: User, 
   return Object.values(aggregator);
 }
 
+export interface MetricCard {
+  title: string;
+  value: number | string;
+  icon: string;
+  selected?: boolean;
+}
+
 export function toScreenerCards(screeningRequests: Invitation[] | Analytics<'title'>[], invitations: Invitation[] | InvitationWithAnalytics[]): MetricCard[] {
   const attendees = invitations.filter(invitation => invitation.watchInfos?.duration);
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
@@ -120,4 +128,49 @@ export function toScreenerCards(screeningRequests: Invitation[] | Analytics<'tit
       icon: 'magnet_electricity'
     }
   ];
+}
+
+interface VanityMetricEvent {
+  name: EventName;
+  title: string;
+  icon: IconSvg;
+};
+
+export const events: VanityMetricEvent[] = [
+  {
+    name: 'pageView',
+    title: 'Views',
+    icon: 'visibility'
+  },
+  {
+    //#8693 Currently we rename on the ui from promo reels/elements to video plays.
+    //This should be reverted to promo elements once above issue is resolved.
+    name: 'promoReelOpened',
+    title: 'Video Plays',
+    icon: 'star_fill'
+  },
+  {
+    name: 'addedToWishlist',
+    title: 'Adds to Wishlist',
+    icon: 'favorite'
+  },
+  {
+    name: 'screeningRequested',
+    title: 'Screening Requested',
+    icon: 'ask_screening_2'
+  },
+  {
+    name: 'askingPriceRequested',
+    title: 'Asking Price Requested',
+    icon: 'local_offer'
+  }
+];
+
+export function toCards(aggregated: AggregatedAnalytic): MetricCard[] {
+  return events.map(event => ({
+    title: event.title,
+    value: aggregated[event.name],
+    icon: event.icon,
+    selected: false
+  }));
 }

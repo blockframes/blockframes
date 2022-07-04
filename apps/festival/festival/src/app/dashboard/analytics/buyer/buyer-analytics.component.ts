@@ -6,8 +6,7 @@ import {
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
-import { MetricCard, events, toCards } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
+import { aggregate, counter, countedToAnalyticData, MetricCard, events, toCards } from '@blockframes/analytics/utils';
 import {
   AggregatedAnalytic,
   isScreening,

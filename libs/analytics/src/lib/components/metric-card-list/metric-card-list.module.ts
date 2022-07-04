@@ -11,9 +11,9 @@ import { MatButtonModule } from '@angular/material/button';
 @NgModule({
   imports: [
     CommonModule,
+    // Material
     MatTooltipModule,
     MatButtonModule,
-    // Material
     MatIconModule
   ],
   declarations: [MetricCardListComponent],
