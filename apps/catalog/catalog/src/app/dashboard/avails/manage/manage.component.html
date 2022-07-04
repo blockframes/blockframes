@@ -1,4 +1,4 @@
-<a class="arrow_back" mat-icon-button routerLink="..">
+<a class="arrow_back" mat-icon-button (click)="goBack()">
   <mat-icon svgIcon="arrow_back" matTooltip="Go back"></mat-icon>
 </a>
 
@@ -13,7 +13,7 @@
     and show them on the map or calendar.
   </p>
 
-  <bf-form-table editOnly [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom" [active]="indexId">
+  <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom">
     <!-- Columns -->
     <ng-template colRef="duration.from" let-from>
       {{ from | date:'M/d/y' }}

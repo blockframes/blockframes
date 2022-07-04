@@ -1,18 +1,17 @@
-import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
-import { MatButtonModule } from "@angular/material/button";
-import { MatIconModule } from "@angular/material/icon";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { RouterModule } from "@angular/router";
-import { CatalogManageAvailsComponent } from "./manage.component";
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RouterModule } from '@angular/router';
+import { CatalogManageAvailsComponent } from './manage.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSelectModule } from "@angular/material/select";
-import { EmptyMovieModule } from "@blockframes/ui/dashboard/components/empty-movie/empty-movie.module";
+import { MatDialogModule } from '@angular/material/dialog';
+
 import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
 import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages.module';
-import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule, ToLabelModule, VersionPipeModule } from "@blockframes/utils/pipes";
-import { FormTableModule } from "@blockframes/ui/form/table/form-table.module";
-import { MatDialogModule } from "@angular/material/dialog";
+import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule, ToLabelModule, VersionPipeModule } from '@blockframes/utils/pipes';
+import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 
 @NgModule({
   declarations: [
@@ -20,10 +19,8 @@ import { MatDialogModule } from "@angular/material/dialog";
   ],
   imports: [
     CommonModule,
-    EmptyMovieModule,
     ToLabelModule,
     FormTableModule,
-    ToLabelModule,
     MaxLengthModule,
     JoinPipeModule,
     AvailsFilterModule,
@@ -33,7 +30,6 @@ import { MatDialogModule } from "@angular/material/dialog";
 
     //Material
     MatProgressSpinnerModule,
-    MatSelectModule,
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,

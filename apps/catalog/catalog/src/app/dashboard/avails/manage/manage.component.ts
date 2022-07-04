@@ -8,15 +8,18 @@ import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ActivatedRoute } from '@angular/router';
-import { firstValueFrom, map, pluck, switchMap, tap } from 'rxjs';
+import { combineLatest, firstValueFrom, map, pluck, shareReplay, switchMap } from 'rxjs';
 import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { TermService } from '@blockframes/contract/term/service';
 import { QueryConstraint, where } from 'firebase/firestore';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { BucketTerm, createTerm, Scope, Term } from '@blockframes/model';
+import { createMandate, createTerm, Scope, Term } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { centralOrgId } from '@env';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NavigationService } from '@blockframes/ui/navigation.service';
 
 
 const contractQuery = (titleId: string): QueryConstraint[] => [
@@ -25,8 +28,7 @@ const contractQuery = (titleId: string): QueryConstraint[] => [
 ];
 
 function isTerm(term: Partial<Term>): term is Term {
-  if (term.contractId) return true;
-  return false;
+  return term.contractId ? true : false;
 }
 
 @Component({
@@ -38,7 +40,7 @@ function isTerm(term: Partial<Term>): term is Term {
 export class CatalogManageAvailsComponent implements OnInit {
   public availsForm = new AvailsForm();
   public form = new NegotiationForm({ terms: [] });
-  private currentOrg$ = this.orgService.currentOrg$
+  private currentOrg$ = this.orgService.currentOrg$;
   indexId = 1;
   termColumns = {
     'duration.from': 'Terms Start Date',
@@ -50,20 +52,27 @@ export class CatalogManageAvailsComponent implements OnInit {
   };
   public title$ = this.route.params.pipe(
     pluck('titleId'),
-    switchMap((titleId: string) => this.titleService.valueChanges(titleId))
+    switchMap((titleId: string) => this.titleService.valueChanges(titleId)),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  public terms$ = this.title$.pipe(
+  private mandates$ = this.title$.pipe(
     switchMap(title => this.contractService.valueChanges(contractQuery(title.id))),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  private terms$ = this.mandates$.pipe(
     map(contracts => contracts.flatMap(({ termIds }) => termIds)),
     switchMap(termIds => this.termService.valueChanges(termIds)),
-    tap(terms => console.log({ terms }))
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   constructor(
     private titleService: MovieService,
     private dynTitleService: DynamicTitleService,
     private route: ActivatedRoute,
+    private navService: NavigationService,
+    private snackBar: MatSnackBar,
     private contractService: ContractService,
     private termService: TermService,
     private dialog: MatDialog,
@@ -86,26 +95,53 @@ export class CatalogManageAvailsComponent implements OnInit {
     this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
   }
 
-  saveAvails() {
-    const toCreate: BucketTerm[] = [];
-    const toUpdate: Term[] = [];
-    for (const term of this.form.value.terms ?? []) {
-      if (isTerm(term)) toUpdate.push(term);
-      else toCreate.push(term);
-    }
-    if (toUpdate.length) this.termService.update(toUpdate);
-    if (!toCreate.length) return;
-    //@Continue from here.
-    // collect a mandate contract and create the terms with this contract id.
-    const contract = await firstValueFrom()
-    const terms = toCreate.map(term => {
-      const partialTerm: Partial<Term> = {
-        ...term,
-        licensedOriginal:true,
-        contractId:
-      }
-      return createTerm(partialTerm);
+  async saveAvails() {
+    const existingTerms = await firstValueFrom(this.terms$);
+    const toCreate = this.form.value.terms.filter(term => !isTerm(term));
+    let toUpdate = this.form.value.terms.filter(term => isTerm(term));
+
+    //Include missing properties of the form eg: licensedOriginal
+    toUpdate = toUpdate.map((term: Term) => {
+      const existingTerm = existingTerms.find(({ id }) => term.id == id) ?? {};
+      return { ...existingTerm, ...term };
     });
 
+    if (toUpdate.length) this.termService.update(toUpdate);
+    if (!toCreate.length) return;
+    const contractId = this.contractService.createId();
+    const terms = toCreate.map(term => createTerm({
+      ...term,
+      licensedOriginal: true,
+      contractId,
+      id: this.termService.createId()
+    }));
+    const termIds = terms.map(({ id }) => id);
+    const data$ = combineLatest([
+      this.title$,
+      this.currentOrg$,
+    ]);
+    const [{ id: titleId }, { id: orgId }] = await firstValueFrom(data$);
+
+    const mandate = createMandate({
+      status: 'accepted',
+      id: contractId,
+      titleId,
+      termIds,
+      buyerId: centralOrgId.catalog,
+      buyerUserId: '',
+      sellerId: orgId,
+      stakeholders: [centralOrgId.catalog, orgId]
+    })
+
+    //@dev firestore rules impose creating the contract before it's terms.
+    await this.contractService.add(mandate)
+    await this.termService.add(terms);
+    const message = toUpdate.length ? 'Terms updated' : 'Terms created';
+    this.snackBar.open(message, null, { duration: 6000 });
+    this.goBack();
+  }
+
+  goBack() {
+    this.navService.goBack(1);
   }
 }
