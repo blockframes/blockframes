@@ -24,6 +24,7 @@ import {
   getGuest,
   hasDisplayName
 } from '@blockframes/model';
+import { toScreenerCards } from '@blockframes/analytics/utils';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
@@ -36,6 +37,8 @@ import {
   ExcelData,
   exportSpreadsheet
 } from '@blockframes/utils/spreadsheet';
+import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
+import { MetricCard } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
 
 interface EventAnalytics {
   name: string, // firstName + lastName
@@ -61,10 +64,10 @@ export class AnalyticsComponent implements OnInit {
   private analytics: EventAnalytics[];
   public acceptedAnalytics: EventAnalytics[];
   public exporting = false;
-  public avgWatchDuration = 0; // in seconds
   public dataMissing = '(Not Registered)';
   private eventInvitations: Invitation[];
   private event: Event<EventMeta>;
+  public aggregatedScreeningCards: MetricCard[];
 
   constructor(
     private dynTitle: DynamicTitleService,
@@ -102,7 +105,7 @@ export class AnalyticsComponent implements OnInit {
             email: user.email,
             watchInfos: {
               duration: i.watchInfos?.duration || 0,
-              date: i.watchInfos.date
+              date: i.watchInfos?.date
             },
             name,
             orgName: org.name,
@@ -111,12 +114,11 @@ export class AnalyticsComponent implements OnInit {
             status: i.status
           };
         });
+
+        this.aggregatedScreeningCards = toScreenerCards(this.eventInvitations.filter(i => i.mode === 'request'), this.eventInvitations);
+
         // Create same analytics but only with 'accepted' status and with a Watchtime > 0
         this.acceptedAnalytics = this.analytics.filter(({ status, watchInfos }) => status === 'accepted' && watchInfos.duration !== 0);
-
-        // if event is a screening or a slate presentation we add the watch time column to the table
-        // and we compute the average watch time
-        this.avgWatchDuration = averageWatchDuration(this.acceptedAnalytics);
 
         this.cdr.markForCheck();
       })
@@ -139,7 +141,11 @@ export class AnalyticsComponent implements OnInit {
   isEventStarted(event: Event) {
     if (!event) return false;
     const start = event.start;
-    return start.getTime() < Date.now();
+    return start.getTime() < Date.now() ? event : false;
+  }
+
+  ongoingScreening(event: Event) {
+    return eventTime(event) === 'onTime';
   }
 
   // Create Event Statistic Excel
@@ -170,7 +176,8 @@ export class AnalyticsComponent implements OnInit {
       if (mode === 'request') invitationsModeCounter.request++;
     });
 
-    const avgWatchDurationGlobal = convertToTimeString(this.avgWatchDuration * 1000);
+    const avgWatchDuration = averageWatchDuration(this.acceptedAnalytics);
+    const avgWatchDurationGlobal = convertToTimeString(avgWatchDuration * 1000);
 
     // Create data for Archipel Event Summary Tab - With Merge
     const summaryData = new ExcelData();

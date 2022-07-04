@@ -72,7 +72,7 @@ export class BuyersAnalyticsComponent {
     @Inject(APP) public app: App
   ) { }
 
-  removeSellerData(orgs: Organization[], analytics: Analytics<"title">[], users: User[]) {
+  removeSellerData(orgs: Organization[], analytics: Analytics<'title'>[], users: User[]) {
     const buyerOrg = orgs.filter(org => !org.appAccess.festival.dashboard);
     const buyerOrgIds = buyerOrg.map(({ id }) => id);
     const buyerAnalytics = analytics.filter(({ meta }) => buyerOrgIds.includes(meta.orgId))

@@ -1,5 +1,19 @@
-import { Organization, Analytics, Scope, createAggregatedAnalytic, AggregatedAnalytic, User, toLabel, AnalyticData } from '@blockframes/model';
+import {
+  Organization,
+  Analytics,
+  Scope,
+  createAggregatedAnalytic,
+  AggregatedAnalytic,
+  User,
+  toLabel,
+  AnalyticData,
+  Invitation,
+  averageWatchDuration,
+  InvitationWithAnalytics
+} from '@blockframes/model';
+import { convertToTimeString } from '@blockframes/utils/helpers';
 import { getDeepValue } from '@blockframes/utils/pipes';
+import { MetricCard } from './components/metric-card-list/metric-card-list.component';
 
 /**
  * Counts number of occurances
@@ -14,7 +28,7 @@ import { getDeepValue } from '@blockframes/utils/pipes';
  * counter(movies, 'genres', (item) => item.analytics.length )
  * @returns A record
  */
-export function counter<T = unknown>(array: T[], keyPath: string, deltaFn?: (item: T) => number) {  
+export function counter<T = unknown>(array: T[], keyPath: string, deltaFn?: (item: T) => number) {
   const counter: Record<string | number, number> = {};
 
   const count = (key: string | number, delta: number) => {
@@ -50,7 +64,7 @@ export function aggregate(analytics: Analytics[], data: Partial<AggregatedAnalyt
   return aggregated;
 }
 
-export function aggregatePerUser(analytics: (Analytics<"title"> & { user: User, org: Organization})[]) {
+export function aggregatePerUser(analytics: (Analytics<'title'> & { user: User, org: Organization })[]) {
   const aggregator: Record<string, AggregatedAnalytic> = {};
   for (const analytic of analytics) {
     if (!analytic.user?.uid) continue;
@@ -63,4 +77,47 @@ export function aggregatePerUser(analytics: (Analytics<"title"> & { user: User, 
     aggregator[analytic.user.uid][analytic.name]++;
   }
   return Object.values(aggregator);
+}
+
+export function toScreenerCards(screeningRequests: Invitation[] | Analytics<'title'>[], invitations: Invitation[] | InvitationWithAnalytics[]): MetricCard[] {
+  const attendees = invitations.filter(invitation => invitation.watchInfos?.duration);
+  const accepted = invitations.filter(invitation => invitation.status === 'accepted');
+
+  const avgWatchDuration = averageWatchDuration(attendees);
+  const parsedTime = convertToTimeString(avgWatchDuration * 1000);
+  const participationRate = Math.round(attendees.length / accepted.length) * 100;
+  const acceptationRate = Math.round(accepted.length / invitations.length) * 100;
+  const traction = Math.round(screeningRequests.length / invitations.length) * 100;
+  return [
+    {
+      title: 'Guests',
+      value: invitations.length,
+      icon: 'badge'
+    },
+    {
+      title: 'Attendees',
+      value: attendees.length,
+      icon: 'group'
+    },
+    {
+      title: 'Average Watch Time',
+      value: parsedTime,
+      icon: 'timer'
+    },
+    {
+      title: 'Participation Rate',
+      value: invitations.length ? `${participationRate}%` : '-',
+      icon: 'front_hand'
+    },
+    {
+      title: 'Acceptation Rate',
+      value: invitations.length ? `${acceptationRate}%` : '-',
+      icon: 'sentiment_satisfied'
+    },
+    {
+      title: 'Traction Rate',
+      value: invitations.length ? `${traction}%` : '-',
+      icon: 'magnet_electricity'
+    }
+  ];
 }

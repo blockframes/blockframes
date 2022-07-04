@@ -1,5 +1,3 @@
-@import '@angular/flex-layout/mq';
-
 :host {
   display: block;
 }
@@ -8,12 +6,23 @@ img {
   width: 320px;
 }
 
-.attendees {
-  width: 550px;
-  margin-bottom: 24px;
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+
   h2 {
-    margin-top: 16px;
+    margin-bottom: 0;
   }
+
+  a, button {
+    margin-left: auto;
+  }
+}
+
+analytics-metric-card-list {
+  margin-bottom: 24px;
 }
 
 h3 {
@@ -27,10 +36,4 @@ h3 {
 
 .no-analytics {
   margin-bottom:100px;
-}
-
-@include layout-bp(xs) {
-  .attendees {
-    width: 300px;
-  }
 }
