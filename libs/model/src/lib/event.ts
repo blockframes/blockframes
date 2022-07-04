@@ -79,6 +79,18 @@ export interface Event<Meta extends EventMeta = unknown> extends CalendarEvent<M
   organizedBy?: User;
 }
 
+export interface IcsEvent {
+  id: string,
+  title: string,
+  start: Date,
+  end: Date,
+  description: string,
+  organizer: {
+    name: string,
+    email: string
+  }
+}
+
 export function createEvent<Meta extends EventMeta>(
   params: Partial<Event<Meta>> = {}
 ): Event<Meta> {

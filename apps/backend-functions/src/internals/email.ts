@@ -15,8 +15,8 @@ import {
   ErrorResultResponse,
   emailErrorCodes,
   EmailRequest,
+  EmailTemplateRequest
 } from '@blockframes/model';
-import { EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 
 interface AppMailSetting {
   description: string;

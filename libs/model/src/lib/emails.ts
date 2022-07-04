@@ -5,9 +5,12 @@ import { Negotiation } from './negociation';
 import { Movie } from './movie';
 import { Organization } from './organisation';
 import { toLabel } from './utils';
-import { movieCurrenciesSymbols, staticModel } from './static/static-model';
+import { appName, eventTypes, movieCurrenciesSymbols, staticModel } from './static/static-model';
 import { Bucket, MailBucket } from './bucket';
-import { createMailContract } from './contract';
+import { Contract, createMailContract } from './contract';
+import { AccessibilityTypes, App, EventTypesValue } from './static/types';
+import { EventMeta, Event, IcsEvent, isScreening, isMeeting, isSlate } from './event';
+import { differenceInDays, differenceInHours, differenceInMinutes, format, millisecondsInHour } from 'date-fns';
 
 export interface OrgEmailData {
   name: string;
@@ -53,6 +56,65 @@ export interface NegotiationEmailData {
   price: string;
   currency: string;
   terms: MailTerm[];
+}
+
+// @see node_modules/@sendgrid/helpers/classes/attachment.d.ts
+interface AttachmentData {
+  content: string;
+  filename: string;
+  type?: string;
+  disposition?: string;
+  contentId?: string;
+}
+
+export interface EventEmailData {
+  id: string;
+  title: string;
+  start: string;
+  otherTimezones: {
+    centralAmerica: string,
+    easternAmerica: string,
+    centralEurope: string,
+    westernEurope: string,
+    japan: string,
+    pacific: string,
+  }
+  end: string;
+  type: EventTypesValue;
+  viewUrl: string;
+  sessionUrl: string;
+  accessibility: AccessibilityTypes;
+  calendar: AttachmentData;
+  duration: string;
+}
+
+export interface EmailParameters {
+  request: EmailRequest | EmailTemplateRequest;
+  app?: App;
+}
+
+export interface EmailTemplateRequest {
+  to: string;
+  templateId: string;
+  data: {
+    org?: OrgEmailData | Organization; // @TODO #7491 template d-f45a08ce5be94e368f868579fa72afa8 uses Organization but it should use OrgEmailData instead
+    user?: UserEmailData;
+    userSubject?: UserEmailData;
+    event?: EventEmailData;
+    eventUrl?: string;
+    pageURL?: string;
+    bucket?: MailBucket;
+    baseUrl?: string;
+    date?: string;
+    movie?: MovieEmailData | Movie;
+    offer?: OfferEmailData;
+    buyer?: UserEmailData;
+    contract?: Contract;
+    territories?: string;
+    contractId?: string;
+    negotiation?: NegotiationEmailData;
+    isInvitationReminder?: boolean;
+  };
 }
 
 export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailRequest {
@@ -119,4 +181,123 @@ export function getBucketEmailData(bucket: Bucket): MailBucket {
     contracts,
     currency: movieCurrenciesSymbols[bucket.currency]
   };
+}
+
+function toTimezone(date: Date, timeZone: string) {
+  const tzDate = new Date(date.toLocaleString('en-us', { timeZone }));
+  return format(tzDate, 'h:mm a');
+}
+
+function getEventDuration(start: Date, end: Date): string {
+  const duration = end.getTime() - start.getTime();
+
+  if (duration < millisecondsInHour) {
+    return `${differenceInMinutes(end, start)} minutes`;
+  } else if (duration < millisecondsInHour * 72) {
+    return `${differenceInHours(end, start)} hours`;
+  } else {
+    return `${differenceInDays(end, start)} days`;
+  }
+}
+
+function getEventEmailAttachment(event: Event<EventMeta>, organizerEmail: string, orgName: string, applicationUrl: string): AttachmentData {
+  const icsEvent = createIcsFromEvent(event, organizerEmail, orgName);
+  return {
+    filename: 'invite.ics',
+    content: Buffer.from(toIcsFile([icsEvent], applicationUrl)).toString('base64'),
+    disposition: 'attachment',
+    type: 'text/calendar',
+  };
+}
+
+interface EventEmailParameters {
+  event: Event<EventMeta>;
+  orgName?: string;
+  organizerEmail?: string;
+  attachment?: boolean;
+  email?: string;
+  invitationId?: string;
+  applicationUrl?: string
+}
+
+export function getEventEmailData({ event, orgName, attachment = true, email, invitationId, organizerEmail, applicationUrl }: EventEmailParameters): EventEmailData {
+
+  const eventStartDate = event.start;
+  const eventEndDate = event.end;
+  const eventUrlParams = email && invitationId ? `?email=${encodeURIComponent(email)}&i=${invitationId}` : '';
+
+  /**
+   * @dev Format from date-fns lib, here the date will be 'month/day/year, hours:min:sec am/pm GMT'
+   * See the doc here : https://date-fns.org/v2.16.1/docs/format
+   */
+
+  return {
+    id: event.id,
+    title: event.title,
+    start: format(eventStartDate, 'Pppp'),
+    otherTimezones: {
+      centralAmerica: toTimezone(eventStartDate, 'America/Chicago'),
+      easternAmerica: toTimezone(eventStartDate, 'America/New_York'),
+      centralEurope: toTimezone(eventStartDate, 'Europe/Helsinki'),
+      westernEurope: toTimezone(eventStartDate, 'Europe/Paris'),
+      japan: toTimezone(eventStartDate, 'Asia/Tokyo'),
+      pacific: toTimezone(eventStartDate, 'America/Vancouver'),
+    },
+    end: format(eventEndDate, 'Pppp'),
+    type: eventTypes[event.type],
+    viewUrl: `/event/${event.id}/r/i${eventUrlParams}`,
+    sessionUrl: `/event/${event.id}/r/i/session${eventUrlParams}`,
+    accessibility: event.accessibility,
+    calendar: attachment ? getEventEmailAttachment(event, organizerEmail, orgName, applicationUrl) : undefined,
+    duration: getEventDuration(eventStartDate, eventEndDate)
+  }
+}
+
+export function createIcsFromEvent(e: Event, organizerEmail: string, orgName?: string): IcsEvent {
+  const event = isScreening(e) || isMeeting(e) || isSlate(e) ? e : undefined;
+  if (!event) return;
+  return {
+    id: event.id,
+    title: event.title,
+    start: event.start,
+    end: event.end,
+    description: event.meta.description,
+    organizer: {
+      name: orgName,
+      email: organizerEmail
+    }
+  }
+}
+
+const header = `BEGIN:VCALENDAR\nVERSION:2.0\nCALSCALE:GREGORIAN\nX-WR-CALNAME:${appName.festival}`;
+const footer = 'END:VCALENDAR';
+
+export function toIcsFile(events: IcsEvent[], applicationUrl: string) {
+
+  const eventsData = events.map(event => {
+    const eventData: string[] = [];
+    eventData.push(`SUMMARY:${event.title}`);
+    eventData.push(`DTSTART:${toIcsDate(event.start)}`);
+    eventData.push(`DTEND:${toIcsDate(event.end)}`);
+    eventData.push(`LOCATION: ${appName.festival}`);
+    eventData.push(`DESCRIPTION: ${event.description}${event.description ? ' - ' : ''}${applicationUrl}/event/${event.id}/r/i`);
+    eventData.push(`ORGANIZER;CN="${event.organizer.name}":MAILTO:${event.organizer.email}`);
+
+    return ['BEGIN:VEVENT'] // Event start tag
+      .concat(eventData)
+      .concat(['STATUS:CONFIRMED', 'SEQUENCE:3', 'END:VEVENT']) // Event end tags
+      .join('\n');
+  });
+
+  return `${header}\n${eventsData.join('\n')}\n${footer}`;
+}
+
+export const toIcsDate = (date: Date): string => {
+  if (!date) return '';
+  const y = date.getUTCFullYear();
+  const m = `${date.getUTCMonth() < 9 ? '0' : ''}${date.getUTCMonth() + 1}`;
+  const d = `${date.getUTCDate() < 10 ? '0' : ''}${date.getUTCDate()}`;
+  const hh = `${date.getUTCHours() < 10 ? '0' : ''}${date.getUTCHours()}`;
+  const mm = `${date.getUTCMinutes() < 10 ? '0' : ''}${date.getUTCMinutes()}`;
+  return `${y}${m}${d}T${hh}${mm}00Z`;
 }

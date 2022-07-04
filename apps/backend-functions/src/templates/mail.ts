@@ -25,14 +25,12 @@ import {
   EmailRequest,
   getMovieEmailData,
   getNegotiationEmailData,
-  getBucketEmailData
+  getBucketEmailData,
+  EventEmailData,
+  EmailTemplateRequest
 } from '@blockframes/model';
 import { format } from 'date-fns';
 import { supportMailosaur } from '@blockframes/utils/constants';
-import {
-  EmailTemplateRequest,
-  EventEmailData,
-} from '@blockframes/utils/emails/utils';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';

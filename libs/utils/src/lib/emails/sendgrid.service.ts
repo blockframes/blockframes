@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { CallableFunctions } from 'ngfire';
-import { ErrorResultResponse } from '@blockframes/model';
-import { EmailAdminParameters, EmailParameters } from './utils';
+import { EmailRequest, ErrorResultResponse, EmailTemplateRequest, EmailParameters } from '@blockframes/model';
+import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
+
+interface EmailAdminParameters {
+  request: EmailRequest | EmailTemplateRequest;
+  from?: EmailJSON;
+}
 
 @Injectable({ providedIn: 'root' })
 export class SendgridService {
