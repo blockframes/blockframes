@@ -21,7 +21,7 @@ export class AuthGuard implements CanActivate, CanDeactivate<unknown> {
         if (!authState) {
           // Set the value of redirectTo
           localStorage.setItem('redirectTo', state.url);
-          return this.router.createUrlTree(['/']);
+          return this.router.createUrlTree(['auth/connexion']);
         }
 
         return hasDisplayName(authState.profile) ? true : this.router.createUrlTree(['auth/identity']);
