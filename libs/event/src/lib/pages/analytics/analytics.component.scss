@@ -32,8 +32,20 @@ h3 {
 
 .analytics {
   margin-bottom: 300px;
+
+  article {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 .no-analytics {
   margin-bottom:100px;
+  display: grid;
+  place-items: center;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
 }

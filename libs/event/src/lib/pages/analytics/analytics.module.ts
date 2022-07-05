@@ -4,7 +4,6 @@ import { AnalyticsComponent } from './analytics.component';
 import { EventFromShellModule } from '@blockframes/event/form/shell/shell.module';
 import { RouterModule } from '@angular/router';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
@@ -26,7 +25,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     ImageModule,
     TableModule,
-    FlexLayoutModule,
     MatIconModule,
     MatTooltipModule,
     MatButtonModule,
