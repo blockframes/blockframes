@@ -37,6 +37,7 @@ import {
   ExcelData,
   exportSpreadsheet
 } from '@blockframes/utils/spreadsheet';
+import { filters } from '@blockframes/ui/list/table/filters';
 
 interface EventAnalytics {
   name: string, // firstName + lastName
@@ -66,6 +67,7 @@ export class AnalyticsComponent implements OnInit {
   private eventInvitations: Invitation[];
   private event: Event<EventMeta>;
   public aggregatedScreeningCards: MetricCard[];
+  public filters = filters;
 
   constructor(
     private dynTitle: DynamicTitleService,
@@ -101,10 +103,7 @@ export class AnalyticsComponent implements OnInit {
           const org = orgs.find(o => o.id === user.orgId);
           return {
             email: user.email,
-            watchInfos: {
-              duration: i.watchInfos?.duration || 0,
-              date: i.watchInfos?.date
-            },
+            watchInfos: i.watchInfos,
             name,
             orgName: org.name,
             orgActivity: org?.activity,
@@ -116,7 +115,7 @@ export class AnalyticsComponent implements OnInit {
         this.aggregatedScreeningCards = toScreenerCards(this.eventInvitations.filter(i => i.mode === 'request'), this.eventInvitations);
 
         // Create same analytics but only with 'accepted' status and with a Watchtime > 0
-        this.acceptedAnalytics = this.analytics.filter(({ status, watchInfos }) => status === 'accepted' && watchInfos.duration !== 0);
+        this.acceptedAnalytics = this.analytics.filter(({ status }) => status === 'accepted');
 
         this.cdr.markForCheck();
       })
@@ -193,7 +192,7 @@ export class AnalyticsComponent implements OnInit {
         orgName || '-',
         activity ? orgActivity[activity] : '-',
         orgCountry ? territories[orgCountry] : '-',
-        convertToTimeString(watchInfos.duration * 1000),
+        watchInfos?.duration !== undefined ? convertToTimeString(watchInfos?.duration * 1000) : '-',
         watchInfos?.date ? formatDate(watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '-'
       ]);
     });

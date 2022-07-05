@@ -12,7 +12,7 @@
     <ng-container *ngIf="acceptedAnalytics as analytics; else loading">
       <ng-container *ngIf="acceptedAnalytics.length else noAnalytics">
         <section class="analytics">
-          <p>"0" means the user left the screening right away.</p>
+          <p>"0s" means the user watched less than a minute.</p>
           <analytics-metric-card-list [cards]="aggregatedScreeningCards"></analytics-metric-card-list>
           <article>
             <h3>Attendees</h3>
@@ -30,8 +30,12 @@
             <ng-template colRef="name" label="Name" let-name sort>{{ name | titlecase }}</ng-template>
             <ng-template colRef="email" label="Email Address" let-email sort>{{ email }}</ng-template>
             <ng-template colRef="orgName" label="Company Name" let-orgName sort>{{ orgName || dataMissing }}</ng-template>
-            <ng-template colRef="orgActivity" label="Company Activity" let-orgActivity>{{ orgActivity ? (orgActivity | toLabel: 'orgActivity') : dataMissing }}</ng-template>
-            <ng-template colRef="orgCountry" label="Country" let-orgCountry>{{ orgCountry ? (orgCountry | toLabel: 'territories') : dataMissing }}</ng-template>
+            <ng-template colRef="orgActivity" label="Company Activity" let-orgActivity sort [filter]="filters.orgActivity">
+              {{ orgActivity ? (orgActivity | toLabel: 'orgActivity') : dataMissing }}
+            </ng-template>
+            <ng-template colRef="orgCountry" label="Country" let-orgCountry sort [filter]="filters.territories">
+              {{ orgCountry ? (orgCountry | toLabel: 'territories') : dataMissing }}
+            </ng-template>
             <ng-template colRef="watchInfos.duration" label="Watch Time" let-duration sort>{{ duration * 1000 | duration }}</ng-template>
             <ng-template colRef="watchInfos.date" label="Watching Status" let-date sort>
               <bf-tag *ngIf="date | isWatchingNow">Watching Now</bf-tag>

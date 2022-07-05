@@ -232,7 +232,7 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
       'Invitation': invitation.status,
       'Request to participate': invitation.mode,
       'Screening Requests': invitation.analytics?.length,
-      'Watch Time': convertToTimeString(invitation.watchInfos?.duration * 1000),
+      'Watch Time': invitation.watchInfos?.duration !== undefined ? convertToTimeString(invitation.watchInfos?.duration * 1000) : '-',
       'Watching Ended': invitation.watchInfos?.date ? formatDate(invitation.watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '-'
     }));
     downloadCsvFromJson(analytics, 'buyer-screener-analytics')

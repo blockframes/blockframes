@@ -167,7 +167,7 @@ export class TitleAnalyticsComponent {
         'Company Name': invitation.guestOrg?.name ?? '-',
         'Activity': activity ? toLabel(activity, 'orgActivity') : '-',
         'Country': country ? toLabel(country, 'territories') : '-',
-        'Watch Time': convertToTimeString(invitation.watchInfos?.duration * 1000),
+        'Watch Time': invitation.watchInfos?.duration !== undefined ? convertToTimeString(invitation.watchInfos?.duration * 1000) : '-',
         'Watching Ended': invitation.watchInfos?.date ? formatDate(invitation.watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '-'
       }
     });
