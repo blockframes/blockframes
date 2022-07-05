@@ -12,7 +12,6 @@ import { InvitationService } from '@blockframes/invitation/service';
 import {
   Invitation,
   InvitationStatus,
-  Screening,
   Event,
   EventMeta,
   territories,
@@ -22,7 +21,8 @@ import {
   WatchInfos,
   getGuest,
   hasDisplayName,
-  Slate
+  isScreening,
+  isSlate
 } from '@blockframes/model';
 import { MetricCard, toScreenerCards } from '@blockframes/analytics/utils';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -114,8 +114,13 @@ export class AnalyticsComponent implements OnInit {
           };
         });
 
-        const titleIds = event.type === 'screening' ? [(this.event.meta as Screening).titleId] : (this.event.meta as Slate).titleIds;
-        const titleAnalytics = (titleId) => this.analyticsService.getTitleAnalytics({ titleId })
+        const titleIds = isScreening(event)
+          ? [event.meta.titleId]
+          : isSlate(event)
+            ? event.meta.titleIds
+            : [];
+
+        const titleAnalytics = (titleId) => this.analyticsService.getTitleAnalytics({ titleId, eventName: 'screeningRequested' })
           .pipe(
             joinWith({
               org: analytic => this.orgService.valueChanges(analytic.meta.orgId),
@@ -124,8 +129,7 @@ export class AnalyticsComponent implements OnInit {
 
         const promises = titleIds.map(titleId => firstValueFrom(titleAnalytics(titleId)));
         const analytics = (await Promise.all(promises)).flat()
-          .filter(({ org }) => !org.appAccess.festival.dashboard)
-          .filter(analytic => analytic.name === 'screeningRequested');
+          .filter(({ org }) => !org.appAccess.festival.dashboard);
 
         this.aggregatedScreeningCards = toScreenerCards(analytics, this.eventInvitations);
 
@@ -149,8 +153,8 @@ export class AnalyticsComponent implements OnInit {
   // Create Event Statistic Excel
   private async exportExcelFile() {
     let staticticsTitle = this.event.title;
-    if (this.event.type === 'screening') {
-      const titleId = (this.event.meta as Screening).titleId;
+    if (isScreening(this.event)) {
+      const titleId = this.event.meta.titleId;
       const { title } = await this.movieService.getValue(titleId);
       staticticsTitle = title.international;
     }
