@@ -5,10 +5,18 @@ import { userJoinedAnOrganization } from '../../templates/mail';
 import { getAdminIds, getOrgAppKey } from '../../data/internals';
 import { wasAccepted, wasCreated } from './utils';
 import { applicationUrl } from '@blockframes/utils/apps';
-import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { createInternalDocumentMeta, createNotification, createPublicOrganization, createPublicUser, Invitation, Organization } from '@blockframes/model';
 import { getDb, getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
+import {
+  createInternalDocumentMeta,
+  createNotification,
+  createPublicOrganization,
+  createPublicUser,
+  getUserEmailData,
+  getOrgEmailData,
+  Invitation,
+  Organization,
+} from '@blockframes/model';
 
 async function addUserToOrg(userId: string, organizationId: string) {
   const db = getDb();
