@@ -20,10 +20,13 @@ export const mediaGroup: StaticGroup<'medias'>[] = [{
   items: ['est', 'nVod', 'aVod', 'fVod', 'sVod', 'tVod']
 }, {
   label: 'Ancillary Rights',
-  items: ['boats', 'inflight', 'hotels', 'educational', 'festival']
+  items: ['boats', 'inflight', 'hotels', 'educational']
 }, {
   label: 'Video (DVD, BluRay)',
   items: ['rental', 'through']
+}, {
+  label: 'Festivals',
+  items: ['festival']
 }];
 
 export const territoriesGroup: StaticGroup<'territories'>[] = [
