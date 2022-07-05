@@ -26,11 +26,6 @@ const mandateQuery = (titleId: string) => [
   where('type', '==', 'mandate'),
 ];
 
-const salesQuery = (termId: string) => [
-  where('parentTermId', '==', termId),
-  where('type', '==', 'sale'),
-];
-
 function isTerm(term: Partial<Term>): term is Term {
   return term.contractId ? true : false;
 }
@@ -95,41 +90,13 @@ export class CatalogManageAvailsComponent implements OnInit {
   }
 
   openDetails(terms: string[], scope: Scope) {
-    console.log({ terms });
     this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
-  }
-
-  async areSalesAttachedToTerms(ids: string[]) {
-    const queries = ids.map(id => this.contractService.valueChanges(salesQuery(id)));
-    const sales = await firstValueFrom(combineLatest(queries));
-    return sales.flat(1).length;
-  }
-
-  async deleteTermsAndContract(termIds: string[]) {
-    const mandates = await firstValueFrom(this.mandates$);
-    const toDelete = mandates.filter(m => m.termIds.every(id => termIds.includes(id)));
-    const toDeleteIds = toDelete.map(({ id }) => id);
-
-    return Promise.all([
-      this.termService.remove(termIds),
-      this.contractService.remove(toDeleteIds)
-    ]);
   }
 
   async saveAvails() {
     const existingTerms = await firstValueFrom(this.terms$);
     const toCreate = this.form.value.terms.filter(term => !isTerm(term));
     let toUpdate = this.form.value.terms.filter(term => isTerm(term));
-    const toUpdateIds = toUpdate.map(({ id }: Term) => id);
-    const toDelete = existingTerms.filter(({ id }) => !toUpdateIds.includes(id));
-    const toDeleteIds = toDelete.map(({ id }) => id);
-
-    const canContinue = this.areSalesAttachedToTerms(toDeleteIds);
-    if (!canContinue) {
-      const message = "You can't delete terms to which at least a sale is attached.";
-      this.snackBar.open(message, null, { duration: 6000 });
-    }
-    else if (toDeleteIds.length) await this.deleteTermsAndContract(toDeleteIds);
 
     //Include missing properties of the form eg: licensedOriginal
     toUpdate = toUpdate.map((term: Term) => {
