@@ -10,9 +10,9 @@ import { toDate } from '@blockframes/firebase-utils/firebase-utils';
 import { BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils/types';
 import { getAuth, getDb, getStorage } from '@blockframes/firebase-utils';
 
-export const db = getDb()
-export const auth = getAuth()
-export const storage = getStorage()
+export const db = getDb();
+export const auth = getAuth();
+export const storage = getStorage();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const skipInMaintenance = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {

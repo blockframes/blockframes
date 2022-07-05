@@ -135,7 +135,7 @@ export async function syncUsers({
 }
 
 export async function printUsers() {
-  const auth = getAuth()
+  const auth = getAuth();
 
   let pageToken;
 

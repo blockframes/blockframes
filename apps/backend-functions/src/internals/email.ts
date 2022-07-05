@@ -110,7 +110,7 @@ export const sendMailAsAdmin = async (
   data: { request: EmailRequest, from?: EmailJSON },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
-  const db = getDb()
+  const db = getDb();
   if (!context?.auth) {
     throw new Error('Permission denied: missing auth context.');
   }

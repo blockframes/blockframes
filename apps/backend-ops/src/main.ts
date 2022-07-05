@@ -49,7 +49,7 @@ const [cmd, ...flags] = args;
 const [arg1, arg2] = flags;
 
 async function runCommand() {
-  const db = getDb()
+  const db = getDb();
   switch (cmd) {
     case 'prepareForTesting':
       await prepareForTesting({ dbBackupURL: arg1 });

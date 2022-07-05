@@ -190,8 +190,8 @@ export async function downloadProdDbBackup(localPath?: string) {
 async function anonDbProcess() {
   const db = getFirestoreEmulator();
   const storage = getStorage();
-  const auth = getAuth()
-  const ciApp = initAdmin(firebaseCI(), 'CI env')
+  const auth = getAuth();
+  const ciApp = initAdmin(firebaseCI(), 'CI env');
   const o = await db.listCollections();
   if (!o.length) throw Error('THERE IS NO DB TO PROCESS - DANGER!');
   console.log(o.map((snap) => snap.id));
@@ -202,7 +202,7 @@ async function anonDbProcess() {
 
   console.log('Running anonymization...');
   await runAnonymization(db);
-  console.log('Anonymization complete!')
+  console.log('Anonymization complete!');
 
   console.info('Syncing users from db...');
   const p1 = syncUsers({ db });

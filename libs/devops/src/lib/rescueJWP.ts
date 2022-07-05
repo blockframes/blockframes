@@ -3,7 +3,7 @@ import { StorageVideo, MovieVideo, Movie } from '@blockframes/model';
 import { delay } from '@blockframes/utils/helpers';
 
 async function storageFileExist(path: string) {
-  const storage = getStorage()
+  const storage = getStorage();
   const file = await storage.bucket().file(path);
 
   // for more info check

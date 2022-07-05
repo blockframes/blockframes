@@ -71,7 +71,7 @@ const organizerEmail = sendgridEmailsFrom.festival.email;
 
 /** Takes one or more notifications and add them on the notifications collection */
 export async function triggerNotifications(notifications: Notification[]) {
-  const db = getDb()
+  const db = getDb();
   const batch = db.batch();
 
   for (const n of notifications) {
@@ -319,7 +319,7 @@ export async function onNotificationCreate(snap: BlockframesSnapshot<Notificatio
         break;
     }
 
-    const db = getDb()
+    const db = getDb();
     await db.collection('notifications').doc(notification.id).set({ email: notification.email }, { merge: true });
   }
 }
