@@ -34,9 +34,9 @@ export class OrganizationViewComponent implements OnDestroy {
     distinctUntilChanged((a: NavigationEnd, b: NavigationEnd) => a.url === b.url),
   ).subscribe((event: NavigationEnd) => {
     if (event.url.includes('members')) {
-      this.dynTitle.setPageTitle('Members', `${this.orgService.org.denomination.full}`);
+      this.dynTitle.setPageTitle('Members', `${this.orgService.org.name}`);
     } else {
-      this.dynTitle.setPageTitle('Company details', `${this.orgService.org.denomination.full}`);
+      this.dynTitle.setPageTitle('Company details', `${this.orgService.org.name}`);
     }
 
     this.countRouteEvents++;

@@ -1,4 +1,4 @@
-import { PublicUser, PermissionsDocument, Organization } from '@blockframes/model';
+import { PermissionsDocument, Organization, User } from '@blockframes/model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 import faker from '@faker-js/faker';
@@ -44,7 +44,11 @@ interface E2EUser {
   orgId?: string;
 }
 
-export const e2eUser = (data: E2EUser): PublicUser => {
+export const e2eUser = (data: E2EUser): User => {
+  const legalTerms = {
+    date: new Date(),
+    ip: '111.111.111.111'
+  };
   const { uid, firstName, lastName, email, orgId } = data;
   return {
     uid,
@@ -53,12 +57,22 @@ export const e2eUser = (data: E2EUser): PublicUser => {
     email,
     orgId,
     hideEmail: false,
+    privacyPolicy: legalTerms,
+    termsAndConditions: {
+      festival: legalTerms,
+      catalog: legalTerms,
+      financiers: legalTerms
+    },
+    phoneNumber: '',
+    position: '',
+    avatar: null,
     _meta: {
       emailVerified: true,
       createdFrom: 'festival',
       createdBy: 'anonymous',
       createdAt: now,
     },
+    
   };
 };
 
@@ -74,10 +88,7 @@ export const e2eOrg = (data: E2EOrganization): Organization => {
   const { id, name, userIds, email, dashboardAccess } = data;
   return {
     id,
-    denomination: {
-      public: null,
-      full: name,
-    },
+    name,
     userIds,
     email,
     status: 'accepted',
@@ -105,7 +116,6 @@ export const e2eOrg = (data: E2EOrganization): Organization => {
         dashboard: false,
       },
     },
-    fiscalNumber: '',
     wishlist: [],
     description: '',
     addresses: {

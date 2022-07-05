@@ -13,7 +13,6 @@ import { InvitationService } from '@blockframes/invitation/service';
 import {
   Invitation,
   InvitationStatus,
-  orgName,
   Screening,
   Event,
   EventMeta,
@@ -106,7 +105,7 @@ export class AnalyticsComponent implements OnInit {
               date: i.watchInfos.date
             },
             name,
-            orgName: orgName(org),
+            orgName: org.name,
             orgActivity: org?.activity,
             orgCountry: org?.addresses?.main.country,
             status: i.status
@@ -197,7 +196,7 @@ export class AnalyticsComponent implements OnInit {
       summaryData.addLine([
         name,
         email,
-        orgName ? orgName : '-',
+        orgName || '-',
         activity ? orgActivity[activity] : '-',
         orgCountry ? territories[orgCountry] : '-',
         convertToTimeString(watchInfos.duration * 1000),

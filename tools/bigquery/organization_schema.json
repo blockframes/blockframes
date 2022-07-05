@@ -5,14 +5,8 @@
       "type": "string"
     },
     {
-      "name": "denomination",
-      "type": "map",
-      "fields": [
-        {
-          "name": "full",
-          "type": "string"
-        }
-      ]
+      "name": "name",
+      "type": "string"
     },
     {
       "name": "email",

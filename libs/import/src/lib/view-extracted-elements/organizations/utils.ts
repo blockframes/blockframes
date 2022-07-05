@@ -25,12 +25,8 @@ interface FieldsConfig {
       festival: ModuleAccess;
       financiers: ModuleAccess;
     };
-    denomination: {
-      full: string;
-      public: string
-    };
+    name: string;
     email: string;
-    fiscalNumber: string;
     userIds: string[];
   };
   superAdmin: {
@@ -61,60 +57,50 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
 
   // ! The order of the property should be the same as excel columns
   const fieldsConfig: FieldsConfigType = {
-    /* a */ 'org.denomination.full': async (value: string) => {
+    /* a */ 'org.name': async (value: string) => {
       if (!value) throw mandatoryError(value, 'Organization Name');
       const exist = await getOrgId(value, organizationService, orgNameCache);
       if (exist) throw alreadyExistError(value, 'Organization Name');
       return value
     },
-    /* b */ 'org.denomination.public': async (value: string, data: Partial<FieldsConfig>) => {
-      if (!value) throw optionalWarning('Organization Public Name', data.org.denomination.full);
-      const exist = await getOrgId(value, organizationService, orgNameCache);
-      if (exist) throw alreadyExistError(value, 'Organization Public Name');
-      return value;
-    },
-    /* c */ 'org.email': async (value: string) => {
+    /* b */ 'org.email': async (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) throw mandatoryError(value, 'Contract Email');
       return lower;
     },
-    /* d */ 'org.activity': (value: string) => {
+    /* c */ 'org.activity': (value: string) => {
       if (!value) throw optionalWarning('Activity');
       const activity = getKeyIfExists('orgActivity', value);
       if (!activity) throw wrongValueError(value, 'Activity');
       return activity;
     },
-    /* e */ 'org.fiscalNumber': (value: string) => {
-      if (!value) throw optionalWarning('Fiscal Number');
+    /* d */ 'org.addresses.main.street': (value: string) => {
+      if (!value) throw optionalWarning('Street');
       return value;
     },
-    /* f */ 'org.addresses.main.street': (value: string) => {
-      if (!value) throw optionalWarning('Fiscal Number');
-      return value;
-    },
-    /* g */ 'org.addresses.main.city': (value: string) => {
+    /* e */ 'org.addresses.main.city': (value: string) => {
       if (!value) throw optionalWarning('City');
       return value;
     },
-    /* h */ 'org.addresses.main.zipCode': (value: string) => {
+    /* f */ 'org.addresses.main.zipCode': (value: string) => {
       if (!value) throw optionalWarning('Zip Code');
       return value;
     },
-    /* i */ 'org.addresses.main.region': (value: string) => {
+    /* g */ 'org.addresses.main.region': (value: string) => {
       if (!value) throw optionalWarning('Region');
       return value;
     },
-    /* j */ 'org.addresses.main.country': (value: string) => {
+    /* h */ 'org.addresses.main.country': (value: string) => {
       if (!value) return optionalWarning('Country');
       const country = getKeyIfExists('territories', value) as Territory;
       if (!country) throw wrongValueError(value, 'Country');
       return country as any;
     },
-    /* k */ 'org.addresses.main.phoneNumber': (value: string) => {
+    /* i */ 'org.addresses.main.phoneNumber': (value: string) => {
       if (!value) throw optionalWarning('Phone Number');
       return value;
     },
-    /* l */ 'superAdmin.email': async (value: string) => {
+    /* j */ 'superAdmin.email': async (value: string) => {
       const lower = value.toLowerCase();
       if (!lower) throw mandatoryError(value, 'Admin Email');
 
@@ -123,9 +109,9 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
 
       return lower;
     },
-    /* m */ 'org.appAccess.catalog': (value: string) => formatAccess(value, 'Catalog Access'),
-    /* n */ 'org.appAccess.festival': (value: string) => formatAccess(value, 'Festival Access'),
-    /* o */ 'org.appAccess.financiers': (value: string) => formatAccess(value, 'Financiers Access'),
+    /* k */ 'org.appAccess.catalog': (value: string) => formatAccess(value, 'Catalog Access'),
+    /* l */ 'org.appAccess.festival': (value: string) => formatAccess(value, 'Festival Access'),
+    /* m */ 'org.appAccess.financiers': (value: string) => formatAccess(value, 'Financiers Access'),
   };
 
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig);

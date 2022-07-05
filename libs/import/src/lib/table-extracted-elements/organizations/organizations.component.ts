@@ -10,8 +10,7 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { OrganizationsImportState, SpreadsheetImportError } from '../../utils';
 import { OrganizationService } from '@blockframes/organization/service';
 import { AuthService } from '@blockframes/auth/service';
-import { PublicUser, getOrgAppAccess } from '@blockframes/model';
-import { OrgEmailData } from '@blockframes/utils/emails/utils';
+import { PublicUser, getOrgAppAccess, OrgEmailData } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 const hasImportErrors = (importState: OrganizationsImportState, type: string = 'error'): boolean => {
@@ -36,7 +35,7 @@ export class TableExtractedOrganizationsComponent implements AfterViewInit {
     'id',
     'select',
     'org.id',
-    'org.denomination.full',
+    'org.name',
     'org.email',
     'superAdmin.email',
     'errors',
@@ -91,7 +90,7 @@ export class TableExtractedOrganizationsComponent implements AfterViewInit {
     const superAdmin = importState.superAdmin;
 
     const orgData: OrgEmailData = {
-      denomination: importState.org.denomination.full ?? importState.org.denomination.public,
+      name: importState.org.name,
       id: importState.org.id || '',
       email: importState.org.email || ''
     }
@@ -170,7 +169,7 @@ export class TableExtractedOrganizationsComponent implements AfterViewInit {
    * Even for nested objects.
    */
   public filterPredicate(data: OrganizationsImportState, filter: string) {
-    const dataStr = data.org.id + data.org.denomination.full + data.org.denomination.public + data.org.email;
+    const dataStr = data.org.id + data.org.name + data.org.email;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

@@ -4,7 +4,6 @@
  * https://www.notion.so/cascade8/Email-Data-Object-8ed9d64e8cd4490ea7bc0e469c04043e
  */
 import { supportEmails, appUrl, e2eMode } from '../environments/environment';
-import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
 import {
@@ -18,18 +17,18 @@ import {
   Movie,
   Organization,
   Negotiation,
-  Contract
-} from '@blockframes/model';
-import {
-  EventEmailData,
-  OrgEmailData,
+  Contract,
   UserEmailData,
-  getMovieEmailData,
-  getOfferEmailData,
+  OrgEmailData,
   MovieEmailData,
+  getOfferEmailData,
+  EmailRequest,
+  getMovieEmailData,
+  getNegotiationEmailData,
   getBucketEmailData,
-  getNegotiationEmailData
-} from '@blockframes/utils/emails/utils';
+  EventEmailData,
+  EmailTemplateRequest
+} from '@blockframes/model';
 import { format } from 'date-fns';
 import { supportMailosaur } from '@blockframes/utils/constants';
 
@@ -157,15 +156,6 @@ export function userJoinedYourOrganization(
     userSubject,
   };
   return { to: toUser.email, templateId: templateIds.org.memberAdded, data };
-}
-
-/** Send email to org admins to inform them that an user declined their invitation to join his org */
-export function invitationToJoinOrgDeclined(toAdmin: UserEmailData, userSubject: UserEmailData): EmailTemplateRequest {
-  const data = {
-    user: toAdmin,
-    userSubject,
-  };
-  return { to: toAdmin.email, templateId: templateIds.invitation.organization.declined, data };
 }
 
 /** Send email to org admin to inform him that an user has left his org */
@@ -496,7 +486,7 @@ const organizationCreatedTemplate = (orgId: string) =>
  */
 const organizationRequestAccessToAppTemplate = (org: PublicOrganization, app: App, module: Module) =>
   `
-  Organization '${org.denomination.full}' requested access to ${module} module of app ${appName[app]},
+  Organization '${org.name}' requested access to ${module} module of app ${appName[app]},
 
   Visit ${appUrl.crm}${ADMIN_ACCEPT_ORG_PATH}/${org.id} or go to ${ADMIN_ACCEPT_ORG_PATH}/${org.id} to enable it.
   `;
@@ -518,7 +508,7 @@ export function organizationCreated(org: Organization): EmailRequest {
 
   return {
     to: supportEmail,
-    subject: `${appName[org._meta.createdFrom]} - ${org.denomination.full} was created and needs a review`,
+    subject: `${appName[org._meta.createdFrom]} - ${org.name} was created and needs a review`,
     text: organizationCreatedTemplate(org.id)
   };
 }
