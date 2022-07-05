@@ -8,7 +8,6 @@ import { MoviesComponent } from './movies.component';
 import { BreadCrumbModule } from '../../components/bread-crumb/bread-crumb.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { DashboardModule } from '../../components/dashboard/dashboard.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 
@@ -24,7 +23,6 @@ import { MatButtonModule } from '@angular/material/button';
     BreadCrumbModule,
     TableModule,
     ImageModule,
-    OrgNameModule,
     DashboardModule,
     TagModule,
     MatIconModule,

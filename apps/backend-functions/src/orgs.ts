@@ -94,7 +94,7 @@ export function onOrganizationCreate(snap: BlockframesSnapshot<Organization>) {
   const org = snap.data();
   if (org.status === 'accepted') return;
 
-  if (!org?.denomination?.full) {
+  if (!org?.name) {
     console.error('Invalid org data:', org);
     throw new Error('organization update function got invalid org data');
   }
@@ -113,14 +113,13 @@ export async function onOrganizationUpdate(change: BlockframesChange<Organizatio
   const before = change.before.data();
   const after = change.after.data();
 
-  if (!before || !after || !after.denomination.full) {
+  if (!before || !after || !after.name) {
     console.error('Invalid org data, before:', before, 'after:', after);
     throw new Error('organization update function got invalid org data');
   }
 
   // Update algolia's index
-  if (before.denomination.full !== after.denomination.full
-    || before.denomination.public !== after.denomination.public) {
+  if (before.name !== after.name) {
     for (const userId of after.userIds) {
       const userDocRef = db.doc(`users/${userId}`);
       const userSnap = await userDocRef.get();

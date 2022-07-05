@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { createDenomination, AlgoliaOrganization } from '@blockframes/model';
+import { AlgoliaOrganization } from '@blockframes/model';
 
 function parseOrg(org) {
   /* Only the org from Algolia has the key `objectID` */
@@ -8,7 +8,7 @@ function parseOrg(org) {
     return {
       id: algoliaOrg.objectID,
       logo: algoliaOrg.logo,
-      denomination: createDenomination({ full: algoliaOrg.name })
+      name: algoliaOrg.name
     }
   }
   return org;

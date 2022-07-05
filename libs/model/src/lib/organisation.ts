@@ -4,15 +4,10 @@ import { getAllAppsExcept } from './apps';
 import type { App, Module, ModuleAccess, OrgActivity, OrganizationStatus, OrgAppAccess, Territory } from './static';
 import { app, modules } from './static';
 
-export interface Denomination {
-  full: string;
-  public?: string;
-}
-
 /** A public interface or Organization, without sensitive data. */
 export interface PublicOrganization {
   id: string;
-  denomination: Denomination;
+  name: string;
   logo: StorageFile;
   activity?: OrgActivity
 }
@@ -29,7 +24,6 @@ export interface Organization extends PublicOrganization {
   appAccess: OrgAppAccess;
   description?: string;
   email: string;
-  fiscalNumber: string;
   userIds: string[];
   status: OrganizationStatus;
   wishlist: string[]; // An array of movieIds
@@ -64,13 +58,12 @@ export function createOrganization(
     id: params.id ? params.id : '',
     description: '',
     email: '',
-    fiscalNumber: '',
     status: 'pending',
     userIds: [],
     wishlist: [],
     ...params,
     addresses: createAddressSet(params.addresses),
-    denomination: createDenomination(params.denomination),
+    name: params.name,
     logo: createStorageFile(params?.logo),
     appAccess: createOrgAppAccess(params.appAccess),
     documents: createOrgMedias(params?.documents),
@@ -85,28 +78,11 @@ export function createAddressSet(params: Partial<AddressSet> = {}): AddressSet {
   };
 }
 
-/** A function that create a denomination object for Organization */
-export function createDenomination(params: Partial<Denomination> = {}): Denomination {
-  return {
-    full: '',
-    public: '',
-    ...params
-  }
-}
-
 export function createOrgMedias(params: Partial<OrgMedias> = {}): OrgMedias {
   return {
     notes: [],
     videos: [],
     ...params
-  }
-}
-
-export function orgName(org: Partial<PublicOrganization>, type: 'public' | 'full' = 'public') {
-  if (org?.denomination) {
-    return org.denomination[type] || org.denomination.full;
-  } else {
-    return '';
   }
 }
 
@@ -138,7 +114,7 @@ export interface OrganizationForm {
 export function createPublicOrganization(org: Partial<Organization>): PublicOrganization {
   return {
     id: org.id ?? '',
-    denomination: createDenomination(org.denomination),
+    name: org.name,
     logo: createStorageFile(org.logo),
     activity: org.activity ?? null,
   }

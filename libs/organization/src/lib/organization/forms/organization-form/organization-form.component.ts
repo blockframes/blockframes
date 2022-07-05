@@ -22,10 +22,10 @@ export class OrganizationFormComponent {
   ) { }
 
   public async uniqueOrgName() {
-    const orgName = this.form.get('denomination').get('full').value.trim();
+    const orgName = this.form.get('name').value.trim();
     const orgId = await this.service.getOrgIdFromName(orgName);
     if (orgId && orgId !== this.orgId) {
-      this.form.get('denomination').get('full').setErrors({ notUnique: true });
+      this.form.get('name').setErrors({ notUnique: true });
       this.cdr.markForCheck();
     }
   }

@@ -1,11 +1,11 @@
 <ng-container *ngIf="org">
   <main fxLayout="column" fxFlex fxLayoutGap="40px">
-    <crm-bread-crumb>{{ org | orgName:'long' }}</crm-bread-crumb>
+    <crm-bread-crumb>{{ org.name }}</crm-bread-crumb>
     <section *ngIf="org" fxLayout="column" fxLayoutGap="40px">
       <article fxLayout="row" fxLayoutAlign="space-between end">
         <organization-display [organization]="org">
           <mat-card-header>
-            <mat-card-title>{{ org | orgName:'long' }} </mat-card-title>
+            <mat-card-title>{{ org.name }} </mat-card-title>
           </mat-card-header>
         </organization-display>
 

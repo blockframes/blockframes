@@ -6,7 +6,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrganizationCardMinimalComponent } from './card-minimal.component';
-import { OrgNameModule } from '../../pipes/org-name.pipe';
 
 @NgModule({
   declarations: [OrganizationCardMinimalComponent],
@@ -15,8 +14,7 @@ import { OrgNameModule } from '../../pipes/org-name.pipe';
     CommonModule,
     RouterModule,
     FlexLayoutModule,
-    ImageModule,
-    OrgNameModule,
+    ImageModule
   ]
 })
 export class OrganizationCardMinimalModule { }

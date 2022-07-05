@@ -1,9 +1,35 @@
-import { Injectable } from "@angular/core";
-import { orgName, Event, isMeeting, isScreening, isSlate } from "@blockframes/model";
+import { Injectable } from '@angular/core';
+import { Event, createIcsFromEvent, IcsEvent, toIcsFile, appName, toIcsDate } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
-import { sendgridEmailsFrom } from "../apps";
-import { IcsEvent } from "./agenda.interfaces";
-import { downloadIcs, toGoogleLink } from "./utils";
+import { applicationUrl, sendgridEmailsFrom } from '../apps';
+
+const googleCalendarLink = 'https://www.google.com/calendar/event';
+
+function toGoogleLink(icsEvent: IcsEvent) {
+
+  const eventData = {
+    action: 'TEMPLATE',
+    text: icsEvent.title,
+    dates: `${toIcsDate(icsEvent.start)}/${toIcsDate(icsEvent.end)}`,
+    details: `${icsEvent.description}${icsEvent.description ? ' - ' : ''}${applicationUrl.festival}/event/${icsEvent.id}/r/i`,
+    location: appName.festival,
+    url: `${applicationUrl.festival}/event/${icsEvent.id}/r/i`,
+    trp: 'false'
+  };
+
+  const params = Object.entries(eventData).map(pair => pair.map(encodeURIComponent).join('=')).join('&');
+  return `${googleCalendarLink}?${params}`;
+}
+
+function downloadIcs(icsEvents: IcsEvent[], filename = 'events.ics') {
+  const data = toIcsFile(icsEvents, applicationUrl.festival);
+  const element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
+  element.setAttribute('download', filename);
+  element.setAttribute('target', '_blank');
+  element.style.display = 'none';
+  element.click();
+}
 
 @Injectable({ providedIn: 'root' })
 export class AgendaService {
@@ -17,7 +43,7 @@ export class AgendaService {
     const filename = events.length > 1 ? 'events.ics' : `${events[0].title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
     const promises = events.map(async event => {
       const ownerOrg = await this.orgService.getValue(event.ownerOrgId);
-      return createIcsFromEvent(event, orgName(ownerOrg, 'full'));
+      return createIcsFromEvent(event, sendgridEmailsFrom.festival.email, ownerOrg.name);
     }).filter(e => !!e);
 
     const icsEvents = await Promise.all(promises);
@@ -25,23 +51,8 @@ export class AgendaService {
   }
 
   public link(event: Event) {
-    const icsEvent = createIcsFromEvent(event);
+    const icsEvent = createIcsFromEvent(event, sendgridEmailsFrom.festival.email);
     return toGoogleLink(icsEvent);
   }
 }
 
-function createIcsFromEvent(e: Event, orgName?: string): IcsEvent {
-  const event = isScreening(e) || isMeeting(e) || isSlate(e) ? e : undefined;
-  if (!event) return;
-  return {
-    id: event.id,
-    title: event.title,
-    start: event.start,
-    end: event.end,
-    description: event.meta.description,
-    organizer: {
-      name: orgName,
-      email: sendgridEmailsFrom.festival.email
-    }
-  }
-}

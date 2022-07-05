@@ -10,7 +10,6 @@ import { PieChartModule } from '@blockframes/analytics/components/pie-chart/pie-
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MetricCardListModule } from '@blockframes/analytics/components/metric-card-list/metric-card-list.module';
-import { OrgNameModule } from '@blockframes/organization/pipes';
 
 @NgModule({
   imports: [
@@ -21,7 +20,6 @@ import { OrgNameModule } from '@blockframes/organization/pipes';
     DisplayNameModule,
     PieChartModule,
     MetricCardListModule,
-    OrgNameModule,
 
     //material
     MatIconModule,
