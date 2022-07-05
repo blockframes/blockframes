@@ -9,6 +9,7 @@ import {
   displayName,
   EventName,
   getGuest,
+  invitationStatus,
 } from '@blockframes/model';
 import { filters } from '@blockframes/ui/list/table/filters';
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -167,6 +168,7 @@ export class TitleAnalyticsComponent {
         'Company Name': invitation.guestOrg?.name ?? '-',
         'Activity': activity ? toLabel(activity, 'orgActivity') : '-',
         'Country': country ? toLabel(country, 'territories') : '-',
+        'Invitation': invitationStatus[invitation.status],
         'Watch Time': invitation.watchInfos?.duration !== undefined ? convertToTimeString(invitation.watchInfos?.duration * 1000) : '-',
         'Watching Ended': invitation.watchInfos?.date ? formatDate(invitation.watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '-'
       }

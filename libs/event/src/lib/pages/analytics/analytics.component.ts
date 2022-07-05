@@ -6,9 +6,8 @@ import {
 } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute } from '@angular/router';
-import { pluck, switchMap, tap } from 'rxjs/operators';
 import { EventService } from '@blockframes/event/service';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom, pluck, switchMap, tap } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/service';
 import {
   Invitation,
@@ -22,7 +21,8 @@ import {
   averageWatchDuration,
   WatchInfos,
   getGuest,
-  hasDisplayName
+  hasDisplayName,
+  Slate
 } from '@blockframes/model';
 import { MetricCard, toScreenerCards } from '@blockframes/analytics/utils';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -38,6 +38,8 @@ import {
   exportSpreadsheet
 } from '@blockframes/utils/spreadsheet';
 import { filters } from '@blockframes/ui/list/table/filters';
+import { AnalyticsService } from '@blockframes/analytics/service';
+import { joinWith } from 'ngfire';
 
 interface EventAnalytics {
   name: string, // firstName + lastName
@@ -60,8 +62,7 @@ interface EventAnalytics {
 })
 export class AnalyticsComponent implements OnInit {
   event$: Observable<Event<EventMeta>>;
-  private analytics: EventAnalytics[];
-  public acceptedAnalytics: EventAnalytics[];
+  public analytics: EventAnalytics[];
   public exporting = false;
   public dataMissing = '(Not Registered)';
   private eventInvitations: Invitation[];
@@ -76,7 +77,8 @@ export class AnalyticsComponent implements OnInit {
     private invitationService: InvitationService,
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
+    private analyticsService: AnalyticsService,
   ) { }
 
   ngOnInit(): void {
@@ -112,10 +114,20 @@ export class AnalyticsComponent implements OnInit {
           };
         });
 
-        this.aggregatedScreeningCards = toScreenerCards(this.eventInvitations.filter(i => i.mode === 'request'), this.eventInvitations);
+        const titleIds = event.type === 'screening' ? [(this.event.meta as Screening).titleId] : (this.event.meta as Slate).titleIds;
+        const titleAnalytics = (titleId) => this.analyticsService.getTitleAnalytics({ titleId })
+          .pipe(
+            joinWith({
+              org: analytic => this.orgService.valueChanges(analytic.meta.orgId),
+            }, { shouldAwait: true })
+          );
 
-        // Create same analytics but only with 'accepted' status and with a Watchtime > 0
-        this.acceptedAnalytics = this.analytics.filter(({ status }) => status === 'accepted');
+        const promises = titleIds.map(titleId => firstValueFrom(titleAnalytics(titleId)));
+        const analytics = (await Promise.all(promises)).flat()
+          .filter(({ org }) => !org.appAccess.festival.dashboard)
+          .filter(analytic => analytic.name === 'screeningRequested');
+
+        this.aggregatedScreeningCards = toScreenerCards(analytics, this.eventInvitations);
 
         this.cdr.markForCheck();
       })
@@ -162,7 +174,8 @@ export class AnalyticsComponent implements OnInit {
       if (mode === 'request') invitationsModeCounter.request++;
     });
 
-    const avgWatchDuration = averageWatchDuration(this.acceptedAnalytics);
+    const acceptedAnalytics = this.analytics.filter(({ status }) => status === 'accepted');
+    const avgWatchDuration = averageWatchDuration(acceptedAnalytics);
     const avgWatchDurationGlobal = convertToTimeString(avgWatchDuration * 1000);
 
     // Create data for Archipel Event Summary Tab - With Merge
@@ -180,12 +193,12 @@ export class AnalyticsComponent implements OnInit {
       null,
       `${invitationsStatusCounter.accepted} accepted, ${invitationsStatusCounter.pending} unanswered, ${invitationsStatusCounter.declined} declined`
     ]);
-    summaryData.addLine(['Number of attendees', null, null, null, null, null, this.acceptedAnalytics.length]);
+    summaryData.addLine(['Number of attendees', null, null, null, null, null, acceptedAnalytics.length]);
     summaryData.addLine(['Average watchtime', null, null, null, null, null, `${avgWatchDurationGlobal}`]);
     summaryData.addBlankLine();
     summaryData.addLine(['NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME', 'WATCHING ENDED']);
 
-    this.acceptedAnalytics.forEach(({ watchInfos, email, name, orgActivity: activity, orgCountry, orgName }) => {
+    acceptedAnalytics.forEach(({ watchInfos, email, name, orgActivity: activity, orgCountry, orgName }) => {
       summaryData.addLine([
         name,
         email,

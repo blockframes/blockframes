@@ -87,15 +87,15 @@ export interface MetricCard {
   selected?: boolean;
 }
 
-export function toScreenerCards(screeningRequests: Invitation[] | Analytics<'title'>[], invitations: Invitation[] | InvitationWithAnalytics[]): MetricCard[] {
-  const attendees = invitations.filter(invitation => invitation.watchInfos?.duration);
+export function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Invitation[] | InvitationWithAnalytics[]): MetricCard[] {
+  const attendees = invitations.filter(invitation => invitation.watchInfos?.duration !== undefined);
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
 
   const avgWatchDuration = averageWatchDuration(attendees);
   const parsedTime = convertToTimeString(avgWatchDuration * 1000);
-  const participationRate = Math.round(attendees.length / accepted.length) * 100;
-  const acceptationRate = Math.round(accepted.length / invitations.length) * 100;
-  const traction = Math.round(screeningRequests.length / invitations.length) * 100;
+  const participationRate = Math.round((attendees.length / accepted.length) * 100);
+  const acceptationRate = Math.round((accepted.length / invitations.length) * 100);
+  const traction = Math.round((screeningRequests.length / invitations.length) * 100);
   return [
     {
       title: 'Guests',

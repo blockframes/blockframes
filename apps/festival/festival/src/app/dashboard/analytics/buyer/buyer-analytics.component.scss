@@ -41,6 +41,10 @@ section {
     justify-content: space-between;
     flex-wrap: wrap;
     margin-bottom: 8px;
+
+    h4 {
+      margin: 0 0 4px;
+    }
   }
 
   .graphs {

@@ -111,7 +111,6 @@
     <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
     <ng-container *ngIf="invitations$ | async as invitations">
       <header>
-        <h5>Attendees</h5>
         <button mat-button color="primary" [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export to .CSV</button>
       </header>
       <bf-table class="screenings" [source]="invitations" clickable useFilter pagination="5" (rowClick)="goToBuyer($event)">
@@ -133,6 +132,9 @@
             {{ country | toLabel:'territories' }}
           </span>
           <ng-template #noCountry>-</ng-template>
+        </ng-template>
+        <ng-template colRef="status" label="Invitation" let-status sort defaultSort >
+          {{ status | toLabel: 'invitationStatus' }}
         </ng-template>
         <ng-template colRef="watchInfos.duration" label="Watch Time" let-watchtime sort defaultSort>
           <span>{{ watchtime * 1000 | duration }}</span>
