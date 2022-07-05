@@ -37,7 +37,6 @@ import {
   ExcelData,
   exportSpreadsheet
 } from '@blockframes/utils/spreadsheet';
-import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
 
 interface EventAnalytics {
   name: string, // firstName + lastName
@@ -134,17 +133,6 @@ export class AnalyticsComponent implements OnInit {
       this.exporting = false;
     }
     this.cdr.markForCheck();
-  }
-
-  // Will be used to show event statistics only if event started
-  isEventStarted(event: Event) {
-    if (!event) return false;
-    const start = event.start;
-    return start.getTime() < Date.now() ? event : false;
-  }
-
-  ongoingScreening(event: Event) {
-    return eventTime(event) === 'onTime';
   }
 
   // Create Event Statistic Excel

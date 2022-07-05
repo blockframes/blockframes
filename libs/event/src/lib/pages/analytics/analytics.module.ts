@@ -12,6 +12,7 @@ import { IsWatchingNowPipeModule } from '@blockframes/event/pipes/is-watching-no
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
 import { MetricCardListModule } from '@blockframes/analytics/components/metric-card-list/metric-card-list.module';
+import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -36,6 +37,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     IsWatchingNowPipeModule,
     MetricCardListModule,
     OngoingButtonModule,
+    EventTimeModule,
     TagModule,
     RouterModule.forChild([{ path: '', component: AnalyticsComponent }]),
   ]
