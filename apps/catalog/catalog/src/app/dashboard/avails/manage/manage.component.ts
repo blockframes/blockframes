@@ -129,10 +129,10 @@ export class CatalogManageAvailsComponent implements OnInit {
       buyerUserId: '',
       sellerId: orgId,
       stakeholders: [centralOrgId.catalog, orgId]
-    })
+    });
 
     //@dev firestore rules impose creating the contract before it's terms.
-    await this.contractService.add(mandate)
+    await this.contractService.add(mandate);
     await this.termService.add(terms);
     const message = toUpdate.length ? 'Terms updated' : 'Terms created';
     this.snackBar.open(message, null, { duration: 6000 });
