@@ -33,8 +33,8 @@ export class BuyersAnalyticsComponent {
       return { uids, orgIds, analytics };
     }),
     joinWith({
-      users: ({ uids }) => this.userService.valueChanges(uids),
-      orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
+      users: ({ uids }) => this.userService.load(uids),
+      orgs: ({ orgIds }) => this.orgService.load(orgIds)
     }, { shouldAwait: true }),
     map(({ orgs, analytics, users, ...rest }) => {
       const filteredData = this.removeSellerData(orgs, analytics, users,);

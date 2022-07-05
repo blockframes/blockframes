@@ -27,7 +27,6 @@ import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 @Injectable({ providedIn: 'root' })
 export class OrganizationService extends BlockframesCollection<Organization> {
   readonly path = 'orgs';
-  readonly memorize = false;
 
   // Organization of the current logged in user or undefined if user have no org
   org: Organization; // For this to be defined, one of the observable below must be called before
