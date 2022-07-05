@@ -10,7 +10,7 @@
       <div>
         <h4>{{ user | displayName }}</h4>
         <a [routerLink]="['/c/o/dashboard/organization/', user.orgId]">
-          <h1>{{ user.org | orgName }}</h1>
+          <h1>{{ user.org.name }}</h1>
         </a>
         <h5>{{ user.org.activity | toLabel:'orgActivity' }}</h5>
 

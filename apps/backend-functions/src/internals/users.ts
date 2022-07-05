@@ -5,8 +5,20 @@ import { userInvite, userFirstConnexion } from '../templates/mail';
 import { groupIds, templateIds } from '@blockframes/utils/emails/ids';
 import { auth, db } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
-import { PublicOrganization, InvitationMode, InvitationStatus, InvitationType, PublicUser, App, createInternalDocumentMeta, Organization, createPublicUser } from '@blockframes/model';
-import { EventEmailData, getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
+import {
+  PublicOrganization,
+  InvitationMode,
+  InvitationStatus,
+  InvitationType,
+  PublicUser,
+  App,
+  createInternalDocumentMeta,
+  Organization,
+  createPublicUser,
+  getUserEmailData,
+  getOrgEmailData,
+  EventEmailData
+} from '@blockframes/model';
 import { logger } from 'firebase-functions';
 import { hasUserAnOrgOrIsAlreadyInvited } from '../invitation';
 import { getDocument } from '@blockframes/firebase-utils';

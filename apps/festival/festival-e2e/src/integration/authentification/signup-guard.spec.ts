@@ -27,8 +27,7 @@ describe('Signup', () => {
 
   it('User cannot signup with an existing email', () => {
     maintenance.start();
-    adminAuth.createUser({ uid: newUser.uid, email: newUser.email });
-    adminAuth.updateUser({ uid: newUser.uid, update: { emailVerified: true } });
+    adminAuth.createUser({ uid: newUser.uid, email: newUser.email, emailVerified: true });
     firestore.create([{ [`users/${newUser.uid}`]: newUser }]);
     maintenance.end();
     cy.visit('auth/identity');

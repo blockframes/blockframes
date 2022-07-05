@@ -7,6 +7,7 @@ import {
   // cypress specific functions
   refreshIfMaintenance,
   // cypress commands
+  check,
   get,
   assertUrlIncludes,
 } from '@blockframes/testing/cypress/browser';
@@ -20,15 +21,15 @@ const injectedData = {
 };
 
 describe('Login tests', () => {
-  it('login', () => {
+  it('login and accept Terms and Privacy Policy', () => {
     cy.visit('');
     browserAuth.clearBrowserAuth();
     maintenance.start();
     adminAuth.deleteAllTestUsers();
     firestore.clearTestData();
-    adminAuth.createUser({ uid: user.uid, email: user.email });
-    adminAuth.updateUser({ uid: user.uid, update: { emailVerified: true } });
+    adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     firestore.create([injectedData]);
+    firestore.update([{docPath: `users/${user.uid}`, field: 'termsAndConditions', value: {} }])
     maintenance.end();
     refreshIfMaintenance();
     get('login').click();
@@ -36,6 +37,9 @@ describe('Login tests', () => {
     get('signin-email').type(user.email);
     get('password').type(USER_FIXTURES_PASSWORD);
     get('submit').click();
+    check('terms');
+    check('privacy-policy');
+    get('access').click();
     get('skip-preferences').should('exist');
   });
 });

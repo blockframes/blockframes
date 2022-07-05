@@ -3,7 +3,7 @@ import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { EventService } from '@blockframes/event/service';
 import { InvitationService } from '@blockframes/invitation/service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { orgName, toLabel } from '@blockframes/model';
+import { toLabel } from '@blockframes/model';
 import { where } from 'firebase/firestore';
 
 @Component({
@@ -36,7 +36,7 @@ export class EventsComponent implements OnInit {
       const row = { ...event } as any;
       const invitations = invites.filter(inv => inv.eventId === event.id);
       const org = orgs.find(o => o.id === event.ownerOrgId);
-      row.hostedBy = org ? orgName(org) : '--';
+      row.hostedBy = org ? org.name : '--';
       row.hostId = org ? org.id : '--';
       row.invited = invitations.length;
       row.confirmed = invitations.filter(i => i.status === 'accepted').length;

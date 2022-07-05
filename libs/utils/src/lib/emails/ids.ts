@@ -16,64 +16,60 @@ export const templateIds = {
 
     // Templates for informing new user that his account have been created
     credentials: {
-      attendEvent: 'd-ce3e57248a694cefacad49bc4c820078',
-      attendNonPrivateEvent: 'd-5123a0ceda2d463db60717dc94005b65',
-      joinOrganization: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c'
+      attendEvent: 'd-de129a43fb43430a8e1d4e8de4d43e46',
+      attendNonPrivateEvent: 'd-13e08d0d89d94cc880a8f40b9880e683',
+      joinOrganization: 'd-5c03ed5bde6d40768a44e3d1e1c95b67'
     },
   },
   // Templates for the org management flow
   org: {
     accepted: 'd-8c5f7009cd2f4f1b877fa168b4efde48',
     appAccessChanged: 'd-274b8b8370b44dc2984273d28970a06d',
-    memberAdded: 'd-f84d8c5a70884316870ca4ef657e368f',
-    memberRemoved: 'd-9913537cf12a497c8959bee844ad0fb7'
+    memberAdded: 'd-4527b4cf44b747db86fa760408202f34',
+    memberRemoved: 'd-a921599689da4c7c9f3b33af2c297a55'
   },
   // Templates for requests (invitations)
   request: {
     joinOrganization: {
-      created: 'd-b1ab5d21def145ccb759520e2d984436',
-      pending: 'd-88665c2583dc46ea85588a39fa8ca1ee',
-      accepted: 'd-d32b25a504874a708de6bfc50a1acba7',
-      declined: 'd-6fbee372b12243c68edd580b02cbccf7'
+      created: 'd-95a9ae5824044c42ae90d804146c5080',
+      pending: 'd-a6135fbfa277434e908c3c515cf50692',
+      accepted: 'd-4e646560616b4030be5b8fdae4dfc50d'
     },
     attendEvent: {
-      created: 'd-07f5e3cc6796455097b6082c22568d9e',
-      accepted: 'd-df7b0a372b994a3090a48dc6cf17ba3e',
-      declined: 'd-4e36dd72f50d4e7e9ec738476efa84a9',
+      created: 'd-bdd7b72c3c6e47d5835f4df3575985b1',
+      accepted: 'd-0e1a2cd4b0154476b4ff7baf8efbdc6b',
+      declined: 'd-7dae9d381a684a4faa4c1528d239e50b',
       sent: 'd-113048f9990044bbb3c9431f9965f7b8'
     }
   },
   // Templates for invitations
   invitation: {
     attendEvent: {
-      created: 'd-1a7cc9ca846c4ae1b4e8cf8a76455cc5',
-      accepted: 'd-5d014e60af4c431dbe7316369f41591e',
-      declined: 'd-b7ea357cfd41404e9ff82f8d75410079',
-      missedScreening: 'd-a03d096d252f4c27a500ff16d13f1795',
-      attendedScreening: 'd-ebf41f86fa124978a15b27bec75faf09'
-    },
-    organization: {
-      declined: 'd-d3c17695e25a453a98ab5540ea171c5c'
+      created: 'd-ecd4fd15707142cdbb1a72179be9d20b',
+      accepted: 'd-65d0309f916942519bd8ec35d1a37040',
+      declined: 'd-0fbe1de6a0834430a0683e495a4f2b0a',
+      missedScreening: 'd-1d75256d03cf486cac275033ecdcc389',
+      attendedScreening: 'd-6a8df635e1ce42e2a2a7ef071f9159fc'
     }
   },
   // Used only in front (see title view component of MF)
   financiers: {
-    invest: 'd-e902521de8684c57bbfa633bad88567a'
+    invest: 'd-3c648c48d33c475e9e03eaf7d8cace05'
   },
   eventReminder: {
-    oneDay: 'd-0c7bcb6e4a234ddc95ed74b9ecc433dc',
-    oneHour: 'd-8a9439a404cc4b51887e9dea44f7fbd7'
+    oneDay: 'd-a6ba88218dfd42c3b09a192de2a08f65',
+    oneHour: 'd-f43aa663bb9046c99b7fc7c36ddb06e2'
   },
   event: {
-    screeningRequested: 'd-4fbb3fbe74d04353bb7185303969fbf9'
+    screeningRequested: 'd-52467be7bfdd43c89bec2a1f3cca4374'
   },
   movie: {
     accepted: 'd-bfcf2760bcb7484ab55f864a59331d26',
-    askingPriceRequested: 'd-107203d5807e48f68e5725518e71354f',
-    askingPriceRequestSent: 'd-51bdd9e408a64cdb8b4dec7704f66267'
+    askingPriceRequested: 'd-afa28cb76e034d9b969588db5933362f',
+    askingPriceRequestSent: 'd-31ba12e3df9946bcb52fefca0c431240'
   },
   offer: {
-    toAdmin: 'd-94a20b20085842f68fb2d64fe325638a',
+    toAdmin: 'd-f45a08ce5be94e368f868579fa72afa8',
     toBuyer: 'd-a4ee1970187e4fd8bef47a4008a2267a',
     // #7946 this may be reactivated later
     // allContractsAccepted: 'd-4f067ef3abca42cc9d8dc25b57935ccc', 
@@ -81,14 +77,14 @@ export const templateIds = {
     // underSignature: 'd-38ee6949f4724b1c8796b8df9229f21d'
   },
   contract: {
-    created: 'd-268b02ed0eb9452ba3acb2a97457d172'
+    created: 'd-2e90ffb26f2e462ca574dccbc1e80ba2'
   },
   negotiation: {
-    receivedCounterOffer: 'd-516fc0e2d4094fa9a2afa55e89f0f5a3',
-    createdCounterOffer: 'd-0b967db91fec4ef39f175e373953766c',
-    myOrgAcceptedAContract: 'd-e127e70b634347788d07cad355421999',// send to org who accepted the contract
-    myContractWasAccepted: 'd-df1f3b4ce57c4634961223fa309729dd',// send to org whose contract was accepted
-    myOrgDeclinedAContract: 'd-c32f642c1c2d45f285aa926322518957',// send to org who declined the contract
+    receivedCounterOffer: 'd-5826727a7741475cbe120a8ef50e3cc7',
+    createdCounterOffer: 'd-a8098e7ac093457ba834397a4657daad',
+    myOrgAcceptedAContract: 'd-fd5f02d9b693449db4647b7de9940168',// send to org who accepted the contract
+    myContractWasAccepted: 'd-261e5613cbd84c3c99ea49b4f3e8cc20',// send to org whose contract was accepted
+    myOrgDeclinedAContract: 'd-022cee72b5904d7386a838d6317054ad',// send to org who declined the contract
     myContractWasDeclined: 'd-b928481ce938423dabb34e50c264d320',// send to org whose contract was declined
     toAdminCounterOffer: 'd-ac1dfcbf692d4ef8888ccad9b6938c8e',
     toAdminContractAccepted: 'd-6750c3d980834301a057403668deceed',

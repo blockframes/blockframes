@@ -78,7 +78,7 @@ export class OrganizationService extends BlockframesCollection<Organization> {
 
   public async getOrgIdFromName(orgName: string) {
     // @TODO #6908 a better solution for this should be found.
-    const [org] = await this.getValue([where('denomination.full', '==', orgName.trim())]);
+    const [org] = await this.getValue([where('name', '==', orgName.trim())]);
     return org?.id;
   }
 
@@ -95,8 +95,7 @@ export class OrganizationService extends BlockframesCollection<Organization> {
   }
 
   cleanOrganization(org: Organization) {
-    if (org.denomination?.full) org.denomination.full = org.denomination.full.trim();
-    if (org.denomination?.public) org.denomination.public = org.denomination.public.trim();
+    if (org.name) org.name = org.name.trim();
     return org;
   }
 

@@ -65,7 +65,7 @@ async function generateOrgs(db: FirebaseFirestore.Firestore) {
 
   const output: Partial<Organization>[] = orgs.map((org) => ({
     id: org.id,
-    denomination: org.denomination,
+    name: org.name,
     description: org.description,
     email: org.email,
     appAccess: org.appAccess,

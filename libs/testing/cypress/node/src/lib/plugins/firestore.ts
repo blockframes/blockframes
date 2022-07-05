@@ -67,7 +67,7 @@ export async function getRandomOrgAdmin(orgId: string) {
 } */
 
 export async function getOrgByName(orgName: string) {
-  const userQuery = await db.collection('orgs').where('denomination.full', '==', orgName).get();
+  const userQuery = await db.collection('orgs').where('name', '==', orgName).get();
   const [org] = userQuery.docs;
   if (!org) return null;
   return createOrganization(org.data());
