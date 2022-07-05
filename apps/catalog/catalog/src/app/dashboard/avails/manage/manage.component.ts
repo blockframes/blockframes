@@ -12,7 +12,7 @@ import { combineLatest, firstValueFrom, map, pluck, shareReplay, switchMap } fro
 import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { TermService } from '@blockframes/contract/term/service';
-import { QueryConstraint, where } from 'firebase/firestore';
+import { where } from 'firebase/firestore';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { createMandate, createTerm, Scope, Term } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -21,13 +21,12 @@ import { centralOrgId } from '@env';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 
-
-const contractQuery = (titleId: string): QueryConstraint[] => [
+const mandateQuery = (titleId: string) => [
   where('titleId', '==', titleId),
   where('type', '==', 'mandate'),
 ];
 
-const salesQuery = (termId: string): QueryConstraint[] => [
+const salesQuery = (termId: string) => [
   where('parentTermId', '==', termId),
   where('type', '==', 'sale'),
 ];
@@ -45,9 +44,8 @@ function isTerm(term: Partial<Term>): term is Term {
 export class CatalogManageAvailsComponent implements OnInit {
   public availsForm = new AvailsForm();
   public form = new NegotiationForm({ terms: [] });
-  private currentOrg$ = this.orgService.currentOrg$;
-  indexId = 1;
-  termColumns = {
+  public indexId = 1;
+  public termColumns = {
     'duration.from': 'Terms Start Date',
     'duration.to': 'Terms End Date',
     territories: 'Territories',
@@ -55,6 +53,7 @@ export class CatalogManageAvailsComponent implements OnInit {
     exclusive: 'Exclusivity',
     languages: 'Versions',
   };
+
   public title$ = this.route.params.pipe(
     pluck('titleId'),
     switchMap((titleId: string) => this.titleService.valueChanges(titleId)),
@@ -62,7 +61,7 @@ export class CatalogManageAvailsComponent implements OnInit {
   );
 
   private mandates$ = this.title$.pipe(
-    switchMap(title => this.contractService.valueChanges(contractQuery(title.id))),
+    switchMap(title => this.contractService.valueChanges(mandateQuery(title.id))),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -95,25 +94,24 @@ export class CatalogManageAvailsComponent implements OnInit {
     this.form.hardReset({ terms });
   }
 
-
-  openDetails(terms: string, scope: Scope) {
+  openDetails(terms: string[], scope: Scope) {
+    console.log({ terms });
     this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
   }
 
   async areSalesAttachedToTerms(ids: string[]) {
-    const sales = await firstValueFrom(combineLatest(
-      ids.map(id => this.contractService.valueChanges(salesQuery(id)))
-    ));
+    const queries = ids.map(id => this.contractService.valueChanges(salesQuery(id)));
+    const sales = await firstValueFrom(combineLatest(queries));
     return sales.flat(1).length;
   }
 
-  async deleteTermsAndContract(ids: string[]) {
+  async deleteTermsAndContract(termIds: string[]) {
     const mandates = await firstValueFrom(this.mandates$);
-    const toDelete = mandates.filter(m => m.termIds.every(id => ids.includes(id)));
+    const toDelete = mandates.filter(m => m.termIds.every(id => termIds.includes(id)));
     const toDeleteIds = toDelete.map(({ id }) => id);
 
     return Promise.all([
-      this.termService.remove(ids),
+      this.termService.remove(termIds),
       this.contractService.remove(toDeleteIds)
     ]);
   }
@@ -128,14 +126,14 @@ export class CatalogManageAvailsComponent implements OnInit {
 
     const canContinue = this.areSalesAttachedToTerms(toDeleteIds);
     if (!canContinue) {
-      const message = `You can't delete terms to which at least a sale is attached.`;
+      const message = "You can't delete terms to which at least a sale is attached.";
       this.snackBar.open(message, null, { duration: 6000 });
     }
-    else if (toDeleteIds.length) await this.deleteTermsAndContract(toDeleteIds)
+    else if (toDeleteIds.length) await this.deleteTermsAndContract(toDeleteIds);
 
     //Include missing properties of the form eg: licensedOriginal
     toUpdate = toUpdate.map((term: Term) => {
-      const existingTerm = existingTerms.find(({ id }) => term.id == id) ?? {};
+      const existingTerm = existingTerms.find(({ id }) => term.id === id) ?? {};
       return { ...existingTerm, ...term };
     });
 
@@ -151,7 +149,7 @@ export class CatalogManageAvailsComponent implements OnInit {
     const termIds = terms.map(({ id }) => id);
     const data$ = combineLatest([
       this.title$,
-      this.currentOrg$,
+      this.orgService.currentOrg$,
     ]);
     const [{ id: titleId }, { id: orgId }] = await firstValueFrom(data$);
 
