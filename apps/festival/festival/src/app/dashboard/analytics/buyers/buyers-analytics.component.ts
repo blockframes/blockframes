@@ -50,7 +50,8 @@ export class BuyersAnalyticsComponent {
         const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === user.uid);
         return aggregate(analyticsOfUser, { user, org });
       });
-    })
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   orgActivity$ = this.buyersAnalytics$.pipe(
