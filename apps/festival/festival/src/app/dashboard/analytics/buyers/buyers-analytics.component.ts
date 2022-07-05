@@ -33,8 +33,8 @@ export class BuyersAnalyticsComponent {
       return { uids, orgIds, analytics };
     }),
     joinWith({
-      users: ({ uids }) => this.userService.valueChanges(uids),
-      orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
+      users: ({ uids }) => this.userService.load(uids),
+      orgs: ({ orgIds }) => this.orgService.load(orgIds)
     }, { shouldAwait: true }),
     map(({ orgs, analytics, users, ...rest }) => {
       const filteredData = this.removeSellerData(orgs, analytics, users,);
@@ -50,7 +50,8 @@ export class BuyersAnalyticsComponent {
         const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === user.uid);
         return aggregate(analyticsOfUser, { user, org });
       });
-    })
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   orgActivity$ = this.buyersAnalytics$.pipe(
