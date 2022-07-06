@@ -3,7 +3,7 @@
 </a>
 
 <ng-container *ngIf="title$ | async as title; else loading">
-  <h2>Add Availabilities for {{(title$| async).title.international}}</h2>
+  <h2>Add Availabilities for {{title.title.international}}</h2>
   <p>
     By adding avails to this Title, your Buyers
     will be able to search for them as soon as Title is published on Marketplace.

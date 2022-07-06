@@ -3,23 +3,27 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+
 import { MovieService } from '@blockframes/movie/service';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { ActivatedRoute } from '@angular/router';
-import { combineLatest, firstValueFrom, map, pluck, shareReplay, switchMap } from 'rxjs';
 import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { TermService } from '@blockframes/contract/term/service';
-import { where } from 'firebase/firestore';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { createMandate, createTerm, Scope, Term } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { MatDialog } from '@angular/material/dialog';
-import { centralOrgId } from '@env';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationService } from '@blockframes/ui/navigation.service';
+import { centralOrgId } from '@env';
+
+import { combineLatest, firstValueFrom, map, pluck, shareReplay, switchMap } from 'rxjs';
+
+import { where } from 'firebase/firestore';
 
 const mandateQuery = (titleId: string) => [
   where('titleId', '==', titleId),
@@ -37,9 +41,7 @@ function isTerm(term: Partial<Term>): term is Term {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CatalogManageAvailsComponent implements OnInit {
-  public availsForm = new AvailsForm();
   public form = new NegotiationForm({ terms: [] });
-  public indexId = 1;
   public termColumns = {
     'duration.from': 'Terms Start Date',
     'duration.to': 'Terms End Date',
@@ -79,32 +81,29 @@ export class CatalogManageAvailsComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const promises = [
-      firstValueFrom(this.title$),
-      firstValueFrom(this.terms$)
-    ] as const;
-    const [movie, terms] = await Promise.all(promises);
+    const data$ = combineLatest([this.title$, this.terms$]);
+    const [movie, terms] = await firstValueFrom(data$);
     const pageTitle = `Manage avails of ${movie.title.international}`;
     this.dynTitleService.setPageTitle(pageTitle);
     this.form.hardReset({ terms });
   }
 
   openDetails(terms: string[], scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
+    const data = { data: createModalData({ terms, scope }), autoFocus: false };
+    this.dialog.open(DetailedTermsComponent, data);
   }
 
   async saveAvails() {
     const existingTerms = await firstValueFrom(this.terms$);
     const toCreate = this.form.value.terms.filter(term => !isTerm(term));
-    let toUpdate = this.form.value.terms.filter(term => isTerm(term));
+    const toUpdate = this.form.value.terms.filter(term => isTerm(term))
+      .map((term: Term) => {
+        const existingTerm = existingTerms.find(({ id }) => term.id === id) ?? {};
+        //Include missing properties of the form eg: licensedOriginal
+        return { ...existingTerm, ...term };
+      });
 
-    //Include missing properties of the form eg: licensedOriginal
-    toUpdate = toUpdate.map((term: Term) => {
-      const existingTerm = existingTerms.find(({ id }) => term.id === id) ?? {};
-      return { ...existingTerm, ...term };
-    });
-
-    if (toUpdate.length) this.termService.update(toUpdate);
+    if (toUpdate.length) await this.termService.update(toUpdate);
     if (!toCreate.length) return;
     const contractId = this.contractService.createId();
     const terms = toCreate.map(term => createTerm({
@@ -125,7 +124,6 @@ export class CatalogManageAvailsComponent implements OnInit {
       id: contractId,
       titleId,
       termIds,
-      buyerId: centralOrgId.catalog,
       buyerUserId: '',
       sellerId: orgId,
       stakeholders: [centralOrgId.catalog, orgId]
