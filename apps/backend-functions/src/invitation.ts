@@ -2,10 +2,9 @@
 import { db } from './internals/firebase'
 import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
-import { 
+import {
   createPublicUser,
   PublicUser,
-  orgName,
   Event,
   EventMeta,
   MEETING_MAX_INVITATIONS_NUMBER,
@@ -15,14 +14,15 @@ import {
   App,
   ErrorResultResponse,
   Invitation,
+  createPublicOrganization,
   Organization,
-  createPublicOrganization
+  getEventEmailData,
 } from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { getEventEmailData } from '@blockframes/utils/emails/utils';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils/algolia';
 import { BlockframesChange, getDocument } from '@blockframes/firebase-utils';
+import { applicationUrl, sendgridEmailsFrom } from '@blockframes/utils/apps';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
 /**
@@ -72,13 +72,13 @@ export async function onInvitationWrite(change: BlockframesChange<Invitation>) {
   // Because of rules restrictions, event creator might not have access to other informations than the id.
   // We consolidate invitation document here.
   let needUpdate = false;
-  if (invitationDoc.fromOrg?.id && !invitationDoc.fromOrg?.denomination.full) {
+  if (invitationDoc.fromOrg?.id && !invitationDoc.fromOrg?.name) {
     const org = await getDocument<Organization>(`orgs/${invitationDoc.fromOrg.id}`);
     invitationDoc.fromOrg = createPublicOrganization(org);
     needUpdate = true;
   }
 
-  if (invitationDoc.toOrg?.id && !invitationDoc.toOrg?.denomination.full) {
+  if (invitationDoc.toOrg?.id && !invitationDoc.toOrg?.name) {
     const org = await getDocument<Organization>(`orgs/${invitationDoc.toOrg.id}`);
     invitationDoc.toOrg = createPublicOrganization(org);
     needUpdate = true;
@@ -174,7 +174,14 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
   for (const email of data.emails) {
     const invitationId = db.collection('invitations').doc().id;
     const { type, mode, fromOrg } = invitation;
-    const eventData = type == 'attendEvent' ? getEventEmailData({ event, orgName: orgName(fromOrg, 'full'), email, invitationId }) : undefined;
+    const eventData = type == 'attendEvent' ? getEventEmailData({
+      event,
+      orgName: fromOrg.name,
+      email,
+      invitationId,
+      organizerEmail: sendgridEmailsFrom.festival.email,
+      applicationUrl: applicationUrl.festival
+    }) : undefined;
     const user = await getOrInviteUserByMail(email, { id: invitationId, type, mode, fromOrg }, data.app, eventData);
 
     if (user.invitationStatus) invitation.status = user.invitationStatus;

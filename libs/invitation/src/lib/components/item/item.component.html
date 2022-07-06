@@ -25,7 +25,7 @@
             </ng-container>
             <ng-template #inviteScreening>
               <p matLine fxLayout="row wrap" fxLayoutGap="6px">
-                <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg | orgName }}</a>
+                <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg.name }}</a>
                 <span>
                   invited you to
                   <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i/session']" id="link">{{ event.title }}</a>
@@ -65,7 +65,7 @@
       </ng-container>
       <ng-container *ngSwitchCase="'joinOrganization'">
         <ng-container *ngIf="_invitation.mode === 'invitation'; else request">
-          {{ _invitation.fromOrg | orgName }} invited you to join the organization.
+          {{ _invitation.fromOrg.name }} invited you to join the organization.
         </ng-container>
         <ng-template #request>
           {{ _invitation.fromUser | displayName }} wants to join your organization.

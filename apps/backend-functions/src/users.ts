@@ -10,9 +10,18 @@ import { getMailSender, applicationUrl } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { production } from './environments/environment';
 import { cleanUserMedias } from './media';
-import { getUserEmailData, OrgEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { User, PublicUser, Invitation, PermissionsDocument, App, ErrorResultResponse, Organization } from '@blockframes/model';
+import {
+  User,
+  PublicUser,
+  PermissionsDocument,
+  App,
+  ErrorResultResponse,
+  Invitation,
+  Organization,
+  getUserEmailData,
+  OrgEmailData,
+} from '@blockframes/model';
 import { registerToNewsletters, updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 

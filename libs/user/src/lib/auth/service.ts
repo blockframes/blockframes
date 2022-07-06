@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy, Optional } from '@angular/core';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { createUser, PublicUser, User, PrivacyPolicy, createDocumentMeta, DocumentMeta, AnonymousCredentials, AnonymousRole, App } from '@blockframes/model';
+import { createUser, PublicUser, User, LegalTerms, createDocumentMeta, DocumentMeta, AnonymousCredentials, AnonymousRole, App } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
@@ -8,7 +8,6 @@ import { intercomId, production } from '@env';
 import { BehaviorSubject, firstValueFrom, Observable, of, Subject, Subscription } from 'rxjs';
 import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { IpService } from '@blockframes/utils/ip';
-import { OrgEmailData } from '@blockframes/utils/emails/utils';
 import { getAnalytics, setUserProperties } from 'firebase/analytics';
 import {
   confirmPasswordReset,
@@ -20,13 +19,20 @@ import {
   UserCredential,
   verifyPasswordResetCode
 } from 'firebase/auth';
-import { ErrorResultResponse } from '@blockframes/model';
+import { ErrorResultResponse, OrgEmailData } from '@blockframes/model';
 import { BlockframesAuth } from '@blockframes/utils/abstract-service';
 import { CallableFunctions, fromRef } from 'ngfire';
 import { doc, DocumentReference, getDoc, writeBatch } from 'firebase/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService extends BlockframesAuth<User> implements OnDestroy {
+  // If we update the privacy policy or the T&C, we need the update the publishing dates
+  readonly privacyPolicyDate = new Date('02/28/2022');
+  readonly termsAndConditionsDate: Partial<Record<App, Date>> = {
+    festival: new Date('02/28/2022'),
+    catalog: new Date('02/28/2022'),
+    financiers: new Date('02/28/2022'),
+  };
   readonly path = 'users';
 
   readonly idKey: 'uid';
@@ -182,8 +188,9 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
     firstName: string,
     lastName: string,
     _meta: DocumentMeta,
-    privacyPolicy: PrivacyPolicy
-    hideEmail: boolean
+    privacyPolicy: LegalTerms,
+    hideEmail: boolean,
+    termsAndConditions: Partial<Record<App, LegalTerms>>
   }) {
     return {
       _meta: createDocumentMeta({ emailVerified: false, ...ctx._meta }),
@@ -192,7 +199,8 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
       firstName: ctx.firstName,
       lastName: ctx.lastName,
       privacyPolicy: ctx.privacyPolicy,
-      hideEmail: ctx.hideEmail
+      hideEmail: ctx.hideEmail,
+      termsAndConditions: ctx.termsAndConditions
     };
   }
 
@@ -208,7 +216,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
     return createUser(user);
   }
 
-  public async getPrivacyPolicy(): Promise<PrivacyPolicy> {
+  public async getLegalTerms(): Promise<LegalTerms> {
     return {
       date: new Date(),
       ip: await this.ipService.get()

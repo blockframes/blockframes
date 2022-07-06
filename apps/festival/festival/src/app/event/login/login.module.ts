@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EventLoginComponent } from './login.component';
 import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -22,7 +21,6 @@ import { PasswordInputModule } from '@blockframes/ui/form/password-input/passwor
   declarations: [EventLoginComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
     ReactiveFormsModule,
     SnackbarLinkModule,
     MatButtonModule,

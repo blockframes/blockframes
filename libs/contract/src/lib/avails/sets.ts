@@ -163,7 +163,7 @@ export function someOf(a?: string[] | Range, optional?: 'optional') {
  */
 export function exclusivityAllOf(availsExclusivity: boolean) {
 
-  //                                Avail
+  //                                Avail form
   //                     | Exclusive | Non-Exclusive |
   //                -----|-----------|---------------|
   //           Exclusive |     ✅    |       ✅     |
@@ -186,7 +186,7 @@ export function exclusivityAllOf(availsExclusivity: boolean) {
  */
 export function exclusivitySomeOf(availsExclusivity: boolean) {
 
-  //                                Avail
+  //                                Avail form
   //                     | Exclusive | Non-Exclusive |
   //                -----|-----------|---------------|
   //           Exclusive |     ✅    |       ✅     |

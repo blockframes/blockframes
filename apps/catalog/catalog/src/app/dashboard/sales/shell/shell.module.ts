@@ -4,7 +4,6 @@ import { Route, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { TagModule } from '@blockframes/ui/tag/tag.module';
-import { OrgNameModule } from '@blockframes/organization/pipes';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
@@ -54,7 +53,6 @@ const routes: Route[] = [
     GetOrgPipeModule,
     NegotiationPipeModule,
     ImageModule,
-    OrgNameModule,
 
     //Material
     MatButtonModule,

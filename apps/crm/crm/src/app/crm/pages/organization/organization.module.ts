@@ -23,7 +23,6 @@ import { MemberRepertoryModule } from '@blockframes/organization/components/memb
 import { MemberPendingModule } from '@blockframes/organization/components/member-pending/member-pending.module';
 import { MemberRequestModule } from '@blockframes/organization/components/member-request/member-request.module';
 import { MemberAddModule } from '@blockframes/organization/components/member-add/member-add.module';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { GoToModule } from '../../components/go-to/go-to.module';
 import { AdminOrganizationFormModule } from '../../components/organization/forms/organization-form/organization-form.module';
 import { FileExplorerModule } from '@blockframes/media/file/explorer/explorer.module';
@@ -52,7 +51,6 @@ import { AppPipeModule, ToLabelModule, MaxLengthModule } from '@blockframes/util
     MemberPendingModule,
     MemberRequestModule,
     MemberAddModule,
-    OrgNameModule,
     GoToModule,
     AdminOrganizationFormModule,
     FileExplorerModule,

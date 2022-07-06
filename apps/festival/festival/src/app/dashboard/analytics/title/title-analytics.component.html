@@ -54,8 +54,8 @@
     <ng-template colRef="user.email" label="Email address" let-email sort>
       {{ email }}
     </ng-template>
-    <ng-template colRef="org" label="Company name" let-org sort>
-      {{ org | orgName }}
+    <ng-template colRef="org.name" label="Company name" let-name sort>
+      {{ name }}
     </ng-template>
     <ng-template colRef="org.activity" label="Activity" let-activity sort [filter]="filters.orgActivity">
       {{ activity | toLabel:'orgActivity' }}
@@ -107,37 +107,39 @@
     </ng-container>
   </header>
   <article class="surface">
-    <p>"0" means the user left the screening right away.</p>
+    <p>"0s" means the user watched less than a minute.</p>
     <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
     <ng-container *ngIf="invitations$ | async as invitations">
       <header>
-        <h5>Attendees</h5>
         <button mat-button color="primary" [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export to .CSV</button>
       </header>
       <bf-table class="screenings" [source]="invitations" clickable useFilter pagination="5" (rowClick)="goToBuyer($event)">
-        <ng-template colRef label="Name" let-invitation="item" sort defaultSort [filter]="filters.name">
+        <ng-template colRef label="Name" let-invitation="item" sort [filter]="filters.name">
           <b>{{ invitation | guest:'user' | displayName }}</b>
         </ng-template>
-        <ng-template colRef label="Email" let-invitation="item" sort defaultSort [filter]="filters.email">
+        <ng-template colRef label="Email" let-invitation="item" sort [filter]="filters.email">
           <span>{{ (invitation | guest: 'user').email }}</span>
         </ng-template>
-        <ng-template colRef="guestOrg.denomination.public" label="Company Name" let-name sort defaultSort>
+        <ng-template colRef="guestOrg.name" label="Company Name" let-name sort>
           <span>{{ name ?? '-' }}</span>
         </ng-template>
-        <ng-template colRef="guestOrg.activity" label="Activity" let-activity sort defaultSort [filter]="filters.orgActivity">
+        <ng-template colRef="guestOrg.activity" label="Activity" let-activity sort [filter]="filters.orgActivity">
           <span *ngIf="activity else noActivity">{{ activity | toLabel: 'orgActivity' }}</span>
           <ng-template #noActivity>-</ng-template>
         </ng-template>
-        <ng-template colRef="guestOrg.addresses.main.country" label="Country" let-country sort defaultSort [filter]="filters.territories">
+        <ng-template colRef="guestOrg.addresses.main.country" label="Country" let-country sort [filter]="filters.territories">
           <span *ngIf="country else noCountry">
             {{ country | toLabel:'territories' }}
           </span>
           <ng-template #noCountry>-</ng-template>
         </ng-template>
-        <ng-template colRef="watchInfos.duration" label="Watch Time" let-watchtime sort defaultSort>
+        <ng-template colRef="status" label="Invitation" let-status sort >
+          {{ status | toLabel: 'invitationStatus' }}
+        </ng-template>
+        <ng-template colRef="watchInfos.duration" label="Watch Time" let-watchtime sort>
           <span>{{ watchtime * 1000 | duration }}</span>
         </ng-template>
-        <ng-template colRef="watchInfos.date" label="Watching Status" let-date sort defaultSort>
+        <ng-template colRef="watchInfos.date" label="Watching Status" let-date sort>
           <bf-tag *ngIf="date | isWatchingNow">Watching Now</bf-tag>
         </ng-template>
       </bf-table>

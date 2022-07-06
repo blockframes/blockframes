@@ -20,10 +20,7 @@ const fixtures = {
     type: 'attendEvent',
     mode: 'invitation',
     fromOrg: {
-      denomination: {
-        full: 'Unit Test',
-        public: 'Unit Test'
-      },
+      name: 'Unit Test',
       id: 'O001'
     },
     toUser: {
