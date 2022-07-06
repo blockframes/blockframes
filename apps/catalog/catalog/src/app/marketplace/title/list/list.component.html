@@ -60,11 +60,11 @@
       <filter-running-time [form]="searchForm.runningTime"></filter-running-time>
     </ng-template>
 
-    <div class="test">
-      <button mat-icon-button (click)="save()" matTooltip="Save New Research">
-        <mat-icon svgIcon="bookmark_border" ></mat-icon>
+    <div class="saveLoad">
+      <button mat-mini-fab color="primary" (click)="save()" matTooltip="Save New Research">
+        <mat-icon [svgIcon]= "activeSave ? 'bookmark_solid' : 'bookmark_border'" ></mat-icon>
       </button>
-      <button mat-icon-button (click)="load()" matTooltip="Load Research">
+      <button mat-mini-fab color="primary" [disabled]='disabledLoad' (click)="load()" matTooltip="Load Research">
         <mat-icon svgIcon="folder_open"></mat-icon>
       </button>
     </div>

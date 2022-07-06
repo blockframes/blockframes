@@ -46,6 +46,8 @@ export class ListComponent implements OnDestroy, OnInit {
   public exporting = false;
   public nbHits: number;
   public hitsViewed = 0;
+  public disabledLoad = true;
+  public activeSave = false;
 
   private subs: Subscription[] = [];
 
@@ -105,6 +107,9 @@ export class ListComponent implements OnDestroy, OnInit {
     if (avails.duration?.from) avails.duration.from = decodeDate(avails.duration.from);
     if (avails.duration?.to) avails.duration.to = decodeDate(avails.duration.to);
 
+    const queryParamsSub = this.route.queryParams.subscribe(q => this.activeUnactiveButtons())
+    this.subs.push(queryParamsSub)
+
     this.patchSearchValues(search)
     this.availsForm.patchValue(avails);
 
@@ -126,7 +131,7 @@ export class ListComponent implements OnDestroy, OnInit {
         release: search.release,
         languages: search.languages.languages,
         versions: search.languages.versions,
-        minReleaseYear: search.minReleaseYear,
+        minReleaseYear: search.minReleaseYear > 0 ? search.minReleaseYear : undefined,
         runningTime: search.runningTime
       },
       avails,
@@ -211,9 +216,19 @@ export class ListComponent implements OnDestroy, OnInit {
     this.searchForm.runningTime.patchValue(search?.runningTime);
   }
 
+  async activeUnactiveButtons() {
+    const dataStorage = localStorage.getItem(`${this.app}-Library`);
+    const currentRouteParams = this.route.snapshot.queryParams.formValue
+    if (dataStorage) this.disabledLoad = false;
+    if (dataStorage === currentRouteParams) this.activeSave = true;
+    else this.activeSave = false;
+  }
+
   save() {
+    this.disabledLoad = false;
     const routeParams = decodeUrl(this.route);
     localStorage.setItem(`${this.app}-Library`, JSON.stringify(routeParams));
+    this.activeUnactiveButtons()
   }
 
   load() {
