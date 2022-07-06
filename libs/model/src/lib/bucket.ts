@@ -1,5 +1,5 @@
 import type { MovieCurrency } from './static';
-import { createHoldback, MailContract, Holdback } from './contract';
+import { createHoldback, Holdback } from './contract';
 import { BucketTerm } from './terms';
 import { createLanguageKey } from './movie';
 
@@ -26,18 +26,6 @@ export interface BucketContract {
   terms: BucketTerm[];
   specificity: string;
   holdbacks: Holdback[];
-}
-
-//To be used for sending mails.
-export interface BucketEmailData {
-  id: string;
-  currency: string;
-  /** One contract per orgId / titleId / parent terms Id */
-  contracts: MailContract[];
-  specificity: string;
-  delivery: string;
-  /** Needed to show user in email to business team */
-  uid?: string;
 }
 
 export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {

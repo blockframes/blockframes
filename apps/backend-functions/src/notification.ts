@@ -455,10 +455,9 @@ async function sendScreeningRequested(recipient: User, notification: Notificatio
   const movie = await getDocument<Movie>(`movies/${notification.docId}`);
   const requestor = await getDocument<User>(`users/${notification.user.uid}`);
   const buyerOrg = await getDocument<Organization>(`orgs/${requestor.orgId}`);
-  const toUser = getUserEmailData(recipient);
 
   const template = screeningRequestedToSeller(
-    toUser,
+    getUserEmailData(recipient),
     getUserEmailData(requestor),
     getOrgEmailData(buyerOrg),
     getMovieEmailData(movie)

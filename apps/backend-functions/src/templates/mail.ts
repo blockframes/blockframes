@@ -211,7 +211,6 @@ export function invitationToEventFromOrgUpdated(
     userSubject,
     org: userOrg,
     event,
-    eventUrl: `${appUrl.market}/c/o/dashboard/event/${event.id}`,
     pageUrl: `${appUrl.market}/c/o/marketplace/organization/${orgId}}/title`
   };
   return { to: toAdmin.email, templateId, data };
@@ -418,7 +417,6 @@ export function counterOfferSenderEmail(
     pageUrl,
     offerId,
     org,
-    contractId,
     app: { name: appName.catalog },
     negotiation: getNegotiationEmailData(negotiation),
     movie: getMovieEmailData(title)

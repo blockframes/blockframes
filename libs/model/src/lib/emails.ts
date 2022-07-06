@@ -6,8 +6,8 @@ import { Movie } from './movie';
 import { Organization } from './organisation';
 import { toLabel } from './utils';
 import { eventTypes, movieCurrenciesSymbols, staticModel } from './static/static-model';
-import { Bucket, BucketEmailData } from './bucket';
-import { Contract, createMailContract } from './contract';
+import { Bucket } from './bucket';
+import { Contract, createMailContract, MailContract } from './contract';
 import { AccessibilityTypes, App, EventTypesValue } from './static/types';
 import { EventMeta, Event, createIcsFromEvent, toIcsFile } from './event';
 import { differenceInDays, differenceInHours, differenceInMinutes, format, millisecondsInHour } from 'date-fns';
@@ -41,7 +41,7 @@ export interface UserEmailData {
   isRegistered?: boolean;
 }
 
-export interface OfferEmailData {
+interface OfferEmailData {
   id: string;
 }
 
@@ -52,7 +52,7 @@ export interface MovieEmailData {
   };
 }
 
-export interface NegotiationEmailData {
+interface NegotiationEmailData {
   price: string;
   currency: string;
   terms: MailTerm[];
@@ -97,11 +97,10 @@ export interface EmailTemplateRequest {
   to: string;
   templateId: string;
   data: {
-    org?: OrgEmailData; // @TODO #7491 template d-f45a08ce5be94e368f868579fa72afa8 uses Organization but it should use OrgEmailData instead
+    org?: OrgEmailData;
     user?: UserEmailData;
     userSubject?: UserEmailData;
     event?: EventEmailData;
-    eventUrl?: string;
     pageUrl?: string;
     bucket?: BucketEmailData;
     baseUrl?: string;
@@ -111,10 +110,21 @@ export interface EmailTemplateRequest {
     buyer?: UserEmailData;
     contract?: Contract;
     territories?: string;
-    contractId?: string;
     negotiation?: NegotiationEmailData;
     isInvitationReminder?: boolean;
   };
+}
+
+//To be used for sending mails.
+interface BucketEmailData {
+  id: string;
+  currency: string;
+  /** One contract per orgId / titleId / parent terms Id */
+  contracts: MailContract[];
+  specificity: string;
+  delivery: string;
+  /** Needed to show user in email to business team */
+  uid?: string;
 }
 
 export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailRequest {
