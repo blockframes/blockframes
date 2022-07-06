@@ -1,18 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnDestroy,
-  OnInit,
 } from '@angular/core';
 import { QueryConstraint, where } from 'firebase/firestore';
-import { Subscription } from 'rxjs';
 import { MovieService } from '@blockframes/movie/service';
-import { Income, storeStatus } from '@blockframes/model';
+import { storeStatus } from '@blockframes/model';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { FullSale } from '@blockframes/contract/avails/avails';
 import { OrganizationService } from '@blockframes/organization/service';
-import { Router } from '@angular/router';
 
 const titleQuery = (orgId: string): QueryConstraint[] => [
   where('orgIds', 'array-contains', orgId),
@@ -36,7 +31,6 @@ export class CatalogAvailsSelectTitleComponent {
   constructor(
     private titleService: MovieService,
     private dynTitleService: DynamicTitleService,
-    private router: Router,
     private orgService: OrganizationService
   ) {
     this.dynTitleService.setPageTitle('My Avails');
