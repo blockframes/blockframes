@@ -7,9 +7,10 @@ import { MovieService } from '@blockframes/movie/service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { getSeller } from '@blockframes/contract/contract/utils'
-import { Organization, Sale } from '@blockframes/model';
+import { Sale } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { orderBy, where } from 'firebase/firestore';
+import { ActivatedRoute, Router } from '@angular/router';
 
 function queryConstraints(orgId: string, options: { internal?: boolean }) {
   if (options.internal) {
@@ -65,6 +66,8 @@ export class SaleListComponent implements OnInit {
     private titleService: MovieService,
     private incomeService: IncomeService,
     private dynTitle: DynamicTitleService,
+    private router: Router,
+    private route:ActivatedRoute,
     @Optional() private intercom: Intercom,
   ) { }
 
@@ -74,6 +77,10 @@ export class SaleListComponent implements OnInit {
 
   public openIntercom() {
     return this.intercom.show();
+  }
+
+  public goToSale(id:string){
+    this.router.navigate([id], { relativeTo: this.route });
   }
 
 }

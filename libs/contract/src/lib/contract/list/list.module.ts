@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { ExternalSaleListComponent } from './external-sales/external-sales.component';
 import { InternalSaleListComponent } from './internal-sales/internal-sales.component';
+import { MandateListComponent } from './mandates/mandates.component';
 
 import { LetModule } from '@rx-angular/template';
 
@@ -33,7 +34,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @NgModule({
   declarations: [
     InternalSaleListComponent,
-    ExternalSaleListComponent
+    ExternalSaleListComponent,
+    MandateListComponent
   ],
   imports: [
     CommonModule,
@@ -64,7 +66,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   ],
   exports: [
     InternalSaleListComponent,
-    ExternalSaleListComponent
+    ExternalSaleListComponent,
+    MandateListComponent
   ]
 })
-export class SaleListModule { }
+export class ContractListModule { }

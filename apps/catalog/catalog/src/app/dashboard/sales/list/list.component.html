@@ -11,7 +11,7 @@
       <internal-sales-list *ngIf="internalSales.length" [sales]="internalSales"></internal-sales-list>
     </ng-container>
     <ng-container *ngIf="externalSales$ | async as externalSales">
-      <external-sales-list *ngIf="externalSales.length" [sales]="externalSales"></external-sales-list>
+      <external-sales-list *ngIf="externalSales.length" [sales]="externalSales" (rowClick)="goToSale($event)"></external-sales-list>
     </ng-container>
   </ng-container>
 </ng-container>

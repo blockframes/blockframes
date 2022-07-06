@@ -51,6 +51,7 @@ import { BreadCrumbModule } from './components/bread-crumb/bread-crumb.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
 
+
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
   { path: 'overview', component: OverviewComponent },
@@ -66,8 +67,8 @@ export const panelRoutes: Routes = [
   { path: 'mails', component: MailsComponent },
   { path: 'dev-area', component: DevAreaComponent },
   { path: 'offer', loadChildren:() => import('./pages/offers/list/offer-list.module').then(s => s.CrmOfferListModule) },
-  { path: 'externalSales', loadChildren:() => import('./pages/external-sales/list/list.module').then(s => s.CrmContractsListModule) },
-  { path: 'externalSales/:saleId', loadChildren:() => import('./pages/external-sales/view/view.module').then(s => s.ContractViewModule) },
+  { path: 'contracts', loadChildren:() => import('./pages/contracts/list/list.module').then(s => s.CrmContractsListModule) },
+  { path: 'contracts/:contractId', loadChildren:() => import('./pages/contracts/view/view.module').then(s => s.ContractViewModule) },
   { path: 'offer/:offerId', loadChildren: () => import('./pages/offers/shell/shell.module').then(m => m.OfferShellModule) },
   { path: 'import', loadChildren: () => import('./pages/import/import.module').then(m => m.CrmImportModule)},
 ];

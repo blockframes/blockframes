@@ -1,4 +1,6 @@
-import { Component, ChangeDetectionStrategy, Input, } from '@angular/core';
+import {
+  Component, ChangeDetectionStrategy, Input, Output, EventEmitter
+} from '@angular/core';
 import { Contract, Sale } from '@blockframes/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
@@ -18,6 +20,7 @@ interface ExternalSale extends Sale {
 export class ExternalSaleListComponent {
 
   private _sales = new BehaviorSubject<ExternalSale[]>([]);
+  @Output() private rowClick = new EventEmitter();
 
   constructor(
     private router: Router,
@@ -33,6 +36,6 @@ export class ExternalSaleListComponent {
   }
 
   goToSale({ id }: Contract) {
-    this.router.navigate([id], { relativeTo: this.route });
+    this.rowClick.emit(id);
   }
 }

@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { IntercomModule } from 'ng-intercom';
-import {SaleListModule} from '@blockframes/contract/contract/list/list.module'
+import {ContractListModule} from '@blockframes/contract/contract/list/list.module'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
@@ -23,7 +23,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FlexLayoutModule,
     ImageModule,
     IntercomModule,
-    SaleListModule,
+    ContractListModule,
 
     MatProgressSpinnerModule,
     MatButtonModule,
