@@ -1,12 +1,13 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Inject } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { MovieService } from '../../service';
 import { getFileMetadata } from '@blockframes/media/utils';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { Subscription } from 'rxjs';
-import { MovieVideo } from '@blockframes/model';
+import { App, HostedVideoType, MovieVideo } from '@blockframes/model';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'movie-form-media-videos',
@@ -18,13 +19,16 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
   form = this.shell.getForm('movie');
   movieId = this.route.snapshot.params.movieId;
 
+  withoutVideoTypes: HostedVideoType[] = this.currentApp === 'catalog' ? [] : ['screener'];
+
   private sub: Subscription;
 
   constructor(
     private movie: MovieService,
     private shell: MovieFormShellComponent,
     private dynTitle: DynamicTitleService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(APP) public currentApp: App
   ) {}
 
   ngOnInit() {

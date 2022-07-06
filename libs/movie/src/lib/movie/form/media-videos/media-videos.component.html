@@ -16,7 +16,7 @@
                 <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')" />
                 <mat-hint>You can give a name to your video</mat-hint>
               </mat-form-field>
-              <static-select required scope="hostedVideoTypes" [control]="activeForm.get('type')" fxFlex>
+              <static-select required scope="hostedVideoTypes" [withoutValues]="withoutVideoTypes" [control]="activeForm.get('type')" fxFlex>
                 <mat-label>Video Type</mat-label>
                 <mat-hint>Trailer, Teaser, Clip...</mat-hint>
               </static-select>
@@ -36,17 +36,19 @@
       </bf-form-list>
     </section>
 
-    <mat-divider class="thick"></mat-divider>
+    <ng-container *ngIf="currentApp !== 'catalog'">
+      <mat-divider class="thick"></mat-divider>
 
-    <h3>Screener</h3>
-    <section>
-      <p>The screener is the full video of this title, it will be used for virtual screenings.</p>
-      <file-uploader [form]="screenerForm" [meta]="['movies', 'screener', movieId]" accept="video" listenToChanges>
-        <h3 title>Upload Screener</h3>
-      </file-uploader>
-      <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong>
-        outside your organization unless you explicitly invite them to a virtual screening.</p>
-    </section>
+      <h3>Screener</h3>
+      <section>
+        <p>The screener is the full video of this title, it will be used for virtual screenings.</p>
+        <file-uploader [form]="screenerForm" [meta]="['movies', 'screener', movieId]" accept="video" listenToChanges>
+          <h3 title>Upload Screener</h3>
+        </file-uploader>
+        <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong>
+          outside your organization unless you explicitly invite them to a virtual screening.</p>
+      </section>
+    </ng-container>
 
     <mat-divider class="thick"></mat-divider>
 

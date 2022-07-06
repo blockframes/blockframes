@@ -129,6 +129,7 @@ export const genres = {
 } as const
 
 export const hostedVideoTypes = {
+  screener: 'Screener',
   trailer: 'Trailer',
   teaser: 'Teaser',
   reel: 'Promo Reel',
