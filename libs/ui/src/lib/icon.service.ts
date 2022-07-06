@@ -24,6 +24,7 @@ export const icons = [
   { name: 'AUD', url: 'assets/icons/attach_money.svg' },
   { name: 'badge', url: 'assets/icons/badge.svg' },
   { name: 'bookmark_border', url: 'assets/icons/bookmark_border.svg' },
+  { name: 'bookmark_solid', url: 'assets/icons/bookmark_solid.svg' },
   { name: 'block', url: 'assets/icons/block.svg' },
   { name: 'build', url: 'assets/icons/build.svg' },
   { name: 'business', url: 'assets/icons/business.svg' },
