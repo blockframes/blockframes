@@ -3,17 +3,15 @@
 </header>
 
 <article>
-  <menu>
-    <button mat-icon-button color="black" (click)="goBack()">
-      <mat-icon svgIcon="arrow_back"></mat-icon>
-    </button>
-  </menu>
+  <button class="back-arrow" mat-icon-button color="black" (click)="goBack()">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+  </button>
+
+  <h1>Welcome to Archipel Market!</h1>
+  <p class="mat-body-1">Please fill in your first and last name <br> to identify yourself.</p>
 
   <form [formGroup]="form" (ngSubmit)="validateIdentity()">
-    <h1>Welcome to Archipel Market!</h1>
-    <p class="mat-body-1">Please fill in your first and last name <br> to identify yourself.</p>
-
-    <div>
+    <section>
       <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
         <input test-id="firstName" matInput type="text" placeholder="First Name" formControlName="firstName" required />
@@ -28,20 +26,20 @@
           Last Name is <strong>required</strong>
         </mat-error>
       </mat-form-field>
-    </div>
+    </section>
 
+    <mat-checkbox color="primary" formControlName="termsOfUse" test-id="terms" required>
+      <span class="mat-caption">I hereby accept Archipel Market&nbsp;
+        <a target="_blank" routerLink="/auth/terms">Terms and Conditions</a>.
+      </span>
+    </mat-checkbox>
+
+    <mat-checkbox color="primary" formControlName="privacyPolicy" test-id="privacy-policy" required>
+      <span class="mat-caption">I hereby accept the Processing of my Personal Data and declare to know&nbsp;
+        <a target="_blank" routerLink="/auth/privacy">the Conditions of such Processing and my rights under GDPR Regulation</a>.
+      </span>
+    </mat-checkbox>
     <footer>
-      <mat-checkbox color="primary" formControlName="termsOfUse" test-id="terms" required>
-        <span class="mat-caption">I hereby accept Archipel Market&nbsp;
-          <a target="_blank" routerLink="/auth/terms">Terms and Conditions</a>.
-        </span>
-      </mat-checkbox>
-  
-      <mat-checkbox color="primary" formControlName="privacyPolicy" test-id="privacy-policy" required>
-        <span class="mat-caption">I hereby accept the Processing of my Personal Data and declare to know&nbsp;
-          <a target="_blank" routerLink="/auth/privacy">the Conditions of such Processing and my rights under GDPR Regulation</a>.
-        </span>
-      </mat-checkbox>
       <button [disabled]="form.invalid" mat-flat-button color="primary" type="submit">Join event</button>
     </footer>
   </form>

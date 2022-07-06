@@ -15,26 +15,33 @@
   }
 
   article {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     text-align: center;
 
-    menu {
-      padding: 0;
-      text-align: left;
+    .back-arrow {
+      align-self: left;
     }
 
     form {
       display: flex;
       flex-direction: column;
 
-      a {
-        font-weight: bold;
-      }
-
-      div {
+      section {
         display: flex;
         margin-block: 16px;
       }
 
+      mat-checkbox {
+        align-self: flex-start;
+        text-align: left;
+      }
+
+      span {
+        white-space: break-spaces;
+      }
+      
       footer {
         display: flex;
         flex-direction: column;
@@ -74,7 +81,7 @@
       form {
         padding: 40px;
 
-        div {
+        section {
           flex-direction: row;
           gap: 16px;
 
@@ -108,7 +115,7 @@
       }
 
       form {
-        div {
+        section {
           flex-direction: column;
         }
       }

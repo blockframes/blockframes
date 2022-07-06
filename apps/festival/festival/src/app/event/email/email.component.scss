@@ -11,43 +11,37 @@
   background-repeat: no-repeat;
 
   article {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     text-align: center;
 
-    menu {
-      padding: 0;
-      text-align: left;
+    .back-arrow {
+      align-self: left;
     }
 
     form {
-      p {
-        margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+
+      mat-checkbox {
+        align-self: flex-start;
+        text-align: left;
       }
 
-      a {
-        font-weight: bold;
+      span {
+        white-space: break-spaces;
       }
 
       footer {
-        margin-top: 16px;
-        div {
-          display: flex;
-          flex-direction: column;
-          align-items: start;
-          margin-bottom: 24px;
-        }
-        span {
-          white-space: break-spaces;
-        }
+        display: flex;
+        flex-direction: column;
+        margin-top: 32px;
+        align-items: center;
+        gap: 16px;
       }
     }
   }
-}
-
-.names-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
 }
 
 @include layout-bp(gt-xs) {
@@ -66,19 +60,22 @@
       @include surface.surface;
       padding: 24px;
 
-      menu {
+      .back-arrow {
         margin: 0;
       }
 
       form {
         padding: 40px;
 
-        div {
-          flex-direction: row;
+        section {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
           gap: 16px;
         }
       }
     }
+    
   }
 }
 
@@ -98,14 +95,13 @@
       padding: 24px;
       margin-bottom: auto;
 
-      menu {
+      .back-arrow {
         margin: 0 0 12px 0;
       }
 
       form {
-        div {
+        section {
           flex-direction: column;
-          gap: 8px;
           mat-form-field {
             width: 100%;
           }
