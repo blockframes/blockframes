@@ -10,7 +10,8 @@ export class DurationPipe implements PipeTransform {
    * Convert **milliseconds** into a time string.
    * `{{ 60 * 1000 | duration }} // '1min'`
    */
-  transform(value: number) {
+  transform(value: number, falback = '-') {
+    if (isNaN(value)) return falback;
     return convertToTimeString(value);
   }
 }
