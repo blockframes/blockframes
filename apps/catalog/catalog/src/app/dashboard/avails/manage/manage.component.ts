@@ -124,7 +124,6 @@ export class CatalogManageAvailsComponent implements OnInit {
       id: contractId,
       titleId,
       termIds,
-      buyerUserId: '',
       sellerId: orgId,
       stakeholders: [centralOrgId.catalog, orgId]
     });
