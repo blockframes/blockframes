@@ -4,7 +4,7 @@ import { Contract, Movie, Term } from '@blockframes/model';
 
 export async function dbStatsScript() {
 
-  await camille28062022Terms();
+  await vincent1602022();
 }
 
 async function camille28062022Contracts() {
