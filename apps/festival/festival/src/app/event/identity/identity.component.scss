@@ -27,14 +27,25 @@
       flex-direction: column;
 
       a {
-        text-decoration: underline;
         font-weight: bold;
-        margin-bottom: 24px;
       }
 
       div {
         display: flex;
         margin-block: 16px;
+      }
+
+      footer {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        span {
+          white-space: break-spaces;
+        }
+        button {
+          align-self: center;
+          margin-top: 24px;
+        }
       }
     }
   }
