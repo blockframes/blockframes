@@ -53,7 +53,6 @@
         </p>
         <ng-template #termAction let-term let-index="index">
           <a mat-icon-button matTooltip="View"
-            *ngIf="offer"
             [routerLink]="['/c/o/dashboard/crm/offer', offer.id, contract.id, 'form']"
             [queryParams]="{termIndex:index}">
             <mat-icon svgIcon="visibility"></mat-icon>

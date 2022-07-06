@@ -66,11 +66,7 @@ export class ContractsListComponent {
     this.dynTitle.setPageTitle('My Sales (All)');
   }
 
-  public goToSale(id: string) {
-    this.router.navigate([id], { relativeTo: this.route });
-  }
-
-  public goToMandate(id: string) {
+  public goToContract(id: string) {
     this.router.navigate([id], { relativeTo: this.route });
   }
 

@@ -51,7 +51,6 @@ import { BreadCrumbModule } from './components/bread-crumb/bread-crumb.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
 
-
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
   { path: 'overview', component: OverviewComponent },

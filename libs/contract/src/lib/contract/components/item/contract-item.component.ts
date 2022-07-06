@@ -7,7 +7,6 @@ import { HoldbackModalComponent } from '../../holdback/modal/holdback-modal.comp
 import { OrganizationService } from '@blockframes/organization/service';
 import { BucketContract, Holdback, Sale, Scope, mediaGroup, territoriesGroup } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: 'contract-item',
@@ -25,7 +24,6 @@ export class ContractItemComponent {
   territoriesGroup = territoriesGroup;
   orgId = this.orgService.org.id;
   @Input() contract: BucketContract | Sale;
-  @Input() @boolean disableViewTerm:boolean;
 
   @ContentChild('priceTemplate') priceTemplate: TemplateRef<unknown>;
   @ContentChild('termAction') actionTemplate?: TemplateRef<unknown>;
