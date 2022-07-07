@@ -1,10 +1,10 @@
-import { createMailTerm, MailTerm } from './terms';
+import { BucketTerm } from './terms';
 import { User } from './user';
 import { Offer } from './offer';
 import { Negotiation } from './negociation';
 import { Movie } from './movie';
 import { Organization } from './organisation';
-import { toLabel } from './utils';
+import { toLabel, toLanguageVersionString } from './utils';
 import { eventTypes, movieCurrenciesSymbols, staticModel } from './static/static-model';
 import { Bucket, BucketContract } from './bucket';
 import { AccessibilityTypes, App, EventTypesValue } from './static/types';
@@ -54,7 +54,7 @@ export interface MovieEmailData {
 interface NegotiationEmailData {
   price: string;
   currency: string;
-  terms: MailTerm[];
+  terms: TermEmailData[];
 }
 
 // @see node_modules/@sendgrid/helpers/classes/attachment.d.ts
@@ -128,7 +128,15 @@ interface BucketEmailData {
 interface ContractEmailData {
   titleId: string;
   price: string;
-  terms: MailTerm[];
+  terms: TermEmailData[];
+}
+
+interface TermEmailData {
+  territories: string;
+  medias: string;
+  duration: { from: string, to: string };
+  languages: string;
+  exclusive: string;
 }
 
 export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailRequest {
@@ -178,7 +186,7 @@ export function getNegotiationEmailData(negotiation: Partial<Negotiation>): Nego
   const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
   const formatter = new Intl.NumberFormat('en-US');
   const price = negotiation.price ? formatter.format(negotiation.price) : '';
-  const terms = createMailTerm(negotiation.terms);
+  const terms = getTermEmailData(negotiation.terms);
 
   return {
     price,
@@ -203,8 +211,23 @@ export function getContractEmailData({ titleId, price, terms }: BucketContract):
   return ({
     titleId,
     price: price ? formatter.format(price) : '',
-    terms: createMailTerm(terms)
+    terms: getTermEmailData(terms)
   });
+}
+
+export function getTermEmailData(terms: BucketTerm[]): TermEmailData[] {
+  return terms.map((term) => ({
+    territories: term.territories
+      .map((territory) => staticModel['territories'][territory])
+      .join(', '),
+    medias: term.medias.map((media) => staticModel['medias'][media] ?? media).join(', '),
+    duration: {
+      from: format(term.duration.from, 'dd MMM, yyyy'),
+      to: format(term.duration.to, 'dd MMM, yyyy'),
+    },
+    languages: toLanguageVersionString(term.languages),
+    exclusive: term.exclusive ? 'Exclusive' : 'Non exclusive',
+  }));
 }
 
 function toTimezone(date: Date, timeZone: string) {
