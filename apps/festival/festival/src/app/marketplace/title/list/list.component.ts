@@ -5,6 +5,7 @@ import {
   OnDestroy,
   AfterViewInit,
   Inject,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -49,6 +50,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private snackbar: MatSnackBar,
     private pdfService: PdfService,
+    private cdRef: ChangeDetectorRef,
     @Inject(APP) public app: App,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
@@ -132,7 +134,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.disabledLoad = false;
     const routeParams = decodeUrl(this.route);
     localStorage.setItem(this.app, JSON.stringify(routeParams));
-    this.activeUnactiveButtons()
+    this.activeUnactiveButtons();
   }
 
   load() {
@@ -140,23 +142,23 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     const versions = this.searchForm.languages.get('versions') as FormEntity<any>
 
     const dataStorage = localStorage.getItem(this.app);
-    const parseData = JSON.parse(dataStorage)
+    const parseData = JSON.parse(dataStorage);
 
-    this.searchForm.sellers.patchAllValue(parseData.sellers)
-    this.searchForm.genres.patchAllValue(parseData.genres)
-    this.searchForm.originCountries.patchAllValue(parseData.originCountries)
-    languages.patchAllValue(parseData.languages.languages)
-    versions.patchValue(parseData.languages.versions)
-    this.searchForm.productionStatus.patchValue(parseData.productionStatus)
-    this.searchForm.minBudget.patchValue(parseData.minBudget)
+    this.searchForm.sellers.patchAllValue(parseData.sellers);
+    this.searchForm.genres.patchAllValue(parseData.genres);
+    this.searchForm.originCountries.patchAllValue(parseData.originCountries);
+    languages.patchAllValue(parseData.languages.languages);
+    versions.patchValue(parseData.languages.versions);
+    this.searchForm.productionStatus.patchValue(parseData.productionStatus);
+    this.searchForm.minBudget.patchValue(parseData.minBudget);
   }
 
   activeUnactiveButtons() {
-    console.log("1")
     const dataStorage = localStorage.getItem(this.app);
-    const currentRouteParams = this.route.snapshot.queryParams.formValue
+    const currentRouteParams = this.route.snapshot.queryParams.formValue;
     if (dataStorage) this.disabledLoad = false;
-    if (dataStorage === currentRouteParams) this.activeSave = true, console.log("2")
+    if (dataStorage === currentRouteParams) this.activeSave = true;
     else this.activeSave = false;
+    this.cdRef.markForCheck();
   }
 }
