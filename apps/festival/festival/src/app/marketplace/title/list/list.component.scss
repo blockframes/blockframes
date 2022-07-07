@@ -37,3 +37,13 @@ list-page-description, pdf-export button {
   margin-left: auto;
   flex-shrink: 0;
 }
+
+.saveLoad{
+  margin-inline: auto;
+}
+.saveLoad button{
+  margin: 0px 8px;
+}
+.saveActive{
+  background: #001EC7 !important;
+}

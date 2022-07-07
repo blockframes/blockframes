@@ -4,6 +4,7 @@ import {
   OnInit,
   OnDestroy,
   AfterViewInit,
+  Inject,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,11 +12,13 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import type { StoreStatus } from '@blockframes/model';
+import type { App, StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie } from '@blockframes/model';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';
+import { APP } from '@blockframes/utils/routes/utils';
+import { FormEntity, FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -33,6 +36,8 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   public exporting = false;
   public nbHits: number;
   public hitsViewed = 0;
+  public activeSave = false;
+  public disabledLoad = true;
 
   private subs: Subscription[] = [];
   private loadMoreToggle: boolean;
@@ -43,12 +48,16 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute,
     private router: Router,
     private snackbar: MatSnackBar,
-    private pdfService: PdfService
+    private pdfService: PdfService,
+    @Inject(APP) public app: App,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
 
   ngOnInit() {
+    const queryParamsSub = this.route.queryParams.subscribe(_ => this.activeUnactiveButtons())
+    this.subs.push(queryParamsSub)
+
     this.movies$ = this.movieResultsState.asObservable();
     const params = this.route.snapshot.queryParams;
     for (const key in params) {
@@ -58,7 +67,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
         console.error(`Invalid parameter ${key} in URL`);
       }
     }
-
     const sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
       distinctUntilChanged(),
       debounceTime(500),
@@ -118,5 +126,37 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     await this.pdfService.download(movies.map(m => m.objectID));
     snackbarRef.dismiss();
     this.exporting = false;
+  }
+
+  save() {
+    this.disabledLoad = false;
+    const routeParams = decodeUrl(this.route);
+    localStorage.setItem(this.app, JSON.stringify(routeParams));
+    this.activeUnactiveButtons()
+  }
+
+  load() {
+    const languages = this.searchForm.languages.get('languages') as FormList<any>
+    const versions = this.searchForm.languages.get('versions') as FormEntity<any>
+
+    const dataStorage = localStorage.getItem(this.app);
+    const parseData = JSON.parse(dataStorage)
+
+    this.searchForm.sellers.patchAllValue(parseData.sellers)
+    this.searchForm.genres.patchAllValue(parseData.genres)
+    this.searchForm.originCountries.patchAllValue(parseData.originCountries)
+    languages.patchAllValue(parseData.languages.languages)
+    versions.patchValue(parseData.languages.versions)
+    this.searchForm.productionStatus.patchValue(parseData.productionStatus)
+    this.searchForm.minBudget.patchValue(parseData.minBudget)
+  }
+
+  activeUnactiveButtons() {
+    console.log("1")
+    const dataStorage = localStorage.getItem(this.app);
+    const currentRouteParams = this.route.snapshot.queryParams.formValue
+    if (dataStorage) this.disabledLoad = false;
+    if (dataStorage === currentRouteParams) this.activeSave = true, console.log("2")
+    else this.activeSave = false;
   }
 }
