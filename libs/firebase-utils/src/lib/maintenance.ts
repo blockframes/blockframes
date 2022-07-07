@@ -1,4 +1,5 @@
 import {
+  DB_DOCUMENT_NAME,
   MAINTENANCE_DOCUMENT_NAME,
   META_COLLECTION_NAME,
   _isInMaintenance
@@ -7,8 +8,12 @@ import { IMaintenanceDoc } from '@blockframes/model';
 import { toDate } from './firebase-utils';
 import { getDb } from './initialize';
 
-const maintenanceRef = (db = getDb()) => {
+export const maintenanceRef = (db = getDb()) => {
   return db.collection(META_COLLECTION_NAME).doc(MAINTENANCE_DOCUMENT_NAME);
+};
+
+export const versionRef = (db = getDb()) => {
+  return db.collection(META_COLLECTION_NAME).doc(DB_DOCUMENT_NAME);
 };
 
 export function startMaintenance(db?: FirebaseFirestore.Firestore) {
