@@ -73,7 +73,7 @@ export class InternalSaleListComponent implements OnInit {
   }
 
   /* index paramater is unused because it is a default paramater from the filter javascript function */
-  filterBySalesStatus(sale: InternalSale, index: number, status: ContractStatus): boolean {
+  filterBySalesStatus(sale: InternalSale, _: number, status: ContractStatus): boolean {
     if (!status) return true;
     if (status === 'negotiating') {
       return sale.status === 'pending' && !isInitial(sale.negotiation);

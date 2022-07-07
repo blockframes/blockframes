@@ -45,9 +45,7 @@ import { ContractViewComponent } from './view.component';
     MatSnackBarModule,
     MatFormFieldModule,
 
-    RouterModule.forChild([
-      { path: '', component: ContractViewComponent },
-    ]),
+    RouterModule.forChild([{ path: '', component: ContractViewComponent }]),
   ]
 })
 export class ContractViewModule { }

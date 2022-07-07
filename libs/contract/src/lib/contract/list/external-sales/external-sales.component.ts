@@ -1,5 +1,5 @@
 import {
-  Component, ChangeDetectionStrategy, Input, Output, EventEmitter
+  Component, ChangeDetectionStrategy, Input
 } from '@angular/core';
 import { Contract, Sale } from '@blockframes/model';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,7 +20,6 @@ interface ExternalSale extends Sale {
 export class ExternalSaleListComponent {
 
   private _sales = new BehaviorSubject<ExternalSale[]>([]);
-  @Output() private rowClick = new EventEmitter();
 
   constructor(
     private router: Router,
@@ -35,7 +34,7 @@ export class ExternalSaleListComponent {
     return this._sales.value;
   }
 
-  goToSale({ id }: Contract) {
-    this.rowClick.emit(id);
+  goToContract({ id }: Contract) {
+    this.router.navigate([id], { relativeTo: this.route });
   }
 }

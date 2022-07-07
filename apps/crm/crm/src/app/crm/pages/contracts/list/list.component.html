@@ -1,11 +1,7 @@
-<ng-container *ngIf="mandates$ | async as mandates">
-  <mandates-list [mandates]="mandates" (rowClick)="goToContract($event)">
-    <h3>List of Mandates</h3>
-  </mandates-list>
-</ng-container>
+<ng-container *ngIf="mandateAndSales$ | async as mandateAndSales; else loading">
+  <mandates-list [mandates]="mandateAndSales.mandates">  </mandates-list>
 
-<ng-container *ngIf="externalSales$ | async as externalSales; else loading">
-  <external-sales-list [sales]="externalSales" (rowClick)="goToContract($event)">
+  <external-sales-list [sales]="mandateAndSales.sales">
     <section fxLayout="column" fxLayoutAlign="center center" fxFlexGap="16">
       <h1>There are no Deals yet.</h1>
       <img asset="empty_contract.svg" alt="Image, you have no sales yet">

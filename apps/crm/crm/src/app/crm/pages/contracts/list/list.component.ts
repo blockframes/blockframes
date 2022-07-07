@@ -5,12 +5,11 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
-import { of } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getSeller } from '@blockframes/contract/contract/utils'
 import { Mandate, Sale } from '@blockframes/model';
 import { orderBy, where } from 'firebase/firestore';
-import { ActivatedRoute, Router } from '@angular/router';
 
 const query = [
   where('buyerId', '==', ''),
@@ -32,7 +31,7 @@ const mandateQuery = [
 export class ContractsListComponent {
   public orgId = this.orgService.org.id;
 
-  public mandates$ = this.contractService.valueChanges(mandateQuery).pipe(
+  private mandates$ = this.contractService.valueChanges(mandateQuery).pipe(
     joinWith({
       licensor: (mandate: Mandate) => {
         return this.orgService.valueChanges(getSeller(mandate)).pipe(map(org => org.name))
@@ -43,7 +42,7 @@ export class ContractsListComponent {
     })
   );
 
-  public externalSales$ = this.contractService.valueChanges(query).pipe(
+  private externalSales$ = this.contractService.valueChanges(query).pipe(
     joinWith({
       licensor: (sale: Sale) => {
         return this.orgService.valueChanges(getSeller(sale)).pipe(map(org => org.name))
@@ -54,20 +53,18 @@ export class ContractsListComponent {
     }),
   );
 
+  public mandateAndSales$ = combineLatest([
+    this.mandates$,
+    this.externalSales$
+  ]).pipe(map(([mandates, sales]) => ({ mandates, sales })));
+
   constructor(
     private contractService: ContractService,
     private orgService: OrganizationService,
     private titleService: MovieService,
     private incomeService: IncomeService,
     private dynTitle: DynamicTitleService,
-    private router: Router,
-    private route: ActivatedRoute
   ) {
     this.dynTitle.setPageTitle('My Sales (All)');
   }
-
-  public goToContract(id: string) {
-    this.router.navigate([id], { relativeTo: this.route });
-  }
-
 }

@@ -3,13 +3,15 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { joinWith } from 'ngfire';
+import { of } from 'rxjs';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
+
+import { getSeller } from '@blockframes/contract/contract/utils'
 import { OrganizationService } from '@blockframes/organization/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieService } from '@blockframes/movie/service';
-import { joinWith } from 'ngfire';
-import { getSeller } from '@blockframes/contract/contract/utils'
-import { of } from 'rxjs';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { IncomeService } from '@blockframes/contract/income/service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { Contract, Term } from '@blockframes/model';
@@ -25,8 +27,7 @@ import { NavigationService } from '@blockframes/ui/navigation.service';
 export class ContractViewComponent {
 
   contract$ = this.route.params.pipe(
-    map(r => r.contractId as string),
-    switchMap(id => this.getContract(id)),
+    switchMap(({ contractId }: { contractId: string }) => this.getContract(contractId)),
     filter(contract => !!contract),
     tap(contract => this.statusForm.setValue(contract.status))
   );

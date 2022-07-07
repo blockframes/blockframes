@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, shareReplay, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
@@ -16,14 +16,12 @@ import { ContractStatus, Mandate } from '@blockframes/model';
 export class MandateListComponent {
 
   private title = 'All Mandates';
-  @Output() private rowClick = new EventEmitter();
-
   private _mandates = new BehaviorSubject<Mandate[]>([]);
 
   filterForm = new FormControl();
   filter$: Observable<ContractStatus | ''> = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value || ''));
 
-  public mandateCount$ = this._mandates.pipe(
+  mandateCount$ = this._mandates.pipe(
     filter(data => !!data),
     map(m => ({
       all: m.length,
@@ -48,10 +46,9 @@ export class MandateListComponent {
     return this._mandates.value;
   }
 
-  applyFilter(filter?: ContractStatus) {
+  applyFilter(filter: ContractStatus) {
     this.filterForm.setValue(filter);
-    const titleFilter = filter === 'pending' ? 'new' : filter;
-    const pageTitle = `${this.title} (${titleFilter ? capitalize(titleFilter) : 'All'})`;
+    const pageTitle = `${this.title} (${capitalize(filter)})`;
     this.dynTitle.setPageTitle(pageTitle);
   }
 
@@ -61,12 +58,12 @@ export class MandateListComponent {
   }
 
   /* index paramater is unused because it is a default paramater from the filter javascript function */
-  filterByStatus(sale: Mandate, index: number, status: ContractStatus): boolean {
+  filterByStatus(sale: Mandate, _: number, status: ContractStatus): boolean {
     if (!status) return true;
     return sale.status === status;
   }
 
-  goToMandate({ id }: Mandate) {
-    this.rowClick.emit(id);
+  goToContract({ id }: Mandate) {
+    this.router.navigate([id], { relativeTo: this.route });
   }
 }
