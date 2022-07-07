@@ -3,77 +3,31 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import {
   AggregatedAnalytic,
-  Analytics,
-  InvitationWithAnalytics,
   Invitation,
   toLabel,
   isScreening,
   displayName,
   EventName,
   getGuest,
-  averageWatchDuration,
+  invitationStatus,
 } from '@blockframes/model';
-import { filters } from "@blockframes/ui/list/table/filters";
+import { filters } from '@blockframes/ui/list/table/filters';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
 import { aggregatePerUser, countedToAnalyticData, counter } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
-import { NavigationService } from "@blockframes/ui/navigation.service";
-import { convertToTimeString, downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { MetricCard } from "@blockframes/analytics/components/metric-card-list/metric-card-list.component";
-import { eventTime } from "@blockframes/event/pipes/event-time.pipe";
-import { InvitationService } from "@blockframes/invitation/service";
-import { EventService } from "@blockframes/event/service";
+import { NavigationService } from '@blockframes/ui/navigation.service';
+import { convertToTimeString, downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { toScreenerCards } from '@blockframes/analytics/utils';
+import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
+import { InvitationService } from '@blockframes/invitation/service';
+import { EventService } from '@blockframes/event/service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { displayPerson } from "@blockframes/utils/pipes";
+import { displayPerson } from '@blockframes/utils/pipes';
 
-import { combineLatest, firstValueFrom, Observable, of, filter, map, pluck, shareReplay, switchMap } from "rxjs";
+import { combineLatest, firstValueFrom, Observable, of, filter, map, pluck, shareReplay, switchMap } from 'rxjs';
 import { joinWith } from 'ngfire';
 import { formatDate } from '@angular/common';
-
-
-function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
-  const attendees = invitations.filter(invitation => invitation.watchInfos?.duration);
-  const accepted = invitations.filter(invitation => invitation.status === 'accepted');
-
-  const avgWatchDuration = averageWatchDuration(attendees);
-  const parsedTime = convertToTimeString(avgWatchDuration * 1000);
-  const participationRate = Math.round(attendees.length / accepted.length) * 100;
-  const acceptationRate = Math.round(accepted.length / invitations.length) * 100;
-  const traction = Math.round(screeningRequests.length / invitations.length) * 100;
-  return [
-    {
-      title: 'Guests',
-      value: invitations.length,
-      icon: 'badge'
-    },
-    {
-      title: 'Attendees',
-      value: attendees.length,
-      icon: 'group'
-    },
-    {
-      title: 'Average Watch Time',
-      value: parsedTime,
-      icon: 'timer'
-    },
-    {
-      title: 'Participation Rate',
-      value: invitations.length ? `${participationRate}%` : '-',
-      icon: 'front_hand'
-    },
-    {
-      title: 'Acceptation Rate',
-      value: invitations.length ? `${acceptationRate}%` : '-',
-      icon: 'sentiment_satisfied'
-    },
-    {
-      title: 'Traction Rate',
-      value: invitations.length ? `${traction}%` : '-',
-      icon: 'magnet_electricity'
-    }
-  ];
-}
 
 function emailFilter(input: string, value: string, invitation: Invitation) {
   const email = getGuest(invitation, 'user')?.email;
@@ -214,7 +168,8 @@ export class TitleAnalyticsComponent {
         'Company Name': invitation.guestOrg?.name ?? '-',
         'Activity': activity ? toLabel(activity, 'orgActivity') : '-',
         'Country': country ? toLabel(country, 'territories') : '-',
-        'Watch Time': convertToTimeString(invitation.watchInfos?.duration * 1000),
+        'Invitation': invitationStatus[invitation.status],
+        'Watch Time': invitation.watchInfos?.duration !== undefined ? convertToTimeString(invitation.watchInfos?.duration * 1000) : '-',
         'Watching Ended': invitation.watchInfos?.date ? formatDate(invitation.watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '-'
       }
     });

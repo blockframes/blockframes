@@ -13,7 +13,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class EventIdenityComponent {
   public form = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required])
+    lastName: new FormControl('', [Validators.required]),
+    termsOfUse: new FormControl(false),
+    privacyPolicy: new FormControl(false)
   });
 
   constructor(
