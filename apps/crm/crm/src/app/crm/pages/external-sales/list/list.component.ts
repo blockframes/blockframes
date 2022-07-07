@@ -17,10 +17,6 @@ const query = [
   orderBy('_meta.createdAt', 'desc')
 ];
 
-function getFullName(seller: Organization) {
-  return seller.denomination.full;
-}
-
 @Component({
   selector: 'contracts-list',
   templateUrl: './list.component.html',
@@ -33,7 +29,7 @@ export class ContractsListComponent {
   public externalSales$ = this.contractService.valueChanges(query).pipe(
     joinWith({
       licensor: (sale: Sale) => {
-        return this.orgService.valueChanges(getSeller(sale)).pipe(map(getFullName))
+        return this.orgService.valueChanges(getSeller(sale)).pipe(map(org => org.name))
       },
       licensee: () => of('External'),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),

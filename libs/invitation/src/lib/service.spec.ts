@@ -31,7 +31,7 @@ const invitationParamsOrg = {
   date: today,
   toOrg: {
     id: 'orgId',
-    denomination: { full: 'MyOrg' },
+    name: 'MyOrg',
     logo: undefined
   },
 };
@@ -135,9 +135,6 @@ describe('Invitations Test Suite', () => {
   it('Should create invitation request', async () => {
     const requestBy = createUser({
       uid: 'userId',
-      financing: {
-        rank: 'first'
-      },
       firstName: 'Unit',
       lastName: 'Tester',
       email: 'userId@myorg.org',

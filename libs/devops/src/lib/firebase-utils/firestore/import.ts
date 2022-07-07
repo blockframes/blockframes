@@ -1,7 +1,7 @@
-import { loadAdminServices } from '@blockframes/firebase-utils';
 import { clearDb } from './clear';
 import { backupBucket, firebase } from '@env';
 import { runShellCommandExec } from '../commands';
+import { getDb } from '@blockframes/firebase-utils/initialize';
 
 /**
  * This function will run `gcloud` shell command to import Firestore backup from GCS bucket into Firestore.
@@ -11,7 +11,7 @@ export async function importFirestoreFromBucket(dirName: string, allowProd = fal
   const url = `gs://${backupBucket}/${dirName}`;
   const cmd = `gcloud firestore import --project ${firebase().projectId} ${url}`;
 
-  const { db } = loadAdminServices();
+  const db = getDb();
   await clearDb(db, allowProd);
 
   return runShellCommandExec(cmd);

@@ -1,15 +1,22 @@
 import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey, projectId } from '../environments/environment';
 import { groupIds } from '@blockframes/utils/emails/ids';
-export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
-import { emailErrorCodes, EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
-import * as admin from 'firebase-admin';
+import type { CallableContext } from 'firebase-functions/lib/providers/https';
 import { getMailSender, appLogo, applicationUrl, AppLogoValue } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { logger } from 'firebase-functions';
-import { App, appDescription, appName, AppNameValue, ErrorResultResponse } from '@blockframes/model';
+import { getDb } from '@blockframes/firebase-utils';
+import {
+  App,
+  appDescription,
+  appName,
+  AppNameValue,
+  ErrorResultResponse,
+  emailErrorCodes,
+  EmailRequest,
+  EmailTemplateRequest
+} from '@blockframes/model';
 
 interface AppMailSetting {
   description: string;
@@ -103,7 +110,7 @@ export const sendMailAsAdmin = async (
   data: { request: EmailRequest, from?: EmailJSON },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
-  const db = admin.firestore();
+  const db = getDb();
   if (!context?.auth) {
     throw new Error('Permission denied: missing auth context.');
   }

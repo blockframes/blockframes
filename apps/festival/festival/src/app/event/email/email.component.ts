@@ -22,7 +22,9 @@ export class EmailComponent implements OnInit {
   public form = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email])
+    email: new FormControl('', [Validators.required, Validators.email]),
+    termsOfUse: new FormControl(false),
+    privacyPolicy: new FormControl(false),
   });
 
   @HostListener('window:popstate', ['$event'])

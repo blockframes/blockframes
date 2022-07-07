@@ -1,26 +1,5 @@
-import { Media, Territory, staticModel } from './static';
-import { format } from 'date-fns';
+import { Media, Territory } from './static';
 import { LanguageRecord } from './movie';
-import { toLanguageVersionString } from './utils';
-
-export function createMailTerm(terms: BucketTerm[]) {
-  return terms.map((term) => ({
-    ...term,
-    territories: term.territories
-      .map((territory) => staticModel['territories'][territory])
-      .join(', '),
-    medias: term.medias.map((media) => staticModel['medias'][media] ?? media).join(', '),
-    duration: {
-      from: format(term.duration.from, 'dd MMM, yyyy'),
-      to: format(term.duration.to, 'dd MMM, yyyy'),
-    },
-    languages: toLanguageVersionString(term.languages),
-    exclusive: term.exclusive ? 'Exclusive' : 'Non exclusive',
-  }));
-}
-
-export type MailTerm = ReturnType<typeof createMailTerm>[number];
-
 export interface Duration {
   from: Date;
   to: Date;

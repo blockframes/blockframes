@@ -1,5 +1,4 @@
 import {
-  loadAdminServices,
   getCollectionInBatches,
   clearIndex,
   setIndexConfiguration,
@@ -10,7 +9,6 @@ import {
 } from '@blockframes/firebase-utils';
 import { algolia } from '@env';
 import {
-  orgName,
   PublicUser,
   Campaign,
   AlgoliaConfig,
@@ -19,10 +17,11 @@ import {
   Organization,
   Movie
 } from '@blockframes/model';
+import { getDb } from '@blockframes/firebase-utils/initialize';
 
 type AlgoliaApp = Exclude<App, 'crm'>;
 
-export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = loadAdminServices().db) {
+export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = getDb()) {
   if (!appConfig) {
     const promises = (<AlgoliaApp[]>getAllAppsExcept(['crm'])).map((app) => upgradeAlgoliaOrgs(app, db));
     await Promise.all(promises);
@@ -63,7 +62,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = loadAdminS
   }
 }
 
-export async function upgradeAlgoliaMovies(appConfig?: App, db = loadAdminServices().db) {
+export async function upgradeAlgoliaMovies(appConfig?: App, db = getDb()) {
   if (!appConfig) {
     const promises = getAllAppsExcept(['crm']).map((app) => upgradeAlgoliaMovies(app, db));
     await Promise.all(promises);
@@ -87,16 +86,16 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = loadAdminServic
     for await (const movies of moviesIterator) {
       const promises = movies.map(async (movie) => {
         try {
-          const orgs = await Promise.all(movie.orgIds.map((id) => getDocument<Organization>(`orgs/${id}`)));
+          const orgs = await Promise.all(movie.orgIds.map((id) => getDocument<Organization>(`orgs/${id}`, db)));
 
           if (!orgs.length) {
             console.error(`Movie ${movie.id} is not part of any orgs`);
           }
 
-          const organizationNames = orgs.map((org) => orgName(org));
+          const organizationNames = orgs.map((org) => org.name);
 
           if (appConfig === 'financiers') {
-            const campaign = await getDocument<Campaign>(`campaign/${movie.id}`);
+            const campaign = await getDocument<Campaign>(`campaign/${movie.id}`, db);
             if (campaign?.minPledge) {
               movie['minPledge'] = campaign.minPledge;
             }
@@ -117,7 +116,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = loadAdminServic
   }
 }
 
-export async function upgradeAlgoliaUsers(db = loadAdminServices().db) {
+export async function upgradeAlgoliaUsers(db = getDb()) {
   // reset config, clear index and fill it up from the db (which is the only source of truth)
   const config: AlgoliaConfig = {
     searchableAttributes: ['email', 'firstName', 'lastName', 'orgNames'],

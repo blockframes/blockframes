@@ -1,5 +1,5 @@
 import { DbRecord } from '@blockframes/firebase-utils';
-import { MAINTENANCE_DOCUMENT_NAME, META_COLLECTION_NAME } from '@blockframes/utils/maintenance';
+import { metaDoc, META_COLLECTION_NAME } from '@blockframes/utils/maintenance';
 import { testVideoId } from '@env';
 import { anonymizeDocument } from './lib';
 
@@ -12,33 +12,15 @@ describe('Test ORG anonymization function', () => {
       docPath: `orgs/${id}`,
       content: {
         id,
-        denomination: { full: 'org full name A', public: 'org public name A' },
-        email: 'email@foo.org',
-        fiscalNumber: 'FR 123 456 78 452'
+        name: 'org name A',
+        email: 'email@foo.org'
       }
     };
 
     const doc = anonymizeDocument(orgRecord);
     expect(doc.content.id).toEqual(orgRecord.content.id);
     expect(doc.content.email).not.toEqual(orgRecord.content.email);
-    expect(doc.content.fiscalNumber).not.toEqual(orgRecord.content.fiscalNumber);
-  });
-
-  it('should not anonymise fiscalNumber if not present in original doc', async () => {
-    const id = 'BBBB01';
-    const orgRecord: DbRecord = {
-      docPath: `orgs/${id}`,
-      content: {
-        id,
-        denomination: { full: 'org full name B', public: 'org public name B' },
-        email: 'email@bar.org',
-      }
-    };
-
-    const doc = anonymizeDocument(orgRecord);
-    expect(doc.content.id).toEqual(orgRecord.content.id);
-    expect(doc.content.email).not.toEqual(orgRecord.content.email);
-    expect(doc.content.fiscalNumber).toBeUndefined();
+    expect(doc.content.name).not.toEqual(orgRecord.content.name);
   });
 });
 
@@ -53,7 +35,22 @@ describe('Test USERS anonymization function', () => {
         firstName: `Foo`,
         lastName: 'Bar',
         privacyPolicy: {
-          ip: '127.0.0.1'
+          ip: '127.0.0.1',
+          date: new Date()
+        },
+        termsAndConditions: {
+          festival: {
+            ip: '127.0.0.1',
+            date: new Date()
+          },
+          catalog: {
+            ip: '127.0.0.1',
+            date: new Date()
+          },
+          financiers: {
+            ip: '127.0.0.1',
+            date: new Date()
+          },
         }
       }
     };
@@ -65,6 +62,9 @@ describe('Test USERS anonymization function', () => {
     expect(doc.content.lastName).not.toEqual(userRecord.content.lastName);
     expect(doc.content.privacyPolicy).toBeDefined();
     expect(doc.content.privacyPolicy.ip).not.toEqual(userRecord.content.privacyPolicy.ip);
+    expect(doc.content.termsAndConditions.festival.ip).not.toEqual(userRecord.content.termsAndConditions.festival.ip);
+    expect(doc.content.termsAndConditions.catalog.ip).not.toEqual(userRecord.content.termsAndConditions.catalog.ip);
+    expect(doc.content.termsAndConditions.financiers.ip).not.toEqual(userRecord.content.termsAndConditions.financiers.ip);
   });
 });
 
@@ -80,9 +80,8 @@ describe('Test INVITATIONS anonymization function', () => {
         status: 'pending',
         fromOrg: {
           id: 'orgIdA',
-          denomination: { full: 'org full name A', public: 'org public name A' },
-          email: 'email@foo.org',
-          fiscalNumber: 'FR 123 456 78 452'
+          name: 'org name B',
+          email: 'email@foo.org'
         },
         toUser: {
           uid: 'uidA',
@@ -106,7 +105,7 @@ describe('Test INVITATIONS anonymization function', () => {
     expect(doc.content.toUser.lastName).not.toEqual(invitationRecord.content.toUser.lastName);
     expect(doc.content.toUser.privacyPolicy).toBeUndefined();
     expect(doc.content.fromOrg.email).not.toEqual(invitationRecord.content.fromOrg.email);
-    expect(doc.content.fromOrg.fiscalNumber).not.toEqual(invitationRecord.content.fromOrg.fiscalNumber);
+    expect(doc.content.fromOrg.name).not.toEqual(invitationRecord.content.fromOrg.name);
   });
 });
 
@@ -120,7 +119,7 @@ describe('Test NOTIFICATIONS anonymization function', () => {
         toUserId: 'uidA',
         organization: {
           id: 'orgIdB',
-          denomination: { full: 'org full name C', public: 'org public name C' },
+          name: 'org name C',
           email: 'email@foo.org'
         },
         user: {
@@ -146,7 +145,7 @@ describe('Test NOTIFICATIONS anonymization function', () => {
     expect(doc.content.user.lastName).not.toEqual(notificationRecord.content.user.lastName);
     expect(doc.content.user.privacyPolicy).toBeUndefined();
     expect(doc.content.organization.email).not.toEqual(notificationRecord.content.organization.email);
-    expect(doc.content.organization.fiscalNumber).toBeUndefined();
+    expect(doc.content.organization.name).not.toEqual(notificationRecord.content.organization.name);
   });
 });
 
@@ -203,7 +202,7 @@ describe(`Test ${META_COLLECTION_NAME} anonymization function`, () => {
   it('maintenance mode should be set to true', async () => {
 
     const titleRecord: DbRecord = {
-      docPath: `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`,
+      docPath: metaDoc,
       content: {
         startedAt: '',
         endedAt: new Date()

@@ -56,7 +56,7 @@ export class FilePathPipe implements PipeTransform {
     } else if (collection === 'orgs') {
       collection = 'Organization';
       const org = await this.orgService.getValue(file.docId);
-      docName = org?.denomination?.public ?? 'Unknown Organization';
+      docName = org?.name ?? 'Unknown Organization';
     } else if (collection === 'users') {
       collection = 'User';
       const user = await this.userService.getValue(file.docId);

@@ -7,7 +7,7 @@
     <h5>Owner</h5>
     <ng-container *ngIf="org">
       <a [routerLink]="['/c/o/dashboard/crm/organization', org.id]">
-        <span>{{ org | orgName:'long' }}</span>
+        <span>{{ org.name }}</span>
         <mat-icon svgIcon="visibility"></mat-icon>
       </a>
     </ng-container>

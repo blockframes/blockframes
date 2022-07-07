@@ -21,7 +21,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 import { MapModule } from '@blockframes/ui/map';
-import { OrgNameModule } from '@blockframes/organization/pipes';
 
 
 import { MarketplaceMovieAvailsMapComponent } from './avails-map.component';
@@ -36,7 +35,6 @@ import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.m
     ReactiveFormsModule,
 
     MapModule,
-    OrgNameModule,
     AvailsFilterModule,
     MatCardModule,
     MatIconModule,

@@ -1,6 +1,6 @@
-import { Person } from "./identity";
-import { LanguageRecord } from "./movie";
-import { Scope, staticModel } from "./static";
+import { Person } from './identity';
+import { LanguageRecord } from './movie';
+import { Scope, staticModel } from './static';
 
 export interface ErrorResultResponse {
   error: string;
