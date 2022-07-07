@@ -37,6 +37,7 @@ export class ListComponent implements OnInit, OnDestroy {
   public nbHits: number;
   public hitsViewed = 0;
   public activeSave = false;
+  public enabledSave = false;
   public disabledLoad = true;
 
   private loadMoreToggle: boolean;
@@ -57,6 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.activeUnactiveButtons()
     const queryParamsSub = this.route.queryParams.subscribe(_ => this.activeUnactiveButtons())
     this.subs.push(queryParamsSub)
 
@@ -161,7 +163,7 @@ export class ListComponent implements OnInit, OnDestroy {
     const dataStorage = localStorage.getItem(this.app);
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
     if (dataStorage) this.disabledLoad = false;
-    if (dataStorage === currentRouteParams) this.activeSave = true;
+    if (dataStorage === currentRouteParams) this.activeSave = true, this.enabledSave = true;
     else this.activeSave = false;
     this.cdRef.markForCheck();
   }

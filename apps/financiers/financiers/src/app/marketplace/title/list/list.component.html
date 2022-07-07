@@ -63,7 +63,7 @@
     </ng-template>
 
     <div class="saveLoad">
-      <button mat-mini-fab color="primary" [class]= "activeSave ? 'saveActive' : ''" (click)="save()" matTooltip="Save New Research">
+      <button mat-mini-fab color="primary" [class]= "activeSave || enabledSave ? 'saveActive' : ''" (click)="save()" matTooltip="Save New Research">
         <mat-icon [svgIcon]= "activeSave ? 'bookmark_solid' : 'bookmark_border'" ></mat-icon>
       </button>
       <button mat-mini-fab color="primary" [disabled]='disabledLoad' (click)="load()" matTooltip="Load Research" [class]= "activeSave ? 'saveActive' : ''">

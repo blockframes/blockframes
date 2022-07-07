@@ -38,6 +38,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   public nbHits: number;
   public hitsViewed = 0;
   public activeSave = false;
+  public enabledSave = false;
   public disabledLoad = true;
 
   private subs: Subscription[] = [];
@@ -157,7 +158,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     const dataStorage = localStorage.getItem(this.app);
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
     if (dataStorage) this.disabledLoad = false;
-    if (dataStorage === currentRouteParams) this.activeSave = true;
+    if (dataStorage === currentRouteParams) this.activeSave = true, this.enabledSave = true;
     else this.activeSave = false;
     this.cdRef.markForCheck();
   }
