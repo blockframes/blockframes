@@ -1,5 +1,5 @@
 import { DbRecord } from '@blockframes/firebase-utils';
-import { MAINTENANCE_DOCUMENT_NAME, META_COLLECTION_NAME } from '@blockframes/utils/maintenance';
+import { metaDoc, META_COLLECTION_NAME } from '@blockframes/utils/maintenance';
 import { testVideoId } from '@env';
 import { anonymizeDocument } from './lib';
 
@@ -202,7 +202,7 @@ describe(`Test ${META_COLLECTION_NAME} anonymization function`, () => {
   it('maintenance mode should be set to true', async () => {
 
     const titleRecord: DbRecord = {
-      docPath: `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`,
+      docPath: metaDoc,
       content: {
         startedAt: '',
         endedAt: new Date()

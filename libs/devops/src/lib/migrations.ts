@@ -3,10 +3,9 @@
  * to the LAST version.
  */
 import { importFirestore } from './admin';
-import { Firestore, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { Firestore, startMaintenance, endMaintenance, versionRef } from '@blockframes/firebase-utils';
 import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
 import { last } from 'lodash';
-import { dbVersionDoc, DB_DOCUMENT_NAME, META_COLLECTION_NAME } from '@blockframes/utils/maintenance';
 import { exportFirestoreToBucketBeta, getFirestoreExportDirname } from './firebase-utils';
 import { isMigrationRequired } from './tools';
 import { getDb, getStorage } from '@blockframes/firebase-utils/initialize';
@@ -14,7 +13,7 @@ import { getDb, getStorage } from '@blockframes/firebase-utils/initialize';
 export const VERSION_ZERO = 2;
 
 export async function loadDBVersion(db: Firestore): Promise<number> {
-  const version = await db.doc(dbVersionDoc).get();
+  const version = await versionRef(db).get();
 
   if (!version.exists) {
     return VERSION_ZERO;
@@ -23,13 +22,12 @@ export async function loadDBVersion(db: Firestore): Promise<number> {
 }
 
 export async function updateDBVersion(db: Firestore, version: number) {
-  const versionRef = db.collection(META_COLLECTION_NAME).doc(DB_DOCUMENT_NAME);
-  const doc = await versionRef.get();
+  const doc = await versionRef(db).get();
 
   if (!doc.exists) {
-    return versionRef.set({ currentVersion: version });
+    return versionRef(db).set({ currentVersion: version });
   } else {
-    return versionRef.update({ currentVersion: version });
+    return versionRef(db).update({ currentVersion: version });
   }
 }
 
