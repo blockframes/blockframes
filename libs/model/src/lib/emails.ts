@@ -6,8 +6,7 @@ import { Movie } from './movie';
 import { Organization } from './organisation';
 import { toLabel } from './utils';
 import { eventTypes, movieCurrenciesSymbols, staticModel } from './static/static-model';
-import { Bucket } from './bucket';
-import { getContractEmailData, ContractEmailData } from './contract';
+import { Bucket, BucketContract } from './bucket';
 import { AccessibilityTypes, App, EventTypesValue } from './static/types';
 import { EventMeta, Event, createIcsFromEvent, toIcsFile } from './event';
 import { differenceInDays, differenceInHours, differenceInMinutes, format, millisecondsInHour } from 'date-fns';
@@ -126,6 +125,12 @@ interface BucketEmailData {
   uid?: string;
 }
 
+interface ContractEmailData {
+  titleId: string;
+  price: string;
+  terms: MailTerm[];
+}
+
 export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailRequest {
   return {
     to: 'foo@bar.com',
@@ -190,6 +195,16 @@ export function getBucketEmailData(bucket: Bucket): BucketEmailData {
     contracts,
     currency: movieCurrenciesSymbols[bucket.currency]
   };
+}
+
+export function getContractEmailData({ titleId, price, terms }: BucketContract): ContractEmailData {
+  const formatter = new Intl.NumberFormat('en-US');
+
+  return ({
+    titleId,
+    price: price ? formatter.format(price) : '',
+    terms: createMailTerm(terms)
+  });
 }
 
 function toTimezone(date: Date, timeZone: string) {
