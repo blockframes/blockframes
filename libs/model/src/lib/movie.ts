@@ -103,6 +103,7 @@ export interface Movie {
 
 export interface MovieVideos {
   screener?: MovieVideo; // Main screener
+  publicScreener?: MovieVideo; // Public screener
   salesPitch?: MovieVideo; // Sales pitch
   otherVideos?: MovieVideo[]; // Other videos
 }
@@ -502,6 +503,7 @@ export function createMovieVideos(params: Partial<MovieVideos>): MovieVideos {
   return {
     ...params,
     screener: createMovieVideo(params?.screener),
+    publicScreener: createMovieVideo(params?.publicScreener),
     salesPitch: createMovieVideo(params?.salesPitch),
     otherVideos: params?.otherVideos?.map(video => createMovieVideo(video)) || [],
   };

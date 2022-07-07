@@ -41,6 +41,8 @@ import { SummaryAvailableMaterialsComponent } from './available-materials/availa
 import { SummaryMediaFilesComponent } from './media-files/media-files.component';
 import { SummaryMediaImagesComponent } from './media-images/media-images.component';
 import { SummaryMediaVideosComponent } from './media-videos/media-videos.component';
+import { SummaryMediaScreenerComponent } from './media-screener/media-screener.component';
+import { SummaryMediaPublicScreenerComponent } from './media-public-screener/media-public-screener.component';
 import { SummaryMediaNotesComponent } from './media-notes/notes.component';
 import { SummaryShootingInformationComponent } from './shooting-information/shooting-information.component';
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
@@ -60,6 +62,8 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
     SummaryMediaFilesComponent,
     SummaryMediaImagesComponent,
     SummaryMediaVideosComponent,
+    SummaryMediaScreenerComponent,
+    SummaryMediaPublicScreenerComponent,
     SummaryMediaNotesComponent,
     SummaryShootingInformationComponent
   ],
@@ -105,6 +109,8 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
     SummaryMediaFilesComponent,
     SummaryMediaImagesComponent,
     SummaryMediaVideosComponent,
+    SummaryMediaScreenerComponent,
+    SummaryMediaPublicScreenerComponent,
     SummaryMediaNotesComponent,
     SummaryShootingInformationComponent
   ]

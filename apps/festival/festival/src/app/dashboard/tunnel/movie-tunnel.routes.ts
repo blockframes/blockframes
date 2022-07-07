@@ -1,12 +1,25 @@
 import { Routes } from '@angular/router';
-import { TunnelGuard } from '@blockframes/ui/tunnel';
+import { TunnelGuard, TunnelStep } from '@blockframes/ui/tunnel';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
+
+const appSteps: TunnelStep[] = [{
+  title: 'Screener',
+  icon: 'movie',
+  time: 2,
+  routes: [
+    {
+      path: 'media-screener',
+      label: 'Screener Video'
+    }
+  ]
+}]
 
 export const tunnelRoutes: Routes = [
   {
     path: '',
     component: MovieFormShellComponent,
     canDeactivate: [TunnelGuard],
+    data: { appSteps },
     children: [
       {
         path: '',
@@ -80,13 +93,18 @@ export const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/media-videos/media-videos.module').then(m => m.MediaFormVideosModule),
       },
       {
-        path: 'media-notes',
+        path: 'media-screener',
         data: { animation: 13 },
+        loadChildren: () => import('./media-screener/media-screener.module').then(m => m.MediaFormScreenerModule),
+      },
+      {
+        path: 'media-notes',
+        data: { animation: 14 },
         loadChildren: () => import('@blockframes/movie/form/media-notes/notes.module').then(m => m.MovieFormNotesModule),
       },
       {
         path: 'summary',
-        data: { animation: 14 },
+        data: { animation: 15 },
         loadChildren: () => import('./summary/summary.module').then(m => m.TunnelSummaryModule),
       }
     ]
