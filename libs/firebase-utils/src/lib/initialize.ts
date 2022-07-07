@@ -7,7 +7,7 @@ import { firebase } from '@env';
 const SAK_KEY = 'GOOGLE_APPLICATION_CREDENTIALS';
 const SAK_VALUE = process.env[SAK_KEY] as string;
 
-export interface ServiceAccountKey {
+interface ServiceAccountKey {
   type: string;
   project_id: string;
   private_key_id: string;
