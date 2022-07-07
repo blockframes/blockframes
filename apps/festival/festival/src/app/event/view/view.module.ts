@@ -9,7 +9,6 @@ import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrganizationCardModule } from '@blockframes/organization/components/card/card.module';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { DisplayNameModule, DisplayPositionModule } from '@blockframes/utils/pipes';
 import { CountdownModule } from '@blockframes/ui/countdown/countdown.module';
@@ -35,7 +34,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     EventTimeModule,
     MovieHeaderModule,
     ImageModule,
-    OrgNameModule,
     OrgChipModule,
     OrganizationCardModule,
     DisplayNameModule,

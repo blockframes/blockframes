@@ -1,6 +1,6 @@
 import { db } from '../testing-cypress';
 import { createUser, createOrganization, createPermissions, ModuleAccess, App } from '@blockframes/model';
-import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME } from '@blockframes/utils/maintenance';
+import { metaDoc } from '@blockframes/utils/maintenance';
 import { WhereFilterOp } from 'firebase/firestore';
 
 export async function getRandomEmail() {
@@ -67,7 +67,7 @@ export async function getRandomOrgAdmin(orgId: string) {
 } */
 
 export async function getOrgByName(orgName: string) {
-  const userQuery = await db.collection('orgs').where('denomination.full', '==', orgName).get();
+  const userQuery = await db.collection('orgs').where('name', '==', orgName).get();
   const [org] = userQuery.docs;
   if (!org) return null;
   return createOrganization(org.data());
@@ -80,7 +80,6 @@ export function deleteOrg(orgId: string) {
 //* LIGHT PLUGIN*----------------------------------------------------------------
 
 const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
-const maintenancePath = `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`;
 
 //* IMPORT DATA*-----------------------------------------------------------------
 
@@ -90,7 +89,7 @@ export async function importData(data: Record<string, object>[]) {
     Object.entries(document).map(([path, content]) => {
       if (!isDocumentPath(path))
         throw new Error('Document path mandatory, like [collectionPath/DocumentPath]. Got ' + JSON.stringify(path));
-      if (path === maintenancePath)
+      if (path === metaDoc)
         content = {
           startedAt: !content['startedAt'] ? null : new Date(content['startedAt']),
           endedAt: !content['endedAt'] ? null : new Date(content['endedAt']),

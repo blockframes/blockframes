@@ -89,7 +89,7 @@ describe('Signup', () => {
     cy.visit('auth/identity');
     get('cookies').click();
     fillCommonInputs(newUser);
-    selectCompany(marketplaceData.org.denomination.full);
+    selectCompany(marketplaceData.org.name);
     get('activity').should('contain', orgActivity[org.activity]);
     get('country').should('contain', capitalize(territories[org.addresses.main.country]));
     get('submit').click();
@@ -121,7 +121,7 @@ describe('Signup', () => {
     cy.visit('auth/identity');
     get('cookies').click();
     fillCommonInputs(newUser);
-    selectCompany(dashboardData.org.denomination.full);
+    selectCompany(dashboardData.org.name);
     get('activity').should('contain', orgActivity[org.activity]);
     get('country').should('contain', capitalize(territories[org.addresses.main.country]));
     get('submit').click();

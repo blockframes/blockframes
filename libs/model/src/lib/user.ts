@@ -1,25 +1,23 @@
 import { createStorageFile, StorageFile } from './media';
 import type { DocumentMeta } from './meta';
-import type { Genre, Language, Media, Territory } from './static';
+import type { App, Genre, Language, Media, Territory } from './static';
 import type { NotificationTypes } from './notification';
 import type { UserRole } from './permissions';
 
 export interface User extends PublicUser {
-  financing: {
-    rank: string;
-  };
   firstName: string;
   lastName: string;
   phoneNumber: string;
   position: string;
   orgId: string;
   avatar: StorageFile;
-  privacyPolicy: PrivacyPolicy;
+  privacyPolicy: LegalTerms;
+  termsAndConditions?: Partial<Record<App, LegalTerms>>;
   settings?: UserSettings;
   preferences?: Preferences;
 }
 
-export interface PrivacyPolicy {
+export interface LegalTerms {
   date: Date;
   ip: string;
 }

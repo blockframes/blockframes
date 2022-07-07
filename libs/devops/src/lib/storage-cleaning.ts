@@ -2,11 +2,12 @@ import { PublicUser, Organization, Movie } from '@blockframes/model';
 import { getDocument, runChunks } from '@blockframes/firebase-utils';
 import type { Bucket, File as GFile } from '@google-cloud/storage';
 
+/**
+ * @dev Warning, this function is not meant to be called with firestore emulator
+ * @param bucket 
+ * @returns 
+ */
 export async function cleanStorage(bucket: Bucket) {
-  const cleanMovieDirOutput = await cleanMovieDir(bucket);
-  console.log(
-    `Cleaned ${cleanMovieDirOutput.deleted}/${cleanMovieDirOutput.total} from "public/movie" directory.`
-  );
   const cleanMoviesDirOutput = await cleanMoviesDir(bucket);
   console.log(
     `Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "public/movies" directory.`
@@ -21,40 +22,6 @@ export async function cleanStorage(bucket: Bucket) {
   );
 
   return true;
-}
-
-/**
- * Movie dir should not exists
- * @dev this should be usefull only once
- * @param bucket
- */
-export async function cleanMovieDir(bucket: Bucket) {
-  // Movie dir should not exists
-  const files: GFile[] = (await bucket.getFiles({ prefix: 'public/movie/' }))[0];
-  let deleted = 0;
-
-  await runChunks(files, async (f) => {
-    if (f.name.split('/').length === 3) {
-      // Clean files at "public/movie/" root
-      if (await f.delete()) {
-        deleted++;
-      }
-    } else if (f.name.split('/').pop().length >= 255) {
-      // Cleaning files that have a too long name
-      if (await f.delete()) {
-        deleted++;
-      }
-    } else {
-      const movieId = f.name.split('/')[2];
-      // We check if the file is used before removing it
-      const movie = await getDocument<Movie>(`movies/${movieId}`);
-      if (!movie && (await f.delete())) {
-        deleted++;
-      }
-    }
-  });
-
-  return { deleted, total: files.length };
 }
 
 export async function cleanMoviesDir(bucket: Bucket) {

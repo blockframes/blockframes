@@ -4,8 +4,7 @@ import { PublicOrganization } from './organisation';
 import { PublicInvitation } from './invitation';
 import { Bucket } from './bucket';
 import { StorageFile } from './media';
-import { App } from './static';
-import { EmailErrorCodes } from './emails';
+import { App, EmailErrorCode } from './static';
 
 export const notifications = {
   catalog: [
@@ -48,7 +47,6 @@ export const notifications = {
     'requestFromUserToJoinOrgDeclined', // Notification is only disabled but not send anymore. See TODO #8026
     'orgMemberUpdated', 
     'requestFromUserToJoinOrgPending', // Notification sent to the user that made the request
-    'invitationToJoinOrgDeclined',
     // Other notifications
     'organizationAcceptedByArchipelContent',
     'orgAppAccessChanged',
@@ -99,7 +97,7 @@ export interface Notification {
   type: NotificationTypes;
   email?: {
     isSent: boolean;
-    error?: EmailErrorCodes;
+    error?: EmailErrorCode;
   },
   app?: {
     isRead: boolean;

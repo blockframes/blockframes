@@ -40,7 +40,7 @@
         <ng-template colRef="status" label="Seller Approved" let-status let-contract="item" sort>
           <bf-tag>{{ contract.negotiation| negotiationStatus | toLabel: 'contractStatus' }}</bf-tag>
         </ng-template>
-        <ng-template colRef="negotiation.seller.denomination.public" label="Seller's name" let-name sort>
+        <ng-template colRef="negotiation.seller.name" label="Seller's name" let-name sort>
           {{ name }}
         </ng-template>
         <ng-template colRef="negotiation.seller.email" label="Seller's email" let-email sort>
@@ -75,7 +75,7 @@
           <ng-template colRef="status" label="Seller Approved" let-status sort>
             <bf-tag>{{ status }}</bf-tag>
           </ng-template>
-          <ng-template colRef="negotiation.seller.denomination.public" label="Seller's name" let-name sort>
+          <ng-template colRef="negotiation.seller.name" label="Seller's name" let-name sort>
             {{ name }}
           </ng-template>
           <ng-template colRef="negotiation.seller.email" label="Seller's email" let-email sort>
