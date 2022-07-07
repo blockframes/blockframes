@@ -36,7 +36,7 @@ export class ContractsListComponent {
       licensor: (mandate: Mandate) => {
         return this.orgService.valueChanges(getSeller(mandate)).pipe(map(org => org.name))
       },
-      licensee: (mandate) => this.orgService.valueChanges(mandate.buyerId).pipe(map(org => org.name)),
+      licensee: (mandate) => this.orgService.valueChanges(mandate.buyerId).pipe(map(org => org?.name)),
       title: (mandate: Mandate) => this.titleService.valueChanges(mandate.titleId).pipe(map(title => title.title.international)),
       price: (mandate: Mandate) => this.incomeService.valueChanges(mandate.id),
     })

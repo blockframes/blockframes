@@ -17,7 +17,7 @@ export class NegotiationFormComponent {
   @Input() form: NegotiationForm;
   @Input() title?: Movie;
   @Input() currency?: string;
-  @Input() set activeTerm(termId: string) {
+   @Input() set activeTerm(termId: string) {
     if (termId === null || termId === undefined) return;
     if (isNumber(termId)) {
       this.indexId = parseFloat(termId);

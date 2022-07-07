@@ -2,8 +2,7 @@
   <mat-icon svgIcon="arrow_back" matTooltip="Go back"></mat-icon>
 </a>
 
-<ng-container *ngIf="title$ | async as title; else loading">
-  <h2>Add Availabilities for {{ title.title.international }}</h2>
+<term-form [titleId]="titleId$ | async">
   <p>
     By adding avails to this Title, your Buyers
     will be able to search for them as soon as Title is published on Marketplace.
@@ -12,49 +11,4 @@
     As well, you will be able to filter them,
     and show them on the map or calendar.
   </p>
-
-  <bf-form-table [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom">
-    <!-- Columns -->
-    <ng-template colRef="duration.from" let-from>
-      {{ from | date:'M/d/y' }}
-    </ng-template>
-    <ng-template colRef="duration.to" let-to>
-      {{ to | date:'M/d/y' }}
-    </ng-template>
-    <ng-template colRef="territories" let-territories>
-      <span class="group-label" (click)="openDetails(territories, 'territories')">
-        {{ territories | toGroupLabel:'territories':'World' | join | maxLength:15 }}
-      </span>
-    </ng-template>
-    <ng-template colRef="medias" let-media>
-      <span class="group-label" (click)="openDetails(media, 'medias')">
-        {{ media | toGroupLabel:'medias':'All'| join | maxLength: 15 }}
-      </span>
-    </ng-template>
-    <ng-template colRef="exclusive" let-exclusive>
-      {{ exclusive ? 'Yes' : 'No' }}
-    </ng-template>
-    <ng-template colRef="languages" let-languages>
-      <ul>
-        <li *ngFor="let language of languages | keyvalue">
-          <strong>{{ language.key | toLabel: 'languages' }}</strong>: {{ language.value | versionPipe | join }}
-        </li>
-      </ul>
-    </ng-template>
-    <!-- Local Form -->
-    <ng-template formView let-termForm>
-      <form [availsFilter]="termForm" class="surface" vertical required></form>
-      <languages-form class="surface" [form]="termForm.get('languages')"></languages-form>
-    </ng-template>
-    <ng-template saveButtonText>Validate</ng-template>
-  </bf-form-table>
-
-  <button mat-flat-button color="primary" [disabled]="form.disabled" (click)="saveAvails()">Save Avails</button>
-
-</ng-container>
-
-<ng-template #loading>
-  <section>
-    <mat-spinner></mat-spinner>
-  </section>
-</ng-template>
+</term-form>

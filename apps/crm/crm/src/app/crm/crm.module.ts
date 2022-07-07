@@ -68,6 +68,7 @@ export const panelRoutes: Routes = [
   { path: 'offer', loadChildren:() => import('./pages/offers/list/offer-list.module').then(s => s.CrmOfferListModule) },
   { path: 'contracts', loadChildren:() => import('./pages/contracts/list/list.module').then(s => s.CrmContractsListModule) },
   { path: 'contracts/:contractId', loadChildren:() => import('./pages/contracts/view/view.module').then(s => s.ContractViewModule) },
+  { path: 'contracts/:contractId/form', loadChildren:() => import('./pages/contracts/term-form/term-form.module').then(s => s.TermFormModule) },
   { path: 'offer/:offerId', loadChildren: () => import('./pages/offers/shell/shell.module').then(m => m.OfferShellModule) },
   { path: 'import', loadChildren: () => import('./pages/import/import.module').then(m => m.CrmImportModule)},
 ];
