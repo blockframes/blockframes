@@ -26,6 +26,8 @@ import {
   getMovieEmailData,
   getNegotiationEmailData,
   getBucketEmailData,
+  Event,
+  EventMeta,
   EventEmailData,
   EmailTemplateRequest
 } from '@blockframes/model';
@@ -36,6 +38,7 @@ const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
 const ADMIN_ACCEPT_ORG_PATH = '/c/o/dashboard/crm/organization';
 const ADMIN_REVIEW_MOVIE_PATH = '/c/o/dashboard/crm/movie';
+const ADMIN_REVIEW_EVENT_PATH = '/c/o/dashboard/crm/event';
 
 /**
  * This method return the "support" email that should be used regarding the originating app
@@ -573,6 +576,19 @@ export function sendMovieSubmittedEmail(app: App, movie: Movie) {
 
     Visit ${appUrl.crm}${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} or go to ${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} to review it.
 
+    `
+  };
+}
+
+/** Send an email to supportEmails.[app] when a new event is created*/
+export function sendEventCreatedEmail(app: App, event: Event<EventMeta>) {
+  return {
+    to: getSupportEmail(app),
+    subject: 'A new event has been created.',
+    text: `
+      A new event ${event.title} has been created.
+
+      Visit ${appUrl.crm}${ADMIN_REVIEW_EVENT_PATH}/${event.id}  or go to ${ADMIN_REVIEW_EVENT_PATH}/${event.id} to review it.
     `
   };
 }

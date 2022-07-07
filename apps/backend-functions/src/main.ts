@@ -23,7 +23,7 @@ import { createNotificationsForEventsToStart, createNotificationsForFinishedScre
 import { getPrivateVideoUrl, getPlayerUrl } from './player';
 import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailWithTemplate } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
-import { onEventDelete, createScreeningRequest } from './event';
+import { onEventCreate, onEventDelete, createScreeningRequest } from './event';
 import { getTwilioAccessToken, twilioWebhook as _twilioWebhook } from './twilio';
 import { eventWebhook as sendgridEventWebhook } from './sendgrid';
 import { onNotificationCreate } from './notification';
@@ -120,6 +120,8 @@ export const acceptOrDeclineInvitationAsAnonymous = functions().https.onCall(inv
 //--------------------------------
 //    Events Management          //
 //--------------------------------
+
+export const onEventCreateEvent = onDocumentCreate('events/{eventId}', onEventCreate);
 
 export const onEventDeleteEvent = onDocumentDelete('events/{eventID}', onEventDelete);
 
