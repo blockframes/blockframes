@@ -159,6 +159,8 @@ export async function downloadProdDbBackup(localPath?: string) {
   if (!('FIREBASE_PRODUCTION_SERVICE_ACCOUNT' in process.env)) {
     throw new Error('Key "FIREBASE_PRODUCTION_SERVICE_ACCOUNT" does not exist in .env');
   }
+  // * The below conversion to string is a hack we need because the type expected by cert() is not correct
+  // * This is a firebase bug
   const cert = getServiceAccountObj(process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUNT) as unknown as string;
 
   const prodApp = admin.initializeApp(
