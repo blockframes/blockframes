@@ -23,7 +23,8 @@ import {
   getOrgEmailData,
   getMovieEmailData,
   EventEmailData,
-  getEventEmailData
+  getEventEmailData,
+  Sale
 } from '@blockframes/model';
 import { sendMailFromTemplate } from './internals/email';
 import {
@@ -685,7 +686,7 @@ async function sendReceivedCounterOfferConfirmation(recipient: User, notificatio
 async function getNegotiationUpdatedEmailData(recipient: User, notification: Notification) {
   const { docPath: path, docId: contractId } = notification;
   const [contract, negotiation, recipientOrg] = await Promise.all([
-    getDocument<Contract>(`contracts/${contractId}`),
+    getDocument<Sale>(`contracts/${contractId}`),
     getDocument<Negotiation>(`${path}`),
     getDocument<Organization>(`orgs/${recipient.orgId}`),
   ]);
@@ -726,7 +727,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
   const data = {
     user: toUser,
     org: getOrgEmailData(recipientOrg),
-    contract,
+    declineReason: contract.declineReason,
     movie: getMovieEmailData(title),
     pageUrl,
     crmPageUrl,

@@ -108,14 +108,13 @@ export interface EmailTemplateRequest {
     movie?: MovieEmailData;
     offer?: OfferEmailData;
     buyer?: UserEmailData;
-    contract?: Contract;
+    declineReason?: string;
     territories?: string;
     negotiation?: NegotiationEmailData;
     isInvitationReminder?: boolean;
   };
 }
 
-//To be used for sending mails.
 interface BucketEmailData {
   id: string;
   currency: string;
