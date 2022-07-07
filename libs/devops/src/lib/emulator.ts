@@ -24,7 +24,6 @@ import { backupBucket, firebase } from '@env'
 import { migrate } from './migrations';
 import { syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
-import { cleanStorage } from './storage-cleaning';
 import {
   awaitProcessExit,
   gsutilTransfer,
@@ -33,8 +32,7 @@ import {
   CI_STORAGE_BACKUP,
   restoreStorageFromCi,
   getLatestFolderURL,
-  runAnonymization,
-  getBackupBucket
+  runAnonymization
 } from './firebase-utils';
 import { firebase as firebaseCI } from 'env/env.blockframes-ci'
 
@@ -217,10 +215,6 @@ async function anonDbProcess() {
   console.info('Cleaning unused DB data...');
   await cleanDeprecatedData(db, auth);
   console.info('DB data clean and fresh!');
-
-  console.info('Cleaning unused storage data...');
-  await cleanStorage(await getBackupBucket(storage));
-  console.info('Storage data clean and fresh!');
 
 }
 
