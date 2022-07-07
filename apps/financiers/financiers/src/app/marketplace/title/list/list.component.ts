@@ -3,18 +3,22 @@ import {
   ChangeDetectionStrategy,
   OnInit,
   ChangeDetectorRef,
-  OnDestroy
+  OnDestroy,
+  Inject
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service'
-import type { StoreStatus } from '@blockframes/model';
+import type { App, StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie } from '@blockframes/model';
-import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
+import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { APP } from '@blockframes/utils/routes/utils';
+import { FormEntity, FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: 'financiers-marketplace-title-list',
@@ -32,22 +36,30 @@ export class ListComponent implements OnInit, OnDestroy {
   public exporting = false;
   public nbHits: number;
   public hitsViewed = 0;
+  public activeSave = false;
+  public disabledLoad = true;
 
-  private sub: Subscription;
   private loadMoreToggle: boolean;
   private lastPage: boolean;
+  private subs: Subscription[] = [];
 
   constructor(
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
+    private router: Router,
     private snackbar: MatSnackBar,
-    private pdfService: PdfService
+    private pdfService: PdfService,
+    private cdRef: ChangeDetectorRef,
+    @Inject(APP) public app: App,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
 
   ngOnInit() {
+    const queryParamsSub = this.route.queryParams.subscribe(_ => this.activeUnactiveButtons())
+    this.subs.push(queryParamsSub)
+
     this.movies$ = this.movieResultsState.asObservable();
 
     const params = this.route.snapshot.queryParams;
@@ -59,7 +71,7 @@ export class ListComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.sub =
+    const sub =
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
         distinctUntilChanged(),
         debounceTime(500),
@@ -84,6 +96,17 @@ export class ListComponent implements OnInit, OnDestroy {
         }
         this.lastPage = this.hitsViewed === this.nbHits;
       });
+    this.subs.push(sub);
+  }
+
+  ngAfterViewInit(): void {
+    const decodedData: MovieSearch = decodeUrl(this.route);
+    if (decodedData && Object.keys(decodedData).length) this.searchForm.hardReset(decodedData)
+
+    const sub = this.searchForm.valueChanges.pipe(
+      debounceTime(1000),
+    ).subscribe(value => encodeUrl<MovieSearch>(this.router, this.route, value));
+    this.subs.push(sub);
   }
 
   clear() {
@@ -99,7 +122,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subs.forEach(element => element.unsubscribe());
   }
 
   async export(movies: AlgoliaMovie[]) {
@@ -108,5 +131,38 @@ export class ListComponent implements OnInit, OnDestroy {
     await this.pdfService.download(movies.map(m => m.objectID));
     snackbarRef.dismiss();
     this.exporting = false;
+  }
+
+  save() {
+    this.disabledLoad = false;
+    const routeParams = decodeUrl(this.route);
+    localStorage.setItem(this.app, JSON.stringify(routeParams));
+    this.activeUnactiveButtons();
+  }
+
+  load() {
+    const languages = this.searchForm.languages.get('languages') as FormList<any>
+    const versions = this.searchForm.languages.get('versions') as FormEntity<any>
+
+    const dataStorage = localStorage.getItem(this.app);
+    const parseData = JSON.parse(dataStorage);
+
+    this.searchForm.sellers.patchAllValue(parseData.sellers);
+    this.searchForm.genres.patchAllValue(parseData.genres);
+    this.searchForm.originCountries.patchAllValue(parseData.originCountries);
+    languages.patchAllValue(parseData.languages.languages);
+    versions.patchValue(parseData.languages.versions);
+    this.searchForm.socialGoals.patchValue(parseData.socialGoals);
+    this.searchForm.productionStatus.patchValue(parseData.productionStatus);
+    this.searchForm.minBudget.patchValue(parseData.minBudget);
+  }
+
+  activeUnactiveButtons() {
+    const dataStorage = localStorage.getItem(this.app);
+    const currentRouteParams = this.route.snapshot.queryParams.formValue;
+    if (dataStorage) this.disabledLoad = false;
+    if (dataStorage === currentRouteParams) this.activeSave = true;
+    else this.activeSave = false;
+    this.cdRef.markForCheck();
   }
 }

@@ -62,9 +62,18 @@
       <filter-budget fxLayout="column" [form]="searchForm.minBudget"></filter-budget>
     </ng-template>
 
+    <div class="saveLoad">
+      <button mat-mini-fab color="primary" [class]= "activeSave ? 'saveActive' : ''" (click)="save()" matTooltip="Save New Research">
+        <mat-icon [svgIcon]= "activeSave ? 'bookmark_solid' : 'bookmark_border'" ></mat-icon>
+      </button>
+      <button mat-mini-fab color="primary" [disabled]='disabledLoad' (click)="load()" matTooltip="Load Research" [class]= "activeSave ? 'saveActive' : ''">
+        <mat-icon svgIcon="folder_open"></mat-icon>
+      </button>
+    </div>
+
     <button mat-button class="refresh translucent" (click)="clear()" matTooltip="Clear all filters">
       <mat-icon svgIcon="refresh_filters"></mat-icon>
-      <span>Clear Filters</span>
+      <span>Clear Filterssss</span>
     </button>
 
   </list-filter>
