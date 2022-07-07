@@ -43,12 +43,12 @@ function getCredentials(): admin.credential.Credential | undefined {
 export function getServiceAccountObj(GACValue: string): ServiceAccountKey {
   try {
     // If service account is a stringified json object
-    return JSON.parse(GACValue) as ServiceAccountKey;
+    return JSON.parse(GACValue);
   } catch (err) {
     // If service account is a path
     const file = readFileSync(resolve(GACValue), 'utf-8');
     if (!file) throw Error('SAK File not found!');
-    return JSON.parse(file) as ServiceAccountKey;
+    return JSON.parse(file);
   }
 }
 
