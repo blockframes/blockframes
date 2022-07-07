@@ -761,10 +761,10 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
 // async function sendOfferAcceptedOrDeclinedConfirmation(recipient: User, notification: Notification) { //to check
 //   const offer = await getDocument<Offer>(`offers/${notification.docId}`);
 //   TODO use queryDocuments<Contract>()
-//   const contractsSnap = await admin.firestore().collection('contracts').where('offerId', '==', offer.id).get();
+//   const contractsSnap = await getDb().collection('contracts').where('offerId', '==', offer.id).get();
 //   const contracts = contractsSnap.docs.map(doc => doc.data() as ContractDocument);
 //   const negotiationPromises = contracts.map(async contract => {
-//     const ref = admin.firestore().collection(`contracts/${contract.id}/negotiations`)
+//     const ref = getDb().collection(`contracts/${contract.id}/negotiations`)
 //       .orderBy('_meta.createdAt', 'desc').limit(1);
 //     const negoSnap = await ref.get();
 //     return negoSnap.docs[0]?.data() as NegotiationDocument;
@@ -788,7 +788,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
 
 // async function sendOfferUnderSignatureConfirmation(recipient: User, notification: Notification) {
 //   const contract = await getDocument<Contract>(`contracts/${notification.docId}`);
-//   const ref = admin.firestore().collection(`contracts/${contract.id}/negotiations`)
+//   const ref = getDb().collection(`contracts/${contract.id}/negotiations`)
 //     .orderBy('_meta.createdAt', 'desc').limit(1);
 //   const negotiation = await ref.get().then(snap => snap.docs[0]?.data() as NegotiationDocument);
 //   const movie = await getDocument<Movie>(`movies/${contract.titleId}`);

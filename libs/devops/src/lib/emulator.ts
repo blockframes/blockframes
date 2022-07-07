@@ -19,8 +19,8 @@ import {
 import { ChildProcess } from 'child_process';
 import { join, resolve } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
-import admin from 'firebase-admin'
-import { backupBucket, firebase } from '@env'
+import admin from 'firebase-admin';
+import { backupBucket, firebase } from '@env';
 import { migrate } from './migrations';
 import { syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
@@ -34,12 +34,12 @@ import {
   restoreStorageFromCi,
   getLatestFolderURL,
   runAnonymization,
-  getBackupBucket
+  getBackupBucket,
 } from './firebase-utils';
-import { firebase as firebaseCI } from 'env/env.blockframes-ci'
+import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 
 interface ImportEmulatorOptions {
-  importFrom: string,
+  importFrom: string;
 }
 
 /**
@@ -52,7 +52,7 @@ interface ImportEmulatorOptions {
  * of date-formatted directory names in the env's backup bucket (if there are multiple dated backups)
  */
 export async function importEmulatorFromBucket({ importFrom }: ImportEmulatorOptions) {
-  const bucketUrl = importFrom || await getLatestFolderURL(getStorage().bucket(backupBucket), 'firestore');
+  const bucketUrl = importFrom || (await getLatestFolderURL(getStorage().bucket(backupBucket), 'firestore'));
   await importFirestoreEmulatorBackup(bucketUrl, defaultEmulatorBackupPath);
   let proc: ChildProcess;
   try {
@@ -70,7 +70,7 @@ export async function importEmulatorFromBucket({ importFrom }: ImportEmulatorOpt
 }
 
 interface StartEmulatorOptions {
-  importFrom: 'defaultImport' | string,
+  importFrom: 'defaultImport' | string;
 }
 
 /**
@@ -86,7 +86,7 @@ export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulat
     proc = await firebaseEmulatorExec({ emulators: 'firestore', importPath: emulatorPath, exportData: true });
     await awaitProcessExit(proc);
   } catch (e) {
-    await shutdownEmulator(proc)
+    await shutdownEmulator(proc);
     throw e;
   }
 }
@@ -96,36 +96,28 @@ export async function startEmulators({ importFrom = 'defaultImport' }: StartEmul
   let proc: ChildProcess;
   try {
     proc = await firebaseEmulatorExec({
-      emulators: [
-        'auth',
-        'functions',
-        'firestore',
-        'pubsub'
-      ],
+      emulators: ['auth', 'functions', 'firestore', 'pubsub'],
       importPath: emulatorPath,
       exportData: true,
     });
     await awaitProcessExit(proc);
   } catch (e) {
-    await shutdownEmulator(proc)
+    await shutdownEmulator(proc);
     throw e;
   }
 }
 
-export async function startEmulatorsForUnitTests({ execCommand }: { execCommand?: string; } = {}) {
+export async function startEmulatorsForUnitTests({ execCommand }: { execCommand?: string } = {}) {
   let proc: ChildProcess;
   try {
     proc = await firebaseEmulatorExec({
       execCommand,
-      emulators: [
-        'auth',
-        'firestore',
-      ],
+      emulators: ['auth', 'firestore'],
       exportData: false,
     });
     await awaitProcessExit(proc);
   } catch (e) {
-    await shutdownEmulator(proc)
+    await shutdownEmulator(proc);
     throw e;
   }
 }
@@ -136,7 +128,9 @@ export async function startEmulatorsForUnitTests({ execCommand }: { execCommand?
  * This will shut down the emulator but the backup will contain a working version with Auth synched
  * IF AUTH GETS TOO BIG, THINGS WILL FAIL
  */
-export async function syncAuthEmulatorWithFirestoreEmulator({ importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom: 'defaultImport' }) {
+export async function syncAuthEmulatorWithFirestoreEmulator(
+  { importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom: 'defaultImport' }
+) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
   let proc: ChildProcess;
   try {
@@ -194,7 +188,7 @@ async function anonDbProcess() {
   const ciApp = initAdmin(firebaseCI(), 'CI env');
   const o = await db.listCollections();
   if (!o.length) throw Error('THERE IS NO DB TO PROCESS - DANGER!');
-  console.log(o.map((snap) => snap.id));
+  console.log(o.map(snap => snap.id));
 
   console.info('Preparing database & storage by running migrations...');
   await migrate({ withBackup: false, db, storage }); // run the migration, do not trigger a backup before, since we already have it!
@@ -221,7 +215,6 @@ async function anonDbProcess() {
   console.info('Cleaning unused storage data...');
   await cleanStorage(await getBackupBucket(storage));
   console.info('Storage data clean and fresh!');
-
 }
 
 /**
@@ -262,7 +255,7 @@ export async function anonymizeLatestProdDb() {
 
   console.log('Storing golden storage data');
   const anonBucketBackupDirURL = `gs://${CI_STORAGE_BACKUP}/${latestAnonStorageDir}/`;
-  await gsutilTransfer({ from: `gs://${firebase().storageBucket}`, to: anonBucketBackupDirURL, mirror: true, quiet: true, });
+  await gsutilTransfer({ from: `gs://${firebase().storageBucket}`, to: anonBucketBackupDirURL, mirror: true, quiet: true });
 }
 
 /**
@@ -271,6 +264,6 @@ export async function anonymizeLatestProdDb() {
  * backup bucket after converting it back to the live Firestore format.
  * @param param0 settings object for `localRelPath` and `remoteDir`
  */
-export async function uploadBackup({ localRelPath, remoteDir }: { localRelPath?: string; remoteDir?: string; } = {}) {
+export async function uploadBackup({ localRelPath, remoteDir }: { localRelPath?: string; remoteDir?: string } = {}) {
   await uploadDbBackupToBucket({ bucketName: backupBucket, localPath: localRelPath, remoteDir });
 }
