@@ -3,8 +3,7 @@ import type { Media, Territory, ContractStatus } from './static';
 import { createMailTerm, Duration } from './terms';
 import { BucketContract } from './bucket';
 
-// TODO: Rename in getContractEmailData that return ContractEmailData
-export function createMailContract(contract: BucketContract) {
+export function getContractEmailData(contract: BucketContract) {
   const formatter = new Intl.NumberFormat('en-US');
   const price = contract.price ? formatter.format(contract.price) : '';
 
@@ -59,7 +58,7 @@ export interface Sale extends Contract {
   holdbacks: Holdback[];
 }
 
-export type MailContract = ReturnType<typeof createMailContract>;
+export type ContractEmailData = ReturnType<typeof getContractEmailData>;
 
 export function createHoldback(params: Partial<Holdback> = {}): Holdback {
   return {

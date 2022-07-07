@@ -454,7 +454,7 @@ export function toAdminCounterOfferEmail(title: Movie, offerId: string): EmailTe
 // }
 
 // export function offerUnderSignature(
-//   user: UserEmailData, offerId: string, contract: ContractDocument, negotiation: MailContract,
+//   user: UserEmailData, offerId: string, contract: ContractDocument, negotiation: ContractEmailData,
 //   title: string
 // ): EmailTemplateRequest {
 //   const pageUrl = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;

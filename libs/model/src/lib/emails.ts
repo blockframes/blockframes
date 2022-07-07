@@ -7,7 +7,7 @@ import { Organization } from './organisation';
 import { toLabel } from './utils';
 import { eventTypes, movieCurrenciesSymbols, staticModel } from './static/static-model';
 import { Bucket } from './bucket';
-import { Contract, createMailContract, MailContract } from './contract';
+import { getContractEmailData, ContractEmailData } from './contract';
 import { AccessibilityTypes, App, EventTypesValue } from './static/types';
 import { EventMeta, Event, createIcsFromEvent, toIcsFile } from './event';
 import { differenceInDays, differenceInHours, differenceInMinutes, format, millisecondsInHour } from 'date-fns';
@@ -119,7 +119,7 @@ interface BucketEmailData {
   id: string;
   currency: string;
   /** One contract per orgId / titleId / parent terms Id */
-  contracts: MailContract[];
+  contracts: ContractEmailData[];
   specificity: string;
   delivery: string;
   /** Needed to show user in email to business team */
@@ -183,7 +183,7 @@ export function getNegotiationEmailData(negotiation: Partial<Negotiation>): Nego
 }
 
 export function getBucketEmailData(bucket: Bucket): BucketEmailData {
-  const contracts = bucket.contracts.map(contract => createMailContract(contract));
+  const contracts = bucket.contracts.map(contract => getContractEmailData(contract));
 
   return {
     ...bucket,

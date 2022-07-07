@@ -64,7 +64,7 @@ import { appUrl, supportEmails } from './environments/environment';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
 import { getDocument, BlockframesSnapshot } from '@blockframes/firebase-utils';
 // #7946 this may be reactivated later
-// import { movieCurrencies, createMailContract, MailContract } from '@blockframes/model';
+// import { movieCurrencies, getContractEmailData, ContractEmailData } from '@blockframes/model';
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
@@ -777,7 +777,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
 //   });
 //   const negotiations = await Promise.all(negotiationPromises);
 //   const titles = await Promise.all(titlePromises);
-//   const mailNegotiations = negotiations.map(createMailContract);
+//   const mailNegotiations = negotiations.map(getContractEmailData);
 
 //   contracts.forEach((contract, index) => contract['negotiation'] = mailNegotiations[index]);
 //   contracts.forEach((contract, index) => contract['title'] = titles[index].title.international);
@@ -797,7 +797,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
 //   const movie = await getDocument<Movie>(`movies/${contract.titleId}`);
 
 
-//   const mailContract: MailContract = createMailContract(negotiation);
+//   const mailContract: ContractEmailData = getContractEmailData(negotiation);
 
 //   const toUser = getUserEmailData(recipient);
 //   const app: App = 'catalog';
