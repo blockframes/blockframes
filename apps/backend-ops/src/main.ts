@@ -1,7 +1,7 @@
 import 'tsconfig-paths/register';
 import { config } from 'dotenv';
 config(); // * Must be run here!
-import { endMaintenance, loadAdminServices, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
+import { endMaintenance, startMaintenance, warnMissingVars, getDb } from '@blockframes/firebase-utils';
 warnMissingVars();
 
 import {
@@ -41,14 +41,14 @@ import {
   clearDb,
   startEmulatorsForUnitTests
 } from '@blockframes/devops';
-import { join } from 'node:path';
+import { join } from 'path';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
 const [arg1, arg2] = flags;
 
 async function runCommand() {
-  const { db } = loadAdminServices();
+  const db = getDb();
   switch (cmd) {
     case 'prepareForTesting':
       await prepareForTesting({ dbBackupURL: arg1 });

@@ -1,7 +1,6 @@
-import { loadAdminServices } from '@blockframes/firebase-utils';
-import { connectFirestoreEmulator, connectAuthEmulator } from '@blockframes/devops';
 import * as plugins from './plugins';
 import type * as admin from 'firebase-admin';
+import { getAuth, getAuthEmulator, getDb, getFirestoreEmulator } from '@blockframes/firebase-utils/initialize';
 
 export let db: FirebaseFirestore.Firestore;
 export let auth: admin.auth.Auth;
@@ -10,14 +9,14 @@ export function testingCypress(config?: Cypress.PluginConfigOptions): Cypress.Ta
   console.log(config.env);
 
   if ('emulator' in config.env && config.env.emulator) {
-    db = connectFirestoreEmulator();
-    auth = connectAuthEmulator();
+    db = getFirestoreEmulator();
+    auth = getAuthEmulator();
     console.log('Connected to emulator');
   } else {
     console.warn('WARNING - e2e tests no longer support running against live services and must be emulated');
     console.warn('These tests are trying to run against a live Firestore instance. Please fix config!');
-    db = loadAdminServices().db;
-    auth = loadAdminServices().auth;
+    db = getDb();
+    auth = getAuth();
     console.log('Connected to live Firestore dev server');
   }
 

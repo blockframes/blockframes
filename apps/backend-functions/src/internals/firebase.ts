@@ -2,19 +2,17 @@
 import * as admin from 'firebase-admin';
 import { firebaseRegion, production } from '@env';
 export const functions = (config = defaultConfig) => region(firebaseRegion).runWith(config);
-import { isInMaintenance } from '@blockframes/firebase-utils/maintenance';
-import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, _isInMaintenance } from '@blockframes/utils/maintenance';
+import { isInMaintenance, maintenanceRef } from '@blockframes/firebase-utils/maintenance';
+import { _isInMaintenance } from '@blockframes/utils/maintenance';
 import { IMaintenanceDoc } from '@blockframes/model';
 import { logErrors } from './sentry';
 import { toDate } from '@blockframes/firebase-utils/firebase-utils';
 import { BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils/types';
+import { getAuth, getDb, getStorage } from '@blockframes/firebase-utils';
 
-if (!admin.apps.length) {
-  admin.initializeApp();
-}
-export const db = admin.firestore();
-export const auth = admin.auth();
-export const storage = admin.storage();
+export const db = getDb();
+export const auth = getAuth();
+export const storage = getStorage();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const skipInMaintenance = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
@@ -30,8 +28,7 @@ let maintenanceActive: boolean = null;
 // * This caches the result of maintenance status in between function invocations and attaches a listener
 // * to the document, meaning that a round trip to Firestore does not need to happen on every single function invocation.
 // * This should boost performance by at least half a second and reduce costs by reducing queries.
-db.collection(META_COLLECTION_NAME)
-  .doc(MAINTENANCE_DOCUMENT_NAME)
+maintenanceRef(db)
   .onSnapshot(
     (snap) => {
       const maintenanceDoc = toDate<IMaintenanceDoc>(snap.data());

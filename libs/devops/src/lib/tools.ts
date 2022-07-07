@@ -1,11 +1,10 @@
-import { Firestore, startMaintenance } from '@blockframes/firebase-utils';
+import { Firestore, maintenanceRef, startMaintenance } from '@blockframes/firebase-utils';
 import * as env from '@env';
 import { config } from 'dotenv';
 import { resolve } from 'path';
 import { loadDBVersion } from './migrations';
 import { IMaintenanceDoc } from '@blockframes/model';
 import { LATEST_VERSION } from './firestoreMigrations';
-import { MAINTENANCE_DOCUMENT_NAME, META_COLLECTION_NAME } from '@blockframes/utils/maintenance';
 
 export async function isMigrationRequired(db: Firestore) {
   const currentVersion = await loadDBVersion(db);
@@ -45,9 +44,8 @@ export async function displayCredentials() {
 
 export async function ensureMaintenanceMode(db: FirebaseFirestore.Firestore) {
   console.log('Ensuring maintenance mode stays active in Firestore');
-  const maintenanceRef = db.collection(META_COLLECTION_NAME).doc(MAINTENANCE_DOCUMENT_NAME);
   await startMaintenance(db);
-  const unsubscribe = maintenanceRef.onSnapshot(async snap => {
+  const unsubscribe = maintenanceRef(db).onSnapshot(async snap => {
     const maintenance = snap.data() as IMaintenanceDoc;
     if (maintenance.endedAt || !maintenance.startedAt) {
       console.log('Maintenance mode was removed.');

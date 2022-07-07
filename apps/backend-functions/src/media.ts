@@ -2,7 +2,6 @@
 // External dependencies
 import { createHash } from 'crypto';
 import { get, set } from 'lodash';
-import * as admin from 'firebase-admin';
 import { logger, storage } from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 
@@ -27,7 +26,7 @@ import { db } from './internals/firebase';
 import { isAllowedToAccessMedia } from './internals/media';
 import { testVideoId } from '@env';
 import { getDeepValue } from './internals/utils';
-import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
+import { getDocument, getDocumentSnap, getStorage } from '@blockframes/firebase-utils';
 
 
 /**
@@ -38,7 +37,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
   if (!data.name) return false;
 
-  const bucket = admin.storage().bucket(storageBucket);
+  const bucket = getStorage().bucket(storageBucket);
   const file = bucket.file(data.name);
 
   // metadata is composed of claims of where the user wants to upload the file:
@@ -215,7 +214,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
       });
       return true;
     } else if (metadata.moving === 'true') {
-      // removing the 'moving' flag from metadata 
+      // removing the 'moving' flag from metadata
       file.setMetadata({ metadata: { moving: null } });
     }
   }
@@ -261,7 +260,7 @@ export const getMediaToken = async (data: { file: StorageFile, parametersSet: Im
 
 export const deleteMedia = async (file: StorageFile) => {
 
-  const bucket = admin.storage().bucket(storageBucket);
+  const bucket = getStorage().bucket(storageBucket);
   const filePath = `${file.privacy}/${file.storagePath}`;
   const fileObject = bucket.file(filePath);
 
@@ -449,7 +448,7 @@ export async function cleanMovieMedias(before: Movie, after?: Movie): Promise<vo
 
 export const moveMedia = async (before: StorageFile, after: StorageFile) => {
 
-  const bucket = admin.storage().bucket(storageBucket);
+  const bucket = getStorage().bucket(storageBucket);
   const beforePath = `${before.privacy}/${before.storagePath}`;
   const afterPath = `${after.privacy}/${after.storagePath}`;
   const fileObject = bucket.file(beforePath);
