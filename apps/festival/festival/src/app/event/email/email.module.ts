@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -27,6 +28,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ImageModule,
     AppLogoModule,
     ReactiveFormsModule,
+    MatCheckboxModule,
 
     RouterModule.forChild([{ path: '', component: EmailComponent }]),
   ]

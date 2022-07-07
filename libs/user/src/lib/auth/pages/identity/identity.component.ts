@@ -234,13 +234,19 @@ export class IdentityComponent implements OnInit, OnDestroy {
    * @returns PublicUser
    */
   private async createUser(user: { email, password, firstName, lastName, hideEmail }) {
-    const privacyPolicy = await this.authService.getPrivacyPolicy();
+    const legalTerms = await this.authService.getLegalTerms();
+    const privacyPolicy = legalTerms;
+    const termsAndConditions = {
+      [this.app]: legalTerms
+    };
+
     const ctx = {
       firstName: user.firstName,
       lastName: user.lastName,
       hideEmail: user.hideEmail,
       _meta: { createdFrom: this.app },
-      privacyPolicy
+      privacyPolicy,
+      termsAndConditions
     };
     const credentials = await this.authService.signup(user.email.trim(), user.password, { ctx });
     return createPublicUser({
@@ -248,7 +254,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       lastName: user.lastName,
       email: user.email,
       uid: credentials.user.uid,
-      hideEmail: user.hideEmail,
+      hideEmail: user.hideEmail
     });
   }
 
@@ -258,13 +264,19 @@ export class IdentityComponent implements OnInit, OnDestroy {
   * @returns PublicUser
   */
   private async createUserFromAnonymous(user: { email, password, firstName, lastName, hideEmail }) {
-    const privacyPolicy = await this.authService.getPrivacyPolicy();
+    const legalTerms = await this.authService.getLegalTerms();
+    const privacyPolicy = legalTerms;
+    const termsAndConditions = {
+      [this.app]: legalTerms
+    };
+
     const ctx = {
       firstName: user.firstName,
       lastName: user.lastName,
       _meta: { createdFrom: this.app, createdBy: 'anonymous', },
       hideEmail: user.hideEmail,
-      privacyPolicy
+      privacyPolicy,
+      termsAndConditions
     };
     const credentials = await this.authService.signupFromAnonymous(user.email.trim(), user.password, { ctx });
     return createPublicUser({
@@ -272,7 +284,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       lastName: user.lastName,
       email: user.email,
       uid: credentials.user.uid,
-      hideEmail: user.hideEmail,
+      hideEmail: user.hideEmail
     });
   }
 
@@ -299,12 +311,17 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     // User is updated only if user was asked to fill firstName & lastName
     if (this.form.get('lastName').enabled && this.form.get('firstName').enabled) {
-      const privacyPolicy = await this.authService.getPrivacyPolicy();
+      const legalTerms = await this.authService.getLegalTerms();
+      const privacyPolicy = legalTerms;
+      const termsAndConditions = {
+        [this.app]: legalTerms
+      }
       await this.authService.update({
         _meta: createDocumentMeta({ createdFrom: this.app }),
         firstName,
         lastName,
-        privacyPolicy: privacyPolicy,
+        privacyPolicy,
+        termsAndConditions
       });
     }
 

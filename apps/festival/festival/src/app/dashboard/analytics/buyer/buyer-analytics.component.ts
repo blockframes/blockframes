@@ -2,12 +2,12 @@ import {
   InvitationWithScreening,
   InvitationWithAnalytics,
   averageWatchDuration,
+  invitationStatus,
 } from '@blockframes/model';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
-import { MetricCard, events, toCards } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
+import { aggregate, counter, countedToAnalyticData, MetricCard, events, toCards } from '@blockframes/analytics/utils';
 import {
   AggregatedAnalytic,
   isScreening,
@@ -59,7 +59,7 @@ function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
 }
 
 function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
-  const attended = invitations.filter(invitation => invitation.watchInfos?.duration);
+  const attended = invitations.filter(invitation => invitation.watchInfos?.duration !== undefined);
   const avgWatchDuration = averageWatchDuration(attended);
   const invitationsCount = invitations.filter(i => i.mode === 'invitation').length;
   const requestsCount = invitations.filter(i => i.mode === 'request').length;
@@ -230,10 +230,10 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
     const data = await firstValueFrom(this.invitations$);
     const analytics = data.map(invitation => ({
       'Title': invitation.event?.movie?.title.international,
-      'Invitation': invitation.status,
+      'Invitation': invitationStatus[invitation.status],
       'Request to participate': invitation.mode,
       'Screening Requests': invitation.analytics?.length,
-      'Watch Time': convertToTimeString(invitation.watchInfos?.duration * 1000),
+      'Watch Time': invitation.watchInfos?.duration !== undefined ? convertToTimeString(invitation.watchInfos?.duration * 1000) : '-',
       'Watching Ended': invitation.watchInfos?.date ? formatDate(invitation.watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '-'
     }));
     downloadCsvFromJson(analytics, 'buyer-screener-analytics')

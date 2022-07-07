@@ -1,0 +1,61 @@
+@import "@angular/flex-layout/mq";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  min-height: 100vh;
+  padding-top: 48px;
+  background-image: url("/assets/images/light/rocket_background.svg");
+  background-color: var(--background-card);
+  background-position: right bottom;
+  background-size: 70%;
+  background-repeat: no-repeat;
+}
+
+a[app-logo] {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+}
+
+.surface {
+  width: 50%;
+  p {
+    text-align: center;
+  }
+}
+
+form {
+  margin-top: 32px;
+
+  mat-checkbox {
+    margin-bottom: 16px;
+  }
+
+  span {
+    white-space: normal;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 32px;
+  }
+}
+
+@include layout-bp(lt-md) {
+  .surface {
+    width: 70%;
+  }
+}
+
+@include layout-bp(lt-sm) {
+  .surface {
+    width: 95%;
+  }
+}
