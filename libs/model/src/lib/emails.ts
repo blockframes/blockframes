@@ -139,6 +139,8 @@ interface TermEmailData {
   exclusive: string;
 }
 
+const formatter = new Intl.NumberFormat('en-US');
+
 export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailRequest {
   return {
     to: 'foo@bar.com',
@@ -184,7 +186,6 @@ export function getMovieEmailData(movie: Partial<Movie>): MovieEmailData {
 
 export function getNegotiationEmailData(negotiation: Partial<Negotiation>): NegotiationEmailData {
   const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
-  const formatter = new Intl.NumberFormat('en-US');
   const price = negotiation.price ? formatter.format(negotiation.price) : '';
   const terms = getTermEmailData(negotiation.terms);
 
@@ -206,8 +207,6 @@ export function getBucketEmailData(bucket: Bucket): BucketEmailData {
 }
 
 export function getContractEmailData({ titleId, price, terms }: BucketContract): ContractEmailData {
-  const formatter = new Intl.NumberFormat('en-US');
-
   return {
     titleId,
     price: price ? formatter.format(price) : '',
