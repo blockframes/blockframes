@@ -105,15 +105,16 @@ async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, 
   if (verbose) console.log('Cleaned movies');
   await cleanDocsIndex(dbData.docsIndex.refs, movieIds.concat(eventIds), organizationIds2);
   if (verbose) console.log('Cleaned docsIndex');
-  await cleanNotifications(dbData.notifications.refs, existingIds);
+  await cleanNotifications(dbData.notifications.refs, existingIds, db);
   if (verbose) console.log('Cleaned notifications');
-  await cleanInvitations(dbData.invitations.refs, existingIds);
+  await cleanInvitations(dbData.invitations.refs, existingIds, db);
   if (verbose) console.log('Cleaned invitations');
 }
 
 export function cleanNotifications(
   notifications: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  existingIds: string[]
+  existingIds: string[],
+  db: FirebaseFirestore.Firestore
 ) {
   return runChunks(
     notifications.docs,
@@ -123,7 +124,7 @@ export function cleanNotifications(
       if (outdatedNotification) {
         await doc.ref.delete();
       } else {
-        await cleanOneNotification(doc, notification);
+        await cleanOneNotification(doc, notification, db);
       }
     },
     undefined,
@@ -133,15 +134,16 @@ export function cleanNotifications(
 
 async function cleanOneNotification(
   doc: QueryDocumentSnapshot,
-  notification: Notification
+  notification: Notification,
+  db: FirebaseFirestore.Firestore
 ) {
   if (notification.organization) {
-    const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
+    const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`, db);
     notification.organization.logo = d?.logo || EMPTY_MEDIA;
   }
 
   if (notification.user) {
-    const d = await getDocument<PublicUser>(`users/${notification.user.uid}`);
+    const d = await getDocument<PublicUser>(`users/${notification.user.uid}`, db);
     notification.user.avatar = d?.avatar || EMPTY_MEDIA;
   }
 
@@ -150,7 +152,8 @@ async function cleanOneNotification(
 
 export function cleanInvitations(
   invitations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  existingIds: string[]
+  existingIds: string[],
+  db: FirebaseFirestore.Firestore
 ) {
   return runChunks(
     invitations.docs,
@@ -160,7 +163,7 @@ export function cleanInvitations(
       if (outdatedInvitation) {
         await doc.ref.delete();
       } else {
-        await cleanOneInvitation(doc, invitation);
+        await cleanOneInvitation(doc, invitation, db);
       }
     },
     undefined,
@@ -168,25 +171,29 @@ export function cleanInvitations(
   );
 }
 
-async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: Invitation) {
+async function cleanOneInvitation(
+  doc: QueryDocumentSnapshot,
+  invitation: Invitation,
+  db: FirebaseFirestore.Firestore
+) {
   if (invitation.fromOrg?.id) {
-    const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
+    const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`, db);
     invitation.fromOrg.logo = d?.logo || EMPTY_MEDIA;
   }
 
   if (invitation.toOrg?.id) {
-    const d = await getDocument<PublicOrganization>(`orgs/${invitation.toOrg.id}`);
+    const d = await getDocument<PublicOrganization>(`orgs/${invitation.toOrg.id}`, db);
     invitation.toOrg.logo = d?.logo || EMPTY_MEDIA;
   }
 
   if (invitation.fromUser?.uid) {
-    const d = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`);
+    const d = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`, db);
     invitation.fromUser.avatar = d?.avatar || EMPTY_MEDIA;
     delete (invitation.fromUser as any).watermark;
   }
 
   if (invitation.toUser?.uid) {
-    const d = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
+    const d = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`, db);
     invitation.toUser.avatar = d?.avatar || EMPTY_MEDIA;
     delete (invitation.toUser as any).watermark;
   }

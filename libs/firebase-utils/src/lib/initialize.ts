@@ -1,12 +1,11 @@
 import * as admin from 'firebase-admin';
 import * as firebaseConfig from 'firebase.json';
 import { readFileSync } from 'fs';
-import { join, resolve } from 'path';
+import { resolve } from 'path';
 import { firebase } from '@env';
 
-export const SAK_KEY = 'GOOGLE_APPLICATION_CREDENTIALS';
-export const SAK_VALUE = process.env[SAK_KEY] as string;
-export const SAK_DIR = join('tools', 'credentials');
+const SAK_KEY = 'GOOGLE_APPLICATION_CREDENTIALS';
+const SAK_VALUE = process.env[SAK_KEY] as string;
 
 export interface ServiceAccountKey {
   type: string;
@@ -23,7 +22,6 @@ export interface ServiceAccountKey {
 
 /**
  * Will ensure firebase app is initialised only once for a given name
- * @returns `void`
  */
 export function initAdmin(...args: Parameters<typeof admin.initializeApp>) {
   const [options, name = '[DEFAULT]'] = args;
