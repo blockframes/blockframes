@@ -26,6 +26,10 @@ export class ReleaseYearFilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.form.valueChanges.subscribe(val => {
+      console.log('vall --->',val);
+      this.inverted.setValue(this.invert(val));
+    })
     this.inverted.setValue(this.invert(this.form.value));
 
     this.subForm = this.form.valueChanges.subscribe(val => {
@@ -36,6 +40,9 @@ export class ReleaseYearFilterComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       map(this.invert)
     ).subscribe(value => {
+      // console.log('SUB: form ---->', this.form);
+      // console.log('SUB: inverted ---->', this.inverted.value);
+      // console.log('SUB: value ---->',value);
       this.form.setValue(value);
       value ? this.form.markAsDirty() : this.form.markAsPristine();
     });

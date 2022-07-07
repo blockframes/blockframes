@@ -113,6 +113,8 @@ export class ListComponent implements OnDestroy, OnInit {
     this.patchSearchValues(search)
     this.availsForm.patchValue(avails);
 
+
+
     const search$ = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
       this.availsForm.value$,
