@@ -98,7 +98,7 @@ export function loadAdminServices(): AdminServices {
 
 export const sleep = (ms: number) => new Promise<void>(res => setTimeout(res, ms));
 
-export async function hasAcceptedMovies(org: Organization, appli: App, db = loadAdminServices().db) {
+export async function hasAcceptedMovies(org: Organization, appli: App, db = getDb()) {
   const moviesColRef = await db.collection('movies').where('orgIds', 'array-contains', org.id).get();
   const movies = moviesColRef.docs.map(doc => doc.data());
   return movies.some(movie => movie?.app?.[appli].status === 'accepted' && movie?.app?.[appli].access);

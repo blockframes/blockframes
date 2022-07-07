@@ -1,7 +1,7 @@
 import 'tsconfig-paths/register';
 import { config } from 'dotenv';
 config(); // * Must be run here!
-import { endMaintenance, startMaintenance, warnMissingVars } from '@blockframes/firebase-utils';
+import { endMaintenance, startMaintenance, warnMissingVars, getDb } from '@blockframes/firebase-utils';
 warnMissingVars();
 
 import {
@@ -42,7 +42,6 @@ import {
   startEmulatorsForUnitTests
 } from '@blockframes/devops';
 import { join } from 'path';
-import { getDb } from '@blockframes/firebase-utils/initialize';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;

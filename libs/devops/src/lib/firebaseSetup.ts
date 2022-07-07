@@ -151,7 +151,6 @@ export async function upgradeEmulators() {
     return;
   }
   const storage = getStorage();
-  // const auth = connectAuthEmulator();
   const maintenanceInsurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
   console.info('Preparing the database...');
