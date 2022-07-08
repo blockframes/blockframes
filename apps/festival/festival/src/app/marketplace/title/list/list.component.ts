@@ -13,13 +13,12 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import type { App, GetKeys, StoreStatus } from '@blockframes/model';
+import type { App, StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie } from '@blockframes/model';
 import { decodeUrl, encodeUrl, loadParamsFromStorage, saveParamsToStorage } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MovieSearchForm, createMovieSearch, MovieSearch, Versions } from '@blockframes/movie/form/search.form';
+import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';
 import { APP } from '@blockframes/utils/routes/utils';
-import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: 'festival-marketplace-title-list',
