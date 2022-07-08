@@ -21,7 +21,7 @@ import { NavigationService } from '@blockframes/ui/navigation.service';
 import { centralOrgId } from '@env';
 
 import {
-  BehaviorSubject, combineLatest, filter, firstValueFrom, map, shareReplay, switchMap
+  BehaviorSubject, combineLatest, distinctUntilChanged, filter, firstValueFrom, map, shareReplay, switchMap
 } from 'rxjs';
 
 import { where } from 'firebase/firestore';
@@ -44,7 +44,7 @@ function isTerm(term: Partial<Term>): term is Term {
 })
 export class TermFormComponent implements OnInit {
   public form = new NegotiationForm({ terms: [] });
-  public activeTerm:number;
+  public activeTerm: number;
   private _titleId = new BehaviorSubject<string>('');
   public termColumns = {
     'duration.from': 'Terms Start Date',
@@ -61,6 +61,7 @@ export class TermFormComponent implements OnInit {
 
   public title$ = this._titleId.pipe(
     filter(id => !!id),
+    distinctUntilChanged(),
     switchMap(id => this.titleService.valueChanges(id)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -86,7 +87,7 @@ export class TermFormComponent implements OnInit {
     private dialog: MatDialog,
     private orgService: OrganizationService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   async ngOnInit() {
     const data$ = combineLatest([this.title$, this.terms$]);
