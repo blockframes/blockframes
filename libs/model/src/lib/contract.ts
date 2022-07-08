@@ -1,18 +1,6 @@
 import { DocumentMeta, createDocumentMeta } from './meta';
 import type { Media, Territory, ContractStatus } from './static';
-import { createMailTerm, Duration } from './terms';
-import { BucketContract } from './bucket';
-
-export function createMailContract(contract: BucketContract) {
-  const formatter = new Intl.NumberFormat('en-US');
-  const price = contract.price ? formatter.format(contract.price) : '';
-
-  return ({
-    ...contract,
-    price,
-    terms: createMailTerm(contract.terms)
-  });
-}
+import { Duration } from './terms';
 
 export interface Holdback {
   territories: Territory[];
@@ -57,8 +45,6 @@ export interface Sale extends Contract {
   declineReason?: string;
   holdbacks: Holdback[];
 }
-
-export type MailContract = ReturnType<typeof createMailContract>;
 
 export function createHoldback(params: Partial<Holdback> = {}): Holdback {
   return {
