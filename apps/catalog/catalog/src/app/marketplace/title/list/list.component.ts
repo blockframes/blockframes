@@ -70,7 +70,6 @@ export class ListComponent implements OnDestroy, OnInit {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
 
-
   async ngOnInit() {
     this.searchForm.hitsPerPage.setValue(1000);
     const mandatesQuery = [
@@ -113,8 +112,6 @@ export class ListComponent implements OnDestroy, OnInit {
 
     this.patchSearchValues(search)
     this.availsForm.patchValue(avails);
-
-
 
     const search$ = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
