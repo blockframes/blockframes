@@ -71,7 +71,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     }
   }
 
-  getTitleAnalytics(params?: { titleId?: string, uid?: string }) {
+  getTitleAnalytics(params?: { titleId?: string, uid?: string, eventName?: EventName }) {
     const { orgId } = this.authService.profile;
 
     const query = [
@@ -82,6 +82,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
 
     if (params?.titleId) query.push(where('meta.titleId', '==', params.titleId));
     if (params?.uid) query.push(where('meta.uid', '==', params.uid));
+    if (params?.eventName) query.push(where('name', '==', params.eventName));
 
     return this.valueChanges(query).pipe(
       // Filter out analytics from owners of title

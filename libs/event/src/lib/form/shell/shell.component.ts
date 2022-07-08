@@ -17,7 +17,7 @@ import { App } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { ExplanationComponent } from '../../components/explanation/explanation.component';
 
-const statisticsTab = { path: 'statistics', label: 'Attendance' };
+const statisticsTab = { path: 'statistics', label: 'Statistics' };
 
 const navTabs: NavTabs = {
   screening: [
