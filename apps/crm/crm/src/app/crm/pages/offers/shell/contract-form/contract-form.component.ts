@@ -94,7 +94,7 @@ export class ContractFormComponent implements OnInit {
 
     const data: Partial<Negotiation> = { terms, price };
     const config = { write, params: { contractId } };
-    this.negotiationService.update(this.negotiation.id, data, config);
+    await this.negotiationService.update(this.negotiation.id, data, config);
 
     await write.commit();
     this.snackbar.open('Contract updated!', 'ok', { duration: 1000 });
