@@ -5,23 +5,23 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { InternalSaleListComponent } from './internal-sales.component';
 
 import { LetModule } from '@rx-angular/template';
 
 // Blockframes
+import { InternalSaleListComponent } from './internal-sales.component';
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { TagModule } from '@blockframes/ui/tag/tag.module';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
+import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-
-import { TagModule } from '@blockframes/ui/tag/tag.module';
-import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { MatTabsModule } from '@angular/material/tabs';
-import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
-import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 @NgModule({
   declarations: [

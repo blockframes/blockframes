@@ -4,8 +4,6 @@ import { map, switchMap } from 'rxjs/operators';
 
 // Services
 import { ContractService } from '@blockframes/contract/contract/service';
-
-// Material
 import { NavigationService } from '@blockframes/ui/navigation.service';
 
 @Component({

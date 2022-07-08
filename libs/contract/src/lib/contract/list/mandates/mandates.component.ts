@@ -4,8 +4,7 @@ import { filter, map, shareReplay, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { capitalize } from '@blockframes/utils/helpers';
-import { ContractStatus, Mandate } from '@blockframes/model';
+import { ContractStatus, Mandate, toLabel } from '@blockframes/model';
 
 @Component({
   selector: 'mandates-list',
@@ -48,7 +47,7 @@ export class MandateListComponent {
 
   applyFilter(filter: ContractStatus) {
     this.filterForm.setValue(filter);
-    const pageTitle = `${this.title} (${capitalize(filter)})`;
+    const pageTitle = `${this.title} (${toLabel(filter, 'contractStatus')})`;
     this.dynTitle.setPageTitle(pageTitle);
   }
 
@@ -57,7 +56,6 @@ export class MandateListComponent {
     this.dynTitle.setPageTitle(`${this.title} (All)`);
   }
 
-  /* index paramater is unused because it is a default paramater from the filter javascript function */
   filterByStatus(sale: Mandate, _: number, status: ContractStatus): boolean {
     if (!status) return true;
     return sale.status === status;

@@ -72,7 +72,6 @@ export class InternalSaleListComponent implements OnInit {
     this.dynTitle.setPageTitle(`${this.title} (All)`);
   }
 
-  /* index paramater is unused because it is a default paramater from the filter javascript function */
   filterBySalesStatus(sale: InternalSale, _: number, status: ContractStatus): boolean {
     if (!status) return true;
     if (status === 'negotiating') {

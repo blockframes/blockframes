@@ -11,7 +11,7 @@ import { getSeller } from '@blockframes/contract/contract/utils'
 import { Mandate, Sale } from '@blockframes/model';
 import { orderBy, where } from 'firebase/firestore';
 
-const query = [
+const externalSaleQuery = [
   where('buyerId', '==', ''),
   where('type', '==', 'sale'),
   orderBy('_meta.createdAt', 'desc')
@@ -42,7 +42,7 @@ export class ContractsListComponent {
     })
   );
 
-  private externalSales$ = this.contractService.valueChanges(query).pipe(
+  private externalSales$ = this.contractService.valueChanges(externalSaleQuery).pipe(
     joinWith({
       licensor: (sale: Sale) => {
         return this.orgService.valueChanges(getSeller(sale)).pipe(map(org => org.name))
@@ -53,7 +53,7 @@ export class ContractsListComponent {
     }),
   );
 
-  public mandateAndSales$ = combineLatest([
+  public contracts$ = combineLatest([
     this.mandates$,
     this.externalSales$
   ]).pipe(map(([mandates, sales]) => ({ mandates, sales })));

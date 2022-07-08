@@ -1,18 +1,20 @@
 <ng-container *rxLet="filter$; let filter">
   <h3>List of Mandates</h3>
   <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-    <button mat-tab-link (click)="resetFilter()" [active]="filter === ''">
-      All <span *ngIf="(mandateCount$ | async) as mandateCount">({{ mandateCount.all }})</span>
-    </button>
-    <button mat-tab-link (click)="applyFilter('accepted')" [active]="filter === 'accepted'">
-      Accepted <span *ngIf="(mandateCount$ | async) as mandateCount">({{ mandateCount.accepted }})</span>
-    </button>
-    <button mat-tab-link (click)="applyFilter('pending')" [active]="filter === 'pending'">
-      Pending <span *ngIf="(mandateCount$ | async) as mandateCount">({{ mandateCount.pending }})</span>
-    </button>
-    <button mat-tab-link (click)="applyFilter('declined')" [active]="filter === 'declined'">
-      Declined <span *ngIf="(mandateCount$ | async) as mandateCount">({{ mandateCount.declined }})</span>
-    </button>
+    <ng-container *rxLet="mandateCount$ ; let mandateCount">
+      <button mat-tab-link (click)="resetFilter()" [active]="filter === ''">
+        All <span>({{ mandateCount.all }})</span>
+      </button>
+      <button mat-tab-link (click)="applyFilter('accepted')" [active]="filter === 'accepted'">
+        Accepted <span>({{ mandateCount.accepted }})</span>
+      </button>
+      <button mat-tab-link (click)="applyFilter('pending')" [active]="filter === 'pending'">
+        Pending <span>({{ mandateCount.pending }})</span>
+      </button>
+      <button mat-tab-link (click)="applyFilter('declined')" [active]="filter === 'declined'">
+        Declined <span>({{ mandateCount.declined }})</span>
+      </button>
+    </ng-container>
   </header>
   <bf-table [source]="mandates | filterBy: filterByStatus: filterForm.value" clickable useFilter pagination="10"
     (rowClick)="goToContract($event)">
