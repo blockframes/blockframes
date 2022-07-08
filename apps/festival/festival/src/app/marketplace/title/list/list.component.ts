@@ -133,24 +133,14 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   save() {
     this.disabledLoad = false;
-    saveParamsToStorage(this.route, this.app, 'title-list-search`');
+    saveParamsToStorage(this.route, this.app, 'title-list-search');
     this.activeUnactiveButtons();
   }
 
   load() {
-    const languages = this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>;
-    const versions = this.searchForm.languages.get('versions') as FormEntity<EntityControl<Versions>, Versions>;
-
     const dataStorage = localStorage.getItem(`${this.app}-title-list-search`);
     const parseData = JSON.parse(dataStorage);
-
-    this.searchForm.sellers.patchAllValue(parseData.sellers);
-    this.searchForm.genres.patchAllValue(parseData.genres);
-    this.searchForm.originCountries.patchAllValue(parseData.originCountries);
-    languages.patchAllValue(parseData.languages.languages);
-    versions.patchValue(parseData.languages.versions);
-    this.searchForm.productionStatus.patchValue(parseData.productionStatus);
-    this.searchForm.minBudget.patchValue(parseData.minBudget);
+    if (parseData && Object.keys(parseData).length) this.searchForm.hardReset(parseData);
   }
 
   activeUnactiveButtons() {

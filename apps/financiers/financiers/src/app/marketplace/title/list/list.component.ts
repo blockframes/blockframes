@@ -143,30 +143,16 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   load() {
-    const languages = this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>;
-    const versions = this.searchForm.languages.get('versions') as FormEntity<EntityControl<Versions>, Versions>;
-
     const dataStorage = localStorage.getItem(`${this.app}-all-projects`);
     const parseData = JSON.parse(dataStorage);
-
-    this.searchForm.sellers.patchAllValue(parseData.sellers);
-    this.searchForm.genres.patchAllValue(parseData.genres);
-    this.searchForm.originCountries.patchAllValue(parseData.originCountries);
-    languages.patchAllValue(parseData.languages.languages);
-    versions.patchValue(parseData.languages.versions);
-    this.searchForm.socialGoals.patchValue(parseData.socialGoals);
-    this.searchForm.productionStatus.patchValue(parseData.productionStatus);
-    this.searchForm.minBudget.patchValue(parseData.minBudget);
+    if (parseData && Object.keys(parseData).length) this.searchForm.hardReset(parseData);
   }
 
   activeUnactiveButtons() {
-    console.log('1')
     const dataStorage = localStorage.getItem(`${this.app}-all-projects`);
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
-    console.log('dataStorage--->',dataStorage)
-    console.log('currentRouteParams--->',currentRouteParams)
     if (dataStorage) this.disabledLoad = false;
-    if (dataStorage === currentRouteParams) this.activeSave = true, this.enabledSave = true, console.log('2')
+    if (dataStorage === currentRouteParams) this.activeSave = true, this.enabledSave = true;
     else this.activeSave = false;
     this.cdRef.markForCheck();
   }
