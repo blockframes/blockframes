@@ -65,6 +65,6 @@ export class ContractsListComponent {
     private incomeService: IncomeService,
     private dynTitle: DynamicTitleService,
   ) {
-    this.dynTitle.setPageTitle('My Sales (All)');
+    this.dynTitle.setPageTitle('Mandates and external sales.');
   }
 }
