@@ -3,7 +3,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { triggerNotifications } from './notification';
 import { Movie, Organization, PublicUser, EventMeta, Event, createInternalDocumentMeta, createPublicUser, createNotification } from '@blockframes/model';
 import { getDocument, BlockframesSnapshot } from '@blockframes/firebase-utils';
-import { sendEventCreatedEmail } from './templates/mail';
+import { eventCreatedAdminEmail } from './templates/mail';
 import { getMailSender } from '@blockframes/utils/apps';
 import { sendMail } from './internals/email';
 
@@ -36,8 +36,8 @@ export async function onEventDelete(snap: BlockframesSnapshot<Event<EventMeta>>)
 export async function onEventCreate(snap: BlockframesSnapshot<Event<EventMeta>>) {
   const event = snap.data();
   const from = getMailSender('festival');
-  
-  await sendMail(sendEventCreatedEmail('festival', event), from);
+  const emailData = eventCreatedAdminEmail('festival', event);
+  await sendMail(emailData, from);
 }
 
 export async function createScreeningRequest(

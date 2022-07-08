@@ -581,14 +581,14 @@ export function sendMovieSubmittedEmail(app: App, movie: Movie) {
 }
 
 /** Send an email to supportEmails.[app] when a new event is created*/
-export function sendEventCreatedEmail(app: App, event: Event<EventMeta>) {
+export function eventCreatedAdminEmail(app: App, event: Event<EventMeta>) {
   return {
     to: getSupportEmail(app),
     subject: 'A new event has been created.',
     text: `
-      A new event ${event.title} has been created.
+      A new ${event.type} has been created: ${event.title}.
 
-      Visit ${appUrl.crm}${ADMIN_REVIEW_EVENT_PATH}/${event.id}  or go to ${ADMIN_REVIEW_EVENT_PATH}/${event.id} to review it.
+      Visit ${appUrl.crm}${ADMIN_REVIEW_EVENT_PATH}/${event.id} or go to ${ADMIN_REVIEW_EVENT_PATH}/${event.id} to review it.
     `
   };
 }
