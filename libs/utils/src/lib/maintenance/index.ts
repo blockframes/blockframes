@@ -29,7 +29,7 @@ export function _isInMaintenance(maintenanceDoc: IMaintenanceDoc, delay = EIGHT_
     }
 
     // We shouldn't throw here else if this happen it create cache issues
-    console.error(`Unexpected cases for maintenance check! please check the ${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME} document.`);
+    console.error(`Unexpected cases for maintenance check! please check the ${metaDoc} document.`);
 
     return true;
   } catch (e) {

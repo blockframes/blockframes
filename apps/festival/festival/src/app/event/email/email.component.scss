@@ -1,37 +1,111 @@
+@use 'surface';
+@import "@angular/flex-layout/mq";
+
 :host {
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
   background-image: url("/assets/images/light/stars_wallpaper.svg");
   background-position: center;
   background-repeat: no-repeat;
 
-  a[app-logo] {
-    position: absolute;
-    top: 40px;
-    left: 40px;
-  }
-
-  .surface {
+  article {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     text-align: center;
 
-    header {
-      text-align: left;
+    .back-arrow {
+      align-self: left;
     }
 
     form {
-      padding: 32px;
+      display: flex;
+      flex-direction: column;
 
-      p {
-        margin-bottom: 16px;
+      mat-checkbox {
+        align-self: flex-start;
+        text-align: left;
+      }
+
+      span {
+        white-space: break-spaces;
       }
 
       footer {
-        margin-top: 16px;
+        display: flex;
+        flex-direction: column;
+        margin-top: 32px;
+        align-items: center;
+        gap: 16px;
+      }
+    }
+  }
+}
+
+@include layout-bp(gt-xs) {
+  :host {
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    header {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+    }
+
+    & > article {
+      @include surface.surface;
+      padding: 24px;
+
+      .back-arrow {
+        margin: 0;
+      }
+
+      form {
+        padding: 40px;
+
+        section {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 16px;
+        }
+      }
+    }
+    
+  }
+}
+
+@include layout-bp(xs) {
+  :host {
+    header {
+      align-self: center;
+      margin-top: auto;
+      padding-top: 24px;
+
+      a[app-logo] {
+        height: 48px;
+      }
+    }
+
+    & > article {
+      padding: 24px;
+      margin-bottom: auto;
+
+      .back-arrow {
+        margin: 0 0 12px 0;
+      }
+
+      form {
+        section {
+          flex-direction: column;
+          mat-form-field {
+            width: 100%;
+          }
+        }
       }
     }
   }

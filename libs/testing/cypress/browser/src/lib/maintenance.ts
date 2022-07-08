@@ -1,7 +1,5 @@
 import { firestore } from './firestore';
-import { META_COLLECTION_NAME, MAINTENANCE_DOCUMENT_NAME, EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
-
-const maintenancePath = `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`;
+import { EIGHT_MINUTES_IN_MS, metaDoc } from '@blockframes/utils/maintenance';
 
 export const maintenance = {
   start() {
@@ -9,7 +7,7 @@ export const maintenance = {
       endedAt: null,
       startedAt: Date.now(),
     };
-    firestore.create([{ [maintenancePath]: maintenanceStart }]);
+    firestore.create([{ [metaDoc]: maintenanceStart }]);
   },
 
   end() {
@@ -17,6 +15,6 @@ export const maintenance = {
       endedAt: Date.now() - EIGHT_MINUTES_IN_MS,
       startedAt: null,
     };
-    firestore.create([{ [maintenancePath]: maintenanceEnd }]);
+    firestore.create([{ [metaDoc]: maintenanceEnd }]);
   },
 };
