@@ -6,7 +6,6 @@ import {
 } from '@blockframes/testing/unit-tests';
 import {
   cleanStorage,
-  cleanMovieDir,
   cleanMoviesDir,
   cleanOrgsDir,
   cleanUsersDir,
@@ -31,33 +30,6 @@ describe('Storage cleaning script', () => {
   it('should return true when cleanStorage is called', async () => {
     const output = await cleanStorage(bucket);
     expect(output).toBeTruthy();
-  });
-
-  it('should clean movie directory', async () => {
-    const movies = [{ id: 'mov-A' }];
-
-    const prefix = 'public/movie';
-    const filesBefore = [
-      'test.png', // File at "movie/" root, should be removed
-      'mov-A/banner.png', // Should be kept
-      'mov-B/banner.jpg', // Should be removed, related document does not exists
-      'mov-A/0.3811e455325c6.378a1f524dbb8.754d1cf5abc3a.b32e89e3dd525.20494fcc5776f.c8ff80b73f1ce.096249c3a3e28.f2659267f17-a.254c59bc91fbc.1f59dd90e2fe3.9626ab5860629.491d8d80ca7e-42.004231bef8f54.e3b51f55de0e3.c82e0a57b4a8-31.023036853e078.953e403f1c5d7.fd7f9cd4ea47-2.5854da602566c.d699b2e7604c3.b684ba709d2de.6792820f10747.e954f470884ec.9a600a294575b.b51ae18c574a7.038c8059ebfdf.56b927c052396.c149fd28f0e7d.fb8068d8e8f0.9f9af74aadf9.svg', // Should be removed, file too long
-    ];
-
-    // Load our test set
-    await populate('movies', movies);
-    bucket.populate(filesBefore, prefix);
-
-    // Check if data have been correctly added
-    const documents = await getCollectionRef('movies');
-    expect(documents.docs.length).toEqual(1);
-
-    const output = await cleanMovieDir(bucket);
-    expect(output.total).toEqual(filesBefore.length);
-    expect(output.deleted).toEqual(3);
-
-    const filesAfter = (await bucket.getFiles({ prefix: `${prefix}/` }))[0];
-    expect(filesAfter.length).toEqual(1);
   });
 
   it('should clean movies directory', async () => {

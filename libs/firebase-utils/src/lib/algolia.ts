@@ -15,7 +15,8 @@ import {
   Movie,
   Organization
 } from '@blockframes/model';
-import { hasAcceptedMovies, loadAdminServices } from './util';
+import { hasAcceptedMovies } from './util';
+import { getDb } from './initialize';
 
 export const algolia = {
   ...algoliaClient,
@@ -62,7 +63,7 @@ export function setIndexConfiguration(indexName: string, config: AlgoliaConfig, 
 //           ORGANIZATIONS
 // ------------------------------------
 
-export function storeSearchableOrg(org: Organization, adminKey?: string, db = loadAdminServices().db): Promise<any> {
+export function storeSearchableOrg(org: Organization, adminKey?: string, db = getDb()): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -199,7 +200,7 @@ export function storeSearchableMovie(
 //                USERS
 // ------------------------------------
 
-export async function storeSearchableUser(user: PublicUser, adminKey?: string, db = loadAdminServices().db): Promise<any> {
+export async function storeSearchableUser(user: PublicUser, adminKey?: string, db = getDb()): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
