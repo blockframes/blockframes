@@ -4,7 +4,7 @@ import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.com
 
 const appSteps: TunnelStep[] = [{
   title: 'Screener',
-  icon: 'movie',
+  icon: 'video',
   time: 2,
   routes: [
     {
