@@ -12,13 +12,13 @@ import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service'
-import type { App, StoreStatus } from '@blockframes/model';
+import type { App, GetKeys, StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie } from '@blockframes/model';
-import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';
+import { MovieSearchForm, createMovieSearch, MovieSearch, Versions } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { APP } from '@blockframes/utils/routes/utils';
-import { FormEntity, FormList } from '@blockframes/utils/form';
+import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: 'financiers-marketplace-title-list',
@@ -143,11 +143,12 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   load() {
-    const languages = this.searchForm.languages.get('languages') as FormList<any>
-    const versions = this.searchForm.languages.get('versions') as FormEntity<any>
+    const languages = this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>;
+    const versions = this.searchForm.languages.get('versions') as FormEntity<EntityControl<Versions>, Versions>;
 
     const dataStorage = localStorage.getItem(this.app);
     const parseData = JSON.parse(dataStorage);
+    console.log('parseData.languages -->', parseData.languages)
 
     this.searchForm.sellers.patchAllValue(parseData.sellers);
     this.searchForm.genres.patchAllValue(parseData.genres);

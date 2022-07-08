@@ -18,17 +18,17 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareRe
 // Blockframes
 import { centralOrgId } from '@env';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie, App } from '@blockframes/model';
+import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie, App, GetKeys } from '@blockframes/model';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
 import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService } from '@blockframes/contract/contract/service';
-import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
+import { MovieSearchForm, createMovieSearch, Versions } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
 import { APP } from '@blockframes/utils/routes/utils';
-import { FormEntity, FormList } from '@blockframes/utils/form';
+import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -201,8 +201,8 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   patchSearchValues(search) {
-    const languages = this.searchForm.languages.get('languages') as FormList<any>
-    const versions = this.searchForm.languages.get('versions') as FormEntity<any>
+    const languages = this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>;
+    const versions = this.searchForm.languages.get('versions') as FormEntity<EntityControl<Versions>, Versions>;
 
     // patch everything
     this.searchForm.patchValue(search);
