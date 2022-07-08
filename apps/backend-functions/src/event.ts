@@ -3,6 +3,9 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { triggerNotifications } from './notification';
 import { Movie, Organization, PublicUser, EventMeta, Event, createInternalDocumentMeta, createPublicUser, createNotification } from '@blockframes/model';
 import { getDocument, BlockframesSnapshot } from '@blockframes/firebase-utils';
+import { eventCreatedAdminEmail } from './templates/mail';
+import { getMailSender } from '@blockframes/utils/apps';
+import { sendMail } from './internals/email';
 
 /**
  * Removes invitations and notifications related to an event when event is deleted
@@ -28,6 +31,13 @@ export async function onEventDelete(snap: BlockframesSnapshot<Event<EventMeta>>)
     batch.delete(doc.ref);
   }
   return batch.commit();
+}
+
+export async function onEventCreate(snap: BlockframesSnapshot<Event<EventMeta>>) {
+  const event = snap.data();
+  const from = getMailSender('festival');
+  const emailData = eventCreatedAdminEmail('festival', event);
+  await sendMail(emailData, from);
 }
 
 export async function createScreeningRequest(
