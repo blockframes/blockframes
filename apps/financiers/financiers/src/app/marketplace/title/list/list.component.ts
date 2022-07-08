@@ -17,7 +17,7 @@ import type { App, GetKeys, StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie } from '@blockframes/model';
 import { MovieSearchForm, createMovieSearch, MovieSearch, Versions } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { decodeUrl, encodeUrl, saveParamsToStorage } from "@blockframes/utils/form/form-state-url-encoder";
 import { APP } from '@blockframes/utils/routes/utils';
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 
@@ -27,7 +27,7 @@ import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit, OnDestroy, AfterViewInit{
+export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private movieResultsState = new BehaviorSubject<AlgoliaMovie[]>(null);
 
@@ -138,8 +138,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit{
 
   save() {
     this.disabledLoad = false;
-    const routeParams = decodeUrl(this.route);
-    localStorage.setItem(`${this.app}-All-Projects`, JSON.stringify(routeParams));
+    saveParamsToStorage(this.route, this.app, 'all-projects');
     this.activeUnactiveButtons();
   }
 
@@ -147,7 +146,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit{
     const languages = this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>;
     const versions = this.searchForm.languages.get('versions') as FormEntity<EntityControl<Versions>, Versions>;
 
-    const dataStorage = localStorage.getItem(`${this.app}-All-Projects`);
+    const dataStorage = localStorage.getItem(`${this.app}-all-projects`);
     const parseData = JSON.parse(dataStorage);
 
     this.searchForm.sellers.patchAllValue(parseData.sellers);
@@ -161,10 +160,13 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit{
   }
 
   activeUnactiveButtons() {
-    const dataStorage = localStorage.getItem(`${this.app}-All-Projects`);
+    console.log('1')
+    const dataStorage = localStorage.getItem(`${this.app}-all-projects`);
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
+    console.log('dataStorage--->',dataStorage)
+    console.log('currentRouteParams--->',currentRouteParams)
     if (dataStorage) this.disabledLoad = false;
-    if (dataStorage === currentRouteParams) this.activeSave = true, this.enabledSave = true;
+    if (dataStorage === currentRouteParams) this.activeSave = true, this.enabledSave = true, console.log('2')
     else this.activeSave = false;
     this.cdRef.markForCheck();
   }

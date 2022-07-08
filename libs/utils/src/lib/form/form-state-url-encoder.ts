@@ -1,4 +1,5 @@
 import { ActivatedRoute, Router } from "@angular/router"
+import { App } from '@blockframes/model';
 
 /**
  * Decode the app url and save it as form state
@@ -38,4 +39,14 @@ export function encodeUrl<T>(
       replaceUrl: true,
     });
   }
+}
+
+/**
+ * Save route parameters to local storage
+ * @param route 
+ * @param app 
+ */
+ export function saveParamsToStorage(route: ActivatedRoute, app: App, key: string) {
+  const routeParams = decodeUrl(route);
+  localStorage.setItem(`${app}-${key}`, JSON.stringify(routeParams));
 }

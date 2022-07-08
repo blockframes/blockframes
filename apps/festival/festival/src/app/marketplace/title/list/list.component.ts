@@ -15,7 +15,7 @@ import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
 import type { App, GetKeys, StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie } from '@blockframes/model';
-import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { decodeUrl, encodeUrl, saveParamsToStorage } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieSearchForm, createMovieSearch, MovieSearch, Versions } from '@blockframes/movie/form/search.form';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -133,8 +133,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   save() {
     this.disabledLoad = false;
-    const routeParams = decodeUrl(this.route);
-    localStorage.setItem(`${this.app}-Title-list-search`, JSON.stringify(routeParams));
+    saveParamsToStorage(this.route, this.app, 'title-list-search`');
     this.activeUnactiveButtons();
   }
 
@@ -142,7 +141,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     const languages = this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>;
     const versions = this.searchForm.languages.get('versions') as FormEntity<EntityControl<Versions>, Versions>;
 
-    const dataStorage = localStorage.getItem(`${this.app}-Title-list-search`);
+    const dataStorage = localStorage.getItem(`${this.app}-title-list-search`);
     const parseData = JSON.parse(dataStorage);
 
     this.searchForm.sellers.patchAllValue(parseData.sellers);
@@ -155,7 +154,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   activeUnactiveButtons() {
-    const dataStorage = localStorage.getItem(`${this.app}-Title-list-search`);
+    const dataStorage = localStorage.getItem(`${this.app}-title-list-search`);
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
     if (dataStorage) this.disabledLoad = false;
     if (dataStorage === currentRouteParams) this.activeSave = true, this.enabledSave = true;
