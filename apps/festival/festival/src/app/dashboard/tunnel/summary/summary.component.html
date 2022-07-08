@@ -112,7 +112,7 @@
     <!-- SCREENER -->
     <section id="screener">
       <h3>Screener</h3>
-      <movie-summary-media-screener [movie]="form" [link]="('media-screener' | getPath)"></movie-summary-media-screener>
+      <movie-summary-media-screener [form]="form.promotional.get('videos').get('screener')" [link]="('media-screener' | getPath)"></movie-summary-media-screener>
     </section>
 
     <!-- Submit -->

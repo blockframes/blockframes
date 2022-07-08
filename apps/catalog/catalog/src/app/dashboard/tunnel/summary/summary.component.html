@@ -111,7 +111,7 @@
     <!-- SCREENER -->
     <section id="screener">
       <h3>Screener</h3>
-      <movie-summary-media-public-screener [movie]="form" [link]="('media-screener' | getPath)"></movie-summary-media-public-screener>
+      <movie-summary-media-screener [form]="form.promotional.get('videos').get('publicScreener')" [link]="('media-screener' | getPath)"></movie-summary-media-screener>
     </section>
 
     <mat-divider></mat-divider>

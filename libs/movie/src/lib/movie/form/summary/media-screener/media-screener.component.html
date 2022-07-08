@@ -6,10 +6,10 @@
 </h6>
 <section>
   <strong>Screener Video</strong>
-  <missing-control [control]="movie.promotional.get('videos').get('screener').get('storagePath')" [link]="link" fragment="screener">
+  <missing-control [control]="form.get('storagePath')" [link]="link" fragment="screener">
     <ng-template let-video>
       <article>
-        <bf-preview-modal [ref]="movie.promotional.get('videos').get('screener').value"></bf-preview-modal>
+        <bf-preview-modal [ref]="form.value"></bf-preview-modal>
         {{ video | fileName }}
       </article>
     </ng-template>

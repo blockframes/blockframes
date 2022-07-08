@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
@@ -11,7 +10,6 @@ import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-u
   declarations: [MovieFormMediaScreenerComponent],
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     TunnelPageModule,
     FileUploaderModule,
     

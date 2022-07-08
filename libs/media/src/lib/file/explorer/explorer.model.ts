@@ -174,14 +174,6 @@ function titleDirectory(title: Movie): Directory {
             meta: ['movies', 'screener', title.id],
             form: getFormStorageVideo(title, 'movies', 'screener'),
           },
-          publicScreener: {
-            name: 'Screener',
-            type: 'file',
-            accept: 'video',
-            togglePrivacy: false,
-            meta: ['movies', 'publicScreener', title.id],
-            form: getFormStorageVideo(title, 'movies', 'publicScreener')
-          },
           salesPitch: {
             name: 'Sales Pitch',
             type: 'file',
