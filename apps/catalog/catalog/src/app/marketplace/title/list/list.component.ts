@@ -217,7 +217,7 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   activeUnactiveButtons() {
-    const dataStorage = localStorage.getItem(this.app);
+    const dataStorage = localStorage.getItem(`${this.app}-Library`);
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
     if (dataStorage) this.disabledLoad = false;
     if (dataStorage === currentRouteParams) this.activeSave = true, this.enabledSave = true;
@@ -227,12 +227,12 @@ export class ListComponent implements OnDestroy, OnInit {
   save() {
     this.disabledLoad = false;
     const routeParams = decodeUrl(this.route);
-    localStorage.setItem(this.app, JSON.stringify(routeParams));
+    localStorage.setItem(`${this.app}-Library`, JSON.stringify(routeParams));
     this.activeUnactiveButtons();
   }
 
   load() {
-    const dataStorage = localStorage.getItem(this.app);
+    const dataStorage = localStorage.getItem(`${this.app}-Library`);
     const parseData = JSON.parse(dataStorage);
     parseData.avails.duration.from = new Date(parseData.avails.duration.from);
     parseData.avails.duration.to = new Date(parseData.avails.duration.to);

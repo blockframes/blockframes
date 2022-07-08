@@ -138,7 +138,7 @@ export class ListComponent implements OnInit, OnDestroy {
   save() {
     this.disabledLoad = false;
     const routeParams = decodeUrl(this.route);
-    localStorage.setItem(this.app, JSON.stringify(routeParams));
+    localStorage.setItem(`${this.app}-All-Projects`, JSON.stringify(routeParams));
     this.activeUnactiveButtons();
   }
 
@@ -146,7 +146,7 @@ export class ListComponent implements OnInit, OnDestroy {
     const languages = this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>;
     const versions = this.searchForm.languages.get('versions') as FormEntity<EntityControl<Versions>, Versions>;
 
-    const dataStorage = localStorage.getItem(this.app);
+    const dataStorage = localStorage.getItem(`${this.app}-All-Projects`);
     const parseData = JSON.parse(dataStorage);
 
     this.searchForm.sellers.patchAllValue(parseData.sellers);
@@ -160,7 +160,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   activeUnactiveButtons() {
-    const dataStorage = localStorage.getItem(this.app);
+    const dataStorage = localStorage.getItem(`${this.app}-All-Projects`);
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
     if (dataStorage) this.disabledLoad = false;
     if (dataStorage === currentRouteParams) this.activeSave = true, this.enabledSave = true;
