@@ -46,7 +46,17 @@ export function encodeUrl<T>(
  * @param route 
  * @param app 
  */
- export function saveParamsToStorage(route: ActivatedRoute, app: App, key: string) {
+export function saveParamsToStorage(route: ActivatedRoute, app: App, key: string) {
   const routeParams = decodeUrl(route);
   localStorage.setItem(`${app}-${key}`, JSON.stringify(routeParams));
+}
+
+/**
+ * Retreive stored route parameters
+ * @param app 
+ * @param key 
+ */
+export function loadParamsFromStorage(app: App, key: string) {
+  const routeParams = localStorage.getItem(`${app}-${key}`);
+  return JSON.parse(routeParams);
 }

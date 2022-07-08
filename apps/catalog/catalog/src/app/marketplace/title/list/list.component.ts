@@ -22,7 +22,7 @@ import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie, App, GetKeys } 
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
-import { decodeDate, decodeUrl, encodeUrl, saveParamsToStorage } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeDate, decodeUrl, encodeUrl, loadParamsFromStorage, saveParamsToStorage } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch, Versions } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -226,13 +226,12 @@ export class ListComponent implements OnDestroy, OnInit {
 
   save() {
     this.disabledLoad = false;
-    saveParamsToStorage(this.route, this.app, 'library`');
+    saveParamsToStorage(this.route, this.app, 'library');
     this.activeUnactiveButtons();
   }
 
   load() {
-    const dataStorage = localStorage.getItem(`${this.app}-library`);
-    const parseData = JSON.parse(dataStorage);
+    const parseData = loadParamsFromStorage(this.app, 'library');
     parseData.avails.duration.from = new Date(parseData.avails.duration.from);
     parseData.avails.duration.to = new Date(parseData.avails.duration.to);
     this.availsForm.patchValue(parseData.avails);

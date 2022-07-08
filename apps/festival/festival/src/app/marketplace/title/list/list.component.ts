@@ -15,7 +15,7 @@ import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
 import type { App, GetKeys, StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie } from '@blockframes/model';
-import { decodeUrl, encodeUrl, saveParamsToStorage } from "@blockframes/utils/form/form-state-url-encoder";
+import { decodeUrl, encodeUrl, loadParamsFromStorage, saveParamsToStorage } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieSearchForm, createMovieSearch, MovieSearch, Versions } from '@blockframes/movie/form/search.form';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -138,8 +138,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   load() {
-    const dataStorage = localStorage.getItem(`${this.app}-title-list-search`);
-    const parseData = JSON.parse(dataStorage);
+    const parseData = loadParamsFromStorage(this.app, 'title-list-search');
     if (parseData && Object.keys(parseData).length) this.searchForm.hardReset(parseData);
   }
 

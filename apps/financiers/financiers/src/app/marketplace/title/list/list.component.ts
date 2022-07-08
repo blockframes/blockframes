@@ -17,7 +17,7 @@ import type { App, GetKeys, StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie } from '@blockframes/model';
 import { MovieSearchForm, createMovieSearch, MovieSearch, Versions } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { decodeUrl, encodeUrl, saveParamsToStorage } from "@blockframes/utils/form/form-state-url-encoder";
+import { decodeUrl, encodeUrl, loadParamsFromStorage, saveParamsToStorage } from "@blockframes/utils/form/form-state-url-encoder";
 import { APP } from '@blockframes/utils/routes/utils';
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 
@@ -143,8 +143,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   load() {
-    const dataStorage = localStorage.getItem(`${this.app}-all-projects`);
-    const parseData = JSON.parse(dataStorage);
+    const parseData = loadParamsFromStorage(this.app, 'all-projects');
     if (parseData && Object.keys(parseData).length) this.searchForm.hardReset(parseData);
   }
 
