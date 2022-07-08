@@ -17,7 +17,7 @@ export class NegotiationFormComponent {
   @Input() form: NegotiationForm;
   @Input() title?: Movie;
   @Input() currency?: string;
-   @Input() set activeTerm(termId: string) {
+  @Input() set activeTerm(termId: string) {
     if (termId === null || termId === undefined) return;
     if (isNumber(termId)) {
       this.indexId = parseFloat(termId);
@@ -37,7 +37,7 @@ export class NegotiationFormComponent {
     languages: 'Versions',
   };
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) { }
 
   openDetails(terms: string, scope: Scope) {
     this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
