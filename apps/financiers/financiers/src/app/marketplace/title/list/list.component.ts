@@ -59,8 +59,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.activeUnactiveButtons()
-    const queryParamsSub = this.route.queryParams.subscribe(_ => this.activeUnactiveButtons())
-    this.subs.push(queryParamsSub)
+    const queryParamsSub = this.route.queryParams.subscribe(_ => this.activeUnactiveButtons());
+    this.subs.push(queryParamsSub);
 
     this.movies$ = this.movieResultsState.asObservable();
 
@@ -103,7 +103,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit(): void {
     const decodedData: MovieSearch = decodeUrl(this.route);
-    if (decodedData && Object.keys(decodedData).length) this.searchForm.hardReset(decodedData)
+    if (decodedData && Object.keys(decodedData).length) this.searchForm.hardReset(decodedData);
 
     const sub = this.searchForm.valueChanges.pipe(
       debounceTime(1000),
@@ -148,7 +148,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
     const dataStorage = localStorage.getItem(this.app);
     const parseData = JSON.parse(dataStorage);
-    console.log('parseData.languages -->', parseData.languages)
 
     this.searchForm.sellers.patchAllValue(parseData.sellers);
     this.searchForm.genres.patchAllValue(parseData.genres);

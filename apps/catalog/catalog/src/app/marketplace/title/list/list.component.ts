@@ -107,10 +107,10 @@ export class ListComponent implements OnDestroy, OnInit {
     if (avails.duration?.from) avails.duration.from = decodeDate(avails.duration.from);
     if (avails.duration?.to) avails.duration.to = decodeDate(avails.duration.to);
 
-    const queryParamsSub = this.route.queryParams.subscribe(_ => this.activeUnactiveButtons())
-    this.subs.push(queryParamsSub)
+    const queryParamsSub = this.route.queryParams.subscribe(_ => this.activeUnactiveButtons());
+    this.subs.push(queryParamsSub);
 
-    this.patchSearchValues(search)
+    this.patchSearchValues(search);
     this.availsForm.patchValue(avails);
 
     const search$ = combineLatest([
@@ -218,7 +218,7 @@ export class ListComponent implements OnDestroy, OnInit {
 
   activeUnactiveButtons() {
     const dataStorage = localStorage.getItem(this.app);
-    const currentRouteParams = this.route.snapshot.queryParams.formValue
+    const currentRouteParams = this.route.snapshot.queryParams.formValue;
     if (dataStorage) this.disabledLoad = false;
     if (dataStorage === currentRouteParams) this.activeSave = true, this.enabledSave = true;
     else this.activeSave = false;
@@ -228,15 +228,15 @@ export class ListComponent implements OnDestroy, OnInit {
     this.disabledLoad = false;
     const routeParams = decodeUrl(this.route);
     localStorage.setItem(this.app, JSON.stringify(routeParams));
-    this.activeUnactiveButtons()
+    this.activeUnactiveButtons();
   }
 
   load() {
     const dataStorage = localStorage.getItem(this.app);
-    const parseData = JSON.parse(dataStorage)
+    const parseData = JSON.parse(dataStorage);
     parseData.avails.duration.from = new Date(parseData.avails.duration.from);
     parseData.avails.duration.to = new Date(parseData.avails.duration.to);
     this.availsForm.patchValue(parseData.avails);
-    this.patchSearchValues(parseData.search)
+    this.patchSearchValues(parseData.search);
   }
 }

@@ -58,8 +58,8 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    const queryParamsSub = this.route.queryParams.subscribe(_ => this.activeUnactiveButtons())
-    this.subs.push(queryParamsSub)
+    const queryParamsSub = this.route.queryParams.subscribe(_ => this.activeUnactiveButtons());
+    this.subs.push(queryParamsSub);
 
     this.movies$ = this.movieResultsState.asObservable();
     const params = this.route.snapshot.queryParams;
