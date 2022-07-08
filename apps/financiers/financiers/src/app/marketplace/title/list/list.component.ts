@@ -4,7 +4,8 @@ import {
   OnInit,
   ChangeDetectorRef,
   OnDestroy,
-  Inject
+  Inject,
+  AfterViewInit
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -26,7 +27,7 @@ import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ListComponent implements OnInit, OnDestroy, AfterViewInit{
 
   private movieResultsState = new BehaviorSubject<AlgoliaMovie[]>(null);
 
