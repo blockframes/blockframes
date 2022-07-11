@@ -1,13 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ContentChild,
   ElementRef,
   Input,
   OnInit,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
@@ -23,22 +22,21 @@ import { createMandate, createTerm, Scope, Term } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { centralOrgId } from '@env';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 import {
   BehaviorSubject, combineLatest, distinctUntilChanged, filter, firstValueFrom, map, shareReplay, switchMap
 } from 'rxjs';
 
 import { where } from 'firebase/firestore';
-import { ActivatedRoute, Router } from '@angular/router';
-import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 const mandateQuery = (titleId: string) => [
   where('titleId', '==', titleId),
   where('type', '==', 'mandate'),
 ];
 
-function isTerm(term: Partial<Term>): term is Term {
-  return term.contractId ? true : false;
+function isTermToBeUpdated(term: Partial<Term>): term is Term {
+  return term.id ? true : false;
 }
 
 const from = new Date();
@@ -127,8 +125,8 @@ export class TermFormComponent implements OnInit {
       to.setHours(1, 0, 0, 0);
       return { ...rest, duration: { from, to } };
     });
-    const toCreate = allTerms.filter(term => !isTerm(term));
-    const toUpdate = allTerms.filter(term => isTerm(term))
+    const toCreate = allTerms.filter(term => !isTermToBeUpdated(term));
+    const toUpdate = allTerms.filter(term => isTermToBeUpdated(term))
       .map((term: Term) => {
         const existingTerm = existingTerms.find(({ id }) => term.id === id) ?? {};
         //Include missing properties of the form eg: licensedOriginal
@@ -139,7 +137,12 @@ export class TermFormComponent implements OnInit {
       });
 
     if (toUpdate.length) await this.termService.update(toUpdate);
-    if (!toCreate.length) return;
+    if (!toCreate.length) {
+      const message = `${toUpdate} Terms updated.`;
+      this.snackBar.open(message, null, { duration: 6000 });
+      this.goBack();
+      return;
+    };
     const contractId = this.contractService.createId();
     const terms = toCreate.map(term => createTerm({
       ...term,
@@ -166,8 +169,11 @@ export class TermFormComponent implements OnInit {
     //@dev firestore rules impose creating the contract before it's terms.
     await this.contractService.add(mandate);
     await this.termService.add(terms);
-    const message = toUpdate.length ? 'Terms updated' : 'Terms created';
+    const message = toUpdate.length
+      ? `${toUpdate.length} Term(s) updated and ${toCreate.length} Term(s) created.`
+      : `${toCreate.length} Term(s) created.`;
     this.snackBar.open(message, null, { duration: 6000 });
+    this.goBack();
   }
 
   goBack() {
@@ -175,7 +181,8 @@ export class TermFormComponent implements OnInit {
     else this.navService.goBack(1);
   }
 
-  scrollToTop(){
+  scrollToTop() {
     scrollIntoView(this.pageTop.nativeElement);
+    this.pageTop.nativeElement.focus();
   }
 }
