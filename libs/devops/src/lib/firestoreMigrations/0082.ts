@@ -1,5 +1,5 @@
 import { Firestore, Storage, runChunks } from '@blockframes/firebase-utils';
-import { Movie, MovieVideo } from '@blockframes/model';
+import { createMovieVideo, Movie, MovieVideo } from '@blockframes/model';
 import * as env from '@env';
 
 const { storageBucket } = env.firebase();
@@ -25,10 +25,13 @@ export async function upgrade(db: Firestore, storage: Storage) {
     const beforePath = publicScreener.storagePath;
     const afterPath = beforePath.replace('promotional.videos.otherVideos', 'promotional.videos.publicScreener');
 
-    movie.promotional.videos.publicScreener = otherVideos.find(getPublicScreener);
-    movie.promotional.videos.publicScreener.storagePath = afterPath;
-    movie.promotional.videos.publicScreener.field = 'promotional.videos.publicScreener';
-    movie.promotional.videos.publicScreener.privacy = 'public';
+    movie.promotional.videos.publicScreener = createMovieVideo({
+      ...publicScreener,
+      privacy: 'public',
+      field: 'promotional.videos.publicScreener',
+      storagePath: afterPath
+    });
+
     movie.promotional.videos.otherVideos = otherVideos.filter(video => !getPublicScreener(video));
 
     await doc.ref.set(movie);
