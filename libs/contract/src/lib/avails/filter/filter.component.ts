@@ -13,6 +13,9 @@ import { AvailsForm, MapAvailsForm, CalendarAvailsForm } from '../form/avails.fo
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AvailsFilterComponent {
+  today = new Date();
+  nextYear = new Date('2023/4/14');
+
   // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('availsFilter') form: AvailsForm | MapAvailsForm | CalendarAvailsForm;
   @Input() disabled = false;

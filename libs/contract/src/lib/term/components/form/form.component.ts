@@ -1,8 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ContentChild,
+  ElementRef,
   Input,
   OnInit,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -25,7 +29,8 @@ import {
 } from 'rxjs';
 
 import { where } from 'firebase/firestore';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 const mandateQuery = (titleId: string) => [
   where('titleId', '==', titleId),
@@ -36,6 +41,12 @@ function isTerm(term: Partial<Term>): term is Term {
   return term.contractId ? true : false;
 }
 
+const from = new Date();
+const duration = {
+  from,
+  to: new Date(from.getFullYear() + 1, from.getMonth(), from.getDate())
+};
+
 @Component({
   selector: 'term-form',
   templateUrl: './form.component.html',
@@ -43,7 +54,8 @@ function isTerm(term: Partial<Term>): term is Term {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TermFormComponent implements OnInit {
-  public form = new NegotiationForm({ terms: [] });
+  public form = new NegotiationForm();
+  public defaultValue = { duration, exclusive: true };
   public activeTerm: number;
   private _titleId = new BehaviorSubject<string>('');
   public termColumns = {
@@ -55,9 +67,12 @@ export class TermFormComponent implements OnInit {
     languages: 'Versions',
   };
 
+  @ViewChild('pageTop') pageTop: ElementRef<HTMLHeadElement>;
   @Input() set titleId(id: string) {
     this._titleId.next(id);
   }
+
+  @Input() backUrl: string;
 
   public title$ = this._titleId.pipe(
     filter(id => !!id),
@@ -86,7 +101,8 @@ export class TermFormComponent implements OnInit {
     private termService: TermService,
     private dialog: MatDialog,
     private orgService: OrganizationService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   async ngOnInit() {
@@ -95,7 +111,8 @@ export class TermFormComponent implements OnInit {
     const pageTitle = `Manage avails of ${movie.title.international}`;
     this.dynTitleService.setPageTitle(pageTitle);
     this.form.hardReset({ terms });
-    this.activeTerm = +this.route.snapshot.queryParams.termIndex;
+    const termIndex = this.route.snapshot.queryParams.termIndex;
+    if (termIndex) this.activeTerm = +termIndex;
   }
 
   openDetails(terms: string[], scope: Scope) {
@@ -105,12 +122,20 @@ export class TermFormComponent implements OnInit {
 
   async saveAvails() {
     const existingTerms = await firstValueFrom(this.terms$);
-    const toCreate = this.form.value.terms.filter(term => !isTerm(term));
-    const toUpdate = this.form.value.terms.filter(term => isTerm(term))
+    const allTerms = this.form.value.terms.map(({ duration: { from, to }, ...rest }) => {
+      from.setHours(1, 0, 0, 0);
+      to.setHours(1, 0, 0, 0);
+      return { ...rest, duration: { from, to } };
+    });
+    const toCreate = allTerms.filter(term => !isTerm(term));
+    const toUpdate = allTerms.filter(term => isTerm(term))
       .map((term: Term) => {
         const existingTerm = existingTerms.find(({ id }) => term.id === id) ?? {};
         //Include missing properties of the form eg: licensedOriginal
-        return { ...existingTerm, ...term };
+        return {
+          ...existingTerm,
+          ...term
+        };
       });
 
     if (toUpdate.length) await this.termService.update(toUpdate);
@@ -143,10 +168,14 @@ export class TermFormComponent implements OnInit {
     await this.termService.add(terms);
     const message = toUpdate.length ? 'Terms updated' : 'Terms created';
     this.snackBar.open(message, null, { duration: 6000 });
-    this.goBack();
   }
 
   goBack() {
-    this.navService.goBack(1);
+    if (this.backUrl) this.router.navigate([this.backUrl]);
+    else this.navService.goBack(1);
+  }
+
+  scrollToTop(){
+    scrollIntoView(this.pageTop.nativeElement);
   }
 }

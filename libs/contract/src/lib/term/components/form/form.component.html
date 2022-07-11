@@ -1,8 +1,8 @@
 <ng-container *ngIf="title$ | async as title; else loading">
-  <h2>Add Availabilities for {{ title.title.international }}</h2>
+  <h2 #pageTop>Add Availabilities for {{ title.title.international }}</h2>
   <ng-content></ng-content>
 
-  <bf-form-table [form]="form.get('terms')" [columns]="termColumns" [active]="activeTerm" tablePosition="bottom">
+  <bf-form-table [form]="form.get('terms')" [columns]="termColumns" [active]="activeTerm" [defaultFormValue]="defaultValue" (itemSelected)="scrollToTop()" tablePosition="bottom">
     <!-- Columns -->
     <ng-template colRef="duration.from" let-from>
       {{ from | date:'M/d/y' }}
