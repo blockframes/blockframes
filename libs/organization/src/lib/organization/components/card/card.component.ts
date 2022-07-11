@@ -23,8 +23,8 @@ export class OrganizationCardComponent implements OnInit {
 
   constructor(
     private movieService: MovieService,
-    @Inject(APP) public app: App,
     private orgService: OrganizationService,
+    @Inject(APP) public app: App
   ) { }
 
   async ngOnInit() {
