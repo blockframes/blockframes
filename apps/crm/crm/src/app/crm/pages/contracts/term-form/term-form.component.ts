@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 
 // Services
 import { ContractService } from '@blockframes/contract/contract/service';
@@ -13,9 +13,11 @@ import { NavigationService } from '@blockframes/ui/navigation.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TermFormComponent {
-  titleId$ = this.route.params.pipe(
-    switchMap(({ contractId }: { contractId: string }) => this.contractService.valueChanges(contractId)),
-    map(({ titleId }) => titleId)
+  contractId$ = this.route.params.pipe(map(({ contractId }: { contractId: string }) => contractId));
+  titleId$ = this.contractId$.pipe(
+    switchMap(contractId => this.contractService.valueChanges(contractId)),
+    map(({ titleId }) => titleId),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   constructor(
