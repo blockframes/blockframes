@@ -1,12 +1,15 @@
-import { Firestore, runChunks } from '@blockframes/firebase-utils';
+import { Firestore, Storage, runChunks } from '@blockframes/firebase-utils';
 import { Movie, MovieVideo } from '@blockframes/model';
+import * as env from '@env';
+
+const { storageBucket } = env.firebase();
 
 /**
  * Update movie documents
  * @param db
  * @returns
  */
-export async function upgrade(db: Firestore) {
+export async function upgrade(db: Firestore, storage: Storage) {
   const movies = await db.collection('movies').get();
 
   return runChunks(movies.docs, async (doc) => {
@@ -16,9 +19,28 @@ export async function upgrade(db: Firestore) {
     const otherVideos = movie.promotional.videos.otherVideos;
     if (!otherVideos?.some(getPublicScreener)) return;
 
+    const publicScreener = otherVideos.find(getPublicScreener);
+    const bucket = storage.bucket(storageBucket);
+
+    const beforePath = publicScreener.storagePath;
+    const afterPath = beforePath.replace('promotional.videos.otherVideos', 'promotional.videos.publicScreener');
+
     movie.promotional.videos.publicScreener = otherVideos.find(getPublicScreener);
+    movie.promotional.videos.publicScreener.storagePath = afterPath;
+    movie.promotional.videos.publicScreener.field = 'promotional.videos.publicScreener';
+    movie.promotional.videos.publicScreener.privacy = 'public';
     movie.promotional.videos.otherVideos = otherVideos.filter(video => !getPublicScreener(video));
 
     await doc.ref.set(movie);
+
+    // move file
+    const file = bucket.file(`${publicScreener.privacy}/${beforePath}`);
+    const [exists] = await file.exists();
+    if (exists) {
+      // set moving flag to prevent upload to jwPlayer
+      await file.setMetadata({ metadata: { privacy: 'public', moving: 'true' } });
+      await file.move(`public/${afterPath}`);
+    }
+
   }).catch(err => console.error(err));
 }
