@@ -164,6 +164,10 @@ describe('Test MOVIES anonymization function', () => {
               title: 'test screener',
               jwPlayerId: 'IDjwplayer1'
             },
+            publicScreener: {
+              title: 'test public screener',
+              jwPlayerId: 'IDjwplayer2'
+            },
             salesPitch: {
               title: 'test salesPitch',
               jwPlayerId: 'IDjwplayersalesPitch'
@@ -190,6 +194,9 @@ describe('Test MOVIES anonymization function', () => {
 
     expect(doc.content.promotional.videos.screener.title).toEqual(titleRecord.content.promotional.videos.screener.title);
     expect(doc.content.promotional.videos.screener.jwPlayerId).toEqual(anonymizedJwplayerId);
+
+    expect(doc.content.promotional.videos.publicScreener.title).toEqual(titleRecord.content.promotional.videos.publicScreener.title);
+    expect(doc.content.promotional.videos.publicScreener.jwPlayerId).toEqual(anonymizedJwplayerId);
 
     doc.content.promotional.videos.otherVideos.map(o => expect(o.jwPlayerId).toEqual(anonymizedJwplayerId));
 
