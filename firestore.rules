@@ -390,8 +390,8 @@ service cloud.firestore {
       allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId
         || userOrgId() == getContract(incomingData().contractId).sellerId)
         && notInMaintenance();
-      allow update: if userOrgId() == getContract(existingData().contractId).sellerId
-        || isBlockframesAdmin(userId())
+      allow update: if (userOrgId() == getContract(existingData().contractId).sellerId
+        || isBlockframesAdmin(userId()))
         && notInMaintenance();
       allow delete: if false;
     }

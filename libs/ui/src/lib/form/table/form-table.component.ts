@@ -87,7 +87,7 @@ export class FormTableComponent<T> implements OnInit, OnDestroy {
   }
 
   add() {
-    this.formItem = this.form.createControl(this.defaultFormValue || null);
+    this.formItem = this.form.createControl(this.defaultFormValue || {});
   }
 
   save() {

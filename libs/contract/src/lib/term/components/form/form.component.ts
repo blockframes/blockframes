@@ -40,10 +40,8 @@ function isTermToBeUpdated(term: Partial<Term>): term is Term {
 }
 
 const from = new Date();
-const duration = {
-  from,
-  to: new Date(from.getFullYear() + 1, from.getMonth(), from.getDate())
-};
+const to = new Date(from.getFullYear() + 1, from.getMonth(), from.getDate());
+const duration = { from, to };
 
 @Component({
   selector: 'term-form',
