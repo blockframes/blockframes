@@ -225,7 +225,6 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   save() {
-    this.buttonsState.load = 'enabled';
     saveParamsToStorage(this.route, this.app, 'library');
     this.activeUnactiveButtons();
   }

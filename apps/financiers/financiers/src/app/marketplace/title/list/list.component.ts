@@ -137,7 +137,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   save() {
-    this.buttonsState.load = 'enabled';
     saveParamsToStorage(this.route, this.app, 'all-projects');
     this.activeUnactiveButtons();
   }
