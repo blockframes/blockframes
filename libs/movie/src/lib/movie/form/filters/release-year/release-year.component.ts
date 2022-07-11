@@ -19,10 +19,7 @@ export class ReleaseYearFilterComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
 
-  invert = (value: number) => {
-    value === undefined ? value = 0 : value;
-    return this.maxReleaseYear - value + this.minReleaseYear;
-  }
+  invert = (value = 0) => this.maxReleaseYear - value + this.minReleaseYear;
 
   ngOnInit() {
 
