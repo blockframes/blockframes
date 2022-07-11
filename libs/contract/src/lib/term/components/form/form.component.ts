@@ -25,7 +25,8 @@ import { centralOrgId } from '@env';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 import {
-  BehaviorSubject, combineLatest, distinctUntilChanged, filter, firstValueFrom, map, shareReplay, switchMap
+  BehaviorSubject, combineLatest, distinctUntilChanged,
+  firstValueFrom, map, shareReplay, switchMap, filter,
 } from 'rxjs';
 
 import { where } from 'firebase/firestore';
@@ -70,13 +71,12 @@ export class TermFormComponent implements OnInit {
     this._titleId.next(id);
   }
 
-  @Input() backUrl: string;
+  @Input() backUrl: string[];
 
   public title$ = this._titleId.pipe(
     filter(id => !!id),
     distinctUntilChanged(),
-    switchMap(id => this.titleService.valueChanges(id)),
-    shareReplay({ bufferSize: 1, refCount: true })
+    switchMap(id => this.titleService.valueChanges(id))
   );
 
   private mandates$ = this.title$.pipe(
@@ -138,7 +138,7 @@ export class TermFormComponent implements OnInit {
 
     if (toUpdate.length) await this.termService.update(toUpdate);
     if (!toCreate.length) {
-      const message = `${toUpdate} Terms updated.`;
+      const message = `${toUpdate.length} Terms updated.`;
       this.snackBar.open(message, null, { duration: 6000 });
       this.goBack();
       return;
@@ -177,7 +177,7 @@ export class TermFormComponent implements OnInit {
   }
 
   goBack() {
-    if (this.backUrl) this.router.navigate([this.backUrl]);
+    if (this.backUrl) this.router.navigate(this.backUrl);
     else this.navService.goBack(1);
   }
 
