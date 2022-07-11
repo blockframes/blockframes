@@ -1,5 +1,34 @@
 <layout-dashboard>
-  <aside fxLayout="column" fxLayoutAlign="space-between">
+  <aside fxLayout="column" fxLayoutAlign="space-between" class="hidden">
+    <mat-nav-list fxFlex>
+      <a mat-list-item routerLink="home" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
+      </a>
+      <a mat-list-item routerLink="title" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="video_library"></mat-icon>
+      </a>
+      <a mat-list-item routerLink="event" routerLinkActive="active" test-id="calendar">
+        <mat-icon matListIcon svgIcon="calendar_today"></mat-icon>
+      </a>
+      <a mat-list-item routerLink="files" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="document"></mat-icon>
+      </a>
+      <a mat-list-item routerLink="organization" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="sellers"></mat-icon>
+      </a>
+      <ng-container *ngIf="org$ | async | canAccess: 'marketplace':'festival'">
+        <mat-divider></mat-divider>
+        <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">
+          <mat-icon matListIcon svgIcon="marketplace"></mat-icon>
+        </a>
+      </ng-container>
+      <auth-sidenav fxHide.gt-xs></auth-sidenav>
+    </mat-nav-list>
+
+    <auth-sidenav-widget fxHide.gt-xs></auth-sidenav-widget>
+  </aside>
+
+  <aside fxLayout="column" fxLayoutAlign="space-between" class="show">
     <mat-nav-list fxFlex>
       <a mat-list-item routerLink="home" routerLinkActive="active">
         <mat-icon matListIcon svgIcon="dashboard"></mat-icon>

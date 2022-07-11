@@ -62,6 +62,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   );
 
   public movieIndex: string;
+  public showNavigation = false;
 
   /**MovieAlgoliaResult Algolia search results */
   public algoliaSearchResults$: Observable<SearchResult[]>;
@@ -86,5 +87,9 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.sub) { this.sub.unsubscribe(); }
+  }
+
+  openNavigation() {
+    this.showNavigation = !this.showNavigation;
   }
 }

@@ -1,55 +1,59 @@
-<mat-sidenav-container>
-  <mat-sidenav class="dark-theme" id="dashboard-navbar" role="navigation" [mode]="mode$ | async" [opened]="(mode$ | async) === 'side'">
-    <mat-toolbar fxLayout fxLayoutAlign="space-between center">
-      <a app-logo routerLink="."></a>
-    </mat-toolbar>
-    <ng-content select="aside"></ng-content>
-  </mat-sidenav>
+<div id="dashboard-aside" class="dark-theme mat-drawer mat-drawer-side mat-drawer-opened">
+  <mat-toolbar fxLayout fxLayoutAlign="space-between center">
+    <a app-logo routerLink="." *ngIf="showNavigation"></a>
+    <a routerLink="." *ngIf="!showNavigation" class="logo">
+      <img asset="archipel_market_solo.svg" alt="Archipel Market">
+    </a>
+  </mat-toolbar>
+  <ng-content *ngIf="showNavigation" select="aside.show"></ng-content>
+  <ng-content *ngIf="!showNavigation" select="aside.hidden"></ng-content>
+</div>
 
-  <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()">
-    <!-- TOOLBAR -->
-    <app-bar #app>
-      <header fxLayout fxLayoutAlign="space-between center">
-        <button mat-icon-button test-id="menu" (click)="sidenav.toggle()">
-          <mat-icon svgIcon="menu"></mat-icon>
-        </button>
-        <div fxLayout="row" fxLayoutGap="24px">
-          <ng-container *ngIf="currentApp === 'festival' || currentApp === 'catalog'">
-            <a fxHide.xs mat-button class="link-to-app" color="primary" [href]="appBridge[currentApp].link" target="_blank">        
-              <mat-icon [svgIcon]="appBridge[currentApp].logo"></mat-icon>
-              <span>{{appBridge[currentApp].text}}</span>
-            </a>
+<div id="dashboard-content" fxLayout="column" [appContainer]="app">
+  <!-- TOOLBAR -->
+  <app-bar #app>
+    <header fxLayout fxLayoutAlign="space-between center">
+      <!-- TODO: ICI TOOGLE NAVIGATIO sur Click -->
+      <button mat-icon-button test-id="menu" (click)="openNavigation()">
+        <mat-icon svgIcon="menu"></mat-icon>
+      </button>
+      <div fxLayout="row" fxLayoutGap="24px">
+        <ng-container *ngIf="currentApp === 'festival' || currentApp === 'catalog'">
+          <a fxHide.xs mat-button class="link-to-app" color="primary" [href]="appBridge[currentApp].link"
+            target="_blank">
+            <mat-icon [svgIcon]="appBridge[currentApp].logo"></mat-icon>
+            <span>{{appBridge[currentApp].text}}</span>
+          </a>
+        </ng-container>
+        <mat-divider vertical fxHide.xs></mat-divider>
+        <!-- Invitations -->
+        <a mat-icon-button routerLink="invitations" test-id="invitations-link">
+          <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
+            <mat-icon svgIcon="invitation" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
           </ng-container>
-          <mat-divider vertical fxHide.xs></mat-divider>
-          <!-- Invitations -->
-          <a mat-icon-button routerLink="invitations" test-id="invitations-link">
-            <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
-              <mat-icon svgIcon="invitation" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
-            </ng-container>
-            <ng-template #noInvitation>
-              <mat-icon svgIcon="invitation"></mat-icon>
-            </ng-template>
-          </a>
-          <!-- Notifications -->
-          <a mat-icon-button routerLink="notifications" test-id="notifications-link">
-            <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
-              <mat-icon svgIcon="notifications" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
-            </ng-container>
-            <ng-template #noNotification>
-              <mat-icon svgIcon="notifications"></mat-icon>
-            </ng-template>
-          </a>
-          <auth-widget fxHide.xs></auth-widget>
-        </div>
-      </header>
-    </app-bar>
-
-    <!-- CONTENT -->
-    <main cdkScrollable fxFlex class="page" fxLayout="column" fxLayoutAlign="space-between space-between">
-      <div>
-        <router-outlet></router-outlet>
+          <ng-template #noInvitation>
+            <mat-icon svgIcon="invitation"></mat-icon>
+          </ng-template>
+        </a>
+        <!-- Notifications -->
+        <a mat-icon-button routerLink="notifications" test-id="notifications-link">
+          <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
+            <mat-icon svgIcon="notifications" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+          </ng-container>
+          <ng-template #noNotification>
+            <mat-icon svgIcon="notifications"></mat-icon>
+          </ng-template>
+        </a>
+        <auth-widget fxHide.xs></auth-widget>
       </div>
-      <bf-footer></bf-footer>
-    </main>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    </header>
+  </app-bar>
+
+  <!-- CONTENT -->
+  <main cdkScrollable fxFlex class="page" fxLayout="column" fxLayoutAlign="space-between space-between">
+    <div>
+      <router-outlet></router-outlet>
+    </div>
+    <bf-footer></bf-footer>
+  </main>
+</div>
