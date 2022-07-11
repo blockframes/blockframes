@@ -36,9 +36,10 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   public exporting = false;
   public nbHits: number;
   public hitsViewed = 0;
-  public activeSave = false;
-  public enabledSave = false;
-  public disabledLoad = true;
+  public buttonsState: Record<'save' | 'load', 'enabled' | 'active' | 'enabledAndActive' | 'disabled'> = {
+    save: 'enabled',
+    load: 'disabled',
+  }
 
   private subs: Subscription[] = [];
   private loadMoreToggle: boolean;
@@ -131,7 +132,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   save() {
-    this.disabledLoad = false;
+    this.buttonsState.load = 'enabled';
     saveParamsToStorage(this.route, this.app, 'title-list-search');
     this.activeUnactiveButtons();
   }
@@ -144,9 +145,8 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   activeUnactiveButtons() {
     const dataStorage = localStorage.getItem(`${this.app}-title-list-search`);
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
-    if (dataStorage) this.disabledLoad = false;
-    if (dataStorage === currentRouteParams) this.activeSave = true, this.enabledSave = true;
-    else this.activeSave = false;
+    if (dataStorage) this.buttonsState.save = 'active', this.buttonsState.load = 'enabled';
+    if (dataStorage === currentRouteParams) this.buttonsState.save = 'enabledAndActive', this.buttonsState.load = 'active';
     this.cdRef.markForCheck();
   }
 }

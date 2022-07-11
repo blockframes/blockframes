@@ -46,9 +46,10 @@ export class ListComponent implements OnDestroy, OnInit {
   public exporting = false;
   public nbHits: number;
   public hitsViewed = 0;
-  public disabledLoad = true;
-  public enabledSave = false;
-  public activeSave = false;
+  public buttonsState: Record<'save' | 'load', 'enabled' | 'active' | 'enabledAndActive' | 'disabled'> = {
+    save: 'enabled',
+    load: 'disabled',
+  }
 
   private subs: Subscription[] = [];
 
@@ -219,13 +220,12 @@ export class ListComponent implements OnDestroy, OnInit {
   activeUnactiveButtons() {
     const dataStorage = localStorage.getItem(`${this.app}-library`);
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
-    if (dataStorage) this.disabledLoad = false;
-    if (dataStorage === currentRouteParams) this.activeSave = true, this.enabledSave = true;
-    else this.activeSave = false;
+    if (dataStorage) this.buttonsState.save = 'active', this.buttonsState.load = 'enabled';
+    if (dataStorage === currentRouteParams) this.buttonsState.save = 'enabledAndActive', this.buttonsState.load = 'active';
   }
 
   save() {
-    this.disabledLoad = false;
+    this.buttonsState.load = 'enabled';
     saveParamsToStorage(this.route, this.app, 'library');
     this.activeUnactiveButtons();
   }
