@@ -7,8 +7,8 @@
 </header>
 <div *ngIf="hideTabs">
   <p class="mat-caption">{{ (org.addresses.main.country | toLabel: 'territories') || "-" }}</p>
-  <p class="mat-caption" i18n>
-    {{ org.userIds.length }} employee{ org.userIds.length, plural, =1 {} other {s} }
+  <p class="mat-caption" i18n *ngIf="memberCount !== 0">
+    {{ memberCount }} employee{ memberCount, plural, =1 {} other {s} }
   </p>
 </div>
 <mat-tab-group *ngIf="!hideTabs" headerPosition="below" mat-align-tabs="center" [disablePagination]="true">
@@ -21,8 +21,8 @@
       <p class="mat-caption" i18n *ngIf="(orgMovieCount$ | async) as count">
         {{ count }} film{ count, plural, =1 {} other {s} } in {{ app === 'catalog' ? 'catalog' : 'line-up' }}
       </p>
-      <p class="mat-caption" i18n>
-        {{ org.userIds.length }} employee{ org.userIds.length, plural, =1 {} other {s} }
+      <p class="mat-caption" i18n *ngIf="memberCount !== 0">
+        {{ memberCount }} employee{ memberCount, plural, =1 {} other {s} }
       </p>
     </div>
   </mat-tab>
