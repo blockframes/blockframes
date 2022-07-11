@@ -8,6 +8,15 @@ list-filter {
   filter-budget {
     padding: 0 16px;
   }
+  div {
+    margin-inline: auto;  
+    button {
+      margin: 0px 8px;  
+      &.saveActive {
+        background-color: #001EC7;
+      }
+    } 
+  }
 }
 
 mat-form-field {
@@ -31,16 +40,4 @@ list-page-description, pdf-export button {
 .refresh {
   margin-left: auto;
   flex-shrink: 0;
-}
-
-div {
-  margin-inline: auto;
-}
-
-div button {
-  margin: 0px 8px;
-}
-
-.saveActive {
-  background: #001EC7 !important;
 }
