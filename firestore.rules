@@ -392,6 +392,7 @@ service cloud.firestore {
         && notInMaintenance();
       allow update:if ('mandate' == getContract(incomingData().contractId).type
         || userOrgId() == getContract(incomingData().contractId).sellerId)
+        || isBlockframesAdmin(userId())
         && notInMaintenance();
       allow delete: if false;
     }

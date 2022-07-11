@@ -25,8 +25,7 @@ import { centralOrgId } from '@env';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 import {
-  BehaviorSubject, combineLatest, distinctUntilChanged,
-  firstValueFrom, map, shareReplay, switchMap, filter,
+  BehaviorSubject, combineLatest, distinctUntilChanged, firstValueFrom, map, shareReplay, switchMap, filter,
 } from 'rxjs';
 
 import { where } from 'firebase/firestore';
@@ -53,7 +52,7 @@ const duration = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TermFormComponent implements OnInit {
-  public form = new NegotiationForm();
+  public form = new NegotiationForm({ terms: [] });
   public defaultValue = { duration, exclusive: true };
   public activeTerm: number;
   private _titleId = new BehaviorSubject<string>('');
@@ -130,10 +129,7 @@ export class TermFormComponent implements OnInit {
       .map((term: Term) => {
         const existingTerm = existingTerms.find(({ id }) => term.id === id) ?? {};
         //Include missing properties of the form eg: licensedOriginal
-        return {
-          ...existingTerm,
-          ...term
-        };
+        return { ...existingTerm, ...term };
       });
 
     if (toUpdate.length) await this.termService.update(toUpdate);
