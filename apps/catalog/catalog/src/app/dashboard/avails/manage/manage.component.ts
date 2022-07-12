@@ -26,9 +26,7 @@ export class CatalogManageAvailsComponent {
     languages: 'Versions',
   };
 
-  public titleId$ = this.route.params.pipe(
-    pluck('titleId')
-  );
+  public titleId$ = this.route.params.pipe(pluck('titleId'));
 
   constructor(
     private route: ActivatedRoute,

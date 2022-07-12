@@ -85,11 +85,16 @@ export class ContractFormComponent implements OnInit {
       const termIds = await this.termService.upsert(termList, { write });
       const existingTermIds = this.contract?.termIds || [];
       const termIdsToDelete = existingTermIds.filter((id) => !termIds.includes(id));
-      await this.termService.remove(termIdsToDelete, { write });
-      await this.contractService.update(contractId, { termIds }, { write });
+      const promises = [
+        this.termService.remove(termIdsToDelete, { write }),
+        this.contractService.update(contractId, { termIds }, { write })
+      ];
       if (price !== this.income?.price) {
-        await this.incomeService.update(contractId, { price }, { write });
+        promises.push(
+          this.incomeService.update(contractId, { price }, { write })
+        );
       }
+      await Promise.all(promises);
     }
 
     const data: Partial<Negotiation> = { terms, price };

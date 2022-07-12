@@ -1,7 +1,9 @@
 <a mat-icon-button routerLink="..">
   <mat-icon svgIcon="arrow_back"></mat-icon>
 </a>
-<ng-container *ngIf="contractId$ | async as contractId">
-  <term-form [titleId]="titleId$ | async" [backUrl]="['/c/o/dashboard/crm/contracts/', contractId]">
-  </term-form>
-</ng-container>
+<term-form
+  *rxLet="contractId$; let contractId"
+  [titleId]="titleId$ | async"
+  [backUrl]="['/c/o/dashboard/crm/contracts/', contractId]"
+>
+</term-form>

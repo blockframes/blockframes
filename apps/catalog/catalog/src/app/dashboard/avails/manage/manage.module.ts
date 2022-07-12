@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { CatalogManageAvailsComponent } from './manage.component';
 import { TermFormModule } from '@blockframes/contract/term/components/form/form.module'
+
 @NgModule({
   declarations: [
     CatalogManageAvailsComponent,

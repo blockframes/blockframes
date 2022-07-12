@@ -108,6 +108,7 @@ export class TermFormComponent implements OnInit {
     this.form.hardReset({ terms });
     const termIndex = this.route.snapshot.queryParams.termIndex;
     if (termIndex) this.activeTerm = +termIndex;
+    else if (terms.length) this.activeTerm = 0;
   }
 
   openDetails(terms: string[], scope: Scope) {
@@ -117,11 +118,13 @@ export class TermFormComponent implements OnInit {
 
   async saveAvails() {
     const existingTerms = await firstValueFrom(this.terms$);
+
     const allTerms = this.form.value.terms.map(({ duration: { from, to }, ...rest }) => {
-      from.setHours(1, 0, 0, 0);
-      to.setHours(1, 0, 0, 0);
+      from.setHours(2, 0, 0, 0);
+      to.setHours(2, 0, 0, 0);
       return { ...rest, duration: { from, to } };
     });
+
     const toCreate = allTerms.filter(term => !isTermToBeUpdated(term));
     const toUpdate = allTerms.filter(term => isTermToBeUpdated(term))
       .map((term: Term) => {
@@ -137,6 +140,7 @@ export class TermFormComponent implements OnInit {
       this.goBack();
       return;
     };
+
     const contractId = this.contractService.createId();
     const terms = toCreate.map(term => createTerm({
       ...term,

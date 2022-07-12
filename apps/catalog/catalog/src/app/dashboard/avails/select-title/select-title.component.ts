@@ -22,11 +22,10 @@ const titleQuery = (orgId: string): QueryConstraint[] => [
 })
 export class CatalogAvailsSelectTitleComponent {
   public availsForm = new AvailsForm();
-  private orgId = this.orgService.org.id;
   public titleId: string;
   public storeStatus = storeStatus;
 
-  public titles$ = this.titleService.valueChanges(titleQuery(this.orgId));
+  public titles$ = this.titleService.valueChanges(titleQuery(this.orgService.org.id));
 
   constructor(
     private titleService: MovieService,
