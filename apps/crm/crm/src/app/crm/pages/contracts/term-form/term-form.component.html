@@ -1,0 +1,9 @@
+<a mat-icon-button routerLink="..">
+  <mat-icon svgIcon="arrow_back"></mat-icon>
+</a>
+<term-form
+  *rxLet="contractId$; let contractId"
+  [titleId]="titleId$ | async"
+  [backUrl]="['/c/o/dashboard/crm/contracts/', contractId]"
+>
+</term-form>
