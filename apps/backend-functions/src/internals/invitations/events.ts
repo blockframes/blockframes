@@ -205,8 +205,7 @@ export async function createNotificationsForFinishedScreenings() {
   const notifications: Notification[] = [];
 
   for (const screening of screenings) {
-    const attendeesUid = screening.meta.attendees ? Object.keys(screening.meta.attendees) : [];
-    const attendees = attendeesUid.map(uid => screening.meta.attendees[uid]);
+    const attendees = Object.values(screening.meta.attendees);
 
     const regularAttendees = attendees.filter(attendee => !attendee.isAnonymous);
     const anonymousAttendees = attendees.filter(attendee => attendee.isAnonymous);
