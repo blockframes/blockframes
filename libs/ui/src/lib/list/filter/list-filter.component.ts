@@ -16,8 +16,6 @@ import { decodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-
-
 export type FilterButtonsState = Record<'save' | 'load', 'enabled' | 'active' | 'enabledAndActive' | 'disabled'>;
 
 const savedSearchIdentifier = 'saved-search';
