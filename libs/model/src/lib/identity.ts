@@ -30,7 +30,7 @@ interface IdentityRaw {
    * @see extending interface for enums
    * can be used for various usages: credit role, stakeholder role (for contracts)
    */
-  role?: string,
+  role?: string, // TODO #1767 used ?
 }
 
 /**

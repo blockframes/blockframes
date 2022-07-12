@@ -241,16 +241,16 @@ export function getFieldConfigs(
       /* t */ 'originalLanguages[]': (value: string) => {
       // ! required
       if (!value?.length) throw mandatoryError(value, 'Original Languages');
-      const languages = getKeyIfExists('languages', value) as Language;
-      if (!languages) throw wrongValueError(value, 'Original Languages');
-      return languages;
+      const language = getKeyIfExists('languages', value) as Language;
+      if (!language) throw wrongValueError(value, 'Original Languages');
+      return language;
     },
       /* u */ 'genres[]': (value: string) => {
       // ! required
       if (!value?.length) throw mandatoryError(value, 'Genres');
-      const genres = getKeyIfExists('genres', value) as Genre;
-      if (!genres) throw wrongValueError(value, 'Genres');
-      return genres;
+      const genre = getKeyIfExists('genres', value) as Genre;
+      if (!genre) throw wrongValueError(value, 'Genres');
+      return genre;
     },
       /* v */ 'customGenres[]': (value: string) => {
       if (!value?.length) throw optionalWarning('Custom Genres');
@@ -300,7 +300,7 @@ export function getFieldConfigs(
     },
       /* ae */ 'prizes[].premiere': (value: string) => {
       if (!value) throw optionalWarning('Festival Prizes Premiere');
-      const premiere = getKeyIfExists('premiereType', value) as PremiereType;
+      const premiere = getKeyIfExists('premiereType', value) as PremiereType; // TODO Remove
       if (!premiere) throw wrongValueError(value, 'Festival Prizes Premiere');
       return premiere;
     },
@@ -331,7 +331,7 @@ export function getFieldConfigs(
     },
       /* al */ 'producers[].role': (value: string) => {
       if (!value) throw optionalWarning('Producer(s) Role');
-      const role = getKeyIfExists('producerRoles', value) as ProducerRole;
+      const role = getKeyIfExists('producerRoles', value);
       if (!role) throw wrongValueError(value, 'Producer(s) Role');
       return role;
     },
@@ -345,7 +345,7 @@ export function getFieldConfigs(
     },
       /* ao */ 'crew[].role': (value: string) => {
       if (!value) throw optionalWarning('Crew Member(s) Role');
-      const role = getKeyIfExists('crewRoles', value) as CrewRole;
+      const role = getKeyIfExists('crewRoles', value);
       if (!role) throw wrongValueError(value, 'Crew Member(s) Role');
       return role;
     },
@@ -375,7 +375,7 @@ export function getFieldConfigs(
     },
       /* at */ 'certifications[]': (value: string) => {
       if (!value) throw optionalWarning('Certification');
-      const certification = getKeyIfExists('certifications', value) as Certification;
+      const certification = getKeyIfExists('certifications', value);
       if (!certification) throw wrongValueError(value, 'Certification');
       return certification;
     },
@@ -417,25 +417,25 @@ export function getFieldConfigs(
     },
       /* bc */ color: (value: string) => {
       if (!value) throw optionalWarning('Color / Black & White');
-      const color = getKeyIfExists('colors', value) as Color;
+      const color = getKeyIfExists('colors', value);
       if (!color) throw wrongValueError(value, 'Color / Black & White');
       return color;
     },
       /* bd */ format: (value: string) => {
       if (!value) throw optionalWarning('Shooting Format');
-      const format = getKeyIfExists('movieFormat', value) as MovieFormat;
+      const format = getKeyIfExists('movieFormat', value);
       if (!format) throw wrongValueError(value, 'Shooting Format');
       return format;
     },
       /* be */ formatQuality: (value: string) => {
       if (!value) throw optionalWarning('Available Format Quality');
-      const quality = getKeyIfExists('movieFormatQuality', value) as MovieFormatQuality;
+      const quality = getKeyIfExists('movieFormatQuality', value);
       if (!quality) throw wrongValueError(value, 'Available Format Quality');
       return quality;
     },
       /* bf */ soundFormat: (value: string) => {
       if (!value) throw optionalWarning('Sound Format');
-      const sound = getKeyIfExists('soundFormat', value) as SoundFormat;
+      const sound = getKeyIfExists('soundFormat', value);
       if (!sound) throw wrongValueError(value, 'Sound Format');
       return sound;
     },
@@ -648,16 +648,16 @@ export function getFieldConfigs(
       /* t */ 'originalLanguages[]': (value: string) => {
       // ! required
       if (!value?.length) throw mandatoryError(value, 'Original Languages');
-      const languages = getKeyIfExists('languages', value) as Language;
-      if (!languages) throw wrongValueError(value, 'Original Languages');
-      return languages;
+      const language = getKeyIfExists('languages', value) as Language;
+      if (!language) throw wrongValueError(value, 'Original Languages');
+      return language;
     },
       /* u */ 'genres[]': (value: string) => {
       // ! required
-      if (!value || !value.length) throw mandatoryError(value, 'Genres');
-      const genres = getKeyIfExists('genres', value) as Genre;
-      if (!genres) throw wrongValueError(value, 'Genres');
-      return genres;
+      if (!value?.length) throw mandatoryError(value, 'Genres');
+      const genre = getKeyIfExists('genres', value) as Genre;
+      if (!genre) throw wrongValueError(value, 'Genres');
+      return genre;
     },
       /* v */ 'customGenres[]': (value: string) => {
       if (!value?.length) throw optionalWarning('Custom Genres');

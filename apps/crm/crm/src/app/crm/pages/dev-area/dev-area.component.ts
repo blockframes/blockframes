@@ -27,11 +27,20 @@ export class DevAreaComponent implements OnInit {
     this.cdRef.markForCheck();
 
 
-    const movie = await this.myapimoviesService.movie('tt0107290');
+    const movie = await this.myapimoviesService.createTitle('tt2392672');
     console.log(movie);
 
-    const genres = await this.myapimoviesService.genres('tt0107290');
-    console.log(genres);
+   // const seasons = await this.myapimoviesService.seasons('tt4063800');
+   // console.log(seasons);
+
+  //  const season = await this.myapimoviesService.season('tt4063800', 1);
+   // console.log(season);
+
+   // const akas = await this.myapimoviesService.akas('tt2392672');
+    //console.log(akas);
+
+    //const genres = await this.myapimoviesService.genres('tt0107290');
+   // console.log(genres);
 
     //const health = await this.myapimoviesService.health();
     //console.log(health);

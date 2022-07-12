@@ -417,9 +417,7 @@ export class DirectorForm extends FormEntity<DirectorFormControl> {
 }
 
 function createDirectorFormControl(director?: Partial<Director>) {
-  const { firstName, lastName, filmography, status, description, category } = createDirector(
-    director
-  );
+  const { firstName, lastName, filmography, status, description, category } = createDirector(director);
   return {
     firstName: new FormControl(firstName, Validators.required),
     lastName: new FormControl(lastName, Validators.required),
