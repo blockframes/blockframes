@@ -1,0 +1,35 @@
+<a class="arrow_back" mat-icon-button routerLink="..">
+  <mat-icon svgIcon="arrow_back" matTooltip="Go back"></mat-icon>
+</a>
+
+<ng-container *ngIf="titles$ | async as titles; else loading">
+  <ng-container *ngIf="titles.length; else noTitles">
+    <h2>Select Title you want to add Avails to</h2>
+    <p>You can add the Avails to a Title with any status (published, submitted, draft)</p>
+    <p>Nevertheless, your Buyers will be able to refine their search only if your selected Title is published.</p>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Select Title</mat-label>
+      <mat-select [value]="titleId" (selectionChange)="titleId = $event.value" >
+        <mat-option *ngFor="let title of titles" [value]="title.id">
+          {{ title.title.international }} ({{title.app.catalog.status | toLabel: 'storeStatus'}})
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <a mat-flat-button color="primary" [disabled]="!titleId" [routerLink]="[titleId, 'manage']">
+      <span>Next</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </a>
+  </ng-container>
+</ng-container>
+
+<ng-template #loading>
+  <section>
+    <mat-spinner></mat-spinner>
+  </section>
+</ng-template>
+
+<ng-template #noTitles>
+  <dashboard-empty-movie></dashboard-empty-movie>
+</ng-template>

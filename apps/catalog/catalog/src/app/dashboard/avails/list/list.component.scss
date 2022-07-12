@@ -3,6 +3,13 @@
   display: block;
 }
 
+header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
 h2,section{
   margin-bottom: 16px;
 }
