@@ -9,7 +9,8 @@ list-filter {
     padding: 0 16px;
   }
   div {
-    margin-inline: auto;  
+    display: flex;
+    padding: 14px 24px;
     button {
       margin: 0px 8px;  
       &.saveActive {

@@ -4,6 +4,7 @@
 
 :host {
   width: 100%;
+  display: flex;
 
   /* Firefox scrollbar */
   section {
@@ -12,10 +13,9 @@
 }
  /* overflow-y: hidden is used to remove the vertical scrollbar on Safari */
 section {
-  width: 100%;
+  width: 80%;
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
   overflow: auto;
   overflow-y: hidden;
   white-space: nowrap;
