@@ -8,13 +8,11 @@
     </form>
   </list-page-app-bar>
 
-
   <list-page-title>
     <h1 class="mat-display-2 page-title">Library</h1>
   </list-page-title>
 
   <!-- SEARCH BAR -->
-
   <list-page-search>
     <form [formGroup]="searchForm">
       <mat-form-field appearance="outline">
@@ -60,14 +58,7 @@
       <filter-running-time [form]="searchForm.runningTime"></filter-running-time>
     </ng-template>
 
-    <div>
-      <button mat-mini-fab color="primary" [class]="buttonsState.save === 'enabledAndActive' || buttonsState.save === 'active' ? 'saveActive' : ''" (click)="save()" matTooltip="Save New Research">
-        <mat-icon [svgIcon]= "buttonsState.save === 'enabledAndActive' ? 'bookmark_solid' : 'bookmark_border'" ></mat-icon>
-      </button>
-      <button mat-mini-fab color="primary" [disabled]="buttonsState.load === 'disabled'" (click)="load()" matTooltip="Load Research" [class]= "buttonsState.load === 'active' ? 'saveActive' : ''">
-        <mat-icon svgIcon="folder_open"></mat-icon>
-      </button>
-    </div>
+    <list-filter-buttons (data)="load($event)"></list-filter-buttons>
 
     <button mat-button class="refresh" (click)="clear()" matTooltip="Clear all filters">
       <mat-icon svgIcon="refresh_filters"></mat-icon>

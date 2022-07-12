@@ -29,7 +29,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
 import { APP } from '@blockframes/utils/routes/utils';
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
-import { setButtonsState, FilterButtonsState, saveParamsToStorage, loadParamsFromStorage } from '@blockframes/ui/list/filter/list-filter.component';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -47,10 +46,6 @@ export class ListComponent implements OnDestroy, OnInit {
   public exporting = false;
   public nbHits: number;
   public hitsViewed = 0;
-  public buttonsState: FilterButtonsState = {
-    save: 'enabled',
-    load: 'disabled',
-  }
 
   private subs: Subscription[] = [];
 
@@ -59,7 +54,7 @@ export class ListComponent implements OnDestroy, OnInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-    private route: ActivatedRoute,
+    public route: ActivatedRoute,
     private contractService: ContractService,
     private termService: TermService,
     private snackbar: MatSnackBar,
@@ -67,6 +62,7 @@ export class ListComponent implements OnDestroy, OnInit {
     private router: Router,
     private pdfService: PdfService,
     @Inject(APP) public app: App,
+    
 
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
@@ -108,9 +104,6 @@ export class ListComponent implements OnDestroy, OnInit {
 
     if (avails.duration?.from) avails.duration.from = decodeDate(avails.duration.from);
     if (avails.duration?.to) avails.duration.to = decodeDate(avails.duration.to);
-
-    const queryParamsSub = this.route.queryParams.subscribe(_ => this.setButtonsState());
-    this.subs.push(queryParamsSub);
 
     this.patchSearchValues(search);
     this.availsForm.patchValue(avails);
@@ -218,21 +211,10 @@ export class ListComponent implements OnDestroy, OnInit {
     this.searchForm.runningTime.patchValue(search?.runningTime);
   }
 
-  setButtonsState() {
-    const currentRouteParams = this.route.snapshot.queryParams.formValue;
-    setButtonsState(currentRouteParams, this.app, this.buttonsState)
-  }
-
-  save() {
-    saveParamsToStorage(this.route, this.app);
-    this.setButtonsState();
-  }
-
-  load() {
-    const parseData = loadParamsFromStorage(this.app);
-    parseData.avails.duration.from = new Date(parseData.avails.duration.from);
-    parseData.avails.duration.to = new Date(parseData.avails.duration.to);
-    this.availsForm.patchValue(parseData.avails);
-    this.patchSearchValues(parseData.search);
+  public load(parsedData) {
+    parsedData.avails.duration.from = new Date(parsedData.avails.duration.from);
+    parsedData.avails.duration.to = new Date(parsedData.avails.duration.to);
+    this.availsForm.patchValue(parsedData.avails);
+    this.patchSearchValues(parsedData.search);
   }
 }
