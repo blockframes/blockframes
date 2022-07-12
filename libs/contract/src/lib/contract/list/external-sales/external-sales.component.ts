@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Contract, Sale } from '@blockframes/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
@@ -32,7 +32,7 @@ export class ExternalSaleListComponent {
     return this._sales.value;
   }
 
-  goToSale({ id }: Contract) {
+  goToContract({ id }: Contract) {
     this.router.navigate([id], { relativeTo: this.route });
   }
 }

@@ -3,17 +3,20 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { joinWith } from 'ngfire';
+import { of } from 'rxjs';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
+
+import { getSeller } from '@blockframes/contract/contract/utils'
 import { OrganizationService } from '@blockframes/organization/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieService } from '@blockframes/movie/service';
-import { joinWith } from 'ngfire';
-import { getSeller } from '@blockframes/contract/contract/utils'
-import { of } from 'rxjs';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { IncomeService } from '@blockframes/contract/income/service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { Sale, Term  } from '@blockframes/model';
+import { Contract, Term } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { NavigationService } from '@blockframes/ui/navigation.service';
 
 @Component({
   selector: 'contract-view',
@@ -23,12 +26,11 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 })
 export class ContractViewComponent {
 
-  contract$ = this.route.params.pipe(map(r => r.saleId as string))
-    .pipe(
-      switchMap(saleId => this.getSale(saleId)),
-      filter(contract => !!contract),
-      tap(contract => this.statusForm.setValue(contract.status))
-    );
+  contract$ = this.route.params.pipe(
+    switchMap(({ contractId }: { contractId: string }) => this.getContract(contractId)),
+    filter(contract => !!contract),
+    tap(contract => this.statusForm.setValue(contract.status))
+  );
 
   statusForm = new FormControl('pending');
 
@@ -39,7 +41,8 @@ export class ContractViewComponent {
     private incomeService: IncomeService,
     private contractService: ContractService,
     private orgService: OrganizationService,
-    private titleService: MovieService
+    private titleService: MovieService,
+    private navService: NavigationService
   ) { }
 
   async update(contractId: string) {
@@ -48,13 +51,13 @@ export class ContractViewComponent {
     this.snackbar.open('Offer updated!', 'ok', { duration: 1000 });
   }
 
-  private getSale(saleId: string) {
+  private getContract(saleId: string) {
     return this.contractService.valueChanges(saleId).pipe(
       joinWith({
-        licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)),
+        licensor: (contract: Contract) => this.orgService.valueChanges(getSeller(contract)),
         licensee: () => of('External'),
-        title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
-        price: (sale: Sale) => this.incomeService.valueChanges(sale.id)
+        title: (contract: Contract) => this.titleService.valueChanges(contract.titleId).pipe(map(title => title.title.international)),
+        price: (contract: Contract) => this.incomeService.valueChanges(contract.id)
       })
     );
   }
@@ -67,7 +70,7 @@ export class ContractViewComponent {
         text: `Please type "DELETE" to confirm.`,
         confirmationWord: 'DELETE',
         confirmButtonText: 'Delete term',
-        onConfirm: this.delete(term)
+        onConfirm: () => this.delete(term)
       })
     });
   }
@@ -77,5 +80,9 @@ export class ContractViewComponent {
       this.incomeService.remove(term.id, { write });
       return { termIds: contract.termIds.filter(id => id !== term.id) };
     })
+  }
+
+  public goBack() {
+    this.navService.goBack(1);
   }
 }
