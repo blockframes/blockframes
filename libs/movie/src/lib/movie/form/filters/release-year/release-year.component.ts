@@ -25,7 +25,7 @@ export class ReleaseYearFilterComponent implements OnInit, OnDestroy {
 
     this.form.valueChanges.subscribe(val => {
       this.inverted.setValue(this.invert(val));
-    })
+    });
 
     this.inverted.setValue(this.invert(this.form.value));
 

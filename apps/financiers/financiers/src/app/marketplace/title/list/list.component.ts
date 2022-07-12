@@ -19,6 +19,7 @@ import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/mo
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { decodeUrl, encodeUrl, loadParamsFromStorage, saveParamsToStorage } from "@blockframes/utils/form/form-state-url-encoder";
 import { APP } from '@blockframes/utils/routes/utils';
+import { FilterButtonsState, setButtonsState } from '@blockframes/ui/list/filter/list-filter.component';
 
 @Component({
   selector: 'financiers-marketplace-title-list',
@@ -36,7 +37,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   public exporting = false;
   public nbHits: number;
   public hitsViewed = 0;
-  public buttonsState: Record<'save' | 'load', 'enabled' | 'active' | 'enabledAndActive' | 'disabled'> = {
+  public buttonsState: FilterButtonsState = {
     save: 'enabled',
     load: 'disabled',
   }
@@ -147,10 +148,8 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   activeUnactiveButtons() {
-    const dataStorage = localStorage.getItem(`${this.app}-all-projects`);
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
-    if (dataStorage) this.buttonsState.save = 'active', this.buttonsState.load = 'enabled';
-    if (dataStorage === currentRouteParams) this.buttonsState.save = 'enabledAndActive', this.buttonsState.load = 'active';
+    setButtonsState(currentRouteParams, this.app, 'all-projects', this.buttonsState)
     this.cdRef.markForCheck();
   }
 }

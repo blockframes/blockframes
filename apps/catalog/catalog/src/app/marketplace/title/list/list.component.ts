@@ -29,6 +29,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
 import { APP } from '@blockframes/utils/routes/utils';
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
+import { setButtonsState, FilterButtonsState } from '@blockframes/ui/list/filter/list-filter.component';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -46,7 +47,7 @@ export class ListComponent implements OnDestroy, OnInit {
   public exporting = false;
   public nbHits: number;
   public hitsViewed = 0;
-  public buttonsState: Record<'save' | 'load', 'enabled' | 'active' | 'enabledAndActive' | 'disabled'> = {
+  public buttonsState: FilterButtonsState = {
     save: 'enabled',
     load: 'disabled',
   }
@@ -218,10 +219,8 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   activeUnactiveButtons() {
-    const dataStorage = localStorage.getItem(`${this.app}-library`);
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
-    if (dataStorage) this.buttonsState.save = 'active', this.buttonsState.load = 'enabled';
-    if (dataStorage === currentRouteParams) this.buttonsState.save = 'enabledAndActive', this.buttonsState.load = 'active';
+    setButtonsState(currentRouteParams, this.app, 'library', this.buttonsState)
   }
 
   save() {

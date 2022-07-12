@@ -9,9 +9,18 @@ import {
   OnInit
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
+import { App } from '@blockframes/model';
 import { hasValue } from '@blockframes/utils/pipes';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+
+export type FilterButtonsState = Record<'save' | 'load', 'enabled' | 'active' | 'enabledAndActive' | 'disabled'>;
+
+export function setButtonsState(currentRouteParams: string, app: App, savedSearchIdentifier: string, buttons: FilterButtonsState) {
+  const dataStorage = localStorage.getItem(`${app}-${savedSearchIdentifier}`);
+  if (dataStorage) buttons.save = 'active', buttons.load = 'enabled';
+  if (dataStorage === currentRouteParams) buttons.save = 'enabledAndActive', buttons.load = 'active';
+}
 
 @Directive({ selector: '[filter]' })
 export class FilterDirective implements OnInit {
