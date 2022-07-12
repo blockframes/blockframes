@@ -107,6 +107,14 @@
       <movie-summary-media-notes *ngIf="form | hasStatus: ['development', 'shooting']" [movie]="form" [link]="('media-notes' | getPath)"></movie-summary-media-notes>
     </section>
 
+    <mat-divider></mat-divider>
+
+    <!-- SCREENER -->
+    <section id="screener">
+      <h3>Screener</h3>
+      <movie-summary-media-screener [form]="form.promotional.get('videos').get('screener')" [link]="('media-screener' | getPath)"></movie-summary-media-screener>
+    </section>
+
     <!-- Submit -->
     <button id="publish" test-id="publish" mat-flat-button color="accent" class="submit" (click)="submit()"
       [disabled]="isPublished$ | async">

@@ -45,10 +45,6 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
     return index;
   }
 
-  get screenerForm() {
-    return this.form.promotional.videos.screener;
-  }
-
   get salesPitchForm() {
     return this.form.promotional.videos.salesPitch;
   }

@@ -18,18 +18,6 @@
       </ng-template>
     </missing-control>
   </li>
-  <li>
-    <strong>Screener</strong>
-    <missing-control [control]="movie.promotional.get('videos').get('screener').get('storagePath')" [link]="link"
-      fragment="videos">
-      <ng-template let-video>
-        <article>
-          <bf-preview-modal [ref]="movie.promotional.get('videos').get('screener').value"></bf-preview-modal>
-          {{ video | fileName }}
-        </article>
-      </ng-template>
-    </missing-control>
-  </li>
 
   <ng-container *ngIf="movie.promotional.get('videos').get('salesPitch') as salesPitch">
     <li>
