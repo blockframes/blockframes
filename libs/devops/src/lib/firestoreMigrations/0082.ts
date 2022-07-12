@@ -11,28 +11,33 @@ const { storageBucket } = env.firebase();
  */
 export async function upgrade(db: Firestore, storage: Storage) {
   const movies = await db.collection('movies').get();
+  const isPublicScreener = ( video: MovieVideo ) => {
+    const title = video.title?.toLowerCase();
+    if (!title) return false;
+    return title === 'screener' || title === 'screening';
+  };
+  const field = 'promotional.videos.publicScreener';
 
   return runChunks(movies.docs, async (doc) => {
     const movie = doc.data() as Movie;
-    const getPublicScreener = ( video: MovieVideo ) => video.title?.toLowerCase().includes('screen');
 
     const otherVideos = movie.promotional.videos.otherVideos;
-    if (!otherVideos?.some(getPublicScreener)) return;
+    if (!otherVideos?.some(isPublicScreener)) return;
 
-    const publicScreener = otherVideos.find(getPublicScreener);
+    const publicScreener = otherVideos.find(isPublicScreener);
     const bucket = storage.bucket(storageBucket);
 
     const beforePath = publicScreener.storagePath;
-    const afterPath = beforePath.replace('promotional.videos.otherVideos', 'promotional.videos.publicScreener');
+    const afterPath = beforePath.replace('promotional.videos.otherVideos', field);
 
     movie.promotional.videos.publicScreener = createMovieVideo({
       ...publicScreener,
       privacy: 'public',
-      field: 'promotional.videos.publicScreener',
+      field,
       storagePath: afterPath
     });
 
-    movie.promotional.videos.otherVideos = otherVideos.filter(video => !getPublicScreener(video));
+    movie.promotional.videos.otherVideos = otherVideos.filter(video => !isPublicScreener(video));
 
     await doc.ref.set(movie);
 
