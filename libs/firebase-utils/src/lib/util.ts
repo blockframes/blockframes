@@ -3,8 +3,8 @@ import { firebase } from '@env';
 import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 import { config } from 'dotenv';
 import requiredVars from 'tools/mandatory-env-vars.json';
-import { resolve } from 'path';
 import { firebase as firebaseProd } from 'env/env.blockframes';
+import { getAuth, getDb, getStorage, initAdmin } from './initialize';
 import { App, Organization } from '@blockframes/model';
 import { toDate } from './firebase-utils';
 import { BlockframesSnapshot } from './types';
@@ -87,51 +87,18 @@ interface AdminServices {
 export function loadAdminServices(): AdminServices {
   config();
 
-  if (!admin.apps.length) {
-    admin.initializeApp({
-      ...firebase(),
-      credential: admin.credential.applicationDefault(),
-    });
-  }
-
   return {
-    getCI,
-    auth: admin.auth(),
-    db: admin.firestore(),
+    getCI: () => initAdmin(firebaseCI(), 'CI-app') ,
+    auth: getAuth(),
+    db: getDb(),
     firebaseConfig: firebase(),
-    storage: admin.storage(),
+    storage: getStorage(),
   };
-}
-
-let ci: admin.app.App;
-
-function getCI() {
-  if (!ci) {
-    ci = admin.initializeApp(
-      {
-        projectId: firebaseCI().projectId,
-        credential: admin.credential.applicationDefault(),
-      },
-      'CI-app'
-    );
-  }
-  return ci;
 }
 
 export const sleep = (ms: number) => new Promise<void>(res => setTimeout(res, ms));
 
-export function getServiceAccountObj(keyFile: string): admin.ServiceAccount {
-  try {
-    // If service account is a stringified json object
-    return JSON.parse(keyFile) as admin.ServiceAccount;
-  } catch (err) {
-    // If service account is a path
-    // tslint:disable-next-line: no-eval
-    return eval('require')(resolve(keyFile)) as admin.ServiceAccount;
-  }
-}
-
-export async function hasAcceptedMovies(org: Organization, appli: App, db = loadAdminServices().db) {
+export async function hasAcceptedMovies(org: Organization, appli: App, db = getDb()) {
   const moviesColRef = await db.collection('movies').where('orgIds', 'array-contains', org.id).get();
   const movies = moviesColRef.docs.map(doc => doc.data());
   return movies.some(movie => movie?.app?.[appli].status === 'accepted' && movie?.app?.[appli].access);
@@ -150,7 +117,7 @@ export function throwOnProduction(): never | void {
 export async function removeAllSubcollections(
   snapshot: FirebaseFirestore.DocumentSnapshot | BlockframesSnapshot,
   batch: FirebaseFirestore.WriteBatch,
-  db = admin.firestore(),
+  db = getDb(),
   options = { verbose: true }
 ): Promise<FirebaseFirestore.WriteBatch> {
   if (options.verbose) console.log(`starting deletion of ${snapshot.ref.path} sub-collections`);

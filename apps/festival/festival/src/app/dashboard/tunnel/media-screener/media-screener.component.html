@@ -1,0 +1,13 @@
+<tunnel-page>
+  <ng-container tunnel-form>
+
+    <h3>Screener</h3>
+    <section>
+      <p>This video is the full video of this title. It is private and cannot be seen by anyone outside your organization unless you explicitly invite them to a virtual screening.</p>
+      <file-uploader [form]="screenerForm" [meta]="['movies', 'screener', movieId]" accept="video" listenToChanges>
+        <h3 title>Upload Screener</h3>
+      </file-uploader>
+    </section>
+
+  </ng-container>
+</tunnel-page>

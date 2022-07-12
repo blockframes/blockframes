@@ -1,4 +1,3 @@
-import * as admin from 'firebase-admin';
 import { getUser } from './../utils';
 import { triggerNotifications } from './../../notification';
 import { sendMailFromTemplate } from './../email';
@@ -7,6 +6,7 @@ import { getAdminIds, getOrgAppKey } from '../../data/internals';
 import { wasAccepted, wasCreated } from './utils';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { groupIds } from '@blockframes/utils/emails/ids';
+import { getDb, getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
 import {
   createInternalDocumentMeta,
   createNotification,
@@ -17,10 +17,9 @@ import {
   Invitation,
   Organization,
 } from '@blockframes/model';
-import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
 
 async function addUserToOrg(userId: string, organizationId: string) {
-  const db = admin.firestore();
+  const db = getDb();
   if (!organizationId || !userId) {
     throw new Error(`missing data: userId=${userId}, organizationId=${organizationId}`);
   }

@@ -3,10 +3,10 @@ import { sendgridAPIKey, projectId } from '../environments/environment';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import type { CallableContext } from 'firebase-functions/lib/providers/https';
-import * as admin from 'firebase-admin';
 import { getMailSender, appLogo, applicationUrl, AppLogoValue } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { logger } from 'firebase-functions';
+import { getDb } from '@blockframes/firebase-utils';
 import {
   App,
   appDescription,
@@ -110,7 +110,7 @@ export const sendMailAsAdmin = async (
   data: { request: EmailRequest, from?: EmailJSON },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
-  const db = admin.firestore();
+  const db = getDb();
   if (!context?.auth) {
     throw new Error('Permission denied: missing auth context.');
   }

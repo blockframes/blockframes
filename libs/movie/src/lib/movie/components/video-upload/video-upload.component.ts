@@ -40,7 +40,7 @@ export class MovieVideoUploadComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  public getPath(pathPart: 'screener' | 'otherVideos') {
+  public getPath(pathPart: 'screener' | 'publicScreener' | 'otherVideos') {
     return `movies/${this.movie.id}/promotional.videos.${pathPart}`;
   }
 
