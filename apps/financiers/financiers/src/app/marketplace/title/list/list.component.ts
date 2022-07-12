@@ -19,7 +19,6 @@ import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/mo
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { APP } from '@blockframes/utils/routes/utils';
-import { FilterButtonsState, loadParamsFromStorage, saveParamsToStorage, setButtonsState } from '@blockframes/ui/list/filter/list-filter.component';
 
 @Component({
   selector: 'financiers-marketplace-title-list',
@@ -37,10 +36,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   public exporting = false;
   public nbHits: number;
   public hitsViewed = 0;
-  public buttonsState: FilterButtonsState = {
-    save: 'enabled',
-    load: 'disabled',
-  }
 
   private loadMoreToggle: boolean;
   private lastPage: boolean;
@@ -60,9 +55,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    const queryParamsSub = this.route.queryParams.subscribe(_ => this.setButtonsState());
-    this.subs.push(queryParamsSub);
-
     this.movies$ = this.movieResultsState.asObservable();
 
     const params = this.route.snapshot.queryParams;
@@ -136,19 +128,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.exporting = false;
   }
 
-  save() {
-    saveParamsToStorage(this.route, this.app);
-    this.setButtonsState();
-  }
-
-  load() {
-    const parseData = loadParamsFromStorage(this.app);
-    if (parseData && Object.keys(parseData).length) this.searchForm.hardReset(parseData);
-  }
-
-  setButtonsState() {
-    const currentRouteParams = this.route.snapshot.queryParams.formValue;
-    setButtonsState(currentRouteParams, this.app, this.buttonsState)
-    this.cdRef.markForCheck();
+  load(parsedData) {
+    if (parsedData && Object.keys(parsedData).length) this.searchForm.hardReset(parsedData);
   }
 }
