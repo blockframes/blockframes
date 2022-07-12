@@ -205,12 +205,24 @@ export async function createNotificationsForFinishedScreenings() {
   const notifications: Notification[] = [];
 
   for (const screening of screenings) {
-    const attendees = screening.meta.attendees ? Object.keys(screening.meta.attendees) : [];
+    const attendeesUid = screening.meta.attendees ? Object.keys(screening.meta.attendees) : [];
+    const attendees = attendeesUid.map(uid => screening.meta.attendees[uid]);
+
+    const regularAttendees = attendees.filter(attendee => !attendee.isAnonymous);
+    const anonymousAttendees = attendees.filter(attendee => attendee.isAnonymous);
+
+    const regularAttendeesEmail = regularAttendees.map(attendee => attendee.email);
+    const anonymousAttendeesEmail = anonymousAttendees.map(attendee => attendee.email).filter(e => !!e);
+
     const invitations = await fetchEventInvitations(screening.id);
 
     for (const invitation of invitations) {
-      const userId = getGuest(invitation, 'user').uid;
-      const notificationType = attendees.includes(userId) ? 'userAttendedScreening' : 'userMissedScreening';
+      const userEmail = getGuest(invitation, 'user').email;
+
+      // We only focus on regular attendees for public events because we cannot match invitation.email and connected user.email
+      const attendeesEmail = screening.accessibility !== 'public' ? regularAttendeesEmail.concat(anonymousAttendeesEmail) : regularAttendeesEmail;
+
+      const notificationType = attendeesEmail.includes(userEmail) ? 'userAttendedScreening' : 'userMissedScreening';
       const [notification] = await createNotificationIfNotExists([invitation], notificationType);
       notifications.push(notification);
     }
