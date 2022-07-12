@@ -60,7 +60,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.setButtonsState()
     const queryParamsSub = this.route.queryParams.subscribe(_ => this.setButtonsState());
     this.subs.push(queryParamsSub);
 
