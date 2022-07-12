@@ -60,8 +60,8 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.activeUnactiveButtons()
-    const queryParamsSub = this.route.queryParams.subscribe(_ => this.activeUnactiveButtons());
+    this.setButtonsState()
+    const queryParamsSub = this.route.queryParams.subscribe(_ => this.setButtonsState());
     this.subs.push(queryParamsSub);
 
     this.movies$ = this.movieResultsState.asObservable();
@@ -139,7 +139,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   save() {
     saveParamsToStorage(this.route, this.app, 'all-projects');
-    this.activeUnactiveButtons();
+    this.setButtonsState();
   }
 
   load() {
@@ -147,7 +147,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     if (parseData && Object.keys(parseData).length) this.searchForm.hardReset(parseData);
   }
 
-  activeUnactiveButtons() {
+  setButtonsState() {
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
     setButtonsState(currentRouteParams, this.app, 'all-projects', this.buttonsState)
     this.cdRef.markForCheck();

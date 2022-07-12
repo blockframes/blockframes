@@ -109,7 +109,7 @@ export class ListComponent implements OnDestroy, OnInit {
     if (avails.duration?.from) avails.duration.from = decodeDate(avails.duration.from);
     if (avails.duration?.to) avails.duration.to = decodeDate(avails.duration.to);
 
-    const queryParamsSub = this.route.queryParams.subscribe(_ => this.activeUnactiveButtons());
+    const queryParamsSub = this.route.queryParams.subscribe(_ => this.setButtonsState());
     this.subs.push(queryParamsSub);
 
     this.patchSearchValues(search);
@@ -218,14 +218,14 @@ export class ListComponent implements OnDestroy, OnInit {
     this.searchForm.runningTime.patchValue(search?.runningTime);
   }
 
-  activeUnactiveButtons() {
+  setButtonsState() {
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
     setButtonsState(currentRouteParams, this.app, 'library', this.buttonsState)
   }
 
   save() {
     saveParamsToStorage(this.route, this.app, 'library');
-    this.activeUnactiveButtons();
+    this.setButtonsState();
   }
 
   load() {
