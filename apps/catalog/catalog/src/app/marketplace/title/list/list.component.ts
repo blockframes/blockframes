@@ -22,14 +22,14 @@ import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie, App, GetKeys } 
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
-import { decodeDate, decodeUrl, encodeUrl, loadParamsFromStorage, saveParamsToStorage } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch, Versions } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
 import { APP } from '@blockframes/utils/routes/utils';
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
-import { setButtonsState, FilterButtonsState } from '@blockframes/ui/list/filter/list-filter.component';
+import { setButtonsState, FilterButtonsState, saveParamsToStorage, loadParamsFromStorage } from '@blockframes/ui/list/filter/list-filter.component';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -224,12 +224,12 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   save() {
-    saveParamsToStorage(this.route, this.app, 'saved-search');
+    saveParamsToStorage(this.route, this.app);
     this.setButtonsState();
   }
 
   load() {
-    const parseData = loadParamsFromStorage(this.app, 'saved-search');
+    const parseData = loadParamsFromStorage(this.app);
     parseData.avails.duration.from = new Date(parseData.avails.duration.from);
     parseData.avails.duration.to = new Date(parseData.avails.duration.to);
     this.availsForm.patchValue(parseData.avails);

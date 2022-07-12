@@ -15,11 +15,11 @@ import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
 import type { App, StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie } from '@blockframes/model';
-import { decodeUrl, encodeUrl, loadParamsFromStorage, saveParamsToStorage } from "@blockframes/utils/form/form-state-url-encoder";
+import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';
 import { APP } from '@blockframes/utils/routes/utils';
-import { FilterButtonsState, setButtonsState } from '@blockframes/ui/list/filter/list-filter.component';
+import { FilterButtonsState, loadParamsFromStorage, saveParamsToStorage, setButtonsState } from '@blockframes/ui/list/filter/list-filter.component';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -133,18 +133,18 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   save() {
-    saveParamsToStorage(this.route, this.app, 'saved-search');
+    saveParamsToStorage(this.route, this.app);
     this.setButtonsState();
   }
 
   load() {
-    const parseData = loadParamsFromStorage(this.app, 'saved-search');
+    const parseData = loadParamsFromStorage(this.app);
     if (parseData && Object.keys(parseData).length) this.searchForm.hardReset(parseData);
   }
 
   setButtonsState() {
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
-    setButtonsState(currentRouteParams, this.app, this.buttonsState )
+    setButtonsState(currentRouteParams, this.app, this.buttonsState)
     this.cdRef.markForCheck();
   }
 }
