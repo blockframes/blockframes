@@ -90,7 +90,7 @@ export class OrganizationService extends BlockframesCollection<Organization> {
     const org = super.fromFirestore(snapshot);
     return {
       ...org,
-      appAccess: createOrgAppAccess(org.appAccess),
+      appAccess: createOrgAppAccess(org?.appAccess),
     };
   }
 
