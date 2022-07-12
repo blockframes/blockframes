@@ -17,8 +17,6 @@ import { Subscription } from 'rxjs';
 
 type FilterButtonsState = Record<'save' | 'load', 'enabled' | 'active' | 'enabledAndActive' | 'disabled'>;
 
-const savedSearchIdentifier = 'saved-search';
-
 @Component({
   selector: 'list-filter-buttons',
   templateUrl: './list-filter-buttons.component.html',
@@ -32,7 +30,9 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
     load: 'disabled',
   }
 
+  private savedSearchIdentifier: 'saved-search'
   private queryParamsSub: Subscription;
+
   @Output() data: EventEmitter<string> = new EventEmitter();
 
   constructor(
@@ -51,18 +51,18 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
   }
   save() {
     const routeParams = decodeUrl(this.route);
-    localStorage.setItem(`${this.app}-${savedSearchIdentifier}`, JSON.stringify(routeParams));
+    localStorage.setItem(`${this.app}-${this.savedSearchIdentifier}`, JSON.stringify(routeParams));
     this.setButtonsState(this.app, this.buttonsState);
   }
 
   load() {
-    const routeParams = localStorage.getItem(`${this.app}-${savedSearchIdentifier}`);
+    const routeParams = localStorage.getItem(`${this.app}-${this.savedSearchIdentifier}`);
     const parsedData = JSON.parse(routeParams);
     this.data.emit(parsedData);
   }
 
   setButtonsState(app: App, buttons: FilterButtonsState) {
-    const dataStorage = localStorage.getItem(`${app}-${savedSearchIdentifier}`);
+    const dataStorage = localStorage.getItem(`${app}-${this.savedSearchIdentifier}`);
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
     if (dataStorage) buttons.save = 'active', buttons.load = 'enabled';
     if (dataStorage === currentRouteParams) buttons.save = 'enabledAndActive', buttons.load = 'active';
