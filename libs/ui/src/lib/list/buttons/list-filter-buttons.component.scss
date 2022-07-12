@@ -1,0 +1,12 @@
+:host {
+   div {
+    display: flex;
+    padding: 14px 24px;
+    button {
+      margin: 0px 8px;  
+      &.saveActive {
+        background-color: #001EC7;
+      }
+    } 
+  }
+}

@@ -1,0 +1,8 @@
+<div>
+  <button mat-mini-fab color="primary" [class]="buttonsState.save === 'enabledAndActive' || buttonsState.save === 'active' ? 'saveActive' : ''" (click)="save()" matTooltip="Save New Research">
+    <mat-icon [svgIcon]= "buttonsState.save === 'enabledAndActive' ? 'bookmark_solid' : 'bookmark_border'" ></mat-icon>
+  </button>
+  <button mat-mini-fab color="primary" [disabled]="buttonsState.load === 'disabled'" (click)="load()" matTooltip="Load Research" [class]= "buttonsState.load === 'active' ? 'saveActive' : ''">
+    <mat-icon svgIcon="folder_open"></mat-icon>
+  </button>
+</div>
