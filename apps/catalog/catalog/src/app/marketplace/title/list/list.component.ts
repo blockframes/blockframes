@@ -220,16 +220,16 @@ export class ListComponent implements OnDestroy, OnInit {
 
   setButtonsState() {
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
-    setButtonsState(currentRouteParams, this.app, 'library', this.buttonsState)
+    setButtonsState(currentRouteParams, this.app, this.buttonsState)
   }
 
   save() {
-    saveParamsToStorage(this.route, this.app, 'library');
+    saveParamsToStorage(this.route, this.app, 'saved-search');
     this.setButtonsState();
   }
 
   load() {
-    const parseData = loadParamsFromStorage(this.app, 'library');
+    const parseData = loadParamsFromStorage(this.app, 'saved-search');
     parseData.avails.duration.from = new Date(parseData.avails.duration.from);
     parseData.avails.duration.to = new Date(parseData.avails.duration.to);
     this.availsForm.patchValue(parseData.avails);

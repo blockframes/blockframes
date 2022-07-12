@@ -16,7 +16,9 @@ import { map, startWith } from 'rxjs/operators';
 
 export type FilterButtonsState = Record<'save' | 'load', 'enabled' | 'active' | 'enabledAndActive' | 'disabled'>;
 
-export function setButtonsState(currentRouteParams: string, app: App, savedSearchIdentifier: string, buttons: FilterButtonsState) {
+const savedSearchIdentifier = 'saved-search';
+
+export function setButtonsState(currentRouteParams: string, app: App, buttons: FilterButtonsState) {
   const dataStorage = localStorage.getItem(`${app}-${savedSearchIdentifier}`);
   if (dataStorage) buttons.save = 'active', buttons.load = 'enabled';
   if (dataStorage === currentRouteParams) buttons.save = 'enabledAndActive', buttons.load = 'active';

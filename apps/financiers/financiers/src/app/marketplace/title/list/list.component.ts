@@ -138,18 +138,18 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   save() {
-    saveParamsToStorage(this.route, this.app, 'all-projects');
+    saveParamsToStorage(this.route, this.app, 'saved-search');
     this.setButtonsState();
   }
 
   load() {
-    const parseData = loadParamsFromStorage(this.app, 'all-projects');
+    const parseData = loadParamsFromStorage(this.app, 'saved-search');
     if (parseData && Object.keys(parseData).length) this.searchForm.hardReset(parseData);
   }
 
   setButtonsState() {
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
-    setButtonsState(currentRouteParams, this.app, 'all-projects', this.buttonsState)
+    setButtonsState(currentRouteParams, this.app, this.buttonsState)
     this.cdRef.markForCheck();
   }
 }
