@@ -1,5 +1,4 @@
 import { ActivatedRoute, Router } from "@angular/router"
-import { App } from '@blockframes/model';
 
 /**
  * Decode the app url and save it as form state
