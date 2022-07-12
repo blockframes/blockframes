@@ -62,8 +62,6 @@ export class ListComponent implements OnDestroy, OnInit {
     private router: Router,
     private pdfService: PdfService,
     @Inject(APP) public app: App,
-    
-
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
