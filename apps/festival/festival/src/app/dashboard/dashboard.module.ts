@@ -30,7 +30,6 @@ import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { EventOrganizationGuard } from "@blockframes/event/guard/event-organization.guard";
 import { EventEditGuard } from '@blockframes/event/guard/event-edit.guard';
 import { EventTypeGuard } from '@blockframes/event/guard/event-type.guard';
-import { HasOrganizationGuard } from '@blockframes/analytics/guard/has-organization.guard';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -73,8 +72,7 @@ const routes: Routes = [{
             },
             {
               path: ':userId',
-              loadChildren: () => import('./analytics/buyer/buyer-analytics.module').then(m => m.BuyerAnalyticsModule),
-              canActivate: [HasOrganizationGuard]
+              loadChildren: () => import('./analytics/buyer/buyer-analytics.module').then(m => m.BuyerAnalyticsModule)
             }
           ]
         }
