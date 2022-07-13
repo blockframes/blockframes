@@ -1,20 +1,9 @@
+@import "@angular/flex-layout/mq";
+
 :host {
   display: flex;
   flex-direction: row;
   height: 100%;
-}
-
-a.hide {
-  display: none;
-}
-
-.logo {
-  height: clamp(32px, 5vw, 48px);
-  display: block;
-  
-  img {
-    height: 100%;
-  }
 }
 
 aside {
@@ -81,4 +70,68 @@ app-bar {
 /* Outline none used to remove the automatic rectangular focus on Safari */
 a[app-logo] {
   outline: none;
+}
+
+@include layout-bp(gt-xs) {
+  a.hide,
+  aside button {
+    display: none;
+  }
+
+  aside {
+    a[app-logo-icon] {
+      display: block;
+    }
+    a[app-logo] {
+      display: none;
+    }
+
+    &.opened {
+      a[app-logo-icon] {
+        display: none;
+      }
+      a[app-logo] {
+        display: block;
+      }
+    }
+  }
+}
+
+@include layout-bp(xs) {
+  .link-to-app,
+  mat-divider,
+  auth-widget,
+  a[app-logo-icon] {
+    display: none;
+  }
+
+  aside {
+    transform: translateX(-100%);
+    position: absolute;
+    top: 0;
+    z-index: 8;
+    transition: transform 0.4s;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    &.opened {
+      transform: translateX(0);
+    }
+  }
+
+  .bg-navigation {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0 0 0 / 60%);
+    z-index: 4;
+    left: 0;
+    visibility: visible;
+    transition: 0.4s;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    &.hide {
+      visibility: hidden;
+      background-color: transparent;
+    }
+  }
 }

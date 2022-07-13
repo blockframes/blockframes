@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -35,7 +34,6 @@ import { MatBadgeModule } from '@angular/material/badge';
   exports: [DashboardComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
     RouterModule,
     ReactiveFormsModule,
     AuthWidgetModule,

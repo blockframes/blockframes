@@ -6,18 +6,16 @@ layout-marketplace aside {
     flex-direction: column;
   }
 
-  &.closed {
-    .mat-list-base .mat-list-item .mat-list-text {
+  @include layout-bp(gt-xs) {
+    &:not(.opened) auth-sidenav,
+    &.opened auth-sidenav {
       display: none;
     }
-  }
 
-  @include layout-bp(gt-xs) {
-    &:not(.closed) auth-sidenav,
-    &:not(.closed) auth-sidenav-widget,
-    &.closed auth-sidenav,
-    &.closed auth-sidenav-widget {
-      display: none;
+    &:not(.opened) {
+      .mat-list-base .mat-list-item .mat-list-text {
+        display: none;
+      }
     }
   }
 }

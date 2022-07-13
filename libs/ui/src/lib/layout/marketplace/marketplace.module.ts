@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
@@ -31,7 +30,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     // Angular
     CommonModule,
     RouterModule,
-    FlexLayoutModule,
     ScrollingModule,
     AppLogoModule,
     AppLogoIconModule,

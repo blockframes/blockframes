@@ -1,20 +1,24 @@
-<aside [ngClass]="{ closed: !showNavigation }">
+<div class="bg-navigation" [ngClass]="{ hide: !showNavigation }" (click)="toggleNavigation()"></div>
+<aside [ngClass]="{ opened: showNavigation }">
   <mat-toolbar>
-    <a app-logo routerLink="." [ngClass]="{ hide: !showNavigation}"></a>
-    <a app-logo-icon routerLink="." [ngClass]="{ hide: showNavigation}"></a>
+    <a app-logo routerLink="."></a>
+    <a app-logo-icon routerLink="."></a>
+    <button test-id="menu" mat-icon-button (click)="toggleNavigation()">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </button>
   </mat-toolbar>
-  <ng-content select="marketplace-aside" ></ng-content>
+  <ng-content select="marketplace-aside"></ng-content>
 </aside>
 
-<div id="marketplace-content" fxLayout="column" [appContainer]="app" (toggle)="openNavigation()">
+<div id="marketplace-content" [appContainer]="app" (toggle)="toggleNavigation()">
   <!-- TOOLBAR -->
   <app-bar #app>
-    <header fxLayout fxLayoutAlign="space-between center">
-      <button test-id="menu" mat-icon-button (click)="openNavigation()">
+    <header>
+      <button test-id="menu" mat-icon-button (click)="toggleNavigation()">
         <mat-icon svgIcon="menu"></mat-icon>
       </button>
       <ng-content select="header"></ng-content>
-      <a fxHide.xs test-id="heart-icon" mat-icon-button routerLink="wishlist" matTooltip="Wishlist">
+      <a test-id="heart-icon" mat-icon-button routerLink="wishlist" matTooltip="Wishlist">
         <mat-icon svgIcon="favorite"
           [matBadge]="wishlistCount$ | async"
           [matBadgeHidden]="(wishlistCount$ | async) === 0"
@@ -22,8 +26,8 @@
           matBadgeSize="small">
         </mat-icon>
       </a>
-      <div fxLayout="row" fxLayoutGap="24px">
-        <mat-divider fxHide.xs vertical></mat-divider>
+      <div>
+        <mat-divider vertical></mat-divider>
         <!-- Invitations -->
         <a mat-icon-button routerLink="invitations" test-id="invitations-link" matTooltip="Invitations">
           <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
@@ -43,13 +47,13 @@
             <mat-icon svgIcon="notifications"></mat-icon>
           </ng-template>
         </a>
-        <auth-widget fxHide.xs></auth-widget>
+        <auth-widget></auth-widget>
       </div>
     </header>
   </app-bar>
 
   <!-- CONTENT -->
-  <main fxFlex cdkScrollable>
+  <main cdkScrollable>
     <div class="page" [@routeAnimation]="animationOutlet(outlet)">
       <router-outlet #outlet="outlet" (activate)="scrollToTop()"></router-outlet>
     </div>

@@ -1,5 +1,4 @@
 ﻿import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
 import { AsideModule } from './layout/aside/aside.module';
 import { MarketplaceComponent } from './marketplace.component';
@@ -95,7 +94,6 @@ const routes: Routes = [{
     RouterModule.forChild(routes),
     // Angular
     CommonModule,
-    FlexLayoutModule,
     MarketplaceLayoutModule,
     AsideModule,
     OrgAccessModule,

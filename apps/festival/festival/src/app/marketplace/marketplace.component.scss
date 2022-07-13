@@ -8,6 +8,19 @@
 
 header {
   margin: 0 24px;
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
+  align-content: center;
+
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    gap: 24px;
+  }
 }
 
 .festival-logo {
@@ -24,7 +37,9 @@ header {
 }
 
 @include layout-bp(xs) {
-  .link-to-app {
+  .link-to-app,
+  a[mat-button],
+  a[mat-button-icon] {
     display: none;
   }
 }

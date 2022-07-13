@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
@@ -231,7 +230,6 @@ const routes: Routes = [{
   declarations: [DashboardComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
     DashboardLayoutModule,
     ImageModule,
     ToLabelModule,

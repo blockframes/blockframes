@@ -34,7 +34,7 @@ export class MarketplaceComponent implements OnInit {
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable;
-  @HostBinding('class.closed') closed = false;
+  @HostBinding('class.opened') opened = true;
 
   constructor(
     private orgService: OrganizationService,
@@ -52,6 +52,9 @@ export class MarketplaceComponent implements OnInit {
       switchMap((movieIds) => this.movieService.getValue(movieIds)),
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(this.app)).length)
     );
+
+    // Hide navigation on screen <= 599 (xs)
+    if (window.innerWidth <= 599) this.showNavigation = false;
   }
 
   scrollToTop() {
@@ -65,7 +68,7 @@ export class MarketplaceComponent implements OnInit {
     return outlet?.activatedRouteData?.animation;
   }
 
-  openNavigation() {
+  toggleNavigation() {
     this.showNavigation = !this.showNavigation;
   }
 }
