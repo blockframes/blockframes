@@ -6,8 +6,6 @@ const { storageBucket } = env.firebase();
 
 /**
  * Update movie documents
- * @param db
- * @returns
  */
 export async function upgrade(db: Firestore, storage: Storage) {
   const movies = await db.collection('movies').get();
@@ -17,6 +15,7 @@ export async function upgrade(db: Firestore, storage: Storage) {
     return title === 'screener' || title === 'screening';
   };
   const field = 'promotional.videos.publicScreener';
+  const bucket = storage.bucket(storageBucket);
 
   return runChunks(movies.docs, async (doc) => {
     const movie = doc.data() as Movie;
@@ -25,7 +24,6 @@ export async function upgrade(db: Firestore, storage: Storage) {
     if (!otherVideos?.some(isPublicScreener)) return;
 
     const publicScreener = otherVideos.find(isPublicScreener);
-    const bucket = storage.bucket(storageBucket);
 
     const beforePath = publicScreener.storagePath;
     const afterPath = beforePath.replace('promotional.videos.otherVideos', field);
