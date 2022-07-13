@@ -196,7 +196,7 @@ export class TermFormComponent implements OnInit {
       await this.contractService.add(newMandate);
     } else {
       const termIds = [...mandate.termIds, ...newTermIds];
-      await this.contractService.update(mandate.id, { termIds }).catch(err => console.log({ err }));
+      await this.contractService.update(mandate.id, { termIds });
     }
 
     //@dev firestore rules impose creating the contract before it's terms.
