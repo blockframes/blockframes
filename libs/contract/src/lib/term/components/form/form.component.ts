@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Inject,
   Input,
   OnInit,
   ViewChild,
@@ -19,7 +18,7 @@ import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { TermService } from '@blockframes/contract/term/service';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { App, createMandate, createTerm, Scope, Term } from '@blockframes/model';
+import { createMandate, createTerm, Scope, Term } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { centralOrgId } from '@env';
@@ -30,9 +29,6 @@ import {
 } from 'rxjs';
 
 import { where } from 'firebase/firestore';
-import { PermissionsService } from '@blockframes/permissions/service';
-import { UserService } from '@blockframes/user/service';
-import { APP } from '@blockframes/utils/routes/utils';
 
 const mandateQuery = (titleId: string, orgId: string) => [
   where('titleId', '==', titleId),
@@ -108,7 +104,7 @@ export class TermFormComponent implements OnInit {
     private dialog: MatDialog,
     private orgService: OrganizationService,
     private route: ActivatedRoute,
-    private router: Router,
+    private router: Router
   ) { }
 
   async ngOnInit() {
