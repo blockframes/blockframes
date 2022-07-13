@@ -203,8 +203,8 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   load(parsedData: { search: MovieSearch, avails: AvailsFilter }) {
-    parsedData.avails.duration.from = new Date(parsedData.avails.duration.from);
-    parsedData.avails.duration.to = new Date(parsedData.avails.duration.to);
+    if (parsedData.avails?.duration?.from) parsedData.avails.duration.from = decodeDate(parsedData.avails.duration.from);
+    if (parsedData.avails?.duration?.to) parsedData.avails.duration.to = decodeDate(parsedData.avails.duration.to);
     this.availsForm.patchValue(parsedData.avails);
     this.patchSearchValues(parsedData.search);
   }
