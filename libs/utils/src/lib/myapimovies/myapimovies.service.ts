@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { createCredit, createMovie, Credit, Genre, Language, Territory } from '@blockframes/model';
+import { createCredit, createMovie, createMovieAppConfig, Credit, Genre, Language, Territory } from '@blockframes/model';
+import { MovieService } from '@blockframes/movie/service';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { getKeyIfExists } from '../helpers';
 
@@ -46,8 +47,11 @@ const genreMap: Record<string, Genre> = {
   Thriller: 'thriller',
   Drama: 'drama',
   Romance: 'romance',
-  Comedy: 'comedy'
+  Comedy: 'comedy',
+  Action: 'action',
+  Crime: 'crime',
 };
+
 
 @Injectable({ providedIn: 'root' })
 export class MyapimoviesService {
@@ -58,7 +62,10 @@ export class MyapimoviesService {
    */
   private api = 'https://www.myapimovies.com/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private titleService: MovieService,
+    private http: HttpClient,
+  ) { }
 
   private token = '';
 
@@ -68,15 +75,25 @@ export class MyapimoviesService {
   }
 
   private async movie(imdbId: string): Promise<MyapimoviesMovie | MyapimoviesSerie> {
-    const { data } = await this.query<{ data: MyapimoviesMovie | MyapimoviesSerie, code: number }>(`/v1/movie/${imdbId}`);
-    switch (data.type) {
-      case 'M':
-        return data as MyapimoviesMovie;
-      case 'S':
-        return data as MyapimoviesSerie;
-      default:
-        throw new Error('Unhandled content type');
+    try {
+      const { data } = await this.query<{ data: MyapimoviesMovie | MyapimoviesSerie, code: number }>(`/v1/movie/${imdbId}`);
+      switch (data.type) {
+        case 'M':
+          return data as MyapimoviesMovie;
+        case 'S':
+          return data as MyapimoviesSerie;
+        default:
+          throw new Error('Unhandled content type');
+      }
+    } catch (error) {
+      if (error.error?.error) {
+        console.log(`Error while importing movie: ${imdbId}: ${error.error.error}`);
+      } else {
+        console.log(`Error while importing movie: ${imdbId}`);
+        console.log(error)
+      }
     }
+
   }
 
   private async genres(imdbId: string): Promise<Genre[]> {
@@ -109,21 +126,43 @@ export class MyapimoviesService {
   }
 
   private async countries(imdbId: string): Promise<Territory[]> {
-    const { data } = await this.query<{ data: { country: string }[], code: number }>(`/v1/movie/${imdbId}/countries`);
-    return data.map(d => {
-      const country = getKeyIfExists('territories', d.country) || getKeyIfExists('territoriesISOA3', d.country);
-      if (!country) console.log(`Unknown territory ${d.country}`);
-      else return country;
-    }).filter(d => !!d);
+    try {
+      const { data } = await this.query<{ data: { country: string }[], code: number }>(`/v1/movie/${imdbId}/countries`);
+      return data.map(d => {
+        if (d.country === 'UK') d.country = 'GBR';
+  
+        const country = getKeyIfExists('territories', d.country) || getKeyIfExists('territoriesISOA3', d.country);
+        if (!country) console.log(`Unknown territory ${d.country}`);
+        else return country;
+      }).filter(d => !!d);
+    } catch (error) {
+      if (error.error?.error) {
+        console.log(`Error while importing countries: ${imdbId}: ${error.error.error}`);
+      } else {
+        console.log(`Error while importing countries: ${imdbId}`);
+        console.log(error)
+      }
+    }
+
   }
 
   private async languages(imdbId: string): Promise<Language[]> {
-    const { data } = await this.query<{ data: { language: string }[], code: number }>(`/v1/movie/${imdbId}/languages`);
-    return data.map(d => {
-      const language = getKeyIfExists('languages', d.language);
-      if (!language) console.log(`Unknown language ${d.language}`);
-      else return language;
-    }).filter(d => !!d);
+    try {
+      const { data } = await this.query<{ data: { language: string }[], code: number }>(`/v1/movie/${imdbId}/languages`);
+      return data.map(d => {
+        const language = getKeyIfExists('languages', d.language);
+        if (!language) console.log(`Unknown language ${d.language}`);
+        else return language;
+      }).filter(d => !!d);
+    } catch (error) {
+      if (error.error?.error) {
+        console.log(`Error while importing languages: ${imdbId}: ${error.error.error}`);
+      } else {
+        console.log(`Error while importing languages: ${imdbId}`);
+        console.log(error)
+      }
+    }
+
   }
 
   private async actors(imdbId: string) {
@@ -159,8 +198,12 @@ export class MyapimoviesService {
 
   public async createTitle(imdbId: string) {
     const title = await this.movie(imdbId);
+    if (!title) return;
+
     if (title.type === 'M') {
       const movie = await this.createMovie(title);
+      //const newMovie = await this.titleService.create(movie);
+      //console.log(` movie "${movie.title.original}" created, id ${newMovie.id}`);
     } else if (title.type === 'S') {
       const seasons = await this.seasons(imdbId);
       seasons.forEach(async s => {
@@ -181,14 +224,16 @@ export class MyapimoviesService {
       //this.actors(title.imdbId),
     ]);
 
-    console.log(crew)
-
     const movie = createMovie({});
     movie.contentType = 'movie';
+    movie.productionStatus = 'released';
+    movie.app = createMovieAppConfig();
+    movie.app.catalog.access = true;
 
     movie.title.international = title.title;
     movie.title.original = title.originalTitle;
     movie.release.year = +title.year;
+    movie.release.status = 'confirmed';
     movie.synopsis = title.plot;
     movie.keywords = keywords.map(k => k.keywords);
     movie.genres = genres;
@@ -197,13 +242,11 @@ export class MyapimoviesService {
 
     movie.directors = crew.filter(c => c.type === 'DIRECTOR').map(c => c.credit);
 
+    movie.runningTime.status = 'confirmed';
+    movie.runningTime.time = +title.runtime.replace('min', '').trim();
+
     console.log(movie);
-
-    //movie.runningTime =
-
-
-
-
+    return movie;
   }
 
   private createSerie(title: MyapimoviesSerie, season: { numSeason: number, year: number, episodes: number }) {
