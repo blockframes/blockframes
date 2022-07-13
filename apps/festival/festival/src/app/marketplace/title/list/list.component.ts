@@ -5,7 +5,6 @@ import {
   OnDestroy,
   AfterViewInit,
   Inject,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -47,7 +46,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private snackbar: MatSnackBar,
     private pdfService: PdfService,
-    private cdRef: ChangeDetectorRef,
     @Inject(APP) public app: App,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');

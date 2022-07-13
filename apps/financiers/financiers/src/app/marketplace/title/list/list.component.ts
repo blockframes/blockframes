@@ -48,7 +48,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private snackbar: MatSnackBar,
     private pdfService: PdfService,
-    private cdRef: ChangeDetectorRef,
     @Inject(APP) public app: App,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
@@ -117,7 +116,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.subs.forEach(element => element.unsubscribe());
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   async export(movies: AlgoliaMovie[]) {
