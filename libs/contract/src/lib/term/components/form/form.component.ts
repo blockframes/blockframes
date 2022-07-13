@@ -82,7 +82,8 @@ export class TermFormComponent implements OnInit {
     switchMap((id: string) => {
       if (!id) return this.getMandateFromTitleAndOrg();
       return this.contractService.valueChanges(id);
-    })
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   private terms$ = this.mandates$.pipe(
