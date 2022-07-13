@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy, Inject, HostBinding } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { FormControl } from '@angular/forms';
@@ -62,13 +62,14 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   );
 
   public movieIndex: string;
-  public showNavigation = false;
+  public showNavigation = true;
 
   /**MovieAlgoliaResult Algolia search results */
   public algoliaSearchResults$: Observable<SearchResult[]>;
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable;
+  @HostBinding('class.opened') opened = true;
 
   constructor(
     private breakpointsService: BreakpointsService,
@@ -83,13 +84,16 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     this.sub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => this.cdkScrollable.scrollTo({ top: 0 }))
+
+    // Hide navigation on screen <= 599 (xs)
+    if (window.innerWidth <= 599) this.showNavigation = false;
   }
 
   ngOnDestroy() {
     if (this.sub) { this.sub.unsubscribe(); }
   }
 
-  openNavigation() {
+  toggleNavigation() {
     this.showNavigation = !this.showNavigation;
   }
 }

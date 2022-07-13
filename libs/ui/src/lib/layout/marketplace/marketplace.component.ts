@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, Inject, HostBinding } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { CdkScrollable } from '@angular/cdk/overlay';
@@ -30,9 +30,11 @@ export class MarketplaceComponent implements OnInit {
   public wishlistCount$: Observable<number>;
   public notificationCount$ = this.notificationService.myNotificationsCount$;
   public invitationCount$ = this.invitationService.invitationCount();
+  public showNavigation = true;
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable;
+  @HostBinding('class.closed') closed = false;
 
   constructor(
     private orgService: OrganizationService,
@@ -56,7 +58,6 @@ export class MarketplaceComponent implements OnInit {
     /* When the component is init, the cdk is not ready yet */
     if (this.cdkScrollable) {
       this.cdkScrollable.scrollTo({ top: 0 });
-      this.sidenav.close();
     }
   }
 
@@ -64,12 +65,8 @@ export class MarketplaceComponent implements OnInit {
     return outlet?.activatedRouteData?.animation;
   }
 
-  onAppLogoClick() {
-    if (this.router.url === '/c/o/marketplace/home') {
-      this.cdkScrollable.scrollTo({ top: 0 });
-    } else {
-      this.router.navigate(['/c/o/marketplace/home']);
-    }
+  openNavigation() {
+    this.showNavigation = !this.showNavigation;
   }
 }
 

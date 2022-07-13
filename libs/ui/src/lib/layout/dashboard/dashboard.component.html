@@ -1,31 +1,30 @@
-<div id="dashboard-aside" class="dark-theme mat-drawer mat-drawer-side mat-drawer-opened">
-  <mat-toolbar fxLayout fxLayoutAlign="space-between center">
-    <a app-logo routerLink="." *ngIf="showNavigation"></a>
-    <a routerLink="." *ngIf="!showNavigation" class="logo">
-      <img asset="archipel_market_solo.svg" alt="Archipel Market">
-    </a>
+<div class="bg-navigation" [ngClass]="{ hide: !showNavigation }" (click)="toggleNavigation()"></div>
+<aside [ngClass]="{ opened: showNavigation }">
+  <mat-toolbar>
+    <a app-logo routerLink="."></a>
+    <a app-logo-icon routerLink="."></a>
+    <button test-id="menu" mat-icon-button (click)="toggleNavigation()">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </button>
   </mat-toolbar>
-  <ng-content *ngIf="showNavigation" select="aside.show"></ng-content>
-  <ng-content *ngIf="!showNavigation" select="aside.hidden"></ng-content>
-</div>
+  <ng-content ></ng-content>
+</aside>
 
-<div id="dashboard-content" fxLayout="column" [appContainer]="app">
+<div id="dashboard-content" [appContainer]="app" (toggle)="toggleNavigation()">
   <!-- TOOLBAR -->
   <app-bar #app>
-    <header fxLayout fxLayoutAlign="space-between center">
-      <!-- TODO: ICI TOOGLE NAVIGATIO sur Click -->
-      <button mat-icon-button test-id="menu" (click)="openNavigation()">
+    <header>
+      <button mat-icon-button test-id="menu" (click)="toggleNavigation()">
         <mat-icon svgIcon="menu"></mat-icon>
       </button>
-      <div fxLayout="row" fxLayoutGap="24px">
+      <div>
         <ng-container *ngIf="currentApp === 'festival' || currentApp === 'catalog'">
-          <a fxHide.xs mat-button class="link-to-app" color="primary" [href]="appBridge[currentApp].link"
-            target="_blank">
+          <a mat-button class="link-to-app" color="primary" [href]="appBridge[currentApp].link" target="_blank">
             <mat-icon [svgIcon]="appBridge[currentApp].logo"></mat-icon>
             <span>{{appBridge[currentApp].text}}</span>
           </a>
         </ng-container>
-        <mat-divider vertical fxHide.xs></mat-divider>
+        <mat-divider vertical></mat-divider>
         <!-- Invitations -->
         <a mat-icon-button routerLink="invitations" test-id="invitations-link">
           <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
@@ -44,13 +43,13 @@
             <mat-icon svgIcon="notifications"></mat-icon>
           </ng-template>
         </a>
-        <auth-widget fxHide.xs></auth-widget>
+        <auth-widget></auth-widget>
       </div>
     </header>
   </app-bar>
 
   <!-- CONTENT -->
-  <main cdkScrollable fxFlex class="page" fxLayout="column" fxLayoutAlign="space-between space-between">
+  <main cdkScrollable>
     <div>
       <router-outlet></router-outlet>
     </div>

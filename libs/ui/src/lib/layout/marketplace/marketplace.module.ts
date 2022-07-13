@@ -10,6 +10,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { AppLogoModule } from '../app-logo/app-logo.module';
+import { AppLogoIconModule } from '../app-logo-icon/app-logo-icon.module';
 import { FooterModule } from '../footer/footer.module';
 
 // Material
@@ -33,6 +34,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FlexLayoutModule,
     ScrollingModule,
     AppLogoModule,
+    AppLogoIconModule,
     FooterModule,
 
     // Material

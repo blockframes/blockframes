@@ -1,3 +1,23 @@
-:host {
-  display: block;
+@import "@angular/flex-layout/mq";
+
+layout-marketplace aside {
+  mat-nav-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &.closed {
+    .mat-list-base .mat-list-item .mat-list-text {
+      display: none;
+    }
+  }
+
+  @include layout-bp(gt-xs) {
+    &:not(.closed) auth-sidenav,
+    &:not(.closed) auth-sidenav-widget,
+    &.closed auth-sidenav,
+    &.closed auth-sidenav-widget {
+      display: none;
+    }
+  }
 }

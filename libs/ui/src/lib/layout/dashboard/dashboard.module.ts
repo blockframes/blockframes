@@ -13,6 +13,7 @@ import { DashboardComponent } from './dashboard.component';
 
 import { AppBarModule } from '../../app-bar';
 import { AppLogoModule } from '../app-logo/app-logo.module';
+import { AppLogoIconModule } from '../app-logo-icon/app-logo-icon.module';
 import { FooterModule } from '../footer/footer.module';
 
 // Widgets
@@ -43,6 +44,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     AppBarModule,
     ScrollingModule,
     AppLogoModule,
+    AppLogoIconModule,
     FooterModule,
     UploadWidgetModule,
 

@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@import "@angular/flex-layout/mq";
 
 :host {
   display: flex;
@@ -6,17 +7,19 @@
   height: 100%;
 }
 
-.logo {
-  height: clamp(32px, 5vw, 48px);
-  display: block;
-}
-
-#dashboard-aside {
+aside {
   height: 100%;
   display: flex;
   flex-direction: column;
-  aside {
-    flex: 1;
+  flex: 1;
+  border-right: solid 1px var(--foreground-divider);
+  background-color: var(--background-card);
+  color: var(--foreground-text);
+
+  mat-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 
@@ -28,17 +31,34 @@ mat-sidenav-container {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
   header {
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
 
     a {
       align-self: center;
+    }
+    div {
+      display: flex;
+      flex-direction: row;
+      gap: 24px;
     }
   }
   main {
     height: 100%;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+    align-content: space-between;
+    align-items: space-between;
 
     .page {
       min-height: calc(100% - 140px); /** 140px : bf-footer height . This will need an update if footer height is changed **/
@@ -53,4 +73,68 @@ mat-sidenav-container {
 .link-to-app {
   padding: 4px 12px;
   @include mat.elevation(2);
+}
+
+@include layout-bp(gt-xs) {
+  a.hide,
+  aside button {
+    display: none;
+  }
+
+  aside {
+    a[app-logo-icon] {
+      display: block;
+    }
+    a[app-logo] {
+      display: none;
+    }
+
+    &.opened {
+      a[app-logo-icon] {
+        display: none;
+      }
+      a[app-logo] {
+        display: block;
+      }
+    }
+  }
+}
+
+@include layout-bp(xs) {
+  .link-to-app,
+  mat-divider,
+  auth-widget,
+  a[app-logo-icon] {
+    display: none;
+  }
+
+  aside {
+    transform: translateX(-100%);
+    position: absolute;
+    top: 0;
+    z-index: 8;
+    transition: transform 0.4s;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    &.opened {
+      transform: translateX(0);
+    }
+  }
+
+  .bg-navigation {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0 0 0 / 60%);
+    z-index: 4;
+    left: 0;
+    visibility: visible;
+    transition: 0.4s;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    &.hide {
+      visibility: hidden;
+      background-color: transparent;
+    }
+  }
 }

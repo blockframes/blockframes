@@ -1,14 +1,45 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: row;
   height: 100%;
+}
+
+a.hide {
+  display: none;
+}
+
+.logo {
+  height: clamp(32px, 5vw, 48px);
+  display: block;
+  
+  img {
+    height: 100%;
+  }
+}
+
+aside {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border-right: solid 1px var(--foreground-divider);
+  background-color: var(--background-card);
+  color: var(--foreground-text);
+
+  mat-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 mat-sidenav-container {
   height: 100%;
 }
 
-mat-sidenav-content {
+#marketplace-content {
   height: 100%;
+  width: 100%;
   overflow: hidden;
 
   header {
