@@ -69,6 +69,7 @@ export const icons = [
   { name: 'fullscreen_exit', url: 'assets/icons/fullscreen_exit.svg' },
   { name: 'GBP', url: 'assets/icons/GBP.svg' },
   { name: 'group', url: 'assets/icons/group.svg' },
+  { name: 'help', url: 'assets/icons/help.svg' },
   { name: 'home', url: 'assets/icons/home.svg' },
   { name: 'how_to_reg', url: 'assets/icons/how_to_reg.svg' },
   { name: 'image', url: 'assets/icons/image.svg' },
