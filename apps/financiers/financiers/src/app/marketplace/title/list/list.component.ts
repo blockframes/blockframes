@@ -13,12 +13,11 @@ import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service'
-import type { App, StoreStatus } from '@blockframes/model';
+import type { StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie } from '@blockframes/model';
 import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
-import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'financiers-marketplace-title-list',
@@ -48,8 +47,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private snackbar: MatSnackBar,
     private pdfService: PdfService,
-    private cdRef: ChangeDetectorRef,
-    @Inject(APP) public app: App,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }

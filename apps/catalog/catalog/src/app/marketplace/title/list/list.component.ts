@@ -27,7 +27,6 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch, Versions } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
-import { APP } from '@blockframes/utils/routes/utils';
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 
 @Component({
@@ -54,14 +53,13 @@ export class ListComponent implements OnDestroy, OnInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-    public route: ActivatedRoute,
+    private route: ActivatedRoute,
     private contractService: ContractService,
     private termService: TermService,
     private snackbar: MatSnackBar,
     private bucketService: BucketService,
     private router: Router,
     private pdfService: PdfService,
-    @Inject(APP) public app: App,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }

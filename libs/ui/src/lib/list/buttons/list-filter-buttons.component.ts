@@ -38,12 +38,12 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
   constructor(
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
-    @Inject(APP) public app: App,
+    @Inject(APP) private app: App,
   ) { }
 
 
   ngOnInit() {
-    this.queryParamsSub = this.route.queryParams.subscribe(_ => this.setButtonsState(this.app, this.buttonsState))
+    this.queryParamsSub = this.route.queryParams.subscribe(() => this.setButtonsState())
   }
 
   ngOnDestroy() {
@@ -52,7 +52,7 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
   save() {
     const routeParams = decodeUrl(this.route);
     localStorage.setItem(`${this.app}-${this.savedSearchIdentifier}`, JSON.stringify(routeParams));
-    this.setButtonsState(this.app, this.buttonsState);
+    this.setButtonsState();
   }
 
   load() {
@@ -61,11 +61,11 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
     this.data.emit(parsedData);
   }
 
-  setButtonsState(app: App, buttons: FilterButtonsState) {
-    const dataStorage = localStorage.getItem(`${app}-${this.savedSearchIdentifier}`);
+  setButtonsState() {
+    const dataStorage = localStorage.getItem(`${this.app}-${this.savedSearchIdentifier}`);
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
-    if (dataStorage) buttons.save = 'active', buttons.load = 'enabled';
-    if (dataStorage === currentRouteParams) buttons.save = 'enabledAndActive', buttons.load = 'active';
+    if (dataStorage) this.buttonsState.save = 'active', this.buttonsState.load = 'enabled';
+    if (dataStorage === currentRouteParams) this.buttonsState.save = 'enabledAndActive', this.buttonsState.load = 'active';
     this.cdRef.markForCheck();
   }
 }

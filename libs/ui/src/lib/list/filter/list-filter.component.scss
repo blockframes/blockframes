@@ -13,13 +13,12 @@
 }
  /* overflow-y: hidden is used to remove the vertical scrollbar on Safari */
 section {
-  width: 80%;
+  width: 100%;
   display: flex;
   align-items: flex-start;
   overflow: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  align-items: center;
 }
 
 mat-card {
