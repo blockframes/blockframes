@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Inject,
   Input,
   OnInit,
   ViewChild,
@@ -18,21 +19,25 @@ import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { TermService } from '@blockframes/contract/term/service';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { createMandate, createTerm, Scope, Term } from '@blockframes/model';
+import { App, createMandate, createTerm, Scope, Term } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { centralOrgId } from '@env';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 import {
-  BehaviorSubject, combineLatest, distinctUntilChanged, firstValueFrom, map, shareReplay, switchMap, filter,
+  BehaviorSubject, combineLatest, distinctUntilChanged, firstValueFrom, map, shareReplay, switchMap, filter, of, pluck,
 } from 'rxjs';
 
 import { where } from 'firebase/firestore';
+import { PermissionsService } from '@blockframes/permissions/service';
+import { UserService } from '@blockframes/user/service';
+import { APP } from '@blockframes/utils/routes/utils';
 
-const mandateQuery = (titleId: string) => [
+const mandateQuery = (titleId: string, orgId: string) => [
   where('titleId', '==', titleId),
   where('type', '==', 'mandate'),
+  where('sellerId', '==', orgId)
 ];
 
 function isTermToBeUpdated(term: Partial<Term>): term is Term {
@@ -76,14 +81,20 @@ export class TermFormComponent implements OnInit {
     switchMap(id => this.titleService.valueChanges(id))
   );
 
-  private mandates$ = this.title$.pipe(
-    switchMap(title => this.contractService.valueChanges(mandateQuery(title.id))),
-    shareReplay({ bufferSize: 1, refCount: true })
+  private mandates$ = this.route.params.pipe(
+    pluck('contractId'),
+    switchMap((id: string) => {
+      if (!id) return this.getMandateFromTitleAndOrg();
+      return this.contractService.valueChanges(id);
+    })
   );
 
   private terms$ = this.mandates$.pipe(
-    map(contracts => contracts.flatMap(({ termIds }) => termIds)),
-    switchMap(termIds => this.termService.valueChanges(termIds)),
+    switchMap(mandate => {
+
+      if (mandate.termIds.length) return this.termService.valueChanges(mandate.termIds);
+      return of([]);
+    }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -97,7 +108,7 @@ export class TermFormComponent implements OnInit {
     private dialog: MatDialog,
     private orgService: OrganizationService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) { }
 
   async ngOnInit() {
@@ -116,8 +127,34 @@ export class TermFormComponent implements OnInit {
     this.dialog.open(DetailedTermsComponent, data);
   }
 
+  getMandateFromTitleAndOrg() {
+    return combineLatest([
+      this.orgService.currentOrg$,
+      this.title$
+    ])
+      .pipe(
+        switchMap(([org, title]) => {
+          const query = mandateQuery(title.id, org.id);
+          return this.contractService.valueChanges(query);
+        }),
+        map(([mandate]) => mandate),
+      );
+  }
+
   async saveAvails() {
-    const existingTerms = await firstValueFrom(this.terms$);
+
+    const data$ = combineLatest([
+      this.title$,
+      this.orgService.currentOrg$,
+      this.mandates$,
+      this.terms$,
+    ]);
+    const [
+      { id: titleId },
+      { id: orgId },
+      mandate,
+      existingTerms
+    ] = await firstValueFrom(data$);
 
     const allTerms = this.form.value.terms.map(({ duration: { from, to }, ...rest }) => {
       from.setHours(2, 0, 0, 0);
@@ -141,31 +178,32 @@ export class TermFormComponent implements OnInit {
       return;
     };
 
-    const contractId = this.contractService.createId();
+    const contractId = mandate?.id || this.contractService.createId();
     const terms = toCreate.map(term => createTerm({
       ...term,
       licensedOriginal: true,
       contractId,
       id: this.termService.createId()
     }));
-    const termIds = terms.map(({ id }) => id);
-    const data$ = combineLatest([
-      this.title$,
-      this.orgService.currentOrg$,
-    ]);
-    const [{ id: titleId }, { id: orgId }] = await firstValueFrom(data$);
+    const newTermIds = terms.map(({ id }) => id);
 
-    const mandate = createMandate({
-      status: 'accepted',
-      id: contractId,
-      titleId,
-      termIds,
-      sellerId: orgId,
-      stakeholders: [centralOrgId.catalog, orgId]
-    });
+    if (!mandate) {
+      const newMandate = createMandate({
+        status: 'accepted',
+        id: contractId,
+        titleId,
+        termIds: newTermIds,
+        sellerId: orgId,
+        buyerId: centralOrgId.catalog,
+        stakeholders: [centralOrgId.catalog, orgId]
+      });
+      await this.contractService.add(newMandate).catch(err => console.log({ err }));
+    } else {
+      const termIds = [...mandate.termIds, ...newTermIds];
+      await this.contractService.update(mandate.id, { termIds });
+    }
 
     //@dev firestore rules impose creating the contract before it's terms.
-    await this.contractService.add(mandate);
     await this.termService.add(terms);
     const message = toUpdate.length
       ? `${toUpdate.length} Term(s) updated and ${toCreate.length} Term(s) created.`
