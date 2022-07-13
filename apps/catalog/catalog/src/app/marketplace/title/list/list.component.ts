@@ -4,7 +4,6 @@ import {
   Component,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  Inject,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -18,13 +17,13 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareRe
 // Blockframes
 import { centralOrgId } from '@env';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie, App, GetKeys } from '@blockframes/model';
+import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie, GetKeys } from '@blockframes/model';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
 import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService } from '@blockframes/contract/contract/service';
-import { MovieSearchForm, createMovieSearch, Versions } from '@blockframes/movie/form/search.form';
+import { MovieSearchForm, createMovieSearch, Versions, MovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
@@ -120,8 +119,7 @@ export class ListComponent implements OnDestroy, OnInit {
         originCountries: search.originCountries,
         contentType: search.contentType,
         release: search.release,
-        languages: search.languages.languages,
-        versions: search.languages.versions,
+        languages: search.languages,
         minReleaseYear: search.minReleaseYear > 0 ? search.minReleaseYear : undefined,
         runningTime: search.runningTime
       },
@@ -191,7 +189,7 @@ export class ListComponent implements OnDestroy, OnInit {
     this.exporting = false;
   }
 
-  patchSearchValues(search) {
+  patchSearchValues(search: MovieSearch) {
     const languages = this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>;
     const versions = this.searchForm.languages.get('versions') as FormEntity<EntityControl<Versions>, Versions>;
 
@@ -201,13 +199,13 @@ export class ListComponent implements OnDestroy, OnInit {
     // ensure FromList are also patched
     this.searchForm.genres.patchAllValue(search?.genres);
     this.searchForm.originCountries.patchAllValue(search?.originCountries);
-    languages.patchAllValue(search?.languages);
-    versions.patchValue(search?.versions);
+    languages.patchAllValue(search?.languages.languages);
+    versions.patchValue(search?.languages.versions);
     this.searchForm.minReleaseYear.patchValue(search?.minReleaseYear);
     this.searchForm.runningTime.patchValue(search?.runningTime);
   }
 
-  public load(parsedData) {
+  load(parsedData: { search: MovieSearch, avails: AvailsFilter }) {
     parsedData.avails.duration.from = new Date(parsedData.avails.duration.from);
     parsedData.avails.duration.to = new Date(parsedData.avails.duration.to);
     this.availsForm.patchValue(parsedData.avails);

@@ -4,7 +4,6 @@ import {
   OnInit,
   ChangeDetectorRef,
   OnDestroy,
-  Inject,
   AfterViewInit
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -125,7 +124,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.exporting = false;
   }
 
-  load(parsedData) {
+  load(parsedData: MovieSearch) {
     if (parsedData && Object.keys(parsedData).length) this.searchForm.hardReset(parsedData);
   }
 }
