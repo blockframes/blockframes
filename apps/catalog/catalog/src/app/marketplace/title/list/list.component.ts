@@ -92,13 +92,10 @@ export class ListComponent implements OnDestroy, OnInit {
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
-    const {
-      search,
-      avails = {}
-    } = decodeUrl(this.route);
+    const { search, avails }: { search: MovieSearch, avails: AvailsFilter } = decodeUrl(this.route);
 
-    if (avails.duration?.from) avails.duration.from = decodeDate(avails.duration.from);
-    if (avails.duration?.to) avails.duration.to = decodeDate(avails.duration.to);
+    if (avails?.duration?.from) avails.duration.from = decodeDate(avails.duration.from);
+    if (avails?.duration?.to) avails.duration.to = decodeDate(avails.duration.to);
 
     this.patchSearchValues(search);
     this.availsForm.patchValue(avails);
@@ -199,8 +196,8 @@ export class ListComponent implements OnDestroy, OnInit {
     // ensure FromList are also patched
     this.searchForm.genres.patchAllValue(search?.genres);
     this.searchForm.originCountries.patchAllValue(search?.originCountries);
-    languages.patchAllValue(search?.languages.languages);
-    versions.patchValue(search?.languages.versions);
+    languages.patchAllValue(search?.languages?.languages);
+    versions.patchValue(search?.languages?.versions);
     this.searchForm.minReleaseYear.patchValue(search?.minReleaseYear);
     this.searchForm.runningTime.patchValue(search?.runningTime);
   }
