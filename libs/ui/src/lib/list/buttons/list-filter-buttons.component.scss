@@ -1,6 +1,9 @@
+@import "@angular/flex-layout/mq";
+
 :host {
    div {
     display: flex;
+    justify-content: center;
     padding: 14px 24px;
     button {
       margin: 0px 8px;  
@@ -8,5 +11,14 @@
         background-color: #001EC7;
       }
     } 
+  }
+}
+
+@include layout-bp(lt-sm) {
+  :host {
+    flex-direction: column;
+  }
+  div {
+    margin-top: 8px;
   }
 }

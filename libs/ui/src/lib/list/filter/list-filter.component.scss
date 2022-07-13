@@ -1,3 +1,5 @@
+@import "@angular/flex-layout/mq";
+
 ::-webkit-scrollbar {
   height: 5px;
 }
@@ -43,5 +45,14 @@ button.filter {
   &.primary {
     border-color: var(--primary);
     color: var(--primary);
+  }
+}
+
+@include layout-bp(lt-sm) {
+  :host {
+    flex-direction: column;
+  }
+  section {
+    padding-bottom: 8px;
   }
 }
