@@ -6,7 +6,6 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  Input,
   ChangeDetectorRef
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -30,14 +29,14 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
     load: 'disabled',
   }
 
-  private savedSearchIdentifier: 'saved-search'
+  private savedSearchIdentifier: 'saved-search';
   private queryParamsSub: Subscription;
 
   @Output() data: EventEmitter<string> = new EventEmitter();
 
   constructor(
     private route: ActivatedRoute,
-    private cdRef: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef,
     @Inject(APP) private app: App,
   ) { }
 
@@ -49,6 +48,7 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
   ngOnDestroy() {
     this.queryParamsSub.unsubscribe();
   }
+
   save() {
     const routeParams = decodeUrl(this.route);
     localStorage.setItem(`${this.app}-${this.savedSearchIdentifier}`, JSON.stringify(routeParams));
@@ -66,6 +66,6 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
     const currentRouteParams = this.route.snapshot.queryParams.formValue;
     if (dataStorage) this.buttonsState.save = 'active', this.buttonsState.load = 'enabled';
     if (dataStorage === currentRouteParams) this.buttonsState.save = 'enabledAndActive', this.buttonsState.load = 'active';
-    this.cdRef.markForCheck();
+    this.cdr.markForCheck();
   }
 }

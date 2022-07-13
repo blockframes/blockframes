@@ -5,7 +5,6 @@ import {
   OnDestroy,
   AfterViewInit,
   Inject,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';

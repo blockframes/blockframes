@@ -114,7 +114,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.subs.forEach(element => element.unsubscribe());
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   async export(movies: AlgoliaMovie[]) {
