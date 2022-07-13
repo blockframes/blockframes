@@ -23,7 +23,7 @@
 
 <section>
   <article>
-    <h2>Interested Users</h2>
+    <h3>Interested Users</h3>
     <p class="mat-body-1">See how many users interacted with your movie (viewed your title, added to wishlist, requested a screening, etc).</p>
   </article>
 
@@ -83,8 +83,12 @@
     </ng-template>
   </bf-table>
 
-  <h3>Vanity Metrics</h3>
-  <article class="surface vanity_metrics">
+  <article>
+    <h3>Title Performance</h3>
+    <p class="mat-body-1">Check the overall metrics of your title performance.</p>
+  </article>
+
+  <article class="surface title_performance">
     <analytics-line-chart class="surface" [eventNames]="['pageView']" [data]="titleAnalytics$ | async">
       <mat-icon svgIcon="visibility"></mat-icon>
       <h5>Film Page Views</h5>
