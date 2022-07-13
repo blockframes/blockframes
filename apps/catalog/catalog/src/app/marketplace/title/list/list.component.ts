@@ -92,8 +92,8 @@ export class ListComponent implements OnDestroy, OnInit {
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
-    const parsedSerch: { search: MovieSearch, avails: AvailsFilter } = decodeUrl(this.route);
-    this.load(parsedSerch);
+    const parsedData: { search: MovieSearch, avails: AvailsFilter } = decodeUrl(this.route);
+    this.load(parsedData);
 
     const search$ = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
