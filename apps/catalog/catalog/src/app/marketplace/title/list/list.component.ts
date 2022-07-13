@@ -92,13 +92,8 @@ export class ListComponent implements OnDestroy, OnInit {
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
-    const { search, avails }: { search: MovieSearch, avails: AvailsFilter } = decodeUrl(this.route);
-
-    if (avails?.duration?.from) avails.duration.from = decodeDate(avails.duration.from);
-    if (avails?.duration?.to) avails.duration.to = decodeDate(avails.duration.to);
-
-    this.patchSearchValues(search);
-    this.availsForm.patchValue(avails);
+    const parsedSerch: { search: MovieSearch, avails: AvailsFilter } = decodeUrl(this.route);
+    this.load(parsedSerch);
 
     const search$ = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
@@ -186,26 +181,26 @@ export class ListComponent implements OnDestroy, OnInit {
     this.exporting = false;
   }
 
-  patchSearchValues(search: MovieSearch) {
+  load(parsedData: { search: MovieSearch, avails: AvailsFilter }) {
+    // Search Form
     const languages = this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>;
     const versions = this.searchForm.languages.get('versions') as FormEntity<EntityControl<Versions>, Versions>;
 
     // patch everything
-    this.searchForm.patchValue(search);
+    this.searchForm.patchValue(parsedData.search);
 
     // ensure FromList are also patched
-    this.searchForm.genres.patchAllValue(search?.genres);
-    this.searchForm.originCountries.patchAllValue(search?.originCountries);
-    languages.patchAllValue(search?.languages?.languages);
-    versions.patchValue(search?.languages?.versions);
-    this.searchForm.minReleaseYear.patchValue(search?.minReleaseYear);
-    this.searchForm.runningTime.patchValue(search?.runningTime);
-  }
+    this.searchForm.genres.patchAllValue(parsedData.search?.genres);
+    this.searchForm.originCountries.patchAllValue(parsedData.search?.originCountries);
+    languages.patchAllValue(parsedData.search?.languages?.languages);
+    versions.patchValue(parsedData.search?.languages?.versions);
+    this.searchForm.minReleaseYear.patchValue(parsedData.search?.minReleaseYear);
+    this.searchForm.runningTime.patchValue(parsedData.search?.runningTime);
 
-  load(parsedData: { search: MovieSearch, avails: AvailsFilter }) {
+    // Avails Form
     if (parsedData.avails?.duration?.from) parsedData.avails.duration.from = decodeDate(parsedData.avails.duration.from);
     if (parsedData.avails?.duration?.to) parsedData.avails.duration.to = decodeDate(parsedData.avails.duration.to);
+
     this.availsForm.patchValue(parsedData.avails);
-    this.patchSearchValues(parsedData.search);
   }
 }
