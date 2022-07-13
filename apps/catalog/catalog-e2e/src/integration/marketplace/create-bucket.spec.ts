@@ -1,6 +1,6 @@
 ﻿/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /// <reference types="cypress" />
-
+/*
 import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 import { assertUrlIncludes } from '@blockframes/testing/cypress/browser';
 import { LandingPage } from '../../support/pages/landing';
@@ -81,3 +81,4 @@ describe.skip('Create a new bucket and finalize a new offer', () => {
     cy.get('catalog-congratulations h1', {timeout: 10 * SEC}).should('contain', 'has been successfully sent.');
   });
 });
+*/

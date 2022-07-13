@@ -1,5 +1,5 @@
 ﻿/// <reference types="cypress" />
-
+/*
 import { LandingPage } from '../../support/pages/landing';
 import { TunnelContractLobbyPage, TunnelContractPage, TunnelContractSummaryPage } from "../../support/pages/dashboard";
 import { User, USER } from '@blockframes/e2e/fixtures/users';
@@ -73,7 +73,7 @@ describe('User can fill and save contract tunnel form', () => {
 
     /* Save, reload and verify the fields
     p5.clickSave(); */
-    cy.reload();
+    /*cy.reload();
     cy.wait(5000);
 
 
@@ -97,3 +97,4 @@ describe('User can fill and save contract tunnel form', () => {
     p6.assertPackagePriceExists(PACKAGE_PRICE_SUMMARY);
   });
 });
+*/
