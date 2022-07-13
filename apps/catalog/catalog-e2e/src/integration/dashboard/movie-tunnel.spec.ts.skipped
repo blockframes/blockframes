@@ -1,6 +1,6 @@
 ﻿/// <reference types="cypress" />
 
-/*import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
+import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
 import {
   mainTest,
@@ -76,4 +76,3 @@ describe.skip('User can navigate to the movie tunnel pages start and main.', () 
     summaryTest();
   });
 });
-*/

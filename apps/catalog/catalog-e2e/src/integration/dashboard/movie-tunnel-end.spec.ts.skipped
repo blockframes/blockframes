@@ -1,5 +1,5 @@
 ﻿/// <reference types="cypress" />
-/*
+
 import { signInAndNavigateToMain } from "../../support/utils/utils";
 import { TunnelMainPage, TunnelStorylinePage, TunnelCreditsPage, TunnelSummaryPage, TitlesDetailsPage, TitlesListPage, TitlesActivityPage } from "../../support/pages/dashboard";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
@@ -65,4 +65,3 @@ describe.skip('User can navigate to the movie tunnel, complete required fields, 
     p7.assertTitleExists(TITLES[0]);
   });
 });
-*/

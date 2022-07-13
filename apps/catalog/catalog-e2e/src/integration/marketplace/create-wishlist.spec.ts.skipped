@@ -1,5 +1,5 @@
 ﻿/// <reference types="cypress" />
-/*
+
 import { HomePage, SearchPage, ViewPage, WishlistPage } from '../../support/pages/marketplace';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { acceptCookie, clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
@@ -88,7 +88,7 @@ describe.skip('Test wishlist features from library, detail page',  () => {
       // one movie got removed from likes.
       likedCount +=  (BINGE_WATCH_COUNT - MOVIE_LIST1_COUNT) - 1;
       */
-/*
+
       //5. Remove a movie from Line view
       p4.openSideNav();
       p4.clickLibrary();
@@ -106,4 +106,3 @@ describe.skip('Test wishlist features from library, detail page',  () => {
     })
   });
 });
-*/

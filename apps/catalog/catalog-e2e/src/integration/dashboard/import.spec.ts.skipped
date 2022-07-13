@@ -1,5 +1,5 @@
 ﻿/// <reference types="cypress" />
-/*
+
 import { User as UserType } from '@blockframes/e2e/utils/type';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 //TODO define proper way to import next line #8071
@@ -135,4 +135,3 @@ describe('User can import objects with Excel', () => {
     cy.logout();
   });
 });
-*/
