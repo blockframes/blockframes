@@ -1,11 +1,11 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, Inject, HostBinding } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, Inject, HostBinding, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
 // RxJs
-import { Observable } from 'rxjs';
+import { fromEvent, Observable, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 // Blockframes
@@ -25,9 +25,10 @@ import { APP } from '@blockframes/utils/routes/utils';
   animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceComponent implements OnInit {
+export class MarketplaceComponent implements OnInit, OnDestroy {
   public user$ = this.authService.profile$;
   public wishlistCount$: Observable<number>;
+  private resizeSub$: Subscription;
   public notificationCount$ = this.notificationService.myNotificationsCount$;
   public invitationCount$ = this.invitationService.invitationCount();
   public showNavigation = true;
@@ -42,7 +43,7 @@ export class MarketplaceComponent implements OnInit {
     private notificationService: NotificationService,
     private authService: AuthService,
     private movieService: MovieService,
-    private router: Router,
+    private cdRef: ChangeDetectorRef,
     @Inject(APP) private app: App
   ) { }
 
@@ -53,8 +54,17 @@ export class MarketplaceComponent implements OnInit {
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(this.app)).length)
     );
 
-    // Hide navigation on screen <= 599 (xs)
-    if (window.innerWidth <= 599) this.showNavigation = false;
+    // toggle Navigation desktop/mobile
+    this.resizeSub$ = fromEvent(window, 'resize').subscribe(_ => {
+      if (window.innerWidth <= 599 && this.showNavigation || window.innerWidth > 599 && !this.showNavigation) {
+        this.toggleNavigation();
+        this.cdRef.markForCheck();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    if (this.resizeSub$) this.resizeSub$.unsubscribe();
   }
 
   scrollToTop() {

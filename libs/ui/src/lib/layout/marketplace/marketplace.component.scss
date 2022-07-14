@@ -30,9 +30,16 @@ mat-sidenav-container {
   height: 100%;
   width: 100%;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
   header {
     width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+
 
     button:first-of-type {
       margin-right: 24px;
@@ -47,11 +54,22 @@ mat-sidenav-container {
     a {
       align-self: center;
     }
+
+    div {
+      display: flex;
+      gap: 24px;
+
+      mat-divider {
+        padding-left: 24px;
+        margin-inline: initial;
+      }
+    }
   }
 
   main {
     height: 100%;
     overflow: auto;
+    flex: 1;
 
     .page {
       min-height: calc(100% - 140px); /** 140px : bf-footer height . This will need an update if footer height is changed **/
@@ -98,10 +116,10 @@ a[app-logo] {
 }
 
 @include layout-bp(xs) {
-  .link-to-app,
   mat-divider,
   auth-widget,
-  a[app-logo-icon] {
+  a[app-logo-icon],
+  a[mat-icon-button] {
     display: none;
   }
 

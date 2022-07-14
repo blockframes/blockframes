@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy, Inject, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy, Inject, HostBinding, HostListener, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { FormControl } from '@angular/forms';
@@ -14,7 +14,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';
 
 // RxJs
-import { Observable, Subscription } from 'rxjs';
+import { fromEvent, Observable, Subscription } from 'rxjs';
 import { filter, map, shareReplay } from 'rxjs/operators';
 
 interface SearchResult {
@@ -39,6 +39,7 @@ type BridgeRecord = Partial<Record<App, AppBridge>>;
 })
 export class DashboardComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
+  private resizeSub$: Subscription;
   public searchCtrl: FormControl = new FormControl('');
   public notificationCount$ = this.notificationService.myNotificationsCount$;
   public appBridge: BridgeRecord = {
@@ -75,6 +76,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     private breakpointsService: BreakpointsService,
     private invitationService: InvitationService,
     private notificationService: NotificationService,
+    private cdRef: ChangeDetectorRef,
     private router: Router,
     @Inject(APP) public currentApp: App
   ) { }
@@ -85,12 +87,18 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => this.cdkScrollable.scrollTo({ top: 0 }))
 
-    // Hide navigation on screen <= 599 (xs)
-    if (window.innerWidth <= 599) this.showNavigation = false;
+    // toggle Navigation desktop/mobile
+    this.resizeSub$ = fromEvent(window, 'resize').subscribe(_ => {
+      if (window.innerWidth <= 599 && this.showNavigation || window.innerWidth > 599 && !this.showNavigation) {
+        this.toggleNavigation();
+        this.cdRef.markForCheck();
+      }
+    })
   }
 
   ngOnDestroy() {
-    if (this.sub) { this.sub.unsubscribe(); }
+    if (this.sub) this.sub.unsubscribe();
+    if (this.resizeSub$) this.resizeSub$.unsubscribe();
   }
 
   toggleNavigation() {
