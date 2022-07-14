@@ -18,7 +18,7 @@ import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { TermService } from '@blockframes/contract/term/service';
 import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
-import { createMandate, createTerm, Scope, Term } from '@blockframes/model';
+import { createMandate, createTerm, Mandate, Scope, Term } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { centralOrgId } from '@env';
@@ -79,19 +79,12 @@ export class TermFormComponent implements OnInit {
 
   private mandates$ = this.route.params.pipe(
     pluck('contractId'),
-    switchMap((id: string) => {
-      if (!id) return this.getMandateFromTitleAndOrg();
-      return this.contractService.valueChanges(id);
-    }),
+    switchMap((id: string) => !id ? this.getMandateFromTitleAndOrg() : this.contractService.valueChanges(id)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
   private terms$ = this.mandates$.pipe(
-    switchMap(mandate => {
-
-      if (mandate.termIds.length) return this.termService.valueChanges(mandate.termIds);
-      return of([]);
-    }),
+    switchMap(({ termIds }) => termIds.length ? this.termService.valueChanges(termIds) : of([] as Term[])),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -134,24 +127,22 @@ export class TermFormComponent implements OnInit {
           const query = mandateQuery(title.id, org.id);
           return this.contractService.valueChanges(query);
         }),
-        map(([mandate]) => mandate),
+        map(([mandate]: Mandate[]) => mandate),
       );
   }
 
   async saveAvails() {
-
-    const data$ = combineLatest([
-      this.title$,
-      this.orgService.currentOrg$,
-      this.mandates$,
-      this.terms$,
-    ]);
     const [
       { id: titleId },
       { id: orgId },
       mandate,
       existingTerms
-    ] = await firstValueFrom(data$);
+    ] = await firstValueFrom(combineLatest([
+      this.title$,
+      this.orgService.currentOrg$,
+      this.mandates$,
+      this.terms$,
+    ]));
 
     const allTerms = this.form.value.terms.map(({ duration: { from, to }, ...rest }) => {
       from.setHours(2, 0, 0, 0);

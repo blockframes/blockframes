@@ -20,7 +20,7 @@
           <button type="button" mat-icon-button (click)="edit(index)" matTooltip="Edit">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
-          <button type="button" mat-icon-button *ngIf="enableDelete || !item.id" (click)="remove(index)" matTooltip="Delete">
+          <button type="button" mat-icon-button *ngIf="!disableDelete || !item.id" (click)="remove(index)" matTooltip="Delete">
             <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </div>

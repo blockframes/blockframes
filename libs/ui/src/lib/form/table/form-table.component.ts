@@ -45,8 +45,8 @@ export class FormViewDirective { }
 export class FormTableComponent<T> implements OnInit, OnDestroy {
   @Input() columns: Record<string, string> = {};
   @Input() form: FormList<T>;
-  @Input() enableDelete = true;
   @Input() defaultFormValue: T;
+  @Input() @boolean disableDelete: boolean;
   @Input() @boolean editOnly = false;
   @Input() tablePosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
   @Input() set active(index: number) {
