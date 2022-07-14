@@ -1,7 +1,6 @@
 ﻿// Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 
 // Component
@@ -16,7 +15,6 @@ import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { OrgAccessModule } from '@blockframes/organization/pipes';
 import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
-import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 
 // Guards
 import { TunnelGuard } from '@blockframes/ui/tunnel/tunnel.guard';
@@ -150,7 +148,6 @@ const routes: Routes = [
   declarations: [DashboardComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
     DashboardLayoutModule,
     ImageModule,
     ToLabelModule,
@@ -158,7 +155,6 @@ const routes: Routes = [
     OrgAccessModule,
     RouterModule.forChild(routes),
     SidenavAuthModule,
-    SidenavWidgetModule,
 
     // Material
     MatListModule,

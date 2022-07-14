@@ -1,32 +1,28 @@
 ﻿<layout-dashboard>
-  <aside fxLayout="column" fxLayoutAlign="space-between">
-    <mat-nav-list fxFlex>
-      <a mat-list-item routerLink="home" routerLinkActive="active">
-        <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
-        <span matLine><b>Dashboard</b></span>
+  <mat-nav-list>
+    <a mat-list-item routerLink="home" routerLinkActive="active">
+      <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
+      <span matLine><b>Dashboard</b></span>
+    </a>
+    <a mat-list-item routerLink="title" routerLinkActive="active">
+      <mat-icon matListIcon svgIcon="video_library"></mat-icon>
+      <span matLine><b>My Titles</b></span>
+    </a>
+    <a mat-list-item routerLink="avails" routerLinkActive="active">
+      <mat-icon matListIcon svgIcon="calendar_today"></mat-icon>
+      <span matLine><b>My Avails</b></span>
+    </a>
+    <a mat-list-item routerLink="sales" routerLinkActive="active">
+      <mat-icon matListIcon svgIcon="document"></mat-icon>
+      <span matLine><b>My Deals</b></span>
+    </a>
+    <ng-container *ngIf="org$ | async | canAccess: 'marketplace':'catalog'">
+      <mat-divider></mat-divider>
+      <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="marketplace"></mat-icon>
+        <span matLine><b>Buyer's Platform</b></span>
       </a>
-      <a mat-list-item routerLink="title" routerLinkActive="active">
-        <mat-icon matListIcon svgIcon="video_library"></mat-icon>
-        <span matLine><b>My Titles</b></span>
-      </a>
-      <a mat-list-item routerLink="avails" routerLinkActive="active">
-        <mat-icon matListIcon svgIcon="calendar_today"></mat-icon>
-        <span matLine><b>My Avails</b></span>
-      </a>
-      <a mat-list-item routerLink="sales" routerLinkActive="active">
-        <mat-icon matListIcon svgIcon="document"></mat-icon>
-        <span matLine><b>My Deals</b></span>
-      </a>
-      <ng-container *ngIf="org$ | async | canAccess: 'marketplace':'catalog'">
-        <mat-divider></mat-divider>
-        <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">
-          <mat-icon matListIcon svgIcon="marketplace"></mat-icon>
-          <span matLine><b>Buyer's Platform</b></span>
-        </a>
-      </ng-container>
-      <auth-sidenav fxHide.gt-xs></auth-sidenav>
-    </mat-nav-list>
-
-    <auth-sidenav-widget fxHide.gt-xs></auth-sidenav-widget>
-  </aside>
+    </ng-container>
+    <auth-sidenav></auth-sidenav>
+  </mat-nav-list>
 </layout-dashboard>

@@ -1,4 +1,21 @@
-﻿:host {
-  display: block;
-  height: 100vh;
+﻿@import "@angular/flex-layout/mq";
+
+layout-dashboard aside {
+  mat-nav-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @include layout-bp(gt-xs) {
+    &:not(.opened) auth-sidenav,
+    &.opened auth-sidenav {
+      display: none;
+    }
+
+    &:not(.opened) {
+      .mat-list-base .mat-list-item .mat-list-text {
+        display: none;
+      }
+    }
+  }
 }
