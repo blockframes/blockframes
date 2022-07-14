@@ -1,9 +1,12 @@
+@import '@angular/flex-layout/mq';
+
 ::-webkit-scrollbar {
   height: 5px;
 }
 
 :host {
   width: 100%;
+  display: flex;
 
   /* Firefox scrollbar */
   section {
@@ -15,10 +18,10 @@ section {
   width: 100%;
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
   overflow: auto;
   overflow-y: hidden;
   white-space: nowrap;
+  align-items: center;
 }
 
 mat-card {
@@ -42,5 +45,14 @@ button.filter {
   &.primary {
     border-color: var(--primary);
     color: var(--primary);
+  }
+}
+
+@include layout-bp(lt-sm) {
+  :host {
+    flex-direction: column;
+  }
+  section {
+    padding-bottom: 8px;
   }
 }

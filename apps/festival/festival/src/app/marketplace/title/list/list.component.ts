@@ -43,7 +43,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute,
     private router: Router,
     private snackbar: MatSnackBar,
-    private pdfService: PdfService
+    private pdfService: PdfService,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -58,7 +58,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
         console.error(`Invalid parameter ${key} in URL`);
       }
     }
-
     const sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
       distinctUntilChanged(),
       debounceTime(500),
@@ -88,14 +87,13 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     const decodedData: MovieSearch = decodeUrl(this.route);
-    if (decodedData && Object.keys(decodedData).length) this.searchForm.hardReset(decodedData)
+    if (decodedData && Object.keys(decodedData).length) this.searchForm.hardReset(decodedData);
 
     const sub = this.searchForm.valueChanges.pipe(
       debounceTime(1000),
     ).subscribe(value => encodeUrl<MovieSearch>(this.router, this.route, value));
     this.subs.push(sub);
   }
-
 
   clear() {
     const initial = createMovieSearch({ storeStatus: [this.storeStatus] });
@@ -118,5 +116,9 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     await this.pdfService.download(movies.map(m => m.objectID));
     snackbarRef.dismiss();
     this.exporting = false;
+  }
+
+  load(parsedData: MovieSearch) {
+    if (parsedData && Object.keys(parsedData).length) this.searchForm.hardReset(parsedData);
   }
 }
