@@ -1,5 +1,4 @@
 ﻿import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -9,7 +8,6 @@ import { MarketplaceComponent } from './marketplace.component';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
-import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -84,11 +82,9 @@ const routes: Routes = [{
     RouterModule.forChild(routes),
     // Angular
     CommonModule,
-    FlexLayoutModule,
     MarketplaceLayoutModule,
     OrgAccessModule,
     SidenavAuthModule,
-    SidenavWidgetModule,
 
     // Material
     MatListModule,
