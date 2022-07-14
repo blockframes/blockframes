@@ -14,3 +14,16 @@ mat-spinner {
 nav {
   margin-bottom: 24px;
 }
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+nav, div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}

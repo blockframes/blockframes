@@ -1,7 +1,6 @@
 import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } from './utils';
 import { triggerNotifications } from '../../notification';
 import { getAdminIds } from '../../data/internals';
-import * as admin from 'firebase-admin';
 import {
   Event,
   EventMeta,
@@ -16,13 +15,13 @@ import {
   createNotification,
   getGuest,
 } from '@blockframes/model';
-import { getDocument, queryDocuments } from '@blockframes/firebase-utils';
+import { getDb, getDocument, queryDocuments } from '@blockframes/firebase-utils';
 
 /**
  * Handles notifications and emails when an invitation to an event is created.
  */
 async function onInvitationToAnEventCreate(invitation: Invitation) {
-  const db = admin.firestore();
+  const db = getDb();
   if (!invitation.eventId) {
     console.log('eventId is not defined');
     return;
@@ -206,12 +205,23 @@ export async function createNotificationsForFinishedScreenings() {
   const notifications: Notification[] = [];
 
   for (const screening of screenings) {
-    const attendees = screening.meta.attendees ? Object.keys(screening.meta.attendees) : [];
+    const attendees = Object.values(screening.meta.attendees);
+
+    const regularAttendees = attendees.filter(attendee => !attendee.isAnonymous);
+    const anonymousAttendees = attendees.filter(attendee => attendee.isAnonymous);
+
+    const regularAttendeesEmail = regularAttendees.map(attendee => attendee.email);
+    const anonymousAttendeesEmail = anonymousAttendees.map(attendee => attendee.email).filter(e => !!e);
+
     const invitations = await fetchEventInvitations(screening.id);
 
     for (const invitation of invitations) {
-      const userId = getGuest(invitation, 'user').uid;
-      const notificationType = attendees.includes(userId) ? 'userAttendedScreening' : 'userMissedScreening';
+      const userEmail = getGuest(invitation, 'user').email;
+
+      // We only focus on regular attendees for public events because we cannot match invitation.email and connected user.email
+      const attendeesEmail = screening.accessibility !== 'public' ? regularAttendeesEmail.concat(anonymousAttendeesEmail) : regularAttendeesEmail;
+
+      const notificationType = attendeesEmail.includes(userEmail) ? 'userAttendedScreening' : 'userMissedScreening';
       const [notification] = await createNotificationIfNotExists([invitation], notificationType);
       notifications.push(notification);
     }
@@ -221,7 +231,7 @@ export async function createNotificationsForFinishedScreenings() {
 
 /** Fetch event collection with a start and an end range search */
 function fetchEventStartingIn(from: number, to: number) {
-  const db = admin.firestore();
+  const db = getDb();
   const query = db.collection('events')
     .where('start', '>=', new Date(Date.now() + from))
     .where('start', '<', new Date(Date.now() + to));
@@ -231,7 +241,7 @@ function fetchEventStartingIn(from: number, to: number) {
 
 /** Fetch screenings finished since a specific time */
 async function fetchFinishedScreenings(since: number) {
-  const db = admin.firestore();
+  const db = getDb();
   const query = await db.collection('events')
     .where('type', '==', 'screening')
     .where('end', '>=', new Date(Date.now() - since))
@@ -242,7 +252,7 @@ async function fetchFinishedScreenings(since: number) {
 
 /** Fetch invitations related to an event */
 function fetchEventInvitations(eventId: string) {
-  const db = admin.firestore();
+  const db = getDb();
   return queryDocuments<Invitation>(db.collection('invitations').where('eventId', '==', eventId));
 }
 
@@ -252,7 +262,7 @@ function fetchEventInvitations(eventId: string) {
  * @param pendingInvites Set true for invitations that are pending invites (not requests)
  */
 async function fetchAttendeesToEvent(events: Event[], pendingInvites = false) {
-  const db = admin.firestore();
+  const db = getDb();
 
   const docsIds: string[] = events.map(event => event.id);
   const queries = pendingInvites
@@ -269,7 +279,7 @@ async function fetchAttendeesToEvent(events: Event[], pendingInvites = false) {
  */
 async function createNotificationIfNotExists(invitations: Invitation[], notificationType: NotificationTypes) {
   const notifications = [];
-  const db = admin.firestore();
+  const db = getDb();
 
   for (const invitation of invitations) {
     const toUserId = invitation.mode === 'request' ? invitation.fromUser.uid : invitation.toUser.uid;
@@ -300,7 +310,7 @@ async function createNotificationIfNotExists(invitations: Invitation[], notifica
  * @param email
  */
 export async function isUserInvitedToEvent(userId: string, event: Event<EventMeta>, email?: string) {
-  const db = admin.firestore();
+  const db = getDb();
 
   if (event.accessibility === 'public') return true;
 

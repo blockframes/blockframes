@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { toCards } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate, countedToAnalyticData, counter } from '@blockframes/analytics/utils';
+import { aggregate, countedToAnalyticData, counter, toCards } from '@blockframes/analytics/utils';
 import { AggregatedAnalytic, App, Organization, Analytics, User } from '@blockframes/model';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -73,7 +72,7 @@ export class BuyersAnalyticsComponent {
     @Inject(APP) public app: App
   ) { }
 
-  removeSellerData(orgs: Organization[], analytics: Analytics<"title">[], users: User[]) {
+  removeSellerData(orgs: Organization[], analytics: Analytics<'title'>[], users: User[]) {
     const buyerOrg = orgs.filter(org => !org.appAccess.festival.dashboard);
     const buyerOrgIds = buyerOrg.map(({ id }) => id);
     const buyerAnalytics = analytics.filter(({ meta }) => buyerOrgIds.includes(meta.orgId))

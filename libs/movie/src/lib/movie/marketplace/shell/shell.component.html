@@ -89,6 +89,12 @@
     <article *ngIf="hasPublicVideos(movie)" id="videoFooter"> <!-- id videoFooter is used for promotional links -->
       <h2>Videos</h2>
       <ul class="videos">
+        <ng-container *ngIf="currentApp === 'catalog' && movie.promotional.videos.publicScreener?.storagePath as video">
+          <li>
+            <video-viewer [ref]="video" *ngIf="video.jwPlayerId" (stateChange)="videoStateChanged(movie, $event)"></video-viewer>
+            <p>Screener</p>
+          </li>
+        </ng-container>
         <ng-container *ngFor="let video of movie.promotional.videos.otherVideos">
           <li *ngIf="video.privacy === 'public'">
             <video-viewer [ref]="video" *ngIf="video.jwPlayerId" (stateChange)="videoStateChanged(movie, $event)"></video-viewer>

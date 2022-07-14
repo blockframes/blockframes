@@ -17,7 +17,7 @@ export class MemberComponent implements OnInit {
 
   public org$ = this.parent.org$;
   public members$ = this.org$.pipe(
-    switchMap(org => this.orgService.getMembers(org.id, { removeConcierges: true }))
+    switchMap(org => this.orgService.getMembers(org, { removeConcierges: true }))
   );
 
   constructor(

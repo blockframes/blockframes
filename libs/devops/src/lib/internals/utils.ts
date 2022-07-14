@@ -93,7 +93,9 @@ const orgMap: Partial<Record<Collections, string[]>> = {
   ],
   invitations: [
     'fromOrg.id',
-    'toOrg.id'
+    'toOrg.id',
+    'toUser.orgId',
+    'fromUser.orgId'
   ],
   contracts: [
     'buyerId',

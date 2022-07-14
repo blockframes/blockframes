@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+header.import-header {
+  margin-bottom: 24px;
+}
+
+header[mat-tab-nav-bar] button {
+  border: none;
+  background-color: transparent;
+  span {
+    margin-left: 4px;
+  }
+}
+
+bf-table {
+  margin-top: 24px;
+}
