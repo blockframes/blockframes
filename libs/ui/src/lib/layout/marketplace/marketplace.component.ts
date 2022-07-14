@@ -55,12 +55,13 @@ export class MarketplaceComponent implements OnInit, OnDestroy {
     );
 
     // toggle Navigation desktop/mobile
+    if (window.innerWidth <= 559) this.showNavigation = false;
     this.resizeSub$ = fromEvent(window, 'resize').subscribe(_ => {
       if (window.innerWidth <= 599 && this.showNavigation || window.innerWidth > 599 && !this.showNavigation) {
         this.toggleNavigation();
         this.cdRef.markForCheck();
       }
-    })
+    });
   }
 
   ngOnDestroy() {
@@ -80,6 +81,10 @@ export class MarketplaceComponent implements OnInit, OnDestroy {
 
   toggleNavigation() {
     this.showNavigation = !this.showNavigation;
+  }
+
+  closeNavigation() {
+    this.showNavigation = false;
   }
 }
 

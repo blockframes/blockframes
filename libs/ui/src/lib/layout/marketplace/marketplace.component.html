@@ -1,4 +1,4 @@
-<div class="bg-navigation" [ngClass]="{ hide: !showNavigation }" (click)="toggleNavigation()"></div>
+<div class="bg-navigation" [ngClass]="{ hide: !showNavigation }" (click)="closeNavigation()"></div>
 <aside [ngClass]="{ opened: showNavigation }">
   <mat-toolbar>
     <a app-logo routerLink="."></a>
@@ -7,7 +7,7 @@
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </button>
   </mat-toolbar>
-  <ng-content select="marketplace-aside"></ng-content>
+  <ng-content select="marketplace-aside, mat-nav-list"></ng-content>
 </aside>
 
 <div id="marketplace-content" [appContainer]="app" (toggle)="toggleNavigation()">
