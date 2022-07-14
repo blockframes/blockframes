@@ -119,7 +119,7 @@ a[app-logo] {
   mat-divider,
   auth-widget,
   a[app-logo-icon],
-  a[mat-icon-button] {
+  header > a[mat-icon-button] {
     display: none;
   }
 

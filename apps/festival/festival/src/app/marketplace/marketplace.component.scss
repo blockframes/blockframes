@@ -38,7 +38,7 @@ header {
 
 @include layout-bp(xs) {
   .link-to-app,
-  a[mat-button-icon] {
+  a[mat-icon-button] {
     display: none;
   }
   header {

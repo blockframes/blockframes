@@ -48,7 +48,8 @@ layout-marketplace {
     header header {
       margin-inline: 0;
 
-      .link-to-app {
+      .link-to-app,
+      a[mat-icon-button] {
         display: none;
       }
     }
