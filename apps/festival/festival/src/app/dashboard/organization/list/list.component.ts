@@ -34,7 +34,7 @@ export class ListComponent implements OnDestroy {
   constructor(
     private service: OrganizationService,
     private dynTitle: DynamicTitleService
-  ) { 
+  ) {
     this.dynTitle.setPageTitle('Buyer List');
     this.orgs$ = this.orgResultsState.asObservable();
     const search = createOrganizationSearch({ appModule: ['marketplace'], hasAcceptedMovies: false });
@@ -44,16 +44,18 @@ export class ListComponent implements OnDestroy {
       distinctUntilChanged(),
       debounceTime(500),
       switchMap(() => this.searchForm.search()),
-      tap(res => this.nbHits = res.nbHits),
+      // tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
       map(results => results.map(org => org.objectID)),
       switchMap(ids => ids.length ? this.service.valueChanges(ids) : of([])),
-    ).subscribe(orgs => {
+    ).subscribe((orgs: Organization[]) => {
+      const filteredOrgs = orgs.filter(org => org.appAccess.festival.dashboard === false);
+      this.nbHits = filteredOrgs.length;
       if (this.loadMoreToggle) {
-        this.orgResultsState.next(this.orgResultsState.value.concat(orgs))
+        this.orgResultsState.next(this.orgResultsState.value.concat(filteredOrgs))
         this.loadMoreToggle = false;
       } else {
-        this.orgResultsState.next(orgs);
+        this.orgResultsState.next(filteredOrgs);
       }
       /* hitsViewed is just the current state of displayed orgs, this information is important for comparing
       the overall possible results which is represented by nbHits.
