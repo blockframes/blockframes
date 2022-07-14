@@ -1,15 +1,56 @@
 @use '@angular/material' as mat;
+@import "@angular/flex-layout/mq";
 
-:host {
+layout-marketplace {
   display: block;
   height: 100%;
-}
 
-header {
-  margin: 0 24px;
-}
+  aside {
+    mat-nav-list {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    @include layout-bp(gt-xs) {
+      &:not(.opened) auth-sidenav,
+      &.opened auth-sidenav {
+        display: none;
+      }
+  
+      &:not(.opened) {
+        .mat-list-base .mat-list-item .mat-list-text {
+          display: none;
+        }
+      }
+    }
 
-.link-to-app {
-  padding: 4px 12px;
-  @include mat.elevation(2);
+  }
+
+  header {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+    align-content: center;
+    
+    header {
+      margin-inline: 24px;
+      gap: 24px;
+    }
+  }
+
+  a[mat-button].link-to-app {
+    padding: 4px 12px;
+    @include mat.elevation(2);
+  }
+
+  @include layout-bp(xs) {
+    header header {
+      margin-inline: 0;
+
+      .link-to-app {
+        display: none;
+      }
+    }
+  }
 }

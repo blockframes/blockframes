@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { OrganizationService } from '@blockframes/organization/service';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { Observable } from 'rxjs';
@@ -10,6 +10,7 @@ import { applicationUrl } from '@blockframes/utils/apps';
   templateUrl: './marketplace.component.html',
   styleUrls: ['./marketplace.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 
 export class MarketplaceComponent {

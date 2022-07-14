@@ -1,46 +1,42 @@
 <layout-marketplace>
-  <aside>
-    <mat-nav-list>
-      <a test-id="home" mat-list-item routerLink="home" routerLinkActive="active">
-        <mat-icon mat-list-icon svgIcon="home"></mat-icon>
-        <span mat-line><b>Home</b></span>
+  <mat-nav-list>
+    <a test-id="home" mat-list-item routerLink="home" routerLinkActive="active">
+      <mat-icon mat-list-icon svgIcon="home"></mat-icon>
+      <span mat-line><b>Home</b></span>
+    </a>
+    <a test-id="library" mat-list-item routerLink="title" routerLinkActive="active">
+      <mat-icon mat-list-icon svgIcon="video_library"></mat-icon>
+      <span mat-line><b>Library</b></span>
+    </a>
+    <!-- #7243 Put back once there are enough sellers -->
+    <!-- <a test-id="sellers" mat-list-item routerLink="organization" routerLinkActive="active">
+      <mat-icon mat-list-icon svgIcon="sellers"></mat-icon>
+      <span mat-line><b>Sellers</b></span>
+    </a> -->
+    <a test-id="offers" mat-list-item routerLink="offer" routerLinkActive="active">
+      <mat-icon mat-list-icon svgIcon="document"></mat-icon>
+      <span mat-line><b>Offers & Deals</b></span>
+    </a>
+    <a test-id="selection" mat-list-item routerLink="selection" routerLinkActive="active">
+      <mat-icon mat-list-icon svgIcon="shopping_basket"></mat-icon>
+      <span mat-line><b>My Selection</b></span>
+    </a>
+    <a mat-list-item routerLink="wishlist" routerLinkActive="active">
+      <mat-icon mat-list-icon svgIcon="favorite"></mat-icon>
+      <span mat-line><b>Wishlist</b></span>
+    </a>
+    <ng-container *ngIf="org$ | async | canAccess: 'dashboard':'catalog'">
+      <mat-divider></mat-divider>
+      <a mat-list-item routerLink="/c/o/dashboard/home" routerLinkActive="active" test-id="dashboard">
+        <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
+        <span matLine><b>My Dashboard</b></span>
       </a>
-      <a test-id="library" mat-list-item routerLink="title" routerLinkActive="active">
-        <mat-icon mat-list-icon svgIcon="video_library"></mat-icon>
-        <span mat-line><b>Library</b></span>
-      </a>
-      <!-- #7243 Put back once there are enough sellers -->
-      <!-- <a test-id="sellers" mat-list-item routerLink="organization" routerLinkActive="active">
-        <mat-icon mat-list-icon svgIcon="sellers"></mat-icon>
-        <span mat-line><b>Sellers</b></span>
-      </a> -->
-      <a test-id="offers" mat-list-item routerLink="offer" routerLinkActive="active">
-        <mat-icon mat-list-icon svgIcon="document"></mat-icon>
-        <span mat-line><b>Offers & Deals</b></span>
-      </a>
-      <a test-id="selection" mat-list-item routerLink="selection" routerLinkActive="active">
-        <mat-icon mat-list-icon svgIcon="shopping_basket"></mat-icon>
-        <span mat-line><b>My Selection</b></span>
-      </a>
-      <a mat-list-item routerLink="wishlist" routerLinkActive="active">
-        <mat-icon mat-list-icon svgIcon="favorite"></mat-icon>
-        <span mat-line><b>Wishlist</b></span>
-      </a>
-      <ng-container *ngIf="org$ | async | canAccess: 'dashboard':'catalog'">
-        <mat-divider></mat-divider>
-        <a mat-list-item routerLink="/c/o/dashboard/home" routerLinkActive="active" test-id="dashboard">
-          <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
-          <span matLine><b>My Dashboard</b></span>
-        </a>
-      </ng-container>
-      <auth-sidenav fxHide.gt-xs></auth-sidenav>
-    </mat-nav-list>
-
-    <auth-sidenav-widget fxHide.gt-xs></auth-sidenav-widget>
-  </aside>
+    </ng-container>
+    <auth-sidenav></auth-sidenav>
+  </mat-nav-list>
   
-  <header fxFlex fxLayout fxLayoutAlign="end center" fxLayoutGap="24px">
-    <a fxHide.xs mat-button class="link-to-app" color="primary" [href]="applicationUrl.festival" target="_blank">        
+  <header>
+    <a mat-button class="link-to-app" color="primary" [href]="applicationUrl.festival" target="_blank">        
       <mat-icon svgIcon="mini_logo_festival"></mat-icon>
       <span>Discover Events And Line-Ups</span>
     </a>

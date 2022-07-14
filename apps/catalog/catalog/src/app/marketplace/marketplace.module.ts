@@ -3,12 +3,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MarketplaceComponent } from './marketplace.component';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
 import { OrgAccessModule } from '@blockframes/organization/pipes';
 import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
-import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 
 // Guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
@@ -113,13 +111,11 @@ const routes: Routes = [{
   imports: [
     CommonModule,
     OrgAccessModule,
-    FlexLayoutModule,
     MatListModule,
     MatIconModule,
     MatButtonModule,
     MarketplaceLayoutModule,
     SidenavAuthModule,
-    SidenavWidgetModule,
     MatBadgeModule,
     MatTooltipModule,
     RouterModule.forChild(routes)
