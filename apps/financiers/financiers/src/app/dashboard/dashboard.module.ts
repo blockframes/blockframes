@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
@@ -15,7 +14,6 @@ import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
 import { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.config';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
-import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 
 // Tunnel routes
 import { titleTunnelRoutes } from './tunnel/routes';
@@ -101,14 +99,12 @@ const routes: Routes = [{
   declarations: [DashboardComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
     DashboardLayoutModule,
     ImageModule,
     ToLabelModule,
     OrgAccessModule,
     MovieFormShellModule,
     SidenavAuthModule,
-    SidenavWidgetModule,
 
     // Material
     MatDividerModule,

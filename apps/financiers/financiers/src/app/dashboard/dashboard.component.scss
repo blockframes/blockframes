@@ -1,4 +1,22 @@
-:host {
-  display: block;
-  height: 100%;
+@import "@angular/flex-layout/mq";
+
+layout-dashboard  {
+  aside {
+    mat-nav-list {
+      flex: 1;
+    }
+  
+    @include layout-bp(gt-xs) {
+      &:not(.opened) auth-sidenav,
+      &.opened auth-sidenav {
+        display: none;
+      }
+  
+      &:not(.opened) {
+        .mat-list-base .mat-list-item .mat-list-text {
+          display: none;
+        }
+      }
+    }
+  }
 }
