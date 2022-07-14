@@ -38,8 +38,10 @@ header {
 
 @include layout-bp(xs) {
   .link-to-app,
-  a[mat-button],
   a[mat-button-icon] {
     display: none;
+  }
+  header {
+    margin: 0;
   }
 }
