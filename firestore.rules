@@ -367,7 +367,7 @@ service cloud.firestore {
         || userOrgId() == incomingData().sellerId)
         && notInMaintenance();
       allow update: if (userOrgId() in existingData().stakeholders)
-                    && onlyChange(['status', 'declineReason'])
+                    && onlyChange(['status', 'declineReason', 'termIds'])
                     && notInMaintenance();
       allow delete: if false;
 
