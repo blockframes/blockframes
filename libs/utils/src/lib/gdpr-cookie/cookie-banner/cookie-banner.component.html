@@ -1,9 +1,48 @@
-<mat-card *ngIf="!hasAccepted">
-  <mat-card-content fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center">
-    <p fxFlex="shrink">By continuing to browse this website, you are agreeing to the use of cookies, 
-      which purpose is to ensure the delivery of our services, 
-      monitor analytics and provide you with personalized content.</p>
-    <button test-id="preferences" fxFlex="1 0 auto" mat-button (click)="changePreferences()">Change Preferences</button>
-    <button test-id="cookies" fxFlex="1 0 auto" mat-flat-button color="primary" (click)="acceptCookies()">Accept Cookies</button>
-  </mat-card-content>
-</mat-card>
+<section class="surface" *ngIf="!hasAccepted">
+  <button mat-icon-button (click)="openCookieModal()">
+    <mat-icon
+      svgIcon="help"
+      matTooltip="More details">
+    </mat-icon>
+  </button>
+  <img asset="cookie.png" alt="cookie">
+
+  <p>This website uses cookies. Some of them are essential to the service, some are just here to improve your exeperience.</p>
+  <form [formGroup]="form">
+    <article>
+      <label>
+        <span>Essential</span>
+        <mat-icon
+          svgIcon="info"
+          matTooltip="Essential cookies are necessary for Archipel products to function as intended.">
+        </mat-icon>
+      </label>
+      <mat-checkbox disabled [checked]="true"></mat-checkbox>
+    </article>
+    <article>
+      <label>
+        <span>Behavioral analytics</span>
+        <mat-icon
+          svgIcon="info"
+          matTooltip="Analytical cookies help us to improve Archipel products by collecting and reporting information on their usage.">
+        </mat-icon>
+      </label>
+      <mat-checkbox color="primary" formControlName="hotjar"></mat-checkbox>
+    </article>
+    <article>
+      <label>
+        <span>Chat</span>
+        <mat-icon
+          svgIcon="info"
+          matTooltip="Chat cookies are used to allow the Archipel team to communicate with its users through the chatbot tool.">
+        </mat-icon>
+      </label>
+      <mat-checkbox color="primary" formControlName="intercom"></mat-checkbox>
+    </article>
+  </form>
+
+  <footer>
+    <button test-id="cookies" mat-flat-button color="primary" (click)="saveCookies()">Save preferences</button>
+    <button mat-button color="primary" (click)="confirmCookies()">Decline all</button>
+  </footer>
+</section>
