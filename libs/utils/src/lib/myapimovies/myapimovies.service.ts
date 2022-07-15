@@ -81,7 +81,6 @@ export class MyapimoviesService {
   ) { }
 
   public token = '';
-  // https://docs.google.com/spreadsheets/d/1cIFA_F4ilwn7AhWYk06rkyGD2RDFNmfusinjPrhGBcU/edit#gid=0
 
   public async health() {
     const { status } = await this.query<{ status: string }>(`/v1/health`);
@@ -243,7 +242,7 @@ export class MyapimoviesService {
   }
 
 
-  public async createTitle(imdbId: string) {
+  public async createTitle(imdbId: string, orgId: string) {
 
     const [existingTitle] = await this.titleService.getValue([where('internalRef', '==', imdbId)]);
 
@@ -257,6 +256,7 @@ export class MyapimoviesService {
 
     if (title.type === 'M') {
       const movie = await this.createMovie(title);
+      movie.orgIds = [orgId];
       const newMovie = await this.titleService.create(movie);
       this.logs.succes.push(`movie "${movie.title.original}" created, id ${newMovie.id}`);
     } else if (title.type === 'S') {

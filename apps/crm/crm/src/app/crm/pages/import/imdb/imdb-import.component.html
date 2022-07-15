@@ -4,9 +4,25 @@
   <section>
     <mat-form-field appearance="outline">
       <mat-label>Token</mat-label>
-      <input  matInput type="text" placeholder="Token" formControlName="token" required />
+      <input matInput type="text" placeholder="Token" formControlName="token" required />
       <mat-error *ngIf="form.get('token').hasError('required')">
         Token is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Imdb ids</mat-label>
+      <textarea matInput formControlName="imdbIds"></textarea>
+      <mat-error *ngIf="form.get('imdbIds').hasError('required')">
+        Imdb ids are <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>OrgId</mat-label>
+      <input matInput type="text" placeholder="Org Id" formControlName="orgId" required />
+      <mat-error *ngIf="form.get('orgId').hasError('required')">
+        OrgId is <strong>required</strong>
       </mat-error>
     </mat-form-field>
 
