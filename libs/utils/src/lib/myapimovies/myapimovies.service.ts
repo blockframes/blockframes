@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { createCredit, createMovie, createMovieAppConfig, Credit, Genre, Language, Territory } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
+import { where } from 'firebase/firestore';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { getKeyIfExists } from '../helpers';
 
@@ -50,8 +51,15 @@ const genreMap: Record<string, Genre> = {
   Comedy: 'comedy',
   Action: 'action',
   Crime: 'crime',
+  Horror: 'horror',
+  Mystery: 'drama',
+  'Film-Noir': 'drama',
+  'Fantasy': 'fantasy',
+  'History': 'drama',
+  'War': 'drama'
 };
 
+export type ImdbImportLogs = { error: string[], succes: string[] };
 
 @Injectable({ providedIn: 'root' })
 export class MyapimoviesService {
@@ -62,12 +70,18 @@ export class MyapimoviesService {
    */
   private api = 'https://www.myapimovies.com/api';
 
+  public logs: ImdbImportLogs = {
+    error: [],
+    succes: []
+  };
+
   constructor(
     private titleService: MovieService,
     private http: HttpClient,
   ) { }
 
-  private token = '';
+  public token = '';
+  // https://docs.google.com/spreadsheets/d/1cIFA_F4ilwn7AhWYk06rkyGD2RDFNmfusinjPrhGBcU/edit#gid=0
 
   public async health() {
     const { status } = await this.query<{ status: string }>(`/v1/health`);
@@ -87,26 +101,47 @@ export class MyapimoviesService {
       }
     } catch (error) {
       if (error.error?.error) {
-        console.log(`Error while importing movie: ${imdbId}: ${error.error.error}`);
+        this.logs.error.push(`Error while importing movie: ${imdbId}: ${error.error.error}`);
       } else {
-        console.log(`Error while importing movie: ${imdbId}`);
-        console.log(error)
+        this.logs.error.push(`Error while importing movie: ${imdbId}`);
+        console.log(error);
       }
     }
-
   }
 
   private async genres(imdbId: string): Promise<Genre[]> {
-    const { data } = await this.query<{ data: { genre: string }[], code: number }>(`/v1/movie/${imdbId}/genres`);
-    return data.map(d => {
-      if (genreMap[d.genre]) return genreMap[d.genre];
-      else console.log(`Unknown genre ${d.genre}`);
-    }).filter(d => !!d);
+    try {
+      const { data } = await this.query<{ data: { genre: string }[], code: number }>(`/v1/movie/${imdbId}/genres`);
+      return data.map(d => {
+        if (genreMap[d.genre]) return genreMap[d.genre];
+        else this.logs.error.push(`Unknown genre ${d.genre}`);
+      }).filter(d => !!d);
+    } catch (error) {
+      if (error.error?.error) {
+        this.logs.error.push(`Error while importing genres: ${imdbId}: ${error.error.error}`);
+      } else {
+        this.logs.error.push(`Error while importing genres: ${imdbId}`);
+        console.log(error);
+      }
+
+      return [];
+    }
   }
 
   private async keywords(imdbId: string) {
-    const { data } = await this.query<{ data: { keywords: string }[], code: number }>(`/v1/movie/${imdbId}/keywords`);
-    return data;
+    try {
+      const { data } = await this.query<{ data: { keywords: string }[], code: number }>(`/v1/movie/${imdbId}/keywords`);
+      return data;
+    } catch (error) {
+      if (error.error?.error) {
+        this.logs.error.push(`Error while importing keywords: ${imdbId}: ${error.error.error}`);
+      } else {
+        this.logs.error.push(`Error while importing keywords: ${imdbId}`);
+        console.log(error);
+      }
+
+      return [];
+    }
   }
 
   private async seasons(imdbId: string) {
@@ -115,14 +150,25 @@ export class MyapimoviesService {
   }
 
   private async crew(imdbId: string): Promise<{ type: 'DIRECTOR', credit: Credit }[]> {
-    const { data } = await this.query<{ data: { type: 'DIRECTOR', name: { name: string, imdbId: string } }[], code: number }>(`/v1/movie/${imdbId}/crew`);
-    return data.map(d => {
-      const firstName = d.name.name.split(' ')[0];
-      const lastName = d.name.name.split(' ')[1];
-      const credit = createCredit({ firstName, lastName });
+    try {
+      const { data } = await this.query<{ data: { type: 'DIRECTOR', name: { name: string, imdbId: string } }[], code: number }>(`/v1/movie/${imdbId}/crew`);
+      return data.map(d => {
+        const firstName = d.name.name.split(' ')[0];
+        const lastName = d.name.name.split(' ')[1];
+        const credit = createCredit({ firstName, lastName });
 
-      return { type: d.type, credit };
-    });
+        return { type: d.type, credit };
+      });
+    } catch (error) {
+      if (error.error?.error) {
+        this.logs.error.push(`Error while importing crew: ${imdbId}: ${error.error.error}`);
+      } else {
+        this.logs.error.push(`Error while importing crew: ${imdbId}`);
+        console.log(error);
+      }
+
+      return [];
+    }
   }
 
   private async countries(imdbId: string): Promise<Territory[]> {
@@ -130,18 +176,20 @@ export class MyapimoviesService {
       const { data } = await this.query<{ data: { country: string }[], code: number }>(`/v1/movie/${imdbId}/countries`);
       return data.map(d => {
         if (d.country === 'UK') d.country = 'GBR';
-  
+
         const country = getKeyIfExists('territories', d.country) || getKeyIfExists('territoriesISOA3', d.country);
-        if (!country) console.log(`Unknown territory ${d.country}`);
+        if (!country) this.logs.error.push(`Unknown territory ${d.country}`);
         else return country;
       }).filter(d => !!d);
     } catch (error) {
       if (error.error?.error) {
-        console.log(`Error while importing countries: ${imdbId}: ${error.error.error}`);
+        this.logs.error.push(`Error while importing countries: ${imdbId}: ${error.error.error}`);
       } else {
-        console.log(`Error while importing countries: ${imdbId}`);
-        console.log(error)
+        this.logs.error.push(`Error while importing countries: ${imdbId}`);
+        console.log(error);
       }
+
+      return [];
     }
 
   }
@@ -150,24 +198,23 @@ export class MyapimoviesService {
     try {
       const { data } = await this.query<{ data: { language: string }[], code: number }>(`/v1/movie/${imdbId}/languages`);
       return data.map(d => {
+        if (d.language === 'Mandarin') d.language = 'mandarin-chinese';
+
         const language = getKeyIfExists('languages', d.language);
-        if (!language) console.log(`Unknown language ${d.language}`);
+        if (!language) this.logs.error.push(`Unknown language ${d.language}`);
         else return language;
       }).filter(d => !!d);
     } catch (error) {
       if (error.error?.error) {
-        console.log(`Error while importing languages: ${imdbId}: ${error.error.error}`);
+        this.logs.error.push(`Error while importing languages: ${imdbId}: ${error.error.error}`);
       } else {
-        console.log(`Error while importing languages: ${imdbId}`);
-        console.log(error)
+        this.logs.error.push(`Error while importing languages: ${imdbId}`);
+        console.log(error);
       }
+
+      return [];
     }
 
-  }
-
-  private async actors(imdbId: string) {
-    const { data } = await this.query<{ data: { character: string, main: boolean, name: { name: string, imdbId: string } }[], code: number }>(`/v1/movie/${imdbId}/actors`);
-    return data;
   }
 
   private async season(imdbId: string, season: number) {
@@ -197,13 +244,21 @@ export class MyapimoviesService {
 
 
   public async createTitle(imdbId: string) {
+
+    const [existingTitle] = await this.titleService.getValue([where('internalRef', '==', imdbId)]);
+
+    if (existingTitle?.id) {
+      this.logs.error.push(`Title ${imdbId} already exists as ${existingTitle.id}`);
+      return;
+    }
+
     const title = await this.movie(imdbId);
     if (!title) return;
 
     if (title.type === 'M') {
       const movie = await this.createMovie(title);
-      //const newMovie = await this.titleService.create(movie);
-      //console.log(` movie "${movie.title.original}" created, id ${newMovie.id}`);
+      const newMovie = await this.titleService.create(movie);
+      this.logs.succes.push(`movie "${movie.title.original}" created, id ${newMovie.id}`);
     } else if (title.type === 'S') {
       const seasons = await this.seasons(imdbId);
       seasons.forEach(async s => {
@@ -221,10 +276,10 @@ export class MyapimoviesService {
       this.crew(title.imdbId),
       this.countries(title.imdbId),
       this.languages(title.imdbId),
-      //this.actors(title.imdbId),
     ]);
 
     const movie = createMovie({});
+    movie.internalRef = title.imdbId;
     movie.contentType = 'movie';
     movie.productionStatus = 'released';
     movie.app = createMovieAppConfig();
@@ -252,6 +307,7 @@ export class MyapimoviesService {
   private createSerie(title: MyapimoviesSerie, season: { numSeason: number, year: number, episodes: number }) {
     const serie = createMovie({});
     serie.contentType = 'tv';
+    serie.internalRef = title.imdbId;
 
     serie.title.original = title.title;
     serie.title.series = season.numSeason;
