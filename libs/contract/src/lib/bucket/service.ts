@@ -47,7 +47,7 @@ export class BucketService extends BlockframesCollection<Bucket> {
   }
 
   protected fromFirestore(document: DocumentSnapshot<Bucket>): Bucket {
-    if(!document.exists()) return ;
+    if (!document.exists()) return;
     const bucket = super.fromFirestore(document);
     return createBucket(bucket);
   }
