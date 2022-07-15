@@ -23,7 +23,7 @@
 
 <section>
   <article>
-    <h2>Interested Users</h2>
+    <h3>Interested Users</h3>
     <p class="mat-body-1">See how many users interacted with your movie (viewed your title, added to wishlist, requested a screening, etc).</p>
   </article>
 
@@ -83,8 +83,12 @@
     </ng-template>
   </bf-table>
 
-  <h3>Vanity Metrics</h3>
-  <article class="surface vanity_metrics">
+  <article>
+    <h3>Title Performance</h3>
+    <p class="mat-body-1">Check the overall metrics of your title performance.</p>
+  </article>
+
+  <article class="surface title_performance">
     <analytics-line-chart class="surface" [eventNames]="['pageView']" [data]="titleAnalytics$ | async">
       <mat-icon svgIcon="visibility"></mat-icon>
       <h5>Film Page Views</h5>
@@ -113,7 +117,7 @@
       <header>
         <button mat-button color="primary" [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export to .CSV</button>
       </header>
-      <bf-table class="screenings" [source]="invitations" clickable useFilter pagination="5" (rowClick)="goToBuyer($event)">
+      <bf-table class="screenings" [source]="invitations" useFilter pagination="5">
         <ng-template colRef label="Name" let-invitation="item" sort [filter]="filters.name">
           <b>{{ invitation | guest:'user' | displayName }}</b>
         </ng-template>
@@ -141,6 +145,15 @@
         </ng-template>
         <ng-template colRef="watchInfos.date" label="Watching Status" let-date sort>
           <bf-tag *ngIf="date | isWatchingNow">Watching Now</bf-tag>
+        </ng-template>
+        <ng-template colRef label="Action" let-item sticky>
+          <ng-container *ngIf="item | guest:'user' as user">
+            <ng-container *ngIf="user.orgId">
+              <a [routerLink]="['../../buyer/', user.uid]">
+                <mat-icon svgIcon="launch"></mat-icon>
+              </a>
+            </ng-container>
+          </ng-container>
         </ng-template>
       </bf-table>
     </ng-container>

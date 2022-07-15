@@ -1,6 +1,7 @@
 import * as admin from 'firebase-admin';
 import { chunk } from 'lodash';
 import * as env from '@env';
+import { getDb } from './initialize';
 
 export function toDate<D>(target: admin.firestore.DocumentData): D {
   if (!target) return;
@@ -21,7 +22,7 @@ export function toDate<D>(target: admin.firestore.DocumentData): D {
   return target as D;
 }
 
-export function getDocumentSnap(path: string, db = admin.firestore(), tx?: FirebaseFirestore.Transaction): Promise<FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>> {
+export function getDocumentSnap(path: string, db = getDb(), tx?: FirebaseFirestore.Transaction): Promise<FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>> {
   const ref = db.doc(path);
   return tx ? tx.get(ref) : db.doc(path).get();
 }
@@ -41,7 +42,7 @@ export async function queryDocuments<T>(query: FirebaseFirestore.Query<FirebaseF
 }
 
 export function getCollectionRef(path: string): Promise<FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>> {
-  const db = admin.firestore();
+  const db = getDb();
   return db.collection(path).get();
 }
 

@@ -5,15 +5,20 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
-import { of } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { getSeller } from '@blockframes/contract/contract/utils'
-import { Organization, Sale } from '@blockframes/model';
+import { Mandate, Sale } from '@blockframes/model';
 import { orderBy, where } from 'firebase/firestore';
 
-const query = [
+const externalSaleQuery = [
   where('buyerId', '==', ''),
   where('type', '==', 'sale'),
+  orderBy('_meta.createdAt', 'desc')
+];
+
+const mandateQuery = [
+  where('type', '==', 'mandate'),
   orderBy('_meta.createdAt', 'desc')
 ];
 
@@ -26,7 +31,18 @@ const query = [
 export class ContractsListComponent {
   public orgId = this.orgService.org.id;
 
-  public externalSales$ = this.contractService.valueChanges(query).pipe(
+  private mandates$ = this.contractService.valueChanges(mandateQuery).pipe(
+    joinWith({
+      licensor: (mandate: Mandate) => {
+        return this.orgService.valueChanges(getSeller(mandate)).pipe(map(org => org.name))
+      },
+      licensee: (mandate) => this.orgService.valueChanges(mandate.buyerId).pipe(map(org => org?.name)),
+      title: (mandate: Mandate) => this.titleService.valueChanges(mandate.titleId).pipe(map(title => title.title.international)),
+      price: (mandate: Mandate) => this.incomeService.valueChanges(mandate.id),
+    })
+  );
+
+  private externalSales$ = this.contractService.valueChanges(externalSaleQuery).pipe(
     joinWith({
       licensor: (sale: Sale) => {
         return this.orgService.valueChanges(getSeller(sale)).pipe(map(org => org.name))
@@ -37,14 +53,18 @@ export class ContractsListComponent {
     }),
   );
 
+  public contracts$ = combineLatest([
+    this.mandates$,
+    this.externalSales$
+  ]).pipe(map(([mandates, sales]) => ({ mandates, sales })));
+
   constructor(
     private contractService: ContractService,
     private orgService: OrganizationService,
     private titleService: MovieService,
     private incomeService: IncomeService,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
   ) {
-    this.dynTitle.setPageTitle('My Sales (All)');
+    this.dynTitle.setPageTitle('Mandates and external sales.');
   }
-
 }
