@@ -7,9 +7,11 @@
 </header>
 <div *ngIf="hideTabs">
   <p class="mat-caption">{{ (org.addresses.main.country | toLabel: 'territories') || "-" }}</p>
-  <p class="mat-caption" i18n *ngIf="memberCount !== 0">
-    {{ memberCount }} employee{ memberCount, plural, =1 {} other {s} }
-  </p>
+  <ng-container *ngIf="memberCount$ | async as memberCount">
+    <p class="mat-caption" i18n *ngIf="memberCount !== 0">
+      {{ memberCount }} employee{ memberCount, plural, =1 {} other {s} }
+    </p>
+  </ng-container>
 </div>
 <mat-tab-group *ngIf="!hideTabs" headerPosition="below" mat-align-tabs="center" [disablePagination]="true">
   <mat-tab>
@@ -18,12 +20,14 @@
     </ng-template>
     <div>
       <p class="mat-caption">{{ (org.addresses.main.country | toLabel: 'territories') || "-" }}</p>
-      <p class="mat-caption" i18n *ngIf="(orgMovieCount$ | async) as count">
-        {{ count }} film{ count, plural, =1 {} other {s} } in {{ app === 'catalog' ? 'catalog' : 'line-up' }}
+      <p class="mat-caption" i18n *ngIf="orgMovieCount$ | async as orgMovieCount">
+        {{ orgMovieCount }} film{ orgMovieCount, plural, =1 {} other {s} } in {{ app === 'catalog' ? 'catalog' : 'line-up' }}
       </p>
-      <p class="mat-caption" i18n *ngIf="memberCount !== 0">
-        {{ memberCount }} employee{ memberCount, plural, =1 {} other {s} }
-      </p>
+      <ng-container *ngIf="memberCount$ | async as memberCount">
+        <p class="mat-caption" i18n *ngIf="memberCount !== 0">
+          {{ memberCount }} employee{ memberCount, plural, =1 {} other {s} }
+        </p>
+      </ng-container>
     </div>
   </mat-tab>
   <mat-tab>
