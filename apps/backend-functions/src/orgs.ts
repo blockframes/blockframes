@@ -134,7 +134,6 @@ export async function onOrganizationUpdate(change: BlockframesChange<Organizatio
   // Send notifications when a member is added or removed
   await notifyOnOrgMemberChanges(before, after);
 
-  // Deploy org's smart-contract
   const becomeAccepted = before.status !== 'accepted' && after.status === 'accepted';
 
   if (becomeAccepted) {
