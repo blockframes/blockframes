@@ -22,12 +22,12 @@ import { format } from 'date-fns';
 import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
 import { UserService } from '@blockframes/user/service';
 import { EventService } from '@blockframes/event/service';
-import { getReviewer } from '@blockframes/contract/negotiation/utils';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { ContractService } from '@blockframes/contract/contract/service';
-import { where } from 'firebase/firestore';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 import { NegotiationService } from '@blockframes/contract/negotiation/service';
+import { getReviewer } from '@blockframes/contract/negotiation/utils';
+import { where } from 'firebase/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService extends BlockframesCollection<Notification> {
@@ -124,8 +124,8 @@ export class NotificationService extends BlockframesCollection<Notification> {
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}${module === 'marketplace'
-              ? `/event/${notification.docId}/r/i/`
-              : `/c/o/${module}/event/${notification.docId}`
+            ? `/event/${notification.docId}/r/i/`
+            : `/c/o/${module}/event/${notification.docId}`
             }`,
         };
       }
@@ -139,8 +139,8 @@ export class NotificationService extends BlockframesCollection<Notification> {
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}${module === 'marketplace'
-              ? `/event/${notification.docId}/r/i/`
-              : `/c/o/${module}/event/${notification.docId}`
+            ? `/event/${notification.docId}/r/i/`
+            : `/c/o/${module}/event/${notification.docId}`
             }`,
         };
       }
@@ -302,8 +302,10 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         const contract = await this.contractService.load(notification.docId);
+        const negotiation = await this.negotiationService.load(notification.docPath);
+        const reviewer = await this.orgService.load(getReviewer(negotiation))
         const movie = await this.movieService.load(contract.titleId);
-        const name = await this.nameToDisplay(notification, contract);
+        const name = reviewer.name;
         const message = `Your counter-offer for ${movie.title.international} was successfully sent to ${name}.`;
 
         return {
@@ -320,8 +322,8 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const contract = await this.contractService.load(notification.docId);
         const movie = await this.movieService.load(contract.titleId);
         const negotiation = await this.negotiationService.load(notification.docPath);
-        const reviewer = await this.orgService.load(negotiation.createdByOrg);
-        const name = reviewer.name;
+        const createdByOrg = await this.orgService.load(negotiation.createdByOrg);
+        const name = createdByOrg.name;
         const message = `${name} sent a counter-offer for ${movie.title.international}.`;
 
         return {
