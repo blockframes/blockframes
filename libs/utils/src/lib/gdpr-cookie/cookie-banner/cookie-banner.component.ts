@@ -3,11 +3,11 @@ import { DOCUMENT } from '@angular/common';
 // Material
 import { MatDialog } from '@angular/material/dialog';
 // Blockframes
-import { PrivacyPolicyComponent } from '@blockframes/auth/components/privacy-policy/privacy-policy.component';
 import { CookieDialogComponent } from '../cookie-dialog/cookie-dialog.component';
 import { GDPRService } from '../gdpr-service/gdpr.service'
 import { AuthService } from '@blockframes/auth/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'cookie-banner',
@@ -18,6 +18,10 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 export class CookieBannerComponent implements OnInit {
 
   public hasAccepted = false;
+  public form = new FormGroup({
+    hotjar: new FormControl(true),
+    intercom: new FormControl(true),
+  });
 
   constructor(
     private dialog: MatDialog,
@@ -34,19 +38,7 @@ export class CookieBannerComponent implements OnInit {
     this.hasAccepted = cookieNames.some(cookieName => cookieName === 'blockframes');
   }
 
-  /** Opens a dialog with terms of use and privacy policy given by the parent. */
-  public openPrivacyPolicy() {
-    this.dialog.open(PrivacyPolicyComponent, { data: createModalData({}, 'large'), autoFocus: false });
-  }
-
-  public acceptCookies() {
-    this.confirmCookies();
-    this.gdpr.enableIntercom(this.authService.profile, true);
-    // this.gdpr.enableYandex(true); #7936 this may be reactivated later
-    this.gdpr.enableHotjar(true);
-  }
-
-  public changePreferences() {
+  public openCookieModal() {
     const dialogRef = this.dialog.open(CookieDialogComponent, { data: createModalData({}, 'large'), autoFocus: false });
     dialogRef.afterClosed().subscribe(settings => {
       if (settings) {
@@ -57,6 +49,15 @@ export class CookieBannerComponent implements OnInit {
       }
     })
   }
+
+  public saveCookies() {
+    this.confirmCookies();
+    const { hotjar, intercom } = this.form.value
+    this.gdpr.enableHotjar(hotjar);
+    this.gdpr.enableIntercom(this.authService.profile, intercom);
+    // this.gdpr.enableYandex(true); #7936 this may be reactivated later
+  }
+
 
   confirmCookies() {
     // A max-age of 31536000 equals one year
