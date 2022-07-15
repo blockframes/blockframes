@@ -38,7 +38,7 @@ export function fillEventDetails(screeningName: string, isPublic = false, invite
 
   cy.log('Save event and navigate to calendar');
   saveEvent();
-  cy.get('[svgicon="arrow_back"]').click();
+  cy.get('[test-id="arrow_back"]').click();
 }
 
 export function inviteUser(email: string | string[]) {
