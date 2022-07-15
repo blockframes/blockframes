@@ -109,9 +109,6 @@ describe('Organiser invites other users to private screening', () => {
       cy.log('Reach Market Home & navigate to Screening Page from Screening Schedule');
       cy.visit('/c/o/marketplace/home');
 
-      // Click on left menu
-      cy.get('festival-marketplace button[test-id=menu]').first().click();
-
       festival.selectSalesAgents();
 
       festival.clickOnOrganization(org.name);
