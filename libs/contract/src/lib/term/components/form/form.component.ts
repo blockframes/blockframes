@@ -84,7 +84,7 @@ export class TermFormComponent implements OnInit {
   );
 
   private terms$ = this.mandates$.pipe(
-    switchMap(({ termIds }) => termIds.length ? this.termService.valueChanges(termIds) : of([] as Term[])),
+    switchMap((mandate) => mandate?.termIds?.length ? this.termService.valueChanges(mandate.termIds) : of([] as Term[])),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
