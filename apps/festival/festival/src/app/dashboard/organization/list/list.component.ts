@@ -44,7 +44,6 @@ export class ListComponent implements OnDestroy {
       distinctUntilChanged(),
       debounceTime(500),
       switchMap(() => this.searchForm.search()),
-      // tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
       map(results => results.map(org => org.objectID)),
       switchMap(ids => ids.length ? this.service.valueChanges(ids) : of([])),
