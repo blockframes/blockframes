@@ -330,6 +330,7 @@ jobs:
           path: dist/cypress/apps
   financiers-e2e:
     executor: blockframes-ci
+    resource_class: xlarge
     environment:
       PROJECT_ID: demo-blockframes
     steps:
@@ -344,6 +345,7 @@ jobs:
           path: dist/cypress/apps
   catalog-e2e:
     executor: blockframes-ci
+    resource_class: xlarge
     environment:
       PROJECT_ID: demo-blockframes
     steps:
