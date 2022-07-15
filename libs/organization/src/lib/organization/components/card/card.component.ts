@@ -1,8 +1,7 @@
-import { Component, Input, ChangeDetectionStrategy, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
 import { Organization, App } from '@blockframes/model';
-import { firstValueFrom } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 import { APP } from '@blockframes/utils/routes/utils';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -22,28 +21,21 @@ export class OrganizationCardComponent {
   @Input() set org(value: Organization) {
     this._org = value;
 
-    const movies$ = this.movieService.valueChanges(fromOrgAndAccepted(this.org.id, this.app)).pipe(
-      map(movies =>
-        movies.filter(movie => movie.app[this.app].access)
-      ))
-    
     Promise.all([
-      firstValueFrom(movies$),
+      this.movieService.getValue(fromOrgAndAccepted(this.org.id, this.app)),
       this.orgService.getMembers(this.org, { removeConcierges: true })
-    ]).then(res => {
-      this.orgMovieCount = res[0].length;
-      this.memberCount = res[1].length;
-      this.cdr.markForCheck();
-    })
+    ]).then(([movies, members]) => {
+      this.orgMovieCount$.next(movies.length);
+      this.memberCount$.next(members.length);
+    });
   }
 
   @Input() @boolean hideTabs = false;
 
-  public orgMovieCount: number;
-  public memberCount: number;
+  public orgMovieCount$ = new BehaviorSubject<number>(0);
+  public memberCount$ = new BehaviorSubject<number>(0);
 
   constructor(
-    private cdr: ChangeDetectorRef,
     private movieService: MovieService,
     private orgService: OrganizationService,
     @Inject(APP) public app: App
