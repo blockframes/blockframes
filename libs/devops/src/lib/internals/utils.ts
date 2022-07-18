@@ -283,8 +283,11 @@ function getCandidates(document: FirebaseFirestore.DocumentData, _field: string)
     if (!val.length) return [];
 
     return val.map(entry => {
-      const idToFind = isString(entry) ? entry : getValue(entry, fieldSuffix);
-      if (!idToFind) console.log('UnHandled error..');
+      const idToFind = isString(entry) ? entry : getValue(entry, fieldSuffix || '');
+      if (!idToFind) {
+        console.log(`UnHandled error.. field: ${field} | fieldSuffix: ${fieldSuffix} | entry: ${entry}`);
+        console.log(entry);
+      }
       return idToFind;
     }).filter(d => !!d);
   }
