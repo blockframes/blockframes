@@ -44,7 +44,7 @@ export class ImdbImportComponent implements OnInit {
 
     this.myapimoviesService.token = this.form.get('token').value;
 
-    const ids = this.form.get('imdbIds').value.split(',').map(id => id.trim());
+    const ids = this.form.get('imdbIds').value.split(',').map(id => id.trim()).filter(id => id);
     const orgId = this.form.get('orgId').value;
 
     for (const id of ids) {

@@ -56,8 +56,13 @@ const genreMap: Record<string, Genre> = {
   'Film-Noir': 'drama',
   'Fantasy': 'fantasy',
   'History': 'drama',
-  'War': 'drama'
+  'War': 'drama',
+  'Documentary': 'documentary',
+  'Biography': 'biography',
+  //'Western': 'western'
 };
+
+const skippedLanguages = ['Maori', 'Aboriginal', 'Xhosa', 'Southern Sotho', 'Shanghainese'];
 
 export type ImdbImportLogs = { error: string[], succes: string[] };
 
@@ -175,6 +180,8 @@ export class MyapimoviesService {
       const { data } = await this.query<{ data: { country: string }[], code: number }>(`/v1/movie/${imdbId}/countries`);
       return data.map(d => {
         if (d.country === 'UK') d.country = 'GBR';
+        if (d.country === 'United Kingdom') d.country = 'united-kingdom';
+        if (d.country === 'United States') d.country = 'united-states-of-america';
 
         const country = getKeyIfExists('territories', d.country) || getKeyIfExists('territoriesISOA3', d.country);
         if (!country) this.logs.error.push(`Unknown territory ${d.country}`);
@@ -196,13 +203,15 @@ export class MyapimoviesService {
   private async languages(imdbId: string): Promise<Language[]> {
     try {
       const { data } = await this.query<{ data: { language: string }[], code: number }>(`/v1/movie/${imdbId}/languages`);
-      return data.map(d => {
-        if (d.language === 'Mandarin') d.language = 'mandarin-chinese';
+      return data.filter(d => !skippedLanguages.includes(d.language))
+        .map(d => {
+          if (d.language === 'Mandarin') d.language = 'mandarin-chinese';
+          if (d.language === 'Chinese') d.language = 'mandarin-chinese';
 
-        const language = getKeyIfExists('languages', d.language);
-        if (!language) this.logs.error.push(`Unknown language ${d.language}`);
-        else return language;
-      }).filter(d => !!d);
+          const language = getKeyIfExists('languages', d.language);
+          if (!language) this.logs.error.push(`Unknown language ${d.language}`);
+          else return language;
+        }).filter(d => !!d);
     } catch (error) {
       if (error.error?.error) {
         this.logs.error.push(`Error while importing languages: ${imdbId}: ${error.error.error}`);
@@ -258,7 +267,7 @@ export class MyapimoviesService {
       const movie = await this.createMovie(title);
       movie.orgIds = [orgId];
       const newMovie = await this.titleService.create(movie);
-      this.logs.succes.push(`movie "${movie.title.original}" created, id ${newMovie.id}`);
+      this.logs.succes.push(`movie "${movie.title.original || movie.title.international}" created, id ${newMovie.id}`);
     } else if (title.type === 'S') {
       const seasons = await this.seasons(imdbId);
       seasons.forEach(async s => {
@@ -269,7 +278,7 @@ export class MyapimoviesService {
   }
 
   private async createMovie(title: MyapimoviesMovie) {
-
+    console.log(title);
     const [genres, keywords, crew, countries, languages] = await Promise.all([
       this.genres(title.imdbId),
       this.keywords(title.imdbId),
