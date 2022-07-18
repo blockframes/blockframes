@@ -4,7 +4,7 @@
       <a mat-icon-button routerLink="/c/o/dashboard/avails">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </a>
-      <a routerLink="/c/o/dashboard/title/{{movie.id}}">
+      <a [routerLink]="['/c/o/dashboard/title', movie.id]">
         <h2>{{movie.title.international}}</h2>
       </a>
     </div>
