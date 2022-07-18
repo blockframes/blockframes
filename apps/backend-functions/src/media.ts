@@ -374,6 +374,10 @@ export async function cleanMovieMedias(before: Movie, after?: Movie): Promise<vo
       mediaToDelete.push(before.promotional.videos.screener);
     }
 
+    if (needsToBeCleaned(before.promotional.videos?.publicScreener, after.promotional.videos?.publicScreener)) {
+      mediaToDelete.push(before.promotional.videos.publicScreener);
+    }
+
     if (needsToBeCleaned(before.promotional.videos?.salesPitch, after.promotional.videos?.salesPitch)) {
       mediaToDelete.push(before.promotional.videos.salesPitch);
     }
