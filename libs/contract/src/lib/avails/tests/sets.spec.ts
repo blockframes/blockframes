@@ -3,6 +3,7 @@ import {
   allOf,
   noneOf,
   someOf,
+  continuousSomeOf,
 } from '../sets';
 
 const discrete = {
@@ -33,7 +34,7 @@ const continuous = {
 
 describe('Sets tests', () => {
   describe('Discrete Sets', () => {
-    describe('Disjoint', () => {
+    describe.skip('Disjoint', () => {
       it('should succeed with disjoint', () => {
         expect(noneOf(discrete.b).in(discrete.a)).toBe(true);
         expect(noneOf(discrete.h).in(discrete.a)).toBe(true);
@@ -51,7 +52,7 @@ describe('Sets tests', () => {
         expect(noneOf(discrete.e).in(discrete.a)).toBe(false);
       });
     });
-    describe('Subset', () => {
+    describe.skip('Subset', () => {
       it('should fail with disjoint', () => {
         expect(allOf(discrete.b).in(discrete.a)).toBe(false);
         expect(allOf(discrete.h).in(discrete.a)).toBe(false);
@@ -69,7 +70,7 @@ describe('Sets tests', () => {
         expect(allOf(discrete.f).in(discrete.b)).toBe(true);
       });
     });
-    describe('Overlap', () => {
+    describe.skip('Overlap', () => {
       it('should fail with disjoint', () => {
         expect(someOf(discrete.b).in(discrete.a)).toBe(false);
         expect(someOf(discrete.h).in(discrete.a)).toBe(false);
@@ -87,7 +88,7 @@ describe('Sets tests', () => {
         expect(someOf(discrete.f).in(discrete.b)).toBe(true);
       });
     });
-    describe('Equal', () => {
+    describe.skip('Equal', () => {
       it('should fail with disjoint', () => {
         expect(allOf(discrete.b).equal(discrete.a)).toBe(false);
         expect(allOf(discrete.h).equal(discrete.a)).toBe(false);
@@ -106,8 +107,8 @@ describe('Sets tests', () => {
       });
     });
   });
-  describe('Continuous Sets', () => {
-    describe('Disjoint', () => {
+  describe.skip('Continuous Sets', () => {
+    describe.skip('Disjoint', () => {
       it('should succeed with disjoint', () => {
         expect(noneOf(continuous.b).in(continuous.a)).toBe(true);
         expect(noneOf(continuous.h).in(continuous.a)).toBe(true);
@@ -124,8 +125,18 @@ describe('Sets tests', () => {
         expect(noneOf(continuous.c).in(continuous.a)).toBe(false);
         expect(noneOf(continuous.f).in(continuous.b)).toBe(false);
       });
+      it('Should fail with disjoint', () => {
+        expect(continuousSomeOf(continuous.a).in(continuous.b).toBe(false));
+      });
+      it('should succeed with complete overlap.', () => {
+        expect(continuousSomeOf(continuous.d).in(continuous.a).toBe(true));
+      });
+      it('should succeed with partial overlap.', () => {
+        expect(continuousSomeOf(continuous.a).in(continuous.e).toBe(true));
+        expect(continuousSomeOf(continuous.b).in(continuous.h).toBe(true));
+      });
     });
-    describe('Subset', () => {
+    describe.skip('Subset', () => {
       it('should fail with disjoint', () => {
         expect(allOf(continuous.b).in(continuous.a)).toBe(false);
         expect(allOf(continuous.h).in(continuous.a)).toBe(false);
@@ -143,7 +154,7 @@ describe('Sets tests', () => {
         expect(allOf(continuous.f).in(continuous.f)).toBe(true);
       });
     });
-    describe('Overlap', () => {
+    describe.skip('Overlap', () => {
       it('should fail with disjoint', () => {
         expect(someOf(continuous.b).in(continuous.a)).toBe(false);
         expect(someOf(continuous.h).in(continuous.a)).toBe(false);
@@ -161,7 +172,7 @@ describe('Sets tests', () => {
         expect(someOf(continuous.f).in(continuous.b)).toBe(true);
       });
     });
-    describe('Equal', () => {
+    describe.skip('Equal', () => {
       it('should fail with disjoint', () => {
         expect(allOf(continuous.b).equal(continuous.a)).toBe(false);
         expect(allOf(continuous.h).equal(continuous.a)).toBe(false);
