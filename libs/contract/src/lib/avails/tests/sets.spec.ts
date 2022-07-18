@@ -126,14 +126,14 @@ describe('Sets tests', () => {
         expect(noneOf(continuous.f).in(continuous.b)).toBe(false);
       });
       it('Should fail with disjoint', () => {
-        expect(continuousSomeOf(continuous.a).in(continuous.b).toBe(false));
+        expect(continuousSomeOf(continuous.a).in(continuous.b)).toBe(false);
       });
       it('should succeed with complete overlap.', () => {
-        expect(continuousSomeOf(continuous.d).in(continuous.a).toBe(true));
+        expect(continuousSomeOf(continuous.d).in(continuous.a)).toBe(true);
       });
       it('should succeed with partial overlap.', () => {
-        expect(continuousSomeOf(continuous.a).in(continuous.e).toBe(true));
-        expect(continuousSomeOf(continuous.b).in(continuous.h).toBe(true));
+        expect(continuousSomeOf(continuous.a).in(continuous.e)).toBe(true);
+        expect(continuousSomeOf(continuous.b).in(continuous.h)).toBe(true);
       });
     });
     describe.skip('Subset', () => {
