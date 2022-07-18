@@ -145,8 +145,8 @@ export class TermFormComponent implements OnInit {
     ]));
 
     const allTerms = this.form.value.terms.map(({ duration: { from, to }, ...rest }) => {
-      from.setHours(2, 0, 0, 0);
-      to.setHours(2, 0, 0, 0);
+      from.setHours(0, 0, 0, 0);
+      to.setHours(0, 0, 0, 0);
       return { ...rest, duration: { from, to } };
     });
 
