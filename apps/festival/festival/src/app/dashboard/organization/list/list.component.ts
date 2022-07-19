@@ -37,7 +37,7 @@ export class ListComponent implements OnDestroy {
   ) { 
     this.dynTitle.setPageTitle('Buyer List');
     this.orgs$ = this.orgResultsState.asObservable();
-    const search = createOrganizationSearch({ appModule: ['marketplace'], hasAcceptedMovies: false });
+    const search = createOrganizationSearch({ appModule: ['marketplace', '-dashboard'], hasAcceptedMovies: false });
     this.searchForm.setValue({ ...search, countries: [] });
     this.sub = this.searchForm.valueChanges.pipe(
       startWith(this.searchForm.value),
@@ -50,7 +50,7 @@ export class ListComponent implements OnDestroy {
       switchMap(ids => ids.length ? this.service.valueChanges(ids) : of([])),
     ).subscribe(orgs => {
       if (this.loadMoreToggle) {
-        this.orgResultsState.next(this.orgResultsState.value.concat(orgs))
+        this.orgResultsState.next(this.orgResultsState.value.concat(orgs));
         this.loadMoreToggle = false;
       } else {
         this.orgResultsState.next(orgs);
