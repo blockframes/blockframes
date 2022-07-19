@@ -1,4 +1,4 @@
-import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, AlgoliaSearch } from '@blockframes/model';
+import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, AlgoliaSearch, Festival, festival } from '@blockframes/model';
 import type { StoreStatus, ProductionStatus, Territory, Genre, SocialGoal, ContentType } from '@blockframes/model';
 import { FormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
@@ -46,6 +46,7 @@ export interface MovieSearch extends AlgoliaSearch {
   socialGoals: SocialGoal[];
   contentType?: ContentType;
   runningTime: number;
+  festivals?: Festival[];
 }
 
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
@@ -72,6 +73,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     sellers: [],
     socialGoals: [],
     runningTime: 0,
+    festivals: [],
     ...search,
   };
 }
@@ -118,7 +120,8 @@ function createMovieSearchControl(search: MovieSearch) {
     contentType: new FormControl(search.contentType),
     runningTime: new FormControl(search.runningTime),
     // Max is 1000, see docs: https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/
-    hitsPerPage: new FormControl(50, Validators.max(1000))
+    hitsPerPage: new FormControl(50, Validators.max(1000)),
+    festivals: new FormStaticValueArray<'festival'>(search.festivals, 'festival'),
   };
 }
 
@@ -151,6 +154,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get hitsPerPage() { return this.get('hitsPerPage'); }
   get contentType() { return this.get('contentType'); }
   get runningTime() { return this.get('runningTime'); }
+  get festivals() { return this.get('festivals'); }
 
   isEmpty() {
     const emptyVersions = !this.languages.value?.versions?.caption &&
@@ -168,6 +172,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       this.minBudget?.value === 0 &&
       this.minReleaseYear.value === 0 &&
       this.sellers?.value.length === 0 &&
+      this.festivals.value?.length === 0 &&
       !this.contentType.value);
   }
 
@@ -184,6 +189,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.sellers.value.map(seller => `orgNames:${seller.name}`),
         this.storeStatus.value.map(config => `storeStatus:${config}`),
         this.socialGoals.value.map(goal => `socialGoals:${goal}`),
+        this.festivals.value.map(festivalName => `festivals:${festival[festivalName]}`),
         [`contentType:${this.contentType.value || ''}`]
       ],
       filters: ''

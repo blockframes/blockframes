@@ -43,7 +43,8 @@ import {
   appName,
   eventTypes,
   privacies,
-  emailErrorCode
+  emailErrorCode,
+  festival
 } from './static-model';
 
 export type App = typeof app[number];
@@ -77,6 +78,8 @@ export type ContractType = keyof typeof contractType;
 
 export type CrewRole = keyof typeof crewRoles;
 export type CrewRoleValue = typeof crewRoles[CrewRole];
+
+export type Festival = keyof typeof festival;
 
 export type Genre = keyof typeof genres;
 export type GenresValue = keyof typeof genres[Genre] & string;
