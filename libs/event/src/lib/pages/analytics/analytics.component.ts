@@ -6,22 +6,25 @@ import {
 } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute } from '@angular/router';
-import { pluck, switchMap, tap } from 'rxjs/operators';
 import { EventService } from '@blockframes/event/service';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom, pluck, switchMap, tap } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/service';
 import {
   Invitation,
   InvitationStatus,
-  orgName,
-  Screening,
   Event,
   EventMeta,
   territories,
   orgActivity,
   invitationStatus,
-  averageWatchtime
+  averageWatchDuration,
+  WatchInfos,
+  getGuest,
+  hasDisplayName,
+  isScreening,
+  isSlate
 } from '@blockframes/model';
+import { MetricCard, toScreenerCards } from '@blockframes/analytics/utils';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
@@ -34,14 +37,17 @@ import {
   ExcelData,
   exportSpreadsheet
 } from '@blockframes/utils/spreadsheet';
+import { filters } from '@blockframes/ui/list/table/filters';
+import { AnalyticsService } from '@blockframes/analytics/service';
+import { joinWith } from 'ngfire';
 
-interface WatchTimeInfo {
+interface EventAnalytics {
   name: string, // firstName + lastName
   email: string,
   orgName?: string,
   orgActivity?: string,
   orgCountry?: string,
-  watchTime?: number, // in seconds
+  watchInfos?: WatchInfos,
   status: InvitationStatus
 }
 
@@ -56,13 +62,13 @@ interface WatchTimeInfo {
 })
 export class AnalyticsComponent implements OnInit {
   event$: Observable<Event<EventMeta>>;
-  private analytics: WatchTimeInfo[];
-  public acceptedAnalytics: WatchTimeInfo[];
+  public analytics: EventAnalytics[];
   public exporting = false;
-  public averageWatchTime = 0; // in seconds
   public dataMissing = '(Not Registered)';
   private eventInvitations: Invitation[];
   private event: Event<EventMeta>;
+  public aggregatedScreeningCards: MetricCard[];
+  public filters = filters;
 
   constructor(
     private dynTitle: DynamicTitleService,
@@ -71,8 +77,9 @@ export class AnalyticsComponent implements OnInit {
     private invitationService: InvitationService,
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
-    private orgService: OrganizationService
-  ) {}
+    private orgService: OrganizationService,
+    private analyticsService: AnalyticsService,
+  ) { }
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Event', 'Event Statistics');
@@ -93,25 +100,38 @@ export class AnalyticsComponent implements OnInit {
         const orgs = await Promise.all(orgIds.map(orgId => this.orgService.getValue(orgId)));
 
         this.analytics = this.eventInvitations.map(i => {
-          const user = i.fromUser || i.toUser;
-          const name = user.lastName && user.firstName ? `${user.firstName} ${user.lastName}` : this.dataMissing;
+          const user = getGuest(i, 'user');
+          const name = hasDisplayName(user) ? `${user.firstName} ${user.lastName}` : this.dataMissing;
           const org = orgs.find(o => o.id === user.orgId);
           return {
             email: user.email,
-            watchTime: i.watchTime || 0,
+            watchInfos: i.watchInfos,
             name,
-            orgName: orgName(org),
+            orgName: org.name,
             orgActivity: org?.activity,
             orgCountry: org?.addresses?.main.country,
             status: i.status
           };
         });
-        // Create same analytics but only with 'accepted' status and with a Watchtime > 0
-        this.acceptedAnalytics = this.analytics.filter(({ status, watchTime }) => status === 'accepted' && watchTime !== 0);
 
-        // if event is a screening or a slate presentation we add the watch time column to the table
-        // and we compute the average watch time
-        this.averageWatchTime = averageWatchtime(this.acceptedAnalytics);
+        const titleIds = isScreening(event)
+          ? [event.meta.titleId]
+          : isSlate(event)
+            ? event.meta.titleIds
+            : [];
+
+        const titleAnalytics = (titleId) => this.analyticsService.getTitleAnalytics({ titleId, eventName: 'screeningRequested' })
+          .pipe(
+            joinWith({
+              org: analytic => this.orgService.valueChanges(analytic.meta.orgId),
+            }, { shouldAwait: true })
+          );
+
+        const promises = titleIds.map(titleId => firstValueFrom(titleAnalytics(titleId)));
+        const analytics = (await Promise.all(promises)).flat()
+          .filter(({ org }) => !org.appAccess.festival.dashboard);
+
+        this.aggregatedScreeningCards = toScreenerCards(analytics, this.eventInvitations);
 
         this.cdr.markForCheck();
       })
@@ -130,18 +150,11 @@ export class AnalyticsComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  // Will be used to show event statistics only if event started
-  isEventStarted(event: Event) {
-    if (!event) return false;
-    const start = event.start;
-    return start.getTime() < Date.now();
-  }
-
   // Create Event Statistic Excel
   private async exportExcelFile() {
     let staticticsTitle = this.event.title;
-    if (this.event.type === 'screening') {
-      const titleId = (this.event.meta as Screening).titleId;
+    if (isScreening(this.event)) {
+      const titleId = this.event.meta.titleId;
       const { title } = await this.movieService.getValue(titleId);
       staticticsTitle = title.international;
     }
@@ -165,35 +178,39 @@ export class AnalyticsComponent implements OnInit {
       if (mode === 'request') invitationsModeCounter.request++;
     });
 
-    const avgWatchTime = convertToTimeString(this.averageWatchTime * 1000);
+    const acceptedAnalytics = this.analytics.filter(({ status }) => status === 'accepted');
+    const avgWatchDuration = averageWatchDuration(acceptedAnalytics);
+    const avgWatchDurationGlobal = convertToTimeString(avgWatchDuration * 1000);
 
     // Create data for Archipel Event Summary Tab - With Merge
     const summaryData = new ExcelData();
-    summaryData.addLine([`${staticticsTitle} - Archipel Market Screening Report`], { merge: [{ start: 'A', end: 'F' }] });
+    summaryData.addLine([`${staticticsTitle} - Archipel Market Screening Report`], { merge: [{ start: 'A', end: 'G' }] });
     summaryData.addLine([eventStart]);
     summaryData.addBlankLine();
-    summaryData.addLine(['Total number of guests', null, null, null, null, this.eventInvitations.length]);
+    summaryData.addLine(['Total number of guests', null, null, null, null, null, this.eventInvitations.length]);
     summaryData.addLine([
       'Answers',
       null,
       null,
       null,
       null,
+      null,
       `${invitationsStatusCounter.accepted} accepted, ${invitationsStatusCounter.pending} unanswered, ${invitationsStatusCounter.declined} declined`
     ]);
-    summaryData.addLine(['Number of attendees', null, null, null, null, this.acceptedAnalytics.length]);
-    summaryData.addLine(['Average watchtime', null, null, null, null, `${avgWatchTime}`]);
+    summaryData.addLine(['Number of attendees', null, null, null, null, null, acceptedAnalytics.length]);
+    summaryData.addLine(['Average watchtime', null, null, null, null, null, `${avgWatchDurationGlobal}`]);
     summaryData.addBlankLine();
-    summaryData.addLine(['NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME']);
+    summaryData.addLine(['NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME', 'WATCHING ENDED']);
 
-    this.acceptedAnalytics.forEach(({ watchTime, email, name, orgActivity: activity, orgCountry, orgName }) => {
+    acceptedAnalytics.forEach(({ watchInfos, email, name, orgActivity: activity, orgCountry, orgName }) => {
       summaryData.addLine([
         name,
         email,
-        orgName ? orgName : '-',
+        orgName || '-',
         activity ? orgActivity[activity] : '-',
         orgCountry ? territories[orgCountry] : '-',
-        watchTime ? `${convertToTimeString(watchTime * 1000)}` : '-'
+        watchInfos?.duration !== undefined ? convertToTimeString(watchInfos?.duration * 1000) : '-',
+        watchInfos?.date ? formatDate(watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '-'
       ]);
     });
 

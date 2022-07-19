@@ -1,18 +1,25 @@
-import * as admin from 'firebase-admin';
 import { getUser } from './../utils';
 import { triggerNotifications } from './../../notification';
 import { sendMailFromTemplate } from './../email';
 import { userJoinedAnOrganization } from '../../templates/mail';
 import { getAdminIds, getOrgAppKey } from '../../data/internals';
-import { wasAccepted, wasDeclined, wasCreated } from './utils';
+import { wasAccepted, wasCreated } from './utils';
 import { applicationUrl } from '@blockframes/utils/apps';
-import { getOrgEmailData, getUserEmailData } from '@blockframes/utils/emails/utils';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { createInternalDocumentMeta, createNotification, createPublicOrganization, createPublicUser, Invitation, Organization } from '@blockframes/model';
-import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
+import { getDb, getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
+import {
+  createInternalDocumentMeta,
+  createNotification,
+  createPublicOrganization,
+  createPublicUser,
+  getUserEmailData,
+  getOrgEmailData,
+  Invitation,
+  Organization,
+} from '@blockframes/model';
 
 async function addUserToOrg(userId: string, organizationId: string) {
-  const db = admin.firestore();
+  const db = getDb();
   if (!organizationId || !userId) {
     throw new Error(`missing data: userId=${userId}, organizationId=${organizationId}`);
   }
@@ -65,30 +72,6 @@ async function onInvitationToOrgAccept({ toUser, fromOrg }: Invitation) {
   }
 
   return addUserToOrg(toUser.uid, fromOrg.id);
-}
-
-/** Send a notification to admins of organization to notify them that the invitation is declined. */
-async function onInvitationToOrgDecline(invitation: Invitation) {
-  if (!invitation.fromUser || !invitation.toOrg) {
-    console.error('No user or org provided');
-    return;
-  }
-
-  const org = await getDocument<Organization>(`orgs/${invitation.toOrg.id}`);
-  const adminIds = await getAdminIds(org.id);
-  const appAccess = await getOrgAppKey(org);
-
-  const notifications = adminIds.map(toAdminId =>
-    createNotification({
-      toUserId: toAdminId,
-      user: createPublicUser(invitation.toUser),
-      organization: createPublicOrganization(invitation.fromOrg),
-      type: 'invitationToJoinOrgDeclined',
-      _meta: createInternalDocumentMeta({ createdFrom: appAccess })
-    })
-  );
-
-  return triggerNotifications(notifications);
 }
 
 /** create a notification/email to sender and org member(s) when
@@ -166,8 +149,6 @@ export async function onInvitationToJoinOrgUpdate(
 ) {
   if (wasAccepted(before, after)) {
     return onInvitationToOrgAccept(invitation);
-  } else if (wasDeclined(before, after)) {
-    return onInvitationToOrgDecline(invitation);
   }
 }
 

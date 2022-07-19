@@ -1,27 +1,23 @@
 <global-modal>
-  <section fxlayout="column" fxLayoutGap="32px">
-    <h1>How It Works</h1>
-
-    <mat-tab-group>
-      <mat-tab label="Multi-territories">
-        <ng-template matTabContent>
-          <p><strong>Multi-territories</strong> view will show the territories that are available according to your search on a map. You just need to point out the dates, terms and exclusivity you need.</p>
-          <video controls src="assets/videos/learn_map.mp4"></video>
-        </ng-template>
-      </mat-tab>
-      <mat-tab label="Single-territory">
-        <ng-template matTabContent>
-          <p><strong>Single-territory</strong> view will show the calendar with availabilities for the territories and rights you've pointed out. Just select the start and end date and your term will be created.</p>
-          <video controls src="assets/videos/learn_calendar.mp4"></video>
-        </ng-template>
-      </mat-tab>
-    </mat-tab-group>
-
-    <div mat-dialog-actions fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px" class="actions">
-      <button mat-flat-button color="primary" (click)="close()">GOT IT!</button>
-      <button mat-button color="primary" (click)="openIntercom()">
-        Ask a question
-      </button>
-    </div>
-  </section>
+  <h1>How It Works</h1>
+  <mat-tab-group>
+    <mat-tab label="Multi-territories">
+      <ng-template matTabContent>
+        <p><strong>Multi-territories</strong> view will show the territories that are available according to your search on a map. You just need to point out the dates, terms and exclusivity you need.</p>
+        <video controls src="assets/videos/learn_map.mp4"></video>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Single-territory">
+      <ng-template matTabContent>
+        <p><strong>Single-territory</strong> view will show the calendar with availabilities for the territories and rights you've pointed out. Just select the start and end date and your term will be created.</p>
+        <video controls src="assets/videos/learn_calendar.mp4"></video>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+  <div mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="close()">GOT IT!</button>
+    <button mat-button color="primary" (click)="openIntercom()">
+      Ask a question
+    </button>
+  </div>
 </global-modal>

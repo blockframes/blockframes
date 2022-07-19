@@ -3,17 +3,17 @@
  * to the LAST version.
  */
 import { importFirestore } from './admin';
-import { Firestore, loadAdminServices, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { Firestore, startMaintenance, endMaintenance, versionRef } from '@blockframes/firebase-utils';
 import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
 import { last } from 'lodash';
-import { dbVersionDoc } from '@blockframes/utils/maintenance';
 import { exportFirestoreToBucketBeta, getFirestoreExportDirname } from './firebase-utils';
 import { isMigrationRequired } from './tools';
+import { getDb, getStorage } from '@blockframes/firebase-utils/initialize';
 
 export const VERSION_ZERO = 2;
 
 export async function loadDBVersion(db: Firestore): Promise<number> {
-  const version = await db.doc(dbVersionDoc).get();
+  const version = await versionRef(db).get();
 
   if (!version.exists) {
     return VERSION_ZERO;
@@ -22,13 +22,12 @@ export async function loadDBVersion(db: Firestore): Promise<number> {
 }
 
 export async function updateDBVersion(db: Firestore, version: number) {
-  const versionRef = db.collection('_META').doc('_VERSION');
-  const doc = await versionRef.get();
+  const doc = await versionRef(db).get();
 
   if (!doc.exists) {
-    return versionRef.set({ currentVersion: version });
+    return versionRef(db).set({ currentVersion: version });
   } else {
-    return versionRef.update({ currentVersion: version });
+    return versionRef(db).update({ currentVersion: version });
   }
 }
 
@@ -43,14 +42,16 @@ export function selectAndOrderMigrations(afterVersion: number): IMigrationWithVe
 
 export async function migrate({
   withBackup = true,
-  db = loadAdminServices().db,
-  storage = loadAdminServices().storage,
-  performMigrationCheck = true
+  db = getDb(),
+  storage = getStorage(),
+  performMigrationCheck = true,
+  withMaintenance = false
 }: {
   withBackup?: boolean;
   db?: FirebaseFirestore.Firestore;
   storage?: import('firebase-admin').storage.Storage;
-  performMigrationCheck?: boolean
+  performMigrationCheck?: boolean,
+  withMaintenance?: boolean
 } = {}) {
 
   if (performMigrationCheck && !await isMigrationRequired(db)) {
@@ -58,7 +59,7 @@ export async function migrate({
     return;
   }
 
-  await startMaintenance(db);
+  if (withMaintenance) await startMaintenance(db);
   console.info('Start the migration process...');
 
   const backupDir = `pre-migration-${getFirestoreExportDirname(new Date())}`;
@@ -91,7 +92,7 @@ export async function migrate({
     }
 
     await updateDBVersion(db, lastVersion);
-    await endMaintenance(db);
+    if (withMaintenance) await endMaintenance(db);
   } catch (e) {
     console.error(e);
     if (withBackup) {

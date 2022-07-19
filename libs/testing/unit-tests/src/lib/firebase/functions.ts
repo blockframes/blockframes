@@ -1,6 +1,6 @@
-﻿import * as admin from 'firebase-admin';
+﻿import type * as admin from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
-import { runChunks } from '@blockframes/firebase-utils';
+import { getDb, initAdmin, runChunks } from '@blockframes/firebase-utils';
 import { join, resolve } from 'path';
 import { config } from 'dotenv';
 import { firebase as firebaseEnv } from '@env';
@@ -39,7 +39,7 @@ export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptio
     // initialize test database
     process.env.GCLOUD_PROJECT = projectId;
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-    const app = admin.initializeApp({ projectId });
+    const app = initAdmin({ projectId });
     firebaseTest.mockConfig(runtimeConfig);
     firebaseTest.firebaseConfig = { projectId, app };
     return firebaseTest;
@@ -98,7 +98,7 @@ function setData(testEnv: RulesTestEnvironment, dataDB: Record<string, unknown>)
 //////////////
 
 export function populate(collection: string, set: any[]) {
-  const db = admin.firestore();
+  const db = getDb();
   return runChunks(set, async (d) => {
     const docRef = db.collection(collection).doc(d.id || d.uid);
     await docRef.set(d);

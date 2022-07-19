@@ -1,4 +1,4 @@
-import { Firestore, startMaintenance } from '@blockframes/firebase-utils';
+import { Firestore, maintenanceRef, startMaintenance } from '@blockframes/firebase-utils';
 import * as env from '@env';
 import { config } from 'dotenv';
 import { resolve } from 'path';
@@ -12,11 +12,6 @@ export async function isMigrationRequired(db: Firestore) {
   console.log('Latest DB version:', LATEST_VERSION);
   console.log('Current DB version:', currentVersion);
   return currentVersion < LATEST_VERSION;
-}
-
-export function disableMaintenanceMode() {
-  process.env.BLOCKFRAMES_MAINTENANCE_DISABLED = 'true';
-  console.warn('Maintenance mode is disabled!');
 }
 
 export async function displayCredentials() {
@@ -49,14 +44,15 @@ export async function displayCredentials() {
 
 export async function ensureMaintenanceMode(db: FirebaseFirestore.Firestore) {
   console.log('Ensuring maintenance mode stays active in Firestore');
-  const maintenanceRef = db.collection('_META').doc('_MAINTENANCE');
   await startMaintenance(db);
-  const unsubscribe = maintenanceRef.onSnapshot(async snap => {
+  const unsubscribe = maintenanceRef(db).onSnapshot(async snap => {
     const maintenance = snap.data() as IMaintenanceDoc;
     if (maintenance.endedAt || !maintenance.startedAt) {
+      console.log('Maintenance mode was removed.');
       await startMaintenance(db);
+      console.log('Insurance started it back.');
     }
-  })
+  });
   return function () {
     unsubscribe();
     console.log('Maintenance mode insurance ended');

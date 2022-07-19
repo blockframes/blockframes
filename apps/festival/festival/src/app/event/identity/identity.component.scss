@@ -1,33 +1,123 @@
+@use 'surface';
+@import '@angular/flex-layout/mq';
+
 :host {
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
   background-image: url("/assets/images/light/stars_wallpaper.svg");
   background-position: center;
   background-repeat: no-repeat;
 
-  a[app-logo] {
-    position: absolute;
-    top: 40px;
-    left: 40px;
+  .snackbar-bar-text {
+    margin-right: 24px;
   }
 
-  .surface {
+  article {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     text-align: center;
-  
-    header {
-      text-align: left;
+
+    .back-arrow {
+      align-self: left;
     }
 
     form {
-      padding: 40px;
+      display: flex;
+      flex-direction: column;
 
-      div {
+      section {
+        display: flex;
         margin-block: 16px;
+      }
+
+      mat-checkbox {
+        align-self: flex-start;
+        text-align: left;
+      }
+
+      span {
+        white-space: break-spaces;
+      }
+      
+      footer {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        span {
+          white-space: break-spaces;
+        }
+        button {
+          align-self: center;
+          margin-top: 24px;
+        }
+      }
+    }
+  }
+}
+
+@include layout-bp(gt-xs) {
+  :host {
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    header {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+    }
+
+    & > article {
+      @include surface.surface;
+      padding: 24px;
+
+      menu {
+        margin: 0;
+      }
+
+      form {
+        padding: 40px;
+
+        section {
+          flex-direction: row;
+          gap: 16px;
+
+          mat-form-field {
+            flex: 1;
+          }
+        }
+      }
+    }
+  }
+}
+
+@include layout-bp(xs) {
+  :host {
+    header {
+      align-self: center;
+      margin-top: auto;
+      padding-top: 24px;
+
+      a[app-logo] {
+        height: 48px;
+      }
+    }
+
+    & > article {
+      padding: 24px;
+      margin-bottom: auto;
+
+      menu {
+        margin: 0 0 12px 0;
+      }
+
+      form {
+        section {
+          flex-direction: column;
+        }
       }
     }
   }

@@ -10,7 +10,8 @@ import {
   Organization,
   PublicOrganization,
   Invitation,
-  IMaintenanceDoc
+  IMaintenanceDoc,
+  getAllAppsExcept
 } from '@blockframes/model';
 import {
   DbRecord,
@@ -23,6 +24,7 @@ import {
 import { firebase, testVideoId } from '@env';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { Queue } from '../../internals/queue';
+import { META_COLLECTION_NAME } from '@blockframes/utils/maintenance';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
@@ -44,22 +46,6 @@ function fakeIp() {
   return randomNumber() + 1 + '.' + randomNumber() + '.' + randomNumber() + '.' + randomNumber();
 }
 
-function fakeFiscalNumber() {
-  const fakeValues = ['FR', 'EN', 'PL', 'GB', 'AL'];
-  const start = fakeValues[Math.floor(Math.random() * fakeValues.length)];
-  return (
-    start +
-    ' ' +
-    randomNumber() +
-    '-' +
-    randomNumber() +
-    '-' +
-    randomNumber() +
-    '-' +
-    randomNumber()
-  );
-}
-
 function hasKeys<T extends Record<string, any>>(
   doc: Record<string, any>,
   ...keys: (keyof T)[]
@@ -71,18 +57,20 @@ function processUser<T extends User | PublicUser>(u: T): T {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
   const email = fakeEmail(firstName);
-  const privacyPolicy = { date: new Date(), ip: fakeIp() };
-  return { ...u, firstName, lastName, email, privacyPolicy };
+  const legalTerms = { date: new Date(), ip: fakeIp() };
+  const privacyPolicy = legalTerms;
+  const termsAndConditions = {};
+  const apps = getAllAppsExcept(['crm']);
+  for (const appName of apps) {
+    termsAndConditions[appName] = legalTerms;
+  }
+  return { ...u, firstName, lastName, email, privacyPolicy, termsAndConditions };
 }
 
 function processOrg<T extends Organization | PublicOrganization>(o: T): T {
-  const companyName = faker.company.companyName();
-  const denomination = { full: companyName, public: companyName };
-  const email = fakeEmail(companyName);
-  const org = { ...o, denomination, email } as any;
-  if (org.fiscalNumber) {
-    org.fiscalNumber = fakeFiscalNumber();
-  }
+  const name = faker.company.companyName();
+  const email = fakeEmail(name);
+  const org = { ...o, name, email } as any;
   return org;
 }
 
@@ -119,12 +107,12 @@ function updateUser(user: User | PublicUser | Partial<User>, toPublicUser = fals
 
 function updateOrg(org: Organization | PublicOrganization) {
   if (!org) return;
-  if (hasKeys<PublicOrganization>(org, 'denomination') && !hasKeys<Organization>(org, 'email')) {
+  if (hasKeys<PublicOrganization>(org, 'name') && !hasKeys<Organization>(org, 'email')) {
     // Is public
     const newOrg = orgCache?.[org.id] || (orgCache[org.id] = processOrg(org));
     return createPublicOrganization(newOrg);
   }
-  if (hasKeys<Organization>(org, 'email') || hasKeys<Organization>(org, 'fiscalNumber')) {
+  if (hasKeys<Organization>(org, 'email')) {
     return orgCache?.[org.id] || (orgCache[org.id] = processOrg(org));
   }
   throw Error(`Unable to process org: ${JSON.stringify(org, null, 4)}`);
@@ -141,6 +129,9 @@ function updateHostedVideo(screener: MovieVideo): MovieVideo {
 function processMovie(movie: Movie): Movie {
   if (movie.promotional?.videos?.screener?.jwPlayerId) {
     movie.promotional.videos.screener = updateHostedVideo(movie.promotional.videos.screener);
+  }
+  if (movie.promotional?.videos?.publicScreener?.jwPlayerId) {
+    movie.promotional.videos.publicScreener = updateHostedVideo(movie.promotional.videos.publicScreener);
   }
   if (movie.promotional?.videos?.otherVideos) {
     movie.promotional.videos.otherVideos = movie.promotional.videos.otherVideos.map(
@@ -180,7 +171,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
       // USERS
       return { docPath, content: updateUser(doc) };
     }
-    if (docPath.includes('orgs/') && hasKeys<Organization>(doc, 'id', 'denomination')) {
+    if (docPath.includes('orgs/') && hasKeys<Organization>(doc, 'id', 'name')) {
       // ORGS
       return { docPath, content: updateOrg(doc) };
     }
@@ -196,7 +187,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
       if (hasKeys<Movie>(doc, 'title')) return { docPath, content: processMovie(doc) };
       return { docPath, content: doc };
     }
-    if (docPath.includes('_META')) {
+    if (docPath.includes(META_COLLECTION_NAME)) {
       // Always set maintenance
       if (hasKeys<IMaintenanceDoc>(doc, 'endedAt')) return { docPath, content: processMaintenanceDoc(doc) };
       return { docPath, content: doc };

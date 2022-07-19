@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ChipComponent } from './chip.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { OrgNameModule } from '../../pipes/org-name.pipe';
 import { MatRippleModule } from '@angular/material/core';
 
 
@@ -14,7 +13,6 @@ import { MatRippleModule } from '@angular/material/core';
     CommonModule,
     RouterModule,
     ImageModule,
-    OrgNameModule,
     MatRippleModule
   ]
 })

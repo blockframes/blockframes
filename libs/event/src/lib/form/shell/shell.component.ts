@@ -15,8 +15,9 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { App } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { ExplanationComponent } from '../../components/explanation/explanation.component';
 
-const statisticsTab = { path: 'statistics', label: 'Attendance' };
+const statisticsTab = { path: 'statistics', label: 'Statistics' };
 
 const navTabs: NavTabs = {
   screening: [
@@ -184,4 +185,9 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     this.errorChipMessage = !videoId ? 'Video file missing' : '';
     this.cdr.markForCheck();
   }
+
+  public explain() {
+    this.dialog.open(ExplanationComponent, { data: createModalData({ type: this.form.value.type }), autoFocus: false });
+  }
+
 }

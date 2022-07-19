@@ -1,13 +1,13 @@
 import {
   InvitationWithScreening,
   InvitationWithAnalytics,
-  averageWatchtime,
-} from "@blockframes/model";
+  averageWatchDuration,
+  invitationStatus,
+} from '@blockframes/model';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
-import { MetricCard, events, toCards } from '@blockframes/analytics/components/metric-card-list/metric-card-list.component';
+import { aggregate, counter, countedToAnalyticData, MetricCard, events, toCards } from '@blockframes/analytics/utils';
 import {
   AggregatedAnalytic,
   isScreening,
@@ -38,6 +38,7 @@ import {
 import { InvitationService } from '@blockframes/invitation/service';
 import { EventService } from '@blockframes/event/service';
 import { scrollIntoView } from "@blockframes/utils/browser/utils";
+import { formatDate } from '@angular/common';
 
 interface MovieWithAnalytics extends Movie { analytics: Analytics<'title'>[]; };
 
@@ -58,12 +59,10 @@ function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
 }
 
 function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
-  const attended = invitations.filter(invitation => invitation.watchTime);
-  const averageWatchTime = averageWatchtime(attended);
+  const attended = invitations.filter(invitation => invitation.watchInfos?.duration !== undefined);
+  const avgWatchDuration = averageWatchDuration(attended);
   const invitationsCount = invitations.filter(i => i.mode === 'invitation').length;
   const requestsCount = invitations.filter(i => i.mode === 'request').length;
-
-  const watchTime = convertToTimeString(averageWatchTime * 1000) || '0s';
 
   return [
     {
@@ -83,7 +82,7 @@ function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): Metri
     },
     {
       title: 'Average Watch Time',
-      value: watchTime,
+      value: convertToTimeString(avgWatchDuration * 1000),
       icon: 'access_time'
     }
   ];
@@ -231,10 +230,11 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
     const data = await firstValueFrom(this.invitations$);
     const analytics = data.map(invitation => ({
       'Title': invitation.event?.movie?.title.international,
-      'Invitation': invitation.status,
+      'Invitation': invitationStatus[invitation.status],
       'Request to participate': invitation.mode,
       'Screening Requests': invitation.analytics?.length,
-      'Watch Time': invitation.watchTime || '0min'
+      'Watch Time': invitation.watchInfos?.duration !== undefined ? convertToTimeString(invitation.watchInfos?.duration * 1000) : '-',
+      'Watching Ended': invitation.watchInfos?.date ? formatDate(invitation.watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '-'
     }));
     downloadCsvFromJson(analytics, 'buyer-screener-analytics')
   }

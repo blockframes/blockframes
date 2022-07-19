@@ -116,9 +116,9 @@ export function debounceFactory(func: (...params) => unknown, wait: number) {
   };
 }
 
-/** Verify if the org exists and has denomination.full. */
-export function hasDenomination(organization: Organization): boolean {
-  return !!organization && !!organization.denomination.full;
+/** Verify if the org exists and has a name. */
+export function hasName(organization: Organization): boolean {
+  return !!organization && !!organization.name;
 }
 
 export function capitalize(text: string) {
@@ -151,5 +151,5 @@ export function convertToTimeString(time: number) {
   const minuteStr = minute > 0 ? `${minute}min` : '';
   const secondStr = second > 0 ? `${second}s` : '';
 
-  return `${dayStr}${hourStr}${minuteStr}${secondStr}`;
+  return `${dayStr}${hourStr}${minuteStr}${secondStr}` || '0s';
 }

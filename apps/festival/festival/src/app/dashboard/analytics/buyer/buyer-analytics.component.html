@@ -10,7 +10,7 @@
       <div>
         <h4>{{ user | displayName }}</h4>
         <a [routerLink]="['/c/o/dashboard/organization/', user.orgId]">
-          <h1>{{ user.org | orgName }}</h1>
+          <h1>{{ user.org.name }}</h1>
         </a>
         <h5>{{ user.org.activity | toLabel:'orgActivity' }}</h5>
 
@@ -85,7 +85,10 @@
 
     <article>
       <header>
-        <h4>Attended Screenings</h4>
+        <article>
+          <h4>Attended Screenings</h4>
+          <p>"0s" means the user watched less than a minute.</p>
+        </article>
         <button mat-button color="primary" (click)="exportScreenerAnalytics()">
           <mat-icon svgIcon="cloud_download"></mat-icon>
           <span>Export Analytics to .CSV</span>
@@ -96,7 +99,7 @@
           {{ title | maxLength: 50 }}
         </ng-template>
         <ng-template colRef="status" label="Invitation" let-status sort>
-          {{ status | titlecase }}
+          {{ status | toLabel: 'invitationStatus' }}
         </ng-template>
         <ng-template colRef="mode" label="Request to Participate" let-mode sort>
           {{ mode | titlecase }}
@@ -104,8 +107,11 @@
         <ng-template colRef="analytics.length" label="Screening Requests" let-requests sort>
           {{ requests }}
         </ng-template>
-        <ng-template colRef="watchTime" label="Watch Time" let-watchTime sort>
-          {{ watchTime * 1000 | duration: '0s' }}
+        <ng-template colRef="watchInfos.duration" label="Watch Time" let-watchTime sort>
+          {{ watchTime * 1000 | duration }}
+        </ng-template>
+        <ng-template colRef="watchInfos.date" label="Watching Status" let-date sort>
+          <bf-tag *ngIf="date | isWatchingNow">Watching Now</bf-tag>
         </ng-template>
       </bf-table>
     </article>

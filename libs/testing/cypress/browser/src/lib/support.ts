@@ -115,6 +115,7 @@ export function selectCompany(orgName: string) {
 export function verifyInvitation(orgAdminEmail: string, user: PublicUser, expectedModule?: Module) {
   browserAuth.signinWithEmailAndPassword(orgAdminEmail);
   cy.visit('');
+
   assertUrlIncludes(`${expectedModule}/home`);
   if (expectedModule === 'marketplace') get('skip-preferences').click();
   get('invitations-link').click();

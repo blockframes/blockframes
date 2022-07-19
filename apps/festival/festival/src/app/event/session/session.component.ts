@@ -14,7 +14,7 @@ import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 import { createScreeningAttendee, ErrorResultResponse, extensionToType } from '@blockframes/model';
 import { MediaService } from '@blockframes/media/service';
 import { InvitationService } from '@blockframes/invitation/service';
-import { filter, pluck, scan, switchMap } from 'rxjs/operators';
+import { filter, pluck, scan, switchMap, tap } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
 import { AuthService } from '@blockframes/auth/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -252,15 +252,23 @@ export class SessionComponent implements OnInit, OnDestroy {
       } else if (invitation) {
         this.watchTimeInterval?.unsubscribe();
 
+        let initializedWatchInfos = false;
         this.watchTimeInterval = interval(1000).pipe(
           filter(() => !!this.isPlaying),
-          scan(watchTime => watchTime + 1, invitation.watchTime ?? 0),
-          finalizeWithValue(watchTime => {
-            if (watchTime !== undefined) this.invitationService.update(invitation.id, { watchTime });
+          tap(() => {
+            // Initialize once to zero as soon as user clicks on play
+            if (!initializedWatchInfos) {
+              this.invitationService.update(invitation.id, { watchInfos: { duration: invitation.watchInfos?.duration ?? 0, date: new Date() } });
+              initializedWatchInfos = true;
+            }
           }),
-          filter(watchTime => watchTime % 60 === 0),
-        ).subscribe(watchTime => {
-          this.invitationService.update(invitation.id, { watchTime });
+          scan(duration => duration + 1, invitation.watchInfos?.duration ?? 0),
+          finalizeWithValue(duration => {
+            if (duration !== undefined) this.invitationService.update(invitation.id, { watchInfos: { duration, date: new Date() } });
+          }),
+          filter(duration => duration % 60 === 0),
+        ).subscribe(duration => {
+          this.invitationService.update(invitation.id, { watchInfos: { duration, date: new Date() } });
         });
       }
     }

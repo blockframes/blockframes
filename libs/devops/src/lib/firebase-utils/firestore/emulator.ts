@@ -1,14 +1,12 @@
 import { firebase } from '@env';
-import * as admin from 'firebase-admin';
 import { ChildProcess, execSync } from 'child_process';
 import { Dirent, existsSync, mkdirSync, readdirSync, rmdirSync, writeFileSync, renameSync } from 'fs';
 import { join, resolve, sep } from 'path';
 import { getFirestoreExportDirname } from './export';
-import { getKeyName, isDemo, sleep, throwOnProduction } from '@blockframes/firebase-utils';
+import { getKeyName, isDemo, sleep } from '@blockframes/firebase-utils';
 import { promises } from 'fs';
 import { set } from 'lodash';
 import { awaitProcOutput, gsutilTransfer, runShellCommand, runShellCommandUntil } from '../commands';
-import type { auth as authType } from 'firebase-admin';
 
 const firestoreExportFolder = 'firestore_export'; // ! Careful - changing this may cause a bug
 const emulatorMetadataFilename = 'firebase-export-metadata.json';
@@ -98,25 +96,8 @@ export async function firebaseEmulatorExec({
 
   if (isOrHasValue(emulators, 'functions')) {
     // * If functions has been selected, write project config to .runtimeConfig file in root of repo dir
-
     writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
     writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json'));
-    // * #7723 Keep the below until we know we don't need to programmatically access firebase tools
-    // console.log('Writing Firebase Functions config secrets to .runtimeConfig');
-    // try {
-    //   const FIREBASE_CONFIG: firebaseTools.FirebaseConfig = { project: projectId };
-    //   if (process.env.FIREBASE_CI_TOKEN) FIREBASE_CONFIG.token = process.env.FIREBASE_CI_TOKEN; // * Check if we are in CI
-    //   const firebaseTools = eval('require')('firebase-tools') as firebaseTools; // * Lazy load not to bundle dep in functions compilation
-    //   const configObj = await firebaseTools.functions.config.get(undefined, FIREBASE_CONFIG);
-    //   await writeFile(
-    //     join(process.cwd(), './.runtimeconfig.json'),
-    //     JSON.stringify(configObj, null, 4),
-    //     'utf-8'
-    //   );
-    // } catch (e) {
-    //   console.error(e);
-    // }
-
   }
 
   if ((isOrHasValue(emulators, 'firestore') || isOrHasValue(emulators, 'auth') || isOrHasValue(emulators, 'storage')) && importPath) {
@@ -203,64 +184,6 @@ export async function shutdownEmulator(proc: ChildProcess, exportDir = defaultEm
 function forceEmulatorExport(exportDir = defaultEmulatorBackupPath) {
   const cmd = `firebase emulators:export ${exportDir} --force`
   return runShellCommand(cmd);
-}
-
-let db: FirebaseFirestore.Firestore;
-let auth: authType.Auth;
-
-export function connectFirestoreEmulator() {
-  throwOnProduction();
-  if (db) return db;
-
-  const firebaseJsonPath = resolve(process.cwd(), 'firebase.json');
-  try {
-    const {
-      emulators: {
-        firestore: { port: dbPort },
-        storage: { port: storagePort },
-        auth: { port: authPort },
-      },
-    } = eval('require')(firebaseJsonPath);
-
-    console.log('Detected - dbPort:', dbPort, 'storagePort:', storagePort, 'authPort:', authPort);
-
-    process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${dbPort}`;
-  } catch (e) {
-    process.env['FIRESTORE_EMULATOR_HOST'] = 'localhost:8080';
-  }
-
-  const app = admin.initializeApp({ projectId: firebase().projectId }, 'firestore');
-  db = app.firestore() as FirebaseFirestore.Firestore;
-
-  db.settings({
-    // port: dbPort,
-    merge: true,
-    ignoreUndefinedProperties: true,
-    host: 'localhost',
-    ssl: false,
-  });
-  return db;
-}
-
-export function connectAuthEmulator() {
-  if (auth) return auth;
-  const firebaseJsonPath = resolve(process.cwd(), 'firebase.json')
-  try {
-    const {
-      emulators: {
-        auth: { port: authPort },
-      },
-    } = eval('require')(firebaseJsonPath);
-    process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${authPort}`;
-  } catch (e) {
-    process.env['FIREBASE_AUTH_EMULATOR_HOST'] = 'localhost:9099';
-  }
-
-
-  const app = admin.initializeApp({ projectId: firebase().projectId }, 'auth');
-  auth = app.auth();
-
-  return auth;
 }
 
 /**

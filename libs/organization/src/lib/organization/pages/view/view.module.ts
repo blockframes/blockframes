@@ -7,7 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrgAddressModule } from '@blockframes/organization/pipes/org-address.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 
 // Components
 import { OrganizationViewComponent } from './view.component';
@@ -45,7 +44,6 @@ const routes = [{
     ImageModule,
     OrgAddressModule,
     ToLabelModule,
-    OrgNameModule,
     // Material
     MatTabsModule,
     MatButtonModule,

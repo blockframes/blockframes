@@ -8,22 +8,10 @@ import { convertToTimeString } from '../helpers';
 export class DurationPipe implements PipeTransform {
   /**
    * Convert **milliseconds** into a time string.
-   * If value is 0 or incorrect the `placeholder` will be returned.
-   *
-   * Default `placeholder` is 'TBC'
-   *
-   * `{{60 * 1000 | duration}} // '1min'`
+   * `{{ 60 * 1000 | duration }} // '1min'`
    */
-  transform(value: number, placeholder = 'TBC') {
-    if (
-      !value ||
-      typeof value !== 'number' ||
-      Number.isNaN(value) ||
-      !Number.isFinite(value) ||
-      value < 0
-    ) {
-      return placeholder;
-    }
+  transform(value: number, falback = '-') {
+    if (isNaN(value)) return falback;
     return convertToTimeString(value);
   }
 }
@@ -35,7 +23,7 @@ export class TimecodePipe implements PipeTransform {
   /** Takes a number of **seconds** and format it into `hh:mm:ss` */
   transform(value: number) {
 
-    if(typeof value !== 'number' || Number.isNaN(value) || !Number.isFinite(value) || value < 0) {
+    if (typeof value !== 'number' || Number.isNaN(value) || !Number.isFinite(value) || value < 0) {
       console.warn(`TIMECODE PIPE ERROR : value must be a positive finite number but got ${value}`);
     }
 

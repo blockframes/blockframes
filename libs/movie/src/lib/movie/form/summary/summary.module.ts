@@ -20,7 +20,6 @@ import { OpenPreviewModule } from '@blockframes/ui/open-preview/open-preview.mod
 // Blockframes Utils
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
-import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { VersionPipeModule } from '@blockframes/utils/pipes/version.pipe';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 import { JoinPipeModule } from '@blockframes/utils/pipes/join.pipe';
@@ -42,6 +41,7 @@ import { SummaryAvailableMaterialsComponent } from './available-materials/availa
 import { SummaryMediaFilesComponent } from './media-files/media-files.component';
 import { SummaryMediaImagesComponent } from './media-images/media-images.component';
 import { SummaryMediaVideosComponent } from './media-videos/media-videos.component';
+import { SummaryMediaScreenerComponent } from './media-screener/media-screener.component';
 import { SummaryMediaNotesComponent } from './media-notes/notes.component';
 import { SummaryShootingInformationComponent } from './shooting-information/shooting-information.component';
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
@@ -61,6 +61,7 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
     SummaryMediaFilesComponent,
     SummaryMediaImagesComponent,
     SummaryMediaVideosComponent,
+    SummaryMediaScreenerComponent,
     SummaryMediaNotesComponent,
     SummaryShootingInformationComponent
   ],
@@ -77,7 +78,6 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
     RunningTimePipeModule,
     FileNameModule,
     FlexLayoutModule,
-    DurationModule,
     HasStatusModule,
     MaxLengthModule,
     FilmographyPipeModule,
@@ -107,6 +107,7 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
     SummaryMediaFilesComponent,
     SummaryMediaImagesComponent,
     SummaryMediaVideosComponent,
+    SummaryMediaScreenerComponent,
     SummaryMediaNotesComponent,
     SummaryShootingInformationComponent
   ]
