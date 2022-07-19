@@ -27,7 +27,7 @@ export class MovieFormAdditionalInformationComponent implements OnInit {
   staticGoals = Object.keys(socialGoals) as SocialGoal[];
 
   certifications = Object.keys(certifications).filter(cert =>
-    (cert !== 'awardedFilm' && cert !== 'aListCast'));
+    (cert !== 'awardedFilm' && cert !== 'aListCast' && cert !== 'artEssai'));
 
 
   public qualificationsColumns = {
