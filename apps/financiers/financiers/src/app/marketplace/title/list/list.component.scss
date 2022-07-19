@@ -18,11 +18,6 @@ mat-form-field {
   text-align: center;
 }
 
-list-filter {
-  display: flex;
-  justify-content: center;
-}
-
 .loading {
   width: 100%;
   display: flex;
@@ -34,6 +29,5 @@ list-page-description, pdf-export button {
 }
 
 .refresh {
-  margin-left: auto;
   flex-shrink: 0;
 }

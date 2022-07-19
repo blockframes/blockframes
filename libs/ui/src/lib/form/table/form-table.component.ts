@@ -12,7 +12,9 @@ import {
   ChangeDetectionStrategy,
   OnDestroy,
   Pipe,
-  PipeTransform
+  PipeTransform,
+  EventEmitter,
+  Output
 } from '@angular/core';
 
 // Blockframes
@@ -31,7 +33,6 @@ export class QueryListFindPipe implements PipeTransform {
   }
 }
 
-
 @Directive({ selector: '[formView]' })
 export class FormViewDirective { }
 
@@ -44,12 +45,16 @@ export class FormViewDirective { }
 export class FormTableComponent<T> implements OnInit, OnDestroy {
   @Input() columns: Record<string, string> = {};
   @Input() form: FormList<T>;
+  @Input() defaultFormValue: T;
+  @Input() @boolean disableDelete: boolean;
   @Input() @boolean editOnly = false;
   @Input() tablePosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
   @Input() set active(index: number) {
     if (typeof index !== 'number' || index < 0) return;
     this.edit(index);
   }
+
+  @Output() itemSelected = new EventEmitter();
 
   @ContentChildren(ColumnDirective, { descendants: false }) cols: QueryList<ColumnDirective<T>>;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
@@ -83,7 +88,7 @@ export class FormTableComponent<T> implements OnInit, OnDestroy {
   }
 
   add() {
-    this.formItem = this.form.createControl({});
+    this.formItem = this.form.createControl(this.defaultFormValue || {});
   }
 
   save() {
@@ -114,6 +119,7 @@ export class FormTableComponent<T> implements OnInit, OnDestroy {
     this.formItem = this.form.at(this.activeIndex);
     this.activeValue = this.formItem.value;
     this.cdr.markForCheck();
+    this.itemSelected.emit(this.formItem.value);
   }
 
   remove(index: number) {
