@@ -87,7 +87,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     const decodedData: MovieSearch = decodeUrl(this.route);
-    if (decodedData && Object.keys(decodedData).length) this.searchForm.hardReset(decodedData);
+    this.load(decodedData);
 
     const sub = this.searchForm.valueChanges.pipe(
       debounceTime(1000),

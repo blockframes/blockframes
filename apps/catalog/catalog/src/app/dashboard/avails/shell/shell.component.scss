@@ -17,11 +17,13 @@ nav {
 
 header {
   display: flex;
-  justify-content: space-between;
-  align-items: start;
+  align-items: center;
+  a[mat-button] {
+    margin-left: auto;
+  }
 }
 
-nav, div {
+nav {
   display: flex;
   align-items: center;
   justify-content: center;

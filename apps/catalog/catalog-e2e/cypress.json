@@ -12,5 +12,7 @@
   "reporter": "junit",
   "reporterOptions": {
     "mochaFile": "../../../dist/test-reports/catalog-[hash].xml"
-  }
+  },
+  "viewportWidth": 1920,
+  "viewportHeight": 1080
 }
