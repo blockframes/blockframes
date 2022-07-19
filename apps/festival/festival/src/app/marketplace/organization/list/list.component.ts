@@ -76,11 +76,6 @@ export class ListComponent implements OnInit, OnDestroy {
     await this.searchForm.search();
   }
 
-  clear() {
-    const initial = createOrganizationSearch();
-    this.searchForm.reset(initial);
-  }
-
   ngOnDestroy() {
     this.sub.unsubscribe();
   }

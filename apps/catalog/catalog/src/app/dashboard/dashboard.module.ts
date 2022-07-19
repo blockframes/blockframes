@@ -80,15 +80,25 @@ const routes: Routes = [
       },
       {
         path: 'avails',
-        children: [{
-          path: '',
-          pathMatch: 'full',
-          loadChildren: () => import('./avails/list/list.module').then(m => m.CatalogAvailsListModule)
-        },
-        {
-          path: ':titleId',
-          loadChildren: () => import('./avails/shell/shell.module').then(m => m.CatalogAvailsShellModule)
-        }]
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            loadChildren: () => import('./avails/list/list.module').then(m => m.CatalogAvailsListModule)
+          },
+          {
+            path: 'select',
+            loadChildren: () => import('./avails/select-title/select-title.module').then(m => m.CatalogAvailsSelectTitleModule)
+          },
+          {
+            path: 'select/:titleId/manage',
+            loadChildren: () => import('./avails/manage/manage.module').then(m => m.CatalogManageAvailsModule)
+          },
+          {
+            path: ':titleId',
+            loadChildren: () => import('./avails/shell/shell.module').then(m => m.CatalogAvailsShellModule)
+          },
+        ]
       },
       {
         path: 'title',

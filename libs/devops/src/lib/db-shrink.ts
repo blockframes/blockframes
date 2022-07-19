@@ -215,7 +215,7 @@ function getOrgsAndUsersToKeep(dbData: DatabaseData) {
   }
 
   const usersLinkedOrgIds = uniqueArray(_usersLinked).map(userId => getOrgIdOfUser(userId)).filter(o => o);
-  const orgSuperAdmins = uniqueArray(_orgsLinked.concat(usersLinkedOrgIds)).map(orgId => getOrgSuperAdmin(orgId)).filter(u => u);
+  const orgSuperAdmins = uniqueArray(_orgsLinked.filter(o => o).concat(usersLinkedOrgIds)).map(orgId => getOrgSuperAdmin(orgId)).filter(u => u);
 
   const usersLinked = uniqueArray(_usersLinked).concat(orgSuperAdmins);
 

@@ -17,15 +17,16 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareRe
 // Blockframes
 import { centralOrgId } from '@env';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie } from '@blockframes/model';
+import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie, GetKeys } from '@blockframes/model';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
 import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService } from '@blockframes/contract/contract/service';
-import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
+import { MovieSearchForm, createMovieSearch, Versions, MovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
+import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -57,11 +58,10 @@ export class ListComponent implements OnDestroy, OnInit {
     private snackbar: MatSnackBar,
     private bucketService: BucketService,
     private router: Router,
-    private pdfService: PdfService
+    private pdfService: PdfService,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
-
 
   async ngOnInit() {
     this.searchForm.hitsPerPage.setValue(1000);
@@ -92,22 +92,8 @@ export class ListComponent implements OnDestroy, OnInit {
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
-    const {
-      search,
-      avails = {}
-    } = decodeUrl(this.route);
-
-    if (avails.duration?.from) avails.duration.from = decodeDate(avails.duration.from);
-    if (avails.duration?.to) avails.duration.to = decodeDate(avails.duration.to);
-
-    // patch everything
-    this.searchForm.patchValue(search);
-
-    // ensure FromList are also patched
-    this.searchForm.genres.patchAllValue(search?.genres);
-    this.searchForm.originCountries.patchAllValue(search?.originCountries);
-
-    this.availsForm.patchValue(avails);
+    const parsedData: { search: MovieSearch, avails: AvailsFilter } = decodeUrl(this.route);
+    this.load(parsedData);
 
     const search$ = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
@@ -124,7 +110,10 @@ export class ListComponent implements OnDestroy, OnInit {
         genres: search.genres,
         originCountries: search.originCountries,
         contentType: search.contentType,
-        release: search.release
+        release: search.release,
+        languages: search.languages,
+        minReleaseYear: search.minReleaseYear > 0 ? search.minReleaseYear : undefined,
+        runningTime: search.runningTime
       },
       avails,
     }));
@@ -190,5 +179,28 @@ export class ListComponent implements OnDestroy, OnInit {
     await this.pdfService.download(movies.map(m => m.objectID));
     snackbarRef.dismiss();
     this.exporting = false;
+  }
+
+  load(parsedData: { search: MovieSearch, avails: AvailsFilter }) {
+    // Search Form
+    const languages = this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>;
+    const versions = this.searchForm.languages.get('versions') as FormEntity<EntityControl<Versions>, Versions>;
+
+    // patch everything
+    this.searchForm.patchValue(parsedData.search);
+
+    // ensure FromList are also patched
+    this.searchForm.genres.patchAllValue(parsedData.search?.genres);
+    this.searchForm.originCountries.patchAllValue(parsedData.search?.originCountries);
+    languages.patchAllValue(parsedData.search?.languages?.languages);
+    versions.patchValue(parsedData.search?.languages?.versions);
+    this.searchForm.minReleaseYear.patchValue(parsedData.search?.minReleaseYear);
+    this.searchForm.runningTime.patchValue(parsedData.search?.runningTime);
+
+    // Avails Form
+    if (parsedData.avails?.duration?.from) parsedData.avails.duration.from = decodeDate(parsedData.avails.duration.from);
+    if (parsedData.avails?.duration?.to) parsedData.avails.duration.to = decodeDate(parsedData.avails.duration.to);
+
+    this.availsForm.patchValue(parsedData.avails);
   }
 }

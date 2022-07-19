@@ -32,7 +32,7 @@ export class ContractFormComponent implements OnInit {
   private income?: Income;
   title?: Movie;
   form = new NegotiationForm();
-  titles$ = this.service.valueChanges([where('app.catalog.status', '==', 'accepted')]);
+  titles$ = this.titleService.valueChanges([where('app.catalog.status', '==', 'accepted')]);
   currency?: string;
   activeTerm?: string;
   contractId: string = this.route.snapshot.params.contractId;
@@ -47,7 +47,6 @@ export class ContractFormComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private service: MovieService,
     private snackbar: MatSnackBar,
     private termService: TermService,
     private titleService: MovieService,
@@ -55,7 +54,7 @@ export class ContractFormComponent implements OnInit {
     private incomeService: IncomeService,
     private contractService: ContractService,
     private negotiationService: NegotiationService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     const [contract, income, offer] = await Promise.all([
@@ -76,29 +75,33 @@ export class ContractFormComponent implements OnInit {
   }
 
   async save() {
-    if (this.form.valid) {
-      const { terms, price } = this.form.value;
-      const contractId = this.route.snapshot.params.contractId;
-      const write = this.contractService.batch(); // create a batch
+    if (this.form.invalid) return;
+    const { terms, price } = this.form.value;
+    const contractId = this.route.snapshot.params.contractId;
+    const write = this.contractService.batch(); // create a batch
 
-      if (this.negotiation.status === 'accepted') {
-        const termList = terms.map((term) => ({ ...term, contractId }));
-        const termIds = await this.termService.upsert(termList, { write });
-        const existingTermIds = this.contract?.termIds || [];
-        const termIdsToDelete = existingTermIds.filter((id) => !termIds.includes(id));
-        await this.termService.remove(termIdsToDelete, { write });
-        await this.contractService.update(contractId, { termIds }, { write });
-        if (price !== this.income?.price) {
-          await this.incomeService.update(contractId, { price }, { write });
-        }
+    if (this.negotiation.status === 'accepted') {
+      const termList = terms.map((term) => ({ ...term, contractId }));
+      const termIds = await this.termService.upsert(termList, { write });
+      const existingTermIds = this.contract?.termIds || [];
+      const termIdsToDelete = existingTermIds.filter((id) => !termIds.includes(id));
+      const promises = [
+        this.termService.remove(termIdsToDelete, { write }),
+        this.contractService.update(contractId, { termIds }, { write })
+      ];
+      if (price !== this.income?.price) {
+        promises.push(
+          this.incomeService.update(contractId, { price }, { write })
+        );
       }
-
-      const data: Partial<Negotiation> = { terms, price };
-      const config = { write, params: { contractId } };
-      this.negotiationService.update(this.negotiation.id, data, config);
-
-      await write.commit();
-      this.snackbar.open('Contract updated!', 'ok', { duration: 1000 });
+      await Promise.all(promises);
     }
+
+    const data: Partial<Negotiation> = { terms, price };
+    const config = { write, params: { contractId } };
+    await this.negotiationService.update(this.negotiation.id, data, config);
+
+    await write.commit();
+    this.snackbar.open('Contract updated!', 'ok', { duration: 1000 });
   }
 }

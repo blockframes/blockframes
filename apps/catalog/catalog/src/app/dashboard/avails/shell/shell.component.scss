@@ -14,3 +14,18 @@ mat-spinner {
 nav {
   margin-bottom: 24px;
 }
+
+header {
+  display: flex;
+  align-items: center;
+  a[mat-button] {
+    margin-left: auto;
+  }
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
