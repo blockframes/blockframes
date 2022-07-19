@@ -114,7 +114,7 @@
         [link]="link"
         fragment="general-information"
       >
-        <ng-template let-time>{{ movie.runningTime.value | getRunningTime }} </ng-template>
+        <ng-template let-time>{{ movie.runningTime.value | getRunningTime: false }} </ng-template>
       </missing-control>
       <missing-control [control]="movie.runningTime.get('status')" [link]="link" fragment="general-information">
         <ng-template let-status>({{ status | toLabel: 'screeningStatus'}})</ng-template>
