@@ -44,17 +44,16 @@ export class ListComponent implements OnDestroy {
       distinctUntilChanged(),
       debounceTime(500),
       switchMap(() => this.searchForm.search()),
+      tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
       map(results => results.map(org => org.objectID)),
       switchMap(ids => ids.length ? this.service.valueChanges(ids) : of([])),
-    ).subscribe((orgs: Organization[]) => {
-      const filteredOrgs = orgs.filter(org => org.appAccess.festival.dashboard === false);
-      this.nbHits = filteredOrgs.length;
+    ).subscribe(orgs => {
       if (this.loadMoreToggle) {
         this.orgResultsState.next(this.orgResultsState.value.concat(orgs));
         this.loadMoreToggle = false;
       } else {
-        this.orgResultsState.next(filteredOrgs);
+        this.orgResultsState.next(orgs);
       }
       /* hitsViewed is just the current state of displayed orgs, this information is important for comparing
       the overall possible results which is represented by nbHits.
