@@ -59,7 +59,8 @@ const genreMap: Record<string, Genre> = {
   'War': 'drama',
   'Documentary': 'documentary',
   'Biography': 'biography',
-  //'Western': 'western'
+  //'Western': 'western' // TODO #1767
+  // 'Sport': '' // TODO #1767
 };
 
 const skippedLanguages = ['Maori', 'Aboriginal', 'Xhosa', 'Southern Sotho', 'Shanghainese'];
@@ -313,6 +314,7 @@ export class MyapimoviesService {
     return movie;
   }
 
+  // TODO #1767 to finish
   private createSerie(title: MyapimoviesSerie, season: { numSeason: number, year: number, episodes: number }) {
     const serie = createMovie({});
     serie.contentType = 'tv';
