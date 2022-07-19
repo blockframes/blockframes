@@ -22,7 +22,7 @@ export class OrganizationCardComponent {
     this._org = value;
 
     Promise.all([
-      this.movieService.getValue(fromOrgAndAccepted(this.org.id, this.app)),
+      this.movieService.load(fromOrgAndAccepted(this.org.id, this.app)),
       this.orgService.getMembers(this.org, { removeConcierges: true })
     ]).then(([movies, members]) => {
       this.orgMovieCount$.next(movies.length);

@@ -1,16 +1,14 @@
 @import '@angular/flex-layout/mq';
 
 :host {
-   div {
-    display: flex;
-    justify-content: center;
-    padding: 14px 24px;
-    button {
-      margin: 0px 8px;  
-      &.active {
-        background-color: #001EC7;
-      }
-    } 
+  display: flex;
+  justify-content: center;
+  padding: 14px 24px;
+  button[mat-mini-fab] {
+    margin: 0px 8px;  
+    &.active {
+      background-color: #001EC7;
+    }
   }
 }
 
