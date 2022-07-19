@@ -17,7 +17,6 @@ import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { boolean } from '@blockframes/utils/decorators/decorators';
 
 function getDir(root: Directory, path: string) {
   return path.split('/').reduce((parent, segment) => parent?.children[segment] ?? parent, root);
@@ -57,8 +56,6 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     return this.org$.getValue();
   }
 
-  @Input() @boolean isCrm = false;
-
   @ViewChild('image') image?: TemplateRef<unknown>;
   @ViewChild('file') file?: TemplateRef<unknown>;
   @ViewChild('fileList') fileList?: TemplateRef<unknown>;
@@ -76,11 +73,11 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     const query = [where('orgIds', 'array-contains', this.org.id)];
 
-    if (!this.isCrm) {
+    if (this.app !== 'crm') {
       query.push(where(`app.${this.app}.access`, '==', true));
     }
 
-    const apps = this.isCrm ? getAllAppsExcept(['crm']) : [this.app];
+    const apps = this.app === 'crm' ? getAllAppsExcept(['crm']) : [this.app];
 
     const { directory } = this.route.snapshot.queryParams;
     if (directory) this.next(directory);
