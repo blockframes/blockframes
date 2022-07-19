@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Libraries
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -21,6 +20,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 import { HasAppStatusModule } from '@blockframes/movie/pipes/has-app-status.pipe';
+import { LogoSpinnerModule } from '@blockframes/ui/rive/logo-spinner.module'
 
 @NgModule({
   declarations: [HomeComponent],
@@ -32,12 +32,12 @@ import { HasAppStatusModule } from '@blockframes/movie/pipes/has-app-status.pipe
     NoTitleModule,
     AppPipeModule,
     HasAppStatusModule,
+    LogoSpinnerModule,
 
     // Material
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    MatProgressSpinnerModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: HomeComponent }])
