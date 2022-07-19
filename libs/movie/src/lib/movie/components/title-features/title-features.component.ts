@@ -16,18 +16,14 @@ interface TitleFeature {
 
 function createTitleFeatureView(movie: Movie): TitleFeature[] {
   const { genres, runningTime, originalLanguages, originCountries } = movie;
-  const isTv = movie.contentType === 'tv';
   const convertedGenres = genres.map((genre) => staticGenres[genre]);
-  const convertedRunTime = isTv
-    ? [formatRunningTime(runningTime), 'Per Episode']
-    : formatRunningTime(runningTime);
+  const convertedRunTime = formatRunningTime(runningTime);
   const convertedOriginalLanguages = originalLanguages.map((language) => languages[language]);
   const convertedOriginCountries = originCountries
     .map((country) => getISO3166TerritoryFromSlug(country))
     .map((country) => country.iso_a2);
   const statusLabel = productionStatus[movie.productionStatus];
   const season = movie.title.series > 0 ? `Season ${movie.title.series}` : '';
-  const episodeCount = runningTime.episodeCount > 0 ? `${runningTime.episodeCount} episodes` : '';
   const features = [
     contentType[movie.contentType],
     convertedRunTime,
@@ -35,7 +31,6 @@ function createTitleFeatureView(movie: Movie): TitleFeature[] {
     convertedOriginCountries,
     convertedOriginalLanguages,
     season,
-    episodeCount,
     statusLabel,
   ];
   return features.map((feature) => {
