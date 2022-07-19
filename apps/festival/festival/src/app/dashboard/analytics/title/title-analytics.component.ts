@@ -212,12 +212,4 @@ export class TitleAnalyticsComponent {
       { relativeTo: this.route }
     );
   }
-
-  public goToBuyer(invitation: Invitation) {
-    const user = getGuest(invitation, 'user');
-    this.router.navigate(
-      [`../../buyer/`, user.uid],
-      { relativeTo: this.route }
-    );
-  }
 }

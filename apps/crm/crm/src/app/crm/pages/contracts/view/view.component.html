@@ -1,7 +1,7 @@
-<a mat-icon-button routerLink="..">
+<button class="go-back" mat-icon-button (click)="goBack()">
   <mat-icon svgIcon="arrow_back"></mat-icon>
   <span>BACK TO CONTRACTS</span>
-</a>
+</button>
 <ng-container *ngIf="contract$ | async as contract">
   <section class="surface" fxLayout="column" fxLayoutGap="16px">
     <ng-container *ngIf="contract.licensor as seller">
