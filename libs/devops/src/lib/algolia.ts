@@ -173,6 +173,8 @@ const baseConfig: AlgoliaConfig = {
     'status',
     'storeStatus',
     'contentType',
+    'festivals',
+    'certifications'
   ],
   customRanking: ['asc(title.international)', 'asc(title.original)'],
 };
