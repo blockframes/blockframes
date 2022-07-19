@@ -7,15 +7,17 @@ import { MovieRunningTime, screeningStatus } from '@blockframes/model';
  * @param isStatusNeeded For some component, like movie-card, we don't want the status at all
  */
 export function formatRunningTime(runningTime?: MovieRunningTime, isStatusNeeded: boolean = true) {
-  const { time, status } = runningTime;
+  const { time, status, episodeCount } = runningTime;
+
+  const timeString = episodeCount ? `${episodeCount} x ${time} min` : `${time} min`;
 
   if (isStatusNeeded) {
     if (status === 'tobedetermined' || (!time && status)) return screeningStatus[status];
-    if (time && status && status !=="confirmed") return `${time} min (${screeningStatus[runningTime.status]})`;
-    if (time && !status) return `${time} min`;
+    if (time && status && status !== 'confirmed') return `${timeString} (${screeningStatus[runningTime.status]})`;
+    if (time && !status) return timeString;
   }
 
-  if (time) return status === "estimated" ? `≈ ${time} min` : `${time} min`;
+  if (time) return status === 'estimated' ? `≈ ${timeString}` : timeString;
 }
 
 @Pipe({
@@ -23,8 +25,8 @@ export function formatRunningTime(runningTime?: MovieRunningTime, isStatusNeeded
   pure: true
 })
 export class RunningTimePipe implements PipeTransform {
-  transform(runningTime: MovieRunningTime) {
-    return formatRunningTime(runningTime);
+  transform(runningTime: MovieRunningTime, isStatusNeeded: boolean = true) {
+    return formatRunningTime(runningTime, isStatusNeeded);
   }
 }
 
