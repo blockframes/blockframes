@@ -3,9 +3,10 @@ import {
   ChangeDetectionStrategy,
   OnInit,
   ChangeDetectorRef,
-  OnDestroy
+  OnDestroy,
+  AfterViewInit
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
@@ -13,8 +14,9 @@ import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service'
 import type { StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie } from '@blockframes/model';
-import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
+import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 
 @Component({
   selector: 'financiers-marketplace-title-list',
@@ -22,7 +24,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private movieResultsState = new BehaviorSubject<AlgoliaMovie[]>(null);
 
@@ -33,16 +35,17 @@ export class ListComponent implements OnInit, OnDestroy {
   public nbHits: number;
   public hitsViewed = 0;
 
-  private sub: Subscription;
   private loadMoreToggle: boolean;
   private lastPage: boolean;
+  private subs: Subscription[] = [];
 
   constructor(
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
+    private router: Router,
     private snackbar: MatSnackBar,
-    private pdfService: PdfService
+    private pdfService: PdfService,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -59,7 +62,7 @@ export class ListComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.sub =
+    const sub =
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
         distinctUntilChanged(),
         debounceTime(500),
@@ -84,6 +87,17 @@ export class ListComponent implements OnInit, OnDestroy {
         }
         this.lastPage = this.hitsViewed === this.nbHits;
       });
+    this.subs.push(sub);
+  }
+
+  ngAfterViewInit(): void {
+    const decodedData: MovieSearch = decodeUrl(this.route);
+    this.load(decodedData);
+
+    const sub = this.searchForm.valueChanges.pipe(
+      debounceTime(1000),
+    ).subscribe(value => encodeUrl<MovieSearch>(this.router, this.route, value));
+    this.subs.push(sub);
   }
 
   clear() {
@@ -99,7 +113,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   async export(movies: AlgoliaMovie[]) {
@@ -108,5 +122,9 @@ export class ListComponent implements OnInit, OnDestroy {
     await this.pdfService.download(movies.map(m => m.objectID));
     snackbarRef.dismiss();
     this.exporting = false;
+  }
+
+  load(parsedData: MovieSearch) {
+    if (parsedData && Object.keys(parsedData).length) this.searchForm.hardReset(parsedData);
   }
 }

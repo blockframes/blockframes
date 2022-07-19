@@ -19,6 +19,7 @@ export interface ScreeningAttendee extends Person {
   uid: string;
   email: string;
   status: 'attended'; //TODO: #7555 may be used later (attending status in screenings statistics for exemple)
+  isAnonymous: boolean;
 }
 
 export interface Meeting {
@@ -194,11 +195,12 @@ export function createMeetingAttendee(
   };
 }
 
-export function createScreeningAttendee(user: User | AnonymousCredentials): ScreeningAttendee {
+export function createScreeningAttendee(user: User | AnonymousCredentials, isAnonymous = false): ScreeningAttendee {
   return {
     uid: user.uid,
     email: user.email,
-    status: 'attended'
+    status: 'attended',
+    isAnonymous
   };
 }
 

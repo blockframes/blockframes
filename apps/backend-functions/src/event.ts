@@ -6,6 +6,7 @@ import { getDocument, BlockframesSnapshot } from '@blockframes/firebase-utils';
 import { eventCreatedAdminEmail } from './templates/mail';
 import { getMailSender } from '@blockframes/utils/apps';
 import { sendMail } from './internals/email';
+import { groupIds } from '@blockframes/utils/emails/ids';
 
 /**
  * Removes invitations and notifications related to an event when event is deleted
@@ -37,7 +38,7 @@ export async function onEventCreate(snap: BlockframesSnapshot<Event<EventMeta>>)
   const event = snap.data();
   const from = getMailSender('festival');
   const emailData = eventCreatedAdminEmail('festival', event);
-  await sendMail(emailData, from);
+  return sendMail(emailData, from, groupIds.noUnsubscribeLink);
 }
 
 export async function createScreeningRequest(
