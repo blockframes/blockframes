@@ -33,10 +33,8 @@ export class ContractsListComponent {
 
   private mandates$ = this.contractService.valueChanges(mandateQuery).pipe(
     joinWith({
-      licensor: (mandate: Mandate) => {
-        return this.orgService.valueChanges(getSeller(mandate)).pipe(map(org => org.name))
-      },
-      licensee: (mandate) => this.orgService.valueChanges(mandate.buyerId).pipe(map(org => org?.name)),
+      licensor: (mandate: Mandate) => this.orgService.valueChanges(getSeller(mandate)).pipe(map(org => org?.name)),
+      licensee: (mandate: Mandate) => this.orgService.valueChanges(mandate.buyerId).pipe(map(org => org?.name)),
       title: (mandate: Mandate) => this.titleService.valueChanges(mandate.titleId).pipe(map(title => title.title.international)),
       price: (mandate: Mandate) => this.incomeService.valueChanges(mandate.id),
     })
@@ -44,13 +42,11 @@ export class ContractsListComponent {
 
   private externalSales$ = this.contractService.valueChanges(externalSaleQuery).pipe(
     joinWith({
-      licensor: (sale: Sale) => {
-        return this.orgService.valueChanges(getSeller(sale)).pipe(map(org => org.name))
-      },
+      licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(org => org?.name)),
       licensee: () => of('External'),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
       price: (sale: Sale) => this.incomeService.valueChanges(sale.id),
-    }),
+    })
   );
 
   public contracts$ = combineLatest([
