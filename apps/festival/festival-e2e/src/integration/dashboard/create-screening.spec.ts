@@ -52,14 +52,14 @@ const injectedData = {
 describe('Screenings', () => {
   beforeEach(() => {
     cy.visit('');
+    maintenance.start();
     firestore.clearTestData();
     firestore.deleteOrgEvents(dashboardOrg.id);
     adminAuth.deleteAllTestUsers();
-    maintenance.start();
     firestore.create([injectedData]);
-    maintenance.end();
     adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true });
     adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true });
+    maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
     browserAuth.signinWithEmailAndPassword(dashboardUser.email);
