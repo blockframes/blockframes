@@ -57,10 +57,7 @@ export const offerStatus = {
 export const negotiationStatus = ['pending', 'accepted', 'declined'] as const;
 
 export const certifications = {
-  // artEssai: 'Art & Essai', TODO: Check if any movie has any of commented one (comment = removed)
   eof: 'EOF (French Speaking Films)',
-  // awardedFilm: 'Awarded Film',
-  // aListCast: 'A-list Cast',
   europeanQualification: 'European Qualification'
 } as const
 
