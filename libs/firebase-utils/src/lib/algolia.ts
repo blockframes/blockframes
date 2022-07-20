@@ -161,6 +161,7 @@ export function storeSearchableMovie(
       runningTime: {
         status: movie.runningTime.status,
         time: movie.runningTime.time,
+        episodeCount: movie.runningTime.episodeCount
       },
       release: {
         status: movie.release.status,
