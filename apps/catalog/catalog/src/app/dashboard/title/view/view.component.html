@@ -8,10 +8,12 @@
         <a mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
           <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
         </a>
-        <a *ngIf="movie.app.catalog.status !== 'archived'" mat-menu-item [routerLink]="['/c/o/dashboard/avails', movie.id]">
-          <mat-icon svgIcon="calendar_today"></mat-icon>
-          <span>Consult Avails</span>
-        </a>
+        <ng-container *ngIf="movie.app.catalog.status !== 'archived'">
+          <a mat-menu-item [routerLink]="['/c/o/dashboard/avails', movie.id]">
+            <mat-icon svgIcon="calendar_today"></mat-icon>
+            <span>Consult Avails</span>
+          </a>
+        </ng-container>
         <a *ngIf="(org$ | async | canAccess: 'marketplace': 'catalog') && movie.app.catalog.status !== 'archived'" mat-menu-item [routerLink]="['/c/o/marketplace/title', movie.id, 'main']">
           <mat-icon svgIcon="visibility"></mat-icon>
           <span>Marketplace Preview</span>

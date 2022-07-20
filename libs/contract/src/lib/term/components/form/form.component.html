@@ -2,7 +2,7 @@
   <h2 #pageTop>Add Availabilities for {{ title.title.international }}</h2>
   <ng-content></ng-content>
 
-  <bf-form-table [form]="form.get('terms')" [columns]="termColumns" [active]="activeTerm" [defaultFormValue]="defaultValue" (itemSelected)="scrollToTop()" tablePosition="bottom">
+  <bf-form-table [form]="form.get('terms')" [columns]="termColumns" [active]="activeTerm" [defaultFormValue]="defaultValue" disableDelete (itemSelected)="scrollToTop()" tablePosition="bottom">
     <!-- Columns -->
     <ng-template colRef="duration.from" let-from>
       {{ from | date:'M/d/y' }}
@@ -39,7 +39,6 @@
   </bf-form-table>
 
   <button mat-flat-button color="primary" [disabled]="form.disabled" (click)="saveAvails()">Save Avails</button>
-
 </ng-container>
 
 <ng-template #loading>

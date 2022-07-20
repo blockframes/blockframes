@@ -149,7 +149,7 @@
         <ng-template colRef label="Action" let-item sticky>
           <ng-container *ngIf="item | guest:'user' as user">
             <ng-container *ngIf="user.orgId">
-              <a [routerLink]="['../../buyer/', user.uid]">
+              <a mat-icon-button [routerLink]="['../../buyer/', user.uid]">
                 <mat-icon svgIcon="launch"></mat-icon>
               </a>
             </ng-container>
