@@ -80,7 +80,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
   };
 }
 
-interface Versions {
+export interface Versions {
   original: boolean,
   dubbed: boolean,
   subtitle: boolean,

@@ -8,6 +8,7 @@ import { TunnelRoot, TunnelStep, TunnelLayoutComponent } from '@blockframes/ui/t
 import { FORMS_CONFIG, ShellConfig } from '../movie.shell.interfaces';
 import { ProductionStatus } from '@blockframes/model';
 import { isChrome } from '@blockframes/utils/browser/utils';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 
 // RxJs
 import { map, pluck, startWith, tap } from 'rxjs/operators';
@@ -122,7 +123,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     @Inject(DOCUMENT) private doc: Document,
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private uploadService: FileUploaderService
   ) { }
 
   async ngOnInit() {
@@ -155,6 +157,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     this.sub?.unsubscribe();
     this.getForm('movie').reset();
     this.getForm('campaign')?.reset();
+    this.uploadService.clearQueue();
   }
 
   getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {

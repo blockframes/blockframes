@@ -1,13 +1,12 @@
-import { createMailTerm, MailTerm } from './terms';
+import { BucketTerm } from './terms';
 import { User } from './user';
 import { Offer } from './offer';
 import { Negotiation } from './negociation';
 import { Movie } from './movie';
 import { Organization } from './organisation';
-import { toLabel } from './utils';
+import { toLabel, toLanguageVersionString } from './utils';
 import { eventTypes, movieCurrenciesSymbols, staticModel } from './static/static-model';
-import { Bucket, MailBucket } from './bucket';
-import { Contract, createMailContract } from './contract';
+import { Bucket, BucketContract } from './bucket';
 import { AccessibilityTypes, App, EventTypesValue } from './static/types';
 import { EventMeta, Event, createIcsFromEvent, toIcsFile } from './event';
 import { differenceInDays, differenceInHours, differenceInMinutes, format, millisecondsInHour } from 'date-fns';
@@ -17,6 +16,7 @@ export interface OrgEmailData {
   email: string;
   id: string;
   country?: string;
+  activity?: string;
 }
 
 export interface EmailData {
@@ -41,7 +41,7 @@ export interface UserEmailData {
   isRegistered?: boolean;
 }
 
-export interface OfferEmailData {
+interface OfferEmailData {
   id: string;
 }
 
@@ -52,10 +52,10 @@ export interface MovieEmailData {
   };
 }
 
-export interface NegotiationEmailData {
+interface NegotiationEmailData {
   price: string;
   currency: string;
-  terms: MailTerm[];
+  terms: TermEmailData[];
 }
 
 // @see node_modules/@sendgrid/helpers/classes/attachment.d.ts
@@ -97,25 +97,50 @@ export interface EmailTemplateRequest {
   to: string;
   templateId: string;
   data: {
-    org?: OrgEmailData | Organization; // @TODO #7491 template d-f45a08ce5be94e368f868579fa72afa8 uses Organization but it should use OrgEmailData instead
+    org?: OrgEmailData;
     user?: UserEmailData;
     userSubject?: UserEmailData;
     event?: EventEmailData;
-    eventUrl?: string;
-    pageURL?: string;
-    bucket?: MailBucket;
+    pageUrl?: string;
+    bucket?: BucketEmailData;
     baseUrl?: string;
     date?: string;
-    movie?: MovieEmailData | Movie;
+    movie?: MovieEmailData;
     offer?: OfferEmailData;
     buyer?: UserEmailData;
-    contract?: Contract;
+    declineReason?: string;
     territories?: string;
-    contractId?: string;
     negotiation?: NegotiationEmailData;
     isInvitationReminder?: boolean;
   };
 }
+
+interface BucketEmailData {
+  id: string;
+  currency: string;
+  /** One contract per orgId / titleId / parent terms Id */
+  contracts: ContractEmailData[];
+  specificity: string;
+  delivery: string;
+  /** Needed to show user in email to business team */
+  uid?: string;
+}
+
+interface ContractEmailData {
+  titleId: string;
+  price: string;
+  terms: TermEmailData[];
+}
+
+interface TermEmailData {
+  territories: string;
+  medias: string;
+  duration: { from: string, to: string };
+  languages: string;
+  exclusive: string;
+}
+
+const formatter = new Intl.NumberFormat('en-US');
 
 export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailRequest {
   return {
@@ -147,7 +172,8 @@ export function getOrgEmailData(org: Partial<Organization>): OrgEmailData {
     id: org.id,
     name: org.name,
     email: org.email || '',
-    country: toLabel(org.addresses?.main?.country, 'territories')
+    country: toLabel(org.addresses?.main?.country, 'territories'),
+    activity: toLabel(org.activity, 'orgActivity')
   }
 }
 
@@ -162,9 +188,8 @@ export function getMovieEmailData(movie: Partial<Movie>): MovieEmailData {
 
 export function getNegotiationEmailData(negotiation: Partial<Negotiation>): NegotiationEmailData {
   const currency = staticModel.movieCurrenciesSymbols[negotiation.currency];
-  const formatter = new Intl.NumberFormat('en-US');
   const price = negotiation.price ? formatter.format(negotiation.price) : '';
-  const terms = createMailTerm(negotiation.terms);
+  const terms = getTermEmailData(negotiation.terms);
 
   return {
     price,
@@ -173,14 +198,37 @@ export function getNegotiationEmailData(negotiation: Partial<Negotiation>): Nego
   };
 }
 
-export function getBucketEmailData(bucket: Bucket): MailBucket {
-  const contracts = bucket.contracts.map(contract => createMailContract(contract));
+export function getBucketEmailData(bucket: Bucket): BucketEmailData {
+  const contracts = bucket.contracts.map(contract => getContractEmailData(contract));
 
   return {
     ...bucket,
     contracts,
     currency: movieCurrenciesSymbols[bucket.currency]
   };
+}
+
+export function getContractEmailData({ titleId, price, terms }: BucketContract): ContractEmailData {
+  return {
+    titleId,
+    price: price ? formatter.format(price) : '',
+    terms: getTermEmailData(terms)
+  };
+}
+
+export function getTermEmailData(terms: BucketTerm[]): TermEmailData[] {
+  return terms.map((term) => ({
+    territories: term.territories
+      .map((territory) => staticModel['territories'][territory])
+      .join(', '),
+    medias: term.medias.map((media) => staticModel['medias'][media] ?? media).join(', '),
+    duration: {
+      from: format(term.duration.from, 'dd MMM, yyyy'),
+      to: format(term.duration.to, 'dd MMM, yyyy'),
+    },
+    languages: toLanguageVersionString(term.languages),
+    exclusive: term.exclusive ? 'Exclusive' : 'Non exclusive',
+  }));
 }
 
 function toTimezone(date: Date, timeZone: string) {

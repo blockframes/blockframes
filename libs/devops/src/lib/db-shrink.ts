@@ -1,5 +1,5 @@
 import { endMaintenance, removeAllSubcollections, startMaintenance } from '@blockframes/firebase-utils';
-import { connectFirestoreEmulator, defaultEmulatorBackupPath, firebaseEmulatorExec, getFirestoreExportPath, importFirestoreEmulatorBackup, shutdownEmulator } from './firebase-utils/firestore/emulator';
+import { defaultEmulatorBackupPath, firebaseEmulatorExec, getFirestoreExportPath, importFirestoreEmulatorBackup, shutdownEmulator } from './firebase-utils/firestore/emulator';
 import { uploadBackup } from './emulator';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
 import { backupBucket } from '@env'
@@ -10,9 +10,10 @@ import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import type { ChildProcess } from 'child_process';
 import { CollectionData, DatabaseData, DocumentDescriptor, getAllDocumentCount, inspectDocumentRelations, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
 import { cleanDeprecatedData } from './db-cleaning';
+import { getFirestoreEmulator } from '@blockframes/firebase-utils/initialize';
 
 /**
- * Temp this should be removed when fixtures are updated. 
+ * Temp this should be removed when fixtures are updated.
  *  - libs/e2e/src/lib/fixtures/users.ts
  *  - libs/e2e/src/lib/utils/screenings.ts
  */
@@ -39,7 +40,7 @@ export async function loadAndShrinkLatestAnonDbAndUpload() {
     });
 
     // STEP 2 shrink DB
-    const db = connectFirestoreEmulator();
+    const db = getFirestoreEmulator();
     await startMaintenance(db);
     const status = await shrinkDb(db);
     await endMaintenance(db, EIGHT_MINUTES_IN_MS);
@@ -57,7 +58,7 @@ export async function loadAndShrinkLatestAnonDbAndUpload() {
 
       /**
        * @dev to test on live firebase project, run:
-       * 
+       *
        * npm run backend-ops startMaintenance
        * npm run backend-ops importFirestore LATEST-ANON-SHRINKED-DB
        * npm run backend-ops syncUsers
@@ -214,7 +215,7 @@ function getOrgsAndUsersToKeep(dbData: DatabaseData) {
   }
 
   const usersLinkedOrgIds = uniqueArray(_usersLinked).map(userId => getOrgIdOfUser(userId)).filter(o => o);
-  const orgSuperAdmins = uniqueArray(_orgsLinked.concat(usersLinkedOrgIds)).map(orgId => getOrgSuperAdmin(orgId)).filter(u => u);
+  const orgSuperAdmins = uniqueArray(_orgsLinked.filter(o => o).concat(usersLinkedOrgIds)).map(orgId => getOrgSuperAdmin(orgId)).filter(u => u);
 
   const usersLinked = uniqueArray(_usersLinked).concat(orgSuperAdmins);
 

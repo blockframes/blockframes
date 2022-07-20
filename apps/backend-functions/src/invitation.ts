@@ -104,14 +104,18 @@ export async function onInvitationWrite(change: BlockframesChange<Invitation>) {
           ? await onInvitationToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc)
           : await onRequestToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc);
         break;
-      case 'attendEvent':
+      case 'attendEvent': {
         /**
          * @dev In this case, an invitation to an event can be:
          * a request from an user who wants to attend an event.
          * an invitation to an user that can be interested to attend an event.
          */
         await onInvitationToAnEventUpdate(invitationDocBefore, invitationDoc, { ...invitationDoc, id: before.id });
+        // Update invitation only if status is not already updated (for public events that are accepted automatically)
+        const invitation = await getDocument<Invitation>(`invitations/${invitationDoc.id}`);
+        needUpdate = needUpdate && invitation.status === invitationDoc.status;
         break;
+      }
       default:
         console.log(`Unhandled invitation: ${JSON.stringify(invitationDoc)}`);
         break;
