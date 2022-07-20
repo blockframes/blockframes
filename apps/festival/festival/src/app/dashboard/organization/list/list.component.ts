@@ -34,10 +34,10 @@ export class ListComponent implements OnDestroy {
   constructor(
     private service: OrganizationService,
     private dynTitle: DynamicTitleService
-  ) { 
+  ) {
     this.dynTitle.setPageTitle('Buyer List');
     this.orgs$ = this.orgResultsState.asObservable();
-    const search = createOrganizationSearch({ appModule: ['marketplace'], hasAcceptedMovies: false });
+    const search = createOrganizationSearch({ appModule: ['marketplace', '-dashboard'], hasAcceptedMovies: false });
     this.searchForm.setValue({ ...search, countries: [] });
     this.sub = this.searchForm.valueChanges.pipe(
       startWith(this.searchForm.value),
@@ -48,9 +48,9 @@ export class ListComponent implements OnDestroy {
       pluck('hits'),
       map(results => results.map(org => org.objectID)),
       switchMap(ids => ids.length ? this.service.valueChanges(ids) : of([])),
-    ).subscribe(orgs => {
+    ).subscribe((orgs: Organization[]) => {
       if (this.loadMoreToggle) {
-        this.orgResultsState.next(this.orgResultsState.value.concat(orgs))
+        this.orgResultsState.next(this.orgResultsState.value.concat(orgs));
         this.loadMoreToggle = false;
       } else {
         this.orgResultsState.next(orgs);
@@ -72,11 +72,6 @@ export class ListComponent implements OnDestroy {
     this.loadMoreToggle = true;
     this.searchForm.page.setValue(this.searchForm.page.value + 1);
     await this.searchForm.search();
-  }
-
-  clear() {
-    const initial = createOrganizationSearch();
-    this.searchForm.reset(initial);
   }
 
   ngOnDestroy() {

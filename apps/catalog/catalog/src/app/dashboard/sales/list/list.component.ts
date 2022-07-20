@@ -7,7 +7,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { getSeller } from '@blockframes/contract/contract/utils'
-import { Organization, Sale } from '@blockframes/model';
+import { Sale } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { orderBy, where } from 'firebase/firestore';
 
@@ -75,5 +75,4 @@ export class SaleListComponent implements OnInit {
   public openIntercom() {
     return this.intercom.show();
   }
-
 }
