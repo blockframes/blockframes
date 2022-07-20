@@ -39,7 +39,7 @@ describe('Organiser invites other users to private screening', () => {
     browserAuth.signinWithEmailAndPassword(userOrganiser.email);
     cy.visit('/c/o/dashboard/event');
     cy.log(`Create screening {${screeningEvent.event}}`);
-    awaitElementDeletion('logo-spinner');
+    awaitElementDeletion('mat-spinner');
     // * We would not need to do this if various user types were generated at the start of the test
     // * in order to generate user types, we either need to create a lot of data manually or use the app's built in methods
     events.deleteAllSellerEvents(userOrganiser.uid); // ! must stay here so eventsService is instantiated
@@ -55,7 +55,7 @@ describe('Organiser invites other users to private screening', () => {
     browserAuth.signinWithEmailAndPassword(userInvited1.email);
 
     cy.visit('/c/o/marketplace/invitations');
-    awaitElementDeletion('mat-spinner');
+    awaitElementDeletion('logo-spinner');
     festival.acceptInvitationScreening();
 
     festival.openMoreMenu();
@@ -84,7 +84,7 @@ describe('Organiser invites other users to private screening', () => {
       browserAuth.signinWithEmailAndPassword(userInvited2.email);
 
       cy.visit('/c/o/marketplace/invitations');
-      awaitElementDeletion('mat-spinner');
+      awaitElementDeletion('logo-spinner');
       festival.refuseInvitationScreening();
 
       // * STEP
