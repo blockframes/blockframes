@@ -3,19 +3,20 @@ import {
   allOf,
   noneOf,
   someOf,
+  continuousSomeOf
 } from '../sets';
 
 const discrete = {
-  a: [ 'apple', 'banana', 'grape' ],
-  b: [ 'peach', 'orange', 'pear' ], // different than A
+  a: ['apple', 'banana', 'grape'],
+  b: ['peach', 'orange', 'pear'], // different than A
 
-  c: [ 'apple', 'banana', 'grape' ], // same as A
-  d: [ 'banana', 'grape' ], // subset of A
-  e: [ 'lemon', 'apricot', 'banana' ], // overlap with A
+  c: ['apple', 'banana', 'grape'], // same as A
+  d: ['banana', 'grape'], // subset of A
+  e: ['lemon', 'apricot', 'banana'], // overlap with A
 
-  f: [ 'peach', 'orange', 'pear' ], // same as B
-  g: [ 'peach', 'pear' ], // subset of B
-  h: [ 'lemon', 'orange', 'apricot' ], // overlap with B
+  f: ['peach', 'orange', 'pear'], // same as B
+  g: ['peach', 'pear'], // subset of B
+  h: ['lemon', 'orange', 'apricot'], // overlap with B
 };
 
 const continuous = {
@@ -123,6 +124,16 @@ describe('Sets tests', () => {
       it('should fail with equal', () => {
         expect(noneOf(continuous.c).in(continuous.a)).toBe(false);
         expect(noneOf(continuous.f).in(continuous.b)).toBe(false);
+      });
+      it('Should fail with disjoint', () => {
+        expect(continuousSomeOf(continuous.a).in(continuous.b)).toBe(false);
+      });
+      it('should succeed with complete overlap.', () => {
+        expect(continuousSomeOf(continuous.d).in(continuous.a)).toBe(true);
+      });
+      it('should succeed with partial overlap.', () => {
+        expect(continuousSomeOf(continuous.a).in(continuous.e)).toBe(true);
+        expect(continuousSomeOf(continuous.b).in(continuous.h)).toBe(true);
       });
     });
     describe('Subset', () => {
