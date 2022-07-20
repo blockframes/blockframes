@@ -210,7 +210,8 @@ export class SessionComponent implements OnInit, OnDestroy {
       } else if (isScreening(event)) {
         this.dynTitle.setPageTitle(event.title, 'Screening');
         // create attendee in event
-        const attendee = createScreeningAttendee(this.authService.anonymouseOrRegularProfile);
+        const isAnonymous = !this.authService.profile;
+        const attendee = createScreeningAttendee(this.authService.anonymouseOrRegularProfile, isAnonymous);
         const meta: Screening = { ...event.meta, attendees: { ...event.meta.attendees, [this.authService.uid]: attendee } };
         await this.service.update(event.id, { meta });
 

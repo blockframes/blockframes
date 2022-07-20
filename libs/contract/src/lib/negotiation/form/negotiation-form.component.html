@@ -21,7 +21,7 @@
   </ng-template>
   <ng-template colRef="medias" let-media>
     <span class="group-label" (click)="openDetails(media, 'medias')">
-      {{ media | toGroupLabel:'medias':'All'| join }}
+      {{ media | toGroupLabel:'medias':'All'| join | maxLength : 50 }}
     </span>
   </ng-template>
   <ng-template colRef="exclusive" let-exclusive>

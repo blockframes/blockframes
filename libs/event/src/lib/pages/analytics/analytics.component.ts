@@ -107,7 +107,7 @@ export class AnalyticsComponent implements OnInit {
             email: user.email,
             watchInfos: i.watchInfos,
             name,
-            orgName: org.name,
+            orgName: org?.name,
             orgActivity: org?.activity,
             orgCountry: org?.addresses?.main.country,
             status: i.status
