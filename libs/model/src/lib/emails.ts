@@ -16,6 +16,7 @@ export interface OrgEmailData {
   email: string;
   id: string;
   country?: string;
+  activity?: string;
 }
 
 export interface EmailData {
@@ -171,7 +172,8 @@ export function getOrgEmailData(org: Partial<Organization>): OrgEmailData {
     id: org.id,
     name: org.name,
     email: org.email || '',
-    country: toLabel(org.addresses?.main?.country, 'territories')
+    country: toLabel(org.addresses?.main?.country, 'territories'),
+    activity: toLabel(org.activity, 'orgActivity')
   }
 }
 
