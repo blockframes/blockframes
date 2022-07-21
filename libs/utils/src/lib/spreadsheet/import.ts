@@ -228,9 +228,11 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
     /**
      *    Column A  |   column B     | c     |
      * --------------------------------------|
+     * | row a,b,c  | column  index n| ..... |
+     * |------------|----------------|-------|
      * |            | column  index 1| ..... |
      * |            |----------------|-------|
-     * | row a,b,c  | column  index 2| ..... |
+     * | row d,e,f  | column  index 2| ..... |
      * |            |----------------|-------|
      * |            | column  index 3| ..... |
      * --------------------------------------|
