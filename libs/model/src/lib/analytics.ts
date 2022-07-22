@@ -5,7 +5,7 @@ import { User } from './user';
 
 const analyticsEvents = [
   'pageView',
-  'promoReelOpened',
+  'promoElementOpened',
   'addedToWishlist',
   'removedFromWishlist',
   'screeningRequested',
@@ -81,7 +81,7 @@ export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>):
     addedToWishlist: 0,
     askingPriceRequested: 0,
     pageView: 0,
-    promoReelOpened: 0,
+    promoElementOpened: 0,
     removedFromWishlist: 0,
     screeningRequested: 0,
     ...analytic

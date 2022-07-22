@@ -41,9 +41,7 @@ const eventNameLabel: Record<EventName, string> = {
   addedToWishlist: 'Added to Wishlist',
   askingPriceRequested: 'Asking Price Requested',
   pageView: 'Page Views',
-  //#8693 Currently we rename on the ui from promo reels/elements to video plays.
-  //This should be reverted to promo elements once above issue is resolved.
-  promoReelOpened: 'Video Plays',
+  promoElementOpened: 'Promo Elements OPened',
   removedFromWishlist: 'Removed from Wishlist',
   screeningRequested: 'Screening Requested'
 }
