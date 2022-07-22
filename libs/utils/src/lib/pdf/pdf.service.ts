@@ -15,11 +15,12 @@ export class PdfService {
     @Inject(EMULATORS_CONFIG) private emulatorsConfig: EmulatorsConfig
   ) { }
 
-  async download(titleIds: string[]) {
+  async download(titleIds: string[], pageTitle?: string) {
     const app = this.app;
     const data: PdfParams = {
       titleIds,
-      app
+      app,
+      pageTitle
     };
 
     const params = {

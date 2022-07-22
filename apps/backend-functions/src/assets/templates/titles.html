@@ -7,6 +7,10 @@
   </head>
   <body>
 
+    {{#if pageTitle}}
+      <h1>{{pageTitle}}</h1>
+    {{/if}}
+    
     {{#titles}}
       <section class="title">
         <div class="row">
@@ -19,21 +23,28 @@
           </div>
           <div class="right-column">
             <h2>{{title}}</h2>
+            <a href="{{links.title}}">See title</a>
             {{#if contentType}}
               <p>{{contentType}}{{#if genres}} -  {{genres}}{{/if}}</p>
+            {{/if}}
+            {{#if originCountries}}
+              <p>{{originCountries}} / {{releaseYear}}</p>
             {{/if}}
             {{#if runningTime}}
               <p>{{#if episodeCount }}{{episodeCount}} x {{/if}}{{runningTime}} min</p>
             {{/if}}
-            <p>{{releaseYear}}</p>
-            {{#if version.isOriginalVersionAvailable}}
-              <p>{{version.original}}{{#if version.languages}} with {{version.languages}}{{/if}}</p>
-            {{else}}
-              <p>Original version is not available
-              {{#if version.languages}}<br>{{version.languages}}{{/if}}</p>
-            {{/if}}
           </div>
         </div>
+
+        <div class="row">
+          {{#if version.isOriginalVersionAvailable}}
+            <p>Version : </p>
+            <p> {{version.original}}{{#if version.languages}} with {{version.languages}}{{/if}}</p>
+          {{else}}
+          <p>Original version is not available
+          {{#if version.languages}}<br>{{version.languages}}{{/if}}</p>
+        {{/if}}
+        </div> 
 
         <div class="row">
           <p class="synopsis">{{synopsis}}</p>
@@ -48,9 +59,6 @@
         {{/if}}
 
         <div class="row links">
-          <div class="column">
-            <a href="{{links.title}}">See title</a>
-          </div>
           {{#if links.trailer}}
             <div class="column">
               <a href="{{links.trailer}}">Trailer</a>

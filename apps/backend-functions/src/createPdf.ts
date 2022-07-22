@@ -40,7 +40,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     return;
   }
 
-  const { titleIds, app } = req.body;
+  const { titleIds, app, pageTitle } = req.body;
   if (!titleIds || !app) {
     res.status(500).send();
     return;
@@ -73,6 +73,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
       genres: genres.join(', '),
       releaseYear: m.release.year,
       episodeCount: m.runningTime.episodeCount,
+      originCountries: toLabel(m.originCountries, 'territories'),
       runningTime: m.runningTime.time,
       synopsis: m.synopsis,
       posterUrl: m.poster?.storagePath ? getImgIxResourceUrl(m.poster, { h: 240, w: 180 }) : '',
@@ -89,7 +90,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     };
   });
 
-  const buffer = await generate('titles', app, data);
+  const buffer = await generate('titles', app, data, pageTitle);
 
   res.set('Content-Type', 'application/pdf');
   res.set('Content-Length', buffer.length.toString());
@@ -97,7 +98,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
   return;
 };
 
-async function generate(templateName: string, app: App, titles: PdfTitleData[]) {
+async function generate(templateName: string, app: App, titles: PdfTitleData[], pageTitle: string) {
   const [fs, hb, path, { default: puppeteer }] = await Promise.all([
     import('fs'),
     import('handlebars'),
@@ -113,6 +114,7 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[]) 
     appLogo: `data:image/svg+xml;utf8,${encodeURIComponent(logo)}`,
     posterFallback: `data:image/svg+xml;utf8,${encodeURIComponent(posterFallback)}`,
     titles,
+    pageTitle
   };
 
   // compile template with data into html

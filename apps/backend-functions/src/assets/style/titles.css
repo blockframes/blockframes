@@ -6,6 +6,11 @@ body {
   font-family: Montserrat, Helvetica Neue, sans-serif;
 }
 
+h1 {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
 h2 {
   font: 800 36px Montserrat, Helvetica Neue, sans-serif;
   margin-top: 0px;

@@ -17,7 +17,7 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareRe
 // Blockframes
 import { centralOrgId } from '@env';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie, GetKeys } from '@blockframes/model';
+import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie, GetKeys, toLabel } from '@blockframes/model';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
@@ -27,6 +27,7 @@ import { MovieSearchForm, createMovieSearch, Versions, MovieSearch } from '@bloc
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
+import { trimString } from '@blockframes/utils/pipes';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -176,11 +177,24 @@ export class ListComponent implements OnDestroy, OnInit {
   async export(movies: AlgoliaMovie[]) {
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
-    await this.pdfService.download(movies.map(m => m.objectID));
+    const pageTitle = this.createPdfTitle()
+    await this.pdfService.download(movies.map(m => m.objectID), pageTitle);
     snackbarRef.dismiss();
     this.exporting = false;
   }
 
+  createPdfTitle() {
+    const searchForm = this.searchForm.value;
+    const availForm = this.availsForm.value;
+    const appTitle = 'Archipel Content Library';
+    const territories = availForm.territories.map(t => toLabel(t, 'territories')).join(', ');
+    const rights = availForm.medias.map(m => toLabel(m, 'medias')).join(', ');
+    const avails = `Avails for ${trimString(territories, 50, true)} in ${trimString(rights, 50, true)}` 
+    const contentType = toLabel(searchForm.contentType, 'contentType');
+    const genres = searchForm.genres.map(g => toLabel(g, 'genres')).join('/');
+    return [appTitle, avails, contentType, genres].filter(Boolean).join(" - ");
+  }
+  
   load(parsedData: { search: MovieSearch, avails: AvailsFilter }) {
     // Search Form
     const languages = this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>;

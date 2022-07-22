@@ -11,7 +11,7 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import type { StoreStatus } from '@blockframes/model';
+import { StoreStatus, toLabel } from '@blockframes/model';
 import { AlgoliaMovie } from '@blockframes/model';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -112,12 +112,20 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async export(movies: AlgoliaMovie[]) {
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
+    const pageTitle = this.createPdfTitle();
     this.exporting = true;
-    await this.pdfService.download(movies.map(m => m.objectID));
+    await this.pdfService.download(movies.map(m => m.objectID), pageTitle);
     snackbarRef.dismiss();
     this.exporting = false;
   }
 
+  createPdfTitle() {
+    const searchForm = this.searchForm.value;
+    const appTitle = 'Archipel Market Library';
+    const genres = searchForm.genres.map(g => toLabel(g, 'genres')).join('/');
+    const countries = searchForm.originCountries.map(t => toLabel(t, 'territories')).join('/');
+    return [appTitle, genres, countries].filter(Boolean).join(" - ");
+  }
   load(parsedData: MovieSearch) {
     if (parsedData && Object.keys(parsedData).length) this.searchForm.hardReset(parsedData);
   }
