@@ -125,7 +125,7 @@ function discreteSomeOf(a: string[], optional?: 'optional') {
 //   |----------------|
 //     |----------|
 //   B.from     B.to
-function continuousSomeOf(a?: Range, optional?: 'optional') {
+export function continuousSomeOf(a?: Range, optional?: 'optional') {
   return {
     in: (b?: Range) => {
       if (optional && (!a?.from || !a?.to)) return true;
