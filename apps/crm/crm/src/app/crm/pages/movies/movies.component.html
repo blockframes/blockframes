@@ -44,11 +44,32 @@
       <ng-template colRef="app.financiers.status" label="Financiers Status" sort let-status>
         <bf-tag>{{ status }}</bf-tag>
       </ng-template>
+      <ng-template colRef="keywords" label="Keywords" let-keywords>
+        <span [matTooltip]="keywords | join">
+          {{ keywords | join | maxLength:30 }}
+        </span>
+      </ng-template>
+      <ng-template colRef="promotional.videos.screener.docId" label="Has Screener" let-title="item">
+        <bf-tag> {{ title.promotional.videos.publicScreener.docId || title.promotional.videos.screener.docId ? 'Yes' : 'No'}} </bf-tag>
+      </ng-template>
+      <ng-template colRef="poster.docId" label="Has Poster" let-docId>
+        <bf-tag> {{ docId ? 'Yes' : 'No'}} </bf-tag>
+      </ng-template>
+      <ng-template colRef="mandate.id" label="Has Avail" let-mandateId>
+        <bf-tag> {{ mandateId ? 'Yes' : 'No'}} </bf-tag>
+      </ng-template>
+      <ng-template colRef="certifications" label="Prizes" let-title="item">
+        <span> {{ title.prizes.length ?? title.customPrizes.length ?? '-' }} </span>
+      </ng-template>
+      <ng-template colRef="certifications" label="Certifications" let-certifications>
+        <span> {{ certifications.length ?? '-'}} </span>
+      </ng-template>
+      <ng-template colRef="releaseMedias" label="Release Medias" let-releaseMedias>
+        <span [matTooltip]="releaseMedias | join"> {{ releaseMedias | join | maxLength: 30 }} </span>
+      </ng-template>
     </bf-table>
   </ng-container>
   <ng-template #loading>
     ...loading movies
   </ng-template>
 </main>
-
-
