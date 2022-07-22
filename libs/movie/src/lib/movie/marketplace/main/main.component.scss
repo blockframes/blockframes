@@ -32,8 +32,19 @@ h5 {
   }
 }
 
+.mains-information{
+  display: flex;
+}
+
+.video {
+  padding-right: 32px;
+}
+
 @include layout-bp(lt-md) {
   video-viewer {
     width: 100%;
+  }
+  .mains-information{
+    flex-direction: column;
   }
 }

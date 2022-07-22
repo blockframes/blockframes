@@ -1,18 +1,18 @@
 <ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
 
   <h2>Main Information</h2>
-  <!-- Sales Pitch -->
-  <ng-container *ngIf="showSalesPitch(movie)">
-    <section id="sales-pitch" *ngIf="movie.promotional.videos.salesPitch as salesPitch">
-      <h3>Sales Pitch</h3>
-      <article fxLayout="row" fxLayoutGap="40px">
-        <video-viewer [ref]="salesPitch" *ngIf="salesPitch.jwPlayerId" (stateChange)="videoStateChanged(movie, $event)"></video-viewer>
-        <p *ngIf="salesPitch.description">{{ salesPitch.description }}</p>
-      </article>
-      <mat-divider></mat-divider>
-    </section>
-  </ng-container>
 
+  <section class="mains-information">
+    <ng-container *ngIf="showOneVideo(movie) as video"> 
+      <article class="video" >
+        <video-viewer [ref]="video" *ngIf="video.jwPlayerId" (stateChange)="videoStateChanged(movie, $event)"></video-viewer>
+      </article>
+    </ng-container>
+    <article *ngIf="movie.synopsis">
+      <h5>Synopsis</h5>
+      <p>{{ movie.synopsis }}</p>
+    </article>
+  </section>  
 
   <!-- Storyline Information -->
   <section *ngIf="movie | hasKeys: keys.main">
@@ -20,11 +20,6 @@
     <article *ngIf="movie.logline">
       <h5>Logline</h5>
       <p>{{ movie.logline }}</p>
-    </article>
-
-    <article *ngIf="movie.synopsis">
-      <h5>Synopsis</h5>
-      <p>{{ movie.synopsis }}</p>
     </article>
 
     <article *ngIf="movie.keywords.length">

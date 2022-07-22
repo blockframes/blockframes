@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { TitleMarketplaceShellComponent } from '../shell/shell.component';
-import { Movie } from '@blockframes/model';
+import { App, Movie } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AnalyticsService } from '@blockframes/analytics/service';
 
@@ -32,16 +32,18 @@ export class MainComponent implements OnInit {
     this.dynTitle.setPageTitle('Film Page', 'Main Info');
   }
 
-  showSalesPitch(movie: Movie) {
-    if (!movie.promotional?.videos?.salesPitch) return false;
-    const { privacy, jwPlayerId, description } = movie.promotional.videos.salesPitch;
-    return privacy === 'public' && (jwPlayerId || description);
-  }
-
   videoStateChanged(title: Movie, event: string) {
     if (event === 'play' && !this.alreadyPlayed) {
       this.analytics.addTitle('promoReelOpened', title);
       this.alreadyPlayed = true;
     }
+  }
+
+  showOneVideo(movie: Movie) {
+    const video = movie.promotional.videos;
+    if (video.salesPitch?.storagePath) return video.salesPitch;
+    if (video.otherVideos[0]?.storagePath) return video.otherVideos[0];
+    if (video.publicScreener?.storagePath) return video.publicScreener;
+    if (video.screener?.storagePath) return video.screener;
   }
 }
