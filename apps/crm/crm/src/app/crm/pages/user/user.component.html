@@ -164,4 +164,26 @@
   </ng-template>
 </bf-table>
 
+<h2>Analytics</h2>
+<bf-table [source]="analytics$ | async" useFilter>
+  <ng-template colRef="title.title.international" label="Title" let-title let-analytic="item" sort>
+    <a [routerLink]="['/c/o/dashboard/crm/movie', analytic.title.id]">{{ title }}</a>
+  </ng-template>
+  <ng-template colRef="pageView" label="Page views" let-pageView sort>
+    {{ pageView ? pageView : '-' }}
+  </ng-template>
+  <ng-template colRef="promoReelOpened" label="Video Plays" let-videoPlays sort>
+    {{ videoPlays ? videoPlays : '-' }}
+  </ng-template>
+  <ng-template colRef="addedToWishlist" label="In wishlist" let-wishlist sort>
+    {{ wishlist ? wishlist : '-' }}
+  </ng-template>
+  <ng-template colRef="screeningRequested" label="Screening requested" let-screeningRequested sort>
+    {{ screeningRequested ? screeningRequested : '-' }}
+  </ng-template>
+  <ng-template colRef="askingPriceRequested" label="Asking price requested" let-askingPriceRequested sort>
+    {{ askingPriceRequested ? askingPriceRequested : '-' }}
+  </ng-template>
+</bf-table>
+
 <crm-dashboard dashboard="user" [params]="{ 'ds2.user_id': userId }"></crm-dashboard>
