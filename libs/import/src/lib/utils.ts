@@ -211,6 +211,7 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
   // if date seems strange we throw an Error
   const year = date.getFullYear();
   if (year < 1895 || year > 2200) throw outOfRangeDate(value)
+  // important dates be set to midnight for avails research
   date.setHours(0, 0, 0, 0);
   return date;
 }

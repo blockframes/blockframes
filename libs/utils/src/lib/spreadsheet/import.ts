@@ -141,7 +141,7 @@ export async function parse<T>(
           }
         } catch (err) {
           if (err instanceof WrongTemplateError)
-            throw err; //stops the recursive looping of parse.
+            throw err; //stops the recursive looping of parse ie, the excelColumnLoop.
           errors.push(err);
         }
       } else {
@@ -224,11 +224,24 @@ export async function extract<T>(rawRows: string[][], config: ExtractConfig<T> =
     const item = {};
     const errors: SpreadsheetImportError[] = [];
     const entries = Object.entries(config);
+
+    /**
+     *    Column A  |   column B     | c     |
+     * --------------------------------------|
+     * | row a,b,c  | column  index n| ..... |
+     * |------------|----------------|-------|
+     * |            | column  index 1| ..... |
+     * |            |----------------|-------|
+     * | row d,e,f  | column  index 2| ..... |
+     * |            |----------------|-------|
+     * |            | column  index 3| ..... |
+     * --------------------------------------|
+     */
     excelColumnLoop: for (let columnIndex = 0; columnIndex < entries.length; columnIndex++) {
       const [key, transform] = entries[columnIndex];
       const value = flatRows[rowIndex][columnIndex];
       try {
-        await parse<T>(state, item, item, value, key, transform as ParseFieldFn<T, typeof key>, rowIndex, errors)
+        await parse<T>(state, item, item, value, key, transform as ParseFieldFn<T, typeof key>, rowIndex, errors);
       } catch (err) {
         if (err instanceof WrongTemplateError) {
           errors.push(err.toJson());
