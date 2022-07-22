@@ -80,15 +80,15 @@ export class UsersComponent implements OnInit {
       this.exporting = true;
       this.cdr.markForCheck()
 
-      const roles = await this.permissionsService.getValue();
-      const getMemberRole = (orgId: string, uid: string) => {
-        const role = roles.find(role => role.id === orgId);
-        if (!role) return
-        return role.roles[uid];
+      const roles = await this.permissionsService.load();
+      const getMemberRole = (r: CrmUser) => {
+        const role = roles.find(role => role.id === r.orgId);
+        if (!role) return;
+        return role.roles[r.uid];
       }
 
       const getRows = users.map(async r => {
-        const role = getMemberRole(r.orgId, r.uid)
+        const role = getMemberRole(r);
         const type = r.org ? getOrgModuleAccess(r.org).includes('dashboard') ? 'seller' : 'buyer' : '--';
         const row = {
           'userId': r.uid,
