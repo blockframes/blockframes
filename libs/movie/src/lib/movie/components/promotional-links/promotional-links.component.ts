@@ -29,6 +29,6 @@ export class PromotionalLinksComponent implements OnInit {
   }
 
   promotionalElementOpened() {
-    this.analytics.addTitle('promoElementOpened', this.movie)
+    this.analytics.addTitle('promoElementOpened', this.movie);
   }
 }
