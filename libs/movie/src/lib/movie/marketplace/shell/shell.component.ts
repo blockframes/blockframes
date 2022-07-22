@@ -75,7 +75,10 @@ export class TitleMarketplaceShellComponent implements OnInit {
     return outlet?.activatedRouteData?.animation;
   }
 
-  fullscreen(refs: StorageFile[], index: number) {
+  fullscreen(title: Movie, index: number) {
+    const refs = title.promotional.still_photo;
+    this.promotionalElementOpened(title);
+
     this.dialog.open(FileListPreviewComponent, {
       data: createModalData({ refs, index }, 'large'),
       autoFocus: false
@@ -88,8 +91,12 @@ export class TitleMarketplaceShellComponent implements OnInit {
 
   videoStateChanged(title: Movie, event: string) {
     if (event === 'play' && !this.alreadyPlayed) {
-      this.analytics.addTitle('promoReelOpened', title);
+      this.promotionalElementOpened(title);
       this.alreadyPlayed = true;
     }
+  }
+
+  promotionalElementOpened(title: Movie) {
+    this.analytics.addTitle('promoElementOpened', title);
   }
 }
