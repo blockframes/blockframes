@@ -14,7 +14,6 @@ import { MatIconModule } from '@angular/material/icon';
 // Blockframes
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-
 import { NotificationListModule } from './components/list/list.module';
 
 @NgModule({
