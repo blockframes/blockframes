@@ -3,8 +3,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { NotificationListModule } from './components/list/list.module';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Page
 import { NotificationComponent } from './notification.component';
@@ -15,6 +13,9 @@ import { MatIconModule } from '@angular/material/icon';
 
 // Blockframes
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
+
+import { NotificationListModule } from './components/list/list.module';
 
 @NgModule({
   declarations: [NotificationComponent],
