@@ -8,6 +8,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { map } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { sorts } from '@blockframes/ui/list/table/sorts';
+import { PermissionsService } from '@blockframes/permissions/service';
 
 interface CrmUser extends User {
   firstConnection: Date;
@@ -36,6 +37,7 @@ export class UsersComponent implements OnInit {
     private analyticsService: AnalyticsService,
     private orgService: OrganizationService,
     private router: Router,
+    private permissionsService: PermissionsService
   ) { }
 
   async ngOnInit() {
@@ -77,8 +79,16 @@ export class UsersComponent implements OnInit {
     try {
       this.exporting = true;
       this.cdr.markForCheck()
+
+      const roles = await this.permissionsService.load();
+      const getMemberRole = (r: CrmUser) => {
+        const role = roles.find(role => role.id === r.orgId);
+        if (!role) return;
+        return role.roles[r.uid];
+      }
+
       const getRows = users.map(async r => {
-        const role = r.org ? await this.orgService.getMemberRole(r.org, r.uid) : '--';
+        const role = getMemberRole(r);
         const type = r.org ? getOrgModuleAccess(r.org).includes('dashboard') ? 'seller' : 'buyer' : '--';
         const row = {
           'userId': r.uid,
