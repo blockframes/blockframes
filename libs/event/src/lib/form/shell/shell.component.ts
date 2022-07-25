@@ -1,13 +1,13 @@
 import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, OnDestroy, Inject } from '@angular/core';
 import { Router, ActivatedRoute, RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { EventForm } from '../../form/event.form';
+import { EventForm, ScreeningForm, SlateForm } from '../../form/event.form';
 import { EventService } from '../../service';
 import { MovieService } from '@blockframes/movie/service';
 import { MatDialog } from '@angular/material/dialog';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { Observable, of, Subscription } from 'rxjs';
-import { map, pluck, switchMap } from 'rxjs/operators';
+import { map, pluck, switchMap, startWith } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -44,10 +44,16 @@ const navTabs: NavTabs = {
 export class EventFormShellComponent implements OnInit, OnDestroy {
   tabs$: Observable<TabConfig[]>;
   private sub: Subscription;
+  private mediaSub?: Subscription;
   form: EventForm;
   internalLink: string;
   link: string;
-  errorChipMessage = '';
+  // errorChipMessage = '';
+
+  screenerFileMissing = false;
+  noTitleSelected = false;
+  slateVideoMissing = false;
+
   constructor(
     private eventService: EventService,
     private movieService: MovieService,
@@ -78,9 +84,16 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       )
 
       if (type === 'screening') {
-        this.checkTitleAndScreener(this.form.meta.value.titleId);
+        this.mediaSub?.unsubscribe();
+        this.mediaSub = (this.form.meta as ScreeningForm).titleId.valueChanges.pipe(
+          startWith(this.form.meta.value.titleId)
+        ).subscribe(titleId => this.checkTitleAndScreener(titleId));
+
       } else if (type === 'slate') {
-        this.checkSlateVideoMissing(this.form.meta.value.videoId);
+        this.mediaSub?.unsubscribe();
+        this.mediaSub = (this.form.meta as SlateForm).videoId.valueChanges.pipe(
+          startWith(this.form.meta.value.videoId)
+        ).subscribe(videoId => this.slateVideoMissing = !videoId);
       }
 
       this.cdr.markForCheck();
@@ -89,6 +102,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.mediaSub?.unsubscribe();
   }
 
   async save(options: { showSnackbar: boolean } = { showSnackbar: true }) {
@@ -166,24 +180,30 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
 
   async checkTitleAndScreener(titleId: string) {
     if (!titleId) {
-      this.errorChipMessage = 'No title selected';
-    } else {
-      const title = await this.movieService.getValue(titleId);
-      if (!title.promotional.videos?.screener?.jwPlayerId) {
-        this.errorChipMessage = 'Screening file missing';
-      } else if (title.app.festival.status === 'draft') {
-        // Titles in draft are not allowed for screenings
-        this.errorChipMessage = 'No title selected';
-      } else {
-        this.errorChipMessage = '';
-      }
+      this.noTitleSelected = true;
+      this.screenerFileMissing = false;
+      return;
     }
-    this.cdr.markForCheck();
+
+    const title = await this.movieService.getValue(titleId);
+    if (!title.promotional.videos?.screener?.jwPlayerId) {
+      this.screenerFileMissing = true;
+      this.noTitleSelected = false;
+      return;
+    }
+
+    if (title.app.festival.status === 'draft') {
+      this.noTitleSelected = true;
+      this.screenerFileMissing = false;
+      return;
+    }
+
+    this.noTitleSelected = false;
+    this.screenerFileMissing = false;
   }
 
-  checkSlateVideoMissing(videoId: string) {
-    this.errorChipMessage = !videoId ? 'Video file missing' : '';
-    this.cdr.markForCheck();
+  scrollTo(selector: string) {
+    document.querySelector(selector).scrollIntoView({behavior: "smooth"});
   }
 
   public explain() {
