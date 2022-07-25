@@ -222,7 +222,7 @@ export class MyapimoviesService {
 
       if (countries.length === 0) {
         countries.push(defaultCountry);
-        this.logs.error.push(`No territories found for ${imdbId}. Used ${defaultCountry} as default`);
+        this.logs.error.push(`No countries found for ${imdbId}. Used ${defaultCountry} as default`);
       }
 
       return countries;
@@ -236,7 +236,7 @@ export class MyapimoviesService {
         console.log(error);
       }
 
-      this.logs.error.push(`No territories found for ${imdbId}. Used ${defaultCountry} as default`);
+      this.logs.error.push(`No countries found for ${imdbId}. Used ${defaultCountry} as default`);
       return [defaultCountry];
     }
 
