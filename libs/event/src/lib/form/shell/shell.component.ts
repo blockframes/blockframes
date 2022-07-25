@@ -35,7 +35,6 @@ const navTabs: NavTabs = {
   ]
 }
 
-
 @Component({
   selector: 'event-shell',
   templateUrl: './shell.component.html',
@@ -176,7 +175,6 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   animationOutlet(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.animation;
   }
-
 
   async checkTitleAndScreener(titleId: string) {
     if (!titleId) {

@@ -21,14 +21,12 @@
             </a>
           </ng-container>
   
-          <ng-container *ngSwitchCase="'video'">
-            <mat-chip-list>
-              <mat-chip disableRipple>
-                <mat-icon svgIcon="warning"></mat-icon>
-                <span>Video file missing</span>
-              </mat-chip>
-            </mat-chip-list>
-          </ng-container>
+          <mat-chip-list *ngSwitchCase="'video'">
+            <mat-chip disableRipple>
+              <mat-icon svgIcon="warning"></mat-icon>
+              <span>Video file missing</span>
+            </mat-chip>
+          </mat-chip-list>
         </ng-container>
 
       </section>
