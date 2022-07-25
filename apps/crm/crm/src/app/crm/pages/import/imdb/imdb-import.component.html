@@ -12,7 +12,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Imdb ids</mat-label>
-      <textarea matInput formControlName="imdbIds"></textarea>
+      <textarea matInput formControlName="imdbIds" placeholder="Enter imdb ids comma separated"></textarea>
       <mat-error *ngIf="form.get('imdbIds').hasError('required')">
         Imdb ids are <strong>required</strong>
       </mat-error>

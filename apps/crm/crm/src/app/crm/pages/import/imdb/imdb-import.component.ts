@@ -1,5 +1,5 @@
 
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -13,7 +13,7 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./imdb-import.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImdbImportComponent implements OnInit {
+export class ImdbImportComponent {
 
   public form = new FormGroup({
     token: new FormControl('', [Validators.required]),
@@ -33,10 +33,6 @@ export class ImdbImportComponent implements OnInit {
     private orgService: OrganizationService,
     private snackbar: MatSnackBar,
   ) { }
-
-  ngOnInit() {
-    this.form.get('orgId').setValue(this.orgService.org.id);
-  }
 
   async import() {
     this.importing = true;
