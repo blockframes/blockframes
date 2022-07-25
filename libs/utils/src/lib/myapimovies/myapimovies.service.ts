@@ -124,7 +124,7 @@ export class MyapimoviesService {
       const { data } = await this.query<{ data: { genre: string }[], code: number }>(`/v1/movie/${imdbId}/genres`);
       const genres = data.map(d => {
         if (genreMap[d.genre]) return genreMap[d.genre];
-        else this.logs.error.push(`Skipped unknown genre ${d.genre}`);
+        else this.logs.error.push(`Skipped unknown genre ${d.genre} for ${imdbId}`);
       }).filter(d => !!d);
 
       if (genres.length === 0) {
@@ -216,7 +216,7 @@ export class MyapimoviesService {
         if (d.country === 'United States') d.country = 'united-states-of-america';
 
         const country = getKeyIfExists('territories', d.country) || getKeyIfExists('territoriesISOA3', d.country);
-        if (!country) this.logs.error.push(`Skipped unknown territory ${d.country}`);
+        if (!country) this.logs.error.push(`Skipped unknown territory ${d.country} for ${imdbId}`);
         else return country;
       }).filter(d => !!d);
 
@@ -250,7 +250,7 @@ export class MyapimoviesService {
         if (d.language === 'Chinese') d.language = 'mandarin-chinese';
 
         const language = getKeyIfExists('languages', d.language);
-        if (!language) this.logs.error.push(`Skipped unknown language ${d.language}`);
+        if (!language) this.logs.error.push(`Skipped unknown language ${d.language} for ${imdbId}`);
         else return language;
       }).filter(d => !!d);
 
