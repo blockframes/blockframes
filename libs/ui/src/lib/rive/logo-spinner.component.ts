@@ -9,7 +9,5 @@ import { APP } from '@blockframes/utils/routes/utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LogoSpinnerComponent {
-  constructor(
-    @Inject(APP) public app: App
-  ) { }
+  constructor( @Inject(APP) public app: App ) { }
 }

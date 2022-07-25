@@ -11,7 +11,7 @@ import { SaleListComponent } from './list.component';
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { ExternalSaleListModule } from '@blockframes/contract/contract/list/external-sales/external-sale.module';
-import { LogoSpinnerModule } from '@blockframes/ui/rive/logo-spinner.module'
+import { LogoSpinnerModule } from '@blockframes/ui/rive/logo-spinner.module';
 import { InternalSalesListModule } from '@blockframes/contract/contract/list/internal-sales/internal-sales.module';
 
 // Material

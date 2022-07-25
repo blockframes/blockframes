@@ -20,7 +20,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 import { HasAppStatusModule } from '@blockframes/movie/pipes/has-app-status.pipe';
-import { LogoSpinnerModule } from '@blockframes/ui/rive/logo-spinner.module'
+import { LogoSpinnerModule } from '@blockframes/ui/rive/logo-spinner.module';
 
 @NgModule({
   declarations: [HomeComponent],

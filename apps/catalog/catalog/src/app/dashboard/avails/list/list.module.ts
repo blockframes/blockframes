@@ -1,23 +1,23 @@
 // Angular
-import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { FlexLayoutModule } from "@angular/flex-layout";
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 //Material
-import { MatButtonModule } from "@angular/material/button";
-import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Modules
-import { AvailsFilterModule } from "@blockframes/contract/avails/filter/filter.module";
-import { ImageModule } from "@blockframes/media/image/directives/image.module";
-import { TableModule } from "@blockframes/ui/list/table/table.module";
-import { LogoSpinnerModule } from '@blockframes/ui/rive/logo-spinner.module'
-import { MaxLengthModule } from "@blockframes/utils/pipes";
+import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { LogoSpinnerModule } from '@blockframes/ui/rive/logo-spinner.module';
+import { MaxLengthModule } from '@blockframes/utils/pipes';
 
 // Pages
-import { CatalogAvailsListComponent } from "./list.component";
+import { CatalogAvailsListComponent } from './list.component';
 
 @NgModule({
   declarations: [
