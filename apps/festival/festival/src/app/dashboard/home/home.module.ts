@@ -7,7 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 //Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Pages
@@ -23,8 +22,9 @@ import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { HasAppStatusModule } from '@blockframes/movie/pipes/has-app-status.pipe';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { MapModule } from "@blockframes/ui/map";
+import { MapModule } from '@blockframes/ui/map';
 import { DisplayNameModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -44,12 +44,12 @@ import { DisplayNameModule, MaxLengthModule, ToLabelModule } from '@blockframes/
     ToLabelModule,
     TableModule,
     MaxLengthModule,
+    LogoSpinnerModule,
 
     // Material
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    MatProgressSpinnerModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: HomeComponent }])
