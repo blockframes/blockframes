@@ -149,7 +149,7 @@ export function getFieldConfigs(
       /* d */ contentType: (value: string) => {
       // ! required
       if (!value) throw mandatoryError(value, 'Content Type');
-      const key = getKeyIfExists('contentType', value) as ContentType;
+      const key = getKeyIfExists('contentType', value);
       if (!key) throw wrongValueError(value, 'Content Type');
       return key;
     },
@@ -169,7 +169,7 @@ export function getFieldConfigs(
     },
       /* g */ productionStatus: (value: string) => {
       if (!value) throw optionalWarning('Production Status');
-      const status = getKeyIfExists('productionStatus', value) as ProductionStatus;
+      const status = getKeyIfExists('productionStatus', value);
       if (!status) throw wrongValueError(value, 'Production Status');
       return status;
     },
@@ -183,7 +183,7 @@ export function getFieldConfigs(
       /* i */ 'release.status': (value: string) => {
       // ! required
       if (!value) throw mandatoryError(value, 'Release Status');
-      const status = getKeyIfExists('screeningStatus', value) as ScreeningStatus;
+      const status = getKeyIfExists('screeningStatus', value);
       if (!status) throw wrongValueError(value, 'Release Year');
       return status;
     },
@@ -202,7 +202,7 @@ export function getFieldConfigs(
       /* m */ 'originCountries[]': (value: string) => {
       // ! required
       if (!value) throw mandatoryError(value, 'Origin Countries');
-      const territories = getKeyIfExists('territories', value) as Territory;
+      const territories = getKeyIfExists('territories', value);
       if (!territories) throw wrongValueError(value, 'Origin Countries');
       return territories;
     },
@@ -212,19 +212,19 @@ export function getFieldConfigs(
     },
       /* o */ 'stakeholders[].role': (value: string) => {
       if (!value) throw optionalWarning('Stakeholders Role');
-      const role = getKeyIfExists('stakeholderRoles', value) as StakeholderRole;
+      const role = getKeyIfExists('stakeholderRoles', value);
       if (!role) throw wrongValueError(value, 'Stakeholders Role');
       return role;
     },
       /* p */ 'stakeholders[].countries[]': (value: string) => {
       if (!value) throw optionalWarning('Stakeholders Country');
-      const country = getKeyIfExists('territories', value) as Territory;
+      const country = getKeyIfExists('territories', value);
       if (!country) throw wrongValueError(value, 'Stakeholders Country');
       return country;
     },
       /* q */ 'originalRelease[].country': (value: string) => {
       if (!value) throw optionalWarning('Original release Country');
-      const country = getKeyIfExists('territories', value) as Territory;
+      const country = getKeyIfExists('territories', value);
       if (!country) throw wrongValueError(value, 'Original release Country');
       return country;
     },
@@ -241,14 +241,14 @@ export function getFieldConfigs(
       /* t */ 'originalLanguages[]': (value: string) => {
       // ! required
       if (!value?.length) throw mandatoryError(value, 'Original Languages');
-      const language = getKeyIfExists('languages', value) as Language;
+      const language = getKeyIfExists('languages', value);
       if (!language) throw wrongValueError(value, 'Original Languages');
       return language;
     },
       /* u */ 'genres[]': (value: string) => {
       // ! required
       if (!value?.length) throw mandatoryError(value, 'Genres');
-      const genre = getKeyIfExists('genres', value) as Genre;
+      const genre = getKeyIfExists('genres', value);
       if (!genre) throw wrongValueError(value, 'Genres');
       return genre;
     },
@@ -264,7 +264,7 @@ export function getFieldConfigs(
     },
       /* x */ 'runningTime.status': (value: string) => {
       if (!value) throw optionalWarning('Running Time Status');
-      const status = getKeyIfExists('screeningStatus', value) as ScreeningStatus;
+      const status = getKeyIfExists('screeningStatus', value);
       if (!status) throw wrongValueError(value, 'Running Time Status');
       return status;
     },
@@ -278,7 +278,7 @@ export function getFieldConfigs(
     },
       /* aa */ 'cast[].status': (value: string) => {
       if (!value) throw optionalWarning('Principal Cast Status');
-      const status = getKeyIfExists('memberStatus', value) as MemberStatus;
+      const status = getKeyIfExists('memberStatus', value);
       if (!status) throw wrongValueError(value, 'Principal Cast Status');
       return status;
     },
@@ -300,7 +300,7 @@ export function getFieldConfigs(
     },
       /* ae */ 'prizes[].premiere': (value: string) => {
       if (!value) throw optionalWarning('Festival Prizes Premiere');
-      const premiere = getKeyIfExists('premiereType', value) as PremiereType; // TODO Remove
+      const premiere = getKeyIfExists('premiereType', value);
       if (!premiere) throw wrongValueError(value, 'Festival Prizes Premiere');
       return premiere;
     },
@@ -353,7 +353,7 @@ export function getFieldConfigs(
       if (!value) throw optionalWarning('Budget Range');
       const budget = getKeyIfExists('budgetRange', value);
       if (!budget) throw wrongValueError(value, 'Budget Range');
-      return budget as any;
+      return budget;
     },
       /* aq */ 'boxOffice[].territory': (value: string) => {
       if (!value) throw optionalWarning('Box Office Country');
@@ -490,7 +490,7 @@ export function getFieldConfigs(
       if (!value) throw optionalWarning('Catalog Status', defaultAccess);
       if (!value) return defaultAccess;
 
-      const status = getKeyIfExists('storeStatus', value) as StoreStatus;
+      const status = getKeyIfExists('storeStatus', value);
       if (!status) throw wrongValueError(value, 'Catalog Status');
 
       return { status, access: true, acceptedAt: null, refusedAt: null };
@@ -506,7 +506,7 @@ export function getFieldConfigs(
       if (!value) throw optionalWarning('Festival Status', defaultAccess);
       if (!value) return defaultAccess;
 
-      const status = getKeyIfExists('storeStatus', value) as StoreStatus;
+      const status = getKeyIfExists('storeStatus', value);
       if (!status) throw wrongValueError(value, 'Festival Status');
 
       return { status, access: true, acceptedAt: null, refusedAt: null };
@@ -522,7 +522,7 @@ export function getFieldConfigs(
       if (!value) throw optionalWarning('Financiers Status', defaultAccess);
       if (!value) return defaultAccess;
 
-      const status = getKeyIfExists('storeStatus', value) as StoreStatus;
+      const status = getKeyIfExists('storeStatus', value);
       if (!status) throw wrongValueError(value, 'Financiers Status');
 
       return { status, access: true, acceptedAt: null, refusedAt: null };
@@ -556,7 +556,7 @@ export function getFieldConfigs(
       /* d */ contentType: (value: string) => {
       // ! required
       if (!value) throw mandatoryError(value, 'Content Type');
-      const key = getKeyIfExists('contentType', value) as ContentType;
+      const key = getKeyIfExists('contentType', value);
       if (!key) throw wrongValueError(value, 'Content Type');
       return key;
     },
@@ -576,7 +576,7 @@ export function getFieldConfigs(
     },
       /* g */ productionStatus: (value: string) => {
       if (!value) throw optionalWarning('Production Status');
-      const status = getKeyIfExists('productionStatus', value) as ProductionStatus;
+      const status = getKeyIfExists('productionStatus', value);
       if (!status) throw wrongValueError(value, 'Production Status');
       return status;
     },
@@ -590,7 +590,7 @@ export function getFieldConfigs(
       /* i */ 'release.status': (value: string) => {
       // ! required
       if (!value) throw mandatoryError(value, 'Release Status');
-      const status = getKeyIfExists('screeningStatus', value) as ScreeningStatus;
+      const status = getKeyIfExists('screeningStatus', value);
       if (!status) throw wrongValueError(value, 'Release Year');
       return status;
     },
@@ -609,7 +609,7 @@ export function getFieldConfigs(
       /* m */ 'originCountries[]': (value: string) => {
       // ! required
       if (!value) throw mandatoryError(value, 'Origin Countries');
-      const territories = getKeyIfExists('territories', value) as Territory;
+      const territories = getKeyIfExists('territories', value);
       if (!territories) throw wrongValueError(value, 'Origin Countries');
       return territories;
     },
@@ -619,19 +619,19 @@ export function getFieldConfigs(
     },
       /* o */ 'stakeholders[].role': (value: string) => {
       if (!value) throw optionalWarning('Stakeholders Role');
-      const role = getKeyIfExists('stakeholderRoles', value) as StakeholderRole;
+      const role = getKeyIfExists('stakeholderRoles', value);
       if (!role) throw wrongValueError(value, 'Stakeholders Role');
       return role;
     },
       /* p */ 'stakeholders[].countries[]': (value: string) => {
       if (!value) throw optionalWarning('Stakeholders Country');
-      const country = getKeyIfExists('territories', value) as Territory;
+      const country = getKeyIfExists('territories', value);
       if (!country) throw wrongValueError(value, 'Stakeholders Country');
       return country;
     },
       /* q */ 'originalRelease[].country': (value: string) => {
       if (!value) throw optionalWarning('Original release Country');
-      const country = getKeyIfExists('territories', value) as Territory;
+      const country = getKeyIfExists('territories', value);
       if (!country) throw wrongValueError(value, 'Original release Country');
       return country;
     },
@@ -648,14 +648,14 @@ export function getFieldConfigs(
       /* t */ 'originalLanguages[]': (value: string) => {
       // ! required
       if (!value?.length) throw mandatoryError(value, 'Original Languages');
-      const language = getKeyIfExists('languages', value) as Language;
+      const language = getKeyIfExists('languages', value);
       if (!language) throw wrongValueError(value, 'Original Languages');
       return language;
     },
       /* u */ 'genres[]': (value: string) => {
       // ! required
       if (!value?.length) throw mandatoryError(value, 'Genres');
-      const genre = getKeyIfExists('genres', value) as Genre;
+      const genre = getKeyIfExists('genres', value);
       if (!genre) throw wrongValueError(value, 'Genres');
       return genre;
     },
@@ -671,7 +671,7 @@ export function getFieldConfigs(
     },
       /* x */ 'runningTime.status': (value: string) => {
       if (!value) throw optionalWarning('Running Time Status');
-      const status = getKeyIfExists('screeningStatus', value) as ScreeningStatus;
+      const status = getKeyIfExists('screeningStatus', value);
       if (!status) throw wrongValueError(value, 'Running Time Status');
       return status;
     },
@@ -685,7 +685,7 @@ export function getFieldConfigs(
     },
       /* aa */ 'cast[].status': (value: string) => {
       if (!value) throw optionalWarning('Principal Cast Status');
-      const status = getKeyIfExists('memberStatus', value) as MemberStatus;
+      const status = getKeyIfExists('memberStatus', value);
       if (!status) throw wrongValueError(value, 'Principal Cast Status');
       return status;
     },
@@ -707,7 +707,7 @@ export function getFieldConfigs(
     },
       /* ae */ 'prizes[].premiere': (value: string) => {
       if (!value) throw optionalWarning('Festival Prizes Premiere');
-      const premiere = getKeyIfExists('premiereType', value) as PremiereType;
+      const premiere = getKeyIfExists('premiereType', value);
       if (!premiere) throw wrongValueError(value, 'Festival Prizes Premiere');
       return premiere;
     },
@@ -738,7 +738,7 @@ export function getFieldConfigs(
     },
       /* al */ 'producers[].role': (value: string) => {
       if (!value) throw optionalWarning('Producer(s) Role');
-      const role = getKeyIfExists('producerRoles', value) as ProducerRole;
+      const role = getKeyIfExists('producerRoles', value);
       if (!role) throw wrongValueError(value, 'Producer(s) Role');
       return role;
     },
@@ -752,7 +752,7 @@ export function getFieldConfigs(
     },
       /* ao */ 'crew[].role': (value: string) => {
       if (!value) throw optionalWarning('Crew Member(s) Role');
-      const role = getKeyIfExists('crewRoles', value) as CrewRole;
+      const role = getKeyIfExists('crewRoles', value);
       if (!role) throw wrongValueError(value, 'Crew Member(s) Role');
       return role;
     },
@@ -760,7 +760,7 @@ export function getFieldConfigs(
       if (!value) throw optionalWarning('Budget Range');
       const budget = getKeyIfExists('budgetRange', value);
       if (!budget) throw wrongValueError(value, 'Budget Range');
-      return budget as any;
+      return budget;
     },
       /* aq */ 'boxOffice[].territory': (value: string) => {
       if (!value) throw optionalWarning('Box Office Country');
@@ -782,7 +782,7 @@ export function getFieldConfigs(
     },
       /* at */ 'certifications[]': (value: string) => {
       if (!value) throw optionalWarning('Certification');
-      const certification = getKeyIfExists('certifications', value) as Certification;
+      const certification = getKeyIfExists('certifications', value);
       if (!certification) throw wrongValueError(value, 'Certification');
       return certification;
     },
@@ -824,25 +824,25 @@ export function getFieldConfigs(
     },
       /* bc */ color: (value: string) => {
       if (!value) throw optionalWarning('Color / Black & White');
-      const color = getKeyIfExists('colors', value) as Color;
+      const color = getKeyIfExists('colors', value);
       if (!color) throw wrongValueError(value, 'Color / Black & White');
       return color;
     },
       /* bd */ format: (value: string) => {
       if (!value) throw optionalWarning('Shooting Format');
-      const format = getKeyIfExists('movieFormat', value) as MovieFormat;
+      const format = getKeyIfExists('movieFormat', value);
       if (!format) throw wrongValueError(value, 'Shooting Format');
       return format;
     },
       /* be */ formatQuality: (value: string) => {
       if (!value) throw optionalWarning('Available Format Quality');
-      const quality = getKeyIfExists('movieFormatQuality', value) as MovieFormatQuality;
+      const quality = getKeyIfExists('movieFormatQuality', value);
       if (!quality) throw wrongValueError(value, 'Available Format Quality');
       return quality;
     },
       /* bf */ soundFormat: (value: string) => {
       if (!value) throw optionalWarning('Sound Format');
-      const sound = getKeyIfExists('soundFormat', value) as SoundFormat;
+      const sound = getKeyIfExists('soundFormat', value);
       if (!sound) throw wrongValueError(value, 'Sound Format');
       return sound;
     },
