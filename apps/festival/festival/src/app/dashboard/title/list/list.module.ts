@@ -18,7 +18,7 @@ import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
-import { LogoSpinnerModule } from '@blockframes/ui/rive/logo-spinner.module';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';

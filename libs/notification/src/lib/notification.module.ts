@@ -14,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 // Blockframes
-import { LogoSpinnerModule } from '@blockframes/ui/rive/logo-spinner.module';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 @NgModule({
   declarations: [NotificationComponent],

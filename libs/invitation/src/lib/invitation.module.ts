@@ -10,7 +10,7 @@ import { InvitationComponent } from './invitation.component';
 import { InvitationListModule } from './components/list/list.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
-import { LogoSpinnerModule } from '@blockframes/ui/rive/logo-spinner.module';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
