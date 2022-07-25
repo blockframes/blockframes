@@ -35,8 +35,6 @@ const navTabs: NavTabs = {
   ]
 }
 
-const parts = ['title', 'screener', 'video'] as const;
-type Part = typeof parts[number];
 
 @Component({
   selector: 'event-shell',
@@ -53,11 +51,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   internalLink: string;
   link: string;
 
-  missing: Record<Part, boolean> = {
-    title: false,
-    screener: false,
-    video: false
-  };
+  missing: 'title' | 'screener' | 'video' | undefined = undefined;
 
   constructor(
     private eventService: EventService,
@@ -98,7 +92,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
         this.mediaSub?.unsubscribe();
         this.mediaSub = (this.form.meta as SlateForm).videoId.valueChanges.pipe(
           startWith(this.form.meta.value.videoId)
-        ).subscribe(videoId => this.missing.video = !videoId);
+        ).subscribe(videoId => this.missing = !videoId ? 'video' : undefined);
       }
 
       this.cdr.markForCheck();
@@ -183,27 +177,25 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     return outlet?.activatedRouteData?.animation;
   }
 
-  private setMissing(missing?: Part) {
-    for (const part of parts) {
-      this.missing[part] = missing === part;
-    }
-  }
 
   async checkTitleAndScreener(titleId: string) {
     if (!titleId) {
-      return this.setMissing('title');
+      this.missing = 'title';
+      return;
     }
 
     const title = await this.movieService.getValue(titleId);
     if (!title.promotional.videos?.screener?.jwPlayerId) {
-      return this.setMissing('screener');
+      this.missing = 'screener';
+      return;
     }
 
     if (title.app.festival.status === 'draft') {
-      return this.setMissing('title');
+      this.missing = 'title';
+      return;
     }
 
-    return this.setMissing();
+    this.missing = undefined;
   }
 
   scrollTo(selector: string) {

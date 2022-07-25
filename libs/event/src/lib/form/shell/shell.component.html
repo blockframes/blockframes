@@ -6,28 +6,31 @@
           <mat-icon svgIcon="arrow_back"></mat-icon>
         </a>
 
-        <ng-container *ngIf="missing.title">
-          <button mat-button color="accent" (click)="scrollTo('#titleField')">
-            <mat-icon svgIcon="warning"></mat-icon>
-            <span>No title selected</span>
-          </button>
-        </ng-container>
-
-        <ng-container *ngIf="missing.screener">
-          <a mat-button color="accent" [routerLink]="['/c/o/dashboard/tunnel/movie', form.meta.value.titleId, 'media-screener']">
-            <mat-icon svgIcon="warning"></mat-icon>
-            <span>Screening file missing</span>
-          </a>
-        </ng-container>
-
-        <ng-container *ngIf="missing.video">
-          <mat-chip-list>
-            <mat-chip disableRipple>
+        <ng-container [ngSwitch]="missing">
+          <ng-container *ngSwitchCase="'title'">
+            <button mat-button color="accent" (click)="scrollTo('#titleField')">
               <mat-icon svgIcon="warning"></mat-icon>
-              <span>Video file missing</span>
-            </mat-chip>
-          </mat-chip-list>
+              <span>No title selected</span>
+            </button>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'screener'">
+            <a mat-button color="accent" [routerLink]="['/c/o/dashboard/tunnel/movie', form.meta.value.titleId, 'media-screener']">
+              <mat-icon svgIcon="warning"></mat-icon>
+              <span>Screening file missing</span>
+            </a>
+          </ng-container>
+  
+          <ng-container *ngSwitchCase="'video'">
+            <mat-chip-list>
+              <mat-chip disableRipple>
+                <mat-icon svgIcon="warning"></mat-icon>
+                <span>Video file missing</span>
+              </mat-chip>
+            </mat-chip-list>
+          </ng-container>
         </ng-container>
+
       </section>
       <div fxLayout fxLayoutAlign="end center" fxLayoutGap="8px">
         <button type="button" mat-button color="warn" (click)="remove()">Delete</button>
