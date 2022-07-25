@@ -30,6 +30,10 @@ const routes: Routes = [{
       path: 'contracts',
       loadChildren: () => import('@blockframes/contract/import/import.module').then(m => m.ContractImportModule),
     },
+    {
+      path: 'imdb',
+      loadChildren: () => import('./imdb/imdb-import.module').then(m => m.ImdbImportModule),
+    },
   ]
 }];
 

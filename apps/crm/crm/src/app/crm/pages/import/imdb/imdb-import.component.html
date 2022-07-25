@@ -1,0 +1,51 @@
+<h1>Import multiple imdb titles at once</h1>
+
+<form [formGroup]="form">
+  <section>
+    <mat-form-field appearance="outline">
+      <mat-label>Token</mat-label>
+      <input matInput type="text" placeholder="Token" formControlName="token" required />
+      <mat-error *ngIf="form.get('token').hasError('required')">
+        Token is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Imdb ids</mat-label>
+      <textarea matInput formControlName="imdbIds" placeholder="Enter imdb ids comma separated"></textarea>
+      <mat-error *ngIf="form.get('imdbIds').hasError('required')">
+        Imdb ids are <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>OrgId</mat-label>
+      <input matInput type="text" placeholder="Org Id" formControlName="orgId" required />
+      <mat-error *ngIf="form.get('orgId').hasError('required')">
+        OrgId is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+  </section>
+
+  <footer>
+    <button [disabled]="importing || form.invalid" (click)="import()"  mat-flat-button color="primary">Import titles</button>
+  </footer>
+</form>
+
+
+<ng-container *ngIf="logs$ | async as logs">
+  <h2>Succes Log</h2>
+  <ul>
+    <li *ngFor="let succes of logs.succes">
+      {{ succes }}
+    </li>
+  </ul>
+
+  <h2>Error Log</h2>
+  <ul>
+    <li *ngFor="let error of logs.error">
+      {{ error }}
+    </li>
+  </ul>
+</ng-container>
