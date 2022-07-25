@@ -129,13 +129,7 @@ export class MyapimoviesService {
 
       return unique(genres);
     } catch (error) {
-      const message = error.error?.error;
-      if (message) {
-        this.logs.error.push(`Error while importing genres: ${imdbId}: ${message}`);
-        if (message === 'Max requests reached') this.canSaveMovie = false;
-      } else {
-        this.logs.error.push(`Error while importing genres: ${imdbId}`);
-      }
+      this.logErrors(error, imdbId, 'genres');
 
       this.logs.error.push(`No genres found for ${imdbId}. Used ${defaultGenre} as default`);
       return [defaultGenre];
@@ -147,13 +141,7 @@ export class MyapimoviesService {
       const { data } = await this.query<{ data: { keywords: string }[], code: number }>(`/v1/movie/${imdbId}/keywords`);
       return data;
     } catch (error) {
-      const message = error.error?.error;
-      if (message) {
-        this.logs.error.push(`Error while importing keywords: ${imdbId}: ${message}`);
-        if (message === 'Max requests reached') this.canSaveMovie = false;
-      } else {
-        this.logs.error.push(`Error while importing keywords: ${imdbId}`);
-      }
+      this.logErrors(error, imdbId, 'keywords');
 
       return [];
     }
@@ -169,13 +157,7 @@ export class MyapimoviesService {
       const { data } = await this.query<{ data: { type: 'DIRECTOR', name: { name: string, imdbId: string } }[], code: number }>(`/v1/movie/${imdbId}/crew`);
       return data.filter(c => c.type === 'DIRECTOR').map(d => this.createCredit(d.name?.name));
     } catch (error) {
-      const message = error.error?.error;
-      if (message) {
-        this.logs.error.push(`Error while importing directors: ${imdbId}: ${message}`);
-        if (message === 'Max requests reached') this.canSaveMovie = false;
-      } else {
-        this.logs.error.push(`Error while importing directors: ${imdbId}`);
-      }
+      this.logErrors(error, imdbId, 'directors');
 
       return [];
     }
@@ -186,13 +168,7 @@ export class MyapimoviesService {
       const { data } = await this.query<{ data: { character: string, main: boolean, name: { name: string, imdbId: string } }[], code: number }>(`/v1/movie/${imdbId}/actors`);
       return data.filter(d => d.main).map(d => this.createCredit(d.name?.name));
     } catch (error) {
-      const message = error.error?.error;
-      if (message) {
-        this.logs.error.push(`Error while importing actors: ${imdbId}: ${message}`);
-        if (message === 'Max requests reached') this.canSaveMovie = false;
-      } else {
-        this.logs.error.push(`Error while importing actors: ${imdbId}`);
-      }
+      this.logErrors(error, imdbId, 'actors');
 
       return [];
     }
@@ -218,13 +194,7 @@ export class MyapimoviesService {
 
       return unique(countries);
     } catch (error) {
-      const message = error.error?.error;
-      if (message) {
-        this.logs.error.push(`Error while importing countries: ${imdbId}: ${message}`);
-        if (message === 'Max requests reached') this.canSaveMovie = false;
-      } else {
-        this.logs.error.push(`Error while importing countries: ${imdbId}`);
-      }
+      this.logErrors(error, imdbId, 'countries');
 
       this.logs.error.push(`No countries found for ${imdbId}. Used ${defaultCountry} as default`);
       return [defaultCountry];
@@ -251,18 +221,22 @@ export class MyapimoviesService {
 
       return unique(languages);
     } catch (error) {
-      const message = error.error?.error;
-      if (message) {
-        this.logs.error.push(`Error while importing languages: ${imdbId}: ${message}`);
-        if (message === 'Max requests reached') this.canSaveMovie = false;
-      } else {
-        this.logs.error.push(`Error while importing languages: ${imdbId}`);
-      }
+      this.logErrors(error, imdbId, 'languages');
 
       this.logs.error.push(`No languages found for ${imdbId}. Used ${defaultLanguage} as default`);
       return [defaultLanguage];
     }
 
+  }
+
+  private logErrors(error, imdbId: string, kind: string) {
+    const message = error.error?.error;
+    if (message) {
+      this.logs.error.push(`Error while importing ${kind}: ${imdbId}: ${message}`);
+      if (message === 'Max requests reached') this.canSaveMovie = false;
+    } else {
+      this.logs.error.push(`Error while importing ${kind}: ${imdbId}`);
+    }
   }
 
   private createCredit(name: string) {
