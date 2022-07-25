@@ -126,7 +126,7 @@ export function capitalize(text: string) {
 }
 
 /** Returns only unique values from array of strings */
-export function unique(array: string[]) {
+export function unique<T>(array: T[]) {
   return Array.from(new Set(array));
 }
 

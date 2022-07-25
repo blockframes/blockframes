@@ -5,6 +5,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { getKeyIfExists } from '../helpers';
+import { unique } from '@blockframes/utils/helpers';
 
 interface MyapimoviesMovie {
   imdbId: string;
@@ -126,7 +127,7 @@ export class MyapimoviesService {
         this.logs.error.push(`No genres found for ${imdbId}. Used ${defaultGenre} as default`);
       }
 
-      return Array.from(new Set(genres));
+      return unique(genres);
     } catch (error) {
       const message = error.error?.error;
       if (message) {
@@ -215,7 +216,7 @@ export class MyapimoviesService {
         this.logs.error.push(`No countries found for ${imdbId}. Used ${defaultCountry} as default`);
       }
 
-      return Array.from(new Set(countries));
+      return unique(countries);
     } catch (error) {
       const message = error.error?.error;
       if (message) {
@@ -248,7 +249,7 @@ export class MyapimoviesService {
         this.logs.error.push(`No languages found for ${imdbId}. Used ${defaultLanguage} as default`);
       }
 
-      return Array.from(new Set(languages));
+      return unique(languages);
     } catch (error) {
       const message = error.error?.error;
       if (message) {
