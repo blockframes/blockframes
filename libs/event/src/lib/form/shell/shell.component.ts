@@ -57,7 +57,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     title: false,
     screener: false,
     video: false
-  }
+  };
 
   constructor(
     private eventService: EventService,
@@ -203,7 +203,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       return this.setMissing('title');
     }
 
-    return this.setMissing()
+    return this.setMissing();
   }
 
   scrollTo(selector: string) {
