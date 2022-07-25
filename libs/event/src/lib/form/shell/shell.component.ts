@@ -34,6 +34,10 @@ const navTabs: NavTabs = {
     { path: 'invitations', label: 'Invitations' },
   ]
 }
+
+const parts = ['title', 'screener', 'video'] as const;
+type Part = typeof parts[number];
+
 @Component({
   selector: 'event-shell',
   templateUrl: './shell.component.html',
@@ -49,9 +53,11 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   internalLink: string;
   link: string;
 
-  screenerFileMissing = false;
-  noTitleSelected = false;
-  slateVideoMissing = false;
+  missing: Record<Part, boolean> = {
+    title: false,
+    screener: false,
+    video: false
+  }
 
   constructor(
     private eventService: EventService,
@@ -92,7 +98,7 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
         this.mediaSub?.unsubscribe();
         this.mediaSub = (this.form.meta as SlateForm).videoId.valueChanges.pipe(
           startWith(this.form.meta.value.videoId)
-        ).subscribe(videoId => this.slateVideoMissing = !videoId);
+        ).subscribe(videoId => this.missing.video = !videoId);
       }
 
       this.cdr.markForCheck();
@@ -177,32 +183,31 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
     return outlet?.activatedRouteData?.animation;
   }
 
+  private setMissing(missing?: Part) {
+    for (const part of parts) {
+      this.missing[part] = missing === part;
+    }
+  }
+
   async checkTitleAndScreener(titleId: string) {
     if (!titleId) {
-      this.noTitleSelected = true;
-      this.screenerFileMissing = false;
-      return;
+      return this.setMissing('title');
     }
 
     const title = await this.movieService.getValue(titleId);
     if (!title.promotional.videos?.screener?.jwPlayerId) {
-      this.screenerFileMissing = true;
-      this.noTitleSelected = false;
-      return;
+      return this.setMissing('screener');
     }
 
     if (title.app.festival.status === 'draft') {
-      this.noTitleSelected = true;
-      this.screenerFileMissing = false;
-      return;
+      return this.setMissing('title');
     }
 
-    this.noTitleSelected = false;
-    this.screenerFileMissing = false;
+    return this.setMissing()
   }
 
   scrollTo(selector: string) {
-    document.querySelector(selector).scrollIntoView({behavior: "smooth"});
+    document.querySelector(selector).scrollIntoView({ behavior: 'smooth' });
   }
 
   public explain() {

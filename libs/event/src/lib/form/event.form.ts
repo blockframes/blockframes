@@ -101,7 +101,7 @@ export class ScreeningForm extends FormEntity<ScreeningControl, Screening> {
   }
 
   get titleId() {
-    return this.get('titleId')
+    return this.get('titleId');
   }
 }
 
@@ -124,6 +124,6 @@ export class SlateForm extends FormEntity<SlateControl, Slate> {
   }
 
   get videoId() {
-    return this.get('videoId')
+    return this.get('videoId');
   }
 }

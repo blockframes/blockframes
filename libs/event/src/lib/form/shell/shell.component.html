@@ -6,21 +6,21 @@
           <mat-icon svgIcon="arrow_back"></mat-icon>
         </a>
 
-        <ng-container *ngIf="noTitleSelected">
+        <ng-container *ngIf="missing.title">
           <button mat-button color="accent" (click)="scrollTo('#titleField')">
             <mat-icon svgIcon="warning"></mat-icon>
             <span>No title selected</span>
           </button>
         </ng-container>
 
-        <ng-container *ngIf="screenerFileMissing">
+        <ng-container *ngIf="missing.screener">
           <a mat-button color="accent" [routerLink]="['/c/o/dashboard/tunnel/movie', form.meta.value.titleId, 'media-screener']">
             <mat-icon svgIcon="warning"></mat-icon>
             <span>Screening file missing</span>
           </a>
         </ng-container>
 
-        <ng-container *ngIf="slateVideoMissing">
+        <ng-container *ngIf="missing.video">
           <mat-chip-list fxLayoutAlign="center center">
             <mat-chip disableRipple>
               <mat-icon svgIcon="warning"></mat-icon>
