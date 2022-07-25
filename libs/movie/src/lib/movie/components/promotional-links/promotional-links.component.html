@@ -4,7 +4,7 @@
   </button>
 
   <ng-container *ngFor="let link of _links">
-    <a mat-mini-fab color="primary" [href]="link.url" target="_blank" [matTooltip]="link.label">
+    <a mat-mini-fab color="primary" [href]="link.url" target="_blank" [matTooltip]="link.label" (click)="promotionalElementOpened()">
       <mat-icon [svgIcon]="link.icon"></mat-icon>
     </a>
   </ng-container>
@@ -20,7 +20,7 @@
     </button>
 
     <ng-container *ngFor="let link of _links">
-      <a mat-menu-item [href]="link.url" target="_blank">
+      <a mat-menu-item [href]="link.url" target="_blank" (click)="promotionalElementOpened()">
         <mat-icon [svgIcon]="link.icon"></mat-icon>
         <span class="mat-caption">{{ link.label }}</span>
       </a>
