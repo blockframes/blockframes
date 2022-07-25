@@ -1,5 +1,5 @@
 @use '@angular/material' as mat;
-@import "@angular/flex-layout/mq";
+@import '@angular/flex-layout/mq';
 
 :host {
   display: flex;
@@ -15,6 +15,10 @@ aside {
   border-right: solid 1px var(--foreground-divider);
   background-color: var(--background-card);
   color: var(--foreground-text);
+
+  &.opened {
+    width: 260px;
+  }
 
   mat-toolbar {
     display: flex;

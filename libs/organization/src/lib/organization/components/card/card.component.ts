@@ -23,7 +23,7 @@ export class OrganizationCardComponent {
 
     Promise.all([
       this.movieService.load(fromOrgAndAccepted(this.org.id, this.app)),
-      this.orgService.getMembers(this.org.id, { removeConcierges: true })
+      this.orgService.getMembers(this.org, { removeConcierges: true })
     ]).then(([movies, members]) => {
       this.orgMovieCount$.next(movies.length);
       this.memberCount$.next(members.length);

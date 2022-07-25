@@ -1,5 +1,5 @@
 <div fxLayout fxLayoutAlign="start center">
-  <button test-id="arrow_back" mat-icon-button mwlCalendarPreviousView [view]="view" [viewDate]="viewDate" (viewDateChange)="viewDateChange.emit($event)">
+  <button mat-icon-button mwlCalendarPreviousView [view]="view" [viewDate]="viewDate" (viewDateChange)="viewDateChange.emit($event)">
     <mat-icon svgIcon="arrow_back"></mat-icon>
   </button>
   <h6>{{ viewDate | date: 'MMMM y' }}</h6>

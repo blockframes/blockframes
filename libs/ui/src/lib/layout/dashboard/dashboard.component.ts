@@ -88,9 +88,13 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     ).subscribe(() => this.cdkScrollable.scrollTo({ top: 0 }))
 
     // toggle Navigation desktop/mobile
-    if (window.innerWidth <= 559) this.showNavigation = false;
+    if (window.innerWidth <= 599) this.showNavigation = false;
     this.resizeSub$ = fromEvent(window, 'resize').subscribe(_ => {
-      if (window.innerWidth <= 599 && this.showNavigation || window.innerWidth > 599 && !this.showNavigation) {
+      const isMobileScreen = window.innerWidth <= 599;
+      const isDesktopScreen = window.innerWidth > 599;
+      if (
+        (isMobileScreen && this.showNavigation) || (isDesktopScreen && !this.showNavigation)
+      ) {
         this.toggleNavigation();
         this.cdRef.markForCheck();
       }

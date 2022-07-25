@@ -10,6 +10,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { AppLogoModule } from '../app-logo/app-logo.module';
+import { AppLogoIconModule } from '../app-logo-icon/app-logo-icon.module';
 import { FooterModule } from '../footer/footer.module';
 
 // Material
@@ -31,6 +32,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     ScrollingModule,
     FlexLayoutModule,
     AppLogoModule,
+    AppLogoIconModule,
     FooterModule,
 
     // Material
