@@ -1,17 +1,35 @@
 ﻿<ng-container *ngIf="form else loading">
   <ng-template pageBar>
     <header fxLayout fxLayoutAlign="space-between center">
-      <div fxLayout fxLayoutGap="40px">
+      <section>
         <a mat-icon-button routerLink="../.." [queryParams]="{date: form.value.start.toISOString()}">
           <mat-icon svgIcon="arrow_back" test-id="arrow_back"></mat-icon>
         </a>
-        <mat-chip-list fxLayoutAlign="center center">
-          <mat-chip disableRipple *ngIf="errorChipMessage">
-            <mat-icon svgIcon="warning"></mat-icon>
-            <span>{{errorChipMessage}}</span>
-          </mat-chip>
-        </mat-chip-list>
-      </div>
+
+        <ng-container [ngSwitch]="missing">
+          <ng-container *ngSwitchCase="'title'">
+            <button mat-button color="accent" (click)="scrollTo('#titleField')">
+              <mat-icon svgIcon="warning"></mat-icon>
+              <span>No title selected</span>
+            </button>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'screener'">
+            <a mat-button color="accent" [routerLink]="['/c/o/dashboard/tunnel/movie', form.meta.value.titleId, 'media-screener']">
+              <mat-icon svgIcon="warning"></mat-icon>
+              <span>Screening file missing</span>
+            </a>
+          </ng-container>
+  
+          <mat-chip-list *ngSwitchCase="'video'">
+            <mat-chip disableRipple>
+              <mat-icon svgIcon="warning"></mat-icon>
+              <span>Video file missing</span>
+            </mat-chip>
+          </mat-chip-list>
+        </ng-container>
+
+      </section>
       <div fxLayout fxLayoutAlign="end center" fxLayoutGap="8px">
         <button type="button" mat-button color="warn" (click)="remove()">Delete</button>
         <ng-container *ngIf="form.dirty else disabled">
