@@ -48,7 +48,6 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
   form: EventForm;
   internalLink: string;
   link: string;
-  // errorChipMessage = '';
 
   screenerFileMissing = false;
   noTitleSelected = false;
