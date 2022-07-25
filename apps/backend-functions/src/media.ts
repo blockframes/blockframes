@@ -152,7 +152,18 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
       let fieldValue: StorageFile | StorageFile[] = get(doc, metadata.field);
 
-      if (Array.isArray(fieldValue)) {
+      const fileLists = [
+        'documents.notes',
+        'documents.videos',
+        'promotional.still_photo',
+        'promotional.videos.otherVideos',
+        'promotional.notes'
+      ];
+      const isList = fileLists.includes(metadata.field);
+    
+      if (fieldValue === undefined && isList) {
+        fieldValue = [uploadData];
+      } else if (Array.isArray(fieldValue)) {
         fieldValue.push(uploadData);
       } else {
         fieldValue = uploadData;
