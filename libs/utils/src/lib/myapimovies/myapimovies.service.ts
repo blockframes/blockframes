@@ -132,7 +132,7 @@ export class MyapimoviesService {
         this.logs.error.push(`No genres found for ${imdbId}. Used ${defaultGenre} as default`);
       }
 
-      return genres;
+      return Array.from(new Set(genres));
     } catch (error) {
       const message = error.error?.error;
       if (message) {
@@ -225,7 +225,7 @@ export class MyapimoviesService {
         this.logs.error.push(`No countries found for ${imdbId}. Used ${defaultCountry} as default`);
       }
 
-      return countries;
+      return Array.from(new Set(countries));
     } catch (error) {
       const message = error.error?.error;
       if (message) {
@@ -259,7 +259,7 @@ export class MyapimoviesService {
         this.logs.error.push(`No languages found for ${imdbId}. Used ${defaultLanguage} as default`);
       }
 
-      return languages;
+      return Array.from(new Set(languages));
     } catch (error) {
       const message = error.error?.error;
       if (message) {
