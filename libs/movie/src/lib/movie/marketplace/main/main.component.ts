@@ -39,13 +39,13 @@ export class MainComponent implements OnInit {
     }
   }
 
-  showOneVideo(movie: Movie) {
+  getMainVideo(movie: Movie) {
     const video = movie.promotional.videos;
-    if (video.salesPitch?.storagePath && video.salesPitch?.privacy === 'public') return video.salesPitch;
-    if (video.otherVideos[0]?.storagePath && video.otherVideos[0]?.privacy === 'public') return video.otherVideos[0];
-    if (video.publicScreener?.storagePath && video.publicScreener?.privacy === 'public') return video.publicScreener;
-    if (video.screener?.storagePath && video.screener?.privacy === 'public') return video.screener;
+    const otherVideo = video.otherVideos.filter(video => video.privacy === 'public' && video.storagePath !== '' && video.jwPlayerId !== '')
+    if (otherVideo.length) return otherVideo[0];
+    if (video.salesPitch?.storagePath && video.salesPitch?.privacy === 'public' && video.salesPitch?.jwPlayerId) return video.salesPitch;
+    if (video.publicScreener?.storagePath && video.publicScreener?.privacy === 'public' && video.publicScreener?.jwPlayerId) return video.publicScreener;
+    if (video.screener?.storagePath && video.screener?.jwPlayerId) return video.screener;
   }
-
 
 }

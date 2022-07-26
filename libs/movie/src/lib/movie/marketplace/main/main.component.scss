@@ -22,17 +22,7 @@ h5 {
   text-transform: uppercase;
 }
 
-
-#sales-pitch {
-  .video {
-    width: 30%;
-  }
-  p {
-    width: 50%;
-  }
-}
-
-.mains-information{
+.main-information {
   display: flex;
   .video {
     padding-right: 32px;
@@ -43,7 +33,7 @@ h5 {
   video-viewer {
     width: 100%;
   }
-  .mains-information{
+  .main-information {
     flex-direction: column;
   }
 }
