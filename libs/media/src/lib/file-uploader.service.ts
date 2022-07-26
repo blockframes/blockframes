@@ -54,7 +54,7 @@ export class FileUploaderService {
     if (!this.queue[storagePath]) this.queue[storagePath] = [];
 
     // Throw in case of duplicated path, instead of silently overwriting the first occurrence
-    if (this.queue[storagePath].some(upload => upload.fileName === fileName)) throw new Error(`This file already exists in the queue : ${storagePath} -> ${fileName}`);
+    if (this.queue[storagePath].some(upload => upload.fileName === fileName)) throw new Error(`This file has already been selected. Please choose a different file.`);
 
     this.queue[storagePath].push({ file, fileName, metadata });
   }
