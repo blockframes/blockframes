@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { TitleMarketplaceShellComponent } from '../shell/shell.component';
-import { App, Movie } from '@blockframes/model';
+import { Movie } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AnalyticsService } from '@blockframes/analytics/service';
 
@@ -41,9 +41,11 @@ export class MainComponent implements OnInit {
 
   showOneVideo(movie: Movie) {
     const video = movie.promotional.videos;
-    if (video.salesPitch?.storagePath) return video.salesPitch;
-    if (video.otherVideos[0]?.storagePath) return video.otherVideos[0];
-    if (video.publicScreener?.storagePath) return video.publicScreener;
-    if (video.screener?.storagePath) return video.screener;
+    if (video.salesPitch?.storagePath && video.salesPitch?.privacy === 'public') return video.salesPitch;
+    if (video.otherVideos[0]?.storagePath && video.otherVideos[0]?.privacy === 'public') return video.otherVideos[0];
+    if (video.publicScreener?.storagePath && video.publicScreener?.privacy === 'public') return video.publicScreener;
+    if (video.screener?.storagePath && video.screener?.privacy === 'public') return video.screener;
   }
+
+
 }

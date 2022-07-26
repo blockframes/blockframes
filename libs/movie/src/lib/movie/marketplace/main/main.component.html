@@ -3,11 +3,9 @@
   <h2>Main Information</h2>
 
   <section class="mains-information">
-    <ng-container *ngIf="showOneVideo(movie) as video"> 
-      <article class="video" >
-        <video-viewer [ref]="video" *ngIf="video.jwPlayerId" (stateChange)="videoStateChanged(movie, $event)"></video-viewer>
-      </article>
-    </ng-container>
+    <article class="video" *ngIf="showOneVideo(movie) as video">
+      <video-viewer [ref]="video" *ngIf="video.jwPlayerId" (stateChange)="videoStateChanged(movie, $event)"></video-viewer>
+    </article>
     <article *ngIf="movie.synopsis">
       <h5>Synopsis</h5>
       <p>{{ movie.synopsis }}</p>
