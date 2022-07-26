@@ -25,6 +25,7 @@ import { AddButtonTextDirective, SaveButtonTextDirective } from '@blockframes/ut
 import { PageState } from '@blockframes/ui/list/table/paginator';
 import { ColumnDirective } from '@blockframes/ui/list/table/table.component';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Pipe({ name: 'findColRef' })
 export class QueryListFindPipe implements PipeTransform {
@@ -45,6 +46,7 @@ export class FormViewDirective { }
 export class FormTableComponent<T> implements OnInit, OnDestroy {
   @Input() columns: Record<string, string> = {};
   @Input() form: FormList<T>;
+  @Input() scrollAnchor: string;
   @Input() defaultFormValue: T;
   @Input() @boolean disableDelete: boolean;
   @Input() @boolean editOnly = false;
@@ -120,6 +122,10 @@ export class FormTableComponent<T> implements OnInit, OnDestroy {
     this.activeValue = this.formItem.value;
     this.cdr.markForCheck();
     this.itemSelected.emit(this.formItem.value);
+    if(this.scrollAnchor){
+      const anchor = document.querySelector(this.scrollAnchor);
+      scrollIntoView(anchor);
+    }
   }
 
   remove(index: number) {
