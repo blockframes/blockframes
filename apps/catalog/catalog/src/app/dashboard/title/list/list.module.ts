@@ -17,12 +17,12 @@ import { MovieListHeaderModule } from '@blockframes/ui/dashboard/components/movi
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module'
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
@@ -45,12 +45,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     NumberPipeModule,
     IncomePipeModule,
     CellModalModule,
+    LogoSpinnerModule,
 
     // Material
     MatButtonModule,
     MatTabsModule,
     MatIconModule,
-    MatProgressSpinnerModule,
     MatTooltipModule,
     // Router
     RouterModule.forChild([{ path: '', component: TitleListComponent }])

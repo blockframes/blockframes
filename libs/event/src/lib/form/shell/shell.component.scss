@@ -5,6 +5,12 @@
 
 header {
   width: 100%;
+
+  section {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
 }
 
 form {
