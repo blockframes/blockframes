@@ -21,7 +21,7 @@ interface MyapimoviesMovie {
   simplePlot: string;
   title: string;
   originalTitle?: string;
-  type: 'M',
+  type: 'M';
   votes: string;
   year: string
 }
@@ -38,7 +38,7 @@ interface MyapimoviesSerie {
   runtime: string;
   simplePlot: string;
   title: string;
-  type: 'S',
+  type: 'S';
   votes: string;
   year: string
 }
@@ -86,12 +86,12 @@ export class MyapimoviesService {
 
   private canSaveMovie = true;
 
+  public token = '';
+
   constructor(
     private titleService: MovieService,
     private http: HttpClient,
   ) { }
-
-  public token = '';
 
   private async movie(imdbId: string): Promise<MyapimoviesMovie | MyapimoviesSerie> {
     try {
