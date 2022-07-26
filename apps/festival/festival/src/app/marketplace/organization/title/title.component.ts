@@ -100,8 +100,7 @@ export class TitleComponent implements OnInit {
     );
 
     this.titles$ = combineLatest([titles$, searchForm$]).pipe(
-      map(([movies, search]: [Movie[], MovieSearch]) => ({ movies, search })),
-      map(({ movies, search }) => movies.filter(movie => {
+      map(([movies, search]: [Movie[], MovieSearch]) => movies.filter(movie => {
         const haveFestivals = search.festivals.every(festival => movie.prizes.map(p => p.name).includes(festival));
         const haveGenres = search.genres.every(genre => movie.genres.includes(genre));
         const haveLanguages = search.languages.languages.every(lang => {
