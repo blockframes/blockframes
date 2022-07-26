@@ -3,6 +3,8 @@
 :host {
   display: block;
   padding: 16px 24px;
+
+  --primary-contrast: var(--foreground-text);
 }
 
 h1 {
@@ -15,6 +17,14 @@ a {
 
 movie-card {
   width: 12.5%;
+}
+
+list-filter {
+  padding-bottom: 24px;
+  static-check-boxes,
+  filter-budget {
+    padding: 0 16px;
+  }
 }
 
 @include layout-bp(xs) {
