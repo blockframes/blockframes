@@ -9,12 +9,7 @@ import { combineLatest, Observable, map } from 'rxjs';
 import { orderBy, where } from 'firebase/firestore';
 import { FormControl, FormGroup } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
-import { MovieSearch, Versions } from '@blockframes/movie/form/search.form';
-
-interface LanguageVersion {
-  languages: GetKeys<'languages'>[],
-  versions: Versions
-}
+import { LanguageVersion, MovieSearch, Versions } from '@blockframes/movie/form/search.form';
 
 @Component({
   selector: 'festival-marketplace-organization-title',
