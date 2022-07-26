@@ -13,6 +13,8 @@ import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { JoinPipeModule, MaxLengthModule } from '@blockframes/utils/pipes';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -25,10 +27,14 @@ import { MatButtonModule } from '@angular/material/button';
     ImageModule,
     DashboardModule,
     TagModule,
+    JoinPipeModule,
+    MaxLengthModule,
+
     MatIconModule,
     MatButtonModule,
     ClipboardModule,
+    MatTooltipModule,
     RouterModule.forChild([{ path: '', component: MoviesComponent }])
   ]
 })
-export class MovieListModule {}
+export class MovieListModule { }

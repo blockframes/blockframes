@@ -55,7 +55,7 @@ describe('Organiser invites other users to private screening', () => {
     browserAuth.signinWithEmailAndPassword(userInvited1.email);
 
     cy.visit('/c/o/marketplace/invitations');
-    awaitElementDeletion('mat-spinner');
+    awaitElementDeletion('logo-spinner');
     festival.acceptInvitationScreening();
 
     festival.openMoreMenu();
@@ -84,7 +84,7 @@ describe('Organiser invites other users to private screening', () => {
       browserAuth.signinWithEmailAndPassword(userInvited2.email);
 
       cy.visit('/c/o/marketplace/invitations');
-      awaitElementDeletion('mat-spinner');
+      awaitElementDeletion('logo-spinner');
       festival.refuseInvitationScreening();
 
       // * STEP
