@@ -1,7 +1,7 @@
 import { MediaRatioType } from '../../image/uploader/uploader.component';
 import { MovieForm, MovieVideoForm } from '@blockframes/movie/form/movie.form';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
-import { AllowedFileType } from '@blockframes/model';
+import { AllowedFileType, App } from '@blockframes/model';
 import { StorageFile, StorageVideo, Movie, MovieVideo, Organization } from '@blockframes/model';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../../utils';
@@ -73,10 +73,10 @@ export function getFormList(form: OrganizationForm | MovieForm, field: string) {
   return field.split('.').reduce((res, key) => res?.controls?.[key], form);
 }
 
-function titlesDirectory(titles: Movie[]) {
+function titlesDirectory(titles: Movie[], app: App) {
   const documents = {};
   for (const title of titles) {
-    documents[title.title.international + title.id] = titleDirectory(title);
+    documents[title.title.international + title.id] = titleDirectory(title, app);
   }
   return documents;
 }
@@ -129,8 +129,8 @@ function getFormListStorageVideo(
   return FormList.factory<StorageVideo>(value, (file) => new MovieVideoForm(file));
 }
 
-function titleDirectory(title: Movie): Directory {
-  return {
+function titleDirectory(title: Movie, app: App): Directory {
+  const directory: Directory = {
     name: title.title.international,
     type: 'directory',
     children: {
@@ -231,7 +231,21 @@ function titleDirectory(title: Movie): Directory {
         },
       },
     },
-  };
+  }
+
+  if (app === 'crm') {
+    const publicScreener: FileDirectory = {
+      name: 'Public Screener',
+      type: 'file',
+      accept: 'video',
+      togglePrivacy: false,
+      meta: ['movies', 'publicScreener', title.id],
+      form: getFormStorageVideo(title, 'movies', 'publicScreener')
+    };
+
+    (directory.children.videos as Directory).children.publicScreener = publicScreener;
+  }
+  return directory;
 }
 
 function orgDirectory(org: Organization): Directory {
@@ -272,7 +286,7 @@ export interface RootDirectory {
   titles: Directory;
 }
 
-export function getDirectories(org: Organization, titles: Movie[]): Directory {
+export function getDirectories(org: Organization, titles: Movie[], app: App): Directory {
   return {
     name: 'Root',
     type: 'directory',
@@ -282,7 +296,7 @@ export function getDirectories(org: Organization, titles: Movie[]): Directory {
         type: 'directory',
         name: 'Titles',
         icon: 'movie',
-        children: titlesDirectory(titles),
+        children: titlesDirectory(titles, app),
       },
     },
   };
