@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { TitleMarketplaceShellComponent } from '../shell/shell.component';
-import { Movie } from '@blockframes/model';
+import { Movie, MovieVideo } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AnalyticsService } from '@blockframes/analytics/service';
 
@@ -40,12 +40,14 @@ export class MainComponent implements OnInit {
   }
 
   getMainVideo(movie: Movie) {
-    const video = movie.promotional.videos;
-    const otherVideo = video.otherVideos.filter(video => video.privacy === 'public' && video.storagePath !== '' && video.jwPlayerId !== '')
-    if (otherVideo.length) return otherVideo[0];
-    if (video.salesPitch?.storagePath && video.salesPitch?.privacy === 'public' && video.salesPitch?.jwPlayerId) return video.salesPitch;
-    if (video.publicScreener?.storagePath && video.publicScreener?.privacy === 'public' && video.publicScreener?.jwPlayerId) return video.publicScreener;
-    if (video.screener?.storagePath && video.screener?.jwPlayerId) return video.screener;
+    const videos = movie.promotional.videos;
+    const isPublicVideo = (video: MovieVideo) => {
+      return video?.storagePath && video?.privacy === 'public' && video?.jwPlayerId;
+    }
+    if (isPublicVideo(videos.salesPitch)) return videos.salesPitch;
+    const otherVideo = videos.otherVideos.find(video => isPublicVideo(video));
+    if (otherVideo) return otherVideo;
+    if (this.shell.currentApp === 'catalog' && isPublicVideo(videos.publicScreener)) return videos.publicScreener;
   }
 
 }
