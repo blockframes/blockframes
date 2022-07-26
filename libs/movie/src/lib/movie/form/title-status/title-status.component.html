@@ -23,7 +23,7 @@
         <ng-container *ngFor="let status of status; index as i">
           <mat-card [ngClass]="{ disabled: status.disabled }">
             <img (click)="setValue(status.key, status.disabled)" [asset]="status.image" />
-            <mat-radio-button [attr.test-id]="'status' + (i + 1)" [value]="status.key" color="primary"
+            <mat-radio-button [attr.test-id]="'status_' + i" [value]="status.key" color="primary"
               [disabled]="status.disabled">
               {{status.value}}
             </mat-radio-button>
