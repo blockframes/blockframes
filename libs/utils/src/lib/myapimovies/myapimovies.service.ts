@@ -1,45 +1,46 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { createCredit, createMovie, createMovieAppConfig, Credit, Genre, Language, Territory } from '@blockframes/model';
+import { createCredit, createMovie, Credit, Genre, Language, Territory } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { getKeyIfExists } from '../helpers';
+import { unique } from '@blockframes/utils/helpers';
 
 interface MyapimoviesMovie {
-  imdbId: string,
-  imdbUrl: string,
-  lastUpdate: string,
-  metascore: string,
-  plot: string,
-  posterUrl: string,
-  rated: string,
-  rating: string,
-  releaseDate: string,
-  runtime: string,
-  simplePlot: string,
-  title: string,
-  originalTitle?: string,
-  type: 'M',
-  votes: string,
-  year: string,
+  imdbId: string;
+  imdbUrl: string;
+  lastUpdate: string;
+  metascore: string;
+  plot: string;
+  posterUrl: string;
+  rated: string;
+  rating: string;
+  releaseDate: string;
+  runtime: string;
+  simplePlot: string;
+  title: string;
+  originalTitle?: string;
+  type: 'M';
+  votes: string;
+  year: string
 }
 
 interface MyapimoviesSerie {
-  imdbId: string,
-  imdbUrl: string,
-  lastUpdate: string,
-  plot: string,
-  posterUrl: string,
-  rated: string,
-  rating: string,
-  releaseDate: string,
-  runtime: string,
-  simplePlot: string,
-  title: string,
-  type: 'S',
-  votes: string,
-  year: string,
+  imdbId: string;
+  imdbUrl: string;
+  lastUpdate: string;
+  plot: string;
+  posterUrl: string;
+  rated: string;
+  rating: string;
+  releaseDate: string;
+  runtime: string;
+  simplePlot: string;
+  title: string;
+  type: 'S';
+  votes: string;
+  year: string
 }
 
 const genreMap: Record<string, Genre> = {
@@ -85,17 +86,12 @@ export class MyapimoviesService {
 
   private canSaveMovie = true;
 
+  public token = '';
+
   constructor(
     private titleService: MovieService,
     private http: HttpClient,
   ) { }
-
-  public token = '';
-
-  public async health() {
-    const { status } = await this.query<{ status: string }>(`/v1/health`);
-    return status;
-  }
 
   private async movie(imdbId: string): Promise<MyapimoviesMovie | MyapimoviesSerie> {
     try {
@@ -114,7 +110,6 @@ export class MyapimoviesService {
         this.logs.error.push(`Error while importing movie: ${imdbId}: ${message}`);
       } else {
         this.logs.error.push(`Error while importing movie: ${imdbId}`);
-        console.log(error);
       }
     }
   }
@@ -124,7 +119,7 @@ export class MyapimoviesService {
       const { data } = await this.query<{ data: { genre: string }[], code: number }>(`/v1/movie/${imdbId}/genres`);
       const genres = data.map(d => {
         if (genreMap[d.genre]) return genreMap[d.genre];
-        else this.logs.error.push(`Skipped unknown genre ${d.genre} for ${imdbId}`);
+        this.logs.error.push(`Skipped unknown genre ${d.genre} for ${imdbId}`);
       }).filter(d => !!d);
 
       if (genres.length === 0) {
@@ -132,16 +127,9 @@ export class MyapimoviesService {
         this.logs.error.push(`No genres found for ${imdbId}. Used ${defaultGenre} as default`);
       }
 
-      return Array.from(new Set(genres));
+      return unique(genres);
     } catch (error) {
-      const message = error.error?.error;
-      if (message) {
-        this.logs.error.push(`Error while importing genres: ${imdbId}: ${message}`);
-        if (message === 'Max requests reached') this.canSaveMovie = false;
-      } else {
-        this.logs.error.push(`Error while importing genres: ${imdbId}`);
-        console.log(error);
-      }
+      this.logErrors(error, imdbId, 'genres');
 
       this.logs.error.push(`No genres found for ${imdbId}. Used ${defaultGenre} as default`);
       return [defaultGenre];
@@ -153,14 +141,7 @@ export class MyapimoviesService {
       const { data } = await this.query<{ data: { keywords: string }[], code: number }>(`/v1/movie/${imdbId}/keywords`);
       return data;
     } catch (error) {
-      const message = error.error?.error;
-      if (message) {
-        this.logs.error.push(`Error while importing keywords: ${imdbId}: ${message}`);
-        if (message === 'Max requests reached') this.canSaveMovie = false;
-      } else {
-        this.logs.error.push(`Error while importing keywords: ${imdbId}`);
-        console.log(error);
-      }
+      this.logErrors(error, imdbId, 'keywords');
 
       return [];
     }
@@ -176,14 +157,7 @@ export class MyapimoviesService {
       const { data } = await this.query<{ data: { type: 'DIRECTOR', name: { name: string, imdbId: string } }[], code: number }>(`/v1/movie/${imdbId}/crew`);
       return data.filter(c => c.type === 'DIRECTOR').map(d => this.createCredit(d.name?.name));
     } catch (error) {
-      const message = error.error?.error;
-      if (message) {
-        this.logs.error.push(`Error while importing directors: ${imdbId}: ${message}`);
-        if (message === 'Max requests reached') this.canSaveMovie = false;
-      } else {
-        this.logs.error.push(`Error while importing directors: ${imdbId}`);
-        console.log(error);
-      }
+      this.logErrors(error, imdbId, 'directors');
 
       return [];
     }
@@ -194,14 +168,7 @@ export class MyapimoviesService {
       const { data } = await this.query<{ data: { character: string, main: boolean, name: { name: string, imdbId: string } }[], code: number }>(`/v1/movie/${imdbId}/actors`);
       return data.filter(d => d.main).map(d => this.createCredit(d.name?.name));
     } catch (error) {
-      const message = error.error?.error;
-      if (message) {
-        this.logs.error.push(`Error while importing actors: ${imdbId}: ${message}`);
-        if (message === 'Max requests reached') this.canSaveMovie = false;
-      } else {
-        this.logs.error.push(`Error while importing actors: ${imdbId}`);
-        console.log(error);
-      }
+      this.logErrors(error, imdbId, 'actors');
 
       return [];
     }
@@ -216,8 +183,8 @@ export class MyapimoviesService {
         if (d.country === 'United States') d.country = 'united-states-of-america';
 
         const country = getKeyIfExists('territories', d.country) || getKeyIfExists('territoriesISOA3', d.country);
-        if (!country) this.logs.error.push(`Skipped unknown territory ${d.country} for ${imdbId}`);
-        else return country;
+        if (country) return country;
+        this.logs.error.push(`Skipped unknown territory ${d.country} for ${imdbId}`);
       }).filter(d => !!d);
 
       if (countries.length === 0) {
@@ -225,16 +192,9 @@ export class MyapimoviesService {
         this.logs.error.push(`No countries found for ${imdbId}. Used ${defaultCountry} as default`);
       }
 
-      return Array.from(new Set(countries));
+      return unique(countries);
     } catch (error) {
-      const message = error.error?.error;
-      if (message) {
-        this.logs.error.push(`Error while importing countries: ${imdbId}: ${message}`);
-        if (message === 'Max requests reached') this.canSaveMovie = false;
-      } else {
-        this.logs.error.push(`Error while importing countries: ${imdbId}`);
-        console.log(error);
-      }
+      this.logErrors(error, imdbId, 'countries');
 
       this.logs.error.push(`No countries found for ${imdbId}. Used ${defaultCountry} as default`);
       return [defaultCountry];
@@ -250,8 +210,8 @@ export class MyapimoviesService {
         if (d.language === 'Chinese') d.language = 'mandarin-chinese';
 
         const language = getKeyIfExists('languages', d.language);
-        if (!language) this.logs.error.push(`Skipped unknown language ${d.language} for ${imdbId}`);
-        else return language;
+        if (language) return language;
+        this.logs.error.push(`Skipped unknown language ${d.language} for ${imdbId}`);
       }).filter(d => !!d);
 
       if (languages.length === 0) {
@@ -259,21 +219,24 @@ export class MyapimoviesService {
         this.logs.error.push(`No languages found for ${imdbId}. Used ${defaultLanguage} as default`);
       }
 
-      return Array.from(new Set(languages));
+      return unique(languages);
     } catch (error) {
-      const message = error.error?.error;
-      if (message) {
-        this.logs.error.push(`Error while importing languages: ${imdbId}: ${message}`);
-        if (message === 'Max requests reached') this.canSaveMovie = false;
-      } else {
-        this.logs.error.push(`Error while importing languages: ${imdbId}`);
-        console.log(error);
-      }
+      this.logErrors(error, imdbId, 'languages');
 
       this.logs.error.push(`No languages found for ${imdbId}. Used ${defaultLanguage} as default`);
       return [defaultLanguage];
     }
 
+  }
+
+  private logErrors(error, imdbId: string, kind: string) {
+    const message = error.error?.error;
+    if (message) {
+      this.logs.error.push(`Error while importing ${kind}: ${imdbId}: ${message}`);
+      if (message === 'Max requests reached') this.canSaveMovie = false;
+    } else {
+      this.logs.error.push(`Error while importing ${kind}: ${imdbId}`);
+    }
   }
 
   private createCredit(name: string) {
@@ -303,7 +266,6 @@ export class MyapimoviesService {
   private query<T>(path: string) {
     return firstValueFrom(this.http.get<T>(`${this.api}${path}?token=${this.token}`));
   }
-
 
   public async createTitle(imdbId: string, orgId: string) {
     this.canSaveMovie = true;
@@ -350,7 +312,6 @@ export class MyapimoviesService {
     movie.internalRef = title.imdbId;
     movie.contentType = 'movie';
     movie.productionStatus = 'released';
-    movie.app = createMovieAppConfig();
     movie.app.catalog.access = true;
 
     movie.title.international = title.title;
@@ -368,7 +329,6 @@ export class MyapimoviesService {
     movie.runningTime.status = 'confirmed';
     movie.runningTime.time = +title.runtime.replace('min', '').trim();
 
-    console.log(movie);
     return movie;
   }
 
@@ -383,6 +343,5 @@ export class MyapimoviesService {
     serie.release.year = season.year;
 
     serie.runningTime.episodeCount = season.episodes;
-    console.log(serie);
   }
 }

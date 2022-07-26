@@ -2,8 +2,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OrganizationService } from '@blockframes/organization/service';
-
 import { ImdbImportLogs, MyapimoviesService } from '@blockframes/utils/myapimovies/myapimovies.service';
 import { BehaviorSubject } from 'rxjs';
 
@@ -30,7 +28,6 @@ export class ImdbImportComponent {
 
   constructor(
     private myapimoviesService: MyapimoviesService,
-    private orgService: OrganizationService,
     private snackbar: MatSnackBar,
   ) { }
 
@@ -38,10 +35,11 @@ export class ImdbImportComponent {
     this.importing = true;
     const ref = this.snackbar.open(`Import in progress, please wait..`);
 
-    this.myapimoviesService.token = this.form.get('token').value;
+    const { token, imdbIds, orgId } = this.form.value;
 
-    const ids = this.form.get('imdbIds').value.split(',').map(id => id.trim()).filter(id => id);
-    const orgId = this.form.get('orgId').value;
+    this.myapimoviesService.token = token;
+
+    const ids = imdbIds.split(',').map(id => id.trim()).filter(id => id);
 
     for (const id of ids) {
       await this.myapimoviesService.createTitle(id, orgId);
