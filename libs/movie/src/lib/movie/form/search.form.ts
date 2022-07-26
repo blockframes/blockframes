@@ -87,7 +87,7 @@ export interface Versions {
   caption: boolean,
 }
 
-interface LanguageVersion {
+export interface LanguageVersion {
   languages: GetKeys<'languages'>[],
   versions: Versions
 }
