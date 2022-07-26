@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { RunningTimePipeModule } from '@blockframes/movie/pipes/running-time.pipe';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -32,6 +33,7 @@ import { WishlistComponent } from './wishlist.component';
     ToLabelModule,
     DisplayNameModule,
     RunningTimePipeModule,
+    LogoSpinnerModule,
     // Material
     MatButtonModule,
     MatDividerModule,
