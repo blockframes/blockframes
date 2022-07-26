@@ -1,24 +1,37 @@
-﻿import { NgModule } from '@angular/core';
+﻿// Angular
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { NotificationListModule } from './components/list/list.module';
-import { ImageModule } from '@blockframes/media/image/directives/image.module';
+
+// Page
 import { NotificationComponent } from './notification.component';
+
+// Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+// Blockframes
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { NotificationListModule } from './components/list/list.module';
 
 @NgModule({
   declarations: [NotificationComponent],
   imports: [
+    // Angular
     CommonModule,
     FlexLayoutModule,
     NotificationListModule,
     ImageModule,
+
+    // Material
     MatIconModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
+
+    // Blockframes
+    LogoSpinnerModule,
+
     RouterModule.forChild([{ path: '', component: NotificationComponent }])
   ]
 })

@@ -17,7 +17,7 @@ export interface MovieAnalytics {
     current: MovieEventAnalytics[],
     past: MovieEventAnalytics[]
   },
-  promoReelOpened: {
+  promoElementOpened: {
     current: MovieEventAnalytics[],
     past: MovieEventAnalytics[]
   }
