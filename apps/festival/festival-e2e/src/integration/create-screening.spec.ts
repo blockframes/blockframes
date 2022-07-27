@@ -54,7 +54,7 @@ describe('Screenings', () => {
     cy.visit('');
     maintenance.start();
     //firestore.clearTestData();
-    //firestore.deleteOrgEvents(dashboardOrg.id);
+    firestore.deleteOrgEvents(dashboardOrg.id);
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true });
@@ -66,16 +66,6 @@ describe('Screenings', () => {
     cy.visit('');
     get('calendar').click();
     get('cookies').click();
-  });
-
-  it('create future private screening event and check if visible in market place', () => {
-    const screenerTitle = screenerMovie.title.international;
-    const futureSlot = createFutureSlot();
-    const eventTitle = `Admin private screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
-    // create event
-    selectSlot(futureSlot);
-    //fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
-    
   });
 
   it('create future public screening event, check if visible in market place, testing also noScreener behaviour', () => {
@@ -107,7 +97,20 @@ describe('Screenings', () => {
     verifyScreening({ title: eventTitle, accessibility: 'public', expected: true });
   });
 
-
+  it('create future private screening event and check if visible in market place', () => {
+    const screenerTitle = screenerMovie.title.international;
+    const futureSlot = createFutureSlot();
+    const eventTitle = `Admin private screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
+    // create event
+    selectSlot(futureSlot);
+    fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
+    fillDashboardCalendarDetails({ movie: screenerTitle, title: eventTitle, accessibility: 'private' });
+    connectOtherUser(marketplaceUser.email);
+    get('skip-preferences').click();
+    get('screenings').click();
+    assertUrlIncludes('c/o/marketplace/event');
+    verifyScreening({ title: eventTitle, accessibility: 'private', expected: true });
+  });
 
   it('create future protected screening event and check if visible in market place', () => {
     const screenerTitle = screenerMovie.title.international;
