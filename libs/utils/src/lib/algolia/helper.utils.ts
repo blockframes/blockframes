@@ -9,11 +9,11 @@ import { algolia } from '@env';
  * It's used by algolia-chips-autocomplete components to enter mail that have no user for example
  */
 export function createAlgoliaUserForm(validators?: Validator) {
-  const createAlogliaUser = (user: (string | Partial<AlgoliaUser>)) => {
+  const createAlgoliaUser = (user: (string | Partial<AlgoliaUser>)) => {
     return typeof user === 'string' ? { email: user } : user;
   }
-  const factory = user => new FormControl(createAlogliaUser(user));
-  return FormList.factory<AlgoliaUser, FormControl>([], factory, validators)
+  const factory = user => new FormControl(createAlgoliaUser(user));
+  return FormList.factory<AlgoliaUser | { email: string }, FormControl>([], factory, validators);
 }
 
 export function parseFilters(filters: MovieIndexFilters, operator: ' AND ' | ' OR ' = ' OR ',

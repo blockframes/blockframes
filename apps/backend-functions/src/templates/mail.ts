@@ -310,7 +310,7 @@ export function screeningRequestedToSeller(
     buyer,
     org,
     movie,
-    pageUrl: `${appUrl.market}/c/o/dashboard/event/new/edit?titleId=${movie.id}`
+    pageUrl: `${appUrl.market}/c/o/dashboard/event/new/edit?titleId=${movie.id}&requestor=${encodeURIComponent(buyer.email)}`
   };
   return { to: toUser.email, templateId: templateIds.event.screeningRequested, data };
 }
