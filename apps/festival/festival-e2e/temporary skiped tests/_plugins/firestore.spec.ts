@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { firestore } from '@blockframes/testing/cypress/browser';
-import { examples } from '../../fixtures/plugins/firestore';
+import { examples } from '../../src/fixtures/plugins/firestore';
 
 //* TESTS --------------------------------------*//
 
