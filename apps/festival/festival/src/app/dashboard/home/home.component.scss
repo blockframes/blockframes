@@ -71,6 +71,10 @@ analytics-map h3 {
   width: fit-content;
 }
 
+.spinner {
+  text-align: center;
+}
+
 @include layout-bp(xs) {
   header {
     flex-direction: column;
