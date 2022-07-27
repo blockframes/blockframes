@@ -40,6 +40,6 @@ export class EventEditGuard implements CanActivate {
       isSecret: true
     });
     const id = await this.event.add(event);
-    return this.router.parseUrl(`/c/o/dashboard/event/${id}/edit/screening?requestor=${requestorParam}`);
+    return this.router.parseUrl(`/c/o/dashboard/event/${id}/edit/invitations?requestor=${requestorParam}`);
   }
 }
