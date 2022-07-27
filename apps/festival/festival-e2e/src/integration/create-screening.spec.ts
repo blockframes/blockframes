@@ -53,7 +53,7 @@ describe('Screenings', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
-    firestore.clearTestData();
+    //firestore.clearTestData();
     //firestore.deleteOrgEvents(dashboardOrg.id);
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
