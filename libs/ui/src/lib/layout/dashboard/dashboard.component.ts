@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy, Inject, HostBinding, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy, Inject, HostBinding, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { FormControl } from '@angular/forms';
@@ -38,8 +38,7 @@ type BridgeRecord = Partial<Record<App, AppBridge>>;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements AfterViewInit, OnDestroy {
-  private sub: Subscription;
-  private resizeSub$: Subscription;
+  private subs: Subscription[] = [];
   public searchCtrl: FormControl = new FormControl('');
   public notificationCount$ = this.notificationService.myNotificationsCount$;
   public appBridge: BridgeRecord = {
@@ -63,14 +62,14 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   );
 
   public movieIndex: string;
-  public showNavigation = true;
+  public showNavigation = false;
 
   /**MovieAlgoliaResult Algolia search results */
   public algoliaSearchResults$: Observable<SearchResult[]>;
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable;
-  @HostBinding('class.opened') opened = true;
+  @HostBinding('class.opened') opened = false;
 
   constructor(
     private breakpointsService: BreakpointsService,
@@ -83,27 +82,23 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     // https://github.com/angular/components/issues/4280
-    this.sub = this.router.events.pipe(
+    const sub$ = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => this.cdkScrollable.scrollTo({ top: 0 }))
 
-    // toggle Navigation desktop/mobile
-    if (window.innerWidth <= 599) this.showNavigation = false;
-    this.resizeSub$ = fromEvent(window, 'resize').subscribe(_ => {
-      const isMobileScreen = window.innerWidth <= 599;
-      const isDesktopScreen = window.innerWidth > 599;
-      if (
-        (isMobileScreen && this.showNavigation) || (isDesktopScreen && !this.showNavigation)
-      ) {
-        this.toggleNavigation();
+    // toggle Navigation desktop/mobile on resize
+    const resizeSub$ = fromEvent(window, 'resize').subscribe(() => {
+      if (this.showNavigation) {
+        // this.toggleNavigation();
         this.cdRef.markForCheck();
       }
     });
+
+    this.subs.push(sub$, resizeSub$);
   }
 
   ngOnDestroy() {
-    if (this.sub) this.sub.unsubscribe();
-    if (this.resizeSub$) this.resizeSub$.unsubscribe();
+    this.subs.forEach(s => s?.unsubscribe());
   }
 
   toggleNavigation() {

@@ -16,10 +16,6 @@ aside {
   background-color: var(--background-card);
   color: var(--foreground-text);
 
-  &.opened {
-    width: 260px;
-  }
-
   mat-toolbar {
     display: flex;
     justify-content: space-between;
@@ -79,7 +75,7 @@ mat-sidenav-container {
   @include mat.elevation(2);
 }
 
-@include layout-bp(gt-xs) {
+@include layout-bp(gt-sm) {
   a.hide,
   aside button {
     display: none;
@@ -104,10 +100,7 @@ mat-sidenav-container {
   }
 }
 
-@include layout-bp(xs) {
-  .link-to-app,
-  mat-divider,
-  auth-widget,
+@include layout-bp(lt-md) {
   a[app-logo-icon] {
     display: none;
   }
@@ -140,5 +133,13 @@ mat-sidenav-container {
       visibility: hidden;
       background-color: transparent;
     }
+  }
+}
+
+@include layout-bp(lt-sm) {
+  .link-to-app,
+  mat-divider,
+  auth-widget {
+    display: none;
   }
 }

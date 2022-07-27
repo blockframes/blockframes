@@ -2,20 +2,22 @@
 
 layout-dashboard  {
   aside {
-    mat-nav-list {
-      flex: 1;
+    &.opened mat-nav-list {
+      width: 260px;
+    }
+
+    @include layout-bp(gt-sm) {
+      &:not(.opened) {
+        .mat-list-base .mat-list-item .mat-list-text {
+          display: none;
+        }
+      }
     }
   
     @include layout-bp(gt-xs) {
       &:not(.opened) auth-sidenav,
       &.opened auth-sidenav {
         display: none;
-      }
-  
-      &:not(.opened) {
-        .mat-list-base .mat-list-item .mat-list-text {
-          display: none;
-        }
       }
     }
   }

@@ -31,11 +31,11 @@ export class EventComponent implements OnInit, OnDestroy {
   public notificationCount$ = this.notificationService.myNotificationsCount$;
   public invitationCount$ = this.invitationService.invitationCount();
   private resizeSub$: Subscription;
-  public showNavigation = true;
+  public showNavigation = false;
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable;
-  @HostBinding('class.opened') opened = true;
+  @HostBinding('class.opened') opened = false;
 
   constructor(
     private orgService: OrganizationService,
@@ -54,14 +54,9 @@ export class EventComponent implements OnInit, OnDestroy {
       map((movies: Movie[]) => movies.filter(filterMovieByAppAccess(this.app)).length)
     );
 
-    // toggle Navigation desktop/mobile
-    if (window.innerWidth <= 599) this.showNavigation = false;
-    this.resizeSub$ = fromEvent(window, 'resize').subscribe(_ => {
-      const isMobileScreen = window.innerWidth <= 599;
-      const isDesktopScreen = window.innerWidth > 599;
-      if (
-        (isMobileScreen && this.showNavigation) || (isDesktopScreen && !this.showNavigation)
-      ) {
+    // toggle Navigation desktop/mobile on resize
+    this.resizeSub$ = fromEvent(window, 'resize').subscribe(() => {
+      if (this.showNavigation) {
         this.toggleNavigation();
         this.cdRef.markForCheck();
       }
@@ -69,7 +64,7 @@ export class EventComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.resizeSub$) this.resizeSub$.unsubscribe();
+    this.resizeSub$?.unsubscribe();
   }
 
   scrollToTop() {

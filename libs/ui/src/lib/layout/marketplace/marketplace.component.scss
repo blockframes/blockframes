@@ -15,10 +15,6 @@ aside {
   background-color: var(--background-card);
   color: var(--foreground-text);
 
-  &.opened {
-    width: 260px;
-  }
-
   mat-toolbar {
     display: flex;
     justify-content: space-between;
@@ -94,7 +90,7 @@ a[app-logo] {
   outline: none;
 }
 
-@include layout-bp(gt-xs) {
+@include layout-bp(gt-sm) {
   a.hide,
   aside button {
     display: none;
@@ -119,9 +115,7 @@ a[app-logo] {
   }
 }
 
-@include layout-bp(xs) {
-  mat-divider,
-  auth-widget,
+@include layout-bp(lt-md) {
   a[app-logo-icon],
   header > a[mat-icon-button] {
     display: none;
@@ -155,5 +149,12 @@ a[app-logo] {
       visibility: hidden;
       background-color: transparent;
     }
+  }
+}
+
+@include layout-bp(lt-sm) {
+  mat-divider,
+  auth-widget {
+    display: none;
   }
 }
