@@ -4,6 +4,7 @@ import { AuthService } from '@blockframes/auth/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { EventForm } from '../event.form';
 import { Event, Meeting, Screening, Slate, AccessibilityTypes } from '@blockframes/model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'event-create',
@@ -28,7 +29,8 @@ export class EventCreateComponent {
 
   async createAndRedirect() {
     const event = this.form.value as Event<Meeting | Screening | Slate>;
-    event.ownerOrgId = this.orgService.org.id;
+    const org = await firstValueFrom(this.orgService.org$);
+    event.ownerOrgId = org.id;
     event.meta.organizerUid = (await this.authService.user).uid;
     if (event.allDay) {
       event.start.setHours(0, 0, 0);
