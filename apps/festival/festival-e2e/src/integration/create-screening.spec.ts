@@ -44,7 +44,7 @@ const injectedData = {
   [`movies/${screenerMovie.id}`]: screenerMovie,
   [`movies/${noScreenerMovie.id}`]: noScreenerMovie,
   // events
-  [`events/${dummyEvent.id}`]: dummyEvent,
+  //[`events/${dummyEvent.id}`]: dummyEvent,
   // document permissions
   [`permissions/${dashboardOrg.id}/documentPermissions/${dashboardDocumentPermissions.id}`]: dashboardDocumentPermissions,
 };
