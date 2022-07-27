@@ -154,13 +154,13 @@
           <bf-tag *ngIf="date | isWatchingNow">Watching Now</bf-tag>
         </ng-template>
         <ng-template colRef label="Action" let-item sticky>
-          <a mat-icon-button [matTooltip]="'View Event details'"
-            [routerLink]="['/c/o/dashboard/event', item.eventId,'edit', 'statistics']">
+          <a mat-icon-button matTooltip="View Event details"
+            [routerLink]="['/c/o/dashboard/event', item.eventId, 'edit', 'statistics']">
             <mat-icon svgIcon="visibility"></mat-icon>
           </a>
           <ng-container *ngIf="item | guest:'user' as user">
             <ng-container *ngIf="user.orgId">
-              <a mat-icon-button [matTooltip]="'View Buyer details'" [routerLink]="['../../buyer/', user.uid]">
+              <a mat-icon-button matTooltip="View Buyer details" [routerLink]="['../../buyer/', user.uid]">
                 <mat-icon svgIcon="launch"></mat-icon>
               </a>
             </ng-container>
