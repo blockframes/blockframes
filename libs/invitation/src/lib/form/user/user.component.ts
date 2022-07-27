@@ -58,10 +58,10 @@ export class UserComponent implements OnInit {
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
   ) {
-    const { requestor } = this.route.snapshot.queryParams
+    const { requestor } = this.route.snapshot.queryParams;
     if (requestor) {
-      const email = decodeURIComponent(requestor)
-      this.form.add({ email })
+      const email = decodeURIComponent(requestor);
+      this.form.add({ email });
     }
   }
 

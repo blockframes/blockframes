@@ -13,7 +13,7 @@ export function createAlgoliaUserForm(validators?: Validator) {
     return typeof user === 'string' ? { email: user } : user;
   }
   const factory = user => new FormControl(createAlgoliaUser(user));
-  return FormList.factory<AlgoliaUser | { email: string }, FormControl>([], factory, validators)
+  return FormList.factory<AlgoliaUser | { email: string }, FormControl>([], factory, validators);
 }
 
 export function parseFilters(filters: MovieIndexFilters, operator: ' AND ' | ' OR ' = ' OR ',
