@@ -23,6 +23,8 @@ export class EventEditGuard implements CanActivate {
     const redirect = this.router.parseUrl(`/c/o/dashboard/event`);
     const orgId = this.orgService.org.id;
     const titleId = next.queryParamMap.get('titleId');
+    const requestor = next.queryParamMap.get('requestor');
+    const requestorParam = requestor ? encodeURIComponent(requestor) : '';
     if (!titleId) return redirect;
     const title = await this.movie.load(titleId);
     if (!title?.orgIds.includes(orgId)) return redirect;
@@ -38,6 +40,6 @@ export class EventEditGuard implements CanActivate {
       isSecret: true
     });
     const id = await this.event.add(event);
-    return this.router.parseUrl(`/c/o/dashboard/event/${id}/edit/screening`);
+    return this.router.parseUrl(`/c/o/dashboard/event/${id}/edit/screening?requestor=${requestorParam}`);
   }
 }

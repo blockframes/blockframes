@@ -10,6 +10,7 @@ import { map, startWith } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.component';
 import { Invitation } from '@blockframes/model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: '[eventId] invitation-form-user',
@@ -54,8 +55,15 @@ export class UserComponent implements OnInit {
   constructor(
     private invitationService: InvitationService,
     private orgService: OrganizationService,
-    private snackBar: MatSnackBar
-  ) { }
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute,
+  ) {
+    const { requestor } = this.route.snapshot.queryParams
+    if (requestor) {
+      const email = decodeURIComponent(requestor)
+      this.form.add({ email })
+    }
+  }
 
   ngOnInit() {
 
