@@ -17,7 +17,7 @@ const chartInfo = [
     image: 'no_wishlist.svg',
   },
   {
-    eventName: 'promoReelOpened',
+    eventName: 'promoElementOpened',
     title: 'Clicks on promo elements',
     icon: 'specific_delivery_list',
     image: 'no_stats_promo.svg',

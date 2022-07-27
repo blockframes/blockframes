@@ -3,6 +3,16 @@
   display: block;
 }
 
+header{
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 8px;
+  align-items: center;
+  h2 {
+    margin-right: auto;
+  }
+}
+
 h2,section{
   margin-bottom: 16px;
 }
@@ -14,4 +24,8 @@ h1{
 form {
   flex-flow: row wrap;
   display: flex;
+}
+
+article {
+  text-align: center;
 }

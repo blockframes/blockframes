@@ -54,7 +54,7 @@ export class FileUploaderService {
     if (!this.queue[storagePath]) this.queue[storagePath] = [];
 
     // Throw in case of duplicated path, instead of silently overwriting the first occurrence
-    if (this.queue[storagePath].some(upload => upload.fileName === fileName)) throw new Error(`This file already exists in the queue : ${storagePath} -> ${fileName}`);
+    if (this.queue[storagePath].some(upload => upload.fileName === fileName)) throw new Error(`This file has already been selected. Please choose a different file.`);
 
     this.queue[storagePath].push({ file, fileName, metadata });
   }
@@ -64,13 +64,14 @@ export class FileUploaderService {
    * @note if the file does not exists in the queue,
    * this function will not throw any error and simply do nothing
    */
-  removeFromQueue(storagePath: string, fileName: string) {
-
+  removeFromQueue(storagePath: string, fileNameOrIndex: string | number) {
     const uploads = this.queue[storagePath];
 
     if (!uploads || !uploads.length) return;
 
-    const index = uploads.findIndex(upload => upload?.fileName === fileName);
+    const index = typeof fileNameOrIndex === 'number'
+      ? fileNameOrIndex
+      : uploads.findIndex(upload => upload?.fileName === fileNameOrIndex);
 
     // ! Do not remove/splice otherwise it will shift remaining uploads and can cause weird side effects
     if (index !== -1) uploads[index] = null;

@@ -1,0 +1,10 @@
+<ng-container [ngSwitch]="app">
+  <canvas *ngSwitchCase="'festival'" riv="archipel-market-logo" width="100" height="100">
+    <riv-animation name="loop_market" play></riv-animation>
+  </canvas>
+  <canvas *ngSwitchCase="'catalog'" riv="archipel-content-logo" width="100" height="100">
+    <riv-animation name="loop_content" play></riv-animation>
+  </canvas>
+  <mat-spinner *ngSwitchDefault></mat-spinner>
+</ng-container>
+

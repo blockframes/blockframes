@@ -1,0 +1,34 @@
+<ng-container *rxLet="filter$; let filter">
+  <h3>List of Mandates</h3>
+  <header mat-tab-nav-bar>
+    <ng-container *rxLet="mandateCount$ ; let mandateCount">
+      <button mat-tab-link (click)="resetFilter()" [active]="filter === ''">
+        All <span>({{ mandateCount.all }})</span>
+      </button>
+      <button mat-tab-link (click)="applyFilter('accepted')" [active]="filter === 'accepted'">
+        Accepted <span>({{ mandateCount.accepted }})</span>
+      </button>
+      <button mat-tab-link (click)="applyFilter('pending')" [active]="filter === 'pending'">
+        Pending <span>({{ mandateCount.pending }})</span>
+      </button>
+      <button mat-tab-link (click)="applyFilter('declined')" [active]="filter === 'declined'">
+        Declined <span>({{ mandateCount.declined }})</span>
+      </button>
+    </ng-container>
+  </header>
+  <bf-table [source]="mandates | filterBy: filterByStatus: filterForm.value" clickable useFilter pagination="10"
+    (rowClick)="goToContract($event)">
+    <ng-template colRef="_meta.createdAt" label="Date" let-date>{{ date | date:'MM/dd/yyyy'}}</ng-template>
+    <ng-template colRef="licensor" label="Licensor" let-licensor sort>{{ licensor | maxLength:50 }}</ng-template>
+    <ng-template colRef="licensee" label="Licensee" let-licensee sort>{{ licensee | maxLength:50 }}</ng-template>
+    <ng-template colRef="title" label="Title" let-title sort>
+      {{ title | maxLength:50 }}
+    </ng-template>
+    <ng-template colRef="status" label="Status" let-status let-mandate="item" sort>
+      <bf-tag>
+        {{ mandate.status | toLabel: 'contractStatus' }}
+      </bf-tag>
+    </ng-template>
+  </bf-table>
+
+</ng-container>

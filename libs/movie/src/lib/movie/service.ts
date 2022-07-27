@@ -34,6 +34,7 @@ export class MovieService extends BlockframesCollection<Movie> {
   }
 
   protected fromFirestore(snapshot: DocumentSnapshot<Movie>) {
+    if (!snapshot.exists()) return;
     const movie = super.fromFirestore(snapshot);
     return createMovie(movie);
   }

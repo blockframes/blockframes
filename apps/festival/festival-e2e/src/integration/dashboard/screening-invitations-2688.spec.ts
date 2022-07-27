@@ -34,7 +34,7 @@ describe('Organiser invites other users to private screening', () => {
     cy.visit('/');
 
     cy.clearLocalStorage(); // ! If event is deleted manually, it will be stuck in localStorage cache
-    cy.contains('Accept Cookies').click();
+    cy.contains('Save preferences').click(); // Accept cookies
     cy.log('user uid', userOrganiser.uid);
     browserAuth.signinWithEmailAndPassword(userOrganiser.email);
     cy.visit('/c/o/dashboard/event');
@@ -55,7 +55,7 @@ describe('Organiser invites other users to private screening', () => {
     browserAuth.signinWithEmailAndPassword(userInvited1.email);
 
     cy.visit('/c/o/marketplace/invitations');
-    awaitElementDeletion('mat-spinner');
+    awaitElementDeletion('logo-spinner');
     festival.acceptInvitationScreening();
 
     festival.openMoreMenu();
@@ -84,7 +84,7 @@ describe('Organiser invites other users to private screening', () => {
       browserAuth.signinWithEmailAndPassword(userInvited2.email);
 
       cy.visit('/c/o/marketplace/invitations');
-      awaitElementDeletion('mat-spinner');
+      awaitElementDeletion('logo-spinner');
       festival.refuseInvitationScreening();
 
       // * STEP

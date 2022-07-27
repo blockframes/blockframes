@@ -47,7 +47,7 @@ section {
   height: fit-content;
 }
 
-.vanity_metrics {
+.title_performance {
   display: flex;
   gap: 16px;
 
@@ -65,7 +65,7 @@ bf-table.screenings {
 }
 
 @include layout-bp(lt-lg) {
-  .vanity_metrics{
+  .title_performance{
     flex-direction: column;
   }
 }

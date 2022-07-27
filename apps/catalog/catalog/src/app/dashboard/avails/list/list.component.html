@@ -1,4 +1,7 @@
-<h2>Availabilities</h2>
+<header>
+  <h2>Availabilities</h2>
+  <a mat-stroked-button routerLink="select">Add avails</a>
+</header>
 
 <section class="surface" fxLayout="column" fxLayoutGap="16px">
   <h3>Search Criteria</h3>
@@ -24,13 +27,16 @@
         <ng-container *ngIf="totalIncome.EUR"> {{ totalIncome.EUR | currency:'EUR' }} </ng-container>
         <ng-container *ngIf="!totalIncome.USD && !totalIncome.EUR"> - </ng-container>
       </ng-template>
-      <ng-template colRef="id" label="actions" let-id>
+      <ng-template colRef="id" label="actions" let-id sticky>
         <div fxLayout fxLayoutGap="16px" *ngIf="queryParams$ | async as queryParams">
           <a mat-icon-button [routerLink]="[id,'map']" [queryParams]="queryParams">
             <mat-icon svgIcon="territories_avails" matTooltip="Map View"></mat-icon>
           </a>
           <a mat-icon-button [routerLink]="[id,'calendar']" [queryParams]="queryParams">
             <mat-icon svgIcon="calendar_avails" matTooltip="Calendar View"></mat-icon>
+          </a>
+          <a mat-icon-button [routerLink]="['select', id, 'manage']">
+            <mat-icon svgIcon="edit" matTooltip="Manage Avails"></mat-icon>
           </a>
         </div>
       </ng-template>
@@ -39,9 +45,9 @@
 </section>
 
 <ng-template #loading>
-  <section fxLayout fxLayoutAlign="center center">
-    <mat-spinner fxLayoutAlign="center center"></mat-spinner>
-  </section>
+  <article>
+    <logo-spinner></logo-spinner>
+  </article>
 </ng-template>
 
 <ng-template #noSales>
@@ -51,5 +57,6 @@
       Oops! it looks like there's no result corresponding to your search criteria.
     </p>
     <img asset="empty_contract.svg" alt="Image, you have no contracts yet">
+    <a mat-flat-button routerLink="select" color="primary" >Add avails</a>
   </section>
 </ng-template>

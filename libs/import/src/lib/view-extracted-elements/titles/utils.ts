@@ -36,6 +36,7 @@ export async function formatTitle(
   for (const result of results) {
     const { data, errors } = result;
 
+    // remove empty fields
     data.audience.goals = data.audience.goals.filter(goal => goal);
     data.audience.targets = data.audience.targets.filter(target => target);
 

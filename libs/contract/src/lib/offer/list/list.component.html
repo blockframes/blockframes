@@ -1,7 +1,7 @@
 <ng-container *ngIf="offers else loading">
   <ng-container *ngIf="offers.length else empty">
 
-    <header class="import-header" fxLayout="row" fxLayoutAlign="space-between center">
+    <header fxLayout="row" fxLayoutAlign="space-between center">
       <h1>Offers & Deals</h1>
     </header>
 
@@ -55,7 +55,7 @@
 </ng-container>
 
 <ng-template #loading>
-  <mat-spinner fxFlexAlign="center"></mat-spinner>
+  <logo-spinner></logo-spinner>
 </ng-template>
 
 <ng-template #empty>

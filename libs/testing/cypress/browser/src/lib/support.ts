@@ -19,7 +19,7 @@ export function awaitElementDeletion(selector: string, timeout?: number) {
 export function acceptCookies() {
   cy.get('body').then($body => {
     if ($body.children('cookie-banner')) {
-      cy.contains('Accept Cookies').click();
+      cy.contains('Save preferences').click(); // Accept cookies
     }
   });
 }
