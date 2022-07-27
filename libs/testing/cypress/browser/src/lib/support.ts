@@ -88,7 +88,7 @@ export function addNewCompany(data: { name: string; activity: OrgActivity; count
   getInList('activity_', activity);
   get('activity').should('contain', activity);
   get('country').click();
-  getInList('country_', country);
+  getInList('option_', country);
   get('country').should('contain', country);
   get('role').contains('Buyer').click();
 }
