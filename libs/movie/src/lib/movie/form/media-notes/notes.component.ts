@@ -52,8 +52,9 @@ export class MovieFormMediaNotesComponent implements OnInit, OnDestroy {
   }
 
   removeFromQueue(index: number) {
+    const title = this.form.value;
     const storagePath = getFileStoragePath('movies', 'notes', this.movieId);
-    const queueIndex = getFileListIndex(index, this.form.promotional.get('notes').value);
+    const queueIndex = getFileListIndex(index, title.promotional.notes);
     this.uploaderService.removeFromQueue(storagePath, queueIndex);
   }
 }

@@ -69,7 +69,9 @@ export class FileUploaderService {
 
     if (!uploads || !uploads.length) return;
 
-    const index = typeof fileNameOrIndex === 'number' ? fileNameOrIndex : uploads.findIndex(upload => upload?.fileName === fileNameOrIndex);
+    const index = typeof fileNameOrIndex === 'number'
+      ? fileNameOrIndex
+      : uploads.findIndex(upload => upload?.fileName === fileNameOrIndex);
 
     // ! Do not remove/splice otherwise it will shift remaining uploads and can cause weird side effects
     if (index !== -1) uploads[index] = null;
