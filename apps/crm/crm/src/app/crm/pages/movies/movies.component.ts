@@ -1,16 +1,26 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { Movie, isScreening, CrmMovie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/service';
-import { Router } from '@angular/router';
 import { EventService } from '@blockframes/event/service';
-import { map } from 'rxjs/operators';
-import { Observable, combineLatest } from 'rxjs';
-import { where } from 'firebase/firestore';
 import { sorts } from '@blockframes/ui/list/table/sorts';
 import { filters } from '@blockframes/ui/list/table/filters';
+
+import { map } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+
+import { where } from 'firebase/firestore';
 import { format } from 'date-fns';
+import { joinWith } from 'ngfire';
+import { ContractService } from '@blockframes/contract/contract/service';
+
+const titleMandateQuery = (id: string) => ([
+  where('titleId', '==', id),
+  where('type', '==', 'mandate')
+]);
 
 @Component({
   selector: 'crm-movies',
@@ -29,7 +39,8 @@ export class MoviesComponent implements OnInit {
     private orgService: OrganizationService,
     private eventService: EventService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private contractService: ContractService,
   ) { }
 
   async ngOnInit() {
@@ -43,8 +54,12 @@ export class MoviesComponent implements OnInit {
         return movies.map((movie) => {
           const org = orgs.find((o) => o.id === movie.orgIds[0]);
           const screeningCount = screenings.filter((e) => e.meta?.titleId === movie.id).length;
-          return { ...movie, org, screeningCount } as CrmMovie;
+          const releaseMedias = movie.originalRelease.map(release => release.media)
+          return { ...movie, releaseMedias, org, screeningCount } as CrmMovie;
         });
+      }),
+      joinWith({
+        mandate: movie => this.contractService.valueChanges(titleMandateQuery(movie.id))
       })
     );
   }

@@ -250,8 +250,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       }
       case 'screeningRequested': {
         const movie = await this.movieService.load(notification.docId);
-        const message = `${displayName(notification.user)} requested a screening for ${movie.title.international
-          }`;
+        const message = `<a href="mailto:${notification.user.email}">${displayName(notification.user)}</a> requested a screening for <a href="/c/o/dashboard/title/${movie.id}">${movie.title.international}</a>`;
 
         return {
           ...notification,
@@ -259,7 +258,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           message,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['festival']}/c/o/dashboard/event/new/edit?titleId=${notification.docId}`,
+          url: `${applicationUrl['festival']}/c/o/dashboard/event/new/edit?titleId=${notification.docId}&requestor=${encodeURIComponent(notification.user.email)}`,
           actionText: 'Organize Screening',
         };
       }

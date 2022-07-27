@@ -1,5 +1,5 @@
 <!-- In case bucket doesn't exist yet, empty is shown -->
-<ng-container *ngIf="bucket$ | async as bucket; else empty">
+<ng-container *ngIf="bucket$ | async as bucket; else loading">
   <ng-container *ngIf="bucket.contracts.length else empty">
     <header class="dark-contrast-theme main-header" bgAsset="banner_header_page.png">
       <div class="main-title" fxLayout="column" fxLayoutAlign="center center">
@@ -79,4 +79,10 @@
     <img asset="empty_selection.svg" alt="No rights in selection">
     <button mat-flat-button color="accent" [routerLink]="['/c/o/marketplace/title']">Discover Titles</button>
   </section>
+</ng-template>
+
+<ng-template #loading>
+  <article>
+    <logo-spinner></logo-spinner>
+  </article>
 </ng-template>

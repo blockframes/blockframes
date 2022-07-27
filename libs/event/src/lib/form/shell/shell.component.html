@@ -53,7 +53,7 @@
     <div>
       <nav mat-tab-nav-bar>
         <ng-container *ngFor="let tab of (tabs$ |async)">
-          <a mat-tab-link [routerLink]="tab.path" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">
+          <a mat-tab-link [routerLink]="tab.path" [queryParams]="queryParams$ | async"  routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">
             {{ tab.label }}
           </a>
         </ng-container>
