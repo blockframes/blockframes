@@ -4,7 +4,6 @@ import { AuthService } from '@blockframes/auth/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { EventForm } from '../event.form';
 import { Event, Meeting, Screening, Slate, AccessibilityTypes } from '@blockframes/model';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'event-create',

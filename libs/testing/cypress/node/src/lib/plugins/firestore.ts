@@ -149,7 +149,7 @@ export async function clearTestData() {
     const docs = snapshot.docs;
     for (const doc of docs) docsToDelete.push(`${collection.id}/${doc.id}`);
   }
-  await deleteData(docsToDelete);
+  return deleteData(docsToDelete);
 }
 
 //* GET DATA*------------------------------------------------------------------
