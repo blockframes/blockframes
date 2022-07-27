@@ -97,7 +97,7 @@ describe('Screenings', () => {
     verifyScreening({ title: eventTitle, accessibility: 'public', expected: true });
   });
 
-  it('create future private screening event and check if visible in market place', () => {
+  it.only('create future private screening event and check if visible in market place', () => {
     const screenerTitle = screenerMovie.title.international;
     const futureSlot = createFutureSlot();
     const eventTitle = `Admin private screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
