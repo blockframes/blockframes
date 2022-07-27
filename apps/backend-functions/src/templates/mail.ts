@@ -33,6 +33,7 @@ import {
 } from '@blockframes/model';
 import { format } from 'date-fns';
 import { supportMailosaur } from '@blockframes/utils/constants';
+import { Firestore } from '@blockframes/firebase-utils';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -565,12 +566,15 @@ export function sendContactEmail(userName: string, userMail: string, subject: st
 }
 
 /** Send an email to supportEmails.[app](catalog & MF only) when a movie is submitted*/
-export function sendMovieSubmittedEmail(app: App, movie: Movie) {
+export async function sendMovieSubmittedEmail(app: App, movie: Movie, db: Firestore) {
+  const org = await db.collection('orgs').doc(movie.orgIds[0]).get()
+  const orgName = org.data().name;
+
   return {
     to: getSupportEmail(app),
-    subject: 'A movie has been submitted.',
+    subject: `${movie.title.international} was submitted by ${orgName}`,
     text: `
-    The new movie ${movie.title.international} has been submitted.
+    The new movie ${movie.title.international} was submitted by ${orgName}.
 
     Visit ${appUrl.crm}${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} or go to ${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} to review it.
 
