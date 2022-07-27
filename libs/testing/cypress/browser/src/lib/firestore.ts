@@ -27,7 +27,7 @@ export const firestore = {
   },
 
   deleteOrgEvents(orgId: string) {
-    firestore
+    return firestore
       .queryData({ collection: 'events', field: 'ownerOrgId', operator: '==', value: orgId })
       .then((events: Event[]) => firestore.delete(events.map(event => `events/${event.id}`)));
   },
