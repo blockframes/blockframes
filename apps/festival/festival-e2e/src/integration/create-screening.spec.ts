@@ -54,7 +54,7 @@ describe('Screenings', () => {
     cy.visit('');
     maintenance.start();
     firestore.clearTestData();
-    firestore.deleteOrgEvents(dashboardOrg.id);
+    //firestore.deleteOrgEvents(dashboardOrg.id);
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true });
@@ -97,7 +97,7 @@ describe('Screenings', () => {
     verifyScreening({ title: eventTitle, accessibility: 'public', expected: true });
   });
 
-  it.only('create future private screening event and check if visible in market place', () => {
+  it('create future private screening event and check if visible in market place', () => {
     const screenerTitle = screenerMovie.title.international;
     const futureSlot = createFutureSlot();
     const eventTitle = `Admin private screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
