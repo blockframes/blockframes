@@ -1,18 +1,16 @@
 import { Firestore, removeAllSubcollections, runChunks } from '@blockframes/firebase-utils';
-import { Organization, Invitation, Notification, PublicOrganization, Movie } from '@blockframes/model';
 import { DocumentSnapshot } from 'firebase-functions/v1/firestore';
 
-
 /**
- * Update name from organizations, invitations and notifications documents
+ * Remove DistributionRights sub-collection from old movies
  * @param db
  * @returns
  */
 export async function upgrade(db: Firestore) {
-  return await deleteMoviesSubcollections(db);
+  return await deleteMoviesSubcollection(db);
 }
 
-async function deleteMoviesSubcollections(db: Firestore) {
+async function deleteMoviesSubcollection(db: Firestore) {
   const movies = await db.collection('movies').get();
 
   return runChunks(movies.docs, async (doc) => {
