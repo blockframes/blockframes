@@ -1,3 +1,4 @@
+import { SEC } from '@blockframes/e2e/utils';
 import {
   // plugins
   adminAuth,
@@ -71,6 +72,7 @@ describe('Screenings', () => {
   });
 
   it('create future public screening event, check if visible in market place, testing also noScreener behaviour', () => {
+    cy.wait(10 * SEC);
     const screenerTitle = screenerMovie.title.international;
     const noScreenerTitle = noScreenerMovie.title.international;
     const futureSlot = createFutureSlot();
@@ -100,6 +102,7 @@ describe('Screenings', () => {
   });
 
   it('create future private screening event and check if visible in market place', () => {
+    cy.wait(10 * SEC);
     const screenerTitle = screenerMovie.title.international;
     const futureSlot = createFutureSlot();
     const eventTitle = `Admin private screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
@@ -115,6 +118,7 @@ describe('Screenings', () => {
   });
 
   it('create future protected screening event and check if visible in market place', () => {
+    cy.wait(10 * SEC);
     const screenerTitle = screenerMovie.title.international;
     const futureSlot = createFutureSlot();
     const eventTitle = `Admin protected screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
@@ -130,6 +134,7 @@ describe('Screenings', () => {
   });
 
   it('create future secret public screening event and check if visible in market place', () => {
+    cy.wait(10 * SEC);
     // create event
     const screenerTitle = screenerMovie.title.international;
     const futureSlot = createFutureSlot();
