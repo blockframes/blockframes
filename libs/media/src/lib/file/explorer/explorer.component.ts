@@ -91,7 +91,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
       this.org$.asObservable(),
       titles$
     ]).pipe(
-      map(([org, titles]) => getDirectories(org, titles)),
+      map(([org, titles]) => getDirectories(org, titles, this.app))
     );
   }
 

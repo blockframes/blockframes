@@ -8,7 +8,9 @@ import {
   TemplateRef,
   Directive,
   ChangeDetectorRef,
-  OnDestroy
+  OnDestroy,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
@@ -49,6 +51,8 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
     this.reverseList$.next(coerceBooleanProperty(shouldReverse));
   };
   private reverseList$ = new BehaviorSubject(false);
+
+  @Output() removed = new EventEmitter<number>();
 
   @ContentChild(ItemRefDirective, { read: TemplateRef }) itemRef: ItemRefDirective;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
@@ -135,6 +139,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
     if (this.isFormEmpty) {
       this.formItem = this.form.createControl();
     }
+    this.removed.emit(i);
   }
 
   computeIndex() {
