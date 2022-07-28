@@ -44,7 +44,7 @@ const injectedData = {
   [`movies/${screenerMovie.id}`]: screenerMovie,
   [`movies/${noScreenerMovie.id}`]: noScreenerMovie,
   // events
-  //[`events/${dummyEvent.id}`]: dummyEvent,
+  [`events/${dummyEvent.id}`]: dummyEvent,
   // document permissions
   [`permissions/${dashboardOrg.id}/documentPermissions/${dashboardDocumentPermissions.id}`]: dashboardDocumentPermissions,
 };
@@ -53,12 +53,14 @@ describe('Screenings', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
+    cy.wait(1000)
     firestore.clearTestData();
     firestore.deleteOrgEvents(dashboardOrg.id);
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true });
     adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true });
+    cy.wait(1000)
     maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
