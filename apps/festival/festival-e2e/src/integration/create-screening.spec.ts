@@ -54,7 +54,7 @@ describe('Screenings', () => {
     cy.visit('');
     console.log('*** BEFORE EACH START')
     maintenance.start().then(x => console.log('*** MAINTENANCE EN COURS'));
-    firestore.clearTestData().then(x => console.log('*** DATA CLEARED'));
+    //firestore.clearTestData().then(x => console.log('*** DATA CLEARED'));
     firestore.deleteOrgEvents(dashboardOrg.id).then(x => console.log('*** DELETE ORGS'));
     adminAuth.deleteAllTestUsers().then(x => console.log('*** USERS DELETED'));
     firestore.create([injectedData]).then(x => console.log('*** DATA INJECTED'));
