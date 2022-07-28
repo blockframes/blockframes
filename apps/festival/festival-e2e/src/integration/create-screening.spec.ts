@@ -67,6 +67,7 @@ describe('Screenings', () => {
     cy.visit('');
     get('calendar').click();
     get('cookies').click();
+    firestore.get([`orgs/${dashboardOrg.id}`]).then(x => console.log(`*** ORGS/${dashboardOrg.id}`, x));
   });
 
   it('create future public screening event, check if visible in market place, testing also noScreener behaviour', () => {
