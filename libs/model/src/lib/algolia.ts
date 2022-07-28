@@ -105,6 +105,7 @@ export interface AlgoliaMovie extends AlgoliaDefaultProperty {
   festivals: string[];
   productionCompany: string[];
   salesAgent: string[];
+  certifications: string[];
 }
 
 /* ORGANIZATION */

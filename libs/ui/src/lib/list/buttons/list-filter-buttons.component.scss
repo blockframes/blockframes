@@ -14,9 +14,6 @@
 
 @include layout-bp(lt-sm) {
   :host {
-    flex-direction: column;
-  }
-  div {
-    margin-top: 8px;
+    margin-top: 12px;
   }
 }

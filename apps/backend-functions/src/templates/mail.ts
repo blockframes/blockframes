@@ -565,12 +565,14 @@ export function sendContactEmail(userName: string, userMail: string, subject: st
 }
 
 /** Send an email to supportEmails.[app](catalog & MF only) when a movie is submitted*/
-export function sendMovieSubmittedEmail(app: App, movie: Movie) {
+export function sendMovieSubmittedEmail(app: App, movie: Movie, org: Organization) {
+  const orgName = org.name;
+
   return {
     to: getSupportEmail(app),
-    subject: 'A movie has been submitted.',
+    subject: `${movie.title.international} was submitted by ${orgName}`,
     text: `
-    The new movie ${movie.title.international} has been submitted.
+    The new movie ${movie.title.international} was submitted by ${orgName}.
 
     Visit ${appUrl.crm}${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} or go to ${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} to review it.
 
