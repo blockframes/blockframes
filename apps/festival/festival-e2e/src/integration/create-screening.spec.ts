@@ -53,21 +53,21 @@ describe('Screenings', () => {
   beforeEach(() => {
     cy.visit('');
     console.log('*** BEFORE EACH START')
-    cy.wrap(maintenance.start().then(x => console.log('*** MAINTENANCE EN COURS')));
-    cy.wrap(firestore.clearTestData().then(x => console.log(`*** DATA CLEARED ${x}`)));
-    cy.wrap(firestore.deleteOrgEvents(dashboardOrg.id).then(x => console.log('*** DELETE ORGS')));
-    cy.wrap(adminAuth.deleteAllTestUsers().then(x => console.log('*** USERS DELETED')));
-    cy.wrap(firestore.create([injectedData]).then(x => console.log('*** DATA INJECTED')));
-    cy.wrap(adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true }).then(x => console.log('*** DASHBOARD AUTH')));
-    cy.wrap(adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true }).then(x => console.log('*** MARKETPLACE AUTH')));
-    cy.wrap(maintenance.end().then(x => console.log('*** MAINTENANCE FINIE')));
-    cy.wrap(browserAuth.clearBrowserAuth().then(x => console.log('*** AUTH CLEARED')));
-    cy.visit('');
-    browserAuth.signinWithEmailAndPassword(dashboardUser.email).then(x => '*** SIGNIN');
-    cy.visit('');
-    get('calendar').click();
-    get('cookies').click();
-    firestore.get([`orgs/${dashboardOrg.id}`]).then(x => console.log(`*** ORGS/${dashboardOrg.id}`, x));
+    maintenance.start().then(() => console.log('*** MAINTENANCE EN COURS'))
+
+    return firestore.clearTestData()
+      .then(() => firestore.deleteOrgEvents(dashboardOrg.id))
+      .then(() => adminAuth.deleteAllTestUsers())
+      .then(() => firestore.create([injectedData]))
+      .then(() => adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true }))
+      .then(() => adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true }))
+      .then(() => maintenance.end())
+      .then(() => browserAuth.clearBrowserAuth())
+      .then(() => cy.visit(''))
+      .then(() => browserAuth.signinWithEmailAndPassword(dashboardUser.email))
+      .then(() => cy.visit(''))
+      .then(() => get('calendar').click())
+      .then(() => get('cookies').click());
   });
 
   it('create future public screening event, check if visible in market place, testing also noScreener behaviour', () => {
