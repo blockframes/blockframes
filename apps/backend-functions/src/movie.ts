@@ -140,7 +140,7 @@ export async function onMovieUpdate(change: BlockframesChange<Movie>) {
     const movieWasSubmittedOn = wasSubmittedOn(before.app, after.app)[0];
     // Mail to supportEmails.[app]
     const from = getMailSender(movieWasSubmittedOn);
-    await sendMail(sendMovieSubmittedEmail(movieWasSubmittedOn, after), from, groupIds.noUnsubscribeLink);
+    await sendMail(sendMovieSubmittedEmail(movieWasSubmittedOn, after, organizations[0]), from, groupIds.noUnsubscribeLink);
 
     // Notification to users related to current movie
     const notifications = organizations
