@@ -24,7 +24,7 @@ export async function upgrade(db: Firestore) {
 
     if (!movie?.certifications.length) return false;
 
-    movie.certifications = movie.certifications.filter((c) => !['artEssai', 'awardedFilm', 'aListCast'].includes(c));
+    movie.certifications = movie.certifications.filter(c => !['artEssai', 'awardedFilm', 'aListCast'].includes(c));
 
     await doc.ref.set(movie);
   }).catch(err => console.error(err));
