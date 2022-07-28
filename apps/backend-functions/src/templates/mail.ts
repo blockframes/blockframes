@@ -566,9 +566,8 @@ export function sendContactEmail(userName: string, userMail: string, subject: st
 }
 
 /** Send an email to supportEmails.[app](catalog & MF only) when a movie is submitted*/
-export async function sendMovieSubmittedEmail(app: App, movie: Movie, db: Firestore) {
-  const org = await db.collection('orgs').doc(movie.orgIds[0]).get()
-  const orgName = org.data().name;
+export async function sendMovieSubmittedEmail(app: App, movie: Movie, org: Organization) {
+  const orgName = org.name;
 
   return {
     to: getSupportEmail(app),
