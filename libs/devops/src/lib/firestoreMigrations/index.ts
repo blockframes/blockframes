@@ -12,6 +12,7 @@ import * as v0080 from './0080';
 import * as v0081 from './0081';
 import * as v0082 from './0082';
 import * as v0083 from './0083';
+import * as v0084 from './0084';
 
 const removedMigrations = 69; // Number of previous migrations removed
 
@@ -39,7 +40,8 @@ export const MIGRATIONS = {
   80: v0080,
   81: v0081,
   82: v0082,
-  83: v0083
+  83: v0083,
+  84: v0084
 };
 
 export const LATEST_VERSION = removedMigrations + Object.keys(MIGRATIONS).length;
