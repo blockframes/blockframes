@@ -33,7 +33,6 @@ import {
 } from '@blockframes/model';
 import { format } from 'date-fns';
 import { supportMailosaur } from '@blockframes/utils/constants';
-import { Firestore } from '@blockframes/firebase-utils';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -566,7 +565,7 @@ export function sendContactEmail(userName: string, userMail: string, subject: st
 }
 
 /** Send an email to supportEmails.[app](catalog & MF only) when a movie is submitted*/
-export async function sendMovieSubmittedEmail(app: App, movie: Movie, org: Organization) {
+export function sendMovieSubmittedEmail(app: App, movie: Movie, org: Organization) {
   const orgName = org.name;
 
   return {
