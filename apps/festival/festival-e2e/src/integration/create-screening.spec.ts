@@ -52,19 +52,18 @@ const injectedData = {
 describe('Screenings', () => {
   beforeEach(() => {
     cy.visit('');
-    maintenance.start();
-    cy.wait(1000)
-    firestore.clearTestData();
-    firestore.deleteOrgEvents(dashboardOrg.id);
-    adminAuth.deleteAllTestUsers();
-    firestore.create([injectedData]);
-    adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true });
-    adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true });
-    cy.wait(1000)
-    maintenance.end();
-    browserAuth.clearBrowserAuth();
+    console.log('*** BEFORE EACH START')
+    maintenance.start().then(x => console.log('*** MAINTENANCE EN COURS'));
+    firestore.clearTestData().then(x => console.log('*** DATA CLEARED'));
+    firestore.deleteOrgEvents(dashboardOrg.id).then(x => console.log('*** DELETE ORGS'));
+    adminAuth.deleteAllTestUsers().then(x => console.log('*** USERS DELETED'));
+    firestore.create([injectedData]).then(x => console.log('*** DATA INJECTED'));
+    adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true }).then(x => console.log('*** DASHBOARD AUTH'));
+    adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true }).then(x => console.log('*** MARKETPLACE AUTH'));
+    maintenance.end().then(x => console.log('*** MAINTENANCE FINIE'));;
+    browserAuth.clearBrowserAuth().then(x => console.log('*** AUTH CLEARED'));;
     cy.visit('');
-    browserAuth.signinWithEmailAndPassword(dashboardUser.email);
+    browserAuth.signinWithEmailAndPassword(dashboardUser.email).then(x => '*** SIGNIN');
     cy.visit('');
     get('calendar').click();
     get('cookies').click();
