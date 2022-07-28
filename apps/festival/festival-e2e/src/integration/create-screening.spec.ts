@@ -53,15 +53,15 @@ describe('Screenings', () => {
   beforeEach(() => {
     cy.visit('');
     console.log('*** BEFORE EACH START')
-    maintenance.start().then(x => console.log('*** MAINTENANCE EN COURS'));
-    firestore.clearTestData().then(x => console.log(`*** DATA CLEARED ${x}`));
-    firestore.deleteOrgEvents(dashboardOrg.id).then(x => console.log('*** DELETE ORGS'));
-    adminAuth.deleteAllTestUsers().then(x => console.log('*** USERS DELETED'));
-    firestore.create([injectedData]).then(x => console.log('*** DATA INJECTED'));
-    adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true }).then(x => console.log('*** DASHBOARD AUTH'));
-    adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true }).then(x => console.log('*** MARKETPLACE AUTH'));
-    maintenance.end().then(x => console.log('*** MAINTENANCE FINIE'));;
-    browserAuth.clearBrowserAuth().then(x => console.log('*** AUTH CLEARED'));;
+    cy.wrap(maintenance.start().then(x => console.log('*** MAINTENANCE EN COURS')));
+    cy.wrap(firestore.clearTestData().then(x => console.log(`*** DATA CLEARED ${x}`)));
+    cy.wrap(firestore.deleteOrgEvents(dashboardOrg.id).then(x => console.log('*** DELETE ORGS')));
+    cy.wrap(adminAuth.deleteAllTestUsers().then(x => console.log('*** USERS DELETED')));
+    cy.wrap(firestore.create([injectedData]).then(x => console.log('*** DATA INJECTED')));
+    cy.wrap(adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true }).then(x => console.log('*** DASHBOARD AUTH')));
+    cy.wrap(adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true }).then(x => console.log('*** MARKETPLACE AUTH')));
+    cy.wrap(maintenance.end().then(x => console.log('*** MAINTENANCE FINIE')));
+    cy.wrap(browserAuth.clearBrowserAuth().then(x => console.log('*** AUTH CLEARED')));
     cy.visit('');
     browserAuth.signinWithEmailAndPassword(dashboardUser.email).then(x => '*** SIGNIN');
     cy.visit('');
