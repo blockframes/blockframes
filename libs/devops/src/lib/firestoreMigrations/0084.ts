@@ -1,5 +1,4 @@
 import { Firestore, removeAllSubcollections, runChunks } from '@blockframes/firebase-utils';
-import { DocumentSnapshot } from 'firebase-functions/v1/firestore';
 
 /**
  * Remove DistributionRights sub-collection from old movies
