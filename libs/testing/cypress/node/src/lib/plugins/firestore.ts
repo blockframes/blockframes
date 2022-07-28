@@ -128,7 +128,7 @@ export async function deleteData(paths: string[]) {
       }
     }
   }
-  await Promise.all(deleteAll);
+  return Promise.all(deleteAll);
 }
 
 const subcollectionsDocsOf = async (path: string) => {
@@ -141,7 +141,7 @@ const subcollectionsDocsOf = async (path: string) => {
   return result;
 };
 
-export async function clearTestData() {
+/*export async function clearTestData() {
   const docsToDelete: string[] = [];
   const collections = await db.listCollections();
   for (const collection of collections) {
@@ -149,9 +149,18 @@ export async function clearTestData() {
     const docs = snapshot.docs;
     for (const doc of docs) docsToDelete.push(`${collection.id}/${doc.id}`);
   }
-  await deleteData(docsToDelete);
+  return deleteData(docsToDelete);
+}*/
 
-  return "bruce";
+export async function getTestData() {
+  const docsToDelete: string[] = [];
+  const collections = await db.listCollections();
+  for (const collection of collections) {
+    const snapshot = await collection.where('_meta.e2e', '==', true).get();
+    const docs = snapshot.docs;
+    for (const doc of docs) docsToDelete.push(`${collection.id}/${doc.id}`);
+  }
+  return docsToDelete;
 }
 
 //* GET DATA*------------------------------------------------------------------

@@ -3,7 +3,11 @@ import { Event } from '@blockframes/model';
 
 export const firestore = {
   clearTestData() {
-    return cy.task('clearTestData');
+    return cy.task('getTestData')
+      .then((paths: string[]) => {
+        console.log('deleting', paths)
+        return firestore.delete(paths).then(() => console.log('deleted'))
+      });
   },
 
   create(data: Record<string, object>[]) {
