@@ -161,16 +161,18 @@ export function userJoinedYourOrganization(
   return { to: toUser.email, templateId: templateIds.org.memberAdded, data };
 }
 
-/** Send email to org admin to inform him that an user has left his org */
-export function userLeftYourOrganization(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
-  const data = {
-    user: toAdmin,
-    userSubject,
-    org,
-    pageUrl: `${ORG_HOME}${org.id}/view/members`
-  };
-  return { to: toAdmin.email, templateId: templateIds.org.memberRemoved, data };
-}
+/** #@dev this might be reactivated later
+ * Send email to org admin to inform him that an user has left his org
+ * */
+// export function userLeftYourOrganization(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
+//   const data = {
+//     user: toAdmin,
+//     userSubject,
+//     org,
+//     pageUrl: `${ORG_HOME}${org.id}/view/members`
+//   };
+//   return { to: toAdmin.email, templateId: templateIds.org.memberRemoved, data };
+// }
 
 /** Generates a transactional email to let an admin knows that an user requested to join his/her org */
 export function userRequestedToJoinYourOrg(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData, url: string = appUrl.market): EmailTemplateRequest {
