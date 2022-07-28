@@ -44,6 +44,7 @@ const navTabs: NavTabs = {
 })
 export class EventFormShellComponent implements OnInit, OnDestroy {
   tabs$: Observable<TabConfig[]>;
+  queryParams$ = this.route.queryParams;
   private sub: Subscription;
   private mediaSub?: Subscription;
   form: EventForm;
