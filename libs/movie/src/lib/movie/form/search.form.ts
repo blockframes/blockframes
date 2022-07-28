@@ -158,27 +158,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get contentType() { return this.get('contentType'); }
   get runningTime() { return this.get('runningTime'); }
   get festivals() { return this.get('festivals'); }
-  get certifications() { return this.get('certifications') }
-
-  isEmpty() {
-    const emptyVersions = !this.languages.value?.versions?.caption &&
-      !this.languages.value?.versions?.dubbed &&
-      !this.languages.value?.versions?.original;
-    const emptyLanguages = !(this.languages.value?.languages?.length === 0) || emptyVersions
-    return (
-      !this.query.value?.trim() &&
-      this.storeStatus.value?.length === 0 &&
-      this.genres.value?.length === 0 &&
-      this.originCountries.value?.length === 0 &&
-      emptyLanguages &&
-      !this.languages.value?.versions?.subtitle &&
-      this.productionStatus?.value.length === 0 &&
-      this.minBudget?.value === 0 &&
-      this.minReleaseYear.value === 0 &&
-      this.sellers?.value.length === 0 &&
-      this.festivals.value?.length === 0 &&
-      !this.contentType.value);
-  }
+  get certifications() { return this.get('certifications'); }
 
   search(needMultipleQueries = false) {
     const search = {

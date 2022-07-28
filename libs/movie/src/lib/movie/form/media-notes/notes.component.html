@@ -2,7 +2,7 @@
   <ng-container tunnel-form>
     <h3>Note / Statement</h3>
     <section id="notes">
-      <bf-form-list [form]="form.promotional.get('notes')">
+      <bf-form-list [form]="form.promotional.get('notes')" (removed)="removeFromQueue($event)">
         <ng-template itemRef let-note>
           {{ note.firstName }} - {{ note.lastName }} - {{ note.role | titlecase }} -
           {{ note?.storagePath | fileName | maxLength: 30 }}

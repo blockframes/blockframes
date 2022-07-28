@@ -99,6 +99,10 @@ export class ScreeningForm extends FormEntity<ScreeningControl, Screening> {
   constructor(screening?: Partial<Screening>) {
     super(createScreeningControl(screening), compareDates('start', 'end'))
   }
+
+  get titleId() {
+    return this.get('titleId');
+  }
 }
 
 // Slate Presentation
@@ -117,5 +121,9 @@ type SlateControl = ReturnType<typeof createSlateControl>;
 export class SlateForm extends FormEntity<SlateControl, Slate> {
   constructor(slate?: Partial<Slate>) {
     super(createSlateControl(slate), compareDates('start', 'end'));
+  }
+
+  get videoId() {
+    return this.get('videoId');
   }
 }
