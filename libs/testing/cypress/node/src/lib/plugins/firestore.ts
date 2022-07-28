@@ -128,7 +128,7 @@ export async function deleteData(paths: string[]) {
       }
     }
   }
-  return Promise.all(deleteAll);
+  await Promise.all(deleteAll);
 }
 
 const subcollectionsDocsOf = async (path: string) => {
@@ -149,7 +149,9 @@ export async function clearTestData() {
     const docs = snapshot.docs;
     for (const doc of docs) docsToDelete.push(`${collection.id}/${doc.id}`);
   }
-  return deleteData(docsToDelete);
+  await deleteData(docsToDelete);
+
+  return "bruce";
 }
 
 //* GET DATA*------------------------------------------------------------------
