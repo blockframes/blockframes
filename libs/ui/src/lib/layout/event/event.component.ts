@@ -50,7 +50,7 @@ export class EventComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Check the user is anonymous or not
-    this.isAnonymous$ = this.authService.user$.pipe(map(user => user.isAnonymous));
+    this.isAnonymous$ = this.authService.user$.pipe(map(user => !!user?.isAnonymous));
 
     this.wishlistCount$ = this.orgService.currentOrg$.pipe(
       map((org) => (org?.wishlist ? org.wishlist : [])),
