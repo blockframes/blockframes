@@ -1,8 +1,9 @@
 import { Firestore, removeAllSubcollections, runChunks } from '@blockframes/firebase-utils';
-import { Movie } from '@blockframes/model';
+import { Movie, Permissions } from '@blockframes/model';
 
 /**
  * Remove DistributionRights sub-collection from old movies
+ * Remove unused fields from permissions and movies collections
  * @param db
  * @returns
  */
