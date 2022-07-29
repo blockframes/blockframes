@@ -140,14 +140,12 @@ export class UsersComponent implements OnInit {
     this.exportingAnalaytics = true;
     this.cdr.markForCheck();
 
-    const query = [where('type', '==', 'title')]
+    const query = [where('type', '==', 'title')];
     const all = await this.analyticsService.load<Analytics<'title'>>(query);
     const allAnalytics = all.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId));
-    console.log('analytics: ', allAnalytics);
 
     const allTitleIds = unique(allAnalytics.map(analytic => analytic.meta.titleId));
     const allTitles = await this.movieService.load(allTitleIds);
-    console.log('titles: ', allTitles)
 
     const exportedRows = [];
     for (const user of users) {
@@ -171,7 +169,7 @@ export class UsersComponent implements OnInit {
           'promo element opened': a.promoElementOpened,
           'added to wishlist': a.addedToWishlist,
           'removed from wishlist': a.removedFromWishlist
-        })
+        });
       }
     }
     downloadCsvFromJson(exportedRows, 'users-analytics-list');

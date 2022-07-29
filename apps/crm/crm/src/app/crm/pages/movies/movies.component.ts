@@ -171,14 +171,12 @@ export class MoviesComponent implements OnInit {
     this.exportingAnalytics = true;
     this.cdr.markForCheck();
 
-    const query = [where('type', '==', 'title')]
+    const query = [where('type', '==', 'title')];
     const all = await this.analyticsService.load<Analytics<'title'>>(query);
     const allAnalytics = all.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId));
-    console.log('analytics: ', allAnalytics);
 
     const allUids = unique(allAnalytics.map(analytic => analytic.meta.uid));
     const allUsers = await this.userService.load(allUids);
-    console.log('users: ', allUsers)
 
     const exportedRows = [];
     for (const title of titles) {
@@ -202,7 +200,7 @@ export class MoviesComponent implements OnInit {
           'promo element opened': a.promoElementOpened,
           'added to wishlist': a.addedToWishlist,
           'removed from wishlist': a.removedFromWishlist
-        })
+        });
       }
     }
     downloadCsvFromJson(exportedRows, 'movies-analytics-list');
