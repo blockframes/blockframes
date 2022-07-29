@@ -44,7 +44,7 @@
 
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Season Number</mat-label>
-            <input test-id="episode-count" matInput type="number" name="seriesName"
+            <input test-id="season-count" matInput type="number" name="seriesName"
               [formControl]="form.title.get('series')" min="1" max="100" />
             <mat-hint>Please fill in a valid season number.</mat-hint>
           </mat-form-field>
@@ -261,11 +261,11 @@
                 <div [formGroup]="filmography" fxLayout="row" fxLayoutGap="24px">
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Film Title</mat-label>
-                    <input test-id="film-title" matInput formControlName="title">
+                    <input test-id="director-film-title" matInput formControlName="title">
                   </mat-form-field>
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Release Year</mat-label>
-                    <input test-id="film-year" matInput formControlName="year" type="number">
+                    <input test-id="director-film-year" matInput formControlName="year" type="number">
                     <mat-error *ngIf="filmography.get('year').hasError('invalidYear')">Please enter a 4 digit date (e.g.
                       2020)
                     </mat-error>

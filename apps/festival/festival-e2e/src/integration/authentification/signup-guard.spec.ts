@@ -50,7 +50,7 @@ describe('Signup', () => {
     get('activity').click();
     getInList('activity_', newOrg.activity);
     get('country').click();
-    getInList('country_', newOrg.country);
+    getInList('option_', newOrg.country);
     get('role').contains('Buyer').click();
     get('password').type(USER_FIXTURES_PASSWORD);
     get('password-confirm').type(USER_FIXTURES_PASSWORD);
@@ -111,7 +111,7 @@ describe('Signup', () => {
     getInList('activity_', newOrg.activity);
     get('submit').should('be.disabled');
     get('country').click();
-    getInList('country_', newOrg.country);
+    getInList('option_', newOrg.country);
     get('submit').should('be.disabled');
     get('role').contains('Buyer').click();
     get('submit').should('be.enabled');
@@ -128,7 +128,7 @@ describe('Signup', () => {
     get('activity').click();
     getInList('activity_', newOrg.activity);
     get('country').click();
-    getInList('country_', newOrg.country);
+    getInList('option_', newOrg.country);
     get('role').contains('Buyer').click();
     check('terms');
     check('gdpr');
