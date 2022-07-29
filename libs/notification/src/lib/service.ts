@@ -426,7 +426,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
-          actionText: "Access App",
+          actionText: 'Access App',
           placeholderUrl: `empty_organization.svg`,
           imgRef: notification.organization?.logo,
           url: `${applicationUrl[notification.appAccess]}`,
