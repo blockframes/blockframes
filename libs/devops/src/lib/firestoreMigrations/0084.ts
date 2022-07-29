@@ -1,6 +1,5 @@
 import { Firestore, removeAllSubcollections, runChunks } from '@blockframes/firebase-utils';
-import { Movie, PermissionsDocument } from '@blockframes/model';
-import { Bucket } from '@google-cloud/storage';
+import { Movie } from '@blockframes/model';
 
 /**
  * Remove DistributionRights sub-collection from old movies
