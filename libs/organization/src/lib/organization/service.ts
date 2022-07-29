@@ -31,6 +31,7 @@ export class OrganizationService extends BlockframesCollection<Organization> {
   // Organization of the current logged in user or undefined if user have no org
   org: Organization; // For this to be defined, one of the observable below must be called before
   org$: Observable<Organization> = this.authService.profile$.pipe(
+    tap((x) => console.log('*** ORGSERVICE', x)),
     switchMap((user) => (user?.orgId ? this.valueChanges(user.orgId) : of(undefined))),
     tap((org) => (this.org = org))
   );
