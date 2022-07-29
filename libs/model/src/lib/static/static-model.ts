@@ -57,10 +57,7 @@ export const offerStatus = {
 export const negotiationStatus = ['pending', 'accepted', 'declined'] as const;
 
 export const certifications = {
-  artEssai: 'Art & Essai',
-  eof: 'EOF',
-  awardedFilm: 'Awarded Film',
-  aListCast: 'A-list Cast',
+  eof: 'EOF (French Speaking Films)',
   europeanQualification: 'European Qualification'
 } as const
 
@@ -1355,11 +1352,9 @@ export const emailErrorCodes: Record<string, { code: typeof emailErrorCode[numbe
   }
 };
 
-export type StaticModel = typeof staticModel;
+type StaticModel = typeof staticModel;
 export type Scope = keyof StaticModel;
 export type GetKeys<S extends Scope> = keyof StaticModel[S];
-export type GetLabel<S extends Scope> = StaticModel[S][GetKeys<S>]
-export type GetCode<S extends Scope> = GetKeys<S> | GetLabel<S>;
 
 /** Check if the given value is a key of a scope */
 export const isInKeys = (scope: Scope, givenValue: string) => {
