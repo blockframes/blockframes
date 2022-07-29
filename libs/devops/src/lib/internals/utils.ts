@@ -65,10 +65,6 @@ const userMap: Partial<Record<Collections, string[]>> = {
   ],
   permissions: [
     'roles{}',
-    'canCreate',
-    'canRead',
-    'canUpdate',
-    'canDelete',
   ],
   blockframesAdmin: [''], // document id
   events: [
