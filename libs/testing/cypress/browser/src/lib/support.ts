@@ -118,7 +118,7 @@ export function verifyInvitation(orgAdminEmail: string, user: PublicUser, expect
 //* MAINTENANCE *//
 
 export function refreshIfMaintenance() {
-  cy.get('festival-root').then($el => {
+  return cy.get('festival-root').then($el => {
     const $children = $el.children();
     const childrenTagNames = $children.toArray().map(child => child.tagName);
     if (childrenTagNames.includes('blockframes-maintenance'.toUpperCase())) get('maintenance-refresh').click();
