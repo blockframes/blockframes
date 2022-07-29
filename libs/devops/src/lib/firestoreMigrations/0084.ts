@@ -7,9 +7,8 @@ import { Movie } from '@blockframes/model';
  * @returns
  */
 export async function upgrade(db: Firestore) {
-  await updateMovies(db)
-  await updateBuckets(db)
-  return updatePermissions(db)
+  await updateMovies(db);
+  return updatePermissions(db);
 }
 
 async function updateMovies(db: Firestore) {
@@ -31,9 +30,9 @@ async function updateMovies(db: Firestore) {
     movie.certifications = movie.certifications.filter(c => !['artEssai', 'awardedFilm', 'aListCast'].includes(c));
 
     // Remove atributes: 'reviews', 'ratings', 'boxoffice'
-    if ((movie as any)?.boxoffice) delete (movie as any).boxoffice;
-    if ((movie as any)?.reviews) delete (movie as any).reviews;
-    if ((movie as any)?.ratings) delete (movie as any).ratings;
+    delete (movie as any).boxoffice;
+    delete (movie as any).reviews;
+    delete (movie as any).ratings;
 
     await doc.ref.set(movie);
   }).catch(err => console.error(err));
@@ -43,28 +42,15 @@ async function updatePermissions(db: Firestore) {
   const permissions = await db.collection('permissions').get();
 
   return runChunks(permissions.docs, async (doc) => {
-    const permission = doc.data() as any;
+    const permission = doc.data() as Permissions;
 
     //Remove unused fields from permissions
-    if (permission?.canCreate) delete permission.canCreate
-    if (permission?.canRead) delete permission.canRead
-    if (permission?.canUpdate) delete permission.canUpdate
-    if (permission?.canDelete) delete permission.canDelete
+    delete (permission as any).canCreate;
+    delete (permission as any).canRead;
+    delete (permission as any).canUpdate;
+    delete (permission as any).canDelete;
 
     await doc.ref.set(permission);
-  }).catch(err => console.error(err));
-}
-
-async function updateBuckets(db: Firestore) {
-  const buckets = await db.collection('buckets').get();
-
-  return runChunks(buckets.docs, async (doc) => {
-    const bucket = doc.data() as any;
-
-    //Remove 'uid' fields from buckets
-    if (bucket?.uid === null) delete bucket.uid
-
-    await doc.ref.set(bucket);
   }).catch(err => console.error(err));
 }
 

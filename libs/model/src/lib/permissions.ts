@@ -16,6 +16,10 @@ export interface DocPermissionsDocument {
   id: string;
   ownerId: string;
   isAdmin: boolean;
+  canCreate: boolean;
+  canRead: boolean;
+  canUpdate: boolean;
+  canDelete: boolean;
 }
 
 /** Factory function to create organization related permissions. */
@@ -33,6 +37,10 @@ export function createDocPermissions(params: Partial<DocPermissionsDocument> = {
     id: params.id || '',
     ownerId: params.ownerId || '',
     isAdmin: true,
+    canCreate: true,
+    canRead: true,
+    canUpdate: true,
+    canDelete: true,
     ...params
   };
 }

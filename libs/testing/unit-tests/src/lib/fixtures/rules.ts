@@ -40,17 +40,36 @@ export const rulesFixtures = {
     id: 'D001',
     ownerId: 'O001',
   },
+  'permissions/O001/documentPermissions/MI-000': {
+    id: 'MI-000',
+    canCreate: false,
+  },
   'permissions/O001/documentPermissions/MI-007': {
     id: 'MI-007',
+    canCreate: true,
+    canDelete: true,
+    canUpdate: true,
     ownerId: 'O001',
   },
   'permissions/O001/documentPermissions/MI-0d7': {
     id: 'MI-0d7',
+    canDelete: true,
+    canUpdate: true,
     ownerId: 'O001',
   },
   'permissions/O001/documentPermissions/MI-077': {
     id: 'MI-077',
+    canUpdate: true,
+    canCreate: true,
     ownerId: 'O001',
+  },
+  'permissions/O001/documentPermissions/C001': {
+    id: 'C001',
+    canCreate: true,
+  },
+  'permissions/O003/documentPermissions/C003': {
+    id: 'C003',
+    canCreate: true,
   },
 
   // Orgs
