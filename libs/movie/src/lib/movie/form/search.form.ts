@@ -1,5 +1,5 @@
-import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, AlgoliaSearch } from '@blockframes/model';
-import type { StoreStatus, ProductionStatus, Territory, Genre, SocialGoal, ContentType } from '@blockframes/model';
+import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, AlgoliaSearch, festival } from '@blockframes/model';
+import type { StoreStatus, ProductionStatus, Territory, Genre, SocialGoal, ContentType, Certification, Festival } from '@blockframes/model';
 import { FormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { algolia } from '@env';
@@ -46,6 +46,8 @@ export interface MovieSearch extends AlgoliaSearch {
   socialGoals: SocialGoal[];
   contentType?: ContentType;
   runningTime: number;
+  festivals: Festival[];
+  certifications: Certification[];
 }
 
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
@@ -72,6 +74,8 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     sellers: [],
     socialGoals: [],
     runningTime: 0,
+    festivals: [],
+    certifications: [],
     ...search,
   };
 }
@@ -118,7 +122,9 @@ function createMovieSearchControl(search: MovieSearch) {
     contentType: new FormControl(search.contentType),
     runningTime: new FormControl(search.runningTime),
     // Max is 1000, see docs: https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/
-    hitsPerPage: new FormControl(50, Validators.max(1000))
+    hitsPerPage: new FormControl(50, Validators.max(1000)),
+    festivals: new FormStaticValueArray<'festival'>(search.festivals, 'festival'),
+    certifications: new FormStaticValueArray<'certifications'>(search.certifications, 'certifications')
   };
 }
 
@@ -151,25 +157,8 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get hitsPerPage() { return this.get('hitsPerPage'); }
   get contentType() { return this.get('contentType'); }
   get runningTime() { return this.get('runningTime'); }
-
-  isEmpty() {
-    const emptyVersions = !this.languages.value?.versions?.caption &&
-      !this.languages.value?.versions?.dubbed &&
-      !this.languages.value?.versions?.original;
-    const emptyLanguages = !(this.languages.value?.languages?.length === 0) || emptyVersions
-    return (
-      !this.query.value?.trim() &&
-      this.storeStatus.value?.length === 0 &&
-      this.genres.value?.length === 0 &&
-      this.originCountries.value?.length === 0 &&
-      emptyLanguages &&
-      !this.languages.value?.versions?.subtitle &&
-      this.productionStatus?.value.length === 0 &&
-      this.minBudget?.value === 0 &&
-      this.minReleaseYear.value === 0 &&
-      this.sellers?.value.length === 0 &&
-      !this.contentType.value);
-  }
+  get festivals() { return this.get('festivals'); }
+  get certifications() { return this.get('certifications'); }
 
   search(needMultipleQueries = false) {
     const search = {
@@ -184,6 +173,8 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.sellers.value.map(seller => `orgNames:${seller.name}`),
         this.storeStatus.value.map(config => `storeStatus:${config}`),
         this.socialGoals.value.map(goal => `socialGoals:${goal}`),
+        this.festivals.value.map(festivalName => `festivals:${festival[festivalName]}`),
+        this.certifications.value.map(certification => `certifications:${certification}`),
         [`contentType:${this.contentType.value || ''}`]
       ],
       filters: ''
