@@ -1,10 +1,6 @@
 export interface PermissionsDocument {
   id: string;
   roles: Roles;
-  canCreate: string[];
-  canRead: string[];
-  canUpdate: string[];
-  canDelete: string[];
 }
 
 /** Mapping of all users with their role in the organization. */
@@ -31,10 +27,6 @@ export function createPermissions(params: Partial<PermissionsDocument>): Permiss
   return {
     id: params.id || '',
     roles: params.roles || {},
-    canCreate: [],
-    canRead: [],
-    canUpdate: [],
-    canDelete: [],
     ...params
   };
 }
