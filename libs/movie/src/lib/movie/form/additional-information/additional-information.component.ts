@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { Observable } from 'rxjs';
-import { unitBox, UnitBox, certifications, SocialGoal, socialGoals } from '@blockframes/model';
+import { unitBox, UnitBox, certifications, SocialGoal, socialGoals, Certification } from '@blockframes/model';
 import { startWith, map } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
@@ -25,10 +25,7 @@ export class MovieFormAdditionalInformationComponent implements OnInit {
   unitBox = unitBox;
   units$: Observable<Unit[]>;
   staticGoals = Object.keys(socialGoals) as SocialGoal[];
-
-  certifications = Object.keys(certifications).filter(cert =>
-    (cert !== 'awardedFilm' && cert !== 'aListCast'));
-
+  certifications = Object.keys(certifications) as Certification[];
 
   public qualificationsColumns = {
     certifications: "Qualifications",

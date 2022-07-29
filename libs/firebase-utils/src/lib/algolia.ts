@@ -170,6 +170,7 @@ export function storeSearchableMovie(
       banner: movie.banner.storagePath,
       poster: movie.poster.storagePath,
       contentType: movie.contentType,
+      certifications: movie.certifications
     };
 
     /* App specific properties */
