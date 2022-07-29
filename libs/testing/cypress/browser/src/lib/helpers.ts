@@ -72,7 +72,7 @@ export const e2eUser = (data: E2EUser): User => {
       createdBy: 'anonymous',
       createdAt: now,
     },
-    
+
   };
 };
 
@@ -148,11 +148,7 @@ export const e2ePermissions = (data: { id: string; adminUid: string }): Permissi
     id,
     roles: {
       [adminUid]: 'superAdmin',
-    },
-    canCreate: [],
-    canDelete: [],
-    canRead: [],
-    canUpdate: [],
+    }
   };
 };
 

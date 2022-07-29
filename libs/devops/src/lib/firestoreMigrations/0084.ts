@@ -44,7 +44,7 @@ async function updatePermissions(db: Firestore) {
   const permissions = await db.collection('permissions').get();
 
   return runChunks(permissions.docs, async (doc) => {
-    const permission = doc.data() as PermissionsDocument;
+    const permission = doc.data() as any;
 
     //Remove unused fields from permissions
     if (permission?.canCreate) delete permission.canCreate

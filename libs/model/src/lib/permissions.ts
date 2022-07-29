@@ -1,10 +1,6 @@
 export interface PermissionsDocument {
   id: string;
   roles: Roles;
-  canCreate: string[];
-  canRead: string[];
-  canUpdate: string[];
-  canDelete: string[];
 }
 
 /** Mapping of all users with their role in the organization. */
@@ -20,10 +16,6 @@ export interface DocPermissionsDocument {
   id: string;
   ownerId: string;
   isAdmin: boolean;
-  canCreate: boolean;
-  canRead: boolean;
-  canUpdate: boolean;
-  canDelete: boolean;
 }
 
 /** Factory function to create organization related permissions. */
@@ -31,10 +23,6 @@ export function createPermissions(params: Partial<PermissionsDocument>): Permiss
   return {
     id: params.id || '',
     roles: params.roles || {},
-    canCreate: [],
-    canRead: [],
-    canUpdate: [],
-    canDelete: [],
     ...params
   };
 }
@@ -45,10 +33,6 @@ export function createDocPermissions(params: Partial<DocPermissionsDocument> = {
     id: params.id || '',
     ownerId: params.ownerId || '',
     isAdmin: true,
-    canCreate: true,
-    canRead: true,
-    canUpdate: true,
-    canDelete: true,
     ...params
   };
 }
