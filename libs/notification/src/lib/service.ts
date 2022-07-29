@@ -39,9 +39,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
   myNotifications$ = this.authService.profile$.pipe(
     filter((user) => !!user?.uid),
     switchMap((user) =>
-      this.valueChanges(
-        [where('toUserId', '==', user.uid)]
-        )
+      this.valueChanges([where('toUserId', '==', user.uid)])
     ),
     switchMap((notifications) => {
       const promises = notifications
@@ -84,7 +82,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message: `Your organization was accepted by the ${this.appName} team.`,
           imgRef: notification.organization?.logo,
-          actionText:"See Organization",
+          actionText: "See Organization",
           placeholderUrl: 'empty_organization.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id
             }/view/org`,
@@ -112,7 +110,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           message,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          actionText:'See Members',
+          actionText: 'See Members',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id
             }/view/members`,
         };
@@ -136,7 +134,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       }
       case 'requestToAttendEventSent': {
         const event = await this.eventService.load(notification.docId);
-        const message = `Your request to attend "<a href="/event/${event.id}" target="_blank">event ${eventTypes[event.type]}</a>" has been sent.`;
+        const message = `Your request to attend "<a href="/event/${event.id}" target="_blank">event "${eventTypes[event.type]}"</a>" has been sent.`;
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
@@ -144,8 +142,8 @@ export class NotificationService extends BlockframesCollection<Notification> {
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}${module === 'marketplace'
-              ? `/event/${notification.docId}/r/i/`
-              : `/c/o/${module}/event/${notification.docId}`
+            ? `/event/${notification.docId}/r/i/`
+            : `/c/o/${module}/event/${notification.docId}`
             }`,
         };
       }
@@ -161,7 +159,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
           imgRef,
-          actionText:'See Title',
+          actionText: 'See Title',
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId
             }/main`,
@@ -177,7 +175,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
           imgRef,
-          actionText:'See Title',
+          actionText: 'See Title',
           placeholderUrl: 'empty_poster.svg',
           url: `/c/o/marketplace/title/${notification.docId}/main`,
         };
@@ -195,7 +193,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           imgRef,
           message,
-          actionText:`Go to ${toLabel(event.type, 'eventTypes')}`,
+          actionText: `Go to ${toLabel(event.type, 'eventTypes')}`,
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/event/${notification.docId}/r/i`,
         };
@@ -233,7 +231,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
           imgRef,
-          actionText:'See Title',
+          actionText: 'See Title',
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId
             }/main`,
@@ -277,7 +275,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           message,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          actionText:'See Title',
+          actionText: 'See Title',
           url: `${applicationUrl['festival']}/c/o/marketplace/title/${notification.docId}`,
         };
       }
@@ -287,7 +285,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message: `Your offer ${notification.docId} was successfully sent.`,
           placeholderUrl: 'profil_user.svg',
-          actionText:'See Offer',
+          actionText: 'See Offer',
           url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`
         }
       case 'contractCreated': {
@@ -301,7 +299,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
           placeholderUrl: 'list_offer.svg',
-          actionText:'See Offer',
+          actionText: 'See Offer',
           url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}`
         }
       }
@@ -318,7 +316,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
-          actionText:'See Offer',
+          actionText: 'See Offer',
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -336,7 +334,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
-          actionText:'See Offer',
+          actionText: 'See Offer',
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -351,7 +349,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message: `Your offer ${contract.offerId} was accepted. The ${this.appName} team will contact you shortly`,
           placeholderUrl: 'list_offer.svg',
-          actionText:'See Offer',
+          actionText: 'See Offer',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
       }
@@ -385,7 +383,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
-          actionText:'See Offer',
+          actionText: 'See Offer',
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -401,7 +399,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message: `Your offer for ${movie.title.international} was declined.`,
           placeholderUrl: 'list_offer.svg',
-          actionText:'See Offer',
+          actionText: 'See Offer',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
       }
@@ -416,7 +414,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message: `The offer for ${movie.title.international} was successfully declined.`,
           placeholderUrl: 'list_offer.svg',
-          actionText:'See Offer',
+          actionText: 'See Offer',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
       }
@@ -428,7 +426,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
-          actionText:"Access App",
+          actionText: "Access App",
           placeholderUrl: `empty_organization.svg`,
           imgRef: notification.organization?.logo,
           url: `${applicationUrl[notification.appAccess]}`,

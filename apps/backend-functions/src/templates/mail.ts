@@ -161,7 +161,7 @@ export function userJoinedYourOrganization(
   return { to: toUser.email, templateId: templateIds.org.memberAdded, data };
 }
 
-/** #@dev this might be reactivated later
+/** #8858 this might be reactivated later
  * Send email to org admin to inform him that an user has left his org
  * */
 // export function userLeftYourOrganization(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData): EmailTemplateRequest {

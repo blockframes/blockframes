@@ -38,7 +38,7 @@ import {
   invitationToEventFromOrg,
   movieAcceptedEmail,
   requestToAttendEventFromUserSent,
-  // #@dev this may be reactivated later
+  // #8858 this may be reactivated later
   // userLeftYourOrganization,
   requestToAttendEventFromUserRefused,
   invitationToEventFromOrgUpdated,
@@ -358,7 +358,16 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
   const org = await getDocument<Organization>(`orgs/${notification.organization.id}`);
   const toAdmin = getUserEmailData(recipient);
 
-  if (!org.userIds.includes(notification.user.uid)) return;
+  if (!org.userIds.includes(notification.user.uid)) {
+    return;
+    // #8858 Might be reactivate later
+    // Member left/removed from org
+    // const userSubject = getUserEmailData(notification.user); // user removed
+    // const app = notification._meta.createdFrom;
+    // const orgData = getOrgEmailData(org);
+    // const template = userLeftYourOrganization(toAdmin, userSubject, orgData);
+    // await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
+  };
   const userSubject = getUserEmailData(notification.user);
   const orgData = getOrgEmailData(org);
 
