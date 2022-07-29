@@ -62,8 +62,10 @@ async function updateBuckets(db: Firestore) {
   return runChunks(buckets.docs, async (doc) => {
     const bucket = doc.data() as any;
 
-    if (bucket?.uid) delete bucket.uid
+    //Remove 'uid' fields from buckets
+    if (bucket?.uid === null) delete bucket.uid
 
+    await doc.ref.set(bucket);
   }).catch(err => console.error(err));
 }
 
