@@ -2,13 +2,22 @@
   <crm-bread-crumb></crm-bread-crumb>
   <ng-container *ngIf="users$ | async as users; else loading">
 
-    <article fxLayout="column" fxLayoutAlign="center center">
+    <article>
       <button [disabled]="exporting" mat-flat-button color="primary" (click)="exportTable(users)">
         <ng-container *ngIf="exporting else export">
           <span>Generating CSV...</span>
         </ng-container>
         <ng-template #export>
           <span>Export to CSV</span>
+          <mat-icon svgIcon="arrow_upward"></mat-icon>
+        </ng-template>
+      </button>
+      <button [disabled]="exportingAnalaytics" mat-flat-button color="primary" (click)="exportTitleAnalaytics(users)">
+        <ng-container *ngIf="exportingAnalaytics else exportAnalytics">
+          <span>Generating CSV...</span>
+        </ng-container>
+        <ng-template #exportAnalytics>
+          <span>Export Analytics to CSV</span>
           <mat-icon svgIcon="arrow_upward"></mat-icon>
         </ng-template>
       </button>
