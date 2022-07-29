@@ -6,6 +6,7 @@ import {
   maintenance,
   // cypress commands
   get,
+  findIn,
   getInList,
   getAllStartingWith,
 } from '@blockframes/testing/cypress/browser';
@@ -19,6 +20,7 @@ import {
   directorCategory,
   productionStatus,
   ProductionStatus,
+  producerRoles,
 } from '@blockframes/model';
 import { user, org, permissions, inDevelopmentMovie } from '../../fixtures/dashboard/movie-tunnel';
 
@@ -28,7 +30,7 @@ const injectedData = {
   [`permissions/${permissions.id}`]: permissions,
 };
 
-describe('Screenings', () => {
+describe('Movie tunnel', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
@@ -137,6 +139,86 @@ describe('Screenings', () => {
     get('next').click();
 
     //storyline elements
+    get('logline').type(movie.logline);
+    get('synopsis').type(movie.synopsis);
+    get('key-assets').type(movie.keyAssets);
+    get('keyword').type(`${movie.keywords[0]}{enter}${movie.keywords[1]}{enter}`);
+    get('next').click();
+
+    //production informations
+    ///production company
+    get('production-company-name').type(movie.stakeholders.productionCompany[0].displayName);
+    get('production-country').click();
+    cy.get('[role="listbox"]')
+      .children()
+      .each($child => {
+        if ($child.text().includes(territories[movie.stakeholders.productionCompany[0].countries[0]])) {
+          cy.wrap($child).click();
+        }
+      });
+    get('production-country').find('input').type(`${movie.stakeholders.productionCompany[0].countries[1]}{enter}{esc}`);
+    findIn('company', 'row-save').click();
+    findIn('company', 'list-add').click();
+    get('production-company-name').type(movie.stakeholders.productionCompany[1].displayName);
+    get('production-country').click();
+    cy.get('[role="listbox"]')
+      .children()
+      .each($child => {
+        if ($child.text().includes(territories[movie.stakeholders.productionCompany[1].countries[0]])) {
+          cy.wrap($child).click();
+        }
+      });
+    get('production-country').find('input').type(`${movie.stakeholders.productionCompany[1].countries[1]}{enter}{esc}`);
+    findIn('company', 'row-save').click();
+    ///co-production company
+    get('co-production-company-name').type(movie.stakeholders.coProductionCompany[0].displayName);
+    get('co-production-country').click();
+    cy.get('[role="listbox"]')
+      .children()
+      .each($child => {
+        if ($child.text().includes(territories[movie.stakeholders.coProductionCompany[0].countries[0]])) {
+          cy.wrap($child).click();
+        }
+      });
+    get('co-production-country').find('input').type(`${movie.stakeholders.coProductionCompany[0].countries[1]}{enter}{esc}`);
+    findIn('co-company', 'row-save').click();
+    ///producers
+    get('first-name').type(movie.producers[0].firstName);
+    get('last-name').type(movie.producers[0].lastName);
+    get('producer-role').click();
+    getInList('option_', producerRoles[movie.producers[0].role]);
+    findIn('producers', 'row-save').click();
+    findIn('producers', 'list-add').click();
+    get('first-name').type(movie.producers[1].firstName);
+    get('last-name').type(movie.producers[1].lastName);
+    get('producer-role').click();
+    getInList('option_', producerRoles[movie.producers[1].role]);
+    findIn('producers', 'row-save').click();
+    ///distributors
+    get('distribution-company-name').type(movie.stakeholders.distributor[0].displayName);
+    get('distribution-country').click();
+    cy.get('[role="listbox"]')
+      .children()
+      .each($child => {
+        if ($child.text().includes(territories[movie.stakeholders.distributor[0].countries[0]])) {
+          cy.wrap($child).click();
+        }
+      });
+    findIn('distributors', 'row-save').click();
+    ///sales
+    get('sales-company-name').type(movie.stakeholders.salesAgent[0].displayName);
+    get('sales-country').click();
+    cy.get('[role="listbox"]')
+      .children()
+      .each($child => {
+        if ($child.text().includes(territories[movie.stakeholders.salesAgent[0].countries[0]])) {
+          cy.wrap($child).click();
+        }
+      });
+    findIn('sales', 'row-save').click();
+    get('next').click();
+
+    //artistic team
   });
 });
 

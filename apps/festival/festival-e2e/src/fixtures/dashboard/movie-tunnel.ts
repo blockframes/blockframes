@@ -27,6 +27,7 @@ export const permissions = e2ePermissions({
 });
 
 export const inDevelopmentMovie: Partial<Movie> = {
+  //main
   productionStatus: 'development',
   title: { original: 'Test movie' },
   runningTime: {
@@ -53,6 +54,58 @@ export const inDevelopmentMovie: Partial<Movie> = {
           year: 2000,
         },
       ],
+    },
+  ],
+  //storyline
+  logline: 'A random character in a movie',
+  synopsis: 'We follow the life of a random character',
+  keyAssets: 'Filmed with a phone',
+  keywords: ['random', 'phone'],
+  //production information
+  stakeholders: {
+    productionCompany: [
+      {
+        displayName: 'mainProd',
+        countries: ['france', 'united-kingdom'],
+      },
+      {
+        displayName: 'otherProd',
+        countries: ['france', 'united-kingdom'],
+      },
+    ],
+    coProductionCompany: [
+      {
+        displayName: 'coProd',
+        countries: ['belgium'],
+      },
+    ],
+    broadcasterCoproducer: [],
+    distributor: [
+      {
+        displayName: 'distribOrg',
+        countries: ['france'],
+      },
+    ],
+    salesAgent: [
+      {
+        displayName: 'saleOrg',
+        countries: ['france'],
+      },
+    ],
+    lineProducer: [],
+    laboratory: [],
+    financier: [],
+  },
+  producers: [
+    {
+      firstName: 'Jane',
+      lastName: 'Doe',
+      role: 'executiveProducer',
+    },
+    {
+      firstName: 'John',
+      lastName: 'Doe',
+      role: 'associateProducer',
     },
   ],
 };

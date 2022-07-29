@@ -1,7 +1,7 @@
 <tunnel-page>
   <ng-container tunnel-form>
     <h3>Production</h3>
-    <section id="company">
+    <section id="company" test-id="company">
       <h6 class="mat-caption">Production Company</h6>
 
       <bf-form-list [form]="productionCompany">
@@ -29,7 +29,7 @@
       </bf-form-list>
     </section>
 
-    <section id="co-company">
+    <section id="co-company" test-id="co-company">
       <h6 class="mat-caption">Co-Production Company</h6>
       <bf-form-list [form]="coProductionCompany">
         <ng-template itemRef let-coProductionCompany>
@@ -58,7 +58,7 @@
       </bf-form-list>
     </section>
 
-    <section id="producers">
+    <section id="producers" test-id="producers">
       <h6 class="mat-caption">Producer(s)</h6>
       <bf-form-list [form]="form.producers">
         <ng-template itemRef let-producer>
@@ -86,7 +86,7 @@
     <mat-divider></mat-divider>
 
     <h3>Distributor(s)</h3>
-    <section id="distributors">
+    <section id="distributors" test-id="distributors">
 
       <bf-form-list [form]="distributors">
         <ng-template itemRef let-distributor>
@@ -119,7 +119,7 @@
     <mat-divider></mat-divider>
 
     <h3>International Sales</h3>
-    <section id="sales">
+    <section id="sales" test-id="sales">
 
       <bf-form-list [form]="internationalSales">
         <ng-template itemRef let-sales> {{ sales.displayName }} - {{ sales.countries | toLabel: 'territories' }}
