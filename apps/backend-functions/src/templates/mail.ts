@@ -29,7 +29,8 @@ import {
   Event,
   EventMeta,
   EventEmailData,
-  EmailTemplateRequest
+  EmailTemplateRequest,
+  displayName
 } from '@blockframes/model';
 import { format } from 'date-fns';
 import { supportMailosaur } from '@blockframes/utils/constants';
@@ -576,14 +577,13 @@ export function eventCreatedAdminEmail(app: App, event: Event<EventMeta>) {
 
 /** Inform Archipel Content admins a new offer has been created*/
 export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrgEmailData) {
-  console.log('building admin email')
   return {
     to: supportEmails.catalog,
     subject: `${org.name} created a new Offer.`,
     text: `
       Date: ${format(new Date(), 'dd MMM, yyyy')}
       Organization name: ${org.name}
-      Buyer name: ${toUser.firstName} ${toUser.lastName}
+      Buyer name: ${displayName(toUser)}
       Buyer email: ${toUser.email}
     `
   };

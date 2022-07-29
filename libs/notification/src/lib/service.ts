@@ -127,24 +127,25 @@ export class NotificationService extends BlockframesCollection<Notification> {
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}${module === 'marketplace'
-              ? `/event/${notification.docId}/r/i/`
-              : `/c/o/${module}/event/${notification.docId}`
+            ? `/event/${notification.docId}/r/i/`
+            : `/c/o/${module}/event/${notification.docId}`
             }`,
         };
       }
       case 'requestToAttendEventSent': {
         const event = await this.eventService.load(notification.docId);
         const message = `Your request to attend "<a href="/event/${event.id}" target="_blank">event "${eventTypes[event.type]}"</a>" has been sent.`;
+        const url = `${applicationUrl['festival']}${module === 'marketplace'
+          ? `/event/${notification.docId}/r/i/`
+          : `/c/o/${module}/event/${notification.docId}`
+          }`
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['festival']}${module === 'marketplace'
-            ? `/event/${notification.docId}/r/i/`
-            : `/c/o/${module}/event/${notification.docId}`
-            }`,
+          url,
         };
       }
       case 'movieSubmitted': {

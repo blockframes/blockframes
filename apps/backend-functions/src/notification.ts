@@ -631,7 +631,7 @@ async function sendOfferCreatedConfirmation(recipient: User, notification: Notif
   ]);
   const buyerOrg = await getDocument<Organization>(`orgs/${offer.buyerId}`);
   const app: App = 'catalog';
-  const from = getMailSender('catalog');
+  const from = getMailSender(app);
   const toUser = getUserEmailData(recipient);
   const emailData = adminOfferCreatedConfirmationEmail(toUser, getOrgEmailData(org));
   const buyerTemplate = buyerOfferCreatedConfirmationEmail(toUser, getOrgEmailData(buyerOrg), offer, notification.bucket);
@@ -653,7 +653,7 @@ async function sendCreatedCounterOfferConfirmation(recipient: User, notification
   const title = await getDocument<Movie>(`movies/${negotiation.titleId}`);
   const isMailRecipientBuyer = recipient.orgId === negotiation.buyerId;
   const app: App = 'catalog';
-  const from = getMailSender('catalog');
+  const from = getMailSender(app);
   const toUser = getUserEmailData(recipient);
   const recipientOrgEmailData = getOrgEmailData(recipientOrg);
 
