@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Movie, isScreening, CrmMovie, smartJoin, toLabel, Language, MovieLanguageSpecification, displayName } from '@blockframes/model';
+import { Movie, isScreening, CrmMovie, smartJoin, toLabel, Language, MovieLanguageSpecification, displayName, Analytics } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
-import { downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/service';
 import { EventService } from '@blockframes/event/service';
 import { sorts } from '@blockframes/ui/list/table/sorts';
@@ -16,6 +16,9 @@ import { where } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { joinWith } from 'ngfire';
 import { ContractService } from '@blockframes/contract/contract/service';
+import { AnalyticsService } from '@blockframes/analytics/service';
+import { aggregate } from '@blockframes/analytics/utils';
+import { UserService } from '@blockframes/user/service';
 
 const titleMandateQuery = (id: string) => ([
   where('titleId', '==', id),
@@ -31,6 +34,7 @@ const titleMandateQuery = (id: string) => ([
 export class MoviesComponent implements OnInit {
   public movies$?: Observable<CrmMovie[]>;
   public exporting = false;
+  public exportingAnalytics = false;
   public sorts = sorts;
   public filters = filters;
 
@@ -41,6 +45,8 @@ export class MoviesComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private router: Router,
     private contractService: ContractService,
+    private analyticsService: AnalyticsService,
+    private userService: UserService
   ) { }
 
   async ngOnInit() {
@@ -158,6 +164,50 @@ export class MoviesComponent implements OnInit {
     } catch (err) {
       this.exporting = false;
     }
+    this.cdr.markForCheck();
+  }
+
+  public async exportTitleAnalytics(titles: CrmMovie[]) {
+    this.exportingAnalytics = true;
+    this.cdr.markForCheck();
+
+    const query = [where('type', '==', 'title')]
+    const all = await this.analyticsService.load<Analytics<'title'>>(query);
+    const allAnalytics = all.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId));
+    console.log('analytics: ', allAnalytics);
+
+    const allUids = unique(allAnalytics.map(analytic => analytic.meta.uid));
+    const allUsers = await this.userService.load(allUids);
+    console.log('users: ', allUsers)
+
+    const exportedRows = [];
+    for (const title of titles) {
+      const movieAnalytics = allAnalytics.filter(analytic => analytic.meta.titleId === title.id);
+      const users = allUsers.filter(user => movieAnalytics.some(analytic => analytic.meta.uid === user.uid));
+      
+      for (const user of users) {
+        const userAnalytics = movieAnalytics.filter(analytic => analytic.meta.uid === user.uid);
+        const a = aggregate(userAnalytics);
+
+        exportedRows.push({
+          'title id': title.id,
+          title: title.title.international,
+          uid: user.uid,
+          user: displayName(user),
+          'user email': user.email,
+          'total interactions': a.total,
+          'page views': a.pageView,
+          'screenings requested': a.screeningRequested,
+          'asking price requested': a.askingPriceRequested,
+          'promo element opened': a.promoElementOpened,
+          'added to wishlist': a.addedToWishlist,
+          'removed from wishlist': a.removedFromWishlist
+        })
+      }
+    }
+    downloadCsvFromJson(exportedRows, 'movies-analytics-list');
+
+    this.exportingAnalytics = false;
     this.cdr.markForCheck();
   }
 }
