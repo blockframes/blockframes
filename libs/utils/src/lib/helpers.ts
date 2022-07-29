@@ -79,7 +79,11 @@ export function downloadCsvFromJson(data: unknown[], fileName = 'my-file') {
   const replacer = (_: unknown, value: unknown) => (value === null ? '' : value);
   const header = Object.keys(data[0]);
   const csv = data.map((row: unknown) =>
-    header.map((fieldName) => JSON.stringify(row[fieldName], replacer)).join(',')
+    header.map((fieldName) => {
+      const value = row[fieldName];
+      if (typeof value === 'string') return `"${value.replace(/"/g, '""')}"`; // escaping double quote
+      return JSON.stringify(value, replacer);
+    }).join(',')
   );
   csv.unshift(header.map((h) => `"${h}"`).join(','));
   const csvArray = csv.join('\r\n');
