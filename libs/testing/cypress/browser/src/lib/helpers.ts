@@ -72,7 +72,6 @@ export const e2eUser = (data: E2EUser): User => {
       createdBy: 'anonymous',
       createdAt: now,
     },
-
   };
 };
 
