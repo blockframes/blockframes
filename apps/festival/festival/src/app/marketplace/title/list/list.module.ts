@@ -21,18 +21,19 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
-import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
-import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module";
-import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module";
+// import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
+// import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module";
+// import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module";
 import { ListPageModule } from "@blockframes/ui/list/page/list-page.module";
 import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module';
-import { ListFilterButtonsModule } from '@blockframes/ui/list/buttons/list-filter-buttons.module';
-import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';
-import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
+// import { ListFilterButtonsModule } from '@blockframes/ui/list/buttons/list-filter-buttons.module';
+// import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';
+// import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { RequestScreeningModule } from '@blockframes/event/components/request-screening/request-screening.module';
-import { ReleaseYearFilterModule } from '@blockframes/movie/form/filters/release-year/release-year.module';
+// import { ReleaseYearFilterModule } from '@blockframes/movie/form/filters/release-year/release-year.module';
+import { ListModule } from '@blockframes/movie/components/title-search/festival/title-search.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -41,18 +42,19 @@ import { ReleaseYearFilterModule } from '@blockframes/movie/form/filters/release
     FlexLayoutModule,
     ReactiveFormsModule,
     MovieCardModule,
-    ChipsAutocompleteModule,
-    AlgoliaAutocompleteModule,
-    AlgoliaChipsAutocompleteModule,
+    // ChipsAutocompleteModule,
+    // AlgoliaAutocompleteModule,
+    // AlgoliaChipsAutocompleteModule,
     ListPageModule,
     ListFilterModule,
-    ListFilterButtonsModule,
-    LanguageFilterModule,
-    BudgetFilterModule,
+    // ListFilterButtonsModule,
+    // LanguageFilterModule,
+    // BudgetFilterModule,
     StaticCheckBoxesModule,
     ImageModule,
     RequestScreeningModule,
-    ReleaseYearFilterModule,
+    // ReleaseYearFilterModule,
+    ListModule,
 
     // Material
     MatIconModule,
