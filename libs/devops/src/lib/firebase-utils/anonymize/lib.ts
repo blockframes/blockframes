@@ -259,7 +259,7 @@ async function loadDb(db: FirebaseFirestore.Firestore) {
       const stored: DbRecord = { docPath, content };
 
       output.push(stored);
-      console.log(`processing :${docPath}`);
+
       // Adding the current path to the subcollections to backup
       const subCollections = await doc.ref.listCollections();
       subCollections.forEach((x) => processingQueue.push(x.path));
