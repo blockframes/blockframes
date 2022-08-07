@@ -263,6 +263,7 @@ jobs:
       - build_deploy_upgrade
   push-anon-db-to-ci:
     executor: blockframes-ci
+    resource_class: xlarge
     steps:
       - prepare_environment
       - run: npm start anonProdDb
