@@ -25,32 +25,65 @@
             <h2>{{title}}</h2>
             <a href="{{links.title}}">See title</a>
             {{#if contentType}}
-              <p>{{contentType}}{{#if genres}} -  {{genres}}{{/if}}</p>
+              <p>{{contentType}}{{#if genres}} / {{genres}}{{/if}}</p>
             {{/if}}
             {{#if originCountries}}
-              <p>{{originCountries}} / {{releaseYear}}</p>
+              <p>{{originCountries}}{{#if releaseYear}} / {{releaseYear}}{{/if}}</p>
             {{/if}}
             {{#if runningTime}}
-              <p>{{#if episodeCount }}{{episodeCount}} x {{/if}}{{runningTime}} min</p>
+              <p>{{#if episodeCount }}{{episodeCount}} x {{/if}}{{runningTime}} min{{#if format}} / {{format}}{{/if}}</p>
+            {{/if}}
+            {{#if certifications.length}}
+              <div class="row">
+                <div>
+                  {{#each certifications}}
+                    <img src="{{flag}}" width="41" height="28">
+                  {{/each}}
+                </div>
+                <div class="certification-desc">
+                  {{#each certifications}}
+                    {{desc}}<br/>
+                  {{/each}}
+                </div>
+              </div>
             {{/if}}
           </div>
         </div>
 
-        <div class="row">
+        <div>
+          <h3>Available Versions</h3>
+          <br/>
+          <strong>Original Version: </strong>
           {{#if version.isOriginalVersionAvailable}}
-            <p>Version : </p>
-            <p> {{version.original}}{{#if version.languages}} with {{version.languages}}{{/if}}</p>
+            {{ version.original }}
           {{else}}
-          <p>Original version is not available
-          {{#if version.languages}}<br>{{version.languages}}{{/if}}</p>
-        {{/if}}
+            not available
+          {{/if}}
+          <br/>
+          {{#if version.subtitles}}
+            <strong>Subtitles: </strong> {{version.subtitles}}<br/>
+          {{/if}}
+          {{#if version.dubs}}
+            <strong>Dubs: </strong> {{version.dubs}}<br/>
+          {{/if}}
         </div> 
 
-        <div class="row">
-          <p class="synopsis">{{synopsis}}</p>
-        </div>
+        {{#if cast}}
+          <div>
+            <h3>Cast</h3>
+            <p class="cast">{{cast}}...</p>
+          </div>
+        {{/if}}
+
+        {{#if synopsis}}
+          <div>
+            <h3>Synopsis</h3>
+            <p class="synopsis">{{synopsis}}</p>
+          </div>
+        {{/if}}
 
         {{#if prizes.length}}
+          <h3>Festival</h3>
           <ul class="prizes">
             {{#each prizes}}
               <li>{{name}}{{#if prize}} {{prize}}{{/if}}{{#if year}} {{year}}{{/if}}{{#if premiere}} - {{premiere}}{{/if}}</li>
@@ -59,6 +92,11 @@
         {{/if}}
 
         <div class="row links">
+          {{#if links.avails}}
+            <div class="column">
+              <a href="{{links.avails}}">Avails</a>
+            </div>
+          {{/if}}
           {{#if links.trailer}}
             <div class="column">
               <a href="{{links.trailer}}">Trailer</a>

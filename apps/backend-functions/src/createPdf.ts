@@ -1,5 +1,5 @@
-import { festival, App, Movie } from '@blockframes/model';
-import { toLanguageVersionString, toLabel } from '@blockframes/model';
+import { festival, App, Movie, smartJoin, displayName } from '@blockframes/model';
+import { toLabel } from '@blockframes/model';
 import { Response } from 'firebase-functions';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { PdfRequest } from '@blockframes/utils/pdf/pdf.interfaces';
@@ -8,18 +8,29 @@ import { getDocument } from '@blockframes/firebase-utils';
 
 interface PdfTitleData {
   title: string;
+  contentType: string;
+  genres: string;
+  releaseYear: number;
+  episodeCount: number;
+  originCountries: string;
+  format: string;
+  runningTime: number;
   synopsis: string;
   posterUrl: string;
+  cast: string;
   version: {
     original: string;
     isOriginalVersionAvailable: boolean;
-    languages: string;
+    subtitles: string;
+    dubs: string;
   };
   links: {
     title: string;
     trailer: string;
+    avails: string;
   };
   prizes: { name: string; prize: string; year: number; premiere: string }[];
+  certifications: { desc: string; flag: string; }[]
 }
 
 const appLogo: Partial<Record<App, string>> = {
@@ -51,6 +62,11 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
   const docs = await Promise.all(promises);
   const titles = docs.filter((m) => !!m);
 
+  const [fs, path] = await Promise.all([import('fs'), import('path')]);
+
+  const europeFlag = fs.readFileSync(path.resolve(`assets/images/europe.svg`), 'utf8');
+  const franceFlag = fs.readFileSync(path.resolve(`assets/images/france.svg`), 'utf8');
+
   const data: PdfTitleData[] = titles.map((m) => {
     const prizes = m.prizes.concat(m.customPrizes).map((p) => ({
       name: (festival[p.name] ? festival[p.name] : p.name).toUpperCase(),
@@ -63,31 +79,64 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
       toLabel(m.genres, 'genres'),
       m.customGenres ? m.customGenres.join(', ') : '',
     ].filter((g) => g);
-    const hasPublicVideos = m.promotional.videos.otherVideos?.some(
-      (video) => video.storagePath && video.privacy === 'public'
-    );
+
+    const hasOtherVideos = m.promotional.videos.otherVideos?.some(v => v.storagePath && v.privacy === 'public');
+    const hasPublicScreener = app === 'catalog' && m.promotional.videos.publicScreener?.jwPlayerId;
+    const hasPublicVideos = hasOtherVideos || hasPublicScreener;
+
     const title = `${appUrl}/c/o/marketplace/title/${m.id}/main`;
-    return {
+
+    const subtitles = Object.entries(m.languages)
+      .map(([language, specs]) => {
+        if (specs.subtitle) return language;
+      }).filter(s => s);
+
+    const dubs = Object.entries(m.languages)
+      .map(([language, specs]) => {
+        if (specs.dubbed) return language;
+      }).filter(d => d);
+
+    const pdfTitle: PdfTitleData = {
       title: m.title.international,
       contentType: toLabel(m.contentType, 'contentType'),
       genres: genres.join(', '),
       releaseYear: m.release.year,
       episodeCount: m.runningTime.episodeCount,
       originCountries: toLabel(m.originCountries, 'territories'),
+      format: toLabel(m.format, 'movieFormat'),
       runningTime: m.runningTime.time,
       synopsis: m.synopsis,
       posterUrl: m.poster?.storagePath ? getImgIxResourceUrl(m.poster, { h: 240, w: 180 }) : '',
+      cast: smartJoin(m.cast.slice(0, 3).map(person => displayName(person))),
       version: {
         original: toLabel(m.originalLanguages, 'languages', ', ', ' & '),
         isOriginalVersionAvailable: m.isOriginalVersionAvailable,
-        languages: toLanguageVersionString(m.languages),
+        subtitles: toLabel(subtitles, 'languages', ', ', ' & '),
+        dubs: toLabel(dubs, 'languages', ', ', ' & '),
       },
       links: {
         title,
         trailer: hasPublicVideos ? `${title}#trailer` : '',
+        avails: app ==='catalog' ? 'TODO' : '',
       },
       prizes,
+      certifications: []
     };
+
+    if (m.certifications.some(c => c === 'eof')) {
+      pdfTitle.certifications.push({
+        desc: toLabel('eof', 'certifications'),
+        flag: `data:image/svg+xml;utf8,${encodeURIComponent(franceFlag)}`,
+      });
+    }
+
+    if (m.certifications.some(c => c === 'europeanQualification')) {
+      pdfTitle.certifications.push({
+        desc: toLabel('europeanQualification', 'certifications'),
+        flag: `data:image/svg+xml;utf8,${encodeURIComponent(europeFlag)}`,
+      });
+    }
+    return pdfTitle;
   });
 
   const buffer = await generate('titles', app, data, pageTitle);

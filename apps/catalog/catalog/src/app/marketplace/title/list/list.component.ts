@@ -177,24 +177,24 @@ export class ListComponent implements OnDestroy, OnInit {
   async export(movies: AlgoliaMovie[]) {
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
-    const pageTitle = this.createPdfTitle()
+    const pageTitle = this.createPdfTitle();
     await this.pdfService.download(movies.map(m => m.objectID), pageTitle);
     snackbarRef.dismiss();
     this.exporting = false;
   }
 
-  createPdfTitle() {
+  private createPdfTitle() {
     const searchForm = this.searchForm.value;
     const availForm = this.availsForm.value;
     const appTitle = 'Archipel Content Library';
-    const territories = availForm.territories.map(t => toLabel(t, 'territories')).join(', ');
-    const rights = availForm.medias.map(m => toLabel(m, 'medias')).join(', ');
-    const avails = `Avails for ${trimString(territories, 50, true)} in ${trimString(rights, 50, true)}` 
+    const territories = toLabel(availForm.territories, 'territories');
+    const rights = toLabel(availForm.medias, 'medias'); // TODO #8828 exlcude TV (main category)
+    const avails = territories && rights ? `Avails for ${trimString(territories, 50, true)} in ${trimString(rights, 50, true)}` : '';
     const contentType = toLabel(searchForm.contentType, 'contentType');
-    const genres = searchForm.genres.map(g => toLabel(g, 'genres')).join('/');
-    return [appTitle, avails, contentType, genres].filter(Boolean).join(" - ");
+    const genres = toLabel(searchForm.genres, 'genres');
+    return [appTitle, avails, contentType, genres].filter(s => s).join(' - ');
   }
-  
+
   load(parsedData: { search: MovieSearch, avails: AvailsFilter }) {
     // Search Form
     const languages = this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>;

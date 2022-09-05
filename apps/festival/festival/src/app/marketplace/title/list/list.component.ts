@@ -112,20 +112,21 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async export(movies: AlgoliaMovie[]) {
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
-    const pageTitle = this.createPdfTitle();
     this.exporting = true;
+    const pageTitle = this.createPdfTitle();
     await this.pdfService.download(movies.map(m => m.objectID), pageTitle);
     snackbarRef.dismiss();
     this.exporting = false;
   }
 
-  createPdfTitle() {
+  private createPdfTitle() {
     const searchForm = this.searchForm.value;
     const appTitle = 'Archipel Market Library';
-    const genres = searchForm.genres.map(g => toLabel(g, 'genres')).join('/');
-    const countries = searchForm.originCountries.map(t => toLabel(t, 'territories')).join('/');
-    return [appTitle, genres, countries].filter(Boolean).join(" - ");
+    const genres = toLabel(searchForm.genres, 'genres');
+    const countries = toLabel(searchForm.originCountries, 'territories');
+    return [appTitle, genres, countries].filter(s => s).join(' - ');
   }
+
   load(parsedData: MovieSearch) {
     if (parsedData && Object.keys(parsedData).length) this.searchForm.hardReset(parsedData);
   }
