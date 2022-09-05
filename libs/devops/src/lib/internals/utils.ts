@@ -65,10 +65,6 @@ const userMap: Partial<Record<Collections, string[]>> = {
   ],
   permissions: [
     'roles{}',
-    'canCreate',
-    'canRead',
-    'canUpdate',
-    'canDelete',
   ],
   blockframesAdmin: [''], // document id
   events: [
@@ -93,7 +89,9 @@ const orgMap: Partial<Record<Collections, string[]>> = {
   ],
   invitations: [
     'fromOrg.id',
-    'toOrg.id'
+    'toOrg.id',
+    'toUser.orgId',
+    'fromUser.orgId'
   ],
   contracts: [
     'buyerId',
@@ -265,7 +263,6 @@ function printInconsistency(inconsistency: ConsistencyError) {
   console.log(`Missing ${auditedCollection} in ${foundIn.collection}/${foundIn.docId}/${foundIn.field}.${missingDocId}`);
 }
 
-
 function getCandidates(document: FirebaseFirestore.DocumentData, _field: string): string[] {
   const [field, fieldSuffix] = _field.split('[].');
 
@@ -280,8 +277,11 @@ function getCandidates(document: FirebaseFirestore.DocumentData, _field: string)
     if (!Array.isArray(val)) val = [val];
     if (!val.length) return [];
 
-    return val.map(entry => {
-      const idToFind = isString(entry) ? entry : getValue(entry, fieldSuffix);
+    return val.filter(entry => {
+      if (!entry) console.log(`Undefined or null value for ${document.id} and field ${_field}`);
+      return entry;
+    }).map(entry => {
+      const idToFind = isString(entry) ? entry : getValue(entry, fieldSuffix || '');
       if (!idToFind) console.log('UnHandled error..');
       return idToFind;
     }).filter(d => !!d);

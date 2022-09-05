@@ -24,7 +24,8 @@
 </header>
 
 <section>
-  <analytics-metric-card-list [cards]="aggregatedCards$ | async" selectable (selection)="filter$.next($event)"></analytics-metric-card-list>
+  <analytics-metric-card-list [cards]="aggregatedCards$ | async" selectable (selection)="filter$.next($event)">
+  </analytics-metric-card-list>
 
   <article>
     <header>
@@ -54,8 +55,8 @@
       <ng-template colRef label="In wishlist" let-wishlist sort>
         {{ inWishlist(wishlist) ? 'Yes' : '-' }}
       </ng-template>
-      <ng-template colRef="promoReelOpened" label="Video Plays" let-videoPlays sort>
-        {{ videoPlays }}
+      <ng-template colRef="promoElementOpened" label="Promo Elements Opened" let-promoElementOpened sort>
+        {{ promoElementOpened }}
       </ng-template>
       <ng-template colRef="screeningRequested" label="Screening Requests" let-screeningRequested sort>
         {{ screeningRequested }}
@@ -79,7 +80,7 @@
 
   <ng-container *ngIf="hasInvitations$ | async">
     <article>
-      <h3>Screenings Buyer has participated</h3>
+      <h3>Screenings Buyer has interacted with</h3>
       <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
     </article>
 
@@ -113,7 +114,12 @@
         <ng-template colRef="watchInfos.date" label="Watching Status" let-date sort>
           <bf-tag *ngIf="date | isWatchingNow">Watching Now</bf-tag>
         </ng-template>
+        <ng-template colRef="event.id" label="Action" let-id sticky>
+          <a mat-icon-button [routerLink]="['/c/o/dashboard/event', id,'edit', 'statistics']">
+            <mat-icon svgIcon="visibility"></mat-icon>
+          </a>
+        </ng-template>
       </bf-table>
     </article>
-</ng-container>
+  </ng-container>
 </section>

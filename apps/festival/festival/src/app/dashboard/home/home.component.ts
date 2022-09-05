@@ -121,7 +121,7 @@ export class HomeComponent {
   interactions: EventName[] = [
     'addedToWishlist',
     'askingPriceRequested',
-    'promoReelOpened',
+    'promoElementOpened',
     'screeningRequested',
   ];
 

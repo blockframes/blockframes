@@ -52,7 +52,7 @@ export class ListComponent implements OnInit, OnDestroy {
       switchMap(ids => ids.length ? this.service.valueChanges(ids) : of([])),
     ).subscribe(orgs => {
       if (this.loadMoreToggle) {
-        this.orgResultsState.next(this.orgResultsState.value.concat(orgs))
+        this.orgResultsState.next(this.orgResultsState.value.concat(orgs));
         this.loadMoreToggle = false;
       } else {
         this.orgResultsState.next(orgs);
@@ -74,11 +74,6 @@ export class ListComponent implements OnInit, OnDestroy {
     this.loadMoreToggle = true;
     this.searchForm.page.setValue(this.searchForm.page.value + 1);
     await this.searchForm.search();
-  }
-
-  clear() {
-    const initial = createOrganizationSearch();
-    this.searchForm.reset(initial);
   }
 
   ngOnDestroy() {

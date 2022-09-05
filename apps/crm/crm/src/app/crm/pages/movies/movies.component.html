@@ -1,13 +1,22 @@
 <main fxLayout="column">
   <crm-bread-crumb></crm-bread-crumb>
   <ng-container *ngIf="movies$ | async as movies; else loading">
-    <article fxLayout="column" fxLayoutAlign="center center">
+    <article>
       <button [disabled]="exporting" mat-flat-button color="primary" (click)="exportTable(movies)">
         <ng-container *ngIf="exporting else export">
           <span>Generating CSV...</span>
         </ng-container>
         <ng-template #export>
-          <span>Export to CSV</span>
+          <span>Export Movies to CSV</span>
+          <mat-icon svgIcon="arrow_upward"></mat-icon>
+        </ng-template>
+      </button>
+      <button [disabled]="exportingAnalytics" mat-flat-button color="primary" (click)="exportTitleAnalytics(movies)">
+        <ng-container *ngIf="exportingAnalytics else exportAnalytics">
+          <span>Generating CSV...</span>
+        </ng-container>
+        <ng-template #exportAnalytics>
+          <span>Export Analytics to CSV</span>
           <mat-icon svgIcon="arrow_upward"></mat-icon>
         </ng-template>
       </button>
@@ -44,11 +53,32 @@
       <ng-template colRef="app.financiers.status" label="Financiers Status" sort let-status>
         <bf-tag>{{ status }}</bf-tag>
       </ng-template>
+      <ng-template colRef="keywords" label="Keywords" let-keywords>
+        <span [matTooltip]="keywords | join">
+          {{ keywords | join | maxLength:30 }}
+        </span>
+      </ng-template>
+      <ng-template colRef="promotional.videos" label="Has Screener" let-videos>
+        <bf-tag> {{ videos.publicScreener.docId || videos.screener.docId ? 'Yes' : 'No'}} </bf-tag>
+      </ng-template>
+      <ng-template colRef="poster.docId" label="Has Poster" let-docId>
+        <bf-tag> {{ docId ? 'Yes' : 'No'}} </bf-tag>
+      </ng-template>
+      <ng-template colRef="mandate.id" label="Has Avail" let-mandateId>
+        <bf-tag> {{ mandateId ? 'Yes' : 'No'}} </bf-tag>
+      </ng-template>
+      <ng-template colRef="certifications" label="Prizes" let-title="item">
+        <span> {{ title.prizes.length ?? title.customPrizes.length ?? '-' }} </span>
+      </ng-template>
+      <ng-template colRef="certifications" label="Certifications" let-certifications>
+        <span> {{ certifications.length ?? '-'}} </span>
+      </ng-template>
+      <ng-template colRef="releaseMedias" label="Release Medias" let-releaseMedias>
+        <span [matTooltip]="releaseMedias | join"> {{ releaseMedias | join | maxLength: 30 }} </span>
+      </ng-template>
     </bf-table>
   </ng-container>
   <ng-template #loading>
     ...loading movies
   </ng-template>
 </main>
-
-

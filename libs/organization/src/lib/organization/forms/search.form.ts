@@ -1,14 +1,18 @@
 // Blockframes
 import { FormEntity, FormList } from '@blockframes/utils/form';
-import { Organization, Territory, AlgoliaSearch, App, Module } from '@blockframes/model';
+import { Organization, Territory, AlgoliaSearch, App, modules } from '@blockframes/model';
 
 // Utils
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { algolia } from '@env';
 import { FormControl } from '@angular/forms';
 
+const negativeModules = ['-dashboard', '-marketplace'] as const;
+const algoliaModules = [...modules, ...negativeModules];
+type AlgoliaModule = typeof algoliaModules[number];
+
 export interface OrganizationSearch extends AlgoliaSearch {
-  appModule: Module[],
+  appModule: AlgoliaModule[],
   isAccepted: boolean,
   hasAcceptedMovies: boolean,
   countries?: Territory[],
@@ -61,12 +65,13 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
   get hasAcceptedMovies() { return this.get('hasAcceptedMovies') }
 
   search() {
+    const appModule: string[] = this.appModule.value.map((module: AlgoliaModule) => `appModule:${module}`);
     return this.organizationIndex.search<Organization>(this.query.value, {
       hitsPerPage: this.hitsPerPage.value,
       page: this.page.value,
       facetFilters: [
         this.countries.value.map(country => `country:${country}`),
-        [`appModule:${this.appModule.value}`],
+        ...appModule,
         [`isAccepted:${this.isAccepted.value}`],
         [`hasAcceptedMovies:${this.hasAcceptedMovies.value}`]
       ]

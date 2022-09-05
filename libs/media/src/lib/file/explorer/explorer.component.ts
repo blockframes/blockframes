@@ -4,7 +4,7 @@ import { FirestoreService } from 'ngfire';
 
 // Blockframes
 import { MovieService } from '@blockframes/movie/service';
-import { createStorageFile, Organization, App } from '@blockframes/model';
+import { createStorageFile, Organization, App, getAllAppsExcept } from '@blockframes/model';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { getFileMetadata } from '@blockframes/media/utils';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -71,16 +71,19 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    const query = [
-      where('orgIds', 'array-contains', this.org.id),
-      where(`app.${this.app}.access`, '==', true)
-    ]
+    const query = [where('orgIds', 'array-contains', this.org.id)];
+
+    if (this.app !== 'crm') {
+      query.push(where(`app.${this.app}.access`, '==', true));
+    }
+
+    const apps = this.app === 'crm' ? getAllAppsExcept(['crm']) : [this.app];
 
     const { directory } = this.route.snapshot.queryParams;
     if (directory) this.next(directory);
 
     const titles$ = this.movieService.valueChanges(query).pipe(
-      map(titles => titles.filter(t => t.app[this.app].status !== 'archived')),
+      map(titles => titles.filter(t => apps.some(app => t.app[app]?.status !== 'archived'))),
       map(titles => titles.sort((movieA, movieB) => movieA.title.international < movieB.title.international ? -1 : 1)),
     );
 
@@ -88,7 +91,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
       this.org$.asObservable(),
       titles$
     ]).pipe(
-      map(([org, titles]) => getDirectories(org, titles)),
+      map(([org, titles]) => getDirectories(org, titles, this.app))
     );
   }
 

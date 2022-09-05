@@ -4,7 +4,7 @@
     <h3>Videos</h3>
     <section>
       <p>Upload videos such as a trailer, teaser, promo reel, etc.</p>
-      <bf-form-list [form]="videoList" listPosition="bottom" keepFormOpen reverseList>
+      <bf-form-list [form]="videoList" listPosition="bottom" keepFormOpen reverseList (removed)="removeFromQueue($event)">
         <ng-template itemRef let-video>
           {{ video.type | toLabel: 'hostedVideoTypes' }} - {{ video.title }} - {{ (video.storagePath | fileName) }}
         </ng-template>
@@ -34,18 +34,6 @@
           </article>
         </ng-template>
       </bf-form-list>
-    </section>
-
-    <mat-divider class="thick"></mat-divider>
-
-    <h3>Screener</h3>
-    <section>
-      <p>The screener is the full video of this title, it will be used for virtual screenings.</p>
-      <file-uploader [form]="screenerForm" [meta]="['movies', 'screener', movieId]" accept="video" listenToChanges>
-        <h3 title>Upload Screener</h3>
-      </file-uploader>
-      <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong>
-        outside your organization unless you explicitly invite them to a virtual screening.</p>
     </section>
 
     <mat-divider class="thick"></mat-divider>

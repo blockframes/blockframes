@@ -5,10 +5,11 @@ import {
   ViewChild,
   ElementRef,
   OnInit,
+  Inject,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
-import { StorageFile, Movie } from '@blockframes/model';
+import { StorageFile, Movie, App } from '@blockframes/model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { RouteDescription } from '@blockframes/model';
 import { FileListPreviewComponent } from '@blockframes/media/file/preview-list/preview-list.component';
@@ -19,6 +20,7 @@ import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'title-marketplace-shell',
@@ -43,7 +45,8 @@ export class TitleMarketplaceShellComponent implements OnInit {
     private route: ActivatedRoute,
     public router: Router,
     private analytics: AnalyticsService,
-    private breakpoint: BreakpointsService
+    private breakpoint: BreakpointsService,
+    @Inject(APP) public currentApp: App
   ) { }
 
   ngOnInit() {
@@ -72,7 +75,10 @@ export class TitleMarketplaceShellComponent implements OnInit {
     return outlet?.activatedRouteData?.animation;
   }
 
-  fullscreen(refs: StorageFile[], index: number) {
+  fullscreen(title: Movie, index: number) {
+    const refs = title.promotional.still_photo;
+    this.promotionalElementOpened(title);
+
     this.dialog.open(FileListPreviewComponent, {
       data: createModalData({ refs, index }, 'large'),
       autoFocus: false
@@ -80,13 +86,17 @@ export class TitleMarketplaceShellComponent implements OnInit {
   }
 
   hasPublicVideos(movie: Movie) {
-    return movie.promotional.videos.otherVideos.some((video) => video.privacy === 'public');
+    return movie.promotional.videos.otherVideos.some((video) => video.privacy === 'public') || movie.promotional.videos.publicScreener?.storagePath;
   }
 
   videoStateChanged(title: Movie, event: string) {
     if (event === 'play' && !this.alreadyPlayed) {
-      this.analytics.addTitle('promoReelOpened', title);
+      this.promotionalElementOpened(title);
       this.alreadyPlayed = true;
     }
+  }
+
+  promotionalElementOpened(title: Movie) {
+    this.analytics.addTitle('promoElementOpened', title);
   }
 }

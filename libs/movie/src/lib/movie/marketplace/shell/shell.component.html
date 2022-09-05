@@ -46,28 +46,28 @@
       <ul class="grid">
         <li class="surface" *ngIf="!!movie.delivery?.file.storagePath">
           <img asset="delivery_list.svg" alt="file with gears" />
-          <a mat-button [href]="movie.delivery.file| getUrl | async" target="_blank">
+          <a mat-button [href]="movie.delivery.file| getUrl | async" target="_blank" (click)="promotionalElementOpened(movie)">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Available Materials</span>
           </a>
         </li>
         <li class="surface" *ngIf="!!movie.promotional.presentation_deck.storagePath">
           <img asset="deck.svg" />
-          <a mat-button [href]="movie.promotional.presentation_deck | getUrl | async" target="_blank">
+          <a mat-button [href]="movie.promotional.presentation_deck | getUrl | async" target="_blank" (click)="promotionalElementOpened(movie)">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Presentation Deck</span>
           </a>
         </li>
         <li class="surface" *ngIf="!!movie.promotional.scenario.storagePath">
           <img asset="scenario.svg" />
-          <a mat-button [href]="movie.promotional.scenario | getUrl | async" target="_blank">
+          <a mat-button [href]="movie.promotional.scenario | getUrl | async" target="_blank" (click)="promotionalElementOpened(movie)">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Script</span>
           </a>
         </li>
         <li class="surface" *ngIf="!!movie.promotional.moodboard.storagePath">
           <img asset="moodboard.svg" />
-          <a mat-button [href]="movie.promotional.moodboard | getUrl | async" target="_blank">
+          <a mat-button [href]="movie.promotional.moodboard | getUrl | async" target="_blank" (click)="promotionalElementOpened(movie)">
             <mat-icon svgIcon="cloud_download"></mat-icon>
             <span>Moodboard</span>
           </a>
@@ -80,7 +80,7 @@
       <bf-carousel [columns]="{ gtMd: 3, md: 2, sm: 2, xs: 1 }">
         <ng-container *ngFor="let photo of movie.promotional.still_photo; let i = index">
           <ng-template carouselItem>
-            <img [ref]="photo" asset="empty_still_photo.svg" loading="eager" (click)="fullscreen(movie.promotional.still_photo, i)">
+            <img [ref]="photo" asset="empty_still_photo.svg" loading="eager" (click)="fullscreen(movie, i)">
           </ng-template>
         </ng-container>
       </bf-carousel>
@@ -89,6 +89,12 @@
     <article *ngIf="hasPublicVideos(movie)" id="videoFooter"> <!-- id videoFooter is used for promotional links -->
       <h2>Videos</h2>
       <ul class="videos">
+        <ng-container *ngIf="currentApp === 'catalog' && movie.promotional.videos.publicScreener?.storagePath">
+          <li *ngIf="movie.promotional.videos.publicScreener as video">
+            <video-viewer [ref]="video" *ngIf="video.jwPlayerId" (stateChange)="videoStateChanged(movie, $event)"></video-viewer>
+            <p>Screener</p>
+          </li>
+        </ng-container>
         <ng-container *ngFor="let video of movie.promotional.videos.otherVideos">
           <li *ngIf="video.privacy === 'public'">
             <video-viewer [ref]="video" *ngIf="video.jwPlayerId" (stateChange)="videoStateChanged(movie, $event)"></video-viewer>

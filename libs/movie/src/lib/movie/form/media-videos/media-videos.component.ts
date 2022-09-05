@@ -3,10 +3,12 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { MovieService } from '../../service';
-import { getFileMetadata } from '@blockframes/media/utils';
+import { getFileMetadata, getFileStoragePath } from '@blockframes/media/utils';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { Subscription } from 'rxjs';
 import { MovieVideo } from '@blockframes/model';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
+import { getFileListIndex } from '@blockframes/media/file/pipes/file-list.pipe';
 
 @Component({
   selector: 'movie-form-media-videos',
@@ -24,7 +26,8 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
     private movie: MovieService,
     private shell: MovieFormShellComponent,
     private dynTitle: DynamicTitleService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private uploaderService: FileUploaderService
   ) {}
 
   ngOnInit() {
@@ -45,15 +48,17 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
     return index;
   }
 
-  get screenerForm() {
-    return this.form.promotional.videos.screener;
-  }
-
   get salesPitchForm() {
     return this.form.promotional.videos.salesPitch;
   }
 
   get videoList() {
     return this.form.promotional.videos.otherVideos;
+  }
+
+  removeFromQueue(index: number) {
+    const storagePath = getFileStoragePath('movies', 'otherVideos', this.movieId);
+    const queueIndex = getFileListIndex(index, this.videoList.value);
+    this.uploaderService.removeFromQueue(storagePath, queueIndex);
   }
 }

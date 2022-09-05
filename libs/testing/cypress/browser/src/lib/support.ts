@@ -15,9 +15,9 @@ export function awaitElementDeletion(selector: string, timeout?: number) {
 }
 
 export function acceptCookies() {
-  cy.get('body').then($body => {
+  return cy.get('body').then($body => {
     if ($body.children('cookie-banner')) {
-      cy.contains('Accept Cookies').click();
+      cy.contains('Save preferences').click(); // Accept cookies
     }
   });
 }
@@ -26,31 +26,35 @@ export function get(selector: string) {
   return cy.get(`[test-id="${selector}"]`);
 }
 
-function getAllStartingWith(selector: string) {
+export function getAllStartingWith(selector: string) {
   return cy.get(`[test-id^="${selector}"]`);
 }
 
 export function getInList(selectorStart: string, option: string) {
-  getAllStartingWith(selectorStart).each($el => {
+  return getAllStartingWith(selectorStart).each($el => {
     // loops between all options
     if ($el[0].innerText === option) $el.trigger('click');
   });
 }
 
+export function findIn(parent: string, child: string) {
+  return get(parent).find(`[test-id="${child}"]`);
+}
+
 export function check(selector: string) {
-  get(selector).find('[type="checkbox"]').check({ force: true });
+  return get(selector).find('[type="checkbox"]').check({ force: true });
 }
 
 export function uncheck(selector: string) {
-  get(selector).find('[type="checkbox"]').uncheck({ force: true });
+  return get(selector).find('[type="checkbox"]').uncheck({ force: true });
 }
 
 export function assertUrl(url: string) {
-  cy.url().should('eq', `http://localhost:4200/${url}`);
+  return cy.url().should('eq', `http://localhost:4200/${url}`);
 }
 
 export function assertUrlIncludes(partialUrl: string) {
-  cy.url().should('include', partialUrl);
+  return cy.url().should('include', partialUrl);
 }
 
 interface InterceptOption {
@@ -88,7 +92,7 @@ export function addNewCompany(data: { name: string; activity: OrgActivity; count
   getInList('activity_', activity);
   get('activity').should('contain', activity);
   get('country').click();
-  getInList('country_', country);
+  getInList('option_', country);
   get('country').should('contain', country);
   get('role').contains('Buyer').click();
 }
@@ -114,7 +118,7 @@ export function verifyInvitation(orgAdminEmail: string, user: PublicUser, expect
 //* MAINTENANCE *//
 
 export function refreshIfMaintenance() {
-  cy.get('festival-root').then($el => {
+  return cy.get('festival-root').then($el => {
     const $children = $el.children();
     const childrenTagNames = $children.toArray().map(child => child.tagName);
     if (childrenTagNames.includes('blockframes-maintenance'.toUpperCase())) get('maintenance-refresh').click();

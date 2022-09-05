@@ -263,6 +263,7 @@ jobs:
       - build_deploy_upgrade
   push-anon-db-to-ci:
     executor: blockframes-ci
+    resource_class: xlarge
     steps:
       - prepare_environment
       - run: npm start anonProdDb
@@ -330,6 +331,7 @@ jobs:
           path: dist/cypress/apps
   financiers-e2e:
     executor: blockframes-ci
+    resource_class: xlarge
     environment:
       PROJECT_ID: demo-blockframes
     steps:
@@ -344,6 +346,7 @@ jobs:
           path: dist/cypress/apps
   catalog-e2e:
     executor: blockframes-ci
+    resource_class: xlarge
     environment:
       PROJECT_ID: demo-blockframes
     steps:

@@ -143,9 +143,7 @@ export const events: VanityMetricEvent[] = [
     icon: 'visibility'
   },
   {
-    //#8693 Currently we rename on the ui from promo reels/elements to video plays.
-    //This should be reverted to promo elements once above issue is resolved.
-    name: 'promoReelOpened',
+    name: 'promoElementOpened',
     title: 'Video Plays',
     icon: 'star_fill'
   },

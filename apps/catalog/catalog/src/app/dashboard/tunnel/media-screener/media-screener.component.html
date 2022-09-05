@@ -1,0 +1,13 @@
+<tunnel-page>
+  <ng-container tunnel-form>
+
+    <h3>Screener</h3>
+    <section>
+      <p>This video is the full video of this title. It is public on the marketplace and can be seen by all Buyers on the marketplace. If you do not wish to share it, please contact us at {{ supportEmail }}.</p>
+      <file-uploader [form]="publicScreenerForm" [meta]="['movies', 'publicScreener', movieId]" accept="video" listenToChanges>
+        <h3 title>Upload Screener</h3>
+      </file-uploader>
+    </section>
+
+  </ng-container>
+</tunnel-page>

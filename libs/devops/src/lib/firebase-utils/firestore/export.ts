@@ -1,11 +1,11 @@
+import { getStorage } from '@blockframes/firebase-utils/initialize';
 import { backupBucket, firebase } from '@env';
-import { loadAdminServices } from '@blockframes/firebase-utils';
 import type { Bucket } from '@google-cloud/storage';
 import type { storage } from 'firebase-admin';
 import { runShellCommandExec } from '../commands';
 
 export async function getBackupBucket(gcs?: storage.Storage): Promise<Bucket> {
-  const bucket: Bucket = (gcs || loadAdminServices().storage).bucket(backupBucket);
+  const bucket: Bucket = (gcs || getStorage()).bucket(backupBucket);
   const exists = await bucket.exists();
 
   // The api returns an array.

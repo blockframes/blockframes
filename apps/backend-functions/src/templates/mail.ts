@@ -26,8 +26,11 @@ import {
   getMovieEmailData,
   getNegotiationEmailData,
   getBucketEmailData,
+  Event,
+  EventMeta,
   EventEmailData,
-  EmailTemplateRequest
+  EmailTemplateRequest,
+  displayName
 } from '@blockframes/model';
 import { format } from 'date-fns';
 import { supportMailosaur } from '@blockframes/utils/constants';
@@ -36,6 +39,7 @@ const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
 const ADMIN_ACCEPT_ORG_PATH = '/c/o/dashboard/crm/organization';
 const ADMIN_REVIEW_MOVIE_PATH = '/c/o/dashboard/crm/movie';
+const ADMIN_REVIEW_EVENT_PATH = '/c/o/dashboard/crm/event';
 
 /**
  * This method return the "support" email that should be used regarding the originating app
@@ -56,14 +60,14 @@ function getSupportEmail(app?: App) {
 export function userVerifyEmail(email: string, user: UserEmailData, link: string): EmailTemplateRequest {
   const data = {
     user,
-    pageURL: link
+    pageUrl: link
   };
   return { to: email, templateId: templateIds.user.verifyEmail, data };
 }
 
 export function accountCreationEmail(email: string, link: string, user: UserEmailData): EmailTemplateRequest {
   const data = {
-    pageURL: link,
+    pageUrl: link,
     user
   };
   return { to: email, templateId: templateIds.user.welcomeMessage, data };
@@ -71,7 +75,7 @@ export function accountCreationEmail(email: string, link: string, user: UserEmai
 
 export function userResetPassword(email: string, link: string, app: App): EmailTemplateRequest {
   const data = {
-    pageURL: link
+    pageUrl: link
   };
   const templateId = app === 'crm' ? templateIds.user.resetPasswordFromCRM : templateIds.user.resetPassword;
   return { to: email, templateId, data };
@@ -87,20 +91,20 @@ export function appAccessEmail(email: string, user: UserEmailData): EmailTemplat
  * @param email
  * @param password
  * @param orgName
- * @param pageURL
+ * @param pageUrl
  * @param templateId
  */
 export function userInvite(
   toUser: UserEmailData,
   org: OrgEmailData,
-  pageURL: string = appUrl.market,
+  pageUrl: string = appUrl.market,
   templateId: string = templateIds.user.credentials.joinOrganization,
   event?: EventEmailData
 ): EmailTemplateRequest {
   const data = {
     user: toUser,
     org,
-    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}?code=${encodeURIComponent(toUser.password)}&email=${encodeURIComponent(toUser.email)}`,
+    pageUrl: `${pageUrl}${USER_CREDENTIAL_INVITATION}?code=${encodeURIComponent(toUser.password)}&email=${encodeURIComponent(toUser.email)}`,
     event,
   };
   return { to: toUser.email, templateId, data };
@@ -110,7 +114,7 @@ export function userInvite(
 export function organizationWasAccepted(toUser: UserEmailData, url: string = appUrl.market): EmailTemplateRequest {
   const data = {
     user: toUser,
-    pageURL: `${url}/c/o`
+    pageUrl: `${url}/c/o`
   };
   return { to: toUser.email, templateId: templateIds.org.accepted, data };
 }
@@ -137,7 +141,7 @@ export function organizationAppAccessChanged(toAdmin: UserEmailData, url: string
 /** Send email to an user to inform him that he joined an org */
 export function userJoinedAnOrganization(toUser: UserEmailData, url: string = appUrl.market, org: OrgEmailData,): EmailTemplateRequest {
   const data = {
-    pageURL: `${url}/c/o`,
+    pageUrl: `${url}/c/o`,
     user: toUser,
     org
   };
@@ -158,16 +162,18 @@ export function userJoinedYourOrganization(
   return { to: toUser.email, templateId: templateIds.org.memberAdded, data };
 }
 
-/** Send email to org admin to inform him that an user has left his org */
-export function userLeftYourOrganization(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
-  const data = {
-    user: toAdmin,
-    userSubject,
-    org,
-    pageURL: `${ORG_HOME}${org.id}/view/members`
-  };
-  return { to: toAdmin.email, templateId: templateIds.org.memberRemoved, data };
-}
+/** #8858 this might be reactivated later
+ * Send email to org admin to inform him that an user has left his org
+ * */
+// export function userLeftYourOrganization(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
+//   const data = {
+//     user: toAdmin,
+//     userSubject,
+//     org,
+//     pageUrl: `${ORG_HOME}${org.id}/view/members`
+//   };
+//   return { to: toAdmin.email, templateId: templateIds.org.memberRemoved, data };
+// }
 
 /** Generates a transactional email to let an admin knows that an user requested to join his/her org */
 export function userRequestedToJoinYourOrg(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData, url: string = appUrl.market): EmailTemplateRequest {
@@ -175,7 +181,7 @@ export function userRequestedToJoinYourOrg(toAdmin: UserEmailData, userSubject: 
     user: toAdmin,
     userSubject,
     org,
-    pageURL: `${url}${ORG_HOME}${org.id}/view/members`
+    pageUrl: `${url}${ORG_HOME}${org.id}/view/members`
   };
   return { to: toAdmin.email, templateId: templateIds.request.joinOrganization.created, data };
 }
@@ -192,7 +198,7 @@ export function invitationToEventFromOrg(
     user: toUser,
     org,
     event,
-    pageURL: `${url}/${link}`,
+    pageUrl: `${url}/${link}`,
   };
   return { to: toUser.email, templateId: templateIds.invitation.attendEvent.created, data };
 }
@@ -211,7 +217,6 @@ export function invitationToEventFromOrgUpdated(
     userSubject,
     org: userOrg,
     event,
-    eventUrl: `${appUrl.market}/c/o/dashboard/event/${event.id}`,
     pageUrl: `${appUrl.market}/c/o/marketplace/organization/${orgId}}/title`
   };
   return { to: toAdmin.email, templateId, data };
@@ -231,7 +236,7 @@ export function requestToAttendEventFromUser(
     userSubject,
     org: userOrg,
     event,
-    pageURL: `${url}/${link}`
+    pageUrl: `${url}/${link}`
   };
   return { to: toAdmin.email, templateId: templateIds.request.attendEvent.created, data };
 }
@@ -300,14 +305,14 @@ export function screeningRequestedToSeller(
   toUser: UserEmailData,
   buyer: UserEmailData,
   org: OrgEmailData,
-  movie: Movie,
+  movie: MovieEmailData,
 ): EmailTemplateRequest {
   const data = {
     user: toUser,
     buyer,
     org,
     movie,
-    pageURL: `${appUrl.market}/c/o/dashboard/event/new/edit?titleId=${movie.id}`
+    pageUrl: `${appUrl.market}/c/o/dashboard/event/new/edit?titleId=${movie.id}&requestor=${encodeURIComponent(buyer.email)}`
   };
   return { to: toUser.email, templateId: templateIds.event.screeningRequested, data };
 }
@@ -326,7 +331,7 @@ export function movieAskingPriceRequested(toUser: UserEmailData, fromBuyer: User
     movie,
     territories,
     message,
-    pageURL: `mailto:${fromBuyer.email}?subject=Interest in ${movie.title.international} via Archipel Market`
+    pageUrl: `mailto:${fromBuyer.email}?subject=Interest in ${movie.title.international} via Archipel Market`
   };
   return { to: toUser.email, templateId: templateIds.movie.askingPriceRequested, data };
 }
@@ -338,7 +343,7 @@ export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieE
     orgNames,
     territories,
     message,
-    pageURL: `${appUrl.market}/c/o/marketplace/title/${movie.id}`
+    pageUrl: `${appUrl.market}/c/o/marketplace/title/${movie.id}`
   }
 
   return { to: toUser.email, templateId: templateIds.movie.askingPriceRequestSent, data };
@@ -347,40 +352,31 @@ export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieE
 /** Inform user of org whose movie is being bought */
 export function contractCreatedEmail(
   toUser: UserEmailData, title: Movie, contract: Contract,
-  negotiation: Negotiation, buyerOrg: Organization
+  negotiation: Negotiation, buyerOrg: OrgEmailData
 ): EmailTemplateRequest {
-  const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
+  const pageUrl = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
   const data = {
     user: toUser,
     app: { name: appName.catalog },
     movie: getMovieEmailData(title),
     contract,
     negotiation: getNegotiationEmailData(negotiation),
-    pageURL,
+    pageUrl,
     buyerOrg,
   };
   return { to: toUser.email, templateId: templateIds.contract.created, data };
 }
 
-/** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
-export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: Organization, bucket: Bucket): EmailTemplateRequest {
-  const date = format(new Date(), 'dd MMM, yyyy');
-  const mailBucket = getBucketEmailData(bucket);
-  const data = { org, bucket: mailBucket, user: toUser, baseUrl: appUrl.content, date };
-
-  return { to: supportEmails.catalog, templateId: templateIds.offer.toAdmin, data };
-}
-
 /**To inform buyer that his offer has been successfully created. */
-export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: Organization, offer: Offer, bucket: Bucket): EmailTemplateRequest {
+export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrgEmailData, offer: Offer, bucket: Bucket): EmailTemplateRequest {
   const mailBucket = getBucketEmailData(bucket);
 
-  const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
+  const pageUrl = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
   const data = {
     app: { name: appName.catalog },
     bucket: mailBucket,
     user: toUser,
-    pageURL,
+    pageUrl,
     baseUrl: appUrl.content,
     offer: getOfferEmailData(offer),
     org
@@ -389,16 +385,16 @@ export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 }
 
 export function counterOfferRecipientEmail(
-  toUser: UserEmailData, senderOrg: Organization, offerId: string,
+  toUser: UserEmailData, senderOrg: OrgEmailData, offerId: string,
   title: Movie, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
-  const pageURL = options.isMailRecipientBuyer
+  const pageUrl = options.isMailRecipientBuyer
     ? `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`
     : `${appUrl.content}/c/o/dashboard/sales/${contractId}/view`;
   const data = {
     user: toUser,
     org: senderOrg,
-    pageURL,
+    pageUrl,
     movie: getMovieEmailData(title),
     app: { name: appName.catalog }
   };
@@ -406,34 +402,23 @@ export function counterOfferRecipientEmail(
 }
 
 export function counterOfferSenderEmail(
-  toUser: UserEmailData, org: Organization, offerId: string,
+  toUser: UserEmailData, org: OrgEmailData, offerId: string,
   negotiation: Negotiation, title: Movie, contractId: string, options: { isMailRecipientBuyer: boolean }
 ): EmailTemplateRequest {
-  const pageURL = options.isMailRecipientBuyer
+  const pageUrl = options.isMailRecipientBuyer
     ? `${appUrl.content}/c/o/marketplace/offer/${offerId}/${contractId}`
     : `${appUrl.content}/c/o/dashboard/sales/${contractId}/view`;
 
   const data = {
     user: toUser,
-    pageURL,
+    pageUrl,
     offerId,
     org,
-    contractId,
     app: { name: appName.catalog },
     negotiation: getNegotiationEmailData(negotiation),
     movie: getMovieEmailData(title)
   };
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
-}
-
-export function toAdminCounterOfferEmail(title: Movie, offerId: string): EmailTemplateRequest {
-  const pageURL = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
-
-  const data = {
-    movie: getMovieEmailData(title),
-    pageURL
-  };
-  return { to: supportEmails.catalog, templateId: templateIds.negotiation.toAdminCounterOffer, data };
 }
 
 // #7946 this may be reactivated later
@@ -443,12 +428,12 @@ export function toAdminCounterOfferEmail(title: Movie, offerId: string): EmailTe
 // ): EmailTemplateRequest {
 //   const isOfferAccepted = offer.status === 'accepted';
 //   const acceptedContracts = contracts.filter(contract => contract.status === 'accepted');
-//   const pageURL = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
+//   const pageUrl = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
 //   const data = {
 //     contracts: isOfferAccepted ? acceptedContracts : contracts,
 //     offer,
 //     user,
-//     pageURL,
+//     pageUrl,
 //     app: { name: appName.catalog }
 //   };
 //   // const templateId = isOfferAccepted ? templateIds.offer.allContractsAccepted : templateIds.offer.allContractsDeclined;
@@ -456,13 +441,13 @@ export function toAdminCounterOfferEmail(title: Movie, offerId: string): EmailTe
 // }
 
 // export function offerUnderSignature(
-//   user: UserEmailData, offerId: string, contract: ContractDocument, negotiation: MailContract,
+//   user: UserEmailData, offerId: string, contract: ContractDocument, negotiation: ContractEmailData,
 //   title: string
 // ): EmailTemplateRequest {
-//   const pageURL = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
+//   const pageUrl = `${appUrl.content}/c/o/dashboard/sales/${contract.id}/view`;
 //   const data = {
 //     contract, offerId, user, negotiation,
-//     title, pageURL, app: { name: appName.catalog }
+//     title, pageUrl, app: { name: appName.catalog }
 //   };
 //   const templateId = templateIds.offer.underSignature;
 //   return { to: user.email, templateId, data };
@@ -564,15 +549,73 @@ export function sendContactEmail(userName: string, userMail: string, subject: st
 }
 
 /** Send an email to supportEmails.[app](catalog & MF only) when a movie is submitted*/
-export function sendMovieSubmittedEmail(app: App, movie: Movie) {
+export function sendMovieSubmittedEmail(app: App, movie: Movie, org: Organization) {
+  const orgName = org.name;
+
   return {
     to: getSupportEmail(app),
-    subject: 'A movie has been submitted.',
+    subject: `${movie.title.international} was submitted by ${orgName}`,
     text: `
-    The new movie ${movie.title.international} has been submitted.
+    The new movie ${movie.title.international} was submitted by ${orgName}.
 
     Visit ${appUrl.crm}${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} or go to ${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} to review it.
 
     `
   };
 }
+
+/** Send an email to supportEmails.[app] when a new event is created*/
+export function eventCreatedAdminEmail(app: App, event: Event<EventMeta>) {
+  return {
+    to: getSupportEmail(app),
+    subject: 'A new event has been created.',
+    text: `
+      A new ${event.type} has been created: ${event.title}.
+
+      Visit ${appUrl.crm}${ADMIN_REVIEW_EVENT_PATH}/${event.id} or go to ${ADMIN_REVIEW_EVENT_PATH}/${event.id} to review it.
+    `
+  };
+}
+
+/** Inform Archipel Content admins a new offer has been created*/
+export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrgEmailData) {
+  return {
+    to: supportEmails.catalog,
+    subject: `${org.name} created a new Offer.`,
+    text: `
+      Date: ${format(new Date(), 'dd MMM, yyyy')}
+      Organization name: ${org.name}
+      Buyer name: ${displayName(toUser)}
+      Buyer email: ${toUser.email}
+    `
+  };
+}
+
+export function toAdminCounterOfferEmail(title: Movie, offerId: string) {
+  const pageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
+  return {
+    to: supportEmails.catalog,
+    subject:'Counter offer created',
+    text: `The counter-offer for ${title.title.international} was successfully sent.
+    To review it: ${pageUrl}`
+  };
+}
+
+export function toAdminContractAccepted(title: Movie, pageUrl: string) {
+  return {
+    to: supportEmails.catalog,
+    subject:'Contract accepted',
+    text: `The contract for ${title.title.international} has been accepted.
+    To review it: ${pageUrl}`
+  };
+}
+
+export function toAdminContractDeclined(title: Movie, pageUrl: string) {
+  return {
+    to: supportEmails.catalog,
+    subject:'Contract declined',
+    text: `The contract for ${title.title.international} has been declined.
+    To review it: ${pageUrl}`
+  };
+}
+

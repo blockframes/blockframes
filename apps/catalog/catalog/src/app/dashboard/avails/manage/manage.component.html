@@ -1,0 +1,12 @@
+<button class="arrow_back" mat-icon-button (click)="goBack()">
+  <mat-icon svgIcon="arrow_back" matTooltip="Go back"></mat-icon>
+</button>
+
+<term-form [titleId]="titleId$ | async" [backUrl]="['/c/o/dashboard/avails']">
+  <p>
+    By adding avails to this Title, your Buyers
+    will be able to search for them as soon as Title is published on Marketplace.
+    As well, you will be able to filter them,
+    and show them on the map or calendar.
+  </p>
+</term-form>

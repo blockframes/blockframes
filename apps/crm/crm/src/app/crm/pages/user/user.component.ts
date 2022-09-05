@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User, Organization, Invitation, UserRole, Scope, App, getOrgAppAccess } from '@blockframes/model';
+import { User, Organization, Invitation, UserRole, Scope, App, getOrgAppAccess, AggregatedAnalytic, Analytics, Movie, createAggregatedAnalytic } from '@blockframes/model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
 import { UserService } from '@blockframes/user/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -10,7 +10,7 @@ import { DetailedTermsComponent } from '@blockframes/contract/term/components/de
 import { PermissionsService } from '@blockframes/permissions/service';
 import { EventService } from '@blockframes/event/service';
 import { InvitationService } from '@blockframes/invitation/service';
-import { where } from 'firebase/firestore';
+import { QueryConstraint, where } from 'firebase/firestore';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { joinWith, CallableFunctions } from 'ngfire';
 import { map } from 'rxjs/operators';
@@ -20,6 +20,21 @@ import { AuthService } from '@blockframes/auth/service';
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AnalyticsService } from '@blockframes/analytics/service';
+import { MovieService } from '@blockframes/movie/service';
+
+export function aggregatePerTitle(analytics: (Analytics<'title'> & { title: Movie })[]) {
+  const aggregator: Record<string, AggregatedAnalytic> = {};
+  for (const analytic of analytics) {
+    if (!aggregator[analytic.title.id]) {
+      aggregator[analytic.title.id] = createAggregatedAnalytic({
+        title: analytic.title
+      });
+    };
+    aggregator[analytic.title.id][analytic.name]++;
+  }
+  return Object.values(aggregator);
+}
 
 @Component({
   selector: 'crm-user',
@@ -38,7 +53,8 @@ export class UserComponent implements OnInit {
   public invitations: Observable<Invitation[]>;
   private originalOrgValue: string;
 
-  public dashboardURL: SafeResourceUrl
+  public analytics$: Observable<AggregatedAnalytic[]>
+  public dashboardURL: SafeResourceUrl;
 
   constructor(
     private userService: UserService,
@@ -52,7 +68,9 @@ export class UserComponent implements OnInit {
     private invitationService: InvitationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private functions: CallableFunctions
+    private functions: CallableFunctions,
+    private analyticsService: AnalyticsService,
+    private movieService: MovieService
   ) { }
 
   async ngOnInit() {
@@ -68,6 +86,17 @@ export class UserComponent implements OnInit {
 
       this.userForm = new UserCrmForm(this.user);
       this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
+
+      const query: QueryConstraint[] = [
+        where('type', '==', 'title'),
+        where('meta.uid', '==', this.userId)
+      ];
+      this.analytics$ = this.analyticsService.valueChanges(query).pipe(
+        joinWith({
+          title: (analytic: Analytics<'title'>) => this.movieService.valueChanges(analytic.meta.titleId)
+        }, { shouldAwait: true }),
+        map(aggregatePerTitle)
+      );
 
       this.cdRef.markForCheck();
     });

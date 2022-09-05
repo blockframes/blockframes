@@ -1,6 +1,62 @@
+@import "@angular/flex-layout/mq";
+
 :host {
   position: fixed;
-  bottom: 0;
+  bottom: 20px;
+  right: 20px;
   z-index: 2;
   width: 100%;
+  max-width: 500px;
+
+  .mat-icon-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+
+  img {
+    width: 50px;
+  }
+
+  section, form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    article {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px; 
+
+      label {
+        display: flex;
+        align-items: center;
+      }
+
+      mat-icon {
+        width: 16px;
+      }
+    }
+  }
+
+  section {
+    gap: 16px;
+  }
+
+  footer {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+  }
+}
+
+@include layout-bp(xs) {
+  :host {
+    right: 0;
+  }
+  footer {
+    flex-direction: column;
+  }
 }

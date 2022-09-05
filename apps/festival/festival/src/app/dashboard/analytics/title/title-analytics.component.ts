@@ -52,7 +52,7 @@ export class TitleAnalyticsComponent {
   interactions: EventName[] = [
     'addedToWishlist',
     'askingPriceRequested',
-    'promoReelOpened',
+    'promoElementOpened',
     'screeningRequested',
   ];
 
@@ -209,14 +209,6 @@ export class TitleAnalyticsComponent {
   public viewBuyerActivity(analytic: AggregatedAnalytic) {
     this.router.navigate(
       [`../../buyer/`, analytic.user.uid],
-      { relativeTo: this.route }
-    );
-  }
-
-  public goToBuyer(invitation: Invitation) {
-    const user = getGuest(invitation, 'user');
-    this.router.navigate(
-      [`../../buyer/`, user.uid],
       { relativeTo: this.route }
     );
   }

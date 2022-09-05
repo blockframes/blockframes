@@ -1,4 +1,4 @@
-<header>
+<header id="data-scroll-to-view">
   <h2>{{ title?.title.international }}</h2>
   <mat-form-field appearance="outline">
     <mat-label>Title price</mat-label>
@@ -6,7 +6,7 @@
     <mat-icon matPrefix *ngIf="currency" [svgIcon]="currency"></mat-icon>
   </mat-form-field>
 </header>
-<bf-form-table editOnly [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom" [active]="indexId">
+<bf-form-table editOnly [form]="form.get('terms')" [columns]="termColumns" tablePosition="bottom" [active]="indexId" scrollAnchor="#data-scroll-to-view">
   <!-- Columns -->
   <ng-template colRef="duration.from" let-from>
     {{ from | date:'M/d/y' }}
@@ -21,7 +21,7 @@
   </ng-template>
   <ng-template colRef="medias" let-media>
     <span class="group-label" (click)="openDetails(media, 'medias')">
-      {{ media | toGroupLabel:'medias':'All'| join }}
+      {{ media | toGroupLabel:'medias':'All'| join | maxLength : 50 }}
     </span>
   </ng-template>
   <ng-template colRef="exclusive" let-exclusive>
