@@ -20,7 +20,7 @@ async function camille28062022Contracts() {
   line.push(`titleId`);
   line.push(`type`);
   printCSVline(line);
-  
+
   contracts.forEach(c => {
     line = [];
     line.push(c.id);
@@ -49,14 +49,14 @@ async function camille28062022Terms() {
   line.push(`territories`);
 
   printCSVline(line);
-  
+
   terms.forEach(t => {
     line = [];
     line.push(t.id);
     line.push(t.contractId);
     line.push(t.duration.from.toISOString());
     line.push(t.duration.to.toISOString());
-    line.push(t.exclusive ? 'yes': 'no');
+    line.push(t.exclusive ? 'yes' : 'no');
     line.push(t.medias.join(' '));
     line.push(t.territories.join(' '));
 
@@ -82,9 +82,18 @@ async function vincent1602022() {
   const moviesOnCatalog = movies.filter(m => m.app.catalog.access === true);
   console.log(`--------- Movies on catalog with "app.catalog.access === true" : ${moviesOnCatalog.length}`);
 
-  // No video
-  const noVideo = moviesOnCatalog.filter(m => !m.promotional?.videos?.otherVideos || m.promotional.videos.otherVideos.length === 0);
-  logData('No video (empty promotional.videos.otherVideos)', noVideo);
+  // No videos
+  const noScreener = moviesOnCatalog.filter(m => !m.promotional?.videos?.screener?.jwPlayerId);
+  logData('No screener', noScreener);
+
+  const noPublicScreener = moviesOnCatalog.filter(m => !m.promotional?.videos?.publicScreener?.jwPlayerId);
+  logData('No publicScreener', noPublicScreener);
+
+  const salesPitch = moviesOnCatalog.filter(m => !m.promotional?.videos?.salesPitch?.jwPlayerId);
+  logData('No salesPitch', salesPitch);
+
+  const noOtherVideos = moviesOnCatalog.filter(m => !m.promotional?.videos?.otherVideos?.some(o => !!o.jwPlayerId));
+  logData('No otherVideos', noOtherVideos);
 
   // No poster
   const noPosterAC = moviesOnCatalog.filter(m => !m.poster.storagePath);
