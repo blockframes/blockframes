@@ -29,7 +29,8 @@ import {
   Event,
   EventMeta,
   EventEmailData,
-  EmailTemplateRequest
+  EmailTemplateRequest,
+  displayName
 } from '@blockframes/model';
 import { format } from 'date-fns';
 import { supportMailosaur } from '@blockframes/utils/constants';
@@ -161,16 +162,18 @@ export function userJoinedYourOrganization(
   return { to: toUser.email, templateId: templateIds.org.memberAdded, data };
 }
 
-/** Send email to org admin to inform him that an user has left his org */
-export function userLeftYourOrganization(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
-  const data = {
-    user: toAdmin,
-    userSubject,
-    org,
-    pageUrl: `${ORG_HOME}${org.id}/view/members`
-  };
-  return { to: toAdmin.email, templateId: templateIds.org.memberRemoved, data };
-}
+/** #8858 this might be reactivated later
+ * Send email to org admin to inform him that an user has left his org
+ * */
+// export function userLeftYourOrganization(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData): EmailTemplateRequest {
+//   const data = {
+//     user: toAdmin,
+//     userSubject,
+//     org,
+//     pageUrl: `${ORG_HOME}${org.id}/view/members`
+//   };
+//   return { to: toAdmin.email, templateId: templateIds.org.memberRemoved, data };
+// }
 
 /** Generates a transactional email to let an admin knows that an user requested to join his/her org */
 export function userRequestedToJoinYourOrg(toAdmin: UserEmailData, userSubject: UserEmailData, org: OrgEmailData, url: string = appUrl.market): EmailTemplateRequest {
@@ -309,7 +312,7 @@ export function screeningRequestedToSeller(
     buyer,
     org,
     movie,
-    pageUrl: `${appUrl.market}/c/o/dashboard/event/new/edit?titleId=${movie.id}`
+    pageUrl: `${appUrl.market}/c/o/dashboard/event/new/edit?titleId=${movie.id}&requestor=${encodeURIComponent(buyer.email)}`
   };
   return { to: toUser.email, templateId: templateIds.event.screeningRequested, data };
 }
@@ -364,15 +367,6 @@ export function contractCreatedEmail(
   return { to: toUser.email, templateId: templateIds.contract.created, data };
 }
 
-/** Template for admins. It is to inform admins of Archipel Content a new offer has been created with titles, prices, etc in the template */
-export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrgEmailData, bucket: Bucket): EmailTemplateRequest {
-  const date = format(new Date(), 'dd MMM, yyyy');
-  const mailBucket = getBucketEmailData(bucket);
-  const data = { org, bucket: mailBucket, user: toUser, baseUrl: appUrl.content, date };
-
-  return { to: supportEmails.catalog, templateId: templateIds.offer.toAdmin, data };
-}
-
 /**To inform buyer that his offer has been successfully created. */
 export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrgEmailData, offer: Offer, bucket: Bucket): EmailTemplateRequest {
   const mailBucket = getBucketEmailData(bucket);
@@ -425,16 +419,6 @@ export function counterOfferSenderEmail(
     movie: getMovieEmailData(title)
   };
   return { to: toUser.email, templateId: templateIds.negotiation.createdCounterOffer, data };
-}
-
-export function toAdminCounterOfferEmail(title: Movie, offerId: string): EmailTemplateRequest {
-  const pageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
-
-  const data = {
-    movie: getMovieEmailData(title),
-    pageUrl
-  };
-  return { to: supportEmails.catalog, templateId: templateIds.negotiation.toAdminCounterOffer, data };
 }
 
 // #7946 this may be reactivated later
@@ -565,12 +549,14 @@ export function sendContactEmail(userName: string, userMail: string, subject: st
 }
 
 /** Send an email to supportEmails.[app](catalog & MF only) when a movie is submitted*/
-export function sendMovieSubmittedEmail(app: App, movie: Movie) {
+export function sendMovieSubmittedEmail(app: App, movie: Movie, org: Organization) {
+  const orgName = org.name;
+
   return {
     to: getSupportEmail(app),
-    subject: 'A movie has been submitted.',
+    subject: `${movie.title.international} was submitted by ${orgName}`,
     text: `
-    The new movie ${movie.title.international} has been submitted.
+    The new movie ${movie.title.international} was submitted by ${orgName}.
 
     Visit ${appUrl.crm}${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} or go to ${ADMIN_REVIEW_MOVIE_PATH}/${movie.id} to review it.
 
@@ -590,3 +576,46 @@ export function eventCreatedAdminEmail(app: App, event: Event<EventMeta>) {
     `
   };
 }
+
+/** Inform Archipel Content admins a new offer has been created*/
+export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrgEmailData) {
+  return {
+    to: supportEmails.catalog,
+    subject: `${org.name} created a new Offer.`,
+    text: `
+      Date: ${format(new Date(), 'dd MMM, yyyy')}
+      Organization name: ${org.name}
+      Buyer name: ${displayName(toUser)}
+      Buyer email: ${toUser.email}
+    `
+  };
+}
+
+export function toAdminCounterOfferEmail(title: Movie, offerId: string) {
+  const pageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
+  return {
+    to: supportEmails.catalog,
+    subject:'Counter offer created',
+    text: `The counter-offer for ${title.title.international} was successfully sent.
+    To review it: ${pageUrl}`
+  };
+}
+
+export function toAdminContractAccepted(title: Movie, pageUrl: string) {
+  return {
+    to: supportEmails.catalog,
+    subject:'Contract accepted',
+    text: `The contract for ${title.title.international} has been accepted.
+    To review it: ${pageUrl}`
+  };
+}
+
+export function toAdminContractDeclined(title: Movie, pageUrl: string) {
+  return {
+    to: supportEmails.catalog,
+    subject:'Contract declined',
+    text: `The contract for ${title.title.international} has been declined.
+    To review it: ${pageUrl}`
+  };
+}
+

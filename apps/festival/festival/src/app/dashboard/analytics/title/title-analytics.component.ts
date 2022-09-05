@@ -52,7 +52,7 @@ export class TitleAnalyticsComponent {
   interactions: EventName[] = [
     'addedToWishlist',
     'askingPriceRequested',
-    'promoReelOpened',
+    'promoElementOpened',
     'screeningRequested',
   ];
 

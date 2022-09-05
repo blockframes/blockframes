@@ -13,7 +13,7 @@
 
               <ng-container *ngIf="fromUser">
                 <p matLine fxLayout="row wrap" fxLayoutGap="6px">
-                  <a [href]="'mailto:' + fromUser.email">{{ fromUser | displayUser | async }}</a> 
+                  <a [href]="'mailto:' + fromUser.email">{{ fromUser | displayUser | async }}</a>
                   <span>
                     invited you to {{ event.type | toLabel:'eventTypes' }}
                     <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i/lobby']" id="link">{{ event.title }}</a>
@@ -40,7 +40,7 @@
 
               <ng-container *ngIf="fromUser">
                 <p matLine fxLayout="row wrap" fxLayoutGap="6px">
-                  <a [href]="'mailto:' + fromUser.email">{{ fromUser | displayUser | async }}</a> 
+                  <a [href]="'mailto:' + fromUser.email">{{ fromUser | displayUser | async }}</a>
                   <span>
                     would like to attend {{ event.type | toLabel:'eventTypes' }}
                     <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i']" id="link">{{ event.title }}</a>
@@ -52,7 +52,7 @@
             </ng-container>
             <ng-template #requestScreening>
               <p matLine fxLayout="row wrap" fxLayoutGap="6px">
-                <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a> 
+                <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a>
                 <span>
                   would like to attend {{ event.type | toLabel:'eventTypes' }}
                   <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i']" id="link">{{ event.title }}</a>.
@@ -64,12 +64,9 @@
         </ng-container>
       </ng-container>
       <ng-container *ngSwitchCase="'joinOrganization'">
-        <ng-container *ngIf="_invitation.mode === 'invitation'; else request">
-          {{ _invitation.fromOrg.name }} invited you to join the organization.
-        </ng-container>
-        <ng-template #request>
+        <ng-container *ngIf="_invitation.mode !== 'invitation'">
           {{ _invitation.fromUser | displayName }} wants to join your organization.
-        </ng-template>
+        </ng-container>
       </ng-container>
     </ng-container>
   </div>

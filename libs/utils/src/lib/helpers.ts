@@ -79,7 +79,16 @@ export function downloadCsvFromJson(data: unknown[], fileName = 'my-file') {
   const replacer = (_: unknown, value: unknown) => (value === null ? '' : value);
   const header = Object.keys(data[0]);
   const csv = data.map((row: unknown) =>
-    header.map((fieldName) => JSON.stringify(row[fieldName], replacer)).join(',')
+    header.map((fieldName) => {
+      const value = row[fieldName];
+      /**
+       * escaping double quotes for correct csv
+       * "I like "cookies" a lot" results in 3 columns: I like; cookies; a lot
+       * "I like ""cookies"" a lot" results in 1 column: I like "cookies" a lot
+       */
+      if (typeof value === 'string') return `"${value.replace(/"/g, '""')}"`;
+      return JSON.stringify(value, replacer);
+    }).join(',')
   );
   csv.unshift(header.map((h) => `"${h}"`).join(','));
   const csvArray = csv.join('\r\n');
@@ -126,7 +135,7 @@ export function capitalize(text: string) {
 }
 
 /** Returns only unique values from array of strings */
-export function unique(array: string[]) {
+export function unique<T>(array: T[]) {
   return Array.from(new Set(array));
 }
 

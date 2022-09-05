@@ -22,7 +22,7 @@ export function toMovieAnalytics(analytics: Analytics<'title'>[]): MovieAnalytic
   const movieAnalytics: MovieAnalytics = {
     addedToWishlist: analyticsFilter('addedToWishlist'),
     movieViews: analyticsFilter('pageView'),
-    promoReelOpened: analyticsFilter('promoReelOpened'),
+    promoElementOpened: analyticsFilter('promoElementOpened'),
     id: ''
   };
 
@@ -34,7 +34,7 @@ function toMovieEventAnalytics(events: Analytics<'title'>[]): MovieEventAnalytic
     addedToWishlist: {},
     askingPriceRequested: {},
     pageView: {},
-    promoReelOpened: {},
+    promoElementOpened: {},
     removedFromWishlist: {},
     screeningRequested: {}
   };

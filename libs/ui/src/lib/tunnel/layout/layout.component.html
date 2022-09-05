@@ -11,7 +11,7 @@
 </mat-toolbar>
 
 <mat-sidenav-container>
-  <mat-sidenav #sidenav [opened]="(mode$ | async) === 'side'" [mode]="mode$ | async">
+  <mat-sidenav #sidenav [opened]="(mode$ | async) === 'side'" [mode]="mode$ | async" test-id="steps-list">
     <ng-content select="aside"></ng-content>
   </mat-sidenav>
 

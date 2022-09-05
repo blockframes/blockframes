@@ -1,13 +1,17 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/service';
-import { User, Organization, getAllAppsExcept, appName, getOrgModuleAccess, modules } from '@blockframes/model';
+import { User, Organization, getAllAppsExcept, appName, getOrgModuleAccess, modules, Analytics, displayName } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { map } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { sorts } from '@blockframes/ui/list/table/sorts';
+import { PermissionsService } from '@blockframes/permissions/service';
+import { MovieService } from '@blockframes/movie/service';
+import { where } from 'firebase/firestore';
+import { aggregate } from '@blockframes/analytics/utils';
 
 interface CrmUser extends User {
   firstConnection: Date;
@@ -27,6 +31,7 @@ interface CrmUser extends User {
 export class UsersComponent implements OnInit {
   public users$?: Observable<CrmUser[]>;
   public exporting = false;
+  public exportingAnalaytics = false;
   public app = getAllAppsExcept(['crm']);
   public sorts = sorts;
 
@@ -36,6 +41,8 @@ export class UsersComponent implements OnInit {
     private analyticsService: AnalyticsService,
     private orgService: OrganizationService,
     private router: Router,
+    private permissionsService: PermissionsService,
+    private movieService: MovieService
   ) { }
 
   async ngOnInit() {
@@ -77,8 +84,16 @@ export class UsersComponent implements OnInit {
     try {
       this.exporting = true;
       this.cdr.markForCheck()
+
+      const roles = await this.permissionsService.load();
+      const getMemberRole = (r: CrmUser) => {
+        const role = roles.find(role => role.id === r.orgId);
+        if (!role) return;
+        return role.roles[r.uid];
+      }
+
       const getRows = users.map(async r => {
-        const role = r.org ? await this.orgService.getMemberRole(r.org, r.uid) : '--';
+        const role = getMemberRole(r);
         const type = r.org ? getOrgModuleAccess(r.org).includes('dashboard') ? 'seller' : 'buyer' : '--';
         const row = {
           'userId': r.uid,
@@ -118,6 +133,48 @@ export class UsersComponent implements OnInit {
       console.error(err);
     }
     this.exporting = false;
+    this.cdr.markForCheck();
+  }
+
+  public async exportTitleAnalaytics(users: CrmUser[]) {
+    this.exportingAnalaytics = true;
+    this.cdr.markForCheck();
+
+    const query = [where('type', '==', 'title')];
+    const all = await this.analyticsService.load<Analytics<'title'>>(query);
+    const allAnalytics = all.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId));
+
+    const allTitleIds = unique(allAnalytics.map(analytic => analytic.meta.titleId));
+    const allTitles = await this.movieService.load(allTitleIds);
+
+    const exportedRows = [];
+    for (const user of users) {
+      const userAnalytics = allAnalytics.filter(analytic => analytic.meta.uid === user.uid);
+      const titles = allTitles.filter(title => userAnalytics.some(analytic => analytic.meta.titleId === title.id));
+
+      for (const title of titles) {
+        const titleAnalytics = userAnalytics.filter(analytic => analytic.meta.titleId === title.id);
+        const a = aggregate(titleAnalytics);
+
+        exportedRows.push({
+          uid: user.uid,
+          user: displayName(user),
+          email: user.email,
+          titleId: title.id,
+          title: title.title.international,
+          'total interactions': a.total,
+          'page views': a.pageView,
+          'screenings requested': a.screeningRequested,
+          'asking price requested': a.askingPriceRequested,
+          'promo element opened': a.promoElementOpened,
+          'added to wishlist': a.addedToWishlist,
+          'removed from wishlist': a.removedFromWishlist
+        });
+      }
+    }
+    downloadCsvFromJson(exportedRows, 'users-analytics-list');
+
+    this.exportingAnalaytics = false;
     this.cdr.markForCheck();
   }
 }
