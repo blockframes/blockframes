@@ -1,10 +1,11 @@
-import { festival, App, Movie, smartJoin, displayName } from '@blockframes/model';
+import { festival, App, Movie, smartJoin, displayName, Term, Duration, Mandate } from '@blockframes/model';
 import { toLabel } from '@blockframes/model';
 import { Response } from 'firebase-functions';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { PdfRequest } from '@blockframes/utils/pdf/pdf.interfaces';
 import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
-import { getDocument } from '@blockframes/firebase-utils';
+import { getDb, getDocument, queryDocuments } from '@blockframes/firebase-utils';
+import { allOf } from '@blockframes/contract/avails/sets';
 
 interface PdfTitleData {
   title: string;
@@ -39,6 +40,68 @@ const appLogo: Partial<Record<App, string>> = {
   financiers: 'media_financiers.svg',
 };
 
+const getPrizes = (m: Movie) => {
+  return m.prizes.concat(m.customPrizes).map((p) => ({
+    name: (festival[p.name] ? festival[p.name] : p.name).toUpperCase(),
+    prize: p.prize ? `${p.prize.charAt(0).toUpperCase()}${p.prize.slice(1)}` : undefined,
+    year: p.year,
+    premiere: p.premiere ? `${toLabel(p.premiere, 'premiereType')} Premiere` : undefined,
+  }));
+}
+
+const getGenres = (m: Movie) => {
+  return [
+    toLabel(m.genres, 'genres'),
+    m.customGenres ? m.customGenres.join(', ') : '',
+  ].filter((g) => g).join(', ');
+}
+
+const getSubs = (m: Movie) => {
+  const subtitles = Object.entries(m.languages)
+    .map(([language, specs]) => {
+      if (specs.subtitle) return language;
+    }).filter(s => s);
+
+  return toLabel(subtitles, 'languages', ', ', ' & ');
+}
+
+const getDubs = (m: Movie) => {
+  const dubs = Object.entries(m.languages)
+    .map(([language, specs]) => {
+      if (specs.dubbed) return language;
+    }).filter(d => d);
+
+  return toLabel(dubs, 'languages', ', ', ' & ');
+}
+
+const hasPublicVideos = (m: Movie, app: App) => {
+  const hasOtherVideos = m.promotional.videos.otherVideos?.some(v => v.storagePath && v.privacy === 'public');
+  const hasPublicScreener = app === 'catalog' && !!m.promotional.videos.publicScreener?.jwPlayerId;
+  return hasOtherVideos || hasPublicScreener;
+}
+
+const hasAvails = async (m: Movie, app: App, db = getDb()) => {
+  if (app !== 'catalog') return false;
+
+  const query = db.collection(`contracts`)
+    .where('titleId', '==', m.id)
+    .where('status', '==', 'accepted')
+    .where('type', '==', 'mandate');
+  const mandates = await queryDocuments<Mandate>(query);
+
+  const mandateTermsIds = mandates.map(mandate => mandate.termIds).flat();
+
+  const terms = await Promise.all(mandateTermsIds.map(termId => getDocument<Term>(`terms/${termId}`)));
+
+  const date = new Date();
+  const duration: Duration = {
+    from: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+    to: new Date(date.getFullYear() + 1, date.getMonth(), date.getDate())
+  }
+
+  return terms.some(t => allOf(duration).in(t.duration));
+}
+
 export const createPdf = async (req: PdfRequest, res: Response) => {
   res.set('Access-Control-Allow-Origin', '*');
 
@@ -57,6 +120,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     return;
   }
 
+  const db = getDb();
   const appUrl = applicationUrl[app];
   const promises = titleIds.map((id) => getDocument<Movie>(`movies/${id}`));
   const docs = await Promise.all(promises);
@@ -67,39 +131,16 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
   const europeFlag = fs.readFileSync(path.resolve(`assets/images/europe.svg`), 'utf8');
   const franceFlag = fs.readFileSync(path.resolve(`assets/images/france.svg`), 'utf8');
 
-  const data: PdfTitleData[] = titles.map((m) => {
-    const prizes = m.prizes.concat(m.customPrizes).map((p) => ({
-      name: (festival[p.name] ? festival[p.name] : p.name).toUpperCase(),
-      prize: p.prize ? `${p.prize.charAt(0).toUpperCase()}${p.prize.slice(1)}` : undefined,
-      year: p.year,
-      premiere: p.premiere ? `${toLabel(p.premiere, 'premiereType')} Premiere` : undefined,
-    }));
+  const data: PdfTitleData[] = [];
 
-    const genres = [
-      toLabel(m.genres, 'genres'),
-      m.customGenres ? m.customGenres.join(', ') : '',
-    ].filter((g) => g);
+  for (const m of titles) {
 
-    const hasOtherVideos = m.promotional.videos.otherVideos?.some(v => v.storagePath && v.privacy === 'public');
-    const hasPublicScreener = app === 'catalog' && m.promotional.videos.publicScreener?.jwPlayerId;
-    const hasPublicVideos = hasOtherVideos || hasPublicScreener;
-
-    const title = `${appUrl}/c/o/marketplace/title/${m.id}/main`;
-
-    const subtitles = Object.entries(m.languages)
-      .map(([language, specs]) => {
-        if (specs.subtitle) return language;
-      }).filter(s => s);
-
-    const dubs = Object.entries(m.languages)
-      .map(([language, specs]) => {
-        if (specs.dubbed) return language;
-      }).filter(d => d);
+    const titleBasePath = `${appUrl}/c/o/marketplace/title/${m.id}`;
 
     const pdfTitle: PdfTitleData = {
       title: m.title.international,
       contentType: toLabel(m.contentType, 'contentType'),
-      genres: genres.join(', '),
+      genres: getGenres(m),
       releaseYear: m.release.year,
       episodeCount: m.runningTime.episodeCount,
       originCountries: toLabel(m.originCountries, 'territories'),
@@ -111,15 +152,15 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
       version: {
         original: toLabel(m.originalLanguages, 'languages', ', ', ' & '),
         isOriginalVersionAvailable: m.isOriginalVersionAvailable,
-        subtitles: toLabel(subtitles, 'languages', ', ', ' & '),
-        dubs: toLabel(dubs, 'languages', ', ', ' & '),
+        subtitles: getSubs(m),
+        dubs: getDubs(m),
       },
       links: {
-        title,
-        trailer: hasPublicVideos ? `${title}#trailer` : '',
-        avails: app ==='catalog' ? 'TODO' : '', // TODO #8658
+        title: `${titleBasePath}/main`,
+        trailer: hasPublicVideos(m, app) ? `${titleBasePath}/main#trailer` : '',
+        avails: await hasAvails(m, app, db) ? `${titleBasePath}/avails/map` : '',
       },
-      prizes,
+      prizes: getPrizes(m),
       certifications: []
     };
 
@@ -136,8 +177,9 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
         flag: `data:image/svg+xml;utf8,${encodeURIComponent(europeFlag)}`,
       });
     }
-    return pdfTitle;
-  });
+
+    data.push(pdfTitle);
+  }
 
   const buffer = await generate('titles', app, data, pageTitle);
 
