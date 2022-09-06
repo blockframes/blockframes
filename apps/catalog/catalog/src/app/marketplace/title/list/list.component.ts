@@ -28,6 +28,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 import { trimString } from '@blockframes/utils/pipes';
+import { toGroupLabel } from '@blockframes/utils/pipes/group-label.pipe';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -187,8 +188,8 @@ export class ListComponent implements OnDestroy, OnInit {
     const searchForm = this.searchForm.value;
     const availForm = this.availsForm.value;
     const appTitle = 'Archipel Content Library';
-    const territories = toLabel(availForm.territories, 'territories');
-    const rights = toLabel(availForm.medias, 'medias'); // TODO #8658 exlcude TV (main category)
+    const territories = toGroupLabel(availForm.territories, 'territories', 'World').join(', ');
+    const rights = toGroupLabel(availForm.medias, 'medias', 'All Rights').join(', ');
     const avails = territories && rights ? `Avails for ${trimString(territories, 50, true)} in ${trimString(rights, 50, true)}` : '';
     const contentType = toLabel(searchForm.contentType, 'contentType');
     const genres = toLabel(searchForm.genres, 'genres');
