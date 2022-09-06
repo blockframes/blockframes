@@ -117,7 +117,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
       links: {
         title,
         trailer: hasPublicVideos ? `${title}#trailer` : '',
-        avails: app ==='catalog' ? 'TODO' : '',
+        avails: app ==='catalog' ? 'TODO' : '', // TODO #8658
       },
       prizes,
       certifications: []

@@ -188,7 +188,7 @@ export class ListComponent implements OnDestroy, OnInit {
     const availForm = this.availsForm.value;
     const appTitle = 'Archipel Content Library';
     const territories = toLabel(availForm.territories, 'territories');
-    const rights = toLabel(availForm.medias, 'medias'); // TODO #8828 exlcude TV (main category)
+    const rights = toLabel(availForm.medias, 'medias'); // TODO #8658 exlcude TV (main category)
     const avails = territories && rights ? `Avails for ${trimString(territories, 50, true)} in ${trimString(rights, 50, true)}` : '';
     const contentType = toLabel(searchForm.contentType, 'contentType');
     const genres = toLabel(searchForm.genres, 'genres');
