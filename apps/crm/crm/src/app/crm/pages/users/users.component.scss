@@ -5,6 +5,9 @@
 
 article {
   margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
 }
 
 .avatar {

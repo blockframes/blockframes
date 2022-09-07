@@ -56,7 +56,7 @@
     <span>
       <ng-template [ngTemplateOutlet]="addButtonText || defaultText"></ng-template>
     </span>
-    <button test-id="list-save" mat-mini-fab color="primary" (click)="add()"
+    <button test-id="list-add" mat-mini-fab color="primary" (click)="add()"
       [disabled]="formItem?.invalid && !formItem?.dirty">
       <mat-icon svgIcon="add"></mat-icon>
     </button>

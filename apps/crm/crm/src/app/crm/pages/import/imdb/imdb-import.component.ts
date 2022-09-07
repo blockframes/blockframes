@@ -33,7 +33,7 @@ export class ImdbImportComponent {
 
   async import() {
     this.importing = true;
-    const ref = this.snackbar.open(`Import in progress, please wait..`);
+    const ref = this.snackbar.open('Import in progress, please wait..');
 
     const { token, imdbIds, orgId } = this.form.value;
 
