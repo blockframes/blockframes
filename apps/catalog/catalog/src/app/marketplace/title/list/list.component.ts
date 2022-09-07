@@ -188,8 +188,8 @@ export class ListComponent implements OnDestroy, OnInit {
     const searchForm = this.searchForm.value;
     const availForm = this.availsForm.value;
     const appTitle = 'Archipel Content Library';
-    const territories = toGroupLabel(availForm.territories, 'territories', 'World').join(', ');
-    const rights = toGroupLabel(availForm.medias, 'medias', 'All Rights').join(', ');
+    const territories = availForm.territories?.length ? toGroupLabel(availForm.territories, 'territories', 'World').join(', ') : '';
+    const rights = availForm.medias?.length ? toGroupLabel(availForm.medias, 'medias', 'All Rights').join(', ') : '';
     const avails = territories && rights ? `Avails for ${trimString(territories, 50, true)} in ${trimString(rights, 50, true)}` : '';
     const contentType = toLabel(searchForm.contentType, 'contentType');
     const genres = toLabel(searchForm.genres, 'genres');
