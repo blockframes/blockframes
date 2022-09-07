@@ -75,6 +75,11 @@ const getDubs = (m: Movie) => {
   return toLabel(dubs, 'languages', ', ', ' & ');
 }
 
+const getCast = (m: Movie) => {
+  const cast = smartJoin(m.cast.slice(0, 3).map(p => displayName(p).trim()).filter(p => p));
+  return `${cast}${m.cast.length > 3 ? '...' : ''}`;
+}
+
 const getLogo = async (app: App, fs: any, path: any, orgId?: string) => {
   const logo = fs.readFileSync(path.resolve(`assets/logo/${appLogo[app]}`), 'utf8');
   const htmlLogo = {
@@ -175,7 +180,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
       runningTime: m.runningTime.time,
       synopsis: m.synopsis,
       posterUrl: m.poster?.storagePath ? getImgIxResourceUrl(m.poster, { h: 240, w: 180 }) : '',
-      cast: smartJoin(m.cast.slice(0, 3).map(person => displayName(person))),
+      cast: getCast(m),
       version: {
         original: toLabel(m.originalLanguages, 'languages', ', ', ' & '),
         isOriginalVersionAvailable: m.isOriginalVersionAvailable,
