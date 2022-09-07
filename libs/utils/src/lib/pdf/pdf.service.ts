@@ -4,6 +4,7 @@ import { firebaseRegion, firebase } from '@env';
 import { EmulatorsConfig, EMULATORS_CONFIG } from '../emulator-front-setup';
 import { APP } from '../routes/utils';
 import { PdfParams } from './pdf.interfaces';
+import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 
 export const { projectId } = firebase();
 
@@ -25,6 +26,8 @@ export class PdfService {
     const app = this.app;
     const data: PdfParams = { app, ...settings };
 
+    const fileName = data.pageTitle ? sanitizeFileName(`titles-export-${data.pageTitle}.pdf`) : `titles-export-${appName[app]}.pdf`;
+
     const params = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -41,7 +44,7 @@ export class PdfService {
           const url = URL.createObjectURL(blob);
           const element = document.createElement('a');
           element.setAttribute('href', url);
-          element.setAttribute('download', `titles-export-${appName[app]}.pdf`);
+          element.setAttribute('download', fileName);
           const event = new MouseEvent('click');
           element.dispatchEvent(event);
           resolve(true);
