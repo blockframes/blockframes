@@ -13,6 +13,13 @@
           *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.achieved }})</span></button>
       <button mat-tab-link (click)="applyFilter('archived')" [active]="filter.value === 'archived'">Archived <span
           *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.archived }})</span></button>
+      <ng-container *ngIf="titles">
+        <span fxFlex></span>
+        <button [disabled]="!titles.length || exporting" mat-button (click)="export(titles)">
+          <mat-icon svgIcon="pdf"></mat-icon>
+          <span>Export results</span>
+        </button>
+      </ng-container>
     </header>
 
     <bf-table [source]="titles" useFilter pagination="50">

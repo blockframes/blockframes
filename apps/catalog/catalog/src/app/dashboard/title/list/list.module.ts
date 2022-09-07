@@ -24,6 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [TitleListComponent],
@@ -52,6 +53,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTabsModule,
     MatIconModule,
     MatTooltipModule,
+    MatSnackBarModule,
     // Router
     RouterModule.forChild([{ path: '', component: TitleListComponent }])
   ]

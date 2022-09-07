@@ -1,13 +1,15 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { fromOrg, MovieService } from '@blockframes/movie/service';
-import { MovieCampaign } from '@blockframes/model';
+import { Movie, MovieCampaign } from '@blockframes/model';
 import { CampaignService } from '@blockframes/campaign/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { filters } from '@blockframes/ui/list/table/filters';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PdfService } from '@blockframes/utils/pdf/pdf.service';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 
@@ -46,12 +48,16 @@ export class ListComponent implements OnInit {
   filter = new FormControl('all');
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
   filters = filters;
+  exporting = false;
 
   constructor(
     private campaignService: CampaignService,
     private orgService: OrganizationService,
+    private pdfService: PdfService,
     private dynTitle: DynamicTitleService,
     private movieService: MovieService,
+    private snackbar: MatSnackBar,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
@@ -97,5 +103,15 @@ export class ListComponent implements OnInit {
 
   public applyFilter(filter: Filters) {
     this.filter.setValue(filter);
+  }
+
+  public async export(movies: Movie[]) {
+    const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
+    this.exporting = true;
+    this.cdr.markForCheck();
+    await this.pdfService.download({ titleIds: movies.map(m => m.id), orgId: this.orgService.org.id });
+    snackbarRef.dismiss();
+    this.exporting = false;
+    this.cdr.markForCheck();
   }
 }
