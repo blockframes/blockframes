@@ -114,7 +114,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
     const pageTitle = this.createPdfTitle();
-    await this.pdfService.download(movies.map(m => m.objectID), pageTitle);
+    await this.pdfService.download({ titleIds: movies.map(m => m.objectID), pageTitle });
     snackbarRef.dismiss();
     this.exporting = false;
   }

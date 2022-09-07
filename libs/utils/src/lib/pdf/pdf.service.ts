@@ -7,6 +7,12 @@ import { PdfParams } from './pdf.interfaces';
 
 export const { projectId } = firebase();
 
+interface DownloadSettings {
+  titleIds: string[],
+  pageTitle?: string,
+  orgId?: string,
+}
+
 @Injectable({ providedIn: 'root' })
 export class PdfService {
 
@@ -15,13 +21,9 @@ export class PdfService {
     @Inject(EMULATORS_CONFIG) private emulatorsConfig: EmulatorsConfig
   ) { }
 
-  async download(titleIds: string[], pageTitle?: string) {
+  async download(settings: DownloadSettings) {
     const app = this.app;
-    const data: PdfParams = {
-      titleIds,
-      app,
-      pageTitle
-    };
+    const data: PdfParams = { app, ...settings };
 
     const params = {
       method: 'POST',

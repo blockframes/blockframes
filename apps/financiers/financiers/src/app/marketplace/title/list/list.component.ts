@@ -119,7 +119,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   async export(movies: AlgoliaMovie[]) {
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
-    await this.pdfService.download(movies.map(m => m.objectID));
+    await this.pdfService.download({ titleIds: movies.map(m => m.objectID) });
     snackbarRef.dismiss();
     this.exporting = false;
   }

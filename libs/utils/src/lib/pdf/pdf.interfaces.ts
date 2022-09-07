@@ -3,7 +3,8 @@ import { App } from '@blockframes/model';
 export interface PdfParams {
   titleIds: string[],
   app: App,
-  pageTitle?: string
+  pageTitle?: string,
+  orgId?: string,
 }
 
 export interface PdfRequest {

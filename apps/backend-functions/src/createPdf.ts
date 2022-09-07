@@ -1,11 +1,12 @@
-import { festival, App, Movie, smartJoin, displayName, Term, Duration, Mandate } from '@blockframes/model';
+import { festival, App, Movie, smartJoin, displayName, Term, Duration, Mandate, Organization } from '@blockframes/model';
 import { toLabel } from '@blockframes/model';
 import { Response } from 'firebase-functions';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { PdfRequest } from '@blockframes/utils/pdf/pdf.interfaces';
 import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
-import { getDb, getDocument, queryDocuments } from '@blockframes/firebase-utils';
+import { getDb, getDocument, getStorage, queryDocuments } from '@blockframes/firebase-utils';
 import { allOf } from '@blockframes/contract/avails/sets';
+import { storageBucket } from './environments/environment';
 
 interface PdfTitleData {
   title: string;
@@ -74,6 +75,32 @@ const getDubs = (m: Movie) => {
   return toLabel(dubs, 'languages', ', ', ' & ');
 }
 
+const getLogo = async (app: App, fs: any, path: any, orgId?: string) => {
+  const logo = fs.readFileSync(path.resolve(`assets/logo/${appLogo[app]}`), 'utf8');
+  const htmlLogo = {
+    tag: `<img src="data:image/svg+xml;utf8,${encodeURIComponent(logo)}">`,
+    width: '144px',
+    height: '48px'
+  };
+
+  if (orgId) {
+    const { logo } = await getDocument<Organization>(`orgs/${orgId}`);
+
+    if (logo.storagePath) {
+
+      const bucket = getStorage().bucket(storageBucket);
+      const filePath = `${logo.privacy}/${logo.storagePath}`;
+      const fileObject = bucket.file(filePath);
+      const [image] = await fileObject.download();
+
+      htmlLogo.tag = `<img src="data:image/webp;base64,${image.toString('base64')}">`;
+      htmlLogo.width = '48px';
+    }
+  }
+
+  return htmlLogo;
+}
+
 const hasPublicVideos = (m: Movie, app: App) => {
   const hasOtherVideos = m.promotional.videos.otherVideos?.some(v => v.storagePath && v.privacy === 'public');
   const hasPublicScreener = app === 'catalog' && !!m.promotional.videos.publicScreener?.jwPlayerId;
@@ -114,7 +141,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     return;
   }
 
-  const { titleIds, app, pageTitle } = req.body;
+  const { titleIds, app, pageTitle, orgId } = req.body;
   if (!titleIds || !app) {
     res.status(500).send();
     return;
@@ -181,7 +208,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     data.push(pdfTitle);
   }
 
-  const buffer = await generate('titles', app, data, pageTitle);
+  const buffer = await generate('titles', app, data, pageTitle, orgId);
 
   res.set('Content-Type', 'application/pdf');
   res.set('Content-Length', buffer.length.toString());
@@ -189,7 +216,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
   return;
 };
 
-async function generate(templateName: string, app: App, titles: PdfTitleData[], pageTitle: string) {
+async function generate(templateName: string, app: App, titles: PdfTitleData[], pageTitle: string, orgId?: string) {
   const [fs, hb, path, { default: puppeteer }] = await Promise.all([
     import('fs'),
     import('handlebars'),
@@ -197,12 +224,12 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[], 
     import('puppeteer'),
   ]);
 
-  const logo = fs.readFileSync(path.resolve(`assets/logo/${appLogo[app]}`), 'utf8');
+  const htmlLogo = await getLogo(app, fs, path, orgId);
+
   const posterFallback = fs.readFileSync(path.resolve(`assets/images/empty_poster.svg`), 'utf8');
   const css = fs.readFileSync(path.resolve(`assets/style/${templateName}.css`), 'utf8');
   const data = {
     css,
-    appLogo: `data:image/svg+xml;utf8,${encodeURIComponent(logo)}`,
     posterFallback: `data:image/svg+xml;utf8,${encodeURIComponent(posterFallback)}`,
     titles,
     pageTitle
@@ -229,7 +256,7 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[], 
   const cssHeader = [];
   cssHeader.push('<style>');
   cssHeader.push('header {width: 100%; text-align: center;}');
-  cssHeader.push('header img {height: 48px; width: 144px}');
+  cssHeader.push(`header img {height: ${htmlLogo.height}; width: ${htmlLogo.width}}`);
   cssHeader.push('</style>');
 
   const pageHeight = (await page.evaluate(() => document.documentElement.offsetHeight)) + 240; // 240 = 100 + 40 margins
@@ -239,7 +266,7 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[], 
   const pdf = await page.pdf({
     height,
     displayHeaderFooter: true,
-    headerTemplate: `${cssHeader.join('')}<header class="header"><img src="data:image/svg+xml;utf8,${encodeURIComponent(logo)}"></header>`,
+    headerTemplate: `${cssHeader.join('')}<header class="header">${htmlLogo.tag}</header>`,
     footerTemplate: `<p></p>`, // If left empty, default is page number
     margin: {
       top: '100px',
