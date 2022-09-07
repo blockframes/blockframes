@@ -10,7 +10,13 @@
 
 <section *ngIf="results$ | async as sales; else loading">
   <ng-container *ngIf="sales.length; else noSales">
-    <h3>Results</h3>
+    <div fxLayout="row" fxLayoutAlign="space-between end">
+      <h3>Results</h3>
+      <button [disabled]="exporting" mat-button (click)="export(sales)">
+        <mat-icon svgIcon="pdf"></mat-icon>
+        <span>Export results</span>
+      </button>
+    </div>
     <bf-table [source]="sales" clickable useFilter pagination="50" (rowClick)="goToMap($event.id)">
       <ng-template colRef="title.international" label="Title" let-title sort defaultSort>
         <b>{{ title | maxLength:50 }}</b>

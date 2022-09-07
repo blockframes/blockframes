@@ -8,6 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Modules
 import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
@@ -36,6 +37,7 @@ import { CatalogAvailsListComponent } from './list.component';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
+    MatSnackBarModule,
 
     RouterModule.forChild([{ path: '', component: CatalogAvailsListComponent }]
     ),
