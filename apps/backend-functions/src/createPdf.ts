@@ -160,8 +160,8 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
 
   const [fs, path] = await Promise.all([import('fs'), import('path')]);
 
-  const europeFlag = fs.readFileSync(path.resolve(`assets/images/europe.svg`), 'utf8');
-  const franceFlag = fs.readFileSync(path.resolve(`assets/images/france.svg`), 'utf8');
+  const europeFlag = fs.readFileSync(path.resolve(`assets/images/europe.png`), 'base64');
+  const franceFlag = fs.readFileSync(path.resolve(`assets/images/france.png`), 'base64');
 
   const data: PdfTitleData[] = [];
 
@@ -199,14 +199,14 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     if (m.certifications.some(c => c === 'eof')) {
       pdfTitle.certifications.push({
         desc: toLabel('eof', 'certifications'),
-        flag: `data:image/svg+xml;utf8,${encodeURIComponent(franceFlag)}`,
+        flag: `data:image/png;base64,${encodeURIComponent(franceFlag)}`,
       });
     }
 
     if (m.certifications.some(c => c === 'europeanQualification')) {
       pdfTitle.certifications.push({
         desc: toLabel('europeanQualification', 'certifications'),
-        flag: `data:image/svg+xml;utf8,${encodeURIComponent(europeFlag)}`,
+        flag: `data:image/png;base64,${encodeURIComponent(europeFlag)}`,
       });
     }
 
