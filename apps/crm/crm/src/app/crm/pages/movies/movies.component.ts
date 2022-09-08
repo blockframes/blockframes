@@ -13,7 +13,7 @@ import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 
 import { where } from 'firebase/firestore';
-import { format } from 'date-fns';
+import { format, isDate } from 'date-fns';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { aggregate } from '@blockframes/analytics/utils';
@@ -90,6 +90,7 @@ export class MoviesComponent implements OnInit {
       const exportedRows = movies.map((m) => ({
         'movie id': m.id,
         title: m.title.international,
+        'season number': m.title.series ?? '--',
         'internal ref': m.internalRef ?? '--',
         org: m.org.name || '--',
         orgId: m.org?.id ?? '--',
@@ -125,10 +126,12 @@ export class MoviesComponent implements OnInit {
         'origin countries': toLabel(m.originCountries, 'territories'),
         prizes: smartJoin(m.prizes.map(prize => prize.name)),
         'custom prizes': smartJoin(m.customPrizes.map(prize => prize.name)),
+        certifications: toLabel(m.certifications, 'certifications'),
         producers: smartJoin(m.producers.map(person => displayName(person))),
         'production status': toLabel(m.productionStatus, 'productionStatus'),
-        rating: m.rating.map(rate => `${rate.value} (${rate.country ? toLabel(rate.country, 'territories') : 'no country'})`),
+        rating: smartJoin(m.rating.map(rate => `${rate.value} (${rate.country ? toLabel(rate.country, 'territories') : 'no country'})`)),
         release: `${m.release.status} ${m.release?.year ? (m.release.year) : ''}`,
+        'release media': smartJoin(m.originalRelease.map(o => `${toLabel(o.country, 'territories')} ( date : ${isDate(o.date) ? format(o.date, 'MM/dd/yyyy') : '--'} / media : ${o.media ? toLabel(o.media, 'medias') : '--'})`)),
         'running time': m.runningTime?.time,
         'running time status': m.runningTime?.status,
         'running time episode count': m.runningTime?.episodeCount,
@@ -148,7 +151,16 @@ export class MoviesComponent implements OnInit {
         financier: smartJoin(m.stakeholders.financier.map(company => company.displayName)),
         synopsis: m.synopsis,
         orgIds: smartJoin(m.orgIds),
-        'campaign started': m.campaignStarted ? format(m.campaignStarted, 'MM/dd/yyyy') : ''
+        'campaign started': m.campaignStarted ? format(m.campaignStarted, 'MM/dd/yyyy') : '',
+
+        'has poster': m.poster?.storagePath ? 'yes' : 'no',
+        'has banner': m.banner?.storagePath ? 'yes' : 'no',
+        'has stills': m.promotional.still_photo?.some(s => s.storagePath) ? 'yes' : 'no',
+
+        'has screener': m.promotional?.videos?.screener?.jwPlayerId ? 'yes' : 'no',
+        'has public screener': m.promotional?.videos?.publicScreener?.jwPlayerId ? 'yes' : 'no',
+        'has salesPitch': m.promotional?.videos?.salesPitch?.jwPlayerId ? 'yes' : 'no',
+        'has otherVideos': m.promotional?.videos?.otherVideos?.some(o => o.jwPlayerId) ? 'yes' : 'no',
       }));
 
       downloadCsvFromJson(exportedRows, 'movies-list');
