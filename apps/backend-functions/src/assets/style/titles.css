@@ -13,13 +13,12 @@ h1 {
 
 h2 {
   font: 800 36px Montserrat, Helvetica Neue, sans-serif;
-  margin-top: 0px;
-  margin-bottom: 10px;
+  margin: 0px;
 }
 
 h3 {
   font: 700 18px Montserrat, Helvetica Neue, sans-serif;
-  margin-bottom: 0px;
+  margin-bottom: 5px;
 }
 
 section {
@@ -47,6 +46,13 @@ section {
 
 .right-column p {
   font-weight: bold;
+  margin: 5px 0;
+}
+
+.right-column p.directors {
+  font-weight: normal;
+  color: #666B81;
+  margin: 0px 0 5px 0;
 }
 
 .column {

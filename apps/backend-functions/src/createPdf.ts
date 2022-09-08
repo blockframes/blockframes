@@ -1,11 +1,10 @@
-import { festival, App, Movie, smartJoin, displayName, Term, Duration, Mandate, Organization } from '@blockframes/model';
+import { festival, App, Movie, smartJoin, displayName, Organization } from '@blockframes/model';
 import { toLabel } from '@blockframes/model';
 import { Response } from 'firebase-functions';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { PdfRequest } from '@blockframes/utils/pdf/pdf.interfaces';
 import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
-import { getDb, getDocument, getStorage, queryDocuments } from '@blockframes/firebase-utils';
-import { allOf } from '@blockframes/contract/avails/sets';
+import { getDocument, getStorage } from '@blockframes/firebase-utils';
 import { storageBucket } from './environments/environment';
 
 interface PdfTitleData {
@@ -16,10 +15,12 @@ interface PdfTitleData {
   episodeCount: number;
   originCountries: string;
   format: string;
+  rating: string;
   runningTime: number;
   synopsis: string;
   posterUrl: string;
   cast: string;
+  directors: string;
   version: {
     original: string;
     isOriginalVersionAvailable: boolean;
@@ -76,8 +77,20 @@ const getDubs = (m: Movie) => {
 }
 
 const getCast = (m: Movie) => {
-  const cast = smartJoin(m.cast.slice(0, 3).map(p => displayName(p).trim()).filter(p => p));
-  return `${cast}${m.cast.length > 3 ? '...' : ''}`;
+  return smartJoin(m.cast.slice(0, 3).map(p => displayName(p).trim()).filter(p => p));
+}
+
+const getDirectors = (m: Movie) => {
+  return smartJoin(m.directors.map(p => displayName(p).trim()).filter(p => p));
+}
+
+const getRating = (m: Movie) => {
+  const ratings = m.rating.map(r => {
+    const country = r.country ? ` (${toLabel(r.country, 'territories')})`: '';
+    return `${r.value}${country}`;
+  });
+
+  return smartJoin(ratings);
 }
 
 const getLogo = async (app: App, fs: any, path: any, orgId?: string) => {
@@ -112,28 +125,6 @@ const hasPublicVideos = (m: Movie, app: App) => {
   return hasOtherVideos || hasPublicScreener;
 }
 
-const hasAvails = async (m: Movie, app: App, db = getDb()) => {
-  if (app !== 'catalog') return false;
-
-  const query = db.collection(`contracts`)
-    .where('titleId', '==', m.id)
-    .where('status', '==', 'accepted')
-    .where('type', '==', 'mandate');
-  const mandates = await queryDocuments<Mandate>(query);
-
-  const mandateTermsIds = mandates.map(mandate => mandate.termIds).flat();
-
-  const terms = await Promise.all(mandateTermsIds.map(termId => getDocument<Term>(`terms/${termId}`)));
-
-  const date = new Date();
-  const duration: Duration = {
-    from: new Date(date.getFullYear(), date.getMonth(), date.getDate()),
-    to: new Date(date.getFullYear() + 1, date.getMonth(), date.getDate())
-  }
-
-  return terms.some(t => allOf(duration).in(t.duration));
-}
-
 export const createPdf = async (req: PdfRequest, res: Response) => {
   res.set('Access-Control-Allow-Origin', '*');
 
@@ -152,7 +143,6 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     return;
   }
 
-  const db = getDb();
   const appUrl = applicationUrl[app];
   const promises = titleIds.map((id) => getDocument<Movie>(`movies/${id}`));
   const docs = await Promise.all(promises);
@@ -177,10 +167,12 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
       episodeCount: m.runningTime.episodeCount,
       originCountries: toLabel(m.originCountries, 'territories'),
       format: toLabel(m.format, 'movieFormat'),
+      rating: getRating(m),
       runningTime: m.runningTime.time,
       synopsis: m.synopsis,
       posterUrl: m.poster?.storagePath ? getImgIxResourceUrl(m.poster, { h: 240, w: 180 }) : '',
       cast: getCast(m),
+      directors: getDirectors(m),
       version: {
         original: toLabel(m.originalLanguages, 'languages', ', ', ' & '),
         isOriginalVersionAvailable: m.isOriginalVersionAvailable,
@@ -190,7 +182,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
       links: {
         title: `${titleBasePath}/main`,
         trailer: hasPublicVideos(m, app) ? `${titleBasePath}/main#trailer` : '',
-        avails: await hasAvails(m, app, db) ? `${titleBasePath}/avails/map` : '',
+        avails: app === 'catalog' ? `${titleBasePath}/avails/map` : '',
       },
       prizes: getPrizes(m),
       certifications: []

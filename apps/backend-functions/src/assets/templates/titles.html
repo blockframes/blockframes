@@ -23,6 +23,9 @@
           </div>
           <div class="right-column">
             <h2>{{title}}</h2>
+            {{#if directors}}
+              <p class="directors">Directed by {{ directors }}</p>
+            {{/if}}
             <a href="{{links.title}}">See title</a>
             {{#if contentType}}
               <p>{{contentType}}{{#if genres}} / {{genres}}{{/if}}</p>
@@ -32,6 +35,9 @@
             {{/if}}
             {{#if runningTime}}
               <p>{{#if episodeCount }}{{episodeCount}} x {{/if}}{{runningTime}} min{{#if format}} / {{format}}{{/if}}</p>
+            {{/if}}
+            {{#if rating}}
+              <p>{{rating}}</p>
             {{/if}}
             {{#if certifications.length}}
               <div class="row">
@@ -52,8 +58,7 @@
 
         <div>
           <h3>Available Versions</h3>
-          <br/>
-          <strong>Original Version: </strong>
+          <strong>OV: </strong>
           {{#if version.isOriginalVersionAvailable}}
             {{ version.original }}
           {{else}}
