@@ -36,6 +36,7 @@ import type {
 import type { DocumentMeta } from './meta';
 import { getAllAppsExcept } from './apps';
 import { Organization } from './organisation';
+import { Mandate } from './contract';
 
 //////////////////
 // MOVIE OBJECT //
@@ -255,6 +256,8 @@ export interface SyncMovieAnalyticsOptions {
 export interface CrmMovie extends Movie {
   org: Organization;
   screeningCount: number;
+  releaseMedias: MediaValue[];
+  mandate: Mandate;
 }
 
 /** A factory function that creates Movie */

@@ -14,16 +14,10 @@ import { Observable, combineLatest } from 'rxjs';
 
 import { where } from 'firebase/firestore';
 import { format } from 'date-fns';
-import { joinWith } from 'ngfire';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { aggregate } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
-
-const titleMandateQuery = (id: string) => ([
-  where('titleId', '==', id),
-  where('type', '==', 'mandate')
-]);
 
 @Component({
   selector: 'crm-movies',
@@ -54,18 +48,17 @@ export class MoviesComponent implements OnInit {
       this.movieService.valueChanges(),
       this.orgService.valueChanges(),
       this.eventService.valueChanges([where('type', '==', 'screening')]),
+      this.contractService.valueChanges([where('type', '==', 'mandate')])
     ]).pipe(
-      map(([movies, orgs, events]) => {
+      map(([movies, orgs, events, mandates]) => {
         const screenings = events.filter(isScreening);
         return movies.map((movie) => {
+          const mandate = mandates.find(m => m.titleId === movie.id);
           const org = orgs.find((o) => o.id === movie.orgIds[0]);
           const screeningCount = screenings.filter((e) => e.meta?.titleId === movie.id).length;
           const releaseMedias = movie.originalRelease.map(release => release.media)
-          return { ...movie, releaseMedias, org, screeningCount } as CrmMovie;
+          return { ...movie, releaseMedias, org, screeningCount, mandate } as CrmMovie;
         });
-      }),
-      joinWith({
-        mandate: movie => this.contractService.valueChanges(titleMandateQuery(movie.id))
       })
     );
   }
@@ -182,7 +175,7 @@ export class MoviesComponent implements OnInit {
     for (const title of titles) {
       const movieAnalytics = allAnalytics.filter(analytic => analytic.meta.titleId === title.id);
       const users = allUsers.filter(user => movieAnalytics.some(analytic => analytic.meta.uid === user.uid));
-      
+
       for (const user of users) {
         const userAnalytics = movieAnalytics.filter(analytic => analytic.meta.uid === user.uid);
         const a = aggregate(userAnalytics);
