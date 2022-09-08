@@ -136,17 +136,6 @@ export class MyapimoviesService {
     }
   }
 
-  private async keywords(imdbId: string) {
-    try {
-      const { data } = await this.query<{ data: { keywords: string }[], code: number }>(`/v1/movie/${imdbId}/keywords`);
-      return data;
-    } catch (error) {
-      this.logErrors(error, imdbId, 'keywords');
-
-      return [];
-    }
-  }
-
   private async seasons(imdbId: string) {
     const { data } = await this.query<{ data: { numSeason: number, year: number }[], code: number }>(`/v1/movie/${imdbId}/season`);
     return data;
@@ -299,9 +288,8 @@ export class MyapimoviesService {
   }
 
   private async createMovie(title: MyapimoviesMovie) {
-    const [genres, keywords, directors, countries, languages, actors] = await Promise.all([
+    const [genres, directors, countries, languages, actors] = await Promise.all([
       this.genres(title.imdbId),
-      this.keywords(title.imdbId),
       this.directors(title.imdbId),
       this.countries(title.imdbId),
       this.languages(title.imdbId),
@@ -319,7 +307,6 @@ export class MyapimoviesService {
     movie.release.year = +title.year;
     movie.release.status = 'confirmed';
     movie.synopsis = title.plot;
-    movie.keywords = keywords.map(k => k.keywords);
     movie.genres = genres;
     movie.originalLanguages = languages;
     movie.originCountries = countries;
