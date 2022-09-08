@@ -11,6 +11,7 @@ import {
   getAllStartingWith,
 } from '@blockframes/testing/cypress/browser';
 import {
+  crewRoles,
   Movie,
   genres,
   languages,
@@ -98,31 +99,13 @@ describe('Movie tunnel', () => {
     });
     getInList('option_', screeningStatus[movie.release.status]);
     get('country').children().eq(0).click();
-    cy.get('[role="listbox"]')
-      .children()
-      .each($child => {
-        if ($child.text().includes(territories[movie.originCountries[0]])) {
-          cy.wrap($child).click(); //adding country within all options
-        }
-      });
+    getInListbox(territories[movie.originCountries[0]]);
     get('country').find('input').type(`${movie.originCountries[1]}{enter}{esc}`); //writing it entirely
     get('language').children().eq(0).click();
-    cy.get('[role="listbox"]')
-      .children()
-      .each($child => {
-        if ($child.text().includes(languages[movie.originalLanguages[0]])) {
-          cy.wrap($child).click();
-        }
-      });
+    getInListbox(languages[movie.originalLanguages[0]]);
     get('language').find('input').type(`${movie.originalLanguages[1]}{enter}{esc}`);
     get('genres').children().eq(0).click();
-    cy.get('[role="listbox"]')
-      .children()
-      .each($child => {
-        if ($child.text().includes(genres[movie.genres[0]])) {
-          cy.wrap($child).click();
-        }
-      });
+    getInListbox(genres[movie.genres[0]]);
     get('genres').find('input').type(`${movie.genres[1]}{enter}{esc}`);
     ///directors
     get('table-save').should('be.disabled');
@@ -149,37 +132,19 @@ describe('Movie tunnel', () => {
     ///production company
     get('production-company-name').type(movie.stakeholders.productionCompany[0].displayName);
     get('production-country').click();
-    cy.get('[role="listbox"]')
-      .children()
-      .each($child => {
-        if ($child.text().includes(territories[movie.stakeholders.productionCompany[0].countries[0]])) {
-          cy.wrap($child).click();
-        }
-      });
+    getInListbox(territories[movie.stakeholders.productionCompany[0].countries[0]]);
     get('production-country').find('input').type(`${movie.stakeholders.productionCompany[0].countries[1]}{enter}{esc}`);
     findIn('company', 'row-save').click();
     findIn('company', 'list-add').click();
     get('production-company-name').type(movie.stakeholders.productionCompany[1].displayName);
     get('production-country').click();
-    cy.get('[role="listbox"]')
-      .children()
-      .each($child => {
-        if ($child.text().includes(territories[movie.stakeholders.productionCompany[1].countries[0]])) {
-          cy.wrap($child).click();
-        }
-      });
+    getInListbox(territories[movie.stakeholders.productionCompany[1].countries[0]]);
     get('production-country').find('input').type(`${movie.stakeholders.productionCompany[1].countries[1]}{enter}{esc}`);
     findIn('company', 'row-save').click();
     ///co-production company
     get('co-production-company-name').type(movie.stakeholders.coProductionCompany[0].displayName);
     get('co-production-country').click();
-    cy.get('[role="listbox"]')
-      .children()
-      .each($child => {
-        if ($child.text().includes(territories[movie.stakeholders.coProductionCompany[0].countries[0]])) {
-          cy.wrap($child).click();
-        }
-      });
+    getInListbox(territories[movie.stakeholders.coProductionCompany[0].countries[0]]);
     get('co-production-country').find('input').type(`${movie.stakeholders.coProductionCompany[0].countries[1]}{enter}{esc}`);
     findIn('co-company', 'row-save').click();
     ///producers
@@ -197,28 +162,67 @@ describe('Movie tunnel', () => {
     ///distributors
     get('distribution-company-name').type(movie.stakeholders.distributor[0].displayName);
     get('distribution-country').click();
-    cy.get('[role="listbox"]')
-      .children()
-      .each($child => {
-        if ($child.text().includes(territories[movie.stakeholders.distributor[0].countries[0]])) {
-          cy.wrap($child).click();
-        }
-      });
+    getInListbox(territories[movie.stakeholders.distributor[0].countries[0]]);
     findIn('distributors', 'row-save').click();
     ///sales
     get('sales-company-name').type(movie.stakeholders.salesAgent[0].displayName);
     get('sales-country').click();
-    cy.get('[role="listbox"]')
-      .children()
-      .each($child => {
-        if ($child.text().includes(territories[movie.stakeholders.salesAgent[0].countries[0]])) {
-          cy.wrap($child).click();
-        }
-      });
+    getInListbox(territories[movie.stakeholders.salesAgent[0].countries[0]]);
     findIn('sales', 'row-save').click();
     get('next').click();
 
     //artistic team
+    ///cast member
+    get('cast-first-name').type(movie.cast[0].firstName);
+    get('cast-last-name').type(movie.cast[0].lastName);
+    get('cast-status').click();
+    getInListbox(memberStatus[movie.cast[0].status]);
+    get('cast-description').type(movie.cast[0].description);
+    get('cast-film-title_0').type(movie.cast[0].filmography[0].title);
+    get('cast-film-year_0').type(movie.cast[0].filmography[0].year.toString());
+    get('cast-film-title_1').type(movie.cast[0].filmography[1].title);
+    get('cast-film-year_1').type(movie.cast[0].filmography[1].year.toString());
+    findIn('cast-member', 'table-save').click();
+    findIn('cast-member', 'add').click();
+    get('cast-first-name').type(movie.cast[1].firstName);
+    get('cast-last-name').type(movie.cast[1].lastName);
+    get('cast-status').click();
+    getInListbox(memberStatus[movie.cast[1].status]);
+    get('cast-description').type(movie.cast[1].description);
+    get('cast-film-title_0').type(movie.cast[1].filmography[0].title);
+    get('cast-film-year_0').type(movie.cast[1].filmography[0].year.toString());
+    get('cast-film-title_1').type(movie.cast[1].filmography[1].title);
+    get('cast-film-year_1').type(movie.cast[1].filmography[1].year.toString());
+    findIn('cast-member', 'row-save').click();
+    ///crew member
+    get('crew-first-name').type(movie.crew[0].firstName);
+    get('crew-last-name').type(movie.crew[0].lastName);
+    get('crew-role').click()
+    getInListbox(crewRoles[movie.crew[0].role])
+    get('crew-status').click();
+    getInListbox(memberStatus[movie.crew[0].status]);
+    get('crew-description').type(movie.crew[0].description);
+    get('crew-film-title_0').type(movie.crew[0].filmography[0].title);
+    get('crew-film-year_0').type(movie.crew[0].filmography[0].year.toString());
+    get('crew-film-title_1').type(movie.crew[0].filmography[1].title);
+    get('crew-film-year_1').type(movie.crew[0].filmography[1].year.toString());
+    findIn('crew-member', 'table-save').click();
+    findIn('crew-member', 'add').click();
+    get('crew-first-name').type(movie.crew[1].firstName);
+    get('crew-last-name').type(movie.crew[1].lastName);
+    get('crew-role').click()
+    getInListbox(crewRoles[movie.crew[1].role])
+    get('crew-status').click();
+    getInListbox(memberStatus[movie.crew[1].status]);
+    get('crew-description').type(movie.crew[1].description);
+    get('crew-film-title_0').type(movie.crew[1].filmography[0].title);
+    get('crew-film-year_0').type(movie.crew[1].filmography[0].year.toString());
+    get('crew-film-title_1').type(movie.crew[1].filmography[1].title);
+    get('crew-film-year_1').type(movie.crew[1].filmography[1].year.toString());
+    findIn('crew-member', 'row-save').click();
+    get('next').click();
+
+    //additional information
   });
 });
 
@@ -242,4 +246,14 @@ function checkSideNav(status: ProductionStatus) {
   if (status !== 'development' && 'shooting') get('steps-list').should('contain', 'Selections & Reviews');
   if (status !== 'post_production' && 'finished' && 'released') get('steps-list').should('contain', 'Notes & Statements');
   if (status !== 'released') get('steps-list').should('contain', 'Shooting Information');
+}
+
+function getInListbox(option: string) {
+  return cy.get('[role="listbox"]')
+      .children()
+      .each($child => {
+        if ($child.text().includes(option)) {
+          cy.wrap($child).click();
+        }
+      });
 }

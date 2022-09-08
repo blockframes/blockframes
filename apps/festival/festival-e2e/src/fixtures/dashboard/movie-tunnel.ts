@@ -108,4 +108,75 @@ export const inDevelopmentMovie: Partial<Movie> = {
       role: 'associateProducer',
     },
   ],
+  //artistic team
+  cast: [
+    {
+      firstName: 'Actor',
+      lastName: ' One',
+      status: 'confirmed',
+      description: 'First actor',
+      filmography: [
+        {
+          title: 'His first acting',
+          year: 2020
+        },
+        {
+          title: 'His second acting',
+          year: 2021
+        },
+      ]
+    },
+    {
+      firstName: 'Actor',
+      lastName: ' Two',
+      status: 'looselyAttached',
+      description: 'Second actor',
+      filmography: [
+        {
+          title: 'His 55th acting',
+          year: 2020
+        },
+        {
+          title: 'His 56th acting',
+          year: 2021
+        },
+      ]
+    }
+  ],
+  crew: [
+    {
+      role: 'dialogueWriter',
+      firstName: 'Young',
+      lastName: ' Writer',
+      status: 'confirmed',
+      description: 'Young is promising',
+      filmography: [
+        {
+          title: 'His first movie',
+          year: 2020
+        },
+        {
+          title: 'His second movie',
+          year: 2021
+        },
+      ]
+    },
+    {
+      role: 'castingDirector',
+      firstName: 'Old',
+      lastName: ' Caster',
+      status: 'looselyAttached',
+      description: 'Old is promising',
+      filmography: [
+        {
+          title: 'His 55th movie',
+          year: 2020
+        },
+        {
+          title: 'His 56th movie',
+          year: 2021
+        },
+      ]
+    }
+  ]
 };
