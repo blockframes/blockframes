@@ -1,13 +1,22 @@
 <main fxLayout="column">
   <crm-bread-crumb></crm-bread-crumb>
   <ng-container *ngIf="movies$ | async as movies; else loading">
-    <article fxLayout="column" fxLayoutAlign="center center">
+    <article>
       <button [disabled]="exporting" mat-flat-button color="primary" (click)="exportTable(movies)">
         <ng-container *ngIf="exporting else export">
           <span>Generating CSV...</span>
         </ng-container>
         <ng-template #export>
-          <span>Export to CSV</span>
+          <span>Export Movies to CSV</span>
+          <mat-icon svgIcon="arrow_upward"></mat-icon>
+        </ng-template>
+      </button>
+      <button [disabled]="exportingAnalytics" mat-flat-button color="primary" (click)="exportTitleAnalytics(movies)">
+        <ng-container *ngIf="exportingAnalytics else exportAnalytics">
+          <span>Generating CSV...</span>
+        </ng-container>
+        <ng-template #exportAnalytics>
+          <span>Export Analytics to CSV</span>
           <mat-icon svgIcon="arrow_upward"></mat-icon>
         </ng-template>
       </button>

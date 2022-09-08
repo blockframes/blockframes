@@ -12,12 +12,7 @@
     "demo3": "blockframes-demo-3",
     "demo4": "blockframes-demo-4",
     "demo5": "blockframes-demo-5",
-    "remco": "blockframes-remco",
-    "springfield": "blockframes-yonga",
-    "antoine": "blockframes-antoine-9e16b",
-    "nicolas": "blockframes-nicolas",
-    "kevin-m": "blockframes-kevin-m",
-    "kevin-d": "blockframes-kevin-d"
+    "nicolas": "blockframes-nicolas"
   },
   "targets": {
     "blockframes": {
@@ -106,38 +101,6 @@
       "hosting": {
         "catalog": [
           "blockframes-nicolas"
-        ]
-      }
-    },
-    "blockframes-kevin-m": {
-      "hosting": {
-        "catalog": [
-          "blockframes-kevin-m"
-        ],
-        "crm": [
-          "crm-blockframes-kevin-m"
-        ],
-        "festival": [
-          "festival-blockframes-kevin-m"
-        ],
-        "financiers": [
-          "financiers-blockframes-kevin-m"
-        ]
-      }
-    },
-    "blockframes-kevin-d": {
-      "hosting": {
-        "catalog": [
-          "blockframes-kevin-d"
-        ],
-        "crm": [
-          "crm-blockframes-kevin-d"
-        ],
-        "festival": [
-          "festival-blockframes-kevin-d"
-        ],
-        "financiers": [
-          "financiers-blockframes-kevin-d"
         ]
       }
     },
@@ -243,41 +206,6 @@
         ]
       }
     },
-    "blockframes-yonga": {
-      "hosting": {
-        "catalog": [
-          "catalog-blockframes-yonga"
-        ],
-        "festival": [
-          "festival-blockframes-yonga"
-        ],
-        "crm": [
-          "crm-blockframes-yonga"
-        ],
-        "financiers": [
-          "financiers-blockframes-yonga"
-        ],
-        "cms": [
-          "cms-blockframes-yonga"
-        ]
-      }
-    },
-    "blockframes-remco": {
-      "hosting": {
-        "catalog": [
-          "blockframes-remco"
-        ],
-        "festival": [
-          "blockframes-remco-festival"
-        ],
-        "financiers": [
-          "blockframes-remco-financiers"
-        ],
-        "crm": [
-          "blockframes-remco-crm"
-        ]
-      }
-    },
     "blockframes-george": {
       "hosting": {
         "catalog": [
@@ -294,25 +222,6 @@
         ],
         "crm": [
           "blockframes-george-crm"
-        ]
-      }
-    },
-    "blockframes-antoine-9e16b": {
-      "hosting": {
-        "catalog": [
-          "catalog-blockframes-antoine"
-        ],
-        "festival": [
-          "festival-blockframes-antoine"
-        ],
-        "crm": [
-          "crm-blockframes-antoine"
-        ],
-        "financiers": [
-          "financiers-blockframes-antoine"
-        ],
-        "cms": [
-          "cms-blockframes-antoine"
         ]
       }
     }

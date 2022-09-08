@@ -12,7 +12,7 @@
     You can also provide other promotional elements if you wish (stills, script, presentation decks, videos…).
   </p>
   <ng-container *ngIf="(loadingTunnel.asObservable() | async) === false ; else loading">
-    <a mat-flat-button color="accent" (click)="navigateToTunnel()">Start</a>
+    <a mat-flat-button color="accent" (click)="navigateToTunnel()" test-id="start">Start</a>
   </ng-container>
   <span class="mat-body-2 center">This process should take about 30 minutes to complete.</span>
 </section>

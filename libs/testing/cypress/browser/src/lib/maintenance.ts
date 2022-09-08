@@ -7,7 +7,7 @@ export const maintenance = {
       endedAt: null,
       startedAt: Date.now(),
     };
-    firestore.create([{ [metaDoc]: maintenanceStart }]);
+    return firestore.create([{ [metaDoc]: maintenanceStart }]);
   },
 
   end() {
@@ -15,6 +15,6 @@ export const maintenance = {
       endedAt: Date.now() - EIGHT_MINUTES_IN_MS,
       startedAt: null,
     };
-    firestore.create([{ [metaDoc]: maintenanceEnd }]);
+    return firestore.create([{ [metaDoc]: maintenanceEnd }]);
   },
 };
