@@ -31,6 +31,7 @@ import {
 import { OrganizationService } from '@blockframes/organization/service';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { trimString, toGroupLabel } from '@blockframes/utils/pipes';
 
 interface TotalIncome {
   EUR: number;
@@ -183,9 +184,19 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
     this.cdr.markForCheck();
-    await this.pdfService.download({ titleIds: movies.map(m => m.id), orgId: this.orgService.org.id });
+    const pageTitle = this.createPdfTitle();
+    await this.pdfService.download({ titleIds: movies.map(m => m.id), orgId: this.orgService.org.id, pageTitle });
     snackbarRef.dismiss();
     this.exporting = false;
     this.cdr.markForCheck();
+  }
+
+  private createPdfTitle() {
+    const availForm = this.availsForm.value;
+    const appTitle = 'Archipel Content Library';
+    const territories = availForm.territories?.length ? toGroupLabel(availForm.territories, 'territories', 'World').join(', ') : '';
+    const rights = availForm.medias?.length ? toGroupLabel(availForm.medias, 'medias', 'All Rights').join(', ') : '';
+    const avails = territories && rights ? `Avails for ${trimString(territories, 50, true)} in ${trimString(rights, 50, true)}` : '';
+    return [appTitle, avails].filter(s => s).join(' - ');
   }
 }

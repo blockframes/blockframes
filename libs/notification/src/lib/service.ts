@@ -20,7 +20,6 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { MovieService } from '@blockframes/movie/service';
 import { format } from 'date-fns';
-import { trimString } from '@blockframes/utils/pipes/max-length.pipe';
 import { UserService } from '@blockframes/user/service';
 import { EventService } from '@blockframes/event/service';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';

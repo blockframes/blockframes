@@ -1,4 +1,4 @@
-import { festival, App, Movie, smartJoin, displayName, Organization } from '@blockframes/model';
+import { festival, App, Movie, smartJoin, displayName, Organization, Module } from '@blockframes/model';
 import { toLabel } from '@blockframes/model';
 import { Response } from 'firebase-functions';
 import { applicationUrl } from '@blockframes/utils/apps';
@@ -30,6 +30,7 @@ interface PdfTitleData {
   links: {
     title: string;
     trailer: string;
+    publicScreener: string;
     avails: string;
   };
   prizes: { name: string; prize: string; year: number; premiere: string }[];
@@ -86,7 +87,7 @@ const getDirectors = (m: Movie) => {
 
 const getRating = (m: Movie) => {
   const ratings = m.rating.map(r => {
-    const country = r.country ? ` (${toLabel(r.country, 'territories')})`: '';
+    const country = r.country ? ` (${toLabel(r.country, 'territories')})` : '';
     return `${r.value}${country}`;
   });
 
@@ -119,10 +120,30 @@ const getLogo = async (app: App, fs: any, path: any, orgId?: string) => {
   return htmlLogo;
 }
 
-const hasPublicVideos = (m: Movie, app: App) => {
-  const hasOtherVideos = m.promotional.videos.otherVideos?.some(v => v.storagePath && v.privacy === 'public');
+const getTitleLink = (m: Movie, app: App, module: Module) => {
+  const appUrl = applicationUrl[app];
+  return `${appUrl}/c/o/${module}/title/${m.id}`;
+}
+
+const getTrailerLink = (m: Movie, app: App, module: Module) => {
+  const hasTrailer = m.promotional.videos.otherVideos?.some(v => v.storagePath && v.privacy === 'public');
+  if (!hasTrailer) return '';
+  const appUrl = applicationUrl[app];
+  return `${appUrl}/c/o/${module}/title/${m.id}/main#trailer`;
+}
+
+const getPublicScreenerLink = (m: Movie, app: App, module: Module) => {
   const hasPublicScreener = app === 'catalog' && !!m.promotional.videos.publicScreener?.jwPlayerId;
-  return hasOtherVideos || hasPublicScreener;
+  if (!hasPublicScreener) return '';
+  const appUrl = applicationUrl[app];
+  return `${appUrl}/c/o/${module}/title/${m.id}/main#trailer`;
+}
+
+const getAvailsLink = (m: Movie, app: App, module: Module) => {
+  if (app !== 'catalog') return '';
+  const appUrl = applicationUrl[app];
+  if (module === 'marketplace') return `${appUrl}/c/o/marketplace/title/${m.id}/avails/map`;
+  return `${appUrl}/c/o/dashboard/avails/${m.id}/map`;
 }
 
 export const createPdf = async (req: PdfRequest, res: Response) => {
@@ -137,13 +158,12 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     return;
   }
 
-  const { titleIds, app, pageTitle, orgId } = req.body;
+  const { titleIds, app, pageTitle, orgId, module } = req.body;
   if (!titleIds || !app) {
     res.status(500).send();
     return;
   }
 
-  const appUrl = applicationUrl[app];
   const promises = titleIds.map((id) => getDocument<Movie>(`movies/${id}`));
   const docs = await Promise.all(promises);
   const titles = docs.filter((m) => !!m);
@@ -156,8 +176,6 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
   const data: PdfTitleData[] = [];
 
   for (const m of titles) {
-
-    const titleBasePath = `${appUrl}/c/o/marketplace/title/${m.id}`;
 
     const pdfTitle: PdfTitleData = {
       title: m.title.international,
@@ -180,9 +198,10 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
         dubs: getDubs(m),
       },
       links: {
-        title: `${titleBasePath}/main`,
-        trailer: hasPublicVideos(m, app) ? `${titleBasePath}/main#trailer` : '',
-        avails: app === 'catalog' ? `${titleBasePath}/avails/map` : '',
+        title: getTitleLink(m, app, module),
+        trailer: getTrailerLink(m, app, module),
+        publicScreener: getPublicScreenerLink(m, app, module),
+        avails: getAvailsLink(m, app, module),
       },
       prizes: getPrizes(m),
       certifications: []

@@ -27,8 +27,7 @@ import { MovieSearchForm, createMovieSearch, Versions, MovieSearch } from '@bloc
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
-import { trimString } from '@blockframes/utils/pipes';
-import { toGroupLabel } from '@blockframes/utils/pipes/group-label.pipe';
+import { trimString, toGroupLabel } from '@blockframes/utils/pipes';
 
 @Component({
   selector: 'catalog-marketplace-title-list',

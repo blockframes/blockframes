@@ -26,7 +26,7 @@
             {{#if directors}}
               <p class="directors">Directed by {{ directors }}</p>
             {{/if}}
-            <a href="{{links.title}}">See title</a>
+            <a href="{{links.title}}">Check online</a>
             {{#if contentType}}
               <p>{{contentType}}{{#if genres}} / {{genres}}{{/if}}</p>
             {{/if}}
@@ -105,6 +105,11 @@
           {{#if links.trailer}}
             <div class="column">
               <a href="{{links.trailer}}">Trailer</a>
+            </div>
+          {{/if}}
+          {{#if links.publicScreener}}
+            <div class="column">
+              <a href="{{links.publicScreener}}">Screener</a>
             </div>
           {{/if}}
         </div>

@@ -5,6 +5,7 @@ import { EmulatorsConfig, EMULATORS_CONFIG } from '../emulator-front-setup';
 import { APP } from '../routes/utils';
 import { PdfParams } from './pdf.interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
+import { ModuleGuard } from '../routes/module.guard';
 
 export const { projectId } = firebase();
 
@@ -18,15 +19,17 @@ interface DownloadSettings {
 export class PdfService {
 
   constructor(
+    private moduleGuard: ModuleGuard,
     @Inject(APP) private app: App,
     @Inject(EMULATORS_CONFIG) private emulatorsConfig: EmulatorsConfig
   ) { }
 
   async download(settings: DownloadSettings) {
     const app = this.app;
-    const data: PdfParams = { app, ...settings };
+    const module = this.moduleGuard.currentModule;
+    const data: PdfParams = { app, module, ...settings };
 
-    const fileName = data.pageTitle ? sanitizeFileName(`titles-export-${data.pageTitle}.pdf`) : `titles-export-${appName[app]}.pdf`;
+    const fileName = data.pageTitle || appName[app];
 
     const params = {
       method: 'POST',
@@ -44,7 +47,7 @@ export class PdfService {
           const url = URL.createObjectURL(blob);
           const element = document.createElement('a');
           element.setAttribute('href', url);
-          element.setAttribute('download', fileName);
+          element.setAttribute('download', sanitizeFileName(`${fileName}.pdf`));
           const event = new MouseEvent('click');
           element.dispatchEvent(event);
           resolve(true);
