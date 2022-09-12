@@ -118,13 +118,13 @@ export const inDevelopmentMovie: Partial<Movie> = {
       filmography: [
         {
           title: 'His first acting',
-          year: 2020
+          year: 2020,
         },
         {
           title: 'His second acting',
-          year: 2021
+          year: 2021,
         },
-      ]
+      ],
     },
     {
       firstName: 'Actor',
@@ -134,14 +134,14 @@ export const inDevelopmentMovie: Partial<Movie> = {
       filmography: [
         {
           title: 'His 55th acting',
-          year: 2020
+          year: 2020,
         },
         {
           title: 'His 56th acting',
-          year: 2021
+          year: 2021,
         },
-      ]
-    }
+      ],
+    },
   ],
   crew: [
     {
@@ -153,13 +153,13 @@ export const inDevelopmentMovie: Partial<Movie> = {
       filmography: [
         {
           title: 'His first movie',
-          year: 2020
+          year: 2020,
         },
         {
           title: 'His second movie',
-          year: 2021
+          year: 2021,
         },
-      ]
+      ],
     },
     {
       role: 'castingDirector',
@@ -170,13 +170,87 @@ export const inDevelopmentMovie: Partial<Movie> = {
       filmography: [
         {
           title: 'His 55th movie',
-          year: 2020
+          year: 2020,
         },
         {
           title: 'His 56th movie',
-          year: 2021
+          year: 2021,
         },
-      ]
-    }
-  ]
+      ],
+    },
+  ],
+  //additional information
+  estimatedBudget: 50000000,
+  audience: {
+    targets: ['E2E tests', 'reliability'],
+    goals: ['sanitation', 'industry'],
+  },
+  //shooting information
+  shooting: {
+    dates: {
+      planned: {
+        from: {
+          period: 'early',
+          month: new Date().toLocaleDateString('en-US', { month: 'long' }),
+          year: new Date().getFullYear() + 1,
+        },
+        to: {
+          period: 'early',
+          month: new Date().toLocaleDateString('en-US', { month: 'long' }),
+          year: new Date().getFullYear() + 2,
+        },
+      },
+    },
+    locations: [
+      {
+        country: 'france',
+        cities: ['Lyon', 'Nantes'],
+      },
+      {
+        country: 'united-kingdom',
+        cities: ['London', 'Manchester'],
+      },
+    ],
+  },
+  expectedPremiere: {
+    date: new Date(new Date().getFullYear() + 2, 0, 1),
+    event: 'E2E summit',
+  },
+  //technical specification
+  format: '1_66',
+  formatQuality: '3DHD',
+  color: 'colorBW',
+  soundFormat: 'dolby-5.1',
+  //promotional elements
+  promotional: {
+    videos: {
+      salesPitch: {
+        title: 'Test Pitch',
+        description: 'This is the journey of an E2E test',
+        type: 'teaser',
+        jwPlayerId: null,
+        privacy: null,
+        collection: null,
+        docId: null,
+        field: null,
+        storagePath: null,
+      },
+    },
+    moodboard: null,
+    notes: [
+      {
+        firstName: 'Note first',
+        lastName: 'Note last',
+        role: 'Director',
+        privacy: null,
+        collection: null,
+        docId: null,
+        field: null,
+        storagePath: null,
+      },
+    ],
+    presentation_deck: null,
+    scenario: null,
+    still_photo: null,
+  },
 };

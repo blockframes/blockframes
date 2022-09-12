@@ -5,6 +5,8 @@ import {
   firestore,
   maintenance,
   // cypress commands
+  check,
+  uncheck,
   get,
   findIn,
   getInList,
@@ -22,6 +24,14 @@ import {
   productionStatus,
   ProductionStatus,
   producerRoles,
+  budgetRange,
+  socialGoals,
+  shootingPeriod,
+  movieFormat,
+  movieFormatQuality,
+  colors,
+  soundFormat,
+  hostedVideoTypes,
 } from '@blockframes/model';
 import { user, org, permissions, inDevelopmentMovie } from '../../fixtures/dashboard/movie-tunnel';
 
@@ -197,8 +207,8 @@ describe('Movie tunnel', () => {
     ///crew member
     get('crew-first-name').type(movie.crew[0].firstName);
     get('crew-last-name').type(movie.crew[0].lastName);
-    get('crew-role').click()
-    getInListbox(crewRoles[movie.crew[0].role])
+    get('crew-role').click();
+    getInListbox(crewRoles[movie.crew[0].role]);
     get('crew-status').click();
     getInListbox(memberStatus[movie.crew[0].status]);
     get('crew-description').type(movie.crew[0].description);
@@ -210,8 +220,8 @@ describe('Movie tunnel', () => {
     findIn('crew-member', 'add').click();
     get('crew-first-name').type(movie.crew[1].firstName);
     get('crew-last-name').type(movie.crew[1].lastName);
-    get('crew-role').click()
-    getInListbox(crewRoles[movie.crew[1].role])
+    get('crew-role').click();
+    getInListbox(crewRoles[movie.crew[1].role]);
     get('crew-status').click();
     getInListbox(memberStatus[movie.crew[1].status]);
     get('crew-description').type(movie.crew[1].description);
@@ -223,6 +233,89 @@ describe('Movie tunnel', () => {
     get('next').click();
 
     //additional information
+    get('budget-range').click();
+    getInListbox(budgetRange[movie.estimatedBudget]);
+    get('target-audience').type(movie.audience.targets[0]);
+    get('row-save').click();
+    get('list-add').click();
+    get('target-audience').type(movie.audience.targets[1]);
+    get('row-save').click();
+    get('goal').click();
+    getInListbox(socialGoals[movie.audience.goals[0]]);
+    getInListbox(socialGoals[movie.audience.goals[1]]);
+    cy.get('body').type('{esc}');
+    get('next').click();
+
+    //shooting information
+    get('shooting-completed').click();
+    get('date-completed').type(dateFromNow(365));
+    get('shooting-progress').click();
+    get('date-progress').type(dateFromNow(-365));
+    get('shooting-planned').click();
+    get('start-period').click();
+    getInListbox(shootingPeriod[movie.shooting.dates.planned.from.period]);
+    get('start-month').click();
+    getInListbox(movie.shooting.dates.planned.from.month);
+    get('start-year').type(movie.shooting.dates.planned.from.year.toString());
+    get('end-period').click();
+    getInListbox(shootingPeriod[movie.shooting.dates.planned.to.period]);
+    get('end-month').click();
+    getInListbox(movie.shooting.dates.planned.to.month);
+    get('end-year').type(movie.shooting.dates.planned.to.year.toString());
+    get('country').click();
+    getInListbox(territories[movie.shooting.locations[0].country]);
+    get('cities').type(`${movie.shooting.locations[0].cities[0]}{enter}`);
+    get('cities').type(`${movie.shooting.locations[0].cities[1]}{enter}`);
+    get('row-save').click();
+    get('list-add').click();
+    get('country').click();
+    getInListbox(territories[movie.shooting.locations[1].country]);
+    get('cities').type(`${movie.shooting.locations[1].cities[0]}{enter}`);
+    get('cities').type(`${movie.shooting.locations[1].cities[1]}{enter}`);
+    get('row-save').click();
+    get('event-premiere').type(movie.expectedPremiere.event);
+    get('event-date').type(movie.expectedPremiere.date.toLocaleDateString());
+    get('next').click();
+
+    //technical specification
+    get('ratio').click();
+    getInListbox(movieFormat[movie.format]);
+    get('resolution').click();
+    getInListbox(movieFormatQuality[movie.formatQuality]);
+    get('color').click();
+    getInListbox(colors[movie.color]);
+    get('sound').click();
+    getInListbox(soundFormat[movie.soundFormat]);
+    get('next').click();
+
+    //promotional elements : no upload possible so far in e2e
+    ///files
+    cy.contains('Presentation Deck'); //just checking we arrived on the good page
+    get('next').click();
+    ///images
+    cy.contains('Promotional Images');
+    get('next').click();
+    ///videos
+    get('title').type(movie.promotional.videos.salesPitch.title);
+    get('video-type').click();
+    getInListbox(hostedVideoTypes[movie.promotional.videos.salesPitch.type]);
+    uncheck('video-privacy');
+    check('video-privacy');
+    get('description').type(movie.promotional.videos.salesPitch.description);
+    uncheck('pitch-privacy');
+    check('pitch-privacy');
+    get('next').click();
+    ///notes & statements
+    get('first-name').type(movie.promotional.notes[0].firstName);
+    get('last-name').type(movie.promotional.notes[0].lastName);
+    get('role').click();
+    getInListbox(movie.promotional.notes[0].role);
+    get('next').click();
+    ///screener movie
+    cy.contains('Screener Video');
+    get('next').click();
+
+    //last step
   });
 });
 
@@ -249,11 +342,18 @@ function checkSideNav(status: ProductionStatus) {
 }
 
 function getInListbox(option: string) {
-  return cy.get('[role="listbox"]')
-      .children()
-      .each($child => {
-        if ($child.text().includes(option)) {
-          cy.wrap($child).click();
-        }
-      });
+  return cy
+    .get('[role="listbox"]')
+    .children()
+    .each($child => {
+      if ($child.text().includes(option)) {
+        cy.wrap($child).click();
+      }
+    });
+}
+
+function dateFromNow(days: number) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return date.toLocaleDateString();
 }
