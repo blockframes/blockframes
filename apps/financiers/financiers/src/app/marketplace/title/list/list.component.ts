@@ -76,11 +76,11 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
           this.movieResultsState.next(movies);
         }
-        /* hitsViewed is just the current state of displayed orgs, this information is important for comparing
+        /* hitsViewed is just the current state of displayed movies, this information is important for comparing
         the overall possible results which is represented by nbHits.
         If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
         So when the next valueChange is happening we need to reset everything and start from beginning  */
-        this.hitsViewed = this.movieResultsState.value.length
+        this.hitsViewed = this.movieResultsState.value.length; // TODO #8893 check this
         if (this.lastPage && this.searchForm.page.value !== 0) {
           this.hitsViewed = 0;
           this.searchForm.page.setValue(0);
