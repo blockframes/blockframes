@@ -39,7 +39,8 @@ import {
   writeRuntimeConfig,
   functionsConfigMap,
   clearDb,
-  startEmulatorsForUnitTests
+  startEmulatorsForUnitTests,
+  updateUsersPassword
 } from '@blockframes/devops';
 import { join } from 'path';
 
@@ -140,6 +141,9 @@ async function runCommand() {
       break;
     case 'createUsers':
       await createUsers();
+      break;
+    case 'updateUsersPassword':
+      await updateUsersPassword(arg1, arg2);
       break;
     case 'clearDb':
       await clearDb(db, false);
