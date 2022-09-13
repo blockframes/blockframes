@@ -18,7 +18,7 @@ import {
   CrewRole,
   Genre,
   Language,
-  MediaValue,
+  ReleaseMedia,
   MemberStatus,
   MovieFormat,
   MovieFormatQuality,
@@ -63,7 +63,7 @@ export interface FieldsConfig {
   }[];
   originalRelease: {
     country: Territory;
-    media: MediaValue;
+    media: ReleaseMedia;
     date: Date;
   }[];
   originalLanguages: Language[];
@@ -228,7 +228,7 @@ export function getFieldConfigs(
     },
       /* r */ 'originalRelease[].media': (value: string) => {
       if (!value) throw optionalWarning('Original release Media');
-      const media = getKeyIfExists('medias', value) as MediaValue;
+      const media = getKeyIfExists('releaseMedias', value);
       if (!media) throw wrongValueError(value, 'Original release Media');
       return media;
     },
@@ -635,7 +635,7 @@ export function getFieldConfigs(
     },
       /* r */ 'originalRelease[].media': (value: string) => {
       if (!value) throw optionalWarning('Original release Media');
-      const media = getKeyIfExists('medias', value) as MediaValue;
+      const media = getKeyIfExists('releaseMedias', value);
       if (!media) throw wrongValueError(value, 'Original release Media');
       return media;
     },

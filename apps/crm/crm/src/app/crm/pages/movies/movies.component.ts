@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Movie, isScreening, CrmMovie, smartJoin, toLabel, Language, MovieLanguageSpecification, displayName, Analytics } from '@blockframes/model';
+import { Movie, isScreening, CrmMovie, smartJoin, toLabel, Language, MovieLanguageSpecification, displayName, Analytics, ReleaseMediaValue, isMandate } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -13,7 +13,7 @@ import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 
 import { where } from 'firebase/firestore';
-import { format, isDate } from 'date-fns';
+import { format } from 'date-fns';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { aggregate } from '@blockframes/analytics/utils';
@@ -53,11 +53,11 @@ export class MoviesComponent implements OnInit {
       map(([movies, orgs, events, mandates]) => {
         const screenings = events.filter(isScreening);
         return movies.map((movie) => {
-          const mandate = mandates.find(m => m.titleId === movie.id);
+          const mandate = mandates.filter(isMandate).find(m => m.titleId === movie.id);
           const org = orgs.find((o) => o.id === movie.orgIds[0]);
           const screeningCount = screenings.filter((e) => e.meta?.titleId === movie.id).length;
-          const releaseMedias = movie.originalRelease.map(release => release.media)
-          return { ...movie, releaseMedias, org, screeningCount, mandate } as CrmMovie;
+          const releaseMedias = movie.originalRelease.map(r => toLabel(r.media, 'releaseMedias') as ReleaseMediaValue).filter(r => r);
+          return { ...movie, releaseMedias: Array.from(new Set(releaseMedias)), org, screeningCount, mandate };
         });
       })
     );
@@ -87,7 +87,7 @@ export class MoviesComponent implements OnInit {
         return toLabel(result, 'languages');
       }
 
-      const exportedRows = movies.map((m) => ({
+      const exportedRows = movies.map(m => ({
         'movie id': m.id,
         title: m.title.international,
         'season number': m.title.series ?? '--',
@@ -131,7 +131,7 @@ export class MoviesComponent implements OnInit {
         'production status': toLabel(m.productionStatus, 'productionStatus'),
         rating: smartJoin(m.rating.map(rate => `${rate.value} (${rate.country ? toLabel(rate.country, 'territories') : 'no country'})`)),
         release: `${m.release.status} ${m.release?.year ? (m.release.year) : ''}`,
-        'release media': smartJoin(m.originalRelease.map(o => `${toLabel(o.country, 'territories')} ( date : ${isDate(o.date) ? format(o.date, 'MM/dd/yyyy') : '--'} / media : ${o.media ? toLabel(o.media, 'medias') : '--'})`)),
+        'release media': smartJoin(m.releaseMedias),
         'running time': m.runningTime?.time,
         'running time status': m.runningTime?.status,
         'running time episode count': m.runningTime?.episodeCount,

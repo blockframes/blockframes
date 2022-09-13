@@ -2,7 +2,6 @@ import { createStorageFile, StorageFile, StorageVideo } from './media';
 import {
   MovieLanguageType,
   Language,
-  MediaValue,
   Scoring,
   Certification,
   Color,
@@ -25,7 +24,9 @@ import {
   App,
   app,
   productionStatus,
-  MovieNoteRole
+  MovieNoteRole,
+  ReleaseMedia,
+  ReleaseMediaValue
 } from './static';
 import type {
   Producer,
@@ -172,7 +173,7 @@ export type LanguageRecord = Partial<{ [language in Language]: MovieLanguageSpec
 export interface MovieOriginalRelease {
   date: Date;
   country: Territory;
-  media?: MediaValue;
+  media?: ReleaseMedia;
 }
 
 export interface MovieRating {
@@ -257,7 +258,7 @@ export interface SyncMovieAnalyticsOptions {
 export interface CrmMovie extends Movie {
   org: Organization;
   screeningCount: number;
-  releaseMedias: MediaValue[];
+  releaseMedias: ReleaseMediaValue[];
   mandate: Mandate;
 }
 

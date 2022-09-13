@@ -45,7 +45,8 @@ import {
   privacies,
   emailErrorCode,
   festival,
-  movieNoteRoles
+  movieNoteRoles,
+  releaseMedias
 } from './static-model';
 
 export type App = typeof app[number];
@@ -92,7 +93,9 @@ export type InvitationType = keyof typeof invitationType;
 export type Language = keyof typeof languages;
 
 export type Media = keyof typeof medias;
-export type MediaValue = typeof medias[Media];
+
+export type ReleaseMedia = keyof typeof releaseMedias;
+export type ReleaseMediaValue = typeof releaseMedias[Media];
 
 export type MovieCurrency = keyof typeof movieCurrencies;
 
@@ -142,7 +145,6 @@ export type StakeholderRole = keyof typeof stakeholderRoles;
 export type StakeholderRoleValue = keyof typeof stakeholderRoles[StakeholderRole] & string;
 
 export type MovieNoteRole = keyof typeof movieNoteRoles;
-export type MovieNoteRoleValue = typeof movieNoteRoles[MovieNoteRole];
 
 export type StoreStatus = keyof typeof storeStatus;
 
