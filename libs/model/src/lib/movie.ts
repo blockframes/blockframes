@@ -24,7 +24,8 @@ import {
   ScreeningStatus,
   App,
   app,
-  productionStatus
+  productionStatus,
+  MovieNoteRole
 } from './static';
 import type {
   Producer,
@@ -226,7 +227,7 @@ export interface MovieShootingDate {
   planned?: MoviePlannedShootingDateRange;
 }
 
-export type MovieNote = { firstName: string; lastName: string; role: string } & StorageFile;
+export type MovieNote = { firstName: string; lastName: string; role?: MovieNoteRole } & StorageFile;
 
 export interface MoviePlannedShootingDateRange {
   from?: MoviePlannedShooting;
@@ -487,7 +488,6 @@ export function createMovieNote(params: Partial<MovieNote> = {}): MovieNote {
   return {
     firstName: '',
     lastName: '',
-    role: '',
     ...file,
     ...params,
   };

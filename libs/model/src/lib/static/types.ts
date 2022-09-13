@@ -44,7 +44,8 @@ import {
   eventTypes,
   privacies,
   emailErrorCode,
-  festival
+  festival,
+  movieNoteRoles
 } from './static-model';
 
 export type App = typeof app[number];
@@ -118,7 +119,7 @@ export type ProducerRoleValue = typeof producerRoles[ProducerRole];
 export type ProductionStatus = keyof typeof productionStatus;
 export type ProductionStatusValue = typeof productionStatus[ProductionStatus];
 
-export type EventTypes  = keyof typeof eventTypes;
+export type EventTypes = keyof typeof eventTypes;
 export type EventTypesValue = typeof eventTypes[EventTypes];
 
 export type Rating = keyof typeof rating;
@@ -139,6 +140,9 @@ export type SoundFormat = keyof typeof soundFormat;
 
 export type StakeholderRole = keyof typeof stakeholderRoles;
 export type StakeholderRoleValue = keyof typeof stakeholderRoles[StakeholderRole] & string;
+
+export type MovieNoteRole = keyof typeof movieNoteRoles;
+export type MovieNoteRoleValue = typeof movieNoteRoles[MovieNoteRole];
 
 export type StoreStatus = keyof typeof storeStatus;
 

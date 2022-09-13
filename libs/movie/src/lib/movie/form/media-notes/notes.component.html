@@ -11,15 +11,10 @@
         <ng-template formView let-noteForm let-index="index">
           <article fxLayout="column" fxLayoutGap="24px">
             <form-display-name [form]="noteForm"></form-display-name>
-            <mat-form-field appearance="outline">
+            <static-select test-id="role" [control]="noteForm.get('role')" scope="movieNoteRoles"
+              [withoutValues]="['']">
               <mat-label>Role</mat-label>
-              <mat-select test-id="role" [formControl]="noteForm.get('role')">
-                <mat-option [value]="null"></mat-option>
-                <mat-option *ngFor="let role of roles" [value]="role">
-                  {{ role | titlecase }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            </static-select>
             <file-uploader
               test-id="intent-note"
               [queueIndex]="index | fileListIndex: form.promotional.get('notes').value"

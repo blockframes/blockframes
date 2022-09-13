@@ -25,8 +25,6 @@ export class MovieFormMediaNotesComponent implements OnInit, OnDestroy {
   movieId = this.route.snapshot.params.movieId;
   form = this.shell.getForm('movie');
 
-  roles = ['producer', 'director', 'other'];
-
   private sub: Subscription;
 
   constructor(

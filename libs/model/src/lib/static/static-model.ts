@@ -400,6 +400,12 @@ export const stakeholderRoles = {
   broadcasterCoproducer: 'Broadcaster coproducer'
 } as const
 
+export const movieNoteRoles = {
+  producer: 'Producer',
+  director: 'Director',
+  other: 'Other',
+} as const
+
 export const storeStatus = {
   submitted: 'Submitted',
   accepted: 'Accepted',
@@ -1314,6 +1320,7 @@ export const staticModel = {
   orgActivity,
   soundFormat,
   stakeholderRoles,
+  movieNoteRoles,
   storeStatus,
   unitBox,
   organizationStatus,
