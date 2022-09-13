@@ -18,6 +18,13 @@ interface DownloadSettings {
 @Injectable({ providedIn: 'root' })
 export class PdfService {
 
+  /**
+   * Firebase functions only allow a max size of 10mb for http requests
+   * @see https://firebase.google.com/docs/functions/quotas#resource_limits
+   * So we need to add a maximum of movies that can be exported to PDF.
+   */
+  public exportLimit = 450;
+
   constructor(
     private moduleGuard: ModuleGuard,
     @Inject(APP) private app: App,
@@ -41,7 +48,7 @@ export class PdfService {
       ? `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`
       : `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`
 
-    await new Promise(resolve => {
+    const status = await new Promise(resolve => {
       fetch(url, params,).then(res => res.blob())
         .then(blob => {
           const url = URL.createObjectURL(blob);
@@ -51,8 +58,9 @@ export class PdfService {
           const event = new MouseEvent('click');
           element.dispatchEvent(event);
           resolve(true);
-        });
+        }).catch(_ => resolve(false));
     });
 
+    return status as boolean;
   }
 }
