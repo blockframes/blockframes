@@ -6,6 +6,7 @@ import { PdfRequest } from '@blockframes/utils/pdf/pdf.interfaces';
 import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
 import { getDocument, getStorage } from '@blockframes/firebase-utils';
 import { storageBucket } from './environments/environment';
+import { gzipSync } from 'node:zlib';
 
 interface PdfTitleData {
   title: string;
@@ -159,7 +160,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
   }
 
   const { titleIds, app, pageTitle, orgId, module } = req.body;
-  if (!titleIds || !app) {
+  if (!titleIds || !app || !module) {
     res.status(500).send();
     return;
   }
@@ -226,9 +227,17 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
 
   const buffer = await generate('titles', app, data, pageTitle, orgId);
 
+  /**
+   * Firebase functions only allow a max size of 10mb for http requests
+   * @see https://firebase.google.com/docs/functions/quotas#resource_limits
+   * So we try to compress it but if gzip size is > 10mb, function will fail
+   */
+  const gzip = gzipSync(buffer);
+
+  res.set('Content-Encoding', 'gzip');
   res.set('Content-Type', 'application/pdf');
   res.set('Content-Length', buffer.length.toString());
-  res.status(200).send(buffer);
+  res.status(200).send(gzip);
   return;
 };
 

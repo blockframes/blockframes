@@ -181,12 +181,21 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
   }
 
   async export(movies: Movie[]) {
+    const titleIds = movies.map(m => m.id);
+    if (titleIds.length >= this.pdfService.exportLimit) {
+      this.snackbar.open('You can\'t have an export with that many titles.', 'close', { duration: 5000 });
+      return;
+    }
+
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
     this.cdr.markForCheck();
     const pageTitle = this.createPdfTitle();
-    await this.pdfService.download({ titleIds: movies.map(m => m.id), orgId: this.orgService.org.id, pageTitle });
+    const exportStatus = await this.pdfService.download({ titleIds, orgId: this.orgService.org.id, pageTitle });
     snackbarRef.dismiss();
+    if (!exportStatus) {
+      this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });
+    }
     this.exporting = false;
     this.cdr.markForCheck();
   }

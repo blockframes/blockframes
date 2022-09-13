@@ -67,18 +67,18 @@
   </list-filter>
 
   <!-- TITLE COUNT (ng-content)-->
-  <list-page-description *ngIf="movies$ | async as movies">
+  <list-page-description *ngIf="nbHits">
     <span i18n  class="mat-body-2">
-      There {movies.length, plural, =1 {is} other {are}} {{ movies.length }} title{movies.length, plural, =1 {} other {s}}
+      There {nbHits, plural, =1 {is} other {are}} {{ nbHits }} title{nbHits, plural, =1 {} other {s}}
       available.
     </span>
   </list-page-description>
 
   <!-- EXPORT (ng-content)-->
-  <pdf-export *ngIf="movies$ | async as movies">
-    <button [disabled]="exporting" mat-button (click)="export(movies)" matTooltip="Export to PDF">
+  <pdf-export *ngIf="nbHits">
+    <button [disabled]="exporting" mat-button (click)="export()" matTooltip="Export to PDF">
       <mat-icon svgIcon="pdf"></mat-icon>
-      <span>Export {movies.length, plural, =1 {title} other {titles}}</span>
+      <span>Export {nbHits, plural, =1 {title} other {titles}}</span>
     </button>
   </pdf-export>
 
@@ -90,5 +90,9 @@
       </button>
     </movie-card>
   </ng-template>
+
+  <list-page-progress *ngIf="hitsViewed$ | async as hitsViewed" [value]=" nbHits ? hitsViewed / nbHits * 100 : 0" (loadMore)="loadMore()">
+    You've viewed {{ hitsViewed }} of {{ nbHits }} titles
+  </list-page-progress>
 
 </list-page>

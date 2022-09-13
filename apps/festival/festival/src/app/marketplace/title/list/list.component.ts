@@ -8,7 +8,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
+import { debounceTime, switchMap, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
 import { StoreStatus, toLabel } from '@blockframes/model';
@@ -28,6 +28,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   private movieResultsState = new BehaviorSubject<AlgoliaMovie[]>(null);
 
   public movies$: Observable<AlgoliaMovie[]>;
+  private movieIds: string[] = [];
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('festival', this.storeStatus);
   public exporting = false;
@@ -61,15 +62,15 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     const sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
       distinctUntilChanged(),
       debounceTime(500),
-      switchMap(() => this.searchForm.search(true)),
-      tap(res => this.nbHits = res.nbHits),
-      pluck('hits'),
-    ).subscribe(movies => {
+      switchMap(async () => [await this.searchForm.search(true), await this.searchForm.search(true, { hitsPerPage: this.pdfService.exportLimit, page: 0 })]),
+      tap(([res]) => this.nbHits = res.nbHits),
+    ).subscribe(([movies, moviesToExport]) => {
+      this.movieIds = moviesToExport.hits.map(m => m.objectID);
       if (this.loadMoreToggle) {
-        this.movieResultsState.next(this.movieResultsState.value.concat(movies))
+        this.movieResultsState.next(this.movieResultsState.value.concat(movies.hits))
         this.loadMoreToggle = false;
       } else {
-        this.movieResultsState.next(movies);
+        this.movieResultsState.next(movies.hits);
       }
       /* hitsViewed is just the current state of displayed movies, this information is important for comparing
       the overall possible results which is represented by nbHits.
@@ -110,12 +111,20 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subs.forEach(element => element.unsubscribe());
   }
 
-  async export(movies: AlgoliaMovie[]) {
+  async export() {
+    if (this.movieIds.length >= this.pdfService.exportLimit) {
+      this.snackbar.open('You can\'t have an export with that many titles.', 'close', { duration: 5000 });
+      return;
+    }
+
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
     const pageTitle = this.createPdfTitle();
-    await this.pdfService.download({ titleIds: movies.map(m => m.objectID), pageTitle });
+    const exportStatus = await this.pdfService.download({ titleIds: this.movieIds, pageTitle });
     snackbarRef.dismiss();
+    if (!exportStatus) {
+      this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });
+    }
     this.exporting = false;
   }
 
