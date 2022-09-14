@@ -86,7 +86,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Month</mat-label>
-                  <mat-select matInput [formControl]="shootingDateFrom.get('month')" placeholder="Month" test-id="end-month">
+                  <mat-select matInput [formControl]="shootingDateTo.get('month')" placeholder="Month" test-id="end-month">
                     <mat-option *ngFor="let month of months" [value]="month">
                       {{ month | toLabel: 'months' }}
                     </mat-option>

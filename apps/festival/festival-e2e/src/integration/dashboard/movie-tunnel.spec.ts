@@ -10,6 +10,7 @@ import {
   get,
   findIn,
   getInList,
+  getInListbox,
   getAllStartingWith,
 } from '@blockframes/testing/cypress/browser';
 import {
@@ -34,6 +35,7 @@ import {
   hostedVideoTypes,
 } from '@blockframes/model';
 import { user, org, permissions, inDevelopmentMovie } from '../../fixtures/dashboard/movie-tunnel';
+import { addDays, subDays, format } from 'date-fns';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -248,9 +250,9 @@ describe('Movie tunnel', () => {
 
     //shooting information
     get('shooting-completed').click();
-    get('date-completed').type(dateFromNow(365));
+    get('date-completed').type(format(addDays(new Date(), 365), 'dd/MM/yyyy'));
     get('shooting-progress').click();
-    get('date-progress').type(dateFromNow(-365));
+    get('date-progress').type(format(subDays(new Date(), 365), 'dd/MM/yyyy'));
     get('shooting-planned').click();
     get('start-period').click();
     getInListbox(shootingPeriod[movie.shooting.dates.planned.from.period]);
@@ -274,7 +276,7 @@ describe('Movie tunnel', () => {
     get('cities').type(`${movie.shooting.locations[1].cities[1]}{enter}`);
     get('row-save').click();
     get('event-premiere').type(movie.expectedPremiere.event);
-    get('event-date').type(movie.expectedPremiere.date.toLocaleDateString());
+    get('event-date').type(format(movie.expectedPremiere.date, 'dd/MM/yyyy'));
     get('next').click();
 
     //technical specification
@@ -288,7 +290,7 @@ describe('Movie tunnel', () => {
     getInListbox(soundFormat[movie.soundFormat]);
     get('next').click();
 
-    //promotional elements : no upload possible so far in e2e
+    //promotional elements : no upload possible so far in e2e - see issue #8900
     ///files
     cy.contains('Presentation Deck'); //just checking we arrived on the good page
     get('next').click();
@@ -330,8 +332,97 @@ describe('Movie tunnel', () => {
     get('language').should('contain', `${languages[movie.originalLanguages[0]]}, ${languages[movie.originalLanguages[1]]}`);
     get('genres').should('contain', `${genres[movie.genres[0]]}, ${genres[movie.genres[1]]}`);
     get('runtime').should('contain', screeningStatus[movie.runningTime.status]);
-    get('director_0').should('contain', movie.directors[0].firstName).should('contain', movie.directors[0].lastName);
-    //get('').should('contain',)
+    get('director_0')
+      .should('contain', movie.directors[0].firstName)
+      .and('contain', movie.directors[0].lastName)
+      .and('contain', directorCategory[movie.directors[0].category])
+      .and('contain', movie.directors[0].description);
+    ///storyline elements
+    get('logline').should('contain', movie.logline);
+    get('synopsis').should('contain', movie.synopsis);
+    get('key-assets').should('contain', movie.keyAssets);
+    get('keywords').should('contain', movie.keywords[0]).and('contain', movie.keywords[1]);
+    ///production information
+    get('prod-company_0')
+      .should('contain',
+      `${territories[movie.stakeholders.productionCompany[0].countries[0]]}, ${
+          territories[movie.stakeholders.productionCompany[0].countries[1]]}`
+      )
+      .and('contain', movie.stakeholders.productionCompany[0].displayName);
+    get('prod-company_1')
+      .should('contain',
+        `${territories[movie.stakeholders.productionCompany[1].countries[0]]}, ${
+          territories[movie.stakeholders.productionCompany[1].countries[1]]}`
+      )
+      .and('contain', movie.stakeholders.productionCompany[1].displayName);
+    get('coprod-company_0')
+      .should('contain', territories[movie.stakeholders.coProductionCompany[0].countries[0]])
+      .and('contain', movie.stakeholders.coProductionCompany[0].displayName);
+    get('producer_0')
+      .should('contain', producerRoles[movie.producers[0].role])
+      .and('contain', movie.producers[0].firstName)
+      .and('contain', movie.producers[0].lastName);
+    get('producer_1')
+      .should('contain', producerRoles[movie.producers[1].role])
+      .and('contain', movie.producers[1].firstName)
+      .and('contain', movie.producers[1].lastName);
+    get('distributor_0')
+      .should('contain', territories[movie.stakeholders.distributor[0].countries[0]])
+      .and('contain', movie.stakeholders.distributor[0].displayName);
+    get('sales-agent_0')
+      .should('contain', territories[movie.stakeholders.salesAgent[0].countries[0]])
+      .and('contain', movie.stakeholders.salesAgent[0].displayName);
+    ///artistic team
+    get('cast_0')
+      .should('contain', movie.cast[0].firstName)
+      .and('contain', movie.cast[0].lastName)
+      .and('contain', `${movie.cast[0].filmography[0].title} (${movie.cast[0].filmography[0].year})`)
+      .and('contain', `${movie.cast[0].filmography[1].title} (${movie.cast[0].filmography[1].year})`);
+    get('cast_1')
+      .should('contain', movie.cast[1].firstName)
+      .and('contain', movie.cast[1].lastName)
+      .and('contain', `${movie.cast[1].filmography[0].title} (${movie.cast[1].filmography[0].year})`)
+      .and('contain', `${movie.cast[1].filmography[1].title} (${movie.cast[1].filmography[1].year})`);
+    get('crew_0')
+      .should('contain', movie.crew[0].firstName)
+      .and('contain', movie.crew[0].lastName)
+      .and('contain', `${movie.crew[0].filmography[0].title} (${movie.crew[0].filmography[0].year})`)
+      .and('contain', `${movie.crew[0].filmography[1].title} (${movie.crew[0].filmography[1].year})`);
+    get('crew_1')
+      .should('contain', movie.crew[1].firstName)
+      .and('contain', movie.crew[1].lastName)
+      .and('contain', `${movie.crew[1].filmography[0].title} (${movie.crew[1].filmography[0].year})`)
+      .and('contain', `${movie.crew[1].filmography[1].title} (${movie.crew[1].filmography[1].year})`);
+    ///additional informationation
+    get('budget-range').should('contain', budgetRange[movie.estimatedBudget]);
+    get('target').should('contain', movie.audience.targets[0]).and('contain', movie.audience.targets[1]);
+    get('goals').should('contain', socialGoals[movie.audience.goals[0]]).and('contain', socialGoals[movie.audience.goals[1]]);
+    ///shooting informationation
+    get('shooting-from-period').should('contain', shootingPeriod[movie.shooting.dates.planned.from.period]);
+    get('shooting-from-month').should('contain', movie.shooting.dates.planned.from.month);
+    get('shooting-from-year').should('contain', movie.shooting.dates.planned.from.year);
+    get('shooting-to-period').should('contain', shootingPeriod[movie.shooting.dates.planned.to.period]);
+    get('shooting-to-month').should('contain', movie.shooting.dates.planned.to.month);
+    get('shooting-to-year').should('contain', movie.shooting.dates.planned.to.year);
+    get('location_0').should('contain',
+      territories[movie.shooting.locations[0].country] + ' - ' +
+        movie.shooting.locations[0].cities[0] + ', ' +
+        movie.shooting.locations[0].cities[1]
+    );
+    get('location_1').should('contain',
+      territories[movie.shooting.locations[1].country] + ' - ' +
+        movie.shooting.locations[1].cities[0] + ', ' +
+        movie.shooting.locations[1].cities[1]
+    );
+    get('premiere-event').should('contain', movie.expectedPremiere.event);
+    get('premiere-date').should('contain', format(movie.expectedPremiere.date, 'MMMM yyyy'));
+    ///technical specifications
+    get('ratio').should('contain', movieFormat[movie.format]);
+    get('resolution').should('contain', movieFormatQuality[movie.formatQuality]);
+    get('color').should('contain', colors[movie.color]);
+    get('sound').should('contain', soundFormat[movie.soundFormat]);
+
+    //TODO: continue #6820
   });
 });
 
@@ -355,21 +446,4 @@ function checkSideNav(status: ProductionStatus) {
   if (status !== 'development' && 'shooting') get('steps-list').should('contain', 'Selections & Reviews');
   if (status !== 'post_production' && 'finished' && 'released') get('steps-list').should('contain', 'Notes & Statements');
   if (status !== 'released') get('steps-list').should('contain', 'Shooting Information');
-}
-
-function getInListbox(option: string) {
-  return cy
-    .get('[role="listbox"]')
-    .children()
-    .each($child => {
-      if ($child.text().includes(option)) {
-        cy.wrap($child).click();
-      }
-    });
-}
-
-function dateFromNow(days: number) {
-  const date = new Date();
-  date.setDate(date.getDate() + days);
-  return date.toLocaleDateString();
 }

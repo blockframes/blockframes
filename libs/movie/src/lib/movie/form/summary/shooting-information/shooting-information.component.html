@@ -32,33 +32,33 @@
     <li *ngIf="isThereShootingPlanned()">
       <strong>Shooting Planned </strong>
       <span>From
-        <missing-control [control]="shootingPlanned.get('from').get('period')" [link]="link" fragment="shooting-dates">
+        <missing-control [control]="shootingPlanned.get('from').get('period')" [link]="link" fragment="shooting-dates" test-id="shooting-from-period">
           <ng-template let-planned>
             <span>{{ planned | toLabel: 'shootingPeriod' }} </span>
           </ng-template>
         </missing-control>
-        <missing-control [control]="shootingPlanned.get('from').get('month')" [link]="link" fragment="shooting-dates">
+        <missing-control [control]="shootingPlanned.get('from').get('month')" [link]="link" fragment="shooting-dates" test-id="shooting-from-month">
           <ng-template let-planned>
             <span>{{ planned | titlecase }} </span>
           </ng-template>
         </missing-control>
-        <missing-control [control]="shootingPlanned.get('from').get('year')" [link]="link" fragment="shooting-dates">
+        <missing-control [control]="shootingPlanned.get('from').get('year')" [link]="link" fragment="shooting-dates" test-id="shooting-from-year">
           <ng-template let-planned>
             <span>{{ planned }}</span>
           </ng-template>
         </missing-control>
         to
-        <missing-control [control]="shootingPlanned.get('to').get('period')" [link]="link" fragment="shooting-dates">
+        <missing-control [control]="shootingPlanned.get('to').get('period')" [link]="link" fragment="shooting-dates" test-id="shooting-to-period">
           <ng-template let-planned>
             <span>{{ planned | toLabel: 'shootingPeriod' }} </span>
           </ng-template>
         </missing-control>
-        <missing-control [control]="shootingPlanned.get('to').get('month')" [link]="link" fragment="shooting-dates">
+        <missing-control [control]="shootingPlanned.get('to').get('month')" [link]="link" fragment="shooting-dates" test-id="shooting-to-month">
           <ng-template let-planned>
             <span>{{ planned | titlecase }} </span>
           </ng-template>
         </missing-control>
-        <missing-control [control]="shootingPlanned.get('to').get('year')" [link]="link" fragment="shooting-dates">
+        <missing-control [control]="shootingPlanned.get('to').get('year')" [link]="link" fragment="shooting-dates" test-id="shooting-to-year">
           <ng-template let-planned>
             <span>{{ planned }}</span>
           </ng-template>
@@ -69,8 +69,8 @@
       <strong>Shooting Locations</strong>
       <missing-control [control]="shootingLocations" [link]="link" fragment="shooting-locations">
         <ng-template let-shooting>
-          <ng-container *ngFor="let location of shooting">
-    <li>
+          <ng-container *ngFor="let location of shooting; let i = index">
+    <li [attr.test-id]="'location_' + i">
       {{ location.country | toLabel: 'territories' }} - {{ location.cities.join(', ') | titlecase }}
     </li>
     </ng-container>
@@ -79,13 +79,13 @@
     </li>
     <li>
       <strong>Expected Premiere </strong>
-      <missing-control [control]="movie.expectedPremiere.get('event')" [link]="link" fragment="expected-premiere">
+      <missing-control [control]="movie.expectedPremiere.get('event')" [link]="link" fragment="expected-premiere" test-id="premiere-event">
         <ng-template let-event>
           {{ event }}
         </ng-template>
       </missing-control>
       <span> - </span>
-      <missing-control [control]="movie.expectedPremiere.get('date')" [link]="link" fragment="expected-premiere">
+      <missing-control [control]="movie.expectedPremiere.get('date')" [link]="link" fragment="expected-premiere" test-id="premiere-date">
         <ng-template let-date>
           {{ date | date: 'MMMM y' }}
         </ng-template>

@@ -8,7 +8,7 @@
   </h6>
   <ul>
     <li>
-      <missing-control test-id="logline" [control]="movie.get('logline')" [link]="link" fragment="logline">
+      <missing-control [control]="movie.get('logline')" [link]="link" fragment="logline" test-id="logline">
       </missing-control>
     </li>
   </ul>
@@ -24,7 +24,7 @@
   </h6>
   <ul>
     <li>
-      <missing-control test-id="synopsis" [control]="movie.get('synopsis')" [link]="link" fragment="synopsis">
+      <missing-control [control]="movie.get('synopsis')" [link]="link" fragment="synopsis" test-id="synopsis">
       </missing-control>
     </li>
   </ul>
@@ -40,7 +40,7 @@
   </h6>
   <ul>
     <li>
-      <missing-control test-id="key-assets" [control]="movie.get('keyAssets')" [link]="link" fragment="key-assets">
+      <missing-control [control]="movie.get('keyAssets')" [link]="link" fragment="key-assets" test-id="key-assets">
       </missing-control>
     </li>
   </ul>
@@ -56,7 +56,7 @@
   </h6>
   <ul>
     <li>
-      <missing-control test-id="keyword-summary" [control]="movie.get('keywords')" [link]="link" fragment="keywords">
+      <missing-control [control]="movie.get('keywords')" [link]="link" fragment="keywords" test-id="keywords">
         <ng-template let-keywords>
           <span>{{ keywords.join(', ') }}</span>
         </ng-template>
