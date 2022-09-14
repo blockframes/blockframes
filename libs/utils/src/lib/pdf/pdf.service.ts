@@ -1,18 +1,23 @@
 import { Inject, Injectable } from '@angular/core';
-import { App, appName } from '@blockframes/model';
+import { App, appName, toLabel } from '@blockframes/model';
 import { firebaseRegion, firebase } from '@env';
 import { EmulatorsConfig, EMULATORS_CONFIG } from '../emulator-front-setup';
 import { APP } from '../routes/utils';
-import { PdfParams } from './pdf.interfaces';
+import { PdfParams, PdfParamsFilters } from './pdf.interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { ModuleGuard } from '../routes/module.guard';
+import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
+import { MovieSearchForm } from '@blockframes/movie/form/search.form';
+import { trimString, toGroupLabel } from '@blockframes/utils/pipes';
 
 export const { projectId } = firebase();
 
 interface DownloadSettings {
   titleIds: string[],
-  pageTitle?: string,
   orgId?: string,
+  forms?: {
+    avails?: AvailsForm,
+    search?: MovieSearchForm
+  }
 }
 
 @Injectable({ providedIn: 'root' })
@@ -26,17 +31,19 @@ export class PdfService {
   public exportLimit = 450;
 
   constructor(
-    private moduleGuard: ModuleGuard,
     @Inject(APP) private app: App,
     @Inject(EMULATORS_CONFIG) private emulatorsConfig: EmulatorsConfig
   ) { }
 
   async download(settings: DownloadSettings) {
-    const app = this.app;
-    const module = this.moduleGuard.currentModule;
-    const data: PdfParams = { app, module, ...settings };
-
-    const fileName = data.pageTitle || appName[app];
+    const filters = this.getFilters(settings.forms);
+    const fileName = this.getFileName(filters);
+    const data: PdfParams = {
+      app: this.app,
+      filters,
+      titleIds: settings.titleIds,
+      orgId: settings.orgId
+    };
 
     const params = {
       method: 'POST',
@@ -62,5 +69,54 @@ export class PdfService {
     });
 
     return status as boolean;
+  }
+
+  /**
+   * catalog: Archipel Content Library - Avails for [Territory] in [Rights] - [Content Type] - [Genre]
+   * festival: Archipel Market Library - [Genre] - [Country of Origin]
+   * financiers: Media Financiers Library
+   * @param filters 
+   * @returns string
+   */
+  private getFileName(filters: PdfParamsFilters) {
+    const fileNameParts: string[] = [`${appName[this.app]} Library`];
+
+    if (filters.avails ) fileNameParts.push(`Avails for ${filters.avails}`);
+    if (filters.contentType) fileNameParts.push(filters.contentType);
+    if (filters.genres) fileNameParts.push(filters.genres);
+    if (filters.originCountries) fileNameParts.push(filters.originCountries);
+
+    return fileNameParts.filter(s => s).join(' - ');
+  }
+
+  private getFilters(forms: { avails?: AvailsForm, search?: MovieSearchForm }) {
+    const filters: PdfParamsFilters = {};
+
+    if (forms?.avails) {
+      const availForm = forms.avails.value;
+
+      if (availForm.territories?.length && availForm.medias?.length) {
+        const territories = toGroupLabel(availForm.territories, 'territories', 'World').join(', ');
+        const rights = toGroupLabel(availForm.medias, 'medias', 'All Rights').join(', ');
+        filters.avails = `${trimString(territories, 50, true)} in ${trimString(rights, 50, true)}`;
+      }
+
+    }
+
+    if (forms?.search) {
+      const searchForm = forms.search.value;
+
+      if (this.app === 'catalog' && searchForm.contentType) {
+        filters.contentType = toLabel(searchForm.contentType, 'contentType');
+      }
+
+      if (searchForm.genres) filters.genres = toLabel(searchForm.genres, 'genres');
+
+      if (this.app === 'festival' && searchForm.originCountries) {
+        filters.originCountries = toLabel(searchForm.originCountries, 'territories');
+      }
+    }
+
+    return filters;
   }
 }

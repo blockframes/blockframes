@@ -12,7 +12,7 @@
   <ng-container *ngIf="sales.length; else noSales">
     <div fxLayout="row" fxLayoutAlign="space-between end">
       <h3>Results</h3>
-      <button [disabled]="exporting" mat-button (click)="export(sales)">
+      <button [disabled]="exporting" matTooltip="Links in the export will redirect to the marketplace" mat-button (click)="export(sales)">
         <mat-icon svgIcon="pdf"></mat-icon>
         <span>Export results</span>
       </button>

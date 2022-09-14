@@ -1,8 +1,8 @@
-import { festival, App, Movie, smartJoin, displayName, Organization, Module } from '@blockframes/model';
+import { festival, App, Movie, smartJoin, displayName, Organization, appName } from '@blockframes/model';
 import { toLabel } from '@blockframes/model';
 import { Response } from 'firebase-functions';
 import { applicationUrl } from '@blockframes/utils/apps';
-import { PdfRequest } from '@blockframes/utils/pdf/pdf.interfaces';
+import { PdfParamsFilters, PdfRequest } from '@blockframes/utils/pdf/pdf.interfaces';
 import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
 import { getDocument, getStorage } from '@blockframes/firebase-utils';
 import { storageBucket } from './environments/environment';
@@ -121,30 +121,25 @@ const getLogo = async (app: App, fs: any, path: any, orgId?: string) => {
   return htmlLogo;
 }
 
-const getTitleLink = (m: Movie, app: App, module: Module) => {
-  const appUrl = applicationUrl[app];
-  return `${appUrl}/c/o/${module}/title/${m.id}`;
+const getTitleLink = (m: Movie, urlBase: string) => {
+  return `${urlBase}${m.id}`;
 }
 
-const getTrailerLink = (m: Movie, app: App, module: Module) => {
+const getTrailerLink = (m: Movie, urlBase: string) => {
   const hasTrailer = m.promotional.videos.otherVideos?.some(v => v.storagePath && v.privacy === 'public');
   if (!hasTrailer) return '';
-  const appUrl = applicationUrl[app];
-  return `${appUrl}/c/o/${module}/title/${m.id}/main#trailer`;
+  return `${urlBase}${m.id}/main#trailer`;
 }
 
-const getPublicScreenerLink = (m: Movie, app: App, module: Module) => {
+const getPublicScreenerLink = (m: Movie, app: App, urlBase: string) => {
   const hasPublicScreener = app === 'catalog' && !!m.promotional.videos.publicScreener?.jwPlayerId;
   if (!hasPublicScreener) return '';
-  const appUrl = applicationUrl[app];
-  return `${appUrl}/c/o/${module}/title/${m.id}/main#trailer`;
+  return `${urlBase}${m.id}/main#trailer`;
 }
 
-const getAvailsLink = (m: Movie, app: App, module: Module) => {
+const getAvailsLink = (m: Movie, app: App, urlBase: string) => {
   if (app !== 'catalog') return '';
-  const appUrl = applicationUrl[app];
-  if (module === 'marketplace') return `${appUrl}/c/o/marketplace/title/${m.id}/avails/map`;
-  return `${appUrl}/c/o/dashboard/avails/${m.id}/map`;
+  return `${urlBase}${m.id}/avails/map`;
 }
 
 export const createPdf = async (req: PdfRequest, res: Response) => {
@@ -159,8 +154,8 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     return;
   }
 
-  const { titleIds, app, pageTitle, orgId, module } = req.body;
-  if (!titleIds || !app || !module) {
+  const { titleIds, app, orgId, filters } = req.body;
+  if (!titleIds || !app) {
     res.status(500).send();
     return;
   }
@@ -175,6 +170,9 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
   const franceFlag = fs.readFileSync(path.resolve(`assets/images/france.png`), 'base64');
 
   const data: PdfTitleData[] = [];
+
+  const appUrl = applicationUrl[app];
+  const urlBase = `${appUrl}/c/o/marketplace/title/`;
 
   for (const m of titles) {
 
@@ -199,10 +197,10 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
         dubs: getDubs(m),
       },
       links: {
-        title: getTitleLink(m, app, module),
-        trailer: getTrailerLink(m, app, module),
-        publicScreener: getPublicScreenerLink(m, app, module),
-        avails: getAvailsLink(m, app, module),
+        title: getTitleLink(m, urlBase),
+        trailer: getTrailerLink(m, urlBase),
+        publicScreener: getPublicScreenerLink(m, app, urlBase),
+        avails: getAvailsLink(m, app, urlBase),
       },
       prizes: getPrizes(m),
       certifications: []
@@ -225,7 +223,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
     data.push(pdfTitle);
   }
 
-  const buffer = await generate('titles', app, data, pageTitle, orgId);
+  const buffer = await generate('titles', app, data, filters, orgId);
 
   /**
    * Firebase functions only allow a max size of 10mb for http requests
@@ -241,7 +239,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
   return;
 };
 
-async function generate(templateName: string, app: App, titles: PdfTitleData[], pageTitle: string, orgId?: string) {
+async function generate(templateName: string, app: App, titles: PdfTitleData[], filters: PdfParamsFilters, orgId?: string) {
   const [fs, hb, path, { default: puppeteer }] = await Promise.all([
     import('fs'),
     import('handlebars'),
@@ -257,7 +255,9 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[], 
     css,
     posterFallback: `data:image/svg+xml;utf8,${encodeURIComponent(posterFallback)}`,
     titles,
-    pageTitle
+    pageTitle: `${appName[app]} Library`,
+    haveFilters : !!filters?.contentType || !!filters?.genres || !!filters?.originCountries || !!filters?.avails, 
+    filters
   };
 
   // compile template with data into html

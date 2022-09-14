@@ -11,6 +11,18 @@ h1 {
   margin-bottom: 48px;
 }
 
+.filters {
+  margin: 0 48px 16px 48px;
+}
+
+.filters h1 {
+  margin-bottom: 0px;
+}
+
+.filters h3 {
+  margin-top: 8px;
+}
+
 h2 {
   font: 800 36px Montserrat, Helvetica Neue, sans-serif;
   margin: 0px;

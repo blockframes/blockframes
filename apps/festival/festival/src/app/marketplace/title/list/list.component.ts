@@ -11,7 +11,7 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { debounceTime, switchMap, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import { StoreStatus, toLabel } from '@blockframes/model';
+import { StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie } from '@blockframes/model';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -119,21 +119,12 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
-    const pageTitle = this.createPdfTitle();
-    const exportStatus = await this.pdfService.download({ titleIds: this.movieIds, pageTitle });
+    const exportStatus = await this.pdfService.download({ titleIds: this.movieIds, forms: { search: this.searchForm } });
     snackbarRef.dismiss();
     if (!exportStatus) {
       this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });
     }
     this.exporting = false;
-  }
-
-  private createPdfTitle() {
-    const searchForm = this.searchForm.value;
-    const appTitle = 'Archipel Market Library';
-    const genres = toLabel(searchForm.genres, 'genres');
-    const countries = toLabel(searchForm.originCountries, 'territories');
-    return [appTitle, genres, countries].filter(s => s).join(' - ');
   }
 
   load(parsedData: MovieSearch) {

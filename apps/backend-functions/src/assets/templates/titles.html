@@ -7,10 +7,30 @@
   </head>
   <body>
 
-    {{#if pageTitle}}
+    {{#if haveFilters}}
+      <div class="filters">
+        <h1>{{pageTitle}}</h1>
+        <h3>Filtered by</h3>
+        {{#if filters.avails}}
+          <strong>Avails: </strong> {{filters.avails}}<br/>
+        {{/if}}
+        {{#if filters.rights}}
+          <strong>Rights: </strong> {{filters.rights}}<br/>
+        {{/if}}
+        {{#if filters.contentType}}
+          <strong>Content Type: </strong> {{filters.contentType}}<br/>
+        {{/if}}
+        {{#if filters.genres}}
+          <strong>Genres: </strong> {{filters.genres}}<br/>
+        {{/if}}
+        {{#if filters.originCountries}}
+          <strong>Country of Origin: </strong> {{filters.originCountries}}<br/>
+        {{/if}}
+      </div>
+    {{else}}
       <h1>{{pageTitle}}</h1>
     {{/if}}
-    
+      
     {{#titles}}
       <section class="title">
         <div class="row">

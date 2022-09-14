@@ -17,7 +17,7 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareRe
 // Blockframes
 import { centralOrgId } from '@env';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie, GetKeys, toLabel } from '@blockframes/model';
+import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie, GetKeys } from '@blockframes/model';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
@@ -27,7 +27,6 @@ import { MovieSearchForm, createMovieSearch, Versions, MovieSearch } from '@bloc
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
-import { trimString, toGroupLabel } from '@blockframes/utils/pipes';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -205,25 +204,12 @@ export class ListComponent implements OnDestroy, OnInit {
 
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
-    const pageTitle = this.createPdfTitle();
-    const exportStatus = await this.pdfService.download({ titleIds: this.movieIds, pageTitle });
+    const exportStatus = await this.pdfService.download({ titleIds: this.movieIds, forms: { avails: this.availsForm, search: this.searchForm } });
     snackbarRef.dismiss();
     if (!exportStatus) {
       this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });
     }
     this.exporting = false;
-  }
-
-  private createPdfTitle() {
-    const searchForm = this.searchForm.value;
-    const availForm = this.availsForm.value;
-    const appTitle = 'Archipel Content Library';
-    const territories = availForm.territories?.length ? toGroupLabel(availForm.territories, 'territories', 'World').join(', ') : '';
-    const rights = availForm.medias?.length ? toGroupLabel(availForm.medias, 'medias', 'All Rights').join(', ') : '';
-    const avails = territories && rights ? `Avails for ${trimString(territories, 50, true)} in ${trimString(rights, 50, true)}` : '';
-    const contentType = toLabel(searchForm.contentType, 'contentType');
-    const genres = toLabel(searchForm.genres, 'genres');
-    return [appTitle, avails, contentType, genres].filter(s => s).join(' - ');
   }
 
   load(parsedData: { search: MovieSearch, avails: AvailsFilter }) {

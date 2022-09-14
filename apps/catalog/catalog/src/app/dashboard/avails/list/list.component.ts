@@ -31,7 +31,6 @@ import {
 import { OrganizationService } from '@blockframes/organization/service';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { trimString, toGroupLabel } from '@blockframes/utils/pipes';
 
 interface TotalIncome {
   EUR: number;
@@ -190,22 +189,12 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
     this.cdr.markForCheck();
-    const pageTitle = this.createPdfTitle();
-    const exportStatus = await this.pdfService.download({ titleIds, orgId: this.orgService.org.id, pageTitle });
+    const exportStatus = await this.pdfService.download({ titleIds, orgId: this.orgService.org.id, forms: { avails: this.availsForm } });
     snackbarRef.dismiss();
     if (!exportStatus) {
       this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });
     }
     this.exporting = false;
     this.cdr.markForCheck();
-  }
-
-  private createPdfTitle() {
-    const availForm = this.availsForm.value;
-    const appTitle = 'Archipel Content Library';
-    const territories = availForm.territories?.length ? toGroupLabel(availForm.territories, 'territories', 'World').join(', ') : '';
-    const rights = availForm.medias?.length ? toGroupLabel(availForm.medias, 'medias', 'All Rights').join(', ') : '';
-    const avails = territories && rights ? `Avails for ${trimString(territories, 50, true)} in ${trimString(rights, 50, true)}` : '';
-    return [appTitle, avails].filter(s => s).join(' - ');
   }
 }
