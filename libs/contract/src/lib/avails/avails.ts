@@ -94,7 +94,8 @@ interface SearchAvailsConfig<A extends BaseAvailsFilter> {
   mandates: FullMandate[],
   sales?: FullSale[],
   mandateFilterFn: (term: Term, avail: A) => boolean,
-  saleFilterFn?: (term: Term, avail: A) => boolean
+  saleFilterFn?: (term: Term, avail: A) => boolean,
+  breakOnMatch: boolean
 };
 
 function combineAvailResults<A extends CalendarAvailsFilter | AvailsFilter>(results: AvailResult<A>[]) {
@@ -163,7 +164,11 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
           avail: subAvail
         };
         result.available.push(availMatch);
-        break mandateLoop;
+
+        // Depending of the case, we might want to break or not.
+        // If we are just interested to check if there is a mandate term (is title available), we can break once we found one
+        // If we want to retreive all the mandates, we don't want to
+        if (config.breakOnMatch) break mandateLoop;
       }
 
     }
@@ -175,7 +180,11 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
           const someOfTermInAvail = saleFilterFn(term, subAvail);
           if (!someOfTermInAvail) continue;
           result.sales.push({ ...sale, terms: [term] });
-          break saleLoop;
+
+          // Depending of the case, we might want to break or not.
+          // If we are just interested to check if a term is already sold, we can break once we found one (titles list)
+          // If we want to retreive all the sales, we don't want to (calendar avails)
+          if (config.breakOnMatch) break saleLoop;
         }
 
       }
@@ -251,12 +260,13 @@ function isListAvailPartiallyInTerm(term: BucketTerm, avails: AvailsFilter) {
 }
 
 export function getListMatchingAvailabilities(mandates: FullMandate[], sales: FullSale[], avails: AvailsFilter) {
-  const options = {
+  const options: SearchAvailsConfig<AvailsFilter> = {
     mandates,
     sales,
     avails,
     mandateFilterFn: isAvailAllInTerm,
     saleFilterFn: isListAvailPartiallyInTerm,
+    breakOnMatch: true
   };
   return getMatchingAvailabilities(options);
 }
@@ -268,10 +278,11 @@ function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], ava
 }
 
 export function getMandateTerms(avails: AvailsFilter, mandates: FullMandate[]): AvailSearchResult<AvailsFilter>[] | undefined {
-  const options = {
+  const options: SearchAvailsConfig<AvailsFilter> = {
     mandates,
     avails,
     mandateFilterFn: isAvailAllInTerm,
+    breakOnMatch: true,
   };
   const { available } = getMatchingAvailabilities(options);
   return available.map(a => ({
@@ -567,12 +578,13 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
 }
 
 export function getMatchingCalendarAvailabilities(avails: CalendarAvailsFilter, mandates: FullMandate[], sales: FullSale[]) {
-  const options = {
+  const options: SearchAvailsConfig<CalendarAvailsFilter> = {
     avails,
     mandates,
     sales,
     mandateFilterFn: isCalendarTermInAvails,
     saleFilterFn: isCalendarAvailPartiallyInTerm,
+    breakOnMatch: false
   };
   return getMatchingAvailabilities(options);
 }
