@@ -186,18 +186,19 @@ export class MoviesComponent implements OnInit {
     const exportedRows = [];
     for (const title of titles) {
       const movieAnalytics = allAnalytics.filter(analytic => analytic.meta.titleId === title.id);
-      const users = allUsers.filter(user => movieAnalytics.some(analytic => analytic.meta.uid === user.uid));
+      const uidsWithAnalytics = allUids.filter(uid => movieAnalytics.some(analytic => analytic.meta.uid === uid));
 
-      for (const user of users) {
-        const userAnalytics = movieAnalytics.filter(analytic => analytic.meta.uid === user.uid);
+      for (const uid of uidsWithAnalytics) {
+        const userAnalytics = movieAnalytics.filter(analytic => analytic.meta.uid === uid);
+        const user = allUsers.find(u => u?.uid === uid);
         const a = aggregate(userAnalytics);
 
         exportedRows.push({
           'title id': title.id,
           title: title.title.international,
-          uid: user.uid,
-          user: displayName(user),
-          'user email': user.email,
+          uid,
+          user: user ? displayName(user) : '--deleted user--',
+          'user email': user?.email ?? '--',
           'total interactions': a.total,
           'page views': a.pageView,
           'screenings requested': a.screeningRequested,
