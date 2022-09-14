@@ -159,6 +159,33 @@ export async function clearUsers() {
   return endMaintenance(db);
 }
 
+export async function updateUsersPassword(emailPrefix: string, password: string) {
+  if (!emailPrefix) throw Error('Email prefix cannot be empty');
+  if (!password || password.length < 6) throw Error('Password must be at least 6 characters long');
+
+  const db = getDb();
+
+  const allUsers = await getUsersFromDb(db);
+  const matchingUids = allUsers.filter(u => u.email.includes(emailPrefix)).map(u => u.uid);
+  return updateUsers(matchingUids, { password });
+}
+
+async function updateUsers(uidsToUpdate: string[], properties: admin.auth.UpdateRequest) {
+  const auth = getAuth();
+  console.log('Updating users now...');
+  const timeMsg = 'Updating users took';
+  console.time(timeMsg); // eslint-disable-line no-restricted-syntax
+
+  for (const uidToUpdate of uidsToUpdate) {
+    console.log(`Updating ${uidToUpdate}`);
+    await auth.updateUser(uidToUpdate, properties)
+      .catch(e => console.log(`An error occured : ${e.message || 'unknown error'}`));
+    await sleep(1000); // @see https://groups.google.com/u/1/g/firebase-talk/c/4VkOBKIsBxU
+  }
+
+  console.timeEnd(timeMsg); // eslint-disable-line no-restricted-syntax
+}
+
 function readUsersFromSTDIN(): Promise<UserConfig[]> {
   const rl = readline.createInterface({
     input: process.stdin,
