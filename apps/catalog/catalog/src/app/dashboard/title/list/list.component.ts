@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { StoreStatus, storeStatus, Person, App } from '@blockframes/model';
+import { StoreStatus, storeStatus, Person } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
