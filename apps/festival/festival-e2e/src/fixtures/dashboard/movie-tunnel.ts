@@ -29,7 +29,10 @@ export const permissions = e2ePermissions({
 export const inDevelopmentMovie: Partial<Movie> = {
   //main
   productionStatus: 'development',
-  title: { original: 'Test movie' },
+  title: {
+    original: 'Test movie',
+  },
+  internalRef: 'E2E ref',
   runningTime: {
     time: 120,
     status: 'tobedetermined',

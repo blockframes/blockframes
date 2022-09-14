@@ -78,7 +78,7 @@ describe('Movie tunnel', () => {
     checkSideNav(movie.productionStatus);
     get('international-title').type(movie.title.original);
     get('original-title').type(movie.title.original);
-    get('reference').type('test');
+    get('reference').type(movie.internalRef);
     ///checking movie related fields (default)
     get('content-type').should('contain', 'Movie');
     get('run-time').type(movie.runningTime.time.toString());
@@ -316,6 +316,22 @@ describe('Movie tunnel', () => {
     get('next').click();
 
     //last step
+    ///main information
+    get('production-status').should('contain', productionStatus[movie.productionStatus]);
+    get('international-title').should('contain', movie.title.original);
+    get('original-title').should('contain', movie.title.original);
+    get('content-type').should('contain', 'Movie');
+    get('reference').should('contain', movie.internalRef);
+    get('poster').should('contain', 'Missing');
+    get('banner').should('contain', 'Missing');
+    get('release-year').should('contain', movie.release.year);
+    get('release-status').should('contain', screeningStatus[movie.release.status]);
+    get('country').should('contain', `${territories[movie.originCountries[0]]}, ${territories[movie.originCountries[1]]}`);
+    get('language').should('contain', `${languages[movie.originalLanguages[0]]}, ${languages[movie.originalLanguages[1]]}`);
+    get('genres').should('contain', `${genres[movie.genres[0]]}, ${genres[movie.genres[1]]}`);
+    get('runtime').should('contain', screeningStatus[movie.runningTime.status]);
+    get('director_0').should('contain', movie.directors[0].firstName).should('contain', movie.directors[0].lastName);
+    //get('').should('contain',)
   });
 });
 
