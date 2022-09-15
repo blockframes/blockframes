@@ -249,21 +249,10 @@ export const medias = {
 export const releaseMedias = {
   payTv: 'Pay TV',
   freeTv: 'Free TV',
-  payPerView: 'Pay Per View',
-  est: 'EST',
-  nVod: 'N-VOD',
-  aVod: 'A-VOD',
-  fVod: 'F-VOD',
   sVod: 'S-VOD',
-  tVod: 'T-VOD',
-  inflight: 'Inflight',
-  boats: 'Boats',
-  hotels: 'Hotels',
-  educational: 'Educational',
+  video: 'Video',
   festival: 'Festival',
-  rental: 'Rental',
   theatrical: 'Theatrical',
-  through: 'Sell Through',
 } as const
 
 export const memberStatus = {

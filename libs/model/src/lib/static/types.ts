@@ -95,7 +95,7 @@ export type Language = keyof typeof languages;
 export type Media = keyof typeof medias;
 
 export type ReleaseMedia = keyof typeof releaseMedias;
-export type ReleaseMediaValue = typeof releaseMedias[Media];
+export type ReleaseMediaValue = typeof releaseMedias[ReleaseMedia];
 
 export type MovieCurrency = keyof typeof movieCurrencies;
 
