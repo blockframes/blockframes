@@ -50,16 +50,16 @@ const injectedData = {
 };
 
 describe('Screenings', () => {
-  before(() => {
-    maintenance.start().then(x => console.log('*** MAINTENANCE EN COURS'));
-    firestore.create([injectedData]).then(x => console.log('*** DATA INJECTED'));
-    adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true }).then(x => console.log('*** DASHBOARD AUTH'));
-    adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true }).then(x => console.log('*** MARKETPLACE AUTH'));
-  });
-
   beforeEach(() => {
     cy.visit('');
     console.log('*** BEFORE EACH START')
+    maintenance.start().then(x => console.log('*** MAINTENANCE EN COURS'));
+    firestore.clearTestData().then(x => console.log('*** DATA CLEARED'));
+    firestore.deleteOrgEvents(dashboardOrg.id).then(x => console.log('*** DELETE ORGS'));
+    adminAuth.deleteAllTestUsers().then(x => console.log('*** USERS DELETED'));
+    firestore.create([injectedData]).then(x => console.log('*** DATA INJECTED'));
+    adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true }).then(x => console.log('*** DASHBOARD AUTH'));
+    adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true }).then(x => console.log('*** MARKETPLACE AUTH'));
     maintenance.end().then(x => console.log('*** MAINTENANCE FINIE'));; 
     browserAuth.clearBrowserAuth().then(x => console.log('*** AUTH CLEARED'));;
     cy.visit('');
@@ -68,13 +68,6 @@ describe('Screenings', () => {
     get('calendar').click();
     get('cookies').click();
     firestore.get([`orgs/${dashboardOrg.id}`]).then(x => console.log(`*** ORGS/${dashboardOrg.id}`, x[0]));
-  });
-
-  afterEach(() => {
-    maintenance.start().then(x => console.log('*** MAINTENANCE EN COURS'));
-    firestore.clearTestData().then(x => console.log('*** DATA CLEARED'));
-    firestore.deleteOrgEvents(dashboardOrg.id).then(x => console.log('*** DELETE ORGS'));
-    adminAuth.deleteAllTestUsers().then(x => console.log('*** USERS DELETED'));
   });
 
   it('create future public screening event, check if visible in market place, testing also noScreener behaviour', () => {

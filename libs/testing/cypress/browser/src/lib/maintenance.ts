@@ -11,6 +11,8 @@ export const maintenance = {
   },
 
   end() {
+    // Required
+    cy.wait(5000); 
     const maintenanceEnd = {
       endedAt: Date.now() - EIGHT_MINUTES_IN_MS,
       startedAt: null,
