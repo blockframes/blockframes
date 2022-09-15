@@ -66,8 +66,8 @@ export class ListComponent implements OnInit, OnDestroy {
       the overall possible results which is represented by nbHits.
       If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
       So when the next valueChange is happening we need to reset everything and start from beginning  */
-      this.hitsViewed = this.orgResultsState.value.length
-      if (this.lastPage && this.searchForm.page.value !== 0) {
+      this.hitsViewed = this.orgResultsState.value.length;
+      if (this.lastPage && this.searchForm.page.value !== 0) { // TODO #8893 check this
         this.hitsViewed = 0;
         this.searchForm.page.setValue(0);
       }

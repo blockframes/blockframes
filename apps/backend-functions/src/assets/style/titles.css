@@ -6,9 +6,31 @@ body {
   font-family: Montserrat, Helvetica Neue, sans-serif;
 }
 
+h1 {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.filters {
+  margin: 0 48px 16px 48px;
+}
+
+.filters h1 {
+  margin-bottom: 0px;
+}
+
+.filters h3 {
+  margin-top: 8px;
+}
+
 h2 {
   font: 800 36px Montserrat, Helvetica Neue, sans-serif;
-  margin-top: 0px;
+  margin: 0px;
+}
+
+h3 {
+  font: 700 18px Montserrat, Helvetica Neue, sans-serif;
+  margin-bottom: 5px;
 }
 
 section {
@@ -21,7 +43,12 @@ section {
 
 .left-column {
   flex: 30%;
-  padding: 10px;
+  padding: 10px 0;
+}
+
+.certification-desc {
+  margin-left: 10px;
+  font-size: 11px;
 }
 
 .right-column {
@@ -29,8 +56,15 @@ section {
   padding: 10px;
 }
 
-.right-column p{
+.right-column p {
   font-weight: bold;
+  margin: 5px 0;
+}
+
+.right-column p.directors {
+  font-weight: normal;
+  color: #666B81;
+  margin: 0px 0 5px 0;
 }
 
 .column {
@@ -38,9 +72,10 @@ section {
   padding: 10px;
 }
 
-div .synopsis {
+div .synopsis, div .cast {
   color: #666B81;
   text-align: justify;
+  margin-top: 5px;
 }
 
 hr.solid {
@@ -54,7 +89,7 @@ div.links div {
   text-align: center;
 }
 
-div.links a {
+div.links a, .title .right-column a {
   font-weight: bold;
 }
 
@@ -65,6 +100,7 @@ div.links a {
 ul.prizes {
   list-style: none;
   padding-left: 0;
+  margin-top: 5px;
 }
 
 ul.prizes li:not(:last-child) {

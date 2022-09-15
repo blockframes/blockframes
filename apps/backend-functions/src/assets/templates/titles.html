@@ -7,6 +7,30 @@
   </head>
   <body>
 
+    {{#if haveFilters}}
+      <div class="filters">
+        <h1>{{pageTitle}}</h1>
+        <h3>Filtered by</h3>
+        {{#if filters.avails}}
+          <strong>Avails: </strong> {{filters.avails}}<br/>
+        {{/if}}
+        {{#if filters.rights}}
+          <strong>Rights: </strong> {{filters.rights}}<br/>
+        {{/if}}
+        {{#if filters.contentType}}
+          <strong>Content Type: </strong> {{filters.contentType}}<br/>
+        {{/if}}
+        {{#if filters.genres}}
+          <strong>Genres: </strong> {{filters.genres}}<br/>
+        {{/if}}
+        {{#if filters.originCountries}}
+          <strong>Country of Origin: </strong> {{filters.originCountries}}<br/>
+        {{/if}}
+      </div>
+    {{else}}
+      <h1>{{pageTitle}}</h1>
+    {{/if}}
+      
     {{#titles}}
       <section class="title">
         <div class="row">
@@ -19,27 +43,72 @@
           </div>
           <div class="right-column">
             <h2>{{title}}</h2>
+            {{#if directors}}
+              <p class="directors">Directed by {{ directors }}</p>
+            {{/if}}
+            <a href="{{links.title}}">Check online</a>
             {{#if contentType}}
-              <p>{{contentType}}{{#if genres}} -  {{genres}}{{/if}}</p>
+              <p>{{contentType}}{{#if genres}} / {{genres}}{{/if}}</p>
+            {{/if}}
+            {{#if originCountries}}
+              <p>{{originCountries}}{{#if releaseYear}} / {{releaseYear}}{{/if}}</p>
             {{/if}}
             {{#if runningTime}}
-              <p>{{#if episodeCount }}{{episodeCount}} x {{/if}}{{runningTime}} min</p>
+              <p>{{#if episodeCount }}{{episodeCount}} x {{/if}}{{runningTime}} min{{#if format}} / {{format}}{{/if}}</p>
             {{/if}}
-            <p>{{releaseYear}}</p>
-            {{#if version.isOriginalVersionAvailable}}
-              <p>{{version.original}}{{#if version.languages}} with {{version.languages}}{{/if}}</p>
-            {{else}}
-              <p>Original version is not available
-              {{#if version.languages}}<br>{{version.languages}}{{/if}}</p>
+            {{#if rating}}
+              <p>{{rating}}</p>
+            {{/if}}
+            {{#if certifications.length}}
+              <div class="row">
+                <div>
+                  {{#each certifications}}
+                    <img src="{{flag}}" width="41" height="28">
+                  {{/each}}
+                </div>
+                <div class="certification-desc">
+                  {{#each certifications}}
+                    {{desc}}<br/>
+                  {{/each}}
+                </div>
+              </div>
             {{/if}}
           </div>
         </div>
 
-        <div class="row">
-          <p class="synopsis">{{synopsis}}</p>
-        </div>
+        <div>
+          <h3>Available Versions</h3>
+          <strong>OV: </strong>
+          {{#if version.isOriginalVersionAvailable}}
+            {{ version.original }}
+          {{else}}
+            not available
+          {{/if}}
+          <br/>
+          {{#if version.subtitles}}
+            <strong>Subtitles: </strong> {{version.subtitles}}<br/>
+          {{/if}}
+          {{#if version.dubs}}
+            <strong>Dubs: </strong> {{version.dubs}}<br/>
+          {{/if}}
+        </div> 
+
+        {{#if cast}}
+          <div>
+            <h3>Cast</h3>
+            <p class="cast">{{cast}}</p>
+          </div>
+        {{/if}}
+
+        {{#if synopsis}}
+          <div>
+            <h3>Synopsis</h3>
+            <p class="synopsis">{{synopsis}}</p>
+          </div>
+        {{/if}}
 
         {{#if prizes.length}}
+          <h3>Festival</h3>
           <ul class="prizes">
             {{#each prizes}}
               <li>{{name}}{{#if prize}} {{prize}}{{/if}}{{#if year}} {{year}}{{/if}}{{#if premiere}} - {{premiere}}{{/if}}</li>
@@ -48,12 +117,19 @@
         {{/if}}
 
         <div class="row links">
-          <div class="column">
-            <a href="{{links.title}}">See title</a>
-          </div>
+          {{#if links.avails}}
+            <div class="column">
+              <a href="{{links.avails}}">Avails</a>
+            </div>
+          {{/if}}
           {{#if links.trailer}}
             <div class="column">
               <a href="{{links.trailer}}">Trailer</a>
+            </div>
+          {{/if}}
+          {{#if links.publicScreener}}
+            <div class="column">
+              <a href="{{links.publicScreener}}">Screener</a>
             </div>
           {{/if}}
         </div>
