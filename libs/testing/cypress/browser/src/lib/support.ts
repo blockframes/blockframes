@@ -222,7 +222,7 @@ export function fillDashboardCalendarDetails(event: {
   secret?: boolean;
 }) {
   const { movie, title, accessibility, secret } = event;
-  get('title').click();
+  get('screening-title').click();
   cy.contains(movie);
   //get('title_1').should('be.visible');
   getInList('title_', movie);
