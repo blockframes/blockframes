@@ -160,7 +160,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get festivals() { return this.get('festivals'); }
   get certifications() { return this.get('certifications'); }
 
-  search(needMultipleQueries = false) {
+  search(needMultipleQueries = false, override?: { hitsPerPage: number, page: number }) {
     const search = {
       hitsPerPage: this.hitsPerPage.value,
       query: this.query.value,
@@ -177,7 +177,8 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.certifications.value.map(certification => `certifications:${certification}`),
         [`contentType:${this.contentType.value || ''}`]
       ],
-      filters: ''
+      filters: '',
+      ...override
     };
 
     if (this.minBudget.value) {

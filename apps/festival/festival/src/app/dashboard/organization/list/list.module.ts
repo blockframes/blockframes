@@ -9,7 +9,7 @@ import { ListComponent } from './list.component';
 
 // Blockframes
 import { OrganizationCardModule } from '@blockframes/organization/components/card/card.module';
-import { ListPageModule } from '@blockframes/ui/list/page/list-page.module'
+import { ListPageModule } from '@blockframes/ui/list/page/list-page.module';
 import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module';
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
 

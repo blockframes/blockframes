@@ -44,6 +44,17 @@ export function getInList(selectorStart: string, option: string) {
   });
 }
 
+export function getInListbox(option: string) {
+  return cy
+    .get('[role="listbox"]')
+    .children()
+    .each($child => {
+      if ($child.text().includes(option)) {
+        cy.wrap($child).click();
+      }
+    });
+}
+
 export function findIn(parent: string, child: string) {
   return get(parent).find(`[test-id="${child}"]`);
 }

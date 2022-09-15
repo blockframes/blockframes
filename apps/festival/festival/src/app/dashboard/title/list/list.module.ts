@@ -26,6 +26,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [ListComponent],
@@ -53,6 +54,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    MatSnackBarModule,
+
     // Router
     RouterModule.forChild([{ path: '', component: ListComponent }])
   ]

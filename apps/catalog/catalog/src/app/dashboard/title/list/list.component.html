@@ -3,7 +3,7 @@
     <dashboard-movie-list-header></dashboard-movie-list-header>
 
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="resetFilter()" [active]="(filter$|async) === ''">
+      <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === ''">
         <span>All </span>
         <span *ngIf="(movieCount$ | async) as movieCount">({{ movieCount.all }})</span>
       </button>
@@ -23,6 +23,13 @@
         <span>Archived </span>
         <span *ngIf="(movieCount$ | async) as movieCount">({{ movieCount.archived }})</span>
       </button>
+      <ng-container *ngIf="result$ | async as result">
+        <span fxFlex></span>
+        <button [disabled]="!result.length || exporting || ((filter$ | async) !== '' && (filter$ | async) !== 'accepted')" matTooltip="Links in the export will redirect to the marketplace" mat-button (click)="export(result)">
+          <mat-icon svgIcon="pdf"></mat-icon>
+          <span>Export results</span>
+        </button>
+      </ng-container>
     </header>
 
     <bf-table [source]="result$ | async" useFilter pagination="50">

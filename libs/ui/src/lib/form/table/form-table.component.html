@@ -67,7 +67,7 @@
   <span>
     <ng-template [ngTemplateOutlet]="addButtonText || defaultText"></ng-template>
   </span>
-  <button mat-mini-fab color="primary" (click)="add()">
+  <button mat-mini-fab color="primary" (click)="add()" test-id="add">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </footer>
