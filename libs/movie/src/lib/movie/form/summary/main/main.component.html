@@ -9,7 +9,7 @@
   <ul>
     <li>
       <strong>Production Status </strong>
-      <missing-control [control]="movie.get('productionStatus')" [link]="productionLink$ | async">
+      <missing-control [control]="movie.get('productionStatus')" [link]="productionLink$ | async" test-id="production-status">
         <ng-template let-status>
           {{ status | toLabel: 'productionStatus' }}
         </ng-template>
@@ -17,17 +17,17 @@
     </li>
     <li>
       <strong>International Title </strong>
-      <missing-control test-id="international-title" [control]="title.get('international')" [link]="link"
-        fragment="reference"></missing-control>
+      <missing-control [control]="title.get('international')" [link]="link"
+        fragment="reference" test-id="international-title"></missing-control>
     </li>
     <li>
       <strong>Original Title </strong>
-      <missing-control test-id="original-title" [control]="title.get('original')" [link]="link" fragment="reference">
+      <missing-control [control]="title.get('original')" [link]="link" fragment="reference" test-id="original-title">
       </missing-control>
     </li>
     <li>
       <strong>Content Type </strong>
-      <missing-control test-id="content-type" [control]="movie.get('contentType')" [link]="link" fragment="reference">
+      <missing-control [control]="movie.get('contentType')" [link]="link" fragment="reference" test-id="content-type">
         <ng-template let-content>
           {{ content | toLabel: 'contentType' }}
         </ng-template>
@@ -35,7 +35,7 @@
     </li>
     <li>
       <strong>Title Reference </strong>
-      <missing-control test-id="reference" [control]="movie.get('internalRef')" [link]="link" fragment="reference">
+      <missing-control [control]="movie.get('internalRef')" [link]="link" fragment="reference" test-id="reference">
       </missing-control>
     </li>
   </ul>
@@ -53,7 +53,7 @@
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
       <bf-preview-modal [ref]="movie.poster.value"><strong> Poster Image </strong></bf-preview-modal>
       <!-- test-id="poster-image" -->
-      <missing-control [control]="movie.poster.storagePath" [link]="link" fragment="images">
+      <missing-control [control]="movie.poster.storagePath" [link]="link" fragment="images" test-id="poster">
         <ng-template let-poster>
           {{poster | fileName | maxLength: 30 }}
         </ng-template>
@@ -62,7 +62,7 @@
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
       <bf-preview-modal [ref]="movie.banner.value"><strong> Film Page Banner Image </strong></bf-preview-modal>
       <!-- test-id="banner-image" -->
-      <missing-control [control]="movie.banner.storagePath" [link]="link" fragment="images">
+      <missing-control [control]="movie.banner.storagePath" [link]="link" fragment="images" test-id="banner">
         <ng-template let-banner>
           {{ banner | fileName | maxLength: 30 }}
         </ng-template>
@@ -82,47 +82,48 @@
   <ul>
     <li>
       <strong>Release Date </strong>
-      <missing-control test-id="release-year" [control]="movie.release.get('year')" [link]="link"
-        fragment="general-information"></missing-control>
-      (<missing-control [control]="movie.release.get('status')" [link]="link" fragment="general-information">
+      <missing-control [control]="movie.release.get('year')" [link]="link"
+        fragment="general-information" test-id="release-year"></missing-control>
+      (<missing-control [control]="movie.release.get('status')" [link]="link" fragment="general-information" test-id="release-status">
         <ng-template let-releaseStatus>{{ releaseStatus | toLabel: "screeningStatus"}}</ng-template>
       </missing-control>)
     </li>
     <li>
       <strong>Countr{ movie.originCountries.controls.length, plural, =0 {y} =1 {y} other {ies}} of origin </strong>
-      <missing-control test-id="country" [control]="movie.originCountries" [link]="link" fragment="general-information"
-        scope="territories">
+      <missing-control [control]="movie.originCountries" [link]="link" fragment="general-information"
+        scope="territories" test-id="country">
       </missing-control>
     </li>
     <li>
       <strong>Original Languag{ movie.originalLanguages.controls.length, plural, =0 {e} =1 {e} other {es}} </strong>
-      <missing-control test-id="language" [control]="movie.originalLanguages" [link]="link"
-        fragment="general-information" scope="languages">
+      <missing-control [control]="movie.originalLanguages" [link]="link"
+        fragment="general-information" scope="languages" test-id="language">
       </missing-control>
     </li>
     <li>
       <strong>Genre{ movie.genres.controls.length, plural, =1 {} other {s}} </strong>
-      <missing-control test-id="genres" [control]="movie.genres" [link]="link" fragment="general-information"
-        scope="genres">
+      <missing-control [control]="movie.genres" [link]="link" fragment="general-information"
+        scope="genres" test-id="genres">
       </missing-control>
     </li>
-    <li test-id="info-runtime">
+    <li>
       <strong>Running Time </strong>
       <missing-control
         *ngIf="movie.runningTime.get('status').value !== 'tobedetermined'"
         [control]="movie.runningTime.get('time')"
         [link]="link"
         fragment="general-information"
+        test-id="runtime"
       >
         <ng-template>{{ movie.runningTime.value | getRunningTime: false }} </ng-template>
       </missing-control>
-      <missing-control [control]="movie.runningTime.get('status')" [link]="link" fragment="general-information">
+      <missing-control [control]="movie.runningTime.get('status')" [link]="link" fragment="general-information" test-id="runtime">
         <ng-template let-status>({{ status | toLabel: 'screeningStatus'}})</ng-template>
       </missing-control>
     </li>
     <li *ngIf="movie.runningTime.get('episodeCount').value">
       <strong>Count of Episodes </strong>
-      <missing-control [control]="movie.runningTime.get('episodeCount')" [link]="link" fragment="general-information">
+      <missing-control [control]="movie.runningTime.get('episodeCount')" [link]="link" fragment="general-information" test-id="episodes">
         <ng-template let-count>{{ count }}</ng-template>
       </missing-control>
     </li>
@@ -140,7 +141,7 @@
   <ul>
     <missing-control [control]="movie.directors" [link]="link" fragment="directors">
       <ng-template let-directors="control">
-        <li *ngFor="let director of directors.controls; let i = index" [attr.test-id]="'dir-info' + (i + 1)">
+        <li *ngFor="let director of directors.controls; let i = index" [attr.test-id]="'director_' + i">
           <strong>
             <missing-control [control]="director.get('firstName')" [link]="link" fragment="directors"></missing-control>
             <span>&nbsp;</span>

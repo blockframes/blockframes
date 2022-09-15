@@ -2,21 +2,21 @@
   <ng-container tunnel-form>
     <div fxLayout="column" fxLayoutGap="32px">
       <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="24px">
-        <static-select test-id="aspectRatio" [control]="format" scope="movieFormat" placeholder="Select Shooting Format"
-          [withoutValues]="['']">
+        <static-select [control]="format" scope="movieFormat" placeholder="Select Shooting Format"
+          [withoutValues]="['']" test-id="ratio">
           <mat-label>Aspect Ratio</mat-label>
         </static-select>
-        <static-select test-id="resolution" [control]="quality" scope="movieFormatQuality" placeholder="Select Format Quality"
-          [withoutValues]="['']">
+        <static-select [control]="quality" scope="movieFormatQuality" placeholder="Select Format Quality"
+          [withoutValues]="['']" test-id="resolution">
           <mat-label>Resolution</mat-label>
         </static-select>
       </div>
       <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="24px">
-        <static-select test-id="colorInfo" [control]="color" scope="colors" placeholder="Select Color/ B&W" [withoutValues]="['']">
+        <static-select [control]="color" scope="colors" placeholder="Select Color/ B&W" [withoutValues]="['']"  test-id="color">
           <mat-label>Color Information</mat-label>
         </static-select>
-        <static-select test-id="soundMix" [control]="soundFormat" scope="soundFormat" placeholder="Select Sound Format"
-          [withoutValues]="['']">
+        <static-select [control]="soundFormat" scope="soundFormat" placeholder="Select Sound Format"
+          [withoutValues]="['']" test-id="sound">
           <mat-label>Sound Mix</mat-label>
         </static-select>
       </div>

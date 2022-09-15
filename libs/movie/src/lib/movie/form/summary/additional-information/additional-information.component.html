@@ -107,7 +107,7 @@
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
-  <missing-control [control]="movie.estimatedBudget" [link]="link" fragment="box-range" class="missing-margin">
+  <missing-control [control]="movie.estimatedBudget" [link]="link" fragment="box-range" class="missing-margin" test-id="budget-range">
     <ng-template let-budget>{{ budget | toLabel: 'budgetRange' }}</ng-template>
   </missing-control>
 </article>
@@ -136,14 +136,14 @@
   <ul>
     <li>
       <strong>Target Audience </strong>
-      <missing-control [control]="goals.get('targets')" [link]="link" fragment="audience-goals">
+      <missing-control [control]="goals.get('targets')" [link]="link" fragment="audience-goals" test-id="target">
         <ng-template let-targets>
           <span>{{ targets.join(', ') }}</span>
         </ng-template>
       </missing-control>
       <br />
       <strong>Social Responsibility Goals </strong>
-      <missing-control [control]="goals.get('goals')" [link]="link" fragment="audience-goals">
+      <missing-control [control]="goals.get('goals')" [link]="link" fragment="audience-goals" test-id="goals">
         <ng-template let-goals>
           <span>{{ goals | toLabel: 'socialGoals' }}</span>
         </ng-template>
