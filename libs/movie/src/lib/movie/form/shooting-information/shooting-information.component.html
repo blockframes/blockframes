@@ -10,13 +10,12 @@
 
         <!-- Shooting completed -->
         <article fxLayout="column">
-          <mat-radio-button test-id="shooting-completed" class="mat-body-2" color="primary" value="completed">Shooting
-            completed :
+          <mat-radio-button class="mat-body-2" color="primary" value="completed" test-id="shooting-completed">
+            Shooting completed :
           </mat-radio-button>
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Date</mat-label>
-            <input test-id="date-completed" matInput [matDatepicker]="completedPicker"
-              [formControl]="form.shooting.get('dates').get('completed')">
+            <input matInput [matDatepicker]="completedPicker" [formControl]="form.shooting.get('dates').get('completed')" test-id="date-completed">
             <mat-hint>You can put the first day of month if there is no exact date.</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="completedPicker">
               <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
@@ -27,12 +26,12 @@
 
         <!-- Shooting in progress -->
         <article fxLayout="column">
-          <mat-radio-button test-id="shooting-progress" class="mat-body-2" color="primary" value="progress">Shooting in
-            progress :
+          <mat-radio-button class="mat-body-2" color="primary" value="progress" test-id="shooting-progress">
+            Shooting in progress :
           </mat-radio-button>
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Approximate end date</mat-label>
-            <input matInput [matDatepicker]="progressPicker" [formControl]="form.shooting.get('dates').get('progress')">
+            <input matInput [matDatepicker]="progressPicker" [formControl]="form.shooting.get('dates').get('progress')" test-id="date-progress">
             <mat-hint>You can put the first day of month if there is no exact date.</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="progressPicker">
               <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
@@ -43,8 +42,8 @@
 
         <!-- Shooting planned -->
         <article fxLayout="column">
-          <mat-radio-button test-id="shooting-planned" class="mat-body-2" color="primary" value="planned">Shooting
-            planned :
+          <mat-radio-button class="mat-body-2" color="primary" value="planned" test-id="shooting-planned">
+            Shooting planned :
           </mat-radio-button>
           <div fxLayout="row wrap" fxFlex fxLayoutGap="24px">
 
@@ -53,7 +52,7 @@
               <div fxLayout="row" fxLayoutGap="8px" fxFlex>
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Period</mat-label>
-                  <mat-select [formControl]="shootingDateFrom.get('period')" placeholder="Period">
+                  <mat-select [formControl]="shootingDateFrom.get('period')" placeholder="Period" test-id="start-period">
                     <mat-option>--</mat-option>
                     <mat-option *ngFor="let period of periods" [value]="period">{{ period | toLabel: 'shootingPeriod' }}
                     </mat-option>
@@ -61,7 +60,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Month</mat-label>
-                  <mat-select matInput [formControl]="shootingDateFrom.get('month')" placeholder="Month">
+                  <mat-select matInput [formControl]="shootingDateFrom.get('month')" placeholder="Month" test-id="start-month">
                     <mat-option *ngFor="let month of months" [value]="month">
                       {{ month | toLabel: 'months' }}
                     </mat-option>
@@ -69,7 +68,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Year</mat-label>
-                  <input matInput [formControl]="shootingDateFrom.get('year')" placeholder="Year" type="number" />
+                  <input matInput [formControl]="shootingDateFrom.get('year')" placeholder="Year" type="number" test-id="start-year"/>
                 </mat-form-field>
               </div>
             </div>
@@ -79,7 +78,7 @@
               <div fxLayout="row" fxLayoutGap="8px" fxFlex>
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Period</mat-label>
-                  <mat-select [formControl]="shootingDateTo.get('period')" placeholder="Period">
+                  <mat-select [formControl]="shootingDateTo.get('period')" placeholder="Period" test-id="end-period">
                     <mat-option>--</mat-option>
                     <mat-option *ngFor=" let period of periods" [value]="period">
                       {{ period | toLabel: 'shootingPeriod' }}</mat-option>
@@ -87,7 +86,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Month</mat-label>
-                  <mat-select matInput [formControl]="shootingDateFrom.get('month')" placeholder="Month">
+                  <mat-select matInput [formControl]="shootingDateTo.get('month')" placeholder="Month" test-id="end-month">
                     <mat-option *ngFor="let month of months" [value]="month">
                       {{ month | toLabel: 'months' }}
                     </mat-option>
@@ -95,7 +94,7 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Year</mat-label>
-                  <input matInput [formControl]="shootingDateTo.get('year')" placeholder="Year" type="number" />
+                  <input matInput [formControl]="shootingDateTo.get('year')" placeholder="Year" type="number" test-id="end-year"/>
                   <mat-error *ngIf="shootingDateTo.get('year').hasError('invalidYear')">Please enter a valid year.
                   </mat-error>
                 </mat-form-field>
@@ -116,8 +115,8 @@
         </ng-template>
         <ng-template formView let-locationForm>
           <article [formGroup]="locationForm" fxLayout="column" fxLayoutGap="24px">
-            <input-autocomplete test-id="country" scope="territories" [control]="locationForm.get('country')"
-              [withoutValues]="['world']">
+            <input-autocomplete scope="territories" [control]="locationForm.get('country')"
+              [withoutValues]="['world']" test-id="country">
               <mat-label>Country</mat-label>
             </input-autocomplete>
 
@@ -131,9 +130,9 @@
                   </mat-chip>
                 </ng-container>
               </mat-chip-list>
-              <input test-id="cities" matInput formArrayName="cities" [matChipInputFor]="chipList"
+              <input matInput formArrayName="cities" [matChipInputFor]="chipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                (matChipInputTokenEnd)="add($event, locationForm.get('cities'))" />
+                (matChipInputTokenEnd)="add($event, locationForm.get('cities'))" test-id="cities"/>
               <mat-hint>Use commas or press Enter key to separate cities.</mat-hint>
             </mat-form-field>
 
@@ -150,14 +149,14 @@
       <article fxLayout="row" fxLayoutGap="24px">
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Event</mat-label>
-          <input test-id="event-premiere" matInput type="text" [formControl]="form.expectedPremiere.get('event')"
-            placeholder="Event">
+          <input matInput type="text" [formControl]="form.expectedPremiere.get('event')"
+            placeholder="Event" test-id="event-premiere">
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Approximate Date</mat-label>
-          <input test-id="event-date" matInput [matDatepicker]="eventDate"
-            [formControl]="form.expectedPremiere.get('date')" placeholder="MM/DD/YYYY">
+          <input matInput [matDatepicker]="eventDate" [formControl]="form.expectedPremiere.get('date')"
+            placeholder="MM/DD/YYYY" test-id="event-date">
           <mat-datepicker-toggle matSuffix [for]="eventDate">
             <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
           </mat-datepicker-toggle>

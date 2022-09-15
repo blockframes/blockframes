@@ -2,7 +2,7 @@
   <ng-container tunnel-form>
 
     <h3>Cast Member</h3>
-    <section id="cast-member">
+    <section id="cast-member" test-id="cast-member">
 
       <bf-form-table [columns]="castColumns" [form]="cast">
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}</ng-template>
@@ -55,11 +55,11 @@
                 <div [formGroup]="cast" fxLayout="row" fxLayoutGap="24px">
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Film Title</mat-label>
-                    <input [attr.test-id]="'cast-film' + (i + 1)" matInput formControlName="title">
+                    <input [attr.test-id]="'cast-film-title_' + i" matInput formControlName="title">
                   </mat-form-field>
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Release Year</mat-label>
-                    <input [attr.test-id]="'cast-year' + (i + 1)" matInput formControlName="year" type="number">
+                    <input [attr.test-id]="'cast-film-year_' + i" matInput formControlName="year" type="number">
                     <mat-error *ngIf="cast.hasError('invalidYear', 'year')">Please enter a 4 digit date (e.g. 2020)
                     </mat-error>
                   </mat-form-field>
@@ -79,7 +79,7 @@
     <mat-divider></mat-divider>
 
     <h3>Crew Member</h3>
-    <section id="crew-member">
+    <section id="crew-member" test-id="crew-member">
 
       <bf-form-table [columns]="crewColumns" [form]="crew">
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}</ng-template>
@@ -144,11 +144,11 @@
                 <div [formGroup]="crew" fxLayout="row" fxLayoutGap="24px">
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Film Title</mat-label>
-                    <input [attr.test-id]="'crew-film' + (i + 1)" matInput formControlName="title">
+                    <input [attr.test-id]="'crew-film-title_' + i" matInput formControlName="title">
                   </mat-form-field>
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Release Year</mat-label>
-                    <input [attr.test-id]="'crew-year' + (i + 1)" matInput formControlName="year" type="number">
+                    <input [attr.test-id]="'crew-film-year_' + i" matInput formControlName="year" type="number">
                     <mat-error *ngIf="crew.hasError('invalidYear', 'year')">Please enter a 4 digit date (e.g. 2020)
                     </mat-error>
                   </mat-form-field>
