@@ -25,7 +25,6 @@ export function _isInMaintenance(maintenanceDoc: IMaintenanceDoc, delay = EIGHT_
       // this prevents triggering firebase events.
       // NOTE: this is hack-ish but good enough for our needs! we'll revisit this later.
       const now = Date.now();
-      console.log('*** maintenanceDoc.endedAt', now, maintenanceDoc.endedAt.getTime() + delay, delay);
       return maintenanceDoc.endedAt.getTime() + delay > now;
     }
 

@@ -28,8 +28,6 @@ export class EventCreateComponent {
 
   async createAndRedirect() {
     const event = this.form.value as Event<Meeting | Screening | Slate>;
-    console.log('*** EVENT:', event);
-    console.log('*** EVENT OWNER ORG:', this.orgService.org);
     event.ownerOrgId = this.orgService.org.id;
     event.meta.organizerUid = (await this.authService.user).uid;
     if (event.allDay) {

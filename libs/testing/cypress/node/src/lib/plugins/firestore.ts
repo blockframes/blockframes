@@ -94,16 +94,15 @@ export function importData(data: Record<string, object>[]) {
 
       if (path === metaDoc) {
         content = {
-          startedAt: !content['startedAt'] ? null : new Date(content['startedAt']),
-          endedAt: !content['endedAt'] ? null : new Date(content['endedAt']),
+          startedAt: !content['startedAt'] ? null : new Date(content['startedAt']), // TODO #8614
+          endedAt: !content['endedAt'] ? null : new Date(content['endedAt']), // TODO #8614
         };
 
-        console.log('*** metaDoc', content['startedAt'], content['endedAt'], content);
       } else if (isEventsPath(path)) {
         content = {
           ...content,
-          start: new Date(content['start']),
-          end: new Date(content['end']),
+          start: new Date(content['start']), // TODO #8614
+          end: new Date(content['end']), // TODO #8614
           _meta: { e2e: true },
         };
       } else if ('_meta' in content) {

@@ -91,7 +91,7 @@ export const startResetPasswordEmail = async (data: EmailFlowData): Promise<Erro
 
 export const onUserCreate = async (user: UserRecord) => {
   const { email, uid } = user;
-  console.log('*** onUserCreate', user)
+
   if (!email || !uid) {
     functions.logger.warn(`Email and uid are mandatory parameter, provided email (${email}), uid (${uid}). The user may have been created anonymously.`);
     return;

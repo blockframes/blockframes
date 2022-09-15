@@ -12,7 +12,7 @@ export const maintenance = {
 
   end() {
     /**
-     * This wait is required for backend function triggers, 
+     * This wait is required for backend function triggers 
      * that can take a certain amount of time before warming up:
      * Even if db writes are ended, triggers will be executed a certain amount of time after,
      * possibly after maintenance.end().
