@@ -13,15 +13,15 @@
             <span fxFlex fxLayout="row" fxLayoutGap="16px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Title</mat-label>
-                <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')" />
+                <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')" test-id="title"/>
                 <mat-hint>You can give a name to your video</mat-hint>
               </mat-form-field>
-              <static-select required scope="hostedVideoTypes" [control]="activeForm.get('type')" fxFlex>
+              <static-select required scope="hostedVideoTypes" [control]="activeForm.get('type')" fxFlex test-id="video-type">
                 <mat-label>Video Type</mat-label>
                 <mat-hint>Trailer, Teaser, Clip...</mat-hint>
               </static-select>
             </span>
-            <mat-checkbox [checked]="activeForm.isPublic" (change)="activeForm.togglePrivacy($event.checked)" color="primary">
+            <mat-checkbox [checked]="activeForm.isPublic" (change)="activeForm.togglePrivacy($event.checked)" color="primary" test-id="video-privacy">
               <b>Public</b> (Buyers can see video on Marketplace)
             </mat-checkbox>
             <file-uploader [queueIndex]="index | fileListIndex: videoList.value" [form]="activeForm" [formIndex]="index" [meta]="['movies', 'otherVideos', movieId]" accept="video">
@@ -43,13 +43,13 @@
       <p>Please provide your sales presentation description to interest buyers and investors.</p>
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Description</mat-label>
-        <textarea test-id="description" matInput [formControl]="salesPitchForm.get('description')" cdkTextareaAutosize
-          cdkAutosizeMinRows="10"></textarea>
+        <textarea matInput [formControl]="salesPitchForm.get('description')" cdkTextareaAutosize
+          cdkAutosizeMinRows="10" test-id="description"></textarea>
         <mat-error *ngIf="salesPitchForm.get('description').hasError('maxlength')">
           Description should not exceed 1500 characters.
         </mat-error>
       </mat-form-field>
-      <mat-checkbox [checked]="salesPitchForm.isPublic" (change)="salesPitchForm.togglePrivacy($event.checked)" color="primary">
+      <mat-checkbox [checked]="salesPitchForm.isPublic" (change)="salesPitchForm.togglePrivacy($event.checked)" color="primary" test-id="pitch-privacy">
         <b>Public</b> (Buyers can see video on Marketplace)
       </mat-checkbox>
       <file-uploader [form]="salesPitchForm" [meta]="['movies', 'salesPitch', movieId]" accept="video" listenToChanges>

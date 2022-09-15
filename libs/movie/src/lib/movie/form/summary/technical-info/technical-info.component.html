@@ -7,22 +7,22 @@
 <ul>
   <li>
     <strong>Shooting Format </strong>
-    <missing-control test-id="aspectRatio" [control]="movie.get('format')" [link]="link" scope="movieFormat">
+    <missing-control [control]="movie.get('format')" [link]="link" scope="movieFormat" test-id="ratio">
     </missing-control>
   </li>
   <li>
     <strong>Format Quality </strong>
-    <missing-control test-id="resolution" [control]="movie.get('formatQuality')" [link]="link" scope="movieFormatQuality">
+    <missing-control [control]="movie.get('formatQuality')" [link]="link" scope="movieFormatQuality" test-id="resolution">
     </missing-control>
   </li>
   <li>
     <strong>Color </strong>
-    <missing-control test-id="colorInfo" [control]="movie.get('color')" [link]="link" scope="colors">
+    <missing-control [control]="movie.get('color')" [link]="link" scope="colors" test-id="color">
     </missing-control>
   </li>
   <li>
     <strong>Sound Format </strong>
-    <missing-control test-id="soundMix" [control]="movie.get('soundFormat')" [link]="link" scope="soundFormat">
+    <missing-control [control]="movie.get('soundFormat')" [link]="link" scope="soundFormat" test-id="sound">
     </missing-control>
   </li>
 </ul>
