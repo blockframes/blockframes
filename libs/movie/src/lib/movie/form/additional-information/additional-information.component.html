@@ -6,7 +6,7 @@
 
         <bf-form-list [form]="form.originalRelease">
           <ng-template itemRef let-release>{{ release.country | toLabel: 'territories' }} -
-            {{ release.media | toLabel: 'medias' }} - {{ release.date | date: 'shortDate' }}</ng-template>
+            {{ release.media | toLabel: 'releaseMedias' }} - {{ release.date | date: 'shortDate' }}</ng-template>
           <ng-template formView let-releaseForm>
             <article [formGroup]="releaseForm" fxLayout="column" fxLayoutGap="24px">
 
@@ -15,8 +15,7 @@
                   <mat-label>Country</mat-label>
                 </static-select>
 
-                <static-select test-id="release-media" [control]="releaseForm.get('media')" scope="medias" fxFlex
-                  [withoutValues]="['payPerView', 'est', 'nVod','aVod', 'fVod', 'sVod', 'tVod', 'inflight', 'boats', 'educational', 'rental','through', 'hotels']">
+                <static-select test-id="release-media" [control]="releaseForm.get('media')" scope="releaseMedias" fxFlex>
                   <mat-label>Release Media</mat-label>
                 </static-select>
               </div>

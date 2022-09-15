@@ -4,13 +4,12 @@ import { uploadBackup } from './emulator';
 import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
 import { backupBucket } from '@env'
 import { latestAnonDbDir, latestAnonShrinkedDbDir } from './firebase-utils';
-
-// Users for E2E tests
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import type { ChildProcess } from 'child_process';
 import { CollectionData, DatabaseData, DocumentDescriptor, getAllDocumentCount, inspectDocumentRelations, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
 import { cleanDeprecatedData } from './db-cleaning';
 import { getFirestoreEmulator } from '@blockframes/firebase-utils/initialize';
+import { unique } from '@blockframes/utils/helpers';
 
 /**
  * Temp this should be removed when fixtures are updated.
@@ -214,15 +213,15 @@ function getOrgsAndUsersToKeep(dbData: DatabaseData) {
     return org?.id || undefined;
   }
 
-  const usersLinkedOrgIds = uniqueArray(_usersLinked).map(userId => getOrgIdOfUser(userId)).filter(o => o);
-  const orgSuperAdmins = uniqueArray(_orgsLinked.filter(o => o).concat(usersLinkedOrgIds)).map(orgId => getOrgSuperAdmin(orgId)).filter(u => u);
+  const usersLinkedOrgIds: string[] = unique(_usersLinked).map(userId => getOrgIdOfUser(userId)).filter(o => o);
+  const orgSuperAdmins = unique(_orgsLinked.filter(o => o).concat(usersLinkedOrgIds)).map(orgId => getOrgSuperAdmin(orgId)).filter(u => u);
 
-  const usersLinked = uniqueArray(_usersLinked).concat(orgSuperAdmins);
+  const usersLinked = unique(_usersLinked).concat(orgSuperAdmins);
 
-  const usersToKeep: string[] = uniqueArray(usersLinked).filter(uid => dbData.users.refs.docs.find(d => d.id === uid));
+  const usersToKeep = unique(usersLinked).filter(uid => dbData.users.refs.docs.find(d => d.id === uid));
 
-  const orgsLinked = uniqueArray(_orgsLinked).concat(usersLinkedOrgIds);
-  const orgsToKeep: string[] = uniqueArray(orgsLinked).filter(id => dbData.orgs.refs.docs.find(d => d.id === id));
+  const orgsLinked = unique(_orgsLinked).concat(usersLinkedOrgIds);
+  const orgsToKeep = unique(orgsLinked).filter(id => dbData.orgs.refs.docs.find(d => d.id === id));
 
   return { usersToKeep, orgsToKeep };
 }
@@ -265,8 +264,4 @@ function getDocumentsToKeepOrDelete(dbData: DatabaseData, collectionData: Collec
   }
 
   return { usedDocuments, documentsToDelete };
-}
-
-function uniqueArray(arr: string[]) {
-  return Array.from(new Set(arr))
 }

@@ -140,7 +140,7 @@ describe('Movie tunnel', () => {
     get('keyword').type(`${movie.keywords[0]}{enter}${movie.keywords[1]}{enter}`);
     get('next').click();
 
-    //production informations
+    //production information
     ///production company
     get('production-company-name').type(movie.stakeholders.productionCompany[0].displayName);
     get('production-country').click();
@@ -393,11 +393,11 @@ describe('Movie tunnel', () => {
       .and('contain', movie.crew[1].lastName)
       .and('contain', `${movie.crew[1].filmography[0].title} (${movie.crew[1].filmography[0].year})`)
       .and('contain', `${movie.crew[1].filmography[1].title} (${movie.crew[1].filmography[1].year})`);
-    ///additional informationation
+    ///additional information
     get('budget-range').should('contain', budgetRange[movie.estimatedBudget]);
     get('target').should('contain', movie.audience.targets[0]).and('contain', movie.audience.targets[1]);
     get('goals').should('contain', socialGoals[movie.audience.goals[0]]).and('contain', socialGoals[movie.audience.goals[1]]);
-    ///shooting informationation
+    ///shooting information
     get('shooting-from-period').should('contain', shootingPeriod[movie.shooting.dates.planned.from.period]);
     get('shooting-from-month').should('contain', movie.shooting.dates.planned.from.month);
     get('shooting-from-year').should('contain', movie.shooting.dates.planned.from.year);

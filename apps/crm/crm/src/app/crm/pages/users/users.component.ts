@@ -150,18 +150,19 @@ export class UsersComponent implements OnInit {
     const exportedRows = [];
     for (const user of users) {
       const userAnalytics = allAnalytics.filter(analytic => analytic.meta.uid === user.uid);
-      const titles = allTitles.filter(title => userAnalytics.some(analytic => analytic.meta.titleId === title.id));
+      const titleIdsWithAnalytics = allTitleIds.filter(id => userAnalytics.some(analytic => analytic.meta.titleId === id));
 
-      for (const title of titles) {
-        const titleAnalytics = userAnalytics.filter(analytic => analytic.meta.titleId === title.id);
+      for (const id of titleIdsWithAnalytics) {
+        const titleAnalytics = userAnalytics.filter(analytic => analytic.meta.titleId === id);
+        const title = allTitles.find(t => t?.id === id);
         const a = aggregate(titleAnalytics);
 
         exportedRows.push({
           uid: user.uid,
           user: displayName(user),
           email: user.email,
-          titleId: title.id,
-          title: title.title.international,
+          titleId: id,
+          title: title?.title.international ?? '--deleted title--',
           'total interactions': a.total,
           'page views': a.pageView,
           'screenings requested': a.screeningRequested,

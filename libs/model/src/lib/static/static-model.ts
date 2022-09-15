@@ -46,9 +46,9 @@ export const contractType = {
 } as const
 
 export const offerStatus = {
-  pending: ' New',
+  pending: 'New',
   negotiating: 'In Negotiation',
-  accepted: ' Accepted',
+  accepted: 'Accepted',
   signing: 'On Signature',
   signed: 'Signed',
   declined: 'Declined',
@@ -246,6 +246,15 @@ export const medias = {
   through: 'Sell Through',
 } as const
 
+export const releaseMedias = {
+  payTv: 'Pay TV',
+  freeTv: 'Free TV',
+  sVod: 'S-VOD',
+  video: 'Video',
+  festival: 'Festival',
+  theatrical: 'Theatrical',
+} as const
+
 export const memberStatus = {
   confirmed: 'Confirmed',
   looselyAttached: 'Loosely Attached',
@@ -398,6 +407,12 @@ export const stakeholderRoles = {
   laboratory: 'Laboratory',
   financier: 'Financier',
   broadcasterCoproducer: 'Broadcaster coproducer'
+} as const
+
+export const movieNoteRoles = {
+  producer: 'Producer',
+  director: 'Director',
+  other: 'Other',
 } as const
 
 export const storeStatus = {
@@ -1299,6 +1314,7 @@ export const staticModel = {
   invitationStatus,
   languages,
   medias,
+  releaseMedias,
   memberStatus,
   movieCurrencies,
   movieCurrenciesSymbols,
@@ -1314,6 +1330,7 @@ export const staticModel = {
   orgActivity,
   soundFormat,
   stakeholderRoles,
+  movieNoteRoles,
   storeStatus,
   unitBox,
   organizationStatus,

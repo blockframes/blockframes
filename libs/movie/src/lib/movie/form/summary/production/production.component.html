@@ -61,7 +61,7 @@
       <ng-template let-producers="control">
         <li *ngFor="let producer of producers.controls; let i = index" [attr.test-id]="'producer_' + i">
           <strong>
-            <missing-control [control]="producer.get('role')" [link]="link" type="producerRoles" scope="producerRoles">
+            <missing-control [control]="producer.get('role')" [link]="link" scope="producerRoles">
             </missing-control>
           </strong>
           <span>&nbsp;</span>

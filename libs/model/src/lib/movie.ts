@@ -2,7 +2,6 @@ import { createStorageFile, StorageFile, StorageVideo } from './media';
 import {
   MovieLanguageType,
   Language,
-  MediaValue,
   Scoring,
   Certification,
   Color,
@@ -24,7 +23,10 @@ import {
   ScreeningStatus,
   App,
   app,
-  productionStatus
+  productionStatus,
+  MovieNoteRole,
+  ReleaseMedia,
+  ReleaseMediaValue
 } from './static';
 import type {
   Producer,
@@ -36,6 +38,7 @@ import type {
 import type { DocumentMeta } from './meta';
 import { getAllAppsExcept } from './apps';
 import { Organization } from './organisation';
+import { Mandate } from './contract';
 
 //////////////////
 // MOVIE OBJECT //
@@ -170,7 +173,7 @@ export type LanguageRecord = Partial<{ [language in Language]: MovieLanguageSpec
 export interface MovieOriginalRelease {
   date: Date;
   country: Territory;
-  media?: MediaValue;
+  media?: ReleaseMedia;
 }
 
 export interface MovieRating {
@@ -225,7 +228,7 @@ export interface MovieShootingDate {
   planned?: MoviePlannedShootingDateRange;
 }
 
-export type MovieNote = { firstName: string; lastName: string; role: string } & StorageFile;
+export type MovieNote = { firstName: string; lastName: string; role?: MovieNoteRole } & StorageFile;
 
 export interface MoviePlannedShootingDateRange {
   from?: MoviePlannedShooting;
@@ -255,6 +258,8 @@ export interface SyncMovieAnalyticsOptions {
 export interface CrmMovie extends Movie {
   org: Organization;
   screeningCount: number;
+  releaseMedias: ReleaseMediaValue[];
+  mandate: Mandate;
 }
 
 /** A factory function that creates Movie */
@@ -484,7 +489,6 @@ export function createMovieNote(params: Partial<MovieNote> = {}): MovieNote {
   return {
     firstName: '',
     lastName: '',
-    role: '',
     ...file,
     ...params,
   };

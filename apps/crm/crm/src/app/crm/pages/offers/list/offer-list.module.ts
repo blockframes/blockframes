@@ -3,7 +3,13 @@ import { OffersListComponent } from './offer-list.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
+// Blockframes
 import { OfferListModule } from '@blockframes/contract/offer/list/list.module';
+
+// Material
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -12,7 +18,11 @@ import { OfferListModule } from '@blockframes/contract/offer/list/list.module';
   imports: [
     CommonModule,
     OfferListModule,
-    //Router
+    // Material
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    MatIconModule,
+    // Router
     RouterModule.forChild([{ path: '', component: OffersListComponent }])
   ],
 })

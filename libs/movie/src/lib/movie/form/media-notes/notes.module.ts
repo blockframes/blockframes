@@ -13,10 +13,10 @@ import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
 
 import { MovieFormMediaNotesComponent } from './notes.component';
 
@@ -33,10 +33,10 @@ import { MovieFormMediaNotesComponent } from './notes.component';
     MaxLengthModule,
     FileUploaderModule,
     FileListPipeModule,
+    StaticSelectModule,
 
     // Material
-    MatFormFieldModule,
-    MatSelectModule
+    MatFormFieldModule
   ],
   declarations: [MovieFormMediaNotesComponent],
 })

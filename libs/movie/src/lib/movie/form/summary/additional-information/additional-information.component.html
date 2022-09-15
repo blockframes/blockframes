@@ -17,7 +17,7 @@
                 <missing-control [control]="release.get('country')" [link]="link" scope="territories"></missing-control>
               </strong>
               <span>&nbsp;</span>
-              <missing-control [control]="release.get('media')" [link]="link" type="medias"></missing-control> -
+              <missing-control [control]="release.get('media')" [link]="link" scope="releaseMedias"></missing-control> -
               <missing-control [control]="release.get('date')" [link]="link">
                 <ng-template let-date>
                   {{ date | date: 'MM/dd/yyyy' }}
