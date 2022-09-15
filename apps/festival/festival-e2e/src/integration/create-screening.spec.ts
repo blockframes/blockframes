@@ -49,17 +49,6 @@ const injectedData = {
   [`permissions/${dashboardOrg.id}/documentPermissions/${dashboardDocumentPermissions.id}`]: dashboardDocumentPermissions,
 };
 
-function beforEachBruce() {
-  maintenance.end().then(x => console.log('*** MAINTENANCE FINIE'));; 
-    browserAuth.clearBrowserAuth().then(x => console.log('*** AUTH CLEARED'));;
-    cy.visit('');
-    browserAuth.signinWithEmailAndPassword(dashboardUser.email).then(x => '*** SIGNIN');
-    cy.visit('');
-    get('calendar').click();
-    get('cookies').click();
-    firestore.get([`orgs/${dashboardOrg.id}`]).then(x => console.log(`*** ORGS/${dashboardOrg.id}`, x[0]));
-}
-
 describe('Screenings', () => {
   beforeEach(() => {
     cy.visit('');
@@ -71,10 +60,18 @@ describe('Screenings', () => {
     firestore.create([injectedData]).then(x => console.log('*** DATA INJECTED'));
     adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true }).then(x => console.log('*** DASHBOARD AUTH'));
     adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true }).then(x => console.log('*** MARKETPLACE AUTH'));
+    cy.wait(5000);
+    maintenance.end().then(x => console.log('*** MAINTENANCE FINIE'));; 
+    browserAuth.clearBrowserAuth().then(x => console.log('*** AUTH CLEARED'));;
+    cy.visit('');
+    browserAuth.signinWithEmailAndPassword(dashboardUser.email).then(x => '*** SIGNIN');
+    cy.visit('');
+    get('calendar').click();
+    get('cookies').click();
+    firestore.get([`orgs/${dashboardOrg.id}`]).then(x => console.log(`*** ORGS/${dashboardOrg.id}`, x[0]));
   });
 
   it('create future public screening event, check if visible in market place, testing also noScreener behaviour', () => {
-    beforEachBruce()
     const screenerTitle = screenerMovie.title.international;
     const noScreenerTitle = noScreenerMovie.title.international;
     const futureSlot = createFutureSlot();
@@ -104,7 +101,6 @@ describe('Screenings', () => {
   });
 
   it('create future private screening event and check if visible in market place', () => {
-    beforEachBruce()
     const screenerTitle = screenerMovie.title.international;
     const futureSlot = createFutureSlot();
     const eventTitle = `Admin private screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
@@ -120,7 +116,6 @@ describe('Screenings', () => {
   });
 
   it('create future protected screening event and check if visible in market place', () => {
-    beforEachBruce()
     const screenerTitle = screenerMovie.title.international;
     const futureSlot = createFutureSlot();
     const eventTitle = `Admin protected screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
@@ -136,7 +131,6 @@ describe('Screenings', () => {
   });
 
   it('create future secret public screening event and check if visible in market place', () => {
-    beforEachBruce()
     // create event
     const screenerTitle = screenerMovie.title.international;
     const futureSlot = createFutureSlot();
