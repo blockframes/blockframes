@@ -95,30 +95,35 @@ const getRating = (m: Movie) => {
   return smartJoin(ratings);
 }
 
-const getLogo = async (app: App, fs: any, path: any, orgId?: string) => {
-  const logo = fs.readFileSync(path.resolve(`assets/logo/${appLogo[app]}`), 'utf8');
-  const htmlLogo = {
-    tag: `<img src="data:image/svg+xml;utf8,${encodeURIComponent(logo)}">`,
-    width: '144px',
-    height: '48px'
-  };
+const getLogo = async (app: App, fs: any, path: any, org: Organization) => {
+  if (org) {
+    const { logo } = org;
 
-  if (orgId) {
-    const { logo } = await getDocument<Organization>(`orgs/${orgId}`);
+    try {
+      if (logo.storagePath) {
+        const bucket = getStorage().bucket(storageBucket);
+        const filePath = `${logo.privacy}/${logo.storagePath}`;
+        const fileObject = bucket.file(filePath);
+        const [image] = await fileObject.download();
 
-    if (logo.storagePath) {
-
-      const bucket = getStorage().bucket(storageBucket);
-      const filePath = `${logo.privacy}/${logo.storagePath}`;
-      const fileObject = bucket.file(filePath);
-      const [image] = await fileObject.download();
-
-      htmlLogo.tag = `<img src="data:image/webp;base64,${image.toString('base64')}">`;
-      htmlLogo.width = '48px';
+        return {
+          tag: `<img src="data:image/webp;base64,${image.toString('base64')}">`,
+          width: '48px',
+          height: '48px'
+        }
+      }
+    } catch (_) {
+      console.warn(`${org.id} logo not found`);
     }
-  }
 
-  return htmlLogo;
+  } else {
+    const logo = fs.readFileSync(path.resolve(`assets/logo/${appLogo[app]}`), 'utf8');
+    return {
+      tag: `<img src="data:image/svg+xml;utf8,${encodeURIComponent(logo)}">`,
+      width: '144px',
+      height: '48px'
+    };
+  }
 }
 
 const getTitleLink = (m: Movie, urlBase: string) => {
@@ -247,7 +252,10 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[], 
     import('puppeteer'),
   ]);
 
-  const htmlLogo = await getLogo(app, fs, path, orgId);
+  const org = orgId ? await getDocument<Organization>(`orgs/${orgId}`) : undefined;
+  const pageTitle = org ? `${org.name} Library` : `${appName[app]} Library`;
+
+  const htmlLogo = await getLogo(app, fs, path, org);
 
   const posterFallback = fs.readFileSync(path.resolve(`assets/images/empty_poster.svg`), 'utf8');
   const css = fs.readFileSync(path.resolve(`assets/style/${templateName}.css`), 'utf8');
@@ -255,8 +263,8 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[], 
     css,
     posterFallback: `data:image/svg+xml;utf8,${encodeURIComponent(posterFallback)}`,
     titles,
-    pageTitle: `${appName[app]} Library`,
-    haveFilters : !!filters?.contentType || !!filters?.genres || !!filters?.originCountries || !!filters?.avails, 
+    pageTitle,
+    haveFilters: !!filters?.contentType || !!filters?.genres || !!filters?.originCountries || !!filters?.avails,
     filters
   };
 
@@ -281,7 +289,7 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[], 
   const cssHeader = [];
   cssHeader.push('<style>');
   cssHeader.push('header {width: 100%; text-align: center;}');
-  cssHeader.push(`header img {height: ${htmlLogo.height}; width: ${htmlLogo.width}}`);
+  if (htmlLogo) cssHeader.push(`header img {height: ${htmlLogo.height}; width: ${htmlLogo.width}}`);
   cssHeader.push('</style>');
 
   const pageHeight = (await page.evaluate(() => document.documentElement.offsetHeight)) + 240; // 240 = 100 + 40 margins
@@ -291,7 +299,7 @@ async function generate(templateName: string, app: App, titles: PdfTitleData[], 
   const pdf = await page.pdf({
     height,
     displayHeaderFooter: true,
-    headerTemplate: `${cssHeader.join('')}<header class="header">${htmlLogo.tag}</header>`,
+    headerTemplate: htmlLogo ? `${cssHeader.join('')}<header class="header">${htmlLogo.tag}</header>` : cssHeader.join(''),
     footerTemplate: `<p></p>`, // If left empty, default is page number
     margin: {
       top: '100px',

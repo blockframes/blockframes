@@ -42,7 +42,7 @@ export class TitleListComponent {
 
   movieCount$ = this.movies$.pipe(
     map((m) => ({
-      all: m.filter((m) => m.app.festival.status !== 'archived').length,
+      all: m.filter((m) => m.app.catalog.status !== 'archived').length,
       draft: m.filter((m) => m.app.catalog.status === 'draft').length,
       submitted: m.filter((m) => m.app.catalog.status === 'submitted').length,
       accepted: m.filter((m) => m.app.catalog.status === 'accepted').length,
@@ -81,7 +81,12 @@ export class TitleListComponent {
   }
 
   async export(movies: Movie[]) {
-    const titleIds = movies.map(m => m.id);
+    const titleIds = movies.filter(m => m.app.catalog.status === 'accepted' ).map(m => m.id);
+    if(!titleIds.length) {
+      this.snackbar.open('You have no published titles.', 'close', { duration: 5000 });
+      return;
+    }
+
     if (titleIds.length >= this.pdfService.exportLimit) {
       this.snackbar.open('You can\'t have an export with that many titles.', 'close', { duration: 5000 });
       return;

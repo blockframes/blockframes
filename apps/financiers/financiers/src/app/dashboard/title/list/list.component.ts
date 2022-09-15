@@ -106,7 +106,12 @@ export class ListComponent implements OnInit {
   }
 
   public async export(movies: Movie[]) {
-    const titleIds = movies.map(m => m.id);
+    const titleIds = movies.filter(m => m.app.financiers.status === 'accepted' ).map(m => m.id);
+    if(!titleIds.length) {
+      this.snackbar.open('You have no published titles.', 'close', { duration: 5000 });
+      return;
+    }
+
     if (titleIds.length >= this.pdfService.exportLimit) {
       this.snackbar.open('You can\'t have an export with that many titles.', 'close', { duration: 5000 });
       return;
