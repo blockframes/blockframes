@@ -1,9 +1,12 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { OfferService } from '@blockframes/contract/offer/service';
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { orderBy, where } from 'firebase/firestore';
+import { Contract, Movie, Negotiation, Offer, toLabel, sum } from '@blockframes/model';
+import { downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { format } from 'date-fns';
 
 
 @Component({
@@ -13,6 +16,7 @@ import { orderBy, where } from 'firebase/firestore';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OffersListComponent {
+  public exporting = false;
 
   offers$ = this.service.valueChanges([orderBy('_meta.createdAt', 'desc')]).pipe(
     joinWith({
@@ -23,6 +27,7 @@ export class OffersListComponent {
     private service: OfferService,
     private contractService: ContractService,
     private titleService: MovieService,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   private getContracts(offerId: string) {
@@ -32,6 +37,35 @@ export class OffersListComponent {
         negotiation: contract => this.contractService.adminLastNegotiation(contract.id)
       })
     )
+  }
+
+  public exportTable(offers: (
+    { contracts: (Contract & { title: Movie, negotiation?: Negotiation })[] }
+    & Offer)[]
+  ) {
+    try {
+      this.exporting = true;
+      this.cdr.markForCheck();
+
+      const exportedRows = offers.map(offer => ({
+        reference: offer.id,
+        created: format(offer._meta.createdAt, 'MM/dd/yyyy'),
+        '# of title': offer.contracts.length,
+        titles: offer.contracts.map(c => c.title?.title?.international).join(', '),
+        'specific terms': offer.specificity ? 'yes' : '--',
+        'total package price': `${sum(offer.contracts.map(c => c.negotiation.price).filter(value => typeof value === 'number'))} ${offer.currency || ''}`,
+        status: toLabel(offer.status, 'offerStatus')
+      }));
+
+      downloadCsvFromJson(exportedRows, 'offer-list');
+
+      this.exporting = false;
+    } catch (err) {
+      console.log(err);
+      this.exporting = false;
+    }
+
+    this.cdr.markForCheck();
   }
 }
 
