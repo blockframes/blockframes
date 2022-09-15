@@ -11,8 +11,15 @@ export const maintenance = {
   },
 
   end() {
-    // Required
-    cy.wait(5000); 
+    /**
+     * This wait is required for backend function triggers, 
+     * that can take a certain amount of time before warming up:
+     * Even if db writes are ended, triggers will be executed a certain amount of time after,
+     * possibly after maintenance.end().
+     * 
+     * 5000 was set arbitrary, can maybe be lowered.
+     */
+    cy.wait(5000);
     const maintenanceEnd = {
       endedAt: Date.now() - EIGHT_MINUTES_IN_MS,
       startedAt: null,
