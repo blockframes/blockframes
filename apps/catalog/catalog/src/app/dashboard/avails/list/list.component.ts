@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnDestroy,
   OnInit,
@@ -28,6 +29,8 @@ import {
   FullMandate,
 } from '@blockframes/contract/avails/avails';
 import { OrganizationService } from '@blockframes/organization/service';
+import { PdfService } from '@blockframes/utils/pdf/pdf.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface TotalIncome {
   EUR: number;
@@ -136,6 +139,8 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     })
   );
 
+  exporting = false;
+
   constructor(
     private titleService: MovieService,
     private dynTitleService: DynamicTitleService,
@@ -144,7 +149,10 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     private route: ActivatedRoute,
     private router: Router,
     private termsService: TermService,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
+    private pdfService: PdfService,
+    private snackbar: MatSnackBar,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
@@ -169,5 +177,29 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
 
   goToMap(id: string) {
     this.router.navigate([id, 'map'], { relativeTo: this.route });
+  }
+
+  async export(movies: Movie[]) {
+    const titleIds = movies.filter(m => m.app.catalog.status === 'accepted' ).map(m => m.id);
+    if(!titleIds.length) {
+      this.snackbar.open('You have no published titles.', 'close', { duration: 5000 });
+      return;
+    }
+    
+    if (titleIds.length >= this.pdfService.exportLimit) {
+      this.snackbar.open('You can\'t have an export with that many titles.', 'close', { duration: 5000 });
+      return;
+    }
+
+    const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
+    this.exporting = true;
+    this.cdr.markForCheck();
+    const exportStatus = await this.pdfService.download({ titleIds, orgId: this.orgService.org.id, forms: { avails: this.availsForm } });
+    snackbarRef.dismiss();
+    if (!exportStatus) {
+      this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });
+    }
+    this.exporting = false;
+    this.cdr.markForCheck();
   }
 }

@@ -11,7 +11,7 @@ import { where } from 'firebase/firestore';
 
 // RxJs
 import { SearchResponse } from '@algolia/client-search';
-import { Observable, Subscription, combineLatest } from 'rxjs';
+import { Observable, Subscription, combineLatest, BehaviorSubject } from 'rxjs';
 import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareReplay, map } from 'rxjs/operators';
 
 // Blockframes
@@ -37,13 +37,14 @@ import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 export class ListComponent implements OnDestroy, OnInit {
 
   public movies$: Observable<(AlgoliaMovie & { mandates: FullMandate[] })[]>;
+  private movieIds: string[] = [];
 
   public storeStatus: StoreStatus = 'accepted';
   public searchForm = new MovieSearchForm('catalog', this.storeStatus);
   public availsForm = new AvailsForm();
   public exporting = false;
   public nbHits: number;
-  public hitsViewed = 0;
+  public hitsViewed$ = new BehaviorSubject<number>(50);
 
   private subs: Subscription[] = [];
 
@@ -100,6 +101,7 @@ export class ListComponent implements OnDestroy, OnInit {
       this.availsForm.value$,
       this.bucketService.active$.pipe(startWith(undefined)),
       this.queries$,
+      this.hitsViewed$
     ]).pipe(shareReplay({ refCount: true, bufferSize: 1 }));
 
     const searchSub = search$.pipe(
@@ -114,6 +116,7 @@ export class ListComponent implements OnDestroy, OnInit {
         languages: search.languages,
         minReleaseYear: search.minReleaseYear > 0 ? search.minReleaseYear : undefined,
         runningTime: search.runningTime
+        // TODO #8893 add page number ?
       },
       avails,
     }));
@@ -122,19 +125,39 @@ export class ListComponent implements OnDestroy, OnInit {
     this.movies$ = search$.pipe(
       distinctUntilChanged(),
       debounceTime(300),
-      switchMap(async ([_, availsValue, bucketValue, queries]) => [await this.searchForm.search(true), availsValue, bucketValue, queries]),
+      switchMap(async ([_, availsValue, bucketValue, queries, hitsViewed]) => [await this.searchForm.search(true), availsValue, bucketValue, queries, hitsViewed]),
     ).pipe(
-      map(([movies, availsValue, bucketValue, { mandates, mandateTerms, sales, saleTerms }]: [SearchResponse<AlgoliaMovie>, AvailsFilter, Bucket, { mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[] }]) => {
+      map(([movies, availsValue, bucketValue, { mandates, mandateTerms, sales, saleTerms }, hitsViewed]: [SearchResponse<AlgoliaMovie>, AvailsFilter, Bucket, { mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[] }, number]) => {
+
         // if availsForm is invalid, put all the movies from algolia
-        if (this.availsForm.invalid) return movies.hits.map(m => ({ ...m, mandates: [] as FullMandate[] }));
-        if (!mandates.length) return [];
-        return movies.hits.map(movie => {
+        if (this.availsForm.invalid) {
+          this.nbHits = movies.hits.length;
+          this.movieIds = movies.hits.map(m => m.objectID);
+          return movies.hits.map(m => ({ ...m, mandates: [] as FullMandate[] })).slice(0, hitsViewed);
+        }
+
+        if (!mandates.length) {
+          this.nbHits = 0;
+          this.movieIds = [];
+          return [];
+        }
+
+        const results = movies.hits.map(movie => {
           const res = filterContractsByTitle(movie.objectID, mandates, mandateTerms, sales, saleTerms, bucketValue);
           const availableMandates = availableTitle(availsValue, res.mandates, res.sales, res.bucketContracts);
           return { ...movie, mandates: availableMandates };
         }).filter(m => !!m.mandates.length);
+
+        this.nbHits = results.length;
+        this.movieIds = results.map(m => m.objectID);
+        return results.slice(0, hitsViewed);
       }),
     );
+  }
+
+  loadMore() {
+    const nextValue = this.hitsViewed$.value + 50 > this.nbHits ? this.nbHits : this.hitsViewed$.value + 50;
+    this.hitsViewed$.next(nextValue);
   }
 
   clear() {
@@ -173,11 +196,19 @@ export class ListComponent implements OnDestroy, OnInit {
     this.subs.forEach(sub => sub.unsubscribe());
   }
 
-  async export(movies: AlgoliaMovie[]) {
+  async export() {
+    if (this.movieIds.length >= this.pdfService.exportLimit) {
+      this.snackbar.open('You can\'t have an export with that many titles.', 'close', { duration: 5000 });
+      return;
+    }
+
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
-    await this.pdfService.download(movies.map(m => m.objectID));
+    const exportStatus = await this.pdfService.download({ titleIds: this.movieIds, forms: { avails: this.availsForm, search: this.searchForm } });
     snackbarRef.dismiss();
+    if (!exportStatus) {
+      this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });
+    }
     this.exporting = false;
   }
 
