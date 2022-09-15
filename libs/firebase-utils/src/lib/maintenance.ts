@@ -46,7 +46,9 @@ export async function isInMaintenance(db?: FirebaseFirestore.Firestore): Promise
     // we force maintenance mode to true.
     if (!doc.exists) return true;
 
-    return _isInMaintenance(toDate<IMaintenanceDoc>(doc.data()), 0);
+    const isIn = await _isInMaintenance(toDate<IMaintenanceDoc>(doc.data()), 0);
+    console.log('*** isInMaintenance', isIn)
+    return isIn;
   } catch (e) {
     throw new Error(`Error while checking if app is in maintenance mode: ${e.message}`);
   }

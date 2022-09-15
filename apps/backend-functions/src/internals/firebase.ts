@@ -17,6 +17,7 @@ export const storage = getStorage();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const skipInMaintenance = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
   // return a new function that is the old function + a check that early exits when we are restoring.
+  console.log('*** maintenanceActive', maintenanceActive)
   return async (...args: Parameters<T>) => {
     if (maintenanceActive === null) return (await isInMaintenance(db)) ? Promise.resolve() : f(...args);
     else return maintenanceActive ? Promise.resolve() : f(...args);
