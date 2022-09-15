@@ -50,6 +50,7 @@ export class OffersListComponent {
       const exportedRows = offers.map(offer => ({
         reference: offer.id,
         created: format(offer._meta.createdAt, 'MM/dd/yyyy'),
+        buyerId: offer.buyerId,
         '# of title': offer.contracts.length,
         titles: offer.contracts.map(c => c.title?.title?.international).join(', '),
         'specific terms': offer.specificity ? 'yes' : '--',
