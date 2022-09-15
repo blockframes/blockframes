@@ -84,26 +84,34 @@ const isEventsPath = (path: string) => path.split('/')[0] === 'events';
 
 //* IMPORT DATA*-----------------------------------------------------------------
 
-export async function importData(data: Record<string, object>[]) {
+export function importData(data: Record<string, object>[]) {
   const createAll: Promise<FirebaseFirestore.WriteResult>[] = [];
   for (const document of data) {
     Object.entries(document).map(([path, content]) => {
-      if (!isDocumentPath(path))
+      if (!isDocumentPath(path)) {
         throw new Error('Document path mandatory, like [collectionPath/DocumentPath]. Got ' + JSON.stringify(path));
-      if (path === metaDoc)
+      }
+
+      if (path === metaDoc) {
         content = {
           startedAt: !content['startedAt'] ? null : new Date(content['startedAt']),
           endedAt: !content['endedAt'] ? null : new Date(content['endedAt']),
         };
-      else if (isEventsPath(path)) {
+
+        console.log('*** metaDoc', content['startedAt'], content['endedAt'], content);
+      } else if (isEventsPath(path)) {
         content = {
           ...content,
           start: new Date(content['start']),
           end: new Date(content['end']),
           _meta: { e2e: true },
         };
-      } else if ('_meta' in content) content['_meta']['e2e'] = true;
-      else content['_meta'] = { e2e: true };
+      } else if ('_meta' in content) {
+        content['_meta']['e2e'] = true;
+      } else {
+        content['_meta'] = { e2e: true };
+      }
+
       createAll.push(db.doc(path).set(content));
     });
   }
