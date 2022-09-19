@@ -34,6 +34,7 @@ import {
   colors,
   soundFormat,
   hostedVideoTypes,
+  movieNoteRoles
 } from '@blockframes/model';
 import { user, org, permissions, inDevelopmentMovie } from '../../../fixtures/dashboard/movie-tunnel';
 import { addDays, subDays, format } from 'date-fns';
@@ -292,6 +293,7 @@ describe('Movie tunnel', () => {
     get('next').click();
 
     //promotional elements : no upload possible so far in e2e - see issue #8900
+    //only inputs are tested
     ///files
     cy.contains('Presentation Deck'); //just checking we arrived on the good page
     get('next').click();
@@ -299,9 +301,9 @@ describe('Movie tunnel', () => {
     cy.contains('Promotional Images');
     get('next').click();
     ///videos
-    get('title').type(movie.promotional.videos.salesPitch.title);
+    get('title').type(movie.promotional.videos.otherVideos[0].title);
     get('video-type').click();
-    getInListbox(hostedVideoTypes[movie.promotional.videos.salesPitch.type]);
+    getInListbox(hostedVideoTypes[movie.promotional.videos.otherVideos[0].type]);
     uncheck('video-privacy');
     check('video-privacy');
     get('description').type(movie.promotional.videos.salesPitch.description);
@@ -312,7 +314,7 @@ describe('Movie tunnel', () => {
     get('first-name').type(movie.promotional.notes[0].firstName);
     get('last-name').type(movie.promotional.notes[0].lastName);
     get('role').click();
-    getInListbox(movie.promotional.notes[0].role);
+    getInListbox(movieNoteRoles[movie.promotional.notes[0].role]);
     get('next').click();
     ///screener movie
     cy.contains('Screener Video');
@@ -428,8 +430,8 @@ describe('Movie tunnel', () => {
     get('moodboard').should('contain', 'Missing');
     //TODO : test 'images' when fixed #8586
     get('video_0')
-      .should('contain', hostedVideoTypes[movie.promotional.videos.salesPitch.type])
-      .and('contain', movie.promotional.videos.salesPitch.title);
+      .should('contain', hostedVideoTypes[movie.promotional.videos.otherVideos[0].type])
+      .and('contain', movie.promotional.videos.otherVideos[0].title);
     get('pitch').should('contain', 'Missing');
     get('note_0').should('contain', 'Note');
     get('screener').should('contain', 'Missing');
