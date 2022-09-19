@@ -10,7 +10,7 @@
     <missing-control [control]="movie.promotional.get('videos').get('otherVideos')" [link]="link">
       <ng-template let-videos>
         <ul class="videos">
-          <li class="video" *ngFor="let video of videos">
+          <li class="video" *ngFor="let video of videos; let i = index" [attr.test-id]="'video_' + i">
             <bf-preview-modal [ref]="video"></bf-preview-modal>
             {{ video.type | toLabel: 'hostedVideoTypes' }}{{ video.type ? ' - ' : '' }}{{ video.title | titlecase }} - {{ video.storagePath | fileName }}
           </li>
@@ -22,7 +22,7 @@
   <ng-container *ngIf="movie.promotional.get('videos').get('salesPitch') as salesPitch">
     <li>
       <strong>Sales Pitch</strong>
-      <missing-control [control]="salesPitch.get('storagePath')" [link]="link">
+      <missing-control [control]="salesPitch.get('storagePath')" [link]="link" test-id="pitch">
         <ng-template let-salesPitchStorage>
           <article>
             <bf-preview-modal [ref]="salesPitch.value"></bf-preview-modal>

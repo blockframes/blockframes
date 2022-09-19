@@ -5,7 +5,7 @@
     </button>
   </ng-container>
   <ng-content select="header, [tunnel-header]"></ng-content>
-  <a mat-icon-button (click)="redirect()">
+  <a mat-icon-button (click)="redirect()" test-id="close">
     <mat-icon svgIcon="close"></mat-icon>
   </a>
 </mat-toolbar>

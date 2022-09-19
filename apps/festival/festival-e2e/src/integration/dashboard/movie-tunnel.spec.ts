@@ -12,6 +12,7 @@ import {
   getInList,
   getInListbox,
   getAllStartingWith,
+  assertUrlIncludes
 } from '@blockframes/testing/cypress/browser';
 import {
   crewRoles,
@@ -421,8 +422,27 @@ describe('Movie tunnel', () => {
     get('resolution').should('contain', movieFormatQuality[movie.formatQuality]);
     get('color').should('contain', colors[movie.color]);
     get('sound').should('contain', soundFormat[movie.soundFormat]);
+    //promotional Elements
+    get('deck').should('contain', 'Missing');
+    get('scenario').should('contain', 'Missing');
+    get('moodboard').should('contain', 'Missing');
+    //TODO : test 'images' when fixed
+    get('video_0')
+      .should('contain', hostedVideoTypes[movie.promotional.videos.salesPitch.type])
+      .and('contain', movie.promotional.videos.salesPitch.title);
+    get('pitch').should('contain', 'Missing');
+    get('note_0').should('contain', 'Note');
+    get('screener').should('contain', 'Missing');
 
-    //TODO: continue #6820
+    get('publish').click();
+    cy.contains(`${movie.title.original} successfully published.`)
+    get('close').click();
+    firestore
+      .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id })
+      .then((movies: Movie[]) => {
+        assertUrlIncludes(`c/o/dashboard/title/${movies[0].id}/activity`);
+      });
+    cy.contains(movie.title.original);
   });
 });
 
