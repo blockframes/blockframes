@@ -9,13 +9,13 @@ import {
   FestivalMarketplaceNotificationsPage,
   FestivalMarketplaceCalendarPage,
   FestivalMarketplaceEventPage
-} from '../../support/pages/marketplace/index';
+} from '../../../support/pages/marketplace/index';
 import {
   FestivalDashboardHomePage,
   FestivalInvitationsPage,
   EventPage
-} from '../../support/pages/dashboard/index';
-import { LandingPage } from '../../support/pages/landing';
+} from '../../../support/pages/dashboard/index';
+import { LandingPage } from '../../../support/pages/landing';
 // Hooks
 import { acceptCookie, clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { EVENTS } from '@blockframes/e2e/utils';

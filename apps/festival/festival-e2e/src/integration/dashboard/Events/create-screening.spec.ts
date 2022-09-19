@@ -29,7 +29,7 @@ import {
   noScreenerMovie,
   dashboardDocumentPermissions,
   dummyEvent,
-} from '../fixtures/dashboard/create-event';
+} from '../../../fixtures/dashboard/create-event';
 
 const injectedData = {
   // dashboard user
@@ -59,7 +59,7 @@ describe('Screenings', () => {
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true });
     adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true });
-    maintenance.end(); 
+    maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
     browserAuth.signinWithEmailAndPassword(dashboardUser.email);
