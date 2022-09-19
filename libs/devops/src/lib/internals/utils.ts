@@ -1,6 +1,6 @@
-import { toDate } from "@blockframes/firebase-utils";
-import { getValue } from "@blockframes/utils/helpers";
-import { isString } from "lodash";
+import { toDate } from '@blockframes/firebase-utils';
+import { getValue } from '@blockframes/utils/helpers';
+import { isString } from 'lodash';
 
 const collections = {
   analytics: false,

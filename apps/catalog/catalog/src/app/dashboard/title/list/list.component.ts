@@ -1,8 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { StoreStatus, storeStatus, Person, App } from '@blockframes/model';
+import { StoreStatus, storeStatus, Person, Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,6 +10,9 @@ import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.compon
 import { displayPerson } from '@blockframes/utils/pipes';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { filters } from '@blockframes/ui/list/table/filters';
+import { PdfService } from '@blockframes/utils/pdf/pdf.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { OrganizationService } from '@blockframes/organization/service';
 
 @Component({
   selector: 'catalog-title-list',
@@ -39,7 +42,7 @@ export class TitleListComponent {
 
   movieCount$ = this.movies$.pipe(
     map((m) => ({
-      all: m.filter((m) => m.app.festival.status !== 'archived').length,
+      all: m.filter((m) => m.app.catalog.status !== 'archived').length,
       draft: m.filter((m) => m.app.catalog.status === 'draft').length,
       submitted: m.filter((m) => m.app.catalog.status === 'submitted').length,
       accepted: m.filter((m) => m.app.catalog.status === 'accepted').length,
@@ -47,10 +50,16 @@ export class TitleListComponent {
     }))
   );
 
+  exporting = false;
+
   constructor(
     private service: MovieService,
+    private pdfService: PdfService,
+    private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
+    private snackbar: MatSnackBar,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   /** Dynamic filter of movies for each tab. */
@@ -69,5 +78,29 @@ export class TitleListComponent {
       data: createModalData({ title, values: displayPerson(values) }),
       autoFocus: false
     });
+  }
+
+  async export(movies: Movie[]) {
+    const titleIds = movies.filter(m => m.app.catalog.status === 'accepted' ).map(m => m.id);
+    if(!titleIds.length) {
+      this.snackbar.open('You have no published titles.', 'close', { duration: 5000 });
+      return;
+    }
+
+    if (titleIds.length >= this.pdfService.exportLimit) {
+      this.snackbar.open('You can\'t have an export with that many titles.', 'close', { duration: 5000 });
+      return;
+    }
+
+    const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
+    this.exporting = true;
+    this.cdr.markForCheck();
+    const exportStatus = await this.pdfService.download({ titleIds, orgId: this.orgService.org.id });
+    snackbarRef.dismiss();
+    if (!exportStatus) {
+      this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });
+    }
+    this.exporting = false;
+    this.cdr.markForCheck();
   }
 }

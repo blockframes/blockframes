@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Movie, isScreening, CrmMovie, smartJoin, toLabel, Language, MovieLanguageSpecification, displayName, Analytics } from '@blockframes/model';
+import { Movie, isScreening, CrmMovie, smartJoin, toLabel, Language, MovieLanguageSpecification, displayName, Analytics, ReleaseMediaValue, isMandate } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -14,16 +14,10 @@ import { Observable, combineLatest } from 'rxjs';
 
 import { where } from 'firebase/firestore';
 import { format } from 'date-fns';
-import { joinWith } from 'ngfire';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { aggregate } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
-
-const titleMandateQuery = (id: string) => ([
-  where('titleId', '==', id),
-  where('type', '==', 'mandate')
-]);
 
 @Component({
   selector: 'crm-movies',
@@ -54,18 +48,17 @@ export class MoviesComponent implements OnInit {
       this.movieService.valueChanges(),
       this.orgService.valueChanges(),
       this.eventService.valueChanges([where('type', '==', 'screening')]),
+      this.contractService.valueChanges([where('type', '==', 'mandate')])
     ]).pipe(
-      map(([movies, orgs, events]) => {
+      map(([movies, orgs, events, mandates]) => {
         const screenings = events.filter(isScreening);
         return movies.map((movie) => {
+          const mandate = mandates.filter(isMandate).find(m => m.titleId === movie.id);
           const org = orgs.find((o) => o.id === movie.orgIds[0]);
           const screeningCount = screenings.filter((e) => e.meta?.titleId === movie.id).length;
-          const releaseMedias = movie.originalRelease.map(release => release.media)
-          return { ...movie, releaseMedias, org, screeningCount } as CrmMovie;
+          const releaseMedias = movie.originalRelease.map(r => toLabel(r.media, 'releaseMedias') as ReleaseMediaValue).filter(r => r);
+          return { ...movie, releaseMedias: Array.from(new Set(releaseMedias)), org, screeningCount, mandate };
         });
-      }),
-      joinWith({
-        mandate: movie => this.contractService.valueChanges(titleMandateQuery(movie.id))
       })
     );
   }
@@ -94,9 +87,10 @@ export class MoviesComponent implements OnInit {
         return toLabel(result, 'languages');
       }
 
-      const exportedRows = movies.map((m) => ({
+      const exportedRows = movies.map(m => ({
         'movie id': m.id,
         title: m.title.international,
+        'season number': m.title.series ?? '--',
         'internal ref': m.internalRef ?? '--',
         org: m.org.name || '--',
         orgId: m.org?.id ?? '--',
@@ -132,10 +126,12 @@ export class MoviesComponent implements OnInit {
         'origin countries': toLabel(m.originCountries, 'territories'),
         prizes: smartJoin(m.prizes.map(prize => prize.name)),
         'custom prizes': smartJoin(m.customPrizes.map(prize => prize.name)),
+        certifications: toLabel(m.certifications, 'certifications'),
         producers: smartJoin(m.producers.map(person => displayName(person))),
         'production status': toLabel(m.productionStatus, 'productionStatus'),
-        rating: m.rating.map(rate => `${rate.value} (${rate.country ? toLabel(rate.country, 'territories') : 'no country'})`),
+        rating: smartJoin(m.rating.map(rate => `${rate.value} (${rate.country ? toLabel(rate.country, 'territories') : 'no country'})`)),
         release: `${m.release.status} ${m.release?.year ? (m.release.year) : ''}`,
+        'release media': smartJoin(m.releaseMedias),
         'running time': m.runningTime?.time,
         'running time status': m.runningTime?.status,
         'running time episode count': m.runningTime?.episodeCount,
@@ -155,7 +151,16 @@ export class MoviesComponent implements OnInit {
         financier: smartJoin(m.stakeholders.financier.map(company => company.displayName)),
         synopsis: m.synopsis,
         orgIds: smartJoin(m.orgIds),
-        'campaign started': m.campaignStarted ? format(m.campaignStarted, 'MM/dd/yyyy') : ''
+        'campaign started': m.campaignStarted ? format(m.campaignStarted, 'MM/dd/yyyy') : '',
+
+        'has poster': m.poster?.storagePath ? 'yes' : 'no',
+        'has banner': m.banner?.storagePath ? 'yes' : 'no',
+        'has stills': m.promotional.still_photo?.some(s => s.storagePath) ? 'yes' : 'no',
+
+        'has screener': m.promotional?.videos?.screener?.jwPlayerId ? 'yes' : 'no',
+        'has public screener': m.promotional?.videos?.publicScreener?.jwPlayerId ? 'yes' : 'no',
+        'has salesPitch': m.promotional?.videos?.salesPitch?.jwPlayerId ? 'yes' : 'no',
+        'has otherVideos': m.promotional?.videos?.otherVideos?.some(o => o.jwPlayerId) ? 'yes' : 'no',
       }));
 
       downloadCsvFromJson(exportedRows, 'movies-list');
@@ -181,18 +186,19 @@ export class MoviesComponent implements OnInit {
     const exportedRows = [];
     for (const title of titles) {
       const movieAnalytics = allAnalytics.filter(analytic => analytic.meta.titleId === title.id);
-      const users = allUsers.filter(user => movieAnalytics.some(analytic => analytic.meta.uid === user.uid));
-      
-      for (const user of users) {
-        const userAnalytics = movieAnalytics.filter(analytic => analytic.meta.uid === user.uid);
+      const uidsWithAnalytics = allUids.filter(uid => movieAnalytics.some(analytic => analytic.meta.uid === uid));
+
+      for (const uid of uidsWithAnalytics) {
+        const userAnalytics = movieAnalytics.filter(analytic => analytic.meta.uid === uid);
+        const user = allUsers.find(u => u?.uid === uid);
         const a = aggregate(userAnalytics);
 
         exportedRows.push({
           'title id': title.id,
           title: title.title.international,
-          uid: user.uid,
-          user: displayName(user),
-          'user email': user.email,
+          uid,
+          user: user ? displayName(user) : '--deleted user--',
+          'user email': user?.email ?? '--',
           'total interactions': a.total,
           'page views': a.pageView,
           'screenings requested': a.screeningRequested,

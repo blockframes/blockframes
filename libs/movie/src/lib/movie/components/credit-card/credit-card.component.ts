@@ -50,6 +50,6 @@ export class EmptyImgPipe implements PipeTransform {
 @Pipe({ name: 'hasFilmography' })
 export class HasFilmographyPipe implements PipeTransform {
   transform(filmography: Filmography[]) {
-    return filmography.some(film => film.title);
+    return filmography?.some(film => film.title);
   }
 }

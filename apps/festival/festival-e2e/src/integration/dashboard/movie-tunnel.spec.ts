@@ -141,7 +141,7 @@ describe('Movie tunnel', () => {
     get('keyword').type(`${movie.keywords[0]}{enter}${movie.keywords[1]}{enter}`);
     get('next').click();
 
-    //production informations
+    //production information
     ///production company
     get('production-company-name').type(movie.stakeholders.productionCompany[0].displayName);
     get('production-country').click();

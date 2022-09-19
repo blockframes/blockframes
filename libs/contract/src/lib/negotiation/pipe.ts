@@ -41,13 +41,17 @@ export class CanNegotiatePipe implements PipeTransform {
   }
 }
 
+export function negotiationStatus(negotiation: Negotiation): ContractStatus {
+  const pending = negotiation?.status === 'pending';
+  if (isInitial(negotiation) && pending) return 'pending';
+  if (negotiation?.status === 'pending') return 'negotiating';
+  return negotiation?.status;
+}
+
 @Pipe({ name: 'negotiationStatus' })
 export class NegotiationStatusPipe implements PipeTransform {
   transform(negotiation: Negotiation): ContractStatus {
-    const pending = negotiation?.status === 'pending'
-    if (isInitial(negotiation) && pending) return 'pending';
-    if (negotiation?.status === 'pending') return 'negotiating';
-    return negotiation?.status;
+    return negotiationStatus(negotiation);
   }
 }
 

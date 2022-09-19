@@ -7,6 +7,7 @@ import { OrganizationCreateComponent } from '../../components/organization/creat
 import { Organization, getAllAppsExcept, appName, modules } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { filters } from '@blockframes/ui/list/table/filters';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'crm-organizations',
@@ -36,6 +37,7 @@ export class OrganizationsComponent {
         id: r.id,
         name: r.name,
         status: r.status,
+        created: r._meta?.createdAt ? format(r._meta?.createdAt, 'MM/dd/yyyy') : '--',
         country: r.addresses.main.country ?? '--',
         email: r.email,
         memberCount: r.userIds.length,

@@ -1,18 +1,19 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
-import { combineLatest, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { combineLatest, of, map } from 'rxjs';
 import { getSeller } from '@blockframes/contract/contract/utils'
-import { Mandate, Sale } from '@blockframes/model';
+import { Income, Mandate, Negotiation, Sale, toLabel } from '@blockframes/model';
 import { orderBy, where } from 'firebase/firestore';
+import { downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { format } from 'date-fns';
+import { negotiationStatus } from '@blockframes/contract/negotiation/pipe';
 
-const externalSaleQuery = [
-  where('buyerId', '==', ''),
+const saleQuery = [
   where('type', '==', 'sale'),
   orderBy('_meta.createdAt', 'desc')
 ];
@@ -30,29 +31,30 @@ const mandateQuery = [
 })
 export class ContractsListComponent {
   public orgId = this.orgService.org.id;
+  public exporting = false;
 
   private mandates$ = this.contractService.valueChanges(mandateQuery).pipe(
     joinWith({
       licensor: (mandate: Mandate) => this.orgService.valueChanges(getSeller(mandate)).pipe(map(org => org?.name)),
       licensee: (mandate: Mandate) => this.orgService.valueChanges(mandate.buyerId).pipe(map(org => org?.name)),
       title: (mandate: Mandate) => this.titleService.valueChanges(mandate.titleId).pipe(map(title => title.title.international)),
-      price: (mandate: Mandate) => this.incomeService.valueChanges(mandate.id),
     })
   );
 
-  private externalSales$ = this.contractService.valueChanges(externalSaleQuery).pipe(
+  private sales$ = this.contractService.valueChanges(saleQuery).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(org => org?.name)),
-      licensee: () => of('External'),
+      licensee: (sale: Sale) => sale.buyerId ? this.orgService.valueChanges(sale.buyerId).pipe(map(org => org?.name)) : of('External'),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
-      price: (sale: Sale) => this.incomeService.valueChanges(sale.id),
+      price: (sale: Sale) => this.incomeService.valueChanges(sale.id), // external sales
+      negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id) // internal sales
     })
   );
 
   public contracts$ = combineLatest([
     this.mandates$,
-    this.externalSales$
-  ]).pipe(map(([mandates, sales]) => ({ mandates, sales })));
+    this.sales$
+  ]).pipe(map(([mandates, sales]) => ({ mandates, sales, externalSales: sales.filter(s => !s.buyerId) })));
 
   constructor(
     private contractService: ContractService,
@@ -60,7 +62,61 @@ export class ContractsListComponent {
     private titleService: MovieService,
     private incomeService: IncomeService,
     private dynTitle: DynamicTitleService,
+    private cdr: ChangeDetectorRef,
   ) {
     this.dynTitle.setPageTitle('Mandates and external sales.');
+  }
+
+  public exportTable(contracts: {
+    mandates: ({ licensor: string, licensee: string, title: string } & Mandate)[],
+    sales: ({ licensor: string, licensee: string, title: string, price?: Income, negotiation?: Negotiation } & Sale)[],
+  }) {
+    try {
+      this.exporting = true;
+      this.cdr.markForCheck();
+
+      const exportedRows = [];
+
+      contracts.mandates.forEach(mandate => {
+        const row = {
+          type: 'mandate',
+          internal: '--',
+          id: mandate.id,
+          date: format(mandate._meta.createdAt, 'MM/dd/yyyy'),
+          licensor: mandate.licensor,
+          licensee: mandate.licensee,
+          title: mandate.title,
+          status: toLabel(mandate.status, 'contractStatus'),
+          price: ''
+        };
+
+        exportedRows.push(row);
+      });
+
+      contracts.sales.forEach(sale => {
+        const row = {
+          type: 'sale',
+          internal: sale.buyerId ? 'yes' : 'no',
+          id: sale.id,
+          date: format(sale._meta.createdAt, 'MM/dd/yyyy'),
+          licensor: sale.licensor,
+          licensee: sale.licensee,
+          title: sale.title,
+          status: toLabel(sale.buyerId ? negotiationStatus(sale.negotiation) : sale.status, 'contractStatus'),
+          price: sale.buyerId ? `${sale.negotiation?.price || ''} ${sale.negotiation?.currency || ''}` : `${sale.price?.price || ''} ${sale.price?.currency || ''}`
+        };
+
+        exportedRows.push(row);
+      });
+
+      downloadCsvFromJson(exportedRows, 'contract-list');
+
+      this.exporting = false;
+    } catch (err) {
+      console.log(err);
+      this.exporting = false;
+    }
+
+    this.cdr.markForCheck();
   }
 }
