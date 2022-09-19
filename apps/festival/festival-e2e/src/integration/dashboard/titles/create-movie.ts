@@ -35,7 +35,7 @@ import {
   soundFormat,
   hostedVideoTypes,
 } from '@blockframes/model';
-import { user, org, permissions, inDevelopmentMovie } from '../../fixtures/dashboard/movie-tunnel';
+import { user, org, permissions, inDevelopmentMovie } from '../../../fixtures/dashboard/movie-tunnel';
 import { addDays, subDays, format } from 'date-fns';
 
 const injectedData = {
@@ -394,11 +394,11 @@ describe('Movie tunnel', () => {
       .and('contain', movie.crew[1].lastName)
       .and('contain', `${movie.crew[1].filmography[0].title} (${movie.crew[1].filmography[0].year})`)
       .and('contain', `${movie.crew[1].filmography[1].title} (${movie.crew[1].filmography[1].year})`);
-    ///additional informationation
+    ///additional information
     get('budget-range').should('contain', budgetRange[movie.estimatedBudget]);
     get('target').should('contain', movie.audience.targets[0]).and('contain', movie.audience.targets[1]);
     get('goals').should('contain', socialGoals[movie.audience.goals[0]]).and('contain', socialGoals[movie.audience.goals[1]]);
-    ///shooting informationation
+    ///shooting information
     get('shooting-from-period').should('contain', shootingPeriod[movie.shooting.dates.planned.from.period]);
     get('shooting-from-month').should('contain', movie.shooting.dates.planned.from.month);
     get('shooting-from-year').should('contain', movie.shooting.dates.planned.from.year);
@@ -426,7 +426,7 @@ describe('Movie tunnel', () => {
     get('deck').should('contain', 'Missing');
     get('scenario').should('contain', 'Missing');
     get('moodboard').should('contain', 'Missing');
-    //TODO : test 'images' when fixed
+    //TODO : test 'images' when fixed #8586
     get('video_0')
       .should('contain', hostedVideoTypes[movie.promotional.videos.salesPitch.type])
       .and('contain', movie.promotional.videos.salesPitch.title);
@@ -435,8 +435,8 @@ describe('Movie tunnel', () => {
     get('screener').should('contain', 'Missing');
 
     get('publish').click();
-    cy.contains(`${movie.title.original} successfully published.`)
-    get('close').click();
+    cy.contains(`${movie.title.original} successfully published.`);
+    get('close-tunnel').click();
     firestore
       .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id })
       .then((movies: Movie[]) => {
