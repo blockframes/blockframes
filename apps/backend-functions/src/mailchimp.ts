@@ -20,7 +20,7 @@ export const registerToNewsletters = async (data: { email: string, tags: string[
     server: mailchimpServer,
   });
 
-  return await mailchimp.lists.addListMember(mailchimpListId,
+  return mailchimp.lists.addListMember(mailchimpListId,
     {
       email_address,
       tags,
