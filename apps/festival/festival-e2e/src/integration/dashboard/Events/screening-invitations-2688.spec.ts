@@ -1,6 +1,6 @@
 ﻿/// <reference types="cypress" />
 
-import screeningEvents from '../../fixtures/screening-events';
+import screeningEvents from '../../../fixtures/screening-events';
 import USERS from 'tools/fixtures/users.json'
 import ORGS from 'tools/fixtures/orgs.json'
 //TODO define proper way to import next line #8071

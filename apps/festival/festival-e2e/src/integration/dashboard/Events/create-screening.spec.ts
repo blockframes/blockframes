@@ -80,14 +80,12 @@ describe('Screenings', () => {
     fillDashboardCalendarDetails({ movie: screenerTitle, title: eventTitle, accessibility: 'public' });
     get('event-save-disabled').should('be.disabled');
     get('missing-screener').should('not.exist');
-    //*warning chip changed in html, to be updated
-    //get('warning-chip').should('not.exist');
+    get('warning-screener').should('not.exist');
     // change movie to check noScreener behaviour
     get('screening-title').click();
     getInList('title_', noScreenerTitle);
     get('event-save').click();
-    //*warning chip changed in html, to be updated
-    //get('warning-chip').should('exist');
+    get('warning-screener').should('exist');
     get('missing-screener').should('exist');
     get('arrow-back').click();
     getEventSlot(futureSlot).should('contain', noScreenerTitle);

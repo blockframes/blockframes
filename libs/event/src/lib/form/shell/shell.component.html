@@ -8,20 +8,20 @@
 
         <ng-container [ngSwitch]="missing">
           <ng-container *ngSwitchCase="'title'">
-            <button mat-button color="accent" (click)="scrollTo('#titleField')">
+            <button mat-button color="accent" (click)="scrollTo('#titleField')" test-id="warning-title">
               <mat-icon svgIcon="warning"></mat-icon>
               <span>No title selected</span>
             </button>
           </ng-container>
 
           <ng-container *ngSwitchCase="'screener'">
-            <a mat-button color="accent" [routerLink]="['/c/o/dashboard/tunnel/movie', form.meta.value.titleId, 'media-screener']">
+            <a mat-button color="accent" [routerLink]="['/c/o/dashboard/tunnel/movie', form.meta.value.titleId, 'media-screener']" test-id="warning-screener">
               <mat-icon svgIcon="warning"></mat-icon>
               <span>Screening file missing</span>
             </a>
           </ng-container>
-  
-          <mat-chip-list *ngSwitchCase="'video'">
+
+          <mat-chip-list *ngSwitchCase="'video'" test-id="warning-video">
             <mat-chip disableRipple>
               <mat-icon svgIcon="warning"></mat-icon>
               <span>Video file missing</span>
