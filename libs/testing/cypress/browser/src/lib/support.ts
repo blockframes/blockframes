@@ -39,7 +39,6 @@ export function getAllStartingWith(selector: string) {
 export function getInList(selectorStart: string, option: string) {
   return getAllStartingWith(selectorStart).each($el => {
     // loops between all options
-    cy.log($el[0].innerText, option, $el[0].innerText === option);
     if ($el[0].innerText === option) $el.trigger('click');
   });
 }
