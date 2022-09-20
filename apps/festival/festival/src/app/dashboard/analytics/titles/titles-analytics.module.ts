@@ -5,12 +5,14 @@ import { TitlesAnalyticsComponent } from './titles-analytics.component';
 
 // Blockframes
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 @NgModule({
   imports: [
     CommonModule,
     // Blockframes
     TableModule,
+    LogoSpinnerModule,
     // Router
     RouterModule.forChild([
       {

@@ -14,7 +14,6 @@ import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-au
 import { FilterByDateModule } from '@blockframes/utils/pipes/filter-by-date.pipe';
 
 // Material
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider'
 import { MatIconModule } from '@angular/material/icon';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -35,7 +34,6 @@ import { MatButtonModule } from '@angular/material/button';
 
     // Material
     MatDividerModule,
-    MatProgressSpinnerModule,
     MatIconModule,
     MatButtonModule
   ]

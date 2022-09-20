@@ -13,7 +13,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
@@ -34,7 +33,6 @@ export const profileRoutes: Routes = [
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
     MatDialogModule,

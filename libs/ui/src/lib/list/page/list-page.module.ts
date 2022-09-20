@@ -7,13 +7,13 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
 
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Component and Directives
 import {
@@ -37,9 +37,9 @@ import {
     ImageModule,
     FlexLayoutModule,
     AppBarModule,
+    LogoSpinnerModule,
 
     // Material
-    MatProgressSpinnerModule,
     MatProgressBarModule,
     MatIconModule,
     MatButtonModule,

@@ -39,7 +39,7 @@ describe('Organiser invites other users to private screening', () => {
     browserAuth.signinWithEmailAndPassword(userOrganiser.email);
     cy.visit('/c/o/dashboard/event');
     cy.log(`Create screening {${screeningEvent.event}}`);
-    awaitElementDeletion('mat-spinner');
+    awaitElementDeletion('logo-spinner');
     // * We would not need to do this if various user types were generated at the start of the test
     // * in order to generate user types, we either need to create a lot of data manually or use the app's built in methods
     events.deleteAllSellerEvents(userOrganiser.uid); // ! must stay here so eventsService is instantiated
@@ -63,10 +63,10 @@ describe('Organiser invites other users to private screening', () => {
 
     // If we want to be able to use screeningUrl later, next steps of the test must be inside the "then"
     cy.url().then(screeningUrl => {
-      awaitElementDeletion('mat-spinner');
+      awaitElementDeletion('logo-spinner');
       festival.clickPlay();
       festival.runVideo();
-      awaitElementDeletion('mat-spinner');
+      awaitElementDeletion('logo-spinner');
 
       cy.get('.jw-video');
       cy.get('video.jw-video').should('have.prop', 'paused', true).and('have.prop', 'ended', false);

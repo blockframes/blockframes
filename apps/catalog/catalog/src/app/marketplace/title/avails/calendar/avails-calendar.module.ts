@@ -5,7 +5,16 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+// Blockframes
+import { MapModule } from '@blockframes/ui/map';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { AvailsCalendarModule } from '@blockframes/contract/avails/calendar/calendar.module';
+import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
 
+// Component
+import { MarketplaceMovieAvailsCalendarComponent } from './avails-calendar.component';
+
+// Material
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -18,16 +27,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 
-
-import { MapModule } from '@blockframes/ui/map';
-
-
-import { MarketplaceMovieAvailsCalendarComponent } from './avails-calendar.component';
-import { AvailsCalendarModule } from '@blockframes/contract/avails/calendar/calendar.module';
-import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
-
 @NgModule({
   declarations: [ MarketplaceMovieAvailsCalendarComponent ],
   imports: [
@@ -38,6 +37,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MapModule,
     AvailsFilterModule,
     AvailsCalendarModule,
+    LogoSpinnerModule,
 
     MatCardModule,
     MatIconModule,
@@ -50,7 +50,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatCheckboxModule,
     MatFormFieldModule,
     MatDatepickerModule,
-    MatProgressSpinnerModule,
 
     RouterModule.forChild([{ path: '', component: MarketplaceMovieAvailsCalendarComponent }]),
   ],
