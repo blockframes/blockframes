@@ -19,7 +19,7 @@ export class LanguagesFormComponent {
     const language = getKeyIfExists('languages', this.languageCtrl.value);
     if(language){
       const spec = createMovieLanguageSpecification({});
-      this.form.addControl(this.languageCtrl.value, new VersionSpecificationForm(spec));
+      this.form.addControl(language, new VersionSpecificationForm(spec));
       this.languageCtrl.reset();
       this.showButtons = true;
     }
