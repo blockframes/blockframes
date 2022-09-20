@@ -63,10 +63,10 @@ describe('Organiser invites other users to private screening', () => {
 
     // If we want to be able to use screeningUrl later, next steps of the test must be inside the "then"
     cy.url().then(screeningUrl => {
-      awaitElementDeletion('mat-spinner');
+      awaitElementDeletion('logo-spinner');
       festival.clickPlay();
       festival.runVideo();
-      awaitElementDeletion('mat-spinner');
+      awaitElementDeletion('logo-spinner');
 
       cy.get('.jw-video');
       cy.get('video.jw-video').should('have.prop', 'paused', true).and('have.prop', 'ended', false);
