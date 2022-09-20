@@ -11,11 +11,6 @@ import { cleanDeprecatedData } from './db-cleaning';
 import { getFirestoreEmulator } from '@blockframes/firebase-utils/initialize';
 import { unique } from '@blockframes/utils/helpers';
 
-/**
- * Temp this should be removed when fixtures are updated.
- *  - libs/e2e/src/lib/fixtures/users.ts
- *  - libs/e2e/src/lib/utils/screenings.ts
- */
 const USERS = [
   'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
   '2OJUZoWtTVcew27YDZa8FQQdg5q2',
