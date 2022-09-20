@@ -6,7 +6,7 @@
 </h6>
 <section>
   <strong>Screener Video</strong>
-  <missing-control [control]="form.get('storagePath')" [link]="link" fragment="screener">
+  <missing-control [control]="form.get('storagePath')" [link]="link" fragment="screener" test-id="screener">
     <ng-template let-video>
       <article>
         <bf-preview-modal [ref]="form.value"></bf-preview-modal>
