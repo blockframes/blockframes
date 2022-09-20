@@ -238,7 +238,7 @@ export const inDevelopmentMovie: Partial<Movie> = {
       },
       otherVideos: [
         {
-          title: 'Test Pitch',
+          title: 'Test other videos',
           type: 'teaser',
           jwPlayerId: null,
           privacy: null,

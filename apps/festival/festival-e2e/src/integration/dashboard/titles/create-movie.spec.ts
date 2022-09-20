@@ -429,9 +429,11 @@ describe('Movie tunnel', () => {
     get('scenario').should('contain', 'Missing');
     get('moodboard').should('contain', 'Missing');
     //TODO : test 'images' when fixed #8586
+    /*Below check to be unskipped when upload will be possible #8900
     get('video_0')
       .should('contain', hostedVideoTypes[movie.promotional.videos.otherVideos[0].type])
       .and('contain', movie.promotional.videos.otherVideos[0].title);
+    */
     get('pitch').should('contain', 'Missing');
     get('note_0').should('contain', 'Note');
     get('screener').should('contain', 'Missing');
@@ -441,10 +443,8 @@ describe('Movie tunnel', () => {
     get('close-tunnel').click();
     firestore
       .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id })
-      .then((movies: Movie[]) => {
-        assertUrlIncludes(`c/o/dashboard/title/${movies[0].id}/activity`);
-      });
-    cy.contains(movie.title.original);
+      .then((movies: Movie[]) => assertUrlIncludes(`c/o/dashboard/title/${movies[0].id}/activity`));
+    get('titles-header-title').should('contain', movie.title.original);
   });
 });
 
