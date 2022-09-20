@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { createMovieLanguageSpecification, Language } from '@blockframes/model';
 import { MovieVersionInfoForm, VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
+import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 @Component({
   selector: '[form] languages-form',
@@ -15,10 +16,13 @@ export class LanguagesFormComponent {
   public showButtons = true;
 
   addLanguage() {
-    const spec = createMovieLanguageSpecification({});
-    this.form.addControl(this.languageCtrl.value, new VersionSpecificationForm(spec));
-    this.languageCtrl.reset();
-    this.showButtons = true;
+    const language = getKeyIfExists('languages', this.languageCtrl.value);
+    if(language){
+      const spec = createMovieLanguageSpecification({});
+      this.form.addControl(this.languageCtrl.value, new VersionSpecificationForm(spec));
+      this.languageCtrl.reset();
+      this.showButtons = true;
+    }
   }
 
   deleteLanguage(language: Language) {

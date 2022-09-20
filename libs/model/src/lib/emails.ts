@@ -240,11 +240,14 @@ function getEventDuration(start: Date, end: Date): string {
   const duration = end.getTime() - start.getTime();
 
   if (duration < millisecondsInHour) {
-    return `${differenceInMinutes(end, start)} minutes`;
+    const diff = differenceInMinutes(end, start);
+    return `${diff} minute${diff > 1 ? 's' : ''}`;
   } else if (duration < millisecondsInHour * 72) {
-    return `${differenceInHours(end, start)} hours`;
+    const diff = differenceInHours(end, start);
+    return `${diff} hour${diff > 1 ? 's' : ''}`;
   } else {
-    return `${differenceInDays(end, start)} days`;
+    const diff = differenceInDays(end, start);
+    return `${diff} day${diff > 1 ? 's' : ''}`;
   }
 }
 
