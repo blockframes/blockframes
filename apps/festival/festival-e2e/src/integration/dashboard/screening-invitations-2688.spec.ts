@@ -39,7 +39,7 @@ describe('Organiser invites other users to private screening', () => {
     browserAuth.signinWithEmailAndPassword(userOrganiser.email);
     cy.visit('/c/o/dashboard/event');
     cy.log(`Create screening {${screeningEvent.event}}`);
-    awaitElementDeletion('mat-spinner');
+    awaitElementDeletion('logo-spinner');
     // * We would not need to do this if various user types were generated at the start of the test
     // * in order to generate user types, we either need to create a lot of data manually or use the app's built in methods
     events.deleteAllSellerEvents(userOrganiser.uid); // ! must stay here so eventsService is instantiated
