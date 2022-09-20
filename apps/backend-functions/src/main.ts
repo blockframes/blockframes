@@ -171,7 +171,7 @@ export const onMovieUpdateEvent = onDocumentUpdate('movies/{movieId}', onMovieUp
 /**
  * Trigger: when a movie is deleted
  */
-export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', onMovieDelete)
+export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', onMovieDelete);
 
 export const requestAskingPrice = functions().https.onCall(skipInMaintenance(logErrors(createAskingPriceRequest)));
 

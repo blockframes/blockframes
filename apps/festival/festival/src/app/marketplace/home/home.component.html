@@ -113,7 +113,7 @@
       <section class="events-slider" bgAsset="events_slider_background.png">
         <header fxLayout fxLayoutAlign="space-between center" class="dark-contrast-theme">
           <h2>{{ section.title }}</h2>
-          <a mat-button [routerLink]="section.link || '../event'">
+          <a mat-button [routerLink]="section.link || '../event'" test-id="screenings">
             <span>See all</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>

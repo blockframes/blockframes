@@ -1,4 +1,5 @@
 import { WhereFilterOp } from 'firebase/firestore';
+import { Event } from '@blockframes/model';
 
 export const firestore = {
   clearTestData() {
@@ -23,5 +24,11 @@ export const firestore = {
 
   update(data: { docPath: string; field: string; value: unknown }[]) {
     return cy.task('updateData', data);
+  },
+
+  deleteOrgEvents(orgId: string) {
+    return firestore
+      .queryData({ collection: 'events', field: 'ownerOrgId', operator: '==', value: orgId })
+      .then((events: Event[]) => firestore.delete(events.map(event => `events/${event.id}`)));
   },
 };

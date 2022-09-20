@@ -33,8 +33,8 @@
       {{ timeFrame | labelByDate }}
     </h2>
 
-    <ng-container *ngFor="let event of timeFrame.events; let last = last; trackBy: trackById">
-      <event-screening-item [event]="event"></event-screening-item>
+    <ng-container *ngFor="let event of timeFrame.events; let last = last; trackBy: trackById; let i = index">
+      <event-screening-item [event]="event" [attr.test-id]="'event_' + i"></event-screening-item>
       <mat-divider *ngIf="!last"></mat-divider>
     </ng-container>
   </ng-template>

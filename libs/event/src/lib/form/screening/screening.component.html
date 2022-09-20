@@ -13,13 +13,15 @@
     <!-- Title -->
     <mat-form-field appearance="outline" id="titleField">
       <mat-label>Select the Title to display</mat-label>
-      <mat-select formControlName="titleId" (selectionChange)="checkTitleAndScreener($event.value)">
-        <mat-option *ngFor="let title of titles" [value]="title.id">
+      <mat-select formControlName="titleId" (selectionChange)="checkTitleAndScreener($event.value)" test-id="screening-title">
+        <mat-option *ngFor="let title of titles; let i = index" [value]="title.id" [attr.test-id]="'title_' + i">
           {{ title.title.international }}
         </mat-option>
       </mat-select>
-      <mat-hint id="missing-screener" *ngIf="screenerMissing || titleMissing">{{titleMissing ? 'No Title selected' : 'This Title has no Screener attached.'}}</mat-hint>
-    </mat-form-field>
+      <mat-hint id="missing-screener" *ngIf="screenerMissing || titleMissing" test-id="missing-screener">
+        {{titleMissing ? 'No Title selected' : 'This Title has no Screener attached.'}}
+      </mat-hint>
+      </mat-form-field>
 
     <!-- Description -->
     <mat-form-field appearance="outline">
@@ -30,7 +32,8 @@
         cdkTextareaAutosize
         #autosize="cdkTextareaAutosize"
         cdkAutosizeMinRows="4"
-        maxlength="500"></textarea>
+        maxlength="500"
+        test-id="description"></textarea>
       <mat-hint>Limited to 500 characters.</mat-hint>
     </mat-form-field>
   </ng-container>
