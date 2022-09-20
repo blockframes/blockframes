@@ -4,10 +4,12 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 
 // Blockframes
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
-import { ImageModule } from "@blockframes/media/image/directives/image.module";
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
+// Component
 import { PieChartComponent } from './pie-chart.component';
 
+// Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
