@@ -9,9 +9,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-
 
 @NgModule({
   declarations: [MovieAnalyticsChartComponent],
@@ -23,8 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
     // Material
     MatCardModule,
     MatIconModule,
-    MatButtonModule,
-    MatProgressSpinnerModule
+    MatButtonModule
   ],
   exports: [MovieAnalyticsChartComponent]
 })

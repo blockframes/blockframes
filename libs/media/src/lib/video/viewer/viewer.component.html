@@ -4,7 +4,7 @@
     <!-- everything in the div will be destroyed when the player is loaded -->
     <section fxLayout="column" fxLayoutAlign="center center">
       <ng-container *ngIf="loading$ | async; else error">
-        <mat-spinner></mat-spinner>
+        <logo-spinner></logo-spinner>
       </ng-container>
       <ng-template #error>
         <img asset="add_organization.svg" />

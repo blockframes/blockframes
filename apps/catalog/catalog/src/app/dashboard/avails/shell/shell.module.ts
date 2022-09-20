@@ -1,11 +1,17 @@
-import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
-import { MatButtonModule } from "@angular/material/button";
-import { MatCardModule } from "@angular/material/card";
-import { MatIconModule } from "@angular/material/icon";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { RouterModule, Routes } from "@angular/router";
-import { CatalogAvailsShellComponent } from "./shell.component";
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+// Component
+import { CatalogAvailsShellComponent } from './shell.component';
+
+// Blockframes
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+
+// Material
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 const routes: Routes = [
   {
@@ -35,9 +41,9 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
+    LogoSpinnerModule,
 
     //material
-    MatProgressSpinnerModule,
     MatButtonModule,
     MatIconModule,
     MatCardModule,

@@ -104,7 +104,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         // Reset all previous tags
         tags.filter(tag => this.layers[tag]).forEach(tag => this.layers[tag].setStyle(this.setStyle()));
         // Listen on changes of color & tag
-        return combineLatest(features.map(f => combineLatest([f.state$, f.tag$]).pipe(map(() => f))))
+        return combineLatest(features.map(f => combineLatest([f.state$, f.tag$]).pipe(map(() => f))));
       })
     ).subscribe((features: MapFeature[]) => {
       // Add new style
@@ -140,15 +140,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     layer.on({
       mouseover: () => {
         const el = getFeature();
-        if (el) {
-          el.mouseover.emit(feature.properties)
-        }
+        if (el) el.mouseover.emit(feature.properties);
       },
       mouseout: () => {
         const el = getFeature();
-        if (el) {
-          el.mouseout.emit(feature.properties)
-        }
+        if (el) el.mouseout.emit(feature.properties);
       },
       click: () => {
         const el = getFeature();

@@ -11,7 +11,6 @@ import { ProfileViewComponent } from './profile-view.component';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -51,7 +50,6 @@ const routes: Routes = [{
     FlexLayoutModule,
     ImageModule,
     // Material
-    MatProgressSpinnerModule,
     MatSelectModule,
     MatButtonModule,
     MatIconModule,

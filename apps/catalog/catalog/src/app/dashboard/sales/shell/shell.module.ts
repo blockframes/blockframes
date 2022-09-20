@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Route, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+// Blockframes
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
@@ -10,12 +11,16 @@ import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { ContractItemModule } from '@blockframes/contract/contract/components/item/contract-item.module';
 import { ConfirmDeclineComponentModule } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.module';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
+// Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+// Component
 import { SaleShellComponent } from './shell.component';
+
+// Guard
 import { CatalogSaleGuard } from './shell.guard';
 
 const routes: Route[] = [
@@ -53,10 +58,10 @@ const routes: Route[] = [
     GetOrgPipeModule,
     NegotiationPipeModule,
     ImageModule,
+    LogoSpinnerModule,
 
     //Material
     MatButtonModule,
-    MatProgressSpinnerModule,
     MatIconModule,
     RouterModule.forChild(routes),
   ]

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild, ViewEncapsulation } from "@angular/core";
-import { Analytics, EventName } from "@blockframes/model";
+import { ChangeDetectionStrategy, Component, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Analytics, EventName } from '@blockframes/model';
 import {
   eachDayOfInterval,
   eachMonthOfInterval,
@@ -9,7 +9,7 @@ import {
   isSameMonth,
   isSameWeek,
   differenceInMonths
-} from "date-fns";
+} from 'date-fns';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -22,7 +22,7 @@ import {
   ApexXAxis,
   ApexYAxis,
   ChartComponent,
-} from "ng-apexcharts";
+} from 'ng-apexcharts';
 
 interface LineChartOptions {
   series: ApexAxisChartSeries;
@@ -123,7 +123,13 @@ export class LineChartComponent {
   @Input() eventNames: EventName[] = [];
   private analytics?: Analytics[];
   @Input() set data(data: Analytics[]) {
-    if (!data?.length) {
+    if (!data) { // Data is still loading
+      this.chart?.updateSeries([]);
+      this.isLoading = true;
+      return;
+    }
+
+    if (data.length === 0) { // Data is loaded but is empty
       this.chart?.updateSeries([]);
       this.isLoading = false;
       return;

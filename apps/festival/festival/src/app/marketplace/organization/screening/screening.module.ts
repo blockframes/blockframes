@@ -10,9 +10,9 @@ import { ScreeningComponent } from './screening.component';
 import { EventListModule } from '@blockframes/event/components/list/list.module';
 import { ScreeningItemModule } from '@blockframes/event/components/screening-item/screening-item.module';
 import { EventEmptyModule } from '@blockframes/event/components/empty/empty.module';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Material
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -26,7 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
     ScreeningItemModule,
     MatIconModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
+    LogoSpinnerModule,
     RouterModule.forChild([{ path: '', component: ScreeningComponent }])
   ]
 })
