@@ -5,12 +5,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
 import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages.module';
 import { ToLabelModule, VersionPipeModule, JoinPipeModule, ToGroupLabelPipeModule } from '@blockframes/utils/pipes';
-import { FormTableModule } from "@blockframes/ui/form/table/form-table.module";
+import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
-import { MaxLengthModule } from "@blockframes/utils/pipes";
+import { MaxLengthModule } from '@blockframes/utils/pipes';
 
 
 @NgModule({
@@ -18,7 +17,6 @@ import { MaxLengthModule } from "@blockframes/utils/pipes";
     CommonModule,
     ReactiveFormsModule,
     AvailsFilterModule,
-    MatProgressSpinnerModule,
     FormTableModule,
     MatFormFieldModule,
     MatIconModule,

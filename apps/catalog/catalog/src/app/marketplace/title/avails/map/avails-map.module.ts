@@ -5,7 +5,15 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+// Blockframes
+import { MapModule } from '@blockframes/ui/map';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
 
+// Component
+import { MarketplaceMovieAvailsMapComponent } from './avails-map.component';
+
+// Material
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -17,23 +25,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
-
-import { MapModule } from '@blockframes/ui/map';
-
-
-import { MarketplaceMovieAvailsMapComponent } from './avails-map.component';
-import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
-
 
 @NgModule({
-  declarations: [ MarketplaceMovieAvailsMapComponent ],
+  declarations: [MarketplaceMovieAvailsMapComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
 
+    LogoSpinnerModule,
     MapModule,
     AvailsFilterModule,
     MatCardModule,
@@ -47,10 +47,9 @@ import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.m
     MatCheckboxModule,
     MatFormFieldModule,
     MatDatepickerModule,
-    MatProgressSpinnerModule,
 
     RouterModule.forChild([{ path: '', component: MarketplaceMovieAvailsMapComponent }]),
   ],
-  exports: [ MarketplaceMovieAvailsMapComponent ],
+  exports: [MarketplaceMovieAvailsMapComponent],
 })
-export class MarketplaceMovieAvailsMapModule {}
+export class MarketplaceMovieAvailsMapModule { }

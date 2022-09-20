@@ -4,7 +4,6 @@ import { MovieCardModule } from "@blockframes/movie/components/card/card.module"
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -62,7 +61,6 @@ import { ReleaseYearFilterModule } from '@blockframes/movie/form/filters/release
     MatSelectModule,
     MatOptionModule,
     MatTooltipModule,
-    MatProgressSpinnerModule,
     MatSnackBarModule,
     RouterModule.forChild([{ path: '', component: ListComponent }])
   ]
