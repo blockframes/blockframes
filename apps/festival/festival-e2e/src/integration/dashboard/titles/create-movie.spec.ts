@@ -80,7 +80,7 @@ describe('Movie tunnel', () => {
 
     //main
     checkSideNav(movie.productionStatus);
-    get('international-title').type(movie.title.original);
+    get('international-title').type(movie.title.international);
     get('original-title').type(movie.title.original);
     get('reference').type(movie.internalRef);
     ///checking movie related fields (default)
@@ -323,7 +323,7 @@ describe('Movie tunnel', () => {
     //last step
     ///main information
     get('production-status').should('contain', productionStatus[movie.productionStatus]);
-    get('international-title').should('contain', movie.title.original);
+    get('international-title').should('contain', movie.title.international);
     get('original-title').should('contain', movie.title.original);
     get('content-type').should('contain', 'Movie');
     get('reference').should('contain', movie.internalRef);
@@ -439,12 +439,12 @@ describe('Movie tunnel', () => {
     get('screener').should('contain', 'Missing');
 
     get('publish').click();
-    cy.contains(`${movie.title.original} successfully published.`);
+    cy.contains(`${movie.title.international} successfully published.`);
     get('close-tunnel').click();
     firestore
       .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id })
       .then((movies: Movie[]) => assertUrlIncludes(`c/o/dashboard/title/${movies[0].id}/activity`));
-    get('titles-header-title').should('contain', movie.title.original);
+    get('titles-header-title').should('contain', movie.title.international);
   });
 });
 

@@ -30,7 +30,8 @@ export const inDevelopmentMovie: Partial<Movie> = {
   //main
   productionStatus: 'development',
   title: {
-    original: 'Test movie',
+    original: 'Original title',
+    international: 'International title'
   },
   internalRef: 'E2E ref',
   runningTime: {
