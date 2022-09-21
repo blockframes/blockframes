@@ -28,14 +28,15 @@ import { displayPerson } from '@blockframes/utils/pipes';
 import { combineLatest, firstValueFrom, Observable, of, filter, map, pluck, shareReplay, switchMap } from 'rxjs';
 import { joinWith } from 'ngfire';
 import { formatDate } from '@angular/common';
+import { where } from 'firebase/firestore';
 
-function emailFilter(input: string, value: string, invitation: Invitation) {
+function emailFilter(input: string, _: string, invitation: Invitation) {
   const email = getGuest(invitation, 'user')?.email;
   if (!email) return false;
   return email.toLowerCase().includes(input.toLowerCase());
 }
 
-function nameFilter(input: string, value: string, invitation: Invitation) {
+function nameFilter(input: string, _: string, invitation: Invitation) {
   const names = displayPerson(getGuest(invitation, 'user'));
   if (!names.length) return false;
   return names.join(' ').toLowerCase().includes(input.toLowerCase());
@@ -126,6 +127,14 @@ export class TitleAnalyticsComponent {
     map(analytics => analytics.filter(analytic => analytic.name !== 'pageView'))
   );
 
+  endedOrOngoingScreenings$ = this.titleId$.pipe(
+    switchMap((titleId: string) => this.eventService.valueChanges([
+      where('meta.titleId', '==', titleId),
+      where('type', '==', 'screening'),
+      where('ownerOrgId', '==', this.orgService.org.id)
+    ])),
+    map(events => events.filter(e => eventTime(e) !== 'early'))
+  );
 
   constructor(
     private movieService: MovieService,

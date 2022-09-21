@@ -133,7 +133,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       }
       case 'requestToAttendEventSent': {
         const event = await this.eventService.load(notification.docId);
-        const message = `Your request to attend "<a href="/event/${event.id}" target="_blank">event "${eventTypes[event.type]}"</a>" has been sent.`;
+        const message = `Your request to attend "<a href="/event/${event.id}" target="_blank">${event.title}</a>" has been sent.`;
         const url = `${applicationUrl['festival']}${module === 'marketplace'
           ? `/event/${notification.docId}/r/i/`
           : `/c/o/${module}/event/${notification.docId}`
@@ -143,6 +143,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
           imgRef: notification.user.avatar,
+          actionText: `Go to ${toLabel(event.type, 'eventTypes')}`,
           placeholderUrl: 'profil_user.svg',
           url,
         };
@@ -239,7 +240,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       }
       case 'movieAskingPriceRequested': {
         const movie = await this.movieService.load(notification.docId);
-        const message = `${displayName(notification.user)} requested the asking price for ${movie.title.international}. Please check your emails for more details or contact us.`;
+        const message = `${displayName(notification.user)} requested an asking price for ${movie.title.international}. Please check your emails for details.`;
 
         return {
           ...notification,
