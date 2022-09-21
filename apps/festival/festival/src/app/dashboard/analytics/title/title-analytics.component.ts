@@ -130,8 +130,7 @@ export class TitleAnalyticsComponent {
   endedOrOngoingScreenings$ = this.titleId$.pipe(
     switchMap((titleId: string) => this.eventService.valueChanges([
       where('meta.titleId', '==', titleId),
-      where('type', '==', 'screening'),
-      where('ownerOrgId', '==', this.orgService.org.id)
+      where('type', '==', 'screening')
     ])),
     map(events => events.filter(e => eventTime(e) !== 'early'))
   );
