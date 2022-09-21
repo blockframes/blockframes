@@ -156,8 +156,7 @@ export class ListComponent implements OnDestroy, OnInit {
   }
 
   loadMore() {
-    const nextValue = this.hitsViewed$.value + 50 > this.nbHits ? this.nbHits : this.hitsViewed$.value + 50;
-    this.hitsViewed$.next(nextValue);
+    this.hitsViewed$.next(this.hitsViewed$.value + 50);
   }
 
   clear() {
