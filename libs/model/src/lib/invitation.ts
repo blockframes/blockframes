@@ -90,10 +90,6 @@ export interface InvitationWithScreening extends Invitation {
   event: Event<Screening>;
 }
 
-export interface InvitationWithAnalytics extends Invitation {
-  analytics: Analytics[];
-};
-
 type Guest<type> = type extends 'user' ? Invitation['toUser'] : Invitation['toOrg'];
 
 /**

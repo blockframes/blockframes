@@ -9,7 +9,6 @@ import {
   AnalyticData,
   Invitation,
   averageWatchDuration,
-  InvitationWithAnalytics,
   EventName
 } from '@blockframes/model';
 import { convertToTimeString } from '@blockframes/utils/helpers';
@@ -87,7 +86,7 @@ export interface MetricCard {
   selected?: boolean;
 }
 
-export function toScreenerCards(invitations: Invitation[] | InvitationWithAnalytics[]): MetricCard[] {
+export function toScreenerCards(invitations: Invitation[]): MetricCard[] {
   const attendees = invitations.filter(invitation => invitation.watchInfos?.duration !== undefined);
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
 
