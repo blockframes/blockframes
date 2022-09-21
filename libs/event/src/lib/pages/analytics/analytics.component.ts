@@ -178,8 +178,8 @@ export class AnalyticsComponent implements OnInit {
       if (mode === 'request') invitationsModeCounter.request++;
     });
 
-    const acceptedAnalytics = this.analytics.filter(({ status }) => status === 'accepted');
-    const avgWatchDuration = averageWatchDuration(acceptedAnalytics);
+    const attendees = this.analytics.filter(({ watchInfos }) => watchInfos?.duration !== undefined);
+    const avgWatchDuration = averageWatchDuration(attendees);
     const avgWatchDurationGlobal = convertToTimeString(avgWatchDuration * 1000);
 
     // Create data for Archipel Event Summary Tab - With Merge
@@ -197,12 +197,12 @@ export class AnalyticsComponent implements OnInit {
       null,
       `${invitationsStatusCounter.accepted} accepted, ${invitationsStatusCounter.pending} unanswered, ${invitationsStatusCounter.declined} declined`
     ]);
-    summaryData.addLine(['Number of attendees', null, null, null, null, null, acceptedAnalytics.length]);
+    summaryData.addLine(['Number of attendees', null, null, null, null, null, attendees.length]);
     summaryData.addLine(['Average watchtime', null, null, null, null, null, `${avgWatchDurationGlobal}`]);
     summaryData.addBlankLine();
     summaryData.addLine(['NAME', 'EMAIL', 'COMPANY', 'ACTIVITY', 'TERRITORY', 'WATCHTIME', 'WATCHING ENDED']);
 
-    acceptedAnalytics.forEach(({ watchInfos, email, name, orgActivity: activity, orgCountry, orgName }) => {
+    attendees.forEach(({ watchInfos, email, name, orgActivity: activity, orgCountry, orgName }) => {
       summaryData.addLine([
         name,
         email,
