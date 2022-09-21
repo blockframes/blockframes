@@ -16,7 +16,7 @@
   </article>
 </section>
 
-<bf-table [source]="buyersAnalytics$ | async" pagination="5" useFilter clickable (rowClick)="goToBuyer($event)">
+<bf-table [source]="buyersAnalytics$ | async" pagination="10" useFilter clickable (rowClick)="goToBuyer($event)">
   <ng-template colRef="user" label="Name" let-user sort>
     <b>{{ user | displayName }}</b>
   </ng-template>

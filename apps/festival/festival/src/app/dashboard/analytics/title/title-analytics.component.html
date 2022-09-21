@@ -50,7 +50,7 @@
     </div>
   </article>
 
-  <bf-table [source]="buyerAnalytics$ | async" pagination="5" useFilter [filterValue]="filterValue"
+  <bf-table [source]="buyerAnalytics$ | async" pagination="10" useFilter [filterValue]="filterValue"
     (rowClick)="viewBuyerActivity($event)">
     <ng-template colRef="user" label="Name" let-user sort>
       <a [href]="'mailto:' + user?.email">{{ user | displayName }}</a>
@@ -125,7 +125,7 @@
             <button mat-button color="primary" [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export
               to .CSV</button>
           </header>
-          <bf-table class="screenings" [source]="invitations" useFilter pagination="5">
+          <bf-table class="screenings" [source]="invitations" useFilter pagination="10">
             <ng-template colRef label="Name" let-invitation="item" sort [filter]="filters.name">
               <b>{{ invitation | guest:'user' | displayName }}</b>
             </ng-template>

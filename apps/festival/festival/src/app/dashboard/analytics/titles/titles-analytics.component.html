@@ -1,6 +1,6 @@
 <h1>Titles' Activity</h1>
 <ng-container *ngIf="titlesAnalytics$ | async as titlesAnalytics; else loading">
-  <bf-table [source]="titlesAnalytics" pagination="5" useFilter clickable (rowClick)="goToTitle($event)">
+  <bf-table [source]="titlesAnalytics" pagination="25" useFilter clickable (rowClick)="goToTitle($event)">
     <ng-template colRef="title.title.international" label="International title" let-title sort>
       <b>{{ title }}</b>
     </ng-template>
