@@ -11,12 +11,15 @@ import { cleanDeprecatedData } from './db-cleaning';
 import { getFirestoreEmulator } from '@blockframes/firebase-utils/initialize';
 import { unique } from '@blockframes/utils/helpers';
 
+/**
+ * Temp this should be removed when fixtures are updated.
+ *  - apps/festival/festival-e2e/src/fixtures/screening-events.ts
+ */
+
 const USERS = [
   'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
   '2OJUZoWtTVcew27YDZa8FQQdg5q2',
-  'K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2',
   'B8UsXliuxwY6ztjtLuh6f7UD1GV2',
-  'qFbytROWQYWJplzck42RLdgAr3K3',
   'mVUZ097xoAeubsPiQlqrzgUF8y83'
 ];
 
