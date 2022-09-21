@@ -99,10 +99,27 @@ export class TitleAnalyticsComponent {
   };
   filterValue?: string;
 
-  invitations$ = this.invitationWithEventAndUserOrg().pipe(
-    joinWith({
-      analytics: () => this.getAnalyticsPerInvitation()
-    }, { shouldAwait: true }),
+  invitations$ = combineLatest([
+    this.titleId$,
+    this.invitationService.allInvitations$.pipe(
+      map(invitations => invitations.filter(invitation => !!invitation.eventId)),
+      joinWith(
+        {
+          guestOrg: invitation => this.getOrg(invitation),
+          event: invitation => this.eventService.queryDocs(invitation.eventId)
+        },
+        { shouldAwait: true }
+      )
+    )
+  ]).pipe(
+    map(([titleId, invitations]) => {
+      return invitations.filter(({ event }) => {
+        const isEventScreening = isScreening(event);
+        if (!isEventScreening) return false;
+        // TODO #8917 where('ownerOrgId', '==', org.id),
+        return event.meta?.titleId === titleId;
+      });
+    }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -111,16 +128,8 @@ export class TitleAnalyticsComponent {
     filter(invitations => !!invitations.length),
   );
 
-  screeningRequests$ = this.titleAnalytics$.pipe(
-    map(analytics => analytics.filter(analytic => analytic.name === 'screeningRequested')),
-    shareReplay({ bufferSize: 1, refCount: true })
-  );
-
-  aggregatedScreeningCards$ = combineLatest([
-    this.screeningRequests$,
-    this.invitations$
-  ]).pipe(
-    map(([requests, invitations]) => toScreenerCards(requests, invitations))
+  aggregatedScreeningCards$ = this.invitations$.pipe(
+    map(invitations => toScreenerCards(invitations))
   );
 
   titleInteractions$ = this.titleAnalytics$.pipe(
@@ -130,6 +139,7 @@ export class TitleAnalyticsComponent {
   endedOrOngoingScreenings$ = this.titleId$.pipe(
     switchMap((titleId: string) => this.eventService.valueChanges([
       where('meta.titleId', '==', titleId),
+      // TODO #8917 where('ownerOrgId', '==', org.id),
       where('type', '==', 'screening')
     ])),
     map(events => events.filter(e => eventTime(e) !== 'early'))
@@ -155,14 +165,6 @@ export class TitleAnalyticsComponent {
     return data.addedToWishlist > data.removedFromWishlist;
   }
 
-  private getAnalyticsPerInvitation() {
-    return this.titleAnalytics$.pipe(
-      map(analytics => {
-        return analytics.filter(analytic => analytic.name === 'screeningRequested')
-      })
-    );
-  }
-
   async exportScreenerAnalytics() {
     const data = await firstValueFrom(this.invitations$);
     const analytics = data.map(invitation => {
@@ -182,31 +184,6 @@ export class TitleAnalyticsComponent {
       }
     });
     downloadCsvFromJson(analytics, 'screener-analytics')
-  }
-
-
-  private invitationWithEventAndUserOrg() {
-    return combineLatest([
-      this.titleId$,
-      this.invitationService.allInvitations$.pipe(
-        map(invitations => invitations.filter(invitation => !!invitation.eventId)),
-        joinWith(
-          {
-            guestOrg: invitation => this.getOrg(invitation),
-            event: invitation => this.eventService.queryDocs(invitation.eventId)
-          },
-          { shouldAwait: true }
-        )
-      )
-    ]).pipe(
-      map(([titleId, invitations]) => {
-        return invitations.filter(({ event }) => {
-          const isEventScreening = isScreening(event);
-          if (!isEventScreening) return false;
-          return event.meta?.titleId === titleId;
-        });
-      })
-    );
   }
 
   private getOrg(invitation: Invitation) {

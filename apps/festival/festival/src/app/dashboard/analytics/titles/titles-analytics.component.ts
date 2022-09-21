@@ -50,6 +50,7 @@ export class TitlesAnalyticsComponent {
       events: title => this.eventService.valueChanges([
         where('type', '==', 'screening'),
         where('meta.titleId', '==', title.id)
+        // TODO #8917 where('ownerOrgId', '==', org.id),
       ])
     }, { shouldAwait: true }),
     map(titles => titles.map(countAnalytics))

@@ -7,7 +7,7 @@ import {
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '@blockframes/event/service';
-import { Observable, firstValueFrom, pluck, switchMap, tap } from 'rxjs';
+import { Observable, pluck, switchMap, tap } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/service';
 import {
   Invitation,
@@ -22,7 +22,6 @@ import {
   getGuest,
   hasDisplayName,
   isScreening,
-  isSlate
 } from '@blockframes/model';
 import { MetricCard, toScreenerCards } from '@blockframes/analytics/utils';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -38,9 +37,6 @@ import {
   exportSpreadsheet
 } from '@blockframes/utils/spreadsheet';
 import { filters } from '@blockframes/ui/list/table/filters';
-import { AnalyticsService } from '@blockframes/analytics/service';
-import { joinWith } from 'ngfire';
-
 interface EventAnalytics {
   name: string, // firstName + lastName
   email: string,
@@ -77,8 +73,7 @@ export class AnalyticsComponent implements OnInit {
     private invitationService: InvitationService,
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
-    private orgService: OrganizationService,
-    private analyticsService: AnalyticsService,
+    private orgService: OrganizationService
   ) { }
 
   ngOnInit(): void {
@@ -114,24 +109,7 @@ export class AnalyticsComponent implements OnInit {
           };
         });
 
-        const titleIds = isScreening(event)
-          ? [event.meta.titleId]
-          : isSlate(event)
-            ? event.meta.titleIds
-            : [];
-
-        const titleAnalytics = (titleId) => this.analyticsService.getTitleAnalytics({ titleId, eventName: 'screeningRequested' })
-          .pipe(
-            joinWith({
-              org: analytic => this.orgService.valueChanges(analytic.meta.orgId),
-            }, { shouldAwait: true })
-          );
-
-        const promises = titleIds.map(titleId => firstValueFrom(titleAnalytics(titleId)));
-        const analytics = (await Promise.all(promises)).flat()
-          .filter(({ org }) => !org.appAccess.festival.dashboard);
-
-        this.aggregatedScreeningCards = toScreenerCards(analytics, this.eventInvitations);
+        this.aggregatedScreeningCards = toScreenerCards(this.eventInvitations);
 
         this.cdr.markForCheck();
       })
