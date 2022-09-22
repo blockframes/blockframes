@@ -12,7 +12,7 @@ export class MemberRepertoryComponent {
   @Input() members: OrganizationMember[];
   @Input() showFilter = false;
   @Input() isSuperAdmin: boolean;
-  @Input() @boolean showActions = false;
+  @Input() @boolean showCrmActions = false;
 
   @Output() memberRemoved = new EventEmitter<string>();
 
