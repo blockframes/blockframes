@@ -116,7 +116,6 @@ export class TitleAnalyticsComponent {
       return invitations.filter(({ event }) => {
         const isEventScreening = isScreening(event);
         if (!isEventScreening) return false;
-        // TODO #8917 where('ownerOrgId', '==', org.id),
         return event.meta?.titleId === titleId;
       });
     }),
@@ -139,7 +138,7 @@ export class TitleAnalyticsComponent {
   endedOrOngoingScreenings$ = this.titleId$.pipe(
     switchMap((titleId: string) => this.eventService.valueChanges([
       where('meta.titleId', '==', titleId),
-      // TODO #8917 where('ownerOrgId', '==', org.id),
+      where('ownerOrgId', '==', this.orgService.org.id),
       where('type', '==', 'screening')
     ])),
     map(events => events.filter(e => eventTime(e) !== 'early'))
