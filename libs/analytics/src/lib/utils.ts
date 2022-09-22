@@ -9,7 +9,6 @@ import {
   AnalyticData,
   Invitation,
   averageWatchDuration,
-  InvitationWithAnalytics,
   EventName
 } from '@blockframes/model';
 import { convertToTimeString } from '@blockframes/utils/helpers';
@@ -87,7 +86,7 @@ export interface MetricCard {
   selected?: boolean;
 }
 
-export function toScreenerCards(screeningRequests: Analytics<'title'>[], invitations: Invitation[] | InvitationWithAnalytics[]): MetricCard[] {
+export function toScreenerCards(invitations: Invitation[]): MetricCard[] {
   const attendees = invitations.filter(invitation => invitation.watchInfos?.duration !== undefined);
   const accepted = invitations.filter(invitation => invitation.status === 'accepted');
 
@@ -95,7 +94,8 @@ export function toScreenerCards(screeningRequests: Analytics<'title'>[], invitat
   const parsedTime = convertToTimeString(avgWatchDuration * 1000);
   const participationRate = Math.round((attendees.length / accepted.length) * 100);
   const acceptationRate = Math.round((accepted.length / invitations.length) * 100);
-  const traction = Math.round((screeningRequests.length / invitations.length) * 100);
+  const requestCount = invitations.filter(i => i.mode === 'request').length;
+  const traction = invitations.length ? Math.round((requestCount / invitations.length) * 100) : 0;
   return [
     {
       title: 'Guests',
