@@ -92,8 +92,8 @@ export function toScreenerCards(invitations: Invitation[]): MetricCard[] {
 
   const avgWatchDuration = averageWatchDuration(attendees);
   const parsedTime = convertToTimeString(avgWatchDuration * 1000);
-  const participationRate = Math.round((attendees.length / accepted.length) * 100);
-  const acceptationRate = Math.round((accepted.length / invitations.length) * 100);
+  const participationRate = accepted.length ? Math.round((attendees.length / accepted.length) * 100) : 0;
+  const acceptationRate = invitations.length ? Math.round((accepted.length / invitations.length) * 100) : 0;
   const requestCount = invitations.filter(i => i.mode === 'request').length;
   const traction = invitations.length ? Math.round((requestCount / invitations.length) * 100) : 0;
   return [
