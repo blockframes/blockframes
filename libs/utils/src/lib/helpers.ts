@@ -85,8 +85,10 @@ export function downloadCsvFromJson(data: unknown[], fileName = 'my-file') {
        * escaping double quotes for correct csv
        * "I like "cookies" a lot" results in 3 columns: I like; cookies; a lot
        * "I like ""cookies"" a lot" results in 1 column: I like "cookies" a lot
+       * 
+       * Also escaping any new lines that could mess with CSV export
        */
-      if (typeof value === 'string') return `"${value.replace(/"/g, '""')}"`;
+      if (typeof value === 'string') return `"${value.replace(/"/g, '""').replace(/(\r\n|\n|\r)/gm, "")}"`;
       return JSON.stringify(value, replacer);
     }).join(',')
   );
