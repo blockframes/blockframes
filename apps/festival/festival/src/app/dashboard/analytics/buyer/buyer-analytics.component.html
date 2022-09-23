@@ -36,7 +36,7 @@
       </button>
     </header>
 
-    <bf-table [source]="filtered$ | async" pagination="5" useFilter>
+    <bf-table [source]="filtered$ | async" pagination="10" useFilter>
       <ng-template colRef="title.title.international" label="Title" let-title sort>
         {{ title | maxLength:50 }}
       </ng-template>
@@ -95,7 +95,7 @@
           <span>Export Analytics to .CSV</span>
         </button>
       </header>
-      <bf-table [source]="invitations$ | async" pagination="5">
+      <bf-table [source]="invitations$ | async" pagination="10">
         <ng-template colRef="event.movie.title.international" label="Title" let-title sort>
           {{ title | maxLength: 50 }}
         </ng-template>

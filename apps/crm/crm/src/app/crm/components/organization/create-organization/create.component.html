@@ -14,13 +14,13 @@
     </mat-form-field>
   </form>
 
-  <static-select scope="appName" [control]="fromApp" [withoutValues]="['cms', 'crm']" placeholder="From app">
+  <static-select scope="appName" [control]="fromApp" [withoutValues]="['cms', 'crm', 'blockframes']" placeholder="From app">
     <mat-label>From App</mat-label>
   </static-select>
 
   <crm-organization-form [form]="form" disableCropper></crm-organization-form>
 
-  <button test-id="create" mat-flat-button color="accent" (click)="addOrganization()">
+  <button test-id="create" mat-flat-button color="accent" [disabled]="creatingOrg" (click)="addOrganization()">
     <span>Create</span>
     <mat-icon svgIcon="arrow_forward"></mat-icon>
   </button>

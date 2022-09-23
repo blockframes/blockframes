@@ -64,6 +64,24 @@ bf-table.screenings {
   margin-top: 24px;
 }
 
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+}
+
+.no-analytics {
+  display: flex;
+  flex-direction: column;
+  article {
+    display: grid;
+    place-items: center;
+    a {
+      margin: 8px 0 24px 0;
+      align-self: center;
+    }
+  }
+}
+
 @include layout-bp(lt-lg) {
   .title_performance{
     flex-direction: column;

@@ -90,10 +90,6 @@ export interface InvitationWithScreening extends Invitation {
   event: Event<Screening>;
 }
 
-export interface InvitationWithAnalytics extends Invitation {
-  analytics: Analytics[];
-};
-
 type Guest<type> = type extends 'user' ? Invitation['toUser'] : Invitation['toOrg'];
 
 /**
@@ -112,6 +108,6 @@ export function getGuest(invitation: Invitation, guestType: 'user' | 'org' = 'us
 }
 
 export function averageWatchDuration(list: { watchInfos?: WatchInfos }[]) {
-  const totalWatchDuration = sum(list, inv => inv.watchInfos?.duration);
+  const totalWatchDuration = sum(list, inv => inv.watchInfos?.duration || 0);
   return Math.round(totalWatchDuration / list.length) || 0;
 }
