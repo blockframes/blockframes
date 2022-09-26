@@ -38,8 +38,15 @@ section {
     }
   }
 
-  article a {
-    margin-bottom: 16px;
+  article {
+    h3 {
+      display: flex;
+      align-items: center;
+    }
+
+    a {
+      margin-bottom: 16px;
+    }
   }
 }
 

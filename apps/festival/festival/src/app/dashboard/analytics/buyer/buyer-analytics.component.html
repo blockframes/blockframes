@@ -29,7 +29,10 @@
 
   <article>
     <header>
-      <h3>Buyer was interested in these Titles</h3>
+      <h3>
+        <span>Buyer was interested in these Titles</span>
+        <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
+      </h3>
       <button mat-button color="primary" (click)="exportAnalytics()">
         <mat-icon svgIcon="cloud_download"></mat-icon>
         <span>Export Analytics</span>
