@@ -21,7 +21,8 @@ import {
   getMovieAppAccess,
   createInternalDocumentMeta,
   createPublicUser,
-  createNotification
+  createNotification,
+  wasLastAcceptedOn
 } from '@blockframes/model';
 import { BlockframesChange, BlockframesSnapshot, getDocument } from '@blockframes/firebase-utils';
 
@@ -132,7 +133,8 @@ export async function onMovieUpdate(change: BlockframesChange<Movie>) {
 
   const isMovieSubmitted = isSubmitted(before.app, after.app);
   const isMovieAccepted = isAccepted(before.app, after.app);
-  const appAccess = apps.find((a) => !!after.app[a].access);
+  const appAccess = isMovieAccepted ? wasLastAcceptedOn(after) : getMovieAppAccess(after)[0];  // TODO #8924 use wasLastSubmittedOn
+
   const organizations = await getOrganizationsOfMovie(after.id);
 
   if (isMovieSubmitted) {

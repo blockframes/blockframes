@@ -7,7 +7,6 @@ import {
   isMeeting,
   isScreening,
   Notification,
-  Contract,
   createStorageFile,
   appName,
   getMovieAppAccess,
@@ -150,7 +149,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'movieSubmitted': {
         const movie = await this.movieService.load(notification.docId);
         const imgRef = this.getPoster(movie);
-        const movieAppAccess = getMovieAppAccess(movie);
+        const movieAppAccess = getMovieAppAccess(movie); // TODO #8924 this should use notification._meta.createdFrom
         const message = `<a href="/c/o/dashboard/title/${movie.id}" target="_blank">${movie.title.international
           }</a> was successfully submitted to the ${appName[movieAppAccess[0]]} team.`;
 
@@ -222,7 +221,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       }
       case 'movieAccepted': {
         const movie = await this.movieService.load(notification.docId);
-        const movieAppAccess = getMovieAppAccess(movie);
+        const movieAppAccess = getMovieAppAccess(movie); // TODO #8924 this should use notification._meta.createdFrom
         const imgRef = this.getPoster(movie);
         const message = `<a href="/c/o/dashboard/title/${movie.id}" target="_blank">${movie.title.international}</a> was successfully published on the marketplace.`;
 

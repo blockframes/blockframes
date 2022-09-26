@@ -135,6 +135,7 @@ export interface MoviePromotionalElements {
 ////////////////////
 export interface MovieAppConfig {
   acceptedAt: Date;
+  // TODO #8924 add submittedAt
   access: boolean;
   refusedAt: Date;
   status: StoreStatus;
@@ -542,7 +543,18 @@ export function checkMovieStatus(movie: Movie, status: StoreStatus) {
 }
 
 export function isMovieAccepted(movie: Movie, app: App) {
-  return movie.app[app].status === 'accepted' && movie.app[app].access;
+  return movie.app[app]?.status === 'accepted' && movie.app[app]?.access;
+}
+
+/**
+ * Return the last app where the movie was accepted on
+ * @param movie 
+ */
+export function wasLastAcceptedOn(movie: Movie): App { // TODO the same for wasLastSubmittedOn
+  const acceptedApps = app.map(a => isMovieAccepted(movie, a) ? a : '').filter(a => a);
+  const movieAppConfig = acceptedApps.map(a => ({ ...movie.app[a], app: a } as MovieAppConfig & { app: App }));
+  const lastAcceptedOn = movieAppConfig.sort((a, b) => new Date(b.acceptedAt).getTime() - new Date(a.acceptedAt).getTime());
+  return lastAcceptedOn.length ? lastAcceptedOn[0].app : undefined;
 }
 
 /**
