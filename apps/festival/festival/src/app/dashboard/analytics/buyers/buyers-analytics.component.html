@@ -11,7 +11,14 @@
     <span>Back to Dashboard</span>
   </a>
   <article>
-    <analytics-pie-chart class="surface" [data]="orgActivity$ | async"></analytics-pie-chart>
+    <analytics-pie-chart class="surface" [data]="orgActivity$ | async">
+      <mat-icon svgIcon="business"></mat-icon>
+      <h5>
+        <span>Split by Company Activity</span>
+        <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
+      </h5>
+      <p class="mat-caption">Learn who are the users who were interested in your Titles.</p>
+    </analytics-pie-chart>
     <analytics-metric-card-list [cards]="aggregatedCards$ | async"></analytics-metric-card-list>
   </article>
 </section>
