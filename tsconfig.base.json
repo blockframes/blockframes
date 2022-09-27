@@ -26,7 +26,6 @@
       "@blockframes/consents/*": ["libs/consents/src/lib/*"],
       "@blockframes/contract/*": ["libs/contract/src/lib/*"],
       "@blockframes/devops": ["libs/devops/src/index.ts"],
-      "@blockframes/e2e/*": ["libs/e2e/src/lib/*"],
       "@blockframes/event/*": ["libs/event/src/lib/*"],
       "@blockframes/financial-report/*": ["libs/financial-report/src/lib/*"],
       "@blockframes/firebase-utils": ["libs/firebase-utils/src/index.ts"],

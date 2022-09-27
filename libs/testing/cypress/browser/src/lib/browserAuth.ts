@@ -14,9 +14,9 @@ export const browserAuth = {
 
   clearBrowserAuth() {
     cy.window().should('have.property', 'LoginService');
-    cy.window().then(async w => {
+    return cy.window().then(async w => {
       await w['LoginService'].signout();
-      indexedDB.deleteDatabase('firebaseLocalStorageDb');
+      return indexedDB.deleteDatabase('firebaseLocalStorageDb');
     });
   },
 

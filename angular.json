@@ -777,29 +777,6 @@
       },
       "tags": ["node", "local"]
     },
-    "e2e": {
-      "projectType": "library",
-      "root": "libs/e2e",
-      "sourceRoot": "libs/e2e/src",
-      "prefix": "blockframes",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/e2e/src/**/*.ts", "libs/e2e/src/**/*.html"]
-          },
-          "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/e2e/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      },
-      "tags": ["browser", "e2e", "deprecated"]
-    },
     "event": {
       "projectType": "library",
       "root": "libs/event",

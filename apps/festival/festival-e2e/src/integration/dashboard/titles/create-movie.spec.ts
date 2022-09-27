@@ -12,6 +12,7 @@ import {
   getInList,
   getInListbox,
   getAllStartingWith,
+  assertUrlIncludes
 } from '@blockframes/testing/cypress/browser';
 import {
   crewRoles,
@@ -33,8 +34,9 @@ import {
   colors,
   soundFormat,
   hostedVideoTypes,
+  movieNoteRoles
 } from '@blockframes/model';
-import { user, org, permissions, inDevelopmentMovie } from '../../fixtures/dashboard/movie-tunnel';
+import { user, org, permissions, inDevelopmentMovie } from '../../../fixtures/dashboard/movie-tunnel';
 import { addDays, subDays, format } from 'date-fns';
 
 const injectedData = {
@@ -78,7 +80,7 @@ describe('Movie tunnel', () => {
 
     //main
     checkSideNav(movie.productionStatus);
-    get('international-title').type(movie.title.original);
+    get('international-title').type(movie.title.international);
     get('original-title').type(movie.title.original);
     get('reference').type(movie.internalRef);
     ///checking movie related fields (default)
@@ -291,6 +293,7 @@ describe('Movie tunnel', () => {
     get('next').click();
 
     //promotional elements : no upload possible so far in e2e - see issue #8900
+    //only inputs are tested
     ///files
     cy.contains('Presentation Deck'); //just checking we arrived on the good page
     get('next').click();
@@ -298,9 +301,9 @@ describe('Movie tunnel', () => {
     cy.contains('Promotional Images');
     get('next').click();
     ///videos
-    get('title').type(movie.promotional.videos.salesPitch.title);
+    get('title').type(movie.promotional.videos.otherVideos[0].title);
     get('video-type').click();
-    getInListbox(hostedVideoTypes[movie.promotional.videos.salesPitch.type]);
+    getInListbox(hostedVideoTypes[movie.promotional.videos.otherVideos[0].type]);
     uncheck('video-privacy');
     check('video-privacy');
     get('description').type(movie.promotional.videos.salesPitch.description);
@@ -311,7 +314,7 @@ describe('Movie tunnel', () => {
     get('first-name').type(movie.promotional.notes[0].firstName);
     get('last-name').type(movie.promotional.notes[0].lastName);
     get('role').click();
-    getInListbox(movie.promotional.notes[0].role);
+    getInListbox(movieNoteRoles[movie.promotional.notes[0].role]);
     get('next').click();
     ///screener movie
     cy.contains('Screener Video');
@@ -320,7 +323,7 @@ describe('Movie tunnel', () => {
     //last step
     ///main information
     get('production-status').should('contain', productionStatus[movie.productionStatus]);
-    get('international-title').should('contain', movie.title.original);
+    get('international-title').should('contain', movie.title.international);
     get('original-title').should('contain', movie.title.original);
     get('content-type').should('contain', 'Movie');
     get('reference').should('contain', movie.internalRef);
@@ -421,8 +424,27 @@ describe('Movie tunnel', () => {
     get('resolution').should('contain', movieFormatQuality[movie.formatQuality]);
     get('color').should('contain', colors[movie.color]);
     get('sound').should('contain', soundFormat[movie.soundFormat]);
+    //promotional Elements
+    get('deck').should('contain', 'Missing');
+    get('scenario').should('contain', 'Missing');
+    get('moodboard').should('contain', 'Missing');
+    //TODO : test 'images' when fixed #8586
+    /*Below check to be unskipped when upload will be possible #8900
+    get('video_0')
+      .should('contain', hostedVideoTypes[movie.promotional.videos.otherVideos[0].type])
+      .and('contain', movie.promotional.videos.otherVideos[0].title);
+    */
+    get('pitch').should('contain', 'Missing');
+    get('note_0').should('contain', 'Note');
+    get('screener').should('contain', 'Missing');
 
-    //TODO: continue #6820
+    get('publish').click();
+    cy.contains(`${movie.title.international} successfully published.`);
+    get('close-tunnel').click();
+    firestore
+      .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id })
+      .then((movies: Movie[]) => assertUrlIncludes(`c/o/dashboard/title/${movies[0].id}/activity`));
+    get('titles-header-title').should('contain', movie.title.international);
   });
 });
 

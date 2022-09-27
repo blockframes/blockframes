@@ -1,7 +1,9 @@
-import { OrgActivity, Territory, PublicUser, Module } from '@blockframes/model';
+import { OrgActivity, Territory, PublicUser, Module, EventTypes, eventTypes, AccessibilityTypes } from '@blockframes/model';
+import { browserAuth } from '@blockframes/testing/cypress/browser';
+import { startOfWeek, add, isPast, isFuture } from 'date-fns';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
-import { browserAuth } from './browserAuth';
+import { capitalize } from '@blockframes/utils/helpers';
 
 export function awaitElementDeletion(selector: string, timeout?: number) {
   const settings = { timeout };
@@ -24,6 +26,10 @@ export function acceptCookies() {
 
 export function get(selector: string) {
   return cy.get(`[test-id="${selector}"]`);
+}
+
+export function getByClass(selector: string) {
+  return cy.get(`.${selector}`);
 }
 
 export function getAllStartingWith(selector: string) {
@@ -83,6 +89,13 @@ export function deleteEmail(id: string) {
   return cy.mailosaurDeleteMessage(id);
 }
 
+export function connectOtherUser(email: string) {
+  browserAuth.clearBrowserAuth();
+  cy.visit('');
+  browserAuth.signinWithEmailAndPassword(email);
+  cy.visit('');
+}
+
 //* AUTHENTIFICATION *//
 
 export function fillCommonInputs(user: PublicUser) {
@@ -122,6 +135,114 @@ export function verifyInvitation(orgAdminEmail: string, user: PublicUser, expect
   get('invitations-link').click();
   get('invitation').first().should('contain', `${user.firstName} ${user.lastName} wants to join your organization.`);
   get('invitation-status').first().should('contain', 'Accepted');
+}
+
+//* ------------------------------------- *//
+
+//* DASHBOARD *//
+
+//* js functions
+
+export function createFutureSlot() {
+  const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
+  do {
+    slot.day = new Date().getDay() + Math.floor(Math.random() * (7 - new Date().getDay()));
+    slot.hours = Math.floor(Math.random() * 24);
+    slot.minutes = Math.random() < 0.5 ? 0 : 30;
+  } while (!isFuture(add(startOfWeek(new Date()), { days: slot.day, hours: slot.hours, minutes: slot.minutes })));
+  return slot;
+}
+
+// not used yet, need to wait for issue #8203 to be resolved
+export function createPastSlot() {
+  const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
+  do {
+    slot.day = Math.floor(Math.random() * new Date().getDay());
+    slot.hours = Math.floor(Math.random() * 24);
+    slot.minutes = Math.random() < 0.5 ? 0 : 30;
+  } while (!isPast(add(startOfWeek(new Date()), { days: slot.day, hours: slot.hours, minutes: slot.minutes })));
+  return slot;
+}
+
+export function getCurrentWeekDays() {
+  const d = new Date();
+  const weekDays: { day: string; date: string }[] = [];
+  d.setDate(d.getDate() - d.getDay());
+  for (let i = 0; i < 7; i++) {
+    weekDays.push({
+      day: d.toLocaleString('en-us', { weekday: 'long' }),
+      date: `${new Date(d).toLocaleString('en-us', { month: 'short' })} ${new Date(d).getDate()}`,
+    });
+    d.setDate(d.getDate() + 1);
+  }
+  return weekDays;
+}
+
+export interface EventSlot {
+  day: number;
+  hours: number;
+  minutes: 0 | 30;
+}
+
+//* cypress commands
+
+export function selectSlot(time: EventSlot) {
+  const { day, hours, minutes } = time;
+  return cy
+    .get('.cal-day-column')
+    .eq(day)
+    .find('.cal-hour')
+    .eq(hours)
+    .children()
+    .eq(!minutes ? 0 : 1)
+    .click();
+}
+
+export function getEventSlot(time: EventSlot) {
+  const { day, hours, minutes } = time;
+  //30 minutes are 30px high, an hour 60px
+  let topOffset = hours * 60;
+  if (minutes === 30) topOffset += 30;
+  return cy.get('.cal-day-column').eq(day).find('.cal-events-container').find(`[style^="top: ${topOffset}px"]`);
+}
+
+export function fillDashboardCalendarPopin(event: { type: EventTypes; title: string }) {
+  const { type, title } = event;
+  get('event-type').click();
+  getInList('type_', eventTypes[type]);
+  get('event-title-modal').clear().type(title);
+  get('more-details').click();
+}
+
+export function fillDashboardCalendarDetails(event: {
+  movie: string;
+  title: string;
+  accessibility: AccessibilityTypes;
+  secret?: boolean;
+}) {
+  const { movie, title, accessibility, secret } = event;
+  get('screening-title').click();
+  cy.contains(movie);
+  //get('title_1').should('be.visible');
+  getInList('title_', movie);
+  get('description').type(`Description : ${title}`);
+  get(accessibility).click();
+  if (secret) check('secret');
+  get('event-save').click();
+}
+
+export function verifyScreening(data: { title: string; accessibility: AccessibilityTypes; expected: boolean }) {
+  const { title, accessibility, expected } = data;
+  getAllStartingWith('event_').then(events => {
+    let eventFound = false;
+    events.toArray().map(event => {
+      if (event.textContent.includes(title)) {
+        expect(event.textContent).to.include(`${capitalize(accessibility)} Screening`);
+        eventFound = true;
+      }
+    });
+    expected ? expect(eventFound).to.be.true : expect(eventFound).to.be.false;
+  });
 }
 
 //* ------------------------------------- *//
