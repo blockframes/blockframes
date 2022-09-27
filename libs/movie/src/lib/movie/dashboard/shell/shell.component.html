@@ -10,7 +10,7 @@
 
           <article fxLayout="column" fxFlex>
             <h4>{{ movie | movieFeature }}</h4>
-            <h1>{{ movie.title.international }}</h1>
+            <h1 test-id="titles-header-title">{{ movie.title.international }}</h1>
             <bf-tag>{{ movie.app[app].status }}</bf-tag>
 
             <h6>{{ movie.directors | displayName }}</h6>

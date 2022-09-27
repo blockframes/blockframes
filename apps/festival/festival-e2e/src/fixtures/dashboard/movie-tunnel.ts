@@ -30,7 +30,8 @@ export const inDevelopmentMovie: Partial<Movie> = {
   //main
   productionStatus: 'development',
   title: {
-    original: 'Test movie',
+    original: 'Original title',
+    international: 'International title'
   },
   internalRef: 'E2E ref',
   runningTime: {
@@ -228,9 +229,7 @@ export const inDevelopmentMovie: Partial<Movie> = {
   promotional: {
     videos: {
       salesPitch: {
-        title: 'Test Pitch',
         description: 'This is the journey of an E2E test',
-        type: 'teaser',
         jwPlayerId: null,
         privacy: null,
         collection: null,
@@ -238,13 +237,25 @@ export const inDevelopmentMovie: Partial<Movie> = {
         field: null,
         storagePath: null,
       },
+      otherVideos: [
+        {
+          title: 'Test other videos',
+          type: 'teaser',
+          jwPlayerId: null,
+          privacy: null,
+          collection: null,
+          docId: null,
+          field: null,
+          storagePath: null,
+        }
+      ],
     },
     moodboard: null,
     notes: [
       {
         firstName: 'Note first',
         lastName: 'Note last',
-        role: 'Director',
+        role: 'director',
         privacy: null,
         collection: null,
         docId: null,

@@ -7,7 +7,7 @@
 <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
   <missing-control [control]="notes" [link]="link">
     <ng-template let-notes>
-      <article *ngFor="let note of notes" fxLayout fxLayoutAlign="start center">
+      <article *ngFor="let note of notes; let i = index" fxLayout fxLayoutAlign="start center" [attr.test-id]="'note_' + i">
         <ng-container *ngIf="note.storagePath; else empty">
           <bf-preview-modal [ref]="note"></bf-preview-modal>
           <span>{{ note.firstName }} {{ note.lastName }} - {{ note.role | titlecase }} -
