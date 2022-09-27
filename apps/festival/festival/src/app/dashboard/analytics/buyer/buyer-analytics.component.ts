@@ -1,6 +1,5 @@
 import {
   InvitationWithScreening,
-  InvitationWithAnalytics,
   averageWatchDuration,
   invitationStatus,
 } from '@blockframes/model';
@@ -58,7 +57,7 @@ function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
   }));
 }
 
-function toScreenerCards(invitations: Partial<InvitationWithAnalytics>[]): MetricCard[] {
+function toScreenerCards(invitations: Invitation[]): MetricCard[] {
   const attended = invitations.filter(invitation => invitation.watchInfos?.duration !== undefined);
   const avgWatchDuration = averageWatchDuration(attended);
   const invitationsCount = invitations.filter(i => i.mode === 'invitation').length;

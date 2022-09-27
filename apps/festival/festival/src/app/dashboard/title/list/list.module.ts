@@ -24,7 +24,6 @@ import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.mod
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
@@ -52,7 +51,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatButtonModule,
     MatTabsModule,
     MatIconModule,
-    MatProgressSpinnerModule,
     MatTooltipModule,
     MatSnackBarModule,
 

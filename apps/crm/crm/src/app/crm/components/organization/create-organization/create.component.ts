@@ -25,6 +25,7 @@ export class OrganizationCreateComponent {
     updateOn: 'blur'
   });
   public fromApp = new FormControl('');
+  public creatingOrg = false;
 
   constructor(
     public dialogRef: MatDialogRef<OrganizationCreateComponent>,
@@ -41,15 +42,18 @@ export class OrganizationCreateComponent {
   }
 
   async addOrganization() {
+    this.creatingOrg = true;
     if (!this.form.valid) {
       this.snackBar.open('Form invalid, please check error messages', 'close', { duration: 2000 });
+      this.creatingOrg = false;
       return;
     }
 
     const [fromApp] = getOrgAppAccess(this.form.value, this.fromApp.value);
     if (!fromApp) {
-      this.snackBar.open('Please pick an app where the user is created from or give org app access', 'close', { duration: 2000 })
-      return
+      this.snackBar.open('Please pick an app where the user is created from or give org app access', 'close', { duration: 2000 });
+      this.creatingOrg = false;
+      return;
     }
 
     const superAdminEmail = this.superAdminForm.get('email').value;
@@ -58,6 +62,7 @@ export class OrganizationCreateComponent {
     if (!!existingSuperAdmin && !!existingSuperAdmin.orgId) {
       this.snackBar.open('User associated with this super admin email address already has an organization');
       this.superAdminForm.get('email').setValue('');
+      this.creatingOrg = false;
       return;
     }
 
@@ -80,6 +85,7 @@ export class OrganizationCreateComponent {
 
     this.router.navigate(['/c/o/dashboard/crm/organization/', orgId]);
     this.dialogRef.close();
+    this.creatingOrg = false;
   }
 
 }

@@ -1,25 +1,32 @@
 <h1>Titles' Activity</h1>
+<ng-container *ngIf="titlesAnalytics$ | async as titlesAnalytics; else loading">
+  <bf-table [source]="titlesAnalytics" pagination="25" useFilter clickable (rowClick)="goToTitle($event)">
+    <ng-template colRef="title.title.international" label="International title" let-title sort>
+      <b>{{ title }}</b>
+    </ng-template>
+    <ng-template colRef="pageView" label="# Views" let-pageView sort>
+      {{ pageView }}
+    </ng-template>
+    <ng-template colRef="screenings" label="# Screenings" let-screenings sort>
+      {{ screenings }}
+    </ng-template>
+    <ng-template colRef="promoElementOpened" label="# Promo Elements Opened" let-promoElementOpened sort>
+      {{ promoElementOpened }}
+    </ng-template>
+    <ng-template colRef="addedToWishlist" label="# Wishlist" let-addedToWishlist sort>
+      {{ addedToWishlist }}
+    </ng-template>
+    <ng-template colRef="screeningRequested" label="# Screening requests" let-screeningRequested sort>
+      {{ screeningRequested }}
+    </ng-template>
+    <ng-template colRef="askingPriceRequested" label="# Asking price requests" let-askingPriceRequested sort>
+      {{ askingPriceRequested }}
+    </ng-template>
+  </bf-table>
+</ng-container>
 
-<bf-table [source]="titlesAnalytics$ | async" pagination="5" useFilter clickable (rowClick)="goToTitle($event)">
-  <ng-template colRef="title.title.international" label="International title" let-title sort>
-    <b>{{ title }}</b>
-  </ng-template>
-  <ng-template colRef="pageView" label="# Views" let-pageView sort>
-    {{ pageView }}
-  </ng-template>
-  <ng-template colRef="screenings" label="# Screenings" let-screenings sort>
-    {{ screenings }}
-  </ng-template>
-  <ng-template colRef="promoElementOpened" label="# Promo Elements Opened" let-promoElementOpened sort>
-    {{ promoElementOpened }}
-  </ng-template>
-  <ng-template colRef="addedToWishlist" label="# Wishlist" let-addedToWishlist sort>
-    {{ addedToWishlist }}
-  </ng-template>
-  <ng-template colRef="screeningRequested" label="# Screening requests" let-screeningRequested sort>
-    {{ screeningRequested }}
-  </ng-template>
-  <ng-template colRef="askingPriceRequested" label="# Asking price requests" let-askingPriceRequested sort>
-    {{ askingPriceRequested }}
-  </ng-template>
-</bf-table>
+<ng-template #loading>
+  <article class="spinner">
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-template>

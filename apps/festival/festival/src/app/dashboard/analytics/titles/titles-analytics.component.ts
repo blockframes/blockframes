@@ -49,7 +49,8 @@ export class TitlesAnalyticsComponent {
       analytics: title => this.getTitleAnalytics(title.id),
       events: title => this.eventService.valueChanges([
         where('type', '==', 'screening'),
-        where('meta.titleId', '==', title.id)
+        where('meta.titleId', '==', title.id),
+        where('ownerOrgId', '==', this.orgService.org.id),
       ])
     }, { shouldAwait: true }),
     map(titles => titles.map(countAnalytics))

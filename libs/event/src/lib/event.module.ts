@@ -10,6 +10,9 @@ import { CalendarHeaderComponent } from './components/header/header.component';
 import { CalendarWeekComponent } from './components/week/week.component';
 import { EventSmallDirective, EventLargeDirective } from './components/event.directive';
 import { EventSizePipe } from './components/event.pipe';
+
+// Blockframes
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
@@ -27,7 +30,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -65,7 +67,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatCheckboxModule,
     MatSelectModule,
     MatSlideToggleModule,
-    MatProgressSpinnerModule,
+    LogoSpinnerModule,
   ]
 })
 export class EventModule {}

@@ -37,19 +37,13 @@
           <svg viewBox="0 0 100 100" width="32px" height="16px">
             <rect fill="#001ec7" x="0" y="0" width="150" height="100" rx="10" />
           </svg>
-          <span class="mat-caption">> 100</span>
-        </mat-list-item>
-        <mat-list-item>
-          <svg viewBox="0 0 100 100" width="32px" height="16px">
-            <rect fill="#3c64f7" x="0" y="0" width="150" height="100" rx="10" />
-          </svg>
           <span class="mat-caption">> 50</span>
         </mat-list-item>
         <mat-list-item>
           <svg viewBox="0 0 100 100" width="32px" height="16px">
             <rect fill="#8da4fa" x="0" y="0" width="150" height="100" rx="10" />
           </svg>
-          <span class="mat-caption">> 5</span>
+          <span class="mat-caption">< 50</span>
         </mat-list-item>
         <mat-list-item>
           <svg viewBox="0 0 100 100" width="32px" height="16px">
@@ -77,5 +71,7 @@
 </ng-template>
 
 <ng-template #loading>
-  <mat-spinner color="primary"></mat-spinner>
+  <article>
+    <logo-spinner></logo-spinner>
+  </article>
 </ng-template>

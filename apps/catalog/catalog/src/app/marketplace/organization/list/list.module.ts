@@ -15,8 +15,8 @@ import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
 import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module";
 import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module";
+
 // Material
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -36,7 +36,6 @@ import { MatInputModule } from '@angular/material/input';
     AlgoliaAutocompleteModule,
     AlgoliaChipsAutocompleteModule,
     // Material
-    MatProgressSpinnerModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule

@@ -11,6 +11,10 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  section {
+    display: flex;
+    gap: 8px;
+  }
 }
 
 .carousel-container {

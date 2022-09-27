@@ -12,7 +12,7 @@ const territories = parseToAll('territories', 'world') as Territory[];
   styleUrls: ['./map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AnalyticsMapComponent implements OnDestroy{
+export class AnalyticsMapComponent implements OnDestroy {
   isLoading = true;
 
   zero: TerritoryISOA3Value[] = [];
@@ -51,7 +51,6 @@ export class AnalyticsMapComponent implements OnDestroy{
 
   private getTopCountries(data: AnalyticData[], count: number) {
     if (!data) return;
-    this.isLoading = false;
 
     for (const territory of territories) {
       const isoA3 = territoriesISOA3[territory];
@@ -71,8 +70,9 @@ export class AnalyticsMapComponent implements OnDestroy{
       }
     }
 
-    const sorted = data.sort((a, b) => b.count - a.count);
+    const sorted = [...data].sort((a, b) => b.count - a.count);
     this.top = sorted.splice(0, count);
+    this.isLoading = false;
   }
 
   toggleSelect(isoA3: TerritoryISOA3Value) {

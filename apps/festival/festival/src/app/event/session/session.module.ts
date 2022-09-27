@@ -5,6 +5,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
 import { SessionComponent } from './session.component';
+
+// Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { FileControlsModule } from '@blockframes/media/file/controls/controls.module';
 import { FileViewersModule } from '@blockframes/media/file/viewers/viewers.module';
@@ -16,14 +18,14 @@ import { MeetingVideoRoomModule } from '@blockframes/event/components/meeting/ro
 import { DoorbellBottomSheetModule } from '@blockframes/event/components/doorbell/doorbell.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 import { RequestAskingPriceModule } from '@blockframes/movie/components/request-asking-price/request-asking-price.module';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Materials
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { MatDividerModule } from '@angular/material/divider';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [SessionComponent],
@@ -43,6 +45,7 @@ import { MatDividerModule } from '@angular/material/divider';
     DoorbellBottomSheetModule,
     ConfirmModule,
     RequestAskingPriceModule,
+    LogoSpinnerModule,
     // Materials
     MatButtonModule,
     MatIconModule,
