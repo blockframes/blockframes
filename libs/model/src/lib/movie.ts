@@ -135,7 +135,7 @@ export interface MoviePromotionalElements {
 ////////////////////
 export interface MovieAppConfig {
   acceptedAt: Date;
-  // TODO #8924 add submittedAt
+  submittedAt: Date;
   access: boolean;
   refusedAt: Date;
   status: StoreStatus;
@@ -353,6 +353,7 @@ export function createAppConfig(params: Partial<MovieAppConfig>): MovieAppConfig
     ...params,
     acceptedAt: params?.acceptedAt,
     refusedAt: params?.refusedAt,
+    submittedAt: params?.submittedAt,
   };
 }
 
@@ -543,18 +544,33 @@ export function checkMovieStatus(movie: Movie, status: StoreStatus) {
 }
 
 export function isMovieAccepted(movie: Movie, app: App) {
-  return movie.app[app]?.status === 'accepted' && movie.app[app]?.access;
+  return isMovieInStatus('accepted', movie, app);
+}
+
+function isMovieInStatus(status: StoreStatus, movie: Movie, app: App) {
+  return movie.app[app]?.status === status && movie.app[app]?.access;
 }
 
 /**
  * Return the last app where the movie was accepted on
  * @param movie 
  */
-export function wasLastAcceptedOn(movie: Movie): App { // TODO the same for wasLastSubmittedOn
-  const acceptedApps = app.map(a => isMovieAccepted(movie, a) ? a : '').filter(a => a);
+export function wasLastAcceptedOn(movie: Movie): App {
+  const acceptedApps = app.map(a => isMovieInStatus('accepted', movie, a) ? a : '').filter(a => a);
   const movieAppConfig = acceptedApps.map(a => ({ ...movie.app[a], app: a } as MovieAppConfig & { app: App }));
   const lastAcceptedOn = movieAppConfig.sort((a, b) => new Date(b.acceptedAt).getTime() - new Date(a.acceptedAt).getTime());
-  return lastAcceptedOn.length ? lastAcceptedOn[0].app : undefined;
+  return lastAcceptedOn.length ? lastAcceptedOn[0].app : getMovieAppAccess(movie)[0];
+}
+
+/**
+ * Return the last app where the movie was submitted on
+ * @param movie 
+ */
+export function wasLastSubmittedOn(movie: Movie): App {
+  const submittedApps = app.map(a => isMovieInStatus('submitted', movie, a) ? a : '').filter(a => a);
+  const movieAppConfig = submittedApps.map(a => ({ ...movie.app[a], app: a } as MovieAppConfig & { app: App }));
+  const lastSubmittedOn = movieAppConfig.sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+  return lastSubmittedOn.length ? lastSubmittedOn[0].app : getMovieAppAccess(movie)[0];
 }
 
 /**

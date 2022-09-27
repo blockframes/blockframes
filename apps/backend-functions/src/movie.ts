@@ -22,7 +22,9 @@ import {
   createInternalDocumentMeta,
   createPublicUser,
   createNotification,
-  wasLastAcceptedOn
+  wasLastAcceptedOn,
+  wasLastSubmittedOn,
+  getMoviePublishStatus
 } from '@blockframes/model';
 import { BlockframesChange, BlockframesSnapshot, getDocument } from '@blockframes/firebase-utils';
 
@@ -133,16 +135,14 @@ export async function onMovieUpdate(change: BlockframesChange<Movie>) {
 
   const isMovieSubmitted = isSubmitted(before.app, after.app);
   const isMovieAccepted = isAccepted(before.app, after.app);
-  const appAccess = isMovieAccepted ? wasLastAcceptedOn(after) : getMovieAppAccess(after)[0];  // TODO #8924 use wasLastSubmittedOn
 
   const organizations = await getOrganizationsOfMovie(after.id);
 
   if (isMovieSubmitted) {
-    // When movie is submitted to Archipel Content or Media Financiers
-    const movieWasSubmittedOn = wasSubmittedOn(before.app, after.app)[0];
+    const createdFrom = wasLastSubmittedOn(after);
     // Mail to supportEmails.[app]
-    const from = getMailSender(movieWasSubmittedOn);
-    await sendMail(sendMovieSubmittedEmail(movieWasSubmittedOn, after, organizations[0]), from, groupIds.noUnsubscribeLink);
+    const from = getMailSender(createdFrom);
+    await sendMail(sendMovieSubmittedEmail(createdFrom, after, organizations[0]), from, groupIds.noUnsubscribeLink);
 
     // Notification to users related to current movie
     const notifications = organizations
@@ -153,7 +153,7 @@ export async function onMovieUpdate(change: BlockframesChange<Movie>) {
           toUserId,
           type: 'movieSubmitted',
           docId: after.id,
-          _meta: createInternalDocumentMeta({ createdFrom: appAccess }),
+          _meta: createInternalDocumentMeta({ createdFrom }),
         })
       );
 
@@ -170,7 +170,7 @@ export async function onMovieUpdate(change: BlockframesChange<Movie>) {
           toUserId,
           type: 'movieAccepted',
           docId: after.id,
-          _meta: createInternalDocumentMeta({ createdFrom: appAccess }),
+          _meta: createInternalDocumentMeta({ createdFrom: wasLastAcceptedOn(after) }),
         });
       });
 
@@ -254,31 +254,23 @@ function isSubmitted(previousAppConfig: AppConfigMap, currentAppConfig: AppConfi
       previousAppConfig &&
       previousAppConfig[app].status === 'draft' &&
       currentAppConfig &&
-      currentAppConfig[app].status === 'submitted'
+      currentAppConfig[app].status === 'submitted' &&
+      currentAppConfig[app].access === true
     );
-  });
-}
-
-/** Return from which app(s) a movie is going from draft to submitted. */
-function wasSubmittedOn(previousAppConfig: AppConfigMap, currentAppConfig: AppConfigMap): App[] {
-  return apps.filter((app) => {
-    if (!previousAppConfig[app] || !currentAppConfig[app]) return false;
-    const wasDraft = previousAppConfig[app].status === 'draft';
-    const isSubmitted = currentAppConfig[app].status === 'submitted';
-    return wasDraft && isSubmitted;
   });
 }
 
 /** Checks if the store status is going from submitted to accepted. */
 function isAccepted(previousAppConfig: AppConfigMap, currentAppConfig: AppConfigMap) {
   return apps.some((app) => {
-    if (app === 'festival') {
+    if (getMoviePublishStatus(app) === 'accepted') {
       // in festival `draft` -> `accepted`
       return (
         previousAppConfig &&
         previousAppConfig[app].status === 'draft' &&
         currentAppConfig &&
-        currentAppConfig[app].status === 'accepted'
+        currentAppConfig[app].status === 'accepted' &&
+        currentAppConfig[app].access === true
       );
     }
     // in catalog/financiers `draft` -> `submitted` -> `accepted`
@@ -286,7 +278,8 @@ function isAccepted(previousAppConfig: AppConfigMap, currentAppConfig: AppConfig
       previousAppConfig &&
       previousAppConfig[app].status === 'submitted' &&
       currentAppConfig &&
-      currentAppConfig[app].status === 'accepted'
+      currentAppConfig[app].status === 'accepted' &&
+      currentAppConfig[app].access === true
     );
   });
 }

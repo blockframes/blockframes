@@ -21,18 +21,21 @@ describe('Movies Rules Tests', () => {
         access: false,
         refusedAt: null,
         acceptedAt: null,
+        submittedAt: null,
       },
       festival: {
         status: <StoreStatus>'draft',
         access: true,
         refusedAt: null,
         acceptedAt: null,
+        submittedAt: null,
       },
       financiers: {
         status: <StoreStatus>'draft',
         access: false,
         refusedAt: null,
         acceptedAt: null,
+        submittedAt: null,
       },
     };
 

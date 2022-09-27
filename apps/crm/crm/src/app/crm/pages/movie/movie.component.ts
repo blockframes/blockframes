@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
-import { Movie, storeStatus, productionStatus, getAllAppsExcept, Analytics, AggregatedAnalytic } from '@blockframes/model';
+import { Movie, storeStatus, productionStatus, getAllAppsExcept, Analytics, AggregatedAnalytic, StoreStatus } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -112,21 +112,31 @@ export class MovieComponent implements OnInit {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
     }
 
-    for (const application of this.apps) { // TODO #8924 this should be reworked so existing acceptedAt or refusedAt date is not overwritten
-      this.movie.app[application].refusedAt = null;
-      this.movie.app[application].acceptedAt = null;
-      this.movie.app[application].access = this.movieAppConfigForm.controls[application].get('access').value;
-      this.movie.app[application].status = this.movieAppConfigForm.controls[application].get('status').value;
+    for (const application of this.apps) {
 
-      if (this.movieAppConfigForm.controls[application].get('status').value === 'accepted') {
+      const newStatus: StoreStatus = this.movieAppConfigForm.controls[application].get('status').value;
+
+      if (this.movie.app[application].status !== 'accepted' && newStatus === 'accepted') {
         this.movie.app[application].acceptedAt = new Date();
+      } else if (this.movie.app[application].acceptedAt && newStatus !== 'accepted') {
+        this.movie.app[application].acceptedAt = null;
       }
 
-      if (this.movieAppConfigForm.controls[application].get('status').value === 'refused') {
+      if (this.movie.app[application].status !== 'refused' && newStatus === 'refused') {
         this.movie.app[application].refusedAt = new Date();
+      } else if (this.movie.app[application].refusedAt && newStatus !== 'refused') {
+        this.movie.app[application].refusedAt = null;
       }
 
-      // TODO #8924 add submittedAt
+      if (this.movie.app[application].status !== 'submitted' && newStatus === 'submitted') {
+        this.movie.app[application].submittedAt = new Date();
+      } else if (this.movie.app[application].submittedAt && newStatus !== 'submitted') {
+        this.movie.app[application].submittedAt = null;
+      }
+
+      this.movie.app[application].access = this.movieAppConfigForm.controls[application].get('access').value;
+      this.movie.app[application].status = newStatus;
+
     }
 
     return this.movie.app;
