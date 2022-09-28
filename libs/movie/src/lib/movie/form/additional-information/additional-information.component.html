@@ -2,7 +2,7 @@
   <ng-container tunnel-form>
     <ng-container *ngIf="form | hasStatus: ['released']">
       <h3>Release</h3>
-      <section id="release">
+      <section id="release" test-id="release">
 
         <bf-form-list [form]="form.originalRelease">
           <ng-template itemRef let-release>{{ release.country | toLabel: 'territories' }} -
@@ -11,19 +11,18 @@
             <article [formGroup]="releaseForm" fxLayout="column" fxLayoutGap="24px">
 
               <div fxLayout="row" fxLayoutGap="24px">
-                <static-select test-id="release-country" [control]="releaseForm.get('country')" scope="territories" fxFlex>
+                <static-select [control]="releaseForm.get('country')" scope="territories" fxFlex test-id="country">
                   <mat-label>Country</mat-label>
                 </static-select>
 
-                <static-select test-id="release-media" [control]="releaseForm.get('media')" scope="releaseMedias" fxFlex>
+                <static-select [control]="releaseForm.get('media')" scope="releaseMedias" fxFlex test-id="media">
                   <mat-label>Release Media</mat-label>
                 </static-select>
               </div>
 
               <mat-form-field appearance="outline">
                 <mat-label>Release Date</mat-label>
-                <input matInput test-id="release-date" formControlName="date" [matDatepicker]="datePicker"
-                  placeholder="MM/DD/YYYY">
+                <input matInput formControlName="date" [matDatepicker]="datePicker" placeholder="MM/DD/YYYY" test-id="date">
                 <mat-datepicker-toggle matSuffix [for]="datePicker">
                   <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
                 </mat-datepicker-toggle>
@@ -51,7 +50,7 @@
 
     <ng-container *ngIf="form | hasStatus: ['released']">
       <h3>Box Office</h3>
-      <section id="box-office" *ngIf="units$ | async as units">
+      <section id="box-office" *ngIf="units$ | async as units" test-id="box-office">
 
         <bf-form-list [form]="form.boxOffice">
           <ng-template itemRef let-boxOffice>
@@ -66,13 +65,13 @@
           <ng-template formView let-boxOfficeForm>
             <article [formGroup]="boxOfficeForm" fxLayout fxLayoutGap="24px">
 
-              <static-select test-id="boxoffice-territory" scope="territories" [control]="boxOfficeForm.get('territory')" fxFlex>
+              <static-select scope="territories" [control]="boxOfficeForm.get('territory')" fxFlex test-id="territory">
                 <mat-label>Country</mat-label>
               </static-select>
 
               <mat-form-field appearance="outline">
                 <mat-label>Metrics</mat-label>
-                <mat-select test-id="boxoffice-unit" formControlName="unit">
+                <mat-select formControlName="unit" test-id="unit">
                   <mat-option *ngFor="let unit of unitBox | keyvalue" [value]="unit.key">
                     {{ unit.value }}
                   </mat-option>
@@ -82,8 +81,7 @@
 
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Figures</mat-label>
-                <input test-id="boxoffice-earnings" matInput type="number" formControlName="value" min="0"
-                  placeholder="Figures">
+                <input matInput type="number" formControlName="value" min="0" placeholder="Figures" test-id="earnings">
                 <mat-error *ngIf="boxOfficeForm.get('value').hasError('min')">
                   Please enter box office figures.
                 </mat-error>
@@ -110,7 +108,7 @@
 
     <ng-container *ngIf="form | hasStatus: ['finished', 'released']">
       <h3>Rating</h3>
-      <section id="rating">
+      <section id="rating" test-id="rating">
         <bf-form-list [form]="form.rating">
           <ng-template itemRef let-rating> {{ rating.value }} - {{ rating.country | toLabel: 'territories'}}
           </ng-template>
@@ -118,11 +116,11 @@
             <div fxLayout fxLayoutGap="24px" [formGroup]="ratingForm">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Rating</mat-label>
-                <input test-id="rating" matInput formControlName="value" />
+                <input matInput formControlName="value" test-id="value"/>
                 <mat-hint>Please specify your title's rating, if existing.</mat-hint>
               </mat-form-field>
 
-              <static-select test-id="rating-country" [control]="ratingForm.get('country')" scope="territories" fxFlex>
+              <static-select [control]="ratingForm.get('country')" scope="territories" fxFlex test-id="country">
                 <mat-label>Country</mat-label>
                 <mat-hint>Please specify country applying rating system.</mat-hint>
               </static-select>
@@ -145,7 +143,7 @@
           <mat-button-toggle-group [formControl]="form.certifications" multiple name="certifications"
             aria-label="Certifications">
             <ng-container *ngFor="let certification of certifications; index as i">
-              <mat-button-toggle [attr.test-id]="'certification' + (i + 1)" [value]="certification">
+              <mat-button-toggle [value]="certification" [attr.test-id]="'certification_' + i">
                 {{ certification | toLabel: 'certifications' }}
               </mat-button-toggle>
             </ng-container>
@@ -157,7 +155,7 @@
       </section>
     </ng-container>
 
-    <section id="audience-goals" fxLayout="column">
+    <section id="audience-goals" fxLayout="column" test-id="audience">
       <h3>Positioning</h3>
       <bf-form-list [form]="audience.get('targets')">
         <ng-template itemRef let-target>{{ target }}</ng-template>
@@ -165,8 +163,7 @@
           <div fxLayout>
             <mat-form-field appearance="outline" fxFlex>
               <mat-label>Target Audience (optional)</mat-label>
-              <input test-id="target-audience" matInput type="text" placeholder="Target Audience"
-                [formControl]="targetForm" />
+              <input matInput type="text" placeholder="Target Audience" [formControl]="targetForm" test-id="audience"/>
             </mat-form-field>
           </div>
 
@@ -178,7 +175,7 @@
 
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Social Responsability Goals (optional)</mat-label>
-        <mat-select test-id="goal" [formControl]="audience.get('goals')" multiple>
+        <mat-select [formControl]="audience.get('goals')" multiple test-id="goals">
           <mat-option *ngFor="let goal of staticGoals" [value]="goal">{{ goal | toLabel: 'socialGoals' }}</mat-option>
         </mat-select>
       </mat-form-field>

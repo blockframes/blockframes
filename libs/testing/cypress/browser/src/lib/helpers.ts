@@ -1,4 +1,4 @@
-import { PermissionsDocument, Organization, User } from '@blockframes/model';
+import { PermissionsDocument, DocPermissionsDocument, Organization, User, App } from '@blockframes/model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 import faker from '@faker-js/faker';
@@ -41,15 +41,16 @@ interface E2EUser {
   firstName: string;
   lastName: string;
   email: string;
+  app: App;
   orgId?: string;
 }
 
 export const e2eUser = (data: E2EUser): User => {
   const legalTerms = {
     date: new Date(),
-    ip: '111.111.111.111'
+    ip: '111.111.111.111',
   };
-  const { uid, firstName, lastName, email, orgId } = data;
+  const { uid, firstName, lastName, email, app, orgId } = data;
   return {
     uid,
     firstName,
@@ -61,14 +62,14 @@ export const e2eUser = (data: E2EUser): User => {
     termsAndConditions: {
       festival: legalTerms,
       catalog: legalTerms,
-      financiers: legalTerms
+      financiers: legalTerms,
     },
     phoneNumber: '',
     position: '',
     avatar: null,
     _meta: {
       emailVerified: true,
-      createdFrom: 'festival',
+      createdFrom: app,
       createdBy: 'anonymous',
       createdAt: now,
     },
@@ -80,11 +81,12 @@ interface E2EOrganization {
   name: string;
   userIds: string[];
   email: string;
+  app: App;
   dashboardAccess: boolean;
 }
 
 export const e2eOrg = (data: E2EOrganization): Organization => {
-  const { id, name, userIds, email, dashboardAccess } = data;
+  const { id, name, userIds, email, app, dashboardAccess } = data;
   return {
     id,
     name,
@@ -94,25 +96,25 @@ export const e2eOrg = (data: E2EOrganization): Organization => {
     activity: 'actor',
     _meta: {
       createdAt: now,
-      createdFrom: 'festival',
+      createdFrom: app,
       createdBy: 'e2e-test',
     },
     appAccess: {
       festival: {
-        marketplace: true,
-        dashboard: dashboardAccess,
+        marketplace: app === 'festival',
+        dashboard: app === 'festival' && dashboardAccess,
       },
       catalog: {
-        marketplace: false,
-        dashboard: false,
+        marketplace: app === 'catalog',
+        dashboard: app === 'catalog' && dashboardAccess,
       },
       crm: {
-        marketplace: false,
-        dashboard: false,
+        marketplace: app === 'crm',
+        dashboard: app === 'crm' && dashboardAccess,
       },
       financiers: {
-        marketplace: false,
-        dashboard: false,
+        marketplace: app === 'financiers',
+        dashboard: app === 'financiers' && dashboardAccess,
       },
     },
     wishlist: [],
@@ -141,13 +143,26 @@ export const e2eOrg = (data: E2EOrganization): Organization => {
   };
 };
 
-export const e2ePermissions = (data: { id: string; adminUid: string }): PermissionsDocument => {
-  const { id, adminUid } = data;
+export const e2eOrgPermissions = (data: { orgId: string; adminUid: string }): PermissionsDocument => {
+  const { orgId, adminUid } = data;
   return {
-    id,
+    id: orgId,
     roles: {
       [adminUid]: 'superAdmin',
-    }
+    },
+  };
+};
+
+export const e2eMoviePermissions = (data: { movieId: string; orgId: string }): DocPermissionsDocument => {
+  const { movieId, orgId } = data;
+  return {
+    id: movieId,
+    ownerId: orgId,
+    isAdmin: true,
+    canCreate: true,
+    canDelete: true,
+    canRead: true,
+    canUpdate: true,
   };
 };
 

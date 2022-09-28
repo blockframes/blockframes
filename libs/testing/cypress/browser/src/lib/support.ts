@@ -1,5 +1,14 @@
-import { OrgActivity, Territory, PublicUser, Module, EventTypes, eventTypes, AccessibilityTypes } from '@blockframes/model';
-import { browserAuth } from '@blockframes/testing/cypress/browser';
+import {
+  OrgActivity,
+  Territory,
+  PublicUser,
+  Module,
+  EventTypes,
+  eventTypes,
+  AccessibilityTypes,
+  ProductionStatus,
+} from '@blockframes/model';
+import { browserAuth } from './browserAuth';
 import { startOfWeek, add, isPast, isFuture } from 'date-fns';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
@@ -43,14 +52,13 @@ export function getInList(selectorStart: string, option: string) {
   });
 }
 
-export function getInListbox(option: string) {
+export function getInListbox(option: string, exact?: boolean) {
   return cy
     .get('[role="listbox"]')
     .children()
     .each($child => {
-      if ($child.text().includes(option)) {
-        cy.wrap($child).click();
-      }
+      if (!exact && $child.text().includes(option)) cy.wrap($child).click();
+      if (exact && $child.text().valueOf() === ` ${option} `) cy.wrap($child).click();
     });
 }
 
@@ -243,6 +251,44 @@ export function verifyScreening(data: { title: string; accessibility: Accessibil
     });
     expected ? expect(eventFound).to.be.true : expect(eventFound).to.be.false;
   });
+}
+
+export function checkMovieTunnelSideNav(status: ProductionStatus) {
+  get('steps-list')
+    .should('contain', 'First Step')
+    .and('contain', 'Title Information')
+    .and('contain', 'Main Information')
+    .and('contain', 'Storyline Elements')
+    .and('contain', 'Production Information')
+    .and('contain', 'Artistic Team')
+    .and('contain', 'Additional Information')
+    .and('contain', 'Technical Specification')
+    .and('contain', 'Promotional Elements')
+    .and('contain', 'Files')
+    .and('contain', 'Images')
+    .and('contain', 'Videos')
+    .and('contain', 'Screener')
+    .and('contain', 'Last Step');
+  if (status !== 'development') {
+    get('steps-list').should('contain', 'Versions');
+  } else {
+    get('steps-list').should('not.contain', 'Versions');
+  }
+  if (status !== 'development' && status !== 'shooting') {
+    get('steps-list').should('contain', 'Selections & Reviews');
+  } else {
+    get('steps-list').should('not.contain', 'Selections & Reviews');
+  }
+  if (status !== 'post_production' && status !== 'finished' && status !== 'released') {
+    get('steps-list').should('contain', 'Notes & Statements');
+  } else {
+    get('steps-list').should('not.contain', 'Notes & Statements');
+  }
+  if (status !== 'released') {
+    get('steps-list').should('contain', 'Shooting Information');
+  } else {
+    get('steps-list').should('not.contain', 'Shooting Information');
+  }
 }
 
 //* ------------------------------------- *//

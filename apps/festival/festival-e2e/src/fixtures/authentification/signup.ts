@@ -15,6 +15,7 @@ export const newUser = e2eUser({
   firstName: newUserData.firstName,
   lastName: newUserData.lastName,
   email: newUserData.email,
+  app: 'festival',
 });
 
 export const newOrg = {
@@ -32,6 +33,7 @@ const marketplaceOrgAdmin = e2eUser({
   firstName: marketplaceOrgAdminData.firstName,
   lastName: marketplaceOrgAdminData.lastName,
   email: marketplaceOrgAdminData.email,
+  app: 'festival',
   orgId: marketplaceOrgId,
 });
 
@@ -40,6 +42,7 @@ const marketplaceOrg = e2eOrg({
   name: marketplaceOrgAdminData.company.name,
   userIds: [marketplaceOrgAdminUid],
   email: marketplaceOrgAdminData.email,
+  app: 'festival',
   dashboardAccess: false,
 });
 
@@ -63,6 +66,7 @@ const dashboardOrgAdmin = e2eUser({
   firstName: dashboardOrgAdminData.firstName,
   lastName: dashboardOrgAdminData.lastName,
   email: dashboardOrgAdminData.email,
+  app: 'festival',
   orgId: dashboardOrgId,
 });
 
@@ -71,6 +75,7 @@ const dashboardOrg = e2eOrg({
   name: dashboardOrgAdminData.company.name,
   userIds: [dashboardOrgAdminUid],
   email: dashboardOrgAdminData.email,
+  app: 'festival',
   dashboardAccess: true,
 });
 

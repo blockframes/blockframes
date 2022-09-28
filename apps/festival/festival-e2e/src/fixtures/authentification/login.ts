@@ -9,6 +9,7 @@ export const user = e2eUser({
   firstName: userData.firstName,
   lastName: userData.lastName,
   email: userData.email,
+  app: 'festival',
   orgId: orgId,
 });
 
@@ -17,6 +18,7 @@ export const org = e2eOrg({
   name: userData.company.name,
   userIds: [adminUid],
   email: userData.email,
+  app: 'festival',
   dashboardAccess: false,
 });
 

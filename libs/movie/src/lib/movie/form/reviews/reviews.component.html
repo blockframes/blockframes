@@ -1,15 +1,14 @@
 <tunnel-page>
   <ng-container tunnel-form>
     <h3>Festivals & Awards</h3>
-    <section id="festival">
+    <section id="festival" test-id="festival">
       <bf-form-list [form]="form.prizes">
         <ng-template itemRef let-prizes>{{ prizes | festivalPrize | titlecase}}</ng-template>
         <ng-template formView let-prizesForm>
           <article [formGroup]="prizesForm" fxLayout="column" fxLayoutGap="24px">
 
             <div fxLayout="row" fxLayoutGap="24px">
-              <static-select test-id="festival-name" [control]="prizesForm.get('name')" scope="festival" fxFlex
-                required>
+              <static-select [control]="prizesForm.get('name')" scope="festival" fxFlex required test-id="name">
                 <mat-label>Festival Name</mat-label>
                 <mat-hint>If you can't find the festival you're looking for, go to 'Other Festival & Awards' section.</mat-hint>
                 <mat-error>Required. If you can't find the festival you're looking for, go to 'Other Festival & Awards' section.</mat-error>
@@ -19,7 +18,7 @@
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Awards/Selections</mat-label>
-                <input test-id="prize" matInput formControlName="prize" />
+                <input matInput formControlName="prize"  test-id="prize"/>
                 <mat-error *ngIf="prizesForm.get('prize').hasError('maxlength')">
                   Awards and selections should not exceed 200 characters.
                 </mat-error>
@@ -28,7 +27,7 @@
 
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Year</mat-label>
-                <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
+                <input matInput formControlName="year" type="number" placeholder="YYYY" test-id="prize-year"/>
                 <mat-error *ngIf="prizesForm.get('year').hasError('invalidYear')">Please enter a valid year.</mat-error>
               </mat-form-field>
             </div>
@@ -38,8 +37,8 @@
               <mat-button-toggle-group [formControl]="prizesForm.get('premiere')" name="Premiere" aria-label="Premiere"
                 #group="matButtonToggleGroup" (change)="onChange()"
                 (click)="onClick(group, prizesForm.get('premiere'))">
-                <ng-container *ngFor="let premiere of premieres">
-                  <mat-button-toggle [value]="premiere">
+                <ng-container *ngFor="let premiere of premieres; let i = index">
+                  <mat-button-toggle [value]="premiere" [attr.test-id]="'festival-premiere_' + i">
                     {{ premiere | toLabel: 'premiereType' }}
                   </mat-button-toggle>
                 </ng-container>
@@ -58,14 +57,14 @@
     <mat-divider></mat-divider>
 
     <h3>Other Festivals & Awards</h3>
-    <section id="custom-festival">
+    <section id="custom-festival" test-id="custom-festival">
 
       <bf-form-list [form]="form.customPrizes">
         <ng-template itemRef let-customPrizes>{{ customPrizes | festivalPrize | titlecase }}</ng-template>
         <ng-template formView let-customPrizesForm>
           <article [formGroup]="customPrizesForm" fxLayout="column" fxLayoutGap="24px">
 
-            <mat-form-field appearance="outline" fxFlex>
+            <mat-form-field appearance="outline" fxFlex test-id="name">
               <mat-label>Other Festival Name</mat-label>
               <input matInput formControlName="name" required>
             </mat-form-field>
@@ -73,7 +72,7 @@
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Awards/Selections</mat-label>
-                <input test-id="prize" matInput formControlName="prize" />
+                <input matInput formControlName="prize"  test-id="prize"/>
                 <mat-error *ngIf="customPrizesForm.get('prize').hasError('maxlength')">
                   Awards and selections should not exceed 200 characters.
                 </mat-error>
@@ -82,7 +81,7 @@
 
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Year</mat-label>
-                <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
+                <input matInput formControlName="year" type="number" placeholder="YYYY" test-id="prize-year"/>
                 <mat-error *ngIf="customPrizesForm.get('year').hasError('invalidYear')">Please enter a valid year
                 </mat-error>
               </mat-form-field>
@@ -93,8 +92,8 @@
               <mat-button-toggle-group [formControl]="customPrizesForm.get('premiere')" name="Premiere"
                 aria-label="Premiere" #group="matButtonToggleGroup" (change)="onChange()"
                 (click)="onClick(group, customPrizesForm.get('premiere'))">
-                <ng-container *ngFor="let premiere of premieres">
-                  <mat-button-toggle [value]="premiere">
+                <ng-container *ngFor="let premiere of premieres; let i = index">
+                  <mat-button-toggle [value]="premiere" [attr.test-id]="'custom-premiere_' + i">
                     {{ premiere | toLabel: 'premiereType' }}
                   </mat-button-toggle>
                 </ng-container>
@@ -113,7 +112,7 @@
     <mat-divider></mat-divider>
 
     <h3>Film Reviews</h3>
-    <section id="reviews">
+    <section id="reviews" test-id="reviews">
 
       <bf-form-list [form]="form.review">
         <ng-template itemRef let-review>{{ review.criticName }} - {{ review.journalName }} -
@@ -124,18 +123,18 @@
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Film's Critic's Name</mat-label>
-                <input test-id="critic-name" matInput formControlName="criticName" />
+                <input matInput formControlName="criticName" test-id="critic"/>
               </mat-form-field>
 
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Journal Name</mat-label>
-                <input test-id="journal-name" matInput formControlName="journalName" required />
+                <input matInput formControlName="journalName" required test-id="journal"/>
               </mat-form-field>
             </div>
 
             <mat-form-field appearance="outline">
               <mat-label>Article Link</mat-label>
-              <input test-id="link" type="url" matInput formControlName="revueLink" placeholder="https://www.example.com" />
+              <input type="url" matInput formControlName="revueLink" placeholder="https://www.example.com"  test-id="link"/>
               <mat-error *ngIf="reviewForm.get('revueLink').hasError('pattern')">
                 Please enter a valid url.
               </mat-error>
@@ -143,7 +142,7 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Quote</mat-label>
-              <textarea test-id="quote" matInput formControlName="criticQuote"></textarea>
+              <textarea matInput formControlName="criticQuote" test-id="quote"></textarea>
               <mat-error *ngIf="reviewForm.get('criticQuote').hasError('maxlength')">
                 Quote should not exceed 500 characters.
               </mat-error>

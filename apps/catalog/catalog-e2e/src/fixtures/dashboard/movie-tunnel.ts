@@ -1,8 +1,9 @@
-import { e2eUser, e2eOrg, e2eOrgPermissions, fakeUserData } from '@blockframes/testing/cypress/browser';
+import { e2eUser, e2eOrg, e2eOrgPermissions, e2eMoviePermissions, fakeUserData } from '@blockframes/testing/cypress/browser';
 import { Movie } from '@blockframes/model';
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
+const movieId = '0-e2e-movieId';
 const userData = fakeUserData();
 
 export const user = e2eUser({
@@ -10,7 +11,7 @@ export const user = e2eUser({
   firstName: userData.firstName,
   lastName: userData.lastName,
   email: userData.email,
-  app: 'festival',
+  app: 'catalog',
   orgId: orgId,
 });
 
@@ -19,21 +20,50 @@ export const org = e2eOrg({
   name: userData.company.name,
   userIds: [adminUid],
   email: userData.email,
-  app: 'festival',
+  app: 'catalog',
   dashboardAccess: true,
 });
 
-export const permissions = e2eOrgPermissions({
+export const orgPermissions = e2eOrgPermissions({
   orgId,
   adminUid,
 });
 
+export const moviePermissions = e2eMoviePermissions({
+  movieId,
+  orgId,
+});
+
 export const inDevelopmentMovie: Partial<Movie> = {
+  id: movieId,
+  orgIds: [orgId],
+  _type: 'movies',
+  contentType: 'movie',
+  app: {
+    financiers: {
+      access: false,
+      refusedAt: null,
+      acceptedAt: null,
+      status: 'draft',
+    },
+    catalog: {
+      access: true,
+      refusedAt: null,
+      acceptedAt: null,
+      status: 'draft',
+    },
+    festival: {
+      access: false,
+      refusedAt: null,
+      acceptedAt: null,
+      status: 'draft',
+    },
+  },
   //main
   productionStatus: 'development',
   title: {
     original: 'Original title',
-    international: 'International title'
+    international: 'International title',
   },
   internalRef: 'E2E ref',
   runningTime: {
@@ -186,7 +216,7 @@ export const inDevelopmentMovie: Partial<Movie> = {
     },
   ],
   //additional information
-  estimatedBudget: 50000000,
+  estimatedBudget: '50000000',
   audience: {
     targets: ['E2E tests', 'reliability'],
     goals: ['sanitation', 'industry'],
@@ -249,7 +279,7 @@ export const inDevelopmentMovie: Partial<Movie> = {
           docId: null,
           field: null,
           storagePath: null,
-        }
+        },
       ],
     },
     moodboard: null,
