@@ -237,12 +237,12 @@ describe('Movie tunnel', () => {
     //additional information
     get('budget-range').click();
     getInListbox(budgetRange[movie.estimatedBudget]);
-    get('target-audience').type(movie.audience.targets[0]);
+    get('audience').type(movie.audience.targets[0]);
     get('row-save').click();
     get('list-add').click();
-    get('target-audience').type(movie.audience.targets[1]);
+    get('audience').type(movie.audience.targets[1]);
     get('row-save').click();
-    get('goal').click();
+    get('goals').click();
     getInListbox(socialGoals[movie.audience.goals[0]]);
     getInListbox(socialGoals[movie.audience.goals[1]]);
     cy.get('body').type('{esc}');
