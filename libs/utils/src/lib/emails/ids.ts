@@ -26,7 +26,7 @@ export const templateIds = {
     accepted: 'd-8c5f7009cd2f4f1b877fa168b4efde48',
     appAccessChanged: 'd-274b8b8370b44dc2984273d28970a06d',
     memberAdded: 'd-4527b4cf44b747db86fa760408202f34',
-    memberRemoved: 'd-a921599689da4c7c9f3b33af2c297a55'
+    //memberRemoved: 'd-a921599689da4c7c9f3b33af2c297a55' #8858 this might be reactivated later
   },
   // Templates for requests (invitations)
   request: {
@@ -69,7 +69,6 @@ export const templateIds = {
     askingPriceRequestSent: 'd-31ba12e3df9946bcb52fefca0c431240'
   },
   offer: {
-    toAdmin: 'd-f45a08ce5be94e368f868579fa72afa8',
     toBuyer: 'd-a4ee1970187e4fd8bef47a4008a2267a',
     // #7946 this may be reactivated later
     // allContractsAccepted: 'd-4f067ef3abca42cc9d8dc25b57935ccc', 
@@ -86,9 +85,6 @@ export const templateIds = {
     myContractWasAccepted: 'd-261e5613cbd84c3c99ea49b4f3e8cc20',// send to org whose contract was accepted
     myOrgDeclinedAContract: 'd-022cee72b5904d7386a838d6317054ad',// send to org who declined the contract
     myContractWasDeclined: 'd-b928481ce938423dabb34e50c264d320',// send to org whose contract was declined
-    toAdminCounterOffer: 'd-ac1dfcbf692d4ef8888ccad9b6938c8e',
-    toAdminContractAccepted: 'd-6750c3d980834301a057403668deceed',
-    toAdminContractDeclined: 'd-fba5c684bdbc4187b27b82e2ba703a2a',
   }
 }
 

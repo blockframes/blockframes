@@ -14,7 +14,6 @@ import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
 
 // Material
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -31,7 +30,6 @@ import { MatInputModule } from '@angular/material/input';
     ChipsAutocompleteModule,
     
     // Material
-    MatProgressSpinnerModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,

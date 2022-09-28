@@ -133,7 +133,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       }
       case 'requestToAttendEventSent': {
         const event = await this.eventService.load(notification.docId);
-        const message = `Your request to attend "<a href="/event/${event.id}" target="_blank">event "${eventTypes[event.type]}"</a>" has been sent.`;
+        const message = `Your request to attend "<a href="/event/${event.id}" target="_blank">${event.title}</a>" has been sent.`;
         const url = `${applicationUrl['festival']}${module === 'marketplace'
           ? `/event/${notification.docId}/r/i/`
           : `/c/o/${module}/event/${notification.docId}`
@@ -239,7 +239,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       }
       case 'movieAskingPriceRequested': {
         const movie = await this.movieService.load(notification.docId);
-        const message = `${displayName(notification.user)} requested the asking price for ${movie.title.international}. Please check your emails for more details or contact us.`;
+        const message = `${displayName(notification.user)} requested an asking price for ${movie.title.international}. Please check your emails for details.`;
 
         return {
           ...notification,
@@ -291,8 +291,8 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'contractCreated': {
         const contract = await this.contractService.load(notification.docId);
         const movie = await this.movieService.load(contract.titleId);
-        const user = await this.userService.load(contract.buyerUserId);
-        const message = `${displayName(user)} sent an offer for ${movie.title.international}.`;
+        const org = await this.orgService.load(contract.buyerId);
+        const message = `${org.name} sent an offer for ${movie.title.international}.`;
 
         return {
           ...notification,
@@ -446,8 +446,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
     // Adding user data to the notification of meeting events
     if (event && isMeeting(event) && notification.organization) {
       const user = await this.userService.load(event.meta.organizerUid);
-      const organizationName = notification.organization.name;
-      subject = `${user.firstName} ${user.lastName} (${organizationName})`;
+      subject = `${displayName(user)} (${notification.organization.name})`;
     } else if (notification.organization) {
       subject = notification.organization.name;
     } else if (notification.user && notification.user.lastName && notification.user.firstName) {
@@ -474,16 +473,4 @@ export class NotificationService extends BlockframesCollection<Notification> {
     );
   }
 
-  /**
-  * @returns A username or org name depending on who is receiving a counter offer
-  */
-  public async nameToDisplay(notification: Notification, contract: Contract) {
-    if (contract.buyerUserId === notification.toUserId) {
-      const org = await this.orgService.load(contract.sellerId);
-      return org.name;
-    } else {
-      const user = await this.userService.load(contract.buyerUserId);
-      return displayName(user);
-    }
-  }
 }

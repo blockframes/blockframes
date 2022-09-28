@@ -80,7 +80,7 @@ export class ListPageComponent implements AfterContentInit {
 @Component({
   selector: 'list-page-progress',
   template: `
-    <ng-container *ngIf="value && value !== 100">
+    <ng-container *ngIf="value && value < 100">
       <ng-content></ng-content>
       <mat-progress-bar color="primary" [value]="value"></mat-progress-bar>
       <button mat-stroked-button color="primary" (click)="loadMore.emit()">

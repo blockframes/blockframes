@@ -9,7 +9,7 @@ import {
   ApexStroke,
   ApexTheme,
   ChartComponent,
-} from "ng-apexcharts";
+} from 'ng-apexcharts';
 
 interface PieChartOptions {
   series: ApexNonAxisChartSeries;

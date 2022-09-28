@@ -1,14 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgApexchartsModule } from "ng-apexcharts";
-import { ImageModule } from "@blockframes/media/image/directives/image.module";
+import { NgApexchartsModule } from 'ng-apexcharts';
 
+// Blockframes
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
+
+// Component
 import { PieChartComponent } from './pie-chart.component';
 
+// Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [
@@ -19,7 +23,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
-    MatProgressSpinnerModule
+    LogoSpinnerModule
   ],
   declarations: [PieChartComponent],
   exports: [PieChartComponent]

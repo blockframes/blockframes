@@ -38,8 +38,15 @@ section {
     }
   }
 
-  article a {
-    margin-bottom: 16px;
+  article {
+    h3 {
+      display: flex;
+      align-items: center;
+    }
+
+    a {
+      margin-bottom: 16px;
+    }
   }
 }
 
@@ -62,6 +69,24 @@ analytics-metric-card-list {
 
 bf-table.screenings {
   margin-top: 24px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+}
+
+.no-analytics {
+  display: flex;
+  flex-direction: column;
+  article {
+    display: grid;
+    place-items: center;
+    a {
+      margin: 8px 0 24px 0;
+      align-self: center;
+    }
+  }
 }
 
 @include layout-bp(lt-lg) {

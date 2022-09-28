@@ -1,21 +1,22 @@
-import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
-import { FlexLayoutModule } from "@angular/flex-layout";
-import { MatButtonModule } from "@angular/material/button";
-import { MatIconModule } from "@angular/material/icon";
-import { MatListModule } from "@angular/material/list";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { RouterModule } from "@angular/router";
-import { AvailsFilterModule } from "@blockframes/contract/avails/filter/filter.module";
-import { TableModule } from "@blockframes/ui/list/table/table.module";
-import { MapModule } from "@blockframes/ui/map";
-import { MaxLengthModule } from "@blockframes/utils/pipes";
-import { DashboardAvailsMapComponent } from "./map.component";
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { RouterModule } from '@angular/router';
 
+// Blockframes
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { MapModule } from '@blockframes/ui/map';
+import { MaxLengthModule } from '@blockframes/utils/pipes';
 
+// Component
+import { DashboardAvailsMapComponent } from './map.component';
 
-
-
+// Material
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -28,10 +29,10 @@ import { DashboardAvailsMapComponent } from "./map.component";
     TableModule,
     AvailsFilterModule,
     MapModule,
+    LogoSpinnerModule,
 
     //Material
     MatButtonModule,
-    MatProgressSpinnerModule,
     MatListModule,
     MatIconModule,
 

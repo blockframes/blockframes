@@ -24,7 +24,10 @@
 
 <section>
   <article>
-    <h3>Interested Users</h3>
+    <h3>
+      <span>Interested Users</span>
+      <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
+    </h3>
     <p class="mat-body-1">See how many users interacted with your movie (viewed your title, added to wishlist, requested
       a screening, etc).</p>
   </article>
@@ -50,7 +53,7 @@
     </div>
   </article>
 
-  <bf-table [source]="buyerAnalytics$ | async" pagination="5" useFilter [filterValue]="filterValue"
+  <bf-table [source]="buyerAnalytics$ | async" pagination="10" useFilter [filterValue]="filterValue"
     (rowClick)="viewBuyerActivity($event)">
     <ng-template colRef="user" label="Name" let-user sort>
       <a [href]="'mailto:' + user?.email">{{ user | displayName }}</a>
@@ -88,7 +91,10 @@
   </bf-table>
 
   <article>
-    <h3>Title Performance</h3>
+    <h3>
+      <span>Title Performance</span>
+      <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
+    </h3>
     <p class="mat-body-1">Check the overall metrics of your title performance.</p>
   </article>
 
@@ -114,59 +120,82 @@
       </a>
     </ng-container>
   </header>
-  <p class="mat-body-1">Check the cumulative statistics of this title's Screenings.</p>
-  <article class="surface">
-    <p>"0s" means the user watched less than a minute.</p>
-    <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
-    <ng-container *ngIf="invitations$ | async as invitations">
-      <header>
-        <button mat-button color="primary" [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export
-          to .CSV</button>
-      </header>
-      <bf-table class="screenings" [source]="invitations" useFilter pagination="5">
-        <ng-template colRef label="Name" let-invitation="item" sort [filter]="filters.name">
-          <b>{{ invitation | guest:'user' | displayName }}</b>
-        </ng-template>
-        <ng-template colRef label="Email" let-invitation="item" sort [filter]="filters.email">
-          <span>{{ (invitation | guest: 'user').email }}</span>
-        </ng-template>
-        <ng-template colRef="guestOrg.name" label="Company Name" let-name sort>
-          <span>{{ name ?? '-' }}</span>
-        </ng-template>
-        <ng-template colRef="guestOrg.activity" label="Activity" let-activity sort [filter]="filters.orgActivity">
-          <span *ngIf="activity else noActivity">{{ activity | toLabel: 'orgActivity' }}</span>
-          <ng-template #noActivity>-</ng-template>
-        </ng-template>
-        <ng-template colRef="guestOrg.addresses.main.country" label="Country" let-country sort
-          [filter]="filters.territories">
-          <span *ngIf="country else noCountry">
-            {{ country | toLabel:'territories' }}
-          </span>
-          <ng-template #noCountry>-</ng-template>
-        </ng-template>
-        <ng-template colRef="status" label="Invitation" let-status sort>
-          {{ status | toLabel: 'invitationStatus' }}
-        </ng-template>
-        <ng-template colRef="watchInfos.duration" label="Watch Time" let-watchtime sort>
-          <span>{{ watchtime * 1000 | duration }}</span>
-        </ng-template>
-        <ng-template colRef="watchInfos.date" label="Watching Status" let-date sort>
-          <bf-tag *ngIf="date | isWatchingNow">Watching Now</bf-tag>
-        </ng-template>
-        <ng-template colRef label="Action" let-item sticky>
-          <a mat-icon-button matTooltip="View Event details"
-            [routerLink]="['/c/o/dashboard/event', item.eventId, 'edit', 'statistics']">
-            <mat-icon svgIcon="visibility"></mat-icon>
-          </a>
-          <ng-container *ngIf="item | guest:'user' as user">
-            <ng-container *ngIf="user.orgId">
-              <a mat-icon-button matTooltip="View Buyer details" [routerLink]="['../../buyer/', user.uid]">
-                <mat-icon svgIcon="launch"></mat-icon>
+  <ng-container *ngIf="endedOrOngoingScreenings$ | async as endedOrOngoingScreenings; else loading">
+    <ng-container *ngIf="endedOrOngoingScreenings.length else noScreenings">
+      <p class="mat-body-1">Check the cumulative statistics of this title's Screenings.</p>
+      <article class="surface">
+        <p>"0s" means the user watched less than a minute.</p>
+        <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
+        <ng-container *ngIf="invitations$ | async as invitations">
+          <header>
+            <button mat-button color="primary" [disabled]="!invitations.length" (click)="exportScreenerAnalytics()">Export
+              to .CSV</button>
+          </header>
+          <bf-table class="screenings" [source]="invitations" useFilter pagination="10">
+            <ng-template colRef label="Name" let-invitation="item" sort [filter]="filters.name">
+              <b>{{ invitation | guest:'user' | displayName }}</b>
+            </ng-template>
+            <ng-template colRef label="Email" let-invitation="item" sort [filter]="filters.email">
+              <span>{{ (invitation | guest: 'user').email }}</span>
+            </ng-template>
+            <ng-template colRef="guestOrg.name" label="Company Name" let-name sort>
+              <span>{{ name ?? '-' }}</span>
+            </ng-template>
+            <ng-template colRef="guestOrg.activity" label="Activity" let-activity sort [filter]="filters.orgActivity">
+              <span *ngIf="activity else noActivity">{{ activity | toLabel: 'orgActivity' }}</span>
+              <ng-template #noActivity>-</ng-template>
+            </ng-template>
+            <ng-template colRef="guestOrg.addresses.main.country" label="Country" let-country sort
+              [filter]="filters.territories">
+              <span *ngIf="country else noCountry">
+                {{ country | toLabel:'territories' }}
+              </span>
+              <ng-template #noCountry>-</ng-template>
+            </ng-template>
+            <ng-template colRef="status" label="Invitation" let-status sort>
+              {{ status | toLabel: 'invitationStatus' }}
+            </ng-template>
+            <ng-template colRef="watchInfos.duration" label="Watch Time" let-watchtime sort>
+              <span>{{ watchtime * 1000 | duration }}</span>
+            </ng-template>
+            <ng-template colRef="watchInfos.date" label="Watching Status" let-date sort>
+              <bf-tag *ngIf="date | isWatchingNow">Watching Now</bf-tag>
+            </ng-template>
+            <ng-template colRef label="Action" let-item sticky>
+              <a mat-icon-button matTooltip="View Event details"
+                [routerLink]="['/c/o/dashboard/event', item.eventId, 'edit', 'statistics']">
+                <mat-icon svgIcon="visibility"></mat-icon>
               </a>
-            </ng-container>
-          </ng-container>
-        </ng-template>
-      </bf-table>
+              <ng-container *ngIf="item | guest:'user' as user">
+                <ng-container *ngIf="user.orgId">
+                  <a mat-icon-button matTooltip="View Buyer details" [routerLink]="['../../buyer/', user.uid]">
+                    <mat-icon svgIcon="launch"></mat-icon>
+                  </a>
+                </ng-container>
+              </ng-container>
+            </ng-template>
+          </bf-table>
+        </ng-container>
+      </article>
     </ng-container>
-  </article>
+  </ng-container>
+  <ng-template #noScreenings>
+    <article class="no-analytics surface">
+      <p class="mat-body-2">Statistics about your last screening session will appear once the session is over.</p>
+      <article>
+        <img asset="no_screenings.svg" alt="no-screenings">
+        <a *ngIf="title$ | async as title" class="create-screening" 
+          mat-button mat-flat-button color="primary" 
+          [routerLink]="['/c/o/dashboard/event/new/edit']" 
+          [queryParams]="{titleId: title.id}">
+          Organize Screening
+        </a>
+      </article>
+    </article>
+  </ng-template>
+  <ng-template #loading>
+    <article class="loading-spinner">
+      <logo-spinner></logo-spinner>
+    </article>
+  </ng-template>
 </section>

@@ -20,7 +20,10 @@
         <section class="surface carousel-container">
           <ng-container *ngIf="popularTitle$ | async as title else loading">
             <header>
-              <h3>{{ title.title.international }}</h3>
+              <section>
+                <h3>{{ title.title.international }}</h3>
+                <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
+              </section>
               <a mat-button [routerLink]="['title', title.id]">
                 <span>See Analytics details</span>
                 <mat-icon svgIcon="arrow_forward"></mat-icon>
@@ -79,7 +82,10 @@
             selectable
           >
             <mat-icon class="title_margin" svgIcon="buyer_insights"></mat-icon>
-            <h3 class="title_margin">Buyers' Insights</h3>
+            <h3 class="title_margin">
+              <span>Buyers' Insights</span>
+              <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
+            </h3>
             <!-- #8696 h4 should be "TOP 5 COUNTRIES" line 76 above -->
             <h4 listTitle>TOP COUNTRIES</h4>
           </analytics-map>
@@ -92,7 +98,7 @@
             class="margin-bottom"
             clickable
             useFilter
-            pagination="5"
+            pagination="10"
           >
             <ng-template colRef="user" label="Name" let-item sort [filter]="filters.displayName">
               <b>{{ item | displayName }}</b>
