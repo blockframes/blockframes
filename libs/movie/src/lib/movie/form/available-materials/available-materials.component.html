@@ -1,8 +1,14 @@
 <tunnel-page>
   <section tunnel-form fxLayout="column" fxLayoutGap="32px" class="surface">
     <span><b>Please upload your available material list</b></span>
-    <file-uploader [form]="fileForm" [meta]="['movies', 'delivery', movieId]"
-      [accept]="['pdf','xls', 'docx']" listenToChanges>
+    <file-uploader 
+      [form]="fileForm" 
+      [meta]="['movies', 'delivery', movieId]"
+      [accept]="['pdf','xls', 'docx']" 
+      (newSubscription)="shell.addSubToStack($event)"
+      listenToChanges
+      pushSubToStack
+    >
       <h3 title>Document</h3>
     </file-uploader>
     <small>Please note that this document will be available for download on the marketplace.</small>

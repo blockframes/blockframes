@@ -29,7 +29,7 @@ export class MovieFormMediaNotesComponent implements OnInit, OnDestroy {
 
   constructor(
     private movie: MovieService,
-    private shell: MovieFormShellComponent,
+    public shell: MovieFormShellComponent,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
     private uploaderService: FileUploaderService

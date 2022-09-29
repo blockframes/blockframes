@@ -23,7 +23,7 @@ export class MovieFormMediaImagesComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
   constructor(
-    private shell: MovieFormShellComponent,
+    public shell: MovieFormShellComponent,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService,
     private cdr: ChangeDetectorRef,

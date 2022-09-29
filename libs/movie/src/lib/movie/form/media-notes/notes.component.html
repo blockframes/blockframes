@@ -22,6 +22,9 @@
               [meta]="['movies', 'notes', movieId]"
               [formIndex]="index"
               accept="pdf"
+              (newSubscription)="shell.addSubToStack($event)"
+              listenToChanges
+              pushSubToStack
             >
             </file-uploader>
             <div fxLayout="column" class="captions">

@@ -14,7 +14,7 @@ export class CampaignFormBudgetComponent {
   form = this.shell.getForm('campaign');
 
   constructor(
-    private shell: MovieFormShellComponent,
+    public shell: MovieFormShellComponent,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService
   ) {

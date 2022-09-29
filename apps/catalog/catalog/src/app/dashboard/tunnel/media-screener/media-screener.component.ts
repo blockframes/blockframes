@@ -17,7 +17,7 @@ export class MovieFormMediaScreenerComponent implements OnInit {
   supportEmail = supportEmails.catalog;
 
   constructor(
-    private shell: MovieFormShellComponent,
+    public shell: MovieFormShellComponent,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute
   ) {}

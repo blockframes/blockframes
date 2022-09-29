@@ -13,7 +13,9 @@
             [queueIndex]="i | fileListIndex: stillPhoto.value"
             [form]="still"
             [formIndex]="i"
+            (newSubscription)="shell.addSubToStack($event)"
             listenToChanges
+            pushSubToStack
           >
             <h3 title>Stills</h3>
           </image-uploader>
