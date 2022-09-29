@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
-import { Movie, storeStatus, productionStatus, getAllAppsExcept, Analytics, EventName, AggregatedAnalytic } from '@blockframes/model';
+import { Movie, storeStatus, productionStatus, getAllAppsExcept, Analytics, AggregatedAnalytic, StoreStatus } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -53,7 +53,7 @@ export class MovieComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private userService: UserService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.movieId = this.route.snapshot.paramMap.get('movieId');
@@ -67,7 +67,7 @@ export class MovieComponent implements OnInit {
     ];
     this.analytics$ = this.analytics.valueChanges(query).pipe(
       // Filter out analytics from owners of title
-      map((analytics: Analytics<'title'>[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId) )),
+      map((analytics: Analytics<'title'>[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId))),
       joinWith({
         org: analytic => this.organizationService.valueChanges(analytic.meta.orgId),
         user: analytic => this.userService.valueChanges(analytic.meta.uid)
@@ -113,21 +113,30 @@ export class MovieComponent implements OnInit {
     }
 
     for (const application of this.apps) {
-      this.movie.app[application].refusedAt = null;
-      this.movie.app[application].acceptedAt = null;
-      this.movie.app[application].access = this.movieAppConfigForm.controls[application].get(
-        'access'
-      ).value;
-      this.movie.app[application].status = this.movieAppConfigForm.controls[application].get(
-        'status'
-      ).value;
 
-      if (this.movieAppConfigForm.controls[application].get('status').value === 'accepted') {
+      const newStatus: StoreStatus = this.movieAppConfigForm.controls[application].get('status').value;
+
+      if (this.movie.app[application].status !== 'accepted' && newStatus === 'accepted') {
         this.movie.app[application].acceptedAt = new Date();
+      } else if (this.movie.app[application].acceptedAt && newStatus !== 'accepted') {
+        this.movie.app[application].acceptedAt = null;
       }
-      if (this.movieAppConfigForm.controls[application].get('status').value === 'refused') {
+
+      if (this.movie.app[application].status !== 'refused' && newStatus === 'refused') {
         this.movie.app[application].refusedAt = new Date();
+      } else if (this.movie.app[application].refusedAt && newStatus !== 'refused') {
+        this.movie.app[application].refusedAt = null;
       }
+
+      if (this.movie.app[application].status !== 'submitted' && newStatus === 'submitted') {
+        this.movie.app[application].submittedAt = new Date();
+      } else if (this.movie.app[application].submittedAt && newStatus !== 'submitted') {
+        this.movie.app[application].submittedAt = null;
+      }
+
+      this.movie.app[application].access = this.movieAppConfigForm.controls[application].get('access').value;
+      this.movie.app[application].status = newStatus;
+
     }
 
     return this.movie.app;

@@ -101,7 +101,9 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     // Specific update if publishing
     if (options.publishing) {
       movie.app[this.currentApp].status = getMoviePublishStatus(this.currentApp);
-      if (this.currentApp === 'festival') movie.app[this.currentApp].acceptedAt = new Date();
+
+      if (movie.app[this.currentApp].status === 'accepted') movie.app[this.currentApp].acceptedAt = new Date();
+      if (movie.app[this.currentApp].status === 'submitted') movie.app[this.currentApp].submittedAt = new Date();
     }
 
     // -- Update movie & media -- //

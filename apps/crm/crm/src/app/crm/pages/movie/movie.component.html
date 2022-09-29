@@ -69,6 +69,7 @@
 
             <span *ngIf="movie.app[app].acceptedAt">Accepted at {{ movie.app[app].acceptedAt | date: 'medium'}}</span>
             <span *ngIf="movie.app[app].refusedAt">Refused at {{ movie.app[app].refusedAt | date: 'medium'}}</span>
+            <span *ngIf="movie.app[app].submittedAt">Submitted at {{ movie.app[app].submittedAt | date: 'medium'}}</span>
           </div>
         </fieldset>
         <div fxLayoutAlign="end end" fxLayoutGap="16px" align="end">

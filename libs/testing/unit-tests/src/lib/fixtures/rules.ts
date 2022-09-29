@@ -168,19 +168,22 @@ export const rulesFixtures = {
         status: 'draft',
         access: false,
         refusedAt: null,
-        acceptedAt: null
+        acceptedAt: null,
+        submittedAt: null,
       },
       festival: {
         status: 'accepted',
         access: true,
         refusedAt: null,
-        acceptedAt: null
+        acceptedAt: null,
+        submittedAt: null,
       },
       financiers: {
         status: 'draft',
         access: false,
         refusedAt: null,
-        acceptedAt: null
+        acceptedAt: null,
+        submittedAt: null,
       }
     },
     orgIds: ['O001']
@@ -195,19 +198,22 @@ export const rulesFixtures = {
         status: 'draft',
         access: false,
         refusedAt: null,
-        acceptedAt: null
+        acceptedAt: null,
+        submittedAt: null,
       },
       festival: {
         status: 'accepted',
         access: true,
         refusedAt: null,
-        acceptedAt: null
+        acceptedAt: null,
+        submittedAt: null,
       },
       financiers: {
         status: 'accepted',
         access: true,
         refusedAt: null,
-        acceptedAt: null
+        acceptedAt: null,
+        submittedAt: null,
       }
     },
     orgIds: ['O001']
@@ -222,19 +228,22 @@ export const rulesFixtures = {
         status: 'draft',
         access: false,
         refusedAt: null,
-        acceptedAt: null
+        acceptedAt: null,
+        submittedAt: null,
       },
       festival: {
         status: 'draft',
         access: true,
         refusedAt: null,
-        acceptedAt: null
+        acceptedAt: null,
+        submittedAt: null,
       },
       financiers: {
         status: 'draft',
         access: false,
         refusedAt: null,
-        acceptedAt: null
+        acceptedAt: null,
+        submittedAt: null,
       }
     },
     note: '',
