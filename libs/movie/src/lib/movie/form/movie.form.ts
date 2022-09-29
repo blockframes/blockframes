@@ -596,9 +596,10 @@ export class AppConfigForm extends FormEntity<AppConfigControl> {
 }
 
 function createAppConfigFormControl(appAccess?: Partial<MovieAppConfig>) {
-  const { acceptedAt, access, refusedAt, status } = createAppConfig(appAccess);
+  const { acceptedAt, submittedAt, access, refusedAt, status } = createAppConfig(appAccess);
   return {
     acceptedAt: new FormControl(acceptedAt),
+    submittedAt: new FormControl(submittedAt),
     access: new FormControl(access),
     refusedAt: new FormControl(refusedAt),
     status: new FormControl(status),
