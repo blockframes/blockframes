@@ -185,7 +185,7 @@ describe('Movie tunnel', () => {
     findIn('rating', 'row-save').click();
     get('certification_0').should('contain', certifications[update.certifications[0]]).click();
     get('certification_1').should('contain', certifications[update.certifications[1]]).click();
-    findIn('positionning', 'delete_1').click();
+    findIn('positioning', 'delete_1').click();
     get('next').click();
     //technical specification
     get('ratio').click();
