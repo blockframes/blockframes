@@ -482,6 +482,7 @@ export function getFieldConfigs(
         status: 'draft',
         access: 'catalog' === currentApp,
         acceptedAt: null,
+        submittedAt: null,
         refusedAt: null,
       };
 
@@ -491,13 +492,14 @@ export function getFieldConfigs(
       const status = getKeyIfExists('storeStatus', value);
       if (!status) throw wrongValueError(value, 'Catalog Status');
 
-      return { status, access: true, acceptedAt: null, refusedAt: null };
+      return { status, access: true, acceptedAt: null, submittedAt: null, refusedAt: null };
     },
       /* bn */ 'app.festival': (value: string) => {
       const defaultAccess: MovieAppConfig = {
         status: 'draft',
         access: 'festival' === currentApp,
         acceptedAt: null,
+        submittedAt: null,
         refusedAt: null,
       };
 
@@ -507,13 +509,14 @@ export function getFieldConfigs(
       const status = getKeyIfExists('storeStatus', value);
       if (!status) throw wrongValueError(value, 'Festival Status');
 
-      return { status, access: true, acceptedAt: null, refusedAt: null };
+      return { status, access: true, acceptedAt: null, submittedAt: null, refusedAt: null };
     },
       /* bo */ 'app.financiers': (value: string) => {
       const defaultAccess: MovieAppConfig = {
         status: 'draft',
         access: 'financiers' === currentApp,
         acceptedAt: null,
+        submittedAt: null,
         refusedAt: null,
       };
 
@@ -523,7 +526,7 @@ export function getFieldConfigs(
       const status = getKeyIfExists('storeStatus', value);
       if (!status) throw wrongValueError(value, 'Financiers Status');
 
-      return { status, access: true, acceptedAt: null, refusedAt: null };
+      return { status, access: true, acceptedAt: null, submittedAt: null, refusedAt: null };
     },
       /* bp */ orgIds: async (value: string) => {
       // ! required
