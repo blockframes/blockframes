@@ -132,8 +132,7 @@ export class TunnelLayoutComponent implements OnInit {
   async save() {
     await this.update({ publishing: false });
     const configs = Object.keys(this.configs)
-    await this.snackBar.open(`${configs.map(config => this.configs[config].name).join(' & ')
-      } saved`, '', { duration: 1000 }).afterDismissed().toPromise();
+    await this.snackBar.open(`${configs.map(config => this.configs[config].name).join(' & ')} saved`, '', { duration: 1000 }).afterDismissed().toPromise();
     return true;
   }
 

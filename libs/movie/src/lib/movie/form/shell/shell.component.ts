@@ -112,6 +112,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
   @ViewChild(TunnelLayoutComponent) layout: TunnelLayoutComponent;
   private subs: Subscription[] = [];
 
+  public saving = false;
+
   steps$: Observable<TunnelStep[]>;
 
   exitRoute$: Observable<string> = this.route.params.pipe(
@@ -151,6 +153,14 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
         inline: 'start',
       });
     }));
+  }
+
+  async save() {
+    this.saving = true;
+    this.cdr.markForCheck();
+    await this.layout.save();
+    this.saving = false;
+    this.cdr.markForCheck();
   }
 
   ngOnDestroy() {
