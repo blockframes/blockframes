@@ -17,7 +17,7 @@
       <mat-form-field appearance="outline">
         <mat-label>{{videos.length ? 'Select video to display' : 'You have no video to select'}}</mat-label>
         <mat-select formControlName="videoId" [disabled]="!videos.length">
-          <mat-option *ngFor="let video of videos" [value]="video.fileId">
+          <mat-option *ngFor="let video of videos" [value]="video.fileId"> <!-- TODO #8944 -->
             {{ video.storagePath | fileName }}
           </mat-option>
         </mat-select>

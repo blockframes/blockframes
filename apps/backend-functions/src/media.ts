@@ -209,6 +209,8 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
           const index = fieldValue.findIndex(video => video.fileId === metadata.fileId);
 
+          // TODO #8944 fileId is not needed anymore, should be removed
+
           if (index < 0) {
             console.error(`UPDATE DB FAILED: Video ${uploadResult.key} was successfully uploaded to JWPlayer, but we didn't found the db document to update`, JSON.stringify(data.name), JSON.stringify(data.metadata));
             return false;

@@ -115,7 +115,7 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
         && file.docId === (eventData.meta as Screening).titleId;
     } else if (eventData.type === 'slate') {
       canAccess = file.field === 'documents.videos'
-        && file.fileId === (eventData.meta as Slate).videoId;
+        && file.fileId === (eventData.meta as Slate).videoId; // TODO #8944
     }
   }
 

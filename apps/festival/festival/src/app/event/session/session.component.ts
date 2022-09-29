@@ -226,7 +226,7 @@ export class SessionComponent implements OnInit, OnDestroy {
         this.dynTitle.setPageTitle(event.title, 'Slate');
         if ((event.meta as Slate).videoId) {
           const org = await this.orgService.getValue(event.ownerOrgId);
-          this.fileRef$.next(org.documents.videos.find(v => v.fileId === event.meta.videoId));
+          this.fileRef$.next(org.documents.videos.find(v => v.fileId === event.meta.videoId)); // TODO #8944
           this.trackWatchTime(event);
         }
       }
