@@ -1,5 +1,12 @@
-import { e2eUser, e2eOrg, e2eOrgPermissions, createFakeUserDataArray } from '@blockframes/testing/cypress/browser';
-import { createMovie, createMoviePromotional, createMovieVideo, DocPermissionsDocument, Event } from '@blockframes/model';
+import { e2eUser, e2eOrg, createFakeUserDataArray } from '@blockframes/testing/cypress/browser';
+import {
+  createMovie,
+  createMoviePromotional,
+  createMovieVideo,
+  createPermissions,
+  DocPermissionsDocument,
+  Event,
+} from '@blockframes/model';
 
 const dashboardAdminUid = '0-e2e-dashboardAdminUid';
 const marketplaceUserUid = '0-e2e-marketplaceUserUid';
@@ -28,9 +35,9 @@ export const dashboardOrg = e2eOrg({
   dashboardAccess: true,
 });
 
-export const dashboardPermissions = e2eOrgPermissions({
-  orgId: dashboardOrgId,
-  adminUid: dashboardAdminUid,
+export const dashboardPermissions = createPermissions({
+  id: dashboardOrgId,
+  roles: { [dashboardAdminUid]: 'superAdmin' },
 });
 
 export const dashboardDocumentPermissions: DocPermissionsDocument = {
@@ -63,9 +70,9 @@ export const marketplaceOrg = e2eOrg({
   dashboardAccess: false,
 });
 
-export const marketplacePermissions = e2eOrgPermissions({
-  orgId: marketplaceOrgId,
-  adminUid: marketplaceUserUid,
+export const marketplacePermissions = createPermissions({
+  id: marketplaceOrgId,
+  roles: { [marketplaceUserUid]: 'superAdmin' },
 });
 
 //* movies *//

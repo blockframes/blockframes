@@ -1,5 +1,6 @@
-import { e2eUser, e2eOrg, e2eOrgPermissions } from '@blockframes/testing/cypress/browser';
+import { e2eUser, e2eOrg } from '@blockframes/testing/cypress/browser';
 import { createFakeUserDataArray } from '@blockframes/testing/cypress/browser';
+import { createPermissions } from '@blockframes/model';
 
 const newUserUid = '0-e2e-newUserUid';
 const marketplaceOrgAdminUid = '0-e2e-marketplaceOrgAdminUid';
@@ -46,9 +47,9 @@ const marketplaceOrg = e2eOrg({
   dashboardAccess: false,
 });
 
-const marketplaceOrgPermissions = e2eOrgPermissions({
-  orgId: marketplaceOrgId,
-  adminUid: marketplaceOrgAdminUid,
+const marketplaceOrgPermissions = createPermissions({
+  id: marketplaceOrgId,
+  roles: { [marketplaceOrgAdminUid]: 'superAdmin' },
 });
 
 export const marketplaceData = {
@@ -79,9 +80,9 @@ const dashboardOrg = e2eOrg({
   dashboardAccess: true,
 });
 
-const dashboardOrgPermissions = e2eOrgPermissions({
-  orgId: dashboardOrgId,
-  adminUid: dashboardOrgAdminUid,
+const dashboardOrgPermissions = createPermissions({
+  id: dashboardOrgId,
+  roles: { [dashboardOrgAdminUid]: 'superAdmin' },
 });
 
 export const dashboardData = {

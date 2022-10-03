@@ -1,4 +1,5 @@
-import { e2eUser, e2eOrg, e2eOrgPermissions, e2eMoviePermissions, fakeUserData } from '@blockframes/testing/cypress/browser';
+import { e2eUser, e2eOrg, fakeUserData } from '@blockframes/testing/cypress/browser';
+import { createDocPermissions, createPermissions, createMovieAppConfig } from '@blockframes/model';
 import { Movie } from '@blockframes/model';
 
 const adminUid = '0-e2e-orgAdminUid';
@@ -24,14 +25,14 @@ export const org = e2eOrg({
   dashboardAccess: true,
 });
 
-export const orgPermissions = e2eOrgPermissions({
-  orgId,
-  adminUid,
+export const orgPermissions = createPermissions({
+  id: orgId,
+  roles: { [adminUid]: 'superAdmin' },
 });
 
-export const moviePermissions = e2eMoviePermissions({
-  movieId,
-  orgId,
+export const moviePermissions = createDocPermissions({
+  id: movieId,
+  ownerId: orgId,
 });
 
 export const inDevelopmentMovie: Partial<Movie> = {
@@ -39,26 +40,15 @@ export const inDevelopmentMovie: Partial<Movie> = {
   orgIds: [orgId],
   _type: 'movies',
   contentType: 'movie',
-  app: {
-    financiers: {
-      access: false,
-      refusedAt: null,
-      acceptedAt: null,
-      status: 'draft',
-    },
+  app: createMovieAppConfig({
     catalog: {
       access: true,
       refusedAt: null,
       acceptedAt: null,
+      submittedAt: null,
       status: 'draft',
     },
-    festival: {
-      access: false,
-      refusedAt: null,
-      acceptedAt: null,
-      status: 'draft',
-    },
-  },
+  }),
   //main
   productionStatus: 'development',
   title: {
@@ -220,37 +210,6 @@ export const inDevelopmentMovie: Partial<Movie> = {
   audience: {
     targets: ['E2E tests', 'reliability'],
     goals: ['sanitation', 'industry'],
-  },
-  //shooting information
-  shooting: {
-    dates: {
-      planned: {
-        from: {
-          period: 'early',
-          month: new Date().toLocaleDateString('en-US', { month: 'long' }),
-          year: new Date().getFullYear() + 1,
-        },
-        to: {
-          period: 'early',
-          month: new Date().toLocaleDateString('en-US', { month: 'long' }),
-          year: new Date().getFullYear() + 2,
-        },
-      },
-    },
-    locations: [
-      {
-        country: 'france',
-        cities: ['Lyon', 'Nantes'],
-      },
-      {
-        country: 'united-kingdom',
-        cities: ['London', 'Manchester'],
-      },
-    ],
-  },
-  expectedPremiere: {
-    date: new Date(new Date().getFullYear() + 2, 0, 1),
-    event: 'E2E summit',
   },
   //technical specification
   format: '1_66',

@@ -1,4 +1,5 @@
-import { e2eUser, e2eOrg, e2eOrgPermissions, fakeUserData } from '@blockframes/testing/cypress/browser';
+import { e2eUser, e2eOrg, fakeUserData } from '@blockframes/testing/cypress/browser';
+import { createPermissions } from '@blockframes/model';
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
@@ -22,7 +23,7 @@ export const org = e2eOrg({
   dashboardAccess: false,
 });
 
-export const permissions = e2eOrgPermissions({
-  orgId,
-  adminUid,
+export const permissions = createPermissions({
+  id: orgId,
+  roles: { [adminUid]: 'superAdmin' },
 });

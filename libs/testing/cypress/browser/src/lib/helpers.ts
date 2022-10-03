@@ -1,4 +1,4 @@
-import { PermissionsDocument, DocPermissionsDocument, Organization, User, App } from '@blockframes/model';
+import { Organization, User, App, createOrgAppAccess } from '@blockframes/model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 import faker from '@faker-js/faker';
@@ -99,24 +99,9 @@ export const e2eOrg = (data: E2EOrganization): Organization => {
       createdFrom: app,
       createdBy: 'e2e-test',
     },
-    appAccess: {
-      festival: {
-        marketplace: app === 'festival',
-        dashboard: app === 'festival' && dashboardAccess,
-      },
-      catalog: {
-        marketplace: app === 'catalog',
-        dashboard: app === 'catalog' && dashboardAccess,
-      },
-      crm: {
-        marketplace: app === 'crm',
-        dashboard: app === 'crm' && dashboardAccess,
-      },
-      financiers: {
-        marketplace: app === 'financiers',
-        dashboard: app === 'financiers' && dashboardAccess,
-      },
-    },
+    appAccess: createOrgAppAccess({
+      [app]: { marketplace: true, dashboard: dashboardAccess },
+    }),
     wishlist: [],
     description: '',
     addresses: {
@@ -140,29 +125,6 @@ export const e2eOrg = (data: E2EOrganization): Organization => {
       collection: 'movies',
       field: '',
     },
-  };
-};
-
-export const e2eOrgPermissions = (data: { orgId: string; adminUid: string }): PermissionsDocument => {
-  const { orgId, adminUid } = data;
-  return {
-    id: orgId,
-    roles: {
-      [adminUid]: 'superAdmin',
-    },
-  };
-};
-
-export const e2eMoviePermissions = (data: { movieId: string; orgId: string }): DocPermissionsDocument => {
-  const { movieId, orgId } = data;
-  return {
-    id: movieId,
-    ownerId: orgId,
-    isAdmin: true,
-    canCreate: true,
-    canDelete: true,
-    canRead: true,
-    canUpdate: true,
   };
 };
 
