@@ -7,10 +7,8 @@ import {
   isMeeting,
   isScreening,
   Notification,
-  Contract,
   createStorageFile,
   appName,
-  getMovieAppAccess,
   eventTypes,
   isAppNotification,
   displayName,
@@ -150,9 +148,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'movieSubmitted': {
         const movie = await this.movieService.load(notification.docId);
         const imgRef = this.getPoster(movie);
-        const movieAppAccess = getMovieAppAccess(movie);
-        const message = `<a href="/c/o/dashboard/title/${movie.id}" target="_blank">${movie.title.international
-          }</a> was successfully submitted to the ${appName[movieAppAccess[0]]} team.`;
+        const message = `<a href="/c/o/dashboard/title/${movie.id}" target="_blank">${movie.title.international}</a> was successfully submitted to the ${appName[notification._meta.createdFrom]} team.`;
 
         return {
           ...notification,
@@ -161,8 +157,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           imgRef,
           actionText: 'See Title',
           placeholderUrl: 'empty_poster.svg',
-          url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId
-            }/main`,
+          url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/main`,
         };
       }
       case 'movieAskingPriceRequestSent': {
@@ -222,7 +217,6 @@ export class NotificationService extends BlockframesCollection<Notification> {
       }
       case 'movieAccepted': {
         const movie = await this.movieService.load(notification.docId);
-        const movieAppAccess = getMovieAppAccess(movie);
         const imgRef = this.getPoster(movie);
         const message = `<a href="/c/o/dashboard/title/${movie.id}" target="_blank">${movie.title.international}</a> was successfully published on the marketplace.`;
 
@@ -233,8 +227,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           imgRef,
           actionText: 'See Title',
           placeholderUrl: 'empty_poster.svg',
-          url: `${applicationUrl[movieAppAccess[0]]}/c/o/dashboard/title/${notification.docId
-            }/main`,
+          url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/main`,
         };
       }
       case 'movieAskingPriceRequested': {

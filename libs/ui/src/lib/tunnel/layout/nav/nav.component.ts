@@ -22,7 +22,7 @@ export class StepActivePipe implements PipeTransform {
    */
   transform(step: TunnelStep) {
     return this.layout.currentStep$.pipe(
-      map(suffix => step.routes.some(route => route.path === suffix.route.path)),
+      map(suffix => step.routes.some(route => route.path === suffix?.route.path)),
     );
   }
 }

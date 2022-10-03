@@ -88,6 +88,7 @@ export const screenerMovie = createMovie({
     festival: {
       access: true,
       refusedAt: null,
+      submittedAt: null,
       acceptedAt: new Date(),
       status: 'accepted',
     },
@@ -113,6 +114,7 @@ export const noScreenerMovie = createMovie({
     festival: {
       access: true,
       refusedAt: null,
+      submittedAt: null,
       acceptedAt: new Date(),
       status: 'accepted',
     },
