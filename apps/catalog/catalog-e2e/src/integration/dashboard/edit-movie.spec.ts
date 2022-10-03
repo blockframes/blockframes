@@ -165,6 +165,17 @@ describe('Movie tunnel', () => {
     get('link').type(update.review[0].revueLink);
     get('quote').type(update.review[0].criticQuote);
     findIn('reviews', 'row-save').click();
+    get('tunnel-step-save').click();
+    cy.contains('Title saved');
+    firestore.get([`movies/${inDevelopmentMovie.id}`]).then((movies: Movie[]) => {
+      //checks intermediary save
+      const dbMovie = movies[0];
+      expect(dbMovie.title.international).to.equal(movie.title.international + ' edited');
+      expect(dbMovie.title.original).to.equal(movie.title.original + ' edited');
+      expect(dbMovie.prizes).to.deep.equal(update.prizes);
+      expect(dbMovie.customPrizes).to.deep.equal(update.customPrizes);
+      expect(dbMovie.review).to.deep.equal(update.review);
+    });
     get('next').click();
     //additional information - some new data due to 'released' status
     findIn('release', 'country').click();
