@@ -40,6 +40,6 @@ describe('Login tests', () => {
     check('terms');
     check('privacy-policy');
     get('access').click();
-    assertUrlIncludes('c/o/dashboard/home');
+    assertUrlIncludes('c/o/marketplace/home');
   });
 });
