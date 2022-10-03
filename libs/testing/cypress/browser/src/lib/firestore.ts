@@ -14,8 +14,9 @@ export const firestore = {
     return cy.task('deleteData', paths);
   },
 
-  get(paths: string[]) {
-    return cy.task('getData', paths);
+  get(paths: string[] | string) {
+    if (Array.isArray(paths)) return cy.task('getData', paths);
+    return cy.task('getData', [paths]).then(array => array[0]);
   },
 
   queryData(data: { collection: string; field: string; operator: WhereFilterOp; value: unknown }) {

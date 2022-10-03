@@ -32,6 +32,8 @@ import {
   premiereType,
   unitBox,
   certifications,
+  createMovie,
+  createMovieLanguageSpecification,
 } from '@blockframes/model';
 import { user, org, orgPermissions, moviePermissions, inDevelopmentMovie } from '../../fixtures/dashboard/movie-tunnel';
 import { sub, format } from 'date-fns';
@@ -44,7 +46,7 @@ const injectedData = {
   [`movies/${inDevelopmentMovie.id}`]: inDevelopmentMovie,
 };
 
-const update: Partial<Movie> = {
+const update = createMovie({
   prizes: [
     {
       name: 'cannes',
@@ -95,13 +97,9 @@ const update: Partial<Movie> = {
   color: 'c',
   soundFormat: 'thx',
   languages: {
-    spanish: {
-      caption: false,
-      dubbed: false,
-      subtitle: true,
-    },
+    spanish: createMovieLanguageSpecification({ subtitle: true }),
   },
-};
+});
 
 describe('Movie tunnel', () => {
   beforeEach(() => {
@@ -166,9 +164,8 @@ describe('Movie tunnel', () => {
     findIn('reviews', 'row-save').click();
     get('tunnel-step-save').click();
     cy.contains('Title saved');
-    firestore.get([`movies/${inDevelopmentMovie.id}`]).then((movies: Movie[]) => {
+    firestore.get(`movies/${inDevelopmentMovie.id}`).then((dbMovie: Movie) => {
       //checks intermediary save
-      const dbMovie = movies[0];
       expect(dbMovie.title.international).to.equal(movie.title.international + ' edited');
       expect(dbMovie.title.original).to.equal(movie.title.original + ' edited');
       expect(dbMovie.prizes).to.deep.equal(update.prizes);

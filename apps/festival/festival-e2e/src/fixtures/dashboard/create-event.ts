@@ -1,4 +1,4 @@
-import { e2eUser, e2eOrg, createFakeUserDataArray } from '@blockframes/testing/cypress/browser';
+import { createFakeUserDataArray } from '@blockframes/testing/cypress/browser';
 import {
   createMovie,
   createMoviePromotional,
@@ -6,6 +6,12 @@ import {
   createPermissions,
   DocPermissionsDocument,
   Event,
+  createTitle,
+  createMovieAppConfig,
+  createAppConfig,
+  createUser,
+  createOrganization,
+  createOrgAppAccess,
 } from '@blockframes/model';
 
 const dashboardAdminUid = '0-e2e-dashboardAdminUid';
@@ -17,22 +23,31 @@ const dummyEventId = '0-e2e-dummyEvent';
 
 //* dashboard user *//
 
-export const dashboardUser = e2eUser({
+export const dashboardUser = createUser({
   uid: dashboardAdminUid,
   firstName: dashboardUserData.firstName,
   lastName: dashboardUserData.lastName,
   email: dashboardUserData.email,
-  app: 'festival',
   orgId: dashboardOrgId,
+  termsAndConditions: {
+    festival: {
+      date: new Date(),
+      ip: '11.111.11.111',
+    },
+  },
+  privacyPolicy: {
+    date: new Date(),
+    ip: '11.111.11.111',
+  },
 });
 
-export const dashboardOrg = e2eOrg({
+export const dashboardOrg = createOrganization({
   id: dashboardOrgId,
   name: dashboardUserData.company.name,
   userIds: [dashboardAdminUid],
   email: dashboardUserData.email,
-  app: 'festival',
-  dashboardAccess: true,
+  status: 'accepted',
+  appAccess: createOrgAppAccess({ festival: { marketplace: true, dashboard: true } }),
 });
 
 export const dashboardPermissions = createPermissions({
@@ -52,22 +67,31 @@ export const dashboardDocumentPermissions: DocPermissionsDocument = {
 
 //* marketplace user *//
 
-export const marketplaceUser = e2eUser({
+export const marketplaceUser = createUser({
   uid: marketplaceUserUid,
   firstName: marketplaceUserData.firstName,
   lastName: marketplaceUserData.lastName,
   email: marketplaceUserData.email,
-  app: 'festival',
   orgId: marketplaceOrgId,
+  termsAndConditions: {
+    festival: {
+      date: new Date(),
+      ip: '11.111.11.111',
+    },
+  },
+  privacyPolicy: {
+    date: new Date(),
+    ip: '11.111.11.111',
+  },
 });
 
-export const marketplaceOrg = e2eOrg({
+export const marketplaceOrg = createOrganization({
   id: marketplaceOrgId,
   name: marketplaceUserData.company.name,
   userIds: [marketplaceUserUid],
   email: marketplaceUserData.email,
-  app: 'festival',
-  dashboardAccess: false,
+  status: 'accepted',
+  appAccess: createOrgAppAccess({ festival: { marketplace: true, dashboard: false } }),
 });
 
 export const marketplacePermissions = createPermissions({
@@ -79,53 +103,37 @@ export const marketplacePermissions = createPermissions({
 
 export const screenerMovie = createMovie({
   id: '0-e2e-screenerMovie',
-  _type: 'movies',
-  contentType: 'movie',
   directors: [],
   genres: [],
   originalLanguages: [],
   originCountries: [],
   synopsis: 'This is a movie for e2e tests, which contains a screener',
   orgIds: [dashboardOrgId],
-  title: {
+  title: createTitle({
     original: 'screenerMovie',
     international: 'screenerMovie',
-  },
-  app: {
-    festival: {
-      access: true,
-      refusedAt: null,
-      submittedAt: null,
-      acceptedAt: new Date(),
-      status: 'accepted',
-    },
-  },
+  }),
+  app: createMovieAppConfig({
+    festival: createAppConfig({ status: 'accepted', access: true }),
+  }),
   promotional: createMoviePromotional({ videos: { screener: createMovieVideo({ jwPlayerId: 'YlSFNnkR' }) } }),
 });
 
 export const noScreenerMovie = createMovie({
   id: '0-e2e-noScreenerMovie',
-  _type: 'movies',
-  contentType: 'movie',
   directors: [],
   genres: [],
   originalLanguages: [],
   originCountries: [],
   synopsis: 'This is a movie for e2e tests, which does not contain a screener',
   orgIds: [dashboardOrgId],
-  title: {
+  title: createTitle({
     original: 'noScreenerMovie',
     international: 'noScreenerMovie',
-  },
-  app: {
-    festival: {
-      access: true,
-      refusedAt: null,
-      submittedAt: null,
-      acceptedAt: new Date(),
-      status: 'accepted',
-    },
-  },
+  }),
+  app: createMovieAppConfig({
+    festival: createAppConfig({ status: 'accepted', access: true }),
+  }),
 });
 
 //* events *//

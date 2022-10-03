@@ -12,7 +12,7 @@ import {
   getInList,
   getInListbox,
   getAllStartingWith,
-  assertUrlIncludes
+  assertUrlIncludes,
 } from '@blockframes/testing/cypress/browser';
 import {
   crewRoles,
@@ -33,7 +33,7 @@ import {
   colors,
   soundFormat,
   hostedVideoTypes,
-  movieNoteRoles
+  movieNoteRoles,
 } from '@blockframes/model';
 import { user, org, permissions, inDevelopmentMovie } from '../../../fixtures/dashboard/movie-tunnel';
 import { addDays, subDays, format } from 'date-fns';
@@ -345,15 +345,19 @@ describe('Movie tunnel', () => {
     get('keywords').should('contain', movie.keywords[0]).and('contain', movie.keywords[1]);
     ///production information
     get('prod-company_0')
-      .should('contain',
-      `${territories[movie.stakeholders.productionCompany[0].countries[0]]}, ${
-          territories[movie.stakeholders.productionCompany[0].countries[1]]}`
+      .should(
+        'contain',
+        `${territories[movie.stakeholders.productionCompany[0].countries[0]]}, ${
+          territories[movie.stakeholders.productionCompany[0].countries[1]]
+        }`
       )
       .and('contain', movie.stakeholders.productionCompany[0].displayName);
     get('prod-company_1')
-      .should('contain',
+      .should(
+        'contain',
         `${territories[movie.stakeholders.productionCompany[1].countries[0]]}, ${
-          territories[movie.stakeholders.productionCompany[1].countries[1]]}`
+          territories[movie.stakeholders.productionCompany[1].countries[1]]
+        }`
       )
       .and('contain', movie.stakeholders.productionCompany[1].displayName);
     get('coprod-company_0')
@@ -405,14 +409,20 @@ describe('Movie tunnel', () => {
     get('shooting-to-period').should('contain', shootingPeriod[movie.shooting.dates.planned.to.period]);
     get('shooting-to-month').should('contain', movie.shooting.dates.planned.to.month);
     get('shooting-to-year').should('contain', movie.shooting.dates.planned.to.year);
-    get('location_0').should('contain',
-      territories[movie.shooting.locations[0].country] + ' - ' +
-        movie.shooting.locations[0].cities[0] + ', ' +
+    get('location_0').should(
+      'contain',
+      territories[movie.shooting.locations[0].country] +
+        ' - ' +
+        movie.shooting.locations[0].cities[0] +
+        ', ' +
         movie.shooting.locations[0].cities[1]
     );
-    get('location_1').should('contain',
-      territories[movie.shooting.locations[1].country] + ' - ' +
-        movie.shooting.locations[1].cities[0] + ', ' +
+    get('location_1').should(
+      'contain',
+      territories[movie.shooting.locations[1].country] +
+        ' - ' +
+        movie.shooting.locations[1].cities[0] +
+        ', ' +
         movie.shooting.locations[1].cities[1]
     );
     get('premiere-event').should('contain', movie.expectedPremiere.event);
@@ -445,4 +455,3 @@ describe('Movie tunnel', () => {
     get('titles-header-title').should('contain', movie.title.international);
   });
 });
-

@@ -1,28 +1,53 @@
-import { e2eUser, e2eOrg, fakeUserData } from '@blockframes/testing/cypress/browser';
-import { createDocPermissions, createPermissions, createMovieAppConfig } from '@blockframes/model';
-import { Movie } from '@blockframes/model';
+import { fakeUserData } from '@blockframes/testing/cypress/browser';
+import {
+  createMovie,
+  createDocPermissions,
+  createPermissions,
+  createMovieAppConfig,
+  createAudienceGoals,
+  createAppConfig,
+  createMoviePromotional,
+  createMovieNote,
+  createMovieVideos,
+  createMovieVideo,
+  createReleaseYear,
+  createMovieStakeholders,
+  createTitle,
+  createUser,
+  createOrganization,
+  createOrgAppAccess,
+} from '@blockframes/model';
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
 const movieId = '0-e2e-movieId';
 const userData = fakeUserData();
 
-export const user = e2eUser({
+export const user = createUser({
   uid: adminUid,
   firstName: userData.firstName,
   lastName: userData.lastName,
   email: userData.email,
-  app: 'catalog',
   orgId: orgId,
+  termsAndConditions: {
+    catalog: {
+      date: new Date(),
+      ip: '11.111.11.111',
+    },
+  },
+  privacyPolicy: {
+    date: new Date(),
+    ip: '11.111.11.111',
+  },
 });
 
-export const org = e2eOrg({
+export const org = createOrganization({
   id: orgId,
   name: userData.company.name,
   userIds: [adminUid],
   email: userData.email,
-  app: 'catalog',
-  dashboardAccess: true,
+  status: 'accepted',
+  appAccess: createOrgAppAccess({ catalog: { marketplace: true, dashboard: true } }),
 });
 
 export const orgPermissions = createPermissions({
@@ -35,35 +60,27 @@ export const moviePermissions = createDocPermissions({
   ownerId: orgId,
 });
 
-export const inDevelopmentMovie: Partial<Movie> = {
+export const inDevelopmentMovie = createMovie({
   id: movieId,
   orgIds: [orgId],
-  _type: 'movies',
-  contentType: 'movie',
   app: createMovieAppConfig({
-    catalog: {
-      access: true,
-      refusedAt: null,
-      acceptedAt: null,
-      submittedAt: null,
-      status: 'draft',
-    },
+    catalog: createAppConfig({ status: 'draft', access: true }),
   }),
   //main
   productionStatus: 'development',
-  title: {
+  title: createTitle({
     original: 'Original title',
     international: 'International title',
-  },
+  }),
   internalRef: 'E2E ref',
   runningTime: {
     time: 120,
     status: 'tobedetermined',
   },
-  release: {
+  release: createReleaseYear({
     year: new Date().getFullYear() + 1,
     status: 'estimated',
-  },
+  }),
   originCountries: ['france', 'united-kingdom'],
   originalLanguages: ['french', 'english'],
   genres: ['action', 'romance'],
@@ -88,7 +105,7 @@ export const inDevelopmentMovie: Partial<Movie> = {
   keyAssets: 'Filmed with a phone',
   keywords: ['random', 'phone'],
   //production information
-  stakeholders: {
+  stakeholders: createMovieStakeholders({
     productionCompany: [
       {
         displayName: 'mainProd',
@@ -121,7 +138,7 @@ export const inDevelopmentMovie: Partial<Movie> = {
     lineProducer: [],
     laboratory: [],
     financier: [],
-  },
+  }),
   producers: [
     {
       firstName: 'Jane',
@@ -206,56 +223,28 @@ export const inDevelopmentMovie: Partial<Movie> = {
     },
   ],
   //additional information
-  estimatedBudget: '50000000',
-  audience: {
+  estimatedBudget: 50000000,
+  audience: createAudienceGoals({
     targets: ['E2E tests', 'reliability'],
     goals: ['sanitation', 'industry'],
-  },
+  }),
   //technical specification
   format: '1_66',
   formatQuality: '3DHD',
   color: 'colorBW',
   soundFormat: 'dolby-5.1',
   //promotional elements
-  promotional: {
-    videos: {
-      salesPitch: {
-        description: 'This is the journey of an E2E test',
-        jwPlayerId: null,
-        privacy: null,
-        collection: null,
-        docId: null,
-        field: null,
-        storagePath: null,
-      },
-      otherVideos: [
-        {
-          title: 'Test other videos',
-          type: 'teaser',
-          jwPlayerId: null,
-          privacy: null,
-          collection: null,
-          docId: null,
-          field: null,
-          storagePath: null,
-        },
-      ],
-    },
-    moodboard: null,
+  promotional: createMoviePromotional({
+    videos: createMovieVideos({
+      salesPitch: createMovieVideo({ description: 'This is the journey of an E2E test' }),
+      otherVideos: [createMovieVideo({ title: 'Test other videos', type: 'teaser' })],
+    }),
     notes: [
-      {
+      createMovieNote({
         firstName: 'Note first',
         lastName: 'Note last',
         role: 'director',
-        privacy: null,
-        collection: null,
-        docId: null,
-        field: null,
-        storagePath: null,
-      },
+      }),
     ],
-    presentation_deck: null,
-    scenario: null,
-    still_photo: null,
-  },
-};
+  }),
+});

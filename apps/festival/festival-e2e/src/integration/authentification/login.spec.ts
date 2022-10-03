@@ -29,7 +29,7 @@ describe('Login tests', () => {
     firestore.clearTestData();
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     firestore.create([injectedData]);
-    firestore.update([{docPath: `users/${user.uid}`, field: 'termsAndConditions', value: {} }])
+    firestore.update([{ docPath: `users/${user.uid}`, field: 'termsAndConditions', value: {} }]);
     maintenance.end();
     refreshIfMaintenance();
     get('login').click();
@@ -40,6 +40,6 @@ describe('Login tests', () => {
     check('terms');
     check('privacy-policy');
     get('access').click();
-    get('skip-preferences').should('exist');
+    assertUrlIncludes('c/o/dashboard/home');
   });
 });
