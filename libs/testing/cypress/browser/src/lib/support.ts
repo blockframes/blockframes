@@ -1,5 +1,5 @@
 import { OrgActivity, Territory, PublicUser, Module, EventTypes, eventTypes, AccessibilityTypes } from '@blockframes/model';
-import { browserAuth } from '@blockframes/testing/cypress/browser';
+import { browserAuth } from './browserAuth';
 import { startOfWeek, add, isPast, isFuture } from 'date-fns';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
@@ -43,14 +43,13 @@ export function getInList(selectorStart: string, option: string) {
   });
 }
 
-export function getInListbox(option: string) {
+export function getInListbox(option: string, exact?: boolean) {
   return cy
     .get('[role="listbox"]')
     .children()
     .each($child => {
-      if ($child.text().includes(option)) {
-        cy.wrap($child).click();
-      }
+      if (!exact && $child.text().includes(option)) cy.wrap($child).click();
+      if (exact && $child.text().valueOf() === ` ${option} `) cy.wrap($child).click();
     });
 }
 

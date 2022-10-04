@@ -7,13 +7,13 @@
   <ng-container *ngIf="list$ | async as list">
     <ng-container *ngIf="list.length">
       <mat-list>
-        <mat-list-item *ngFor="let item of list; let index = index">
+        <mat-list-item *ngFor="let item of list; let index = index" [attr.test-id]="'item_' + index">
           <ng-template [ngTemplateOutlet]="itemRef || text" [ngTemplateOutletContext]="{ $implicit: item, index: index }" matLine>
           </ng-template>
           <button mat-icon-button (click)="edit(index)" matTooltip="Edit">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
-          <button mat-icon-button (click)="remove(index)" matTooltip="Delete">
+          <button mat-icon-button (click)="remove(index)" matTooltip="Delete" [attr.test-id]="'delete_' + index">
             <mat-icon svgIcon="delete"></mat-icon>
           </button>
           <mat-divider *ngIf="index < list.length -1"></mat-divider>

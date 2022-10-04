@@ -8,6 +8,7 @@ import {
   refreshIfMaintenance,
   // cypress commands
   get,
+  check,
   assertUrlIncludes,
 } from '@blockframes/testing/cypress/browser';
 import { user, org, permissions } from '../../fixtures/authentification/login';
@@ -30,6 +31,9 @@ describe('Login tests', () => {
     maintenance.end();
     refreshIfMaintenance();
     browserAuth.signinWithEmailAndPassword(user.email);
+    check('terms');
+    check('privacy-policy');
+    get('access').click();
     get('skip-preferences').click();
     get('auth-user').click();
     get('profile').click();

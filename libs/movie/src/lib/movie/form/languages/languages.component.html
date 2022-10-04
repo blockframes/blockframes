@@ -4,9 +4,9 @@
     <div fxLayout="column" fxLayoutGap="8px">
       <p class="uppercase">{{ language.key | toLabel: 'languages' }}</p>
       <div [formGroupName]="language.key" fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-        <mat-checkbox formControlName="subtitle" color="primary">Subtitles</mat-checkbox>
-        <mat-checkbox formControlName="dubbed" color="primary">Dubbings</mat-checkbox>
-        <mat-checkbox formControlName="caption" color="primary">Closed Captions</mat-checkbox>
+        <mat-checkbox formControlName="subtitle" color="primary" test-id="subtitle">Subtitles</mat-checkbox>
+        <mat-checkbox formControlName="dubbed" color="primary" test-id="dubbed">Dubbings</mat-checkbox>
+        <mat-checkbox formControlName="caption" color="primary" test-id="caption">Closed Captions</mat-checkbox>
         <button mat-icon-button (click)="deleteLanguage(language.key)" color="warn" matTooltip="Delete language">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
@@ -23,16 +23,16 @@
 <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons else noButtons">
   <mat-divider inset></mat-divider>
   <span class="mat-caption text-primary">Add a Version</span>
-  <button mat-mini-fab color="primary" (click)="showButtons = !showButtons">
+  <button mat-mini-fab color="primary" (click)="showButtons = !showButtons" test-id="add-version">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </div>
 <ng-template #noButtons>
-  <input-autocomplete scope="languages" [control]="languageCtrl">
+  <input-autocomplete scope="languages" [control]="languageCtrl" test-id="languages">
     <mat-label>Languages</mat-label>
   </input-autocomplete>
   <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()"
-    [disabled]="!languageCtrl.value">
+    [disabled]="!languageCtrl.value" test-id="save-language">
     <mat-icon svgIcon="save"></mat-icon>
     <span>Save Language</span>
   </button>

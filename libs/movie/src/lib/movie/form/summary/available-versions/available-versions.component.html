@@ -6,7 +6,7 @@
     </a>
   </h6>
   <ul>
-    <li>
+    <li test-id="original-version">
       {{ movie.isOriginalVersionAvailable.value ? 'Available' : 'Not available' }}
     </li>
   </ul>
@@ -21,7 +21,7 @@
     </a>
   </h6>
   <ul>
-    <li *ngFor="let language of movie.languages.controls | keyvalue">
+    <li *ngFor="let language of movie.languages.controls | keyvalue; let i = index" [attr.test-id]="'available-version_' + i">
       <strong>{{ language.key | toLabel: 'languages' }}</strong>&nbsp;
       <missing-control [control]="language.value" [link]="link">
         <ng-template let-version>

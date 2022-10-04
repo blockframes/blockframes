@@ -1,7 +1,7 @@
-<a [routerLink]="movie.id" mat-icon-button matTooltip="View Title">
+<a [routerLink]="movie.id" mat-icon-button matTooltip="View Title" test-id="view">
   <mat-icon svgIcon="visibility"></mat-icon>
 </a>
-<a [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-icon-button matTooltip="Edit Title">
+<a [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-icon-button matTooltip="Edit Title" test-id="edit">
   <mat-icon svgIcon="edit"></mat-icon>
 </a>
 <button *ngIf="movie.app[app].status === 'archived' else archive" type="button" mat-icon-button (click)="updateStatus(movie, 'draft', 'Title restored.')" matTooltip="Restore Title">

@@ -7,8 +7,7 @@ describe('Maintenance mode tests', () => {
     cy.visit('');
     //starting maintenance mode
     maintenance.start();
-    firestore.get([metaDoc]).then((data: IMaintenanceDoc[]) => {
-      const [meta] = data;
+    firestore.get(metaDoc).then((meta: IMaintenanceDoc) => {
       expect(meta.startedAt).not.to.be.null;
       expect(meta.endedAt).to.be.null;
     });
@@ -16,8 +15,7 @@ describe('Maintenance mode tests', () => {
 
     //ending maintenance mode
     maintenance.end();
-    firestore.get([metaDoc]).then((data: IMaintenanceDoc[]) => {
-      const [meta] = data;
+    firestore.get(metaDoc).then((meta: IMaintenanceDoc) => {
       expect(meta.startedAt).to.be.null;
       expect(meta.endedAt).not.to.be.null;
     });

@@ -9,7 +9,7 @@
       </a>
     </h6>
     <ul>
-      <missing-control [control]="movie.originalRelease" [link]="link">
+      <missing-control [control]="movie.originalRelease" [link]="link" test-id="release">
         <ng-template let-release="control">
           <ng-container *ngFor="let release of release.controls">
             <li>
@@ -39,14 +39,13 @@
       </a>
     </h6>
     <ul>
-      <missing-control [control]="movie.boxOffice" [link]="link" fragment="box-office">
+      <missing-control [control]="movie.boxOffice" [link]="link" fragment="box-office" test-id="box-office">
         <ng-template let-boxOffice="control">
           <ng-container *ngFor="let office of boxOffice.controls">
             <li>
               <strong>
                 <missing-control [control]="office.get('territory')" [link]="link" scope="territories"></missing-control> -
               </strong>
-              
               <missing-control [control]="office.get('unit')" [link]="link">
                 <ng-template let-unit>
                   <ng-container *ngIf="unit !== 'admissions'">
@@ -81,7 +80,7 @@
       </a>
     </h6>
     <ul>
-      <missing-control [control]="movie.rating" [link]="link" fragment="rating">
+      <missing-control [control]="movie.rating" [link]="link" fragment="rating" test-id="rating">
         <ng-template let-ratings="control">
           <ng-container *ngFor="let rating of ratings.controls">
             <li>
@@ -120,7 +119,7 @@
       <mat-icon svgIcon="edit" color="primary"></mat-icon>
     </a>
   </h6>
-  <missing-control [control]="movie.certifications" [link]="link" fragment="qualifications" class="missing-margin">
+  <missing-control [control]="movie.certifications" [link]="link" fragment="qualifications" class="missing-margin" test-id="qualifications">
     <ng-template let-certs>{{ certs | toLabel: 'certifications' }}</ng-template>
   </missing-control>
 </article>
