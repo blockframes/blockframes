@@ -1,5 +1,12 @@
-import { e2eUser, e2eOrg, e2ePermissions } from '@blockframes/testing/cypress/browser';
 import { createFakeUserDataArray } from '@blockframes/testing/cypress/browser';
+import {
+  createPermissions,
+  createUser,
+  createOrganization,
+  createOrgAppAccess,
+  createAddressSet,
+  createLocation,
+} from '@blockframes/model';
 
 const newUserUid = '0-e2e-newUserUid';
 const marketplaceOrgAdminUid = '0-e2e-marketplaceOrgAdminUid';
@@ -10,7 +17,7 @@ const [newUserData, marketplaceOrgAdminData, dashboardOrgAdminData] = createFake
 
 //* New user
 
-export const newUser = e2eUser({
+export const newUser = createUser({
   uid: newUserUid,
   firstName: newUserData.firstName,
   lastName: newUserData.lastName,
@@ -27,25 +34,40 @@ export const newOrg = {
 
 //* Marketplace admin, org and permissions *//
 
-const marketplaceOrgAdmin = e2eUser({
+const marketplaceOrgAdmin = createUser({
   uid: marketplaceOrgAdminUid,
   firstName: marketplaceOrgAdminData.firstName,
   lastName: marketplaceOrgAdminData.lastName,
   email: marketplaceOrgAdminData.email,
   orgId: marketplaceOrgId,
+  termsAndConditions: {
+    festival: {
+      date: new Date(),
+      ip: '11.111.11.111',
+    },
+  },
+  privacyPolicy: {
+    date: new Date(),
+    ip: '11.111.11.111',
+  },
 });
 
-const marketplaceOrg = e2eOrg({
+const marketplaceOrg = createOrganization({
   id: marketplaceOrgId,
   name: marketplaceOrgAdminData.company.name,
   userIds: [marketplaceOrgAdminUid],
   email: marketplaceOrgAdminData.email,
-  dashboardAccess: false,
+  status: 'accepted',
+  appAccess: createOrgAppAccess({ festival: { marketplace: true, dashboard: false } }),
+  activity: 'actor',
+  addresses: createAddressSet({
+    main: createLocation({ country: 'france' }),
+  }),
 });
 
-const marketplaceOrgPermissions = e2ePermissions({
+const marketplaceOrgPermissions = createPermissions({
   id: marketplaceOrgId,
-  adminUid: marketplaceOrgAdminUid,
+  roles: { [marketplaceOrgAdminUid]: 'superAdmin' },
 });
 
 export const marketplaceData = {
@@ -58,25 +80,40 @@ export const marketplaceData = {
 
 //* Dashboard admin, org and permissions *//
 
-const dashboardOrgAdmin = e2eUser({
+const dashboardOrgAdmin = createUser({
   uid: dashboardOrgAdminUid,
   firstName: dashboardOrgAdminData.firstName,
   lastName: dashboardOrgAdminData.lastName,
   email: dashboardOrgAdminData.email,
   orgId: dashboardOrgId,
+  termsAndConditions: {
+    festival: {
+      date: new Date(),
+      ip: '11.111.11.111',
+    },
+  },
+  privacyPolicy: {
+    date: new Date(),
+    ip: '11.111.11.111',
+  },
 });
 
-const dashboardOrg = e2eOrg({
+const dashboardOrg = createOrganization({
   id: dashboardOrgId,
   name: dashboardOrgAdminData.company.name,
   userIds: [dashboardOrgAdminUid],
   email: dashboardOrgAdminData.email,
-  dashboardAccess: true,
+  status: 'accepted',
+  appAccess: createOrgAppAccess({ festival: { marketplace: true, dashboard: true } }),
+  activity: 'actor',
+  addresses: createAddressSet({
+    main: createLocation({ country: 'france' }),
+  }),
 });
 
-const dashboardOrgPermissions = e2ePermissions({
+const dashboardOrgPermissions = createPermissions({
   id: dashboardOrgId,
-  adminUid: dashboardOrgAdminUid,
+  roles: { [dashboardOrgAdminUid]: 'superAdmin' },
 });
 
 export const dashboardData = {

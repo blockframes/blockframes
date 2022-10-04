@@ -12,7 +12,7 @@ import {
   getInList,
   getInListbox,
   getAllStartingWith,
-  assertUrlIncludes
+  assertUrlIncludes,
 } from '@blockframes/testing/cypress/browser';
 import {
   crewRoles,
@@ -24,7 +24,6 @@ import {
   screeningStatus,
   directorCategory,
   productionStatus,
-  ProductionStatus,
   producerRoles,
   budgetRange,
   socialGoals,
@@ -34,9 +33,9 @@ import {
   colors,
   soundFormat,
   hostedVideoTypes,
-  movieNoteRoles
+  movieNoteRoles,
 } from '@blockframes/model';
-import { user, org, permissions, inDevelopmentMovie } from '../../../fixtures/dashboard/movie-tunnel';
+import { user, org, permissions, inDevelopmentMovie as movie } from '../../../fixtures/dashboard/movie-tunnel';
 import { addDays, subDays, format } from 'date-fns';
 
 const injectedData = {
@@ -50,11 +49,7 @@ describe('Movie tunnel', () => {
     cy.visit('');
     maintenance.start();
     firestore.clearTestData();
-    firestore
-      .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id })
-      .then((movies: Movie[]) => {
-        for (const movie of movies) firestore.delete([`movies/${movie.id}`]);
-      });
+    firestore.deleteOrgMovies(org.id);
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
@@ -68,7 +63,6 @@ describe('Movie tunnel', () => {
   });
 
   it('Create a movie in development', () => {
-    const movie = inDevelopmentMovie;
     //dashboard
     get('no-title').should('exist');
     get('add-title').click();
@@ -79,7 +73,6 @@ describe('Movie tunnel', () => {
     get('next').click();
 
     //main
-    checkSideNav(movie.productionStatus);
     get('international-title').type(movie.title.international);
     get('original-title').type(movie.title.original);
     get('reference').type(movie.internalRef);
@@ -239,12 +232,12 @@ describe('Movie tunnel', () => {
     //additional information
     get('budget-range').click();
     getInListbox(budgetRange[movie.estimatedBudget]);
-    get('target-audience').type(movie.audience.targets[0]);
+    get('audience').type(movie.audience.targets[0]);
     get('row-save').click();
     get('list-add').click();
-    get('target-audience').type(movie.audience.targets[1]);
+    get('audience').type(movie.audience.targets[1]);
     get('row-save').click();
-    get('goal').click();
+    get('goals').click();
     getInListbox(socialGoals[movie.audience.goals[0]]);
     getInListbox(socialGoals[movie.audience.goals[1]]);
     cy.get('body').type('{esc}');
@@ -347,15 +340,19 @@ describe('Movie tunnel', () => {
     get('keywords').should('contain', movie.keywords[0]).and('contain', movie.keywords[1]);
     ///production information
     get('prod-company_0')
-      .should('contain',
-      `${territories[movie.stakeholders.productionCompany[0].countries[0]]}, ${
-          territories[movie.stakeholders.productionCompany[0].countries[1]]}`
+      .should(
+        'contain',
+        `${territories[movie.stakeholders.productionCompany[0].countries[0]]}, ${
+          territories[movie.stakeholders.productionCompany[0].countries[1]]
+        }`
       )
       .and('contain', movie.stakeholders.productionCompany[0].displayName);
     get('prod-company_1')
-      .should('contain',
+      .should(
+        'contain',
         `${territories[movie.stakeholders.productionCompany[1].countries[0]]}, ${
-          territories[movie.stakeholders.productionCompany[1].countries[1]]}`
+          territories[movie.stakeholders.productionCompany[1].countries[1]]
+        }`
       )
       .and('contain', movie.stakeholders.productionCompany[1].displayName);
     get('coprod-company_0')
@@ -407,14 +404,20 @@ describe('Movie tunnel', () => {
     get('shooting-to-period').should('contain', shootingPeriod[movie.shooting.dates.planned.to.period]);
     get('shooting-to-month').should('contain', movie.shooting.dates.planned.to.month);
     get('shooting-to-year').should('contain', movie.shooting.dates.planned.to.year);
-    get('location_0').should('contain',
-      territories[movie.shooting.locations[0].country] + ' - ' +
-        movie.shooting.locations[0].cities[0] + ', ' +
+    get('location_0').should(
+      'contain',
+      territories[movie.shooting.locations[0].country] +
+        ' - ' +
+        movie.shooting.locations[0].cities[0] +
+        ', ' +
         movie.shooting.locations[0].cities[1]
     );
-    get('location_1').should('contain',
-      territories[movie.shooting.locations[1].country] + ' - ' +
-        movie.shooting.locations[1].cities[0] + ', ' +
+    get('location_1').should(
+      'contain',
+      territories[movie.shooting.locations[1].country] +
+        ' - ' +
+        movie.shooting.locations[1].cities[0] +
+        ', ' +
         movie.shooting.locations[1].cities[1]
     );
     get('premiere-event').should('contain', movie.expectedPremiere.event);
@@ -447,25 +450,3 @@ describe('Movie tunnel', () => {
     get('titles-header-title').should('contain', movie.title.international);
   });
 });
-
-function checkSideNav(status: ProductionStatus) {
-  get('steps-list')
-    .should('contain', 'First Step')
-    .and('contain', 'Title Information')
-    .and('contain', 'Main Information')
-    .and('contain', 'Storyline Elements')
-    .and('contain', 'Production Information')
-    .and('contain', 'Artistic Team')
-    .and('contain', 'Additional Information')
-    .and('contain', 'Technical Specification')
-    .and('contain', 'Promotional Elements')
-    .and('contain', 'Files')
-    .and('contain', 'Images')
-    .and('contain', 'Videos')
-    .and('contain', 'Screener')
-    .and('contain', 'Last Step');
-  if (status !== 'development') get('steps-list').should('contain', 'Versions');
-  if (status !== 'development' && 'shooting') get('steps-list').should('contain', 'Selections & Reviews');
-  if (status !== 'post_production' && 'finished' && 'released') get('steps-list').should('contain', 'Notes & Statements');
-  if (status !== 'released') get('steps-list').should('contain', 'Shooting Information');
-}
