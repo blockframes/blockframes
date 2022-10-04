@@ -33,7 +33,7 @@ import {
   unitBox,
   certifications,
 } from '@blockframes/model';
-import { user, org, orgPermissions, moviePermissions, inDevelopmentMovie, update } from '../../fixtures/dashboard/movie-tunnel';
+import { user, org, orgPermissions, moviePermissions, inDevelopmentMovie as movie, update } from '../../fixtures/dashboard/movie-tunnel';
 import { format } from 'date-fns';
 
 const injectedData = {
@@ -41,7 +41,7 @@ const injectedData = {
   [`orgs/${org.id}`]: org,
   [`permissions/${orgPermissions.id}`]: orgPermissions,
   [`permissions/${orgPermissions.id}/documentPermissions/${moviePermissions.id}`]: moviePermissions,
-  [`movies/${inDevelopmentMovie.id}`]: inDevelopmentMovie,
+  [`movies/${movie.id}`]: movie,
 };
 
 describe('Movie tunnel', () => {
@@ -62,7 +62,6 @@ describe('Movie tunnel', () => {
   });
 
   it('Edit an existing movie', () => {
-    const movie = inDevelopmentMovie;
     get('title').click();
     get('row_0_col_0').should('contain', movie.title.international);
     findIn('row_0_col_5', 'edit').click();
@@ -103,7 +102,7 @@ describe('Movie tunnel', () => {
     findIn('reviews', 'row-save').click();
     get('tunnel-step-save').click();
     cy.contains('Title saved');
-    firestore.get(`movies/${inDevelopmentMovie.id}`).then((dbMovie: Movie) => {
+    firestore.get(`movies/${movie.id}`).then((dbMovie: Movie) => {
       //checks intermediary save
       expect(dbMovie.title.international).to.equal(movie.title.international + ' edited');
       expect(dbMovie.title.original).to.equal(movie.title.original + ' edited');

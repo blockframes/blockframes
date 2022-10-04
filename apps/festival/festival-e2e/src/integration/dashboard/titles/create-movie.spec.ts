@@ -35,7 +35,7 @@ import {
   hostedVideoTypes,
   movieNoteRoles,
 } from '@blockframes/model';
-import { user, org, permissions, inDevelopmentMovie } from '../../../fixtures/dashboard/movie-tunnel';
+import { user, org, permissions, inDevelopmentMovie as movie } from '../../../fixtures/dashboard/movie-tunnel';
 import { addDays, subDays, format } from 'date-fns';
 
 const injectedData = {
@@ -63,7 +63,6 @@ describe('Movie tunnel', () => {
   });
 
   it('Create a movie in development', () => {
-    const movie = inDevelopmentMovie;
     //dashboard
     get('no-title').should('exist');
     get('add-title').click();

@@ -8,7 +8,7 @@ import {
   get,
   checkMovieTunnelSideNav,
 } from '@blockframes/testing/cypress/browser';
-import { Movie, productionStatus } from '@blockframes/model';
+import { productionStatus } from '@blockframes/model';
 import { user, org, permissions } from '../../../fixtures/dashboard/movie-tunnel';
 
 const injectedData = {
