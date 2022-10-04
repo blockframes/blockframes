@@ -10,7 +10,6 @@ import {
   FileMetaData,
   isValidMetadata,
   StorageFile,
-  StorageVideo,
   PublicUser,
   User,
   Movie,
@@ -134,7 +133,23 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
       await file.copy(to);
 
-      // (3) update db
+      // (3) if video file, upload to jwPlayer
+      const isVideo = data.contentType.indexOf('video/') === 0 && ['movies', 'orgs'].includes(metadata.collection);
+      if (isVideo) {
+        const uploadResult = await uploadToJWPlayer(to);
+
+        // There was an error when uploading file to jwPlayer
+        if (!uploadResult.success) {
+          console.error(`UPLOAD TO JWPLAYER FAILED: video ${data.name}`);
+          if (uploadResult.message) {
+            console.error(`An error occurred when uploading video to JwPlayer: ${uploadResult.message}`);
+          }
+        } else {
+          metadata.jwPlayerId = uploadResult.key;
+        }
+      }
+
+      // (4) update db
 
       // separate extraData from metadata
       const keysToDelete = [
@@ -174,60 +189,9 @@ export async function linkFile(data: storage.ObjectMetadata) {
       await transaction.update(docRef, doc);
     }).catch(err => console.error('Transaction Failed:', err));
 
-    // (4) delete tmp/file
+    // (5) delete tmp/file
     return file.delete();
 
-  } else {
-
-    if (!isValid) throw new Error('Invalid metadata after file copy');
-
-    // Post processing such as: signal end of upload flow, trigger upload to JWPlayer, ...
-
-    const isVideo = data.contentType.indexOf('video/') === 0 && ['movies', 'orgs'].includes(metadata.collection);
-    if (isVideo && metadata.moving !== 'true') {
-
-      const uploadResult = await uploadToJWPlayer(file);
-
-      // There was an error when uploading file to jwPlayer
-      if (!uploadResult.success) {
-        console.error(`UPLOAD TO JWPLAYER FAILED: video ${data.name}`);
-        if (uploadResult.message) {
-          console.error(`An error occurred when uploading video to JwPlayer: ${uploadResult.message}`);
-        }
-        return false;
-      }
-
-      await db.runTransaction(async transaction => {
-        // upload success: we should add jwPlayerId to the db document
-        const docRef = db.collection(metadata.collection).doc(metadata.docId);
-        const docSnap = await transaction.get(docRef);
-        if (!docSnap.exists) return false;
-        const doc = docSnap.data();
-
-        const fieldValue: StorageVideo | StorageVideo[] = get(doc, metadata.field);
-        if (Array.isArray(fieldValue)) {
-
-          const index = fieldValue.findIndex(video => video.fileId === metadata.fileId);
-
-          if (index < 0) {
-            console.error(`UPDATE DB FAILED: Video ${uploadResult.key} was successfully uploaded to JWPlayer, but we didn't found the db document to update`, JSON.stringify(data.name), JSON.stringify(data.metadata));
-            return false;
-          }
-
-          fieldValue[index].jwPlayerId = uploadResult.key;
-
-        } else {
-          fieldValue.jwPlayerId = uploadResult.key;
-        }
-
-        set(doc, metadata.field, fieldValue); // update the whole doc with only the new jwPlayerId
-        await transaction.update(docRef, doc);
-      });
-      return true;
-    } else if (metadata.moving === 'true') {
-      // removing the 'moving' flag from metadata
-      file.setMetadata({ metadata: { moving: null } });
-    }
   }
 
 }
@@ -473,13 +437,8 @@ const moveMedia = async (before: StorageFile, after: StorageFile) => {
     logger.error(`Move Error : File "${beforePath}" does not exists in the storage`);
   } else {
 
-    // set moving flag to prevent upload to jwPlayer
-    await fileObject.setMetadata({
-      metadata: {
-        privacy: after.privacy,
-        moving: 'true'
-      }
-    });
+    // update meta data with new privacy
+    await fileObject.setMetadata({ metadata: { privacy: after.privacy } });
     return fileObject.move(afterPath);
   }
 }

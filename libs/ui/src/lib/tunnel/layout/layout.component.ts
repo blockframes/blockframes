@@ -23,7 +23,6 @@ import type { ShellConfig } from '@blockframes/movie/form/movie.shell.interfaces
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { SentryService } from '@blockframes/utils/sentry.service';
 
 /**
  * @description returns the next or previous page where the router should go to
@@ -120,7 +119,6 @@ export class TunnelLayoutComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
-    private sentryService: SentryService,
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
   ) { }
 
@@ -132,12 +130,10 @@ export class TunnelLayoutComponent implements OnInit {
 
   /** Save the form and display feedback to user */
   async save() {
-    const result = await this.update({ publishing: false });
-    if (result) {
-      const configs = Object.keys(this.configs);
-      await this.snackBar.open(`${configs.map(config => this.configs[config].name).join(' & ')} saved`, '', { duration: 1000 }).afterDismissed().toPromise();
-    }
-    return result;
+    await this.update({ publishing: false });
+    const configs = Object.keys(this.configs)
+    await this.snackBar.open(`${configs.map(config => this.configs[config].name).join(' & ')} saved`, '', { duration: 1000 }).afterDismissed().toPromise();
+    return true;
   }
 
   private getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {
@@ -183,19 +179,10 @@ export class TunnelLayoutComponent implements OnInit {
       }
     }
 
-    if (!this.configs.movie.canSave()) {
-      const message = `Prevented save of movie ${this.configs.movie.movie.id}. Missing jwPlayerId on upload.`;
-      this.sentryService.triggerError({ message, location: 'movie-tunnel', bugType: 'file-upload' });
-      this.snackBar.open('Cannot save right now, please try again in a few seconds.', '', { duration: 5000 });
-      return false;
-    }
-
     const promises = [];
     promises.push(this.configs.movie.onSave(options));
     if (this.configs.campaign) promises.push(this.configs.campaign.onSave());
     await Promise.all(promises);
-
-    return true;
   }
 
   animationOutlet(outlet: RouterOutlet) {
