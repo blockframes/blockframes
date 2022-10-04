@@ -10,8 +10,9 @@ export const firestore = {
     return cy.task('importData', data);
   },
 
-  delete(paths: string[]) {
-    return cy.task('deleteData', paths);
+  delete(paths: string[] | string) {
+    if (Array.isArray(paths)) return cy.task('deleteData', paths);
+    return cy.task('deleteData', [paths]);
   },
 
   get(paths: string[] | string) {

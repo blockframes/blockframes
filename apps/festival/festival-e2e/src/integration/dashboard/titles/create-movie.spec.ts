@@ -52,7 +52,7 @@ describe('Movie tunnel', () => {
     firestore
       .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id })
       .then((movies: Movie[]) => {
-        for (const movie of movies) firestore.delete([`movies/${movie.id}`]);
+        for (const movie of movies) firestore.delete(`movies/${movie.id}`);
       });
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
