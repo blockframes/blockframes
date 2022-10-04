@@ -32,11 +32,9 @@ import {
   premiereType,
   unitBox,
   certifications,
-  createMovie,
-  createMovieLanguageSpecification,
 } from '@blockframes/model';
-import { user, org, orgPermissions, moviePermissions, inDevelopmentMovie } from '../../fixtures/dashboard/movie-tunnel';
-import { sub, format } from 'date-fns';
+import { user, org, orgPermissions, moviePermissions, inDevelopmentMovie, update } from '../../fixtures/dashboard/movie-tunnel';
+import { format } from 'date-fns';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -46,71 +44,12 @@ const injectedData = {
   [`movies/${inDevelopmentMovie.id}`]: inDevelopmentMovie,
 };
 
-const update = createMovie({
-  prizes: [
-    {
-      name: 'cannes',
-      prize: `Palme d'Or`,
-      year: 2022,
-      premiere: 'world',
-    },
-  ],
-  customPrizes: [
-    {
-      name: 'Custom festival',
-      prize: 'Custom Prize',
-      year: 2021,
-      premiere: 'market',
-    },
-  ],
-  review: [
-    {
-      criticName: 'Joe Criticizer',
-      journalName: 'Critics&Co',
-      revueLink: 'http://www.criticandco.com/e2e',
-      criticQuote: 'This is the best e2e fake movie !',
-    },
-  ],
-  originalRelease: [
-    {
-      country: 'france',
-      media: 'festival',
-      date: sub(new Date(), { months: 1 }),
-    },
-  ],
-  boxOffice: [
-    {
-      territory: 'france',
-      unit: 'eur',
-      value: 1000000,
-    },
-  ],
-  rating: [
-    {
-      country: 'france',
-      value: 'imdb : 8.2',
-    },
-  ],
-  certifications: ['eof', 'europeanQualification'],
-  format: '4/3',
-  formatQuality: '4k',
-  color: 'c',
-  soundFormat: 'thx',
-  languages: {
-    spanish: createMovieLanguageSpecification({ subtitle: true }),
-  },
-});
-
 describe('Movie tunnel', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
     firestore.clearTestData();
-    firestore
-      .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id })
-      .then((movies: Movie[]) => {
-        for (const movie of movies) firestore.delete(`movies/${movie.id}`);
-      });
+    firestore.deleteOrgMovies(org.id);
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });

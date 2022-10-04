@@ -1,5 +1,5 @@
 import { WhereFilterOp } from 'firebase/firestore';
-import { Event } from '@blockframes/model';
+import { Event, Movie } from '@blockframes/model';
 
 export const firestore = {
   clearTestData() {
@@ -32,5 +32,13 @@ export const firestore = {
     return firestore
       .queryData({ collection: 'events', field: 'ownerOrgId', operator: '==', value: orgId })
       .then((events: Event[]) => firestore.delete(events.map(event => `events/${event.id}`)));
+  },
+
+  deleteOrgMovies(orgId: string) {
+    return firestore
+      .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: orgId })
+      .then((movies: Movie[]) => {
+        for (const movie of movies) firestore.delete(`movies/${movie.id}`);
+      });
   },
 };

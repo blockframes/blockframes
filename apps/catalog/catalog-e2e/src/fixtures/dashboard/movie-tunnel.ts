@@ -16,7 +16,9 @@ import {
   createUser,
   createOrganization,
   createOrgAppAccess,
+  createMovieLanguageSpecification,
 } from '@blockframes/model';
+import { sub } from 'date-fns';
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
@@ -247,4 +249,59 @@ export const inDevelopmentMovie = createMovie({
       }),
     ],
   }),
+});
+
+export const update = createMovie({
+  prizes: [
+    {
+      name: 'cannes',
+      prize: `Palme d'Or`,
+      year: 2022,
+      premiere: 'world',
+    },
+  ],
+  customPrizes: [
+    {
+      name: 'Custom festival',
+      prize: 'Custom Prize',
+      year: 2021,
+      premiere: 'market',
+    },
+  ],
+  review: [
+    {
+      criticName: 'Joe Criticizer',
+      journalName: 'Critics&Co',
+      revueLink: 'http://www.criticandco.com/e2e',
+      criticQuote: 'This is the best e2e fake movie !',
+    },
+  ],
+  originalRelease: [
+    {
+      country: 'france',
+      media: 'festival',
+      date: sub(new Date(), { months: 1 }),
+    },
+  ],
+  boxOffice: [
+    {
+      territory: 'france',
+      unit: 'eur',
+      value: 1000000,
+    },
+  ],
+  rating: [
+    {
+      country: 'france',
+      value: 'imdb : 8.2',
+    },
+  ],
+  certifications: ['eof', 'europeanQualification'],
+  format: '4/3',
+  formatQuality: '4k',
+  color: 'c',
+  soundFormat: 'thx',
+  languages: {
+    spanish: createMovieLanguageSpecification({ subtitle: true }),
+  },
 });
