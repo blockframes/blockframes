@@ -65,7 +65,8 @@ export class TunnelSummaryComponent implements OnInit {
         confirmButtonText: 'accept',
         onConfirm: async () => {
           try {
-            await this.shell.layout.update({ publishing: true });
+            const updateStatus = await this.shell.layout.update({ publishing: true });
+            if (!updateStatus) return;
             const movieId = this.route.snapshot.paramMap.get('movieId');
             await this.consentsService.createConsent('share', movieId);
             const text = `${this.form.get('title').get('international').value} was successfully submitted.`;

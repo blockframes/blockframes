@@ -51,7 +51,8 @@ export class TunnelSummaryComponent implements OnInit {
   public async submit() {
     try {
       if (this.form.valid) {
-        await this.shell.layout.update({ publishing: true });
+        const updateStatus = await this.shell.layout.update({ publishing: true });
+        if (!updateStatus) return;
         const message = `${this.form.get('title').get('international').value} successfully published.`;
         const movieId = this.route.snapshot.paramMap.get('movieId');
         this.snackBar.openFromComponent(SnackbarLinkComponent, {

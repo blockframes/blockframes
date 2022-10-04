@@ -5,7 +5,7 @@ import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { MovieControl, MovieForm } from './movie.form';
 import type { FormShellConfig } from './movie.shell.interfaces'
 import { MovieService } from '../service';
-import { Movie, MoviePromotionalElements, ProductionStatus, App, getMoviePublishStatus, FormSaveOptions } from '@blockframes/model';
+import { Movie, MoviePromotionalElements, ProductionStatus, App, getMoviePublishStatus, FormSaveOptions, MovieVideo } from '@blockframes/model';
 import { MovieActiveGuard } from '../guards/movie-active.guard';
 import { APP } from '@blockframes/utils/routes/utils';
 
@@ -77,7 +77,23 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
   }
 
   async onSave(options: FormSaveOptions): Promise<void> {
+    const movie = this.movie;
 
+    // Specific update if publishing
+    if (options.publishing) {
+      movie.app[this.currentApp].status = getMoviePublishStatus(this.currentApp);
+
+      if (movie.app[this.currentApp].status === 'accepted') movie.app[this.currentApp].acceptedAt = new Date();
+      if (movie.app[this.currentApp].status === 'submitted') movie.app[this.currentApp].submittedAt = new Date();
+    }
+
+    // -- Update movie & media -- //
+    await this.service.upsert(movie);
+    this.uploaderService.upload();
+    this.form.markAsPristine();
+  }
+
+  get movie() {
     const base = this.movieActiveGuard.movie;
     const movie = mergeDeep(base, this.form.value);
 
@@ -98,18 +114,29 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
     const dynamicKeyFields = ['languages', 'shooting'];
     dynamicKeyFields.forEach(key => movie[key] = this.form.value[key])
 
-    // Specific update if publishing
-    if (options.publishing) {
-      movie.app[this.currentApp].status = getMoviePublishStatus(this.currentApp);
+    return movie;
+  }
 
-      if (movie.app[this.currentApp].status === 'accepted') movie.app[this.currentApp].acceptedAt = new Date();
-      if (movie.app[this.currentApp].status === 'submitted') movie.app[this.currentApp].submittedAt = new Date();
-    }
+  /**
+   * Checks if all video upload areas of a movie are in a correct state
+   * Return true if movie document is in a state that allow saving
+   */
+  public canSave() {
+    const isVideoFileValid = (movieVideo: MovieVideo) => !movieVideo.storagePath || !!movieVideo.jwPlayerId;
 
-    // -- Update movie & media -- //
-    await this.service.upsert(movie);
-    this.uploaderService.upload();
-    this.form.markAsPristine();
+    const { promotional } = this.movie;
+    if (!promotional) return true;
+
+    const { videos } = promotional;
+    if (!videos) return true;
+
+    if (!isVideoFileValid(videos.screener)) return false;
+    if (!isVideoFileValid(videos.publicScreener)) return false;
+    if (!isVideoFileValid(videos.salesPitch)) return false;
+
+    if (videos.otherVideos.length && videos.otherVideos.some(v => !isVideoFileValid(v))) return false;
+
+    return true;
   }
 
 }
