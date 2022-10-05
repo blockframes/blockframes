@@ -11,6 +11,7 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
 import { MovieService } from '@blockframes/movie/service';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 
 @Component({
   selector: 'financiers-summary-tunnel',
@@ -43,7 +44,8 @@ export class TunnelSummaryComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService,
     private consentsService: ConsentsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public uploadService: FileUploaderService
   ) {
     this.dynTitle.setPageTitle('Summary and Submit a new title')
   }

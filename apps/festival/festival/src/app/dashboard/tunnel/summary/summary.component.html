@@ -117,7 +117,7 @@
 
     <!-- Submit -->
     <button id="publish" test-id="publish" mat-flat-button color="accent" class="submit" (click)="submit()"
-      [disabled]="isPublished$ | async">
+      [disabled]="(isPublished$ | async) || (uploadService.finalizedUpload | async)">
       <span>Publish to Marketplace</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>

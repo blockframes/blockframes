@@ -126,7 +126,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
-    private uploadService: FileUploaderService
+    public uploadService: FileUploaderService
   ) { }
 
   async ngOnInit() {
