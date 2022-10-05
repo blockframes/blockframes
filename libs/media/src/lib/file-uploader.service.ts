@@ -94,15 +94,15 @@ export class FileUploaderService {
   /** Upload all files in the queue */
   upload() {
     const validQueue = Object.entries(this.queue).filter(([storagePath, uploads]) => {
-      const arr = uploads.filter(upload => {
+      const arr = uploads.filter(upload => upload?.metadata).filter(upload => {
         const isValid = isValidMetadata(upload.metadata, { uidRequired: false });
         if (!isValid) {
           console.warn('INVALID METADATA: upload will be skipped!');
           console.warn(storagePath, upload.metadata);
         }
-        return isValid
+        return isValid;
       })
-      return !!arr.length
+      return !!arr.length;
     });
 
     const tasks = validQueue.map(([storagePath, uploads]) => {

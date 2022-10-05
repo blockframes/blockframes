@@ -30,9 +30,7 @@
               [formIndex]="index" 
               [meta]="['movies', 'otherVideos', movieId]" 
               accept="video"
-              (newSubscription)="shell.addSubToStack($event)"
               listenToChanges
-              pushSubToStack
             >
               <h3 title>Upload Video</h3>
             </file-uploader>
