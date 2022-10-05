@@ -97,7 +97,7 @@ describe('Movie display in marketplace', () => {
     selectFilter('Language & Version');
     get('language').find('input').click();
     getInListbox(languages[Object.keys(movie.languages)[0]]);
-    check('dubs');
+    check('Dubs');
     get('save-filter').click();
     selectFilter('Release Year');
     get('slider').focus();
@@ -111,20 +111,20 @@ describe('Movie display in marketplace', () => {
     movieCardShould('exist');
     getAllStartingWith('item_').should('have.length', 1);
   });
-});
 
-it('Absent if not released', () => {
-  firestore.update({ docPath: `movies/${movie.id}`, field: 'app.catalog.status', value: 'draft' });
-  syncMovieToAlgolia(movie);
-  findIn('New on Archipel', 'see-all').click();
-  get('titles-count').then($result => {
-    titlesCount = $result[0].innerText;
-    get('search-input').type(movie.title.international);
-    get('titles-count').should('not.contain', titlesCount);
+  it('Absent if not released', () => {
+    firestore.update({ docPath: `movies/${movie.id}`, field: 'app.catalog.status', value: 'draft' });
+    syncMovieToAlgolia(movie);
+    findIn('New on Archipel', 'see-all').click();
+    get('titles-count').then($result => {
+      titlesCount = $result[0].innerText;
+      get('search-input').type(movie.title.international);
+      get('titles-count').should('not.contain', titlesCount);
+    });
+    movieCardShould('not.exist');
+    get('clear-filters').click();
+    get('titles-count').should('contain', titlesCount);
   });
-  movieCardShould('not.exist');
-  get('clear-filters').click();
-  get('titles-count').should('contain', titlesCount);
 });
 
 function movieCardShould(option: 'exist' | 'not.exist') {
