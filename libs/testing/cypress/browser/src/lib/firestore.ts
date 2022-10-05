@@ -24,8 +24,9 @@ export const firestore = {
     return cy.task('queryData', data);
   },
 
-  update(data: { docPath: string; field: string; value: unknown }[]) {
-    return cy.task('updateData', data);
+  update(data: { docPath: string; field: string; value: unknown }[] | { docPath: string; field: string; value: unknown }) {
+    if (Array.isArray(data)) return cy.task('updateData', data);
+    return cy.task('updateData', [data]);
   },
 
   deleteOrgEvents(orgId: string) {

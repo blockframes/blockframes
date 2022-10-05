@@ -48,7 +48,7 @@
       </div>
       <ng-container *ngIf="!listView; else displayList">
         <ul class="grid" [@fadeList]="items.length">
-          <li *ngFor="let item of items; trackBy:trackById">
+          <li *ngFor="let item of items; trackBy:trackById; let i = index" [attr.test-id]="'item_' +i">
             <!-- INSERT CARD -->
             <ng-template [ngTemplateOutlet]="cardTemplate" [ngTemplateOutletContext]="{$implicit: item}">
             </ng-template>
