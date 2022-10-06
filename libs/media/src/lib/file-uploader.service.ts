@@ -100,12 +100,12 @@ export class FileUploaderService {
   /** Upload all files in the queue */
   upload() {
     const validQueue = Object.entries(this.queue).filter(([storagePath, uploads]) => {
-      const arr = uploads.filter(upload => upload?.metadata).filter(upload => {
-        const isValid = isValidMetadata(upload.metadata, { uidRequired: false });
+      const arr = uploads.filter(upload => {
+        const isValid = isValidMetadata(upload?.metadata, { uidRequired: false });
         if (!isValid) {
           const message = `Skipped upload because of invalid metadata.`;
           console.warn(message);
-          console.warn(storagePath, upload.metadata);
+          console.warn(storagePath, upload?.metadata);
           this.sentryService.triggerError({ message, location: 'file-uploader-service', bugType: 'invalid-metadata' });
         }
         return isValid;
