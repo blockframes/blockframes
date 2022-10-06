@@ -47,10 +47,6 @@ export class MovieFormMediaVideosComponent implements OnInit {
     return this.form.promotional.videos.salesPitch;
   }
 
-  get firstVideo() {
-    return this.form.promotional.videos.otherVideos.at(0);
-  }
-
   get videoList() {
     return this.form.promotional.videos.otherVideos;
   }
