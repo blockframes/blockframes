@@ -21,7 +21,7 @@ export class FileUploaderService {
   private tasksState = new BehaviorStore<unknown[]>([]);
   public finalizedUpload = new BehaviorSubject<boolean>(false);
   private finalizedSubs: Subscription[] = [];
-  private commonDelay = 3000;
+  private finalizedUploadDelay = 5000;
 
   private queue: Record<string, UploadData[] | null> = {};
 
@@ -141,7 +141,7 @@ export class FileUploaderService {
     this.tasks.value = [...this.tasks.value, ...tasks.flat().filter(task => !!task)];
     this.tasksState.value = [...this.tasksState.value, ...tasksState];
     Promise.allSettled(tasks)
-      .then(() => delay(this.commonDelay))
+      .then(() => delay(3000))
       .then(() => this.detachWidget());
     this.showWidget();
     this.listenOnFinalized();
@@ -158,7 +158,7 @@ export class FileUploaderService {
       if (p.progress === 100) {
         this.finalizedUpload.next(true);
         locks.push(1);
-        delay(this.commonDelay).then(() => {
+        delay(this.finalizedUploadDelay).then(() => {
           if (locks.length === 1) this.finalizedUpload.next(false);
           locks.pop();
         });
@@ -182,7 +182,7 @@ export class FileUploaderService {
       this.tasksState.value = [];
 
       // Unsubscribe from subscriptions that listen for ended uploads
-      delay(this.commonDelay).then(() => this.finalizedSubs.map(s => s?.unsubscribe()));
+      delay(this.finalizedUploadDelay).then(() => this.finalizedSubs.map(s => s?.unsubscribe()));
     }
   }
 
