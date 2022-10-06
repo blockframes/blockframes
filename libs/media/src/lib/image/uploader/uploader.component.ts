@@ -2,11 +2,10 @@ import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener, Elemen
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { BehaviorSubject, map, Subscription } from 'rxjs';
 import { MediaService } from '../../service';
-import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FileMetaData, createStorageFile, allowedFiles, fileSizeToString } from '@blockframes/model';
+import { FileMetaData, createStorageFile, allowedFiles, fileSizeToString, StorageFile } from '@blockframes/model';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../utils';
 import { FileUploaderService } from '../../file-uploader.service';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
@@ -54,11 +53,6 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
 
   private storagePath: string;
   private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
-  private parameters: ImageParameters = {
-    auto: 'compress,format',
-    fit: 'crop',
-    w: 0,
-  };
 
   ///////////////////////
   // Public Variables //
@@ -148,6 +142,10 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
 
   @Output() selectionChange = new EventEmitter<'added' | 'removed'>();
 
+  // Determine whether document subscription removal should be handled here or on parent component
+  @Input() @boolean pushSubToStack = false;
+  @Output() newSubscription = new EventEmitter<Subscription>();
+
   @ViewChild('fileUploader') fileUploader: ElementRef<HTMLInputElement>;
 
   private docSub: Subscription;
@@ -165,18 +163,20 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
     if (this.listenToChanges) {
       const ref = this.firestore.getRef(`${this.metadata.collection}/${this.metadata.docId}`) as DocumentReference;
       this.docSub = fromRef(ref).pipe(map(snap => snap.data())).subscribe(data => {
-        const media = this.formIndex !== undefined
+        const media: StorageFile = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
-        if (media) {
+        if (media?.storagePath) {
           this.form.setValue(media);
         }
-      })
+      });
+
+      if (this.pushSubToStack) this.newSubscription.emit(this.docSub);
     }
   }
 
   ngOnDestroy() {
-    if (this.docSub) this.docSub.unsubscribe()
+    if (!this.pushSubToStack) this.docSub?.unsubscribe();
   }
 
   @HostListener('drop', ['$event'])

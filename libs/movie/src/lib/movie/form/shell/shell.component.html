@@ -2,10 +2,12 @@
   <header fxLayout="row" fxLayoutAlign="space-between center">
     <tunnel-step-stat></tunnel-step-stat>
     <app-logo></app-logo>
-    <button mat-stroked-button color="primary" (click)="layout.save()" test-id="tunnel-step-save">
-      <mat-icon svgIcon="save"></mat-icon>
-      <span>Save</span>
-    </button>
+    <span [matTooltip]="(uploadService.finalizedUpload | async) ? 'We\'re finishing the upload of your file first, please wait a few seconds before saving your Title.' : ''">
+      <button mat-stroked-button color="primary" [disabled]="saving || (uploadService.finalizedUpload | async)" (click)="save()" test-id="tunnel-step-save">
+        <mat-icon svgIcon="save"></mat-icon>
+        <span>Save</span>
+      </button>
+    </span>
   </header>
 
   <aside>

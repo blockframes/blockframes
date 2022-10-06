@@ -13,7 +13,7 @@ import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [MovieFormShellComponent],
@@ -29,6 +29,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatIconModule,
     MatButtonModule,
     MatDialogModule,
+    MatTooltipModule
   ],
 })
 export class MovieFormShellModule { }

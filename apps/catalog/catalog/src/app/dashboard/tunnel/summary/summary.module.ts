@@ -17,6 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [TunnelSummaryComponent],
@@ -36,6 +37,7 @@ import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
     MatButtonModule,
     MatSnackBarModule,
     MatDividerModule,
+    MatTooltipModule,
     RouterModule.forChild([{ path: '', component: TunnelSummaryComponent }])
   ],
 })

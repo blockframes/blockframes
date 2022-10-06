@@ -1,5 +1,5 @@
 // Angular
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // Component
@@ -10,7 +10,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { MovieService } from '../../service';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { getFileMetadata, getFileStoragePath } from '@blockframes/media/utils';
-import { Subscription } from 'rxjs';
 import { MovieNote } from '@blockframes/model';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { getFileListIndex } from '@blockframes/media/file/pipes/file-list.pipe';
@@ -21,11 +20,9 @@ import { getFileListIndex } from '@blockframes/media/file/pipes/file-list.pipe';
   styleUrls: ['./notes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MovieFormMediaNotesComponent implements OnInit, OnDestroy {
+export class MovieFormMediaNotesComponent implements OnInit {
   movieId = this.route.snapshot.params.movieId;
   form = this.shell.getForm('movie');
-
-  private sub: Subscription;
 
   constructor(
     private movie: MovieService,
@@ -38,15 +35,13 @@ export class MovieFormMediaNotesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub = this.movie.valueChanges(this.movieId).subscribe((title) => {
+    const sub = this.movie.valueChanges(this.movieId).subscribe((title) => {
       const metadata = getFileMetadata('movies', 'notes', this.movieId);
       const mediaArray: Partial<MovieNote>[] = getDeepValue(title, metadata.field);
       this.form.promotional.get('notes').patchValue(mediaArray);
     });
-  }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.shell.addSubToStack(sub);
   }
 
   removeFromQueue(index: number) {

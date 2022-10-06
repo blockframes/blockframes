@@ -1,7 +1,6 @@
 
 // External dependencies
 import { get } from 'lodash';
-import * as admin from 'firebase-admin';
 
 // Blockframes dependencies
 import {
@@ -20,7 +19,6 @@ import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
 
 // Internal dependencies
 import { isUserInvitedToEvent } from './invitations/events';
-
 
 export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eventId?: string, email?: string): Promise<boolean> {
   const eventData = eventId ? await getDocument<Event<EventMeta>>(`events/${eventId}`) : undefined;

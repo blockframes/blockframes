@@ -116,11 +116,13 @@
     </section>
 
     <!-- Submit -->
-    <button id="publish" test-id="publish" mat-flat-button color="accent" class="submit" (click)="submit()"
-      [disabled]="isPublished$ | async">
-      <span>Publish to Marketplace</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
-    </button>
+    <span class="submit" [matTooltip]="(uploadService.finalizedUpload | async) ? 'We\'re finishing the upload of your file first, please wait a few seconds before saving your Title.' : ''">
+      <button id="publish" test-id="publish" mat-flat-button color="accent" (click)="submit()"
+        [disabled]="(isPublished$ | async) || (uploadService.finalizedUpload | async)">
+        <span>Publish to Marketplace</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </button>
+    </span>
     <p *ngIf="isPublished$ | async" class="submit mat-caption" >Already published!</p>
   </ng-container>
 

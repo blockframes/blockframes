@@ -18,7 +18,7 @@ import {
   sanitizeFileName,
 } from '@blockframes/utils/file-sanitizer';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
-import { FileMetaData } from '@blockframes/model';
+import { FileMetaData, StorageFile } from '@blockframes/model';
 import { allowedFiles, AllowedFileType, fileSizeToString, maxAllowedFileSize } from '@blockframes/model';
 import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../utils';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
@@ -85,6 +85,10 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
 
   @Output() selectionChange = new EventEmitter<'added' | 'removed'>();
 
+  // Determine whether document subscription removal should be handled here or on parent component
+  @Input() @boolean pushSubToStack = false;
+  @Output() newSubscription = new EventEmitter<Subscription>();
+
   public allowedTypes: string[] = [];
   public types: string[] = [];
 
@@ -111,22 +115,24 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     if (this.listenToChanges) {
       const ref = this.firestore.getRef(`${this.metadata.collection}/${this.metadata.docId}`) as DocumentReference;
       this.docSub = fromRef(ref).pipe(map(snap => snap.data())).subscribe(data => {
-        const media = this.formIndex !== undefined
+        const media: StorageFile = this.formIndex !== undefined
           ? getDeepValue(data, this.metadata.field)[this.formIndex]
           : getDeepValue(data, this.metadata.field);
-        if (media) {
+        if (media?.storagePath) {
           const extra = this.getExtra();
           // jwPlayer comes from the doc, not from the form.
           delete extra?.['jwPlayerId'];
           this.form.patchValue({ ...media, ...extra });
         }
-      })
+      });
+
+      if (this.pushSubToStack) this.newSubscription.emit(this.docSub);
     }
   }
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
-    this.docSub?.unsubscribe();
+    if (!this.pushSubToStack) this.docSub?.unsubscribe();
   }
 
   @HostListener('drop', ['$event'])

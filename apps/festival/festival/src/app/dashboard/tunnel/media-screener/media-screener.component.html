@@ -4,7 +4,14 @@
     <h3>Screener</h3>
     <section>
       <p>This video is the full video of this title. It is private and cannot be seen by anyone outside your organization unless you explicitly invite them to a virtual screening.</p>
-      <file-uploader [form]="screenerForm" [meta]="['movies', 'screener', movieId]" accept="video" listenToChanges>
+      <file-uploader 
+        [form]="screenerForm" 
+        (newSubscription)="shell.addSubToStack($event)"
+        [meta]="['movies', 'screener', movieId]"
+        accept="video"
+        listenToChanges
+        pushSubToStack
+      >
         <h3 title>Upload Screener</h3>
       </file-uploader>
     </section>

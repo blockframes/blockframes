@@ -79,7 +79,14 @@
         <br />
         This upload is optional, but this information might be very helpful to your potential investors.
       </p>
-      <file-uploader [form]="form.get('files').get('budget')" [meta]="['campaigns', 'budget', movieId]" accept="pdf" listenToChanges>
+      <file-uploader
+        [form]="form.get('files').get('budget')"
+        [meta]="['campaigns', 'budget', movieId]"
+        accept="pdf"
+        (newSubscription)="shell.addSubToStack($event)"
+        listenToChanges
+        pushSubToStack
+      >
         <h3 title>Upload File</h3>
       </file-uploader>
       <span class="mat-caption">Upload a complete document.</span>

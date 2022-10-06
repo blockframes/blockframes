@@ -110,7 +110,9 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
 })
 export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
   @ViewChild(TunnelLayoutComponent) layout: TunnelLayoutComponent;
-  private sub: Subscription;
+  private subs: Subscription[] = [];
+
+  public saving = false;
 
   steps$: Observable<TunnelStep[]>;
 
@@ -124,7 +126,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
-    private uploadService: FileUploaderService
+    public uploadService: FileUploaderService
   ) { }
 
   async ngOnInit() {
@@ -142,7 +144,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
       map(([productionStatus, data]: [ProductionStatus, Data]) => getSteps(productionStatus, data.appSteps))
     );
 
-    this.sub = this.route.fragment.subscribe(async (fragment: string) => {
+    this.subs.push(this.route.fragment.subscribe(async (fragment: string) => {
       const el: HTMLElement = await this.checkIfElementIsReady(fragment);
 
       el?.scrollIntoView({
@@ -150,14 +152,26 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, OnDestroy {
         block: 'center',
         inline: 'start',
       });
-    });
+    }));
+  }
+
+  async save() {
+    this.saving = true;
+    this.cdr.markForCheck();
+    await this.layout.save();
+    this.saving = false;
+    this.cdr.markForCheck();
   }
 
   ngOnDestroy() {
-    this.sub?.unsubscribe();
+    this.subs.forEach(s => s?.unsubscribe());
     this.getForm('movie').reset();
     this.getForm('campaign')?.reset();
     this.uploadService.clearQueue();
+  }
+
+  addSubToStack(sub: Subscription) {
+    this.subs.push(sub);
   }
 
   getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {
