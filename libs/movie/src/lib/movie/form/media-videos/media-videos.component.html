@@ -24,14 +24,7 @@
             <mat-checkbox [checked]="activeForm.isPublic" (change)="activeForm.togglePrivacy($event.checked)" color="primary" test-id="video-privacy">
               <b>Public</b> (Buyers can see video on Marketplace)
             </mat-checkbox>
-            <file-uploader 
-              [queueIndex]="index | fileListIndex: videoList.value" 
-              [form]="activeForm" 
-              [formIndex]="index" 
-              [meta]="['movies', 'otherVideos', movieId]" 
-              accept="video"
-              listenToChanges
-            >
+            <file-uploader [queueIndex]="index | fileListIndex: videoList.value" [form]="activeForm" [formIndex]="index" [meta]="['movies', 'otherVideos', movieId]" accept="video">
               <h3 title>Upload Video</h3>
             </file-uploader>
 
