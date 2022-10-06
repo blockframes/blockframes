@@ -148,9 +148,9 @@ export class FileUploaderService {
   }
 
   /**
-   * Set finalizedSubs to false after a delay to let some time to backend functions 
+   * Set finalizedUpload to false after a delay to let some time to backend functions 
    * to update db document.
-   * finalizedSubs is used in movie-tunnel components to prevent saving during this time.
+   * finalizedUpload is used in movie-tunnel components to prevent saving during this time.
    */
   private listenOnFinalized() {
     const locks = [];
