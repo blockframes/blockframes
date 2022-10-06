@@ -3,10 +3,14 @@ import { sentryDsn, sentryEnv } from '@env';
 import * as Sentry from '@sentry/browser';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/service';
+import { SentryService } from './sentry.service';
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private sentryService: SentryService,
+  ) {
     this.authService.profile$.subscribe(user => {
       if (!user) {
         return;
@@ -26,7 +30,13 @@ export class SentryErrorHandler implements ErrorHandler {
     if (sentryEnv as unknown !== 'production') {
       console.error(error);
     }
-    Sentry.captureException(error.originalError || error);
+
+    if (error?.message.includes('ChunkLoadError')) {
+      this.sentryService.triggerError({ message: 'ChunkLoadError - forced browser refresh', bugType: 'network', location: 'global' });
+      setTimeout(() => window.location.reload(), 3000);
+    } else {
+      Sentry.captureException(error.originalError || error);
+    }
   }
 }
 
