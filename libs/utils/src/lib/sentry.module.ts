@@ -32,8 +32,7 @@ export class SentryErrorHandler implements ErrorHandler {
     }
 
     if (error?.message.includes('ChunkLoadError')) {
-      this.sentryService.triggerError({ message: 'ChunkLoadError - forced browser refresh', bugType: 'network', location: 'global' });
-      setTimeout(() => window.location.reload(), 3000);
+      this.sentryService.triggerError({ message: 'ChunkLoadError', bugType: 'network', location: 'global' });
     } else {
       Sentry.captureException(error.originalError || error);
     }
