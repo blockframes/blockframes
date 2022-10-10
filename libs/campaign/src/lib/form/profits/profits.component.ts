@@ -20,7 +20,7 @@ export class CampaignFormProfitsComponent {
   public allowedFilesExtensions = allowedFiles.pdf.extension;
 
   constructor(
-    private shell: MovieFormShellComponent,
+    public shell: MovieFormShellComponent,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService
   ) {

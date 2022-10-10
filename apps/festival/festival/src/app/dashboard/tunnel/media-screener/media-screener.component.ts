@@ -14,7 +14,7 @@ export class MovieFormMediaScreenerComponent implements OnInit {
   movieId = this.route.snapshot.params.movieId;
 
   constructor(
-    private shell: MovieFormShellComponent,
+    public shell: MovieFormShellComponent,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute
   ) {}

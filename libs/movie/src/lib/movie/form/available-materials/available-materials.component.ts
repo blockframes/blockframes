@@ -24,7 +24,7 @@ export class MovieFormAvailableMaterialsComponent implements OnDestroy {
   public movieId=this.route.snapshot.paramMap.get('movieId')
 
   constructor(
-    private shell: MovieFormShellComponent,
+    public shell: MovieFormShellComponent,
     private dynTitle: DynamicTitleService,
     private route:ActivatedRoute,
   ) {

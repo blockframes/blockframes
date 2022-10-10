@@ -10,13 +10,18 @@ import { delay } from '@blockframes/utils/helpers';
 import { UploadData, isValidMetadata } from '@blockframes/model';
 import { UploadWidgetComponent } from './file/upload-widget/upload-widget.component';
 import { getTaskStateObservable } from './file/upload-widget/task.pipe';
-import { FireStorage, FirestoreService } from 'ngfire';
+import { FireStorage, FirestoreService, percentage } from 'ngfire';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { SentryService } from '@blockframes/utils/sentry.service';
 
 @Injectable({ providedIn: 'root' })
 export class FileUploaderService {
 
   private tasks = new BehaviorStore<UploadTask[]>([]);
   private tasksState = new BehaviorStore<unknown[]>([]);
+  public finalizedUpload = new BehaviorSubject<boolean>(false);
+  private finalizedSubs: Subscription[] = [];
+  private finalizedUploadDelay = 5000;
 
   private queue: Record<string, UploadData[] | null> = {};
 
@@ -32,6 +37,7 @@ export class FileUploaderService {
     private authService: AuthService,
     private firestore: FirestoreService,
     private storage: FireStorage,
+    private sentryService: SentryService,
   ) { }
 
   /**
@@ -95,14 +101,16 @@ export class FileUploaderService {
   upload() {
     const validQueue = Object.entries(this.queue).filter(([storagePath, uploads]) => {
       const arr = uploads.filter(upload => {
-        const isValid = isValidMetadata(upload.metadata, { uidRequired: false });
+        const isValid = isValidMetadata(upload?.metadata, { uidRequired: false });
         if (!isValid) {
-          console.warn('INVALID METADATA: upload will be skipped!');
-          console.warn(storagePath, upload.metadata);
+          const message = `Skipped upload because of invalid metadata.`;
+          console.warn(message);
+          console.warn(storagePath, upload?.metadata);
+          this.sentryService.triggerError({ message, location: 'file-uploader-service', bugType: 'invalid-metadata' });
         }
-        return isValid
-      })
-      return !!arr.length
+        return isValid;
+      });
+      return !!arr.length;
     });
 
     const tasks = validQueue.map(([storagePath, uploads]) => {
@@ -116,7 +124,7 @@ export class FileUploaderService {
         const alreadyUploading = (fullPath: string) => this.tasks.value.some(task => task.snapshot.ref.fullPath === fullPath);
         if (alreadyUploading(finalPath)) return undefined;
 
-        const afTask = this.storage.upload(finalPath, upload.file, { customMetadata: upload.metadata })
+        const afTask = this.storage.upload(finalPath, upload.file, { customMetadata: upload.metadata });
 
         // clean on success
         if (afTask) {
@@ -136,8 +144,27 @@ export class FileUploaderService {
       .then(() => delay(3000))
       .then(() => this.detachWidget());
     this.showWidget();
+    this.listenOnFinalized();
   }
 
+  /**
+   * Set finalizedUpload to false after a delay to let some time to backend functions 
+   * to update db document.
+   * finalizedUpload is used in movie-tunnel components to prevent saving during this time.
+   */
+  private listenOnFinalized() {
+    const locks = [];
+    this.finalizedSubs = this.tasks.value.map(t => percentage(t).subscribe(p => {
+      if (p.progress === 100) {
+        this.finalizedUpload.next(true);
+        locks.push(1);
+        delay(this.finalizedUploadDelay).then(() => {
+          if (locks.length === 1) this.finalizedUpload.next(false);
+          locks.pop();
+        });
+      }
+    }));
+  }
 
   // --------------------------
   //          WIDGET         //
@@ -146,13 +173,16 @@ export class FileUploaderService {
   private async detachWidget() {
     if (!this.overlayRef) return;
 
-    const states = await Promise.all(this.tasksState.value)
-    const canClose = states.every(state => state === 'success')
+    const states = await Promise.all(this.tasksState.value);
+    const canClose = states.every(state => state === 'success');
     if (canClose) {
-      this.overlayRef.detach();
+      this.overlayRef?.detach();
       delete this.overlayRef;
       this.tasks.value = [];
       this.tasksState.value = [];
+
+      // Unsubscribe from subscriptions that listen for ended uploads
+      delay(this.finalizedUploadDelay).then(() => this.finalizedSubs.map(s => s?.unsubscribe()));
     }
   }
 
@@ -160,7 +190,7 @@ export class FileUploaderService {
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create(this.overlayOptions);
       const instance = new ComponentPortal(UploadWidgetComponent);
-      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this.tasks }, { provide: 'db', useValue: this.firestore.db }] }); 
+      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this.tasks }, { provide: 'db', useValue: this.firestore.db }] });
       this.overlayRef.attach(instance);
     }
   }

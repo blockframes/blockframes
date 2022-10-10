@@ -96,14 +96,14 @@ export class TunnelLayoutComponent implements OnInit {
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
   @ViewChild(MatSidenav) sidenav: MatSidenav;
-  
+
   @Input() set steps(steps: TunnelStep[]) {
     this._steps = steps;
     this.steps$.next(steps);
   }
-  
+
   private _steps: TunnelStep[] = [];
-  
+
   private routeBeforeTunnel: string;
 
   /** Fallback link to redirect on exit */
@@ -132,8 +132,7 @@ export class TunnelLayoutComponent implements OnInit {
   async save() {
     await this.update({ publishing: false });
     const configs = Object.keys(this.configs)
-    await this.snackBar.open(`${configs.map(config => this.configs[config].name).join(' & ')
-      } saved`, '', { duration: 1000 }).afterDismissed().toPromise();
+    await this.snackBar.open(`${configs.map(config => this.configs[config].name).join(' & ')} saved`, '', { duration: 1000 }).afterDismissed().toPromise();
     return true;
   }
 

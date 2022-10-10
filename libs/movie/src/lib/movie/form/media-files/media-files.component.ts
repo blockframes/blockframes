@@ -6,7 +6,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 
 import { MovieFormShellComponent } from '../shell/shell.component';
 
-
 @Component({
   selector: 'movie-form-media-files',
   templateUrl: './media-files.component.html',
@@ -18,7 +17,7 @@ export class MovieFormMediaFilesComponent {
   movieId = this.route.snapshot.params.movieId;
 
   constructor(
-    private shell: MovieFormShellComponent,
+    public shell: MovieFormShellComponent,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService
   ) {

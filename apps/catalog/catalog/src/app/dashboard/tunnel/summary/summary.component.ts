@@ -7,6 +7,7 @@ import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.com
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component'
 import { MovieService } from '@blockframes/movie/service';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -36,7 +37,8 @@ export class TunnelSummaryComponent implements OnInit {
     private route: ActivatedRoute,
     private movieService: MovieService,
     private snackBar: MatSnackBar,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    public uploadService: FileUploaderService
   ) {
     this.dynTitle.setPageTitle('Summary and Submit a new title')
   }
