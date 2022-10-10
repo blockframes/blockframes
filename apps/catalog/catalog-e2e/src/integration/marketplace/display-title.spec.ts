@@ -31,6 +31,7 @@ describe('Movie display in marketplace', () => {
     cy.visit('');
     maintenance.start();
     firestore.clearTestData();
+    algolia.delete(movie.id);
     firestore.deleteOrgMovies(org.id);
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
@@ -53,30 +54,30 @@ describe('Movie display in marketplace', () => {
       get('search-input').type(movie.title.international);
       //wait for the count to update before checking our movie
       get('titles-count').should('not.contain', titlesCount);
+      movieCardShould('exist');
     });
-    movieCardShould('exist');
   });
 
   it('Find with director', () => {
     syncMovieToAlgolia(movie);
     findIn('New on Archipel', 'see-all').click();
     get('titles-count').then($result => {
-      const count = $result[0].innerText;
+      titlesCount = $result[0].innerText;
       get('search-input').type(`${movie.directors[0].firstName} ${movie.directors[0].lastName}`);
-      get('titles-count').should('not.contain', count);
+      get('titles-count').should('not.contain', titlesCount);
+      movieCardShould('exist');
     });
-    movieCardShould('exist');
   });
 
   it('Find with keyword', () => {
     syncMovieToAlgolia(movie);
     findIn('New on Archipel', 'see-all').click();
     get('titles-count').then($result => {
-      const count = $result[0].innerText;
+      titlesCount = $result[0].innerText;
       get('search-input').type(movie.keywords[0]);
-      get('titles-count').should('not.contain', count);
+      get('titles-count').should('not.contain', titlesCount);
+      movieCardShould('exist');
     });
-    movieCardShould('exist');
   });
 
   it('Find with filters', () => {
@@ -120,10 +121,10 @@ describe('Movie display in marketplace', () => {
       titlesCount = $result[0].innerText;
       get('search-input').type(movie.title.international);
       get('titles-count').should('not.contain', titlesCount);
+      movieCardShould('not.exist');
+      get('clear-filters').click();
+      get('titles-count').should('contain', titlesCount);
     });
-    movieCardShould('not.exist');
-    get('clear-filters').click();
-    get('titles-count').should('contain', titlesCount);
   });
 });
 

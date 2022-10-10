@@ -8,4 +8,8 @@ export const algolia = {
   storeMovie(data: { movie: Movie; organizationNames: string[] }) {
     return cy.task('storeMovie', data);
   },
+
+  delete(docId: string) {
+    return cy.task('algoliaDelete', docId);
+  },
 };
