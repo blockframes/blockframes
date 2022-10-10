@@ -76,7 +76,7 @@
 
   <!-- EXPORT (ng-content)-->
   <pdf-export *ngIf="nbHits">
-    <button [disabled]="exporting" mat-button (click)="export()" matTooltip="Export to PDF">
+    <button [disabled]="exporting" mat-button (click)="export()" matTooltip="Export to PDF" test-id="export">
       <mat-icon svgIcon="pdf"></mat-icon>
       <span>Export {nbHits, plural, =1 {title} other {titles}}</span>
     </button>

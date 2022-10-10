@@ -80,7 +80,7 @@ describe('Movie display in marketplace', () => {
     });
   });
 
-  it('Find with filters', () => {
+  it('Find with filters, save & load filters', () => {
     syncMovieToAlgolia(movie);
     findIn('New on Archipel', 'see-all').click();
     get('titles-count');
@@ -111,6 +111,11 @@ describe('Movie display in marketplace', () => {
     get('titles-count').should('contain', 'There is 1 title available.');
     movieCardShould('exist');
     getAllStartingWith('item_').should('have.length', 1);
+    get('save').click();
+    get('clear-filters').click();
+    get('titles-count').should('not.contain', 'There is 1 title available.');
+    get('load').click();
+    get('titles-count').should('contain', 'There is 1 title available.');
   });
 
   it('Absent if not released', () => {
@@ -125,6 +130,23 @@ describe('Movie display in marketplace', () => {
       get('clear-filters').click();
       get('titles-count').should('contain', titlesCount);
     });
+  });
+
+  it('Can only export less than 450 movies', () => {
+    syncMovieToAlgolia(movie);
+    findIn('New on Archipel', 'see-all').click();
+    //There shouldn't be less than 450 movies
+    get('export').click();
+    cy.contains(`You can't have an export with that many titles.`);
+    get('titles-count').then($result => {
+      titlesCount = $result[0].innerText;
+      get('search-input').type(movie.title.international);
+      //wait for the count to update before checking our movie
+      get('titles-count').should('not.contain', titlesCount);
+      movieCardShould('exist');
+    });
+    get('export').click();
+    cy.contains('Please wait, your export is being generated...');
   });
 });
 
