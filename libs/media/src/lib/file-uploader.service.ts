@@ -21,6 +21,7 @@ export class FileUploaderService {
   private tasksState = new BehaviorStore<unknown[]>([]);
   public finalizedUpload = new BehaviorSubject<boolean>(false);
   private finalizedSubs: Subscription[] = [];
+  private listeningOn: string[] = [];
   private finalizedUploadDelay = 5000;
 
   private queue: Record<string, UploadData[] | null> = {};
@@ -154,7 +155,11 @@ export class FileUploaderService {
    */
   private listenOnFinalized() {
     const locks = [];
-    this.finalizedSubs = this.tasks.value.map(t => percentage(t).subscribe(p => {
+    const newTasks = this.tasks.value.filter(({ snapshot }) => !this.listeningOn.includes(snapshot.ref.fullPath));
+    if (!newTasks.length) return;
+
+    const subs = newTasks.map(t => percentage(t).subscribe(p => {
+      this.listeningOn.push(t.snapshot.ref.fullPath); // Prevent listening multiple times on same task
       if (p.progress === 100) {
         this.finalizedUpload.next(true);
         locks.push(1);
@@ -164,6 +169,7 @@ export class FileUploaderService {
         });
       }
     }));
+    this.finalizedSubs = [...this.finalizedSubs, ...subs];
   }
 
   // --------------------------
