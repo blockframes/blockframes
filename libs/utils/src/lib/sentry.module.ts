@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/browser';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/service';
 import { SentryService } from './sentry.service';
+import { appVersion } from './constants';
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
@@ -13,6 +14,9 @@ export class SentryErrorHandler implements ErrorHandler {
   ) {
     this.authService.profile$.subscribe(user => {
       if (!user) {
+        Sentry.configureScope(scope => {
+          scope.setTag('appVersion', appVersion);
+        });
         return;
       }
 
@@ -22,6 +26,7 @@ export class SentryErrorHandler implements ErrorHandler {
           id: user.uid,
           username: `${user.firstName} ${user.lastName}`
         });
+        scope.setTag('appVersion', appVersion);
       });
     });
   }

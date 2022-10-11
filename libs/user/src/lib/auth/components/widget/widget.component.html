@@ -8,8 +8,9 @@
         </div>
         <img asset="profil_user.svg" [ref]="user.avatar" alt="Profile picture">
       </button>
-      <span class="mat-caption bf-admin" *ngIf="isBfAdmin | async">Blockframes Admin (db <strong>v{{ (appVersion$ |
-          async)?.currentVersion }}</strong> | emulators : <strong>{{ emulators }}</strong> )</span>
+      <span class="mat-caption bf-admin" *ngIf="isBfAdmin | async">
+        Blockframes Admin (db <strong>v{{ (dbVersion$ | async)?.currentVersion }}</strong> | app <strong>v{{ (appVersion$ | async)?.currentVersion }}</strong> | emulators : <strong>{{ emulators }}</strong> )
+      </span>
       <overlay-widget #menu>
         <widget-card>
           <mat-nav-list>

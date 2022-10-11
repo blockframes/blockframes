@@ -25,6 +25,7 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { CrmModule } from './crm.module';
 import { APP } from '@blockframes/utils/routes/utils';
 import { EMULATORS_CONFIG, setupEmulators } from '@blockframes/utils/emulator-front-setup';
+import { VersionModule } from '@blockframes/utils/version/version.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -47,6 +48,8 @@ import { EMULATORS_CONFIG, setupEmulators } from '@blockframes/utils/emulator-fr
     // Intercom
     IntercomModule.forRoot({ appId: intercomId }),
 
+    // Blockframes
+    VersionModule
   ],
   providers: [
     { provide: APP, useValue: 'crm' },

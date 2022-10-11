@@ -5,7 +5,7 @@ import { IconService } from '@blockframes/ui/icon.service';
 
 @Component({
   selector: 'financiers-root',
-  template: '<router-outlet></router-outlet><cookie-banner></cookie-banner>',
+  template: '<router-outlet></router-outlet><cookie-banner></cookie-banner><app-version></app-version>',
   styles: [':host{ display: block; height: 100vh; }'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
