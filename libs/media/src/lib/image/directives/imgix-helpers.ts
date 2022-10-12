@@ -1,6 +1,5 @@
 import { firebase } from '@env';
-import { StorageFile, privacies, Privacy, createStorageFile } from '@blockframes/model';
-import { getFileExtension } from '@blockframes/utils/file-sanitizer';
+import { StorageFile, privacies, Privacy } from '@blockframes/model';
 
 /**
  * Interface that hold the image options for imgix processing.
@@ -66,13 +65,7 @@ export function formatParameters(parameters: ImageParameters): string {
  * @param ref
  * @param parameters
  */
-export function getImgIxResourceUrl(file: StorageFile, parameters: ImageParameters, useDefault = false) {
-  if (useDefault) {
-    const storagePath = file?.storagePath && getFileExtension(file.storagePath) === 'pdf' ? 'default-pdf.pdf' : 'default-image.webp';
-    file = createStorageFile({ storagePath });
-    delete parameters.s;
-  }
-
+export function getImgIxResourceUrl(file: StorageFile, parameters: ImageParameters) {
   /**
    * @dev This is the directory that must be set in imgIx source config.
    * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a

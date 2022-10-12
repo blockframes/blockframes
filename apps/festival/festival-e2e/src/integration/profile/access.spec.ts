@@ -41,13 +41,13 @@ describe('Login tests', () => {
     get('profile').click();
     assertUrlIncludes('c/o/account/profile/view/settings');
 
-   /* cy.get('image-uploader').selectFile(imageFixture, {
+    cy.get('image-uploader').selectFile(imageFixture, {
       action: 'drag-drop'
     });
 
     cy.wait(500); // TODO remove - Waiting for image to be here
     get('crop-image').click();
-    get('update-profile').click();
+    /*get('update-profile').click();
 
     cy.wait(5000); // Wait until the backend function is triggered
     firestore.get(`users/${user.uid}`)
@@ -55,6 +55,7 @@ describe('Login tests', () => {
 
     // TODO check storage path in bucket ?
 
-    // TODO refresh and check avatar ?*/
+    // TODO refresh and check avatar ?
+    */
   });
 });
