@@ -1,5 +1,6 @@
 import { firebase } from '@env';
 import { StorageFile, privacies, Privacy, createStorageFile } from '@blockframes/model';
+import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 
 /**
  * Interface that hold the image options for imgix processing.
@@ -67,7 +68,8 @@ export function formatParameters(parameters: ImageParameters): string {
  */
 export function getImgIxResourceUrl(file: StorageFile, parameters: ImageParameters, useDefault = false) {
   if (useDefault) {
-    file = createStorageFile({ storagePath: 'default-image.webp' });
+    const storagePath = getFileExtension(file.storagePath) === 'pdf' ? 'default-pdf.pdf' : 'default-image.webp';
+    file = createStorageFile({ storagePath });
     delete parameters.s;
   }
 
