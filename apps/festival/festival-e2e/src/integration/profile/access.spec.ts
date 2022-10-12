@@ -32,7 +32,9 @@ describe('Login tests', () => {
     firestore.create([injectedData]);
     maintenance.end();
     refreshIfMaintenance();
+    cy.visit('');
     browserAuth.signinWithEmailAndPassword(user.email);
+    cy.visit('');
   });
 
   it('login', () => {
@@ -67,5 +69,7 @@ describe('Login tests', () => {
       .then((user: User) => expect(user.avatar.storagePath).to.contain('default-image'));
 
     // TODO check storage path in bucket ?
+
+    // TODO refresh and check avatar ?
   });
 });
