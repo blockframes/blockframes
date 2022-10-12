@@ -1,13 +1,12 @@
 // Angular
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { CallableFunctions } from 'ngfire';
 
-// State
-import { StorageFile } from '@blockframes/model';
-import { ImageParameters, getImgSize, getImgIxResourceUrl } from './image/directives/imgix-helpers';
-
 // Blockframes
-import { clamp } from '@blockframes/model';
+import { clamp, StorageFile } from '@blockframes/model';
+import { ImageParameters, getImgSize, getImgIxResourceUrl } from './image/directives/imgix-helpers';
+import { EmulatorsConfig, EMULATORS_CONFIG } from '@blockframes/utils/emulator-front-setup';
+
 @Injectable({ providedIn: 'root' })
 export class MediaService {
 
@@ -23,7 +22,10 @@ export class MediaService {
    */
   getProtectedMediaToken = this.functions.prepare<{ file: StorageFile, parametersSet: ImageParameters[], eventId?: string }, string[]>('getMediaToken');
 
-  constructor(private functions: CallableFunctions) { }
+  constructor(
+    private functions: CallableFunctions,
+    @Inject(EMULATORS_CONFIG) private emulatorsConfig: EmulatorsConfig
+  ) { }
 
   async generateImageSrcset(file: StorageFile, _parameters: ImageParameters): Promise<string> {
     const parametersSet: ImageParameters[] = getImgSize(file.storagePath).map(size => ({ ..._parameters, w: size }));
@@ -35,7 +37,7 @@ export class MediaService {
 
     const urls = parametersSet.map((param, index) => {
       if (tokens[index]) { param.s = tokens[index] };
-      return `${getImgIxResourceUrl(file, param)} ${param.w}w`;
+      return `${getImgIxResourceUrl(file, param, !!this.emulatorsConfig.storage)} ${param.w}w`;
     })
 
     return urls.join(', ');
@@ -52,7 +54,7 @@ export class MediaService {
       parameters.s = token;
     }
 
-    return getImgIxResourceUrl(file, parameters);
+    return getImgIxResourceUrl(file, parameters, !!this.emulatorsConfig.storage);
   }
 
   generateBackgroundImageUrl(file: StorageFile, p: ImageParameters): Promise<string> {

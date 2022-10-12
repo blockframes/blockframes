@@ -5,8 +5,9 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { jwplayerApiV2 } from '@blockframes/firebase-utils/jwplayer-api';
 import { StorageVideo, linkDuration, ErrorResultResponse } from '@blockframes/model';
 import { isAllowedToAccessMedia } from './internals/media';
-import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, production, playerId } from './environments/environment';
+import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, production, playerId, e2eMode } from './environments/environment';
 import { getDocument } from '@blockframes/firebase-utils';
+import { testVideoId } from '@env';
 
 export interface ReadVideoParams {
 
@@ -121,6 +122,8 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
   /** if upload is a failure (`success = false`) this field will hold the error message */
   message?: string
 }> => {
+
+  if (e2eMode) return { success: true, key: testVideoId };
 
   const expires = new Date().getTime() + 7200000; // now + 2 hours
 

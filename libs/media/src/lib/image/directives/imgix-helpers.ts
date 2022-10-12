@@ -1,5 +1,5 @@
 import { firebase } from '@env';
-import { StorageFile, privacies, Privacy } from '@blockframes/model';
+import { StorageFile, privacies, Privacy, createStorageFile } from '@blockframes/model';
 
 /**
  * Interface that hold the image options for imgix processing.
@@ -65,7 +65,12 @@ export function formatParameters(parameters: ImageParameters): string {
  * @param ref
  * @param parameters
  */
-export function getImgIxResourceUrl(file: StorageFile, parameters: ImageParameters) {
+export function getImgIxResourceUrl(file: StorageFile, parameters: ImageParameters, useDefault = false) {
+  if (useDefault) {
+    file = createStorageFile({ storagePath: 'default-image.webp' });
+    delete parameters.s;
+  }
+
   /**
    * @dev This is the directory that must be set in imgIx source config.
    * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
