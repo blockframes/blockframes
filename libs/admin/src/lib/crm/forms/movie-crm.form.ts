@@ -10,6 +10,7 @@ function createMovieCrmControls(entity: Partial<Movie>) {
     productionStatus: new FormControl(movie.productionStatus),
     internalRef: new FormControl(movie.internalRef),
     orgIds: FormList.factory(movie.orgIds, (el) => new FormControl(el)),
+    keywords: FormList.factory(entity.keywords, (el) => new FormControl(el)),
   };
 }
 
@@ -18,6 +19,10 @@ type MovieCrmControl = ReturnType<typeof createMovieCrmControls>;
 export class MovieCrmForm extends FormEntity<MovieCrmControl> {
   constructor(data?: Movie) {
     super(createMovieCrmControls(data));
+  }
+
+  get keywords() {
+    return this.get('keywords');
   }
 }
 
