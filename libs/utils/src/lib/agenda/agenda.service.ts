@@ -6,7 +6,7 @@ import { applicationUrl, sendgridEmailsFrom } from '../apps';
 const googleCalendarLink = 'https://www.google.com/calendar/event';
 
 function toGoogleLink(icsEvent: IcsEvent) {
-
+  if (!icsEvent) return;
   const eventData = {
     action: 'TEMPLATE',
     text: icsEvent.title,
