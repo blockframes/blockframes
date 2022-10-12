@@ -41,7 +41,7 @@ describe('Login tests', () => {
     get('profile').click();
     assertUrlIncludes('c/o/account/profile/view/settings');
 
-    cy.get('image-uploader').selectFile(imageFixture, {
+   /* cy.get('image-uploader').selectFile(imageFixture, {
       action: 'drag-drop'
     });
 
@@ -55,6 +55,6 @@ describe('Login tests', () => {
 
     // TODO check storage path in bucket ?
 
-    // TODO refresh and check avatar ?
+    // TODO refresh and check avatar ?*/
   });
 });
