@@ -25,7 +25,7 @@
     <image-cropper [imageFile]="file" [aspectRatio]="cropRatio" format="webp" [containWithinAspectRatio]="false"
       [resizeToWidth]="setWidth || parentWidth" (imageCropped)="imageCropped($event)"></image-cropper>
     <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
-      <button mat-mini-fab color="primary" (click)="cropIt()" matTooltip="Crop Image">
+      <button test-id="crop-image" mat-mini-fab color="primary" (click)="cropIt()" matTooltip="Crop Image">
         <mat-icon svgIcon="check"></mat-icon>
       </button>
       <button mat-mini-fab color="warn" (click)="nextStep('drop')" matTooltip="Cancel & Choose another picture">

@@ -1,3 +1,4 @@
+import { User } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -12,6 +13,7 @@ import {
   assertUrlIncludes,
 } from '@blockframes/testing/cypress/browser';
 import { user, org, permissions } from '../../fixtures/authentification/login';
+const imageFixture = 'src/fixtures/default-image.webp';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -20,7 +22,7 @@ const injectedData = {
 };
 
 describe('Login tests', () => {
-  it('login', () => {
+  beforeEach(() => {
     cy.visit('');
     browserAuth.clearBrowserAuth();
     maintenance.start();
@@ -31,6 +33,9 @@ describe('Login tests', () => {
     maintenance.end();
     refreshIfMaintenance();
     browserAuth.signinWithEmailAndPassword(user.email);
+  });
+
+  it('login', () => {
     check('terms');
     check('privacy-policy');
     get('access').click();
@@ -38,5 +43,29 @@ describe('Login tests', () => {
     get('auth-user').click();
     get('profile').click();
     assertUrlIncludes('c/o/account/profile/view/settings');
+  });
+
+  it('upload profile picture', () => {
+    check('terms');
+    check('privacy-policy');
+    get('access').click();
+    get('skip-preferences').click();
+    get('auth-user').click();
+    get('profile').click();
+    assertUrlIncludes('c/o/account/profile/view/settings');
+
+    cy.get('image-uploader').selectFile(imageFixture, {
+      action: 'drag-drop'
+    });
+
+    cy.wait(500); // TODO remove - Waiting for image to be here
+    get('crop-image').click();
+    get('update-profile').click();
+
+    cy.wait(5000); // Wait until the backend function is triggered
+    firestore.get(`users/${user.uid}`)
+      .then((user: User) => expect(user.avatar.storagePath).to.contain('default-image'));
+
+    // TODO check storage path in bucket ?
   });
 });
