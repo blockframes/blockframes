@@ -51,7 +51,7 @@ commands:
             - emulator-cache-v1-
       - run:
           background: true
-          command: npm start emulatorsE2E
+          command: npm start emulators
   fail_on_production:
     description: Exit if run against production - failsafe
     steps:
