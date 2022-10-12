@@ -22,7 +22,7 @@ const injectedData = {
 };
 
 describe('Login tests', () => {
-  beforeEach(() => {
+  it('login and set a profile picture', () => {
     cy.visit('');
     browserAuth.clearBrowserAuth();
     maintenance.start();
@@ -32,22 +32,7 @@ describe('Login tests', () => {
     firestore.create([injectedData]);
     maintenance.end();
     refreshIfMaintenance();
-    cy.visit('');
     browserAuth.signinWithEmailAndPassword(user.email);
-    cy.visit('');
-  });
-
-  it('login', () => {
-    check('terms');
-    check('privacy-policy');
-    get('access').click();
-    get('skip-preferences').click();
-    get('auth-user').click();
-    get('profile').click();
-    assertUrlIncludes('c/o/account/profile/view/settings');
-  });
-
-  it('upload profile picture', () => {
     check('terms');
     check('privacy-policy');
     get('access').click();
