@@ -244,7 +244,7 @@ export const requestFromOrgToAccessApp = functions().https.onCall(skipInMaintena
 //      Files management        //
 //--------------------------------
 
-export const onFileUpload = functions(heavyConfig).storage.object().onFinalize(skipInMaintenance(linkFile));
+export const onFileUpload = functions(heavyConfig).storage.bucket('blockframes-ci').object().onFinalize(skipInMaintenance(linkFile));
 
 /** Trigger: when an user ask for a private media. */
 export const getMediaToken = functions().https.onCall(skipInMaintenance(logErrors(_getMediaToken)));
