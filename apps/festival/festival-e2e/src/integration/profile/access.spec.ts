@@ -41,21 +41,16 @@ describe('Login tests', () => {
     get('profile').click();
     assertUrlIncludes('c/o/account/profile/view/settings');
 
-    cy.get('image-uploader').selectFile(imageFixture, {
-      action: 'drag-drop'
-    });
+    cy.get('image-uploader').selectFile(imageFixture, { action: 'drag-drop' });
 
-    cy.wait(500); // TODO remove - Waiting for image to be here
+    cy.wait(500); // Waiting for image to be here after drag 
     get('crop-image').click();
-    /*get('update-profile').click();
+    get('update-profile').click({ force: true }); // TODO { force: true } because of snackbar with permission error
 
     cy.wait(5000); // Wait until the backend function is triggered
-    firestore.get(`users/${user.uid}`)
+    firestore
+      .get(`users/${user.uid}`)
       .then((user: User) => expect(user.avatar.storagePath).to.contain('default-image'));
 
-    // TODO check storage path in bucket ?
-
-    // TODO refresh and check avatar ?
-    */
   });
 });
