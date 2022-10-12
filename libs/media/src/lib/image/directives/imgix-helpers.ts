@@ -68,7 +68,7 @@ export function formatParameters(parameters: ImageParameters): string {
  */
 export function getImgIxResourceUrl(file: StorageFile, parameters: ImageParameters, useDefault = false) {
   if (useDefault) {
-    const storagePath = getFileExtension(file.storagePath) === 'pdf' ? 'default-pdf.pdf' : 'default-image.webp';
+    const storagePath = file?.storagePath && getFileExtension(file.storagePath) === 'pdf' ? 'default-pdf.pdf' : 'default-image.webp';
     file = createStorageFile({ storagePath });
     delete parameters.s;
   }
