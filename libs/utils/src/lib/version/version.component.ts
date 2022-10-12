@@ -27,7 +27,9 @@ export class VersionComponent implements OnInit, OnDestroy {
       fromRef(this.firestore.getRef(appVersionDoc) as DocumentReference<IVersionDoc>).pipe(map(snap => snap.data())),
       this.service.isInMaintenance$,
     ]).pipe(
-      tap(([{ currentVersion }, isInMaintenance]) => {
+      tap(([version, isInMaintenance]) => {
+        if (!version) return;
+        const { currentVersion } = version;
         if (!isInMaintenance && currentVersion !== appVersion) {
           this.sentryService.triggerWarning({ message: `Front not in v${currentVersion}`, bugType: 'front-version', location: 'global' });
         }
