@@ -454,10 +454,10 @@ describe('Movie tunnel', () => {
     firestore
       .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id })
       .then(([movie]: Movie[]) => {
-        expect(movie.promotional.videos.screener).to.equal('movies');
-        expect(movie.promotional.videos.screener).to.equal('promotional.videos.screener');
-        expect(movie.promotional.videos.screener).to.equal(user.uid);
-        expect(movie.promotional.videos.screener).to.equal('protected');
+        expect(movie.promotional.videos.screener.collection).to.equal('movies');
+        expect(movie.promotional.videos.screener.field).to.equal('promotional.videos.screener');
+        expect(movie.promotional.videos.screener.docId).to.equal(movie.id);
+        expect(movie.promotional.videos.screener.privacy).to.equal('protected');
         expect(movie.promotional.videos.screener.jwPlayerId).to.equal(testVideoId);
         expect(movie.promotional.videos.screener.storagePath).to.contain(`movies/${movie.id}/promotional.videos.screener/default-video.avi`);
         assertUrlIncludes(`c/o/dashboard/title/${movie.id}/activity`);
