@@ -113,7 +113,7 @@ export async function startEmulatorsForUnitTests({ execCommand }: { execCommand?
       emulators: ['auth', 'firestore', 'functions'],
       exportData: false,
     });
-    await awaitProcessExit(proc);
+    await awaitProcessExit(proc, !!execCommand);
   } catch (e) {
     await shutdownEmulator(proc);
     throw e;
