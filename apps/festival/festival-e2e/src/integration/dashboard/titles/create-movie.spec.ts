@@ -449,7 +449,9 @@ describe('Movie tunnel', () => {
     get('publish').click();
     cy.contains(`${movie.title.international} successfully published.`);
     awaitElementDeletion('[test-id="upload-completed"]');
-    cy.wait(5000); // Wait until the onFileUpload backend function is triggered
+    cy.wait(1000); // Wait until the onFileUpload backend function is triggered
+    get('screener').should('contain', 'default-video.avi');
+
     get('close-tunnel').click();
     firestore
       .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id })

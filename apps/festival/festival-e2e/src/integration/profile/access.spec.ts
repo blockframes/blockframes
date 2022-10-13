@@ -49,7 +49,7 @@ describe('Login tests', () => {
     get('update-profile').click({ force: true }); // TODO { force: true } because of snackbar with permission error
 
     awaitElementDeletion('[test-id="upload-completed"]');
-    cy.wait(5000); // Wait until the backend function is triggered
+    cy.wait(1000); // Wait until the onFileUpload backend function is triggered
     firestore
       .get(`users/${user.uid}`)
       .then((user: User) => {
