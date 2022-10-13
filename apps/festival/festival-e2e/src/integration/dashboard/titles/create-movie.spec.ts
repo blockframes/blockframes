@@ -315,7 +315,7 @@ describe('Movie tunnel', () => {
     get('next').click();
     ///screener movie
     cy.contains('Screener Video');
-    cy.get('file-uploader').selectFile(videoFixture, { action: 'drag-drop' });
+    get('screener-upload').selectFile(videoFixture, { action: 'drag-drop' });
     get('next').click();
 
     //last step
