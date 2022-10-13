@@ -94,11 +94,12 @@ export async function firebaseEmulatorExec({
     return Boolean(result);
   }
 
-  if (isOrHasValue(emulators, 'functions')) {
+  // TODO test process.env['PROJECT_ID']
+  //if (isOrHasValue(emulators, 'functions')) { // test 
     // * If functions has been selected, write project config to .runtimeConfig file in root of repo dir
     writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
-    // writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json')); // Failing on CI
-  }
+    // writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json')); // Failing on CI ..
+  //}
 
   if ((isOrHasValue(emulators, 'firestore') || isOrHasValue(emulators, 'auth') || isOrHasValue(emulators, 'storage')) && importPath) {
     // * we are running emulators that need a backup location

@@ -110,7 +110,7 @@ export async function startEmulatorsForUnitTests({ execCommand }: { execCommand?
   try {
     proc = await firebaseEmulatorExec({
       execCommand,
-      emulators: ['auth', 'firestore', 'functions', 'pubsub'],
+      emulators: ['auth', 'firestore'], // no functions needed ?
       exportData: false,
     });
     await awaitProcessExit(proc, !!execCommand);
