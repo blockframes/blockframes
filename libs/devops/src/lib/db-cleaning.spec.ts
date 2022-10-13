@@ -670,7 +670,7 @@ describe('DB cleaning script', () => {
 
     const documentIds = users.docs.map(d => d.id);
 
-    await cleanNotifications(notificationsBefore, documentIds);
+    await cleanNotifications(notificationsBefore, documentIds, db);
     const notificationsAfter: Snapshot = await getCollectionRef('notifications');
 
     expect(notificationsAfter.docs.length).toEqual(2);
