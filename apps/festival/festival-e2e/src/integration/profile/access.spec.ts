@@ -52,7 +52,13 @@ describe('Login tests', () => {
     cy.wait(5000); // Wait until the backend function is triggered
     firestore
       .get(`users/${user.uid}`)
-      .then((user: User) => expect(user.avatar.storagePath).to.contain('default-image'));
+      .then((user: User) => {
+        expect(user.avatar.collection).to.equal('users');
+        expect(user.avatar.field).to.equal('avatar');
+        expect(user.avatar.docId).to.equal(user.uid);
+        expect(user.avatar.privacy).to.equal('public');
+        expect(user.avatar.storagePath).to.contain(`/users/${user.uid}/avatar/default-image`);
+      });
 
   });
 });
