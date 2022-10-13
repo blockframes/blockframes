@@ -57,7 +57,7 @@ describe('Login tests', () => {
         expect(user.avatar.field).to.equal('avatar');
         expect(user.avatar.docId).to.equal(user.uid);
         expect(user.avatar.privacy).to.equal('public');
-        expect(user.avatar.storagePath).to.contain(`/users/${user.uid}/avatar/default-image`);
+        expect(user.avatar.storagePath).to.contain(`users/${user.uid}/avatar/default-image`);
       });
 
   });
