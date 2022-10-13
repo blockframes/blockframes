@@ -11,6 +11,7 @@ import {
   get,
   check,
   assertUrlIncludes,
+  awaitElementDeletion,
 } from '@blockframes/testing/cypress/browser';
 import { user, org, permissions } from '../../fixtures/authentification/login';
 const imageFixture = 'src/fixtures/default-image.webp';
@@ -47,6 +48,7 @@ describe('Login tests', () => {
     get('crop-image').click();
     get('update-profile').click({ force: true }); // TODO { force: true } because of snackbar with permission error
 
+    awaitElementDeletion('[test-id="upload-completed"]');
     cy.wait(5000); // Wait until the backend function is triggered
     firestore
       .get(`users/${user.uid}`)
