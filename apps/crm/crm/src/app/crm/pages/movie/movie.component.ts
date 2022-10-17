@@ -16,10 +16,13 @@ import { MovieAppConfigForm } from '@blockframes/movie/form/movie.form';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { QueryConstraint, where } from 'firebase/firestore';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { map, Observable } from 'rxjs';
+import { map, Observable, startWith } from 'rxjs';
 import { aggregatePerUser } from '@blockframes/analytics/utils';
 import { joinWith } from 'ngfire';
 import { UserService } from '@blockframes/user/service';
+import { FormControl } from '@angular/forms';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'crm-movie',
@@ -35,6 +38,10 @@ export class MovieComponent implements OnInit {
   public storeStatus = storeStatus;
   public productionStatus = productionStatus;
   public apps = getAllAppsExcept(['crm']);
+
+  public keywords$: Observable<string[]>;
+  public keywordForm = new FormControl();
+  public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   public analytics$: Observable<AggregatedAnalytic[]>;
 
@@ -60,6 +67,8 @@ export class MovieComponent implements OnInit {
     this.movie = await this.movieService.getValue(this.movieId);
     this.movieForm = new MovieCrmForm(this.movie);
     this.movieAppConfigForm = new MovieAppConfigForm(this.movie.app);
+
+    this.keywords$ = this.movieForm.keywords.valueChanges.pipe(startWith(this.movieForm.keywords.value));
 
     const query: QueryConstraint[] = [
       where('type', '==', 'title'),
@@ -90,6 +99,7 @@ export class MovieComponent implements OnInit {
       productionStatus: this.movieForm.get('productionStatus').value,
       internalRef: this.movieForm.get('internalRef').value,
       orgIds: this.movieForm.get('orgIds').value,
+      keywords: this.movieForm.keywords.value,
     };
 
     const hasCampaign = await this.campaignService.getValue(this.movieId);
@@ -140,6 +150,17 @@ export class MovieComponent implements OnInit {
     }
 
     return this.movie.app;
+  }
+
+  public addKeyword(event: MatChipInputEvent): void {
+    const { value = '' } = event;
+
+    this.movieForm.keywords.add(value);
+    this.keywordForm.reset();
+  }
+
+  public removeKeyword(i: number): void {
+    this.movieForm.keywords.removeAt(i);
   }
 
   public async deleteMovie() {

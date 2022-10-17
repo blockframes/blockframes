@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
 
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -89,6 +90,7 @@ export const panelRoutes: Routes = [
     MatProgressSpinnerModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatChipsModule,
 
     TableModule,
     ImageModule,

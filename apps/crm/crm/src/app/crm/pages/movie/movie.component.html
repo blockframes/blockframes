@@ -40,6 +40,22 @@
               </mat-form-field>
             </ng-template>
           </bf-form-list>
+          <legend>Keywords</legend>
+          <mat-form-field appearance="outline">
+            <mat-label>Keywords</mat-label>
+            <mat-chip-list #chipList>
+              <ng-container *ngFor="let value of keywords$ | async; let i = index">
+                <mat-chip removable="true" (removed)="removeKeyword(i)">
+                  <span>{{ value }}</span>
+                  <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
+                </mat-chip>
+              </ng-container>
+            </mat-chip-list>
+            <input matInput [formControl]="keywordForm" [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addKeyword($event)"
+              placeholder="e.g. Ship, Shipwreck, Disaster, Iceberg, Young Love, Forbidden Love, Social Class" />
+            <mat-hint>Use commas or press Enter key to separate keywords.</mat-hint>
+          </mat-form-field>
         </form>
       </ng-container>
     </article>
