@@ -44,7 +44,7 @@
     "affected:build": "cross-env nx affected:build --configuration=$NG_CONFIG",
     "affected:e2e": "cross-env nx affected:e2e --configuration=$NG_CONFIG",
     "affected:lint": "cross-env nx affected:lint --configuration=$NG_CONFIG",
-    "affected:test": "npm start emulatorsUnitTests 'cross-env nx affected:test --base=origin/develop --configuration=$NG_CONFIG'",
+    "affected:test": "cross-env nx affected:test --base=origin/develop --configuration=$NG_CONFIG",
     "affected:dep-graph": "nx affected:dep-graph",
     "format": "nx format:write",
     "format:write": "nx format:write",
