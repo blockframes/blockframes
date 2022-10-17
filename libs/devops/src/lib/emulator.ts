@@ -98,7 +98,7 @@ export async function startEmulators({ importFrom = 'defaultImport', emulators, 
     proc = await firebaseEmulatorExec({
       emulators: emulators || ['auth', 'functions', 'firestore', 'pubsub'],
       importPath: importData ? emulatorPath : undefined,
-      exportData: true,
+      exportData: importData,
     });
     await awaitProcessExit(proc);
   } catch (e) {
