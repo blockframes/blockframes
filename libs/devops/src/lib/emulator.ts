@@ -92,13 +92,18 @@ export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulat
   }
 }
 
-export async function startEmulators({ importFrom = 'defaultImport', emulators, importData = true, execCommand }: StartEmulatorOptions = { importFrom: 'defaultImport', importData: true }) {
+export async function startEmulators({
+  importFrom = 'defaultImport',
+  emulators = ['auth', 'functions', 'firestore', 'pubsub'],
+  importData = true,
+  execCommand
+}: StartEmulatorOptions = { importFrom: 'defaultImport', importData: true, emulators: ['auth', 'functions', 'firestore', 'pubsub'] }) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
   let proc: ChildProcess;
   try {
     proc = await firebaseEmulatorExec({
       execCommand,
-      emulators: emulators || ['auth', 'functions', 'firestore', 'pubsub'],
+      emulators,
       importPath: importData ? emulatorPath : undefined,
       exportData: importData,
     });
