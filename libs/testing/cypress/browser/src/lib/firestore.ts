@@ -24,7 +24,7 @@ export const firestore = {
     return cy.task('queryData', data);
   },
 
-  update(data: { docPath: string; field: string; value: unknown }[] | { docPath: string; field: string; value: unknown }) {
+  update(data: UpdateParameters[] | UpdateParameters) {
     if (Array.isArray(data)) return cy.task('updateData', data);
     return cy.task('updateData', [data]);
   },
@@ -43,3 +43,9 @@ export const firestore = {
       });
   },
 };
+
+interface UpdateParameters {
+  docPath: string;
+  field: string;
+  value: unknown;
+}

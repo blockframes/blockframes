@@ -1,4 +1,4 @@
-import { fakeUserData } from '@blockframes/testing/cypress/browser';
+import { fakeUserData, E2eLegalTerms } from '@blockframes/testing/cypress/browser';
 import {
   createMovie,
   createDocPermissions,
@@ -22,6 +22,7 @@ import { sub } from 'date-fns';
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
+const movieOrgId = '0-e2e-movieOrgId';
 const movieId = '0-e2e-movieId';
 const userData = fakeUserData();
 
@@ -32,15 +33,9 @@ export const user = createUser({
   email: userData.email,
   orgId: orgId,
   termsAndConditions: {
-    catalog: {
-      date: new Date(),
-      ip: '11.111.11.111',
-    },
+    catalog: E2eLegalTerms,
   },
-  privacyPolicy: {
-    date: new Date(),
-    ip: '11.111.11.111',
-  },
+  privacyPolicy: E2eLegalTerms,
 });
 
 export const org = createOrganization({
@@ -52,19 +47,30 @@ export const org = createOrganization({
   appAccess: createOrgAppAccess({ catalog: { marketplace: true, dashboard: false } }),
 });
 
+export const movieOrg = createOrganization({
+  id: movieOrgId,
+  name: 'movie org',
+  status: 'accepted',
+  appAccess: createOrgAppAccess({ festival: { marketplace: true, dashboard: true } }),
+});
+
 export const orgPermissions = createPermissions({
   id: orgId,
   roles: { [adminUid]: 'superAdmin' },
 });
 
-export const moviePermissions = createDocPermissions({
+export const movieOrgPermissions = createPermissions({
+  id: movieOrgId,
+});
+
+export const movieOrgMoviePermissions = createDocPermissions({
   id: movieId,
-  ownerId: orgId,
+  ownerId: movieOrgId,
 });
 
 export const displayMovie = createMovie({
   id: movieId,
-  orgIds: ['otherOrg'],
+  orgIds: [movieOrgId],
   app: createMovieAppConfig({
     catalog: createAppConfig({ status: 'accepted', access: true }),
   }),

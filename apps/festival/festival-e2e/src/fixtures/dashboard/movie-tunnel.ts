@@ -1,4 +1,4 @@
-import { fakeUserData } from '@blockframes/testing/cypress/browser';
+import { fakeUserData, E2eLegalTerms } from '@blockframes/testing/cypress/browser';
 import {
   createPermissions,
   createMovie,
@@ -29,15 +29,9 @@ export const user = createUser({
   email: userData.email,
   orgId: orgId,
   termsAndConditions: {
-    festival: {
-      date: new Date(),
-      ip: '11.111.11.111',
-    },
+    festival: E2eLegalTerms,
   },
-  privacyPolicy: {
-    date: new Date(),
-    ip: '11.111.11.111',
-  },
+  privacyPolicy: E2eLegalTerms,
 });
 
 export const org = createOrganization({

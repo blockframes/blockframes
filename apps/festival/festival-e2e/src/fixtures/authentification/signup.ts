@@ -1,4 +1,4 @@
-import { createFakeUserDataArray } from '@blockframes/testing/cypress/browser';
+import { createFakeUserDataArray, E2eLegalTerms } from '@blockframes/testing/cypress/browser';
 import {
   createPermissions,
   createUser,
@@ -41,15 +41,9 @@ const marketplaceOrgAdmin = createUser({
   email: marketplaceOrgAdminData.email,
   orgId: marketplaceOrgId,
   termsAndConditions: {
-    festival: {
-      date: new Date(),
-      ip: '11.111.11.111',
-    },
+    festival: E2eLegalTerms,
   },
-  privacyPolicy: {
-    date: new Date(),
-    ip: '11.111.11.111',
-  },
+  privacyPolicy: E2eLegalTerms,
 });
 
 const marketplaceOrg = createOrganization({
@@ -87,15 +81,9 @@ const dashboardOrgAdmin = createUser({
   email: dashboardOrgAdminData.email,
   orgId: dashboardOrgId,
   termsAndConditions: {
-    festival: {
-      date: new Date(),
-      ip: '11.111.11.111',
-    },
+    festival: E2eLegalTerms,
   },
-  privacyPolicy: {
-    date: new Date(),
-    ip: '11.111.11.111',
-  },
+  privacyPolicy: E2eLegalTerms,
 });
 
 const dashboardOrg = createOrganization({

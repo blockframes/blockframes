@@ -83,7 +83,7 @@
     <ng-template [ngTemplateOutlet]="listPageEmptyTemplate || defaultImg"></ng-template>
     <ng-template #defaultImg>
       <div fxLayout="column" fxLayoutAlign="start center">
-        <h6>Sorry, we didn't find anything.</h6>
+        <h6 test-id="empty">Sorry, we didn't find anything.</h6>
         <img asset="empty_results.svg" alt="No titles">
       </div>
     </ng-template>

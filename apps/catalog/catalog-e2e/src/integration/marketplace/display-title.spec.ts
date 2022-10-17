@@ -1,5 +1,13 @@
-import { user, org, orgPermissions, moviePermissions, displayMovie as movie } from '../../fixtures/marketplace/display-title';
-import { Movie, genres, languages, territories } from '@blockframes/model';
+import {
+  user,
+  org,
+  movieOrg,
+  orgPermissions,
+  movieOrgPermissions,
+  movieOrgMoviePermissions,
+  displayMovie as movie,
+} from '../../fixtures/marketplace/display-title';
+import { genres, languages, territories } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -14,13 +22,21 @@ import {
   findIn,
   getInListbox,
   getAllStartingWith,
+  //marketplace lib
+  movieCardShould,
+  selectFilter,
+  selectToggle,
+  selectYear,
+  syncMovieToAlgolia,
 } from '@blockframes/testing/cypress/browser';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
   [`orgs/${org.id}`]: org,
+  [`orgs/${movieOrg.id}`]: movieOrg,
   [`permissions/${orgPermissions.id}`]: orgPermissions,
-  [`permissions/${orgPermissions.id}/documentPermissions/${moviePermissions.id}`]: moviePermissions,
+  [`permissions/${movieOrgPermissions.id}`]: movieOrgPermissions,
+  [`permissions/${movieOrgPermissions.id}/documentPermissions/${movieOrgMoviePermissions.id}`]: movieOrgMoviePermissions,
   [`movies/${movie.id}`]: movie,
 };
 
@@ -31,7 +47,7 @@ describe('Movie display in marketplace', () => {
     cy.visit('');
     maintenance.start();
     firestore.clearTestData();
-    algolia.delete(movie.id);
+    algolia.deleteMovie({ app: 'catalog', objectId: movie.id });
     firestore.deleteOrgMovies(org.id);
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
@@ -47,41 +63,41 @@ describe('Movie display in marketplace', () => {
   });
 
   it('Find with title', () => {
-    syncMovieToAlgolia(movie);
+    syncMovieToAlgolia(movie.id);
     findIn('New on Archipel', 'see-all').click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
       get('search-input').type(movie.title.international);
       //wait for the count to update before checking our movie
       get('titles-count').should('not.contain', titlesCount);
-      movieCardShould('exist');
+      movieCardShould('exist', movie.title.international);
     });
   });
 
   it('Find with director', () => {
-    syncMovieToAlgolia(movie);
+    syncMovieToAlgolia(movie.id);
     findIn('New on Archipel', 'see-all').click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
       get('search-input').type(`${movie.directors[0].firstName} ${movie.directors[0].lastName}`);
       get('titles-count').should('not.contain', titlesCount);
-      movieCardShould('exist');
+      movieCardShould('exist', movie.title.international);
     });
   });
 
   it('Find with keyword', () => {
-    syncMovieToAlgolia(movie);
+    syncMovieToAlgolia(movie.id);
     findIn('New on Archipel', 'see-all').click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
       get('search-input').type(movie.keywords[0]);
       get('titles-count').should('not.contain', titlesCount);
-      movieCardShould('exist');
+      movieCardShould('exist', movie.title.international);
     });
   });
 
   it('Find with filters, save & load filters', () => {
-    syncMovieToAlgolia(movie);
+    syncMovieToAlgolia(movie.id);
     findIn('New on Archipel', 'see-all').click();
     get('titles-count');
     selectFilter('Content Type');
@@ -109,7 +125,7 @@ describe('Movie display in marketplace', () => {
     get('90min - 180min').click();
     get('save-filter').click();
     get('titles-count').should('contain', 'There is 1 title available.');
-    movieCardShould('exist');
+    movieCardShould('exist', movie.title.international);
     getAllStartingWith('item_').should('have.length', 1);
     get('save').click();
     get('clear-filters').click();
@@ -118,22 +134,98 @@ describe('Movie display in marketplace', () => {
     get('titles-count').should('contain', 'There is 1 title available.');
   });
 
-  it('Absent if not released', () => {
-    firestore.update({ docPath: `movies/${movie.id}`, field: 'app.catalog.status', value: 'draft' });
-    syncMovieToAlgolia(movie);
+  it('Title is excluded if no match with filters', () => {
+    //test failing = database changed
+    //explanation: Cypress does not allow conditional testing.
+    //after applying a filter, we might still have movies, OR nothing.
+    //other solution, know the filtered Algolia movies beforehand.
+    //other solution, inject a dummy movie corresponding to each tested filter.
+    syncMovieToAlgolia(movie.id);
     findIn('New on Archipel', 'see-all').click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
       get('search-input').type(movie.title.international);
       get('titles-count').should('not.contain', titlesCount);
-      movieCardShould('not.exist');
+      movieCardShould('exist', movie.title.international);
+      get('titles-count').then($result => {
+        titlesCount = $result[0].innerText;
+        selectFilter('Content Type');
+        selectToggle('content_', 'TV');
+        get('titles-count').should('not.contain', titlesCount);
+        movieCardShould('not.exist', movie.title.international);
+        get('clear-filter').click();
+        get('save-filter').click();
+        get('titles-count').should('contain', titlesCount);
+        movieCardShould('exist', movie.title.international);
+        selectFilter('Genre');
+        get('genre').find('input').click();
+        getInListbox(genres['erotic']);
+        get('empty').should('exist');
+        get('clear-filter').click();
+        get('save-filter').click();
+        movieCardShould('exist', movie.title.international);
+        get('titles-count').should('contain', titlesCount);
+        selectFilter('Country of Origin');
+        get('country').find('input').click();
+        getInListbox(territories['cayman-islands']);
+        get('empty').should('exist');
+        get('clear-filter').click();
+        get('save-filter').click();
+        movieCardShould('exist', movie.title.international);
+        get('titles-count').should('contain', titlesCount);
+        selectFilter('Language & Version');
+        get('language').find('input').click();
+        getInListbox(languages['belarussian']);
+        check('Dubs');
+        get('empty').should('exist');
+        get('clear-filter').click();
+        get('save-filter').click();
+        movieCardShould('exist', movie.title.international);
+        get('titles-count').should('contain', titlesCount);
+        selectFilter('Language & Version');
+        get('language').find('input').click();
+        getInListbox(languages[Object.keys(movie.languages)[0]]);
+        check('Subs');
+        get('empty').should('exist');
+        get('clear-filter').click();
+        get('save-filter').click();
+        movieCardShould('exist', movie.title.international);
+        get('titles-count').should('contain', titlesCount);
+        selectFilter('Release Year');
+        get('slider').focus();
+        selectYear(2030);
+        get('empty').should('exist');
+        get('clear-filter').click();
+        get('save-filter').click();
+        movieCardShould('exist', movie.title.international);
+        get('titles-count').should('contain', titlesCount);
+        selectFilter('Running Time');
+        get('13min - 26min').click();
+        get('titles-count').should('not.contain', titlesCount);
+        movieCardShould('not.exist', movie.title.international);
+        get('clear-filter').click();
+        get('save-filter').click();
+        movieCardShould('exist', movie.title.international);
+      });
+    });
+  });
+
+  it('Absent if not released', () => {
+    firestore.update({ docPath: `movies/${movie.id}`, field: 'app.catalog.status', value: 'draft' });
+    syncMovieToAlgolia(movie.id);
+    findIn('New on Archipel', 'see-all').click();
+    get('titles-count').then($result => {
+      titlesCount = $result[0].innerText;
+      get('search-input').type(movie.title.international);
+      get('titles-count').should('not.contain', titlesCount);
+      movieCardShould('not.exist', movie.title.international);
       get('clear-filters').click();
       get('titles-count').should('contain', titlesCount);
     });
   });
 
   it('Can only export less than 450 movies', () => {
-    syncMovieToAlgolia(movie);
+    syncMovieToAlgolia(movie.id);
     findIn('New on Archipel', 'see-all').click();
     //There shouldn't be less than 450 movies
     get('export').click();
@@ -143,50 +235,9 @@ describe('Movie display in marketplace', () => {
       get('search-input').type(movie.title.international);
       //wait for the count to update before checking our movie
       get('titles-count').should('not.contain', titlesCount);
-      movieCardShould('exist');
+      movieCardShould('exist', movie.title.international);
     });
     get('export').click();
     cy.contains('Please wait, your export is being generated...');
   });
 });
-
-function movieCardShould(option: 'exist' | 'not.exist') {
-  let titleFound = false;
-  return getAllStartingWith('item_').then($elements => {
-    const $cards = $elements.children();
-    const cardsInnerTexts = $cards.toArray().map(child => child.innerText);
-    for (const text of cardsInnerTexts) {
-      if (text.includes(movie.title.international)) titleFound = true;
-    }
-    if (option === 'exist') {
-      expect(titleFound).to.equal(true);
-    } else {
-      expect(titleFound).to.equal(false);
-    }
-  });
-}
-
-function syncMovieToAlgolia(movie: Movie) {
-  return firestore
-    .get(`movies/${movie.id}`)
-    .then((dbMovie: Movie) => algolia.storeMovie({ movie: dbMovie, organizationNames: dbMovie.orgIds }));
-}
-
-function selectFilter(name: string) {
-  return get('filters').contains(name).click();
-}
-
-function selectToggle(prefix: string, text: string) {
-  return getAllStartingWith(prefix).then($elements => {
-    const $toggles = $elements.children();
-    for (const $toggle of $toggles) {
-      if ($toggle.innerText === text) cy.wrap($toggle).click();
-    }
-  });
-}
-
-function selectYear(year: number) {
-  const steps = Math.floor((year - 1980) / 10);
-  if (steps) return cy.get('body').type('{downArrow}'.repeat(steps));
-  return;
-}

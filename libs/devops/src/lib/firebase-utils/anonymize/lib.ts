@@ -42,7 +42,7 @@ function randomNumber() {
   return Math.floor(Math.random() * 255);
 }
 
-function fakeIp() {
+export function fakeIp() {
   return randomNumber() + 1 + '.' + randomNumber() + '.' + randomNumber() + '.' + randomNumber();
 }
 
