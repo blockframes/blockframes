@@ -54,6 +54,9 @@ commands:
           command: npm start emulators
   start_unit_tests_emulators:
     steps:
+      - restore_cache:
+          keys:
+            - emulator-cache-v1-
       - run:
           background: true
           command: npm start emulatorsUnitTests
