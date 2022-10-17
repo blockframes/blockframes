@@ -92,7 +92,7 @@ export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulat
   }
 }
 
-export async function startEmulators({ importFrom = 'defaultImport', emulators, importData, execCommand }: StartEmulatorOptions = { importFrom: 'defaultImport', importData: true }) {
+export async function startEmulators({ importFrom = 'defaultImport', emulators, importData = true, execCommand }: StartEmulatorOptions = { importFrom: 'defaultImport', importData: true }) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
   let proc: ChildProcess;
   try {
