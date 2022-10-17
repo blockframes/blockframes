@@ -120,7 +120,7 @@ describe('JwPlayer test script', () => {
     await clearFirestoreData({ projectId: getTestingProjectId() });
   });
 
-  it('should retreive jwPlayerId check status processing and delete video', async () => {
+  it('should retreive jwPlayerId, check status is processing and delete video', async () => {
     const fileName = `unit-tests/${Math.random().toString(36).substr(2)}.avi`;
     const [file] = await storage.bucket().upload('apps/festival/festival-e2e/src/fixtures/default-video.avi', { destination: fileName });
     const fileObject = storage.bucket().file(fileName);
