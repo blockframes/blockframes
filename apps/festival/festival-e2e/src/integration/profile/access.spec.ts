@@ -4,6 +4,7 @@ import {
   adminAuth,
   browserAuth,
   firestore,
+  storage,
   maintenance,
   // cypress specific functions
   refreshIfMaintenance,
@@ -58,6 +59,10 @@ describe('Login tests', () => {
         expect(user.avatar.docId).to.equal(user.uid);
         expect(user.avatar.privacy).to.equal('public');
         expect(user.avatar.storagePath).to.contain(`users/${user.uid}/avatar/default-image`);
+
+        storage.exists(`${user.avatar.privacy}/${user.avatar.storagePath}`).then(exists => {
+          expect(exists).to.be.true;
+        });
       });
 
   });

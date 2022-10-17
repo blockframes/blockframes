@@ -16,3 +16,4 @@ export * from './lib/helpers';
 export * from './lib/maintenance';
 export * from './lib/movies';
 export * from './lib/support';
+export * from './lib/storage';

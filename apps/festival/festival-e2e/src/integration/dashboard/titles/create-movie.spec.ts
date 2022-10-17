@@ -3,6 +3,7 @@ import {
   adminAuth,
   browserAuth,
   firestore,
+  storage,
   maintenance,
   // cypress commands
   check,
@@ -462,6 +463,11 @@ describe('Movie tunnel', () => {
         expect(movie.promotional.videos.screener.privacy).to.equal('protected');
         expect(movie.promotional.videos.screener.jwPlayerId).to.equal(testVideoId);
         expect(movie.promotional.videos.screener.storagePath).to.contain(`movies/${movie.id}/promotional.videos.screener/default-video.avi`);
+
+        storage.exists(`${movie.promotional.videos.screener.privacy}/${movie.promotional.videos.screener.storagePath}`).then(exists => {
+          expect(exists).to.be.true;
+        });
+
         assertUrlIncludes(`c/o/dashboard/title/${movie.id}/activity`);
       });
     get('titles-header-title').should('contain', movie.title.international);
