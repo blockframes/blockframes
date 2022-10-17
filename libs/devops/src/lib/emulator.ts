@@ -69,7 +69,8 @@ export async function importEmulatorFromBucket({ importFrom }: ImportEmulatorOpt
 
 interface StartEmulatorOptions {
   importFrom: 'defaultImport' | string;
-  emulators?: ('auth' | 'functions' | 'firestore' | 'pubsub' | 'storage')[]
+  emulators?: ('auth' | 'functions' | 'firestore' | 'pubsub' | 'storage')[];
+  importData?: boolean
 }
 
 /**
@@ -90,13 +91,13 @@ export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulat
   }
 }
 
-export async function startEmulators({ importFrom = 'defaultImport', emulators }: StartEmulatorOptions = { importFrom: 'defaultImport' }) {
+export async function startEmulators({ importFrom = 'defaultImport', emulators, importData }: StartEmulatorOptions = { importFrom: 'defaultImport', importData: true }) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
   let proc: ChildProcess;
   try {
     proc = await firebaseEmulatorExec({
       emulators: emulators || ['auth', 'functions', 'firestore', 'pubsub'],
-      importPath: emulatorPath,
+      importPath: importData ? emulatorPath : undefined,
       exportData: true,
     });
     await awaitProcessExit(proc);

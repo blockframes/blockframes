@@ -54,9 +54,6 @@ commands:
           command: npm start emulators
   start_unit_tests_emulators:
     steps:
-      - restore_cache:
-          keys:
-            - emulator-cache-v1-
       - run:
           background: true
           command: npm start emulatorsUnitTests
@@ -244,9 +241,7 @@ jobs:
     steps:
       - prepare_environment
       - run: npm start writeRuntimeConfig
-      - run: npx nx build backend-functions --configuration=e2e
       - start_unit_tests_emulators
-      - run: npm start upgradeEmulators
       - run:
           command: npm run affected:test
           no_output_timeout: 15m
