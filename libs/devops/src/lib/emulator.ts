@@ -69,6 +69,7 @@ export async function importEmulatorFromBucket({ importFrom }: ImportEmulatorOpt
 
 interface StartEmulatorOptions {
   importFrom: 'defaultImport' | string;
+  emulators?: ('auth' | 'functions' | 'firestore' | 'pubsub' | 'storage')[]
 }
 
 /**
@@ -89,12 +90,12 @@ export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulat
   }
 }
 
-export async function startEmulators({ importFrom = 'defaultImport' }: StartEmulatorOptions = { importFrom: 'defaultImport' }) {
+export async function startEmulators({ importFrom = 'defaultImport', emulators }: StartEmulatorOptions = { importFrom: 'defaultImport' }) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
   let proc: ChildProcess;
   try {
     proc = await firebaseEmulatorExec({
-      emulators: ['auth', 'functions', 'firestore', 'pubsub'],
+      emulators: emulators || ['auth', 'functions', 'firestore', 'pubsub'],
       importPath: emulatorPath,
       exportData: true,
     });
@@ -109,11 +110,11 @@ export async function startEmulatorsForUnitTests({ execCommand }: { execCommand?
   let proc: ChildProcess;
   try {
     proc = await firebaseEmulatorExec({
-      execCommand,
-      emulators: ['auth', 'firestore'], // no functions needed ?
+      //execCommand, // remove exec & update config.yml?
+      emulators: ['auth', 'firestore', 'functions', 'pubsub'], // no functions needed ? 
       exportData: false,
     });
-    await awaitProcessExit(proc, !!execCommand);
+    await awaitProcessExit(proc); // not working
   } catch (e) {
     await shutdownEmulator(proc);
     throw e;

@@ -67,7 +67,8 @@ async function runCommand() {
       console.log(...flags);
       break;
     case 'emulatorsUnitTests':
-      await startEmulatorsForUnitTests({ execCommand: arg1 });
+      //await startEmulatorsForUnitTests({ execCommand: arg1 });
+      await startEmulators({ importFrom: arg1, emulators: ['auth', 'firestore'] });
       break;
     case 'startEmulators':
     case 'emulators':
