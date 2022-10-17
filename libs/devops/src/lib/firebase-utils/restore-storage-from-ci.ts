@@ -23,7 +23,7 @@ export async function restoreStorageFromCi(ciApp: admin.app.App) {
   console.log('Latest backup:', folderName);
 
   console.log('Mirroring backup prod-storage bucket from blockframe-ci to your local project\'s main storage bucket...');
-  const exclude = '*.mp4$|*.mov$|*.mkv$|*.3gpp$|*.wmv$|*.avi$';
+  const exclude = '*.mp4$|*.mov$|*.mkv$|*.3gp$|*.wmv$|*.avi$'; // defined in libs/model/src/lib/utils.ts allowedFiles.video.extension
   await gsutilTransfer({
     exclude,
     quiet: true,
