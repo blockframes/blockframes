@@ -670,7 +670,7 @@ describe('DB cleaning script', () => {
 
     const documentIds = users.docs.map(d => d.id);
 
-    await cleanNotifications(notificationsBefore, documentIds);
+    await cleanNotifications(notificationsBefore, documentIds, db);
     const notificationsAfter: Snapshot = await getCollectionRef('notifications');
 
     expect(notificationsAfter.docs.length).toEqual(2);
@@ -762,7 +762,7 @@ describe('DB cleaning script', () => {
       .concat(orgs.docs.map(d => d.id))
       .concat(contracts.docs.map(d => d.id));
 
-    await cleanNotifications(notificationsBefore, documentIds);
+    await cleanNotifications(notificationsBefore, documentIds, db);
     const notificationsAfter: Snapshot = await getCollectionRef('notifications');
 
     expect(notificationsAfter.docs.length).toEqual(12);
@@ -823,7 +823,7 @@ describe('DB cleaning script', () => {
 
     const documentIds = users.docs.map(d => d.id).concat(orgs.docs.map(d => d.id));
 
-    await cleanNotifications(notificationsBefore, documentIds);
+    await cleanNotifications(notificationsBefore, documentIds, db);
     const notificationsAfter: Snapshot = await getCollectionRef('notifications');
 
     const cleanOutput = notificationsAfter.docs.map(d => isNotificationClean(d));
@@ -899,7 +899,7 @@ describe('DB cleaning script', () => {
       .concat(orgs.docs.map(d => d.id));
 
 
-    await cleanInvitations(invitationsBefore, documentIds);
+    await cleanInvitations(invitationsBefore, documentIds, db);
     const invitationsAfter: Snapshot = await getCollectionRef('invitations');
 
     expect(invitationsAfter.docs.length).toEqual(1);
@@ -961,7 +961,7 @@ describe('DB cleaning script', () => {
 
     const documentIds = users.docs.map(d => d.id).concat(orgs.docs.map(d => d.id));
 
-    await cleanInvitations(invitationsBefore, documentIds);
+    await cleanInvitations(invitationsBefore, documentIds, db);
     const invitationsAfter: Snapshot = await getCollectionRef('invitations');
 
     expect(invitationsAfter.docs.length).toEqual(2);
@@ -1024,7 +1024,7 @@ describe('DB cleaning script', () => {
 
     const documentIds = users.docs.map(d => d.id).concat(orgs.docs.map(d => d.id));
 
-    await cleanInvitations(invitationsBefore, documentIds);
+    await cleanInvitations(invitationsBefore, documentIds, db);
     const invitationsAfter: Snapshot = await getCollectionRef('invitations');
 
     const cleanOutput = invitationsAfter.docs.map(d => isInvitationClean(d));

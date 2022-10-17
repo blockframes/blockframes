@@ -68,8 +68,10 @@ export async function importEmulatorFromBucket({ importFrom }: ImportEmulatorOpt
 }
 
 interface StartEmulatorOptions {
-  importFrom: 'defaultImport' | string;
-  emulators?: ('auth' | 'functions' | 'firestore' | 'pubsub' | 'storage')[]
+  importFrom?: 'defaultImport' | string;
+  emulators?: ('auth' | 'functions' | 'firestore' | 'pubsub' | 'storage')[];
+  importData?: boolean;
+  execCommand?: string
 }
 
 /**
@@ -90,14 +92,20 @@ export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulat
   }
 }
 
-export async function startEmulators({ importFrom = 'defaultImport', emulators }: StartEmulatorOptions = { importFrom: 'defaultImport' }) {
+export async function startEmulators({
+  importFrom = 'defaultImport',
+  emulators = ['auth', 'functions', 'firestore', 'pubsub'],
+  importData = true,
+  execCommand
+}: StartEmulatorOptions = { importFrom: 'defaultImport', importData: true, emulators: ['auth', 'functions', 'firestore', 'pubsub'] }) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
   let proc: ChildProcess;
   try {
     proc = await firebaseEmulatorExec({
-      emulators: emulators || ['auth', 'functions', 'firestore', 'pubsub'],
-      importPath: emulatorPath,
-      exportData: true,
+      execCommand,
+      emulators,
+      importPath: importData ? emulatorPath : undefined,
+      exportData: importData,
     });
     await awaitProcessExit(proc);
   } catch (e) {
@@ -106,20 +114,6 @@ export async function startEmulators({ importFrom = 'defaultImport', emulators }
   }
 }
 
-export async function startEmulatorsForUnitTests({ execCommand }: { execCommand?: string } = {}) {
-  let proc: ChildProcess;
-  try {
-    proc = await firebaseEmulatorExec({
-      execCommand,
-      emulators: ['auth', 'firestore'],
-      exportData: false,
-    });
-    await awaitProcessExit(proc);
-  } catch (e) {
-    await shutdownEmulator(proc);
-    throw e;
-  }
-}
 /**
  * This creates users in Auth emulator from a running instance of the Firestore emulator
  * By keeping this clean and separate, we don't need to launch functions emulator when this is happening,

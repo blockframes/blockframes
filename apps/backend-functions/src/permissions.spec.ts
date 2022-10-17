@@ -35,7 +35,7 @@ describe('Permissions backend-function unit-tests', () => {
       expect(snapBefore.data()).toBeUndefined();
 
       // Call the function
-      await wrapped(undefined, context); // Only context is used in onDocumentPermissionCreateEvent
+      await wrapped({}, context); // Only context is used in onDocumentPermissionCreateEvent
 
       const snapAfter = await db.doc(`docsIndex/${docID}`).get();
       expect(snapAfter.data()).toEqual(

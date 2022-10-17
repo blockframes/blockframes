@@ -39,7 +39,6 @@ import {
   writeRuntimeConfig,
   functionsConfigMap,
   clearDb,
-  startEmulatorsForUnitTests,
   updateUsersPassword
 } from '@blockframes/devops';
 import { join } from 'path';
@@ -67,7 +66,7 @@ async function runCommand() {
       console.log(...flags);
       break;
     case 'emulatorsUnitTests':
-      await startEmulatorsForUnitTests({ execCommand: arg1 });
+      await startEmulators({ execCommand: arg1, emulators: ['auth', 'firestore'], importData: false });
       break;
     case 'emulatorsE2E':
       await startEmulators({ importFrom: arg1, emulators: ['auth', 'functions', 'firestore', 'pubsub', 'storage'] });

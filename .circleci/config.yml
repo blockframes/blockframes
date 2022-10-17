@@ -52,6 +52,14 @@ commands:
       - run:
           background: true
           command: npm start emulatorsE2E
+  start_unit_tests_emulators:
+    steps:
+      - restore_cache:
+          keys:
+            - emulator-cache-v1-
+      - run:
+          background: true
+          command: npm start emulatorsUnitTests
   fail_on_production:
     description: Exit if run against production - failsafe
     steps:
@@ -235,6 +243,8 @@ jobs:
       PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
+      - run: npm start writeRuntimeConfig
+      - start_unit_tests_emulators
       - run:
           command: npm run affected:test
           no_output_timeout: 15m
