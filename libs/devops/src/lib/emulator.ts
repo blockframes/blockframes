@@ -68,9 +68,10 @@ export async function importEmulatorFromBucket({ importFrom }: ImportEmulatorOpt
 }
 
 interface StartEmulatorOptions {
-  importFrom: 'defaultImport' | string;
+  importFrom?: 'defaultImport' | string;
   emulators?: ('auth' | 'functions' | 'firestore' | 'pubsub' | 'storage')[];
-  importData?: boolean
+  importData?: boolean;
+  execCommand?: string
 }
 
 /**
@@ -91,11 +92,12 @@ export async function loadEmulator({ importFrom = 'defaultImport' }: StartEmulat
   }
 }
 
-export async function startEmulators({ importFrom = 'defaultImport', emulators, importData }: StartEmulatorOptions = { importFrom: 'defaultImport', importData: true }) {
+export async function startEmulators({ importFrom = 'defaultImport', emulators, importData, execCommand }: StartEmulatorOptions = { importFrom: 'defaultImport', importData: true }) {
   const emulatorPath = importFrom === 'defaultImport' ? defaultEmulatorBackupPath : resolve(importFrom);
   let proc: ChildProcess;
   try {
     proc = await firebaseEmulatorExec({
+      execCommand,
       emulators: emulators || ['auth', 'functions', 'firestore', 'pubsub'],
       importPath: importData ? emulatorPath : undefined,
       exportData: importData,
@@ -107,20 +109,6 @@ export async function startEmulators({ importFrom = 'defaultImport', emulators, 
   }
 }
 
-export async function startEmulatorsForUnitTests({ execCommand }: { execCommand?: string } = {}) {
-  let proc: ChildProcess;
-  try {
-    proc = await firebaseEmulatorExec({
-      //execCommand, // remove exec & update config.yml?
-      emulators: ['auth', 'firestore', 'functions', 'pubsub'], // no functions needed ? 
-      exportData: false,
-    });
-    await awaitProcessExit(proc); // not working
-  } catch (e) {
-    await shutdownEmulator(proc);
-    throw e;
-  }
-}
 /**
  * This creates users in Auth emulator from a running instance of the Firestore emulator
  * By keeping this clean and separate, we don't need to launch functions emulator when this is happening,

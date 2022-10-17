@@ -19,14 +19,10 @@ export function runShellCommand(cmd: string) {
   });
 }
 
-export function awaitProcessExit(proc: ChildProcess, exit = false) {
+export function awaitProcessExit(proc: ChildProcess) {
   return new Promise((res, rej) => {
     proc.on('error', rej);
-    proc.on('exit', (code) => {
-      // Used to send exit code to CircleCi when emulator is run with exec instead of start
-      if(exit) process.exit(code);
-      else code === 0 ? res : rej;
-    });
+    proc.on('exit', (code) => code === 0 ? res : rej);
     proc.stdout.on('close', res);
     proc.stdout.on('exit', res);
   });

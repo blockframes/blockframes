@@ -94,11 +94,10 @@ export async function firebaseEmulatorExec({
     return Boolean(result);
   }
 
-  // TODO test process.env['PROJECT_ID']
-  if (isOrHasValue(emulators, 'functions')) { // test 
+  if (isOrHasValue(emulators, 'functions')) {
     // * If functions has been selected, write project config to .runtimeConfig file in root of repo dir
     writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
-     writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json')); // Failing on CI ..
+    writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './dist/apps/backend-functions/.runtimeconfig.json'));
   }
 
   if ((isOrHasValue(emulators, 'firestore') || isOrHasValue(emulators, 'auth') || isOrHasValue(emulators, 'storage')) && importPath) {
