@@ -243,7 +243,6 @@ jobs:
       PROJECT_ID: demo-blockframes
     steps:
       - prepare_environment
-      - run: npm start writeRuntimeConfig
       - start_unit_tests_emulators
       - run:
           command: npm run affected:test
