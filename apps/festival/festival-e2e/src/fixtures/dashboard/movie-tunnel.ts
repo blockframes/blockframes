@@ -1,4 +1,4 @@
-import { fakeUserData, E2eLegalTerms } from '@blockframes/testing/cypress/browser';
+import { fakeUserData } from '@blockframes/testing/cypress/browser';
 import {
   createPermissions,
   createMovie,
@@ -16,6 +16,7 @@ import {
   createUser,
   createOrganization,
   createOrgAppAccess,
+  legalTerms,
 } from '@blockframes/model';
 
 const adminUid = '0-e2e-orgAdminUid';
@@ -29,9 +30,9 @@ export const user = createUser({
   email: userData.email,
   orgId: orgId,
   termsAndConditions: {
-    festival: E2eLegalTerms,
+    festival: legalTerms,
   },
-  privacyPolicy: E2eLegalTerms,
+  privacyPolicy: legalTerms,
 });
 
 export const org = createOrganization({
@@ -138,7 +139,7 @@ export const inDevelopmentMovie = createMovie({
   cast: [
     {
       firstName: 'Actor',
-      lastName: ' One',
+      lastName: 'One',
       status: 'confirmed',
       description: 'First actor',
       filmography: [

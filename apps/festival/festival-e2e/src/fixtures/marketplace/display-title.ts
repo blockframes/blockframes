@@ -1,4 +1,4 @@
-import { fakeUserData, E2eLegalTerms } from '@blockframes/testing/cypress/browser';
+import { fakeUserData } from '@blockframes/testing/cypress/browser';
 import {
   createMovie,
   createDocPermissions,
@@ -19,6 +19,7 @@ import {
   createMovieLanguageSpecification,
   createAddressSet,
   createLocation,
+  legalTerms,
 } from '@blockframes/model';
 import { sub } from 'date-fns';
 
@@ -36,9 +37,9 @@ export const user = createUser({
   email: userData.email,
   orgId: orgId,
   termsAndConditions: {
-    festival: E2eLegalTerms,
+    festival: legalTerms,
   },
-  privacyPolicy: E2eLegalTerms,
+  privacyPolicy: legalTerms,
 });
 
 export const org = createOrganization({
@@ -64,6 +65,11 @@ export const orgPermissions = createPermissions({
   roles: { [adminUid]: 'superAdmin' },
 });
 
+export const saleOrgPermissions = createPermissions({
+  id: orgId,
+  roles: { [adminUid]: 'superAdmin' },
+});
+
 export const moviePermissions = createDocPermissions({
   id: movieId,
   ownerId: orgId,
@@ -71,7 +77,7 @@ export const moviePermissions = createDocPermissions({
 
 export const displayMovie = createMovie({
   id: movieId,
-  orgIds: ['otherOrg', saleOrgName],
+  orgIds: [saleOrgId],
   app: createMovieAppConfig({
     festival: createAppConfig({ status: 'accepted', access: true }),
   }),
@@ -164,7 +170,7 @@ export const displayMovie = createMovie({
   cast: [
     {
       firstName: 'Actor',
-      lastName: ' One',
+      lastName: 'One',
       status: 'confirmed',
       description: 'First actor',
       filmography: [
@@ -332,7 +338,7 @@ export const expectedSavedLocalStorage = {
       appModule: ['dashboard', 'marketplace'],
       country: 'france',
       isAccepted: true,
-      hasAcceptedMovies: false,
+      hasAcceptedMovies: true,
       logo: '',
       activity: 'intlSales',
       objectID: '0-e2e-saleOrgId',

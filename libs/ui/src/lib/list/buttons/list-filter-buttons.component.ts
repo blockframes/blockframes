@@ -29,7 +29,7 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
     load: 'disabled',
   }
 
-  private savedSearchIdentifier: 'saved-search';
+  private savedSearchIdentifier= 'saved-search';
   private queryParamsSub: Subscription;
 
   @Output() data: EventEmitter<string> = new EventEmitter();

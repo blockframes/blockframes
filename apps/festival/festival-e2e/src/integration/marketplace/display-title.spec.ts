@@ -3,6 +3,7 @@ import {
   org,
   saleOrg,
   orgPermissions,
+  saleOrgPermissions,
   moviePermissions,
   displayMovie as movie,
   expectedSavedLocalStorage,
@@ -32,8 +33,10 @@ import {
 const injectedData = {
   [`users/${user.uid}`]: user,
   [`orgs/${org.id}`]: org,
+  [`orgs/${saleOrg.id}`]: saleOrg,
   [`permissions/${orgPermissions.id}`]: orgPermissions,
   [`permissions/${orgPermissions.id}/documentPermissions/${moviePermissions.id}`]: moviePermissions,
+  [`permissions/${saleOrgPermissions.id}`]: saleOrgPermissions,
   [`movies/${movie.id}`]: movie,
 };
 
@@ -102,7 +105,7 @@ describe('Movie display in marketplace', () => {
     cy.wait(1000);
     get('save').click();
     cy.window().then(window => {
-      expect(JSON.parse(window.localStorage.getItem('festival-undefined'))).to.deep.equal(expectedSavedLocalStorage);
+      expect(JSON.parse(window.localStorage.getItem('festival-saved-search'))).to.deep.equal(expectedSavedLocalStorage);
     });
     get('clear-filters').click();
     get('titles-count').should('not.contain', 'There is 1 title available.');

@@ -1,7 +1,6 @@
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 import faker from '@faker-js/faker';
-import { fakeIp } from 'libs/devops/src/lib/firebase-utils/anonymize/lib';
 
 export const fakeUserData = () => {
   const firstName = faker.name.firstName();
@@ -32,5 +31,3 @@ export function createFakeUserDataArray(number: number) {
   }
   return fakeUserDataArray;
 }
-
-export const E2eLegalTerms = { date: new Date(), ip: fakeIp() };

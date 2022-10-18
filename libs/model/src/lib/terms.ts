@@ -41,3 +41,13 @@ export function createTerm(params: Partial<Term> = {}): Term {
     ...params
   }
 }
+
+function randomNumber() {
+  return Math.floor(Math.random() * 255);
+}
+
+function fakeIp() {
+  return randomNumber() + 1 + '.' + randomNumber() + '.' + randomNumber() + '.' + randomNumber();
+}
+
+export const legalTerms = { date: new Date(), ip: fakeIp() };

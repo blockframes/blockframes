@@ -64,7 +64,6 @@ describe('Movie display in marketplace', () => {
 
   it('Find with title', () => {
     syncMovieToAlgolia(movie.id);
-    cy.wait(1000); // i don't like it, but algolia needs some time to catch up
     findIn('New on Archipel', 'see-all').click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
@@ -77,7 +76,6 @@ describe('Movie display in marketplace', () => {
 
   it('Find with director', () => {
     syncMovieToAlgolia(movie.id);
-    cy.wait(1000);
     findIn('New on Archipel', 'see-all').click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
@@ -89,7 +87,6 @@ describe('Movie display in marketplace', () => {
 
   it('Find with keyword', () => {
     syncMovieToAlgolia(movie.id);
-    cy.wait(1000);
     findIn('New on Archipel', 'see-all').click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
@@ -101,7 +98,6 @@ describe('Movie display in marketplace', () => {
 
   it('Find with filters, save & load filters', () => {
     syncMovieToAlgolia(movie.id);
-    cy.wait(1000);
     findIn('New on Archipel', 'see-all').click();
     get('titles-count');
     selectFilter('Content Type');
@@ -145,7 +141,6 @@ describe('Movie display in marketplace', () => {
     //other solution, know the filtered Algolia movies beforehand.
     //other solution, inject a dummy movie corresponding to each tested filter.
     syncMovieToAlgolia(movie.id);
-    cy.wait(1000);
     findIn('New on Archipel', 'see-all').click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
@@ -218,7 +213,6 @@ describe('Movie display in marketplace', () => {
   it('Absent if not released', () => {
     firestore.update({ docPath: `movies/${movie.id}`, field: 'app.catalog.status', value: 'draft' });
     syncMovieToAlgolia(movie.id);
-    cy.wait(1000);
     findIn('New on Archipel', 'see-all').click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
@@ -232,7 +226,6 @@ describe('Movie display in marketplace', () => {
 
   it('Can only export less than 450 movies', () => {
     syncMovieToAlgolia(movie.id);
-    cy.wait(1000);
     findIn('New on Archipel', 'see-all').click();
     //There shouldn't be less than 450 movies
     get('export').click();
