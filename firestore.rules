@@ -296,10 +296,7 @@ service cloud.firestore {
 
     match /movies/{movieId} {
       allow get: if isSignedIn()
-        
-        
-        || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
-        );
+        && notInMaintenance();
       allow list: if userHasValidOrg()
         && notInMaintenance()
         && ( checkStatus(existingData(), 'accepted')
