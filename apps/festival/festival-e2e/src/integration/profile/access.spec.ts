@@ -43,9 +43,8 @@ describe('Login tests', () => {
     get('profile').click();
     assertUrlIncludes('c/o/account/profile/view/settings');
 
-    cy.get('image-uploader').selectFile(imageFixture, { action: 'drag-drop' });
-
-    cy.wait(500); // Waiting for image to be here after drag 
+    get('image-uploader').selectFile(imageFixture, { action: 'drag-drop' });
+    get('image-uploader').invoke('height').should('equal', 697);
     get('crop-image').click();
     get('update-profile').click({ force: true }); // TODO { force: true } because of snackbar with permission error
 
