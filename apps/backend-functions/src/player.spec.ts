@@ -148,7 +148,7 @@ describe('JwPlayer test script', () => {
 
     const [existsAfterDelete] = await fileObject.exists();
     expect(existsAfterDelete).toBeFalsy();
-  }, 20000);
+  }, 30000);
 
   it('should throw error when auth is null', async () => {
     // Load our test set

@@ -17,7 +17,15 @@ export const browserAuth = {
     return cy.window().then(async w => {
       await w['LoginService'].signout();
       const databases = await indexedDB.databases();
-      return Promise.all(databases.map(db => indexedDB.deleteDatabase(db.name)));
+      const requests = databases.map(db => indexedDB.deleteDatabase(db.name));
+
+      const results = requests.map(r => new Promise((res, rej) => {
+        r.onsuccess = () => res(true);
+        r.onerror = () => rej(true);
+        r.onblocked = () => rej(true);
+      }));
+
+      return Promise.all(results);
     });
   },
 
