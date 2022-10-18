@@ -44,7 +44,6 @@ describe('Login tests', () => {
     assertUrlIncludes('c/o/account/profile/view/settings');
 
     get('image-uploader').selectFile(imageFixture, { action: 'drag-drop' });
-    get('image-uploader').invoke('height').should('equal', 697);
     get('crop-image').click();
     get('update-profile').click({ force: true }); // TODO { force: true } because of snackbar with permission error
 

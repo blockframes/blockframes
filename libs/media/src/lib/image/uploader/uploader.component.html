@@ -24,7 +24,7 @@
   <article *ngSwitchCase="'crop'">
     <image-cropper [imageFile]="file" [aspectRatio]="cropRatio" format="webp" [containWithinAspectRatio]="false"
       [resizeToWidth]="setWidth || parentWidth" (imageCropped)="imageCropped($event)"></image-cropper>
-    <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
+    <div *ngIf="croppedImage" class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
       <button test-id="crop-image" mat-mini-fab color="primary" (click)="cropIt()" matTooltip="Crop Image">
         <mat-icon svgIcon="check"></mat-icon>
       </button>
