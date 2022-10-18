@@ -49,7 +49,7 @@ const injectedData = {
 
 const videoFixture = 'src/fixtures/default-video.avi';
 
-describe('Movie tunnel', () => {
+describe.skip('Movie tunnel', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
