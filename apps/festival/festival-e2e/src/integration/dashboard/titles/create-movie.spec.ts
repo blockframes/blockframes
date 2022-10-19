@@ -3,6 +3,7 @@ import {
   adminAuth,
   browserAuth,
   firestore,
+  storage,
   maintenance,
   // cypress commands
   check,
@@ -13,6 +14,7 @@ import {
   getInListbox,
   getAllStartingWith,
   assertUrlIncludes,
+  awaitElementDeletion,
 } from '@blockframes/testing/cypress/browser';
 import {
   crewRoles,
@@ -37,12 +39,15 @@ import {
 } from '@blockframes/model';
 import { user, org, permissions, inDevelopmentMovie as movie } from '../../../fixtures/dashboard/movie-tunnel';
 import { addDays, subDays, format } from 'date-fns';
+import { testVideoId } from '@env';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
   [`orgs/${org.id}`]: org,
   [`permissions/${permissions.id}`]: permissions,
 };
+
+const videoFixture = 'src/fixtures/default-video.avi';
 
 describe('Movie tunnel', () => {
   beforeEach(() => {
@@ -311,6 +316,7 @@ describe('Movie tunnel', () => {
     get('next').click();
     ///screener movie
     cy.contains('Screener Video');
+    get('screener-upload').selectFile(videoFixture, { action: 'drag-drop' });
     get('next').click();
 
     //last step
@@ -443,10 +449,27 @@ describe('Movie tunnel', () => {
 
     get('publish').click();
     cy.contains(`${movie.title.international} successfully published.`);
+    awaitElementDeletion('[test-id="upload-completed"]');
+    cy.wait(1000); // Wait until the onFileUpload backend function is triggered
+    get('screener').should('contain', 'default-video.avi');
+
     get('close-tunnel').click();
     firestore
       .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id })
-      .then((movies: Movie[]) => assertUrlIncludes(`c/o/dashboard/title/${movies[0].id}/activity`));
+      .then(([movie]: Movie[]) => {
+        expect(movie.promotional.videos.screener.collection).to.equal('movies');
+        expect(movie.promotional.videos.screener.field).to.equal('promotional.videos.screener');
+        expect(movie.promotional.videos.screener.docId).to.equal(movie.id);
+        expect(movie.promotional.videos.screener.privacy).to.equal('protected');
+        expect(movie.promotional.videos.screener.jwPlayerId).to.equal(testVideoId);
+        expect(movie.promotional.videos.screener.storagePath).to.contain(`movies/${movie.id}/promotional.videos.screener/default-video.avi`);
+
+        storage.exists(`${movie.promotional.videos.screener.privacy}/${movie.promotional.videos.screener.storagePath}`).then(exists => {
+          expect(exists).to.be.true;
+        });
+
+        assertUrlIncludes(`c/o/dashboard/title/${movie.id}/activity`);
+      });
     get('titles-header-title').should('contain', movie.title.international);
   });
 });

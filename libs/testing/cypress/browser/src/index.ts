@@ -17,3 +17,4 @@ export * from './lib/maintenance';
 export * from './lib/marketplace';
 export * from './lib/movies';
 export * from './lib/support';
+export * from './lib/storage';

@@ -68,6 +68,9 @@ async function runCommand() {
     case 'emulatorsUnitTests':
       await startEmulators({ execCommand: arg1, emulators: ['auth', 'firestore'], importData: false });
       break;
+    case 'emulatorsE2E':
+      await startEmulators({ importFrom: arg1, emulators: ['auth', 'functions', 'firestore', 'pubsub', 'storage'] });
+      break;
     case 'startEmulators':
     case 'emulators':
       await startEmulators({ importFrom: arg1 });
