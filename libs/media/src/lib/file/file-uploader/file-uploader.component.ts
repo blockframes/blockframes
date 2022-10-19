@@ -90,7 +90,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
   @Output() newSubscription = new EventEmitter<Subscription>();
 
   public allowedTypes: string[] = [];
-  public types: string[] = [];
+  private types: string[] = [];
 
   @ContentChild('onReady') onReadyTemplate: TemplateRef<unknown>;
   @ContentChild('onFile') onFileTemplate: TemplateRef<unknown>;
