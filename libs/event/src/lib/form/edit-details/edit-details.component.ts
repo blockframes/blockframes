@@ -32,7 +32,7 @@ export class EditDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.showPrivacy) {
       this.sub = this.eventService.valueChanges(this.form.value.id).subscribe(e => {
-        this.previouslySavedAccessibility = e.accessibility;
+        this.previouslySavedAccessibility = e?.accessibility;
       });
     }
   }

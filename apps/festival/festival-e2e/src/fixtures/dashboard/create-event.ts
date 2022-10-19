@@ -12,6 +12,7 @@ import {
   createUser,
   createOrganization,
   createOrgAppAccess,
+  fakeLegalTerms,
 } from '@blockframes/model';
 
 const dashboardAdminUid = '0-e2e-dashboardAdminUid';
@@ -30,15 +31,9 @@ export const dashboardUser = createUser({
   email: dashboardUserData.email,
   orgId: dashboardOrgId,
   termsAndConditions: {
-    festival: {
-      date: new Date(),
-      ip: '11.111.11.111',
-    },
+    festival: fakeLegalTerms,
   },
-  privacyPolicy: {
-    date: new Date(),
-    ip: '11.111.11.111',
-  },
+  privacyPolicy: fakeLegalTerms,
 });
 
 export const dashboardOrg = createOrganization({
@@ -74,15 +69,9 @@ export const marketplaceUser = createUser({
   email: marketplaceUserData.email,
   orgId: marketplaceOrgId,
   termsAndConditions: {
-    festival: {
-      date: new Date(),
-      ip: '11.111.11.111',
-    },
+    festival: fakeLegalTerms,
   },
-  privacyPolicy: {
-    date: new Date(),
-    ip: '11.111.11.111',
-  },
+  privacyPolicy: fakeLegalTerms,
 });
 
 export const marketplaceOrg = createOrganization({

@@ -5,9 +5,11 @@ export const EIGHT_MINUTES_IN_MS = 8 * 60 * 1000; // 8 minutes in ms
 export const META_COLLECTION_NAME = '_META';
 export const MAINTENANCE_DOCUMENT_NAME = '_MAINTENANCE';
 export const DB_DOCUMENT_NAME = '_VERSION';
+export const APP_DOCUMENT_NAME = '_APP';
 
 export const metaDoc = `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`;
 export const dbVersionDoc = `${META_COLLECTION_NAME}/${DB_DOCUMENT_NAME}`;
+export const appVersionDoc = `${META_COLLECTION_NAME}/${APP_DOCUMENT_NAME}`;
 
 export function _isInMaintenance(maintenanceDoc: IMaintenanceDoc, delay = EIGHT_MINUTES_IN_MS): boolean {
   try {

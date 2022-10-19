@@ -1,5 +1,5 @@
-<mat-button-toggle-group name="contentType" [formControl]="form" fxLayout fxLayoutGap="8px" >
-  <mat-button-toggle *ngFor="let type of contentTypes" [value]="type">
+<mat-button-toggle-group name="contentType" [formControl]="form" fxLayout fxLayoutGap="8px">
+  <mat-button-toggle *ngFor="let type of contentTypes; let i = index" [value]="type" [attr.test-id]="'content_' + i">
     {{contentType[type]}}
   </mat-button-toggle>
 </mat-button-toggle-group>

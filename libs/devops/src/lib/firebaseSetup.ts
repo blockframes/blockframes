@@ -1,6 +1,6 @@
 import { syncUsers } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
-import { migrate } from './migrations';
+import { migrate, updateAppVersion } from './migrations';
 import { importFirestore } from './admin';
 import { endMaintenance, startMaintenance } from '@blockframes/firebase-utils';
 import {
@@ -18,6 +18,7 @@ import { backupBucket as ciBucketName } from 'env/env.blockframes-ci';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import { copyFirestoreExportFromCiBucket, latestAnonDbDir, restoreAnonStorageFromCI } from './firebase-utils';
 import { getAuth, getAuthEmulator, getDb, getFirestoreEmulator, getStorage } from '@blockframes/firebase-utils/initialize';
+import { appVersion } from '@blockframes/utils/constants';
 
 const { storageBucket } = firebase();
 
@@ -116,6 +117,8 @@ export async function upgrade() {
   const db = getDb();
   const auth = getAuth();
   const storage = getStorage();
+
+  await updateAppVersion(db, appVersion);
 
   if (!await isMigrationRequired(db)) {
     console.log('Skipping upgrade because migration is not required...');

@@ -50,6 +50,11 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /_META/_APP {
+      allow read: if true;
+      allow write: if false;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////
     ///                                 COLLECTIONS                               ///
     ///             rules defined at the collections or document level            ///

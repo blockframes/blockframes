@@ -3,12 +3,20 @@ import { sentryDsn, sentryEnv } from '@env';
 import * as Sentry from '@sentry/browser';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/service';
+import { SentryService } from './sentry.service';
+import { appVersion } from './constants';
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private sentryService: SentryService,
+  ) {
     this.authService.profile$.subscribe(user => {
       if (!user) {
+        Sentry.configureScope(scope => {
+          scope.setTag('appVersion', appVersion);
+        });
         return;
       }
 
@@ -18,6 +26,7 @@ export class SentryErrorHandler implements ErrorHandler {
           id: user.uid,
           username: `${user.firstName} ${user.lastName}`
         });
+        scope.setTag('appVersion', appVersion);
       });
     });
   }
@@ -26,7 +35,12 @@ export class SentryErrorHandler implements ErrorHandler {
     if (sentryEnv as unknown !== 'production') {
       console.error(error);
     }
-    Sentry.captureException(error.originalError || error);
+
+    if (error?.message.includes('ChunkLoadError')) {
+      this.sentryService.triggerError({ message: 'ChunkLoadError', bugType: 'network', location: 'global' });
+    } else {
+      Sentry.captureException(error.originalError || error);
+    }
   }
 }
 
