@@ -1,3 +1,3 @@
-import { getEmulatorsConfig } from "@blockframes/utils/emulator-front-setup";
+import { getEmulatorsConfig } from '@blockframes/utils/emulator-front-setup';
 
 export const emulatorConfig = getEmulatorsConfig();

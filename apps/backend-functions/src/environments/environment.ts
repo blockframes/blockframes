@@ -31,6 +31,7 @@ export {
   centralOrgId,
   supportEmails,
   playerId,
+  testVideoId
 } from '@env';
 
 export const { projectId, storageBucket } = firebase();

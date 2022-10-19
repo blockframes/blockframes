@@ -2,12 +2,10 @@
 import { Injectable } from '@angular/core';
 import { CallableFunctions } from 'ngfire';
 
-// State
-import { StorageFile } from '@blockframes/model';
+// Blockframes
+import { clamp, StorageFile } from '@blockframes/model';
 import { ImageParameters, getImgSize, getImgIxResourceUrl } from './image/directives/imgix-helpers';
 
-// Blockframes
-import { clamp } from '@blockframes/model';
 @Injectable({ providedIn: 'root' })
 export class MediaService {
 
