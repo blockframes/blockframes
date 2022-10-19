@@ -1,12 +1,10 @@
-import { getPrivateVideoUrl, ReadVideoParams, deleteFromJWPlayer, uploadToJWPlayer } from './player';
+import { getPrivateVideoUrl, ReadVideoParams } from './player';
 import { CallableContextOptions } from 'firebase-functions-test/lib/main';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { getTestingProjectId, initFunctionsTestMock, populate } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { StorageVideo } from '@blockframes/model';
-import type * as admin from 'firebase-admin';
-import { jwplayerApiV2Secret, jwplayerKey, testVideoId } from './environments/environment';
-import { getStorage, jwplayerApiV2, sleep } from '@blockframes/firebase-utils';
+import { testVideoId } from './environments/environment';
 
 const testInvitations = [
   {
@@ -107,47 +105,14 @@ const testMovies = [
 
 const videoParams: ReadVideoParams = { video: screener, eventId: 'eventTestPrivate', email: userA.email };
 
-let storage: admin.storage.Storage;
-
 describe('JwPlayer test script', () => {
   beforeAll(async () => {
     initFunctionsTestMock();
-    storage = getStorage();
   });
 
   afterEach(async () => {
     // After each test, db is reseted
     await clearFirestoreData({ projectId: getTestingProjectId() });
-  });
-
-  it('should retreive jwPlayerId, check status is processing and delete video', async () => {
-    const fileName = `unit-tests/${Math.random().toString(36).substr(2)}.avi`;
-    const [file] = await storage.bucket().upload('apps/festival/festival-e2e/src/fixtures/default-video.avi', { destination: fileName });
-    const fileObject = storage.bucket().file(fileName);
-
-    const [exists] = await fileObject.exists();
-    expect(exists).toBeTruthy();
-
-    const output = await uploadToJWPlayer(file);
-
-    expect(output.success).toBe(true);
-    expect(output.key).toBeDefined();
-    expect(output.key).not.toEqual(testVideoId);
-
-    const videoInfos = await jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret).getVideoInfo(output.key);
-
-    expect(videoInfos.status).toEqual('processing');
-
-    await deleteFromJWPlayer(output.key);
-
-    const videoInfosAfter: any = await jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret).getVideoInfo(output.key);
-
-    expect(videoInfosAfter.errors[0].code).toEqual('not_found');
-
-    await file.delete();
-
-    const [existsAfterDelete] = await fileObject.exists();
-    expect(existsAfterDelete).toBeFalsy();
   });
 
   it('should throw error when auth is null', async () => {
