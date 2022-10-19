@@ -113,6 +113,7 @@ export class EventService extends BlockframesCollection<Event> {
   }
 
   protected fromFirestore(snapshot: DocumentSnapshot<Event>): Event {
+    if (!snapshot.exists()) return;
     const event = super.fromFirestore(snapshot) as Event;
     return createCalendarEvent(event, this.isOwner(event));
   }

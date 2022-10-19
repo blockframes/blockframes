@@ -4,5 +4,5 @@ export interface IMaintenanceDoc {
 }
 
 export interface IVersionDoc {
-  currentVersion: number;
+  currentVersion: number | string;
 }
