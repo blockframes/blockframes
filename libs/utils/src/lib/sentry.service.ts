@@ -1,13 +1,8 @@
 import { Injectable } from '@angular/core';
+import { SentryError } from '@blockframes/model';
 import { firebase, sentryDsn } from '@env';
 import { Severity, captureMessage } from '@sentry/browser';
 import { appVersion } from './constants';
-
-interface SentryError {
-  message: string;
-  location: 'file-uploader-service' | 'global';
-  bugType: 'invalid-metadata' | 'network' | 'front-version'
-}
 
 @Injectable({ providedIn: 'root' })
 export class SentryService {
