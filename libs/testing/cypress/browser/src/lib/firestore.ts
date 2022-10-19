@@ -1,6 +1,12 @@
 import { WhereFilterOp } from 'firebase/firestore';
 import { Event, Movie } from '@blockframes/model';
 
+interface UpdateParameters {
+  docPath: string;
+  field: string;
+  value: unknown;
+}
+
 export const firestore = {
   clearTestData() {
     return cy.task('clearTestData');
@@ -24,8 +30,9 @@ export const firestore = {
     return cy.task('queryData', data);
   },
 
-  update(data: { docPath: string; field: string; value: unknown }[]) {
-    return cy.task('updateData', data);
+  update(data: UpdateParameters[] | UpdateParameters) {
+    if (Array.isArray(data)) return cy.task('updateData', data);
+    return cy.task('updateData', [data]);
   },
 
   deleteOrgEvents(orgId: string) {

@@ -17,6 +17,7 @@ import {
   createOrganization,
   createOrgAppAccess,
   createMovieLanguageSpecification,
+  fakeLegalTerms,
 } from '@blockframes/model';
 import { sub } from 'date-fns';
 
@@ -32,15 +33,9 @@ export const user = createUser({
   email: userData.email,
   orgId: orgId,
   termsAndConditions: {
-    catalog: {
-      date: new Date(),
-      ip: '11.111.11.111',
-    },
+    catalog: fakeLegalTerms,
   },
-  privacyPolicy: {
-    date: new Date(),
-    ip: '11.111.11.111',
-  },
+  privacyPolicy: fakeLegalTerms,
 });
 
 export const org = createOrganization({
@@ -157,7 +152,7 @@ export const inDevelopmentMovie = createMovie({
   cast: [
     {
       firstName: 'Actor',
-      lastName: ' One',
+      lastName: 'One',
       status: 'confirmed',
       description: 'First actor',
       filmography: [

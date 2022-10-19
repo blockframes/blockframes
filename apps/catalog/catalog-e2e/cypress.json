@@ -13,6 +13,15 @@
   "reporterOptions": {
     "mochaFile": "../../../dist/test-reports/catalog-[hash].xml"
   },
+  "retries": {
+    "runMode": 2,
+    "openMode": 2
+  },
+  "blockHosts": [
+    "*google-analytics.com",
+    "*googleapis.com",
+    "*imgix.net"
+  ],
   "viewportWidth": 1920,
   "viewportHeight": 1080
 }

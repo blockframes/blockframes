@@ -1,12 +1,12 @@
 <mat-radio-group [formControl]="form" fxLayout fxLayoutAlign="space-between">
   <div fxLayout="column" fxLayoutGap="12px">
-    <mat-radio-button [value]="1">{{ filters[1].label }}</mat-radio-button>
-    <mat-radio-button [value]="2">{{ filters[2].label }}</mat-radio-button>
-    <mat-radio-button [value]="3">{{ filters[3].label }}</mat-radio-button>    
+    <mat-radio-button [value]="1" [attr.test-id]="filters[1].label">{{ filters[1].label }}</mat-radio-button>
+    <mat-radio-button [value]="2" [attr.test-id]="filters[2].label">{{ filters[2].label }}</mat-radio-button>
+    <mat-radio-button [value]="3" [attr.test-id]="filters[3].label">{{ filters[3].label }}</mat-radio-button>    
   </div>
   <div fxLayout="column" fxLayoutGap="12px">
-    <mat-radio-button [value]="4">{{ filters[4].label }}</mat-radio-button>
-    <mat-radio-button [value]="5">{{ filters[5].label }}</mat-radio-button>
-    <mat-radio-button [value]="6">{{ filters[6].label }}</mat-radio-button>
+    <mat-radio-button [value]="4" [attr.test-id]="filters[4].label">{{ filters[4].label }}</mat-radio-button>
+    <mat-radio-button [value]="5" [attr.test-id]="filters[5].label">{{ filters[5].label }}</mat-radio-button>
+    <mat-radio-button [value]="6" [attr.test-id]="filters[6].label">{{ filters[6].label }}</mat-radio-button>
   </div>
 </mat-radio-group>

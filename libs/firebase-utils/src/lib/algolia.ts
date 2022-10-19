@@ -23,7 +23,7 @@ export const algolia = {
   adminKey: functions.config().algolia?.api_key,
 };
 
-const indexBuilder = (indexName: string, adminKey?: string) => {
+export const indexBuilder = (indexName: string, adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
   return client.initIndex(indexName);
 };

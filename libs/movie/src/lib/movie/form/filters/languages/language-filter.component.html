@@ -1,8 +1,8 @@
-<chips-autocomplete scope="languages" placeholder="Language" [form]="form.get('languages')" [withoutValues]="['all']">
+<chips-autocomplete scope="languages" placeholder="Language" [form]="form.get('languages')" [withoutValues]="['all']" test-id="language">
   <mat-label>Enter Languages</mat-label>
 </chips-autocomplete>
 <ng-container *ngFor="let item of items | keyvalue: keepOrder">
-  <mat-checkbox [formControl]="form.get('versions').get(item.key)" [value]="item.key" color="primary">
+  <mat-checkbox [formControl]="form.get('versions').get(item.key)" [value]="item.key" color="primary" [attr.test-id]="item.value">
     {{item.value}}
   </mat-checkbox>
 </ng-container>

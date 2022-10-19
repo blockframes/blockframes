@@ -1,8 +1,11 @@
 import { fakeUserData } from '@blockframes/testing/cypress/browser';
 import {
-  createPermissions,
   createMovie,
+  createDocPermissions,
+  createPermissions,
+  createMovieAppConfig,
   createAudienceGoals,
+  createAppConfig,
   createMoviePromotional,
   createMovieNote,
   createMovieVideos,
@@ -10,17 +13,22 @@ import {
   createReleaseYear,
   createMovieStakeholders,
   createTitle,
-  createShooting,
-  createShootingDate,
-  createExpectedPremiere,
   createUser,
   createOrganization,
   createOrgAppAccess,
+  createMovieLanguageSpecification,
+  createAddressSet,
+  createLocation,
   fakeLegalTerms,
+  createDocumentMeta
 } from '@blockframes/model';
+import { sub } from 'date-fns';
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
+const saleOrgId = '0-e2e-saleOrgId';
+const saleOrgName = 'sale org';
+const movieId = '0-e2e-movieId';
 const userData = fakeUserData();
 
 export const user = createUser({
@@ -41,17 +49,42 @@ export const org = createOrganization({
   userIds: [adminUid],
   email: userData.email,
   status: 'accepted',
+  appAccess: createOrgAppAccess({ festival: { marketplace: true, dashboard: false } }),
+});
+
+export const saleOrg = createOrganization({
+  id: saleOrgId,
+  name: saleOrgName,
+  activity: 'intlSales',
+  status: 'accepted',
+  addresses: createAddressSet({ main: createLocation({ country: 'france' }) }),
   appAccess: createOrgAppAccess({ festival: { marketplace: true, dashboard: true } }),
 });
 
-export const permissions = createPermissions({
+export const orgPermissions = createPermissions({
   id: orgId,
   roles: { [adminUid]: 'superAdmin' },
 });
 
-export const inDevelopmentMovie = createMovie({
+export const saleOrgPermissions = createPermissions({
+  id: orgId,
+  roles: { [adminUid]: 'superAdmin' },
+});
+
+export const moviePermissions = createDocPermissions({
+  id: movieId,
+  ownerId: orgId,
+});
+
+export const displayMovie = createMovie({
+  _meta: createDocumentMeta(),
+  id: movieId,
+  orgIds: [orgId, saleOrgId],
+  app: createMovieAppConfig({
+    festival: createAppConfig({ status: 'accepted', access: true }),
+  }),
   //main
-  productionStatus: 'development',
+  productionStatus: 'released',
   title: createTitle({
     original: 'Original title',
     international: 'International title',
@@ -212,37 +245,27 @@ export const inDevelopmentMovie = createMovie({
     targets: ['E2E tests', 'reliability'],
     goals: ['sanitation', 'industry'],
   }),
-  //shooting information
-  shooting: createShooting({
-    dates: createShootingDate({
-      planned: {
-        from: {
-          period: 'early',
-          month: new Date().toLocaleDateString('en-US', { month: 'long' }),
-          year: new Date().getFullYear() + 1,
-        },
-        to: {
-          period: 'early',
-          month: new Date().toLocaleDateString('en-US', { month: 'long' }),
-          year: new Date().getFullYear() + 2,
-        },
-      },
-    }),
-    locations: [
-      {
-        country: 'france',
-        cities: ['Lyon', 'Nantes'],
-      },
-      {
-        country: 'united-kingdom',
-        cities: ['London', 'Manchester'],
-      },
-    ],
-  }),
-  expectedPremiere: createExpectedPremiere({
-    date: new Date(new Date().getFullYear() + 2, 0, 1),
-    event: 'E2E summit',
-  }),
+  boxOffice: [
+    {
+      territory: 'france',
+      unit: 'eur',
+      value: 1000000,
+    },
+  ],
+  rating: [
+    {
+      country: 'france',
+      value: 'imdb : 8.2',
+    },
+  ],
+  certifications: ['eof', 'europeanQualification'],
+  originalRelease: [
+    {
+      country: 'france',
+      media: 'festival',
+      date: sub(new Date(), { months: 1 }),
+    },
+  ],
   //technical specification
   format: '1_66',
   formatQuality: '3DHD',
@@ -262,4 +285,79 @@ export const inDevelopmentMovie = createMovie({
       }),
     ],
   }),
+  //prizes & reviews
+  prizes: [
+    {
+      name: 'cannes',
+      prize: `Palme d'Or`,
+      year: 2022,
+      premiere: 'world',
+    },
+  ],
+  customPrizes: [
+    {
+      name: 'Custom festival',
+      prize: 'Custom Prize',
+      year: 2021,
+      premiere: 'market',
+    },
+  ],
+  review: [
+    {
+      criticName: 'Joe Criticizer',
+      journalName: 'Critics&Co',
+      revueLink: 'http://www.criticandco.com/e2e',
+      criticQuote: 'This is the best e2e fake movie !',
+    },
+  ],
+  //versions
+  languages: {
+    kyrgyz: createMovieLanguageSpecification({ dubbed: true }),
+  },
 });
+
+export const expectedSavedLocalStorage = {
+  query: '',
+  page: 0,
+  storeStatus: ['accepted'],
+  genres: ['action'],
+  originCountries: ['france'],
+  languages: {
+    languages: ['kyrgyz'],
+    versions: {
+      original: false,
+      dubbed: true,
+      subtitle: false,
+      caption: false,
+    },
+  },
+  productionStatus: ['released'],
+  minBudget: 0,
+  minReleaseYear: 2020,
+  sellers: [
+    {
+      name: 'sale org',
+      appModule: ['dashboard', 'marketplace'],
+      country: 'france',
+      isAccepted: true,
+      hasAcceptedMovies: true,
+      logo: '',
+      activity: 'intlSales',
+      objectID: '0-e2e-saleOrgId',
+      _highlightResult: {
+        name: {
+          value: '<em>sale</em> <em>org</em>',
+          matchLevel: 'full',
+          fullyHighlighted: true,
+          matchedWords: ['sale', 'org'],
+        },
+      },
+    },
+  ],
+  socialGoals: [],
+  contentType: null,
+  runningTime: 0,
+  hitsPerPage: 50,
+  festivals: ['cannes'],
+  certifications: ['eof', 'europeanQualification'],
+};
