@@ -3,7 +3,7 @@
  * to the LAST version.
  */
 import { importFirestore } from './admin';
-import { Firestore, startMaintenance, endMaintenance, versionRef } from '@blockframes/firebase-utils';
+import { Firestore, startMaintenance, endMaintenance, versionRef, appVersionRef } from '@blockframes/firebase-utils';
 import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
 import { last } from 'lodash';
 import { exportFirestoreToBucketBeta, getFirestoreExportDirname } from './firebase-utils';
@@ -28,6 +28,16 @@ export async function updateDBVersion(db: Firestore, version: number) {
     return versionRef(db).set({ currentVersion: version });
   } else {
     return versionRef(db).update({ currentVersion: version });
+  }
+}
+
+export async function updateAppVersion(db: Firestore, version: string) {
+  const doc = await appVersionRef(db).get();
+
+  if (!doc.exists) {
+    return appVersionRef(db).set({ currentVersion: version });
+  } else {
+    return appVersionRef(db).update({ currentVersion: version });
   }
 }
 

@@ -1,4 +1,5 @@
 import {
+  APP_DOCUMENT_NAME,
   DB_DOCUMENT_NAME,
   MAINTENANCE_DOCUMENT_NAME,
   META_COLLECTION_NAME,
@@ -14,6 +15,10 @@ export const maintenanceRef = (db = getDb()) => {
 
 export const versionRef = (db = getDb()) => {
   return db.collection(META_COLLECTION_NAME).doc(DB_DOCUMENT_NAME);
+};
+
+export const appVersionRef = (db = getDb()) => {
+  return db.collection(META_COLLECTION_NAME).doc(APP_DOCUMENT_NAME);
 };
 
 export function startMaintenance(db?: FirebaseFirestore.Firestore) {

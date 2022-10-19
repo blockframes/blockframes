@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { AuthService } from '../../service';
 import { ThemeService } from '@blockframes/ui/theme';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { dbVersionDoc } from '@blockframes/utils/maintenance';
+import { appVersionDoc, dbVersionDoc } from '@blockframes/utils/maintenance';
 import { OrganizationService } from '@blockframes/organization/service';
 import { IVersionDoc } from '@blockframes/model';
 import { DocumentReference } from 'firebase/firestore';
@@ -20,8 +20,9 @@ export class AuthWidgetComponent {
   user$ = this.authService.profile$;
   organization$ = this.orgService.currentOrg$;
   theme$ = this.themeService.theme$;
-  isBfAdmin = firstValueFrom(this.authService.isBlockframesAdmin$); 
-  appVersion$ = fromRef(this.firestore.getRef(dbVersionDoc) as DocumentReference<IVersionDoc>).pipe(map(snap => snap.data()));
+  isBfAdmin = firstValueFrom(this.authService.isBlockframesAdmin$);
+  dbVersion$ = fromRef(this.firestore.getRef(dbVersionDoc) as DocumentReference<IVersionDoc>).pipe(map(snap => snap.data()));
+  appVersion$ = fromRef(this.firestore.getRef(appVersionDoc) as DocumentReference<IVersionDoc>).pipe(map(snap => snap.data()));
   emulatorList = Object.keys(this.emulatorsConfig);
   emulators = this.emulatorList.length ? this.emulatorList.join(' - ') : 'none';
 

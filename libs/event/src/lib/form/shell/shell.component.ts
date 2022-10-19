@@ -7,7 +7,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { MatDialog } from '@angular/material/dialog';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { Observable, of, Subscription } from 'rxjs';
-import { map, pluck, switchMap, startWith } from 'rxjs/operators';
+import { map, pluck, switchMap, startWith, catchError } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -79,8 +79,9 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
       this.link = `${url}${this.internalLink}`;
 
       this.tabs$ = this.eventService.valueChanges(this.form.value.id).pipe(
-        map(e => e.start < new Date() && e.type !== 'meeting' ? navTabs[type].concat(statisticsTab) : navTabs[type])
-      )
+        map(e => e.start < new Date() && e.type !== 'meeting' ? navTabs[type].concat(statisticsTab) : navTabs[type]),
+        catchError(() => this.router.navigate(['../..'], { relativeTo: this.route, state: { eventDeleted: true } }))
+      );
 
       if (type === 'screening') {
         this.mediaSub?.unsubscribe();
@@ -162,8 +163,6 @@ export class EventFormShellComponent implements OnInit, OnDestroy {
 
     return dialogRef.afterClosed().pipe(
       switchMap(shouldSave => {
-        console.log("shouldSave", shouldSave)
-
         /* Undefined means user clicked on the backdrop, meaning just close the modal */
         if (typeof shouldSave === 'undefined') {
           return of(false);
