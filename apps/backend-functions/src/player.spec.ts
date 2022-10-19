@@ -6,7 +6,7 @@ import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firest
 import { StorageVideo } from '@blockframes/model';
 import type * as admin from 'firebase-admin';
 import { jwplayerApiV2Secret, jwplayerKey, testVideoId } from './environments/environment';
-import { getStorage, jwplayerApiV2 } from '@blockframes/firebase-utils';
+import { getStorage, jwplayerApiV2, sleep } from '@blockframes/firebase-utils';
 
 const testInvitations = [
   {
@@ -148,7 +148,7 @@ describe('JwPlayer test script', () => {
 
     const [existsAfterDelete] = await fileObject.exists();
     expect(existsAfterDelete).toBeFalsy();
-  }, 30000);
+  });
 
   it('should throw error when auth is null', async () => {
     // Load our test set
