@@ -46,7 +46,7 @@ describe('Login tests', () => {
 
     get('image-uploader').selectFile(imageFixture, { action: 'drag-drop' });
     get('crop-image').click();
-    get('update-profile').click();
+    get('update-profile').click({ force: true }); // TODO #8968 { force: true } because of snackbar with permission error
 
     awaitElementDeletion('[test-id="upload-completed"]');
     cy.wait(1000); // Wait until the onFileUpload backend function is triggered
