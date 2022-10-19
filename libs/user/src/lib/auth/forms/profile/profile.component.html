@@ -40,7 +40,7 @@
     <mat-card-subtitle>Please upload an image to your profile.</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <image-uploader test-id="image-uploader" ratio="square" [meta]="['users', 'avatar', uid]" [form]="form.avatar" listenToChanges>
+    <image-uploader ratio="square" [meta]="['users', 'avatar', uid]" [form]="form.avatar" listenToChanges test-id="image-uploader">
       <h3 title>Profile Image</h3>
     </image-uploader>
   </mat-card-content>

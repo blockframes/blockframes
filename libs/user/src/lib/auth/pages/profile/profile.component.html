@@ -1,7 +1,7 @@
 <auth-form-profile [form]="profileForm"></auth-form-profile>
 <change-password [form]="passwordForm"></change-password>
 <footer fxLayout fxLayoutAlign="center center">
-  <button test-id="update-profile" mat-flat-button color="primary" (click)="update()">
+  <button mat-flat-button color="primary" (click)="update()" test-id="update-profile">
     <mat-icon svgIcon="save"></mat-icon>
     <span>Update</span>
   </button>
