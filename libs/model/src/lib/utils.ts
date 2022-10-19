@@ -77,6 +77,7 @@ export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
       'video/quicktime',
       'video/x-ms-wmv',
     ],
+    /** @dev if updated, also update libs/devops/src/lib/firebase-utils/restore-storage-from-ci.ts restoreStorageFromCi */
     extension: ['.avi', '.mkv', '.mp4', '.3gp', '.mov', '.wmv'],
   },
   docx: {
