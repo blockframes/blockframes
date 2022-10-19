@@ -19,6 +19,7 @@ export {
   centralOrgId,
   supportEmails,
   playerId,
+  testVideoId
 } from '@env';
 
 import { firebase } from '@env';

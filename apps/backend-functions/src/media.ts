@@ -20,10 +20,9 @@ import { ImageParameters, formatParameters } from '@blockframes/media/image/dire
 
 // Internal dependencies
 import { deleteFromJWPlayer, uploadToJWPlayer } from './player';
-import { imgixToken, storageBucket } from './environments/environment';
+import { imgixToken, storageBucket, testVideoId } from './environments/environment';
 import { db } from './internals/firebase';
 import { isAllowedToAccessMedia } from './internals/media';
-import { testVideoId } from '@env';
 import { getDeepValue } from './internals/utils';
 import { getDocument, getDocumentSnap, getStorage } from '@blockframes/firebase-utils';
 

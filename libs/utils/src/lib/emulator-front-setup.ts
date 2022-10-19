@@ -2,20 +2,22 @@ import { InjectionToken } from '@angular/core';
 import { Auth, connectAuthEmulator } from 'firebase/auth';
 import { connectFirestoreEmulator, Firestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, Functions } from 'firebase/functions';
+import { connectStorageEmulator, FirebaseStorage } from 'firebase/storage';
 import firebaseSetup from 'firebase.json';
 
 interface EnabledEmulators {
   auth: boolean;
   firestore: boolean;
   functions: boolean;
+  storage: boolean;
 }
 
-export type EmulatorsConfig = Partial<Record<'auth' | 'firestore' | 'functions', { host: string, port: number }>>;
+export type EmulatorsConfig = Partial<Record<'auth' | 'firestore' | 'functions' | 'storage', { host: string, port: number }>>;
 
 /**
  * @see firebase.json for ports
  */
-export function getEmulatorsConfig(emulators: EnabledEmulators = { auth: false, firestore: false, functions: false }) {
+export function getEmulatorsConfig(emulators: EnabledEmulators = { auth: false, firestore: false, functions: false, storage: false }) {
   const enabledEmulators: EmulatorsConfig = {};
 
   if (emulators.auth) {
@@ -28,6 +30,10 @@ export function getEmulatorsConfig(emulators: EnabledEmulators = { auth: false, 
 
   if (emulators.functions) {
     enabledEmulators.functions = { host: 'localhost', port: firebaseSetup.emulators.functions.port };
+  }
+
+  if (emulators.storage) {
+    enabledEmulators.storage = { host: 'localhost', port: firebaseSetup.emulators.storage.port };
   }
 
   return enabledEmulators;
@@ -50,6 +56,11 @@ export function setupEmulators(emulatorConfig: EmulatorsConfig) {
     functions: (functions: Functions) => {
       if (emulatorConfig.functions) {
         connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
+      }
+    },
+    storage: (storage: FirebaseStorage) => {
+      if (emulatorConfig.storage) {
+        connectStorageEmulator(storage, emulatorConfig.storage.host, emulatorConfig.storage.port);
       }
     }
   };

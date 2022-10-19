@@ -6,7 +6,6 @@
  */
 import * as functions from 'firebase-functions';
 
-
 export const e2eMode = false;
 
 export {
@@ -19,6 +18,7 @@ export {
   centralOrgId,
   supportEmails,
   playerId,
+  testVideoId
 } from '@env';
 
 import { firebase } from '@env';

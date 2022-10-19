@@ -51,7 +51,7 @@ commands:
             - emulator-cache-v1-
       - run:
           background: true
-          command: npm start emulators
+          command: npm start emulatorsE2E
   start_unit_tests_emulators:
     steps:
       - restore_cache:
