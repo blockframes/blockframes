@@ -25,6 +25,7 @@ const injectedData = {
 
 describe('Login tests', () => {
   it('login and set a profile picture', () => {
+    browserAuth.clearIndexDBAttempt().then(r => console.log('bruce',r));
     cy.visit('');
     browserAuth.clearBrowserAuth();
     maintenance.start();

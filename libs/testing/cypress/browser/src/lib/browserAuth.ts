@@ -16,17 +16,24 @@ export const browserAuth = {
     cy.window().should('have.property', 'LoginService');
     return cy.window().then(async w => {
       await w['LoginService'].signout();
-      const databases = await indexedDB.databases();
-      const requests = databases.map(db => indexedDB.deleteDatabase(db.name));
-
-      const results = requests.map(r => new Promise((res, rej) => {
-        r.onsuccess = () => res(true);
-        r.onerror = () => rej(true);
-        r.onblocked = () => rej(true);
-      }));
-
-      return Promise.all(results);
+      return this.clearIndexDBAttempt().then(r => console.log('bruce2',r));
     });
+  },
+
+  /**
+   * Try to delete all indexedDB databases.
+   * If db is currently used, it request can be blocked.
+   */
+  async clearIndexDBAttempt() {
+    const databases = await indexedDB.databases();
+    const requests = databases.map(db => indexedDB.deleteDatabase(db.name));
+
+    const results = requests.map(r => new Promise((res, rej) => {
+      r.onsuccess = () => res(true);
+      r.onerror = () => rej();
+      r.onblocked = () => rej();
+    }));
+    return Promise.all(results).catch(_ => false);
   },
 
   getAuth() {
