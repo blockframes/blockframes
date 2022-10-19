@@ -1,5 +1,5 @@
 import { fakeUserData } from '@blockframes/testing/cypress/browser';
-import { createPermissions, createUser, createOrganization, createOrgAppAccess, legalTerms } from '@blockframes/model';
+import { createPermissions, createUser, createOrganization, createOrgAppAccess, fakeLegalTerms } from '@blockframes/model';
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
@@ -12,9 +12,9 @@ export const user = createUser({
   email: userData.email,
   orgId: orgId,
   termsAndConditions: {
-    catalog: legalTerms,
+    catalog: fakeLegalTerms,
   },
-  privacyPolicy: legalTerms,
+  privacyPolicy: fakeLegalTerms,
 });
 
 export const org = createOrganization({

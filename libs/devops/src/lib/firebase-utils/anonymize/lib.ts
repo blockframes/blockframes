@@ -12,7 +12,7 @@ import {
   Invitation,
   IMaintenanceDoc,
   getAllAppsExcept,
-  legalTerms,
+  fakeLegalTerms,
 } from '@blockframes/model';
 import {
   DbRecord,
@@ -47,11 +47,11 @@ function processUser<T extends User | PublicUser>(u: T): T {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
   const email = fakeEmail(firstName);
-  const privacyPolicy = legalTerms;
+  const privacyPolicy = fakeLegalTerms;
   const termsAndConditions = {};
   const apps = getAllAppsExcept(['crm']);
   for (const appName of apps) {
-    termsAndConditions[appName] = legalTerms;
+    termsAndConditions[appName] = fakeLegalTerms;
   }
   return { ...u, firstName, lastName, email, privacyPolicy, termsAndConditions };
 }

@@ -50,4 +50,4 @@ function fakeIp() {
   return randomNumber() + 1 + '.' + randomNumber() + '.' + randomNumber() + '.' + randomNumber();
 }
 
-export const legalTerms = { date: new Date(), ip: fakeIp() };
+export const fakeLegalTerms = { date: new Date(), ip: fakeIp() };

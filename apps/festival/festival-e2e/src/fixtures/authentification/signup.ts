@@ -6,7 +6,7 @@ import {
   createOrgAppAccess,
   createAddressSet,
   createLocation,
-  legalTerms,
+  fakeLegalTerms,
 } from '@blockframes/model';
 
 const newUserUid = '0-e2e-newUserUid';
@@ -42,9 +42,9 @@ const marketplaceOrgAdmin = createUser({
   email: marketplaceOrgAdminData.email,
   orgId: marketplaceOrgId,
   termsAndConditions: {
-    festival: legalTerms,
+    festival: fakeLegalTerms,
   },
-  privacyPolicy: legalTerms,
+  privacyPolicy: fakeLegalTerms,
 });
 
 const marketplaceOrg = createOrganization({
@@ -82,9 +82,9 @@ const dashboardOrgAdmin = createUser({
   email: dashboardOrgAdminData.email,
   orgId: dashboardOrgId,
   termsAndConditions: {
-    festival: legalTerms,
+    festival: fakeLegalTerms,
   },
-  privacyPolicy: legalTerms,
+  privacyPolicy: fakeLegalTerms,
 });
 
 const dashboardOrg = createOrganization({

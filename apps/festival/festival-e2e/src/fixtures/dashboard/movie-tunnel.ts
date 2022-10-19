@@ -16,7 +16,7 @@ import {
   createUser,
   createOrganization,
   createOrgAppAccess,
-  legalTerms,
+  fakeLegalTerms,
 } from '@blockframes/model';
 
 const adminUid = '0-e2e-orgAdminUid';
@@ -30,9 +30,9 @@ export const user = createUser({
   email: userData.email,
   orgId: orgId,
   termsAndConditions: {
-    festival: legalTerms,
+    festival: fakeLegalTerms,
   },
-  privacyPolicy: legalTerms,
+  privacyPolicy: fakeLegalTerms,
 });
 
 export const org = createOrganization({

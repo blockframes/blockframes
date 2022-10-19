@@ -19,7 +19,8 @@ import {
   createMovieLanguageSpecification,
   createAddressSet,
   createLocation,
-  legalTerms,
+  fakeLegalTerms,
+  createDocumentMeta
 } from '@blockframes/model';
 import { sub } from 'date-fns';
 
@@ -37,9 +38,9 @@ export const user = createUser({
   email: userData.email,
   orgId: orgId,
   termsAndConditions: {
-    festival: legalTerms,
+    festival: fakeLegalTerms,
   },
-  privacyPolicy: legalTerms,
+  privacyPolicy: fakeLegalTerms,
 });
 
 export const org = createOrganization({
@@ -76,8 +77,9 @@ export const moviePermissions = createDocPermissions({
 });
 
 export const displayMovie = createMovie({
+  _meta: createDocumentMeta(),
   id: movieId,
-  orgIds: [saleOrgId],
+  orgIds: [orgId, saleOrgId],
   app: createMovieAppConfig({
     festival: createAppConfig({ status: 'accepted', access: true }),
   }),
