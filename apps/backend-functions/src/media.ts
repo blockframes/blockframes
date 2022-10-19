@@ -25,6 +25,7 @@ import { db } from './internals/firebase';
 import { isAllowedToAccessMedia } from './internals/media';
 import { getDeepValue } from './internals/utils';
 import { getDocument, getDocumentSnap, getStorage } from '@blockframes/firebase-utils';
+import { triggerError } from './internals/sentry';
 
 
 /**
@@ -138,8 +139,10 @@ export async function linkFile(data: storage.ObjectMetadata) {
         const uploadResult = await uploadToJWPlayer(to);
 
         // There was an error when uploading file to jwPlayer
-        if (!uploadResult.success) {
-          console.error(`UPLOAD TO JWPLAYER FAILED: video ${data.name}`);
+        if (!uploadResult.success || !uploadResult.key) {
+          const message = `Upload to JwPlayer failed for video ${data.name}. ${metadata.collection}/${metadata.docId}`;
+          await triggerError({ message, bugType: 'jwplayer-api' });
+          console.error(message);
           if (uploadResult.message) {
             console.error(`An error occurred when uploading video to JwPlayer: ${uploadResult.message}`);
           }
