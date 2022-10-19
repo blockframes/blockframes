@@ -268,7 +268,7 @@ describe('Movie tunnel', () => {
     get('sound').should('contain', soundFormat[update.soundFormat]);
     ///versions
     get('original-version').should('contain', 'Available');
-    get('available-version_0').should('contain', languages[Object.keys(update.languages)[0]]).and('contain', 'subs');
+    get('available-version_0').should('contain', languages[Object.keys(update.languages)[0]]).and('contain', 'Subs');
     //promotional Elements
     get('deck').should('contain', 'Missing');
     get('scenario').should('contain', 'Missing');

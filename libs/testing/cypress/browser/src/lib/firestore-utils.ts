@@ -31,7 +31,7 @@ export function deleteInvitation(userEmail: string) {
 export function validateUser(userEmail: string) {
   adminAuth.getUser(userEmail).then((user: UserRecord) => {
     adminAuth.updateUser({ uid: user.uid, update: { emailVerified: true } });
-    firestore.update([{ docPath: `users/${user.uid}`, field: '_meta.emailVerified', value: true }]);
+    firestore.update({ docPath: `users/${user.uid}`, field: '_meta.emailVerified', value: true });
   });
 }
 
@@ -40,14 +40,14 @@ export function validateOrg(orgName: string) {
     .queryData({ collection: 'orgs', field: 'name', operator: '==', value: orgName })
     .then((orgs: Organization[]) => {
       const [org] = orgs;
-      firestore.update([{ docPath: `orgs/${org.id}`, field: 'status', value: 'accepted' }]);
-    });
+      firestore.update({ docPath: `orgs/${org.id}`, field: 'status', value: 'accepted' });
+  });
 }
 
 export function validateInvitation(userEmail: string) {
   firestore
     .queryData({ collection: 'invitations', field: 'fromUser.email', operator: '==', value: userEmail })
     .then((invitations: Invitation[]) =>
-      firestore.update([{ docPath: `invitations/${invitations[0].id}`, field: 'status', value: 'accepted' }])
+      firestore.update({ docPath: `invitations/${invitations[0].id}`, field: 'status', value: 'accepted' })
     );
 }

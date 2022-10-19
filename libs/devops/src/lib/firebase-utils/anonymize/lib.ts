@@ -11,7 +11,8 @@ import {
   PublicOrganization,
   Invitation,
   IMaintenanceDoc,
-  getAllAppsExcept
+  getAllAppsExcept,
+  fakeLegalTerms,
 } from '@blockframes/model';
 import {
   DbRecord,
@@ -19,7 +20,7 @@ import {
   CollectionReference,
   QueryDocumentSnapshot,
   QuerySnapshot,
-  runChunks
+  runChunks,
 } from '@blockframes/firebase-utils';
 import { firebase, testVideoId } from '@env';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
@@ -38,31 +39,19 @@ function fakeEmail(name: string) {
   return `dev+${suffix}-${random}@blockframes.io`;
 }
 
-function randomNumber() {
-  return Math.floor(Math.random() * 255);
-}
-
-function fakeIp() {
-  return randomNumber() + 1 + '.' + randomNumber() + '.' + randomNumber() + '.' + randomNumber();
-}
-
-function hasKeys<T extends Record<string, any>>(
-  doc: Record<string, any>,
-  ...keys: (keyof T)[]
-): doc is T {
-  return keys.every((key) => key in doc);
+function hasKeys<T extends Record<string, any>>(doc: Record<string, any>, ...keys: (keyof T)[]): doc is T {
+  return keys.every(key => key in doc);
 }
 
 function processUser<T extends User | PublicUser>(u: T): T {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
   const email = fakeEmail(firstName);
-  const legalTerms = { date: new Date(), ip: fakeIp() };
-  const privacyPolicy = legalTerms;
+  const privacyPolicy = fakeLegalTerms;
   const termsAndConditions = {};
   const apps = getAllAppsExcept(['crm']);
   for (const appName of apps) {
-    termsAndConditions[appName] = legalTerms;
+    termsAndConditions[appName] = fakeLegalTerms;
   }
   return { ...u, firstName, lastName, email, privacyPolicy, termsAndConditions };
 }
