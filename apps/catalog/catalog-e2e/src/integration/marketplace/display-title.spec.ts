@@ -240,4 +240,11 @@ describe('Movie display in marketplace', () => {
     get('export').click();
     cy.contains('Please wait, your export is being generated...');
   });
+
+  it('Can load more movies', () => {
+    findIn('New on Archipel', 'see-all').click();
+    getAllStartingWith('movie-card_').should('have.length', 50);
+    get('load-more').click();
+    getAllStartingWith('movie-card_').should('have.length', 100);
+  });
 });
