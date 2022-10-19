@@ -21,6 +21,12 @@ export interface RouteDescription {
   disclaimer?: string;
 }
 
+export interface SentryError {
+  message: string;
+  location: 'file-uploader-service' | 'global';
+  bugType: 'invalid-metadata' | 'network' | 'front-version' | 'jwplayer-api'
+}
+
 /**
  * replaces accented characters with their closes neighbour
  * in english characters
