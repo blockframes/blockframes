@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SentryError } from '@blockframes/model';
 import { firebase, sentryDsn } from '@env';
-import { Severity, captureMessage } from '@sentry/browser';
+import { captureMessage, SeverityLevel } from '@sentry/browser';
 import { appVersion } from './constants';
 
 @Injectable({ providedIn: 'root' })
@@ -22,10 +22,10 @@ export class SentryService {
  * @returns generated eventId
  */
   triggerWarning(error: SentryError) {
-    return this.capture(error, Severity.Warning);
+    return this.capture(error, 'warning');
   }
 
-  private capture(error: SentryError, level: Severity = Severity.Error) {
+  private capture(error: SentryError, level: SeverityLevel = 'error') {
     if (sentryDsn) {
       try {
         const eventId = captureMessage(error.message, {
