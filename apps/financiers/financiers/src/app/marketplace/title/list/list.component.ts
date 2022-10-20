@@ -54,15 +54,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
 
-    const params = this.route.snapshot.queryParams;
-    for (const key in params) {
-      try {
-        params[key].split(',').forEach(v => this.searchForm[key].add(v.trim()));
-      } catch (_) {
-        console.error(`Invalid parameter ${key} in URL`);
-      }
-    }
-
     const sub =
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
         distinctUntilChanged(),
@@ -81,7 +72,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
         the overall possible results which is represented by nbHits.
         If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
         So when the next valueChange is happening we need to reset everything and start from beginning  */
-        this.hitsViewed = this.movieResultsState.value.length; // TODO #8893 check this
+        this.hitsViewed = this.movieResultsState.value.length; // TODO #8893 do same as for title list
         if (this.lastPage && this.searchForm.page.value !== 0) {
           this.hitsViewed = 0;
           this.searchForm.page.setValue(0);
