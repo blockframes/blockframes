@@ -38,10 +38,10 @@
 
 <!-- Titles -->
 <ng-template #titles let-section>
-  <section class="titles cards" [attr.test-id]="section.title">
+  <section class="titles cards">
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>{{ section.title }}</h2>
-      <a mat-button [routerLink]="section.link | getLink: '../title'" [queryParams]="section.link | getParams" color="primary" test-id="see-all">
+      <a mat-button [routerLink]="section.link | getLink: '../title'" [queryParams]="section.link | getParams" color="primary" test-id="title-link">
         <span>See all</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>
@@ -62,10 +62,10 @@
 
 <!-- Orgs -->
 <ng-template #orgs let-section>
-  <section class="orgs cards" [attr.test-id]="section.title">
+  <section class="orgs cards">
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>{{ section.title }}</h2>
-      <a mat-button [routerLink]="section.link | getLink: '../organization'" [queryParams]="section.link | getParams" color="primary" test-id="see-all">
+      <a mat-button [routerLink]="section.link | getLink: '../organization'" [queryParams]="section.link | getParams" color="primary" test-id="organization-link">
         <span>See all</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>
@@ -110,10 +110,10 @@
 <ng-template #eventsSlider let-section>
   <ng-container *ngIf="section | queryEvents | async as events">
     <ng-container *ngIf="events.length">
-      <section class="events-slider" bgAsset="events_slider_background.png" [attr.test-id]="section.title">
+      <section class="events-slider" bgAsset="events_slider_background.png">
         <header fxLayout fxLayoutAlign="space-between center" class="dark-contrast-theme">
           <h2>{{ section.title }}</h2>
-          <a mat-button [routerLink]="section.link || '../event'" test-id="see-all">
+          <a mat-button [routerLink]="section.link || '../event'" test-id="event-link">
             <span>See all</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
@@ -132,10 +132,10 @@
 
 <!-- Org Titles -->
 <ng-template #orgTitles let-section>
-  <section class="org-titles cards" [attr.test-id]="section.title">
+  <section class="org-titles cards">
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>{{ section.title }}</h2>
-      <a mat-button [routerLink]="section.link || '../organization'" color="primary" test-id="see-all">
+      <a mat-button [routerLink]="section.link || '../organization'" color="primary" test-id="organization-link">
         <span>See all</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>

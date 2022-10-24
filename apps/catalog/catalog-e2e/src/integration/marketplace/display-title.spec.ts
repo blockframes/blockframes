@@ -64,7 +64,7 @@ describe('Movie display in marketplace', () => {
 
   it('Find with title', () => {
     syncMovieToAlgolia(movie.id);
-    findIn('New on Archipel', 'see-all').click();
+    get('title-link').eq(0).click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
       get('search-input').type(movie.title.international);
@@ -76,7 +76,7 @@ describe('Movie display in marketplace', () => {
 
   it('Find with director', () => {
     syncMovieToAlgolia(movie.id);
-    findIn('New on Archipel', 'see-all').click();
+    get('title-link').eq(0).click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
       get('search-input').type(`${movie.directors[0].firstName} ${movie.directors[0].lastName}`);
@@ -87,7 +87,7 @@ describe('Movie display in marketplace', () => {
 
   it('Find with keyword', () => {
     syncMovieToAlgolia(movie.id);
-    findIn('New on Archipel', 'see-all').click();
+    get('title-link').eq(0).click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
       get('search-input').type(movie.keywords[0]);
@@ -98,7 +98,7 @@ describe('Movie display in marketplace', () => {
 
   it('Find with filters, save & load filters', () => {
     syncMovieToAlgolia(movie.id);
-    findIn('New on Archipel', 'see-all').click();
+    get('title-link').eq(0).click();
     get('titles-count');
     selectFilter('Content Type');
     selectToggle('content_', 'Movie');
@@ -141,7 +141,7 @@ describe('Movie display in marketplace', () => {
     //other solution, know the filtered Algolia movies beforehand.
     //other solution, inject a dummy movie corresponding to each tested filter.
     syncMovieToAlgolia(movie.id);
-    findIn('New on Archipel', 'see-all').click();
+    get('title-link').eq(0).click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
       get('search-input').type(movie.title.international);
@@ -213,7 +213,7 @@ describe('Movie display in marketplace', () => {
   it('Absent if not released', () => {
     firestore.update({ docPath: `movies/${movie.id}`, field: 'app.catalog.status', value: 'draft' });
     syncMovieToAlgolia(movie.id);
-    findIn('New on Archipel', 'see-all').click();
+    get('title-link').eq(0).click();
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
       get('search-input').type(movie.title.international);
@@ -226,7 +226,7 @@ describe('Movie display in marketplace', () => {
 
   it('Can only export less than 450 movies', () => {
     syncMovieToAlgolia(movie.id);
-    findIn('New on Archipel', 'see-all').click();
+    get('title-link').eq(0).click();
     //There shouldn't be less than 450 movies
     get('export').click();
     cy.contains(`You can't have an export with that many titles.`);
@@ -242,7 +242,7 @@ describe('Movie display in marketplace', () => {
   });
 
   it('Can load more movies', () => {
-    findIn('New on Archipel', 'see-all').click();
+    get('title-link').eq(0).click();
     getAllStartingWith('movie-card_').should('have.length', 50);
     get('load-more').click();
     getAllStartingWith('movie-card_').should('have.length', 100);

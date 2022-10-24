@@ -63,7 +63,7 @@ describe('Movie display in marketplace', () => {
   });
 
   it('Find with filters, save & load filters', () => {
-    findIn('New on Archipel', 'see-all').click();
+    get('title-link').eq(0).click();
     get('titles-count');
     selectFilter('Sales Agent');
     get('sales-agent').find('input').type(saleOrg.name);
@@ -113,15 +113,15 @@ describe('Movie display in marketplace', () => {
   });
 
   it('Published movie is displayed in org page', () => {
-    findIn('Featured Sales Agents', 'see-all').click();
+    get('organization-link').click();
     get('search-input').type(saleOrg.name);
     get(`org-card_${saleOrg.id}`).should('exist');
     findIn(`org-card_${saleOrg.id}`, 'logo').click();
     get(`movie-card_${movie.id}`).should('exist');
   });
-  
+
   it('Unpublished movie is not displayed in org page', () => {
-    findIn('Featured Sales Agents', 'see-all').click();
+    get('organization-link').click();
     get('search-input').type(saleOrg.name);
     findIn(`org-card_${saleOrg.id}`, 'logo').click();
     get(`movie-card_${movie.id}`).should('exist');

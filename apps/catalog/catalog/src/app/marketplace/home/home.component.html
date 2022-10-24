@@ -38,10 +38,10 @@
 
 <!-- Titles -->
 <ng-template #titles let-section>
-  <section class="titles cards" [attr.test-id]="section.title">
+  <section class="titles cards">
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>{{ section.title }}</h2>
-      <a mat-button [routerLink]="section.link | getLink: '../title'" [queryParams]="section.link | getParams" color="primary" test-id="see-all">
+      <a mat-button [routerLink]="section.link | getLink: '../title'" [queryParams]="section.link | getParams" color="primary" test-id="title-link">
         <span>See all</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>
