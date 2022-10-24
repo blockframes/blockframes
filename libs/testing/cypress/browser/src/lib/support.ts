@@ -207,7 +207,7 @@ export function getEventSlot(time: EventSlot) {
 export function fillDashboardCalendarPopin(event: { type: EventTypes; title: string }) {
   const { type, title } = event;
   get('event-type').click();
-  get(`type_${type}`).click();
+  get(`option_${type}`).click();
   get('event-title-modal').clear().type(title);
   get('more-details').click();
 }
@@ -220,7 +220,7 @@ export function fillDashboardCalendarDetails(event: {
 }) {
   const { movieId, title, accessibility, secret } = event;
   get('screening-title').click();
-  get(`title_${movieId}`).click();
+  get(`option_${movieId}`).click();
   get('description').type(`Description : ${title}`);
   get(accessibility).click();
   if (secret) check('secret');
