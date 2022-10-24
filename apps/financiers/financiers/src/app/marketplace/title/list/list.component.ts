@@ -37,7 +37,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   public hitsViewed = 0;
 
   private loadMoreToggle: boolean;
-  private lastPage: boolean;
+  private previousSearch: string;
   private subs: Subscription[] = [];
 
   constructor(
@@ -58,6 +58,16 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
         distinctUntilChanged(),
         debounceTime(500),
+        tap(() => {
+          const search = { ...this.searchForm.value };
+          delete search.page;
+          const currentSearch = JSON.stringify(search);
+          if (this.previousSearch !== currentSearch && this.searchForm.page.value !== 0) {
+            this.searchForm.page.setValue(0, { onlySelf: false, emitEvent: false });
+            encodeUrl<MovieSearch>(this.router, this.route, this.searchForm.value);
+          }
+          this.previousSearch = currentSearch;
+        }),
         switchMap(async () => [await this.searchForm.search(true), await this.searchForm.search(true, { hitsPerPage: this.pdfService.exportLimit, page: 0 })]),
         tap(([res]) => this.nbHits = res.nbHits),
       ).subscribe(([movies, moviesToExport]) => {
@@ -68,16 +78,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
           this.movieResultsState.next(movies.hits);
         }
-        /* hitsViewed is just the current state of displayed movies, this information is important for comparing
-        the overall possible results which is represented by nbHits.
-        If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
-        So when the next valueChange is happening we need to reset everything and start from beginning  */
-        this.hitsViewed = this.movieResultsState.value.length; // TODO #8893 do same as for title list
-        if (this.lastPage && this.searchForm.page.value !== 0) {
-          this.hitsViewed = 0;
-          this.searchForm.page.setValue(0);
-        }
-        this.lastPage = this.hitsViewed === this.nbHits;
+        this.hitsViewed = this.movieResultsState.value.length;
       });
     this.subs.push(sub);
   }

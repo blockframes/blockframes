@@ -1,16 +1,18 @@
 // Angular
 import { Component, ChangeDetectionStrategy, HostBinding, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 // Blockframes
 import { OrganizationService } from '@blockframes/organization/service';
 import { scaleOut } from '@blockframes/utils/animations/fade';
 import { Organization } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/organization/forms/search.form';
+import { OrganizationSearchForm, createOrganizationSearch, OrganizationSearch } from '@blockframes/organization/forms/search.form';
 
 // RxJs
-import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap, throttleTime } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 
 @Component({
   selector: 'financiers-organization-list',
@@ -32,29 +34,41 @@ export class ListComponent implements OnInit, OnDestroy {
   public nbHits: number;
   public hitsViewed = 0;
 
-  private sub: Subscription;
+  private subs: Subscription[] = [];
   private loadMoreToggle: boolean;
-  private lastPage: boolean;
+  private previousSearch: string;
 
   constructor(
     private service: OrganizationService,
     private dynTitle: DynamicTitleService,
+    private router: Router,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Partners', 'All');
     this.orgs$ = this.orgResultsState.asObservable();
     const search = createOrganizationSearch({ appModule: ['marketplace'], countries: [] });
-    this.searchForm.setValue(search);
-    this.sub = this.searchForm.valueChanges.pipe(
+    const decodedData = decodeUrl<OrganizationSearch>(this.route);
+    this.searchForm.hardReset({ ...search, ...decodedData });
+    const sub = this.searchForm.valueChanges.pipe(
       startWith(this.searchForm.value),
       distinctUntilChanged(),
       debounceTime(500),
+      tap(() => {
+        const search = { ...this.searchForm.value };
+        delete search.page;
+        const currentSearch = JSON.stringify(search);
+        if (this.previousSearch !== currentSearch && this.searchForm.page.value !== 0) {
+          this.searchForm.page.setValue(0, { onlySelf: false, emitEvent: false });
+        }
+        this.previousSearch = currentSearch;
+      }),
       switchMap(() => this.searchForm.search()),
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
       map(results => results.map(org => org.objectID)),
-      switchMap(ids => ids.length ? this.service.valueChanges(ids) : of([])),
+      switchMap(ids => ids.length ? this.service.load(ids) : of([])),
     ).subscribe(orgs => {
       if (this.loadMoreToggle) {
         this.orgResultsState.next(this.orgResultsState.value.concat(orgs));
@@ -62,17 +76,16 @@ export class ListComponent implements OnInit, OnDestroy {
       } else {
         this.orgResultsState.next(orgs);
       }
-      /* hitsViewed is just the current state of displayed orgs, this information is important for comparing
-      the overall possible results which is represented by nbHits.
-      If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
-      So when the next valueChange is happening we need to reset everything and start from beginning  */
       this.hitsViewed = this.orgResultsState.value.length;
-      if (this.lastPage && this.searchForm.page.value !== 0) { // TODO #8893 do same as for title list
-        this.hitsViewed = 0;
-        this.searchForm.page.setValue(0);
-      }
-      this.lastPage = this.hitsViewed === this.nbHits;
     });
+
+    const subSearchUrl = this.searchForm.valueChanges.pipe(
+      throttleTime(1000)
+    ).subscribe(({ countries, query }) => {
+      encodeUrl<Partial<OrganizationSearch>>(this.router, this.route, { countries, query });
+    });
+
+    this.subs.push(sub, subSearchUrl);
   }
 
   async loadMore() {
@@ -82,6 +95,6 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subs.forEach(s => s.unsubscribe());
   }
 }

@@ -116,7 +116,6 @@ export class ListComponent implements OnDestroy, OnInit {
         languages: search.languages,
         minReleaseYear: search.minReleaseYear > 0 ? search.minReleaseYear : undefined,
         runningTime: search.runningTime
-        // TODO #8893 add page number  ?
       },
       avails,
     }));

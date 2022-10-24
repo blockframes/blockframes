@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, HostBinding, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/service';
 import { scaleOut } from '@blockframes/utils/animations/fade';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
@@ -6,8 +7,8 @@ import { Organization } from '@blockframes/model';
 import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap, throttleTime } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationSearchForm, createOrganizationSearch, OrganizationSearch } from '@blockframes/organization/forms/search.form';
-import { ActivatedRoute, Router } from '@angular/router'
-import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder'
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+
 @Component({
   selector: 'catalog-organization-list',
   templateUrl: './list.component.html',
@@ -30,8 +31,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private subs: Subscription[] = [];
   private loadMoreToggle: boolean;
-  private lastPage: boolean;
-  private currentRoute: string;
+  private previousSearch: string;
 
   constructor(
     private service: OrganizationService,
@@ -45,20 +45,26 @@ export class ListComponent implements OnInit, OnDestroy {
     this.orgs$ = this.orgResultsState.asObservable();
     const search = createOrganizationSearch({ appModule: ['dashboard'] });
     const decodedData = decodeUrl<OrganizationSearch>(this.route);
-    this.searchForm.setValue({
-      ...search,
-      countries: [],
-      ...decodedData
-    });
+    this.searchForm.hardReset({ ...search, ...decodedData });
+
     const sub = this.searchForm.valueChanges.pipe(
       startWith(this.searchForm.value),
       distinctUntilChanged(),
       debounceTime(500),
+      tap(() => {
+        const search = { ...this.searchForm.value };
+        delete search.page;
+        const currentSearch = JSON.stringify(search);
+        if (this.previousSearch !== currentSearch && this.searchForm.page.value !== 0) {
+          this.searchForm.page.setValue(0, { onlySelf: false, emitEvent: false });
+        }
+        this.previousSearch = currentSearch;
+      }),
       switchMap(() => this.searchForm.search()),
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
       map(results => results.map(org => org.objectID)),
-      switchMap(ids => ids.length ? this.service.valueChanges(ids) : of([])),
+      switchMap(ids => ids.length ? this.service.load(ids) : of([])),
     ).subscribe(orgs => {
       if (this.loadMoreToggle) {
         this.orgResultsState.next(this.orgResultsState.value.concat(orgs));
@@ -66,22 +72,13 @@ export class ListComponent implements OnInit, OnDestroy {
       } else {
         this.orgResultsState.next(orgs);
       }
-      /* hitsViewed is just the current state of displayed orgs, this information is important for comparing
-      the overall possible results which is represented by nbHits.
-      If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
-      So when the next valueChange is happening we need to reset everything and start from beginning  */
       this.hitsViewed = this.orgResultsState.value.length;
-      if (this.lastPage && this.searchForm.page.value !== 0) {  // TODO #8893 do same as for festival
-        this.hitsViewed = 0;
-        this.searchForm.page.setValue(0);
-      }
-      this.lastPage = this.hitsViewed === this.nbHits;
     });
 
     const subSearchUrl = this.searchForm.valueChanges.pipe(
       throttleTime(1000)
     ).subscribe(({ countries, query }) => {
-      encodeUrl<Partial<OrganizationSearch>>(this.router, this.route, { countries, query, });
+      encodeUrl<Partial<OrganizationSearch>>(this.router, this.route, { countries, query });
     });
 
     this.subs.push(sub, subSearchUrl);

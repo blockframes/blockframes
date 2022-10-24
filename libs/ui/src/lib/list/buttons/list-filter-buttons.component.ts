@@ -65,7 +65,7 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
 
   setButtonsState() {
     const dataStorage = localStorage.getItem(`${this.app}-${this.savedSearchIdentifier}`);
-    const currentRouteParams = JSON.parse(this.route.snapshot.queryParams.formValue);
+    const currentRouteParams = JSON.parse(this.route.snapshot.queryParams.formValue ?? '{}');
     delete currentRouteParams.page;
     if (dataStorage) this.buttonsState.save = 'active', this.buttonsState.load = 'enabled';
     if (dataStorage === JSON.stringify(currentRouteParams)) this.buttonsState.save = 'enabledAndActive', this.buttonsState.load = 'active';
