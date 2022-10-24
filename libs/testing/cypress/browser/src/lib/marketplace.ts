@@ -1,22 +1,6 @@
 import { Movie, Organization } from '@blockframes/model';
 import { algolia, firestore, get, getAllStartingWith } from '@blockframes/testing/cypress/browser';
 
-export function movieCardShould(option: 'exist' | 'not.exist', title: string) {
-  let titleFound = false;
-  return getAllStartingWith('item_').then($elements => {
-    const $cards = $elements.children();
-    const cardsInnerTexts = $cards.toArray().map(child => child.innerText);
-    for (const text of cardsInnerTexts) {
-      if (text.includes(title)) titleFound = true;
-    }
-    if (option === 'exist') {
-      expect(titleFound).to.equal(true);
-    } else {
-      expect(titleFound).to.equal(false);
-    }
-  });
-}
-
 export function syncMovieToAlgolia(movieId: string) {
   return firestore
     .get(`movies/${movieId}`)

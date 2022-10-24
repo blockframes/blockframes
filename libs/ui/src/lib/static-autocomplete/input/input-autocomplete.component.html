@@ -4,7 +4,7 @@
   </mat-label>
   <input matInput type="text" autocomplete="off" [formControl]="control" [matAutocomplete]="auto">
   <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-    <mat-option *ngFor="let state of filteredStates | async" [value]="state">
+    <mat-option *ngFor="let state of filteredStates | async" [value]="state" [attr.test-id]="'option_' + state">
       <ng-template [ngTemplateOutlet]="template || label" [ngTemplateOutletContext]="{ $implicit: state }">
       </ng-template>
       <ng-template #label>

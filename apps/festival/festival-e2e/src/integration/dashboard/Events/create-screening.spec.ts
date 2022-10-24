@@ -7,8 +7,6 @@ import {
   // cypress commands
   assertUrlIncludes,
   get,
-  getInList,
-  findIn,
   // cypress dashboard specific cpmmands
   connectOtherUser,
   getEventSlot,
@@ -77,13 +75,13 @@ describe('Screenings', () => {
     // create event
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
-    fillDashboardCalendarDetails({ movie: screenerTitle, title: eventTitle, accessibility: 'public' });
+    fillDashboardCalendarDetails({ movieId: screenerMovie.id, title: eventTitle, accessibility: 'public' });
     get('event-save-disabled').should('be.disabled');
     get('missing-screener').should('not.exist');
     get('warning-screener').should('not.exist');
     // change movie to check noScreener behaviour
     get('screening-title').click();
-    getInList('title_', noScreenerTitle);
+    get(`option_${noScreenerMovie.id}`).click();
     get('event-save').click();
     get('warning-screener').should('exist');
     get('missing-screener').should('exist');
@@ -103,7 +101,7 @@ describe('Screenings', () => {
     // create event
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
-    fillDashboardCalendarDetails({ movie: screenerTitle, title: eventTitle, accessibility: 'private' });
+    fillDashboardCalendarDetails({ movieId: screenerMovie.id, title: eventTitle, accessibility: 'private' });
     connectOtherUser(marketplaceUser.email);
     get('skip-preferences').click();
     get('event-link').click();
@@ -118,7 +116,7 @@ describe('Screenings', () => {
     // create event
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
-    fillDashboardCalendarDetails({ movie: screenerTitle, title: eventTitle, accessibility: 'protected' });
+    fillDashboardCalendarDetails({ movieId: screenerMovie.id, title: eventTitle, accessibility: 'protected' });
     connectOtherUser(marketplaceUser.email);
     get('skip-preferences').click();
     get('event-link').click();
@@ -133,7 +131,7 @@ describe('Screenings', () => {
     const eventTitle = `Admin public screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
-    fillDashboardCalendarDetails({ movie: screenerTitle, title: eventTitle, accessibility: 'public', secret: true });
+    fillDashboardCalendarDetails({ movieId: screenerMovie.id, title: eventTitle, accessibility: 'public', secret: true });
     connectOtherUser(marketplaceUser.email);
     get('skip-preferences').click();
     get('event-link').click();

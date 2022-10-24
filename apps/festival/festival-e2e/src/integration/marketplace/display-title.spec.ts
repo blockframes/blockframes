@@ -8,7 +8,7 @@ import {
   displayMovie as movie,
   expectedSavedLocalStorage,
 } from '../../fixtures/marketplace/display-title';
-import { genres, languages, territories, productionStatus, festival, certifications } from '@blockframes/model';
+import { productionStatus, festival, certifications } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -21,7 +21,6 @@ import {
   check,
   get,
   findIn,
-  getInListbox,
   getByClass,
   //marketplace lib
   selectFilter,
@@ -71,15 +70,15 @@ describe('Movie display in marketplace', () => {
     get('save-filter').click();
     selectFilter('Genre');
     get('genre').find('input').click();
-    getInListbox(genres[movie.genres[0]]);
+    get(`option_${movie.genres[0]}`).click();
     get('save-filter').click();
     selectFilter('Country of Origin');
     get('country').find('input').click();
-    getInListbox(territories[movie.originCountries[0]]);
+    get(`option_${movie.originCountries[0]}`).click();
     get('save-filter').click();
     selectFilter('Language & Version');
     get('language').find('input').click();
-    getInListbox(languages[Object.keys(movie.languages)[0]]);
+    get(`option_${Object.keys(movie.languages)[0]}`).click();
     check('Dubs');
     get('save-filter').click();
     selectFilter('Production Status');

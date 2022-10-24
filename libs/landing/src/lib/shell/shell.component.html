@@ -16,7 +16,7 @@
 
 <main>
   <!-- Bridge between app banner -->
-  
+
   <ng-content select="app-bridge-banner"></ng-content>
 
   <!-- Header -->
@@ -70,8 +70,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Role</mat-label>
               <mat-select placeholder="Activity" formControlName="role" required test-id="role">
-                <ng-container *ngFor="let role of roles, let i = index">
-                  <mat-option [value]="role" [attr.test-id]="'role_' + i">{{ role | roleLabel }}</mat-option>
+                <ng-container *ngFor="let role of roles">
+                  <mat-option [value]="role" [attr.test-id]="'role_' + role">{{ role | roleLabel }}</mat-option>
                 </ng-container>
               </mat-select>
               <mat-error *ngIf="form.get('role').hasError('required')">

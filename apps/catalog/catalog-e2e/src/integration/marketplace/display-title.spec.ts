@@ -7,7 +7,6 @@ import {
   movieOrgMoviePermissions,
   displayMovie as movie,
 } from '../../fixtures/marketplace/display-title';
-import { genres, languages, territories } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -19,11 +18,8 @@ import {
   assertUrlIncludes,
   check,
   get,
-  findIn,
-  getInListbox,
   getAllStartingWith,
   //marketplace lib
-  movieCardShould,
   selectFilter,
   selectToggle,
   selectYear,
@@ -70,7 +66,7 @@ describe('Movie display in marketplace', () => {
       get('search-input').type(movie.title.international);
       //wait for the count to update before checking our movie
       get('titles-count').should('not.contain', titlesCount);
-      movieCardShould('exist', movie.title.international);
+      get(`movie-card_${movie.id}`).should('exist');
     });
   });
 
@@ -81,7 +77,7 @@ describe('Movie display in marketplace', () => {
       titlesCount = $result[0].innerText;
       get('search-input').type(`${movie.directors[0].firstName} ${movie.directors[0].lastName}`);
       get('titles-count').should('not.contain', titlesCount);
-      movieCardShould('exist', movie.title.international);
+      get(`movie-card_${movie.id}`).should('exist');
     });
   });
 
@@ -92,7 +88,7 @@ describe('Movie display in marketplace', () => {
       titlesCount = $result[0].innerText;
       get('search-input').type(movie.keywords[0]);
       get('titles-count').should('not.contain', titlesCount);
-      movieCardShould('exist', movie.title.international);
+      get(`movie-card_${movie.id}`).should('exist');
     });
   });
 
@@ -105,15 +101,15 @@ describe('Movie display in marketplace', () => {
     get('save-filter').click();
     selectFilter('Genre');
     get('genre').find('input').click();
-    getInListbox(genres[movie.genres[0]]);
+    get(`option_${movie.genres[0]}`).click();
     get('save-filter').click();
     selectFilter('Country of Origin');
     get('country').find('input').click();
-    getInListbox(territories[movie.originCountries[0]]);
+    get(`option_${movie.originCountries[0]}`).click();
     get('save-filter').click();
     selectFilter('Language & Version');
     get('language').find('input').click();
-    getInListbox(languages[Object.keys(movie.languages)[0]]);
+    get(`option_${Object.keys(movie.languages)[0]}`).click();
     check('Dubs');
     get('save-filter').click();
     selectFilter('Release Year');
@@ -125,7 +121,7 @@ describe('Movie display in marketplace', () => {
     get('90min - 180min').click();
     get('save-filter').click();
     get('titles-count').should('contain', 'There is 1 title available.');
-    movieCardShould('exist', movie.title.international);
+    get(`movie-card_${movie.id}`).should('exist');
     getAllStartingWith('item_').should('have.length', 1);
     get('save').click();
     get('clear-filters').click();
@@ -146,50 +142,50 @@ describe('Movie display in marketplace', () => {
       titlesCount = $result[0].innerText;
       get('search-input').type(movie.title.international);
       get('titles-count').should('not.contain', titlesCount);
-      movieCardShould('exist', movie.title.international);
+      get(`movie-card_${movie.id}`).should('exist');
       get('titles-count').then($result => {
         titlesCount = $result[0].innerText;
         selectFilter('Content Type');
         selectToggle('content_', 'TV');
         get('titles-count').should('not.contain', titlesCount);
-        movieCardShould('not.exist', movie.title.international);
+        get(`movie-card_${movie.id}`).should('not.exist');
         get('clear-filter').click();
         get('save-filter').click();
         get('titles-count').should('contain', titlesCount);
-        movieCardShould('exist', movie.title.international);
+        get(`movie-card_${movie.id}`).should('exist');
         selectFilter('Genre');
         get('genre').find('input').click();
-        getInListbox(genres['erotic']);
+        get('option_erotic').click();
         get('empty').should('exist');
         get('clear-filter').click();
         get('save-filter').click();
-        movieCardShould('exist', movie.title.international);
+        get(`movie-card_${movie.id}`).should('exist');
         get('titles-count').should('contain', titlesCount);
         selectFilter('Country of Origin');
         get('country').find('input').click();
-        getInListbox(territories['cayman-islands']);
+        get('option_cayman-islands').click();
         get('empty').should('exist');
         get('clear-filter').click();
         get('save-filter').click();
-        movieCardShould('exist', movie.title.international);
+        get(`movie-card_${movie.id}`).should('exist');
         get('titles-count').should('contain', titlesCount);
         selectFilter('Language & Version');
         get('language').find('input').click();
-        getInListbox(languages['belarussian']);
+        get('option_belarussian').click();
         check('Dubs');
         get('empty').should('exist');
         get('clear-filter').click();
         get('save-filter').click();
-        movieCardShould('exist', movie.title.international);
+        get(`movie-card_${movie.id}`).should('exist');
         get('titles-count').should('contain', titlesCount);
         selectFilter('Language & Version');
         get('language').find('input').click();
-        getInListbox(languages[Object.keys(movie.languages)[0]]);
+        get(`option_${Object.keys(movie.languages)[0]}`).click();
         check('Subs');
         get('empty').should('exist');
         get('clear-filter').click();
         get('save-filter').click();
-        movieCardShould('exist', movie.title.international);
+        get(`movie-card_${movie.id}`).should('exist');
         get('titles-count').should('contain', titlesCount);
         selectFilter('Release Year');
         get('slider').focus();
@@ -197,15 +193,15 @@ describe('Movie display in marketplace', () => {
         get('empty').should('exist');
         get('clear-filter').click();
         get('save-filter').click();
-        movieCardShould('exist', movie.title.international);
+        get(`movie-card_${movie.id}`).should('exist');
         get('titles-count').should('contain', titlesCount);
         selectFilter('Running Time');
         get('13min - 26min').click();
         get('titles-count').should('not.contain', titlesCount);
-        movieCardShould('not.exist', movie.title.international);
+        get(`movie-card_${movie.id}`).should('not.exist');
         get('clear-filter').click();
         get('save-filter').click();
-        movieCardShould('exist', movie.title.international);
+        get(`movie-card_${movie.id}`).should('exist');
       });
     });
   });
@@ -218,7 +214,7 @@ describe('Movie display in marketplace', () => {
       titlesCount = $result[0].innerText;
       get('search-input').type(movie.title.international);
       get('titles-count').should('not.contain', titlesCount);
-      movieCardShould('not.exist', movie.title.international);
+      get(`movie-card_${movie.id}`).should('not.exist');
       get('clear-filters').click();
       get('titles-count').should('contain', titlesCount);
     });
@@ -235,7 +231,7 @@ describe('Movie display in marketplace', () => {
       get('search-input').type(movie.title.international);
       //wait for the count to update before checking our movie
       get('titles-count').should('not.contain', titlesCount);
-      movieCardShould('exist', movie.title.international);
+      get(`movie-card_${movie.id}`).should('exist');
     });
     get('export').click();
     cy.contains('Please wait, your export is being generated...');

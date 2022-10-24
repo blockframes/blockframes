@@ -22,7 +22,7 @@
   </mat-error>
 </mat-form-field>
 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-  <mat-option *ngFor="let item of (filteredItems$ | async)" [value]="item">
+  <mat-option *ngFor="let item of (filteredItems$ | async)" [value]="item" [attr.test-id]="'option_' + item">
     {{ item | toLabel: scope }}
   </mat-option>
 </mat-autocomplete>

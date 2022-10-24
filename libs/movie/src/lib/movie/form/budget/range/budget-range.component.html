@@ -2,7 +2,7 @@
   <mat-label>Budget Range</mat-label>
   <mat-select [formControl]="form" [placeholder]="placeholder" test-id="budget-range">
     <mat-option [value]="null"></mat-option>
-    <mat-option *ngFor="let opt of optionsBudget" [value]="opt">
+    <mat-option *ngFor="let opt of optionsBudget" [value]="opt" [attr.test-id]="'option_' + opt">
       {{ opt | toLabel: 'budgetRange' }}
     </mat-option>
   </mat-select>
