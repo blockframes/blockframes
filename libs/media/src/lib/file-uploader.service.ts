@@ -116,6 +116,7 @@ export class FileUploaderService {
 
     const tasks = validQueue.map(([storagePath, uploads]) => {
       return uploads.map(upload => {
+        if (!upload.metadata) return undefined;
         upload.metadata.uid = this.authService.uid;
 
         // upload
