@@ -91,7 +91,7 @@ describe('Screenings', () => {
     getEventSlot(futureSlot).should('contain', noScreenerTitle);
     connectOtherUser(marketplaceUser.email);
     get('skip-preferences').click();
-    findIn('Upcoming screenings', 'see-all').click();
+    get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
     verifyScreening({ title: eventTitle, accessibility: 'public', expected: true });
   });
@@ -106,7 +106,7 @@ describe('Screenings', () => {
     fillDashboardCalendarDetails({ movie: screenerTitle, title: eventTitle, accessibility: 'private' });
     connectOtherUser(marketplaceUser.email);
     get('skip-preferences').click();
-    findIn('Upcoming screenings', 'see-all').click();
+    get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
     verifyScreening({ title: eventTitle, accessibility: 'private', expected: true });
   });
@@ -121,7 +121,7 @@ describe('Screenings', () => {
     fillDashboardCalendarDetails({ movie: screenerTitle, title: eventTitle, accessibility: 'protected' });
     connectOtherUser(marketplaceUser.email);
     get('skip-preferences').click();
-    findIn('Upcoming screenings', 'see-all').click();
+    get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
     verifyScreening({ title: eventTitle, accessibility: 'protected', expected: true });
   });
@@ -136,7 +136,7 @@ describe('Screenings', () => {
     fillDashboardCalendarDetails({ movie: screenerTitle, title: eventTitle, accessibility: 'public', secret: true });
     connectOtherUser(marketplaceUser.email);
     get('skip-preferences').click();
-    findIn('Upcoming screenings', 'see-all').click();
+    get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
     verifyScreening({ title: dummyEvent.title, accessibility: 'public', expected: true });
     verifyScreening({ title: eventTitle, accessibility: 'public', expected: false });

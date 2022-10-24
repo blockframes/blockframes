@@ -36,7 +36,7 @@
   </list-filter>
 
   <ng-template listPageCard let-org>
-    <org-card [org]="org"></org-card>
+    <org-card [org]="org" [attr.test-id]="'org-card_' + org.id"></org-card>
   </ng-template>
 
   <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
