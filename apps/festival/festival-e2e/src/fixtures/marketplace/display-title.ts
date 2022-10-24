@@ -318,7 +318,6 @@ export const displayMovie = createMovie({
 
 export const expectedSavedLocalStorage = {
   query: '',
-  page: 0,
   storeStatus: ['accepted'],
   genres: ['action'],
   originCountries: ['france'],
