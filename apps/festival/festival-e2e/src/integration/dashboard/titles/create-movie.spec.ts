@@ -30,6 +30,7 @@ import {
   movieFormatQuality,
   colors,
   soundFormat,
+  months
 } from '@blockframes/model';
 import { user, org, permissions, inDevelopmentMovie as movie } from '../../../fixtures/dashboard/movie-tunnel';
 import { addDays, subDays, format } from 'date-fns';
@@ -400,10 +401,10 @@ describe('Movie tunnel', () => {
     get('goals').should('contain', socialGoals[movie.audience.goals[0]]).and('contain', socialGoals[movie.audience.goals[1]]);
     ///shooting information
     get('shooting-from-period').should('contain', shootingPeriod[movie.shooting.dates.planned.from.period]);
-    get('shooting-from-month').should('contain', movie.shooting.dates.planned.from.month);
+    get('shooting-from-month').should('contain', months[movie.shooting.dates.planned.from.month]);
     get('shooting-from-year').should('contain', movie.shooting.dates.planned.from.year);
     get('shooting-to-period').should('contain', shootingPeriod[movie.shooting.dates.planned.to.period]);
-    get('shooting-to-month').should('contain', movie.shooting.dates.planned.to.month);
+    get('shooting-to-month').should('contain', months[movie.shooting.dates.planned.to.month]);
     get('shooting-to-year').should('contain', movie.shooting.dates.planned.to.year);
     get('location_0').should(
       'contain',
