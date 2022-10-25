@@ -1,9 +1,25 @@
-import { OrgActivity, Territory, PublicUser, Module, EventTypes, eventTypes, AccessibilityTypes } from '@blockframes/model';
-import { browserAuth } from './browserAuth';
+import {
+  OrgActivity,
+  orgActivity,
+  Territory,
+  territories,
+  PublicUser,
+  Module,
+  Event,
+  EventTypes,
+  AccessibilityTypes,
+} from '@blockframes/model';
+import { browserAuth, firestore } from '@blockframes/testing/cypress/browser';
 import { startOfWeek, add, isPast, isFuture } from 'date-fns';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 import { capitalize } from '@blockframes/utils/helpers';
+
+interface ScreeningVerification {
+  title: string;
+  accessibility: AccessibilityTypes;
+  expected: boolean;
+}
 
 export function awaitElementDeletion(selector: string, timeout?: number) {
   const settings = { timeout };
@@ -34,23 +50,6 @@ export function getByClass(selector: string) {
 
 export function getAllStartingWith(selector: string) {
   return cy.get(`[test-id^="${selector}"]`);
-}
-
-export function getInList(selectorStart: string, option: string) {
-  return getAllStartingWith(selectorStart).each($el => {
-    // loops between all options
-    if ($el[0].innerText === option) $el.trigger('click');
-  });
-}
-
-export function getInListbox(option: string, exact?: boolean) {
-  return cy
-    .get('[role="listbox"]')
-    .children()
-    .each($child => {
-      if (!exact && $child.text().includes(option)) cy.wrap($child).click();
-      if (exact && $child.text().valueOf() === ` ${option} `) cy.wrap($child).click();
-    });
 }
 
 export function findIn(parent: string, child: string) {
@@ -107,22 +106,21 @@ export function fillCommonInputs(user: PublicUser) {
   check('gdpr');
 }
 
-export function addNewCompany(data: { name: string; activity: OrgActivity; country: Territory }) {
-  const { name, activity, country } = data;
+export function addNewCompany({ name, activity, country }: { name: string; activity: OrgActivity; country: Territory }) {
   get('org').type(name);
   get('new-org').click();
   get('activity').click();
-  getInList('activity_', activity);
-  get('activity').should('contain', activity);
+  get(`activity_${activity}`).click();
+  get('activity').should('contain', orgActivity[activity]);
   get('country').click();
-  getInList('option_', country);
-  get('country').should('contain', country);
+  get(`option_${country}`).click();
+  get('country').should('contain', territories[country]);
   get('role').contains('Buyer').click();
 }
 
 export function selectCompany(orgName: string) {
   get('org').type(orgName);
-  getInList('org_', orgName);
+  get(`org_${orgName}`).click();
 }
 
 export function verifyInvitation(orgAdminEmail: string, user: PublicUser, expectedModule?: Module) {
@@ -185,8 +183,7 @@ export interface EventSlot {
 
 //* cypress commands
 
-export function selectSlot(time: EventSlot) {
-  const { day, hours, minutes } = time;
+export function selectSlot({ day, hours, minutes }: EventSlot) {
   return cy
     .get('.cal-day-column')
     .eq(day)
@@ -197,50 +194,39 @@ export function selectSlot(time: EventSlot) {
     .click();
 }
 
-export function getEventSlot(time: EventSlot) {
-  const { day, hours, minutes } = time;
+export function getEventSlot({ day, hours, minutes }: EventSlot) {
   //30 minutes are 30px high, an hour 60px
   let topOffset = hours * 60;
   if (minutes === 30) topOffset += 30;
   return cy.get('.cal-day-column').eq(day).find('.cal-events-container').find(`[style^="top: ${topOffset}px"]`);
 }
 
-export function fillDashboardCalendarPopin(event: { type: EventTypes; title: string }) {
-  const { type, title } = event;
+export function fillDashboardCalendarPopin({ type, title }: { type: EventTypes; title: string }) {
   get('event-type').click();
-  getInList('type_', eventTypes[type]);
+  get(`option_${type}`).click();
   get('event-title-modal').clear().type(title);
   get('more-details').click();
 }
 
-export function fillDashboardCalendarDetails(event: {
-  movie: string;
+export function fillDashboardCalendarDetails({ movieId, title, accessibility, secret }: {
+  movieId: string;
   title: string;
   accessibility: AccessibilityTypes;
   secret?: boolean;
 }) {
-  const { movie, title, accessibility, secret } = event;
   get('screening-title').click();
-  cy.contains(movie);
-  //get('title_1').should('be.visible');
-  getInList('title_', movie);
+  get(`option_${movieId}`).click();
   get('description').type(`Description : ${title}`);
   get(accessibility).click();
   if (secret) check('secret');
   get('event-save').click();
 }
 
-export function verifyScreening(data: { title: string; accessibility: AccessibilityTypes; expected: boolean }) {
-  const { title, accessibility, expected } = data;
-  getAllStartingWith('event_').then(events => {
-    let eventFound = false;
-    events.toArray().map(event => {
-      if (event.textContent.includes(title)) {
-        expect(event.textContent).to.include(`${capitalize(accessibility)} Screening`);
-        eventFound = true;
-      }
-    });
-    expected ? expect(eventFound).to.be.true : expect(eventFound).to.be.false;
+export function verifyScreening({ title, accessibility, expected }: ScreeningVerification) {
+  return firestore.queryData({ collection: 'events', field: 'title', operator: '==', value: title })
+    .then(([dbEvent]: Event[]) => {
+      get(`event_${dbEvent.id}`).should(expected ? 'exist' : 'not.exist');
+      if (expected) get(`event_${dbEvent.id}`).should('contain', `${capitalize(accessibility)} Screening`);
   });
 }
 

@@ -8,7 +8,6 @@ import {
   check,
   get,
   findIn,
-  getInListbox,
   assertUrlIncludes,
   checkMovieTunnelSideNav,
 } from '@blockframes/testing/cypress/browser';
@@ -30,10 +29,16 @@ import {
   festival,
   releaseMedias,
   premiereType,
-  unitBox,
   certifications,
 } from '@blockframes/model';
-import { user, org, orgPermissions, moviePermissions, inDevelopmentMovie as movie, update } from '../../fixtures/dashboard/movie-tunnel';
+import {
+  user,
+  org,
+  orgPermissions,
+  moviePermissions,
+  inDevelopmentMovie as movie,
+  update,
+} from '../../fixtures/dashboard/movie-tunnel';
 import { format } from 'date-fns';
 
 const injectedData = {
@@ -85,7 +90,7 @@ describe('Movie tunnel', () => {
     get('next').click();
     //selection & rewiews - new step due to 'released' status
     findIn('festival', 'name').click();
-    getInListbox(festival[update.prizes[0].name]);
+    get(`option_${update.prizes[0].name}`).click();
     findIn('festival', 'prize').type(update.prizes[0].prize);
     findIn('festival', 'prize-year').type(update.prizes[0].year.toString());
     get('festival-premiere_1').should('contain', premiereType[update.prizes[0].premiere]).click();
@@ -113,34 +118,34 @@ describe('Movie tunnel', () => {
     get('next').click();
     //additional information - some new data due to 'released' status
     findIn('release', 'country').click();
-    getInListbox(territories[update.originalRelease[0].country]);
+    get(`option_${update.originalRelease[0].country}`).click();
     findIn('release', 'media').click();
-    getInListbox(releaseMedias[update.originalRelease[0].media]);
+    get(`option_${update.originalRelease[0].media}`).click();
     findIn('release', 'date').type(format(update.originalRelease[0].date, 'MM/dd/yyyy'));
     findIn('release', 'row-save').click();
     findIn('box-office', 'territory').click();
-    getInListbox(territories[update.boxOffice[0].territory]);
+    get(`option_${update.boxOffice[0].territory}`).click();
     findIn('box-office', 'unit').click();
-    getInListbox(unitBox[update.boxOffice[0].unit]);
+    get(`option_${update.boxOffice[0].unit}`).click();
     findIn('box-office', 'earnings').type(update.boxOffice[0].value.toString());
     findIn('box-office', 'row-save').click();
     findIn('rating', 'value').type(update.rating[0].value);
     findIn('rating', 'country').click();
-    getInListbox(territories[update.rating[0].country]);
+    get(`option_${update.rating[0].country}`).click();
     findIn('rating', 'row-save').click();
-    get('certification_0').should('contain', certifications[update.certifications[0]]).click();
-    get('certification_1').should('contain', certifications[update.certifications[1]]).click();
+    get('certification_eof').click();
+    get('certification_europeanQualification').click();
     findIn('positioning', 'delete_1').click();
     get('next').click();
     //technical specification
     get('ratio').click();
-    getInListbox(movieFormat[update.format]);
+    get(`option_${update.format}`).click();
     get('resolution').click();
-    getInListbox(movieFormatQuality[update.formatQuality]);
+    get(`option_${update.formatQuality}`).click();
     get('color').click();
-    getInListbox(colors[update.color], true);
+    get(`option_${update.color}`).click();
     get('sound').click();
-    getInListbox(soundFormat[update.soundFormat]);
+    get(`option_${update.soundFormat}`).click();
     get('next').click();
     //versions
     get('add-version').click();

@@ -10,19 +10,15 @@ import {
   uncheck,
   get,
   findIn,
-  getInList,
-  getInListbox,
   getAllStartingWith,
   assertUrlIncludes,
   awaitElementDeletion,
 } from '@blockframes/testing/cypress/browser';
 import {
-  crewRoles,
   Movie,
   genres,
   languages,
   territories,
-  memberStatus,
   screeningStatus,
   directorCategory,
   productionStatus,
@@ -34,8 +30,7 @@ import {
   movieFormatQuality,
   colors,
   soundFormat,
-  hostedVideoTypes,
-  movieNoteRoles,
+  months
 } from '@blockframes/model';
 import { user, org, permissions, inDevelopmentMovie as movie } from '../../../fixtures/dashboard/movie-tunnel';
 import { addDays, subDays, format } from 'date-fns';
@@ -74,7 +69,7 @@ describe('Movie tunnel', () => {
     //loby
     get('start').click();
     //title status
-    get('status_0').should('contain', productionStatus[movie.productionStatus]).click();
+    get(`status_${movie.productionStatus}`).click();
     get('next').click();
 
     //main
@@ -90,17 +85,17 @@ describe('Movie tunnel', () => {
         cy.wrap($options).should('contain', status);
       }
     });
-    getInList('option_', screeningStatus[movie.runningTime.status]);
+    get(`option_${movie.runningTime.status}`).click();
     get('season-count').should('not.exist');
     get('episode-count').should('not.exist');
     ///checking TV related fields
     get('content-type').click();
-    getInList('option_', 'TV');
+    get('option_tv').click();
     get('season-count').type('5');
     get('episode-count').type('20');
     ///back to movie type
     get('content-type').click();
-    getInList('option_', 'Movie');
+    get('option_movie').click();
     ///general information
     get('release-year').type(movie.release.year.toString());
     get('status').click();
@@ -109,24 +104,24 @@ describe('Movie tunnel', () => {
         cy.wrap($options).should('contain', status);
       }
     });
-    getInList('option_', screeningStatus[movie.release.status]);
+    get(`option_${movie.release.status}`).click();
     get('country').children().eq(0).click();
-    getInListbox(territories[movie.originCountries[0]]);
+    get(`option_${movie.originCountries[0]}`).click();
     get('country').find('input').type(`${movie.originCountries[1]}{enter}{esc}`); //writing it entirely
     get('language').children().eq(0).click();
-    getInListbox(languages[movie.originalLanguages[0]]);
+    get(`option_${movie.originalLanguages[0]}`).click();
     get('language').find('input').type(`${movie.originalLanguages[1]}{enter}{esc}`);
     get('genres').children().eq(0).click();
-    getInListbox(genres[movie.genres[0]]);
+    get(`option_${movie.genres[0]}`).click();
     get('genres').find('input').type(`${movie.genres[1]}{enter}{esc}`);
     ///directors
     get('table-save').should('be.disabled');
     get('first-name').type(movie.directors[0].firstName);
     get('last-name').type(movie.directors[0].lastName);
     get('director-status').click();
-    getInList('option_', memberStatus[movie.directors[0].status]);
+    get(`option_${movie.directors[0].status}`).click();
     get('director-category').click();
-    getInList('option_', directorCategory[movie.directors[0].category]);
+    get(`option_${movie.directors[0].category}`).click();
     get('director-desc').type(movie.directors[0].description);
     get('director-film-title').eq(0).type(movie.directors[0].filmography[0].title);
     get('director-film-year').eq(0).type(movie.directors[0].filmography[0].year.toString());
@@ -144,42 +139,42 @@ describe('Movie tunnel', () => {
     ///production company
     get('production-company-name').type(movie.stakeholders.productionCompany[0].displayName);
     get('production-country').click();
-    getInListbox(territories[movie.stakeholders.productionCompany[0].countries[0]]);
+    get(`option_${movie.stakeholders.productionCompany[0].countries[0]}`).click();
     get('production-country').find('input').type(`${movie.stakeholders.productionCompany[0].countries[1]}{enter}{esc}`);
     findIn('company', 'row-save').click();
     findIn('company', 'list-add').click();
     get('production-company-name').type(movie.stakeholders.productionCompany[1].displayName);
     get('production-country').click();
-    getInListbox(territories[movie.stakeholders.productionCompany[1].countries[0]]);
+    get(`option_${movie.stakeholders.productionCompany[1].countries[0]}`).click();
     get('production-country').find('input').type(`${movie.stakeholders.productionCompany[1].countries[1]}{enter}{esc}`);
     findIn('company', 'row-save').click();
     ///co-production company
     get('co-production-company-name').type(movie.stakeholders.coProductionCompany[0].displayName);
     get('co-production-country').click();
-    getInListbox(territories[movie.stakeholders.coProductionCompany[0].countries[0]]);
+    get(`option_${movie.stakeholders.coProductionCompany[0].countries[0]}`).click();
     get('co-production-country').find('input').type(`${movie.stakeholders.coProductionCompany[0].countries[1]}{enter}{esc}`);
     findIn('co-company', 'row-save').click();
     ///producers
     get('first-name').type(movie.producers[0].firstName);
     get('last-name').type(movie.producers[0].lastName);
     get('producer-role').click();
-    getInList('option_', producerRoles[movie.producers[0].role]);
+    get(`option_${movie.producers[0].role}`).click();
     findIn('producers', 'row-save').click();
     findIn('producers', 'list-add').click();
     get('first-name').type(movie.producers[1].firstName);
     get('last-name').type(movie.producers[1].lastName);
     get('producer-role').click();
-    getInList('option_', producerRoles[movie.producers[1].role]);
+    get(`option_${movie.producers[1].role}`).click();
     findIn('producers', 'row-save').click();
     ///distributors
     get('distribution-company-name').type(movie.stakeholders.distributor[0].displayName);
     get('distribution-country').click();
-    getInListbox(territories[movie.stakeholders.distributor[0].countries[0]]);
+    get(`option_${movie.stakeholders.distributor[0].countries[0]}`).click();
     findIn('distributors', 'row-save').click();
     ///sales
     get('sales-company-name').type(movie.stakeholders.salesAgent[0].displayName);
     get('sales-country').click();
-    getInListbox(territories[movie.stakeholders.salesAgent[0].countries[0]]);
+    get(`option_${movie.stakeholders.salesAgent[0].countries[0]}`).click();
     findIn('sales', 'row-save').click();
     get('next').click();
 
@@ -188,7 +183,7 @@ describe('Movie tunnel', () => {
     get('cast-first-name').type(movie.cast[0].firstName);
     get('cast-last-name').type(movie.cast[0].lastName);
     get('cast-status').click();
-    getInListbox(memberStatus[movie.cast[0].status]);
+    get(`option_${movie.cast[0].status}`).click();
     get('cast-description').type(movie.cast[0].description);
     get('cast-film-title_0').type(movie.cast[0].filmography[0].title);
     get('cast-film-year_0').type(movie.cast[0].filmography[0].year.toString());
@@ -199,7 +194,7 @@ describe('Movie tunnel', () => {
     get('cast-first-name').type(movie.cast[1].firstName);
     get('cast-last-name').type(movie.cast[1].lastName);
     get('cast-status').click();
-    getInListbox(memberStatus[movie.cast[1].status]);
+    get(`option_${movie.cast[1].status}`).click();
     get('cast-description').type(movie.cast[1].description);
     get('cast-film-title_0').type(movie.cast[1].filmography[0].title);
     get('cast-film-year_0').type(movie.cast[1].filmography[0].year.toString());
@@ -210,9 +205,9 @@ describe('Movie tunnel', () => {
     get('crew-first-name').type(movie.crew[0].firstName);
     get('crew-last-name').type(movie.crew[0].lastName);
     get('crew-role').click();
-    getInListbox(crewRoles[movie.crew[0].role]);
+    get(`option_${movie.crew[0].role}`).click();
     get('crew-status').click();
-    getInListbox(memberStatus[movie.crew[0].status]);
+    get(`option_${movie.crew[0].status}`).click();
     get('crew-description').type(movie.crew[0].description);
     get('crew-film-title_0').type(movie.crew[0].filmography[0].title);
     get('crew-film-year_0').type(movie.crew[0].filmography[0].year.toString());
@@ -223,9 +218,9 @@ describe('Movie tunnel', () => {
     get('crew-first-name').type(movie.crew[1].firstName);
     get('crew-last-name').type(movie.crew[1].lastName);
     get('crew-role').click();
-    getInListbox(crewRoles[movie.crew[1].role]);
+    get(`option_${movie.crew[1].role}`).click();
     get('crew-status').click();
-    getInListbox(memberStatus[movie.crew[1].status]);
+    get(`option_${movie.crew[1].status}`).click();
     get('crew-description').type(movie.crew[1].description);
     get('crew-film-title_0').type(movie.crew[1].filmography[0].title);
     get('crew-film-year_0').type(movie.crew[1].filmography[0].year.toString());
@@ -236,15 +231,15 @@ describe('Movie tunnel', () => {
 
     //additional information
     get('budget-range').click();
-    getInListbox(budgetRange[movie.estimatedBudget]);
+    get(`option_${movie.estimatedBudget}`).click();
     get('audience').type(movie.audience.targets[0]);
     get('row-save').click();
     get('list-add').click();
     get('audience').type(movie.audience.targets[1]);
     get('row-save').click();
     get('goals').click();
-    getInListbox(socialGoals[movie.audience.goals[0]]);
-    getInListbox(socialGoals[movie.audience.goals[1]]);
+    get(`option_${movie.audience.goals[0]}`).click();
+    get(`option_${movie.audience.goals[1]}`).click();
     cy.get('body').type('{esc}');
     get('next').click();
 
@@ -255,23 +250,23 @@ describe('Movie tunnel', () => {
     get('date-progress').type(format(subDays(new Date(), 365), 'dd/MM/yyyy'));
     get('shooting-planned').click();
     get('start-period').click();
-    getInListbox(shootingPeriod[movie.shooting.dates.planned.from.period]);
+    get(`option_${movie.shooting.dates.planned.from.period}`).click();
     get('start-month').click();
-    getInListbox(movie.shooting.dates.planned.from.month);
+    get(`option_${movie.shooting.dates.planned.from.month}`).click();
     get('start-year').type(movie.shooting.dates.planned.from.year.toString());
     get('end-period').click();
-    getInListbox(shootingPeriod[movie.shooting.dates.planned.to.period]);
+    get(`option_${movie.shooting.dates.planned.to.period}`).click();
     get('end-month').click();
-    getInListbox(movie.shooting.dates.planned.to.month);
+    get(`option_${movie.shooting.dates.planned.to.month}`).click();
     get('end-year').type(movie.shooting.dates.planned.to.year.toString());
     get('country').click();
-    getInListbox(territories[movie.shooting.locations[0].country]);
+    get(`option_${movie.shooting.locations[0].country}`).click();
     get('cities').type(`${movie.shooting.locations[0].cities[0]}{enter}`);
     get('cities').type(`${movie.shooting.locations[0].cities[1]}{enter}`);
     get('row-save').click();
     get('list-add').click();
     get('country').click();
-    getInListbox(territories[movie.shooting.locations[1].country]);
+    get(`option_${movie.shooting.locations[1].country}`).click();
     get('cities').type(`${movie.shooting.locations[1].cities[0]}{enter}`);
     get('cities').type(`${movie.shooting.locations[1].cities[1]}{enter}`);
     get('row-save').click();
@@ -281,13 +276,14 @@ describe('Movie tunnel', () => {
 
     //technical specification
     get('ratio').click();
-    getInListbox(movieFormat[movie.format]);
+
+    get(`option_${movie.format}`).click();
     get('resolution').click();
-    getInListbox(movieFormatQuality[movie.formatQuality]);
+    get(`option_${movie.formatQuality}`).click();
     get('color').click();
-    getInListbox(colors[movie.color]);
+    get(`option_${movie.color}`).click();
     get('sound').click();
-    getInListbox(soundFormat[movie.soundFormat]);
+    get(`option_${movie.soundFormat}`).click();
     get('next').click();
 
     //promotional elements : no upload possible so far in e2e - see issue #8900
@@ -301,7 +297,7 @@ describe('Movie tunnel', () => {
     ///videos
     get('title').type(movie.promotional.videos.otherVideos[0].title);
     get('video-type').click();
-    getInListbox(hostedVideoTypes[movie.promotional.videos.otherVideos[0].type]);
+    get(`option_${movie.promotional.videos.otherVideos[0].type}`).click();
     uncheck('video-privacy');
     check('video-privacy');
     get('description').type(movie.promotional.videos.salesPitch.description);
@@ -312,7 +308,7 @@ describe('Movie tunnel', () => {
     get('first-name').type(movie.promotional.notes[0].firstName);
     get('last-name').type(movie.promotional.notes[0].lastName);
     get('role').click();
-    getInListbox(movieNoteRoles[movie.promotional.notes[0].role]);
+    get(`option_${movie.promotional.notes[0].role}`).click();
     get('next').click();
     ///screener movie
     cy.contains('Screener Video');
@@ -405,10 +401,10 @@ describe('Movie tunnel', () => {
     get('goals').should('contain', socialGoals[movie.audience.goals[0]]).and('contain', socialGoals[movie.audience.goals[1]]);
     ///shooting information
     get('shooting-from-period').should('contain', shootingPeriod[movie.shooting.dates.planned.from.period]);
-    get('shooting-from-month').should('contain', movie.shooting.dates.planned.from.month);
+    get('shooting-from-month').should('contain', months[movie.shooting.dates.planned.from.month]);
     get('shooting-from-year').should('contain', movie.shooting.dates.planned.from.year);
     get('shooting-to-period').should('contain', shootingPeriod[movie.shooting.dates.planned.to.period]);
-    get('shooting-to-month').should('contain', movie.shooting.dates.planned.to.month);
+    get('shooting-to-month').should('contain', months[movie.shooting.dates.planned.to.month]);
     get('shooting-to-year').should('contain', movie.shooting.dates.planned.to.year);
     get('location_0').should(
       'contain',

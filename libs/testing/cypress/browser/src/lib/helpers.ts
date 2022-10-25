@@ -11,14 +11,14 @@ export const fakeUserData = () => {
     lastName,
     email,
     uid: '0-tempUid',
-    country: 'France',
+    country: 'france',
     password: USER_FIXTURES_PASSWORD,
     company: {
       name: `${firstName} ${lastName} corporation`,
-      activity: 'Organization',
-      country: 'France',
+      activity: 'organization',
+      country: 'france',
     },
-    role: 'Buyer',
+    role: 'buyer',
     indicator: '+33',
     phone: '123456789',
   };

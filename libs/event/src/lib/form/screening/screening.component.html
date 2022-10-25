@@ -14,7 +14,7 @@
     <mat-form-field appearance="outline" id="titleField">
       <mat-label>Select the Title to display</mat-label>
       <mat-select formControlName="titleId" (selectionChange)="checkTitleAndScreener($event.value)" test-id="screening-title">
-        <mat-option *ngFor="let title of titles; let i = index" [value]="title.id" [attr.test-id]="'title_' + i">
+        <mat-option *ngFor="let title of titles" [value]="title.id" [attr.test-id]="'option_' + title.id">
           {{ title.title.international }}
         </mat-option>
       </mat-select>

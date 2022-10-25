@@ -3,8 +3,8 @@
   <mat-form-field appearance="outline">
     <mat-label>Company Activity</mat-label>
     <mat-select test-id="activity" [formControl]="form.get('activity')" aria-label="Company Activity" required>
-      <ng-container *ngFor="let activity of activities | keyvalue; let i = index">
-        <mat-option *ngIf="activity.key !== 'other'" [value]="activity.key" [attr.test-id]="'activity_' + i">
+      <ng-container *ngFor="let activity of activities | keyvalue">
+        <mat-option *ngIf="activity.key !== 'other'" [value]="activity.key" [attr.test-id]="'activity_' + activity.key">
           {{ activity.value }}
         </mat-option>
       </ng-container>

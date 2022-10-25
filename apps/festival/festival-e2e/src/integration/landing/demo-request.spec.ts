@@ -1,11 +1,7 @@
-/* eslint-disable @nrwl/nx/enforce-module-boundaries */
-/// <reference types="cypress" />
-
 import {
   browserAuth,
   // cypress commands
   get,
-  getInList,
   check,
   // cypress tasks
   interceptEmail,
@@ -28,13 +24,13 @@ describe('Demo Request Email', () => {
     get('last-name').type(user.lastName);
     get('company').type(user.company.name);
     get('role').click();
-    getInList('role_', user.role);
+    get(`role_${user.role}`).click();
     get('demo-email').type(user.email);
     get('phone').children().children().as('phoneInputs');
     cy.get('@phoneInputs').first().type(user.indicator);
     cy.get('@phoneInputs').last().type(user.phone);
     check('checkbox-newsletters');
     get('submit-demo-request').click();
-    interceptEmail({ sentTo: supportMailosaur }).then((mail) => deleteEmail(mail.id));
+    interceptEmail({ sentTo: supportMailosaur }).then(mail => deleteEmail(mail.id));
   });
 });

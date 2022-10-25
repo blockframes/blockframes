@@ -8,7 +8,6 @@ import {
   get,
   checkMovieTunnelSideNav,
 } from '@blockframes/testing/cypress/browser';
-import { productionStatus } from '@blockframes/model';
 import { user, org, permissions } from '../../../fixtures/dashboard/movie-tunnel';
 
 const injectedData = {
@@ -38,27 +37,27 @@ describe('Movie tunnel', () => {
   });
 
   it('Checks side nav for movie in development', () => {
-    get('status_0').should('contain', productionStatus['development']).click();
+    get('status_development').click();
     get('next').click();
     checkMovieTunnelSideNav('development');
   });
   it('Checks side nav for a movie in production', () => {
-    get('status_1').should('contain', productionStatus['shooting']).click();
+    get('status_shooting').click();
     get('next').click();
     checkMovieTunnelSideNav('shooting');
   });
   it('Checks side nav for a movie in post production', () => {
-    get('status_2').should('contain', productionStatus['post_production']).click();
+    get('status_post_production').click();
     get('next').click();
     checkMovieTunnelSideNav('post_production');
   });
   it('Checks side nav for a finished movie', () => {
-    get('status_3').should('contain', productionStatus['finished']).click();
+    get('status_finished').click();
     get('next').click();
     checkMovieTunnelSideNav('finished');
   });
   it('Checks side nav for a released movie', () => {
-    get('status_4').should('contain', productionStatus['released']).click();
+    get('status_released').click();
     get('next').click();
     checkMovieTunnelSideNav('released');
   });
