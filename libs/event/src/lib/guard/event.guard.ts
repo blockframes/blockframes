@@ -113,6 +113,10 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
           return true;
         }
       }
+
+      const navObject = this.router.getCurrentNavigation();
+      if (navObject.extras?.state?.eventDeleted) return true;
+
       const dialogRef = this.dialog.open(ConfirmComponent, {
         data: createModalData({
           title: `You are about to leave this ${this.event.type}.`,
@@ -121,7 +125,7 @@ export class EventGuard implements CanActivate, CanDeactivate<unknown> {
           cancel: 'Stay'
         }),
         autoFocus: false
-      })
+      });
       return dialogRef.afterClosed();
     }
 

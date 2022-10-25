@@ -30,7 +30,7 @@ export class MovieFormStoryElementsComponent implements OnInit {
   public add(event: MatChipInputEvent): void {
     const { value = '' } = event;
 
-    this.form.keywords.add(value)
+    this.form.keywords.add(value.trim());
     this.keyword.reset();
   }
 

@@ -8,6 +8,7 @@ import {
   EventEmitter,
   ChangeDetectorRef
 } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { App } from '@blockframes/model';
 import { decodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
@@ -37,6 +38,7 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
   constructor(
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
+    private snackbar: MatSnackBar,
     @Inject(APP) private app: App,
   ) { }
 
@@ -54,6 +56,7 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
     delete routeParams.page;
     localStorage.setItem(`${this.app}-${this.savedSearchIdentifier}`, JSON.stringify(routeParams));
     this.setButtonsState();
+    this.snackbar.open('Research successfully saved.', 'close', { duration: 5000 });
   }
 
   load() {
