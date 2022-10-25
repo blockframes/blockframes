@@ -15,7 +15,7 @@ import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 import { capitalize } from '@blockframes/utils/helpers';
 
-interface screeningVerification {
+interface ScreeningVerification {
   title: string;
   accessibility: AccessibilityTypes;
   expected: boolean;
@@ -106,8 +106,7 @@ export function fillCommonInputs(user: PublicUser) {
   check('gdpr');
 }
 
-export function addNewCompany(data: { name: string; activity: OrgActivity; country: Territory }) {
-  const { name, activity, country } = data;
+export function addNewCompany({ name, activity, country }: { name: string; activity: OrgActivity; country: Territory }) {
   get('org').type(name);
   get('new-org').click();
   get('activity').click();
@@ -184,8 +183,7 @@ export interface EventSlot {
 
 //* cypress commands
 
-export function selectSlot(time: EventSlot) {
-  const { day, hours, minutes } = time;
+export function selectSlot({ day, hours, minutes }: EventSlot) {
   return cy
     .get('.cal-day-column')
     .eq(day)
@@ -196,29 +194,26 @@ export function selectSlot(time: EventSlot) {
     .click();
 }
 
-export function getEventSlot(time: EventSlot) {
-  const { day, hours, minutes } = time;
+export function getEventSlot({ day, hours, minutes }: EventSlot) {
   //30 minutes are 30px high, an hour 60px
   let topOffset = hours * 60;
   if (minutes === 30) topOffset += 30;
   return cy.get('.cal-day-column').eq(day).find('.cal-events-container').find(`[style^="top: ${topOffset}px"]`);
 }
 
-export function fillDashboardCalendarPopin(event: { type: EventTypes; title: string }) {
-  const { type, title } = event;
+export function fillDashboardCalendarPopin({ type, title }: { type: EventTypes; title: string }) {
   get('event-type').click();
   get(`option_${type}`).click();
   get('event-title-modal').clear().type(title);
   get('more-details').click();
 }
 
-export function fillDashboardCalendarDetails(event: {
+export function fillDashboardCalendarDetails({ movieId, title, accessibility, secret }: {
   movieId: string;
   title: string;
   accessibility: AccessibilityTypes;
   secret?: boolean;
 }) {
-  const { movieId, title, accessibility, secret } = event;
   get('screening-title').click();
   get(`option_${movieId}`).click();
   get('description').type(`Description : ${title}`);
@@ -227,10 +222,9 @@ export function fillDashboardCalendarDetails(event: {
   get('event-save').click();
 }
 
-export function verifyScreening({ title, accessibility, expected }: screeningVerification) {
+export function verifyScreening({ title, accessibility, expected }: ScreeningVerification) {
   return firestore.queryData({ collection: 'events', field: 'title', operator: '==', value: title })
-    .then((result: Event[]) => {
-      const dbEvent = result[0];
+    .then(([dbEvent]: Event[]) => {
       get(`event_${dbEvent.id}`).should(expected ? 'exist' : 'not.exist');
       if (expected) get(`event_${dbEvent.id}`).should('contain', `${capitalize(accessibility)} Screening`);
   });
