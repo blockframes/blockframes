@@ -12,7 +12,7 @@ export function syncMovieToAlgolia(movieId: string) {
           algolia.storeMovie({ movie: dbMovie, organizationNames });
         });
     })
-    .then(() => cy.wait(1000)); // i don't like it, but algolia needs some time to catch up
+    .then(() => cy.wait(5000)); // i don't like it, but algolia needs some time to catch up
 }
 
 export function selectFilter(name: string) {
