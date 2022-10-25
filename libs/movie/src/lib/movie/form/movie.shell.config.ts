@@ -104,6 +104,8 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
 
       if (movie.app[this.currentApp].status === 'accepted') movie.app[this.currentApp].acceptedAt = new Date();
       if (movie.app[this.currentApp].status === 'submitted') movie.app[this.currentApp].submittedAt = new Date();
+
+      this.form.get('app').setValue(movie.app);
     }
 
     // -- Update movie & media -- //
