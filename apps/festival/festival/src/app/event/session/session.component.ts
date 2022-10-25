@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { EventService } from '@blockframes/event/service';
-import { BehaviorSubject, firstValueFrom, interval, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, interval, Observable, of, Subscription } from 'rxjs';
 import { MovieService } from '@blockframes/movie/service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { DoorbellBottomSheetComponent } from '@blockframes/event/components/doorbell/doorbell.component';
@@ -11,10 +11,10 @@ import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { TwilioService } from '@blockframes/utils/twilio';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getFileExtension } from '@blockframes/utils/file-sanitizer';
-import { createScreeningAttendee, ErrorResultResponse, extensionToType } from '@blockframes/model';
+import { createScreeningAttendee, ErrorResultResponse, extensionToType, isMeeting } from '@blockframes/model';
 import { MediaService } from '@blockframes/media/service';
 import { InvitationService } from '@blockframes/invitation/service';
-import { filter, pluck, scan, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, pluck, scan, switchMap, tap } from 'rxjs/operators';
 import { finalizeWithValue } from '@blockframes/utils/observable-helpers';
 import { AuthService } from '@blockframes/auth/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -35,10 +35,6 @@ import {
 } from '@blockframes/model';
 import { CallableFunctions } from 'ngfire';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-
-const isMeeting = (meetingEvent: Event): meetingEvent is Event<Meeting> => {
-  return meetingEvent.type === 'meeting';
-};
 
 @Component({
   selector: 'festival-event-session',
@@ -93,6 +89,11 @@ export class SessionComponent implements OnInit, OnDestroy {
     this.event$ = this.route.params.pipe(
       pluck('eventId'),
       switchMap((eventId: string) => this.service.queryDocs(eventId)),
+      catchError(() => {
+        this.snackbar.open('Sorry, this event was deleted by the organizer.', 'close', { duration: 5000 });
+        this.router.navigate([this.authService.profile ? '/c/o/marketplace' : '/'], { state: { eventDeleted: true } });
+        return of(undefined);
+      })
     );
 
     this.sub = this.event$.subscribe(async event => {

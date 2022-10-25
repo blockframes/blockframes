@@ -59,7 +59,7 @@ export class EventService extends BlockframesCollection<Event> {
   private eventQuery = <Meta extends EventMeta = unknown>(id: string) => {
     return this.valueChanges<Event<Meta>>(id).pipe(
       joinWith({
-        org: ({ ownerOrgId }: Event<Meta>) => this.orgService.valueChanges(ownerOrgId),
+        org: (event: Event<Meta>) => event ? this.orgService.valueChanges(event.ownerOrgId) : undefined,
         movie: (event: Event<Meta>) => {
           if (isScreening(event)) {
             if (!event.meta.titleId) return;

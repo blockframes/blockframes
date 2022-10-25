@@ -155,7 +155,7 @@ export class MovieComponent implements OnInit {
   public addKeyword(event: MatChipInputEvent): void {
     const { value = '' } = event;
 
-    this.movieForm.keywords.add(value);
+    this.movieForm.keywords.add(value.trim());
     this.keywordForm.reset();
   }
 
