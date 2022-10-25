@@ -24,7 +24,6 @@ import {
   getInListbox,
   getByClass,
   //marketplace lib
-  movieCardShould,
   selectFilter,
   selectYear,
   syncMovieToAlgolia,
@@ -60,11 +59,11 @@ describe('Movie display in marketplace', () => {
     get('skip-preferences').click();
     get('cookies').click();
     assertUrlIncludes('c/o/marketplace/home');
+    syncMovieToAlgolia(movie.id);
   });
 
   it('Find with filters, save & load filters', () => {
-    syncMovieToAlgolia(movie.id);
-    findIn('New on Archipel', 'see-all').click();
+    get('title-link').eq(0).click();
     get('titles-count');
     selectFilter('Sales Agent');
     get('sales-agent').find('input').type(saleOrg.name);
@@ -100,7 +99,7 @@ describe('Movie display in marketplace', () => {
     get(certifications[movie.certifications[1]]).click();
     get('save-filter').click();
     get('titles-count').should('contain', 'There is 1 title available.');
-    movieCardShould('exist', movie.title.international);
+    get(`movie-card_${movie.id}`).should('exist');
     //without wait, Cypress goes to quick and some filters are not saved in the localStorage
     cy.wait(1000);
     get('save').click();
@@ -111,5 +110,22 @@ describe('Movie display in marketplace', () => {
     get('titles-count').should('not.contain', 'There is 1 title available.');
     get('load').click();
     get('titles-count').should('contain', 'There is 1 title available.');
+  });
+
+  it('Published movie is displayed in org page', () => {
+    get('organization-link').click();
+    get('search-input').type(saleOrg.name);
+    get(`org-card_${saleOrg.id}`).should('exist');
+    findIn(`org-card_${saleOrg.id}`, 'logo').click();
+    get(`movie-card_${movie.id}`).should('exist');
+  });
+
+  it('Unpublished movie is not displayed in org page', () => {
+    get('organization-link').click();
+    get('search-input').type(saleOrg.name);
+    findIn(`org-card_${saleOrg.id}`, 'logo').click();
+    get(`movie-card_${movie.id}`).should('exist');
+    firestore.update({ docPath: `movies/${movie.id}`, field: 'app.festival.status', value: 'draft' });
+    get(`movie-card_${movie.id}`).should('not.exist');
   });
 });
