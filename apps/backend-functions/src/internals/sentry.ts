@@ -1,4 +1,4 @@
-import { init as sentryInit, flush as sentryFlush, captureException, Severity, captureMessage } from '@sentry/node';
+import { init as sentryInit, flush as sentryFlush, captureException, captureMessage, SeverityLevel } from '@sentry/node';
 import { projectId, sentryDsn, sentryEnv } from '../environments/environment';
 import { logger } from 'firebase-functions';
 import { firebaseRegion } from './utils';
@@ -25,7 +25,7 @@ export function logErrors(f) {
       // Send the exception to sentry IF we have a configuration.
       if (sentryDsn) {
         captureException(err, {
-          level: Severity.Error,
+          level: 'error',
           tags: {
             projectId,
             firebaseRegion,
@@ -50,7 +50,7 @@ export function logErrors(f) {
   };
 }
 
-export async function triggerError(error: Partial<SentryError>, level: Severity = Severity.Error) {
+export async function triggerError(error: Partial<SentryError>, level: SeverityLevel = 'error') {
   if (sentryDsn) {
     try {
       const eventId = captureMessage(error.message, {

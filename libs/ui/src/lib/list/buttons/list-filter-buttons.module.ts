@@ -7,6 +7,7 @@ import { ListFilterButtonsComponent } from './list-filter-buttons.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [ListFilterButtonsComponent],
@@ -16,7 +17,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     // Material
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSnackBarModule
   ],
   exports: [ListFilterButtonsComponent]
 })
