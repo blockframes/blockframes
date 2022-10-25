@@ -37,7 +37,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private subs: Subscription[] = [];
   private loadMoreToggle: boolean;
-  private lastPage: boolean;
+  private previousSearch: string;
 
   constructor(
     private dynTitle: DynamicTitleService,
@@ -51,17 +51,20 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.movies$ = this.movieResultsState.asObservable();
-    const params = this.route.snapshot.queryParams;
-    for (const key in params) {
-      try {
-        params[key].split(',').forEach(v => this.searchForm[key].add(v.trim()));
-      } catch (_) {
-        console.error(`Invalid parameter ${key} in URL`);
-      }
-    }
+
     const sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
       distinctUntilChanged(),
       debounceTime(500),
+      tap(() => {
+        const search = { ...this.searchForm.value };
+        delete search.page;
+        const currentSearch = JSON.stringify(search);
+        if (this.previousSearch !== currentSearch && this.searchForm.page.value !== 0) {
+          this.searchForm.page.setValue(0, { onlySelf: false, emitEvent: false });
+          encodeUrl<MovieSearch>(this.router, this.route, this.searchForm.value);
+        }
+        this.previousSearch = currentSearch;
+      }),
       switchMap(async () => [await this.searchForm.search(true), await this.searchForm.search(true, { hitsPerPage: this.pdfService.exportLimit, page: 0 })]),
       tap(([res]) => this.nbHits = res.nbHits),
     ).subscribe(([movies, moviesToExport]) => {
@@ -72,16 +75,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
       } else {
         this.movieResultsState.next(movies.hits);
       }
-      /* hitsViewed is just the current state of displayed movies, this information is important for comparing
-      the overall possible results which is represented by nbHits.
-      If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
-      So when the next valueChange is happening we need to reset everything and start from beginning  */
       this.hitsViewed = this.movieResultsState.value.length;
-      if (this.lastPage && this.searchForm.page.value !== 0) { // TODO #8893 check this
-        this.hitsViewed = 0;
-        this.searchForm.page.setValue(0);
-      }
-      this.lastPage = this.hitsViewed === this.nbHits;
     });
     this.subs.push(sub);
   }

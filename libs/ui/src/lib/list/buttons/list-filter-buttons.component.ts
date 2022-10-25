@@ -30,7 +30,7 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
     load: 'disabled',
   }
 
-  private savedSearchIdentifier= 'saved-search';
+  private savedSearchIdentifier = 'saved-search';
   private queryParamsSub: Subscription;
 
   @Output() data: EventEmitter<string> = new EventEmitter();
@@ -53,6 +53,7 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
 
   save() {
     const routeParams = decodeUrl(this.route);
+    delete routeParams.page;
     localStorage.setItem(`${this.app}-${this.savedSearchIdentifier}`, JSON.stringify(routeParams));
     this.setButtonsState();
     this.snackbar.open('Research successfully saved.', 'close', { duration: 5000 });
@@ -61,14 +62,16 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
   load() {
     const routeParams = localStorage.getItem(`${this.app}-${this.savedSearchIdentifier}`);
     const parsedData = JSON.parse(routeParams);
+    parsedData.page = 0;
     this.data.emit(parsedData);
   }
 
   setButtonsState() {
     const dataStorage = localStorage.getItem(`${this.app}-${this.savedSearchIdentifier}`);
-    const currentRouteParams = this.route.snapshot.queryParams.formValue;
+    const currentRouteParams = JSON.parse(this.route.snapshot.queryParams.formValue ?? '{}');
+    delete currentRouteParams.page;
     if (dataStorage) this.buttonsState.save = 'active', this.buttonsState.load = 'enabled';
-    if (dataStorage === currentRouteParams) this.buttonsState.save = 'enabledAndActive', this.buttonsState.load = 'active';
+    if (dataStorage === JSON.stringify(currentRouteParams)) this.buttonsState.save = 'enabledAndActive', this.buttonsState.load = 'active';
     this.cdr.markForCheck();
   }
 }
