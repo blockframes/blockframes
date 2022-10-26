@@ -52,15 +52,13 @@ export async function upgrade(db: Firestore, storage: Storage) {
           }
         }
 
-
-      } else {
-        movie.promotional.videos.otherVideo = createMovieVideo({});
       }
-
-      delete (movie.promotional?.videos as any)?.otherVideos;
-      await doc.ref.set(movie);
-
+    } else {
+      movie.promotional.videos.otherVideo = createMovieVideo({});
     }
+
+    delete (movie.promotional?.videos as any)?.otherVideos;
+    await doc.ref.set(movie);
 
   }).catch(err => console.error(err));
 }
