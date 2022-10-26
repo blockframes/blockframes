@@ -105,8 +105,7 @@ export async function rescueJWP(options: { jwplayerKey: string; jwplayerApiV2Sec
     if (videos) {
       sortVideo(videos.screener, movie.id);
       sortVideo(videos.salesPitch, movie.id);
-
-      videos.otherVideos?.forEach((video) => sortVideo(video, movie.id));
+      sortVideo(videos.otherVideo, movie.id);
     }
   });
 

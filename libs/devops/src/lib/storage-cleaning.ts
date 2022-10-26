@@ -9,17 +9,11 @@ import type { Bucket, File as GFile } from '@google-cloud/storage';
  */
 export async function cleanStorage(bucket: Bucket) {
   const cleanMoviesDirOutput = await cleanMoviesDir(bucket);
-  console.log(
-    `Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "public/movies" directory.`
-  );
+  console.log(`Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "public/movies" directory.`);
   const cleanOrgsDirOutput = await cleanOrgsDir(bucket);
-  console.log(
-    `Cleaned ${cleanOrgsDirOutput.deleted}/${cleanOrgsDirOutput.total} from "public/orgs" directory.`
-  );
+  console.log(`Cleaned ${cleanOrgsDirOutput.deleted}/${cleanOrgsDirOutput.total} from "public/orgs" directory.`);
   const cleanUsersDirOutput = await cleanUsersDir(bucket);
-  console.log(
-    `Cleaned ${cleanUsersDirOutput.deleted}/${cleanUsersDirOutput.total} from "public/users" directory.`
-  );
+  console.log(`Cleaned ${cleanUsersDirOutput.deleted}/${cleanUsersDirOutput.total} from "public/users" directory.`);
 
   return true;
 }

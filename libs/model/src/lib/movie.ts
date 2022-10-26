@@ -108,7 +108,7 @@ export interface MovieVideos {
   screener?: MovieVideo; // Main screener
   publicScreener?: MovieVideo; // Public screener
   salesPitch?: MovieVideo; // Sales pitch
-  otherVideos?: MovieVideo[]; // Other videos
+  otherVideo: MovieVideo; // Other video
 }
 
 export interface MovieVideo extends StorageVideo {
@@ -511,7 +511,7 @@ export function createMovieVideos(params: Partial<MovieVideos>): MovieVideos {
     screener: createMovieVideo(params?.screener),
     publicScreener: createMovieVideo(params?.publicScreener),
     salesPitch: createMovieVideo(params?.salesPitch),
-    otherVideos: params?.otherVideos?.map(video => createMovieVideo(video)) || [],
+    otherVideo: createMovieVideo(params?.otherVideo),
   };
 }
 

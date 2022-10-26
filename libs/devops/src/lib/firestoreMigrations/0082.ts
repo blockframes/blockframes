@@ -9,7 +9,7 @@ const { storageBucket } = env.firebase();
  */
 export async function upgrade(db: Firestore, storage: Storage) {
   const movies = await db.collection('movies').get();
-  const isPublicScreener = ( video: MovieVideo ) => {
+  const isPublicScreener = (video: MovieVideo) => {
     const title = video.title?.toLowerCase();
     if (!title) return false;
     return title === 'screener' || title === 'screening';
@@ -20,7 +20,7 @@ export async function upgrade(db: Firestore, storage: Storage) {
   return runChunks(movies.docs, async (doc) => {
     const movie = doc.data() as Movie;
 
-    const otherVideos = movie.promotional.videos.otherVideos;
+    const otherVideos: MovieVideo[] = (movie.promotional.videos as any).otherVideos;
     if (!otherVideos?.some(isPublicScreener)) return;
 
     const publicScreener = otherVideos.find(isPublicScreener);
@@ -35,7 +35,7 @@ export async function upgrade(db: Firestore, storage: Storage) {
       storagePath: afterPath
     });
 
-    movie.promotional.videos.otherVideos = otherVideos.filter(video => !isPublicScreener(video));
+    (movie.promotional.videos as any).otherVideos = otherVideos.filter(video => !isPublicScreener(video));
 
     await doc.ref.set(movie);
 
