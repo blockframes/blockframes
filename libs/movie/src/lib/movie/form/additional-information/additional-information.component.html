@@ -72,7 +72,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>Metrics</mat-label>
                 <mat-select formControlName="unit" test-id="unit">
-                  <mat-option *ngFor="let unit of unitBox | keyvalue" [value]="unit.key">
+                  <mat-option *ngFor="let unit of unitBox | keyvalue" [value]="unit.key" [attr.test-id]="'option_' + unit.key">
                     {{ unit.value }}
                   </mat-option>
                 </mat-select>
@@ -142,8 +142,8 @@
         <article>
           <mat-button-toggle-group [formControl]="form.certifications" multiple name="certifications"
             aria-label="Certifications">
-            <ng-container *ngFor="let certification of certifications; index as i">
-              <mat-button-toggle [value]="certification" [attr.test-id]="'certification_' + i">
+            <ng-container *ngFor="let certification of certifications">
+              <mat-button-toggle [value]="certification" [attr.test-id]="'certification_' + certification">
                 {{ certification | toLabel: 'certifications' }}
               </mat-button-toggle>
             </ng-container>
@@ -176,7 +176,9 @@
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Social Responsability Goals (optional)</mat-label>
         <mat-select [formControl]="audience.get('goals')" multiple test-id="goals">
-          <mat-option *ngFor="let goal of staticGoals" [value]="goal">{{ goal | toLabel: 'socialGoals' }}</mat-option>
+          <mat-option *ngFor="let goal of staticGoals" [value]="goal" [attr.test-id]="'option_' + goal">
+            {{ goal | toLabel: 'socialGoals' }}
+          </mat-option>
         </mat-select>
       </mat-form-field>
 

@@ -27,8 +27,8 @@
   </mat-error>
 </mat-form-field>
 <mat-autocomplete #auto="matAutocomplete">
-  <ng-container *ngFor="let result of (algoliaSearchResults$ | async); let i = index">
-    <mat-option [value]="result | deepKey: keyToDisplay" (onSelectionChange)="selected(result) " [attr.test-id]="'org_' + i">
+  <ng-container *ngFor="let result of (algoliaSearchResults$ | async)">
+    <mat-option [value]="result | deepKey: keyToDisplay" (onSelectionChange)="selected(result) " [attr.test-id]="'org_' + result.name">
   
       <!-- INJECTED CONTENT -->
       <ng-template [ngTemplateOutlet]="optionRef || default" [ngTemplateOutletContext]="{ $implicit: result }"></ng-template>

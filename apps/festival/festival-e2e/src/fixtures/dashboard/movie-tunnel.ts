@@ -218,12 +218,12 @@ export const inDevelopmentMovie = createMovie({
       planned: {
         from: {
           period: 'early',
-          month: new Date().toLocaleDateString('en-US', { month: 'long' }),
+          month: new Date().toLocaleDateString('en-US', { month: 'long' }).toLowerCase(),
           year: new Date().getFullYear() + 1,
         },
         to: {
           period: 'early',
-          month: new Date().toLocaleDateString('en-US', { month: 'long' }),
+          month: new Date().toLocaleDateString('en-US', { month: 'long' }).toLowerCase(),
           year: new Date().getFullYear() + 2,
         },
       },

@@ -6,7 +6,6 @@ import {
   maintenance,
   // cypress commands
   get,
-  getInList,
   check,
   uncheck,
   // cypress specific functions
@@ -48,9 +47,9 @@ describe('Signup', () => {
     get('org').type(newOrg.name);
     get('new-org').click();
     get('activity').click();
-    getInList('activity_', newOrg.activity);
+    get(`activity_${newOrg.activity}`).click();
     get('country').click();
-    getInList('option_', newOrg.country);
+    get(`option_${newOrg.country}`).click();
     get('role').contains('Buyer').click();
     get('password').type(USER_FIXTURES_PASSWORD);
     get('password-confirm').type(USER_FIXTURES_PASSWORD);
@@ -108,10 +107,10 @@ describe('Signup', () => {
     get('new-org').click();
     get('submit').should('be.disabled');
     get('activity').click();
-    getInList('activity_', newOrg.activity);
+    get(`activity_${newOrg.activity}`).click();
     get('submit').should('be.disabled');
     get('country').click();
-    getInList('option_', newOrg.country);
+    get(`option_${newOrg.country}`).click();
     get('submit').should('be.disabled');
     get('role').contains('Buyer').click();
     get('submit').should('be.enabled');
@@ -126,9 +125,9 @@ describe('Signup', () => {
     get('org').type(newOrg.name);
     get('new-org').click();
     get('activity').click();
-    getInList('activity_', newOrg.activity);
+    get(`activity_${newOrg.activity}`).click();
     get('country').click();
-    getInList('option_', newOrg.country);
+    get(`option_${newOrg.country}`).click();
     get('role').contains('Buyer').click();
     check('terms');
     check('gdpr');

@@ -20,11 +20,10 @@
 
       <mat-radio-group [formControl]="form.get('productionStatus')" fxLayout="wrap row" fxLayoutGap="16px">
 
-        <ng-container *ngFor="let status of status; index as i">
+        <ng-container *ngFor="let status of status">
           <mat-card [ngClass]="{ disabled: status.disabled }">
             <img (click)="setValue(status.key, status.disabled)" [asset]="status.image" />
-            <mat-radio-button [attr.test-id]="'status_' + i" [value]="status.key" color="primary"
-              [disabled]="status.disabled">
+            <mat-radio-button [value]="status.key" color="primary" [disabled]="status.disabled" [attr.test-id]="'status_' + status.key">
               {{status.value}}
             </mat-radio-button>
           </mat-card>
