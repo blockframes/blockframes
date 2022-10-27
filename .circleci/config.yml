@@ -296,7 +296,6 @@ jobs:
       - run: gcloud firestore export "gs://blockframes-backups/firestore-backup-$(date +%d-%m-%Y)/"
   crm-e2e:
     executor: blockframes-ci
-    resource_class: xlarge
     environment:
       PROJECT_ID: demo-blockframes
     steps:
@@ -311,7 +310,6 @@ jobs:
           path: dist/cypress/apps
   cms-e2e:
     executor: blockframes-ci
-    resource_class: xlarge
     environment:
       PROJECT_ID: demo-blockframes
     steps:

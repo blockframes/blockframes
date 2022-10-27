@@ -5,7 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie, hostedVideoTypes } from '@blockframes/model';
+import { Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { MovieVideosForm } from '@blockframes/movie/form/movie.form';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
@@ -20,7 +20,6 @@ export class MovieVideoUploadComponent implements OnInit {
   public form: MovieVideosForm;
 
   @Input() movie: Movie;
-  public hostedVideoTypes = Object.keys(hostedVideoTypes);
 
   constructor(
     private snackBar: MatSnackBar,

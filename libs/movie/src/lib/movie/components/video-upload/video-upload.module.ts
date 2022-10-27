@@ -12,11 +12,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
 
 // Modules
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Components
 import { MovieVideoUploadComponent } from './video-upload.component';
@@ -36,11 +36,11 @@ import { MovieVideoUploadComponent } from './video-upload.component';
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
-    MatSelectModule,
 
     // Modules
     FileUploaderModule,
     ToLabelModule,
+    StaticSelectModule,
   ],
   declarations: [MovieVideoUploadComponent],
   exports: [MovieVideoUploadComponent]

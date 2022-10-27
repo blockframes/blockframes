@@ -61,12 +61,10 @@
           <mat-label>Video title</mat-label>
           <input matInput formControlName="title" >
         </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex>
-          <mat-label>Video type</mat-label>
-          <mat-select formControlName="type">
-            <mat-option *ngFor="let type of hostedVideoTypes" [value]="type">{{ type | toLabel: 'hostedVideoTypes' }}</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <static-select required scope="hostedVideoTypes" [control]="form.otherVideo.get('type')" fxFlex>
+          <mat-label>Video Type</mat-label>
+          <mat-hint>Trailer, Teaser, Clip...</mat-hint>
+        </static-select>
         <mat-checkbox [checked]="form.otherVideo.isPublic" (change)="form.otherVideo.togglePrivacy($event.checked)" color="primary">
           <b>Public</b> (Buyers can see video on Marketplace)
         </mat-checkbox>
