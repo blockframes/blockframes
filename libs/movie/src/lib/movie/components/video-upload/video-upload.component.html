@@ -10,22 +10,23 @@
       <mat-checkbox [checked]="form.salesPitch.isPublic" (change)="form.salesPitch.togglePrivacy($event.checked)" color="primary">
         <b>Public</b> (Buyers can see video on Marketplace)
       </mat-checkbox>
-      <file-uploader [form]="form.salesPitch" [meta]="['movies', 'salesPitch', movie.id]" accept="video" listenToChanges>
+      <file-uploader 
+        [form]="form.salesPitch"
+        [meta]="['movies', 'salesPitch', movie.id]"
+        accept="video"
+        listenToChanges
+      >
         <h3 title>Sales Pitch Video</h3>
       </file-uploader>
     </div>
   </form>
   
   <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center" fxFlex>
-    <h2>Upload screening</h2>
+    <h2>Upload private screening</h2>
     <div formGroupName="screener" fxLayout="column">
       <mat-form-field appearance="outline">
         <mat-label>Screener title</mat-label>
         <input matInput formControlName="title" >
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Screener description</mat-label>
-        <input matInput formControlName="description" >
       </mat-form-field>
       <file-uploader
         [form]="form.screener"
@@ -33,51 +34,57 @@
         accept="video"
         listenToChanges
       >
-          <h3 title>Upload Screener</h3>
+        <h3 title>Upload private Screener</h3>
       </file-uploader>
     </div>
 
-    <h2>Upload other videos</h2>
-    <ng-container *ngFor="let otherVideo of form.otherVideos.controls; let index = index">
-      <article [formGroup]="otherVideo" fxLayout="column">
+    <h2>Upload public screening</h2>
+    <div formGroupName="publicScreener" fxLayout="column">
+      <mat-form-field appearance="outline">
+        <mat-label>Screener title</mat-label>
+        <input matInput formControlName="title" >
+      </mat-form-field>
+      <file-uploader
+        [form]="form.publicScreener"
+        [meta]="['movies', 'publicScreener', movie.id]"
+        accept="video"
+        listenToChanges
+      >
+        <h3 title>Upload public Screener</h3>
+      </file-uploader>
+    </div>
+
+    <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center" fxFlex>
+      <h2>Upload other video</h2>
+      <div formGroupName="otherVideo" fxLayout="column">
         <mat-form-field appearance="outline">
           <mat-label>Video title</mat-label>
           <input matInput formControlName="title" >
         </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Video description</mat-label>
-          <input matInput formControlName="description" >
-        </mat-form-field>
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Video type</mat-label>
-          <mat-select [formControl]="otherVideo.get('type')">
+          <mat-select formControlName="type">
             <mat-option *ngFor="let type of hostedVideoTypes" [value]="type">{{ type | toLabel: 'hostedVideoTypes' }}</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-checkbox [checked]="otherVideo.isPublic" (change)="otherVideo.togglePrivacy($event.checked)" color="primary">
+        <mat-checkbox [checked]="form.otherVideo.isPublic" (change)="form.otherVideo.togglePrivacy($event.checked)" color="primary">
           <b>Public</b> (Buyers can see video on Marketplace)
         </mat-checkbox>
         <file-uploader
-          [form]="otherVideo"
-          [meta]="['movies', 'otherVideos', movie.id]"
-          [formIndex]="index"
+          [form]="form.otherVideo"
+          [meta]="['movies', 'otherVideo', movie.id]"
           accept="video"
           listenToChanges
         >
-            <h3 title>Upload Video</h3>
+        <h3 title>Upload Video</h3>
         </file-uploader>
-      </article>
-    </ng-container>
+      </div>
+    </form>
 
     <article fxLayout="row" fxLayoutAlign="space-around">
       <button mat-flat-button color="primary" (click)="uploadVideo()">
         <span>Update</span>
         <mat-icon svgIcon="send"></mat-icon>
-      </button>
-
-      <button mat-flat-button color="accent" (click)="addOtherVideo()">
-        <span>Add</span>
-        <mat-icon svgIcon="add"></mat-icon>
       </button>
     </article>
 

@@ -52,7 +52,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
       if (storageFile.privacy) this.metadata.privacy = storageFile.privacy;
       const extra = this.getExtra();
       if (extra) {
-        this.metadata = { ...this.metadata, ...extra }
+        this.metadata = { ...this.metadata, ...extra };
         const task = this.uploaderService.retrieveFromQueue(this.storagePath, this.queueIndex);
         if (task) task.metadata = this.metadata;
       }
@@ -221,7 +221,7 @@ export class FileUploaderComponent implements OnInit, OnDestroy {
     this.state$.next('waiting');
     this.fileExplorer.nativeElement.value = null;
     this.uploaderService.removeFromQueue(this.storagePath, this.fileName);
-    this.form.reset();
+    this.form.reset({ privacy: this.metadata.privacy });
     this.selectionChange.emit('removed');
   }
 

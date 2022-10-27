@@ -95,8 +95,8 @@
             <p>Screener</p>
           </li>
         </ng-container>
-        <ng-container *ngFor="let video of movie.promotional.videos.otherVideos">
-          <li *ngIf="video.privacy === 'public'">
+        <ng-container *ngIf="movie.promotional.videos.otherVideo?.storagePath && movie.promotional.videos.otherVideo?.privacy === 'public'">
+          <li *ngIf="movie.promotional.videos.otherVideo as video">
             <video-viewer [ref]="video" *ngIf="video.jwPlayerId" (stateChange)="videoStateChanged(movie, $event)"></video-viewer>
             <p>{{ video.title || (video.type | toLabel: 'hostedVideoTypes') }}</p>
           </li>

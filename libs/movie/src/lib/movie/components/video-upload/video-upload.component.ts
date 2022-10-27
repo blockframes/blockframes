@@ -3,10 +3,9 @@ import {
   ChangeDetectionStrategy,
   Input,
   OnInit,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie, MovieVideos, hostedVideoTypes, Privacy } from '@blockframes/model';
+import { Movie, hostedVideoTypes } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { MovieVideosForm } from '@blockframes/movie/form/movie.form';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
@@ -20,7 +19,6 @@ import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 export class MovieVideoUploadComponent implements OnInit {
   public form: MovieVideosForm;
 
-  public filePrivacy: Privacy = 'protected';
   @Input() movie: Movie;
   public hostedVideoTypes = Object.keys(hostedVideoTypes);
 
@@ -28,36 +26,21 @@ export class MovieVideoUploadComponent implements OnInit {
     private snackBar: MatSnackBar,
     private uploaderService: FileUploaderService,
     private movieService: MovieService,
-    private cdr: ChangeDetectorRef
   ) {
     this.form = new MovieVideosForm();
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.form = new MovieVideosForm(this.movie.promotional.videos);
-    // Add empty upload zone
-    this.form.otherVideos.add({ ref: '' });
-    this.cdr.markForCheck();
-  }
-
-  public addOtherVideo() {
-    this.form.otherVideos.add({ ref: '' });
-    this.cdr.markForCheck();
   }
 
   public async uploadVideo() {
-    // @TODO #2586 should be done by shell component if component is not called from admin
     if (!this.form.valid) {
       this.snackBar.open('Form invalid, please check error messages', 'close', { duration: 2000 });
       return;
     }
 
-    const videos: MovieVideos = {
-      ...this.form.value,
-      otherVideos: this.form.otherVideos.value.filter((n) => !!n.storagePath),
-    };
-
-    this.movie.promotional.videos = videos;
+    this.movie.promotional.videos = this.form.value;
     this.uploaderService.upload();
     await this.movieService.update(this.movie.id, this.movie);
 

@@ -1,5 +1,5 @@
 <ng-container *ngIf="(links | promotionalLinks: movie | async); let _links">
-  <button mat-mini-fab color="primary" (click)="scrollToFooter()" matTooltip="Watch Trailer" *ngIf="videos">
+  <button mat-mini-fab color="primary" (click)="scrollToFooter()" matTooltip="Watch Trailer" *ngIf="video">
     <mat-icon svgIcon="video_library"></mat-icon>
   </button>
 
@@ -9,12 +9,12 @@
     </a>
   </ng-container>
 
-  <button mat-mini-fab color="primary" matTooltip="More" [matMenuTriggerFor]="more" *ngIf="_links.length || videos">
+  <button mat-mini-fab color="primary" matTooltip="More" [matMenuTriggerFor]="more" *ngIf="_links.length || video">
     <mat-icon svgIcon="more_horiz"></mat-icon>
   </button>
 
   <mat-menu #more>
-    <button mat-menu-item (click)="scrollToFooter()" id="mat-menu-open" *ngIf="videos">
+    <button mat-menu-item (click)="scrollToFooter()" id="mat-menu-open" *ngIf="video">
       <mat-icon svgIcon="video_library"></mat-icon>
       <span class="mat-caption">Watch Trailer</span>
     </button>

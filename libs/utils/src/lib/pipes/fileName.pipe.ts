@@ -52,7 +52,7 @@ export class FilePathPipe implements PipeTransform {
     if (collection === 'movies') {
       collection = 'Movie';
       const movie = await this.movieService.getValue(file.docId);
-      docName = movie?.title?.original ?? 'Unknown Movie';
+      docName = movie?.title?.international ?? 'Unknown Movie';
     } else if (collection === 'orgs') {
       collection = 'Organization';
       const org = await this.orgService.getValue(file.docId);
@@ -128,13 +128,13 @@ export class FileTypeImagePipe implements PipeTransform {
   }
 }
 
-export const getFileFolder = (folder: string) => {
+const getFileFolder = (folder: string) => {
   switch (folder) {
     case 'notes':
       return 'Note'
     case 'still_photo':
       return 'Image'
-    case 'otherVideos':
+    case 'otherVideo':
       return 'Video'
     case 'presentation_deck':
       return 'Presentation deck'

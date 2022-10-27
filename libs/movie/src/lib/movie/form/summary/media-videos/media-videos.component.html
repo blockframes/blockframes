@@ -7,14 +7,12 @@
 <ul class="controls">
   <li>
     <strong>Videos</strong>
-    <missing-control [control]="movie.promotional.get('videos').get('otherVideos')" [link]="link">
-      <ng-template let-videos>
-        <ul class="videos">
-          <li class="video" *ngFor="let video of videos; let i = index" [attr.test-id]="'video_' + i">
-            <bf-preview-modal [ref]="video"></bf-preview-modal>
-            {{ video.type | toLabel: 'hostedVideoTypes' }}{{ video.type ? ' - ' : '' }}{{ video.title | titlecase }} - {{ video.storagePath | fileName }}
-          </li>
-        </ul>
+    <missing-control [control]="movie.promotional.get('videos').get('otherVideo')" [link]="link">
+      <ng-template let-video>
+        <article>
+          <bf-preview-modal [ref]="video"></bf-preview-modal>
+          {{ video.type | toLabel: 'hostedVideoTypes' }}{{ video.type ? ' - ' : '' }}{{ video.title | titlecase }} - {{ video.storagePath | fileName }}
+        </article>
       </ng-template>
     </missing-control>
   </li>
