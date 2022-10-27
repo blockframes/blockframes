@@ -47,8 +47,8 @@ export async function upgrade(db: Firestore, storage: Storage) {
           const oldFile = bucket.file(oldPath);
           const [exists] = await oldFile.exists();
           if (exists) {
-            await oldFile.delete();
-            console.log(`deleted ${oldPath}`);
+            console.log(`deleting ${oldPath}`);
+            await oldFile.delete().catch(() => console.log(`Error while deleting ${oldPath}`));
           }
         }
 
