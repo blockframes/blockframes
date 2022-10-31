@@ -111,7 +111,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async export() {
     if (this.movieIds.length >= this.pdfService.exportLimit) {
-      this.snackbar.open('You can\'t have an export with that many titles.', 'close', { duration: 5000 });
+      this.snackbar.open('Sorry, you can\'t have an export with that many titles.', 'close', { duration: 5000 });
       return;
     }
 

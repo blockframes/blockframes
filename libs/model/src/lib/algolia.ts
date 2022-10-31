@@ -15,6 +15,7 @@ export interface AlgoliaConfig {
   searchableAttributes: string[];
   attributesForFaceting: string[];
   customRanking?: string[];
+  paginationLimitedTo: number;
 }
 
 export interface AlgoliaQueries {
