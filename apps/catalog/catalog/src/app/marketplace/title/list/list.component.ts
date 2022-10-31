@@ -167,7 +167,7 @@ export class ListComponent implements OnDestroy, OnInit {
 
   async addAvail(title: (AlgoliaMovie & { mandates: FullMandate[] })) {
     if (this.availsForm.invalid) {
-      this.snackbar.open('Fill in avails filter to add title to your Selection.', 'close', { duration: 5000 })
+      this.snackbar.open('Please fill in your Avail Search Criteria first.', 'close', { duration: 5000 })
       return;
     }
 
