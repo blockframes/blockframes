@@ -38,6 +38,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = getDb()) {
         'hasAcceptedMovies',
       ],
       customRanking: ['asc(name)'],
+      paginationLimitedTo: 1000
     };
     await clearIndex(algolia.indexNameOrganizations[appConfig], process.env['ALGOLIA_API_KEY']);
     await setIndexConfiguration(
@@ -121,6 +122,7 @@ export async function upgradeAlgoliaUsers(db = getDb()) {
   const config: AlgoliaConfig = {
     searchableAttributes: ['email', 'firstName', 'lastName', 'orgNames'],
     attributesForFaceting: ['email'],
+    paginationLimitedTo: 1000
   };
 
   await clearIndex(algolia.indexNameUsers, process.env['ALGOLIA_API_KEY']);
@@ -177,6 +179,7 @@ const baseConfig: AlgoliaConfig = {
     'certifications'
   ],
   customRanking: ['asc(title.international)', 'asc(title.original)'],
+  paginationLimitedTo: 2000
 };
 
 function movieConfig(appConfig: App): AlgoliaConfig {
@@ -189,6 +192,7 @@ function movieConfig(appConfig: App): AlgoliaConfig {
           'socialGoals',
           'filterOnly(minPledge)',
         ],
+        paginationLimitedTo: 2000
       };
     default:
       return baseConfig;
