@@ -141,7 +141,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
    */
   async reloadUser() {
     const currentUser = await this.auth.currentUser;
-    await currentUser.reload();
+    if (currentUser) await currentUser.reload();
     return this.auth.currentUser;
   }
 
