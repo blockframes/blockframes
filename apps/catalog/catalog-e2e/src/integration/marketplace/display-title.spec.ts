@@ -225,7 +225,7 @@ describe('Movie display in marketplace', () => {
     get('title-link').eq(0).click();
     //There shouldn't be less than 450 movies
     get('export').click();
-    cy.contains(`You can't have an export with that many titles.`);
+    cy.contains(`Sorry, you can't have an export with that many titles.`);
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
       get('search-input').type(movie.title.international);
