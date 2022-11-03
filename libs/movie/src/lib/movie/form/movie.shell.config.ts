@@ -37,10 +37,6 @@ function cleanPromotionalMedia(promotional: MoviePromotionalElements): MovieProm
     ...promotional,
     still_photo: promotional.still_photo.filter(photo => !!photo.storagePath),
     notes: promotional.notes.filter(note => !!note.storagePath),
-    videos: {
-      ...promotional.videos,
-      otherVideos: promotional.videos.otherVideos.filter(video => !!video.storagePath),
-    }
   }
 }
 

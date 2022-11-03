@@ -182,13 +182,13 @@ function titleDirectory(title: Movie, app: App): Directory {
             meta: ['movies', 'salesPitch', title.id],
             form: getFormStorageVideo(title, 'movies', 'salesPitch'),
           },
-          otherVideos: {
-            name: 'Other Videos',
-            type: 'fileList',
+          otherVideo: {
+            name: 'Promotional Video',
+            type: 'file',
             accept: 'video',
             togglePrivacy: true,
-            meta: ['movies', 'otherVideos', title.id],
-            form: getFormListStorageVideo(title, 'movies', 'otherVideos'),
+            meta: ['movies', 'otherVideo', title.id],
+            form: getFormStorageVideo(title, 'movies', 'otherVideo'),
           },
         },
       },

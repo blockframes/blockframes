@@ -74,7 +74,7 @@ export async function rescueJWP(options: { jwplayerKey: string; jwplayerApiV2Sec
   // 1) Get all videos in DB
   //  - Movies
   //    - promotional.videos.salesPitch
-  //    - promotional.videos.otherVideos[]
+  //    - promotional.videos.otherVideo
   //    - promotional.videos.screener
   // 2) Spot the malformed video
   //  - video that exist in storage but not in JWP needs to be uploaded
@@ -105,8 +105,7 @@ export async function rescueJWP(options: { jwplayerKey: string; jwplayerApiV2Sec
     if (videos) {
       sortVideo(videos.screener, movie.id);
       sortVideo(videos.salesPitch, movie.id);
-
-      videos.otherVideos?.forEach((video) => sortVideo(video, movie.id));
+      sortVideo(videos.otherVideo, movie.id);
     }
   });
 
@@ -127,18 +126,10 @@ export async function rescueJWP(options: { jwplayerKey: string; jwplayerApiV2Sec
 
   console.log(`\nThere is ${okVideos.length} correct videos`);
   console.log(`${emptyVideos.length} empty videos.`);
-  console.log(
-    `${notInStorage.length} videos that exists in JWP but not in storage (need to be downloaded)`
-  );
-  console.log(
-    `${notInJWP.length} videos that exists in the storage but not in JWP (need to be uploaded)`
-  );
-  console.log(
-    `${wrongJWPId.length} videos that have a non-existent JWP ID (need to be re-uploaded)`
-  );
-  console.log(
-    `${wrongStoragePath.length} videos that have a non-existent storage path (need to be re-downloaded)`
-  );
+  console.log(`${notInStorage.length} videos that exists in JWP but not in storage (need to be downloaded)`);
+  console.log(`${notInJWP.length} videos that exists in the storage but not in JWP (need to be uploaded)`);
+  console.log(`${wrongJWPId.length} videos that have a non-existent JWP ID (need to be re-uploaded)`);
+  console.log(`${wrongStoragePath.length} videos that have a non-existent storage path (need to be re-downloaded)`);
 
   console.log('\nVIDEO THAT NEED TO BE DOWNLOADED');
   notInStorage.forEach((v) => console.log(v));

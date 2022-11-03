@@ -1007,12 +1007,12 @@ export class MovieVideoForm extends FormEntity<MovieVideoControls, MovieVideo> {
 }
 
 function createMovieVideosControl(videos: Partial<MovieVideos> = {}) {
-  const { screener, publicScreener, salesPitch, otherVideos } = createMovieVideos(videos);
+  const { screener, publicScreener, salesPitch, otherVideo } = createMovieVideos(videos);
   return {
     screener: new MovieVideoForm(screener),
     publicScreener: new MovieVideoForm(publicScreener),
     salesPitch: new MovieVideoForm(salesPitch),
-    otherVideos: FormList.factory(otherVideos, (otherVideo) => new MovieVideoForm(otherVideo)),
+    otherVideo: new MovieVideoForm(otherVideo),
   };
 }
 
@@ -1023,8 +1023,8 @@ export class MovieVideosForm extends FormEntity<MovieVideosControls, MovieVideos
     super(createMovieVideosControl(videos));
   }
 
-  get otherVideos() {
-    return this.get('otherVideos');
+  get otherVideo() {
+    return this.get('otherVideo');
   }
 
   get screener() {

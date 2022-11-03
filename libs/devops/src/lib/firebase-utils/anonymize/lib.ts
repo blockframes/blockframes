@@ -122,10 +122,8 @@ function processMovie(movie: Movie): Movie {
   if (movie.promotional?.videos?.publicScreener?.jwPlayerId) {
     movie.promotional.videos.publicScreener = updateHostedVideo(movie.promotional.videos.publicScreener);
   }
-  if (movie.promotional?.videos?.otherVideos) {
-    movie.promotional.videos.otherVideos = movie.promotional.videos.otherVideos.map(
-      updateHostedVideo
-    );
+  if (movie.promotional?.videos?.otherVideo) {
+    movie.promotional.videos.otherVideo = updateHostedVideo(movie.promotional.videos.otherVideo);
   }
   if (movie.promotional?.videos?.salesPitch?.jwPlayerId) {
     movie.promotional.videos.salesPitch = updateHostedVideo(movie.promotional.videos.salesPitch);

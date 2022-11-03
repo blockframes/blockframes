@@ -1,39 +1,33 @@
 <tunnel-page>
   <ng-container tunnel-form>
 
-    <h3>Videos</h3>
-    <section>
-      <p>Upload videos such as a trailer, teaser, promo reel, etc.</p>
-      <bf-form-list [form]="videoList" listPosition="bottom" keepFormOpen reverseList (removed)="removeFromQueue($event)">
-        <ng-template itemRef let-video>
-          {{ video.type | toLabel: 'hostedVideoTypes' }} - {{ video.title }} - {{ (video.storagePath | fileName) }}
-        </ng-template>
-        <ng-template formView let-activeForm let-index="index">
-          <article fxLayout="column">
-            <span fxFlex fxLayout="row" fxLayoutGap="16px">
-              <mat-form-field appearance="outline" fxFlex>
-                <mat-label>Title</mat-label>
-                <input matInput type="text" placeholder="Title of the video" [formControl]="activeForm.get('title')" test-id="title"/>
-                <mat-hint>You can give a name to your video</mat-hint>
-              </mat-form-field>
-              <static-select required scope="hostedVideoTypes" [control]="activeForm.get('type')" fxFlex test-id="video-type">
-                <mat-label>Video Type</mat-label>
-                <mat-hint>Trailer, Teaser, Clip...</mat-hint>
-              </static-select>
-            </span>
-            <mat-checkbox [checked]="activeForm.isPublic" (change)="activeForm.togglePrivacy($event.checked)" color="primary" test-id="video-privacy">
-              <b>Public</b> (Buyers can see video on Marketplace)
-            </mat-checkbox>
-            <file-uploader [queueIndex]="index | fileListIndex: videoList.value" [form]="activeForm" [formIndex]="index" [meta]="['movies', 'otherVideos', movieId]" accept="video">
-              <h3 title>Upload Video</h3>
-            </file-uploader>
-
-            <ng-template saveButtonText>Save Video</ng-template>
-            <ng-template addButtonText>Add a Video</ng-template>
-
-          </article>
-        </ng-template>
-      </bf-form-list>
+    <h3>Promotional Video</h3>
+    <section fxLayout="column">
+      <p>Upload video such as a trailer, teaser, promo reel, etc.</p>
+      <span fxFlex fxLayout="row" fxLayoutGap="16px">
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>Title</mat-label>
+          <input matInput type="text" placeholder="Title of the video" [formControl]="otherVideoForm.get('title')" test-id="title"/>
+          <mat-hint>You can give a name to your video</mat-hint>
+        </mat-form-field>
+        <static-select required scope="hostedVideoTypes" [control]="otherVideoForm.get('type')" fxFlex test-id="video-type">
+          <mat-label>Video Type</mat-label>
+          <mat-hint>Trailer, Teaser, Clip...</mat-hint>
+        </static-select>
+      </span>
+      <mat-checkbox [checked]="otherVideoForm.isPublic" (change)="otherVideoForm.togglePrivacy($event.checked)" color="primary" test-id="video-privacy">
+        <b>Public</b> (Buyers can see video on Marketplace)
+      </mat-checkbox>
+      <file-uploader
+        [form]="otherVideoForm"
+        [meta]="['movies', 'otherVideo', movieId]"
+        accept="video"
+        (newSubscription)="shell.addSubToStack($event)"
+        listenToChanges
+        pushSubToStack
+      >
+        <h3 title>Upload Promotional Video</h3>
+      </file-uploader>
     </section>
 
     <mat-divider class="thick"></mat-divider>

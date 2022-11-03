@@ -295,9 +295,9 @@ describe('Movie tunnel', () => {
     cy.contains('Promotional Images');
     get('next').click();
     ///videos
-    get('title').type(movie.promotional.videos.otherVideos[0].title);
+    get('title').type(movie.promotional.videos.otherVideo.title);
     get('video-type').click();
-    get(`option_${movie.promotional.videos.otherVideos[0].type}`).click();
+    get(`option_${movie.promotional.videos.otherVideo.type}`).click();
     uncheck('video-privacy');
     check('video-privacy');
     get('description').type(movie.promotional.videos.salesPitch.description);
@@ -436,8 +436,8 @@ describe('Movie tunnel', () => {
     //TODO : test 'images' when fixed #8586
     /*Below check to be unskipped when upload will be possible #8900
     get('video_0')
-      .should('contain', hostedVideoTypes[movie.promotional.videos.otherVideos[0].type])
-      .and('contain', movie.promotional.videos.otherVideos[0].title);
+      .should('contain', hostedVideoTypes[movie.promotional.videos.otherVideo.type])
+      .and('contain', movie.promotional.videos.otherVideo.title);
     */
     get('pitch').should('contain', 'Missing');
     get('note_0').should('contain', 'Note');

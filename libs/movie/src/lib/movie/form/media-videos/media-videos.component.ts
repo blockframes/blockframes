@@ -2,12 +2,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieFormShellComponent } from '../shell/shell.component';
-import { MovieService } from '../../service';
-import { getFileMetadata, getFileStoragePath } from '@blockframes/media/utils';
-import { getDeepValue } from '@blockframes/utils/pipes';
-import { MovieVideo } from '@blockframes/model';
-import { FileUploaderService } from '@blockframes/media/file-uploader.service';
-import { getFileListIndex } from '@blockframes/media/file/pipes/file-list.pipe';
 
 @Component({
   selector: 'movie-form-media-videos',
@@ -20,23 +14,13 @@ export class MovieFormMediaVideosComponent implements OnInit {
   movieId = this.route.snapshot.params.movieId;
 
   constructor(
-    private movie: MovieService,
     public shell: MovieFormShellComponent,
     private dynTitle: DynamicTitleService,
-    private route: ActivatedRoute,
-    private uploaderService: FileUploaderService
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Videos');
-
-    const sub = this.movie.valueChanges(this.movieId).subscribe((title) => {
-      const metadata = getFileMetadata('movies', 'otherVideos', this.movieId);
-      const mediaArray: Partial<MovieVideo>[] = getDeepValue(title, metadata.field);
-      this.videoList.patchValue(mediaArray);
-    });
-
-    this.shell.addSubToStack(sub);
   }
 
   trackByIndex(index: number) {
@@ -47,13 +31,7 @@ export class MovieFormMediaVideosComponent implements OnInit {
     return this.form.promotional.videos.salesPitch;
   }
 
-  get videoList() {
-    return this.form.promotional.videos.otherVideos;
-  }
-
-  removeFromQueue(index: number) {
-    const storagePath = getFileStoragePath('movies', 'otherVideos', this.movieId);
-    const queueIndex = getFileListIndex(index, this.videoList.value);
-    this.uploaderService.removeFromQueue(storagePath, queueIndex);
+  get otherVideoForm() {
+    return this.form.promotional.videos.otherVideo;
   }
 }

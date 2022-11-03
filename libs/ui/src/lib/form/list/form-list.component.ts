@@ -20,7 +20,6 @@ import { startWith, distinctUntilChanged, map } from 'rxjs/operators';
 
 // Blockframes
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
-import { boolean } from '@blockframes/utils/decorators/decorators';
 import { AddButtonTextDirective, SaveButtonTextDirective } from '@blockframes/utils/directives/button-text.directive';
 
 @Directive({ selector: '[formView]' })
@@ -41,10 +40,6 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
 
   @Input() form: FormList<T>;
   @Input() listPosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
-
-
-  /** Keep the form open after the user has clicked on the add/save button */
-  @Input() @boolean keepFormOpen = false;
 
   /** Reverse the list order: the last added element will appear at the top */
   @Input() set reverseList(shouldReverse: boolean) {
@@ -76,9 +71,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
     ]).pipe(
       map(([list, reverse]) => reverse ? list.reverse() : list)
     );
-    if (this.isFormEmpty || this.keepFormOpen) {
-      this.add();
-    }
+    if (this.isFormEmpty) this.add();
   }
 
   ngOnDestroy() {
@@ -90,7 +83,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   }
 
   get displayCancelButton() {
-    return !this.keepFormOpen && this.form.controls.length;
+    return this.form.controls.length;
   }
 
   /** Add a clean form */
@@ -109,8 +102,6 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
       }
       delete this.formItem;
       this.cdr.markForCheck();
-
-      if (this.keepFormOpen) this.add();
     }
   }
 
