@@ -252,7 +252,7 @@ export const inDevelopmentMovie = createMovie({
   promotional: createMoviePromotional({
     videos: createMovieVideos({
       salesPitch: createMovieVideo({ description: 'This is the journey of an E2E test' }),
-      otherVideo: createMovieVideo({ title: 'Test other video', type: 'teaser' }),
+      otherVideo: createMovieVideo({ title: 'Test promotional video', type: 'teaser' }),
     }),
     notes: [
       createMovieNote({

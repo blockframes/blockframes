@@ -7,7 +7,7 @@
 <ul class="controls">
   <ng-container *ngIf="movie.promotional.get('videos').get('otherVideo') as otherVideo">
     <li>
-      <strong>Video</strong>
+      <strong>Promotional Video</strong>
       <missing-control [control]="otherVideo.get('storagePath')" [link]="link">
         <ng-template let-videoStorage>
           <article>

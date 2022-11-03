@@ -183,7 +183,7 @@ function titleDirectory(title: Movie, app: App): Directory {
             form: getFormStorageVideo(title, 'movies', 'salesPitch'),
           },
           otherVideo: {
-            name: 'Other Video',
+            name: 'Promotional Video',
             type: 'file',
             accept: 'video',
             togglePrivacy: true,

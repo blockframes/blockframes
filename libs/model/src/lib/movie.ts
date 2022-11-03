@@ -108,7 +108,7 @@ export interface MovieVideos {
   screener?: MovieVideo; // Main screener
   publicScreener?: MovieVideo; // Public screener
   salesPitch?: MovieVideo; // Sales pitch
-  otherVideo: MovieVideo; // Other video
+  otherVideo: MovieVideo; // Promotional video
 }
 
 export interface MovieVideo extends StorageVideo {
