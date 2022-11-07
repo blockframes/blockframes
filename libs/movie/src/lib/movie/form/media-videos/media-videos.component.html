@@ -24,7 +24,11 @@
             <mat-checkbox [checked]="activeForm.isPublic" (change)="activeForm.togglePrivacy($event.checked)" color="primary" test-id="video-privacy">
               <b>Public</b> (Buyers can see video on Marketplace)
             </mat-checkbox>
-            <file-uploader [queueIndex]="index | fileListIndex: videoList.value" [form]="activeForm" [formIndex]="index" [meta]="['movies', 'otherVideos', movieId]" accept="video">
+            <file-uploader
+            [queueIndex]="index | fileListIndex: videoList.value"
+            [form]="activeForm" [formIndex]="index"
+            [meta]="['movies', 'otherVideos', movieId]" accept="video"
+            test-id="video-upload">
               <h3 title>Upload Video</h3>
             </file-uploader>
 
@@ -59,6 +63,7 @@
         (newSubscription)="shell.addSubToStack($event)"
         listenToChanges
         pushSubToStack
+        test-id="sales-pitch-upload"
       >
         <h3 title>Sales Pitch Video</h3>
       </file-uploader>

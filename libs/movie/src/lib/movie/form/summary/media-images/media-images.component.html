@@ -6,7 +6,7 @@
 </h6>
 <missing-control [control]="stillPhoto" [link]="link">
   <ng-template let-images="control">
-    <article fxLayout fxLayoutAlign="start center" *ngFor="let image of images.value">
+    <article fxLayout fxLayoutAlign="start center" *ngFor="let image of images.value; let i = index" [attr.test-id]="'image_' + i">
       <ng-container *ngIf="!!image.storagePath; else empty">
         <bf-preview-modal [ref]="image"></bf-preview-modal>
         <span>{{ image.storagePath | fileName | maxLength: 30 }}</span>

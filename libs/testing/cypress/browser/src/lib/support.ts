@@ -9,7 +9,8 @@ import {
   EventTypes,
   AccessibilityTypes,
 } from '@blockframes/model';
-import { browserAuth, firestore } from '@blockframes/testing/cypress/browser';
+import { browserAuth } from './browserAuth';
+import { firestore } from './firestore';
 import { startOfWeek, add, isPast, isFuture } from 'date-fns';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
@@ -42,6 +43,10 @@ export function acceptCookies() {
 
 export function get(selector: string) {
   return cy.get(`[test-id="${selector}"]`);
+}
+
+export function snackbarShould(verb: string, value?:string) {
+  !value ? cy.get('snack-bar-container').should(verb) : cy.get('snack-bar-container').should(verb, value)
 }
 
 export function getByClass(selector: string) {

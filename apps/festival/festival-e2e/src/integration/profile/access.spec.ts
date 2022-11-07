@@ -15,7 +15,7 @@ import {
   awaitElementDeletion,
 } from '@blockframes/testing/cypress/browser';
 import { user, org, permissions } from '../../fixtures/authentification/login';
-const imageFixture = 'src/fixtures/default-image.webp';
+const imageFixture = 'src/fixtures/default-image-1.webp';
 
 const injectedData = {
   [`users/${user.uid}`]: user,

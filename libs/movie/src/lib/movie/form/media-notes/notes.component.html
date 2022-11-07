@@ -16,12 +16,12 @@
               <mat-label>Role</mat-label>
             </static-select>
             <file-uploader
-              test-id="intent-note"
               [queueIndex]="index | fileListIndex: form.promotional.get('notes').value"
               [form]="noteForm"
               [meta]="['movies', 'notes', movieId]"
               [formIndex]="index"
               accept="pdf"
+              test-id="note-upload"
             >
             </file-uploader>
             <div fxLayout="column" class="captions">
