@@ -319,7 +319,6 @@ describe('Movie tunnel', () => {
     check('video-privacy');
     testUploadGuard('video-upload', ['image', 'pdf']);
     get('video-upload').selectFile('src/fixtures/default-video.mp4', { action: 'drag-drop' });
-    get('row-save').click();
     saveStep();
     get('description').type(movie.promotional.videos.salesPitch.description);
     uncheck('pitch-privacy');
@@ -470,7 +469,7 @@ describe('Movie tunnel', () => {
     get('moodboard').should('contain', 'default-moodboard');
     get('image_0').should('contain', 'default-image-1');
     get('image_1').should('contain', 'default-image-2');
-    get('video_0').should('contain', 'Teaser - Test Other Videos - default-video.mp4');
+    get('other-video').should('contain', 'Teaser - Test Promotional Video - default-video.mp4');
     get('pitch').should('contain', 'default-pitch.mp4');
     get('note_0').should('contain', 'Note first Note last - Director - default-note.pdf');
     get('screener').should('contain', 'default-screener.mp4');
@@ -484,10 +483,9 @@ describe('Movie tunnel', () => {
         checkUpload({ movie, baseField: 'promotional.moodboard', isVideo: false });
         checkUpload({ movie, baseField: 'promotional.presentation_deck', isVideo: false });
         checkUpload({ movie, baseField: 'promotional.videos.salesPitch', isVideo: true });
-
         checkUpload({ movie, baseField: 'promotional.still_photo[0]', isVideo: false });
         checkUpload({ movie, baseField: 'promotional.still_photo[1]', isVideo: false });
-        checkUpload({ movie, baseField: 'promotional.videos.otherVideos[0]', isVideo: true });
+        checkUpload({ movie, baseField: 'promotional.videos.otherVideo', isVideo: true });
         checkUpload({ movie, baseField: 'promotional.notes[0]', isVideo: false });
         checkUpload({ movie, baseField: 'promotional.scenario', isVideo: false });
         checkUpload({ movie, baseField: 'promotional.videos.screener', isVideo: true });

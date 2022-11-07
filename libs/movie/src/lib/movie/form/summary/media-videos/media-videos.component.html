@@ -8,7 +8,7 @@
   <ng-container *ngIf="movie.promotional.get('videos').get('otherVideo') as otherVideo">
     <li>
       <strong>Promotional Video</strong>
-      <missing-control [control]="otherVideo.get('storagePath')" [link]="link">
+      <missing-control [control]="otherVideo.get('storagePath')" [link]="link" test-id="other-video">
         <ng-template let-videoStorage>
           <article>
             <bf-preview-modal [ref]="otherVideo.value"></bf-preview-modal>
