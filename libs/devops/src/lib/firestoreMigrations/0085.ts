@@ -34,7 +34,7 @@ export async function upgrade(db: Firestore, storage: Storage) {
       const file = bucket.file(beforePath);
       const [exists] = await file.exists();
       if (exists) {
-        await file.move(afterPath);
+        await file.move(afterPath).catch(() => console.log(`Error while moving ${beforePath} to ${afterPath}`));
         console.log(`moved ${beforePath} to ${afterPath}`);
       }
 
