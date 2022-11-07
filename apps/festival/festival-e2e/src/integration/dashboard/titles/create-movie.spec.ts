@@ -312,9 +312,9 @@ describe('Movie tunnel', () => {
     saveStep();
     get('next').click();
     ///videos
-    get('title').type(movie.promotional.videos.otherVideos[0].title);
+    get('title').type(movie.promotional.videos.otherVideo.title);
     get('video-type').click();
-    get(`option_${movie.promotional.videos.otherVideos[0].type}`).click();
+    get(`option_${movie.promotional.videos.otherVideo.type}`).click();
     uncheck('video-privacy');
     check('video-privacy');
     testUploadGuard('video-upload', ['image', 'pdf']);

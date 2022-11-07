@@ -131,13 +131,13 @@ const getTitleLink = (m: Movie, urlBase: string) => {
 }
 
 const getTrailerLink = (m: Movie, urlBase: string) => {
-  const hasTrailer = m.promotional.videos.otherVideos?.some(v => v.storagePath && v.privacy === 'public');
+  const hasTrailer = m.promotional?.videos?.otherVideo?.jwPlayerId && m.promotional?.videos?.otherVideo?.privacy === 'public';
   if (!hasTrailer) return '';
   return `${urlBase}${m.id}/main#trailer`;
 }
 
 const getPublicScreenerLink = (m: Movie, app: App, urlBase: string) => {
-  const hasPublicScreener = app === 'catalog' && !!m.promotional.videos.publicScreener?.jwPlayerId;
+  const hasPublicScreener = app === 'catalog' && !!m.promotional?.videos?.publicScreener?.jwPlayerId;
   if (!hasPublicScreener) return '';
   return `${urlBase}${m.id}/main#trailer`;
 }

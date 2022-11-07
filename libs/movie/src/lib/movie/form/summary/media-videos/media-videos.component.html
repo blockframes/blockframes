@@ -5,19 +5,19 @@
   </a>
 </h6>
 <ul class="controls">
-  <li>
-    <strong>Videos</strong>
-    <missing-control [control]="movie.promotional.get('videos').get('otherVideos')" [link]="link">
-      <ng-template let-videos>
-        <ul class="videos">
-          <li class="video" *ngFor="let video of videos; let i = index" [attr.test-id]="'video_' + i">
-            <bf-preview-modal [ref]="video"></bf-preview-modal>
-            {{ video.type | toLabel: 'hostedVideoTypes' }}{{ video.type ? ' - ' : '' }}{{ video.title | titlecase }} - {{ video.storagePath | fileName }}
-          </li>
-        </ul>
-      </ng-template>
-    </missing-control>
-  </li>
+  <ng-container *ngIf="movie.promotional.get('videos').get('otherVideo') as otherVideo">
+    <li>
+      <strong>Promotional Video</strong>
+      <missing-control [control]="otherVideo.get('storagePath')" [link]="link">
+        <ng-template let-videoStorage>
+          <article>
+            <bf-preview-modal [ref]="otherVideo.value"></bf-preview-modal>
+            {{ otherVideo.value.type | toLabel: 'hostedVideoTypes' }}{{ otherVideo.value.type ? ' - ' : '' }}{{ otherVideo.value.title | titlecase }} - {{ videoStorage | fileName }}
+          </article>
+        </ng-template>
+      </missing-control>
+    </li>
+  </ng-container>
 
   <ng-container *ngIf="movie.promotional.get('videos').get('salesPitch') as salesPitch">
     <li>

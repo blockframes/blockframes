@@ -84,7 +84,7 @@ export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
       'video/x-ms-wmv',
     ],
     /** @dev if updated, also update libs/devops/src/lib/firebase-utils/restore-storage-from-ci.ts restoreStorageFromCi */
-    extension: ['.avi', '.mkv', '.mp4', '.3gp', '.mov', '.wmv'],
+    extension: ['.avi', '.mkv', '.mp4', '.3gp', '.mov', '.wmv', '.m4v'],
   },
   docx: {
     mime: [

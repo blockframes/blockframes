@@ -19,14 +19,7 @@ ul.controls {
   }
 }
 
-ul.videos {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 0;
-}
-
-li.video, article {
+article {
   display: flex;
   align-items: center;
   gap: 8px

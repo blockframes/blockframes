@@ -45,8 +45,7 @@ export class MainComponent implements OnInit {
       return video?.storagePath && video?.privacy === 'public' && video?.jwPlayerId;
     }
     if (isPublicVideo(videos.salesPitch)) return videos.salesPitch;
-    const otherVideo = videos.otherVideos.find(video => isPublicVideo(video));
-    if (otherVideo) return otherVideo;
+    if (isPublicVideo(videos.otherVideo)) return videos.otherVideo;
     if (this.shell.currentApp === 'catalog' && isPublicVideo(videos.publicScreener)) return videos.publicScreener;
   }
 

@@ -173,7 +173,6 @@ export async function linkFile(data: storage.ObjectMetadata) {
         'documents.notes',
         'documents.videos',
         'promotional.still_photo',
-        'promotional.videos.otherVideos',
         'promotional.notes'
       ];
       const isList = fileLists.includes(metadata.field);
@@ -359,13 +358,11 @@ export async function cleanMovieMedias(before: Movie, after?: Movie): Promise<vo
       mediaToDelete.push(before.promotional.videos.salesPitch);
     }
 
-    // FILES LIST
+    if (needsToBeCleaned(before.promotional.videos?.otherVideo, after.promotional.videos?.otherVideo)) {
+      mediaToDelete.push(before.promotional.videos.otherVideo);
+    }
 
-    const otherVideosToDelete = checkFileList(
-      before.promotional.videos?.otherVideos,
-      after.promotional.videos?.otherVideos
-    );
-    mediaToDelete.push(...otherVideosToDelete);
+    // FILES LIST
 
     const stillToDelete = checkFileList(
       before.promotional?.still_photo,
@@ -410,8 +407,8 @@ export async function cleanMovieMedias(before: Movie, after?: Movie): Promise<vo
       mediaToDelete.push(before.promotional.videos.salesPitch);
     }
 
-    if (before.promotional.videos?.otherVideos?.length) {
-      before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n));
+    if (before.promotional.videos?.otherVideo?.storagePath) {
+      mediaToDelete.push(before.promotional.videos.otherVideo);
     }
 
     if (before.promotional.still_photo?.length) {
@@ -455,7 +452,7 @@ export async function moveMovieMedia(before: Movie, after: Movie): Promise<void>
   // Videos upload types where privacy can be changed
   const paths = [
     'promotional.videos.salesPitch',
-    'promotional.videos.otherVideos'
+    'promotional.videos.otherVideo'
   ];
 
   const containsFile = (file: StorageFile) => file && file.storagePath !== null;
@@ -466,22 +463,10 @@ export async function moveMovieMedia(before: Movie, after: Movie): Promise<void>
   }
 
   for (const path of paths) {
-    const beforeFiles: StorageFile | StorageFile[] = getDeepValue(before, path);
-
-    if (Array.isArray(beforeFiles)) {
-      for (const beforeFile of beforeFiles) {
-        const afterFiles: StorageFile[] = getDeepValue(after, path);
-        const afterFile = afterFiles?.find(file => file.storagePath === beforeFile.storagePath);
-        if (needsToBeMoved(beforeFile, afterFile)) {
-          await moveMedia(beforeFile, afterFile);
-        }
-      }
-
-    } else {
-      const afterFile: StorageFile = getDeepValue(after, path);
-      if (needsToBeMoved(beforeFiles, afterFile)) {
-        await moveMedia(beforeFiles, afterFile);
-      }
+    const beforeFiles: StorageFile = getDeepValue(before, path);
+    const afterFile: StorageFile = getDeepValue(after, path);
+    if (needsToBeMoved(beforeFiles, afterFile)) {
+      await moveMedia(beforeFiles, afterFile);
     }
   }
 }

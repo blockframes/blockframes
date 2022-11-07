@@ -86,7 +86,9 @@ export class TitleMarketplaceShellComponent implements OnInit {
   }
 
   hasPublicVideos(movie: Movie) {
-    return movie.promotional.videos.otherVideos.some((video) => video.privacy === 'public') || movie.promotional.videos.publicScreener?.storagePath;
+    const hasPublicOtherVideo = movie.promotional.videos.otherVideo?.privacy === 'public' && !!movie.promotional.videos.otherVideo?.storagePath;
+    const hasPublicScreener = this.currentApp === 'catalog' && !!movie.promotional.videos.publicScreener?.storagePath; 
+    return hasPublicOtherVideo || hasPublicScreener;
   }
 
   videoStateChanged(title: Movie, event: string) {
