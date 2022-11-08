@@ -47,7 +47,8 @@ describe('Login tests', () => {
     get('crop-image').click();
     get('update-profile').click({ force: true }); // TODO #8968 { force: true } because of snackbar with permission error
 
-    awaitElementDeletion('[test-id="upload-completed"]');
+    get('upload-widget').should('exist');
+    get('upload-widget').should('not.exist');
     cy.wait(1000); // Wait until the onFileUpload backend function is triggered
     firestore
       .get(`users/${user.uid}`)
