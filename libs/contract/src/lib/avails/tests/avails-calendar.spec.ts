@@ -12,7 +12,7 @@ import {
   reset,
   select
 } from '../calendar/calendar.model';
-import { durationAvailabilities, DurationMarker } from '../avails';
+import { durationAvailabilities, DurationMarker } from '@blockframes/model';
 import {
   availSouthKorea, availAfghanistan,
   availFrance, availsSVODArgentina, availsPayTVArgentina,

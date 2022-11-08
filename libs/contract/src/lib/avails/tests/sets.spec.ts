@@ -4,7 +4,7 @@ import {
   noneOf,
   someOf,
   continuousSomeOf
-} from '../sets';
+} from '@blockframes/model';
 
 const discrete = {
   a: ['apple', 'banana', 'grape'],

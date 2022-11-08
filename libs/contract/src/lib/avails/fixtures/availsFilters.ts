@@ -1,5 +1,6 @@
-import { AvailsFilter } from "../avails";
-import { allButSouthKorea, Europe } from "./mandatesAndSales";
+
+import { AvailsFilter } from '@blockframes/model';
+import { allButSouthKorea, Europe } from './mandatesAndSales';
 
 export const availDetailsExclusive: AvailsFilter = {
   duration: {

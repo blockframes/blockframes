@@ -5,16 +5,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import {
+  filterContractsByTitle,
+  TerritoryValue,
   AvailableTerritoryMarker,
   BucketTerritoryMarker,
   emptyAvailabilities,
-  filterContractsByTitle,
   MapAvailsFilter,
   territoryAvailabilities,
-} from '@blockframes/contract/avails/avails';
-import { MarketplaceMovieAvailsComponent } from '../avails.component';
-import { TerritoryValue } from '@blockframes/model';
+} from '@blockframes/model';
 
 @Component({
   selector: 'catalog-movie-avails-map',

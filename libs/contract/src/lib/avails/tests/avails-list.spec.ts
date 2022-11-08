@@ -1,4 +1,4 @@
-import { availableTitle, AvailsFilter, FullMandate, FullSale } from '../avails';
+import { availableTitle, AvailsFilter, FullMandate, FullSale } from '@blockframes/model';
 import {
   availsListSouthKorea, availsListAfghanistan, availsListFrance, availsListGermanyRussiaCzech,
   availsListOngoingSalesExclusive, availsListOngoingSalesNonExclusive, availsListGermanyRussiaCzechExclusive,

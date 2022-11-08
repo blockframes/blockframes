@@ -24,9 +24,19 @@ import {
   createNotification,
   wasLastAcceptedOn,
   wasLastSubmittedOn,
-  getMoviePublishStatus
+  getMoviePublishStatus,
+  AlgoliaMovie,
+  Mandate,
+  Sale,
+  Term,
+  AvailsFilter,
+  filterContractsByTitle,
+  availableTitle,
+  FullMandate
 } from '@blockframes/model';
-import { BlockframesChange, BlockframesSnapshot, getDocument } from '@blockframes/firebase-utils';
+import { BlockframesChange, BlockframesSnapshot, getCollection, getDocument, queryDocuments } from '@blockframes/firebase-utils';
+import algoliasearch, { SearchIndex } from 'algoliasearch';
+import { centralOrgId } from '@env';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
@@ -301,4 +311,94 @@ async function removeMovieFromWishlists(movie: Movie, batch?: FirebaseFirestore.
   if (updates.length) {
     await Promise.allSettled(updates);
   }
+}
+
+
+async function algoliaRecursiveSearch(search : any, app: App) { // TODO #8894 any
+
+  const movieIndex: SearchIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameMovies[app]);
+  const movies = await movieIndex.search<AlgoliaMovie>(search.query, search);
+
+  if(movies.nbHits > search.hitsPerPage) {
+    search.page += search.page;
+    
+  }
+}
+
+export async function algoliaSearch(
+  data: { app: App, search: any, availsFilter?: AvailsFilter, orgId: string }, // TODO #8894 any
+  context: CallableContext
+) {
+  const { app, orgId, search, availsFilter } = data;
+
+  if (!context?.auth) throw new Error('Permission denied: missing auth context.');
+  if (!orgId) throw new Error('Permission denied: missing org id.');
+
+  // ALGOLIA SEARCH
+  const overridedSearch = {...search};
+  if (availsFilter) {
+    overridedSearch.hitsPerPage = 1000; // TODO #8894 2000 ok ? cf https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/ 
+    overridedSearch.page = 0;  // TODO  #8894 if nbHits > 1000 => recursive search avec page ?
+  }
+  const movieIndex: SearchIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameMovies[app]);
+  const movies = await movieIndex.search<AlgoliaMovie>(search.query, overridedSearch); // TODO #8894 page param ?
+
+  // SEARCH WITHOUT AVAIL FILTERS (Regular algolia search)
+  // (if availsForm is invalid, put all the movies from algolia)
+  if (!availsFilter) {
+    const hits = movies.hits.map(m => ({ ...m, mandates: [] as FullMandate[] })); // TODO REMOVE .slice(search.page * search.hitsPerPage, search.hitsPerPage);
+    return { nbHits: movies.nbHits, hits };
+  }
+
+  // LOAD CONTRACTS RELATED DATA
+  const mandatesQuery = db.collection('contracts')
+    .where('type', '==', 'mandate')
+    .where('buyerId', '==', centralOrgId.catalog)
+    .where('status', '==', 'accepted');
+  const mandates = await queryDocuments<Mandate>(mandatesQuery);
+
+  // No accepted mandates in DB
+  if (!mandates.length) return { nbHits: 0, hits: [] };
+
+  const salesQuery = db.collection('contracts')
+    .where('type', '==', 'sale')
+    .where('status', '==', 'accepted');
+  const sales = await queryDocuments<Sale>(salesQuery);
+
+  const terms = await getCollection<Term>('terms');
+
+  const mandateTermIds = mandates.map(mandate => mandate.termIds).flat();
+  const mandateTerms = terms.filter(t => mandateTermIds.includes(t.id));
+
+  const saleTermIds = sales.map(sale => sale.termIds).flat();
+  const saleTerms = terms.filter(t => saleTermIds.includes(t.id));
+
+  const bucket = await getDocument<Bucket>(`buckets/${orgId}`); // TODO #8894 tester bucket
+
+  // @see https://github.com/firebase/firebase-functions/issues/316
+  availsFilter.duration.from = new Date(availsFilter.duration.from);
+  availsFilter.duration.to = new Date(availsFilter.duration.to);
+
+  // Filtered algolia results with avails
+  const allHits = movies.hits.map(movie => {
+    const res = filterContractsByTitle(movie.objectID, mandates, mandateTerms, sales, saleTerms, bucket);
+    const availableMandates = availableTitle(availsFilter, res.mandates, res.sales, res.bucketContracts);
+    return { ...movie, mandates: availableMandates };
+  }).filter(m => !!m.mandates.length)
+  .map(hit => {
+    /**
+     * @see https://github.com/firebase/firebase-functions/issues/316
+     * convert dates to timestamp
+     */
+    // TODO #8894 clean type
+    hit.mandates.forEach(m => m.terms.forEach(t => {
+      (t.duration as any).from = t.duration.from.getTime(); 
+      (t.duration as any).to = t.duration.to.getTime()
+    }))
+
+    return hit;
+  })
+
+  const hits = allHits.slice(search.page * search.hitsPerPage, search.page * search.hitsPerPage + search.hitsPerPage);
+  return { nbHits: allHits.length, hits };
 }
