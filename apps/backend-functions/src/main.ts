@@ -16,7 +16,7 @@ import {
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged, onRequestFromOrgToAccessApp } from './orgs';
-import { onMovieUpdate, onMovieCreate, onMovieDelete, createAskingPriceRequest } from './movie';
+import { onMovieUpdate, onMovieCreate, onMovieDelete, createAskingPriceRequest, algoliaSearch } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate, onPermissionDelete } from './permissions';
 import { createNotificationsForEventsToStart, createNotificationsForFinishedScreenings } from './internals/invitations/events';
@@ -175,6 +175,11 @@ export const onMovieUpdateEvent = onDocumentUpdate('movies/{movieId}', onMovieUp
 export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', onMovieDelete);
 
 export const requestAskingPrice = functions().https.onCall(skipInMaintenance(logErrors(createAskingPriceRequest)));
+
+export const searchWithAlgolia = functions({
+  timeoutSeconds: 10,
+  memory: '1GB',
+}).https.onCall(skipInMaintenance(logErrors(algoliaSearch)));
 
 //--------------------------------
 //     Consents Management      //

@@ -91,7 +91,7 @@
     </movie-card>
   </ng-template>
 
-  <list-page-progress *ngIf="hitsViewed$ | async as hitsViewed" [value]="nbHits ? hitsViewed / nbHits * 100 : 0" (loadMore)="loadMore()">
+  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
     You've viewed {{ hitsViewed }} of {{ nbHits }} titles
   </list-page-progress>
 

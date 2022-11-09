@@ -1,6 +1,7 @@
+import { AvailsFilter } from './avail';
 import { Person } from './identity';
 import { LanguageRecord } from './movie';
-import { Scope, staticModel } from './static';
+import { App, Scope, staticModel } from './static';
 
 export interface ErrorResultResponse {
   error: string;
@@ -25,6 +26,15 @@ export interface SentryError {
   message: string;
   location: 'file-uploader-service' | 'global';
   bugType: 'invalid-metadata' | 'network' | 'front-version' | 'jwplayer-api'
+}
+
+export interface BackendSearchOptions {
+  app: App, 
+  orgId: string, 
+  search: any, // TODO #8894 any
+  availsFilter?: AvailsFilter,
+  maxHits?: number,
+  cachedAvails: string[]
 }
 
 /**

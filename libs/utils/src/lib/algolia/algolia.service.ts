@@ -1,17 +1,23 @@
 import { Inject, Injectable } from '@angular/core';
-import { AlgoliaObject, AlgoliaQueries, App } from '@blockframes/model';
+import { AlgoliaObject, AlgoliaQueries, App, BackendSearchOptions } from '@blockframes/model';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { APP } from '../routes/utils';
 import { parseFilters, parseFacets, algoliaIndex } from './helper.utils';
 import { SearchResponse } from '@algolia/client-search';
+import { CallableFunctions } from 'ngfire';
 
 @Injectable({ providedIn: 'root' })
 export class AlgoliaService {
 
   private indices: Record<string, SearchIndex> = {};
 
-  constructor(@Inject(APP) private app: App) { }
+  backendSearch = this.functions.prepare<BackendSearchOptions, SearchResponse<any> & { moviesToExport: any }>('searchWithAlgolia'); // TODO #8894 any
+
+  constructor(
+    private functions: CallableFunctions,
+    @Inject(APP) private app: App
+  ) { }
 
   getIndex(name: 'movie' | 'org' | 'user'): SearchIndex {
     if (!this.indices[name]) {

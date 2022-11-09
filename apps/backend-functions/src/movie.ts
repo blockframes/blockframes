@@ -24,9 +24,19 @@ import {
   createNotification,
   wasLastAcceptedOn,
   wasLastSubmittedOn,
-  getMoviePublishStatus
+  getMoviePublishStatus,
+  AlgoliaMovie,
+  Mandate,
+  Sale,
+  Term,
+  filterContractsByTitle,
+  availableTitle,
+  FullMandate,
+  BackendSearchOptions
 } from '@blockframes/model';
-import { BlockframesChange, BlockframesSnapshot, getDocument } from '@blockframes/firebase-utils';
+import { BlockframesChange, BlockframesSnapshot, getCollection, getDocument, queryDocuments } from '@blockframes/firebase-utils';
+import algoliasearch, { SearchIndex } from 'algoliasearch';
+import { centralOrgId } from '@env';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
@@ -301,4 +311,183 @@ async function removeMovieFromWishlists(movie: Movie, batch?: FirebaseFirestore.
   if (updates.length) {
     await Promise.allSettled(updates);
   }
+}
+
+export async function algoliaSearch(
+  data: BackendSearchOptions,
+  context: CallableContext
+) {
+  const { orgId, availsFilter } = data;
+
+  if (!context?.auth) throw new Error('Permission denied: missing auth context.');
+  if (!orgId) throw new Error('Permission denied: missing org id.');
+
+  const test = availsFilter ? await loadAvailsData2(orgId) : {};
+
+  console.time('algoliaSearch')
+  const [regularSearch, pdfSearch] = await Promise.all([
+    _algoliaSearch({ ...data, maxHits: undefined }, test),
+    _algoliaSearch(data, test) // TODO #8894 clean
+  ]);
+  console.timeEnd('algoliaSearch')
+  return { ...regularSearch, moviesToExport: pdfSearch.hits };
+}
+
+async function loadAvailsData(orgId: string) {
+  console.time('mandates')
+  // LOAD CONTRACTS RELATED DATA
+  const mandatesQuery = db.collection('contracts')
+    .where('type', '==', 'mandate')
+    .where('buyerId', '==', centralOrgId.catalog)
+    .where('status', '==', 'accepted');
+  const mandates = await queryDocuments<Mandate>(mandatesQuery);
+  console.timeEnd('mandates')
+
+  // No accepted mandates in DB
+  if (!mandates.length) return;
+  console.time('sales')
+  const salesQuery = db.collection('contracts')
+    .where('type', '==', 'sale')
+    .where('status', '==', 'accepted');
+  const sales = await queryDocuments<Sale>(salesQuery);
+  console.timeEnd('sales')
+
+  console.time('terms')
+  const _terms = await getCollection<Term>('terms');
+  const terms = _terms.map(t => {
+    /**
+     * @see https://github.com/firebase/firebase-functions/issues/316
+     * convert dates to timestamp
+     */
+    // TODO #8894 clean type
+    if (t.duration?.from) (t.duration as any).from = t.duration.from.getTime();
+    if (t.duration?.to) (t.duration as any).to = t.duration.to.getTime()
+    return t;
+  })
+
+
+  const mandateTermIds = mandates.map(mandate => mandate.termIds).flat();
+  const mandateTerms = terms.filter(t => mandateTermIds.includes(t.id));
+
+  const saleTermIds = sales.map(sale => sale.termIds).flat();
+  const saleTerms = terms.filter(t => saleTermIds.includes(t.id));
+  console.timeEnd('terms')
+
+  console.time('buckets')
+  const bucket = await getDocument<Bucket>(`buckets/${orgId}`);
+  console.timeEnd('buckets')
+  return {
+    mandates,
+    mandateTerms,
+    sales,
+    saleTerms,
+    bucket
+  }
+}
+
+async function loadAvailsData2(orgId: string) {
+  console.time('loadAvailsData2')
+  const promises = [];
+
+  // LOAD CONTRACTS RELATED DATA
+  const mandatesQuery = db.collection('contracts')
+    .where('type', '==', 'mandate')
+    .where('buyerId', '==', centralOrgId.catalog)
+    .where('status', '==', 'accepted');
+  promises.push(queryDocuments<Mandate>(mandatesQuery));
+
+  const salesQuery = db.collection('contracts')
+    .where('type', '==', 'sale')
+    .where('status', '==', 'accepted');
+  promises.push(queryDocuments<Sale>(salesQuery));
+
+  promises.push(getCollection<Term>('terms'));
+
+  promises.push(getDocument<Bucket>(`buckets/${orgId}`));
+
+  const [mandates, sales, _terms, bucket] = await Promise.all(promises);
+  const terms = _terms.map(t => {
+    /**
+     * @see https://github.com/firebase/firebase-functions/issues/316
+     * convert dates to timestamp
+     */
+    // TODO #8894 clean type
+    if (t.duration?.from) (t.duration as any).from = t.duration.from.getTime();
+    if (t.duration?.to) (t.duration as any).to = t.duration.to.getTime()
+    return t;
+  });
+
+  const mandateTermIds = mandates.map(mandate => mandate.termIds).flat();
+  const mandateTerms = terms.filter(t => mandateTermIds.includes(t.id));
+
+  const saleTermIds = sales.map(sale => sale.termIds).flat();
+  const saleTerms = terms.filter(t => saleTermIds.includes(t.id));
+  console.timeEnd('loadAvailsData2')
+  return {
+    mandates,
+    mandateTerms,
+    sales,
+    saleTerms,
+    bucket
+  }
+}
+
+let testBruce ;
+
+async function _algoliaSearch(
+  { app, search, availsFilter, maxHits, cachedAvails }: BackendSearchOptions,
+  { mandates, mandateTerms, sales, saleTerms, bucket }: any // TODO #8894 type
+) {
+  if(!testBruce) testBruce = Math.random().toString(36).substr(2);
+  console.log(testBruce);
+  const movieIndex: SearchIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameMovies[app]);
+
+  // SEARCH WITHOUT AVAIL FILTERS (Regular algolia search)
+  // (if availsForm is invalid, put all the movies from algolia)
+  if (!availsFilter) {
+    const overridedSearch = { ...search };
+    if (maxHits) {
+      overridedSearch.hitsPerPage = maxHits
+      overridedSearch.page = 0;
+    }
+    const movies = await movieIndex.search<AlgoliaMovie>(overridedSearch.query, overridedSearch);
+    const hits = movies.hits.map(m => ({ ...m, mandates: [] as FullMandate[] }));
+    return { nbHits: movies.nbHits, hits };
+  }
+
+  // ALGOLIA SEARCH WITHOUT PAGINATION
+  const overridedSearch = { ...search };
+  overridedSearch.hitsPerPage = 1000; // Max is 1000, see docs: https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/
+  overridedSearch.page = 0;
+
+  const movies = await movieIndex.search<AlgoliaMovie>(overridedSearch.query, overridedSearch);
+  let hitsRetrieved: number = movies.hits.length;
+  const maxLoop = 10; // Security to prevent infinite loop
+  let loops = 0;
+  while (movies.nbHits > hitsRetrieved) {
+    loops++;
+    overridedSearch.page++;
+    const m = await movieIndex.search<AlgoliaMovie>(overridedSearch.query, overridedSearch);
+    movies.hits = movies.hits.concat(m.hits);
+    hitsRetrieved = movies.hits.length;
+    if (loops >= maxLoop) break
+  }
+
+  // No accepted mandates in DB
+  if (!mandates.length) return { nbHits: 0, hits: [] };
+
+  // @see https://github.com/firebase/firebase-functions/issues/316
+  availsFilter.duration.from = new Date(availsFilter.duration.from);
+  availsFilter.duration.to = new Date(availsFilter.duration.to);
+
+  // Filtered algolia results with avails
+  console.log(cachedAvails);
+  const allHits = movies.hits.map(movie => {
+    const res = filterContractsByTitle(movie.objectID, mandates, mandateTerms, sales, saleTerms, bucket);
+    const availableMandates = availableTitle(availsFilter, res.mandates, res.sales, res.bucketContracts);
+    return { ...movie, mandates: availableMandates }; // TODO slice ici et save des movieID précédents
+  }).filter(m => !!m.mandates.length);
+
+  const hits = maxHits ? allHits.slice(0, maxHits) : allHits.slice(search.page * search.hitsPerPage, (search.page * search.hitsPerPage) + search.hitsPerPage);
+  return { nbHits: allHits.length, hits };
 }

@@ -161,6 +161,11 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get certifications() { return this.get('certifications'); }
 
   search(needMultipleQueries = false, override?: { hitsPerPage: number, page: number }) {
+    const search = this._search(needMultipleQueries, override)
+    return this.movieIndex.search<AlgoliaMovie>(search.query, search);
+  }
+
+  _search(needMultipleQueries = false, override?: { hitsPerPage: number, page: number }) { // TODO #8894 clean override sur festival & financiers ?
     const search = {
       hitsPerPage: this.hitsPerPage.value,
       query: this.query.value,
@@ -204,7 +209,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     }
 
 
-    return this.movieIndex.search<AlgoliaMovie>(search.query, search);
+    return search;
   }
 
   getLanguages(data: LanguageVersion) {
