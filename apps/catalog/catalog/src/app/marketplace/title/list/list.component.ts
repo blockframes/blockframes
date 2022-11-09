@@ -17,7 +17,20 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, skip, shareRe
 // Blockframes
 import { centralOrgId } from '@env';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
-import { Term, StoreStatus, Mandate, Sale, Bucket, AlgoliaMovie, GetKeys } from '@blockframes/model';
+import {
+  Term,
+  StoreStatus,
+  Mandate,
+  Sale,
+  Bucket,
+  AlgoliaMovie,
+  GetKeys,
+  AvailsFilter,
+  filterContractsByTitle,
+  availableTitle,
+  FullMandate,
+  getMandateTerms
+} from '@blockframes/model';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
@@ -25,7 +38,6 @@ import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-s
 import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch, Versions, MovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { AvailsFilter, filterContractsByTitle, availableTitle, FullMandate, getMandateTerms } from '@blockframes/contract/avails/avails';
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 
 @Component({
