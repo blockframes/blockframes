@@ -10,6 +10,7 @@ import {
   findIn,
   assertUrlIncludes,
   checkMovieTunnelSideNav,
+  saveTitle
 } from '@blockframes/testing/cypress/browser';
 import {
   Movie,
@@ -105,8 +106,7 @@ describe('Movie tunnel', () => {
     get('link').type(update.review[0].revueLink);
     get('quote').type(update.review[0].criticQuote);
     findIn('reviews', 'row-save').click();
-    get('tunnel-step-save').click();
-    cy.contains('Title saved');
+    saveTitle();
     firestore.get(`movies/${movie.id}`).then((dbMovie: Movie) => {
       //checks intermediary save
       expect(dbMovie.title.international).to.equal(movie.title.international + ' edited');
