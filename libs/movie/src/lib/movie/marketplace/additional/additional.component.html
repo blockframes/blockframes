@@ -5,7 +5,7 @@
 
   <section *ngIf="(movie | hasStatus: ['released']) && (movie.originalRelease.length)">
     <h3>Release</h3>
-    <article *ngFor="let release of movie.originalRelease">
+    <article *ngFor="let release of movie.originalRelease; let i = index" [attr.test-id]="'release_' + i">
       <h5>{{ release.country | toLabel : 'territories'}}</h5>
       <p>{{ release.media | toLabel: 'releaseMedias' }} {{ release.date | date: 'shortDate' }}</p>
     </article>
@@ -14,7 +14,7 @@
 
   <section *ngIf="(movie | hasStatus: ['released']) && (movie.boxOffice.length)">
     <h3>Box Office</h3>
-    <article *ngFor="let boxOffice of movie.boxOffice">
+    <article *ngFor="let boxOffice of movie.boxOffice; let i = index" [attr.test-id]="'box-office_' + i">
       <h5>{{ boxOffice.territory | toLabel : 'territories' }}</h5>
       <p *ngIf="boxOffice.unit !== 'admissions'">{{ boxOffice.value | currency: (boxOffice.unit | uppercase) }}</p>
       <p *ngIf="boxOffice.unit === 'admissions'">{{ boxOffice.value | number }} Admissions</p>
@@ -25,7 +25,7 @@
 
   <section *ngIf="(movie | hasStatus: status.finished) && movie.rating.length">
     <h3>Ratings</h3>
-    <article *ngFor="let rating of movie.rating">
+    <article *ngFor="let rating of movie.rating; let i = index" [attr.test-id]="'ratings_' + i">
       <h5>{{ rating.country | toLabel : 'territories' }}</h5>
       <p>{{ rating.value }}</p>
     </article>
@@ -37,7 +37,7 @@
     <h3>Budget</h3>
     <article>
       <h5>Budget Range</h5>
-      <p>{{ movie.estimatedBudget | toLabel: 'budgetRange' }}</p>
+      <p test-id="budget-range">{{ movie.estimatedBudget | toLabel: 'budgetRange' }}</p>
     </article>
 
     <mat-divider></mat-divider>
@@ -46,7 +46,7 @@
   <section *ngIf="(movie | hasKeys: 'certifications')">
     <h3>Qualifications</h3>
     <article>
-      <p>{{ movie.certifications | toLabel: 'certifications' }}</p>
+      <p test-id="qualifications">{{ movie.certifications | toLabel: 'certifications' }}</p>
     </article>
 
     <mat-divider></mat-divider>
@@ -61,19 +61,19 @@
     <h3>Formats</h3>
     <article *ngIf="movie.format">
       <h5>Shooting Format</h5>
-      <p>{{ movie.format | toLabel: 'movieFormat' }}</p>
+      <p test-id="format">{{ movie.format | toLabel: 'movieFormat' }}</p>
     </article>
     <article *ngIf="movie.formatQuality">
       <h5>Format quality</h5>
-      <p>{{ movie.formatQuality | toLabel: 'movieFormatQuality' }}</p>
+      <p test-id="quality">{{ movie.formatQuality | toLabel: 'movieFormatQuality' }}</p>
     </article>
     <article *ngIf="movie.color">
       <h5>Color information</h5>
-      <p>{{ movie.color | toLabel: 'colors' }}</p>
+      <p test-id="color">{{ movie.color | toLabel: 'colors' }}</p>
     </article>
     <article *ngIf="movie.soundFormat">
       <h5>Sound format</h5>
-      <p>{{ movie.soundFormat | toLabel: 'soundFormat' }}</p>
+      <p test-id="sound">{{ movie.soundFormat | toLabel: 'soundFormat' }}</p>
     </article>
 
     <mat-divider></mat-divider>
@@ -83,7 +83,7 @@
     <h2>Versions</h2>
     <article>
       <h5>Original version</h5>
-      <p>
+      <p test-id="original-version">
         {{ movie.originalLanguages | toLabel: 'languages' }}
         {{ movie.isOriginalVersionAvailable ? 'Available' : 'Unavailable' }}
       </p>
@@ -91,8 +91,8 @@
     <article *ngIf="movie | hasKeys: 'languages'">
       <ng-container *ngIf="movie.languages | versionPipe">
         <h5>Available Versions</h5>
-        <ng-container *ngFor="let language of movie.languages | keyvalue">
-          <div class="version" fxLayout fxLayoutGap="8px">
+        <ng-container *ngFor="let language of movie.languages | keyvalue; let i = index">
+          <div class="version" fxLayout fxLayoutGap="8px" [attr.test-id]="'languages_' +i">
             <b>{{ language.key | toLabel: 'languages' }}: </b>
             <mat-chip-list>
               <ng-container *ngFor="let version of language.value | keyvalue">
@@ -112,7 +112,7 @@
     <h2>Positioning</h2>
     <article *ngIf="movie.audience.targets.length">
       <h5>Target audience</h5>
-      <mat-chip-list fxLayout="row" fxLayoutGap="8px">
+      <mat-chip-list fxLayout="row" fxLayoutGap="8px" test-id="target">
         <ng-container *ngFor="let target of movie.audience.targets">
           <mat-chip disableRipple>{{ target }}</mat-chip>
         </ng-container>
@@ -120,7 +120,7 @@
     </article>
     <article *ngIf="movie.audience.goals.length">
       <h5>Social responsability goals</h5>
-      <mat-chip-list fxLayout="row" fxLayoutGap="8px">
+      <mat-chip-list fxLayout="row" fxLayoutGap="8px" test-id="social">
         <ng-container *ngFor="let goal of movie.audience.goals">
           <mat-chip disableRipple>{{ goal | toLabel: 'socialGoals' }}</mat-chip>
         </ng-container>

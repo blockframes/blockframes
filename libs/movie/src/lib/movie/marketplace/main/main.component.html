@@ -8,21 +8,21 @@
     </article>
     <article *ngIf="movie.synopsis">
       <h5>Synopsis</h5>
-      <p>{{ movie.synopsis }}</p>
+      <p test-id="synopsis">{{ movie.synopsis }}</p>
     </article>
-  </section>  
+  </section>
 
   <!-- Storyline Information -->
   <section *ngIf="movie | hasKeys: keys.main">
     <h3>Storyline Elements</h3>
     <article *ngIf="movie.logline">
       <h5>Logline</h5>
-      <p>{{ movie.logline }}</p>
+      <p test-id="logline">{{ movie.logline }}</p>
     </article>
 
     <article *ngIf="movie.keywords.length">
       <h5>Keywords</h5>
-      <mat-chip-list fxLayout="row" fxLayoutGap="8px">
+      <mat-chip-list fxLayout="row" fxLayoutGap="8px" test-id="keywords">
         <ng-container *ngFor="let keyword of movie.keywords">
           <mat-chip disableRipple>{{ keyword | titlecase }}</mat-chip>
         </ng-container>
@@ -38,7 +38,7 @@
 
     <article *ngIf="movie.release.year">
       <h5>Release Year</h5>
-      <p>
+      <p test-id="release">
         <span>{{ movie.release.year }}</span>
         <span *ngIf="movie.release.status && movie.release.status !== 'confirmed'"> ({{ movie.release.status | toLabel: 'screeningStatus' }})</span>
       </p>
@@ -46,18 +46,18 @@
 
     <article *ngIf="movie.originCountries.length">
       <h5>Country of origin</h5>
-      <p>{{ movie.originCountries | toLabel: 'territories' }}</p>
+      <p test-id="country">{{ movie.originCountries | toLabel: 'territories' }}</p>
     </article>
 
     <article *ngIf="movie.originalLanguages.length">
       <h5>Original Languages</h5>
-      <p>{{ movie.originalLanguages | toLabel: 'languages' }}</p>
+      <p test-id="language">{{ movie.originalLanguages | toLabel: 'languages' }}</p>
     </article>
 
     <article *ngIf="movie.genres.length">
       <h5>Genres</h5>
-      <p>
-        <span>{{ movie.genres | toLabel: 'genres' }}</span>
+      <p test-id="genres">
+        <span >{{ movie.genres | toLabel: 'genres' }}</span>
         <span *ngIf="movie.customGenres.length">, {{ movie.customGenres.join(', ') }}</span>
       </p>
     </article>
@@ -77,7 +77,7 @@
     <article *ngIf="movie.runningTime.time || movie.runningTime.status">
       <h5>Running time</h5>
       <div fxLayout fxLayoutGap="8px">
-        <span>{{ movie.runningTime | getRunningTime }}</span>
+        <span test-id="running-time">{{ movie.runningTime | getRunningTime }}</span>
       </div>
     </article>
 
@@ -89,8 +89,8 @@
   <section *ngIf="movie.directors.length">
     <h3>Directors</h3>
     <ul class="grid">
-      <li *ngFor="let director of movie.directors">
-        <title-credit-card [credit]="director" type="director"></title-credit-card> 
+      <li *ngFor="let director of movie.directors; let i = index">
+        <title-credit-card [credit]="director" type="director" [attr.test-id]="'director-card_' + i"></title-credit-card> 
       </li>
     </ul>
   </section>
@@ -105,11 +105,11 @@
   <section *ngIf="(movie.prizes.length || movie.customPrizes.length) && (movie | hasStatus: status.afterProd)">
     <h3>Festivals & Awards</h3>
     <ul class="grid">
-      <li *ngFor="let prize of movie.prizes">
-        <title-prize-card [prize]="prize"></title-prize-card>
+      <li *ngFor="let prize of movie.prizes; let i = index">
+        <title-prize-card [prize]="prize" [attr.test-id]="'prize-card_' + i"></title-prize-card>
       </li>
-      <li *ngFor="let prize of movie.customPrizes">
-        <title-prize-card [prize]="prize"></title-prize-card>
+      <li *ngFor="let prize of movie.customPrizes; let i = index">
+        <title-prize-card [prize]="prize" [attr.test-id]="'custom-prize-card_' + i"></title-prize-card>
       </li>
     </ul>
 
@@ -120,8 +120,8 @@
   <section *ngIf="movie.review.length && (movie | hasStatus: status.afterProd)">
     <h3>Film Reviews</h3>
     <ul class="grid">
-      <li *ngFor="let review of movie.review">
-        <title-review-card [review]="review"></title-review-card>
+      <li *ngFor="let review of movie.review; let i = index">
+        <title-review-card [review]="review" [attr.test-id]="'review-card_' + i"></title-review-card>
       </li>
     </ul>
   </section>

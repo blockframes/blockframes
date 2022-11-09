@@ -19,10 +19,10 @@
       <!-- Descriptions -->
       <div fxLayout="column" fxLayoutAlign="space-between start">
         <div class="movie-details">
-          <h4>{{ movieView.directors | displayName }}</h4>
-          <h1 class="mat-display-2">{{ movieView.title.international }}</h1>
+          <h4 test-id="director">{{ movieView.directors | displayName }}</h4>
+          <h1 class="mat-display-2" test-id="title">{{ movieView.title.international }}</h1>
           <h2 fxHide.lt-md>{{ movieView.title.original }}</h2>
-          <movie-title-features [movie]="movie"></movie-title-features>
+          <movie-title-features [movie]="movie" test-id="features"></movie-title-features>
         </div>
         <ng-content select="movie-header-preferences"></ng-content>
         <ng-content select="movie-header-cta"></ng-content>

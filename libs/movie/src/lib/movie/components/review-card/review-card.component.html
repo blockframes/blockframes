@@ -6,7 +6,7 @@
   </div>
   <caption class="mat-caption">{{ review.criticName }}</caption>
 
-  <a *ngIf="review.revueLink" mat-button [href]="review.revueLink" target="_blank">
+  <a *ngIf="review.revueLink" mat-button [href]="review.revueLink" target="_blank" test-id="review-link">
     Read the article
   </a>
   <button *ngIf="!review.revueLink" mat-button (click)="openDialog()">

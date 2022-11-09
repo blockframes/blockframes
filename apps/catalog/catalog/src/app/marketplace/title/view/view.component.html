@@ -4,7 +4,7 @@
       <movie-header-cta fxLayout="column" fxLayoutGap="32px">
         <section class="orgs">
           <ng-container *ngFor="let org of orgs$ | async">
-            <org-chip [org]="org"></org-chip>
+            <org-chip [org]="org" test-id="organization"></org-chip>
           </ng-container>
         </section>
         <section>
@@ -15,7 +15,7 @@
           <wishlist-button small [movieId]="movie.id"></wishlist-button>
         </section>
       </movie-header-cta>
-      
+
       <movie-header-actions>
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>

@@ -6,7 +6,7 @@ import {
   movieOrgPermissions,
   movieOrgMoviePermissions,
   displayMovie as movie,
-} from '../../fixtures/marketplace/display-title';
+} from '../../fixtures/marketplace/search-display-title';
 import {
   // plugins
   adminAuth,
@@ -16,15 +16,37 @@ import {
   maintenance,
   // cypress commands
   assertUrlIncludes,
-  check,
   get,
-  getAllStartingWith,
+  findIn,
   //marketplace lib
-  selectFilter,
-  selectToggle,
-  selectYear,
   syncMovieToAlgolia,
 } from '@blockframes/testing/cypress/browser';
+import {
+  budgetRange,
+  certifications,
+  colors,
+  contentType,
+  crewRoles,
+  directorCategory,
+  festival,
+  genres,
+  languages,
+  movieFormat,
+  movieFormatQuality,
+  movieLanguageTypes,
+  productionStatus,
+  screeningStatus,
+  territories,
+  territoriesISOA2,
+  premiereType,
+  producerRoles,
+  releaseMedias,
+  socialGoals,
+  soundFormat,
+} from '@blockframes/model';
+import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
+import { capitalize } from '@blockframes/utils/helpers';
+import { format } from 'date-fns';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -35,8 +57,6 @@ const injectedData = {
   [`permissions/${movieOrgPermissions.id}/documentPermissions/${movieOrgMoviePermissions.id}`]: movieOrgMoviePermissions,
   [`movies/${movie.id}`]: movie,
 };
-
-let titlesCount: string;
 
 describe('Movie display in marketplace', () => {
   beforeEach(() => {
@@ -58,189 +78,167 @@ describe('Movie display in marketplace', () => {
     assertUrlIncludes('c/o/marketplace/home');
   });
 
-  it('Find with title', () => {
+  it('Access to title page by clicking on the movie card', () => {
     syncMovieToAlgolia(movie.id);
     get('title-link').eq(0).click();
-    get('titles-count').then($result => {
-      titlesCount = $result[0].innerText;
-      get('search-input').type(movie.title.international);
-      //wait for the count to update before checking our movie
-      get('titles-count').should('not.contain', titlesCount);
-      get(`movie-card_${movie.id}`).should('exist');
-    });
+    get('search-input').type(movie.title.international);
+    get(`movie-card_${movie.id}`).click();
+    assertUrlIncludes(`c/o/marketplace/title/${movie.id}/main`);
   });
 
-  it('Find with director', () => {
-    syncMovieToAlgolia(movie.id);
-    get('title-link').eq(0).click();
-    get('titles-count').then($result => {
-      titlesCount = $result[0].innerText;
-      get('search-input').type(`${movie.directors[0].firstName} ${movie.directors[0].lastName}`);
-      get('titles-count').should('not.contain', titlesCount);
-      get(`movie-card_${movie.id}`).should('exist');
-    });
-  });
-
-  it('Find with keyword', () => {
-    syncMovieToAlgolia(movie.id);
-    get('title-link').eq(0).click();
-    get('titles-count').then($result => {
-      titlesCount = $result[0].innerText;
-      get('search-input').type(movie.keywords[0]);
-      get('titles-count').should('not.contain', titlesCount);
-      get(`movie-card_${movie.id}`).should('exist');
-    });
-  });
-
-  it('Find with filters, save & load filters', () => {
-    syncMovieToAlgolia(movie.id);
-    get('title-link').eq(0).click();
-    get('titles-count');
-    selectFilter('Content Type');
-    selectToggle('content_', 'Movie');
-    get('save-filter').click();
-    selectFilter('Genre');
-    get('genre').find('input').click();
-    get(`option_${movie.genres[0]}`).click();
-    get('save-filter').click();
-    selectFilter('Country of Origin');
-    get('country').find('input').click();
-    get(`option_${movie.originCountries[0]}`).click();
-    get('save-filter').click();
-    selectFilter('Language & Version');
-    get('language').find('input').click();
-    get(`option_${Object.keys(movie.languages)[0]}`).click();
-    check('Dubs');
-    get('save-filter').click();
-    selectFilter('Release Year');
-    get('slider').focus();
-    selectYear(movie.release.year - (movie.release.year % 10));
-    get('slider').find('.mat-slider-thumb-label').should('contain', '2020');
-    get('save-filter').click();
-    selectFilter('Running Time');
-    get('90min - 180min').click();
-    get('save-filter').click();
-    get('titles-count').should('contain', 'There is 1 title available.');
-    get(`movie-card_${movie.id}`).should('exist');
-    getAllStartingWith('item_').should('have.length', 1);
-    get('save').click();
-    get('clear-filters').click();
-    get('titles-count').should('not.contain', 'There is 1 title available.');
-    get('load').click();
-    get('titles-count').should('contain', 'There is 1 title available.');
-  });
-
-  it('Title is excluded if no match with filters', () => {
-    //test failing = database changed
-    //explanation: Cypress does not allow conditional testing.
-    //after applying a filter, we might still have movies, OR nothing.
-    //other solution, know the filtered Algolia movies beforehand.
-    //other solution, inject a dummy movie corresponding to each tested filter.
-    syncMovieToAlgolia(movie.id);
-    get('title-link').eq(0).click();
-    get('titles-count').then($result => {
-      titlesCount = $result[0].innerText;
-      get('search-input').type(movie.title.international);
-      get('titles-count').should('not.contain', titlesCount);
-      get(`movie-card_${movie.id}`).should('exist');
-      get('titles-count').then($result => {
-        titlesCount = $result[0].innerText;
-        selectFilter('Content Type');
-        selectToggle('content_', 'TV');
-        get('titles-count').should('not.contain', titlesCount);
-        get(`movie-card_${movie.id}`).should('not.exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get('titles-count').should('contain', titlesCount);
-        get(`movie-card_${movie.id}`).should('exist');
-        selectFilter('Genre');
-        get('genre').find('input').click();
-        get('option_erotic').click();
-        get('empty').should('exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get(`movie-card_${movie.id}`).should('exist');
-        get('titles-count').should('contain', titlesCount);
-        selectFilter('Country of Origin');
-        get('country').find('input').click();
-        get('option_cayman-islands').click();
-        get('empty').should('exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get(`movie-card_${movie.id}`).should('exist');
-        get('titles-count').should('contain', titlesCount);
-        selectFilter('Language & Version');
-        get('language').find('input').click();
-        get('option_belarussian').click();
-        check('Dubs');
-        get('empty').should('exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get(`movie-card_${movie.id}`).should('exist');
-        get('titles-count').should('contain', titlesCount);
-        selectFilter('Language & Version');
-        get('language').find('input').click();
-        get(`option_${Object.keys(movie.languages)[0]}`).click();
-        check('Subs');
-        get('empty').should('exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get(`movie-card_${movie.id}`).should('exist');
-        get('titles-count').should('contain', titlesCount);
-        selectFilter('Release Year');
-        get('slider').focus();
-        selectYear(2030);
-        get('empty').should('exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get(`movie-card_${movie.id}`).should('exist');
-        get('titles-count').should('contain', titlesCount);
-        selectFilter('Running Time');
-        get('13min - 26min').click();
-        get('titles-count').should('not.contain', titlesCount);
-        get(`movie-card_${movie.id}`).should('not.exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get(`movie-card_${movie.id}`).should('exist');
-      });
-    });
-  });
-
-  it('Absent if not released', () => {
-    firestore.update({ docPath: `movies/${movie.id}`, field: 'app.catalog.status', value: 'draft' });
-    syncMovieToAlgolia(movie.id);
-    get('title-link').eq(0).click();
-    get('titles-count').then($result => {
-      titlesCount = $result[0].innerText;
-      get('search-input').type(movie.title.international);
-      get('titles-count').should('not.contain', titlesCount);
-      get(`movie-card_${movie.id}`).should('not.exist');
-      get('clear-filters').click();
-      get('titles-count').should('contain', titlesCount);
-    });
-  });
-
-  it('Can only export less than 450 movies', () => {
-    syncMovieToAlgolia(movie.id);
-    get('title-link').eq(0).click();
-    //There shouldn't be less than 450 movies
-    get('export').click();
-    cy.contains(`Sorry, you can't have an export with that many titles.`);
-    get('titles-count').then($result => {
-      titlesCount = $result[0].innerText;
-      get('search-input').type(movie.title.international);
-      //wait for the count to update before checking our movie
-      get('titles-count').should('not.contain', titlesCount);
-      get(`movie-card_${movie.id}`).should('exist');
-    });
-    get('export').click();
-    cy.contains('Please wait, your export is being generated...');
-  });
-
-  it('Can load more movies', () => {
-    get('title-link').eq(0).click();
-    getAllStartingWith('movie-card_').should('have.length', 50);
-    get('load-more').click();
-    getAllStartingWith('movie-card_').should('have.length', 100);
+  it('Released movie metadata is displayed in the title page', () => {
+    cy.visit(`c/o/marketplace/title/${movie.id}/main`);
+    //header
+    get('director').should('contain', `${movie.directors[0].firstName} ${movie.directors[0].lastName}`);
+    get('title').should('contain', movie.title.international);
+    get('features')
+      .should('contain', contentType[movie.contentType])
+      .and('contain', genres[movie.genres[0]])
+      .and('not.contain', genres[movie.genres[1]])
+      .and('contain', formatRunningTime(movie.runningTime))
+      .and('contain', territoriesISOA2[movie.originCountries[0]])
+      .and('not.contain', territoriesISOA2[movie.originCountries[1]])
+      .and('contain', languages[movie.originalLanguages[0]])
+      .and('not.contain', languages[movie.originalLanguages[1]])
+      .and('contain', productionStatus[movie.productionStatus]);
+    get('organization').should('contain', movieOrg.name);
+    //main
+    get('synopsis').should('contain', movie.synopsis);
+    get('logline').should('contain', movie.logline);
+    get('keywords').should('contain', capitalize(movie.keywords[0])).and('contain', capitalize(movie.keywords[1]));
+    get('release').should('contain', movie.release.year).and('contain', screeningStatus[movie.release.status]);
+    get('country').should('contain', territories[movie.originCountries[0]]).and('contain', territories[movie.originCountries[1]]);
+    get('language')
+      .should('contain', languages[movie.originalLanguages[0]])
+      .and('contain', languages[movie.originalLanguages[1]]);
+    get('genres').should('contain', genres[movie.genres[0]]).and('contain', genres[movie.genres[1]]);
+    get('running-time').should('contain', formatRunningTime(movie.runningTime));
+    get('director-card_0')
+      .should('contain', `${movie.directors[0].firstName} ${movie.directors[0].lastName}`)
+      .and('contain', directorCategory[movie.directors[0].category])
+      .and('contain', movie.directors[0].description);
+    findIn('director-card_0', `${movie.directors[0].status}-icon`).should('exist');
+    get('card-filmography').click();
+    get('director-card_0')
+      .should('contain', movie.directors[0].filmography[0].title)
+      .and('contain', movie.directors[0].filmography[0].year);
+    get('prize-card_0')
+      .should('contain', festival[movie.prizes[0].name].toUpperCase())
+      .and('contain', movie.prizes[0].prize)
+      .and('contain', movie.prizes[0].year)
+      .and('contain', premiereType[movie.prizes[0].premiere]);
+    get('custom-prize-card_0')
+      .should('contain', movie.customPrizes[0].name.toUpperCase())
+      .and('contain', movie.customPrizes[0].prize)
+      .and('contain', movie.customPrizes[0].year)
+      .and('contain', premiereType[movie.customPrizes[0].premiere]);
+    get('review-card_0').should('contain', movie.review[0].journalName);
+    get('review-card_0').should('contain', movie.review[0].criticQuote);
+    get('review-card_0').should('contain', movie.review[0].criticName);
+    get('review-link').should('have.attr', 'href', movie.review[0].revueLink);
+    //artistic
+    get('Artistic').click();
+    assertUrlIncludes(`c/o/marketplace/title/${movie.id}/artistic`);
+    get('cast-card_0')
+      .should('contain', `${movie.cast[0].firstName} ${movie.cast[0].lastName}`)
+      .and('contain', movie.cast[0].description);
+    findIn('cast-card_0', 'card-filmography').click();
+    findIn('cast-card_0', `${movie.cast[0].status}-icon`).should('exist');
+    get('cast-card_0')
+      .should('contain', movie.cast[0].filmography[0].title)
+      .and('contain', movie.cast[0].filmography[0].year)
+      .and('contain', movie.cast[0].filmography[1].title)
+      .and('contain', movie.cast[0].filmography[1].year);
+    get('cast-card_1')
+      .should('contain', `${movie.cast[1].firstName} ${movie.cast[1].lastName}`)
+      .and('contain', movie.cast[1].description);
+    findIn('cast-card_1', 'card-filmography').click();
+    findIn('cast-card_1', `${movie.cast[1].status}-icon`).should('exist');
+    get('cast-card_1')
+      .should('contain', movie.cast[1].filmography[0].title)
+      .and('contain', movie.cast[1].filmography[0].year)
+      .and('contain', movie.cast[1].filmography[1].title)
+      .and('contain', movie.cast[1].filmography[1].year);
+    get('crew-card_0')
+      .should('contain', `${movie.crew[0].firstName} ${movie.crew[0].lastName}`)
+      .and('contain', crewRoles[movie.crew[0].role])
+      .and('contain', movie.crew[0].description);
+    findIn('crew-card_0', 'card-filmography').click();
+    findIn('crew-card_0', `${movie.crew[0].status}-icon`).should('exist');
+    get('crew-card_0')
+      .should('contain', movie.crew[0].filmography[0].title)
+      .and('contain', movie.crew[0].filmography[0].year)
+      .and('contain', movie.crew[0].filmography[1].title)
+      .and('contain', movie.crew[0].filmography[1].year);
+    get('crew-card_1')
+      .should('contain', `${movie.crew[1].firstName} ${movie.crew[1].lastName}`)
+      .and('contain', crewRoles[movie.crew[1].role])
+      .and('contain', movie.crew[1].description);
+    findIn('crew-card_1', 'card-filmography').click();
+    findIn('crew-card_1', `${movie.crew[1].status}-icon`).should('exist');
+    get('crew-card_1')
+      .should('contain', movie.crew[1].filmography[0].title)
+      .and('contain', movie.crew[1].filmography[0].year)
+      .and('contain', movie.crew[1].filmography[1].title)
+      .and('contain', movie.crew[1].filmography[1].year);
+    //production
+    get('Production').click();
+    assertUrlIncludes(`c/o/marketplace/title/${movie.id}/production`);
+    get('prod-company_0')
+      .should('contain', territories[movie.stakeholders.productionCompany[0].countries[0]])
+      .and('contain', territories[movie.stakeholders.productionCompany[0].countries[1]])
+      .and('contain', movie.stakeholders.productionCompany[0].displayName);
+    get('prod-company_1')
+      .should('contain', territories[movie.stakeholders.productionCompany[1].countries[0]])
+      .and('contain', territories[movie.stakeholders.productionCompany[1].countries[1]])
+      .and('contain', movie.stakeholders.productionCompany[1].displayName);
+    get('co-prod-company_0')
+      .should('contain', territories[movie.stakeholders.coProductionCompany[0].countries[0]])
+      .and('contain', movie.stakeholders.coProductionCompany[0].displayName);
+    get('producer_0')
+      .should('contain', producerRoles[movie.producers[0].role])
+      .and('contain', `${movie.producers[0].firstName} ${movie.producers[0].lastName}`);
+    get('producer_1')
+      .should('contain', producerRoles[movie.producers[1].role])
+      .and('contain', `${movie.producers[1].firstName} ${movie.producers[1].lastName}`);
+    get('distributor_0')
+      .should('contain', movie.stakeholders.distributor[0].displayName)
+      .and('contain', territories[movie.stakeholders.distributor[0].countries[0]]);
+    get('international-sales_0')
+      .should('contain', movie.stakeholders.salesAgent[0].displayName)
+      .and('contain', territories[movie.stakeholders.salesAgent[0].countries[0]]);
+    //additional
+    get('Additional').click();
+    assertUrlIncludes(`c/o/marketplace/title/${movie.id}/additional`);
+    get('release_0')
+      .should('contain', territories[movie.originalRelease[0].country])
+      .and('contain', releaseMedias[movie.originalRelease[0].media])
+      .and('contain', format(movie.originalRelease[0].date, 'M/d/yy'));
+    get('box-office_0')
+      .should('contain', territories[movie.boxOffice[0].territory])
+      .and(
+        'contain',
+        movie.boxOffice[0].value.toLocaleString('en-US', {
+          style: 'currency',
+          currency: 'EUR',
+        })
+      );
+    get('ratings_0').should('contain', territories[movie.rating[0].country]).and('contain', movie.rating[0].value);
+    get('budget-range').should('contain', budgetRange[movie.estimatedBudget]);
+    get('qualifications')
+      .should('contain', certifications[movie.certifications[0]])
+      .and('contain', certifications[movie.certifications[1]]);
+    get('format').should('contain', movieFormat[movie.format]);
+    get('quality').should('contain', movieFormatQuality[movie.formatQuality]);
+    get('color').should('contain', colors[movie.color]);
+    get('sound').should('contain', soundFormat[movie.soundFormat]);
+    get('original-version').should('contain', languages[movie.originalLanguages[0]]);
+    get('languages_0').should('contain', languages[Object.keys(movie.languages)[0]]).and('contain', movieLanguageTypes['dubbed']);
+    get('target').should('contain', movie.audience.targets[0]).and('contain', movie.audience.targets[1]);
+    get('social').should('contain', socialGoals[movie.audience.goals[0]]).and('contain', socialGoals[movie.audience.goals[1]]);
+    //avails
+    get('Avails').click();
+    assertUrlIncludes(`c/o/marketplace/title/${movie.id}/avails/map`);
+    //functionality not yet available
   });
 });
