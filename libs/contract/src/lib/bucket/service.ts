@@ -3,7 +3,6 @@ import { centralOrgId } from '@env';
 import { switchMap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/service';
 import { createOfferId } from '@blockframes/model';
-import { AvailsFilter } from '@blockframes/contract/avails/avails';
 import { OrganizationService } from '@blockframes/organization/service';
 import { TermService } from '../term/service';
 import { OfferService } from '../offer/service';
@@ -16,7 +15,8 @@ import {
   createBucketContract,
   createDocumentMeta,
   MovieCurrency,
-  Sale
+  Sale,
+  AvailsFilter
 } from '@blockframes/model';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 import { firstValueFrom } from 'rxjs';

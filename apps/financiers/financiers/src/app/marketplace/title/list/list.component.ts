@@ -73,7 +73,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
       ).subscribe(([movies, moviesToExport]) => {
         this.movieIds = moviesToExport.hits.map(m => m.objectID);
         if (this.loadMoreToggle) {
-          this.movieResultsState.next(this.movieResultsState.value.concat(movies.hits))
+          this.movieResultsState.next(this.movieResultsState.value.concat(movies.hits));
           this.loadMoreToggle = false;
         } else {
           this.movieResultsState.next(movies.hits);

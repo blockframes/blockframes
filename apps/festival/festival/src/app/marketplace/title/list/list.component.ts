@@ -55,7 +55,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
       distinctUntilChanged(),
       debounceTime(500),
       tap(() => {
-        const search = { ...this.searchForm.value };
+        const search = { ...this.searchForm.value }; // TODO #8992 typing here & other apps
         delete search.page;
         const currentSearch = JSON.stringify(search);
         if (this.previousSearch !== currentSearch && this.searchForm.page.value !== 0) {
@@ -69,7 +69,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     ).subscribe(([movies, moviesToExport]) => {
       this.movieIds = moviesToExport.hits.map(m => m.objectID);
       if (this.loadMoreToggle) {
-        this.movieResultsState.next(this.movieResultsState.value.concat(movies.hits))
+        this.movieResultsState.next(this.movieResultsState.value.concat(movies.hits));
         this.loadMoreToggle = false;
       } else {
         this.movieResultsState.next(movies.hits);
