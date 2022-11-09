@@ -1,4 +1,3 @@
-
 import { AvailsFilter } from '@blockframes/model';
 import { allButSouthKorea, Europe } from './mandatesAndSales';
 
