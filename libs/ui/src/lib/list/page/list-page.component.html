@@ -39,7 +39,7 @@
 
 <!-- Items -->
 <section>
-  <ng-container *ngIf="!!items; else loading">
+  <ng-container *ngIf="!!items && !isLoading; else loading">
     <ng-container *ngIf="items.length; else empty">
       <div class="export-section">
         <ng-content select="list-page-description"></ng-content>

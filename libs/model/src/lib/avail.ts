@@ -249,7 +249,7 @@ function getListMatchingAvailabilities(mandates: FullMandate[], sales: FullSale[
   return getMatchingAvailabilities(options);
 }
 
-function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], avails: AvailsFilter): T[] {
+export function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], avails: AvailsFilter): T[] {
   return sales.filter(sale => sale.terms.some(term => {
     return isListAvailPartiallyInTerm(term, avails);
   }));
@@ -586,7 +586,6 @@ function isCalendarTermSelected<T extends BucketTerm | Term>(term: T, avails: Ca
 
   return exclusivityCheck && mediaCheck && territoryCheck;
 }
-
 
 export function durationAvailabilities(
   avails: CalendarAvailsFilter,

@@ -1,3 +1,4 @@
+import { SearchIndex } from 'algoliasearch';
 import { MovieLanguageSpecification, MovieRunningTime, MovieRelease } from './movie';
 import {
   Genre,
@@ -29,7 +30,7 @@ export interface AlgoliaObject {
   org: AlgoliaOrganization;
 }
 
-export interface AlgoliaQuery<T, C = unknown> {
+interface AlgoliaQuery<T, C = unknown> {
   text?: string;
   limitResultsTo: number;
   activePage: number;
@@ -59,6 +60,7 @@ interface UserIndexConfig {
   firstName: string;
   lastName: string;
 }
+
 export interface MovieIndexFilters {
   budget?: number;
   minPledge?: number;
@@ -70,6 +72,19 @@ export interface AlgoliaSearch {
   query: string;
   page: number;
   hitsPerPage: number;
+}
+
+export interface AlgoliaSearchQuery {
+  hitsPerPage?: number;
+  page?: number;
+  query?: string;
+  facetFilters?: string[][];
+  filters?: string;
+}
+
+export interface AlgoliaResult<T> {
+  hits: T[];
+  nbHits: number;
 }
 
 interface AlgoliaDefaultProperty {
@@ -129,4 +144,23 @@ export interface AlgoliaUser extends AlgoliaDefaultProperty {
   lastName: string;
   avatar: string;
   orgName: string;
+}
+
+
+export async function recursiveSearch<T>(index: SearchIndex, _search: AlgoliaSearchQuery): Promise<AlgoliaResult<T>> {
+  const search = { ..._search, hitsPerPage: 1000, page: 0 };
+  const results = await index.search<T>(search.query, search);
+  let hitsRetrieved: number = results.hits.length;
+  const maxLoop = 10; // Security to prevent infinite loop
+  let loops = 0;
+  while (results.nbHits > hitsRetrieved) {
+    loops++;
+    search.page++;
+    const m = await index.search<T>(search.query, search);
+    results.hits = results.hits.concat(m.hits);
+    hitsRetrieved = results.hits.length;
+    if (loops >= maxLoop) break;
+  }
+
+  return { hits: results.hits, nbHits: results.nbHits };
 }
