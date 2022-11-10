@@ -110,7 +110,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
       distinctUntilChanged(),
       debounceTime(300),
       tap(([_, availsValue]) => {
-        const search: { search: MovieSearch, avails: AvailsFilter } = { search: { ...this.searchForm.value }, avails: availsValue }; // TODO #8992 typing here & other apps
+        const search: { search: MovieSearch, avails: AvailsFilter } = { search: { ...this.searchForm.value }, avails: availsValue }; // TODO #9003 typing here & other apps
         delete search.search.page;
         const currentSearch = JSON.stringify(search);
 
@@ -120,11 +120,8 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
             encodeUrl<MovieSearch>(this.router, this.route, this.searchForm.value);
           }
 
-          // TODO https://github.com/blockframes/blockframes/issues/8894#issuecomment-1297062856
+          // TODO #8894 https://github.com/blockframes/blockframes/issues/8894#issuecomment-1297062856
           this.hitsViewed$.next(50);
-
-
-          // TODO #8894 afficher loader si on change les filtres (sur les 3 apps)
         }
 
         this.previousSearch = currentSearch;
@@ -159,7 +156,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
       debounceTime(1000),
     ).subscribe(([search, avails]) => {
       encodeUrl(this.router, this.route, {
-        search: { // TODO #8992 typing here & clean
+        search: { // TODO #9003 typing here & clean
           query: search.query,
           genres: search.genres,
           originCountries: search.originCountries,
@@ -169,7 +166,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
           runningTime: search.runningTime,
           page: search.page
         },
-        avails, // TODO #8992 typing here
+        avails, // TODO #9003 typing here
       })
     });
 
@@ -244,7 +241,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     const versions = this.searchForm.languages.get('versions') as FormEntity<EntityControl<Versions>, Versions>;
 
     // patch everything
-    this.searchForm.patchValue(parsedData.search); // TODO #8894 hard reset ?
+    this.searchForm.patchValue(parsedData.search);
 
     // ensure FromList are also patched
     this.searchForm.genres.patchAllValue(parsedData.search?.genres);
@@ -255,9 +252,9 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     this.searchForm.runningTime.patchValue(parsedData.search?.runningTime);
 
     // Avails Form
-    if (parsedData.avails?.duration?.from) parsedData.avails.duration.from = decodeDate(parsedData.avails.duration.from); // TODO #8992 needed decodeDate?
+    if (parsedData.avails?.duration?.from) parsedData.avails.duration.from = decodeDate(parsedData.avails.duration.from);
     if (parsedData.avails?.duration?.to) parsedData.avails.duration.to = decodeDate(parsedData.avails.duration.to);
-    if (!parsedData.avails.medias) parsedData.avails.medias = [];
+    if (parsedData.avails && !parsedData.avails?.medias) parsedData.avails.medias = [];
 
     this.availsForm.patchValue(parsedData.avails);
   }

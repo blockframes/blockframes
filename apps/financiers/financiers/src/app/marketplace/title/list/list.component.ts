@@ -59,7 +59,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
         distinctUntilChanged(),
         debounceTime(500),
         tap(() => {
-          const search = { ...this.searchForm.value };
+          const search: MovieSearch = { ...this.searchForm.value };
           delete search.page;
           const currentSearch = JSON.stringify(search);
           if (this.previousSearch !== currentSearch && this.searchForm.page.value !== 0) {
