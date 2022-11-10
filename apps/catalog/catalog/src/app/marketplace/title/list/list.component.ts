@@ -145,7 +145,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     this.load(decodeUrl<MovieAvailsSearch>(this.route));
 
     const sub = this.search$.pipe(debounceTime(1000),)
-      .subscribe(([search, avails]) => encodeUrl<MovieAvailsSearch>(this.router, this.route, { search, avails }));  // TODO #9003 typing here & clean
+      .subscribe(([search, avails]) => encodeUrl<MovieAvailsSearch>(this.router, this.route, { search, avails }));
 
     this.subs.push(sub);
   }
@@ -213,7 +213,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   load(savedSearch: MovieAvailsSearch) {
-    this.searchForm.hardReset(createMovieSearch(savedSearch.search));
+    this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
 
     // Avails Form
     if (savedSearch.avails?.duration?.from) savedSearch.avails.duration.from = decodeDate(savedSearch.avails.duration.from);
