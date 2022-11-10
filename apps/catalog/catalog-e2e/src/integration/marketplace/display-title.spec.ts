@@ -123,6 +123,9 @@ describe('Movie display in marketplace', () => {
     get('titles-count').should('contain', 'There is 1 title available.');
     get(`movie-card_${movie.id}`).should('exist');
     getAllStartingWith('item_').should('have.length', 1);
+    // without wait, Cypress goes too quick and some filters are not saved in the localStorage 
+    // CF debounceTime(1000) in apps/festival/festival/src/app/marketplace/title/list/list.component.ts
+    cy.wait(1500);
     get('save').click();
     get('clear-filters').click();
     get('titles-count').should('not.contain', 'There is 1 title available.');
@@ -147,7 +150,7 @@ describe('Movie display in marketplace', () => {
         titlesCount = $result[0].innerText;
         selectFilter('Content Type');
         selectToggle('content_', 'TV');
-        get('titles-count').should('not.contain', titlesCount);
+        get('empty').should('exist');
         get(`movie-card_${movie.id}`).should('not.exist');
         get('clear-filter').click();
         get('save-filter').click();
@@ -197,7 +200,7 @@ describe('Movie display in marketplace', () => {
         get('titles-count').should('contain', titlesCount);
         selectFilter('Running Time');
         get('13min - 26min').click();
-        get('titles-count').should('not.contain', titlesCount);
+        get('empty').should('exist');
         get(`movie-card_${movie.id}`).should('not.exist');
         get('clear-filter').click();
         get('save-filter').click();
@@ -213,7 +216,7 @@ describe('Movie display in marketplace', () => {
     get('titles-count').then($result => {
       titlesCount = $result[0].innerText;
       get('search-input').type(movie.title.international);
-      get('titles-count').should('not.contain', titlesCount);
+      get('empty').should('exist');
       get(`movie-card_${movie.id}`).should('not.exist');
       get('clear-filters').click();
       get('titles-count').should('contain', titlesCount);

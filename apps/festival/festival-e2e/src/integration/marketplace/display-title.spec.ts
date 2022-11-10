@@ -99,8 +99,9 @@ describe('Movie display in marketplace', () => {
     get('save-filter').click();
     get('titles-count').should('contain', 'There is 1 title available.');
     get(`movie-card_${movie.id}`).should('exist');
-    //without wait, Cypress goes to quick and some filters are not saved in the localStorage
-    cy.wait(1000);
+    // without wait, Cypress goes too quick and some filters are not saved in the localStorage 
+    // CF debounceTime(1000) in apps/festival/festival/src/app/marketplace/title/list/list.component.ts
+    cy.wait(1500);
     get('save').click();
     cy.window().then(window => {
       expect(JSON.parse(window.localStorage.getItem('festival-saved-search'))).to.deep.equal(expectedSavedLocalStorage);
