@@ -6,9 +6,9 @@ import {
   saleOrgPermissions,
   moviePermissions,
   displayMovie as movie,
-  expectedSavedLocalStorage,
+  expectedSavedSearch,
 } from '../../fixtures/marketplace/display-title';
-import { productionStatus, festival, certifications } from '@blockframes/model';
+import { productionStatus, festival, certifications, User } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -103,8 +103,8 @@ describe('Movie display in marketplace', () => {
     // CF debounceTime(1000) in apps/festival/festival/src/app/marketplace/title/list/list.component.ts
     cy.wait(1500);
     get('save').click();
-    cy.window().then(window => {
-      expect(JSON.parse(window.localStorage.getItem('festival-saved-search'))).to.deep.equal(expectedSavedLocalStorage);
+    firestore.get(`users/${user.uid}`).then((user: User) => {
+      expect(user.savedSearches.festival).to.deep.equal(JSON.stringify(expectedSavedSearch));
     });
     get('clear-filters').click();
     get('titles-count').should('not.contain', 'There is 1 title available.');
