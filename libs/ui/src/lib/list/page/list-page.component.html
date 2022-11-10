@@ -69,7 +69,7 @@
   </ng-container>
 
   <!-- PROGRESS -->
-  <ng-content select="list-page-progress"></ng-content>
+  <ng-content *ngIf="!isLoading" select="list-page-progress"></ng-content>
 
   <!-- LOADING -->
   <ng-template #loading>
