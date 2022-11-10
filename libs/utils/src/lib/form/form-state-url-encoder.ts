@@ -33,7 +33,7 @@ export function encodeUrl<T>(
   //url musn't be longer than 2000 characters
   if (formValue.length < 1500) {
     router.navigate(['.'], {
-      queryParams: { formValue, },
+      queryParams: { formValue },
       relativeTo: route,
       replaceUrl: true,
     });

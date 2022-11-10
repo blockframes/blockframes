@@ -15,6 +15,7 @@ export interface User extends PublicUser {
   termsAndConditions?: Partial<Record<App, LegalTerms>>;
   settings?: UserSettings;
   preferences?: Preferences;
+  savedSearches?: Partial<Record<App, string>>
 }
 
 export interface LegalTerms {

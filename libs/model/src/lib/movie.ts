@@ -26,7 +26,8 @@ import {
   productionStatus,
   MovieNoteRole,
   ReleaseMedia,
-  ReleaseMediaValue
+  ReleaseMediaValue,
+  GetKeys
 } from './static';
 import type {
   Producer,
@@ -261,6 +262,18 @@ export interface CrmMovie extends Movie {
   screeningCount: number;
   releaseMedias: ReleaseMediaValue[];
   mandate: Mandate;
+}
+
+export interface Versions {
+  original: boolean,
+  dubbed: boolean,
+  subtitle: boolean,
+  caption: boolean,
+}
+
+export interface LanguageVersion {
+  languages: GetKeys<'languages'>[],
+  versions: Versions
 }
 
 /** A factory function that creates Movie */
