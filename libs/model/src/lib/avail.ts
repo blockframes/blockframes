@@ -213,7 +213,7 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
 // ----------------------------
 
 export interface AvailsFilter extends BaseAvailsFilter {
-  duration: { from: Date, to: Date },
+  duration: Duration,
   territories: Territory[],
 }
 
@@ -249,7 +249,7 @@ function getListMatchingAvailabilities(mandates: FullMandate[], sales: FullSale[
   return getMatchingAvailabilities(options);
 }
 
-function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], avails: AvailsFilter): T[] {
+export function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], avails: AvailsFilter): T[] {
   return sales.filter(sale => sale.terms.some(term => {
     return isListAvailPartiallyInTerm(term, avails);
   }));
@@ -310,7 +310,7 @@ export function availableTitle(
 // ----------------------------
 
 export interface MapAvailsFilter extends BaseAvailsFilter {
-  duration: { from: Date, to: Date },
+  duration: Duration,
 }
 
 interface TerritoryMarkerBase {
@@ -586,7 +586,6 @@ function isCalendarTermSelected<T extends BucketTerm | Term>(term: T, avails: Ca
 
   return exclusivityCheck && mediaCheck && territoryCheck;
 }
-
 
 export function durationAvailabilities(
   avails: CalendarAvailsFilter,

@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 // Blockframes
 import { fadeList, slideUp } from '@blockframes/utils/animations/fade';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Directive({ selector: '[listPageAppBar], list-page-app-bar' })
 export class PageAppBarSearchDirective { }
@@ -54,6 +55,7 @@ export class ListPageComponent implements AfterContentInit {
   @ContentChild(PageAppBarSearchDirective) appBar: PageAppBarSearchDirective;
 
   @Input() items: unknown[];
+  @Input() @boolean isLoading = false;
 
   public listView = false;
   public canToggle = false;

@@ -79,7 +79,7 @@ export const displayMovie = createMovie({
   productionStatus: 'released',
   title: createTitle({
     original: 'Original title',
-    international: 'International title',
+    international: '_unique_International title',
   }),
   internalRef: 'E2E ref',
   runningTime: {
@@ -95,8 +95,8 @@ export const displayMovie = createMovie({
   genres: ['action', 'romance'],
   directors: [
     {
-      firstName: 'John',
-      lastName: 'Doe',
+      firstName: '_unique_John',
+      lastName: '_unique_Doe',
       category: 'risingTalent',
       status: 'looselyAttached',
       description: 'E2E description',
@@ -112,7 +112,7 @@ export const displayMovie = createMovie({
   logline: 'A random character in a movie',
   synopsis: 'We follow the life of a random character',
   keyAssets: 'Filmed with a phone',
-  keywords: ['random', 'phone'],
+  keywords: ['_unique_random', '_unique_phone'],
   //production information
   stakeholders: createMovieStakeholders({
     productionCompany: [

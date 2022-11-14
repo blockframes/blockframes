@@ -1,22 +1,11 @@
 // Blockframes
 import { FormEntity, FormList } from '@blockframes/utils/form';
-import { Organization, Territory, AlgoliaSearch, App, modules } from '@blockframes/model';
+import { Organization, Territory, App, OrganizationSearch, AlgoliaModule } from '@blockframes/model';
 
 // Utils
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { algolia } from '@env';
 import { FormControl } from '@angular/forms';
-
-const negativeModules = ['-dashboard', '-marketplace'] as const;
-const algoliaModules = [...modules, ...negativeModules];
-type AlgoliaModule = typeof algoliaModules[number];
-
-export interface OrganizationSearch extends AlgoliaSearch {
-  appModule: AlgoliaModule[],
-  isAccepted: boolean,
-  hasAcceptedMovies: boolean,
-  countries?: Territory[],
-}
 
 export function createOrganizationSearch(search: Partial<OrganizationSearch> = {}): OrganizationSearch {
   return {

@@ -1,4 +1,4 @@
-﻿<list-page [items]="movies$ | async">
+﻿<list-page [isLoading]="isLoading" [items]="movies$ | async">
 
   <!-- App Bar Search -->
   <list-page-app-bar>

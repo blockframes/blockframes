@@ -6,9 +6,9 @@ import {
   saleOrgPermissions,
   moviePermissions,
   displayMovie as movie,
-  expectedSavedLocalStorage,
+  expectedSavedSearch,
 } from '../../fixtures/marketplace/display-title';
-import { productionStatus, festival, certifications } from '@blockframes/model';
+import { productionStatus, festival, certifications, User } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -99,11 +99,11 @@ describe('Movie display in marketplace', () => {
     get('save-filter').click();
     get('titles-count').should('contain', 'There is 1 title available.');
     get(`movie-card_${movie.id}`).should('exist');
-    //without wait, Cypress goes to quick and some filters are not saved in the localStorage
-    cy.wait(1000);
+    // Wait for the last parameter to be present in URL before saving filters
+    assertUrlIncludes('%22certifications%22:%5B%22eof%22,%22europeanQualification%22');
     get('save').click();
-    cy.window().then(window => {
-      expect(JSON.parse(window.localStorage.getItem('festival-saved-search'))).to.deep.equal(expectedSavedLocalStorage);
+    firestore.get(`users/${user.uid}`).then((user: User) => {
+      expect(user.savedSearches.festival).to.deep.equal(JSON.stringify(expectedSavedSearch));
     });
     get('clear-filters').click();
     get('titles-count').should('not.contain', 'There is 1 title available.');
