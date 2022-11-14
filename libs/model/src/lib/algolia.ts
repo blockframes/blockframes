@@ -1,4 +1,6 @@
-import { MovieLanguageSpecification, MovieRunningTime, MovieRelease } from './movie';
+import { SearchIndex } from 'algoliasearch';
+import { AvailsFilter } from './avail';
+import { MovieLanguageSpecification, MovieRunningTime, MovieRelease, LanguageVersion } from './movie';
 import {
   Genre,
   Language,
@@ -8,7 +10,11 @@ import {
   OrgActivity,
   ContentType,
   Module,
-  ModuleAccess
+  ModuleAccess,
+  SocialGoal,
+  Festival,
+  Certification,
+  modules
 } from './static';
 
 export interface AlgoliaConfig {
@@ -29,7 +35,7 @@ export interface AlgoliaObject {
   org: AlgoliaOrganization;
 }
 
-export interface AlgoliaQuery<T, C = unknown> {
+interface AlgoliaQuery<T, C = unknown> {
   text?: string;
   limitResultsTo: number;
   activePage: number;
@@ -59,17 +65,62 @@ interface UserIndexConfig {
   firstName: string;
   lastName: string;
 }
+
 export interface MovieIndexFilters {
   budget?: number;
   minPledge?: number;
 }
 
-///// TYPES //////
+const negativeModules = ['-dashboard', '-marketplace'] as const;
+const algoliaModules = [...modules, ...negativeModules];
+export type AlgoliaModule = typeof algoliaModules[number];
 
-export interface AlgoliaSearch {
+///// TYPES //////
+interface AlgoliaSearch {
   query: string;
   page: number;
   hitsPerPage: number;
+}
+
+export interface AlgoliaSearchQuery {
+  hitsPerPage?: number;
+  page?: number;
+  query?: string;
+  facetFilters?: string[][];
+  filters?: string;
+}
+
+export interface AlgoliaResult<T> {
+  hits: T[];
+  nbHits: number;
+}
+
+export interface MovieSearch extends AlgoliaSearch {
+  storeStatus: StoreStatus[];
+  genres: Genre[];
+  originCountries: Territory[];
+  languages: LanguageVersion;
+  productionStatus: ProductionStatus[];
+  minBudget: number;
+  minReleaseYear: number;
+  sellers: AlgoliaOrganization[];
+  socialGoals: SocialGoal[];
+  contentType?: ContentType;
+  runningTime: number;
+  festivals: Festival[];
+  certifications: Certification[];
+}
+
+export interface MovieAvailsSearch {
+  search: MovieSearch;
+  avails?: AvailsFilter
+}
+
+export interface OrganizationSearch extends AlgoliaSearch {
+  appModule: AlgoliaModule[],
+  isAccepted: boolean,
+  hasAcceptedMovies: boolean,
+  countries?: Territory[],
 }
 
 interface AlgoliaDefaultProperty {
@@ -129,4 +180,23 @@ export interface AlgoliaUser extends AlgoliaDefaultProperty {
   lastName: string;
   avatar: string;
   orgName: string;
+}
+
+
+export async function recursiveSearch<T>(index: SearchIndex, _search: AlgoliaSearchQuery): Promise<AlgoliaResult<T>> {
+  const search = { ..._search, hitsPerPage: 1000, page: 0 };
+  const results = await index.search<T>(search.query, search);
+  let hitsRetrieved: number = results.hits.length;
+  const maxLoop = 10; // Security to prevent infinite loop
+  let loops = 0;
+  while (results.nbHits > hitsRetrieved) {
+    loops++;
+    search.page++;
+    const m = await index.search<T>(search.query, search);
+    results.hits = results.hits.concat(m.hits);
+    hitsRetrieved = results.hits.length;
+    if (loops >= maxLoop) break;
+  }
+
+  return { hits: results.hits, nbHits: results.nbHits };
 }

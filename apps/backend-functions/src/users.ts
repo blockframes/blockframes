@@ -217,9 +217,8 @@ export async function onUserDelete(userSnapshot: BlockframesSnapshot<PublicUser>
   }
 
   // remove all invitations related to user
-  const invitations = await getCollection<Invitation>(`invitations`)
-  invitations
-    .filter(invitation => invitation.fromUser?.uid === user.uid || invitation.toUser?.uid === user.uid)
+  const invitations = await getCollection<Invitation>(`invitations`);
+  invitations.filter(invitation => invitation.fromUser?.uid === user.uid || invitation.toUser?.uid === user.uid)
     .map(invitation => invitation.id)
     .map(id => db.doc(`invitations/${id}`).delete());
 

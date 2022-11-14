@@ -317,3 +317,12 @@ export function sum<T>(array: T[], getAmount?: (item: T) => number): number {
   const cb = getAmount || ((item: number) => item);
   return array.reduce((total, item) => total + cb(item as any), 0);
 }
+
+/**
+ * Get the date of the decoded url and set it 
+ */
+export function decodeDate(date: string | Date): Date {
+  if (!date || date === 'now') return new Date();
+  // Issue #8655: Add more date magic string later ('nextYear', 'lastYear', ...)
+  return new Date(date);
+}

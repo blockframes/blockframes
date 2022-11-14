@@ -2,9 +2,18 @@ import { FormControl, Validators } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FormStaticValueArray } from '@blockframes/utils/form/forms/static-value.form';
 import { compareDates, isDateInFuture } from '@blockframes/utils/form/validators/validators';
-import { AvailsFilter, BaseAvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from '../avails';
-import { Duration, Territory } from '@blockframes/model';
+import { Duration, Territory, AvailsFilter, BaseAvailsFilter, CalendarAvailsFilter, MapAvailsFilter, createDuration } from '@blockframes/model';
 
+export function createAvailsSearch(search: Partial<AvailsFilter> = {}): AvailsFilter {
+
+  return {
+    exclusive: false,
+    ...search,
+    territories: search.territories?.length ? search.territories: [],
+    medias: search.medias?.length ? search.medias: [],
+    duration: createDuration(search?.duration),
+  };
+}
 
 function createDurationControl(duration: Partial<{ from: Date, to: Date }> = {}) {
 

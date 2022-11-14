@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { getCollidingHoldbacks } from '@blockframes/contract/avails/avails';
-import { Holdback, BucketTerm } from '@blockframes/model';
+import { Holdback, BucketTerm, getCollidingHoldbacks } from '@blockframes/model';
 
 @Pipe({ name: 'collidingHoldbacks' })
 export class CollidingHoldbacksPipe implements PipeTransform {

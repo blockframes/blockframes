@@ -1,14 +1,13 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { format } from 'date-fns';
-import { combineLatest, Subscription } from "rxjs";
-import { first, map, shareReplay, startWith, throttleTime } from "rxjs/operators";
-import { medias, TerritoryValue } from '@blockframes/model';
-import { downloadCsvFromJson } from "@blockframes/utils/helpers";
-import { decodeDate, decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
-import { filterContractsByTitle, MapAvailsFilter, territoryAvailabilities } from "@blockframes/contract/avails/avails";
-import { CatalogAvailsShellComponent } from "../shell/shell.component";
-import { toGroupLabel } from "@blockframes/utils/pipes/group-label.pipe";
+import { combineLatest, Subscription } from 'rxjs';
+import { first, map, shareReplay, startWith, throttleTime } from 'rxjs/operators';
+import { filterContractsByTitle, medias, TerritoryValue, MapAvailsFilter, territoryAvailabilities, decodeDate } from '@blockframes/model';
+import { downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { CatalogAvailsShellComponent } from '../shell/shell.component';
+import { toGroupLabel } from '@blockframes/utils/pipes/group-label.pipe';
 
 function formatDate(date: Date) {
   return format(date, 'dd/MM/yyy');
@@ -110,11 +109,11 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
         const availableTerritories = availabilities.available.map(marker => marker.term.territories).flat();
         const territories = toGroupLabel(availableTerritories, 'territories', 'World');
         const data = [{
-          "International Title": movie.title.international,
+          'International Title': movie.title.international,
           Medias: availsFilter.medias.map(medium => medias[medium]).join(';'),
           Exclusivity: availsFilter.exclusive ? 'Exclusive' : 'Non Exclusive',
           'Start Date - End Date': `${formatDate(availsFilter.duration.from)} - ${formatDate(availsFilter.duration.to)}`,
-          "Available Territories": territories,
+          'Available Territories': territories,
         }]
         const filename = `${movie.title.international.split(' ').join('_')}_avails`;
         downloadCsvFromJson(data, filename);

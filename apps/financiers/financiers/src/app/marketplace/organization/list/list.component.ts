@@ -5,9 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 // Blockframes
 import { OrganizationService } from '@blockframes/organization/service';
 import { scaleOut } from '@blockframes/utils/animations/fade';
-import { Organization } from '@blockframes/model';
+import { Organization, OrganizationSearch } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationSearchForm, createOrganizationSearch, OrganizationSearch } from '@blockframes/organization/forms/search.form';
+import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/organization/forms/search.form';
 
 // RxJs
 import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap, throttleTime } from 'rxjs/operators';

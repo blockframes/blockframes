@@ -1,9 +1,13 @@
 import {
-  createMandate, createSale,
-  territories, Territory,
-  territoriesGroup, medias, mediaGroup
+  createMandate,
+  createSale,
+  territories,
+  Territory,
+  territoriesGroup,
+  medias,mediaGroup,
+  FullMandate,
+  FullSale
 } from '@blockframes/model';
-import { FullMandate, FullSale } from '../avails';
 
 /**
  * AVAILS AND SALES ARE GOTTEN FROM HERE.
