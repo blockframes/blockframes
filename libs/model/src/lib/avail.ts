@@ -213,7 +213,7 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
 // ----------------------------
 
 export interface AvailsFilter extends BaseAvailsFilter {
-  duration: { from: Date, to: Date },
+  duration: Duration,
   territories: Territory[],
 }
 
@@ -310,7 +310,7 @@ export function availableTitle(
 // ----------------------------
 
 export interface MapAvailsFilter extends BaseAvailsFilter {
-  duration: { from: Date, to: Date },
+  duration: Duration,
 }
 
 interface TerritoryMarkerBase {

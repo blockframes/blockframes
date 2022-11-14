@@ -33,10 +33,10 @@ import {
   AlgoliaResult,
   MovieAvailsSearch
 } from '@blockframes/model';
-import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
+import { AvailsForm, createAvailsSearch } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
-import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -216,11 +216,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
 
     // Avails Form
-    if (savedSearch.avails?.duration?.from) savedSearch.avails.duration.from = decodeDate(savedSearch.avails.duration.from);
-    if (savedSearch.avails?.duration?.to) savedSearch.avails.duration.to = decodeDate(savedSearch.avails.duration.to);
-    if (savedSearch.avails && !savedSearch.avails?.medias) savedSearch.avails.medias = [];
-
-    this.availsForm.patchValue(savedSearch.avails); // TODO #9003 hardReset with createAvailsSearch()
+    this.availsForm.hardReset(createAvailsSearch(savedSearch.avails));
   }
 
   // ----------------------------

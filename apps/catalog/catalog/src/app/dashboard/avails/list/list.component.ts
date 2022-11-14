@@ -21,13 +21,14 @@ import {
   AvailsFilter,
   availableTitle,
   FullSale,
-  FullMandate
+  FullMandate,
+  decodeDate
  } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { IncomeService } from '@blockframes/contract/income/service';
-import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { PdfService } from '@blockframes/utils/pdf/pdf.service';
