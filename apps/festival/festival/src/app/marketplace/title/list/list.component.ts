@@ -121,8 +121,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   load(savedSearch: MovieAvailsSearch) {
-    if (savedSearch?.search && Object.keys(savedSearch.search).length) {
-      this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
-    }
+    this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
   }
 }
