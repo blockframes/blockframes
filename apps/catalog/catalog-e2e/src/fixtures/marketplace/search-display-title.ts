@@ -84,7 +84,7 @@ export const displayMovie = createMovie({
   internalRef: 'E2E ref',
   runningTime: {
     time: 120,
-    status: 'tobedetermined',
+    status: 'confirmed',
   },
   release: createReleaseYear({
     year: new Date().getFullYear() + 1,
@@ -92,6 +92,7 @@ export const displayMovie = createMovie({
   }),
   originCountries: ['france', 'united-kingdom'],
   originalLanguages: ['french', 'english'],
+  isOriginalVersionAvailable: true,
   genres: ['action', 'romance'],
   directors: [
     {
@@ -180,7 +181,7 @@ export const displayMovie = createMovie({
     },
     {
       firstName: 'Actor',
-      lastName: ' Two',
+      lastName: 'Two',
       status: 'looselyAttached',
       description: 'Second actor',
       filmography: [
@@ -199,7 +200,7 @@ export const displayMovie = createMovie({
     {
       role: 'dialogueWriter',
       firstName: 'Young',
-      lastName: ' Writer',
+      lastName: 'Writer',
       status: 'confirmed',
       description: 'Young is promising',
       filmography: [
@@ -216,7 +217,7 @@ export const displayMovie = createMovie({
     {
       role: 'castingDirector',
       firstName: 'Old',
-      lastName: ' Caster',
+      lastName: 'Caster',
       status: 'looselyAttached',
       description: 'Old is promising',
       filmography: [
@@ -281,7 +282,7 @@ export const displayMovie = createMovie({
   prizes: [
     {
       name: 'cannes',
-      prize: `Palme d'Or`,
+      prize: `Palme D'or`,
       year: 2022,
       premiere: 'world',
     },

@@ -4,19 +4,19 @@
   <section *ngIf="movie.cast.length">
     <h3>Cast Members</h3>
     <article class="card-grid">
-      <ng-container *ngFor="let cast of movie.cast">
-        <title-credit-card  [credit]="cast" type="cast"></title-credit-card>
+      <ng-container *ngFor="let cast of movie.cast; let i = index">
+        <title-credit-card  [credit]="cast" type="cast" [attr.test-id]="'cast-card_' + i"></title-credit-card>
       </ng-container>
     </article>
-    
+
     <mat-divider></mat-divider>
   </section>
 
   <section *ngIf="movie.crew.length">
     <h3>Crew Members</h3>
     <article class="card-grid">
-      <ng-container *ngFor="let crew of movie.crew">
-        <title-credit-card [credit]="crew" type="crew"></title-credit-card>
+      <ng-container *ngFor="let crew of movie.crew; let i = index">
+        <title-credit-card [credit]="crew" type="crew" [attr.test-id]="'crew-card_' + i"></title-credit-card>
       </ng-container>
     </article>
 
