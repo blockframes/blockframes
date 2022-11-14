@@ -23,7 +23,6 @@ import {
   Mandate,
   Sale,
   AlgoliaMovie,
-  GetKeys,
   AvailsFilter,
   filterContractsByTitle,
   availableTitle,
@@ -31,16 +30,16 @@ import {
   getMandateTerms,
   recursiveSearch,
   Term,
-  AlgoliaResult
+  AlgoliaResult,
+  MovieAvailsSearch
 } from '@blockframes/model';
-import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
+import { AvailsForm, createAvailsSearch } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
-import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService } from '@blockframes/contract/contract/service';
-import { MovieSearchForm, createMovieSearch, Versions, MovieSearch } from '@blockframes/movie/form/search.form';
+import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 import algoliasearch from 'algoliasearch';
 
 const mandatesQuery = [
@@ -110,17 +109,11 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
       distinctUntilChanged(),
       debounceTime(300),
       tap(([_, availsValue]) => {
-        const search: { search: MovieSearch, avails: AvailsFilter } = { search: { ...this.searchForm.value }, avails: availsValue }; // TODO #9003 typing here & other apps
-        delete search.search.page;
+        // TODO #8894 https://github.com/blockframes/blockframes/issues/8894#issuecomment-1297062856
+        const search: MovieAvailsSearch = { search: this.searchForm.value, avails: availsValue };
         const currentSearch = JSON.stringify(search);
 
         if (this.previousSearch !== currentSearch) {
-          if (this.searchForm.page.value !== 0) {
-            this.searchForm.page.setValue(0, { onlySelf: false, emitEvent: false });
-            encodeUrl<MovieSearch>(this.router, this.route, this.searchForm.value);
-          }
-
-          // TODO #8894 https://github.com/blockframes/blockframes/issues/8894#issuecomment-1297062856
           this.hitsViewed$.next(50);
         }
 
@@ -149,26 +142,10 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const decodedData: { search: MovieSearch, avails: AvailsFilter } = decodeUrl(this.route);
-    this.load(decodedData);
+    this.load(decodeUrl<MovieAvailsSearch>(this.route));
 
-    const sub = this.search$.pipe(
-      debounceTime(1000),
-    ).subscribe(([search, avails]) => {
-      encodeUrl(this.router, this.route, {
-        search: { // TODO #9003 typing here & clean
-          query: search.query,
-          genres: search.genres,
-          originCountries: search.originCountries,
-          contentType: search.contentType,
-          languages: search.languages,
-          minReleaseYear: search.minReleaseYear > 0 ? search.minReleaseYear : undefined,
-          runningTime: search.runningTime,
-          page: search.page
-        },
-        avails, // TODO #9003 typing here
-      })
-    });
+    const sub = this.search$.pipe(debounceTime(1000),)
+      .subscribe(([search, avails]) => encodeUrl<MovieAvailsSearch>(this.router, this.route, { search, avails }));
 
     this.subs.push(sub);
   }
@@ -235,28 +212,11 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     this.exporting = false;
   }
 
-  load(parsedData: { search: MovieSearch, avails: AvailsFilter }) {
-    // Search Form
-    const languages = this.searchForm.languages.get('languages') as FormList<GetKeys<'languages'>>;
-    const versions = this.searchForm.languages.get('versions') as FormEntity<EntityControl<Versions>, Versions>;
-
-    // patch everything
-    this.searchForm.patchValue(parsedData.search);
-
-    // ensure FromList are also patched
-    this.searchForm.genres.patchAllValue(parsedData.search?.genres);
-    this.searchForm.originCountries.patchAllValue(parsedData.search?.originCountries);
-    languages.patchAllValue(parsedData.search?.languages?.languages);
-    versions.patchValue(parsedData.search?.languages?.versions);
-    this.searchForm.minReleaseYear.patchValue(parsedData.search?.minReleaseYear);
-    this.searchForm.runningTime.patchValue(parsedData.search?.runningTime);
+  load(savedSearch: MovieAvailsSearch) {
+    this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
 
     // Avails Form
-    if (parsedData.avails?.duration?.from) parsedData.avails.duration.from = decodeDate(parsedData.avails.duration.from);
-    if (parsedData.avails?.duration?.to) parsedData.avails.duration.to = decodeDate(parsedData.avails.duration.to);
-    if (parsedData.avails && !parsedData.avails?.medias) parsedData.avails.medias = [];
-
-    this.availsForm.patchValue(parsedData.avails);
+    this.availsForm.hardReset(createAvailsSearch(savedSearch.avails));
   }
 
   // ----------------------------

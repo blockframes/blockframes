@@ -36,7 +36,7 @@ const injectedData = {
   [`movies/${movie.id}`]: movie,
 };
 
-let titlesCount: string;
+const oneTitleSentence = 'There is 1 title available.';
 
 describe('Movie display in marketplace', () => {
   beforeEach(() => {
@@ -61,35 +61,26 @@ describe('Movie display in marketplace', () => {
   it('Find with title', () => {
     syncMovieToAlgolia(movie.id);
     get('title-link').eq(0).click();
-    get('titles-count').then($result => {
-      titlesCount = $result[0].innerText;
-      get('search-input').type(movie.title.international);
-      //wait for the count to update before checking our movie
-      get('titles-count').should('not.contain', titlesCount);
-      get(`movie-card_${movie.id}`).should('exist');
-    });
+    get('search-input').type(movie.title.international);
+    //wait for the count to update before checking our movie
+    get('titles-count').should('contain', oneTitleSentence);
+    get(`movie-card_${movie.id}`).should('exist');
   });
 
   it('Find with director', () => {
     syncMovieToAlgolia(movie.id);
     get('title-link').eq(0).click();
-    get('titles-count').then($result => {
-      titlesCount = $result[0].innerText;
-      get('search-input').type(`${movie.directors[0].firstName} ${movie.directors[0].lastName}`);
-      get('titles-count').should('not.contain', titlesCount);
-      get(`movie-card_${movie.id}`).should('exist');
-    });
+    get('search-input').type(`${movie.directors[0].firstName} ${movie.directors[0].lastName}`);
+    get('titles-count').should('contain', oneTitleSentence);
+    get(`movie-card_${movie.id}`).should('exist');
   });
 
   it('Find with keyword', () => {
     syncMovieToAlgolia(movie.id);
     get('title-link').eq(0).click();
-    get('titles-count').then($result => {
-      titlesCount = $result[0].innerText;
-      get('search-input').type(movie.keywords[0]);
-      get('titles-count').should('not.contain', titlesCount);
-      get(`movie-card_${movie.id}`).should('exist');
-    });
+    get('search-input').type(movie.keywords[0]);
+    get('titles-count').should('contain', oneTitleSentence);
+    get(`movie-card_${movie.id}`).should('exist');
   });
 
   it('Find with filters, save & load filters', () => {
@@ -120,93 +111,82 @@ describe('Movie display in marketplace', () => {
     selectFilter('Running Time');
     get('90min - 180min').click();
     get('save-filter').click();
-    get('titles-count').should('contain', 'There is 1 title available.');
+    get('titles-count').should('contain', oneTitleSentence);
     get(`movie-card_${movie.id}`).should('exist');
     getAllStartingWith('item_').should('have.length', 1);
-    // without wait, Cypress goes too quick and some filters are not saved in the localStorage 
-    // CF debounceTime(1000) in apps/festival/festival/src/app/marketplace/title/list/list.component.ts
-    cy.wait(1500);
+    // Wait for the last parameter to be present in URL before saving filters
+    assertUrlIncludes('%22runningTime%22:5');
     get('save').click();
     get('clear-filters').click();
-    get('titles-count').should('not.contain', 'There is 1 title available.');
+    get('titles-count').should('not.contain', oneTitleSentence);
     get('load').click();
-    get('titles-count').should('contain', 'There is 1 title available.');
+    get('titles-count').should('contain', oneTitleSentence);
   });
 
   it('Title is excluded if no match with filters', () => {
-    //test failing = database changed
-    //explanation: Cypress does not allow conditional testing.
-    //after applying a filter, we might still have movies, OR nothing.
-    //other solution, know the filtered Algolia movies beforehand.
-    //other solution, inject a dummy movie corresponding to each tested filter.
     syncMovieToAlgolia(movie.id);
     get('title-link').eq(0).click();
-    get('titles-count').then($result => {
-      titlesCount = $result[0].innerText;
-      get('search-input').type(movie.title.international);
-      get('titles-count').should('not.contain', titlesCount);
-      get(`movie-card_${movie.id}`).should('exist');
-      get('titles-count').then($result => {
-        titlesCount = $result[0].innerText;
-        selectFilter('Content Type');
-        selectToggle('content_', 'TV');
-        get('empty').should('exist');
-        get(`movie-card_${movie.id}`).should('not.exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get('titles-count').should('contain', titlesCount);
-        get(`movie-card_${movie.id}`).should('exist');
-        selectFilter('Genre');
-        get('genre').find('input').click();
-        get('option_erotic').click();
-        get('empty').should('exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get(`movie-card_${movie.id}`).should('exist');
-        get('titles-count').should('contain', titlesCount);
-        selectFilter('Country of Origin');
-        get('country').find('input').click();
-        get('option_cayman-islands').click();
-        get('empty').should('exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get(`movie-card_${movie.id}`).should('exist');
-        get('titles-count').should('contain', titlesCount);
-        selectFilter('Language & Version');
-        get('language').find('input').click();
-        get('option_belarussian').click();
-        check('Dubs');
-        get('empty').should('exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get(`movie-card_${movie.id}`).should('exist');
-        get('titles-count').should('contain', titlesCount);
-        selectFilter('Language & Version');
-        get('language').find('input').click();
-        get(`option_${Object.keys(movie.languages)[0]}`).click();
-        check('Subs');
-        get('empty').should('exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get(`movie-card_${movie.id}`).should('exist');
-        get('titles-count').should('contain', titlesCount);
-        selectFilter('Release Year');
-        get('slider').focus();
-        selectYear(2030);
-        get('empty').should('exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get(`movie-card_${movie.id}`).should('exist');
-        get('titles-count').should('contain', titlesCount);
-        selectFilter('Running Time');
-        get('13min - 26min').click();
-        get('empty').should('exist');
-        get(`movie-card_${movie.id}`).should('not.exist');
-        get('clear-filter').click();
-        get('save-filter').click();
-        get(`movie-card_${movie.id}`).should('exist');
-      });
-    });
+    get('titles-count').should('not.contain', oneTitleSentence);
+    get('search-input').type(movie.title.international);
+    get('titles-count').should('contain', oneTitleSentence);
+    get(`movie-card_${movie.id}`).should('exist');
+    selectFilter('Content Type');
+    selectToggle('content_', 'TV');
+    get('empty').should('exist');
+    get(`movie-card_${movie.id}`).should('not.exist');
+    get('clear-filter').click();
+    get('save-filter').click();
+    get('titles-count').should('contain', oneTitleSentence);
+    get(`movie-card_${movie.id}`).should('exist');
+    selectFilter('Genre');
+    get('genre').find('input').click();
+    get('option_erotic').click();
+    get('empty').should('exist');
+    get('clear-filter').click();
+    get('save-filter').click();
+    get(`movie-card_${movie.id}`).should('exist');
+    get('titles-count').should('contain', oneTitleSentence);
+    selectFilter('Country of Origin');
+    get('country').find('input').click();
+    get('option_cayman-islands').click();
+    get('empty').should('exist');
+    get('clear-filter').click();
+    get('save-filter').click();
+    get(`movie-card_${movie.id}`).should('exist');
+    get('titles-count').should('contain', oneTitleSentence);
+    selectFilter('Language & Version');
+    get('language').find('input').click();
+    get('option_belarussian').click();
+    check('Dubs');
+    get('empty').should('exist');
+    get('clear-filter').click();
+    get('save-filter').click();
+    get(`movie-card_${movie.id}`).should('exist');
+    get('titles-count').should('contain', oneTitleSentence);
+    selectFilter('Language & Version');
+    get('language').find('input').click();
+    get(`option_${Object.keys(movie.languages)[0]}`).click();
+    check('Subs');
+    get('empty').should('exist');
+    get('clear-filter').click();
+    get('save-filter').click();
+    get(`movie-card_${movie.id}`).should('exist');
+    get('titles-count').should('contain', oneTitleSentence);
+    selectFilter('Release Year');
+    get('slider').focus();
+    selectYear(2030);
+    get('empty').should('exist');
+    get('clear-filter').click();
+    get('save-filter').click();
+    get(`movie-card_${movie.id}`).should('exist');
+    get('titles-count').should('contain', oneTitleSentence);
+    selectFilter('Running Time');
+    get('13min - 26min').click();
+    get('empty').should('exist');
+    get(`movie-card_${movie.id}`).should('not.exist');
+    get('clear-filter').click();
+    get('save-filter').click();
+    get(`movie-card_${movie.id}`).should('exist');
   });
 
   it('Absent if not released', () => {
@@ -214,7 +194,7 @@ describe('Movie display in marketplace', () => {
     syncMovieToAlgolia(movie.id);
     get('title-link').eq(0).click();
     get('titles-count').then($result => {
-      titlesCount = $result[0].innerText;
+      const titlesCount = $result[0].innerText;
       get('search-input').type(movie.title.international);
       get('empty').should('exist');
       get(`movie-card_${movie.id}`).should('not.exist');
@@ -229,13 +209,10 @@ describe('Movie display in marketplace', () => {
     //There shouldn't be less than 450 movies
     get('export').click();
     cy.contains(`Sorry, you can't have an export with that many titles.`);
-    get('titles-count').then($result => {
-      titlesCount = $result[0].innerText;
-      get('search-input').type(movie.title.international);
-      //wait for the count to update before checking our movie
-      get('titles-count').should('not.contain', titlesCount);
-      get(`movie-card_${movie.id}`).should('exist');
-    });
+    get('search-input').type(movie.title.international);
+    //wait for the count to update before checking our movie
+    get('titles-count').should('contain', oneTitleSentence);
+    get(`movie-card_${movie.id}`).should('exist');
     get('export').click();
     cy.contains('Please wait, your export is being generated...');
   });

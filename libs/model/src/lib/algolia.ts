@@ -1,5 +1,6 @@
 import { SearchIndex } from 'algoliasearch';
-import { MovieLanguageSpecification, MovieRunningTime, MovieRelease } from './movie';
+import { AvailsFilter } from './avail';
+import { MovieLanguageSpecification, MovieRunningTime, MovieRelease, LanguageVersion } from './movie';
 import {
   Genre,
   Language,
@@ -9,7 +10,11 @@ import {
   OrgActivity,
   ContentType,
   Module,
-  ModuleAccess
+  ModuleAccess,
+  SocialGoal,
+  Festival,
+  Certification,
+  modules
 } from './static';
 
 export interface AlgoliaConfig {
@@ -66,9 +71,12 @@ export interface MovieIndexFilters {
   minPledge?: number;
 }
 
-///// TYPES //////
+const negativeModules = ['-dashboard', '-marketplace'] as const;
+const algoliaModules = [...modules, ...negativeModules];
+export type AlgoliaModule = typeof algoliaModules[number];
 
-export interface AlgoliaSearch {
+///// TYPES //////
+interface AlgoliaSearch {
   query: string;
   page: number;
   hitsPerPage: number;
@@ -85,6 +93,34 @@ export interface AlgoliaSearchQuery {
 export interface AlgoliaResult<T> {
   hits: T[];
   nbHits: number;
+}
+
+export interface MovieSearch extends AlgoliaSearch {
+  storeStatus: StoreStatus[];
+  genres: Genre[];
+  originCountries: Territory[];
+  languages: LanguageVersion;
+  productionStatus: ProductionStatus[];
+  minBudget: number;
+  minReleaseYear: number;
+  sellers: AlgoliaOrganization[];
+  socialGoals: SocialGoal[];
+  contentType?: ContentType;
+  runningTime: number;
+  festivals: Festival[];
+  certifications: Certification[];
+}
+
+export interface MovieAvailsSearch {
+  search: MovieSearch;
+  avails?: AvailsFilter
+}
+
+export interface OrganizationSearch extends AlgoliaSearch {
+  appModule: AlgoliaModule[],
+  isAccepted: boolean,
+  hasAcceptedMovies: boolean,
+  countries?: Territory[],
 }
 
 interface AlgoliaDefaultProperty {

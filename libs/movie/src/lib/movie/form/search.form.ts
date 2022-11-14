@@ -1,5 +1,5 @@
-import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, AlgoliaSearch, festival, recursiveSearch, AlgoliaSearchQuery } from '@blockframes/model';
-import type { StoreStatus, ProductionStatus, Territory, Genre, SocialGoal, ContentType, Certification, Festival } from '@blockframes/model';
+import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, festival, recursiveSearch, AlgoliaSearchQuery, MovieSearch, LanguageVersion, Versions } from '@blockframes/model';
+import type { StoreStatus, Territory } from '@blockframes/model';
 import { FormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { algolia } from '@env';
@@ -34,22 +34,6 @@ export const runningTimeFilters = {
   }
 }
 
-export interface MovieSearch extends AlgoliaSearch {
-  storeStatus: StoreStatus[];
-  genres: Genre[];
-  originCountries: Territory[];
-  languages: LanguageVersion;
-  productionStatus: ProductionStatus[];
-  minBudget: number;
-  minReleaseYear: number;
-  sellers: AlgoliaOrganization[];
-  socialGoals: SocialGoal[];
-  contentType?: ContentType;
-  runningTime: number;
-  festivals: Festival[];
-  certifications: Certification[];
-}
-
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
 
   return {
@@ -78,18 +62,6 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     certifications: [],
     ...search,
   };
-}
-
-export interface Versions {
-  original: boolean,
-  dubbed: boolean,
-  subtitle: boolean,
-  caption: boolean,
-}
-
-interface LanguageVersion {
-  languages: GetKeys<'languages'>[],
-  versions: Versions
 }
 
 function createLanguageVersionControl(data: LanguageVersion) {

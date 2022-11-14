@@ -15,6 +15,7 @@ export interface User extends PublicUser {
   termsAndConditions?: Partial<Record<App, LegalTerms>>;
   settings?: UserSettings;
   preferences?: Preferences;
+  savedSearches?: Partial<Record<App, string>>
 }
 
 export interface LegalTerms {
@@ -97,3 +98,13 @@ export function createUser(user: Partial<User> = {}) {
 export function hasDisplayName(user: User | PublicUser): boolean {
   return !!user && !!user.firstName && !!user.lastName;
 }
+
+function randomNumber() {
+  return Math.floor(Math.random() * 255);
+}
+
+function fakeIp() {
+  return randomNumber() + 1 + '.' + randomNumber() + '.' + randomNumber() + '.' + randomNumber();
+}
+
+export const fakeLegalTerms = { date: new Date(), ip: fakeIp() };

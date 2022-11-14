@@ -12,9 +12,9 @@ import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { debounceTime, switchMap, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 import { PdfService } from '@blockframes/utils/pdf/pdf.service'
-import type { StoreStatus } from '@blockframes/model';
-import { AlgoliaMovie } from '@blockframes/model';
-import { MovieSearchForm, createMovieSearch, MovieSearch } from '@blockframes/movie/form/search.form';
+import type { MovieAvailsSearch, StoreStatus } from '@blockframes/model';
+import { AlgoliaMovie, MovieSearch } from '@blockframes/model';
+import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 
@@ -64,7 +64,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
           const currentSearch = JSON.stringify(search);
           if (this.previousSearch !== currentSearch && this.searchForm.page.value !== 0) {
             this.searchForm.page.setValue(0, { onlySelf: false, emitEvent: false });
-            encodeUrl<MovieSearch>(this.router, this.route, this.searchForm.value);
+            encodeUrl<MovieAvailsSearch>(this.router, this.route, { search: this.searchForm.value });
           }
           this.previousSearch = currentSearch;
         }),
@@ -84,12 +84,12 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const decodedData: MovieSearch = decodeUrl(this.route);
+    const decodedData = decodeUrl<MovieAvailsSearch>(this.route);
     this.load(decodedData);
 
     const sub = this.searchForm.valueChanges.pipe(
       debounceTime(1000),
-    ).subscribe(value => encodeUrl<MovieSearch>(this.router, this.route, value));
+    ).subscribe(search => encodeUrl<MovieAvailsSearch>(this.router, this.route, { search }));
     this.subs.push(sub);
   }
 
@@ -125,7 +125,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.exporting = false;
   }
 
-  load(parsedData: MovieSearch) {
-    if (parsedData && Object.keys(parsedData).length) this.searchForm.hardReset(parsedData);
+  load(savedSearch: MovieAvailsSearch) {
+    this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
   }
 }

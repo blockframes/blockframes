@@ -4,7 +4,7 @@ import { map, shareReplay, throttleTime } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
-import { decodeDate, decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import {
   filterContractsByTitle,
@@ -14,6 +14,7 @@ import {
   emptyAvailabilities,
   MapAvailsFilter,
   territoryAvailabilities,
+  decodeDate,
 } from '@blockframes/model';
 
 @Component({
