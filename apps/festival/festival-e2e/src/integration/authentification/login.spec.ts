@@ -31,7 +31,7 @@ describe('Login tests', () => {
     firestore.create([injectedData]);
     firestore.update({ docPath: `users/${user.uid}`, field: 'termsAndConditions', value: {} });
     maintenance.end();
-    refreshIfMaintenance();
+    refreshIfMaintenance('festival');
     get('login').click();
     assertUrlIncludes('/connexion');
     get('signin-email').type(user.email);
