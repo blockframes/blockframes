@@ -9,7 +9,8 @@ import {
   EventTypes,
   AccessibilityTypes,
 } from '@blockframes/model';
-import { browserAuth, firestore } from '@blockframes/testing/cypress/browser';
+import { browserAuth } from './browserAuth';
+import { firestore } from './firestore';
 import { startOfWeek, add, isPast, isFuture } from 'date-fns';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
@@ -42,6 +43,10 @@ export function acceptCookies() {
 
 export function get(selector: string) {
   return cy.get(`[test-id="${selector}"]`);
+}
+
+export function snackbarShould(verb: 'not.exist' | 'contain', value?: string) {
+  !value ? cy.get('snack-bar-container').should(verb) : cy.get('snack-bar-container').should(verb, value);
 }
 
 export function getByClass(selector: string) {
@@ -228,6 +233,17 @@ export function verifyScreening({ title, accessibility, expected }: ScreeningVer
       get(`event_${dbEvent.id}`).should(expected ? 'exist' : 'not.exist');
       if (expected) get(`event_${dbEvent.id}`).should('contain', `${capitalize(accessibility)} Screening`);
   });
+}
+
+//this function is used during movie creation to validate each upload
+//has they tend to fail in batch. See #9002
+export function saveTitle(checkUploadWidget = false) {
+  get('tunnel-step-save').click();
+  snackbarShould('contain', 'Title saved');
+  if (checkUploadWidget) {
+    get('upload-widget').should('exist');
+    get('upload-widget').should('not.exist');
+  }
 }
 
 //* ------------------------------------- *//

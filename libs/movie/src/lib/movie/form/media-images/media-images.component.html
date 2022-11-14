@@ -16,6 +16,7 @@
             (newSubscription)="shell.addSubToStack($event)"
             listenToChanges
             pushSubToStack
+            [attr.test-id]="'image-upload_' + i"
           >
             <h3 title>Stills</h3>
           </image-uploader>
@@ -27,7 +28,7 @@
       <footer fxLayout="row" fxLayoutAlign="start baseline" fxLayoutGap="16px">
         <mat-divider></mat-divider>
         <span class="mat-caption text-primary">Add Images</span>
-        <button mat-mini-fab color="primary" (click)="addStill()">
+        <button mat-mini-fab color="primary" (click)="addStill()" test-id="add">
           <mat-icon svgIcon="add"></mat-icon>
         </button>
       </footer>
