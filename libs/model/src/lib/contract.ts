@@ -1,6 +1,6 @@
 import { DocumentMeta, createDocumentMeta } from './meta';
 import type { Media, Territory, ContractStatus } from './static';
-import { Duration } from './terms';
+import { Duration, Term } from './terms';
 
 export interface Holdback {
   territories: Territory[];
@@ -44,6 +44,13 @@ export interface Sale extends Contract {
   delivery?: string;
   declineReason?: string;
   holdbacks: Holdback[];
+}
+
+export interface FullMandate extends Mandate {
+  terms: Term[];
+}
+export interface FullSale extends Sale {
+  terms: Term[];
 }
 
 export function createHoldback(params: Partial<Holdback> = {}): Holdback {

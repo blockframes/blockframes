@@ -5,13 +5,13 @@ import { combineLatest, Subscription } from 'rxjs';
 import { map, startWith, throttleTime } from 'rxjs/operators';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { MarketplaceMovieAvailsComponent } from '../avails.component';
 import {
+  filterContractsByTitle,
   CalendarAvailsFilter,
   durationAvailabilities,
-  DurationMarker,
-  filterContractsByTitle,
-} from '@blockframes/contract/avails/avails';
-import { MarketplaceMovieAvailsComponent } from '../avails.component';
+  DurationMarker
+} from '@blockframes/model';
 
 @Component({
   selector: 'catalog-movie-avails-calendar',

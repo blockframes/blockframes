@@ -1,5 +1,5 @@
-import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, AlgoliaSearch, festival } from '@blockframes/model';
-import type { StoreStatus, ProductionStatus, Territory, Genre, SocialGoal, ContentType, Certification, Festival } from '@blockframes/model';
+import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, festival, recursiveSearch, AlgoliaSearchQuery, MovieSearch, LanguageVersion, Versions } from '@blockframes/model';
+import type { StoreStatus, Territory } from '@blockframes/model';
 import { FormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { algolia } from '@env';
@@ -34,22 +34,6 @@ export const runningTimeFilters = {
   }
 }
 
-export interface MovieSearch extends AlgoliaSearch {
-  storeStatus: StoreStatus[];
-  genres: Genre[];
-  originCountries: Territory[];
-  languages: LanguageVersion;
-  productionStatus: ProductionStatus[];
-  minBudget: number;
-  minReleaseYear: number;
-  sellers: AlgoliaOrganization[];
-  socialGoals: SocialGoal[];
-  contentType?: ContentType;
-  runningTime: number;
-  festivals: Festival[];
-  certifications: Certification[];
-}
-
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
 
   return {
@@ -78,18 +62,6 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     certifications: [],
     ...search,
   };
-}
-
-export interface Versions {
-  original: boolean,
-  dubbed: boolean,
-  subtitle: boolean,
-  caption: boolean,
-}
-
-interface LanguageVersion {
-  languages: GetKeys<'languages'>[],
-  versions: Versions
 }
 
 function createLanguageVersionControl(data: LanguageVersion) {
@@ -161,7 +133,17 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get certifications() { return this.get('certifications'); }
 
   search(needMultipleQueries = false, override?: { hitsPerPage: number, page: number }) {
-    const search = {
+    const search = this.prepareSearch(needMultipleQueries, override);
+    return this.movieIndex.search<AlgoliaMovie>(search.query, search);
+  }
+
+  recursiveSearch() {
+    const search = this.prepareSearch();
+    return recursiveSearch<AlgoliaMovie>(this.movieIndex, search);
+  }
+
+  private prepareSearch(needMultipleQueries = false, override?: { hitsPerPage: number, page: number }) {
+    const search: AlgoliaSearchQuery = {
       hitsPerPage: this.hitsPerPage.value,
       query: this.query.value,
       page: this.page.value,
@@ -203,8 +185,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       search['optionalWords'] = multipleQueries;
     }
 
-
-    return this.movieIndex.search<AlgoliaMovie>(search.query, search);
+    return search;
   }
 
   getLanguages(data: LanguageVersion) {

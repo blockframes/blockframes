@@ -1,42 +1,20 @@
-import {
-  Bucket,
-  BucketContract,
-  Holdback,
-  Mandate,
-  Sale,
-  BucketTerm,
-  Term,
-  Media,
-  territories,
-  territoriesISOA3,
-  Territory,
-  TerritoryISOA3,
-  TerritoryISOA3Value,
-  TerritoryValue
-} from '@blockframes/model';
-import { allOf, exclusivityAllOf, exclusivitySomeOf, someOf } from './sets';
-import { max, min } from 'date-fns'
-import { Duration } from '@blockframes/model'
 
-
+import { max, min } from 'date-fns';
+import { Bucket, BucketContract } from './bucket';
+import { FullMandate, FullSale, Holdback, Mandate, Sale } from './contract';
+import { territories, territoriesISOA3 } from './static';
+import { Media, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from './static/types';
+import { BucketTerm, Term, Duration } from './terms';
 
 export interface BaseAvailsFilter {
   medias: Media[],
   exclusive: boolean
 }
 
-export interface FullMandate extends Mandate {
-  terms: Term[];
-}
-
-export interface AvailSearchResult<A extends BaseAvailsFilter> {
+interface AvailSearchResult<A extends BaseAvailsFilter> {
   term?: Term;
   mandate?: FullMandate;
   avail?: A;
-}
-
-export interface FullSale extends Sale {
-  terms: Term[];
 }
 
 interface AvailResult<A extends BaseAvailsFilter> {
@@ -235,7 +213,7 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
 // ----------------------------
 
 export interface AvailsFilter extends BaseAvailsFilter {
-  duration: { from: Date, to: Date },
+  duration: Duration,
   territories: Territory[],
 }
 
@@ -259,7 +237,7 @@ function isListAvailPartiallyInTerm(term: BucketTerm, avails: AvailsFilter) {
   return someOf(avails.territories).in(term.territories);
 }
 
-export function getListMatchingAvailabilities(mandates: FullMandate[], sales: FullSale[], avails: AvailsFilter) {
+function getListMatchingAvailabilities(mandates: FullMandate[], sales: FullSale[], avails: AvailsFilter) {
   const options: SearchAvailsConfig<AvailsFilter> = {
     mandates,
     sales,
@@ -271,7 +249,7 @@ export function getListMatchingAvailabilities(mandates: FullMandate[], sales: Fu
   return getMatchingAvailabilities(options);
 }
 
-function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], avails: AvailsFilter): T[] {
+export function getMatchingSales<T extends (FullSale | BucketContract)>(sales: T[], avails: AvailsFilter): T[] {
   return sales.filter(sale => sale.terms.some(term => {
     return isListAvailPartiallyInTerm(term, avails);
   }));
@@ -332,7 +310,7 @@ export function availableTitle(
 // ----------------------------
 
 export interface MapAvailsFilter extends BaseAvailsFilter {
-  duration: { from: Date, to: Date },
+  duration: Duration,
 }
 
 interface TerritoryMarkerBase {
@@ -363,7 +341,7 @@ export interface BucketTerritoryMarker extends TerritoryMarkerBase {
   term: BucketTerm,
 }
 
-export type TerritoryMarker = NotLicensedTerritoryMarker | AvailableTerritoryMarker | SoldTerritoryMarker | BucketTerritoryMarker;
+type TerritoryMarker = NotLicensedTerritoryMarker | AvailableTerritoryMarker | SoldTerritoryMarker | BucketTerritoryMarker;
 
 interface MapAvailabilities {
   notLicensed: NotLicensedTerritoryMarker[];
@@ -569,7 +547,7 @@ interface CalendarAvailabilities {
  * as soon as we have a false value, we return.
  * This is a small optimization as this method is called in several loops.
 */
-export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {
+function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, avails: CalendarAvailsFilter) {
   const exclusivityCheck = exclusivityAllOf(avails.exclusive).in(term.exclusive);
   if (!exclusivityCheck) return false;
   const mediaCheck = allOf(avails.medias).in(term.medias);
@@ -577,7 +555,7 @@ export function isCalendarTermInAvails<T extends BucketTerm | Term>(term: T, ava
   return allOf(avails.territories).in(term.territories);
 }
 
-export function getMatchingCalendarAvailabilities(avails: CalendarAvailsFilter, mandates: FullMandate[], sales: FullSale[]) {
+function getMatchingCalendarAvailabilities(avails: CalendarAvailsFilter, mandates: FullMandate[], sales: FullSale[]) {
   const options: SearchAvailsConfig<CalendarAvailsFilter> = {
     avails,
     mandates,
@@ -608,7 +586,6 @@ function isCalendarTermSelected<T extends BucketTerm | Term>(term: T, avails: Ca
 
   return exclusivityCheck && mediaCheck && territoryCheck;
 }
-
 
 export function durationAvailabilities(
   avails: CalendarAvailsFilter,
@@ -724,3 +701,203 @@ export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]
   return holdbackCollision;
 }
 
+
+// ----------------------------
+//         EASY COMPARE      //
+// ----------------------------
+
+
+// Helpers functions used to check collision, inclusion, etc...
+// This is used for example in avail.ts
+// These functions can handle two type of data:
+// - discrete = `string[]`
+// - continuous = `Range`
+
+
+interface Range { from: number | Date, to: number | Date };
+
+function discreteAllOf(a: string[], optional?: 'optional') {
+  return {
+    in: (b: string[]) => optional && !a.length ? true : a.every(elt => b.includes(elt)),
+
+    // it's equal if every A is included in B AND if every B is also included in A
+    // but we also check the length to avoid the case where A or B has duplicated elements
+    equal: (b: string[]) => optional && !a.length ? true : a.length === b.length && a.every(elt => b.includes(elt)) && b.every(elt => a.includes(elt)),
+  };
+}
+
+function continuousAllOf(a?: Range, optional?: 'optional') {
+  return {
+    // for continuous data, A is "in" B if the range are like that
+    //   A.from   A.to
+    //     |------|
+    //   |----------|
+    // B.from      B.to
+    //
+    // we also pre-suppose that Range are not malformed (i.e. from must be before to)
+    in: (b?: Range) => {
+      if (optional && (!a?.from || !a?.to)) return true
+      else return a?.from >= b?.from && a?.to <= b?.to
+    },
+
+    // To check if it's equal we simply check if `a.to === b.to && a.from === b.from`
+    // BUT since we cannot compare Date with `===` we use "not lesser than && not greater than"
+    equal: (b?: Range) => {
+      if (optional && (!a?.from || !a?.to)) return true
+      else return !(a?.from < b?.from) && !(a?.from > b?.from) && !(a?.to < b?.to) && !(a?.to > b?.to)
+    },
+  }
+}
+
+/**
+ * Check if all of the elements of A are in or equal to the elements of B.
+ *
+ * After calling `allOf(a)` you **MUST** call `.in(b)` or `.equal(b)` for the check to be performed.
+ * @note `optional` parameter will make the check return `true` if `a` is empty *(or from/to undefined)*.
+ * @example
+ * allOf(a).in(b);
+ * allOf(a).equal(b);
+ * allOf([], 'optional').in(b); // true
+ */
+export function allOf(a: string[], optional?: 'optional'): ReturnType<typeof discreteAllOf>;
+export function allOf(a: Range, optional?: 'optional'): ReturnType<typeof continuousAllOf>;
+export function allOf(a: string[] | Range, optional?: 'optional') {
+  return Array.isArray(a) ? discreteAllOf(a, optional) : continuousAllOf(a, optional);
+}
+
+function discreteNoneOf(a: string[], optional?: 'optional') {
+  return {
+    in: (b: string[]) => optional && !a.length ? true : a.every(elt => !b.includes(elt)),
+  };
+}
+
+
+//      A.to
+//  ...--|
+//          |---...
+//        B.from
+//
+// ~~~~~~~~~~ OR ~~~~~~~~
+//
+//         A.from
+//           |---...
+//   ...---|
+//       B.to
+function continuousNoneOf(a: Range, optional?: 'optional') {
+  return {
+    in: (b: Range) => optional && (!a?.from || !a?.to) ? true : a?.to < b?.from || b?.to < a?.from,
+  };
+}
+
+/**
+ * Check if none of the elements of A are in the elements of B, i.e. A and B are totally different
+ *
+ * After calling `noneOf(a)` you **MUST** call `.in(b)` for the check to be performed.
+ * @note `optional` parameter will make the check return `true` if `a` is empty *(or from/to undefined)*.
+ * @example
+ * noneOf(a).in(b);
+ * noneOf([], 'optional').in(b); // true
+ */
+export function noneOf(a: string[], optional?: 'optional'): ReturnType<typeof discreteNoneOf>;
+export function noneOf(a: Range, optional?: 'optional'): ReturnType<typeof continuousNoneOf>;
+export function noneOf(a: string[] | Range, optional?: 'optional') {
+  return Array.isArray(a) ? discreteNoneOf(a, optional) : continuousNoneOf(a, optional);
+}
+
+function discreteSomeOf(a: string[], optional?: 'optional') {
+  return {
+    in: (b: string[]) => optional && !a.length ? true : a.some(elt => b.includes(elt)),
+  };
+}
+
+//      A.from
+//       |---...
+//  |------------|
+// B.from      B.to
+//
+// ~~~~~~~~~~~~~~ OR ~~~~~~~~~~~~~
+//
+//        A.to
+//   ...---|
+//   |----------|
+// B.from      B.to
+//
+// ~~~~~~~~~~~~~~ OR ~~~~~~~~~~~~~
+//
+//  A.from           A.to
+//   |----------------|
+//     |----------|
+//   B.from     B.to
+export function continuousSomeOf(a?: Range, optional?: 'optional') {
+  return {
+    in: (b?: Range) => {
+      if (optional && (!a?.from || !a?.to)) return true;
+      return (a?.from >= b?.from && a?.from <= b?.to) || (a?.to >= b?.from && a?.to <= b?.to) || continuousAllOf(b, optional).in(a)
+    },
+  };
+}
+
+/**
+ * Check if some of the elements of A are in the elements of B, i.e. A and B overlap somehow (A ⊆ B or A ⊇ B or A = B)
+ *
+ * After calling `someOf(a)` you **MUST** call `.in(b)` for the check to be performed.
+ * @note `optional` parameter will make the check return `true` if `a` is empty *(or from/to undefined)*.
+ * @example
+ * someOf(a).in(b);
+ * someOf([], 'optional').in(b); // true
+ */
+export function someOf(a?: string[], optional?: 'optional'): ReturnType<typeof discreteSomeOf>;
+export function someOf(a?: Range, optional?: 'optional'): ReturnType<typeof continuousSomeOf>;
+export function someOf(a?: string[] | Range, optional?: 'optional') {
+  return Array.isArray(a) ? discreteSomeOf(a, optional) : continuousSomeOf(a, optional);
+}
+
+
+// ----------------------------
+// SPECIAL EXCLUSIVITY CHECK
+
+/**
+ * Check exclusivity
+ *
+ * |⬇ Mandate \ Avail ➡|Exclusive|Non-Exclusive|
+ * |-|-|-|
+ * |Exclusive|✅|✅|
+ * |Non-Exclusive|❌|✅|
+ */
+function exclusivityAllOf(availsExclusivity: boolean) {
+
+  //                                Avail form
+  //                     | Exclusive | Non-Exclusive |
+  //                -----|-----------|---------------|
+  //           Exclusive |     ✅    |       ✅     |
+  // Mandate        -----|-----------|---------------|
+  //       Non-Exclusive |    ❌     |      ✅      |
+  //                -----|-----------|---------------|
+
+  return {
+    in: (termExclusivity: boolean) => termExclusivity || !availsExclusivity,
+  };
+}
+
+/**
+ * Check exclusivity
+ *
+ * |⬇ Sale \ Avail ➡|Exclusive|Non-Exclusive|
+ * |-|-|-|
+ * |Exclusive|✅|✅|
+ * |Non-Exclusive|✅|❌|
+ */
+function exclusivitySomeOf(availsExclusivity: boolean) {
+
+  //                                Avail form
+  //                     | Exclusive | Non-Exclusive |
+  //                -----|-----------|---------------|
+  //           Exclusive |     ✅    |       ✅     |
+  // Sale           -----|-----------|---------------|
+  //       Non-Exclusive |    ✅     |      ❌      |
+  //                -----|-----------|---------------|
+
+  return {
+    in: (termExclusivity: boolean) => termExclusivity || availsExclusivity,
+  };
+}

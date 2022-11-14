@@ -1,6 +1,5 @@
-import { Term } from '@blockframes/model'
+import { Term, isCalendarAvailPartiallyInTerm } from '@blockframes/model'
 import { availsBrewster3 } from '../fixtures/availsFilters';
-import { isCalendarAvailPartiallyInTerm } from '../avails'
 
 const nonOverlappingTerm: Term = {
   id: 'term',

@@ -1,7 +1,13 @@
-import { AvailableTerritoryMarker, BucketTerritoryMarker, CalendarAvailsFilter, DurationMarker, MapAvailsFilter } from '@blockframes/contract/avails/avails';
-import { Mandate, Term } from '@blockframes/model';
+import {
+  Mandate,
+  Term,
+  AvailableTerritoryMarker,
+  BucketTerritoryMarker,
+  CalendarAvailsFilter,
+  DurationMarker,
+  MapAvailsFilter
+} from '@blockframes/model';
 import { BucketForm } from '../form';
-
 
 function fakeMandate(mandate?: Partial<Mandate>): Mandate {
   return {
@@ -35,13 +41,13 @@ function fakeTerm(term?: Partial<Term>): Term {
 
 const mapFilterA: MapAvailsFilter = {
   exclusive: true,
-  medias: [ 'payTv' ],
+  medias: ['payTv'],
   duration: { from: new Date(2), to: new Date(8) },
 };
 
 const mapFilterB: MapAvailsFilter = {
   exclusive: true,
-  medias: [ 'payTv' ],
+  medias: ['payTv'],
   duration: { from: new Date(9), to: new Date(24) },
 };
 

@@ -23,3 +23,4 @@ export * from './lib/apps';
 export * from './lib/income';
 export * from './lib/utils';
 export * from './lib/emails';
+export * from './lib/avail';

@@ -316,47 +316,49 @@ export const displayMovie = createMovie({
   },
 });
 
-export const expectedSavedLocalStorage = {
-  query: '',
-  storeStatus: ['accepted'],
-  genres: ['action'],
-  originCountries: ['france'],
-  languages: {
-    languages: ['kyrgyz'],
-    versions: {
-      original: false,
-      dubbed: true,
-      subtitle: false,
-      caption: false,
-    },
-  },
-  productionStatus: ['released'],
-  minBudget: 0,
-  minReleaseYear: 2020,
-  sellers: [
-    {
-      name: 'sale org',
-      appModule: ['dashboard', 'marketplace'],
-      country: 'france',
-      isAccepted: true,
-      hasAcceptedMovies: true,
-      logo: '',
-      activity: 'intlSales',
-      objectID: '0-e2e-saleOrgId',
-      _highlightResult: {
-        name: {
-          value: '<em>sale</em> <em>org</em>',
-          matchLevel: 'full',
-          fullyHighlighted: true,
-          matchedWords: ['sale', 'org'],
-        },
+export const expectedSavedSearch = {
+  search: {
+    query: '',
+    storeStatus: ['accepted'],
+    genres: ['action'],
+    originCountries: ['france'],
+    languages: {
+      languages: ['kyrgyz'],
+      versions: {
+        original: false,
+        dubbed: true,
+        subtitle: false,
+        caption: false,
       },
     },
-  ],
-  socialGoals: [],
-  contentType: null,
-  runningTime: 0,
-  hitsPerPage: 50,
-  festivals: ['cannes'],
-  certifications: ['eof', 'europeanQualification'],
+    productionStatus: ['released'],
+    minBudget: 0,
+    minReleaseYear: 2020,
+    sellers: [
+      {
+        name: 'sale org',
+        appModule: ['dashboard', 'marketplace'],
+        country: 'france',
+        isAccepted: true,
+        hasAcceptedMovies: true,
+        logo: '',
+        activity: 'intlSales',
+        objectID: '0-e2e-saleOrgId',
+        _highlightResult: {
+          name: {
+            value: '<em>sale</em> <em>org</em>',
+            matchLevel: 'full',
+            fullyHighlighted: true,
+            matchedWords: ['sale', 'org'],
+          },
+        },
+      },
+    ],
+    socialGoals: [],
+    contentType: null,
+    runningTime: 0,
+    hitsPerPage: 50,
+    festivals: ['cannes'],
+    certifications: ['eof', 'europeanQualification'],
+  }
 };

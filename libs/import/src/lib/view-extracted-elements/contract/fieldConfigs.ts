@@ -7,7 +7,7 @@ import {
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
   ContractStatus, ImportContractStatus, Language, Mandate, Media, Movie,
-  Sale, Territory, User
+  Sale, Territory, User, Duration
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -35,10 +35,7 @@ export interface FieldsConfig {
     territories_excluded: Territory[];
     medias: Media[];
     exclusive: boolean;
-    duration: {
-      from: Date;
-      to: Date;
-    };
+    duration: Duration;
     licensedOriginal: boolean;
     dubbed: Language[];
     subtitle: Language[];

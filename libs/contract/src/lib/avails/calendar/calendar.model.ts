@@ -1,5 +1,5 @@
 
-import { DurationMarker } from '../avails';
+import { DurationMarker } from '@blockframes/model';
 
 export type CellState = 'empty' | 'available' | 'expired' | 'sold' | 'selected';
 export type SelectionState = 'waiting' | 'started' | 'selected';
