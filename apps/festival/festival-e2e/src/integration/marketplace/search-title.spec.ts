@@ -7,7 +7,7 @@ import {
   moviePermissions,
   displayMovie as movie,
   expectedSavedSearch,
-} from '../../fixtures/marketplace/display-title';
+} from '../../fixtures/marketplace/search-title';
 import { productionStatus, festival, certifications, User } from '@blockframes/model';
 import {
   // plugins
