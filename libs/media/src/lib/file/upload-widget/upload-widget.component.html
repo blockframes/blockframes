@@ -1,4 +1,4 @@
-<mat-accordion *ngIf="(tasks.$ | async)?.length as itemCount">
+<mat-accordion *ngIf="(tasks.$ | async)?.length as itemCount" test-id="upload-widget">
   <mat-expansion-panel expanded>
     <mat-expansion-panel-header i18n>Uploading {{ itemCount }} item{ itemCount,
       plural, =1 {} other {s} }
@@ -23,7 +23,7 @@
 
                 <!-- Finished -->
                 <ng-template ngSwitchCase="success">
-                  <caption class="mat-caption succeeded" test-id="upload-completed"><em>Completed</em></caption>
+                  <caption class="mat-caption succeeded"><em>Completed</em></caption>
                 </ng-template>
 
                 <!-- Paused -->

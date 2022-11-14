@@ -3,7 +3,7 @@
 
     <h3>Promotional Video</h3>
     <section fxLayout="column">
-      <p>Upload video such as a trailer, teaser, promo reel, etc.</p>
+      <p>Upload a video such as a trailer, teaser, promo reel, etc.</p>
       <span fxFlex fxLayout="row" fxLayoutGap="16px">
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Title</mat-label>
@@ -25,6 +25,7 @@
         (newSubscription)="shell.addSubToStack($event)"
         listenToChanges
         pushSubToStack
+        test-id="video-upload"
       >
         <h3 title>Upload Promotional Video</h3>
       </file-uploader>
@@ -53,6 +54,7 @@
         (newSubscription)="shell.addSubToStack($event)"
         listenToChanges
         pushSubToStack
+        test-id="sales-pitch-upload"
       >
         <h3 title>Sales Pitch Video</h3>
       </file-uploader>
