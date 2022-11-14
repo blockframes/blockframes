@@ -13,6 +13,7 @@ import {
   snackbarShould,
   getAllStartingWith,
   assertUrlIncludes,
+  saveTitle
 } from '@blockframes/testing/cypress/browser';
 import {
   Movie,
@@ -31,10 +32,20 @@ import {
   colors,
   soundFormat,
   months,
+  AllowedFileType,
+  Privacy,
 } from '@blockframes/model';
 import { user, org, permissions, inDevelopmentMovie as movie } from '../../../fixtures/dashboard/movie-tunnel';
 import { addDays, subDays, format } from 'date-fns';
 import { testVideoId } from '@env';
+
+interface UploadCheckParameters {
+  movie: Movie;
+  baseField: string;
+  index?: number;
+  privacy?: Privacy;
+  isVideo?: boolean;
+}
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -90,10 +101,10 @@ describe('Movie tunnel', () => {
     testUploadGuard('poster-upload', ['pdf', 'video']);
     get('poster-upload').selectFile('src/fixtures/default-poster.webp', { action: 'drag-drop' });
     get('crop-image').click();
-    saveStep();
+    saveTitle(true);
     get('banner-upload').selectFile('src/fixtures/default-banner.webp', { action: 'drag-drop' });
     get('crop-image').click();
-    saveStep();
+    saveTitle(true);
     ///checking TV related fields
     get('content-type').click();
     get('option_tv').click();
@@ -295,21 +306,21 @@ describe('Movie tunnel', () => {
     cy.contains('Presentation Deck');
     testUploadGuard('presentation-deck-upload', ['image', 'video']);
     get('presentation-deck-upload').selectFile('src/fixtures/default-presentation-deck.pdf', { action: 'drag-drop' });
-    saveStep();
+    saveTitle(true);
     get('scenario-upload').selectFile('src/fixtures/default-scenario.pdf', { action: 'drag-drop' });
-    saveStep();
+    saveTitle(true);
     get('moodboard-upload').selectFile('src/fixtures/default-moodboard.pdf', { action: 'drag-drop' });
-    saveStep();
+    saveTitle(true);
     get('next').click();
     ///images
     cy.contains('Promotional Images');
     get('image-upload_0').selectFile('src/fixtures/default-image-1.webp', { action: 'drag-drop' });
     get('crop-image').click();
-    saveStep();
+    saveTitle(true);
     get('add').click();
     get('image-upload_1').selectFile('src/fixtures/default-image-2.webp', { action: 'drag-drop' });
     get('crop-image').click();
-    saveStep();
+    saveTitle(true);
     get('next').click();
     ///videos
     get('title').type(movie.promotional.videos.otherVideo.title);
@@ -319,12 +330,12 @@ describe('Movie tunnel', () => {
     check('video-privacy');
     testUploadGuard('video-upload', ['image', 'pdf']);
     get('video-upload').selectFile('src/fixtures/default-video.mp4', { action: 'drag-drop' });
-    saveStep();
+    saveTitle(true);
     get('description').type(movie.promotional.videos.salesPitch.description);
     uncheck('pitch-privacy');
     check('pitch-privacy');
     get('sales-pitch-upload').selectFile('src/fixtures/default-pitch.mp4', { action: 'drag-drop' });
-    saveStep();
+    saveTitle(true);
     get('next').click();
     ///notes & statements
     get('first-name').type(movie.promotional.notes[0].firstName);
@@ -333,12 +344,12 @@ describe('Movie tunnel', () => {
     get(`option_${movie.promotional.notes[0].role}`).click();
     get('note-upload').selectFile('src/fixtures/default-note.pdf', { action: 'drag-drop' });
     get('row-save').click();
-    saveStep();
+    saveTitle(true);
     get('next').click();
     ///screener movie
     cy.contains('Screener Video');
     get('screener-upload').selectFile('src/fixtures/default-screener.mp4', { action: 'drag-drop' });
-    saveStep();
+    saveTitle(true);
     get('next').click();
 
     //last step
@@ -348,10 +359,6 @@ describe('Movie tunnel', () => {
     get('original-title').should('contain', movie.title.original);
     get('content-type').should('contain', 'Movie');
     get('reference').should('contain', movie.internalRef);
-    /*
-    get('poster').should('contain', 'Missing');
-    get('banner').should('contain', 'Missing');
-    */
     get('release-year').should('contain', movie.release.year);
     get('release-status').should('contain', screeningStatus[movie.release.status]);
     get('country').should('contain', `${territories[movie.originCountries[0]]}, ${territories[movie.originCountries[1]]}`);
@@ -478,17 +485,17 @@ describe('Movie tunnel', () => {
     firestore
       .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id })
       .then(([movie]: Movie[]) => {
-        checkUpload({ movie, baseField: 'banner', isVideo: false });
-        checkUpload({ movie, baseField: 'poster', isVideo: false });
-        checkUpload({ movie, baseField: 'promotional.moodboard', isVideo: false });
-        checkUpload({ movie, baseField: 'promotional.presentation_deck', isVideo: false });
+        checkUpload({ movie, baseField: 'banner' });
+        checkUpload({ movie, baseField: 'poster' });
+        checkUpload({ movie, baseField: 'promotional.moodboard' });
+        checkUpload({ movie, baseField: 'promotional.presentation_deck' });
         checkUpload({ movie, baseField: 'promotional.videos.salesPitch', isVideo: true });
-        checkUpload({ movie, baseField: 'promotional.still_photo[0]', isVideo: false });
-        checkUpload({ movie, baseField: 'promotional.still_photo[1]', isVideo: false });
+        checkUpload({ movie, baseField: 'promotional.still_photo', index: 0 });
+        checkUpload({ movie, baseField: 'promotional.still_photo', index: 1 });
         checkUpload({ movie, baseField: 'promotional.videos.otherVideo', isVideo: true });
-        checkUpload({ movie, baseField: 'promotional.notes[0]', isVideo: false });
-        checkUpload({ movie, baseField: 'promotional.scenario', isVideo: false });
-        checkUpload({ movie, baseField: 'promotional.videos.screener', isVideo: true });
+        checkUpload({ movie, baseField: 'promotional.notes', index: 0 });
+        checkUpload({ movie, baseField: 'promotional.scenario' });
+        checkUpload({ movie, baseField: 'promotional.videos.screener', isVideo: true, privacy: 'protected' });
 
         assertUrlIncludes(`c/o/dashboard/title/${movie.id}/activity`);
       });
@@ -496,7 +503,7 @@ describe('Movie tunnel', () => {
   });
 });
 
-function testUploadGuard(selector: string, tests: ('image' | 'pdf' | 'video')[]) {
+function testUploadGuard(selector: string, tests: AllowedFileType[]) {
   return tests.map(test => {
     switch (test) {
       case 'image':
@@ -514,40 +521,28 @@ function testUploadGuard(selector: string, tests: ('image' | 'pdf' | 'video')[])
         snackbarShould('contain', 'Unsupported file type: "video/mp4".');
         snackbarShould('not.exist');
         break;
+      default:
+        throw new Error('Function testUploadGuard() does not have a case for this format yet.');
     }
   });
 }
 
-//function used to avoid batch upload (which tend to fail)
-function saveStep() {
-  get('tunnel-step-save').click();
-  snackbarShould('contain', 'Title saved');
-  get('upload-widget').should('exist');
-  get('upload-widget').should('not.exist');
+function checkUpload({ movie, baseField, index, privacy = 'public', isVideo = false }: UploadCheckParameters) {
+  const value = index >= 0 ? getDeepValue(movie, baseField)[index] : getDeepValue(movie, baseField);
+  expect(value.collection).to.equal('movies');
+  expect(value.field).to.equal(baseField);
+  expect(value.docId).to.equal(movie.id);
+  expect(value.privacy).to.equal(privacy);
+  if (isVideo) expect(value.jwPlayerId).to.equal(testVideoId);
+  expect(value.storagePath).to.contain(`movies/${movie.id}/${baseField}/default-`);
+
+  storage.exists(`${value.privacy}/${value.storagePath}`).then(exists => expect(exists).to.be.true);
 }
 
-function checkUpload({ movie, baseField, isVideo }: { movie: Movie; baseField: string; isVideo: boolean }) {
-  expect(getValue(movie, `${baseField}.collection`)).to.equal('movies');
-  expect(getValue(movie, `${baseField}.field`)).to.equal(baseField.split('[')[0]);
-  expect(getValue(movie, `${baseField}.docId`)).to.equal(movie.id);
-  expect(getValue(movie, `${baseField}.privacy`)).to.equal(baseField === 'promotional.videos.screener' ? 'protected' : 'public');
-  if (isVideo) expect(getValue(movie, `${baseField}.jwPlayerId`)).to.equal(testVideoId);
-  expect(getValue(movie, `${baseField}.storagePath`)).to.contain(`movies/${movie.id}/${baseField.split('[')[0]}/default-`);
-  storage
-    .exists(`${getValue(movie, `${baseField}.privacy`)}/${getValue(movie, `${baseField}.storagePath`)}`)
-    .then(exists => expect(exists).to.be.true);
-}
-
-function getValue(movie: Movie, path: string) {
+function getDeepValue(movie: Movie, path: string) {
   let result = movie;
   for (const key of path.split('.')) {
-    if (key.split('[').length > 1) {
-      const subkey = key.split('[')[0];
-      const index = key.substring(subkey.length + 1, subkey.length + 2);
-      result = result[subkey][index];
-    } else {
-      result = result[key];
-    }
+    result = result[key];
   }
   return result;
 }
