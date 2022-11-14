@@ -25,7 +25,7 @@
       <ng-container *ngFor="let link of routes">
         <ng-container *ngIf="movie | hasKeys : (link.requireKeys || [])">
           <a mat-tab-link [routerLink]="link.path" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive"
-            (click)="navClicked = true">
+            (click)="navClicked = true" [attr.test-id]="link.label">
             {{link.label}}
           </a>
         </ng-container>

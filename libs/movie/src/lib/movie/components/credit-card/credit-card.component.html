@@ -17,7 +17,7 @@
     </p>
   </div>
   <!-- Icon -->
-  <mat-icon
+  <mat-icon [attr.test-id]="credit.status + '-icon'"
     [svgIcon]="credit.status | statusIcon"
     [matTooltip]="credit.status | toLabel:'memberStatus'">
   </mat-icon>
@@ -29,7 +29,7 @@
   <!-- Description -->
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon svgIcon="account_circle"></mat-icon>
+      <mat-icon svgIcon="account_circle" test-id="card-description"></mat-icon>
     </ng-template>
     <article fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
       <ng-container *ngIf="credit.description; else empty">
@@ -46,7 +46,7 @@
   <!-- Filmography -->
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon svgIcon="movie"></mat-icon>
+      <mat-icon svgIcon="movie" test-id="card-filmography"></mat-icon>
     </ng-template>
     <article fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
       <ng-container *ngIf="credit.filmography | hasFilmography; else emptyFilmography">

@@ -3,7 +3,7 @@
 
   <section *ngIf="movie.stakeholders.productionCompany.length">
     <h3>Production Companies</h3>
-    <article *ngFor="let company of movie.stakeholders.productionCompany">
+    <article *ngFor="let company of movie.stakeholders.productionCompany; let i = index" [attr.test-id]="'prod-company_' + i">
       <h5>{{ company.countries | toLabel : 'territories' }}</h5>
       <p>{{ company.displayName }}</p>
     </article>
@@ -14,7 +14,7 @@
 
   <section *ngIf="movie.stakeholders.coProductionCompany.length">
     <h3>Co-Production Companies</h3>
-    <article *ngFor="let company of movie.stakeholders.coProductionCompany">
+    <article *ngFor="let company of movie.stakeholders.coProductionCompany; let i = index" [attr.test-id]="'co-prod-company_' + i">
       <h5>{{ company.countries | toLabel : 'territories' }}</h5>
       <p>{{ company.displayName }}</p>
     </article>
@@ -25,7 +25,7 @@
 
   <section *ngIf="movie.producers.length">
     <h3>Producers</h3>
-    <article *ngFor="let producer of movie.producers">
+    <article *ngFor="let producer of movie.producers; let i = index" [attr.test-id]="'producer_' + i">
       <h5>{{ producer.role | toLabel: 'producerRoles' }}</h5>
       <p>{{ producer | displayName }}</p>
     </article>
@@ -36,7 +36,7 @@
 
   <section *ngIf="movie.stakeholders.distributor.length">
     <h3>Distributors</h3>
-    <article *ngFor="let distributor of movie.stakeholders.distributor">
+    <article *ngFor="let distributor of movie.stakeholders.distributor; let i = index" [attr.test-id]="'distributor_' + i">
       <h5>{{ distributor.displayName }}</h5>
       <p>{{ distributor.countries | toLabel : 'territories' }}</p>
     </article>
@@ -47,7 +47,7 @@
 
   <section *ngIf="movie.stakeholders.salesAgent.length">
     <h3>International Sales</h3>
-    <article *ngFor="let salesAgent of movie.stakeholders.salesAgent">
+    <article *ngFor="let salesAgent of movie.stakeholders.salesAgent; let i = index" [attr.test-id]="'international-sales_' + i">
       <h5>{{ salesAgent.countries | toLabel : 'territories' }}</h5>
       <p>{{ salesAgent.displayName }}</p>
     </article>
