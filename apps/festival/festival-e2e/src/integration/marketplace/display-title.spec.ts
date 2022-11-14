@@ -99,9 +99,8 @@ describe('Movie display in marketplace', () => {
     get('save-filter').click();
     get('titles-count').should('contain', 'There is 1 title available.');
     get(`movie-card_${movie.id}`).should('exist');
-    // without wait, Cypress goes too quick and some filters are not saved in the localStorage 
-    // CF debounceTime(1000) in apps/festival/festival/src/app/marketplace/title/list/list.component.ts
-    cy.wait(1500);
+    // Wait for the last parameter to be present in URL before saving filters
+    assertUrlIncludes('%22certifications%22:%5B%22eof%22,%22europeanQualification%22');
     get('save').click();
     firestore.get(`users/${user.uid}`).then((user: User) => {
       expect(user.savedSearches.festival).to.deep.equal(JSON.stringify(expectedSavedSearch));

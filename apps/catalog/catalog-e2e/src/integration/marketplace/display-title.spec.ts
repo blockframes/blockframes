@@ -71,7 +71,7 @@ describe('Movie display in marketplace', () => {
     syncMovieToAlgolia(movie.id);
     get('title-link').eq(0).click();
     get('search-input').type(`${movie.directors[0].firstName} ${movie.directors[0].lastName}`);
-    get('titles-count').should('contain', oneTitleSentence); //  flaky, needs several tries => increase algoliaSync wait  ?
+    get('titles-count').should('contain', oneTitleSentence);
     get(`movie-card_${movie.id}`).should('exist');
   });
 
@@ -114,9 +114,8 @@ describe('Movie display in marketplace', () => {
     get('titles-count').should('contain', oneTitleSentence);
     get(`movie-card_${movie.id}`).should('exist');
     getAllStartingWith('item_').should('have.length', 1);
-    // without wait, Cypress goes too quick and some filters are not saved in the localStorage 
-    // CF debounceTime(1000) in apps/festival/festival/src/app/marketplace/title/list/list.component.ts
-    cy.wait(1500);
+    // Wait for the last parameter to be present in URL before saving filters
+    assertUrlIncludes('%22runningTime%22:5');
     get('save').click();
     get('clear-filters').click();
     get('titles-count').should('not.contain', oneTitleSentence);
