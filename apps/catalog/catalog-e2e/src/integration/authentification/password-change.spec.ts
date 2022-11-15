@@ -22,7 +22,7 @@ const injectedData = {
   [`permissions/${org.id}`]: permissions,
 };
 
-const newPassword = 'NewPassword'
+const newPassword = 'NewPassword';
 
 describe('Password reset & change test', () => {
   beforeEach(() => {
