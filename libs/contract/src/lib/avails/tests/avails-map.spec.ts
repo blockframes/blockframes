@@ -1,4 +1,4 @@
-import { BucketContract } from '@blockframes/model';
+import { BucketContract, FullMandate, FullSale, territoryAvailabilities } from '@blockframes/model';
 import {
   availDetailsExclusive, availSouthKorea, availAfghanistan,
   availFrance, availsSVODArgentina, availsPayTVArgentina,
@@ -14,7 +14,6 @@ import {
   saleBelgiumFranceLuxembourgMovie1,
   mandateMovie6
 } from './../fixtures/mandatesAndSales';
-import { FullMandate, FullSale, territoryAvailabilities } from '../avails';
 
 const sales = [saleArgentinaMovie1, saleGermanyMovie1, saleCanadaMovie1, saleBelgiumFranceLuxembourgMovie1];
 

@@ -14,11 +14,9 @@ import {
   createBucketTerm,
   Mandate,
   BucketTerm,
-  Term
-} from '@blockframes/model';
-import {
-  AvailableTerritoryMarker,
+  Term,
   AvailsFilter,
+  AvailableTerritoryMarker,
   BucketTerritoryMarker,
   CalendarAvailsFilter,
   DurationMarker,
@@ -26,7 +24,7 @@ import {
   isSameCalendarBucketTerm,
   isSameMapBucketTerm,
   MapAvailsFilter
-} from '../avails/avails';
+} from '@blockframes/model';
 import { HoldbackForm } from '../contract/holdback/form';
 
 //////////

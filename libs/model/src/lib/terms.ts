@@ -1,5 +1,7 @@
 import { Media, Territory } from './static';
 import { LanguageRecord } from './movie';
+import { decodeDate } from './utils';
+
 export interface Duration {
   from: Date;
   to: Date;
@@ -34,20 +36,14 @@ export function createTerm(params: Partial<Term> = {}): Term {
     territories: [],
     medias: [],
     exclusive: false,
-    duration: { from: new Date(), to: new Date() },
     licensedOriginal: null,
     languages: {},
     criteria: [],
-    ...params
-  }
+    ...params,
+    duration: createDuration(params?.duration),
+  };
 }
 
-function randomNumber() {
-  return Math.floor(Math.random() * 255);
+export function createDuration(params: Partial<Duration> = {}): Duration {
+  return { from: decodeDate(params?.from), to: decodeDate(params?.to) };
 }
-
-function fakeIp() {
-  return randomNumber() + 1 + '.' + randomNumber() + '.' + randomNumber() + '.' + randomNumber();
-}
-
-export const fakeLegalTerms = { date: new Date(), ip: fakeIp() };

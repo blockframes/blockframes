@@ -1,5 +1,14 @@
-import { collidingHoldback, getCollidingHoldbacks } from '../avails';
-import { createHoldback, Holdback, Duration, Term, createTerm, Media, Territory } from '@blockframes/model';
+import {
+  createHoldback,
+  Holdback,
+  Duration,
+  Term,
+  createTerm,
+  Media,
+  Territory,
+  collidingHoldback,
+  getCollidingHoldbacks
+} from '@blockframes/model';
 
 // Territories
 const nonCollidingTerritoriesA: Territory[] = [
