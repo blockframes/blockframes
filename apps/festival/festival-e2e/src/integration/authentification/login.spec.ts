@@ -20,7 +20,7 @@ const injectedData = {
   [`permissions/${org.id}`]: permissions,
 };
 
-describe('Login tests', () => {
+describe('Login test', () => {
   it('login and accept Terms and Privacy Policy', () => {
     cy.visit('');
     browserAuth.clearBrowserAuth();
@@ -29,9 +29,8 @@ describe('Login tests', () => {
     firestore.clearTestData();
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     firestore.create([injectedData]);
-    firestore.update({ docPath: `users/${user.uid}`, field: 'termsAndConditions', value: {} });
     maintenance.end();
-    refreshIfMaintenance();
+    refreshIfMaintenance('festival');
     get('login').click();
     assertUrlIncludes('/connexion');
     get('signin-email').type(user.email);

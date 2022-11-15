@@ -12,7 +12,6 @@ import {
   get,
   check,
   assertUrlIncludes,
-  awaitElementDeletion,
 } from '@blockframes/testing/cypress/browser';
 import { user, org, permissions } from '../../fixtures/authentification/login';
 const imageFixture = 'src/fixtures/default-image-1.webp';
@@ -23,7 +22,7 @@ const injectedData = {
   [`permissions/${org.id}`]: permissions,
 };
 
-describe('Login tests', () => {
+describe('Profile test', () => {
   it('login and set a profile picture', () => {
     cy.visit('');
     browserAuth.clearBrowserAuth();
@@ -33,7 +32,7 @@ describe('Login tests', () => {
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     firestore.create([injectedData]);
     maintenance.end();
-    refreshIfMaintenance();
+    refreshIfMaintenance('festival');
     browserAuth.signinWithEmailAndPassword(user.email);
     check('terms');
     check('privacy-policy');

@@ -1,4 +1,5 @@
 import {
+  App,
   OrgActivity,
   orgActivity,
   Territory,
@@ -250,8 +251,8 @@ export function saveTitle(checkUploadWidget = false) {
 
 //* MAINTENANCE *//
 
-export function refreshIfMaintenance() {
-  return cy.get('festival-root').then($el => {
+export function refreshIfMaintenance(app: App) {
+  return cy.get(`${app}-root`).then($el => {
     const $children = $el.children();
     const childrenTagNames = $children.toArray().map(child => child.tagName);
     if (childrenTagNames.includes('blockframes-maintenance'.toUpperCase())) get('maintenance-refresh').click();
