@@ -140,7 +140,7 @@ export class BucketService extends BlockframesCollection<Bucket> {
   async isInSelection(availsFitler: AvailsFilter, titleId: string) {
     const bucket = await this.getActive();
     const bucketContracts = bucket?.contracts.filter(s => s.titleId === titleId);
-    const inBucket = getMatchingSales(bucketContracts, availsFitler);
+    const inBucket = getMatchingSales(bucketContracts ?? [], availsFitler);
     return !!inBucket.length;
   }
 }
