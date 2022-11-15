@@ -22,7 +22,7 @@ const injectedData = {
   [`permissions/${org.id}`]: permissions,
 };
 
-describe('Login tests', () => {
+describe('Profile test', () => {
   it('login and set a profile picture', () => {
     cy.visit('');
     browserAuth.clearBrowserAuth();

@@ -7,7 +7,6 @@ import {
   // cypress specific functions
   refreshIfMaintenance,
   // cypress commands
-  check,
   get,
   assertUrlIncludes,
   interceptEmail,
@@ -23,7 +22,9 @@ const injectedData = {
   [`permissions/${org.id}`]: permissions,
 };
 
-describe('Login tests', () => {
+const newPassword = 'NewPassword'
+
+describe('Password reset & change test', () => {
   beforeEach(() => {
     cy.visit('');
     browserAuth.clearBrowserAuth();
@@ -32,7 +33,6 @@ describe('Login tests', () => {
     firestore.clearTestData();
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     firestore.create([injectedData]);
-    firestore.update({ docPath: `users/${user.uid}`, field: 'termsAndConditions', value: {} });
     maintenance.end();
     refreshIfMaintenance('catalog');
     get('login').click();
@@ -61,16 +61,7 @@ describe('Login tests', () => {
   });
 
   it('An known user can modify his password with a valid profile form', () => {
-    get('signin-email').type(user.email);
-    get('password').type(USER_FIXTURES_PASSWORD);
-    get('submit').click();
-    check('terms');
-    check('privacy-policy');
-    get('access').click();
-    assertUrlIncludes('c/o/marketplace/home');
-    get('skip-preferences').click();
-    get('auth-user').click();
-    get('profile').click();
+    accessProfile();
     get('current-password').type(USER_FIXTURES_PASSWORD);
     get('new-password').type('NewPassword');
     get('password-confirm').type('NewPassword');
@@ -86,15 +77,7 @@ describe('Login tests', () => {
   });
 
   it('An known user cannot modify his password with an invalid profile form', () => {
-    browserAuth.signinWithEmailAndPassword(user.email);
-    cy.visit('');
-    check('terms');
-    check('privacy-policy');
-    get('access').click();
-    assertUrlIncludes('c/o/marketplace/home');
-    get('skip-preferences').click();
-    get('auth-user').click();
-    get('profile').click();
+    accessProfile();
     // wrong current password
     get('current-password').type('WrongPassword');
     get('update-profile').click();
@@ -126,7 +109,7 @@ describe('Login tests', () => {
     get('new-password').find('input').clear();
     get('current-error').should('not.exist');
     // new valid password
-    get('new-password').type('NewPassword');
+    get('new-password').type(newPassword);
     // unmatching confirmation
     get('password-confirm').type('NoMatch');
     get('update-profile').click();
@@ -137,8 +120,16 @@ describe('Login tests', () => {
     get('confirm-required-error').should('exist');
     // valid confirm
     get('password-confirm').find('input').clear();
-    get('password-confirm').type('NewPassword');
+    get('password-confirm').type(newPassword);
     get('unmatch-error').should('not.exist');
     get('confirm-required-error').should('not.exist');
   });
 });
+
+function accessProfile() {
+  browserAuth.signinWithEmailAndPassword(user.email);
+  cy.visit('');
+  get('skip-preferences').click();
+  get('auth-user').click();
+  get('profile').click();
+}
