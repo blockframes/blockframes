@@ -12,7 +12,7 @@ import {
   addNewCompany,
   fillCommonInputs,
 } from '@blockframes/testing/cypress/browser';
-import { newUser, newOrg } from '../../fixtures/authentification/signup';
+import { newUser1 as newUser, newOrg1 as newOrg} from '../../fixtures/authentification/signup';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 
 describe('Signup', () => {
@@ -49,7 +49,7 @@ describe('Signup', () => {
     get('activity').click();
     get(`activity_${newOrg.activity}`).click();
     get('country').click();
-    get(`option_${newOrg.country}`).click();
+    get(`option_${newOrg.addresses.main.country}`).click();
     get('role').contains('Buyer').click();
     get('password').type(USER_FIXTURES_PASSWORD);
     get('password-confirm').type(USER_FIXTURES_PASSWORD);
@@ -110,7 +110,7 @@ describe('Signup', () => {
     get(`activity_${newOrg.activity}`).click();
     get('submit').should('be.disabled');
     get('country').click();
-    get(`option_${newOrg.country}`).click();
+    get(`option_${newOrg.addresses.main.country}`).click();
     get('submit').should('be.disabled');
     get('role').contains('Buyer').click();
     get('submit').should('be.enabled');
@@ -127,7 +127,7 @@ describe('Signup', () => {
     get('activity').click();
     get(`activity_${newOrg.activity}`).click();
     get('country').click();
-    get(`option_${newOrg.country}`).click();
+    get(`option_${newOrg.addresses.main.country}`).click();
     get('role').contains('Buyer').click();
     check('terms');
     check('gdpr');

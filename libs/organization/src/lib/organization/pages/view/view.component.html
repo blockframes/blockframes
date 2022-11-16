@@ -1,5 +1,5 @@
 <ng-container *ngIf="organization$ | async as org">
-  <header>
+  <header test-id="header">
     <article fxLayout fxLayoutAlign="space-around start">
       <img [ref]="org.logo" type="logo" asset="empty_organization.svg" alt="organization logo">
       <div class="org-info">
@@ -16,10 +16,11 @@
   <section>
     <nav mat-tab-nav-bar>
       <a mat-tab-link
-         *ngFor="let link of navLinks"
-         [routerLink]="link.path"
-         routerLinkActive #rla="routerLinkActive"
-         [active]="rla.isActive">
+        *ngFor="let link of navLinks"
+        [routerLink]="link.path"
+        routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive"
+        [attr.test-id]="link.label">
         {{link.label}}
       </a>
     </nav>
