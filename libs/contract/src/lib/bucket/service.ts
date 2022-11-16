@@ -24,6 +24,7 @@ import { firstValueFrom } from 'rxjs';
 
 interface AddTermConfig {
   titleId: string,
+  orgId: string,
   parentTermId: string,
   avail: AvailsFilter
 };
@@ -119,17 +120,17 @@ export class BucketService extends BlockframesCollection<Bucket> {
   }
 
   async addBatchTerms(availsResults: AddTermConfig[]) {
-    const orgId = this.orgService.org.id;
+    const bucketId = this.orgService.org.id;
     let bucket = await this.getActive();
-    if (!bucket) bucket = createBucket({ id: orgId });
+    if (!bucket) bucket = createBucket({ id: bucketId });
 
-    for (const { titleId, parentTermId, avail } of availsResults) {
+    for (const { titleId, parentTermId, avail, orgId } of availsResults) {
       const term = createBucketTerm(avail);
       const sale = bucket.contracts.find(c => c.titleId === titleId && c.parentTermId === parentTermId);
       if (sale) {
         sale.terms.push(term);
       } else {
-        const contract = createBucketContract({ titleId, parentTermId, terms: [term] });
+        const contract = createBucketContract({ orgId, titleId, parentTermId, terms: [term] });
         bucket.contracts.push(contract);
       }
     }
