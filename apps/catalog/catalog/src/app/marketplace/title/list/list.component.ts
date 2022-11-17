@@ -204,7 +204,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
 
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
-    const exportStatus = await this.pdfService.download({ titleIds: this.movieIds, forms: { avails: this.availsForm, search: this.searchForm } });
+    const exportStatus = await this.pdfService.download({ titleIds: this.movieIds, filters: { avails: this.availsForm.value, search: this.searchForm.value } });
     snackbarRef.dismiss();
     if (!exportStatus) {
       this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });

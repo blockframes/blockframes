@@ -112,7 +112,7 @@ export interface MovieSearch extends AlgoliaSearch {
 }
 
 export interface MovieAvailsSearch {
-  search: MovieSearch;
+  search?: MovieSearch;
   avails?: AvailsFilter
 }
 

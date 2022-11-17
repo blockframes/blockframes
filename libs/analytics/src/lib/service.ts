@@ -7,7 +7,7 @@ import { firstValueFrom, Subscription, map } from 'rxjs';
 import { CallableFunctions, FIRE_ANALYTICS } from 'ngfire';
 
 // Blockframes
-import { Analytics, AnalyticsTypes, EventName, createTitleMeta, Movie, createDocumentMeta } from '@blockframes/model';
+import { Analytics, AnalyticsTypes, EventName, createTitleMeta, Movie, createDocumentMeta, MovieAvailsSearch, createPdfExportMeta, Module } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
@@ -104,6 +104,21 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     });
     logEvent(this.analytics, name, meta);
     return this.add({ type: 'title', name, meta });
+  }
+
+  async addPdfExport(search: MovieAvailsSearch, module: Module) {
+    if (await this.isOperator()) return;
+    const profile = this.authService.profile;
+    if (!profile) return;
+
+    const meta = createPdfExportMeta({
+      search,
+      module,
+      orgId: profile.orgId,
+      uid: profile.uid,
+    });
+
+    return this.add({ type: 'pdfExport', meta });
   }
 
   async addTitlePageView(title: Movie) {

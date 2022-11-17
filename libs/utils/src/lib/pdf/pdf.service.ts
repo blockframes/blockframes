@@ -1,23 +1,20 @@
 import { Inject, Injectable } from '@angular/core';
-import { App, appName, toLabel } from '@blockframes/model';
+import { App, appName, toLabel, MovieAvailsSearch } from '@blockframes/model';
 import { firebaseRegion, firebase } from '@env';
 import { EmulatorsConfig, EMULATORS_CONFIG } from '../emulator-front-setup';
 import { APP } from '../routes/utils';
 import { PdfParams, PdfParamsFilters } from './pdf.interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
-import { MovieSearchForm } from '@blockframes/movie/form/search.form';
 import { trimString, toGroupLabel } from '@blockframes/utils/pipes';
+import { AnalyticsService } from '@blockframes/analytics/service';
+import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 
 export const { projectId } = firebase();
 
 interface DownloadSettings {
   titleIds: string[],
   orgId?: string,
-  forms?: {
-    avails?: AvailsForm,
-    search?: MovieSearchForm
-  }
+  filters?: MovieAvailsSearch
 }
 
 @Injectable({ providedIn: 'root' })
@@ -32,11 +29,13 @@ export class PdfService {
 
   constructor(
     @Inject(APP) private app: App,
-    @Inject(EMULATORS_CONFIG) private emulatorsConfig: EmulatorsConfig
+    @Inject(EMULATORS_CONFIG) private emulatorsConfig: EmulatorsConfig,
+    private analyticsService: AnalyticsService,
+    private moduleGuard: ModuleGuard
   ) { }
 
   async download(settings: DownloadSettings) {
-    const filters = this.getFilters(settings.forms);
+    const filters = this.getFilters(settings.filters);
     const fileName = this.getFileName(filters);
     const data: PdfParams = {
       app: this.app,
@@ -50,6 +49,8 @@ export class PdfService {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     }
+
+    await this.analyticsService.addPdfExport(settings.filters, this.moduleGuard.currentModule);
 
     const url = this.emulatorsConfig.functions
       ? `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`
@@ -81,7 +82,7 @@ export class PdfService {
   private getFileName(filters: PdfParamsFilters) {
     const fileNameParts: string[] = [`${appName[this.app]} Library`];
 
-    if (filters.avails ) fileNameParts.push(`Avails for ${filters.avails}`);
+    if (filters.avails) fileNameParts.push(`Avails for ${filters.avails}`);
     if (filters.contentType) fileNameParts.push(filters.contentType);
     if (filters.genres) fileNameParts.push(filters.genres);
     if (filters.originCountries) fileNameParts.push(filters.originCountries);
@@ -89,11 +90,11 @@ export class PdfService {
     return fileNameParts.filter(s => s).join(' - ');
   }
 
-  private getFilters(forms: { avails?: AvailsForm, search?: MovieSearchForm }) {
+  private getFilters(search: MovieAvailsSearch) {
     const filters: PdfParamsFilters = {};
 
-    if (forms?.avails) {
-      const availForm = forms.avails.value;
+    if (search?.avails) {
+      const availForm = search.avails;
 
       if (availForm.territories?.length && availForm.medias?.length) {
         const territories = toGroupLabel(availForm.territories, 'territories', 'World').join(', ');
@@ -103,8 +104,8 @@ export class PdfService {
 
     }
 
-    if (forms?.search) {
-      const searchForm = forms.search.value;
+    if (search?.search) {
+      const searchForm = search.search;
 
       if (this.app === 'catalog' && searchForm.contentType) {
         filters.contentType = toLabel(searchForm.contentType, 'contentType');

@@ -1,6 +1,8 @@
+import { MovieAvailsSearch } from './algolia';
 import { DocumentMeta } from './meta';
 import { Movie } from './movie';
 import { Organization } from './organisation';
+import { Module } from './static';
 import { User } from './user';
 
 const analyticsEvents = [
@@ -16,6 +18,7 @@ export type EventName = typeof analyticsEvents[number];
 export interface AnalyticsTypeRecord {
   title: MetaTitle;
   event: MetaEvent;
+  pdfExport: MetaPdfExport
 }
 
 export type AnalyticsTypes = keyof AnalyticsTypeRecord;
@@ -40,6 +43,13 @@ export interface MetaEvent {
   uid: string;
   orgId?: string;
   ownerOrgId: string;
+}
+
+export interface MetaPdfExport {
+  search?: MovieAvailsSearch;
+  module: Module,
+  uid: string;
+  orgId?: string;
 }
 
 export interface AggregatedAnalytic extends Record<EventName, number> {
@@ -71,6 +81,15 @@ export function createTitleMeta(meta: Partial<MetaTitle>): MetaTitle {
     orgId: '',
     uid: '',
     ownerOrgIds: [],
+    ...meta
+  };
+};
+
+export function createPdfExportMeta(meta: Partial<MetaPdfExport>): MetaPdfExport {
+  return {
+    module: 'marketplace',
+    orgId: '',
+    uid: '',
     ...meta
   };
 };

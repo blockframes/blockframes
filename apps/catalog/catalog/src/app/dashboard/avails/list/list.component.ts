@@ -196,7 +196,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
     this.cdr.markForCheck();
-    const exportStatus = await this.pdfService.download({ titleIds, orgId: this.orgService.org.id, forms: { avails: this.availsForm } });
+    const exportStatus = await this.pdfService.download({ titleIds, orgId: this.orgService.org.id, filters: { avails: this.availsForm.value } });
     snackbarRef.dismiss();
     if (!exportStatus) {
       this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });
