@@ -50,6 +50,7 @@ export interface MetaPdfExport {
   module: Module,
   uid: string;
   orgId?: string;
+  titleCount: number,
 }
 
 export interface AggregatedAnalytic extends Record<EventName, number> {
@@ -90,6 +91,7 @@ export function createPdfExportMeta(meta: Partial<MetaPdfExport>): MetaPdfExport
     module: 'marketplace',
     orgId: '',
     uid: '',
+    titleCount: 0,
     ...meta
   };
 };

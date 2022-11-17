@@ -106,7 +106,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     return this.add({ type: 'title', name, meta });
   }
 
-  async addPdfExport(search: MovieAvailsSearch, module: Module) {
+  async addPdfExport(search: MovieAvailsSearch, titleCount: number, module: Module) {
     if (await this.isOperator()) return;
     const profile = this.authService.profile;
     if (!profile) return;
@@ -116,6 +116,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
       module,
       orgId: profile.orgId,
       uid: profile.uid,
+      titleCount
     });
 
     return this.add({ type: 'pdfExport', meta });

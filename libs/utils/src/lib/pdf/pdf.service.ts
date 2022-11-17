@@ -50,7 +50,7 @@ export class PdfService {
       body: JSON.stringify(data)
     }
 
-    await this.analyticsService.addPdfExport(settings.filters, this.moduleGuard.currentModule);
+    await this.analyticsService.addPdfExport(settings.filters, settings.titleIds.length, this.moduleGuard.currentModule);
 
     const url = this.emulatorsConfig.functions
       ? `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`
