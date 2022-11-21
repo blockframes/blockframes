@@ -111,8 +111,7 @@ export function fillCommonInputs(user: PublicUser, fillEmail = true) {
   check('gdpr');
 }
 
-export function addNewCompany(organization: Organization) {
-  const { name, activity, addresses } = organization;
+export function addNewCompany({ name, activity, addresses }: Organization) {
   get('org').type(name);
   get('new-org').click();
   get('activity').click();
