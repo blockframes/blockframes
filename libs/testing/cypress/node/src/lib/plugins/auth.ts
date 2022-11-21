@@ -3,8 +3,8 @@ import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 import { User } from 'firebase/auth';
 
-export async function createUser(data: { uid: string; email: string; emailVerified: boolean; password?: string }) {
-  return await auth.createUser({ password: data.password || USER_FIXTURES_PASSWORD, ...data });
+export async function createUser(data: { uid: string; email: string; emailVerified: boolean; password: string }) {
+  return await auth.createUser(data);
 }
 
 export async function getUser(emailOrUid: string) {

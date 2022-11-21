@@ -16,15 +16,15 @@ import {
   snackbarShould,
 } from '@blockframes/testing/cypress/browser';
 import {
-  newUser1,
-  newUser2,
-  newOrg2,
+  userWithJoinOrgInvitation,
+  userWithEventInvitation,
+  userWithEventInvitationOrg,
   dashboardData,
   orgInvitation,
   meetingInvitation,
   meetingEvent,
   meetingDocIndex,
-} from '../../fixtures/authentification/signup';
+} from '../../fixtures/authentification/signup-with-invitation';
 import { territories, orgActivity } from '@blockframes/model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 
@@ -34,8 +34,8 @@ const meetingInvitationCode = 'E2eMeetingInvitCode';
 
 const injectedData = {
   [`users/${orgAdmin.uid}`]: orgAdmin,
-  [`users/${newUser1.uid}`]: { uid: newUser1.uid, email: newUser1.email },
-  [`users/${newUser2.uid}`]: { uid: newUser2.uid, email: newUser2.email },
+  [`users/${userWithJoinOrgInvitation.uid}`]: { uid: userWithJoinOrgInvitation.uid, email: userWithJoinOrgInvitation.email },
+  [`users/${userWithEventInvitation.uid}`]: { uid: userWithEventInvitation.uid, email: userWithEventInvitation.email },
   [`orgs/${org.id}`]: org,
   [`permissions/${permissions.id}`]: permissions,
   [`invitations/${orgInvitation.id}`]: orgInvitation,
@@ -52,14 +52,14 @@ describe('Signup following an invitation', () => {
     browserAuth.clearBrowserAuth();
     maintenance.start();
     adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email, emailVerified: true });
-    adminAuth.createUser({ uid: newUser1.uid, email: newUser1.email, emailVerified: true, password: orgInvitationCode });
-    adminAuth.createUser({ uid: newUser2.uid, email: newUser2.email, emailVerified: true, password: meetingInvitationCode });
+    adminAuth.createUser({ uid: userWithJoinOrgInvitation.uid, email: userWithJoinOrgInvitation.email, emailVerified: true, password: orgInvitationCode });
+    adminAuth.createUser({ uid: userWithEventInvitation.uid, email: userWithEventInvitation.email, emailVerified: true, password: meetingInvitationCode });
     firestore.create([injectedData]);
     maintenance.end();
   });
 
   it('User invited by an organization admin can signup', () => {
-    const newUser = newUser1;
+    const newUser = userWithJoinOrgInvitation;
     cy.visit(`auth/identity?code=${orgInvitationCode}&email=${newUser.email}`);
     get('cookies').click();
     get('email').should('be.disabled').invoke('val').should('contain', newUser.email);
@@ -89,7 +89,7 @@ describe('Signup following an invitation', () => {
   });
 
   it('User invited by an organization admin cannot signup if the form is invalid', () => {
-    const newUser = newUser1;
+    const newUser = userWithJoinOrgInvitation;
     cy.visit(`auth/identity?code=${orgInvitationCode}&email=${newUser.email}`);
     get('cookies').click();
     get('submit').should('be.disabled');
@@ -116,7 +116,7 @@ describe('Signup following an invitation', () => {
   });
 
   it('User invited by an organization admin cannot signup with an invalid code', () => {
-    const newUser = newUser1;
+    const newUser = userWithJoinOrgInvitation;
     cy.visit(`auth/identity?code=${orgInvitationCode}&email=${newUser.email}`);
     get('cookies').click();
     get('submit').should('be.disabled');
@@ -127,8 +127,8 @@ describe('Signup following an invitation', () => {
   });
 
   it('User invited for an event can signup', () => {
-    const newUser = newUser2;
-    const newOrg = newOrg2;
+    const newUser = userWithEventInvitation;
+    const newOrg = userWithEventInvitationOrg;
     cy.visit(`auth/identity?code=${meetingInvitationCode}&email=${newUser.email}`);
     get('cookies').click();
     get('email').should('be.disabled').invoke('val').should('contain', newUser.email);
@@ -163,6 +163,9 @@ describe('Signup following an invitation', () => {
 });
 
 function checkRequiredErrors(selectors: string[], focusAndBlur?: boolean) {
+  // .focus = enter inpout
+  // .blur  = leave input
+  // we use .focus.blur to trigger the 'required' errors
   for (const selector of selectors) {
     if (selector.includes('password') && focusAndBlur) {
       get(selector).find('input').focus().blur();

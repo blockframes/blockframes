@@ -101,8 +101,8 @@ export function connectOtherUser(email: string) {
 
 //* AUTHENTIFICATION *//
 
-export function fillCommonInputs(user: PublicUser, omitEmail?: boolean) {
-  if (!omitEmail) get('email').type(user.email);
+export function fillCommonInputs(user: PublicUser, fillEmail = true) {
+  if (fillEmail) get('email').type(user.email);
   get('first-name').type(user.firstName);
   get('last-name').type(user.lastName);
   get('password').type(USER_FIXTURES_PASSWORD);

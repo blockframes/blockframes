@@ -25,7 +25,7 @@ import {
   validateInvitation,
   deleteInvitation,
 } from '@blockframes/testing/cypress/browser';
-import { newUser1 as newUser, newOrg1 as newOrg, marketplaceData, dashboardData } from '../../fixtures/authentification/signup';
+import { newUser, newOrg, marketplaceData, dashboardData } from '../../fixtures/authentification/signup';
 import { territories, orgActivity } from '@blockframes/model';
 import { capitalize } from '@blockframes/utils/helpers';
 
