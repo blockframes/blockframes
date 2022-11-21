@@ -403,6 +403,10 @@ export async function cleanMovieMedias(before: Movie, after?: Movie): Promise<vo
       mediaToDelete.push(before.promotional.videos.screener);
     }
 
+    if (before.promotional.videos?.publicScreener?.storagePath) {
+      mediaToDelete.push(before.promotional.videos.publicScreener);
+    }
+
     if (before.promotional.videos?.salesPitch?.storagePath) {
       mediaToDelete.push(before.promotional.videos.salesPitch);
     }
