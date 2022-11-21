@@ -265,6 +265,7 @@ export function getMandateTerms(avails: AvailsFilter, mandates: FullMandate[]): 
   const { available } = getMatchingAvailabilities(options);
   return available.map(a => ({
     term: a.mandate.terms[0],
+    mandate: a.mandate,
     avail: a.avail
   }));
 }
