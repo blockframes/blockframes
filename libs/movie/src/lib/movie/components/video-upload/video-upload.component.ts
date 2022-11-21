@@ -43,6 +43,6 @@ export class MovieVideoUploadComponent implements OnInit {
     this.uploaderService.upload();
     await this.movieService.update(this.movie.id, this.movie);
 
-    this.snackBar.open('Videos upload started !', 'close', { duration: 5000 });
+    this.snackBar.open('Videos update started !', 'close', { duration: 5000 });
   }
 }
