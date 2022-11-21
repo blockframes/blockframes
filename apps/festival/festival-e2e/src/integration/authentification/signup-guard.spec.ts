@@ -12,7 +12,7 @@ import {
   addNewCompany,
   fillCommonInputs,
 } from '@blockframes/testing/cypress/browser';
-import { newUser1 as newUser, newOrg1 as newOrg} from '../../fixtures/authentification/signup';
+import { newUser, newOrg} from '../../fixtures/authentification/signup';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 
 describe('Signup', () => {

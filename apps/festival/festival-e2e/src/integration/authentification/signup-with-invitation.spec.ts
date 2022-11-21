@@ -63,7 +63,7 @@ describe('Signup following an invitation', () => {
     cy.visit(`auth/identity?code=${orgInvitationCode}&email=${newUser.email}`);
     get('cookies').click();
     get('email').should('be.disabled').invoke('val').should('contain', newUser.email);
-    fillCommonInputs(newUser, true);
+    fillCommonInputs(newUser, false);
     get('organization').should('be.disabled').invoke('val').should('contain', org.name);
     get('activity').should('contain', orgActivity[org.activity]);
     get('country').should('contain', territories[org.addresses.main.country]);
@@ -120,7 +120,7 @@ describe('Signup following an invitation', () => {
     cy.visit(`auth/identity?code=${orgInvitationCode}&email=${newUser.email}`);
     get('cookies').click();
     get('submit').should('be.disabled');
-    fillCommonInputs(newUser, true);
+    fillCommonInputs(newUser, false);
     get('invitation-code').find('input').clear().type('WrongCode');
     get('submit').click();
     snackbarShould('contain', 'Incorrect Invitation Pass. Please check your invitation email.');
@@ -132,7 +132,7 @@ describe('Signup following an invitation', () => {
     cy.visit(`auth/identity?code=${meetingInvitationCode}&email=${newUser.email}`);
     get('cookies').click();
     get('email').should('be.disabled').invoke('val').should('contain', newUser.email);
-    fillCommonInputs(newUser, true);
+    fillCommonInputs(newUser, false);
     get('organization').should('contain', '');
     addNewCompany(newOrg);
     get('invitation-code').find('input').invoke('val').should('contain', meetingInvitationCode);
