@@ -39,6 +39,7 @@ describe('Search buyer organizations in dashboard', () => {
     algolia.deleteOrg({ app: 'festival', objectId: dashboardBuyerOrg.id });
     algolia.deleteOrg({ app: 'festival', objectId: pendingBuyerOrg.id });
     algolia.deleteOrg({ app: 'festival', objectId: catalogBuyerOrg.id });
+    cy.wait(2000); // giving alfolia some tome to catch up
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
@@ -57,6 +58,7 @@ describe('Search buyer organizations in dashboard', () => {
     algolia.storeOrganization(dashboardBuyerOrg);
     algolia.storeOrganization(pendingBuyerOrg);
     algolia.storeOrganization(catalogBuyerOrg);
+    cy.wait(2000); // giving alfolia some tome to catch up
     get('organization').click();
     assertUrlIncludes('c/o/dashboard/organization');
     get('organizations-count').then($result => {

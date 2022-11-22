@@ -72,7 +72,7 @@ describe('Signup following an invitation', () => {
     assertUrlIncludes('c/o/dashboard/home');
     //check organization data
     get('auth-user').click();
-    get('organization').click();
+    get('widget-organization').click();
     get('header')
       .should('contain', org.name)
       .and('contain', orgActivity[org.activity])
@@ -149,7 +149,7 @@ describe('Signup following an invitation', () => {
     get('skip-preferences').click();
     //check organization data
     get('auth-user').click();
-    get('organization').click();
+    get('widget-organization').click();
     get('header')
       .should('contain', newOrg.name)
       .and('contain', orgActivity[newOrg.activity])
