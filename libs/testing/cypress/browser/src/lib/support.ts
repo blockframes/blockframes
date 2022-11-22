@@ -1,8 +1,7 @@
 import {
   App,
-  OrgActivity,
   orgActivity,
-  Territory,
+  Organization,
   territories,
   PublicUser,
   Module,
@@ -102,8 +101,8 @@ export function connectOtherUser(email: string) {
 
 //* AUTHENTIFICATION *//
 
-export function fillCommonInputs(user: PublicUser) {
-  get('email').type(user.email);
+export function fillCommonInputs(user: PublicUser, fillEmail = true) {
+  if (fillEmail) get('email').type(user.email);
   get('first-name').type(user.firstName);
   get('last-name').type(user.lastName);
   get('password').type(USER_FIXTURES_PASSWORD);
@@ -112,15 +111,15 @@ export function fillCommonInputs(user: PublicUser) {
   check('gdpr');
 }
 
-export function addNewCompany({ name, activity, country }: { name: string; activity: OrgActivity; country: Territory }) {
+export function addNewCompany({ name, activity, addresses }: Organization) {
   get('org').type(name);
   get('new-org').click();
   get('activity').click();
   get(`activity_${activity}`).click();
   get('activity').should('contain', orgActivity[activity]);
   get('country').click();
-  get(`option_${country}`).click();
-  get('country').should('contain', territories[country]);
+  get(`option_${addresses.main.country}`).click();
+  get('country').should('contain', territories[addresses.main.country]);
   get('role').contains('Buyer').click();
 }
 
