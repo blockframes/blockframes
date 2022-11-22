@@ -38,7 +38,7 @@ const injectedData = {
   [`movies/${movie.id}`]: movie,
 };
 
-describe('Movie display in marketplace', () => {
+describe('Movie search in marketplace', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
