@@ -11,7 +11,7 @@ import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 
 export const { projectId } = firebase();
 
-interface DownloadSettings {
+export interface DownloadSettings {
   titleIds: string[],
   orgId?: string,
   filters?: MovieAvailsSearch
@@ -34,6 +34,18 @@ export class PdfService {
     private moduleGuard: ModuleGuard
   ) { }
 
+  canDownload({ filters, titleIds }: DownloadSettings) {
+    if (!titleIds.length) {
+      this.analyticsService.addPdfExport(filters, titleIds.length, this.moduleGuard.currentModule, false);
+      return { status: false, message: 'You have no published titles.' };
+    }
+    if (titleIds.length >= this.exportLimit) {
+      this.analyticsService.addPdfExport(filters, titleIds.length, this.moduleGuard.currentModule, false);
+      return { status: false, message: 'Sorry, you can\'t have an export with that many titles.' };
+    }
+    return { status: true };
+  }
+
   async download(settings: DownloadSettings) {
     const filters = this.getFilters(settings.filters);
     const fileName = this.getFileName(filters);
@@ -50,13 +62,11 @@ export class PdfService {
       body: JSON.stringify(data)
     }
 
-    await this.analyticsService.addPdfExport(settings.filters, settings.titleIds.length, this.moduleGuard.currentModule);
-
     const url = this.emulatorsConfig.functions
       ? `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`
       : `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`
 
-    const status = await new Promise(resolve => {
+    const status: boolean = await new Promise(resolve => {
       fetch(url, params,).then(res => res.blob())
         .then(blob => {
           const url = URL.createObjectURL(blob);
@@ -69,7 +79,9 @@ export class PdfService {
         }).catch(_ => resolve(false));
     });
 
-    return status as boolean;
+    this.analyticsService.addPdfExport(settings.filters, settings.titleIds.length, this.moduleGuard.currentModule, status);
+
+    return status;
   }
 
   /**

@@ -10,7 +10,7 @@ import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.compon
 import { displayPerson } from '@blockframes/utils/pipes';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { filters } from '@blockframes/ui/list/table/filters';
-import { PdfService } from '@blockframes/utils/pdf/pdf.service';
+import { DownloadSettings, PdfService } from '@blockframes/utils/pdf/pdf.service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -79,20 +79,18 @@ export class ListComponent {
 
   async export(movies: Movie[]) {
     const titleIds = movies.filter(m => m.app.festival.status === 'accepted' ).map(m => m.id);
-    if(!titleIds.length) {
-      this.snackbar.open('You have no published titles.', 'close', { duration: 5000 });
-      return;
-    }
+    const downloadSettings: DownloadSettings = { titleIds, orgId: this.orgService.org.id };
+    const canDownload = this.pdfService.canDownload(downloadSettings);
 
-    if (titleIds.length >= this.pdfService.exportLimit) {
-      this.snackbar.open('Sorry, you can\'t have an export with that many titles.', 'close', { duration: 5000 });
+    if (!canDownload.status) {
+      this.snackbar.open(canDownload.message, 'close', { duration: 5000 });
       return;
     }
 
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
     this.cdr.markForCheck();
-    const exportStatus = await this.pdfService.download({ titleIds, orgId: this.orgService.org.id });
+    const exportStatus = await this.pdfService.download(downloadSettings);
     snackbarRef.dismiss();
     if (!exportStatus) {
       this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });
