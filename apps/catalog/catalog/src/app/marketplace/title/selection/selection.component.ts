@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Intercom } from 'ng-intercom';
 import { BucketService } from '@blockframes/contract/bucket/service';
-import { Movie, Bucket, Holdback, movieCurrencies } from '@blockframes/model';
+import { Movie, Bucket, Holdback, movieCurrencies, createBucket } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable, Subject, merge } from 'rxjs';
 import { map, mapTo, tap } from 'rxjs/operators';
@@ -38,6 +38,7 @@ export class MarketplaceSelectionComponent {
     private snackBar: MatSnackBar
   ) {
     this.bucket$ = this.bucketService.active$.pipe(
+      map((bucket) => bucket ?? createBucket()),
       tap((bucket) => {
         this.setTitle(bucket?.contracts.length);
         if (bucket?.currency) this.currencyForm.setValue(bucket.currency);

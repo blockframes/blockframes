@@ -4,7 +4,7 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 export function hasValue(value: string | number | unknown[] | unknown) {
   if (!value) return false;
   if (Array.isArray(value)) {
-    return !!value.length;
+    return !!value.filter(v => !!v).length;
   } else if (typeof value === 'object' && !(value instanceof Date)) {
     return Object.values(value).some(hasValue);
   } else {
@@ -24,8 +24,8 @@ export class HasKeysPipe implements PipeTransform {
     }
     return keys[filter](key => {
       const value = key.split('.').reduce((result, k) => {
-        if (result) return result[k]
-        return null
+        if (result) return result[k];
+        return null;
       }, base);
       return hasValue(value);
     });
