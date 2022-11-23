@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Validators } from '@angular/forms';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,10 +26,21 @@ import { centralOrgId } from '@env';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 import {
-  BehaviorSubject, combineLatest, distinctUntilChanged, firstValueFrom, map, shareReplay, switchMap, filter, of, pluck,
+  BehaviorSubject,
+  combineLatest,
+  distinctUntilChanged,
+  firstValueFrom,
+  map,
+  shareReplay,
+  switchMap,
+  filter,
+  of,
+  pluck
 } from 'rxjs';
 
 import { where } from 'firebase/firestore';
+import { BucketTermForm } from '@blockframes/contract/bucket/form';
+import { compareDates, isDateInFuture } from '@blockframes/utils/form';
 
 const mandateQuery = (titleId: string, orgId: string) => [
   where('titleId', '==', titleId),
@@ -43,6 +55,8 @@ function isTermToBeUpdated(term: Partial<Term>): term is Term {
 const from = new Date();
 const to = new Date(from.getFullYear() + 1, from.getMonth(), from.getDate());
 const duration = { from, to };
+const fromValidators = [compareDates('from', 'to', 'from'), Validators.required];
+const toValidators = [compareDates('from', 'to', 'to'), isDateInFuture, Validators.required];
 
 @Component({
   selector: 'term-form',
@@ -208,5 +222,11 @@ export class TermFormComponent implements OnInit {
   scrollToTop() {
     scrollIntoView(this.pageTop.nativeElement);
     this.pageTop.nativeElement.focus();
+  }
+
+  setValidators(termForm: BucketTermForm) {
+    termForm.get('duration').controls['from'].setValidators(fromValidators);
+    termForm.get('duration').controls['to'].setValidators(toValidators);
+    return termForm;
   }
 }

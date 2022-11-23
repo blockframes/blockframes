@@ -5,7 +5,6 @@ import {
 import { QueryConstraint, where } from 'firebase/firestore';
 import { MovieService } from '@blockframes/movie/service';
 import { storeStatus } from '@blockframes/model';
-import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
 
@@ -21,7 +20,6 @@ const titleQuery = (orgId: string): QueryConstraint[] => [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CatalogAvailsSelectTitleComponent {
-  public availsForm = new AvailsForm();
   public titleId: string;
   public storeStatus = storeStatus;
 
