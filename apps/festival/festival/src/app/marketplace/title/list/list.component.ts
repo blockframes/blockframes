@@ -10,11 +10,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { debounceTime, switchMap, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
-import { PdfService } from '@blockframes/utils/pdf/pdf.service';
+import { DownloadSettings, PdfService } from '@blockframes/utils/pdf/pdf.service';
 import { StoreStatus, AlgoliaMovie, MovieSearch, MovieAvailsSearch } from '@blockframes/model';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
+import { AnalyticsService } from '@blockframes/analytics/service';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -44,6 +45,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private snackbar: MatSnackBar,
     private pdfService: PdfService,
+    private analyticsService: AnalyticsService,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -85,13 +87,17 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const sub = this.searchForm.valueChanges.pipe(
       debounceTime(1000),
-    ).subscribe(search => encodeUrl<MovieAvailsSearch>(this.router, this.route, { search }));
+    ).subscribe(search => {
+      this.analyticsService.addTitleFilter({ search }, 'marketplace');
+      return encodeUrl<MovieAvailsSearch>(this.router, this.route, { search })
+    });
     this.subs.push(sub);
   }
 
   clear() {
     const initial = createMovieSearch({ storeStatus: [this.storeStatus] });
     this.searchForm.reset(initial);
+    this.analyticsService.addTitleFilter({ search: this.searchForm.value }, 'marketplace', true);
   }
 
   async loadMore() {
@@ -105,14 +111,17 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async export() {
-    if (this.movieIds.length >= this.pdfService.exportLimit) {
-      this.snackbar.open('Sorry, you can\'t have an export with that many titles.', 'close', { duration: 5000 });
+    const downloadSettings: DownloadSettings = { titleIds: this.movieIds, filters: { search: this.searchForm.value } };
+    const canDownload = this.pdfService.canDownload(downloadSettings);
+
+    if (!canDownload.status) {
+      this.snackbar.open(canDownload.message, 'close', { duration: 5000 });
       return;
     }
 
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
-    const exportStatus = await this.pdfService.download({ titleIds: this.movieIds, filters: { search: this.searchForm.value } });
+    const exportStatus = await this.pdfService.download(downloadSettings);
     snackbarRef.dismiss();
     if (!exportStatus) {
       this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });
@@ -120,7 +129,9 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.exporting = false;
   }
 
-  load(savedSearch: MovieAvailsSearch) {
-    this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
+  load(_savedSearch: MovieAvailsSearch) {
+    const savedSearch = { search: { ..._savedSearch.search, storeStatus: [this.storeStatus] } };
+    this.searchForm.hardReset(createMovieSearch(savedSearch.search));
+    this.analyticsService.addTitleFilter(savedSearch, 'marketplace', true);
   }
 }

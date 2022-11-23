@@ -17,7 +17,7 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, shareReplay, 
 
 // Blockframes
 import { algolia, centralOrgId } from '@env';
-import { PdfService } from '@blockframes/utils/pdf/pdf.service';
+import { DownloadSettings, PdfService } from '@blockframes/utils/pdf/pdf.service';
 import {
   StoreStatus,
   Mandate,
@@ -41,6 +41,7 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import algoliasearch from 'algoliasearch';
+import { AnalyticsService } from '@blockframes/analytics/service';
 
 const mandatesQuery = [
   where('type', '==', 'mandate'),
@@ -98,6 +99,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     private bucketService: BucketService,
     private router: Router,
     private pdfService: PdfService,
+    private analyticsService: AnalyticsService,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -109,7 +111,6 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
       distinctUntilChanged(),
       debounceTime(300),
       tap(([_, availsValue]) => {
-        // TODO #8894 https://github.com/blockframes/blockframes/issues/8894#issuecomment-1297062856
         const search: MovieAvailsSearch = { search: this.searchForm.value, avails: availsValue };
         const currentSearch = JSON.stringify(search);
 
@@ -197,14 +198,17 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   async export() {
-    if (this.movieIds.length >= this.pdfService.exportLimit) {
-      this.snackbar.open('Sorry, you can\'t have an export with that many titles.', 'close', { duration: 5000 });
+    const downloadSettings: DownloadSettings = { titleIds: this.movieIds, filters: { avails: this.availsForm.value, search: this.searchForm.value } };
+    const canDownload = this.pdfService.canDownload(downloadSettings);
+
+    if (!canDownload.status) {
+      this.snackbar.open(canDownload.message, 'close', { duration: 5000 });
       return;
     }
 
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
-    const exportStatus = await this.pdfService.download({ titleIds: this.movieIds, filters: { avails: this.availsForm.value, search: this.searchForm.value } });
+    const exportStatus = await this.pdfService.download(downloadSettings);
     snackbarRef.dismiss();
     if (!exportStatus) {
       this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });

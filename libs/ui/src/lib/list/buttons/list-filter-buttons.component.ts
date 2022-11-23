@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import { AnalyticsService } from '@blockframes/analytics/service';
 import { AuthService } from '@blockframes/auth/service';
 import { App, MovieAvailsSearch } from '@blockframes/model';
 import { decodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
@@ -40,6 +41,7 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
     private cdr: ChangeDetectorRef,
     private snackbar: MatSnackBar,
     private authService: AuthService,
+    private analyticsService: AnalyticsService,
     @Inject(APP) private app: App,
   ) { }
 
@@ -60,12 +62,14 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
     await this.authService.update({ savedSearches });
     this.setButtonsState();
     this.snackbar.open('Research successfully saved.', 'close', { duration: 5000 });
+    this.analyticsService.addSavedOrLoadedSearch(routeParams, 'marketplace', 'savedFilters');
   }
 
   load() {
     const savedSearches = this.authService.profile.savedSearches ?? {};
     const parsedData: MovieAvailsSearch = JSON.parse(savedSearches[this.app]);
     this.data.emit(parsedData);
+    this.analyticsService.addSavedOrLoadedSearch(parsedData, 'marketplace', 'loadedFilters');
   }
 
   setButtonsState() {

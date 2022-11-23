@@ -11,14 +11,17 @@ const analyticsEvents = [
   'addedToWishlist',
   'removedFromWishlist',
   'screeningRequested',
-  'askingPriceRequested'
+  'askingPriceRequested',
+  'exportedTitles',
+  'filteredTitles',
+  'savedFilters',
+  'loadedFilters'
 ] as const;
 export type EventName = typeof analyticsEvents[number];
 
 export interface AnalyticsTypeRecord {
   title: MetaTitle;
-  event: MetaEvent;
-  pdfExport: MetaPdfExport
+  titleSearch: MetaTitleSearch;
 }
 
 export type AnalyticsTypes = keyof AnalyticsTypeRecord;
@@ -31,29 +34,23 @@ export interface Analytics<type extends AnalyticsTypes = AnalyticsTypes> {
   _meta?: DocumentMeta;
 }
 
-export interface MetaTitle {
+interface MetaTitle {
   titleId: string;
   orgId: string;
   uid: string;
   ownerOrgIds: string[];
 }
 
-export interface MetaEvent {
-  eventId: string;
-  uid: string;
-  orgId?: string;
-  ownerOrgId: string;
-}
-
-export interface MetaPdfExport {
+interface MetaTitleSearch {
   search?: MovieAvailsSearch;
   module: Module,
   uid: string;
   orgId?: string;
-  titleCount: number,
+  titleCount?: number;
+  status: boolean;
 }
 
-export interface AggregatedAnalytic extends Record<EventName, number> {
+export interface AggregatedAnalytic extends Partial<Record<EventName, number>> {
   total: number;
   user?: User;
   org?: Organization;
@@ -86,12 +83,12 @@ export function createTitleMeta(meta: Partial<MetaTitle>): MetaTitle {
   };
 };
 
-export function createPdfExportMeta(meta: Partial<MetaPdfExport>): MetaPdfExport {
+export function createTitleSearchMeta(meta: Partial<MetaTitleSearch>): MetaTitleSearch {
   return {
     module: 'marketplace',
     orgId: '',
     uid: '',
-    titleCount: 0,
+    status: true,
     ...meta
   };
 };
