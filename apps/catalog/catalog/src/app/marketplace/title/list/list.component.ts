@@ -181,6 +181,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
 
     const results = availResults.map(res => ({
       titleId: title.objectID,
+      orgId: res.mandate.sellerId,
       parentTermId: res.term.id,
       avail: res.avail
     }));

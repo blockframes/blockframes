@@ -11,7 +11,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { ActivatedRoute } from "@angular/router";
 
 // File Explorer
-import { getDirectories, Directory, FileDirectoryBase } from './explorer.model';
+import { getDirectories, Directory, FileDirectory } from './explorer.model';
 
 // RxJs
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -119,25 +119,27 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     this.path$.next(crumbs[crumbs.length - 2]);
   }
 
-  getMeta(dir: FileDirectoryBase, index: number) {
-    return [...dir.meta, index];
-  }
+  update(file?: FileDirectory) {
+    if (file?.togglePrivacy) {
+      const metadata = getFileMetadata(file.meta[0], file.meta[1], file.meta[2]);
+      const ref = this.firestore.getRef(`${metadata.collection}/${metadata.docId}`) as DocumentReference;
+      updateDoc(ref, { [`${metadata.field}.privacy`]: file.form.get('privacy').value });
+    }
 
-  update() {
     this.service.upload();
   }
 
   change($event: 'removed' | 'added', meta) {
     if ($event === 'removed') {
       const metadata = getFileMetadata(meta[0], meta[1], meta[2])
-      const emptyStorageFile = {}
+      const emptyStorageFile = {};
       emptyStorageFile[metadata.field] = createStorageFile({
         collection: null,
         docId: null,
         field: null,
         privacy: null,
         storagePath: null
-      })
+      });
       const ref = this.firestore.getRef(`${metadata.collection}/${metadata.docId}`) as DocumentReference;
       updateDoc(ref, emptyStorageFile);
     }

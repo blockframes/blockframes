@@ -48,7 +48,7 @@ interface ImgDirectory extends FileDirectoryBase {
   form: StorageFileForm | FormList<StorageFile>;
 }
 
-interface FileDirectory extends FileDirectoryBase {
+export interface FileDirectory extends FileDirectoryBase {
   type: 'file';
   accept: AllowedFileType;
   form: StorageFileForm | FormList<StorageFile>;
