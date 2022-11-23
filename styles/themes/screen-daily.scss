@@ -18,13 +18,15 @@ $dark-theme: (
       200: #1F2A3B,
       500: #FFFFFF,
       800: #FFFFFF,
-    )
+    ),
   ),
   warn: (
+    100: #ff3f33,
     500: #ff3f33,
+    700: #ff3f33,
     contrast: (
       500: #FFFFFF
-    )
+    ),
   ),
   background: (
     900: #0E0E11,
@@ -39,9 +41,8 @@ $dark-theme: (
     700: #DCDCDC,
     600: #BEBFC2,
     500: #575759
-  )
+  ),
 );
-
 
 
 $light-theme: (
@@ -64,14 +65,15 @@ $light-theme: (
       200: #1F2A3B,
       500: #FFFFFF,
       800: #FFFFFF,
-    )
-  
+    ),
   ),
   warn: (
+    100: #FF3712,
     500: #FF3712,
+    700: #FF3712,
     contrast: (
       500: #FFFFFF
-    )  
+    ),
   ),
   background: (
     900: #f4f4f4,
@@ -88,4 +90,3 @@ $light-theme: (
     500: #D3D5DC,
   )
 );
-
