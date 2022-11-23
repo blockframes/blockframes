@@ -1,35 +1,37 @@
 import { createFakeUserDataArray } from '@blockframes/testing/cypress/browser';
 import {
-  createPermissions,
-  createUser,
-  createOrganization,
-  createOrgAppAccess,
   createAddressSet,
   createLocation,
+  createOrganization,
+  createOrgAppAccess,
+  createPermissions,
+  createUser,
   fakeLegalTerms,
 } from '@blockframes/model';
 
-const newUserUid = '0-e2e-newUserUid';
+const newUser1Uid = '0-e2e-newUser1Uid';
 const marketplaceOrgAdminUid = '0-e2e-marketplaceOrgAdminUid';
 const dashboardOrgAdminUid = '0-e2e-dashboardOrgAdminUid';
 const marketplaceOrgId = '0-e2e-marketplaceOrgId';
 const dashboardOrgId = '0-e2e-dashboardOrgId';
-const [newUserData, marketplaceOrgAdminData, dashboardOrgAdminData] = createFakeUserDataArray(3);
+const [newUser1Data, marketplaceOrgAdminData, dashboardOrgAdminData] = createFakeUserDataArray(3);
 
-//* New user
+//* New users data
 
 export const newUser = createUser({
-  uid: newUserUid,
-  firstName: newUserData.firstName,
-  lastName: newUserData.lastName,
-  email: newUserData.email,
+  uid: newUser1Uid,
+  firstName: newUser1Data.firstName,
+  lastName: newUser1Data.lastName,
+  email: newUser1Data.email,
 });
 
-export const newOrg = {
-  name: newUserData.company.name,
-  country: newUserData.company.country,
-  activity: newUserData.company.activity,
-};
+export const newOrg = createOrganization({
+  name: newUser1Data.company.name,
+  activity: newUser1Data.company.activity,
+  addresses: createAddressSet({
+    main: createLocation({ country: 'france' }),
+  }),
+});
 
 //* ------------------------------------- *//
 

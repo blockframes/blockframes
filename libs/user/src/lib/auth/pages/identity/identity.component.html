@@ -27,7 +27,7 @@
           <mat-form-field appearance="outline">
             <mat-label>First Name</mat-label>
             <input matInput type="text" placeholder="First Name" formControlName="firstName" required test-id="first-name"/>
-            <mat-error *ngIf="form.get('firstName').hasError('required')">
+            <mat-error *ngIf="form.get('firstName').hasError('required')" test-id="first-name-required">
               First Name is <strong>required</strong>.
             </mat-error>
           </mat-form-field>
@@ -35,7 +35,7 @@
           <mat-form-field appearance="outline">
             <mat-label>Last Name</mat-label>
             <input matInput type="text" placeholder="Last Name" formControlName="lastName" required test-id="last-name"/>
-            <mat-error *ngIf="form.get('lastName').hasError('required')">
+            <mat-error *ngIf="form.get('lastName').hasError('required')" test-id="last-name-required">
               Last Name is <strong>required</strong>.
             </mat-error>
           </mat-form-field>
@@ -44,7 +44,7 @@
         <!-- ORGANIZATION -->
         <ng-container *ngIf="useAlgolia else orgInput">
           <algolia-autocomplete [indexGroup]="indexGroup" keyToDisplay="name" (selectionChange)="setOrg($event)"
-            required [control]="orgControl">
+            required [control]="orgControl" test-id="organization">
             <ng-template optionRef let-result>
               <div flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center">
                 <img [ref]="result.logo | storageFile: 'orgs':'logo':result.id" asset="empty_organization.svg"
@@ -75,7 +75,7 @@
             <mat-hint *ngIf="existingUser">Your Company Information is pre-filled as we found an invitation matching
               your email address, associating you with an existing company.</mat-hint>
             <mat-label>Company Name*</mat-label>
-            <input matInput type="text" [formControl]="orgForm.get('name')" disabled />
+            <input matInput type="text" [formControl]="orgForm.get('name')" disabled test-id="organization"/>
           </mat-form-field>
         </ng-template>
 
@@ -105,16 +105,16 @@
           [errorStateMatcher]="currentPasswordMatch"
         >
           <mat-hint>Between 6 and 24 characters.</mat-hint>
-          <mat-error *ngIf="form.get('password').hasError('required')">
+          <mat-error *ngIf="form.get('password').hasError('required')" test-id="password-required">
             New password is <strong>required</strong>.
           </mat-error>
-          <mat-error *ngIf="form.get('password').hasError('minlength')">
+          <mat-error *ngIf="form.get('password').hasError('minlength')" test-id="short-password">
             New password with less than <strong>6</strong> characters.
           </mat-error>
-          <mat-error *ngIf="form.get('password').hasError('maxlength')">
+          <mat-error *ngIf="form.get('password').hasError('maxlength')" test-id="long-password">
             New password with more than <strong>24</strong> characters.
           </mat-error>
-          <mat-error *ngIf="form.hasError('currentPasswordMatch')">
+          <mat-error *ngIf="form.hasError('currentPasswordMatch')" test-id="same-password">
             Your new password has to be <strong>different</strong> than Invitation Pass.
           </mat-error>
         </password-input>
@@ -127,10 +127,10 @@
           test-id="password-confirm"
         >
           <mat-hint>Please rewrite your password for confirmation.</mat-hint>
-          <mat-error *ngIf="form.get('confirm').hasError('required')">
+          <mat-error *ngIf="form.get('confirm').hasError('required')" test-id="password-confirm-required">
             New password confirmation is <strong>required</strong>.
           </mat-error>
-          <mat-error *ngIf="form.hasError('passwordsNotMatching')">
+          <mat-error *ngIf="form.hasError('passwordsNotMatching')" test-id="password-confirm-mismatch">
             The confirmation password does not <strong>match your password</strong>.
           </mat-error>
         </password-input>
