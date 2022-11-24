@@ -1,23 +1,37 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Movie, isScreening, CrmMovie, smartJoin, toLabel, Language, MovieLanguageSpecification, displayName, Analytics, ReleaseMediaValue, isMandate } from '@blockframes/model';
+import {
+  Movie,
+  isScreening,
+  CrmMovie,
+  smartJoin,
+  toLabel,
+  Language,
+  MovieLanguageSpecification,
+  displayName,
+  Analytics,
+  ReleaseMediaValue,
+  isMandate,
+  AvailsFilter
+} from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/service';
 import { EventService } from '@blockframes/event/service';
 import { sorts } from '@blockframes/ui/list/table/sorts';
 import { filters } from '@blockframes/ui/list/table/filters';
+import { ContractService } from '@blockframes/contract/contract/service';
+import { AnalyticsService } from '@blockframes/analytics/service';
+import { aggregate } from '@blockframes/analytics/utils';
+import { toGroupLabel } from '@blockframes/utils/pipes';
+import { UserService } from '@blockframes/user/service';
 
 import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 
 import { where } from 'firebase/firestore';
 import { format } from 'date-fns';
-import { ContractService } from '@blockframes/contract/contract/service';
-import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate } from '@blockframes/analytics/utils';
-import { UserService } from '@blockframes/user/service';
 
 @Component({
   selector: 'crm-movies',
@@ -210,6 +224,52 @@ export class MoviesComponent implements OnInit {
       }
     }
     downloadCsvFromJson(exportedRows, 'movies-analytics-list');
+
+    this.exportingAnalytics = false;
+    this.cdr.markForCheck();
+  }
+
+  public async exportSearchAnalytics() {
+    this.exportingAnalytics = true;
+    this.cdr.markForCheck();
+
+    const query = [where('type', '==', 'titleSearch')];
+    const all = await this.analyticsService.load<Analytics<'titleSearch'>>(query);
+
+    const allUids = unique(all.map(analytic => analytic.meta.uid));
+    const allUsers = await this.userService.load(allUids);
+
+    const exportedRows = [];
+
+    for (const titleSearch of all) {
+      const user = allUsers.find(u => u.uid === titleSearch._meta.createdBy);
+      const availsSearch = titleSearch.meta.search?.avails as AvailsFilter;
+      const search = titleSearch.meta.search?.search;
+      // TODO #8931 orgId & orgName
+      exportedRows.push({
+        // Common
+        uid: titleSearch._meta.createdBy,
+        user: user ? displayName(user) : '--deleted user--',
+        date: format(titleSearch._meta.createdAt, 'MM/dd/yyyy'),
+        'event name': titleSearch.name,
+        app: titleSearch._meta.createdFrom,
+        module: titleSearch.meta.module,
+        status: titleSearch.meta.status,
+        // PDF
+        'title count': titleSearch.meta.titleCount ?? '--',
+        // Avails
+        from: availsSearch?.duration?.from ? format(availsSearch.duration.from, 'MM/dd/yyyy') : '--',
+        to: availsSearch?.duration?.to ? format(availsSearch.duration.to, 'MM/dd/yyyy') : '--',
+        territories: toGroupLabel((availsSearch?.territories ?? []), 'territories', 'World').join(', '),
+        medias: toGroupLabel((availsSearch?.medias ?? []), 'medias', 'All Rights').join(', '),
+        exclusivity: availsSearch?.exclusive,
+        // Search
+        'search': search.query ?? '--',
+        'genres': toLabel((search?.genres ?? []), 'genres'),
+      });
+
+    }
+    downloadCsvFromJson(exportedRows, 'title-search-analytics-list');
 
     this.exportingAnalytics = false;
     this.cdr.markForCheck();

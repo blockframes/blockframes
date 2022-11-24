@@ -11,7 +11,7 @@
           <mat-icon svgIcon="arrow_upward"></mat-icon>
         </ng-template>
       </button>
-      <button [disabled]="exportingAnalytics" mat-flat-button color="primary" (click)="exportTitleAnalytics(movies)">
+      <button [disabled]="exportingAnalytics" mat-flat-button color="primary" [matMenuTriggerFor]="analyticsExports" >
         <ng-container *ngIf="exportingAnalytics else exportAnalytics">
           <span>Generating CSV...</span>
         </ng-container>
@@ -20,6 +20,18 @@
           <mat-icon svgIcon="arrow_upward"></mat-icon>
         </ng-template>
       </button>
+
+      <mat-menu #analyticsExports="matMenu">
+        <button mat-menu-item (click)="exportTitleAnalytics(movies)">
+          Export title Analytics
+          <mat-icon svgIcon="arrow_upward"></mat-icon>
+        </button>
+        <button mat-menu-item (click)="exportSearchAnalytics()">
+          Export search Analytics
+          <mat-icon svgIcon="arrow_upward"></mat-icon>
+        </button>
+      </mat-menu>
+
     </article>
     <bf-table [source]="movies" clickable useFilter pagination="50" (rowClick)="goToEdit($event)">
       <ng-template colRef="poster" let-poster>
