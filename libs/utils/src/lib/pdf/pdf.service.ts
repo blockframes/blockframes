@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { App, appName, toLabel, MovieAvailsSearch } from '@blockframes/model';
+import { App, appName, toLabel, MovieAvailsSearch, AvailsFilter } from '@blockframes/model';
 import { firebaseRegion, firebase } from '@env';
 import { EmulatorsConfig, EMULATORS_CONFIG } from '../emulator-front-setup';
 import { APP } from '../routes/utils';
@@ -106,7 +106,7 @@ export class PdfService {
     const filters: PdfParamsFilters = {};
 
     if (search?.avails) {
-      const availForm = search.avails;
+      const availForm = search.avails as AvailsFilter;
 
       if (availForm.territories?.length && availForm.medias?.length) {
         const territories = toGroupLabel(availForm.territories, 'territories', 'World').join(', ');

@@ -88,7 +88,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     const sub = this.searchForm.valueChanges.pipe(
       debounceTime(1000),
     ).subscribe(search => {
-      this.analyticsService.addTitleFilter({ search }, 'marketplace');
+      this.analyticsService.addTitleFilter({ search }, 'marketplace', 'filteredTitles');
       return encodeUrl<MovieAvailsSearch>(this.router, this.route, { search });
     });
     this.subs.push(sub);
@@ -97,7 +97,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   clear() {
     const initial = createMovieSearch({ storeStatus: [this.storeStatus] });
     this.searchForm.reset(initial);
-    this.analyticsService.addTitleFilter({ search: this.searchForm.value }, 'marketplace', true);
+    this.analyticsService.addTitleFilter({ search: this.searchForm.value }, 'marketplace', 'filteredTitles', true);
   }
 
   async loadMore() {
@@ -131,6 +131,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   load(savedSearch: MovieAvailsSearch) {
     this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
-    this.analyticsService.addTitleFilter({ search: this.searchForm.value }, 'marketplace', true);
+    this.analyticsService.addTitleFilter({ search: this.searchForm.value }, 'marketplace', 'filteredTitles', true);
   }
 }

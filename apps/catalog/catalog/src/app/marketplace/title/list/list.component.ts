@@ -150,7 +150,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
       this.availsForm.value$
     ]).pipe(debounceTime(1000))
       .subscribe(([search, avails]) => {
-        this.analyticsService.addTitleFilter({ search, avails }, 'marketplace');
+        this.analyticsService.addTitleFilter({ search, avails }, 'marketplace', 'filteredTitles');
         return encodeUrl<MovieAvailsSearch>(this.router, this.route, { search, avails });
       });
 
@@ -166,7 +166,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     this.searchForm.reset(initial);
     this.availsForm.reset();
     this.cdr.markForCheck();
-    this.analyticsService.addTitleFilter({ search: this.searchForm.value, avails: this.availsForm.value }, 'marketplace', true);
+    this.analyticsService.addTitleFilter({ search: this.searchForm.value, avails: this.availsForm.value }, 'marketplace', 'filteredTitles', true);
   }
 
   async addAvail(title: (AlgoliaMovie & { mandates: FullMandate[] })) {
@@ -230,7 +230,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     // Avails Form
     this.availsForm.hardReset(createAvailsSearch(savedSearch.avails));
 
-    this.analyticsService.addTitleFilter({ search: this.searchForm.value, avails: this.availsForm.value }, 'marketplace', true);
+    this.analyticsService.addTitleFilter({ search: this.searchForm.value, avails: this.availsForm.value }, 'marketplace', 'filteredTitles', true);
   }
 
   // ----------------------------

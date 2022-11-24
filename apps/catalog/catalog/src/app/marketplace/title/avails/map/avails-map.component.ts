@@ -1,6 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
-import { combineLatest, firstValueFrom } from 'rxjs';
-import { map, shareReplay, throttleTime } from 'rxjs/operators';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { combineLatest, firstValueFrom, Subscription } from 'rxjs';
+import { debounceTime, map, shareReplay } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
@@ -16,6 +16,7 @@ import {
   territoryAvailabilities,
   decodeDate,
 } from '@blockframes/model';
+import { AnalyticsService } from '@blockframes/analytics/service';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -23,7 +24,7 @@ import {
   styleUrls: ['./avails-map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
+export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDestroy {
   public hoveredTerritory: {
     name: string;
     status: string;
@@ -35,6 +36,8 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   private mandateTerms$ = this.shell.mandateTerms$;
   private sales$ = this.shell.sales$;
   private salesTerms$ = this.shell.salesTerms$;
+
+  private sub: Subscription;
 
   public availabilities$ = combineLatest([
     this.availsForm.value$,
@@ -71,7 +74,8 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
     private snackbar: MatSnackBar,
     private shell: MarketplaceMovieAvailsComponent,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private analyticsService: AnalyticsService,
   ) { }
 
   /** Display the territories information in the tooltip */
@@ -109,7 +113,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
   }
 
   clear() {
-    this.shell.avails.mapForm.reset();
+    this.analyticsService.addTitleFilter({ avails: this.availsForm.value }, 'marketplace', 'filteredAvailsMap', true);
   }
 
   onNewRight() {
@@ -123,13 +127,26 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     const decodedData = decodeUrl<MapAvailsFilter>(this.route);
-    if (!decodedData.medias) decodedData.medias = [];
-    if (decodedData.duration?.from) decodedData.duration.from = decodeDate(decodedData.duration.from);
-    if (decodedData.duration?.to) decodedData.duration.to = decodeDate(decodedData.duration.to);
+    this.load(decodedData);
 
-    this.availsForm.patchValue(decodedData);
-    this.availsForm.valueChanges.pipe(throttleTime(1000)).subscribe((formState) => {
-      encodeUrl<MapAvailsFilter>(this.router, this.route, formState);
-    });
+    this.sub = this.availsForm.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(avails => {
+        this.analyticsService.addTitleFilter({ avails }, 'marketplace', 'filteredAvailsMap');
+        return encodeUrl<MapAvailsFilter>(this.router, this.route, avails);
+      });
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+  }
+
+  load(avails: MapAvailsFilter) {
+    if (!avails.medias) avails.medias = [];
+    if (avails.duration?.from) avails.duration.from = decodeDate(avails.duration.from);
+    if (avails.duration?.to) avails.duration.to = decodeDate(avails.duration.to);
+
+    this.availsForm.patchValue(avails);
+    this.analyticsService.addTitleFilter({ avails: this.availsForm.value }, 'marketplace', 'filteredAvailsMap', true);
   }
 }

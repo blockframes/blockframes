@@ -15,7 +15,9 @@ const analyticsEvents = [
   'exportedTitles',
   'filteredTitles',
   'savedFilters',
-  'loadedFilters'
+  'loadedFilters',
+  'filteredAvailsCalendar',
+  'filteredAvailsMap'
 ] as const;
 export type EventName = typeof analyticsEvents[number];
 

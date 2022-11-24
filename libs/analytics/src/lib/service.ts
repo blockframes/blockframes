@@ -134,7 +134,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     return this.add({ type: 'titleSearch', name: 'exportedTitles', meta });
   }
 
-  async addTitleFilter(_search: MovieAvailsSearch, module: Module, nonUiSearch = false) {
+  async addTitleFilter(_search: MovieAvailsSearch, module: Module, evenName: 'filteredTitles' | 'filteredAvailsCalendar' | 'filteredAvailsMap', nonUiSearch = false) {
     if (await this.isOperator()) return;
     const profile = this.authService.profile;
     if (!profile) return;
@@ -156,7 +156,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
       where('_meta.createdBy', '==', profile.uid),
       where('_meta.createdFrom', '==', this.app),
       where('meta.module', '==', module),
-      where('name', '==', 'filteredTitles')
+      where('name', '==', evenName)
     ]);
 
     const meta = createTitleSearchMeta({
@@ -171,11 +171,11 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
       existingEvent.meta = meta;
       return this.update(existingEvent);
     } else {
-      return this.add({ type: 'titleSearch', name: 'filteredTitles', meta });
+      return this.add({ type: 'titleSearch', name: evenName, meta });
     }
   }
 
-  async addSavedOrLoadedSearch(search: MovieAvailsSearch, module: Module, name: 'savedFilters' | 'loadedFilters') {
+  async addSavedOrLoadedSearch(search: MovieAvailsSearch, module: Module, eventName: 'savedFilters' | 'loadedFilters') {
     if (await this.isOperator()) return;
     const profile = this.authService.profile;
     if (!profile) return;
@@ -187,7 +187,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
       uid: profile.uid
     });
 
-    return this.add({ type: 'titleSearch', name, meta });
+    return this.add({ type: 'titleSearch', name: eventName, meta });
   }
 
   async addTitlePageView(title: Movie) {
