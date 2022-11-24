@@ -134,17 +134,17 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     return this.add({ type: 'titleSearch', name: 'exportedTitles', meta });
   }
 
-  async addTitleFilter(search: MovieAvailsSearch, module: Module, nonUiSearch = false) {
+  async addTitleFilter(_search: MovieAvailsSearch, module: Module, nonUiSearch = false) {
     if (await this.isOperator()) return;
     const profile = this.authService.profile;
     if (!profile) return;
 
+    const search = { search: { ..._search.search }, avails: _search.avails };
     delete search.search?.page;
 
     // Store search filters not changed by user through UI (ie: loaded from params or saved search)
     if (nonUiSearch) {
-      this.nonUiTitleSearch = { ...search };
-      delete this.nonUiTitleSearch.search?.page;
+      this.nonUiTitleSearch = search;
       return;
     }
 

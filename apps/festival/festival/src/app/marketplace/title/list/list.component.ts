@@ -89,7 +89,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
       debounceTime(1000),
     ).subscribe(search => {
       this.analyticsService.addTitleFilter({ search }, 'marketplace');
-      return encodeUrl<MovieAvailsSearch>(this.router, this.route, { search })
+      return encodeUrl<MovieAvailsSearch>(this.router, this.route, { search });
     });
     this.subs.push(sub);
   }
@@ -129,9 +129,8 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.exporting = false;
   }
 
-  load(_savedSearch: MovieAvailsSearch) {
-    const savedSearch = { search: { ..._savedSearch.search, storeStatus: [this.storeStatus] } };
-    this.searchForm.hardReset(createMovieSearch(savedSearch.search));
-    this.analyticsService.addTitleFilter(savedSearch, 'marketplace', true);
+  load(savedSearch: MovieAvailsSearch) {
+    this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
+    this.analyticsService.addTitleFilter({ search: this.searchForm.value }, 'marketplace', true);
   }
 }
