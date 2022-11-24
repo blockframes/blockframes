@@ -264,8 +264,12 @@ export class MoviesComponent implements OnInit {
         medias: toGroupLabel((availsSearch?.medias ?? []), 'medias', 'All Rights').join(', '),
         exclusivity: availsSearch?.exclusive,
         // Search
-        'search': search.query ?? '--',
+        'search': search?.query ?? '--',
+        'content type': search?.contentType ? toLabel(search.contentType, 'contentType') : '--',
         'genres': toLabel((search?.genres ?? []), 'genres'),
+        'origin countries': toLabel(search?.originCountries ?? [], 'territories'),
+        'min release year': search?.minReleaseYear ?? '--',
+        'min budget': search?.minBudget ?? '--',
       });
 
     }
