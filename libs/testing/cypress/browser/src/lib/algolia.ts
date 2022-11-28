@@ -16,4 +16,8 @@ export const algolia = {
   deleteOrg(data: { app: Exclude<App, 'crm'>; objectId: string }) {
     return cy.task('deleteAlgoliaOrg', data);
   },
+
+  clearTestData() {
+    return cy.task('clearAlgoliaTestData');
+  },
 };

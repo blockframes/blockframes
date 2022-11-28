@@ -7,7 +7,7 @@ import {
   storeSearchableUser,
   getDocument,
 } from '@blockframes/firebase-utils';
-import { algolia } from '@env';
+import { algolia, production } from '@env';
 import {
   PublicUser,
   Campaign,
@@ -36,7 +36,8 @@ export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = getDb()) {
         'country',
         'isAccepted',
         'hasAcceptedMovies',
-      ],
+        !production && 'e2eTag',
+      ].filter(Boolean),
       customRanking: ['asc(name)'],
       paginationLimitedTo: 1000
     };
@@ -176,8 +177,11 @@ const baseConfig: AlgoliaConfig = {
     'storeStatus',
     'contentType',
     'festivals',
-    'certifications'
-  ],
+    'certifications',
+
+    // e2e facet for testing
+    !production && 'e2eTag'
+  ].filter(Boolean),
   customRanking: ['asc(title.international)', 'asc(title.original)'],
   paginationLimitedTo: 2000
 };

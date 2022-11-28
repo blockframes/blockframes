@@ -35,11 +35,7 @@ describe('Search buyer organizations in dashboard', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
-    algolia.deleteOrg({ app: 'festival', objectId: acceptedBuyerOrg.id });
-    algolia.deleteOrg({ app: 'festival', objectId: dashboardBuyerOrg.id });
-    algolia.deleteOrg({ app: 'festival', objectId: pendingBuyerOrg.id });
-    algolia.deleteOrg({ app: 'festival', objectId: catalogBuyerOrg.id });
-    cy.wait(2000); // giving alfolia some tome to catch up
+    algolia.clearTestData();
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
