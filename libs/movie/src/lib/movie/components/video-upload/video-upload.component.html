@@ -24,10 +24,6 @@
   <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center" fxFlex>
     <h2>Upload private screening</h2>
     <div formGroupName="screener" fxLayout="column">
-      <mat-form-field appearance="outline">
-        <mat-label>Screener title</mat-label>
-        <input matInput formControlName="title" >
-      </mat-form-field>
       <file-uploader
         [form]="form.screener"
         [meta]="['movies', 'screener', movie.id]"
@@ -40,10 +36,6 @@
 
     <h2>Upload public screening</h2>
     <div formGroupName="publicScreener" fxLayout="column">
-      <mat-form-field appearance="outline">
-        <mat-label>Screener title</mat-label>
-        <input matInput formControlName="title" >
-      </mat-form-field>
       <file-uploader
         [form]="form.publicScreener"
         [meta]="['movies', 'publicScreener', movie.id]"
@@ -61,7 +53,7 @@
           <mat-label>Video title</mat-label>
           <input matInput formControlName="title" >
         </mat-form-field>
-        <static-select required scope="hostedVideoTypes" [control]="form.otherVideo.get('type')" fxFlex>
+        <static-select scope="hostedVideoTypes" [control]="form.otherVideo.get('type')" fxFlex>
           <mat-label>Video Type</mat-label>
           <mat-hint>Trailer, Teaser, Clip...</mat-hint>
         </static-select>
