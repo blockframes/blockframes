@@ -158,6 +158,7 @@ export interface AlgoliaMovie extends AlgoliaDefaultProperty {
   productionCompany: string[];
   salesAgent: string[];
   certifications: string[];
+  e2eTag?: string;
 }
 
 /* ORGANIZATION */
@@ -170,6 +171,7 @@ export interface AlgoliaOrganization extends AlgoliaDefaultProperty {
   hasAcceptedMovies: boolean;
   logo: string;
   activity: OrgActivity;
+  e2eTag?: string;
 }
 
 /* USER */
