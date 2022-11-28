@@ -53,7 +53,7 @@
   </file-uploader>
   <section fxLayout="row" fxLayoutAlign="end center" class="save">
     <bf-preview-modal *ngIf="!!dir.form.value.storagePath" [ref]="dir.form.value"></bf-preview-modal>
-    <button mat-stroked-button (click)="update()">
+    <button mat-stroked-button (click)="update(dir)">
       <mat-icon svgIcon="save"></mat-icon>
       <span>Save</span>
     </button>
