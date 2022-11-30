@@ -1,8 +1,14 @@
 <ng-container *ngIf="offers$ | async as offers; else loading">
-  <button [disabled]="exporting" mat-flat-button color="primary" (click)="exportTable(offers)">
-    <span>Export to CSV</span>
-    <mat-icon svgIcon="arrow_upward"></mat-icon>
-  </button>
+  <article>
+    <button [disabled]="exporting" mat-flat-button color="primary" (click)="exportTable(offers)">
+      <span>Export to CSV</span>
+      <mat-icon svgIcon="arrow_upward"></mat-icon>
+    </button>
+    <button *ngIf="buckets$ | async as buckets" [disabled]="exporting" mat-flat-button color="primary" (click)="exportBuckets(buckets)">
+      <span>Export Buckets to CSV</span>
+      <mat-icon svgIcon="arrow_upward"></mat-icon>
+    </button>
+  </article>
   <offer-list [offers]="offers"></offer-list>
 </ng-container>
 

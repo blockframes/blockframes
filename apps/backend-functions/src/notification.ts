@@ -61,9 +61,8 @@ import {
 } from './templates/mail';
 import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
 import { applicationUrl, getMailSender, sendgridEmailsFrom } from '@blockframes/utils/apps';
-import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
-import { appUrl, supportEmails } from './environments/environment';
+import { appUrl } from './environments/environment';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
 import { getDocument, BlockframesSnapshot, getDb } from '@blockframes/firebase-utils';
 // #7946 this may be reactivated later
