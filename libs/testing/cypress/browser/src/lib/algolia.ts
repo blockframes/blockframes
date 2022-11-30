@@ -18,6 +18,7 @@ export const algolia = {
   },
 
   clearTestData() {
-    return cy.task('clearAlgoliaTestData');
+    cy.task('clearAlgoliaTestData');
+    return cy.wait(10000) //giving some time to algolia to delete all
   },
 };
