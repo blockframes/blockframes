@@ -35,8 +35,9 @@ export class BuyersAnalyticsComponent {
       users: ({ uids }) => this.userService.load(uids),
       orgs: ({ orgIds }) => this.orgService.load(orgIds)
     }, { shouldAwait: true }),
+    map(({ users, ...rest }) => ({ users: users.filter(u => !!u), ...rest })),
     map(({ orgs, analytics, users, ...rest }) => {
-      const filteredData = this.removeSellerData(orgs, analytics, users,);
+      const filteredData = this.removeSellerData(orgs, analytics, users);
       return { ...rest, ...filteredData };
     }),
     shareReplay({ bufferSize: 1, refCount: true })
