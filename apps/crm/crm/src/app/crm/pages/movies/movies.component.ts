@@ -13,7 +13,7 @@ import {
   Analytics,
   ReleaseMediaValue,
   isMandate,
-  AvailsFilter
+  Organization,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
@@ -24,10 +24,9 @@ import { filters } from '@blockframes/ui/list/table/filters';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { aggregate } from '@blockframes/analytics/utils';
-import { toGroupLabel } from '@blockframes/utils/pipes';
 import { UserService } from '@blockframes/user/service';
 
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 
 import { where } from 'firebase/firestore';
@@ -45,6 +44,7 @@ export class MoviesComponent implements OnInit {
   public exportingAnalytics = false;
   public sorts = sorts;
   public filters = filters;
+  private orgs: Organization[] = [];
 
   constructor(
     private movieService: MovieService,
@@ -64,6 +64,7 @@ export class MoviesComponent implements OnInit {
       this.eventService.valueChanges([where('type', '==', 'screening')]),
       this.contractService.valueChanges([where('type', '==', 'mandate')])
     ]).pipe(
+      tap(([_, orgs]) => this.orgs = orgs),
       map(([movies, orgs, events, mandates]) => {
         const screenings = events.filter(isScreening);
         return movies.map((movie) => {
@@ -201,19 +202,30 @@ export class MoviesComponent implements OnInit {
     for (const title of titles) {
       const movieAnalytics = allAnalytics.filter(analytic => analytic.meta.titleId === title.id);
       const uidsWithAnalytics = allUids.filter(uid => movieAnalytics.some(analytic => analytic.meta.uid === uid));
+      const orgs = this.orgs.filter(o => title.orgIds.includes(o.id));
 
       for (const uid of uidsWithAnalytics) {
         const userAnalytics = movieAnalytics.filter(analytic => analytic.meta.uid === uid);
         const user = allUsers.find(u => u?.uid === uid);
+        const org = this.orgs.find(o => o.id === user?.orgId);
         const a = aggregate(userAnalytics);
 
         exportedRows.push({
           'title id': title.id,
           title: title.title.international,
+          'title org id(s)': title?.orgIds?.join(', '),
+          'title org(s) name': orgs.map(o => o.name).join(', '),
           uid,
           user: user ? displayName(user) : '--deleted user--',
           'user email': user?.email ?? '--',
-          'total interactions': a.total,
+          'user org id': user?.orgId ?? '--',
+          'org name': org ? org.name : '--',
+          'total interactions': a.interactions.global.count,
+          'interactions on catalog': a.interactions.catalog.count,
+          'interactions on festival': a.interactions.festival.count,
+          'first interaction on catalog': a.interactions.catalog.first ? format(a.interactions.catalog.first, 'MM/dd/yyyy') : '--',
+          'last interaction on catalog': a.interactions.catalog.last ? format(a.interactions.catalog.last, 'MM/dd/yyyy') : '--',
+          'last interaction on festival': a.interactions.festival.last ? format(a.interactions.festival.last, 'MM/dd/yyyy') : '--',
           'page views': a.pageView,
           'screenings requested': a.screeningRequested,
           'asking price requested': a.askingPriceRequested,
@@ -229,53 +241,4 @@ export class MoviesComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  public async exportSearchAnalytics() {
-    this.exportingAnalytics = true;
-    this.cdr.markForCheck();
-
-    const query = [where('type', '==', 'titleSearch')];
-    const all = await this.analyticsService.load<Analytics<'titleSearch'>>(query);
-
-    const allUids = unique(all.map(analytic => analytic.meta.uid));
-    const allUsers = await this.userService.load(allUids);
-
-    const exportedRows = [];
-
-    for (const titleSearch of all) {
-      const user = allUsers.find(u => u.uid === titleSearch._meta.createdBy);
-      const availsSearch = titleSearch.meta.search?.avails as AvailsFilter;
-      const search = titleSearch.meta.search?.search;
-      // TODO #8931 orgId & orgName
-      exportedRows.push({
-        // Common
-        uid: titleSearch._meta.createdBy,
-        user: user ? displayName(user) : '--deleted user--',
-        date: format(titleSearch._meta.createdAt, 'MM/dd/yyyy'),
-        'event name': titleSearch.name,
-        app: titleSearch._meta.createdFrom,
-        module: titleSearch.meta.module,
-        status: titleSearch.meta.status,
-        // PDF
-        'title count': titleSearch.meta.titleCount ?? '--',
-        // Avails
-        from: availsSearch?.duration?.from ? format(availsSearch.duration.from, 'MM/dd/yyyy') : '--',
-        to: availsSearch?.duration?.to ? format(availsSearch.duration.to, 'MM/dd/yyyy') : '--',
-        territories: toGroupLabel((availsSearch?.territories ?? []), 'territories', 'World').join(', '),
-        medias: toGroupLabel((availsSearch?.medias ?? []), 'medias', 'All Rights').join(', '),
-        exclusivity: availsSearch?.exclusive,
-        // Search
-        'search': search?.query ?? '--',
-        'content type': search?.contentType ? toLabel(search.contentType, 'contentType') : '--',
-        'genres': toLabel((search?.genres ?? []), 'genres'),
-        'origin countries': toLabel(search?.originCountries ?? [], 'territories'),
-        'min release year': search?.minReleaseYear ?? '--',
-        'min budget': search?.minBudget ?? '--',
-      });
-
-    }
-    downloadCsvFromJson(exportedRows, 'title-search-analytics-list');
-
-    this.exportingAnalytics = false;
-    this.cdr.markForCheck();
-  }
 }

@@ -52,8 +52,14 @@ interface MetaTitleSearch {
   status: boolean;
 }
 
+export interface AnalyticsInteraction {
+  count: number;
+  first?: Date;
+  last?: Date;
+}
+
 export interface AggregatedAnalytic extends Partial<Record<EventName, number>> {
-  total: number;
+  interactions: Record<'global' | 'festival' | 'catalog', AnalyticsInteraction>
   user?: User;
   org?: Organization;
   title?: Movie;
@@ -97,7 +103,11 @@ export function createTitleSearchMeta(meta: Partial<MetaTitleSearch>): MetaTitle
 
 export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>): AggregatedAnalytic {
   return {
-    total: 0,
+    interactions: {
+      global: { count: 0 },
+      festival: { count: 0 },
+      catalog: { count: 0 },
+    },
     addedToWishlist: 0,
     askingPriceRequested: 0,
     pageView: 0,

@@ -15,8 +15,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { JoinPipeModule, MaxLengthModule } from '@blockframes/utils/pipes';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatMenuModule } from '@angular/material/menu';
-
 
 @NgModule({
   declarations: [MoviesComponent],
@@ -33,7 +31,6 @@ import { MatMenuModule } from '@angular/material/menu';
 
     MatIconModule,
     MatButtonModule,
-    MatMenuModule,
     ClipboardModule,
     MatTooltipModule,
     RouterModule.forChild([{ path: '', component: MoviesComponent }])
