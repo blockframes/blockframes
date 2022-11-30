@@ -108,7 +108,7 @@ export class HomeComponent {
       orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
     }, { shouldAwait: true }),
     map(({ users, orgs, analytics }) => {
-      return users.map(user => {
+      return users.filter(u => !!u).map(user => {
         const org = orgs.find(o => o.id === user.orgId);
         const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === user.uid);
         return aggregate(analyticsOfUser, { user, org });
