@@ -5,7 +5,7 @@ import { joinWith } from 'ngfire';
 
 // Blockframes
 import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie, App, Event } from '@blockframes/model';
-import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
+import { fromOrgAndAccessible, MovieService } from '@blockframes/movie/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { EventService } from '@blockframes/event/service';
 import { where } from 'firebase/firestore';
@@ -44,7 +44,7 @@ function countAnalytics(title: Movie & { analytics?: Analytics[], events?: Event
 })
 export class TitlesAnalyticsComponent {
 
-  titlesAnalytics$ = this.service.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
+  titlesAnalytics$ = this.service.valueChanges(fromOrgAndAccessible(this.orgService.org.id, this.app)).pipe(
     joinWith({
       analytics: title => this.getTitleAnalytics(title.id),
       events: title => this.eventService.valueChanges([
@@ -66,11 +66,11 @@ export class TitlesAnalyticsComponent {
     @Inject(APP) public app: App
   ) { }
 
-  getTitleAnalytics(titleId:string){
+  getTitleAnalytics(titleId: string) {
     return this.analytics.getTitleAnalytics({ titleId }).pipe(
       joinWith({
-        org: ({meta}) => this.orgService.valueChanges(meta.orgId)
-      }, {shouldAwait:true}),
+        org: ({ meta }) => this.orgService.valueChanges(meta.orgId)
+      }, { shouldAwait: true }),
       map(analyticsWithOrg => {
         return analyticsWithOrg.filter(({ org }) => !org.appAccess.festival.dashboard);
       })

@@ -13,8 +13,9 @@ import {
   hasAppStatus,
   App,
   AggregatedAnalytic,
+  createUser,
 } from '@blockframes/model';
-import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
+import { aggregate, counter, countedToAnalyticData, deletedUserIdentifier } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 import { filters } from '@blockframes/ui/list/table/filters';
@@ -107,10 +108,11 @@ export class HomeComponent {
       users: ({ uids }) => this.userService.valueChanges(uids),
       orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
     }, { shouldAwait: true }),
-    map(({ users, orgs, analytics }) => {
-      return users.filter(u => !!u).map(user => {
-        const org = orgs.find(o => o.id === user.orgId);
-        const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === user.uid);
+    map(({ uids, users, orgs, analytics }) => {
+      return uids.map(uid => {
+        const user = users.filter(u => !!u).find(u => u.uid === uid) || createUser({ uid, lastName: deletedUserIdentifier });
+        const org = user?.orgId ? orgs.find(o => o.id === user.orgId) : undefined;
+        const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === uid);
         return aggregate(analyticsOfUser, { user, org });
       });
     }),
@@ -140,7 +142,9 @@ export class HomeComponent {
   ) { }
 
   showBuyer(row: AggregatedAnalytic) {
-    this.router.navigate(['buyer', row.user.uid], { relativeTo: this.route });
+    if (row.user.lastName !== deletedUserIdentifier) {
+      this.router.navigate(['buyer', row.user.uid], { relativeTo: this.route });
+    }
   }
 
   public openIntercom(): void {
