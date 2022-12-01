@@ -9,7 +9,8 @@ import {
   AnalyticData,
   Invitation,
   averageWatchDuration,
-  EventName
+  EventName,
+  AnalyticsInteraction
 } from '@blockframes/model';
 import { convertToTimeString } from '@blockframes/utils/helpers';
 import { getDeepValue } from '@blockframes/utils/pipes';
@@ -60,8 +61,21 @@ export function aggregate(analytics: Analytics[], data: Partial<AggregatedAnalyt
   for (const analytic of analytics) {
     aggregated[analytic.name]++;
   }
-  aggregated.total = analytics.length;
+
+  aggregated.interactions.global = aggregateInteractions(analytics);
+  aggregated.interactions.festival = aggregateInteractions(analytics.filter(a => a._meta.createdFrom === 'festival'));
+  aggregated.interactions.catalog = aggregateInteractions(analytics.filter(a => a._meta.createdFrom === 'catalog'));
+
   return aggregated;
+}
+
+function aggregateInteractions(analytics: Analytics[]): AnalyticsInteraction {
+  const sorted = analytics.sort(sortByDate);
+  return {
+    count: sorted.length,
+    first: sorted[0] ? sorted[0]._meta.createdAt : undefined,
+    last: sorted[sorted.length - 1] ? sorted[sorted.length - 1]._meta.createdAt : undefined,
+  };
 }
 
 export function aggregatePerUser(analytics: (Analytics<'title'> & { user: User, org: Organization })[]) {
@@ -171,4 +185,10 @@ export function toCards(aggregated: AggregatedAnalytic): MetricCard[] {
     icon: event.icon,
     selected: false
   }));
+}
+
+function sortByDate(a: Analytics, b: Analytics): number {
+  if (a._meta.createdAt.getTime() < b._meta.createdAt.getTime()) return -1;
+  if (a._meta.createdAt.getTime() > b._meta.createdAt.getTime()) return 1;
+  return 0;
 }

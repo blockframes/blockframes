@@ -10,11 +10,14 @@ import {
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import { AnalyticsService } from '@blockframes/analytics/service';
 import { AuthService } from '@blockframes/auth/service';
 import { App, MovieAvailsSearch } from '@blockframes/model';
 import { decodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { APP } from '@blockframes/utils/routes/utils';
 import { Subscription } from 'rxjs';
+import { createMovieSearch } from '@blockframes/movie/form/search.form';
+import { createAvailsSearch } from '@blockframes/contract/avails/form/avails.form';
 
 type FilterButtonsState = Record<'save' | 'load', 'enabled' | 'active' | 'enabledAndActive' | 'disabled'>;
 
@@ -40,6 +43,7 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
     private cdr: ChangeDetectorRef,
     private snackbar: MatSnackBar,
     private authService: AuthService,
+    private analyticsService: AnalyticsService,
     @Inject(APP) private app: App,
   ) { }
 
@@ -60,12 +64,14 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
     await this.authService.update({ savedSearches });
     this.setButtonsState();
     this.snackbar.open('Research successfully saved.', 'close', { duration: 5000 });
+    this.analyticsService.addSavedOrLoadedSearch({ search: createMovieSearch(routeParams.search), avails: createAvailsSearch(routeParams.avails) }, 'marketplace', 'savedFilters');
   }
 
   load() {
     const savedSearches = this.authService.profile.savedSearches ?? {};
     const parsedData: MovieAvailsSearch = JSON.parse(savedSearches[this.app]);
     this.data.emit(parsedData);
+    this.analyticsService.addSavedOrLoadedSearch({ search: createMovieSearch(parsedData.search), avails: createAvailsSearch(parsedData.avails) }, 'marketplace', 'loadedFilters');
   }
 
   setButtonsState() {

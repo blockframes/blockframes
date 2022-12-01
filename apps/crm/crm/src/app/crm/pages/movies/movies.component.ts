@@ -1,23 +1,36 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Movie, isScreening, CrmMovie, smartJoin, toLabel, Language, MovieLanguageSpecification, displayName, Analytics, ReleaseMediaValue, isMandate } from '@blockframes/model';
+import {
+  Movie,
+  isScreening,
+  CrmMovie,
+  smartJoin,
+  toLabel,
+  Language,
+  MovieLanguageSpecification,
+  displayName,
+  Analytics,
+  ReleaseMediaValue,
+  isMandate,
+  Organization,
+} from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/service';
 import { EventService } from '@blockframes/event/service';
 import { sorts } from '@blockframes/ui/list/table/sorts';
 import { filters } from '@blockframes/ui/list/table/filters';
-
-import { map } from 'rxjs/operators';
-import { Observable, combineLatest } from 'rxjs';
-
-import { where } from 'firebase/firestore';
-import { format } from 'date-fns';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { aggregate } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
+
+import { map, tap } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+
+import { where } from 'firebase/firestore';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'crm-movies',
@@ -31,6 +44,7 @@ export class MoviesComponent implements OnInit {
   public exportingAnalytics = false;
   public sorts = sorts;
   public filters = filters;
+  private orgs: Organization[] = [];
 
   constructor(
     private movieService: MovieService,
@@ -50,6 +64,7 @@ export class MoviesComponent implements OnInit {
       this.eventService.valueChanges([where('type', '==', 'screening')]),
       this.contractService.valueChanges([where('type', '==', 'mandate')])
     ]).pipe(
+      tap(([_, orgs]) => this.orgs = orgs),
       map(([movies, orgs, events, mandates]) => {
         const screenings = events.filter(isScreening);
         return movies.map((movie) => {
@@ -187,19 +202,30 @@ export class MoviesComponent implements OnInit {
     for (const title of titles) {
       const movieAnalytics = allAnalytics.filter(analytic => analytic.meta.titleId === title.id);
       const uidsWithAnalytics = allUids.filter(uid => movieAnalytics.some(analytic => analytic.meta.uid === uid));
+      const orgs = this.orgs.filter(o => title.orgIds.includes(o.id));
 
       for (const uid of uidsWithAnalytics) {
         const userAnalytics = movieAnalytics.filter(analytic => analytic.meta.uid === uid);
         const user = allUsers.find(u => u?.uid === uid);
+        const org = this.orgs.find(o => o.id === user?.orgId);
         const a = aggregate(userAnalytics);
 
         exportedRows.push({
           'title id': title.id,
           title: title.title.international,
+          'title org id(s)': title?.orgIds?.join(', '),
+          'title org(s) name': orgs.map(o => o.name).join(', '),
           uid,
           user: user ? displayName(user) : '--deleted user--',
           'user email': user?.email ?? '--',
-          'total interactions': a.total,
+          'user org id': user?.orgId ?? '--',
+          'org name': org ? org.name : '--',
+          'total interactions': a.interactions.global.count,
+          'interactions on catalog': a.interactions.catalog.count,
+          'interactions on festival': a.interactions.festival.count,
+          'first interaction on catalog': a.interactions.catalog.first ? format(a.interactions.catalog.first, 'MM/dd/yyyy') : '--',
+          'last interaction on catalog': a.interactions.catalog.last ? format(a.interactions.catalog.last, 'MM/dd/yyyy') : '--',
+          'last interaction on festival': a.interactions.festival.last ? format(a.interactions.festival.last, 'MM/dd/yyyy') : '--',
           'page views': a.pageView,
           'screenings requested': a.screeningRequested,
           'asking price requested': a.askingPriceRequested,
@@ -214,4 +240,5 @@ export class MoviesComponent implements OnInit {
     this.exportingAnalytics = false;
     this.cdr.markForCheck();
   }
+
 }

@@ -12,8 +12,8 @@
           <mat-icon svgIcon="arrow_upward"></mat-icon>
         </ng-template>
       </button>
-      <button [disabled]="exportingAnalaytics" mat-flat-button color="primary" (click)="exportTitleAnalaytics(users)">
-        <ng-container *ngIf="exportingAnalaytics else exportAnalytics">
+      <button [disabled]="exportingAnalytics" mat-flat-button color="primary" [matMenuTriggerFor]="analyticsExports">
+        <ng-container *ngIf="exportingAnalytics else exportAnalytics">
           <span>Generating CSV...</span>
         </ng-container>
         <ng-template #exportAnalytics>
@@ -21,6 +21,29 @@
           <mat-icon svgIcon="arrow_upward"></mat-icon>
         </ng-template>
       </button>
+
+      <mat-menu #analyticsExports="matMenu">
+        <button mat-menu-item (click)="exportTitleAnalytics(users)">
+          Users Analytics
+          <mat-icon svgIcon="arrow_upward"></mat-icon>
+        </button>
+        <button mat-menu-item (click)="exportSearchAnalytics(['filteredTitles'])">
+          Title Search Analytics
+          <mat-icon svgIcon="arrow_upward"></mat-icon>
+        </button>
+        <button mat-menu-item (click)="exportSearchAnalytics(['savedFilters','loadedFilters'])">
+          Saved & Loaded search Analytics
+          <mat-icon svgIcon="arrow_upward"></mat-icon>
+        </button>
+        <button mat-menu-item (click)="exportSearchAnalytics(['exportedTitles'])">
+          PDF export Analytics
+          <mat-icon svgIcon="arrow_upward"></mat-icon>
+        </button>
+        <button mat-menu-item (click)="exportSearchAnalytics(['filteredAvailsCalendar','filteredAvailsMap'])">
+          Avails search Analytics
+          <mat-icon svgIcon="arrow_upward"></mat-icon>
+        </button>
+      </mat-menu>
     </article>
 
     <bf-table clickable [source]="users" pagination="50" useFilter (rowClick)="goToEdit($event)">

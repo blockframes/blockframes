@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@a
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { combineLatest, Subscription } from 'rxjs';
-import { map, startWith, throttleTime } from 'rxjs/operators';
+import { debounceTime, map, startWith } from 'rxjs/operators';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';
@@ -12,6 +12,7 @@ import {
   durationAvailabilities,
   DurationMarker
 } from '@blockframes/model';
+import { AnalyticsService } from '@blockframes/analytics/service';
 
 @Component({
   selector: 'catalog-movie-avails-calendar',
@@ -26,7 +27,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
 
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.status));
 
-  private subs: Subscription[] = [];
+  private sub: Subscription;
 
   public mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
@@ -62,11 +63,12 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     private snackbar: MatSnackBar,
     private shell: MarketplaceMovieAvailsComponent,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private analyticsService: AnalyticsService,
   ) { }
 
   clear() {
-    this.availsForm.reset();
+    this.analyticsService.addTitleFilter({ avails: this.availsForm.value }, 'marketplace', 'filteredAvailsCalendar', true);
   }
 
   async selected(marker: DurationMarker) {
@@ -93,19 +95,25 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
 
   ngAfterViewInit() {
     const decodedData = decodeUrl<CalendarAvailsFilter>(this.route);
-    if (!decodedData.medias) decodedData.medias = [];
-    if (!decodedData.territories) decodedData.territories = [];
+    this.load(decodedData);
 
-    this.availsForm.patchValue(decodedData);
-    const subSearchUrl = this.availsForm.valueChanges
-      .pipe(throttleTime(1000))
-      .subscribe((formState) => {
-        encodeUrl<CalendarAvailsFilter>(this.router, this.route, formState);
+    this.sub = this.availsForm.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(avails => {
+        this.analyticsService.addTitleFilter({ avails }, 'marketplace', 'filteredAvailsCalendar');
+        return encodeUrl<CalendarAvailsFilter>(this.router, this.route, avails);
       });
-    this.subs.push(subSearchUrl);
   }
 
   ngOnDestroy() {
-    this.subs.forEach((s) => s.unsubscribe());
+    this.sub?.unsubscribe();
+  }
+
+  load(avails: CalendarAvailsFilter) {
+    if (!avails.medias) avails.medias = [];
+    if (!avails.territories) avails.territories = [];
+
+    this.availsForm.patchValue(avails);
+    this.analyticsService.addTitleFilter({ avails: this.availsForm.value }, 'marketplace', 'filteredAvailsCalendar', true);
   }
 }
