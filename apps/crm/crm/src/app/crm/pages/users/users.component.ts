@@ -217,14 +217,11 @@ export class UsersComponent implements OnInit {
 
     const allUids = unique(all.map(analytic => analytic.meta.uid));
     const allUsers = await this.userService.load(allUids);
-    const allOrgIds = unique(allUsers.map(u => u.orgId));
-    const allOrgs = await this.orgService.load(allOrgIds);
 
     const exportedRows = [];
-
     for (const titleSearch of all) {
       const user = allUsers.find(u => u.uid === titleSearch._meta.createdBy);
-      const org = allOrgs.find(o => o.id === user.orgId);
+      const org = this.orgs.find(o => o.id === user.orgId);
       const availsSearch = titleSearch.meta.search?.avails as AvailsFilter;
       const search = titleSearch.meta.search?.search;
 
