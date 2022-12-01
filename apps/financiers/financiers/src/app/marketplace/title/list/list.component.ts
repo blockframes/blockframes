@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { debounceTime, switchMap, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
-import { DownloadSettings, PdfService } from '@blockframes/utils/pdf/pdf.service'
+import { DownloadSettings, PdfService } from '@blockframes/utils/pdf/pdf.service';
 import type { MovieAvailsSearch, StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie, MovieSearch } from '@blockframes/model';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
