@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate, countedToAnalyticData, counter, toCards } from '@blockframes/analytics/utils';
-import { AggregatedAnalytic, App, Organization, Analytics, User } from '@blockframes/model';
-import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
+import { aggregate, countedToAnalyticData, counter, deletedUserIdentifier, toCards } from '@blockframes/analytics/utils';
+import { AggregatedAnalytic, App, Organization, Analytics, User, createUser } from '@blockframes/model';
+import { fromOrgAndAccessible, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
@@ -21,7 +21,7 @@ import { map, shareReplay } from 'rxjs/operators';
 export class BuyersAnalyticsComponent {
 
   // The analytics of each buyer who interacted with sellers' title
-  private analyticsWithUsersAndOrgs$ = this.titleService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
+  private analyticsWithUsersAndOrgs$ = this.titleService.valueChanges(fromOrgAndAccessible(this.orgService.org.id, this.app)).pipe(
     joinWith({
       analytics: title => this.analytics.getTitleAnalytics({ titleId: title.id }),
     }, { shouldAwait: true }),
@@ -35,7 +35,10 @@ export class BuyersAnalyticsComponent {
       users: ({ uids }) => this.userService.load(uids),
       orgs: ({ orgIds }) => this.orgService.load(orgIds)
     }, { shouldAwait: true }),
-    map(({ users, ...rest }) => ({ users: users.filter(u => !!u), ...rest })),
+    map(({ uids, users, ...rest }) => ({
+      users: uids.map(uid => users.filter(u => !!u).find(u => u.uid === uid) || createUser({ uid, lastName: deletedUserIdentifier })),
+      ...rest
+    })),
     map(({ orgs, analytics, users, ...rest }) => {
       const filteredData = this.removeSellerData(orgs, analytics, users);
       return { ...rest, ...filteredData };
@@ -83,6 +86,8 @@ export class BuyersAnalyticsComponent {
   }
 
   goToBuyer(data: AggregatedAnalytic) {
-    this.router.navigate([data.user.uid], { relativeTo: this.route });
+    if (data.user.lastName !== deletedUserIdentifier) {
+      this.router.navigate([data.user.uid], { relativeTo: this.route });
+    }
   }
 }
