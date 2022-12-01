@@ -78,7 +78,7 @@ export class ListComponent {
   }
 
   async export(movies: Movie[]) {
-    const titleIds = movies.filter(m => m.app.festival.status === 'accepted' ).map(m => m.id);
+    const titleIds = movies.filter(m => m.app.festival.status === 'accepted').map(m => m.id);
     const downloadSettings: DownloadSettings = { titleIds, orgId: this.orgService.org.id };
     const canDownload = this.pdfService.canDownload(downloadSettings);
 
