@@ -14,7 +14,7 @@ import {
 import { filters } from '@blockframes/ui/list/table/filters';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
-import { aggregatePerUser, countedToAnalyticData, counter } from '@blockframes/analytics/utils';
+import { aggregatePerUser, countedToAnalyticData, counter, deletedUserIdentifier } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { convertToTimeString, downloadCsvFromJson } from '@blockframes/utils/helpers';
@@ -57,14 +57,14 @@ export class TitleAnalyticsComponent {
     'screeningRequested',
   ];
 
-  titleId$ = this.route.params.pipe(
+  private titleId$ = this.route.params.pipe(
     pluck('titleId')
   ) as Observable<string>;
 
-  title$ = this.titleId$.pipe(
+  title$ = firstValueFrom(this.titleId$.pipe(
     switchMap((titleId: string) => this.movieService.valueChanges(titleId)),
     shareReplay({ bufferSize: 1, refCount: true })
-  );
+  ));
 
   titleAnalytics$ = this.titleId$.pipe(
     switchMap((titleId: string) => this.analyticsService.getTitleAnalytics({ titleId })),
@@ -78,19 +78,19 @@ export class TitleAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  orgActivity$ = this.titleAnalytics$.pipe(
+  orgActivity$ = firstValueFrom(this.titleAnalytics$.pipe(
     map(analytics => counter(analytics, 'org.activity')),
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
-  );
+  ));
 
-  territoryActivity$ = this.titleAnalytics$.pipe(
+  territoryActivity$ = firstValueFrom(this.titleAnalytics$.pipe(
     map(analytics => counter(analytics, 'org.addresses.main.country')),
     map(counted => countedToAnalyticData(counted, 'territories'))
-  );
+  ));
 
-  buyerAnalytics$ = this.titleAnalytics$.pipe(
+  buyerAnalytics$ = firstValueFrom(this.titleAnalytics$.pipe(
     map(aggregatePerUser)
-  );
+  ));
 
   filters = {
     name: nameFilter,
@@ -122,27 +122,27 @@ export class TitleAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  ongoingScreenings$ = this.invitations$.pipe(
+  ongoingScreenings$ = firstValueFrom(this.invitations$.pipe(
     map(invitations => invitations.filter(({ event }) => eventTime(event) === 'onTime')),
     filter(invitations => !!invitations.length),
-  );
+  ));
 
-  aggregatedScreeningCards$ = this.invitations$.pipe(
+  aggregatedScreeningCards$ = firstValueFrom(this.invitations$.pipe(
     map(invitations => toScreenerCards(invitations))
-  );
+  ));
 
-  titleInteractions$ = this.titleAnalytics$.pipe(
+  titleInteractions$ = firstValueFrom(this.titleAnalytics$.pipe(
     map(analytics => analytics.filter(analytic => analytic.name !== 'pageView'))
-  );
+  ));
 
-  endedOrOngoingScreenings$ = this.titleId$.pipe(
+  endedOrOngoingScreenings$ = firstValueFrom(this.titleId$.pipe(
     switchMap((titleId: string) => this.eventService.valueChanges([
       where('meta.titleId', '==', titleId),
       where('ownerOrgId', '==', this.orgService.org.id),
       where('type', '==', 'screening')
     ])),
     map(events => events.filter(e => eventTime(e) !== 'early'))
-  );
+  ));
 
   constructor(
     private movieService: MovieService,
@@ -191,9 +191,8 @@ export class TitleAnalyticsComponent {
   }
 
   public viewBuyerActivity(analytic: AggregatedAnalytic) {
-    this.router.navigate(
-      [`../../buyer/`, analytic.user.uid],
-      { relativeTo: this.route }
-    );
+    if (analytic.user.lastName !== deletedUserIdentifier) {
+      this.router.navigate([`../../buyer/`, analytic.user.uid], { relativeTo: this.route } );
+    }
   }
 }
