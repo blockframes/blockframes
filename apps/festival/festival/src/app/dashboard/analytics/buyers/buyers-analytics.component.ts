@@ -10,6 +10,7 @@ import { unique } from '@blockframes/utils/helpers';
 import { APP } from '@blockframes/utils/routes/utils';
 
 import { joinWith } from 'ngfire';
+import { firstValueFrom } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
 @Component({
@@ -57,14 +58,15 @@ export class BuyersAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  orgActivity$ = this.buyersAnalytics$.pipe(
+  orgActivity$ = firstValueFrom(this.buyersAnalytics$.pipe(
     map(aggregated => counter(aggregated, 'org.activity', (item: AggregatedAnalytic) => item.total)),
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
-  )
-  aggregatedCards$ = this.analyticsWithUsersAndOrgs$.pipe(
+  ));
+  
+  aggregatedCards$ = firstValueFrom(this.analyticsWithUsersAndOrgs$.pipe(
     map(({ analytics }) => aggregate(analytics)),
     map(toCards)
-  );
+  ));
 
   constructor(
     private analytics: AnalyticsService,
