@@ -50,9 +50,9 @@ function filterAnalytics(title: string, analytics: AggregatedAnalytic[]) {
 }
 
 function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
-  return data.map(({ title, total }) => ({
+  return data.map(({ title, interactions }) => ({
     key: title.id,
-    count: total,
+    count: interactions.global.count,
     label: title.title.international ?? title.title.original
   }));
 }
@@ -151,7 +151,7 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
   filtered$ = combineLatest([
     this.filter$.asObservable(),
     this.aggregatedPerTitle$.pipe(
-      map(aggregated => aggregated.filter(a => a.total > 0))
+      map(aggregated => aggregated.filter(a => a.interactions.global.count > 0))
     )
   ]).pipe(
     map(([filter, analytics]) => filterAnalytics(filter, analytics))

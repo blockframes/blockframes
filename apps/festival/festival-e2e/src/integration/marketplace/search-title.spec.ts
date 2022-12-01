@@ -26,6 +26,7 @@ import {
   selectFilter,
   selectYear,
   syncMovieToAlgolia,
+  snackbarShould,
 } from '@blockframes/testing/cypress/browser';
 
 const injectedData = {
@@ -102,6 +103,7 @@ describe('Movie display in marketplace', () => {
     // Wait for the last parameter to be present in URL before saving filters
     assertUrlIncludes('%22certifications%22:%5B%22eof%22,%22europeanQualification%22');
     get('save').click();
+    snackbarShould('contain', 'Research successfully saved.');
     firestore.get(`users/${user.uid}`).then((user: User) => {
       expect(user.savedSearches.festival).to.deep.equal(JSON.stringify(expectedSavedSearch));
     });

@@ -30,7 +30,7 @@ export function toMovieAnalytics(analytics: Analytics<'title'>[]): MovieAnalytic
 }
 
 function toMovieEventAnalytics(events: Analytics<'title'>[]): MovieEventAnalytics[] {
-  const counter: Record<EventName, Record<string, MovieEventAnalytics>> = {
+  const counter: Partial<Record<EventName, Record<string, MovieEventAnalytics>>> = {
     addedToWishlist: {},
     askingPriceRequested: {},
     pageView: {},

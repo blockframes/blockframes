@@ -114,7 +114,7 @@ export class HomeComponent {
         return aggregate(analyticsOfUser, { user, org });
       });
     }),
-    map(users => users.sort((userA, userB) => userB.total - userA.total))
+    map(users => users.sort((userA, userB) => userB.interactions.global.count - userA.interactions.global.count))
   );
 
 

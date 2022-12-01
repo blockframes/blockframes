@@ -10,6 +10,7 @@ import { OfferListModule } from '@blockframes/contract/offer/list/list.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatProgressSpinnerModule,
     MatButtonModule,
     MatIconModule,
+    MatSnackBarModule,
     // Router
     RouterModule.forChild([{ path: '', component: OffersListComponent }])
   ],
