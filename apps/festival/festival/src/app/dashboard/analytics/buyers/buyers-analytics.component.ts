@@ -59,7 +59,7 @@ export class BuyersAnalyticsComponent {
   );
 
   orgActivity$ = firstValueFrom(this.buyersAnalytics$.pipe(
-    map(aggregated => counter(aggregated, 'org.activity', (item: AggregatedAnalytic) => item.total)),
+    map(aggregated => counter(aggregated, 'org.activity', (item: AggregatedAnalytic) => item.interactions.global.count)),
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
   ));
   

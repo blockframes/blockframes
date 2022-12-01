@@ -15,7 +15,7 @@ import { map, throttleTime } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { joinWith } from 'ngfire';
 import { MovieService } from '@blockframes/movie/service';
-import { 
+import {
   Movie,
   Income,
   AvailsFilter,
@@ -23,7 +23,7 @@ import {
   FullSale,
   FullMandate,
   decodeDate
- } from '@blockframes/model';
+} from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
@@ -31,7 +31,7 @@ import { IncomeService } from '@blockframes/contract/income/service';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { PdfService } from '@blockframes/utils/pdf/pdf.service';
+import { DownloadSettings, PdfService } from '@blockframes/utils/pdf/pdf.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface TotalIncome {
@@ -182,21 +182,20 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
   }
 
   async export(movies: Movie[]) {
-    const titleIds = movies.filter(m => m.app.catalog.status === 'accepted' ).map(m => m.id);
-    if(!titleIds.length) {
-      this.snackbar.open('You have no published titles.', 'close', { duration: 5000 });
-      return;
-    }
-    
-    if (titleIds.length >= this.pdfService.exportLimit) {
-      this.snackbar.open('Sorry, you can\'t have an export with that many titles.', 'close', { duration: 5000 });
+    const titleIds = movies.filter(m => m.app.catalog.status === 'accepted').map(m => m.id);
+
+    const downloadSettings: DownloadSettings = { titleIds, orgId: this.orgService.org.id, filters: { avails: this.availsForm.value } };
+    const canDownload = this.pdfService.canDownload(downloadSettings);
+
+    if (!canDownload.status) {
+      this.snackbar.open(canDownload.message, 'close', { duration: 5000 });
       return;
     }
 
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
     this.cdr.markForCheck();
-    const exportStatus = await this.pdfService.download({ titleIds, orgId: this.orgService.org.id, forms: { avails: this.availsForm } });
+    const exportStatus = await this.pdfService.download(downloadSettings);
     snackbarRef.dismiss();
     if (!exportStatus) {
       this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });

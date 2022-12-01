@@ -58,6 +58,18 @@
       <filter-running-time [form]="searchForm.runningTime"></filter-running-time>
     </ng-template>
 
+    <ng-template filter label="Festival Selection" [form]="searchForm.festivals">
+      <static-check-boxes fxLayout="column" fxLayoutGap="12px" [form]="searchForm.festivals"
+        scope="festival">
+      </static-check-boxes>
+    </ng-template>
+
+    <ng-template filter label="Qualifications" [form]="searchForm.certifications">
+      <static-check-boxes fxLayout="column" fxLayoutGap="12px" [form]="searchForm.certifications"
+        scope="certifications">
+      </static-check-boxes>
+    </ng-template>
+
     <list-filter-buttons (data)="load($event)"></list-filter-buttons>
 
     <button mat-button class="refresh" (click)="clear()" matTooltip="Clear all filters" test-id="clear-filters">

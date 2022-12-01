@@ -1,23 +1,20 @@
 import { Inject, Injectable } from '@angular/core';
-import { App, appName, toLabel } from '@blockframes/model';
+import { App, appName, toLabel, MovieAvailsSearch, AvailsFilter } from '@blockframes/model';
 import { firebaseRegion, firebase } from '@env';
 import { EmulatorsConfig, EMULATORS_CONFIG } from '../emulator-front-setup';
 import { APP } from '../routes/utils';
 import { PdfParams, PdfParamsFilters } from './pdf.interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
-import { MovieSearchForm } from '@blockframes/movie/form/search.form';
 import { trimString, toGroupLabel } from '@blockframes/utils/pipes';
+import { AnalyticsService } from '@blockframes/analytics/service';
+import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 
 export const { projectId } = firebase();
 
-interface DownloadSettings {
+export interface DownloadSettings {
   titleIds: string[],
   orgId?: string,
-  forms?: {
-    avails?: AvailsForm,
-    search?: MovieSearchForm
-  }
+  filters?: MovieAvailsSearch
 }
 
 @Injectable({ providedIn: 'root' })
@@ -32,11 +29,25 @@ export class PdfService {
 
   constructor(
     @Inject(APP) private app: App,
-    @Inject(EMULATORS_CONFIG) private emulatorsConfig: EmulatorsConfig
+    @Inject(EMULATORS_CONFIG) private emulatorsConfig: EmulatorsConfig,
+    private analyticsService: AnalyticsService,
+    private moduleGuard: ModuleGuard
   ) { }
 
+  canDownload({ filters, titleIds }: DownloadSettings) {
+    if (!titleIds.length) {
+      this.analyticsService.addPdfExport(filters, titleIds.length, this.moduleGuard.currentModule, false);
+      return { status: false, message: 'You have no published titles.' };
+    }
+    if (titleIds.length >= this.exportLimit) {
+      this.analyticsService.addPdfExport(filters, titleIds.length, this.moduleGuard.currentModule, false);
+      return { status: false, message: 'Sorry, you can\'t have an export with that many titles.' };
+    }
+    return { status: true };
+  }
+
   async download(settings: DownloadSettings) {
-    const filters = this.getFilters(settings.forms);
+    const filters = this.getFilters(settings.filters);
     const fileName = this.getFileName(filters);
     const data: PdfParams = {
       app: this.app,
@@ -55,7 +66,7 @@ export class PdfService {
       ? `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`
       : `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`
 
-    const status = await new Promise(resolve => {
+    const status: boolean = await new Promise(resolve => {
       fetch(url, params,).then(res => res.blob())
         .then(blob => {
           const url = URL.createObjectURL(blob);
@@ -68,7 +79,9 @@ export class PdfService {
         }).catch(_ => resolve(false));
     });
 
-    return status as boolean;
+    this.analyticsService.addPdfExport(settings.filters, settings.titleIds.length, this.moduleGuard.currentModule, status);
+
+    return status;
   }
 
   /**
@@ -81,7 +94,7 @@ export class PdfService {
   private getFileName(filters: PdfParamsFilters) {
     const fileNameParts: string[] = [`${appName[this.app]} Library`];
 
-    if (filters.avails ) fileNameParts.push(`Avails for ${filters.avails}`);
+    if (filters.avails) fileNameParts.push(`Avails for ${filters.avails}`);
     if (filters.contentType) fileNameParts.push(filters.contentType);
     if (filters.genres) fileNameParts.push(filters.genres);
     if (filters.originCountries) fileNameParts.push(filters.originCountries);
@@ -89,11 +102,11 @@ export class PdfService {
     return fileNameParts.filter(s => s).join(' - ');
   }
 
-  private getFilters(forms: { avails?: AvailsForm, search?: MovieSearchForm }) {
+  private getFilters(search: MovieAvailsSearch) {
     const filters: PdfParamsFilters = {};
 
-    if (forms?.avails) {
-      const availForm = forms.avails.value;
+    if (search?.avails) {
+      const availForm = search.avails as AvailsFilter;
 
       if (availForm.territories?.length && availForm.medias?.length) {
         const territories = toGroupLabel(availForm.territories, 'territories', 'World').join(', ');
@@ -103,8 +116,8 @@ export class PdfService {
 
     }
 
-    if (forms?.search) {
-      const searchForm = forms.search.value;
+    if (search?.search) {
+      const searchForm = search.search;
 
       if (this.app === 'catalog' && searchForm.contentType) {
         filters.contentType = toLabel(searchForm.contentType, 'contentType');

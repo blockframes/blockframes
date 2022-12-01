@@ -37,7 +37,7 @@ interface LineChartOptions {
   markers: ApexMarkers;
 };
 
-const eventNameLabel: Record<EventName, string> = {
+const eventNameLabel: Partial<Record<EventName, string>> = {
   addedToWishlist: 'Added to Wishlist',
   askingPriceRequested: 'Asking Price Requested',
   pageView: 'Page Views',
