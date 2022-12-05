@@ -1,6 +1,8 @@
+import { MovieAvailsSearch } from './algolia';
 import { DocumentMeta } from './meta';
 import { Movie } from './movie';
 import { Organization } from './organisation';
+import { Module } from './static';
 import { User } from './user';
 
 const analyticsEvents = [
@@ -9,13 +11,19 @@ const analyticsEvents = [
   'addedToWishlist',
   'removedFromWishlist',
   'screeningRequested',
-  'askingPriceRequested'
+  'askingPriceRequested',
+  'exportedTitles',
+  'filteredTitles',
+  'savedFilters',
+  'loadedFilters',
+  'filteredAvailsCalendar',
+  'filteredAvailsMap'
 ] as const;
 export type EventName = typeof analyticsEvents[number];
 
 export interface AnalyticsTypeRecord {
   title: MetaTitle;
-  event: MetaEvent;
+  titleSearch: MetaTitleSearch;
 }
 
 export type AnalyticsTypes = keyof AnalyticsTypeRecord;
@@ -28,22 +36,30 @@ export interface Analytics<type extends AnalyticsTypes = AnalyticsTypes> {
   _meta?: DocumentMeta;
 }
 
-export interface MetaTitle {
+interface MetaTitle {
   titleId: string;
   orgId: string;
   uid: string;
   ownerOrgIds: string[];
 }
 
-export interface MetaEvent {
-  eventId: string;
+interface MetaTitleSearch {
+  search?: MovieAvailsSearch;
+  module: Module,
   uid: string;
   orgId?: string;
-  ownerOrgId: string;
+  titleCount?: number;
+  status: boolean;
 }
 
-export interface AggregatedAnalytic extends Record<EventName, number> {
-  total: number;
+export interface AnalyticsInteraction {
+  count: number;
+  first?: Date;
+  last?: Date;
+}
+
+export interface AggregatedAnalytic extends Partial<Record<EventName, number>> {
+  interactions: Record<'global' | 'festival' | 'catalog', AnalyticsInteraction>
   user?: User;
   org?: Organization;
   title?: Movie;
@@ -75,9 +91,23 @@ export function createTitleMeta(meta: Partial<MetaTitle>): MetaTitle {
   };
 };
 
+export function createTitleSearchMeta(meta: Partial<MetaTitleSearch>): MetaTitleSearch {
+  return {
+    module: 'marketplace',
+    orgId: '',
+    uid: '',
+    status: true,
+    ...meta
+  };
+};
+
 export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>): AggregatedAnalytic {
   return {
-    total: 0,
+    interactions: {
+      global: { count: 0 },
+      festival: { count: 0 },
+      catalog: { count: 0 },
+    },
     addedToWishlist: 0,
     askingPriceRequested: 0,
     pageView: 0,

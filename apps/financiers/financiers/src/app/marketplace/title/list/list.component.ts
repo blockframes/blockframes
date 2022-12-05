@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { debounceTime, switchMap, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
-import { PdfService } from '@blockframes/utils/pdf/pdf.service'
+import { DownloadSettings, PdfService } from '@blockframes/utils/pdf/pdf.service';
 import type { MovieAvailsSearch, StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie, MovieSearch } from '@blockframes/model';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
@@ -110,14 +110,17 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async export() {
-    if (this.movieIds.length >= this.pdfService.exportLimit) {
-      this.snackbar.open('Sorry, you can\'t have an export with that many titles.', 'close', { duration: 5000 });
+    const downloadSettings: DownloadSettings = { titleIds: this.movieIds };
+    const canDownload = this.pdfService.canDownload(downloadSettings);
+
+    if (!canDownload.status) {
+      this.snackbar.open(canDownload.message, 'close', { duration: 5000 });
       return;
     }
 
     const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
     this.exporting = true;
-    const exportStatus = await this.pdfService.download({ titleIds: this.movieIds });
+    const exportStatus = await this.pdfService.download(downloadSettings);
     snackbarRef.dismiss();
     if (!exportStatus) {
       this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });

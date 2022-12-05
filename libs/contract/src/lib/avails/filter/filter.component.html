@@ -89,7 +89,7 @@
 </mat-form-field>
 
 <ng-container *ngIf="!vertical">
-  <button mat-icon-button type="reset" (click)="form.reset()" matTooltip="Clear Fields" [disabled]="disabled">
+  <button mat-icon-button type="reset" (click)="clear()" matTooltip="Clear Fields" [disabled]="disabled">
     <mat-icon svgIcon="refresh_filters"></mat-icon>
   </button>
 </ng-container>

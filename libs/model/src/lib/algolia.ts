@@ -1,5 +1,5 @@
 import { SearchIndex } from 'algoliasearch';
-import { AvailsFilter } from './avail';
+import { AvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from './avail';
 import { MovieLanguageSpecification, MovieRunningTime, MovieRelease, LanguageVersion } from './movie';
 import {
   Genre,
@@ -112,8 +112,8 @@ export interface MovieSearch extends AlgoliaSearch {
 }
 
 export interface MovieAvailsSearch {
-  search: MovieSearch;
-  avails?: AvailsFilter
+  search?: MovieSearch;
+  avails?: AvailsFilter | CalendarAvailsFilter | MapAvailsFilter;
 }
 
 export interface OrganizationSearch extends AlgoliaSearch {

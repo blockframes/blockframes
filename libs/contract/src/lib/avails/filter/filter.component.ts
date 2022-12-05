@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { AvailsFilter } from '@blockframes/model';
 import { AvailsForm, MapAvailsForm, CalendarAvailsForm } from '../form/avails.form';
@@ -14,8 +14,14 @@ export class AvailsFilterComponent {
   @Input('availsFilter') form: AvailsForm | MapAvailsForm | CalendarAvailsForm;
   @Input() disabled = false;
   @HostBinding('class.vertical') @Input() @boolean vertical: boolean;
+  @Output() cleared = new EventEmitter<boolean>();
 
   public getControl(key: keyof AvailsFilter) {
     return this.form.controls[key];
+  }
+
+  public clear() {
+    this.form.reset();
+    this.cleared.emit(true);
   }
 }

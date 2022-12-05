@@ -4,9 +4,12 @@ import { OfferService } from '@blockframes/contract/offer/service';
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { orderBy, where } from 'firebase/firestore';
-import { Contract, Movie, Negotiation, Offer, toLabel, sum } from '@blockframes/model';
+import { Contract, Movie, Negotiation, Offer, toLabel, sum, Bucket } from '@blockframes/model';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { format } from 'date-fns';
+import { BucketService } from '@blockframes/contract/bucket/service';
+import { OrganizationService } from '@blockframes/organization/service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -23,11 +26,17 @@ export class OffersListComponent {
       contracts: offer => this.getContracts(offer.id)
     })
   );
+
+  buckets$ = this.bucketService.valueChanges();
+
   constructor(
     private service: OfferService,
     private contractService: ContractService,
     private titleService: MovieService,
+    private bucketService: BucketService,
     private cdr: ChangeDetectorRef,
+    private orgService: OrganizationService,
+    private snackbar: MatSnackBar,
   ) { }
 
   private getContracts(offerId: string) {
@@ -59,6 +68,41 @@ export class OffersListComponent {
       }));
 
       downloadCsvFromJson(exportedRows, 'offer-list');
+
+      this.exporting = false;
+    } catch (err) {
+      console.log(err);
+      this.exporting = false;
+    }
+
+    this.cdr.markForCheck();
+  }
+
+  public async exportBuckets(buckets: Bucket[]) {
+    try {
+      this.exporting = true;
+      this.cdr.markForCheck();
+
+      if (buckets.length) {
+        const exportedRows = [];
+        const orgs = await this.orgService.load(buckets.map(b => b.id));
+        for (const bucket of buckets) {
+          const org = orgs.find(o => o.id === bucket.id);
+          exportedRows.push({
+            'bucket reference': bucket.id,
+            'org name': org ? org.name : '--deleted org--',
+            '# of title': bucket.contracts.length,
+            delivery: bucket.delivery ?? '--',
+            specificity: bucket.specificity ?? '--',
+            'total bucket price': `${sum(bucket.contracts.map(c => c.price).filter(value => typeof value === 'number' && !isNaN(value)))} ${bucket.currency || ''}`
+          });
+        }
+
+        downloadCsvFromJson(exportedRows, 'bucket-list');
+      } else {
+        this.snackbar.open('No data to export', 'close', { duration: 5000 });
+      }
+
 
       this.exporting = false;
     } catch (err) {
