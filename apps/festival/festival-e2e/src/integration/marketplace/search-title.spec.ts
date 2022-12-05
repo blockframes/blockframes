@@ -101,8 +101,9 @@ describe('Movie search in marketplace', () => {
     // Wait for the last parameter to be present in URL before saving filters
     assertUrlIncludes('%22certifications%22:%5B%22eof%22,%22europeanQualification%22');
     get('save').click();
+    cy.wait(1000); //giving time for firestore to update (without, test if flaky)
     firestore.get(`users/${user.uid}`).then((user: User) => {
-      expect(user.savedSearches.festival).to.deep.equal(JSON.stringify(expectedSavedSearch));
+      expect(JSON.parse(user.savedSearches.festival)).to.deep.equal(expectedSavedSearch);
     });
     get('clear-filters').click();
     get('titles-count').should('not.contain', 'There is 1 title available.');

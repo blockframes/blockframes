@@ -23,6 +23,7 @@ import {
   createDocumentMeta
 } from '@blockframes/model';
 import { sub } from 'date-fns';
+import { algolia } from '@env';
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
@@ -344,6 +345,7 @@ export const expectedSavedSearch = {
         logo: '',
         activity: 'intlSales',
         objectID: '0-e2e-saleOrgId',
+        e2eTag: algolia.e2eTag,
         _highlightResult: {
           name: {
             value: '<em>sale</em> <em>org</em>',
