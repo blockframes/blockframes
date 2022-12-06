@@ -1,4 +1,4 @@
-import { fakeUserData } from '@blockframes/testing/cypress/browser';
+import { fakeUserData, fakeMovieTitle } from '@blockframes/testing/cypress/browser';
 import {
   createMovie,
   createDocPermissions,
@@ -25,6 +25,7 @@ const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
 const movieId = '0-e2e-movieId';
 const userData = fakeUserData();
+const movieTitle = fakeMovieTitle()
 
 export const user = createUser({
   uid: adminUid,
@@ -66,8 +67,8 @@ export const inDevelopmentMovie = createMovie({
   //main
   productionStatus: 'development',
   title: createTitle({
-    original: 'Original title',
-    international: 'International title',
+    original: movieTitle,
+    international: movieTitle,
   }),
   internalRef: 'E2E ref',
   runningTime: {

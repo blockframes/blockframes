@@ -31,3 +31,7 @@ export function createFakeUserDataArray(number: number) {
   }
   return fakeUserDataArray;
 }
+
+export const fakeMovieTitle = () => 'E2E_' + faker.lorem.slug(3) + '_movie';
+
+export const fakeOrgName = () => 'E2E_' + faker.lorem.slug(3) + '_org';

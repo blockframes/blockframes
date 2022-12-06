@@ -1,4 +1,4 @@
-import { fakeUserData } from '@blockframes/testing/cypress/browser';
+import { fakeUserData, fakeOrgName } from '@blockframes/testing/cypress/browser';
 import {
   createPermissions,
   createUser,
@@ -12,13 +12,13 @@ import {
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
 const acceptedBuyerOrgid = '0-e2e-acceptedBuyerOrgid';
-const acceptedBuyerOrgName = 'E2E accepted buyer org';
+const acceptedBuyerOrgName = fakeOrgName() + ' buyer accepted';
 const dashboardBuyerOrgid = '0-e2e-dashboardBuyerOrgid';
-const dashboardBuyerOrgName = 'E2E dashboard buyer org';
+const dashboardBuyerOrgName = fakeOrgName() + ' buyer dashboard';
 const pendingBuyerOrgid = '0-e2e-pendingBuyerOrgid';
-const pendingBuyerOrgName = 'E2e pending buyer org';
+const pendingBuyerOrgName = fakeOrgName() + ' buyer pending';
 const catalogBuyerOrgid = '0-e2e-catalogBuyerOrgid';
-const catalogBuyerOrgName = 'E2e catalog buyer org';
+const catalogBuyerOrgName = fakeOrgName() + ' buyer catalog';
 const userData = fakeUserData();
 
 export const user = createUser({

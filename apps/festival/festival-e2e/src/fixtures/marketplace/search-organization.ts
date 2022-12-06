@@ -1,4 +1,4 @@
-import { fakeUserData } from '@blockframes/testing/cypress/browser';
+import { fakeUserData, fakeOrgName } from '@blockframes/testing/cypress/browser';
 import {
   createMovie,
   createDocPermissions,
@@ -17,11 +17,11 @@ import {
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
 const acceptedSaleOrgid = '0-e2e-acceptedSaleOrgid';
-const acceptedSaleOrgName = 'E2E accepted sale org';
+const acceptedSaleOrgName = fakeOrgName() + ' sale accepted';
 const pendingSaleOrgid = '0-e2e-pendingSaleOrgid';
-const pendingSaleOrgName = 'E2e pending sale org';
+const pendingSaleOrgName = fakeOrgName() + ' sale pending';
 const catalogSaleOrgid = '0-e2e-catalogSaleOrgid';
-const catalogSaleOrgName = 'E2e catalog sale org';
+const catalogSaleOrgName = fakeOrgName() + ' sale catalog';
 const movieId = '0-e2e-movieId';
 const userData = fakeUserData();
 

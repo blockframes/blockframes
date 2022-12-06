@@ -1,4 +1,4 @@
-import { fakeUserData } from '@blockframes/testing/cypress/browser';
+import { fakeUserData, fakeMovieTitle, fakeOrgName } from '@blockframes/testing/cypress/browser';
 import {
   createMovie,
   createDocPermissions,
@@ -28,9 +28,10 @@ import { algolia } from '@env';
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
 const saleOrgId = '0-e2e-saleOrgId';
-const saleOrgName = 'sale org';
+const saleOrgName = fakeOrgName() + ' sale';
 const movieId = '0-e2e-movieId';
 const userData = fakeUserData();
+const movieTitle = fakeMovieTitle();
 
 export const user = createUser({
   uid: adminUid,
@@ -87,8 +88,8 @@ export const displayMovie = createMovie({
   //main
   productionStatus: 'released',
   title: createTitle({
-    original: 'Original title',
-    international: 'International title',
+    original: movieTitle,
+    international: movieTitle,
   }),
   internalRef: 'E2E ref',
   runningTime: {
@@ -337,7 +338,7 @@ export const expectedSavedSearch = {
     minReleaseYear: 2020,
     sellers: [
       {
-        name: 'sale org',
+        name: saleOrgName,
         appModule: ['dashboard', 'marketplace'],
         country: 'france',
         isAccepted: true,
@@ -348,10 +349,10 @@ export const expectedSavedSearch = {
         e2eTag: algolia.e2eTag,
         _highlightResult: {
           name: {
-            value: '<em>sale</em> <em>org</em>',
+            value: `<em>E2E</em>_<em>${saleOrgName.split('_')[1]}</em>_<em>org</em> <em>sale</em>`,
             matchLevel: 'full',
             fullyHighlighted: true,
-            matchedWords: ['sale', 'org'],
+            matchedWords: saleOrgName.split(/[\W_]/).map(word => word.toLowerCase()),
           },
         },
       },
