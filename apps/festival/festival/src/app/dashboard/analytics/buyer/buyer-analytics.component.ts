@@ -16,7 +16,7 @@ import {
   AnalyticData,
   Movie,
 } from '@blockframes/model';
-import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
+import { fromOrgAndAccessible, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { UserService } from '@blockframes/user/service';
@@ -110,7 +110,7 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
     }, { shouldAwait: true })
   );
 
-  buyerAnalytics$ = this.titleService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
+  buyerAnalytics$ = this.titleService.valueChanges(fromOrgAndAccessible(this.orgService.org.id, this.app)).pipe(
     joinWith({
       analytics: title => {
         const { userId } = this.route.snapshot.params;

@@ -4,7 +4,7 @@
   </button>
 
   <ng-container *ngIf="user$ | async as user">
-    <article>
+    <article *ngIf="user.org">
       <img [ref]="user.org.logo" asset="profil_user.svg" alt="Organization Logo">
 
       <div>
