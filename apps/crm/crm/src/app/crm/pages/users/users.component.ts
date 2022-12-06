@@ -158,11 +158,15 @@ export class UsersComponent implements OnInit {
     this.exportingAnalytics = true;
     this.cdr.markForCheck();
 
-    const query = [where('type', '==', 'title')];
-    const all = await this.analyticsService.load<Analytics<'title'>>(query);
-    const allAnalytics = all.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId));
+    const titleQuery = [where('type', '==', 'title')];
+    const titleAnalytics = await this.analyticsService.load<Analytics<'title'>>(titleQuery);
 
-    const allTitleIds = unique(allAnalytics.map(analytic => analytic.meta.titleId));
+    const availsSearchQuery = [where('type', '==', 'titleSearch'), where('name', 'in', ['filteredAvailsCalendar', 'filteredAvailsMap'])];
+    const availsSearchAnalytics = await this.analyticsService.load<Analytics<'titleSearch'>>(availsSearchQuery);
+
+    const allAnalytics = [...titleAnalytics, ...availsSearchAnalytics].filter(analytic => !analytic.meta.ownerOrgIds?.includes(analytic.meta.orgId));
+
+    const allTitleIds = unique(allAnalytics.map(analytic => analytic.meta.titleId).filter(t => !!t));
     const allTitles = await this.movieService.load(allTitleIds);
 
     const exportedRows = [];
@@ -198,7 +202,9 @@ export class UsersComponent implements OnInit {
           'asking price requested': a.askingPriceRequested,
           'promo element opened': a.promoElementOpened,
           'added to wishlist': a.addedToWishlist,
-          'removed from wishlist': a.removedFromWishlist
+          'removed from wishlist': a.removedFromWishlist,
+          'filtered Avails Calendar': a.filteredAvailsCalendar ?? 0,
+          'filtered Avails Map': a.filteredAvailsMap ?? 0,
         });
       }
     }
@@ -217,6 +223,9 @@ export class UsersComponent implements OnInit {
 
     const allUids = unique(all.map(analytic => analytic.meta.uid));
     const allUsers = await this.userService.load(allUids);
+
+    const allTitleIds = unique(all.map(analytic => analytic.meta.titleId).filter(t => !!t));
+    const allTitles = await this.movieService.load(allTitleIds);
 
     const exportedRows = [];
     for (const titleSearch of all) {
@@ -258,6 +267,16 @@ export class UsersComponent implements OnInit {
         row['qualifications'] = toLabel(search?.certifications, 'certifications');
         row['min release year'] = search?.minReleaseYear ?? '--';
         row['min budget'] = search?.minBudget ?? '--';
+      }
+
+      // Avails Search
+      if (eventNames.includes('filteredAvailsCalendar') || eventNames.includes('filteredAvailsMap')) {
+        const title = allTitles.find(t => t?.id === titleSearch.meta.titleId);
+        const orgs = this.orgs.filter(o => title?.orgIds.includes(o.id));
+        row['titleId'] = titleSearch.meta.titleId ?? '--';
+        row['title'] = title?.title.international ?? '--deleted title--';
+        row['title org id(s)'] = title?.orgIds?.join(', ');
+        row['title org(s) name'] = orgs.map(o => o.name).join(', ');
       }
 
       // PDF
