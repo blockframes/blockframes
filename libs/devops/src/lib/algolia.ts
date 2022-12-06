@@ -54,7 +54,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = getDb()) {
       300
     );
     for await (const orgs of orgsIterator) {
-      const promises = orgs.map((org) => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY'], db));
+      const promises = orgs.map((org) => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY'], db, false));
 
       await Promise.all(promises);
       console.log(`chunk of ${orgs.length} orgs processed...`);
@@ -103,7 +103,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = getDb()) {
             }
           }
 
-          await storeSearchableMovie(movie, organizationNames, process.env['ALGOLIA_API_KEY']);
+          await storeSearchableMovie(movie, organizationNames, process.env['ALGOLIA_API_KEY'], false);
         } catch (error) {
           console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
           console.error(error);
