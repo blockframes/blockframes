@@ -118,6 +118,7 @@ describe('Movie display in marketplace', () => {
     selectFilter('Qualifications');
     get(certifications[movie.certifications[0]]).click();
     get(certifications[movie.certifications[1]]).click();
+    get('save-filter').click();
     get('titles-count').should('contain', oneTitleSentence);
     get(`movie-card_${movie.id}`).should('exist');
     getAllStartingWith('item_').should('have.length', 1);
