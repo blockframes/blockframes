@@ -56,7 +56,7 @@ describe('Search sale organization in marketplace', () => {
     algolia.storeOrganization(acceptedSaleOrg);
     algolia.storeOrganization(pendingSaleOrg);
     algolia.storeOrganization(catalogSaleOrg);
-    cy.wait(2000); // giving alfolia some tome to catch up
+    cy.wait(2000); // giving algolia some tome to catch up
     get('Sales Agents').click();
     assertUrlIncludes('c/o/marketplace/organization');
     get('organizations-count').then($result => {
@@ -72,7 +72,7 @@ describe('Search sale organization in marketplace', () => {
 
   it('Filter works as expected', () => {
     algolia.storeOrganization(acceptedSaleOrg);
-    cy.wait(2000); // giving alfolia some tome to catch up
+    cy.wait(2000);
     get('Sales Agents').click();
     assertUrlIncludes('c/o/marketplace/organization');
     get('organizations-count').then($result => {

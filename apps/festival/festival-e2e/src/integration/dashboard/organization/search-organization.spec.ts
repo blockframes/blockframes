@@ -54,7 +54,7 @@ describe('Search buyer organizations in dashboard', () => {
     algolia.storeOrganization(dashboardBuyerOrg);
     algolia.storeOrganization(pendingBuyerOrg);
     algolia.storeOrganization(catalogBuyerOrg);
-    cy.wait(2000); // giving alfolia some tome to catch up
+    cy.wait(2000); // giving algolia some tome to catch up
     get('organization').click();
     assertUrlIncludes('c/o/dashboard/organization');
     get('organizations-count').then($result => {

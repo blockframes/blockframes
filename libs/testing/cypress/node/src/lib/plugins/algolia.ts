@@ -6,11 +6,11 @@ import { algolia } from '@env';
 import { capitalize } from '@blockframes/utils/helpers';
 
 export async function storeOrganization(org: Organization) {
-  return await storeSearchableOrg(org, process.env['ALGOLIA_API_KEY'], db, true);
+  return await storeSearchableOrg(org, process.env['ALGOLIA_API_KEY'], db);
 }
 
 export async function storeMovie({ movie, organizationNames }: { movie: Movie; organizationNames: string[] }) {
-  return storeSearchableMovie(movie, organizationNames, process.env['ALGOLIA_API_KEY'], true);
+  return storeSearchableMovie(movie, organizationNames, process.env['ALGOLIA_API_KEY']);
 }
 
 export async function clearAlgoliaTestData() {
