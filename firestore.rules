@@ -510,7 +510,7 @@ service cloud.firestore {
           || isMyAnalytics()
           || isAllowedToReadTitleAnalytics()
         );
-       allow create: if userHasValidOrg()
+       allow create, update: if userHasValidOrg()
         && notInMaintenance()
         && isRequestFieldValueEqualTo(['id'], docId)
         && isRequestFieldValueEqualTo(['meta', 'orgId'], userOrgId())
