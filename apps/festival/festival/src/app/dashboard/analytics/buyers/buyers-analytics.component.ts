@@ -1,15 +1,16 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate, countedToAnalyticData, counter, toCards } from '@blockframes/analytics/utils';
-import { AggregatedAnalytic, App, Organization, Analytics, User } from '@blockframes/model';
-import { fromOrgAndAccepted, MovieService } from '@blockframes/movie/service';
+import { aggregate, countedToAnalyticData, counter, deletedUserIdentifier, toCards } from '@blockframes/analytics/utils';
+import { AggregatedAnalytic, App, Organization, Analytics, User, createUser } from '@blockframes/model';
+import { fromOrgAndAccessible, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 import { APP } from '@blockframes/utils/routes/utils';
 
 import { joinWith } from 'ngfire';
+import { firstValueFrom } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
 @Component({
@@ -21,7 +22,7 @@ import { map, shareReplay } from 'rxjs/operators';
 export class BuyersAnalyticsComponent {
 
   // The analytics of each buyer who interacted with sellers' title
-  private analyticsWithUsersAndOrgs$ = this.titleService.valueChanges(fromOrgAndAccepted(this.orgService.org.id, this.app)).pipe(
+  private analyticsWithUsersAndOrgs$ = this.titleService.valueChanges(fromOrgAndAccessible(this.orgService.org.id, this.app)).pipe(
     joinWith({
       analytics: title => this.analytics.getTitleAnalytics({ titleId: title.id }),
     }, { shouldAwait: true }),
@@ -35,8 +36,12 @@ export class BuyersAnalyticsComponent {
       users: ({ uids }) => this.userService.load(uids),
       orgs: ({ orgIds }) => this.orgService.load(orgIds)
     }, { shouldAwait: true }),
+    map(({ uids, users, ...rest }) => ({
+      users: uids.map(uid => users.filter(u => !!u).find(u => u.uid === uid) || createUser({ uid, lastName: deletedUserIdentifier })),
+      ...rest
+    })),
     map(({ orgs, analytics, users, ...rest }) => {
-      const filteredData = this.removeSellerData(orgs, analytics, users,);
+      const filteredData = this.removeSellerData(orgs, analytics, users);
       return { ...rest, ...filteredData };
     }),
     shareReplay({ bufferSize: 1, refCount: true })
@@ -53,14 +58,15 @@ export class BuyersAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  orgActivity$ = this.buyersAnalytics$.pipe(
+  orgActivity$ = firstValueFrom(this.buyersAnalytics$.pipe(
     map(aggregated => counter(aggregated, 'org.activity', (item: AggregatedAnalytic) => item.interactions.global.count)),
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
-  )
-  aggregatedCards$ = this.analyticsWithUsersAndOrgs$.pipe(
+  ));
+  
+  aggregatedCards$ = firstValueFrom(this.analyticsWithUsersAndOrgs$.pipe(
     map(({ analytics }) => aggregate(analytics)),
     map(toCards)
-  );
+  ));
 
   constructor(
     private analytics: AnalyticsService,
@@ -82,6 +88,8 @@ export class BuyersAnalyticsComponent {
   }
 
   goToBuyer(data: AggregatedAnalytic) {
-    this.router.navigate([data.user.uid], { relativeTo: this.route });
+    if (data.user.lastName !== deletedUserIdentifier) {
+      this.router.navigate([data.user.uid], { relativeTo: this.route });
+    }
   }
 }
