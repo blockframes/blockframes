@@ -246,6 +246,7 @@ export async function clearAlgoliaTestData(apps: AlgoliaApp[]) {
       const searchIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia[index][app]);
       const records = await searchIndex.search('', { facetFilters: [`e2eTag:${algolia.e2eTag}`] });
       const objectIDs = records.hits.map(object => object.objectID);
+      console.log(`deleting ${objectIDs.length} objects from ${algolia[index][app]}`);
       await indexBuilder(algolia[index][app], process.env['ALGOLIA_API_KEY']).deleteObjects(objectIDs);
     }
   }
