@@ -39,6 +39,8 @@ const injectedData = {
   [`movies/${movie.id}`]: movie,
 };
 
+const oneTitleSentence = 'There is 1 title available.';
+
 describe('Movie search in marketplace', () => {
   beforeEach(() => {
     cy.visit('');
