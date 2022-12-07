@@ -95,7 +95,7 @@ async function runCommand() {
       await uploadBackup({ remoteDir: arg1, localRelPath: arg2 });
       break;
     case 'use':
-      await selectEnvironment(arg1);
+      await selectEnvironment(arg1, arg2);
       break;
     case 'generateFixtures':
       await generateFixtures(db);
