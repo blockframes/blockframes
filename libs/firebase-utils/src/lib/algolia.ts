@@ -20,7 +20,7 @@ import {
 import { hasAcceptedMovies } from './util';
 import { getDb } from './initialize';
 
-interface StoreOptions  {
+interface StoreOptions {
   origin: string;
 }
 
@@ -246,14 +246,22 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string, d
 
 export async function clearAlgoliaTestData(apps: AlgoliaApp[]) {
   const indexes: AlgoliaIndexGroups[] = ['indexNameOrganizations', 'indexNameMovies'];
-  for (const app of apps) {
-    for (const index of indexes) {
-      const searchIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia[index][app]);
-      const records = await searchIndex.search('', { facetFilters: [`origin:${currentGitBranch}`] });
-      const objectIDs = records.hits.map(object => object.objectID);
-      console.log(`deleting ${objectIDs.length} objects from ${algolia[index][app]}`);
-      await indexBuilder(algolia[index][app], process.env['ALGOLIA_API_KEY']).deleteObjects(objectIDs);
+  for (const index of indexes) {
+    if (typeof algolia[index] === 'object') {
+      for (const app of apps) {
+        await clearAlgoliaIndex(algolia[index][app], currentGitBranch);
+      }
+    } else {
+      await clearAlgoliaIndex(algolia[index] as string, currentGitBranch);
     }
   }
   return true;
+}
+
+async function clearAlgoliaIndex(index: string, origin: string) {
+  const searchIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(index);
+  const records = await searchIndex.search('', { facetFilters: [`origin:${origin}`] });
+  const objectIDs = records.hits.map(object => object.objectID);
+  console.log(`deleting ${objectIDs.length} objects from ${index}`);
+  await indexBuilder(index, process.env['ALGOLIA_API_KEY']).deleteObjects(objectIDs);
 }
