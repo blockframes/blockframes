@@ -152,3 +152,5 @@ export const chunkSize = 15;
 
 export const playerId = 'lpkRdflk';
 export const testVideoId = 'YlSFNnkR';
+
+export const currentGitBranch='';

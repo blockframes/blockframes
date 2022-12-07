@@ -118,3 +118,5 @@ export const chunkSize = 25;
 
 export const playerId = 'LVeBD5vf';
 export const testVideoId = 'YlSFNnkR';
+
+export const currentGitBranch='';
