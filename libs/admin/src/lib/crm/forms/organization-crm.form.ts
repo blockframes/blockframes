@@ -10,7 +10,7 @@ function createOrgCrmControls(entity: Partial<Organization>) {
   const appAccess = new FormGroup({});
   const apps = getAllAppsExcept(['crm']);
   for (const a of apps) {
-    appAccess.addControl(a, new ModuleAccessCrmForm(org.appAccess[a]))
+    appAccess.addControl(a, new ModuleAccessCrmForm(org.appAccess[a]));
   }
   return {
     name: new FormControl(org.name),

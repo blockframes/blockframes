@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -19,11 +19,7 @@ import { where } from 'firebase/firestore';
 })
 export class OrganizationCreateComponent {
   public form = new OrganizationCrmForm();
-  public superAdminForm = new FormEntity({
-    email: new FormControl('', [Validators.required, Validators.email], this.emailValidator.bind(this))
-  }, {
-    updateOn: 'blur'
-  });
+  public superAdminForm = new FormEntity({ email: new FormControl('', [Validators.required, Validators.email], this.emailValidator.bind(this)) }, { updateOn: 'blur' });
   public fromApp = new FormControl('');
   public creatingOrg = false;
 
@@ -41,9 +37,18 @@ export class OrganizationCreateComponent {
     return (!!existingSuperAdmin && !!existingSuperAdmin.orgId) ? { taken: true } : null;
   }
 
+  isFormValid() {
+    return this.form.valid && this.superAdminForm.valid;
+  }
+
   async addOrganization() {
     this.creatingOrg = true;
-    if (!this.form.valid) {
+
+    if (this.form.get('name').value?.trim() === '') {
+      this.form.get('name').setErrors({ required: true });
+    }
+
+    if (!this.isFormValid()) {
       this.snackBar.open('Form invalid, please check error messages', 'close', { duration: 2000 });
       this.creatingOrg = false;
       return;
