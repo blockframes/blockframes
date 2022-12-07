@@ -48,6 +48,8 @@ interface MetaTitleSearch {
   module: Module,
   uid: string;
   orgId?: string;
+  titleId?: string;
+  ownerOrgIds?: string[];
   titleCount?: number;
   status: boolean;
 }

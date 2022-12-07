@@ -39,6 +39,8 @@ const injectedData = {
   [`movies/${movie.id}`]: movie,
 };
 
+const oneTitleSentence = 'There is 1 title available.';
+
 describe('Movie display in marketplace', () => {
   beforeEach(() => {
     cy.visit('');
@@ -98,7 +100,7 @@ describe('Movie display in marketplace', () => {
     get(certifications[movie.certifications[0]]).click();
     get(certifications[movie.certifications[1]]).click();
     get('save-filter').click();
-    get('titles-count').should('contain', 'There is 1 title available.');
+    get('titles-count').should('contain', oneTitleSentence);
     get(`movie-card_${movie.id}`).should('exist');
     // Wait for the last parameter to be present in URL before saving filters
     assertUrlIncludes('%22certifications%22:%5B%22eof%22,%22europeanQualification%22');
@@ -108,9 +110,9 @@ describe('Movie display in marketplace', () => {
       expect(user.savedSearches.festival).to.deep.equal(JSON.stringify(expectedSavedSearch));
     });
     get('clear-filters').click();
-    get('titles-count').should('not.contain', 'There is 1 title available.');
+    get('titles-count').should('not.contain', oneTitleSentence);
     get('load').click();
-    get('titles-count').should('contain', 'There is 1 title available.');
+    get('titles-count').should('contain', oneTitleSentence);
   });
 
   it('Published movie is displayed in org page', () => {

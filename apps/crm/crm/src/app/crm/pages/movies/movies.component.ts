@@ -191,9 +191,13 @@ export class MoviesComponent implements OnInit {
     this.exportingAnalytics = true;
     this.cdr.markForCheck();
 
-    const query = [where('type', '==', 'title')];
-    const all = await this.analyticsService.load<Analytics<'title'>>(query);
-    const allAnalytics = all.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId));
+    const titleQuery = [where('type', '==', 'title')];
+    const titleAnalytics = await this.analyticsService.load<Analytics<'title'>>(titleQuery);
+
+    const availsSearchQuery = [where('type', '==', 'titleSearch'), where('name', 'in', ['filteredAvailsCalendar', 'filteredAvailsMap'])];
+    const availsSearchAnalytics = await this.analyticsService.load<Analytics<'titleSearch'>>(availsSearchQuery);
+
+    const allAnalytics = [...titleAnalytics, ...availsSearchAnalytics].filter(analytic => !analytic.meta.ownerOrgIds?.includes(analytic.meta.orgId));
 
     const allUids = unique(allAnalytics.map(analytic => analytic.meta.uid));
     const allUsers = await this.userService.load(allUids);
@@ -231,7 +235,9 @@ export class MoviesComponent implements OnInit {
           'asking price requested': a.askingPriceRequested,
           'promo element opened': a.promoElementOpened,
           'added to wishlist': a.addedToWishlist,
-          'removed from wishlist': a.removedFromWishlist
+          'removed from wishlist': a.removedFromWishlist,
+          'filtered Avails Calendar': a.filteredAvailsCalendar ?? 0,
+          'filtered Avails Map': a.filteredAvailsMap ?? 0,
         });
       }
     }
