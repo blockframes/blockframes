@@ -13,7 +13,8 @@ import {
   getMovieAppAccess,
   getOrgAppAccess,
   Movie,
-  Organization
+  Organization,
+  AlgoliaApp
 } from '@blockframes/model';
 import { hasAcceptedMovies } from './util';
 import { getDb } from './initialize';
@@ -236,4 +237,17 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string, d
     console.error(error);
     return new Promise((res) => res(true));
   }
+}
+
+export async function clearAlgoliaTestData(apps: AlgoliaApp[]) {
+  const indexes: ('indexNameOrganizations' | 'indexNameMovies')[] = ['indexNameOrganizations', 'indexNameMovies'];
+  for (const app of apps) {
+    for (const index of indexes) {
+      const searchIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia[index][app]);
+      const records = await searchIndex.search('', { facetFilters: [`e2eTag:${algolia.e2eTag}`] });
+      const objectIDs = records.hits.map(object => object.objectID);
+      await indexBuilder(algolia[index][app], process.env['ALGOLIA_API_KEY']).deleteObjects(objectIDs);
+    }
+  }
+  return true;
 }

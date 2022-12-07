@@ -337,6 +337,7 @@ jobs:
       - run:
           command: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e,cms-e2e
           no_output_timeout: 30m
+      - run: npm start clearAlgoliaTestData festival
       - store_test_results:
           path: dist/test-reports/
       - store_artifacts:
@@ -352,6 +353,7 @@ jobs:
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e,cms-e2e
+      - run: npm start clearAlgoliaTestData financiers
       - store_test_results:
           path: dist/test-reports/
       - store_artifacts:
@@ -369,6 +371,7 @@ jobs:
       - run:
           command: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e,cms-e2e
           no_output_timeout: 30m
+      - run: npm start clearAlgoliaTestData catalog
       - store_test_results:
           path: dist/test-reports/
       - store_artifacts:

@@ -39,7 +39,8 @@ import {
   writeRuntimeConfig,
   functionsConfigMap,
   clearDb,
-  updateUsersPassword
+  updateUsersPassword,
+  clearAlgoliaTestData
 } from '@blockframes/devops';
 import { join } from 'path';
 
@@ -158,6 +159,9 @@ async function runCommand() {
       break;
     case 'upgradeAlgoliaUsers':
       await upgradeAlgoliaUsers();
+      break;
+    case 'clearAlgoliaTestData':
+      await clearAlgoliaTestData([arg1 as any]);
       break;
     case 'rescueJWP':
       await rescueJWP({ jwplayerKey: arg1, jwplayerApiV2Secret: arg2 });

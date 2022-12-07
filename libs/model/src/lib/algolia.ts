@@ -14,7 +14,8 @@ import {
   SocialGoal,
   Festival,
   Certification,
-  modules
+  modules,
+  App
 } from './static';
 
 export interface AlgoliaConfig {
@@ -74,6 +75,8 @@ export interface MovieIndexFilters {
 const negativeModules = ['-dashboard', '-marketplace'] as const;
 const algoliaModules = [...modules, ...negativeModules];
 export type AlgoliaModule = typeof algoliaModules[number];
+
+export type AlgoliaApp = Exclude<App, 'crm'>;
 
 ///// TYPES //////
 interface AlgoliaSearch {

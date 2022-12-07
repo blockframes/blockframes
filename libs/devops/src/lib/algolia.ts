@@ -6,6 +6,7 @@ import {
   storeSearchableOrg,
   storeSearchableUser,
   getDocument,
+  clearAlgoliaTestData as _clearAlgoliaTestData,
 } from '@blockframes/firebase-utils';
 import { algolia, production } from '@env';
 import {
@@ -15,11 +16,10 @@ import {
   App,
   getAllAppsExcept,
   Organization,
-  Movie
+  Movie,
+  AlgoliaApp
 } from '@blockframes/model';
 import { getDb } from '@blockframes/firebase-utils/initialize';
-
-type AlgoliaApp = Exclude<App, 'crm'>;
 
 export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = getDb()) {
   if (!appConfig) {
@@ -143,6 +143,10 @@ export async function upgradeAlgoliaUsers(db = getDb()) {
     console.log(`chunk of ${users.length} users processed...`);
   }
   console.log('Algolia Users index updated with success !');
+}
+
+export async function clearAlgoliaTestData(apps: AlgoliaApp[]) {
+  return _clearAlgoliaTestData(apps);
 }
 
 const baseConfig: AlgoliaConfig = {
