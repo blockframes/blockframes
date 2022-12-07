@@ -43,7 +43,7 @@ describe('Movie search in marketplace', () => {
     cy.visit('');
     maintenance.start();
     firestore.clearTestData();
-    algolia.clearTestData();
+    algolia.clearTestData('catalog');
     firestore.deleteOrgMovies(org.id);
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);

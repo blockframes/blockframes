@@ -35,7 +35,7 @@ describe('Search buyer organizations in dashboard', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
-    algolia.clearTestData();
+    algolia.clearTestData('festival');
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);

@@ -44,7 +44,7 @@ describe('Signup', () => {
   beforeEach(() => {
     cy.visit('');
     firestore.clearTestData();
-    algolia.clearTestData();
+    algolia.clearTestData('festival');
     adminAuth.deleteAllTestUsers();
     browserAuth.clearBrowserAuth();
   });

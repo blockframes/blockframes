@@ -13,9 +13,7 @@ export async function storeMovie({ movie, organizationNames }: { movie: Movie; o
   return storeSearchableMovie(movie, organizationNames, process.env['ALGOLIA_API_KEY']);
 }
 
-export async function clearAlgoliaTestData() {
-  //types to adapt if needed further
-  const apps: Exclude<App, 'crm' | 'financiers'>[] = ['festival', 'catalog'];
+export async function clearAlgoliaTestData(apps: Exclude<App, 'crm' | 'financiers'>[]) {
   const indexes: ('organizations' | 'movies')[] = ['organizations', 'movies'];
   for (const app of apps) {
     for (const index of indexes) {

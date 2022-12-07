@@ -37,7 +37,7 @@ describe('Search sale organization in marketplace', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
-    algolia.clearTestData();
+    algolia.clearTestData('festival');
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
