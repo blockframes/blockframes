@@ -149,12 +149,10 @@ export async function upgrade() {
 
 export async function upgradeEmulators() {
   const db = getFirestoreEmulator();
-  /*
   if (!await isMigrationRequired(db)) {
     console.log('Skipping upgrade because migration is not required...');
     return;
   }
-  */
   const storage = getStorage();
   const maintenanceInsurance = await ensureMaintenanceMode(db); // Enable maintenance insurance
 
