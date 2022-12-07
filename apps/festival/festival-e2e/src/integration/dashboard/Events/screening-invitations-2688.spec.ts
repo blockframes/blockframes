@@ -5,7 +5,7 @@ import USERS from 'tools/fixtures/users.json'
 import ORGS from 'tools/fixtures/orgs.json'
 //TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { adminAuth, browserAuth, events, festival, awaitElementDeletion } from '@blockframes/testing/cypress/browser';
+import { browserAuth, events, festival, awaitElementDeletion } from '@blockframes/testing/cypress/browser';
 
 const screeningEvent = screeningEvents[0];
 const org = ORGS.find((org) => org.id === screeningEvent.org.id);
@@ -30,18 +30,12 @@ describe('Organiser invites other users to private screening', () => {
     */
 
     cy.visit('/');
-    adminAuth.deleteAllTestUsers();
     browserAuth.clearBrowserAuth();
     cy.visit('/');
 
     cy.clearLocalStorage(); // ! If event is deleted manually, it will be stuck in localStorage cache
     cy.contains('Save preferences').click(); // Accept cookies
     cy.log('user uid', userOrganiser.uid);
-    adminAuth.createUser({ uid: userOrganiser.uid, email: userOrganiser.email, emailVerified: true });
-    adminAuth.createUser({ uid: userAdmin.uid, email: userAdmin.email, emailVerified: true });
-    adminAuth.createUser({ uid: userInvited1.uid, email: userInvited1.email, emailVerified: true });
-    adminAuth.createUser({ uid: userInvited2.uid, email: userInvited2.email, emailVerified: true });
-    adminAuth.createUser({ uid: userUninvited.uid, email: userUninvited.email, emailVerified: true });
     browserAuth.signinWithEmailAndPassword(userOrganiser.email);
     cy.visit('/c/o/dashboard/event');
     cy.log(`Create screening {${screeningEvent.event}}`);
