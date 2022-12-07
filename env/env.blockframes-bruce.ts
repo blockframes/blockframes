@@ -44,7 +44,6 @@ export const algolia = {
     catalog: 'bruce_catalog_movies',
   },
   indexNameUsers: 'bruce_users',
-  e2eTag: 'bruce',
 };
 
 // Support emails

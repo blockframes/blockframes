@@ -1,5 +1,5 @@
 import algoliasearch from 'algoliasearch';
-import { algolia as algoliaClient, centralOrgId } from '@env';
+import { algolia as algoliaClient, centralOrgId, currentGitBranch } from '@env';
 import * as functions from 'firebase-functions';
 import {
   PublicUser,
@@ -14,10 +14,15 @@ import {
   getOrgAppAccess,
   Movie,
   Organization,
-  AlgoliaApp
+  AlgoliaApp,
+  AlgoliaIndexGroups
 } from '@blockframes/model';
 import { hasAcceptedMovies } from './util';
 import { getDb } from './initialize';
+
+interface StoreOptions  {
+  origin: string;
+}
 
 export const algolia = {
   ...algoliaClient,
@@ -65,7 +70,7 @@ export function setIndexConfiguration(indexName: string, config: AlgoliaConfig, 
 //           ORGANIZATIONS
 // ------------------------------------
 
-export function storeSearchableOrg(org: Organization, adminKey?: string, db = getDb(), storeE2ETag = true): Promise<any> {
+export function storeSearchableOrg(org: Organization, adminKey?: string, db = getDb(), opts: StoreOptions = { origin: currentGitBranch }): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -81,7 +86,7 @@ export function storeSearchableOrg(org: Organization, adminKey?: string, db = ge
     org['hasAcceptedMovies'] = await hasAcceptedMovies(org, appName, db);
     const orgRecord = createAlgoliaOrganization(org);
     if (orgRecord.name) {
-      if (storeE2ETag) orgRecord['e2eTag'] = algolia.e2eTag;
+      orgRecord.origin = opts.origin;
       return indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord);
     }
   });
@@ -109,7 +114,7 @@ export function storeSearchableMovie(
   movie: Movie,
   organizationNames: string[],
   adminKey?: string,
-  storeE2ETag = true
+  opts: StoreOptions = { origin: currentGitBranch }
 ): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
@@ -173,7 +178,8 @@ export function storeSearchableMovie(
       banner: movie.banner.storagePath,
       poster: movie.poster.storagePath,
       contentType: movie.contentType,
-      certifications: movie.certifications
+      certifications: movie.certifications,
+      origin: opts.origin
     };
 
     /* App specific properties */
@@ -181,8 +187,6 @@ export function storeSearchableMovie(
       movieRecord['socialGoals'] = movie?.audience?.goals;
       movieRecord['minPledge'] = movie['minPledge'];
     }
-
-    if (storeE2ETag) movieRecord['e2eTag'] = algolia.e2eTag;
 
     const movieAppAccess = getMovieAppAccess(movie);
 
@@ -207,7 +211,7 @@ export function storeSearchableMovie(
 //                USERS
 // ------------------------------------
 
-export async function storeSearchableUser(user: PublicUser, adminKey?: string, db = getDb()): Promise<any> {
+export async function storeSearchableUser(user: PublicUser, adminKey?: string, db = getDb(), opts: StoreOptions = { origin: currentGitBranch }): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -227,6 +231,7 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string, d
       lastName: user.lastName ?? '',
       avatar: user.avatar?.storagePath ?? '',
       orgName: orgData ? orgData.name : '',
+      origin: opts.origin
     };
 
     return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);
@@ -240,11 +245,11 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string, d
 }
 
 export async function clearAlgoliaTestData(apps: AlgoliaApp[]) {
-  const indexes: ('indexNameOrganizations' | 'indexNameMovies')[] = ['indexNameOrganizations', 'indexNameMovies'];
+  const indexes: AlgoliaIndexGroups[] = ['indexNameOrganizations', 'indexNameMovies'];
   for (const app of apps) {
     for (const index of indexes) {
       const searchIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia[index][app]);
-      const records = await searchIndex.search('', { facetFilters: [`e2eTag:${algolia.e2eTag}`] });
+      const records = await searchIndex.search('', { facetFilters: [`origin:${currentGitBranch}`] });
       const objectIDs = records.hits.map(object => object.objectID);
       console.log(`deleting ${objectIDs.length} objects from ${algolia[index][app]}`);
       await indexBuilder(algolia[index][app], process.env['ALGOLIA_API_KEY']).deleteObjects(objectIDs);

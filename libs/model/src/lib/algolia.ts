@@ -78,6 +78,8 @@ export type AlgoliaModule = typeof algoliaModules[number];
 
 export type AlgoliaApp = Exclude<App, 'crm'>;
 
+export type AlgoliaIndexGroups = 'indexNameOrganizations' | 'indexNameMovies' | 'indexNameUsers';
+
 ///// TYPES //////
 interface AlgoliaSearch {
   query: string;
@@ -161,7 +163,7 @@ export interface AlgoliaMovie extends AlgoliaDefaultProperty {
   productionCompany: string[];
   salesAgent: string[];
   certifications: string[];
-  e2eTag?: string;
+  origin?: string;
 }
 
 /* ORGANIZATION */
@@ -174,7 +176,7 @@ export interface AlgoliaOrganization extends AlgoliaDefaultProperty {
   hasAcceptedMovies: boolean;
   logo: string;
   activity: OrgActivity;
-  e2eTag?: string;
+  origin?: string;
 }
 
 /* USER */
@@ -185,6 +187,7 @@ export interface AlgoliaUser extends AlgoliaDefaultProperty {
   lastName: string;
   avatar: string;
   orgName: string;
+  origin?: string;
 }
 
 

@@ -8,7 +8,7 @@ import {
   getDocument,
   clearAlgoliaTestData as _clearAlgoliaTestData,
 } from '@blockframes/firebase-utils';
-import { algolia, production } from '@env';
+import { algolia } from '@env';
 import {
   PublicUser,
   Campaign,
@@ -36,8 +36,8 @@ export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = getDb()) {
         'country',
         'isAccepted',
         'hasAcceptedMovies',
-        !production && 'e2eTag',
-      ].filter(Boolean),
+        'origin',
+      ],
       customRanking: ['asc(name)'],
       paginationLimitedTo: 1000
     };
@@ -54,7 +54,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = getDb()) {
       300
     );
     for await (const orgs of orgsIterator) {
-      const promises = orgs.map((org) => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY'], db, false));
+      const promises = orgs.map((org) => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY'], db, { origin: 'init' }));
 
       await Promise.all(promises);
       console.log(`chunk of ${orgs.length} orgs processed...`);
@@ -103,7 +103,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = getDb()) {
             }
           }
 
-          await storeSearchableMovie(movie, organizationNames, process.env['ALGOLIA_API_KEY'], false);
+          await storeSearchableMovie(movie, organizationNames, process.env['ALGOLIA_API_KEY'], { origin: 'init' });
         } catch (error) {
           console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
           console.error(error);
@@ -122,7 +122,7 @@ export async function upgradeAlgoliaUsers(db = getDb()) {
   // reset config, clear index and fill it up from the db (which is the only source of truth)
   const config: AlgoliaConfig = {
     searchableAttributes: ['email', 'firstName', 'lastName', 'orgNames'],
-    attributesForFaceting: ['email'],
+    attributesForFaceting: ['email', 'origin'],
     paginationLimitedTo: 1000
   };
 
@@ -133,7 +133,7 @@ export async function upgradeAlgoliaUsers(db = getDb()) {
   for await (const users of usersIterator) {
     const promises = users.map(async (user) => {
       try {
-        await storeSearchableUser(user, process.env['ALGOLIA_API_KEY'], db);
+        await storeSearchableUser(user, process.env['ALGOLIA_API_KEY'], db, { origin: 'init' });
       } catch (error) {
         console.error(`\n\n\tFailed to insert a user ${user.uid} : skipping\n\n`);
         console.error(error);
@@ -182,10 +182,8 @@ const baseConfig: AlgoliaConfig = {
     'contentType',
     'festivals',
     'certifications',
-
-    // e2e facet for testing
-    !production && 'e2eTag'
-  ].filter(Boolean),
+    'origin',
+  ],
   customRanking: ['asc(title.international)', 'asc(title.original)'],
   paginationLimitedTo: 2000
 };

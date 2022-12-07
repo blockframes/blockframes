@@ -75,7 +75,7 @@ commands:
   select_environment:
     description: Configure tools to use a project ID
     steps:
-      - run: npm start use ${PROJECT_ID} << pipeline.id >>
+      - run: npm start use ${PROJECT_ID} << pipeline.git.branch >>
       - run: . ./.env && echo "export PROJECT_ID=\"$PROJECT_ID\"" >> $BASH_ENV # ! These are here so vars set in .env are avail in shell env
       - run: . ./.env && echo "export GOOGLE_APPLICATION_CREDENTIALS=\"$GOOGLE_APPLICATION_CREDENTIALS\"" >> $BASH_ENV
       - run: gcloud info

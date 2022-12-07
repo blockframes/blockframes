@@ -81,7 +81,7 @@ async function findSAKFilename(dirPath: string, projectId: string) {
   return SAKS.find((account) => account.key.project_id === projectId)?.fileName;
 }
 
-export async function selectEnvironment(projectId: string, pipelineId?: string) {
+export async function selectEnvironment(projectId: string, currentGitBranch?: string) {
   if (!projectId) throw Error('Please specify a project ID!');
 
   let cmd: string;
@@ -106,7 +106,7 @@ export async function selectEnvironment(projectId: string, pipelineId?: string) 
 
   async function updateEnvFile() {
     const fileName = `env.${projectId}`;
-    const envLine = `export * from 'env/${fileName}'; export const pipelineId='${pipelineId}'`;
+    const envLine = `export * from 'env/${fileName}'; export const currentGitBranch='${currentGitBranch || projectId}';`;
     const localEnvFile = join(process.cwd(), 'env', 'env.ts');
     await promises.writeFile(localEnvFile, envLine);
     console.log(`env.ts file now contains: ${envLine}`);

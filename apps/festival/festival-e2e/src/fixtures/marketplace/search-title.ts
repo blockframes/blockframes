@@ -23,7 +23,7 @@ import {
   createDocumentMeta
 } from '@blockframes/model';
 import { sub } from 'date-fns';
-import { algolia } from '@env';
+import { currentGitBranch } from '@env';
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
@@ -346,7 +346,7 @@ export const expectedSavedSearch = {
         logo: '',
         activity: 'intlSales',
         objectID: '0-e2e-saleOrgId',
-        e2eTag: algolia.e2eTag,
+        origin: currentGitBranch,
         _highlightResult: {
           name: {
             value: `<em>E2E</em>_<em>${saleOrgName.split('_')[1]}</em>_<em>org</em> <em>sale</em>`,

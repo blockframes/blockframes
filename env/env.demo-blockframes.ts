@@ -44,7 +44,6 @@ export const algolia = {
     catalog: 'ci_catalog_movies',
   },
   indexNameUsers: 'ci_users',
-  e2eTag: 'demo',
 };
 
 
