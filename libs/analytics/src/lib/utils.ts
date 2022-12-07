@@ -60,8 +60,9 @@ export function countedToAnalyticData(record: Record<string | number, number>, s
 }
 
 export function aggregate(analytics: Analytics[], data: Partial<AggregatedAnalytic> = {}) {
-  const aggregated = createAggregatedAnalytic(data)
+  const aggregated = createAggregatedAnalytic(data);
   for (const analytic of analytics) {
+    if (!aggregated[analytic.name]) aggregated[analytic.name] = 0;
     aggregated[analytic.name]++;
   }
 

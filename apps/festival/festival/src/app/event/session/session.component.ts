@@ -145,8 +145,7 @@ export class SessionComponent implements OnInit, OnDestroy {
           const attendees = event.meta.attendees;
           if (attendees[this.authService.uid]?.status !== 'owner') {
             const attendee = createMeetingAttendee(this.authService.anonymouseOrRegularProfile, 'owner');
-            const meta: Meeting = { ...event.meta, attendees: { ...event.meta.attendees, [this.authService.uid]: attendee } };
-            this.service.update(event.id, { meta });
+            await this.service.update(event.id, { [`meta.attendees.${this.authService.uid}`]: attendee });
           }
 
           const requests = Object.values(attendees).filter(attendee => attendee.status === 'requesting');
@@ -158,9 +157,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
           // If the current selected file hasn't any controls yet we should create them
           if (event.meta.selectedFile) {
-            const selectedFile = event.meta.files.find(file =>
-              file.storagePath === event.meta.selectedFile
-            );
+            const selectedFile = event.meta.files.find(file => file.storagePath === event.meta.selectedFile);
             if (!selectedFile) {
               console.warn('Selected file doesn\'t exists in this Meeting!');
               this.select('', event);
@@ -211,10 +208,11 @@ export class SessionComponent implements OnInit, OnDestroy {
       } else if (isScreening(event)) {
         this.dynTitle.setPageTitle(event.title, 'Screening');
         // create attendee in event
-        const isAnonymous = !this.authService.profile;
-        const attendee = createScreeningAttendee(this.authService.anonymouseOrRegularProfile, isAnonymous);
-        const meta: Screening = { ...event.meta, attendees: { ...event.meta.attendees, [this.authService.uid]: attendee } };
-        await this.service.update(event.id, { meta });
+        if (!event.meta?.attendees[this.authService.uid]) {
+          const isAnonymous = !this.authService.profile;
+          const attendee = createScreeningAttendee(this.authService.anonymouseOrRegularProfile, isAnonymous);
+          await this.service.update(event.id, { [`meta.attendees.${this.authService.uid}`]: attendee });
+        }
 
         if ((event.meta as Screening).titleId) {
           const movie = await this.movieService.getValue(event.meta.titleId as string);
@@ -315,7 +313,7 @@ export class SessionComponent implements OnInit, OnDestroy {
 
   picked(files: string[], event: Event<Meeting>) {
     const meta = { ...event.meta, files };
-    this.service.update(event.id, { meta })
+    this.service.update(event.id, { meta });
   }
 
   async createPdfControl(file: StorageFile, eventId: string): Promise<MeetingPdfControl> {

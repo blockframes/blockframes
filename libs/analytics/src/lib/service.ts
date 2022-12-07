@@ -134,7 +134,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     return this.add({ type: 'titleSearch', name: 'exportedTitles', meta });
   }
 
-  async addTitleFilter(_search: MovieAvailsSearch, module: Module, eventName: 'filteredTitles' | 'filteredAvailsCalendar' | 'filteredAvailsMap', nonUiSearch = false) {
+  async addTitleFilter(_search: MovieAvailsSearch & { titleId?: string, ownerOrgIds?: string[] }, module: Module, eventName: 'filteredTitles' | 'filteredAvailsCalendar' | 'filteredAvailsMap', nonUiSearch = false) {
     if (await this.isOperator()) return;
     const profile = this.authService.profile;
     if (!profile) return;
@@ -165,6 +165,9 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
       orgId: profile.orgId,
       uid: profile.uid,
     });
+
+    if (_search.titleId) meta.titleId = _search.titleId;
+    if (_search.ownerOrgIds) meta.ownerOrgIds = _search.ownerOrgIds;
 
     const existingEvent = analytics.find(analytic => analytic._meta.createdAt > nowMinusOneMin);
     if (existingEvent) {
