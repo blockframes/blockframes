@@ -1,4 +1,4 @@
-import { fakeUserData } from '@blockframes/testing/cypress/browser';
+import { fakeOrgName, fakeUserData } from '@blockframes/testing/cypress/browser';
 import {
   createMovie,
   createDocPermissions,
@@ -27,7 +27,7 @@ import { sub } from 'date-fns';
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
 const saleOrgId = '0-e2e-saleOrgId';
-const saleOrgName = 'sale org';
+const saleOrgName = `${fakeOrgName()}_sale`;
 const movieId = '0-e2e-movieId';
 const userData = fakeUserData();
 
