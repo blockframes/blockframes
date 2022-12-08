@@ -35,3 +35,9 @@ export function createFakeUserDataArray(number: number) {
 export const fakeMovieTitle = () => `E2E_${faker.lorem.slug(3)}_movie`;
 
 export const fakeOrgName = () => `E2E_${faker.lorem.slug(3)}_org`;
+
+export const fakeFirstName = () => `E2E_${faker.name.firstName()}`;
+
+export const fakeLastName = () => `E2E_${faker.name.lastName()}`;
+
+export const fakeKeyword = () => `E2E_${faker.word.noun()}`;
