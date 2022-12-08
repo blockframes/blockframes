@@ -50,6 +50,14 @@ export class UsersComponent implements OnInit {
   public app = getAllAppsExcept(['crm']);
   public sorts = sorts;
   private orgs: Organization[] = [];
+  private searchAnalyticsEventNames: EventName[] = [
+    'filteredTitles',
+    'savedFilters',
+    'loadedFilters',
+    'exportedTitles',
+    'filteredAvailsCalendar',
+    'filteredAvailsMap'
+  ];
 
   constructor(
     private userService: UserService,
@@ -82,7 +90,7 @@ export class UsersComponent implements OnInit {
             createdFrom: u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
             org,
           };
-        })
+        });
       })
     )
   }
@@ -103,14 +111,23 @@ export class UsersComponent implements OnInit {
       this.exporting = true;
       this.cdr.markForCheck()
 
-      const roles = await this.permissionsService.load();
+      const roles = await this.permissionsService.load(); // TODO  #9088 value change ?
       const getMemberRole = (r: CrmUser) => {
         const role = roles.find(role => role.id === r.orgId);
         if (!role) return;
         return role.roles[r.uid];
       }
 
-      const getRows = users.map(async r => {
+      const titleSearchQuery = [where('type', '==', 'titleSearch')];
+      const titleSearchAnalytics = await this.analyticsService.load<Analytics<'titleSearch'>>(titleSearchQuery);
+
+
+      // const allAnalytics = all.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId)); // TODO  #9088 
+
+      const rows = users.map( r => {
+        const userAnalytics = titleSearchAnalytics.filter(analytic => analytic.meta.uid === r.uid);
+        const a = aggregate(userAnalytics);
+        console.log(a);
         const role = getMemberRole(r);
         const type = r.org ? getOrgModuleAccess(r.org).includes('dashboard') ? 'seller' : 'buyer' : '--';
         const row = {
@@ -145,7 +162,7 @@ export class UsersComponent implements OnInit {
 
         return row;
       });
-      const rows = await Promise.all(getRows);
+  
       downloadCsvFromJson(rows, 'user-list');
     } catch (err) {
       console.error(err);
@@ -208,19 +225,16 @@ export class UsersComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  public async exportSearchAnalytics(eventNames: EventName[]) {
+  public async exportSearchAnalytics(users: CrmUser[]) {
     this.exportingAnalytics = true;
     this.cdr.markForCheck();
 
-    const query = [where('type', '==', 'titleSearch'), where('name', 'in', eventNames)];
+    const query = [where('type', '==', 'titleSearch'), where('name', 'in', this.searchAnalyticsEventNames)];
     const all = await this.analyticsService.load<Analytics<'titleSearch'>>(query);
-
-    const allUids = unique(all.map(analytic => analytic.meta.uid));
-    const allUsers = await this.userService.load(allUids);
 
     const exportedRows = [];
     for (const titleSearch of all) {
-      const user = allUsers.find(u => u.uid === titleSearch._meta.createdBy);
+      const user = users.find(u => u.uid === titleSearch._meta.createdBy);
       const org = this.orgs.find(o => o.id === user.orgId);
       const availsSearch = titleSearch.meta.search?.avails as AvailsFilter;
       const search = titleSearch.meta.search?.search;
@@ -242,18 +256,17 @@ export class UsersComponent implements OnInit {
         to: availsSearch?.duration?.to ? format(availsSearch.duration.to, 'MM/dd/yyyy') : '--',
         territories: toGroupLabel((availsSearch?.territories ?? []), 'territories', 'World').join(', '),
         medias: toGroupLabel((availsSearch?.medias ?? []), 'medias', 'All Rights').join(', '),
-        exclusivity: availsSearch?.exclusive,
-
+        exclusivity: availsSearch?.exclusive
       };
 
       // Search
-      if (!eventNames.includes('filteredAvailsCalendar') && !eventNames.includes('filteredAvailsMap')) {
+      if (!this.searchAnalyticsEventNames.includes('filteredAvailsCalendar') && !this.searchAnalyticsEventNames.includes('filteredAvailsMap')) {
         row['search'] = search?.query ?? '--';
         row['content type'] = search?.contentType ? toLabel(search.contentType, 'contentType') : '--';
         row['genres'] = toLabel((search?.genres ?? []), 'genres');
         row['origin countries'] = toLabel(search?.originCountries ?? [], 'territories');
         row['languages'] = toLabel(search?.languages?.languages ?? [], 'languages');
-        row['version'] = `${search?.languages?.versions.caption ? 'captioned ' : ''}${search?.languages?.versions.dubbed ? 'dubbed ' : ''}${search?.languages?.versions.subtitle ? 'subtitled ' : ''}${search?.languages?.versions.original ? 'original' : ''}`
+        row['version'] = `${search?.languages?.versions.caption ? 'captioned ' : ''}${search?.languages?.versions.dubbed ? 'dubbed ' : ''}${search?.languages?.versions.subtitle ? 'subtitled ' : ''}${search?.languages?.versions.original ? 'original' : ''}`;
         row['festival selection'] = toLabel(search?.festivals ?? [], 'festival');
         row['qualifications'] = toLabel(search?.certifications, 'certifications');
         row['min release year'] = search?.minReleaseYear ?? '--';
@@ -261,7 +274,7 @@ export class UsersComponent implements OnInit {
       }
 
       // PDF
-      if (eventNames.includes('exportedTitles')) {
+      if (this.searchAnalyticsEventNames.includes('exportedTitles')) {
         row['title count'] = titleSearch.meta.titleCount ?? '--';
       }
 
@@ -269,7 +282,7 @@ export class UsersComponent implements OnInit {
     }
 
     if (exportedRows.length) {
-      downloadCsvFromJson(exportedRows, `${eventNames.join('-')}-analytics-list`);
+      downloadCsvFromJson(exportedRows, 'search-analytics-list');
     } else {
       this.snackbar.open('No data to export', 'close', { duration: 5000 });
     }
