@@ -245,7 +245,7 @@ export async function storeSearchableUser(user: PublicUser, adminKey?: string, d
 }
 
 export async function clearAlgoliaTestData(apps: AlgoliaApp[]) {
-  const indexes: AlgoliaIndexGroups[] = ['indexNameOrganizations', 'indexNameMovies'];
+  const indexes: AlgoliaIndexGroups[] = ['indexNameOrganizations', 'indexNameMovies', 'indexNameUsers'];
   for (const index of indexes) {
     if (typeof algolia[index] === 'object') {
       for (const app of apps) {
@@ -262,6 +262,6 @@ async function clearAlgoliaIndex(index: string, origin: string) {
   const searchIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(index);
   const records = await searchIndex.search('', { facetFilters: [`origin:${origin}`] });
   const objectIDs = records.hits.map(object => object.objectID);
-  console.log(`deleting ${objectIDs.length} objects from ${index}`);
   await indexBuilder(index, process.env['ALGOLIA_API_KEY']).deleteObjects(objectIDs);
+  console.log(`Deleted ${objectIDs.length} objects from ${index} that matched "origin:${origin}"`);
 }
