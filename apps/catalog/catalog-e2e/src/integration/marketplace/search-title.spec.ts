@@ -7,6 +7,7 @@ import {
   movieOrgMoviePermissions,
   displayMovie as movie,
 } from '../../fixtures/marketplace/search-display-title';
+import { festival, certifications } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -111,11 +112,18 @@ describe('Movie display in marketplace', () => {
     selectFilter('Running Time');
     get('90min - 180min').click();
     get('save-filter').click();
+    selectFilter('Festival Selection');
+    get(festival[movie.prizes[0].name]).click();
+    get('save-filter').click();
+    selectFilter('Qualifications');
+    get(certifications[movie.certifications[0]]).click();
+    get(certifications[movie.certifications[1]]).click();
+    get('save-filter').click();
     get('titles-count').should('contain', oneTitleSentence);
     get(`movie-card_${movie.id}`).should('exist');
     getAllStartingWith('item_').should('have.length', 1);
     // Wait for the last parameter to be present in URL before saving filters
-    assertUrlIncludes('%22runningTime%22:5');
+    assertUrlIncludes('%22certifications%22:%5B%22eof%22,%22europeanQualification%22');
     get('save').click();
     get('clear-filters').click();
     get('titles-count').should('not.contain', oneTitleSentence);

@@ -17,6 +17,7 @@ import {
   decodeDate,
 } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/service';
+import { MovieService } from '@blockframes/movie/service';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -38,6 +39,8 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
   private salesTerms$ = this.shell.salesTerms$;
 
   private sub: Subscription;
+
+  private titleId: string = this.route.snapshot.params.movieId;
 
   public availabilities$ = combineLatest([
     this.availsForm.value$,
@@ -76,6 +79,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
     private router: Router,
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService,
+    private movieService: MovieService,
   ) { }
 
   /** Display the territories information in the tooltip */
@@ -125,14 +129,15 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
       });
   }
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
     const decodedData = decodeUrl<MapAvailsFilter>(this.route);
     this.load(decodedData);
 
+    const movie = await this.movieService.getValue(this.titleId);
     this.sub = this.availsForm.valueChanges
       .pipe(debounceTime(1000))
       .subscribe(avails => {
-        this.analyticsService.addTitleFilter({ avails }, 'marketplace', 'filteredAvailsMap');
+        this.analyticsService.addTitleFilter({ avails, titleId: movie.id, ownerOrgIds: movie.orgIds }, 'marketplace', 'filteredAvailsMap');
         return encodeUrl<MapAvailsFilter>(this.router, this.route, avails);
       });
   }
