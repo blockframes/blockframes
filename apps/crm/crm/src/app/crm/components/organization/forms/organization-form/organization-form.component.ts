@@ -28,6 +28,7 @@ export class CrmOrganizationFormComponent {
   ) { }
 
   public async uniqueOrgName() {
+    if (!this.form.get('name').value) return;
     const orgName = this.form.get('name').value.trim();
     const orgId = await this.organizationService.getOrgIdFromName(orgName);
     if (orgId && orgId !== this.orgId) {
