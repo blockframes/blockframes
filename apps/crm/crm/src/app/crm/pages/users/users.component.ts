@@ -24,7 +24,6 @@ import { PermissionsService } from '@blockframes/permissions/service';
 import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
 import { aggregate } from '@blockframes/analytics/utils';
-import { format } from 'date-fns';
 import { toGroupLabel } from '@blockframes/utils/pipes';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -82,7 +81,7 @@ export class UsersComponent implements OnInit {
             createdFrom: u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
             org,
           };
-        })
+        });
       })
     )
   }
@@ -110,7 +109,19 @@ export class UsersComponent implements OnInit {
         return role.roles[r.uid];
       }
 
-      const getRows = users.map(async r => {
+      const titleQuery = [where('type', '==', 'title'), where('name', '==', 'pageView')];
+      const titleAnalytics = await this.analyticsService.load<Analytics<'title'>>(titleQuery);
+  
+      const titleSearchQuery = [where('type', '==', 'titleSearch')];
+      const titleSearchAnalytics = await this.analyticsService.load<Analytics<'titleSearch'>>(titleSearchQuery);
+
+      const allAnalytics = [...titleAnalytics, ...titleSearchAnalytics].filter(analytic => {
+        return (analytic.meta.titleId && !analytic.meta.ownerOrgIds?.includes(analytic.meta.orgId)) || true;
+      });
+
+      const rows = users.map(r => {
+        const userAnalytics = allAnalytics.filter(analytic => analytic.meta.uid === r.uid);
+        const a = aggregate(userAnalytics);
         const role = getMemberRole(r);
         const type = r.org ? getOrgModuleAccess(r.org).includes('dashboard') ? 'seller' : 'buyer' : '--';
         const row = {
@@ -134,7 +145,21 @@ export class UsersComponent implements OnInit {
           'buying preferences language': r.preferences?.languages.join(', ') ?? '--',
           'buying preferences genres': r.preferences?.genres.join(', ') ?? '--',
           'buying preferences medias': r.preferences?.medias.join(', ') ?? '--',
-          'buying preferences territories': r.preferences?.territories.join(', ') ?? '--'
+          'buying preferences territories': r.preferences?.territories.join(', ') ?? '--',
+
+          'total interactions': a.interactions.global.count,
+          'interactions on catalog': a.interactions.catalog.count,
+          'interactions on festival': a.interactions.festival.count,
+          'first interaction on catalog': a.interactions.catalog.first ? a.interactions.catalog.first : '--',
+          'last interaction on catalog': a.interactions.catalog.last ? a.interactions.catalog.last : '--',
+          'last interaction on festival': a.interactions.festival.last ? a.interactions.festival.last : '--',
+          'title views': a.pageView,
+          'exported Titles': a.exportedTitles ?? 0,
+          'filtered Titles': a.filteredTitles ?? 0,
+          'saved Filters': a.savedFilters ?? 0,
+          'loadedFilters': a.loadedFilters ?? 0,
+          'filtered Avails Calendar': a.filteredAvailsCalendar ?? 0,
+          'filtered Avails Map': a.filteredAvailsMap ?? 0,
         };
 
         for (const a of this.app) {
@@ -145,7 +170,7 @@ export class UsersComponent implements OnInit {
 
         return row;
       });
-      const rows = await Promise.all(getRows);
+
       downloadCsvFromJson(rows, 'user-list');
     } catch (err) {
       console.error(err);
@@ -194,9 +219,9 @@ export class UsersComponent implements OnInit {
           'total interactions': a.interactions.global.count,
           'interactions on catalog': a.interactions.catalog.count,
           'interactions on festival': a.interactions.festival.count,
-          'first interaction on catalog': a.interactions.catalog.first ? format(a.interactions.catalog.first, 'MM/dd/yyyy') : '--',
-          'last interaction on catalog': a.interactions.catalog.last ? format(a.interactions.catalog.last, 'MM/dd/yyyy') : '--',
-          'last interaction on festival': a.interactions.festival.last ? format(a.interactions.festival.last, 'MM/dd/yyyy') : '--',
+          'first interaction on catalog': a.interactions.catalog.first ? a.interactions.catalog.first : '--',
+          'last interaction on catalog': a.interactions.catalog.last ? a.interactions.catalog.last : '--',
+          'last interaction on festival': a.interactions.festival.last ? a.interactions.festival.last : '--',
           'page views': a.pageView,
           'screenings requested': a.screeningRequested,
           'asking price requested': a.askingPriceRequested,
@@ -214,22 +239,28 @@ export class UsersComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  public async exportSearchAnalytics(eventNames: EventName[]) {
+  public async exportSearchAnalytics(users: CrmUser[]) {
     this.exportingAnalytics = true;
     this.cdr.markForCheck();
 
-    const query = [where('type', '==', 'titleSearch'), where('name', 'in', eventNames)];
-    const all = await this.analyticsService.load<Analytics<'titleSearch'>>(query);
+    const searchAnalyticsEventNames: EventName[] = [
+      'filteredTitles',
+      'savedFilters',
+      'loadedFilters',
+      'exportedTitles',
+      'filteredAvailsCalendar',
+      'filteredAvailsMap'
+    ];
 
-    const allUids = unique(all.map(analytic => analytic.meta.uid));
-    const allUsers = await this.userService.load(allUids);
+    const query = [where('type', '==', 'titleSearch'), where('name', 'in', searchAnalyticsEventNames)];
+    const all = await this.analyticsService.load<Analytics<'titleSearch'>>(query);
 
     const allTitleIds = unique(all.map(analytic => analytic.meta.titleId).filter(t => !!t));
     const allTitles = await this.movieService.load(allTitleIds);
 
     const exportedRows = [];
     for (const titleSearch of all) {
-      const user = allUsers.find(u => u.uid === titleSearch._meta.createdBy);
+      const user = users.find(u => u.uid === titleSearch._meta.createdBy);
       const org = this.orgs.find(o => o.id === user.orgId);
       const availsSearch = titleSearch.meta.search?.avails as AvailsFilter;
       const search = titleSearch.meta.search?.search;
@@ -241,54 +272,72 @@ export class UsersComponent implements OnInit {
         email: user.email,
         orgId: user.orgId,
         'org name': org ? org.name : '--deleted org--',
-        date: format(titleSearch._meta.createdAt, 'MM/dd/yyyy'),
+        date: titleSearch._meta.createdAt,
         'event name': titleSearch.name,
         app: titleSearch._meta.createdFrom,
         module: titleSearch.meta.module,
-        status: titleSearch.meta.status,
         // Avails
-        from: availsSearch?.duration?.from ? format(availsSearch.duration.from, 'MM/dd/yyyy') : '--',
-        to: availsSearch?.duration?.to ? format(availsSearch.duration.to, 'MM/dd/yyyy') : '--',
+        from: availsSearch?.duration?.from ? availsSearch.duration.from : '--',
+        to: availsSearch?.duration?.to ? availsSearch.duration.to : '--',
         territories: toGroupLabel((availsSearch?.territories ?? []), 'territories', 'World').join(', '),
         medias: toGroupLabel((availsSearch?.medias ?? []), 'medias', 'All Rights').join(', '),
         exclusivity: availsSearch?.exclusive,
-
+        // Search
+        search: '',
+        'content type': '',
+        genres: '',
+        'origin countries': '',
+        languages: '',
+        version: '',
+        ['festival selection']: '',
+        qualifications: '',
+        'min release year': '',
+        'min budget': '',
+        titleId: '',
+        title: '',
+        // Avails Search
+        'title org id(s)': '',
+        'title org(s) name': '',
+        // PDF
+        'exported title count': '',
+        'export PDF status': '',
       };
 
       // Search
-      if (!eventNames.includes('filteredAvailsCalendar') && !eventNames.includes('filteredAvailsMap')) {
-        row['search'] = search?.query ?? '--';
+      if (!['filteredAvailsCalendar', 'filteredAvailsMap'].includes(titleSearch.name)) {
+        row.search = search?.query ?? '--';
         row['content type'] = search?.contentType ? toLabel(search.contentType, 'contentType') : '--';
-        row['genres'] = toLabel((search?.genres ?? []), 'genres');
+        row.genres = toLabel((search?.genres ?? []), 'genres');
         row['origin countries'] = toLabel(search?.originCountries ?? [], 'territories');
-        row['languages'] = toLabel(search?.languages?.languages ?? [], 'languages');
-        row['version'] = `${search?.languages?.versions.caption ? 'captioned ' : ''}${search?.languages?.versions.dubbed ? 'dubbed ' : ''}${search?.languages?.versions.subtitle ? 'subtitled ' : ''}${search?.languages?.versions.original ? 'original' : ''}`
+        row.languages = toLabel(search?.languages?.languages ?? [], 'languages');
+        row.version = `${search?.languages?.versions.caption ? 'captioned ' : ''}${search?.languages?.versions.dubbed ? 'dubbed ' : ''}${search?.languages?.versions.subtitle ? 'subtitled ' : ''}${search?.languages?.versions.original ? 'original' : ''}`;
         row['festival selection'] = toLabel(search?.festivals ?? [], 'festival');
         row['qualifications'] = toLabel(search?.certifications, 'certifications');
-        row['min release year'] = search?.minReleaseYear ?? '--';
-        row['min budget'] = search?.minBudget ?? '--';
+        row['min release year'] = search?.minReleaseYear.toFixed(0) ?? '--';
+        row['min budget'] = search?.minBudget.toFixed(0) ?? '--';
       }
 
       // Avails Search
-      if (eventNames.includes('filteredAvailsCalendar') || eventNames.includes('filteredAvailsMap')) {
+      if (['filteredAvailsCalendar', 'filteredAvailsMap'].includes(titleSearch.name)) {
         const title = allTitles.find(t => t?.id === titleSearch.meta.titleId);
         const orgs = this.orgs.filter(o => title?.orgIds.includes(o.id));
-        row['titleId'] = titleSearch.meta.titleId ?? '--';
-        row['title'] = title?.title.international ?? '--deleted title--';
+        row.titleId = titleSearch.meta.titleId ?? '--';
+        row.title = title?.title.international ?? '--deleted title--';
         row['title org id(s)'] = title?.orgIds?.join(', ');
         row['title org(s) name'] = orgs.map(o => o.name).join(', ');
       }
 
       // PDF
-      if (eventNames.includes('exportedTitles')) {
-        row['title count'] = titleSearch.meta.titleCount ?? '--';
+      if (titleSearch.name === 'exportedTitles') {
+        row['exported title count'] = titleSearch.meta.titleCount.toFixed(0) ?? '--';
+        row['export PDF status'] = titleSearch.meta.status ? 'true' : 'false';
       }
 
       exportedRows.push(row);
     }
 
     if (exportedRows.length) {
-      downloadCsvFromJson(exportedRows, `${eventNames.join('-')}-analytics-list`);
+      downloadCsvFromJson(exportedRows, 'search-analytics-list');
     } else {
       this.snackbar.open('No data to export', 'close', { duration: 5000 });
     }
