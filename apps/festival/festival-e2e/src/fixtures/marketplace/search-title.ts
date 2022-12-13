@@ -20,7 +20,8 @@ import {
   createAddressSet,
   createLocation,
   fakeLegalTerms,
-  createDocumentMeta
+  createDocumentMeta,
+  MovieSearch
 } from '@blockframes/model';
 import { sub } from 'date-fns';
 
@@ -316,7 +317,7 @@ export const displayMovie = createMovie({
   },
 });
 
-export const expectedSavedSearch = {
+export const expectedSavedSearch: { search: Omit<MovieSearch, 'page'> } = {
   search: {
     query: '',
     storeStatus: ['accepted'],
@@ -336,7 +337,7 @@ export const expectedSavedSearch = {
     minReleaseYear: 2020,
     sellers: [
       {
-        name: 'sale org',
+        name: saleOrgName,
         appModule: ['dashboard', 'marketplace'],
         country: 'france',
         isAccepted: true,
@@ -344,14 +345,6 @@ export const expectedSavedSearch = {
         logo: '',
         activity: 'intlSales',
         objectID: '0-e2e-saleOrgId',
-        _highlightResult: {
-          name: {
-            value: '<em>sale</em> <em>org</em>',
-            matchLevel: 'full',
-            fullyHighlighted: true,
-            matchedWords: ['sale', 'org'],
-          },
-        },
       },
     ],
     socialGoals: [],
