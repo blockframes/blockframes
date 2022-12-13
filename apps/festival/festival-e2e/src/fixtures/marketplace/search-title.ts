@@ -1,5 +1,4 @@
 import { fakeOrgName, fakeUserData } from '@blockframes/testing/cypress/browser';
-import { createAlgoliaOrganization } from '@blockframes/firebase-utils/algolia';
 import {
   createMovie,
   createDocPermissions,
@@ -318,8 +317,6 @@ export const displayMovie = createMovie({
   },
 });
 
-const seller = createAlgoliaOrganization(saleOrg);
-seller.hasAcceptedMovies = true;
 export const expectedSavedSearch: { search: Omit<MovieSearch, 'page'> } = {
   search: {
     query: '',
@@ -338,7 +335,18 @@ export const expectedSavedSearch: { search: Omit<MovieSearch, 'page'> } = {
     productionStatus: ['released'],
     minBudget: 0,
     minReleaseYear: 2020,
-    sellers: [seller],
+    sellers: [
+      {
+        name: saleOrg.name,
+        appModule: ['dashboard', 'marketplace'],
+        country: saleOrg.addresses.main.country,
+        isAccepted: true,
+        hasAcceptedMovies: true,
+        logo: '',
+        activity: saleOrg.activity,
+        objectID: saleOrg.id,
+      },
+    ],
     socialGoals: [],
     contentType: null,
     runningTime: 0,
