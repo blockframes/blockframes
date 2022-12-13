@@ -92,7 +92,8 @@ export class InvitationsComponent implements OnInit {
       'guest organization': i.guestOrg?.name || '--',
       'invitation mode': i.mode,
       'invitation status': i.status,
-      'watchtime': i.watchInfos?.duration !== undefined ? convertToTimeString(i.watchInfos?.duration * 1000) : '--',
+      watchtime: i.watchInfos?.duration !== undefined ? convertToTimeString(i.watchInfos?.duration * 1000) : '--',
+      'watchtime (sec)': i.watchInfos?.duration ?? '--',
       'watching ended': i.watchInfos?.date ? formatDate(i.watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '--'
     }));
     downloadCsvFromJson(exportedRows, 'invitations-list');
