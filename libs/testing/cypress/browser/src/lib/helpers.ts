@@ -43,4 +43,4 @@ export const fakeLastName = () => `E2E_${faker.name.lastName()}`;
 export const fakeKeyword = () => `E2E_${faker.word.noun()}`;
 
 /** @see Angular TitleCasePipe */
-export const titleCase = (txt: string) => `${txt => txt[0].toUpperCase()}${txt.substr(1).toLowerCase()}`;
+export const titleCase = (txt: string) => `${txt[0].toUpperCase()}${txt.substr(1).toLowerCase()}`;
