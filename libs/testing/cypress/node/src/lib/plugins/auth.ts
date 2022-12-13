@@ -1,5 +1,4 @@
 import { auth } from '../testing-cypress';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 import { User } from 'firebase/auth';
 
