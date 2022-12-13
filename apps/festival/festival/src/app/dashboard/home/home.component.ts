@@ -13,8 +13,9 @@ import {
   hasAppStatus,
   App,
   AggregatedAnalytic,
+  createUser,
 } from '@blockframes/model';
-import { aggregate, counter, countedToAnalyticData } from '@blockframes/analytics/utils';
+import { aggregate, counter, countedToAnalyticData, deletedUserIdentifier } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 import { filters } from '@blockframes/ui/list/table/filters';
@@ -22,7 +23,7 @@ import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter, distinctUntilChanged } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
+import { combineLatest, firstValueFrom } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
@@ -39,7 +40,7 @@ import { joinWith } from 'ngfire';
 export class HomeComponent {
   @ViewChild('tableTitle') tableTitle: ElementRef;
   public selectedCountry?: string;
-  public titles$ = this.orgService.currentOrg$.pipe(
+  public titles$ = firstValueFrom(this.orgService.currentOrg$.pipe(
     switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
     map((titles) => titles.filter((title) => title.app[this.app].access)),
     tap(titles => {
@@ -47,7 +48,7 @@ export class HomeComponent {
         ? this.dynTitle.setPageTitle('Dashboard')
         : this.dynTitle.setPageTitle('Dashboard', 'Empty');
     })
-  );
+  ));
 
   titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
     joinWith({
@@ -59,13 +60,13 @@ export class HomeComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  popularTitle$ = this.titleAnalytics$.pipe(
+  popularTitle$ = firstValueFrom(this.titleAnalytics$.pipe(
     filter(analytics => analytics.length > 0),
     map(analytics => counter(analytics, 'meta.titleId')),
     map(counted => countedToAnalyticData(counted)),
     map(analyticData => analyticData.sort((a, b) => a.count > b.count ? -1 : 1)),
     switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key))
-  );
+  ));
 
   private titleAnalyticsOfPopularTitle$ = combineLatest([this.popularTitle$, this.titleAnalytics$]).pipe(
     map(([title, titleAnalytics]) => titleAnalytics.filter(analytics => analytics.meta.titleId === title.id)),
@@ -73,30 +74,30 @@ export class HomeComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  orgActivityOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
+  orgActivityOfPopularTitle$ = firstValueFrom(this.titleAnalyticsOfPopularTitle$.pipe(
     map(analytics => counter(analytics, 'org.activity')),
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
-  );
+  ));
 
-  territoryActivityOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
+  territoryActivityOfPopularTitle$ = firstValueFrom(this.titleAnalyticsOfPopularTitle$.pipe(
     map(analytics => counter(analytics, 'org.addresses.main.country')),
     map(counted => countedToAnalyticData(counted, 'territories'))
-  );
+  ));
 
-  interactionsOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
+  interactionsOfPopularTitle$ = firstValueFrom(this.titleAnalyticsOfPopularTitle$.pipe(
     map(analytics => analytics.filter(analytic => analytic.name !== 'pageView'))
-  );
+  ));
 
-  pageViewsOfPopularTitle$ = this.titleAnalyticsOfPopularTitle$.pipe(
+  pageViewsOfPopularTitle$ = firstValueFrom(this.titleAnalyticsOfPopularTitle$.pipe(
     map(analytics => analytics.filter(analytic => analytic.name === 'pageView'))
-  );
+  ));
 
-  activeCountries$ = this.titleAnalytics$.pipe(
+  activeCountries$ = firstValueFrom(this.titleAnalytics$.pipe(
     map(analytics => counter(analytics, 'org.addresses.main.country')),
     map(counted => countedToAnalyticData(counted, 'territories'))
-  );
+  ));
 
-  activeBuyers$ = this.titleAnalytics$.pipe(
+  activeBuyers$ = firstValueFrom(this.titleAnalytics$.pipe(
     filter(analytics => analytics.length > 0),
     map(analytics => {
       const uids = unique(analytics.map(analytic => analytic.meta.uid));
@@ -107,15 +108,16 @@ export class HomeComponent {
       users: ({ uids }) => this.userService.valueChanges(uids),
       orgs: ({ orgIds }) => this.orgService.valueChanges(orgIds)
     }, { shouldAwait: true }),
-    map(({ users, orgs, analytics }) => {
-      return users.map(user => {
-        const org = orgs.find(o => o.id === user.orgId);
-        const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === user.uid);
+    map(({ uids, users, orgs, analytics }) => {
+      return uids.map(uid => {
+        const user = users.filter(u => !!u).find(u => u.uid === uid) || createUser({ uid, lastName: deletedUserIdentifier });
+        const org = user?.orgId ? orgs.find(o => o.id === user.orgId) : undefined;
+        const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === uid);
         return aggregate(analyticsOfUser, { user, org });
       });
     }),
-    map(users => users.sort((userA, userB) => userB.total - userA.total))
-  );
+    map(users => users.sort((userA, userB) => userB.interactions.global.count - userA.interactions.global.count))
+  ));
 
 
   interactions: EventName[] = [
@@ -140,7 +142,9 @@ export class HomeComponent {
   ) { }
 
   showBuyer(row: AggregatedAnalytic) {
-    this.router.navigate(['buyer', row.user.uid], { relativeTo: this.route });
+    if (row.user.lastName !== deletedUserIdentifier) {
+      this.router.navigate(['buyer', row.user.uid], { relativeTo: this.route });
+    }
   }
 
   public openIntercom(): void {

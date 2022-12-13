@@ -9,11 +9,15 @@ import {
   AnalyticData,
   Invitation,
   averageWatchDuration,
-  EventName
+  EventName,
+  createUser,
+  AnalyticsInteraction
 } from '@blockframes/model';
 import { convertToTimeString } from '@blockframes/utils/helpers';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { IconSvg } from '@blockframes/ui/icon.service';
+
+export const deletedUserIdentifier = '(Deleted User)';
 
 /**
  * Counts number of occurances
@@ -56,18 +60,33 @@ export function countedToAnalyticData(record: Record<string | number, number>, s
 }
 
 export function aggregate(analytics: Analytics[], data: Partial<AggregatedAnalytic> = {}) {
-  const aggregated = createAggregatedAnalytic(data)
+  const aggregated = createAggregatedAnalytic(data);
   for (const analytic of analytics) {
+    if (!aggregated[analytic.name]) aggregated[analytic.name] = 0;
     aggregated[analytic.name]++;
   }
-  aggregated.total = analytics.length;
+
+  aggregated.interactions.global = aggregateInteractions(analytics);
+  aggregated.interactions.festival = aggregateInteractions(analytics.filter(a => a._meta.createdFrom === 'festival'));
+  aggregated.interactions.catalog = aggregateInteractions(analytics.filter(a => a._meta.createdFrom === 'catalog'));
+
   return aggregated;
+}
+
+function aggregateInteractions(analytics: Analytics[]): AnalyticsInteraction {
+  const sorted = analytics.sort(sortByDate);
+  return {
+    count: sorted.length,
+    first: sorted[0] ? sorted[0]._meta.createdAt : undefined,
+    last: sorted[sorted.length - 1] ? sorted[sorted.length - 1]._meta.createdAt : undefined,
+  };
 }
 
 export function aggregatePerUser(analytics: (Analytics<'title'> & { user: User, org: Organization })[]) {
   const aggregator: Record<string, AggregatedAnalytic> = {};
   for (const analytic of analytics) {
-    if (!analytic.user?.uid) continue;
+    if (!analytic.meta?.uid) continue;
+    if (!analytic.user?.uid) analytic.user = createUser({ uid: analytic.meta.uid, lastName: deletedUserIdentifier });
     if (!aggregator[analytic.user.uid]) {
       aggregator[analytic.user.uid] = createAggregatedAnalytic({
         user: analytic.user,
@@ -171,4 +190,10 @@ export function toCards(aggregated: AggregatedAnalytic): MetricCard[] {
     icon: event.icon,
     selected: false
   }));
+}
+
+function sortByDate(a: Analytics, b: Analytics): number {
+  if (a._meta.createdAt.getTime() < b._meta.createdAt.getTime()) return -1;
+  if (a._meta.createdAt.getTime() > b._meta.createdAt.getTime()) return 1;
+  return 0;
 }

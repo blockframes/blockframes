@@ -1,13 +1,16 @@
 :host {
   padding-top: 24px;
-  display: block;
+  flex-direction: column;
+  display: flex;
 }
 
 mat-spinner {
   margin: auto;
 }
 
-button {
-  margin: auto;
-  display: block;
+article {
+  margin-bottom: 24px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
 }

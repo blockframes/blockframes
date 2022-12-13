@@ -136,7 +136,7 @@
     "@nrwl/cli": "13.9.6",
     "@nrwl/cypress": "13.9.6",
     "@nrwl/eslint-plugin-nx": "13.9.6",
-    "@nrwl/express": "13.9.6",
+    "@nrwl/express": "15.3.0",
     "@nrwl/jest": "13.9.6",
     "@nrwl/linter": "13.9.6",
     "@nrwl/node": "13.9.6",

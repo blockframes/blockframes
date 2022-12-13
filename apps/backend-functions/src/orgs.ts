@@ -92,21 +92,25 @@ async function notifyOnOrgMemberChanges(before: Organization, after: Organizatio
 
 export function onOrganizationCreate(snap: BlockframesSnapshot<Organization>) {
   const org = snap.data();
-  if (org.status === 'accepted') return;
 
   if (!org?.name) {
     console.error('Invalid org data:', org);
     throw new Error('organization update function got invalid org data');
   }
-  const emailRequest = organizationCreated(org);
-  const from = getMailSender(org._meta.createdFrom);
 
-  return Promise.all([
-    // Send a mail to c8 admin to inform about the created organization
-    sendMail(emailRequest, from, groupIds.noUnsubscribeLink).catch(e => console.warn(e.message)),
-    // Update algolia's index
-    storeSearchableOrg(org)
-  ]);
+  const promises = [];
+
+  // Send a mail to c8 admin to inform about the created organization
+  if (org.status !== 'accepted') {
+    const emailRequest = organizationCreated(org);
+    const from = getMailSender(org._meta.createdFrom);
+    promises.push(sendMail(emailRequest, from, groupIds.noUnsubscribeLink).catch(e => console.warn(e.message)))
+  }
+
+  // Update algolia's index
+  promises.push(storeSearchableOrg(org));
+
+  return Promise.all(promises);
 }
 
 export async function onOrganizationUpdate(change: BlockframesChange<Organization>) {

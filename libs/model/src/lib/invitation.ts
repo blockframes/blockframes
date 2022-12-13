@@ -3,7 +3,6 @@ import { Organization, PublicOrganization } from './organisation';
 import { PublicUser } from './user';
 import { Movie } from './movie';
 import { Event, Screening } from './event';
-import { Analytics } from './analytics';
 import { sum } from './utils';
 
 export interface WatchInfos {
