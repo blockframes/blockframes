@@ -1,4 +1,4 @@
-import { fakeUserData } from '@blockframes/testing/cypress/browser';
+import { fakeFirstName, fakeKeyword, fakeLastName, fakeMovieTitle, fakeUserData } from '@blockframes/testing/cypress/browser';
 import {
   createMovie,
   createDocPermissions,
@@ -25,6 +25,7 @@ const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
 const movieOrgId = '0-e2e-movieOrgId';
 const movieId = '0-e2e-movieId';
+const movieName = fakeMovieTitle();
 const userData = fakeUserData();
 
 export const user = createUser({
@@ -78,8 +79,8 @@ export const displayMovie = createMovie({
   //main
   productionStatus: 'released',
   title: createTitle({
-    original: 'Original title',
-    international: 'International title_unique_',
+    original: movieName,
+    international: movieName,
   }),
   internalRef: 'E2E ref',
   runningTime: {
@@ -96,8 +97,8 @@ export const displayMovie = createMovie({
   genres: ['action', 'romance'],
   directors: [
     {
-      firstName: 'John_unique_',
-      lastName: 'Doe_unique_',
+      firstName: fakeFirstName(),
+      lastName: fakeLastName(),
       category: 'risingTalent',
       status: 'looselyAttached',
       description: 'E2E description',
@@ -113,7 +114,7 @@ export const displayMovie = createMovie({
   logline: 'A random character in a movie',
   synopsis: 'We follow the life of a random character',
   keyAssets: 'Filmed with a phone',
-  keywords: ['random_unique_', 'phone_unique_'],
+  keywords: [fakeKeyword(), fakeKeyword()],
   //production information
   stakeholders: createMovieStakeholders({
     productionCompany: [
