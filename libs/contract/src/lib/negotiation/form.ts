@@ -1,7 +1,7 @@
-import { FormControl, Validators } from "@angular/forms";
-import { EntityControl, FormEntity, FormList } from "@blockframes/utils/form";
-import { BucketTermForm, createBucketTermControl } from "../bucket/form";
-import { BucketTerm, Term, Negotiation } from "@blockframes/model";
+import { FormControl, Validators } from '@angular/forms';
+import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
+import { BucketTermForm, createBucketTermControl } from '../bucket/form';
+import { BucketTerm, Term, Negotiation } from '@blockframes/model';
 
 type NegotiationFormState = {
   price: number,
