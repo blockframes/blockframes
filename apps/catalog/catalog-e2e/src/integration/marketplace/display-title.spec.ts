@@ -18,8 +18,10 @@ import {
   assertUrlIncludes,
   get,
   findIn,
-  //marketplace lib
+  // marketplace lib
   syncMovieToAlgolia,
+  // helpers
+  titleCase,
 } from '@blockframes/testing/cypress/browser';
 import {
   budgetRange,
@@ -46,9 +48,6 @@ import {
 } from '@blockframes/model';
 import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
 import { format } from 'date-fns';
-import { TitleCasePipe } from '@angular/common';
-
-const titleCase = new TitleCasePipe();
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -120,7 +119,7 @@ function checkHeader() {
 function checkMain() {
   get('synopsis').should('contain', movie.synopsis);
   get('logline').should('contain', movie.logline);
-  get('keywords').should('contain', titleCase.transform(movie.keywords[0])).and('contain', titleCase.transform(movie.keywords[1]));
+  get('keywords').should('contain', titleCase(movie.keywords[0])).and('contain', titleCase(movie.keywords[1]));
   get('release').should('contain', movie.release.year).and('contain', screeningStatus[movie.release.status]);
   get('country').should('contain', territories[movie.originCountries[0]]).and('contain', territories[movie.originCountries[1]]);
   get('language').should('contain', languages[movie.originalLanguages[0]]).and('contain', languages[movie.originalLanguages[1]]);
