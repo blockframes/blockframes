@@ -37,8 +37,10 @@ describe('Search sale organization in marketplace', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
-    algolia.clearTestData('festival');
     firestore.clearTestData();
+    algolia.deleteOrg({app: 'festival', objectId: acceptedSaleOrg.id});
+    algolia.deleteOrg({app: 'festival', objectId: pendingSaleOrg.id});
+    algolia.deleteOrg({app: 'festival', objectId: catalogSaleOrg.id});
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });

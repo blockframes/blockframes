@@ -44,8 +44,8 @@ describe('Movie search in marketplace', () => {
     cy.visit('');
     maintenance.start();
     firestore.clearTestData();
-    algolia.clearTestData('catalog');
     firestore.deleteOrgMovies(org.id);
+    algolia.deleteMovie({app: 'catalog', objectId: movie.id});
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });

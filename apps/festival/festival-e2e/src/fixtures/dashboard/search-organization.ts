@@ -11,14 +11,15 @@ import {
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
+export const orgNamePrefix = fakeOrgName();
 const acceptedBuyerOrgid = '0-e2e-acceptedBuyerOrgid';
-const acceptedBuyerOrgName = fakeOrgName() + ' buyer accepted';
+const acceptedBuyerOrgName = orgNamePrefix + ' buyer accepted';
 const dashboardBuyerOrgid = '0-e2e-dashboardBuyerOrgid';
-const dashboardBuyerOrgName = fakeOrgName() + ' buyer dashboard';
+const dashboardBuyerOrgName = orgNamePrefix + ' buyer dashboard';
 const pendingBuyerOrgid = '0-e2e-pendingBuyerOrgid';
-const pendingBuyerOrgName = fakeOrgName() + ' buyer pending';
+const pendingBuyerOrgName = orgNamePrefix + ' buyer pending';
 const catalogBuyerOrgid = '0-e2e-catalogBuyerOrgid';
-const catalogBuyerOrgName = fakeOrgName() + ' buyer catalog';
+const catalogBuyerOrgName = orgNamePrefix + ' buyer catalog';
 const userData = fakeUserData();
 
 export const user = createUser({

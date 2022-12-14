@@ -64,7 +64,7 @@ export function setIndexConfiguration(indexName: string, config: AlgoliaConfig, 
 //           ORGANIZATIONS
 // ------------------------------------
 
-export function storeSearchableOrg(org: Organization, adminKey?: string, db = getDb(), storeE2ETag = true): Promise<any> {
+export function storeSearchableOrg(org: Organization, adminKey?: string, db = getDb()): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -80,7 +80,6 @@ export function storeSearchableOrg(org: Organization, adminKey?: string, db = ge
     org['hasAcceptedMovies'] = await hasAcceptedMovies(org, appName, db);
     const orgRecord = createAlgoliaOrganization(org);
     if (orgRecord.name) {
-      if (storeE2ETag) orgRecord['e2eTag'] = algolia.e2eTag;
       return indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord);
     }
   });
@@ -107,8 +106,7 @@ export function createAlgoliaOrganization(org: Organization): AlgoliaOrganizatio
 export function storeSearchableMovie(
   movie: Movie,
   organizationNames: string[],
-  adminKey?: string,
-  storeE2ETag = true
+  adminKey?: string
 ): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
@@ -180,8 +178,6 @@ export function storeSearchableMovie(
       movieRecord['socialGoals'] = movie?.audience?.goals;
       movieRecord['minPledge'] = movie['minPledge'];
     }
-
-    if (storeE2ETag) movieRecord['e2eTag'] = algolia.e2eTag;
 
     const movieAppAccess = getMovieAppAccess(movie);
 

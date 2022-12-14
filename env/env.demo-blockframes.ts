@@ -43,8 +43,7 @@ export const algolia = {
     financiers: 'ci_financiers_movies',
     catalog: 'ci_catalog_movies',
   },
-  indexNameUsers: 'ci_users',
-  e2eTag: 'demo',
+  indexNameUsers: 'ci_users', 
 };
 
 

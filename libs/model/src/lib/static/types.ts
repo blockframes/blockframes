@@ -56,6 +56,7 @@ export type Module = typeof modules[number];
 export type ModuleAccess = Record<Module, boolean>;
 
 export type OrgAppAccess = Record<App, ModuleAccess>;
+export type AlgoliaApp = Exclude<App, 'crm'>;
 
 export type Privacy = typeof privacies[number];
 

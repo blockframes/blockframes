@@ -1,4 +1,4 @@
-import { Organization, Movie, App } from '@blockframes/model';
+import { Organization, Movie, AlgoliaApp } from '@blockframes/model';
 
 export const algolia = {
   storeOrganization(org: Organization) {
@@ -9,9 +9,11 @@ export const algolia = {
     return cy.task('storeMovie', data);
   },
 
-  clearTestData(apps: Exclude<App, 'crm' | 'financiers'> | Exclude<App, 'crm' | 'financiers'>[]) {
-    if (!Array.isArray(apps)) apps = [apps];
-    cy.task('clearAlgoliaTestData', apps);
-    return cy.wait(10000); //giving some time to algolia to delete all
+  deleteMovie(data: { app: AlgoliaApp; objectId: string }) {
+    return cy.task('deleteAlgoliaMovie', data);
+  },
+
+  deleteOrg(data: { app: AlgoliaApp; objectId: string }) {
+    return cy.task('deleteAlgoliaOrg', data);
   },
 };

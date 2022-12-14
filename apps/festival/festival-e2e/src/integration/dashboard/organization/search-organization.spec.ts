@@ -35,8 +35,11 @@ describe('Search buyer organizations in dashboard', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
-    algolia.clearTestData('festival');
     firestore.clearTestData();
+    algolia.deleteOrg({app: 'festival', objectId: acceptedBuyerOrg.id});
+    algolia.deleteOrg({app: 'festival', objectId: dashboardBuyerOrg.id});
+    algolia.deleteOrg({app: 'festival', objectId: pendingBuyerOrg.id});
+    algolia.deleteOrg({app: 'festival', objectId: catalogBuyerOrg.id});
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });

@@ -25,7 +25,7 @@ const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
 const movieId = '0-e2e-movieId';
 const userData = fakeUserData();
-const movieTitle = fakeMovieTitle()
+const movieTitle = fakeMovieTitle();
 
 export const user = createUser({
   uid: adminUid,
