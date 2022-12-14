@@ -22,7 +22,12 @@
   </form>
   
   <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center" fxFlex>
-    <h2>Upload private screening</h2>
+    <h2>
+      Upload private screening
+      <button [disabled]="!hasScreener('screener') || hasScreener('publicScreener')" mat-icon-button matTooltip="Copy screener to publicScreener" (click)="copyScreener('screener', 'publicScreener')">
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </button>
+    </h2>
     <div formGroupName="screener" fxLayout="column">
       <file-uploader
         [form]="form.screener"
@@ -34,7 +39,12 @@
       </file-uploader>
     </div>
 
-    <h2>Upload public screening</h2>
+    <h2>
+      Upload public screening
+      <button [disabled]="!hasScreener('publicScreener') || hasScreener('screener')" mat-icon-button matTooltip="Copy publicScreener to screener" (click)="copyScreener('publicScreener', 'screener')">
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </button>
+    </h2>
     <div formGroupName="publicScreener" fxLayout="column">
       <file-uploader
         [form]="form.publicScreener"

@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Modules
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
@@ -36,6 +37,7 @@ import { MovieVideoUploadComponent } from './video-upload.component';
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
+    MatTooltipModule,
 
     // Modules
     FileUploaderModule,

@@ -25,13 +25,13 @@ const injectedData = {
 describe('Profile test', () => {
   it('login and set a profile picture', () => {
     cy.visit('');
-    browserAuth.clearBrowserAuth();
     maintenance.start();
     adminAuth.deleteAllTestUsers();
     firestore.clearTestData();
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     firestore.create([injectedData]);
     maintenance.end();
+    browserAuth.clearBrowserAuth();
     refreshIfMaintenance('festival');
     browserAuth.signinWithEmailAndPassword(user.email);
     check('terms');

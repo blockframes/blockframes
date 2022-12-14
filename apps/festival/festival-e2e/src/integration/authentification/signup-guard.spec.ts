@@ -18,8 +18,10 @@ import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 describe('Signup', () => {
   beforeEach(() => {
     cy.visit('');
+    maintenance.start();
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
+    maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('auth/identity');
   });
