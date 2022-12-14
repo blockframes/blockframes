@@ -43,8 +43,10 @@ const dashboardInjectedData = {
 describe('Signup', () => {
   beforeEach(() => {
     cy.visit('');
+    maintenance.start();
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
+    maintenance.end();
     browserAuth.clearBrowserAuth();
   });
 
