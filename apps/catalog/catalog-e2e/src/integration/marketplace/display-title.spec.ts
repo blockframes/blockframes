@@ -79,11 +79,14 @@ describe('Movie display in marketplace', () => {
   });
 
   it.only('Access to title page by clicking on the movie card', () => {
+    const titlePage = `/c/o/marketplace/title/${movie.id}`
     syncMovieToAlgolia(movie.id);
     get('title-link').eq(0).click();
     get('search-input').type(movie.title.international);
-    goToTitlePage(movie.id);
-    assertUrlIncludes(`c/o/marketplace/title/${movie.id}/main`);
+    get(`movie-card_${movie.id}`).trigger('mouseenter');
+    get(`movie-card_${movie.id}`).find('a').should('have.attr', 'href', titlePage)
+    get(`movie-card_${movie.id}`).find('a').click()
+    assertUrlIncludes(titlePage + '/main');
   });
 
   it('Released movie metadata is displayed in the title page', () => {
@@ -98,15 +101,6 @@ describe('Movie display in marketplace', () => {
     assertUrlIncludes(`c/o/marketplace/title/${movie.id}/avails/map`);
   });
 });
-
-function goToTitlePage(movieId: string, loop = 0) {
-  get(`movie-card_${movieId}`).click();
-  cy.wait(3000);
-  cy.url().then(url => {
-    cy.log('goTotitlePage() loop #' + loop);
-    if (!url.includes(`c/o/marketplace/title/${movie.id}/main`)) goToTitlePage(movieId, loop + 1);
-  });
-}
 
 function checkHeader() {
   get('director').should('contain', `${movie.directors[0].firstName} ${movie.directors[0].lastName}`);
