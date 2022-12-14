@@ -46,7 +46,8 @@ import {
   emailErrorCode,
   festival,
   movieNoteRoles,
-  releaseMedias
+  releaseMedias,
+  screenerTypes
 } from './static-model';
 
 export type App = typeof app[number];
@@ -59,6 +60,8 @@ export type OrgAppAccess = Record<App, ModuleAccess>;
 export type AlgoliaApp = Exclude<App, 'crm'>;
 
 export type Privacy = typeof privacies[number];
+
+export type ScreenerType = typeof screenerTypes[number];
 
 export type NumberRange = keyof typeof budgetRange;
 
