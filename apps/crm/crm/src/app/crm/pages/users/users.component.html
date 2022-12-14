@@ -24,23 +24,11 @@
 
       <mat-menu #analyticsExports="matMenu">
         <button mat-menu-item (click)="exportTitleAnalytics(users)">
-          Users Analytics
+          Title Analytics
           <mat-icon svgIcon="arrow_upward"></mat-icon>
         </button>
-        <button mat-menu-item (click)="exportSearchAnalytics(['filteredTitles'])">
-          Title Search Analytics
-          <mat-icon svgIcon="arrow_upward"></mat-icon>
-        </button>
-        <button mat-menu-item (click)="exportSearchAnalytics(['savedFilters','loadedFilters'])">
-          Saved & Loaded search Analytics
-          <mat-icon svgIcon="arrow_upward"></mat-icon>
-        </button>
-        <button mat-menu-item (click)="exportSearchAnalytics(['exportedTitles'])">
-          PDF export Analytics
-          <mat-icon svgIcon="arrow_upward"></mat-icon>
-        </button>
-        <button mat-menu-item (click)="exportSearchAnalytics(['filteredAvailsCalendar','filteredAvailsMap'])">
-          Avails search Analytics
+        <button mat-menu-item (click)="exportSearchAnalytics(users)">
+          Search Analytics
           <mat-icon svgIcon="arrow_upward"></mat-icon>
         </button>
       </mat-menu>

@@ -18,8 +18,10 @@ import {
   assertUrlIncludes,
   get,
   findIn,
-  //marketplace lib
+  // marketplace lib
   syncMovieToAlgolia,
+  // helpers
+  titleCase,
 } from '@blockframes/testing/cypress/browser';
 import {
   budgetRange,
@@ -45,7 +47,6 @@ import {
   soundFormat,
 } from '@blockframes/model';
 import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
-import { capitalize } from '@blockframes/utils/helpers';
 import { format } from 'date-fns';
 
 const injectedData = {
@@ -79,11 +80,14 @@ describe('Movie display in marketplace', () => {
   });
 
   it('Access to title page by clicking on the movie card', () => {
+    const titlePage = `/c/o/marketplace/title/${movie.id}`;
     syncMovieToAlgolia(movie.id);
     get('title-link').eq(0).click();
     get('search-input').type(movie.title.international);
-    get(`movie-card_${movie.id}`).click();
-    assertUrlIncludes(`c/o/marketplace/title/${movie.id}/main`);
+    get(`movie-card_${movie.id}`).trigger('mouseenter');
+    get(`movie-card_${movie.id}`).find('a').should('have.attr', 'href', titlePage);
+    get(`movie-card_${movie.id}`).find('a').click();
+    assertUrlIncludes(titlePage + '/main');
   });
 
   it('Released movie metadata is displayed in the title page', () => {
@@ -118,7 +122,7 @@ function checkHeader() {
 function checkMain() {
   get('synopsis').should('contain', movie.synopsis);
   get('logline').should('contain', movie.logline);
-  get('keywords').should('contain', capitalize(movie.keywords[0])).and('contain', capitalize(movie.keywords[1]));
+  get('keywords').should('contain', titleCase(movie.keywords[0])).and('contain', titleCase(movie.keywords[1]));
   get('release').should('contain', movie.release.year).and('contain', screeningStatus[movie.release.status]);
   get('country').should('contain', territories[movie.originCountries[0]]).and('contain', territories[movie.originCountries[1]]);
   get('language').should('contain', languages[movie.originalLanguages[0]]).and('contain', languages[movie.originalLanguages[1]]);
@@ -233,7 +237,9 @@ function checkAdditional() {
     .and('contain', format(movie.originalRelease[0].date, 'M/d/yy'));
   get('box-office_0')
     .should('contain', territories[movie.boxOffice[0].territory])
-    .and('contain', movie.boxOffice[0].value.toLocaleString('en-US', {
+    .and(
+      'contain',
+      movie.boxOffice[0].value.toLocaleString('en-US', {
         style: 'currency',
         currency: 'EUR',
       })
