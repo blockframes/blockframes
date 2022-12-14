@@ -78,7 +78,7 @@ describe('Movie display in marketplace', () => {
     assertUrlIncludes('c/o/marketplace/home');
   });
 
-  it.only('Access to title page by clicking on the movie card', () => {
+  it('Access to title page by clicking on the movie card', () => {
     const titlePage = `/c/o/marketplace/title/${movie.id}`
     syncMovieToAlgolia(movie.id);
     get('title-link').eq(0).click();
