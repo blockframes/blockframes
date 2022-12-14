@@ -262,6 +262,7 @@ export interface CrmMovie extends Movie {
   screeningCount: number;
   releaseMedias: ReleaseMediaValue[];
   mandate: Mandate;
+  allPrizes: Prize[]; // prizes & customPrizes
 }
 
 export interface Versions {

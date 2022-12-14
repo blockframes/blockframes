@@ -72,7 +72,8 @@ export class MoviesComponent implements OnInit {
           const org = orgs.find((o) => o.id === movie.orgIds[0]);
           const screeningCount = screenings.filter((e) => e.meta?.titleId === movie.id).length;
           const releaseMedias = movie.originalRelease.map(r => toLabel(r.media, 'releaseMedias') as ReleaseMediaValue).filter(r => r);
-          return { ...movie, releaseMedias: Array.from(new Set(releaseMedias)), org, screeningCount, mandate };
+          const allPrizes = movie.prizes.concat(movie.customPrizes);
+          return { ...movie, releaseMedias: Array.from(new Set(releaseMedias)), org, screeningCount, mandate, allPrizes };
         });
       })
     );

@@ -53,27 +53,27 @@
       <ng-template colRef="app.financiers.status" label="Financiers Status" sort let-status>
         <bf-tag>{{ status }}</bf-tag>
       </ng-template>
-      <ng-template colRef="keywords" label="Keywords" let-keywords>
+      <ng-template colRef="keywords" label="Keywords" [sort]="sorts.byLength" let-keywords>
         <span [matTooltip]="keywords | join">
           {{ keywords | join | maxLength:30 }}
         </span>
       </ng-template>
-      <ng-template colRef="promotional.videos" label="Has Screener" let-videos>
+      <ng-template colRef="promotional.videos" label="Has Screener" [sort]="sorts.byScreener" let-videos>
         <bf-tag> {{ videos.publicScreener.docId || videos.screener.docId ? 'Yes' : 'No'}} </bf-tag>
       </ng-template>
-      <ng-template colRef="poster.docId" label="Has Poster" let-docId>
+      <ng-template colRef="poster.docId" label="Has Poster" sort let-docId>
         <bf-tag> {{ docId ? 'Yes' : 'No'}} </bf-tag>
       </ng-template>
-      <ng-template colRef="mandate.id" label="Has Avail" let-mandateId>
+      <ng-template colRef="mandate.id" label="Has Avail" sort let-mandateId>
         <bf-tag> {{ mandateId ? 'Yes' : 'No'}} </bf-tag>
       </ng-template>
-      <ng-template colRef="certifications" label="Prizes" let-title="item">
-        <span> {{ title.prizes.length ?? title.customPrizes.length ?? '-' }} </span>
+      <ng-template colRef="allPrizes" label="Prizes" let-title="item" [sort]="sorts.byLength">
+        <span> {{ title.allPrizes.length ?? '-' }} </span>
       </ng-template>
-      <ng-template colRef="certifications" label="Certifications" let-certifications>
+      <ng-template colRef="certifications" label="Certifications" [sort]="sorts.byLength" let-certifications>
         <span> {{ certifications.length ?? '-'}} </span>
       </ng-template>
-      <ng-template colRef="releaseMedias" label="Release Medias" let-releaseMedias>
+      <ng-template colRef="releaseMedias" label="Release Medias" [sort]="sorts.byLength" let-releaseMedias>
         <span [matTooltip]="releaseMedias | join"> {{ releaseMedias | join | maxLength: 30 }} </span>
       </ng-template>
     </bf-table>
