@@ -187,8 +187,8 @@ describe('Testing bridge between Cypress and node', () => {
     before(() => {
       maintenance.start();
       firestore.clearTestData();
-      maintenance.end();
       firestore.create([examples.collectionToQuery]);
+      maintenance.end();
     });
 
     it('less than', () => {
