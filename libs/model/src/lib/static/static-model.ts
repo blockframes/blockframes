@@ -4,6 +4,8 @@ export const modules = ['dashboard', 'marketplace'] as const;
 
 export const privacies = ['public', 'protected'] as const;
 
+export const screenerTypes = ['screener', 'publicScreener'] as const;
+
 export const appShortName = {
   catalog: 'AC',
   festival: 'AM',
