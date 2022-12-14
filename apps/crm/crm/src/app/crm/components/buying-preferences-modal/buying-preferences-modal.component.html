@@ -1,0 +1,10 @@
+<global-modal>
+  <h2>Edit buying preferences for {{ data.user | displayName }}</h2>
+
+  <auth-preferences-form [form]="form"></auth-preferences-form>
+  
+  <footer fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
+    <button mat-flat-button color="accent" (click)="update()">Save Preferences</button>
+    <button mat-button (click)="close()">Cancel</button>
+  </footer>
+</global-modal>
