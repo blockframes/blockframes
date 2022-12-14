@@ -57,7 +57,11 @@
             </a>
           </li>
         </ul>
-        <h3>Buying Preferences</h3>
+        <h3>Buying Preferences 
+          <button mat-icon-button (click)="editBuyingPreferences()">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </button>
+        </h3>
         <ul>
           <li><b>Genres : </b>
             <span (click)="openDetails(user.preferences?.genres, 'genres')">

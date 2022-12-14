@@ -51,27 +51,28 @@ import { DashboardModule } from './components/dashboard/dashboard.module';
 import { BreadCrumbModule } from './components/bread-crumb/bread-crumb.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
+import { BuyingPreferencesModalModule } from './components/buying-preferences-modal/buying-preferences-modal.module';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
   { path: 'overview', component: OverviewComponent },
-  { path: 'movies', loadChildren: () => import('./pages/movies/movies.module').then(m => m.MovieListModule)},
+  { path: 'movies', loadChildren: () => import('./pages/movies/movies.module').then(m => m.MovieListModule) },
   { path: 'movie/:movieId', component: MovieComponent },
-  { path: 'organizations', loadChildren: () => import('./pages/organizations/organizations.module').then(m => m.OrganizationListModule)},
+  { path: 'organizations', loadChildren: () => import('./pages/organizations/organizations.module').then(m => m.OrganizationListModule) },
   { path: 'organization/:orgId', component: OrganizationComponent },
-  { path: 'users', loadChildren: () => import('./pages/users/users.module').then(m => m.UserListModule)},
+  { path: 'users', loadChildren: () => import('./pages/users/users.module').then(m => m.UserListModule) },
   { path: 'user/:userId', component: UserComponent },
   { path: 'events', component: EventsComponent },
   { path: 'event/:eventId', component: EventComponent },
   { path: 'invitations', component: InvitationsComponent },
   { path: 'mails', component: MailsComponent },
   { path: 'dev-area', component: DevAreaComponent },
-  { path: 'offer', loadChildren:() => import('./pages/offers/list/offer-list.module').then(s => s.CrmOfferListModule) },
-  { path: 'contracts', loadChildren:() => import('./pages/contracts/list/list.module').then(s => s.CrmContractsListModule) },
-  { path: 'contracts/:contractId', loadChildren:() => import('./pages/contracts/view/view.module').then(s => s.ContractViewModule) },
-  { path: 'contracts/:contractId/form', loadChildren:() => import('./pages/contracts/term-form/term-form.module').then(s => s.TermFormModule) },
+  { path: 'offer', loadChildren: () => import('./pages/offers/list/offer-list.module').then(s => s.CrmOfferListModule) },
+  { path: 'contracts', loadChildren: () => import('./pages/contracts/list/list.module').then(s => s.CrmContractsListModule) },
+  { path: 'contracts/:contractId', loadChildren: () => import('./pages/contracts/view/view.module').then(s => s.ContractViewModule) },
+  { path: 'contracts/:contractId/form', loadChildren: () => import('./pages/contracts/term-form/term-form.module').then(s => s.TermFormModule) },
   { path: 'offer/:offerId', loadChildren: () => import('./pages/offers/shell/shell.module').then(m => m.OfferShellModule) },
-  { path: 'import', loadChildren: () => import('./pages/import/import.module').then(m => m.CrmImportModule)},
+  { path: 'import', loadChildren: () => import('./pages/import/import.module').then(m => m.CrmImportModule) },
 ];
 
 @NgModule({
@@ -120,6 +121,7 @@ export const panelRoutes: Routes = [
     DetailedTermsModule,
     UploadWidgetModule,
     DisplayNameModule,
+    BuyingPreferencesModalModule,
 
     RouterModule.forChild(panelRoutes),
   ],
