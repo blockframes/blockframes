@@ -78,11 +78,11 @@ describe('Movie display in marketplace', () => {
     assertUrlIncludes('c/o/marketplace/home');
   });
 
-  it('Access to title page by clicking on the movie card', () => {
+  it.only('Access to title page by clicking on the movie card', () => {
     syncMovieToAlgolia(movie.id);
     get('title-link').eq(0).click();
     get('search-input').type(movie.title.international);
-    get(`movie-card_${movie.id}`).click();
+    goToTitlePage(movie.id);
     assertUrlIncludes(`c/o/marketplace/title/${movie.id}/main`);
   });
 
@@ -98,6 +98,15 @@ describe('Movie display in marketplace', () => {
     assertUrlIncludes(`c/o/marketplace/title/${movie.id}/avails/map`);
   });
 });
+
+function goToTitlePage(movieId: string, loop = 0) {
+  get(`movie-card_${movieId}`).click();
+  cy.wait(3000);
+  cy.url().then(url => {
+    cy.log('goTotitlePage() loop #' + loop);
+    if (!url.includes(`c/o/marketplace/title/${movie.id}/main`)) goToTitlePage(movieId, loop + 1);
+  });
+}
 
 function checkHeader() {
   get('director').should('contain', `${movie.directors[0].firstName} ${movie.directors[0].lastName}`);
@@ -233,7 +242,9 @@ function checkAdditional() {
     .and('contain', format(movie.originalRelease[0].date, 'M/d/yy'));
   get('box-office_0')
     .should('contain', territories[movie.boxOffice[0].territory])
-    .and('contain', movie.boxOffice[0].value.toLocaleString('en-US', {
+    .and(
+      'contain',
+      movie.boxOffice[0].value.toLocaleString('en-US', {
         style: 'currency',
         currency: 'EUR',
       })
