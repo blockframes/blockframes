@@ -2,12 +2,22 @@ import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { isSupported, logEvent, setUserId, Analytics as FirebaseAnalytics } from 'firebase/analytics';
 import { where } from 'firebase/firestore';
 import { centralOrgId } from '@env';
-import { startOfDay } from 'date-fns';
+import { startOfDay, subMinutes } from 'date-fns';
 import { firstValueFrom, Subscription, map } from 'rxjs';
 import { CallableFunctions, FIRE_ANALYTICS } from 'ngfire';
 
 // Blockframes
-import { Analytics, AnalyticsTypes, EventName, createTitleMeta, Movie, createDocumentMeta } from '@blockframes/model';
+import {
+  Analytics,
+  AnalyticsTypes,
+  EventName,
+  createTitleMeta,
+  Movie,
+  createDocumentMeta,
+  MovieAvailsSearch,
+  Module,
+  createTitleSearchMeta
+} from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
@@ -34,9 +44,10 @@ interface ConnectedUserInfo {
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService extends BlockframesCollection<Analytics> implements OnDestroy {
   readonly path = 'analytics';
-  private subscription?: Subscription
+  private subscription?: Subscription;
 
   private analyticsCache: ConnectedUserInfo[] = [];
+  private nonUiTitleSearch: MovieAvailsSearch;
 
   private getAnalyticsActiveUsers = this.functions.prepare<unknown, AnalyticsActiveUser[]>('getAnalyticsActiveUsers');
 
@@ -104,6 +115,82 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     });
     logEvent(this.analytics, name, meta);
     return this.add({ type: 'title', name, meta });
+  }
+
+  async addPdfExport(search: MovieAvailsSearch, titleCount: number, module: Module, status: boolean) {
+    if (await this.isOperator()) return;
+    const profile = this.authService.profile;
+    if (!profile) return;
+
+    const meta = createTitleSearchMeta({
+      search,
+      module,
+      orgId: profile.orgId,
+      uid: profile.uid,
+      titleCount,
+      status
+    });
+
+    return this.add({ type: 'titleSearch', name: 'exportedTitles', meta });
+  }
+
+  async addTitleFilter(_search: MovieAvailsSearch & { titleId?: string, ownerOrgIds?: string[] }, module: Module, eventName: 'filteredTitles' | 'filteredAvailsCalendar' | 'filteredAvailsMap', nonUiSearch = false) {
+    if (await this.isOperator()) return;
+    const profile = this.authService.profile;
+    if (!profile) return;
+
+    const search = { search: { ..._search.search }, avails: _search.avails };
+    delete search.search?.page;
+
+    // Store search filters not changed by user through UI (ie: loaded from params or saved search)
+    if (nonUiSearch) {
+      this.nonUiTitleSearch = search;
+      return;
+    }
+
+    // If search is same as nonUiTitleSearch, this search was not performed by an user an should not be tracked
+    if (JSON.stringify(this.nonUiTitleSearch) === JSON.stringify(search)) return;
+
+    const nowMinusOneMin = subMinutes(new Date(), 1);
+    const analytics = await this.getValue([
+      where('_meta.createdBy', '==', profile.uid),
+      where('_meta.createdFrom', '==', this.app),
+      where('meta.module', '==', module),
+      where('name', '==', eventName)
+    ]);
+
+    const meta = createTitleSearchMeta({
+      search,
+      module,
+      orgId: profile.orgId,
+      uid: profile.uid,
+    });
+
+    if (_search.titleId) meta.titleId = _search.titleId;
+    if (_search.ownerOrgIds) meta.ownerOrgIds = _search.ownerOrgIds;
+
+    const existingEvent = analytics.find(analytic => analytic._meta.createdAt > nowMinusOneMin);
+    if (existingEvent) {
+      existingEvent.meta = meta;
+      return this.update(existingEvent);
+    } else {
+      return this.add({ type: 'titleSearch', name: eventName, meta });
+    }
+  }
+
+  async addSavedOrLoadedSearch(search: MovieAvailsSearch, module: Module, eventName: 'savedFilters' | 'loadedFilters') {
+    if (await this.isOperator()) return;
+    const profile = this.authService.profile;
+    if (!profile) return;
+
+    const meta = createTitleSearchMeta({
+      search,
+      module,
+      orgId: profile.orgId,
+      uid: profile.uid
+    });
+
+    return this.add({ type: 'titleSearch', name: eventName, meta });
   }
 
   async addTitlePageView(title: Movie) {

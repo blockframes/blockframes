@@ -2,11 +2,12 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { InvitationService } from '@blockframes/invitation/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { EventService } from '@blockframes/event/service';
-import { downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { convertToTimeString, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { getHost } from '@blockframes/invitation/pipes/host.pipe';
 import { Movie, Organization, Event, isScreening, InvitationDetailed, getGuest } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'crm-invitations',
@@ -74,7 +75,7 @@ export class InvitationsComponent implements OnInit {
   }
 
   public exportTable() {
-    const exportedRows = this.invitations.map((i) => ({
+    const exportedRows = this.invitations.map(i => ({
       'event id': i.event.id,
       'event name': i.event.title,
       'start date': i.event.start,
@@ -91,6 +92,9 @@ export class InvitationsComponent implements OnInit {
       'guest organization': i.guestOrg?.name || '--',
       'invitation mode': i.mode,
       'invitation status': i.status,
+      watchtime: i.watchInfos?.duration !== undefined ? convertToTimeString(i.watchInfos?.duration * 1000) : '--',
+      'watchtime (sec)': i.watchInfos?.duration ?? '--',
+      'watching ended': i.watchInfos?.date ? formatDate(i.watchInfos?.date, 'MM/dd/yyyy HH:mm', 'en') : '--'
     }));
     downloadCsvFromJson(exportedRows, 'invitations-list');
   }

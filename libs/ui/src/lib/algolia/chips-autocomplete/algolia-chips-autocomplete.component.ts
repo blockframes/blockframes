@@ -131,6 +131,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     const values = typeof value === 'string' ? splitValue(value, this.separators) : [value];
     for (const v of values) {
       if (this.unique && !!v && !!v[this.displayWithPath]) this.addedFilters.push(v[this.displayWithPath]);
+      delete (v as any)._highlightResult; // removes unwanted algolia attribute
       this.form.add(v);
     }
 

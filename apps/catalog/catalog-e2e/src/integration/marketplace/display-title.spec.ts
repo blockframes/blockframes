@@ -18,8 +18,10 @@ import {
   assertUrlIncludes,
   get,
   findIn,
-  //marketplace lib
+  // marketplace lib
   syncMovieToAlgolia,
+  // helpers
+  titleCase,
 } from '@blockframes/testing/cypress/browser';
 import {
   budgetRange,
@@ -45,7 +47,6 @@ import {
   soundFormat,
 } from '@blockframes/model';
 import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
-import { capitalize } from '@blockframes/utils/helpers';
 import { format } from 'date-fns';
 
 const injectedData = {
@@ -121,7 +122,7 @@ function checkHeader() {
 function checkMain() {
   get('synopsis').should('contain', movie.synopsis);
   get('logline').should('contain', movie.logline);
-  get('keywords').should('contain', capitalize(movie.keywords[0])).and('contain', capitalize(movie.keywords[1]));
+  get('keywords').should('contain', titleCase(movie.keywords[0])).and('contain', titleCase(movie.keywords[1]));
   get('release').should('contain', movie.release.year).and('contain', screeningStatus[movie.release.status]);
   get('country').should('contain', territories[movie.originCountries[0]]).and('contain', territories[movie.originCountries[1]]);
   get('language').should('contain', languages[movie.originalLanguages[0]]).and('contain', languages[movie.originalLanguages[1]]);

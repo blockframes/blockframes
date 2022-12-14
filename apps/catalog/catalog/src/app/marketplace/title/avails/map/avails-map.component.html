@@ -1,5 +1,5 @@
 <ng-container *ngIf="mandates$|async as mandates">
-  <form [availsFilter]="availsForm" [disabled]="!mandates.length"></form>
+  <form [availsFilter]="availsForm" [disabled]="!mandates.length" (cleared)="clear()"></form>
 
   <h2>Available Territories</h2>
 

@@ -56,7 +56,8 @@
   <bf-table [source]="buyerAnalytics$ | async" pagination="10" useFilter [filterValue]="filterValue"
     (rowClick)="viewBuyerActivity($event)">
     <ng-template colRef="user" label="Name" let-user sort>
-      <a [href]="'mailto:' + user?.email">{{ user | displayName }}</a>
+      <a *ngIf="user?.email" [href]="'mailto:' + user.email">{{ user | displayName }}</a>
+      <b *ngIf="!user?.email">{{ user | displayName }}</b>
     </ng-template>
     <ng-template colRef="user.email" label="Email address" let-email sort>
       {{ email }}

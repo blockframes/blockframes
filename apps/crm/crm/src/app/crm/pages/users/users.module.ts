@@ -12,7 +12,8 @@ import { DashboardModule } from '../../components/dashboard/dashboard.module';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [UsersComponent],
@@ -26,6 +27,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatButtonModule,
     ClipboardModule,
+    MatMenuModule,
+    MatSnackBarModule,
     RouterModule.forChild([{ path: '', component: UsersComponent }])
   ]
 })
