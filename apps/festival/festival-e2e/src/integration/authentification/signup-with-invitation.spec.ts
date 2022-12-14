@@ -47,10 +47,10 @@ const injectedData = {
 describe('Signup following an invitation', () => {
   beforeEach(() => {
     cy.visit('');
+    maintenance.start();
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
     browserAuth.clearBrowserAuth();
-    maintenance.start();
     adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email, emailVerified: true });
     adminAuth.createUser({ uid: userWithJoinOrgInvitation.uid, email: userWithJoinOrgInvitation.email, emailVerified: true, password: orgInvitationCode });
     adminAuth.createUser({ uid: userWithEventInvitation.uid, email: userWithEventInvitation.email, emailVerified: true, password: meetingInvitationCode });
