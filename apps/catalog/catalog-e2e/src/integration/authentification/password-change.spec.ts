@@ -27,13 +27,13 @@ const newPassword = 'NewPassword';
 describe('Password reset & change test', () => {
   beforeEach(() => {
     cy.visit('');
-    browserAuth.clearBrowserAuth();
     maintenance.start();
     adminAuth.deleteAllTestUsers();
     firestore.clearTestData();
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     firestore.create([injectedData]);
     maintenance.end();
+    browserAuth.clearBrowserAuth();
     refreshIfMaintenance('catalog');
     get('login').click();
     assertUrlIncludes('/connexion');
