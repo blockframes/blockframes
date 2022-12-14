@@ -156,7 +156,7 @@ const baseConfig: AlgoliaConfig = {
     'orgNames',
     'festivals',
     'productionCompany',
-    'salesAgent',
+    'salesAgent'
   ],
   attributesForFaceting: [
     // filters
@@ -176,10 +176,10 @@ const baseConfig: AlgoliaConfig = {
     'storeStatus',
     'contentType',
     'festivals',
-    'certifications',
+    'certifications'
   ],
   customRanking: ['asc(title.international)', 'asc(title.original)'],
-  paginationLimitedTo: 2000
+  paginationLimitedTo: 2000,
 };
 
 function movieConfig(appConfig: App): AlgoliaConfig {

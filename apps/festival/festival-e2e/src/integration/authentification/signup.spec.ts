@@ -45,7 +45,7 @@ describe('Signup', () => {
   beforeEach(() => {
     cy.visit('');
     firestore.clearTestData();
-    algolia.deleteOrg({app: 'festival', objectId: org.id});
+    algolia.deleteOrg({ app: 'festival', objectId: org.id });
     adminAuth.deleteAllTestUsers();
     browserAuth.clearBrowserAuth();
   });

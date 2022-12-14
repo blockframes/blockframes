@@ -43,7 +43,7 @@ export const algolia = {
     financiers: 'bruce_financiers_movies',
     catalog: 'bruce_catalog_movies',
   },
-  indexNameUsers: 'bruce_users',  
+  indexNameUsers: 'bruce_users',
 };
 
 // Support emails
