@@ -79,13 +79,13 @@ describe('Movie display in marketplace', () => {
   });
 
   it('Access to title page by clicking on the movie card', () => {
-    const titlePage = `/c/o/marketplace/title/${movie.id}`
+    const titlePage = `/c/o/marketplace/title/${movie.id}`;
     syncMovieToAlgolia(movie.id);
     get('title-link').eq(0).click();
     get('search-input').type(movie.title.international);
     get(`movie-card_${movie.id}`).trigger('mouseenter');
-    get(`movie-card_${movie.id}`).find('a').should('have.attr', 'href', titlePage)
-    get(`movie-card_${movie.id}`).find('a').click()
+    get(`movie-card_${movie.id}`).find('a').should('have.attr', 'href', titlePage);
+    get(`movie-card_${movie.id}`).find('a').click();
     assertUrlIncludes(titlePage + '/main');
   });
 
