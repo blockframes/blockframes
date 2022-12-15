@@ -247,6 +247,53 @@ export async function createAskingPriceRequest(
   triggerNotifications([notification]);
 }
 
+export async function createScreenerRequest(
+  data: { uid: string; movieId: string },
+  context: CallableContext
+) {
+  const { uid, movieId } = data;
+
+  if (!context?.auth) {
+    throw new Error('Permission denied: missing auth context.');
+  }
+  if (!uid) {
+    throw new Error('User id is mandatory for screener requested');
+  }
+  if (!movieId) {
+    throw new Error('Movie id is mandatory for screener requested');
+  }
+
+  const [user, movie] = await Promise.all([
+    getDocument<PublicUser>(`users/${uid}`),
+    getDocument<Movie>(`movies/${movieId}`),
+  ]);
+
+  const getNotifications = (org: Organization) =>
+    org.userIds.map((userId) =>
+      createNotification({
+        toUserId: userId,
+        type: 'screenerRequested',
+        docId: movieId,
+        user: createPublicUser(user),
+        _meta: createInternalDocumentMeta({ createdFrom: 'catalog' }),
+      })
+    );
+
+  for (const orgId of movie.orgIds) {
+    getDocument<Organization>(`orgs/${orgId}`).then(getNotifications).then(triggerNotifications);
+  }
+
+  // notification to user who requested the screener
+  const notification = createNotification({
+    toUserId: uid,
+    type: 'screenerRequestSent',
+    docId: movieId,
+    user: createPublicUser(user),
+    _meta: createInternalDocumentMeta({ createdFrom: 'catalog' }),
+  });
+  triggerNotifications([notification]);
+}
+
 /** Checks if the store status is going from draft to submitted. */
 function isSubmitted(previousAppConfig: AppConfigMap, currentAppConfig: AppConfigMap) {
   return apps.some((app) => {

@@ -272,6 +272,34 @@ export class NotificationService extends BlockframesCollection<Notification> {
           url: `${applicationUrl['festival']}/c/o/marketplace/title/${notification.docId}`,
         };
       }
+      case 'screenerRequested': {
+        const movie = await this.movieService.load(notification.docId);
+        const message = `<a href="mailto:${notification.user.email}">${displayName(notification.user)}</a> requested the screener for <a href="/c/o/dashboard/title/${movie.id}">${movie.title.international}</a>`;
+
+        return {
+          ...notification,
+          _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
+          message,
+          imgRef: notification.user.avatar,
+          placeholderUrl: 'profil_user.svg',
+          url: `/c/o/dashboard/tunnel/movie/${notification.docId}/media-screener`,
+          actionText: 'Upload screener',
+        };
+      }
+      case 'screenerRequestSent': {
+        const movie = await this.movieService.load(notification.docId);
+        const message = `Your screener request for ${movie.title.international} was successfully sent.`;
+
+        return {
+          ...notification,
+          _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
+          message,
+          imgRef: notification.user.avatar,
+          placeholderUrl: 'profil_user.svg',
+          actionText: 'See Title',
+          url: `/c/o/marketplace/title/${notification.docId}`,
+        };
+      }
       case 'offerCreatedConfirmation':
         return {
           ...notification,

@@ -162,3 +162,5 @@ export type AccessibilityTypes = keyof typeof accessibility;
 export type AccessibilityTypesValue = typeof accessibility[AccessibilityTypes];
 
 export type EmailErrorCode = typeof emailErrorCode[number];
+
+export type RequestStatus = 'available' | 'sending' | 'sent';

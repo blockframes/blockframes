@@ -234,6 +234,12 @@ export async function onNotificationCreate(snap: BlockframesSnapshot<Notificatio
       case 'screeningRequestSent':
         // No email is sent to user that requested the screening, only a notification
         break;
+      case 'screenerRequested':
+        // TODO #8128 email & new template
+        break;
+      case 'screenerRequestSent':
+        // TODO #8128 email & new template
+        break;
       case 'contractCreated':
         await sendContractCreated(recipient, notification)
           .then(() => notification.email.isSent = true)

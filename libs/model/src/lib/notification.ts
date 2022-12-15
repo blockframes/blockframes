@@ -17,7 +17,9 @@ export const notifications = {
     'myContractWasDeclined',
     'myOrgDeclinedAContract',
     'movieSubmitted',
-      // #7946 this may be reactivated later
+    'screenerRequested', // TODO #8128  libs/user/src/lib/auth/forms/notifications-form/notifications-form.component.ts  
+    'screenerRequestSent', // TODO #8128  libs/user/src/lib/auth/forms/notifications-form/notifications-form.component.ts 
+    // #7946 this may be reactivated later
     // 'underSignature',
     // 'offerAccepted',
     // 'offerDeclined',

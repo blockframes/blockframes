@@ -31,8 +31,10 @@ const titleType: Partial<Record<NotificationTypes, NotificationSetting>> = {
   invitationToAttendMeetingCreated: { text: 'You are invited to a meeting. (RECOMMENDED)', tooltip: true },
   invitationToAttendScreeningCreated: { text: 'You are invited to a screening. (RECOMMENDED)', tooltip: true },
   invitationToAttendSlateCreated: { text: 'You are invited to a slate presentation. (RECOMMENDED)', tooltip: true },
-  screeningRequested: { text: 'A screening has been requested. (RECOMMENDED)', tooltip: false },
+  screeningRequested: { text: 'A screening has been requested. (RECOMMENDED)', tooltip: true },
   screeningRequestSent: { text: 'Your screening request was successfully sent', tooltip: false },
+  screenerRequested: { text: 'A screener has been requested. (RECOMMENDED)', tooltip: true },
+  screenerRequestSent: { text: 'Your screener request was successfully sent', tooltip: false },
   offerCreatedConfirmation: { text: 'Your offer is successfully sent', tooltip: false },
   contractCreated: { text: 'An offer has been made on one of your titles. (RECOMMENDED)', tooltip: true },
   createdCounterOffer: { text: 'Your counter-offer is submitted.', tooltip: true },
@@ -55,7 +57,9 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
     title: 'Content Management',
     types: [
       'movieAccepted',
-      'movieSubmitted'
+      'movieSubmitted',
+      'screenerRequested',
+      'screenerRequestSent'
     ],
     appAuthorized: ['catalog']
   },
