@@ -70,7 +70,8 @@ describe('Password reset & change test', () => {
     browserAuth.clearBrowserAuth();
     // connect with new password
     get('login').click();
-    get('signin-email').type(user.email);
+    assertUrlIncludes('/connexion');
+    get('signin-email').click().wait(0).type(user.email); // #9106 (https://github.com/cypress-io/cypress/issues/3817)
     get('password').type('NewPassword');
     get('submit').click();
     assertUrlIncludes('c/o/marketplace/home');
