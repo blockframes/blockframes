@@ -87,6 +87,7 @@ export class OrganizationService extends BlockframesCollection<Organization> {
    * @param org
    */
   protected fromFirestore(snapshot: DocumentSnapshot<Organization>): Organization {
+    if (!snapshot.exists()) return;
     const org = super.fromFirestore(snapshot);
     return {
       ...org,

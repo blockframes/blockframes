@@ -7,6 +7,7 @@ import {
   catalogSaleOrg,
   moviePermissions,
   movie,
+  orgNamePrefix,
 } from '../../fixtures/marketplace/search-organization';
 import {
   // plugins
@@ -63,7 +64,7 @@ describe('Search sale organization in marketplace', () => {
     assertUrlIncludes('c/o/marketplace/organization');
     get('organizations-count').then($result => {
       const orgsCount = $result[0].innerText;
-      get('search-input').type('E2E');
+      get('search-input').type(orgNamePrefix);
       get('organizations-count').should('not.contain', orgsCount);
       get('organizations-count').should('contain', 'There is 1 seller available.');
       get(`org-card_${acceptedSaleOrg.id}`).should('exist');
