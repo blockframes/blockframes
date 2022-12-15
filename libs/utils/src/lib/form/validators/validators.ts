@@ -177,7 +177,7 @@ export function compareDates(fromKey: string, toKey: string, keyOnControl?: stri
 
     if (!parentForm.contains(fromKey) || !parentForm.contains(toKey)) {
       const keys = Object.keys(parentForm.controls).join(', ');
-      throw new Error(`Could not find keys ${fromKey} or ${toKey} in the form with keys ${keys}`)
+      throw new Error(`Could not find keys ${fromKey} or ${toKey} in the form with keys ${keys}`);
     }
 
     const from = parentForm.get(fromKey).value;
@@ -206,7 +206,7 @@ export function compareDates(fromKey: string, toKey: string, keyOnControl?: stri
         }
       }
     }
-    if (to < from) { return { startOverEnd: true } ;}
+    if (to < from) { return { startOverEnd: true }; }
     else { return null; }
   }
 }
