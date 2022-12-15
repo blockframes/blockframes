@@ -6,6 +6,7 @@ import {
   dashboardBuyerOrg,
   pendingBuyerOrg,
   catalogBuyerOrg,
+  orgNamePrefix,
 } from '../../../fixtures/dashboard/search-organization';
 import {
   // plugins
@@ -62,7 +63,7 @@ describe('Search buyer organizations in dashboard', () => {
     assertUrlIncludes('c/o/dashboard/organization');
     get('organizations-count').then($result => {
       const orgsCount = $result[0].innerText;
-      get('search-input').type('E2E');
+      get('search-input').type(orgNamePrefix);
       get('organizations-count').should('not.contain', orgsCount);
       get('organizations-count').should('contain', 'There is 1 buyer available.');
       get(`item_${acceptedBuyerOrg.id}`).should('exist');
@@ -78,7 +79,7 @@ describe('Search buyer organizations in dashboard', () => {
     assertUrlIncludes('c/o/dashboard/organization');
     get('organizations-count').then($result => {
       const orgsCount = $result[0].innerText;
-      get('search-input').type('E2E');
+      get('search-input').type(orgNamePrefix);
       get('organizations-count').should('not.contain', orgsCount);
       get('organizations-count').should('contain', 'There is 1 buyer available.');
       get(`item_${acceptedBuyerOrg.id}`).should('exist');
