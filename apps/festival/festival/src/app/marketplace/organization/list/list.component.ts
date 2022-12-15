@@ -64,7 +64,8 @@ export class ListComponent implements OnInit, OnDestroy {
       pluck('hits'),
       map(results => results.map(org => org.objectID)),
       switchMap(ids => ids.length ? this.service.load(ids) : of([])),
-    ).subscribe(orgs => {
+      map(orgs => orgs.filter(o => !!o))
+    ).subscribe((orgs: Organization[]) => {
       if (this.loadMoreToggle) {
         this.orgResultsState.next(this.orgResultsState.value.concat(orgs));
         this.loadMoreToggle = false;
