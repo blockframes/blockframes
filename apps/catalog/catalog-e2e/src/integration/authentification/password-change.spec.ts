@@ -70,6 +70,7 @@ describe('Password reset & change test', () => {
     browserAuth.clearBrowserAuth();
     // connect with new password
     get('login').click();
+    assertUrlIncludes('/connexion');
     get('signin-email').type(user.email);
     get('password').type('NewPassword');
     get('submit').click();
