@@ -45,9 +45,12 @@
     />
     <mat-datepicker-toggle matPrefix [for]="datepickerFrom" test-id="dateFrom"></mat-datepicker-toggle>
     <mat-datepicker #datepickerFrom> </mat-datepicker>
-    <mat-error *ngIf="form.hasError('startOverEnd', 'duration.from')">Start date must not be later than end date
+    <mat-error *ngIf="form.hasError('startOverEnd', 'duration.from')">
+      Start date must not be later than end date
     </mat-error>
-    <mat-error *ngIf="form.hasError('inPast', 'duration.from')">Date must be in the future</mat-error>
+    <mat-error *ngIf="form.hasError('inPast', 'duration.from')">
+      Date must be in the future
+    </mat-error>
     <mat-error *ngIf="form.hasError('required', 'duration.from')">
       This field is mandatory
     </mat-error>
@@ -67,7 +70,7 @@
     <mat-error *ngIf="form.hasError('startOverEnd', 'duration.to')">
       End date must not be earlier than start date
     </mat-error>
-    <mat-error *ngIf="form.hasError('inPast', 'duration.from')">
+    <mat-error *ngIf="form.hasError('inPast', 'duration.to')">
       Date must be in the future
     </mat-error>
     <mat-error *ngIf="form.hasError('required', 'duration.to')">
