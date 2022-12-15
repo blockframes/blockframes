@@ -459,7 +459,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       createStorageFile({
         privacy: 'public',
         collection: 'movies',
-        docId: movie.id,
+        docId: movie?.id,
         field: 'poster',
         storagePath: 'poster',
       })
