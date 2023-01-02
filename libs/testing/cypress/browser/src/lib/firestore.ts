@@ -44,19 +44,19 @@ export const firestore = {
   deleteOrgMovies(orgId: string) {
     return firestore
       .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: orgId })
-      .then((movies: Movie[]) => {
-        for (const movie of movies) firestore.delete(`movies/${movie.id}`);
-      });
+      .then((movies: Movie[]) => Promise.all(movies.map(movie => firestore.delete(`movies/${movie.id}`))));
   },
 
   deleteContractsAndTerms(orgId: string) {
     return firestore
       .queryData({ collection: 'contracts', field: 'sellerId', operator: '==', value: orgId })
       .then((contracts: Contract[]) => {
+        const promises = [];
         for (const contract of contracts) {
-          firestore.delete(`contracts/${contract.id}`);
-          for (const termId of contract.termIds) firestore.delete(`terms/${termId}`);
+          promises.push(firestore.delete(`contracts/${contract.id}`));
+          for (const termId of contract.termIds) promises.push(firestore.delete(`terms/${termId}`));
         }
+        return Promise.all(promises);
       });
   },
 };

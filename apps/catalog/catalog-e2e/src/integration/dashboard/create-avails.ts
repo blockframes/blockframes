@@ -10,7 +10,16 @@ import {
   assertUrlIncludes,
   snackbarShould,
 } from '@blockframes/testing/cypress/browser';
-import { user, org, orgPermissions, moviePermissions, acceptedMovie as movie } from '../../fixtures/dashboard/create-avails';
+import {
+  user,
+  org,
+  orgPermissions,
+  moviePermissions,
+  acceptedMovie as movie,
+  expectedContract,
+  expectedTerm,
+} from '../../fixtures/dashboard/create-avails';
+import { Contract, Term } from '@blockframes/model';
 
 const today = new Date();
 const nextYear = today.getFullYear() + 1;
@@ -23,7 +32,7 @@ const injectedData = {
   [`movies/${movie.id}`]: movie,
 };
 
-describe('Movie tunnel', () => {
+describe('Avails', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
@@ -41,7 +50,7 @@ describe('Movie tunnel', () => {
     get('cookies').click();
   });
 
-  it('Edit an existing movie', () => {
+  it('Add new avails for a movie', () => {
     get('avails').click();
     get('add').click();
     get('title-select').click();
@@ -77,5 +86,20 @@ describe('Movie tunnel', () => {
     get('table-save').click();
     get('save').click();
     snackbarShould('contain', '1 Term(s) created.');
+    firestore
+      .queryData({ collection: 'contracts', field: 'titleId', operator: '==', value: movie.id })
+      .then((contracts: Contract[]) => {
+        //check contract in database
+        expect(contracts).to.have.lengthOf(1);
+        const contract = contracts[0];
+        const buyerId = contract.buyerId;
+        expect(contract).to.deep.include({ ...expectedContract, buyerId, stakeholders: [buyerId, org.id] });
+        //check term in database
+        expect(contract.termIds).to.have.lengthOf(1);
+        const termId = contract.termIds[0];
+        firestore
+          .get(`terms/${termId}`)
+          .then((term: Term) => expect(term).to.deep.include({ ...expectedTerm, contractId: contract.id }));
+      });
   });
 });

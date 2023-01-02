@@ -10,6 +10,9 @@ import {
   createOrganization,
   createOrgAppAccess,
   fakeLegalTerms,
+  Contract,
+  Term,
+  territoriesGroup,
 } from '@blockframes/model';
 
 const adminUid = '0-e2e-orgAdminUid';
@@ -61,3 +64,48 @@ export const acceptedMovie = createMovie({
     international: 'International title',
   }),
 });
+
+export const expectedContract: Partial<Contract> = {
+  titleId: '0-e2e-movieId',
+  sellerId: '0-e2e-orgId',
+  type: 'mandate',
+  status: 'accepted',
+  parentTermId: '',
+  buyerUserId: '',
+};
+
+export const expectedTerm = {
+  territories: [
+    //all territories in Europe and Latin America, plus Nepal
+    territoriesGroup.map(group => (group.label === 'Europe' || group.label === 'Latin America') && group.items).filter(Boolean),
+    'nepal',
+  ].flat(2),
+  medias: ['payTv', 'freeTv', 'payPerView', 'rental', 'festival'],
+  languages: {
+    english: {
+      dubbed: true,
+      subtitle: false,
+      caption: false,
+    },
+    french: {
+      dubbed: false,
+      subtitle: true,
+      caption: false,
+    },
+  },
+  licensedOriginal: true,
+  criteria: [],
+  exclusive: false,
+  /* Dates will be checked with the UI in another test, because below format is received using the plugin to read firestore
+    duration: {
+        from: {
+            _seconds: 1704063600,
+            _nanoseconds: 0
+        },
+        to: {
+            _seconds: 1733958000,
+            _nanoseconds: 0
+        }
+    },
+    */
+};
