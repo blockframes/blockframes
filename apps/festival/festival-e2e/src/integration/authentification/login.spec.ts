@@ -23,13 +23,13 @@ const injectedData = {
 describe('Login test', () => {
   it('login and accept Terms and Privacy Policy', () => {
     cy.visit('');
-    browserAuth.clearBrowserAuth();
     maintenance.start();
     adminAuth.deleteAllTestUsers();
     firestore.clearTestData();
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     firestore.create([injectedData]);
     maintenance.end();
+    browserAuth.clearBrowserAuth();
     refreshIfMaintenance('festival');
     get('login').click();
     assertUrlIncludes('/connexion');

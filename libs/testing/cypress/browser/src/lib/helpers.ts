@@ -31,3 +31,16 @@ export function createFakeUserDataArray(number: number) {
   }
   return fakeUserDataArray;
 }
+
+export const fakeMovieTitle = () => `E2E_${faker.lorem.slug(3)}_movie`;
+
+export const fakeOrgName = () => `E2E_${faker.lorem.slug(3)}_org`;
+
+export const fakeFirstName = () => `E2E_${faker.name.firstName()}`;
+
+export const fakeLastName = () => `E2E_${faker.name.lastName()}`;
+
+export const fakeKeyword = () => `E2E_${faker.word.noun()}`;
+
+/** @see Angular TitleCasePipe */
+export const titleCase = (txt: string) => `${txt[0].toUpperCase()}${txt.substr(1).toLowerCase()}`;

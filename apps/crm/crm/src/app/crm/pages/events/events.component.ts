@@ -3,7 +3,7 @@ import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { EventService } from '@blockframes/event/service';
 import { InvitationService } from '@blockframes/invitation/service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { toLabel } from '@blockframes/model';
+import { isScreening, toLabel } from '@blockframes/model';
 import { where } from 'firebase/firestore';
 
 @Component({
@@ -41,6 +41,7 @@ export class EventsComponent implements OnInit {
       row.invited = invitations.length;
       row.confirmed = invitations.filter(i => i.status === 'accepted').length;
       row.pending = invitations.filter(i => i.status === 'pending').length;
+      row.attended = isScreening(event) ? invitations.filter(i => i.watchInfos?.duration > 0).length : '--';
       row.accessibility = toLabel(event.accessibility, 'accessibility');
       row.isSecret = event.isSecret ? 'Yes' : 'No';
       return row;
@@ -62,6 +63,7 @@ export class EventsComponent implements OnInit {
       'invited': i.invited,
       'confirmed': i.confirmed,
       'pending': i.pending,
+      'attended': i.attended,
       'accessibility': i.accessibility,
       'hidden on marketplace': i.isSecret
     }))

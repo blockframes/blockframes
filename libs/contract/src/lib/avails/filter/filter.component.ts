@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, O
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { AvailsFilter } from '@blockframes/model';
 import { AvailsForm, MapAvailsForm, CalendarAvailsForm } from '../form/avails.form';
+import { BucketTermForm } from '../../bucket/form';
 
 @Component({
   selector: 'form[availsFilter]',
@@ -11,7 +12,7 @@ import { AvailsForm, MapAvailsForm, CalendarAvailsForm } from '../form/avails.fo
 })
 export class AvailsFilterComponent {
   // eslint-disable-next-line @angular-eslint/no-input-rename
-  @Input('availsFilter') form: AvailsForm | MapAvailsForm | CalendarAvailsForm;
+  @Input('availsFilter') form: AvailsForm | MapAvailsForm | CalendarAvailsForm | BucketTermForm;
   @Input() disabled = false;
   @HostBinding('class.vertical') @Input() @boolean vertical: boolean;
   @Output() cleared = new EventEmitter<boolean>();

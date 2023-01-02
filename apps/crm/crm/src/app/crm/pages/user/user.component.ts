@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User, Organization, Invitation, UserRole, Scope, App, getOrgAppAccess, AggregatedAnalytic, Analytics, Movie, createAggregatedAnalytic } from '@blockframes/model';
 import { UserCrmForm } from '@blockframes/admin/crm/forms/user-crm.form';
@@ -16,6 +16,7 @@ import { joinWith, CallableFunctions } from 'ngfire';
 import { map } from 'rxjs/operators';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { AuthService } from '@blockframes/auth/service';
+import { BuyingPreferencesModalComponent } from '../../components/buying-preferences-modal/buying-preferences-modal.component';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
@@ -42,10 +43,10 @@ export function aggregatePerTitle(analytics: (Analytics<'title'> & { title: Movi
   styleUrls: ['./user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
   public userId = '';
   public user: User;
-  public user$: Observable<User>
+  public user$: Observable<User>;
   public userOrg: Organization;
   public userOrgRole: UserRole;
   public isUserBlockframesAdmin = false;
@@ -55,6 +56,8 @@ export class UserComponent implements OnInit {
 
   public analytics$: Observable<AggregatedAnalytic[]>
   public dashboardURL: SafeResourceUrl;
+
+  private sub: Subscription;
 
   constructor(
     private userService: UserService,
@@ -74,7 +77,7 @@ export class UserComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.route.params.subscribe(async params => {
+    this.sub = this.route.params.subscribe(async params => {
       this.userId = params.userId;
       this.user = await this.userService.getValue(this.userId);
       this.user$ = this.userService.valueChanges(this.userId);
@@ -116,6 +119,10 @@ export class UserComponent implements OnInit {
         { shouldAwait: true }
       )
     );
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 
   public async update() {
@@ -283,5 +290,14 @@ export class UserComponent implements OnInit {
       const id = invitation.fromOrg ? invitation.fromOrg.id : invitation.toOrg?.id;
       return ['/c/o/dashboard/crm/organization', id];
     }
+  }
+
+  public editBuyingPreferences() {
+    const dialogRef = this.dialog.open(BuyingPreferencesModalComponent, { data: createModalData({ user: this.user }, 'large'), autoFocus: false });
+
+    dialogRef.afterClosed().subscribe(async () => {
+      this.user = await this.userService.getValue(this.userId);
+      this.cdRef.markForCheck();
+    });
   }
 }

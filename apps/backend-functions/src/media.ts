@@ -13,7 +13,9 @@ import {
   PublicUser,
   User,
   Movie,
-  Organization
+  Organization,
+  MovieVideos,
+  ScreenerType
 } from '@blockframes/model';
 import { tempUploadDir } from '@blockframes/utils/file-sanitizer';
 import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
@@ -262,6 +264,15 @@ function needsToBeCleaned(before: StorageFile | undefined, after: StorageFile | 
   return !!before?.storagePath && before.storagePath !== after?.storagePath;
 };
 
+function needsToCleanScreener(videosBefore: Partial<MovieVideos> = {}, videosAfter: Partial<MovieVideos> = {}, type: ScreenerType) {
+  const otherType: ScreenerType = type === 'screener' ? 'publicScreener' : 'screener';
+
+  // PublicScreener was copied to screener or vice versa
+  if (!!videosBefore[type]?.storagePath && videosAfter[otherType]?.storagePath && videosBefore[type].storagePath === videosAfter[otherType].storagePath) return false;
+
+  return needsToBeCleaned(videosBefore[type], videosAfter[type]);
+}
+
 function checkFileList(before: StorageFile[] | undefined, after: StorageFile[] | undefined) {
   const filesToClean: StorageFile[] = [];
   before?.forEach(beforeFile => {
@@ -346,11 +357,11 @@ export async function cleanMovieMedias(before: Movie, after?: Movie): Promise<vo
       mediaToDelete.push(before.promotional.moodboard);
     }
 
-    if (needsToBeCleaned(before.promotional.videos?.screener, after.promotional.videos?.screener)) {
+    if (needsToCleanScreener(before.promotional.videos, after.promotional.videos, 'screener')) {
       mediaToDelete.push(before.promotional.videos.screener);
     }
 
-    if (needsToBeCleaned(before.promotional.videos?.publicScreener, after.promotional.videos?.publicScreener)) {
+    if (needsToCleanScreener(before.promotional.videos, after.promotional.videos, 'publicScreener')) {
       mediaToDelete.push(before.promotional.videos.publicScreener);
     }
 

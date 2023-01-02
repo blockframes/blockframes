@@ -1,4 +1,4 @@
-import { fakeUserData } from '@blockframes/testing/cypress/browser';
+import { fakeOrgName, fakeUserData } from '@blockframes/testing/cypress/browser';
 import {
   createMovie,
   createDocPermissions,
@@ -20,14 +20,15 @@ import {
   createAddressSet,
   createLocation,
   fakeLegalTerms,
-  createDocumentMeta
+  createDocumentMeta,
+  MovieSearch
 } from '@blockframes/model';
 import { sub } from 'date-fns';
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
 const saleOrgId = '0-e2e-saleOrgId';
-const saleOrgName = 'sale org';
+const saleOrgName = `${fakeOrgName()}_sale`;
 const movieId = '0-e2e-movieId';
 const userData = fakeUserData();
 
@@ -316,7 +317,7 @@ export const displayMovie = createMovie({
   },
 });
 
-export const expectedSavedSearch = {
+export const expectedSavedSearch: { search: Omit<MovieSearch, 'page'> } = {
   search: {
     query: '',
     storeStatus: ['accepted'],
@@ -336,22 +337,14 @@ export const expectedSavedSearch = {
     minReleaseYear: 2020,
     sellers: [
       {
-        name: 'sale org',
+        name: saleOrg.name,
         appModule: ['dashboard', 'marketplace'],
-        country: 'france',
+        country: saleOrg.addresses.main.country,
         isAccepted: true,
         hasAcceptedMovies: true,
         logo: '',
-        activity: 'intlSales',
-        objectID: '0-e2e-saleOrgId',
-        _highlightResult: {
-          name: {
-            value: '<em>sale</em> <em>org</em>',
-            matchLevel: 'full',
-            fullyHighlighted: true,
-            matchedWords: ['sale', 'org'],
-          },
-        },
+        activity: saleOrg.activity,
+        objectID: saleOrg.id,
       },
     ],
     socialGoals: [],

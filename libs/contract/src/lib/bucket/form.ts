@@ -1,9 +1,9 @@
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-import { FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
+import { compareDates, FormEntity, FormList, FormStaticValueArray, isDateInFuture } from '@blockframes/utils/form';
 import { MovieVersionInfoForm, createLanguageControl } from '@blockframes/movie/form/movie.form';
 
 import {
@@ -31,14 +31,17 @@ import { HoldbackForm } from '../contract/holdback/form';
 // TERM //
 //////////
 export function createBucketTermControl(params: Partial<BucketTerm> = {}) {
+  const fromValidators = [compareDates('from', 'to', 'from'), Validators.required];
+  const toValidators = [compareDates('from', 'to', 'to'), isDateInFuture, Validators.required];
+
   const term = createBucketTerm(params);
   return {
     territories: new FormStaticValueArray<'territories'>(term.territories, 'territories'),
     medias: new FormStaticValueArray<'medias'>(term.medias, 'medias'),
     exclusive: new FormControl(term.exclusive ?? true),
     duration: new FormGroup({
-      from: new FormControl(term.duration?.from),
-      to: new FormControl(term.duration?.to)
+      from: new FormControl(term.duration?.from, fromValidators),
+      to: new FormControl(term.duration?.to, toValidators)
     }),
     languages: MovieVersionInfoForm.factory(term.languages, createLanguageControl),
   }
@@ -49,7 +52,7 @@ type BucketTermControl = ReturnType<typeof createBucketTermControl>
 export class BucketTermForm extends FormEntity<BucketTermControl, BucketTerm> {
   constructor(term: Partial<BucketTerm> = {}) {
     const control = createBucketTermControl(term);
-    super(control)
+    super(control);
   }
 }
 
