@@ -194,7 +194,7 @@
     "pwmetrics": "^4.2.2",
     "ts-jest": "27.0.5",
     "ts-node": "9.1.1",
-    "tsconfig-paths": "^3.9.0",
+    "tsconfig-paths": "^3.14.1",
     "tsickle": "0.38.0",
     "tslib": "^2.2.0",
     "tslint": "6.1.3",
