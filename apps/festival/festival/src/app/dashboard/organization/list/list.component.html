@@ -16,20 +16,20 @@
     <mat-form-field appearance="outline" [formGroup]="searchForm">
       <mat-label>Search for a buyer...</mat-label>
       <mat-icon matPrefix svgIcon="search"></mat-icon>
-      <input matInput type="text" formControlName="query" [value]="searchForm.query.value">
+      <input matInput type="text" formControlName="query" [value]="searchForm.query.value" test-id="search-input">
     </mat-form-field>
   </list-page-search>
 
   <list-page-description>
-    <span i18n *ngIf="nbHits" class="mat-body-2">
+    <span i18n *ngIf="nbHits" class="mat-body-2" test-id="organizations-count">
       There {nbHits, plural, =1 {is} other {are}} {{ nbHits }} buyer{nbHits, plural, =1 {} other {s}}
       available.
     </span>
   </list-page-description>
 
-  <list-filter>
+  <list-filter test-id="filters">
     <ng-template filter [form]="searchForm.countries" label="Company's Nationality">
-      <chips-autocomplete [form]="searchForm.countries" placeholder="Country of Origin" scope="territories">
+      <chips-autocomplete [form]="searchForm.countries" placeholder="Country of Origin" scope="territories" test-id="country">
         <mat-label>Type and select Country</mat-label>
       </chips-autocomplete>
     </ng-template>
