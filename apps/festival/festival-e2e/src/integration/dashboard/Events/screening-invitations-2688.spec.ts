@@ -101,7 +101,7 @@ describe('Organiser invites other users to private screening', () => {
       festival.verifyNotification(userInvited2.firstName, false);
 
       // * STEP
-      cy.log('UninvitedGuest logs in, go on event page, asserts no access to the video');
+      cy.log('Uninvited guest logs in, go on event page, asserts no access to the video');
       browserAuth.clearBrowserAuth();
       cy.visit('/');
       browserAuth.signinWithEmailAndPassword(userUninvited.email);

@@ -14,7 +14,7 @@
       </header>
       <ng-container *ngFor="let group of filteredGroups$ | async; trackBy: trackByLabel">
         <div matRipple (click)="checkGroup(group, !checkbox.checked, $event)"
-          class="subheader mat-option mat-focus-indicator mat-option-multiple mat-optgroup-label">
+          class="subheader mat-option mat-focus-indicator mat-option-multiple mat-optgroup-label" [attr.test-id]="group.label">
           <mat-checkbox #checkbox="matCheckbox" color="primary"
             [indeterminate]="(value | getMode:group) === 'indeterminate'"
             [checked]="(value | getMode:group) === 'checked'" (change)="checkGroup(group, $event.checked)"
@@ -28,7 +28,7 @@
         </div>
         <mat-divider></mat-divider>
         <ng-container *ngFor="let item of group.items">
-          <mat-option class="item" [ngClass]="{ hidden: hidden[group.label] }" [value]="item">
+          <mat-option class="item" [ngClass]="{ hidden: hidden[group.label] }" [value]="item" [attr.test-id]="item">
             {{ item | toLabel: scope }}
           </mat-option>
         </ng-container>

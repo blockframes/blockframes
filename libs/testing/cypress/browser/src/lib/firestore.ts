@@ -1,5 +1,5 @@
 import { WhereFilterOp } from 'firebase/firestore';
-import { Event, Movie } from '@blockframes/model';
+import { Contract, Event, Movie } from '@blockframes/model';
 
 interface UpdateParameters {
   docPath: string;
@@ -44,8 +44,19 @@ export const firestore = {
   deleteOrgMovies(orgId: string) {
     return firestore
       .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: orgId })
-      .then((movies: Movie[]) => {
-        for (const movie of movies) firestore.delete(`movies/${movie.id}`);
+      .then((movies: Movie[]) => Promise.all(movies.map(movie => firestore.delete(`movies/${movie.id}`))));
+  },
+
+  deleteContractsAndTerms(orgId: string) {
+    return firestore
+      .queryData({ collection: 'contracts', field: 'sellerId', operator: '==', value: orgId })
+      .then((contracts: Contract[]) => {
+        const promises = [];
+        for (const contract of contracts) {
+          promises.push(firestore.delete(`contracts/${contract.id}`));
+          for (const termId of contract.termIds) promises.push(firestore.delete(`terms/${termId}`));
+        }
+        return Promise.all(promises);
       });
   },
 };
