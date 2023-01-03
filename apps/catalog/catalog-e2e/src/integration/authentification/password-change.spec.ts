@@ -12,6 +12,7 @@ import {
   interceptEmail,
   deleteEmail,
   snackbarShould,
+  ensureInput,
 } from '@blockframes/testing/cypress/browser';
 import { user, org, permissions } from '../../fixtures/authentification/password-change';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
@@ -50,7 +51,7 @@ describe('Password reset & change test', () => {
   it('An known user can receive a reset link by mail', () => {
     get('reset-password').click();
     assertUrlIncludes('auth/reset-password');
-    get('email').type(user.email);
+    ensureInput('email', user.email);
     get('reset').click();
     interceptEmail({ sentTo: user.email }).then(mail => {
       // because of E2E environement, we can only check if we received a reset link
@@ -71,7 +72,7 @@ describe('Password reset & change test', () => {
     // connect with new password
     get('login').click();
     assertUrlIncludes('/connexion');
-    get('signin-email').click().wait(0).type(user.email); // #9106 (https://github.com/cypress-io/cypress/issues/3817)
+    ensureInput('signin-email', user.email);
     get('password').type('NewPassword');
     get('submit').click();
     assertUrlIncludes('c/o/marketplace/home');
