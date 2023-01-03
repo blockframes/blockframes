@@ -28,6 +28,7 @@ import {
 import { newUser, newOrg, marketplaceData, dashboardData } from '../../fixtures/authentification/signup';
 import { territories, orgActivity } from '@blockframes/model';
 import { capitalize } from '@blockframes/utils/helpers';
+import { org } from '../../fixtures/authentification/login';
 
 const marketplaceInjectedData = {
   [`users/${marketplaceData.orgAdmin.uid}`]: marketplaceData.orgAdmin,
@@ -45,6 +46,7 @@ describe('Signup', () => {
     cy.visit('');
     maintenance.start();
     firestore.clearTestData();
+    algolia.deleteOrg({ app: 'festival', objectId: org.id });
     adminAuth.deleteAllTestUsers();
     maintenance.end();
     browserAuth.clearBrowserAuth();

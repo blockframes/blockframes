@@ -83,7 +83,6 @@ export function storeSearchableOrg(org: Organization, adminKey?: string, db = ge
       return indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord);
     }
   });
-
   return Promise.all(promises);
 }
 
