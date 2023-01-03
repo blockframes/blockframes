@@ -66,7 +66,9 @@ export const templateIds = {
   movie: {
     accepted: 'd-bfcf2760bcb7484ab55f864a59331d26',
     askingPriceRequested: 'd-afa28cb76e034d9b969588db5933362f',
-    askingPriceRequestSent: 'd-31ba12e3df9946bcb52fefca0c431240'
+    askingPriceRequestSent: 'd-31ba12e3df9946bcb52fefca0c431240',
+    screenerRequested: 'd-036f47a340f8450fb754ff1606160592',
+    screenerRequestSent: 'd-56f18feab83f48aeaf518b13bfd61591'
   },
   offer: {
     toBuyer: 'd-a4ee1970187e4fd8bef47a4008a2267a',

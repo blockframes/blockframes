@@ -55,6 +55,8 @@ import {
   toAdminCounterOfferEmail,
   toAdminContractAccepted,
   toAdminContractDeclined,
+  screenerRequestedToSeller,
+  screenerRequestFromUserSent,
   // #7946 this may be reactivated later
   // offerUnderSignature,
   // offerAcceptedOrDeclined,
@@ -235,10 +237,14 @@ export async function onNotificationCreate(snap: BlockframesSnapshot<Notificatio
         // No email is sent to user that requested the screening, only a notification
         break;
       case 'screenerRequested':
-        // TODO #8128 email & new template
+        await sendScreenerRequested(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
         break;
       case 'screenerRequestSent':
-        // TODO #8128 email & new template
+        await sendScreenerRequestSentEmail(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
         break;
       case 'contractCreated':
         await sendContractCreated(recipient, notification)
@@ -471,6 +477,38 @@ async function sendScreeningRequested(recipient: User, notification: Notificatio
     getMovieEmailData(movie)
   );
   await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
+}
+
+/** Send an email to users of orgs of movie to request a screener */
+async function sendScreenerRequested(recipient: User, notification: Notification) {
+  const movie = await getDocument<Movie>(`movies/${notification.docId}`);
+  const requestor = await getDocument<User>(`users/${notification.user.uid}`);
+  const buyerOrg = await getDocument<Organization>(`orgs/${requestor.orgId}`);
+
+  const app = notification._meta.createdFrom;
+  const template = screenerRequestedToSeller(
+    getUserEmailData(recipient),
+    getOrgEmailData(buyerOrg),
+    getMovieEmailData(movie)
+  );
+  await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
+}
+
+/** Send an email to user when their screener request has been sent */
+async function sendScreenerRequestSentEmail(recipient: User, notification: Notification) {
+  const movie = await getDocument<Movie>(`movies/${notification.docId}`);
+  const orgs = await Promise.all(
+    movie.orgIds.map(orgId => getDocument<Organization>(`orgs/${orgId}`))
+  );
+  const orgNames = orgs.map(org => org.name).join(', ');
+
+  const app = notification._meta.createdFrom;
+  const template = screenerRequestFromUserSent(
+    getUserEmailData(recipient),
+    getMovieEmailData(movie),
+    orgNames
+  );
+  await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 
 /** Send an email to org admin when his/her org is accepted */

@@ -317,6 +317,35 @@ export function screeningRequestedToSeller(
   return { to: toUser.email, templateId: templateIds.event.screeningRequested, data };
 }
 
+/** Generate an email to seller mentioning a screener has been requested */
+export function screenerRequestedToSeller(
+  toUser: UserEmailData,
+  org: OrgEmailData,
+  movie: MovieEmailData,
+): EmailTemplateRequest {
+  const data = {
+    user: toUser,
+    org,
+    movie,
+    pageUrl: `${appUrl.content}/c/o/dashboard/tunnel/movie/${movie.id}/media-screener`
+  };
+  return { to: toUser.email, templateId: templateIds.movie.screenerRequested, data };
+}
+
+/** Generate an email to inform users their screener request has been sent */
+export function screenerRequestFromUserSent(
+  toUser: UserEmailData,
+  movie: MovieEmailData,
+  orgNames: string,
+): EmailTemplateRequest {
+  const data = {
+    user: toUser,
+    movie,
+    orgNames
+  };
+  return { to: toUser.email, templateId: templateIds.movie.screenerRequestSent, data };
+}
+
 /** Generate an email when a movie is accepted */
 export function movieAcceptedEmail(toUser: UserEmailData, movieTitle: string, movieUrl: string): EmailTemplateRequest {
   const data = { user: toUser, movieTitle, movieUrl };
