@@ -96,7 +96,7 @@ export const expectedTerm = {
   licensedOriginal: true,
   criteria: [],
   exclusive: false,
-  /* Dates will be checked with the UI in another test, because below format is received using the plugin to read firestore
+  /* Dates will be checked with the UI in another test, because below format is received using the plugin to read firestore #9047
     duration: {
         from: {
             _seconds: 1704063600,
