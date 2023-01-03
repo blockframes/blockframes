@@ -258,6 +258,9 @@ export class UsersComponent implements OnInit {
     const allTitleIds = unique(all.map(analytic => analytic.meta.titleId).filter(t => !!t));
     const allTitles = await this.movieService.load(allTitleIds);
 
+    const allTitleIds = unique(all.map(analytic => analytic.meta.titleId).filter(t => !!t));
+    const allTitles = await this.movieService.load(allTitleIds);
+
     const exportedRows = [];
     for (const titleSearch of all) {
       const user = users.find(u => u.uid === titleSearch._meta.createdBy);
@@ -323,6 +326,16 @@ export class UsersComponent implements OnInit {
         const orgs = this.orgs.filter(o => title?.orgIds.includes(o.id));
         row.titleId = titleSearch.meta.titleId ?? '--';
         row.title = title?.title.international ?? '--deleted title--';
+        row['title org id(s)'] = title?.orgIds?.join(', ');
+        row['title org(s) name'] = orgs.map(o => o.name).join(', ');
+      }
+
+      // Avails Search
+      if (eventNames.includes('filteredAvailsCalendar') || eventNames.includes('filteredAvailsMap')) {
+        const title = allTitles.find(t => t?.id === titleSearch.meta.titleId);
+        const orgs = this.orgs.filter(o => title?.orgIds.includes(o.id));
+        row['titleId'] = titleSearch.meta.titleId ?? '--';
+        row['title'] = title?.title.international ?? '--deleted title--';
         row['title org id(s)'] = title?.orgIds?.join(', ');
         row['title org(s) name'] = orgs.map(o => o.name).join(', ');
       }
