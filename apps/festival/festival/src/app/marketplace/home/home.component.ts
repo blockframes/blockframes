@@ -14,9 +14,11 @@ import { createPreferences, canHavePreferences } from '@blockframes/model';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
 import { OrganizationService } from '@blockframes/organization/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'festival-marketplace-home',
@@ -43,7 +45,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private authService: AuthService,
     private orgService: OrganizationService,
-    private firestore: FirestoreService
+    private firestore: FirestoreService,
+    private snackbar: MatSnackBar
   ) { }
 
   async ngOnInit() {
@@ -62,6 +65,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
         if (action === 'dismiss') {
           const preferences = createPreferences();
           this.authService.update({ preferences });
+        }
+        if (action !== 'saved') {
+          this.snackbar.openFromComponent(SnackbarLinkComponent, {
+            data: {
+              message: 'You can fill in your buyer preferences later.',
+              link: ['/c/o/account/profile/view/preferences'],
+              linkName: 'TAKE ME THERE'
+            },
+            duration: 8000
+          });
         }
       });
     }
