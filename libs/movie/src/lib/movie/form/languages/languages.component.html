@@ -1,13 +1,13 @@
 <!-- FORM -->
 <form [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
   <ng-container *ngFor="let language of form.controls | keyvalue">
-    <div fxLayout="column" fxLayoutGap="8px">
+    <div fxLayout="column" fxLayoutGap="8px" [attr.test-id]="language.key">
       <p class="uppercase">{{ language.key | toLabel: 'languages' }}</p>
       <div [formGroupName]="language.key" fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
         <mat-checkbox formControlName="subtitle" color="primary" test-id="subtitle">Subtitles</mat-checkbox>
         <mat-checkbox formControlName="dubbed" color="primary" test-id="dubbed">Dubbings</mat-checkbox>
         <mat-checkbox formControlName="caption" color="primary" test-id="caption">Closed Captions</mat-checkbox>
-        <button mat-icon-button (click)="deleteLanguage(language.key)" color="warn" matTooltip="Delete language">
+        <button mat-icon-button (click)="deleteLanguage(language.key)" color="warn" matTooltip="Delete language" test-id="delete">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </div>

@@ -41,13 +41,13 @@ const injectedData = {
 
 const oneTitleSentence = 'There is 1 title available.';
 
-describe('Movie display in marketplace', () => {
+describe('Movie search in marketplace', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
     firestore.clearTestData();
-    algolia.deleteOrg({ app: 'festival', objectId: saleOrg.id });
     algolia.deleteMovie({ app: 'festival', objectId: movie.id });
+    algolia.deleteOrg({ app: 'festival', objectId: saleOrg.id });
     firestore.deleteOrgMovies(org.id);
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
@@ -107,7 +107,7 @@ describe('Movie display in marketplace', () => {
     get('save').click();
     snackbarShould('contain', 'Research successfully saved.');
     firestore.get(`users/${user.uid}`).then((user: User) => {
-      expect(user.savedSearches.festival).to.deep.equal(JSON.stringify(expectedSavedSearch));
+      expect(JSON.parse(user.savedSearches.festival)).to.deep.equal(expectedSavedSearch);
     });
     get('clear-filters').click();
     get('titles-count').should('not.contain', oneTitleSentence);

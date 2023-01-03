@@ -42,8 +42,9 @@
       formControlName="from"
       required
       placeholder="MM/DD/YYYY"
+      test-id="dateFrom"
     />
-    <mat-datepicker-toggle matPrefix [for]="datepickerFrom" test-id="dateFrom"></mat-datepicker-toggle>
+    <mat-datepicker-toggle matPrefix [for]="datepickerFrom"></mat-datepicker-toggle>
     <mat-datepicker #datepickerFrom> </mat-datepicker>
     <mat-error *ngIf="form.hasError('startOverEnd', 'duration.from')">
       Start date must not be later than end date
@@ -64,8 +65,9 @@
       formControlName="to"
       required
       placeholder="MM/DD/YYYY"
+      test-id="dateTo"
     />
-    <mat-datepicker-toggle matPrefix [for]="datepickerTo" test-id="dateTo"></mat-datepicker-toggle>
+    <mat-datepicker-toggle matPrefix [for]="datepickerTo"></mat-datepicker-toggle>
     <mat-datepicker #datepickerTo> </mat-datepicker>
     <mat-error *ngIf="form.hasError('startOverEnd', 'duration.to')">
       End date must not be earlier than start date
@@ -82,9 +84,9 @@
 <mat-form-field appearance="outline" *ngIf="getControl('exclusive') as exclusive">
   <mat-label>Select exclusivity</mat-label>
   <mat-icon matPrefix svgIcon="star"></mat-icon>
-  <mat-select [formControl]="exclusive" [disabled]="disabled" required>
-    <mat-option [value]="true">Exclusive</mat-option>
-    <mat-option [value]="false">Non exclusive</mat-option>
+  <mat-select [formControl]="exclusive" [disabled]="disabled" required test-id="exclusivity">
+    <mat-option [value]="true" test-id="exclusive">Exclusive</mat-option>
+    <mat-option [value]="false" test-id="non-exclusive">Non exclusive</mat-option>
   </mat-select>
   <mat-error *ngIf="form.hasError('required', 'exclusive')">
     This field is mandatory
