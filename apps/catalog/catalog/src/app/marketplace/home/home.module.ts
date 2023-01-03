@@ -4,10 +4,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-//Material
+// Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Libraries
 import { SliderModule } from '@blockframes/ui/slider/slider.module';
@@ -18,6 +19,7 @@ import { OrganizationBannerModule } from '@blockframes/organization/components/b
 import { MovieSlideModule } from '@blockframes/movie/components/slide/slide.module'
 import { OrganizationCardMinimalModule } from '@blockframes/organization/components/card-minimal/card-minimal.module'
 import { PreferenceModule } from '@blockframes/auth/pages/preferences/modal/preferences.module';
+import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
 
 // Pages
 import { MarketplaceHomeComponent } from './home.component';
@@ -43,11 +45,15 @@ import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
     GetLinkModule,
     WishlistButtonModule,
     OrganizationCardMinimalModule,
+    SortByPipeModule,
+    PreferenceModule,
+    SnackbarLinkModule,
+
+    // Material
+    MatSnackBarModule,
     MatIconModule,
     MatButtonModule,
     MatDialogModule,
-    SortByPipeModule,
-    PreferenceModule,
     RouterModule.forChild([
       {
         path: '',
