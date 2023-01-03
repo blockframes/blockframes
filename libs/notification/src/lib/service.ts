@@ -274,7 +274,8 @@ export class NotificationService extends BlockframesCollection<Notification> {
       }
       case 'screenerRequested': {
         const movie = await this.movieService.load(notification.docId);
-        const message = `<a href="mailto:${notification.user.email}">${displayName(notification.user)}</a> requested the screener for <a href="/c/o/dashboard/title/${movie.id}">${movie.title.international}</a>`;
+        const org = await this.orgService.load(notification.user.orgId);
+        const message = `${org.activity} - ${org.addresses.main.country} requested a screener for <a href="/c/o/dashboard/title/${movie.id}">${movie.title.international}</a>`;
 
         return {
           ...notification,
@@ -283,7 +284,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `/c/o/dashboard/tunnel/movie/${notification.docId}/media-screener`,
-          actionText: 'Upload screener',
+          actionText: 'Upload a Screener',
         };
       }
       case 'screenerRequestSent': {

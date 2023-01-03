@@ -341,7 +341,8 @@ export function screenerRequestFromUserSent(
   const data = {
     user: toUser,
     movie,
-    orgNames
+    orgNames,
+    pageUrl: `${appUrl.content}/c/o/marketplace/title/${movie.id}`
   };
   return { to: toUser.email, templateId: templateIds.movie.screenerRequestSent, data };
 }
@@ -624,7 +625,7 @@ export function toAdminCounterOfferEmail(title: Movie, offerId: string) {
   const pageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
   return {
     to: supportEmails.catalog,
-    subject:'Counter offer created',
+    subject: 'Counter offer created',
     text: `The counter-offer for ${title.title.international} was successfully sent.
     To review it: ${pageUrl}`
   };
@@ -633,7 +634,7 @@ export function toAdminCounterOfferEmail(title: Movie, offerId: string) {
 export function toAdminContractAccepted(title: Movie, pageUrl: string) {
   return {
     to: supportEmails.catalog,
-    subject:'Contract accepted',
+    subject: 'Contract accepted',
     text: `The contract for ${title.title.international} has been accepted.
     To review it: ${pageUrl}`
   };
@@ -642,7 +643,7 @@ export function toAdminContractAccepted(title: Movie, pageUrl: string) {
 export function toAdminContractDeclined(title: Movie, pageUrl: string) {
   return {
     to: supportEmails.catalog,
-    subject:'Contract declined',
+    subject: 'Contract declined',
     text: `The contract for ${title.title.international} has been declined.
     To review it: ${pageUrl}`
   };
