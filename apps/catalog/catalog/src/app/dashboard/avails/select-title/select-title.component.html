@@ -10,14 +10,14 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Select Title</mat-label>
-      <mat-select [value]="titleId" (selectionChange)="titleId = $event.value" >
-        <mat-option *ngFor="let title of titles" [value]="title.id">
+      <mat-select [value]="titleId" (selectionChange)="titleId = $event.value" test-id="title-select">
+        <mat-option *ngFor="let title of titles" [value]="title.id" [attr.test-id]="'title_' + title.id">
           {{ title.title.international }} ({{title.app.catalog.status | toLabel: 'storeStatus'}})
         </mat-option>
       </mat-select>
     </mat-form-field>
 
-    <a mat-flat-button color="primary" [disabled]="!titleId" [routerLink]="[titleId, 'manage']">
+    <a mat-flat-button color="primary" [disabled]="!titleId" [routerLink]="[titleId, 'manage']" test-id="next">
       <span>Next</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </a>
