@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/service';
 import { PreferencesForm } from '@blockframes/auth/forms/preferences/preferences.form';
-import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
+import { Preferences } from '@blockframes/model';
 
 @Component({
   selector: 'auth-preferences',
@@ -22,22 +22,24 @@ export class PreferencesComponent {
 
   update() {
     const preferences = this.form.value;
+    if(!this.formValid(preferences)) {
+      this.snackbar.open('Please fill at least one content preference.', 'close', { duration: 5000 });
+      return ;
+    }
     this.authService.update({ preferences });
     this.snackbar.open('Buying preferences saved.', 'close', { duration: 5000 });
-    this.close();
+    this.close('saved');
   }
-  
-  close(action?: 'dismiss') {
-    if(action === 'dismiss'){
-      this.snackbar.openFromComponent(SnackbarLinkComponent, {
-        data: {
-          message: 'You can fill in your buyer preferences later in your settings.',
-          link: ['/c/o/account/profile/view/preferences'],
-          linkName: 'TAKE ME THERE'
-        },
-        duration: 8000
-      });
-    }
+
+  close(action?: 'dismiss' | 'saved') {
     this.dialogRef.close(action);
+  }
+
+  private formValid(preferences: Preferences) {
+    if(preferences.medias.length) return true;
+    if(preferences.territories.length) return true;
+    if(preferences.languages.length) return true;
+    if(preferences.genres.length) return true;
+    return false;
   }
 }
