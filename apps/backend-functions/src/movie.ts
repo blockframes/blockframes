@@ -5,7 +5,7 @@ import { cleanMovieMedias, moveMovieMedia } from './media';
 import { EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils/algolia';
 import { getMailSender } from '@blockframes/utils/apps';
-import { sendMovieSubmittedEmail } from './templates/mail';
+import { screenerRequested, sendMovieSubmittedEmail } from './templates/mail';
 import { sendMail } from './internals/email';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
@@ -268,6 +268,8 @@ export async function createScreenerRequest(
     getDocument<Movie>(`movies/${movieId}`),
   ]);
 
+  const buyerOrg = await getDocument<Organization>(`orgs/${user.orgId}`);
+
   const getNotifications = (org: Organization) =>
     org.userIds.map((userId) =>
       createNotification({
@@ -279,9 +281,8 @@ export async function createScreenerRequest(
       })
     );
 
-  for (const orgId of movie.orgIds) {
-    getDocument<Organization>(`orgs/${orgId}`).then(getNotifications).then(triggerNotifications);
-  }
+  const sellerOrgs = await Promise.all(movie.orgIds.map(orgId => getDocument<Organization>(`orgs/${orgId}`)));
+  sellerOrgs.map(getNotifications).map(triggerNotifications);
 
   // notification to user who requested the screener
   const notification = createNotification({
@@ -292,6 +293,10 @@ export async function createScreenerRequest(
     _meta: createInternalDocumentMeta({ createdFrom: 'catalog' }),
   });
   triggerNotifications([notification]);
+
+  const adminEmail = screenerRequested(movie, buyerOrg, sellerOrgs);
+  const from = getMailSender('catalog');
+  return sendMail(adminEmail, from, groupIds.noUnsubscribeLink).catch(e => console.warn(e.message));
 }
 
 /** Checks if the store status is going from draft to submitted. */

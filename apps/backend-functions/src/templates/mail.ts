@@ -649,3 +649,11 @@ export function toAdminContractDeclined(title: Movie, pageUrl: string) {
   };
 }
 
+export function screenerRequested(title: Movie, buyerOrg: Organization, sellerOrgs: Organization[]) {
+  const orgNames = sellerOrgs.map(org => `${org.name} (${org.addresses.main.country})`).join(', ');
+  return {
+    to: supportEmails.catalog,
+    subject: 'New screener request',
+    text: `Organization(s) ${orgNames} received a screener request from ${buyerOrg.name} (${buyerOrg.activity}-${buyerOrg.addresses.main.country}) to watch the screener for Title ${title.title.international}.`
+  };
+}
