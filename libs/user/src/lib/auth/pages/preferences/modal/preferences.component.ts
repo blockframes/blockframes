@@ -26,7 +26,7 @@ export class PreferencesComponent {
     this.close();
   }
   
-  close() {
-    this.dialogRef.close();
+  close(action?: 'dismiss') {
+    this.dialogRef.close(action);
   }
 }

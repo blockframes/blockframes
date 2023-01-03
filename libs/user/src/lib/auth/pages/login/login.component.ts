@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Login')
+    this.dynTitle.setPageTitle('Login');
   }
 
   ngOnDestroy() {

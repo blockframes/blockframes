@@ -50,9 +50,13 @@ export class MarketplaceHomeComponent implements OnInit, AfterViewInit {
     if (this.authService.profile.preferences) return;
     const org = this.orgService.org;
     if (canHavePreferences(org, 'catalog')) {
-      const preferences = createPreferences();
-      this.authService.update({ preferences });
-      this.dialog.open(PreferencesComponent, { data: createModalData({}, 'large'), autoFocus: false });
+      const dialogRef = this.dialog.open(PreferencesComponent, { data: createModalData({}, 'large'), autoFocus: false });
+      dialogRef.afterClosed().subscribe((action: string) => {
+        if (action === 'dismiss') {
+          const preferences = createPreferences();
+          this.authService.update({ preferences });
+        }
+      });
     }
   }
 

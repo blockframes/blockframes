@@ -16,12 +16,13 @@ import {
 
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
+export const orgNamePrefix = fakeOrgName();
 const acceptedSaleOrgid = '0-e2e-acceptedSaleOrgid';
-const acceptedSaleOrgName = fakeOrgName() + ' sale accepted';
+const acceptedSaleOrgName = orgNamePrefix + ' sale accepted';
 const pendingSaleOrgid = '0-e2e-pendingSaleOrgid';
-const pendingSaleOrgName = fakeOrgName() + ' sale pending';
+const pendingSaleOrgName = orgNamePrefix + ' sale pending';
 const catalogSaleOrgid = '0-e2e-catalogSaleOrgid';
-const catalogSaleOrgName = fakeOrgName() + ' sale catalog';
+const catalogSaleOrgName = orgNamePrefix + ' sale catalog';
 const movieId = '0-e2e-movieId';
 const userData = fakeUserData();
 
