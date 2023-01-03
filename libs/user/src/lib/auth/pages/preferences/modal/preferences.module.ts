@@ -7,6 +7,7 @@ import { PreferencesComponent } from './preferences.component';
 // Blockframes
 import { PreferencesFormModule } from '@blockframes/auth/forms/preferences/preferences.module';
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
+import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -20,7 +21,8 @@ import { MatIconModule } from '@angular/material/icon';
     PreferencesFormModule,
     GlobalModalModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    SnackbarLinkModule
   ],
   declarations: [PreferencesComponent],
   exports: [PreferencesComponent]
