@@ -62,7 +62,7 @@ export class MarketplaceHomeComponent implements OnInit, AfterViewInit {
         if (action !== 'saved') {
           this.snackbar.openFromComponent(SnackbarLinkComponent, {
             data: {
-              message: 'You can fill in your buyer preferences later in your settings.',
+              message: 'You can fill in your buyer preferences later.',
               link: ['/c/o/account/profile/view/preferences'],
               linkName: 'TAKE ME THERE'
             },

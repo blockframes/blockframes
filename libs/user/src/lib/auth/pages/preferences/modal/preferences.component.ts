@@ -23,7 +23,7 @@ export class PreferencesComponent {
   update() {
     const preferences = this.form.value;
     if(!this.formValid(preferences)) {
-      this.snackbar.open('Please fill at least one content preference.', 'close', { duration: 5000 });
+      this.snackbar.open('Please choose at least one of your buying preferences.', 'close', { duration: 5000 });
       return ;
     }
     this.authService.update({ preferences });
