@@ -6,19 +6,22 @@ import { Module } from './static';
 import { User } from './user';
 
 const analyticsEvents = [
+  // Title type
   'pageView',
   'promoElementOpened',
   'addedToWishlist',
   'removedFromWishlist',
   'screeningRequested',
   'askingPriceRequested',
+  'screenerRequested',
+
+  // TitleSearch type
   'exportedTitles',
   'filteredTitles',
   'savedFilters',
   'loadedFilters',
   'filteredAvailsCalendar',
-  'filteredAvailsMap',
-  'screenerRequested'
+  'filteredAvailsMap'
 ] as const;
 export type EventName = typeof analyticsEvents[number];
 
@@ -104,7 +107,7 @@ export function createTitleSearchMeta(meta: Partial<MetaTitleSearch>): MetaTitle
   };
 };
 
-export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>): AggregatedAnalytic { // TODO #8128 remove partial?
+export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>): AggregatedAnalytic {
   return {
     interactions: {
       global: { count: 0 },
@@ -118,6 +121,12 @@ export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>):
     removedFromWishlist: 0,
     screeningRequested: 0,
     screenerRequested: 0,
+    exportedTitles: 0,
+    filteredTitles: 0,
+    savedFilters: 0,
+    loadedFilters: 0,
+    filteredAvailsCalendar: 0,
+    filteredAvailsMap: 0,
     ...analytic
   };
 }

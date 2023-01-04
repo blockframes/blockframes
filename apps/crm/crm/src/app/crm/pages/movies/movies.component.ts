@@ -238,8 +238,8 @@ export class MoviesComponent implements OnInit {
           'promo element opened': a.promoElementOpened,
           'added to wishlist': a.addedToWishlist,
           'removed from wishlist': a.removedFromWishlist,
-          'filtered Avails Calendar': a.filteredAvailsCalendar ?? 0,
-          'filtered Avails Map': a.filteredAvailsMap ?? 0,
+          'filtered Avails Calendar': a.filteredAvailsCalendar,
+          'filtered Avails Map': a.filteredAvailsMap,
         });
       }
     }
