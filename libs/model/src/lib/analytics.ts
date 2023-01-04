@@ -17,7 +17,8 @@ const analyticsEvents = [
   'savedFilters',
   'loadedFilters',
   'filteredAvailsCalendar',
-  'filteredAvailsMap'
+  'filteredAvailsMap',
+  'screenerRequested'
 ] as const;
 export type EventName = typeof analyticsEvents[number];
 
@@ -103,7 +104,7 @@ export function createTitleSearchMeta(meta: Partial<MetaTitleSearch>): MetaTitle
   };
 };
 
-export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>): AggregatedAnalytic {
+export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>): AggregatedAnalytic { // TODO #8128 remove partial?
   return {
     interactions: {
       global: { count: 0 },
@@ -116,6 +117,7 @@ export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>):
     promoElementOpened: 0,
     removedFromWishlist: 0,
     screeningRequested: 0,
+    screenerRequested: 0,
     ...analytic
   };
 }

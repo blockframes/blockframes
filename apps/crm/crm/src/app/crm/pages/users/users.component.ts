@@ -224,6 +224,7 @@ export class UsersComponent implements OnInit {
           'last interaction on festival': a.interactions.festival.last ? a.interactions.festival.last : '--',
           'page views': a.pageView,
           'screenings requested': a.screeningRequested,
+          'screener requested': a.screenerRequested,
           'asking price requested': a.askingPriceRequested,
           'promo element opened': a.promoElementOpened,
           'added to wishlist': a.addedToWishlist,

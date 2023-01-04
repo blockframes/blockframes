@@ -73,8 +73,8 @@ export class MarketplaceMovieViewComponent {
     this.requestStatus.next('sending');
     await this.functions.call('requestScreener', { movieId: movieId, uid: this.authService.uid });
     this.requestStatus.next('sent');
-    // const title = await this.movieService.load(movieId);
-    //this.analytics.addTitle('screenerRequested', title); // TODO #8128
+    const title = await this.movieService.load(movieId);
+    this.analytics.addTitle('screenerRequested', title);
     this.snackbar.open('Screener request successfully sent.', '', { duration: 3000 });
   }
 }
