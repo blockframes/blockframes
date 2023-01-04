@@ -55,7 +55,7 @@ export class HomeComponent {
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
     }, { shouldAwait: true }),
     map(analyticsWithOrg => {
-      return analyticsWithOrg.filter(({ org }) => !org.appAccess.festival.dashboard);
+      return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard);
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -111,7 +111,7 @@ export class HomeComponent {
     map(({ uids, users, orgs, analytics }) => {
       return uids.map(uid => {
         const user = users.filter(u => !!u).find(u => u.uid === uid) || createUser({ uid, lastName: deletedUserIdentifier });
-        const org = user?.orgId ? orgs.find(o => o.id === user.orgId) : undefined;
+        const org = user?.orgId ? orgs.find(o => o?.id === user.orgId) : undefined;
         const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === uid);
         return aggregate(analyticsOfUser, { user, org });
       });
