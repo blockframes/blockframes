@@ -10,6 +10,7 @@ import {
   check,
   get,
   assertUrlIncludes,
+  ensureInput
 } from '@blockframes/testing/cypress/browser';
 import { user, org, permissions } from '../../fixtures/authentification/login';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
@@ -33,7 +34,7 @@ describe('Login test', () => {
     refreshIfMaintenance('festival');
     get('login').click();
     assertUrlIncludes('/connexion');
-    get('signin-email').type(user.email);
+    ensureInput('signin-email', user.email)
     get('password').type(USER_FIXTURES_PASSWORD);
     get('submit').click();
     check('terms');

@@ -102,7 +102,7 @@ export function connectOtherUser(email: string) {
 //* AUTHENTIFICATION *//
 
 export function fillCommonInputs(user: PublicUser, fillEmail = true) {
-  if (fillEmail) get('email').type(user.email);
+  if (fillEmail) ensureInput('email', user.email);
   get('first-name').type(user.firstName);
   get('last-name').type(user.lastName);
   get('password').type(USER_FIXTURES_PASSWORD);
@@ -137,6 +137,14 @@ export function verifyInvitation(orgAdminEmail: string, user: PublicUser, expect
   get('invitations-link').click();
   get('invitation').first().should('contain', `${user.firstName} ${user.lastName} wants to join your organization.`);
   get('invitation-status').first().should('contain', 'Accepted');
+}
+
+export function ensureInput(input: string, value: string) {
+  //response to flaky test where the email was sometimes missing the first caracters
+  get(input).type(value);
+  get(input)
+    .invoke('val')
+    .then(val => val !== value && get(input).clear().type(value));
 }
 
 //* ------------------------------------- *//
