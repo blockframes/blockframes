@@ -8,7 +8,8 @@ import { MovieService } from '@blockframes/movie/service';
 import { FormStaticValueArray } from '@blockframes/utils/form';
 import { toGroupLabel } from '@blockframes/utils/pipes';
 import { CallableFunctions } from 'ngfire';
-import { smartJoin } from '@blockframes/model';
+import { App, RequestAskingPriceData, smartJoin } from '@blockframes/model';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'movie-request-asking-price',
@@ -18,11 +19,9 @@ import { smartJoin } from '@blockframes/model';
 })
 export class RequestAskingPriceComponent {
 
-  form = new FormGroup({
-    territories: new FormStaticValueArray<'territories'>([], 'territories', [Validators.required]),
-    message: new FormControl()
-  });
+  form: FormGroup;
   sending = false;
+
   constructor(
     private authService: AuthService,
     private dialog: MatDialogRef<RequestAskingPriceComponent>,
@@ -30,22 +29,54 @@ export class RequestAskingPriceComponent {
     private snackbar: MatSnackBar,
     private analytics: AnalyticsService,
     private titleService: MovieService,
-    @Inject(MAT_DIALOG_DATA) public data: { movieId: string }
-  ) { }
+    @Inject(APP) private app: App,
+    @Inject(MAT_DIALOG_DATA) public data: { movieId: string, enhanced?: boolean }
+  ) {
+
+    this.form = new FormGroup({
+      territories: new FormStaticValueArray<'territories'>([], 'territories', [Validators.required]),
+      message: new FormControl()
+    });
+
+    if (data.enhanced) {
+      this.form = new FormGroup({
+        territories: new FormStaticValueArray<'territories'>([], 'territories', [Validators.required]),
+        medias: new FormStaticValueArray<'medias'>([], 'medias', [Validators.required]),
+        exclusive: new FormControl(true, Validators.required),
+      });
+    }
+  }
 
   async send() {
     try {
       this.sending = true;
       this.form.disable();
+
       const groupedTerritories = toGroupLabel(this.form.get('territories').value, 'territories', 'World');
       const territories = smartJoin(groupedTerritories, ', ', ' and ');
-      const message = this.form.get('message').value ?? 'No message provided.';
-      await this.functions.call<{ movieId: string, uid: string, territories: string, message: string }, unknown>('requestAskingPrice', {
+
+      const requestData: RequestAskingPriceData = {
         movieId: this.data.movieId,
         uid: this.authService.uid,
         territories,
-        message
-      });
+        app: this.app
+      }
+
+      if (this.hasControl('message')) {
+        requestData.message = this.form.get('message').value ?? 'No message provided.';
+      }
+
+      if (this.hasControl('medias')) {
+        const groupedMedias = toGroupLabel(this.form.get('medias').value, 'medias', 'All Rights');
+        requestData.medias = smartJoin(groupedMedias, ', ', ' and ');
+      }
+
+      if (this.hasControl('exclusive')) {
+        requestData.exclusive = !!this.form.get('medias').value;
+      }
+
+      await this.functions.call<RequestAskingPriceData, unknown>('requestAskingPrice', requestData);
+
       const title = await this.titleService.load(this.data.movieId);
       this.analytics.addTitle('askingPriceRequested', title);
       this.snackbar.open('Asking price request successfully sent.', '', { duration: 3000 });
@@ -59,5 +90,9 @@ export class RequestAskingPriceComponent {
 
   close() {
     this.dialog.close(false);
+  }
+
+  public hasControl(key: string) {
+    return !!this.form.controls[key];
   }
 }

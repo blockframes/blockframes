@@ -232,7 +232,13 @@ export class NotificationService extends BlockframesCollection<Notification> {
       }
       case 'movieAskingPriceRequested': {
         const movie = await this.movieService.load(notification.docId);
-        const message = `${displayName(notification.user)} requested an asking price for ${movie.title.international}. Please check your emails for details.`;
+        const isFestival = notification._meta.createdFrom === 'festival';
+
+        const buyerName = isFestival ? displayName(notification.user) : 'Someone';
+        const message = `${buyerName} requested an asking price for ${movie.title.international}. Please check your emails for details.`;
+        const url = isFestival
+          ? `mailto:${notification.user.email}?subject=Interest in ${movie.title.international} via Archipel Market`
+          : `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/avails/${notification.docId}/map/`;
 
         return {
           ...notification,
@@ -240,8 +246,8 @@ export class NotificationService extends BlockframesCollection<Notification> {
           message,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          url: `mailto:${notification.user.email}?subject=Interest in ${movie.title.international} via Archipel Market`,
-          actionText: 'Start Discussions',
+          url,
+          actionText: isFestival ? 'Start Discussions' : 'See Title',
         };
       }
       case 'screeningRequested': {

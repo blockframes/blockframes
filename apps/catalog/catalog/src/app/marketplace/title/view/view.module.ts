@@ -12,6 +12,7 @@ import { WishlistButtonModule } from '@blockframes/organization/components/wishl
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { RequestAskingPriceModule } from '@blockframes/movie/components/request-asking-price/request-asking-price.module';
 
 // Material
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -78,6 +79,7 @@ const routes = [{
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    RequestAskingPriceModule,
     RouterModule.forChild(routes)
   ]
 })

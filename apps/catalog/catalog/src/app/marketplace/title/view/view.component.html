@@ -18,6 +18,10 @@
                 {{ screenerRequest[status] }}
               </button>
             </span>
+            <button mat-button class="translucent" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)" matTooltip="Request Asking Price">
+              <mat-icon svgIcon="local_offer"></mat-icon>
+              <span>Request Asking Price</span>
+            </button>
           </ng-container>
           <a mat-button class="translucent" routerLink="avails" fragment="avails">
             <span>Search & Buy Terms</span>

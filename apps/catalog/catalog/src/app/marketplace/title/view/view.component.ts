@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, ChangeDetectorRef } from '@angular/core';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ActivatedRoute } from '@angular/router';
@@ -11,6 +11,9 @@ import { BehaviorSubject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/service';
 import { CallableFunctions } from 'ngfire';
+import { MatDialog } from '@angular/material/dialog';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -53,6 +56,8 @@ export class MarketplaceMovieViewComponent {
     sent: 'Screener requested'
   };
 
+  public requestSent = false;
+
   constructor(
     private route: ActivatedRoute,
     private movieService: MovieService,
@@ -61,13 +66,14 @@ export class MarketplaceMovieViewComponent {
     private analytics: AnalyticsService,
     private authService: AuthService,
     private snackbar: MatSnackBar,
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef,
     @Optional() private intercom: Intercom
   ) { }
 
   public openIntercom(): void {
     return this.intercom.show();
   }
-
 
   async requestScreener(movieId: string) {
     this.requestStatus.next('sending');
@@ -76,5 +82,16 @@ export class MarketplaceMovieViewComponent {
     // const title = await this.movieService.load(movieId);
     //this.analytics.addTitle('screenerRequested', title); // TODO #8128
     this.snackbar.open('Screener request successfully sent.', '', { duration: 3000 });
+  }
+
+  requestAskingPrice(movieId: string) {
+    const ref = this.dialog.open(RequestAskingPriceComponent, {
+      data: createModalData({ movieId, enhanced: true }, 'large'),
+      autoFocus: false
+    });
+    ref.afterClosed().subscribe(isSent => {
+      this.requestSent = !!isSent;
+      this.cdr.markForCheck();
+    });
   }
 }
