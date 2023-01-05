@@ -1,5 +1,5 @@
 import { db } from './internals/firebase';
-import { Movie, Offer, User, staticModel, createNotification } from '@blockframes/model';
+import { Movie, Offer, User, createNotification, Bucket } from '@blockframes/model';
 import { triggerNotifications } from './notification';
 import { getDocument, BlockframesSnapshot } from '@blockframes/firebase-utils';
 // #7946 this may be reactivated later
@@ -17,14 +17,13 @@ import { getDocument, BlockframesSnapshot } from '@blockframes/firebase-utils';
 export async function onOfferCreate(snap: BlockframesSnapshot<Offer>): Promise<void> {
   const offer = snap.data();
   const orgId = offer.buyerId;
-  const bucket = await getDocument<any>(`buckets/${orgId}`);
-  
+  const bucket = await getDocument<Bucket>(`buckets/${orgId}`);
+
   const user = await getDocument<User>(`users/${bucket.uid}`);
 
   // Empty bucket
   db.doc(`buckets/${orgId}`).update({ contracts: [], uid: null });
 
-  bucket.currency = staticModel['movieCurrencies'][bucket.currency];
   for (const contract of bucket.contracts) {
     const movie = await getDocument<Movie>(`movies/${contract.titleId}`);
     contract['title'] = movie.title.international;
