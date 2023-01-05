@@ -24,7 +24,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
 
-export function aggregatePerTitle(analytics: (Analytics<'title'> & { title: Movie })[]) {
+function aggregatePerTitle(analytics: (Analytics<'title'> & { title: Movie })[]) {
   const aggregator: Record<string, AggregatedAnalytic> = {};
   for (const analytic of analytics) {
     if (!aggregator[analytic.title.id]) {
@@ -54,7 +54,7 @@ export class UserComponent implements OnInit, OnDestroy {
   public invitations: Observable<Invitation[]>;
   private originalOrgValue: string;
 
-  public analytics$: Observable<AggregatedAnalytic[]>
+  public analytics$: Observable<AggregatedAnalytic[]>;
   public dashboardURL: SafeResourceUrl;
 
   private sub: Subscription;

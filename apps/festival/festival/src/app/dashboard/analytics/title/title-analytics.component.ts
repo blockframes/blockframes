@@ -73,7 +73,7 @@ export class TitleAnalyticsComponent {
       user: analytic => this.userService.valueChanges(analytic.meta.uid)
     }, { shouldAwait: true }),
     map(analyticsWithOrg => {
-      return analyticsWithOrg.filter(({ org }) => !org.appAccess.festival.dashboard);
+      return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard);
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
