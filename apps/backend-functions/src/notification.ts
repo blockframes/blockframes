@@ -607,7 +607,6 @@ async function sendMovieAskingPriceRequested(recipient: User, notification: Noti
   const toUser = getUserEmailData(recipient);
   const buyer = getUserEmailData(notification.user);
   const buyerOrg = await getDocument<Organization>(`orgs/${notification.user.orgId}`);
-  const { territories, message } = notification.data;
 
   const app = notification._meta.createdFrom;
   const template = movieAskingPriceRequested(
@@ -615,8 +614,8 @@ async function sendMovieAskingPriceRequested(recipient: User, notification: Noti
     buyer,
     getOrgEmailData(buyerOrg),
     getMovieEmailData(movie),
-    territories,
-    message
+    notification.data,
+    app,
   );
   await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
@@ -625,7 +624,6 @@ async function sendMovieAskingPriceRequested(recipient: User, notification: Noti
 async function sendMovieAskingPriceRequestSent(recipient: User, notification: Notification) {
   const movie = await getDocument<Movie>(`movies/${notification.docId}`);
   const toUser = getUserEmailData(recipient);
-  const { territories, message } = notification.data;
 
   const orgs = await Promise.all(
     movie.orgIds.map(orgId => getDocument<Organization>(`orgs/${orgId}`))
@@ -633,7 +631,13 @@ async function sendMovieAskingPriceRequestSent(recipient: User, notification: No
   const orgNames = orgs.map(org => org.name).join(', ');
 
   const app = notification._meta.createdFrom;
-  const template = movieAskingPriceRequestSent(toUser, getMovieEmailData(movie), orgNames, territories, message);
+  const template = movieAskingPriceRequestSent(
+    toUser,
+    getMovieEmailData(movie),
+    orgNames,
+    notification.data,
+    app
+  );
   await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
 }
 

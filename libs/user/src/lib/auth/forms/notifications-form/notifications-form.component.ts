@@ -59,7 +59,9 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
       'movieAccepted',
       'movieSubmitted',
       'screenerRequested',
-      'screenerRequestSent'
+      'screenerRequestSent',
+      'movieAskingPriceRequested',
+      'movieAskingPriceRequestSent'
     ],
     appAuthorized: ['catalog']
   },
