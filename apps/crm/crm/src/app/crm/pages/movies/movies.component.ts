@@ -233,12 +233,13 @@ export class MoviesComponent implements OnInit {
           'last interaction on festival': a.interactions.festival.last ? format(a.interactions.festival.last, 'MM/dd/yyyy') : '--',
           'page views': a.pageView,
           'screenings requested': a.screeningRequested,
+          'screener requested': a.screenerRequested,
           'asking price requested': a.askingPriceRequested,
           'promo element opened': a.promoElementOpened,
           'added to wishlist': a.addedToWishlist,
           'removed from wishlist': a.removedFromWishlist,
-          'filtered Avails Calendar': a.filteredAvailsCalendar ?? 0,
-          'filtered Avails Map': a.filteredAvailsMap ?? 0,
+          'filtered Avails Calendar': a.filteredAvailsCalendar,
+          'filtered Avails Map': a.filteredAvailsMap,
         });
       }
     }

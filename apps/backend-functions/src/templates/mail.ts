@@ -30,7 +30,8 @@ import {
   EventMeta,
   EventEmailData,
   EmailTemplateRequest,
-  displayName
+  displayName,
+  RequestAskingPriceData
 } from '@blockframes/model';
 import { format } from 'date-fns';
 import { supportMailosaur } from '@blockframes/utils/constants';
@@ -317,36 +318,78 @@ export function screeningRequestedToSeller(
   return { to: toUser.email, templateId: templateIds.event.screeningRequested, data };
 }
 
+/** Generate an email to seller mentioning a screener has been requested */
+export function screenerRequestedToSeller(
+  toUser: UserEmailData,
+  org: OrgEmailData,
+  movie: MovieEmailData,
+): EmailTemplateRequest {
+  const data = {
+    user: toUser,
+    org,
+    movie,
+    pageUrl: `${appUrl.content}/c/o/dashboard/tunnel/movie/${movie.id}/media-screener`
+  };
+  return { to: toUser.email, templateId: templateIds.movie.screenerRequested, data };
+}
+
+/** Generate an email to inform users their screener request has been sent */
+export function screenerRequestFromUserSent(
+  toUser: UserEmailData,
+  movie: MovieEmailData,
+  orgNames: string,
+): EmailTemplateRequest {
+  const data = {
+    user: toUser,
+    movie,
+    orgNames,
+    pageUrl: `${appUrl.content}/c/o/marketplace/title/${movie.id}`
+  };
+  return { to: toUser.email, templateId: templateIds.movie.screenerRequestSent, data };
+}
+
 /** Generate an email when a movie is accepted */
 export function movieAcceptedEmail(toUser: UserEmailData, movieTitle: string, movieUrl: string): EmailTemplateRequest {
   const data = { user: toUser, movieTitle, movieUrl };
   return { to: toUser.email, templateId: templateIds.movie.accepted, data };
 }
 
-export function movieAskingPriceRequested(toUser: UserEmailData, fromBuyer: UserEmailData, buyerOrg: OrgEmailData, movie: MovieEmailData, territories: string, message: string): EmailTemplateRequest {
+export function movieAskingPriceRequested(
+  toUser: UserEmailData,
+  fromBuyer: UserEmailData,
+  buyerOrg: OrgEmailData,
+  movie: MovieEmailData,
+  notificationData: Record<string, string>,
+  app: App
+): EmailTemplateRequest {
   const data = {
     user: toUser,
     buyer: fromBuyer,
     org: buyerOrg,
     movie,
-    territories,
-    message,
-    pageUrl: `mailto:${fromBuyer.email}?subject=Interest in ${movie.title.international} via Archipel Market`
+    ...notificationData,
+    pageUrl: `mailto:${fromBuyer.email}?subject=Interest in ${movie.title.international} via ${appName[app]}`
   };
-  return { to: toUser.email, templateId: templateIds.movie.askingPriceRequested, data };
+  const templateId = app === 'festival' ? templateIds.movie.askingPriceRequested : templateIds.movie.askingPriceRequestedEnhanced;
+  return { to: toUser.email, templateId, data };
 }
 
-export function movieAskingPriceRequestSent(toUser: UserEmailData, movie: MovieEmailData, orgNames: string, territories: string, message: string): EmailTemplateRequest {
+export function movieAskingPriceRequestSent(
+  toUser: UserEmailData,
+  movie: MovieEmailData,
+  orgNames: string,
+  notificationData: Record<string, string>,
+  app: App
+): EmailTemplateRequest {
   const data = {
     user: toUser,
     movie,
     orgNames,
-    territories,
-    message,
+    ...notificationData,
     pageUrl: `${appUrl.market}/c/o/marketplace/title/${movie.id}`
-  }
-
-  return { to: toUser.email, templateId: templateIds.movie.askingPriceRequestSent, data };
+  };
+  const templateId = app === 'festival' ? templateIds.movie.askingPriceRequestSent : templateIds.movie.askingPriceRequestSentEnhanced;
+  return { to: toUser.email, templateId, data };
 }
 
 /** Inform user of org whose movie is being bought */
@@ -595,7 +638,7 @@ export function toAdminCounterOfferEmail(title: Movie, offerId: string) {
   const pageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
   return {
     to: supportEmails.catalog,
-    subject:'Counter offer created',
+    subject: 'Counter offer created',
     text: `The counter-offer for ${title.title.international} was successfully sent.
     To review it: ${pageUrl}`
   };
@@ -604,7 +647,7 @@ export function toAdminCounterOfferEmail(title: Movie, offerId: string) {
 export function toAdminContractAccepted(title: Movie, pageUrl: string) {
   return {
     to: supportEmails.catalog,
-    subject:'Contract accepted',
+    subject: 'Contract accepted',
     text: `The contract for ${title.title.international} has been accepted.
     To review it: ${pageUrl}`
   };
@@ -613,9 +656,33 @@ export function toAdminContractAccepted(title: Movie, pageUrl: string) {
 export function toAdminContractDeclined(title: Movie, pageUrl: string) {
   return {
     to: supportEmails.catalog,
-    subject:'Contract declined',
+    subject: 'Contract declined',
     text: `The contract for ${title.title.international} has been declined.
     To review it: ${pageUrl}`
   };
 }
 
+export function screenerRequested(title: Movie, buyerOrg: Organization, sellerOrgs: Organization[]) {
+  const orgNames = sellerOrgs.map(org => `${org.name} (${org.addresses.main.country})`).join(', ');
+  return {
+    to: supportEmails.catalog,
+    subject: 'New screener request',
+    text: `Organization(s) ${orgNames} received a screener request from ${buyerOrg.name} (${buyerOrg.activity}-${buyerOrg.addresses.main.country}) to watch the screener for Title ${title.title.international}.`
+  };
+}
+
+export function askingPriceRequested(title: Movie, buyerOrg: Organization, sellerOrgs: Organization[], data: RequestAskingPriceData) {
+  const orgNames = sellerOrgs.map(org => `${org.name} (${org.addresses.main.country})`).join(', ');
+  return {
+    to: supportEmails.catalog,
+    subject: 'New asking price request',
+    text: `
+      Organization(s) ${orgNames} received an asking price request from ${buyerOrg.name} (${buyerOrg.activity}-${buyerOrg.addresses.main.country}) for Title ${title.title.international}.
+
+      Territories: ${data.territories}
+      ${data.medias ? 'Medias: ' + data.medias : ''}
+      ${data.exclusive ? 'Exclusive: ' + data.exclusive : ''}
+      ${data.message ? 'Message: ' + data.message : ''}
+    `
+  };
+}

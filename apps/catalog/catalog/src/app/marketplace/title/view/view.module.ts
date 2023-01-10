@@ -10,10 +10,16 @@ import { RouterModule } from '@angular/router';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { RequestAskingPriceModule } from '@blockframes/movie/components/request-asking-price/request-asking-price.module';
+
+// Material
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const routes = [{
   path: '',
@@ -70,6 +76,10 @@ const routes = [{
     FlexLayoutModule,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    RequestAskingPriceModule,
     RouterModule.forChild(routes)
   ]
 })

@@ -154,12 +154,12 @@ export class UsersComponent implements OnInit {
           'last interaction on catalog': a.interactions.catalog.last ? a.interactions.catalog.last : '--',
           'last interaction on festival': a.interactions.festival.last ? a.interactions.festival.last : '--',
           'title views': a.pageView,
-          'exported Titles': a.exportedTitles ?? 0,
-          'filtered Titles': a.filteredTitles ?? 0,
-          'saved Filters': a.savedFilters ?? 0,
-          'loadedFilters': a.loadedFilters ?? 0,
-          'filtered Avails Calendar': a.filteredAvailsCalendar ?? 0,
-          'filtered Avails Map': a.filteredAvailsMap ?? 0,
+          'exported Titles': a.exportedTitles,
+          'filtered Titles': a.filteredTitles,
+          'saved Filters': a.savedFilters,
+          'loadedFilters': a.loadedFilters,
+          'filtered Avails Calendar': a.filteredAvailsCalendar,
+          'filtered Avails Map': a.filteredAvailsMap,
         };
 
         for (const a of this.app) {
@@ -224,12 +224,13 @@ export class UsersComponent implements OnInit {
           'last interaction on festival': a.interactions.festival.last ? a.interactions.festival.last : '--',
           'page views': a.pageView,
           'screenings requested': a.screeningRequested,
+          'screener requested': a.screenerRequested,
           'asking price requested': a.askingPriceRequested,
           'promo element opened': a.promoElementOpened,
           'added to wishlist': a.addedToWishlist,
           'removed from wishlist': a.removedFromWishlist,
-          'filtered Avails Calendar': a.filteredAvailsCalendar ?? 0,
-          'filtered Avails Map': a.filteredAvailsMap ?? 0,
+          'filtered Avails Calendar': a.filteredAvailsCalendar,
+          'filtered Avails Map': a.filteredAvailsMap,
         });
       }
     }

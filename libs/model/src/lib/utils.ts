@@ -1,6 +1,6 @@
 import { Person } from './identity';
 import { LanguageRecord } from './movie';
-import { Scope, staticModel } from './static';
+import { App, Scope, staticModel } from './static';
 
 export interface ErrorResultResponse {
   error: string;
@@ -26,6 +26,16 @@ export interface SentryError {
   location: 'file-uploader-service' | 'global';
   bugType: 'invalid-metadata' | 'network' | 'front-version' | 'jwplayer-api'
 }
+
+export interface RequestAskingPriceData { 
+  movieId: string;
+  uid: string;
+  territories: string;
+  message?: string;
+  medias?: string;
+  exclusive?: boolean;
+  app: App
+};
 
 /**
  * replaces accented characters with their closes neighbour

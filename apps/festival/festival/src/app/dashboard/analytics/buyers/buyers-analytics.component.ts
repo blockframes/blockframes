@@ -79,9 +79,9 @@ export class BuyersAnalyticsComponent {
   ) { }
 
   private removeSellerData(orgs: Organization[], analytics: Analytics<'title'>[], users: User[]) {
-    const buyerOrg = orgs.filter(org => !org.appAccess.festival.dashboard);
+    const buyerOrg = orgs.filter(org => org && !org.appAccess.festival.dashboard);
     const buyerOrgIds = buyerOrg.map(({ id }) => id);
-    const buyerAnalytics = analytics.filter(({ meta }) => buyerOrgIds.includes(meta.orgId))
+    const buyerAnalytics = analytics.filter(({ meta }) => buyerOrgIds.includes(meta.orgId));
     const buyerUsers = buyerAnalytics.map(({ meta }) => meta.uid);
     const filteredUsers = users.filter(({ uid }) => buyerUsers.includes(uid));
     return { users: filteredUsers, orgs: buyerOrg, analytics: buyerAnalytics };

@@ -73,7 +73,7 @@ export class TitlesAnalyticsComponent {
         org: ({ meta }) => this.orgService.valueChanges(meta.orgId)
       }, { shouldAwait: true }),
       map(analyticsWithOrg => {
-        return analyticsWithOrg.filter(({ org }) => !org.appAccess.festival.dashboard);
+        return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard);
       })
     );
   }
