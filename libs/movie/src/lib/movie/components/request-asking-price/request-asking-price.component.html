@@ -6,6 +6,7 @@
   <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
     <mat-form-field appearance="outline">
       <mat-label>Select Territories</mat-label>
+      <mat-icon matPrefix svgIcon="world"></mat-icon>
       <static-group
         [formControl]="form.get('territories')"
         scope="territories"
@@ -17,7 +18,31 @@
       <mat-error *ngIf="form.get('territories').hasError('required')">Select at least one territory</mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" *ngIf="hasControl('medias')">
+      <mat-label>Select Rights</mat-label>
+      <mat-icon matPrefix svgIcon="play_arrow"></mat-icon>
+      <static-group
+        [formControl]="form.get('medias')"
+        scope="medias"
+        displayAll="All Rights"
+        required
+        placeholder="Select rights">
+      </static-group>
+      <mat-hint>Select the rights you are interested in.</mat-hint>
+      <mat-error *ngIf="form.get('medias').hasError('required')">Select at least one Right</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" *ngIf="hasControl('exclusive')">
+      <mat-label>Select exclusivity</mat-label>
+      <mat-icon matPrefix svgIcon="star"></mat-icon>
+      <mat-select [formControl]="form.get('exclusive')" required>
+        <mat-option [value]="true">Exclusive</mat-option>
+        <mat-option [value]="false">Non exclusive</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('exclusive').hasError('required')">This field is mandatory</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" *ngIf="hasControl('message')">
       <mat-label>Your message</mat-label>
       <textarea
         matInput

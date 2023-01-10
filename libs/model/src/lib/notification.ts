@@ -17,7 +17,9 @@ export const notifications = {
     'myContractWasDeclined',
     'myOrgDeclinedAContract',
     'movieSubmitted',
-      // #7946 this may be reactivated later
+    'screenerRequested',
+    'screenerRequestSent',
+    // #7946 this may be reactivated later
     // 'underSignature',
     // 'offerAccepted',
     // 'offerDeclined',

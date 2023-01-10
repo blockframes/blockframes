@@ -29,6 +29,8 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     requestToAttendEventUpdated: new NotificationSettingsForm(settings.requestToAttendEventUpdated),
     screeningRequested: new NotificationSettingsForm(settings.screeningRequested, true),
     screeningRequestSent: new NotificationSettingsForm(settings.screeningRequestSent),
+    screenerRequested: new NotificationSettingsForm(settings.screeningRequested, true),
+    screenerRequestSent: new NotificationSettingsForm(settings.screeningRequestSent),
     movieAccepted: new NotificationSettingsForm(settings.movieAccepted),
     movieSubmitted: new NotificationSettingsForm(settings.movieSubmitted),
     movieAskingPriceRequested: new NotificationSettingsForm(settings.movieAskingPriceRequested, true),

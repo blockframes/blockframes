@@ -31,6 +31,10 @@ section.hero {
   padding: 40px;
 }
 
+mat-spinner {
+  display: inline-block;
+}
+
 @include layout-bp(gt-sm) {
   movie-header-actions {
     margin-left: auto;
