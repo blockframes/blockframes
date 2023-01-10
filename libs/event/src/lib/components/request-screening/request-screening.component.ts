@@ -6,8 +6,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 import { BehaviorSubject } from 'rxjs';
 import { MovieService } from '@blockframes/movie/service';
 import { CallableFunctions } from 'ngfire';
-
-type RequestStatus = 'available' | 'sending' | 'sent';
+import { RequestStatus } from '@blockframes/model';
 
 @Component({
   selector: '[movieId] event-request-screening',

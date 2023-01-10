@@ -6,12 +6,16 @@ import { Module } from './static';
 import { User } from './user';
 
 const analyticsEvents = [
+  // Title type
   'pageView',
   'promoElementOpened',
   'addedToWishlist',
   'removedFromWishlist',
   'screeningRequested',
   'askingPriceRequested',
+  'screenerRequested',
+
+  // TitleSearch type
   'exportedTitles',
   'filteredTitles',
   'savedFilters',
@@ -116,6 +120,13 @@ export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>):
     promoElementOpened: 0,
     removedFromWishlist: 0,
     screeningRequested: 0,
+    screenerRequested: 0,
+    exportedTitles: 0,
+    filteredTitles: 0,
+    savedFilters: 0,
+    loadedFilters: 0,
+    filteredAvailsCalendar: 0,
+    filteredAvailsMap: 0,
     ...analytic
   };
 }

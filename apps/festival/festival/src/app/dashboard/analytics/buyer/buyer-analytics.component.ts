@@ -129,7 +129,7 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
   aggregatedPerGenre$ = this.buyerAnalytics$.pipe(
     map(titles => {
       const getDelta = (movie: MovieWithAnalytics) => movie.analytics.length;
-      return counter(titles, 'genres', getDelta)
+      return counter(titles, 'genres', getDelta);
     }),
     map(counted => countedToAnalyticData(counted, 'genres'))
   )

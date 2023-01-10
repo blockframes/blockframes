@@ -1,7 +1,7 @@
-import { Analytics, EventName } from "@blockframes/model";
-import { MovieAnalytics, MovieEventAnalytics } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics.model';
+import { Analytics, EventName } from '@blockframes/model';
+import { MovieAnalytics, MovieEventAnalytics } from './movie-analytics.model';
 
-import { subDays, format } from 'date-fns'
+import { subDays, format } from 'date-fns';
 
 export function toMovieAnalytics(analytics: Analytics<'title'>[]): MovieAnalytics[] {
   const today = new Date();
@@ -40,6 +40,7 @@ function toMovieEventAnalytics(events: Analytics<'title'>[]): MovieEventAnalytic
   };
 
   for (const event of events) {
+    if (!counter[event.name]) continue;
     const date = format(event._meta.createdAt, 'yyyyMMdd');
     if (counter[event.name][date]) {
       counter[event.name][date].hits++;

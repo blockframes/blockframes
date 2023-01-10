@@ -110,6 +110,9 @@ export interface EmailTemplateRequest {
     buyer?: UserEmailData;
     declineReason?: string;
     territories?: string;
+    medias?: string;
+    message?: string;
+    exclusive?: string;
     negotiation?: NegotiationEmailData;
     isInvitationReminder?: boolean;
   };

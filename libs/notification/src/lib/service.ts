@@ -232,7 +232,13 @@ export class NotificationService extends BlockframesCollection<Notification> {
       }
       case 'movieAskingPriceRequested': {
         const movie = await this.movieService.load(notification.docId);
-        const message = `${displayName(notification.user)} requested an asking price for ${movie.title.international}. Please check your emails for details.`;
+        const isFestival = notification._meta.createdFrom === 'festival';
+
+        const buyerName = isFestival ? displayName(notification.user) : 'Someone';
+        const message = `${buyerName} requested an asking price for ${movie.title.international}. Please check your emails for details.`;
+        const url = isFestival
+          ? `mailto:${notification.user.email}?subject=Interest in ${movie.title.international} via Archipel Market`
+          : `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/avails/${notification.docId}/map/`;
 
         return {
           ...notification,
@@ -240,8 +246,8 @@ export class NotificationService extends BlockframesCollection<Notification> {
           message,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          url: `mailto:${notification.user.email}?subject=Interest in ${movie.title.international} via Archipel Market`,
-          actionText: 'Start Discussions',
+          url,
+          actionText: isFestival ? 'Start Discussions' : 'See Title',
         };
       }
       case 'screeningRequested': {
@@ -270,6 +276,35 @@ export class NotificationService extends BlockframesCollection<Notification> {
           placeholderUrl: 'profil_user.svg',
           actionText: 'See Title',
           url: `${applicationUrl['festival']}/c/o/marketplace/title/${notification.docId}`,
+        };
+      }
+      case 'screenerRequested': {
+        const movie = await this.movieService.load(notification.docId);
+        const org = await this.orgService.load(notification.user.orgId);
+        const message = `${org.activity} - ${org.addresses.main.country} requested a screener for <a href="/c/o/dashboard/title/${movie.id}">${movie.title.international}</a>`;
+
+        return {
+          ...notification,
+          _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
+          message,
+          imgRef: notification.user.avatar,
+          placeholderUrl: 'profil_user.svg',
+          url: `/c/o/dashboard/tunnel/movie/${notification.docId}/media-screener`,
+          actionText: 'Upload a Screener',
+        };
+      }
+      case 'screenerRequestSent': {
+        const movie = await this.movieService.load(notification.docId);
+        const message = `Your screener request for ${movie.title.international} was successfully sent.`;
+
+        return {
+          ...notification,
+          _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
+          message,
+          imgRef: notification.user.avatar,
+          placeholderUrl: 'profil_user.svg',
+          actionText: 'See Title',
+          url: `/c/o/marketplace/title/${notification.docId}`,
         };
       }
       case 'offerCreatedConfirmation':
