@@ -5,7 +5,7 @@ import { cleanMovieMedias, moveMovieMedia } from './media';
 import { EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils/algolia';
 import { getMailSender } from '@blockframes/utils/apps';
-import { sendMovieSubmittedEmail } from './templates/mail';
+import { askingPriceRequested, screenerRequested, sendMovieSubmittedEmail } from './templates/mail';
 import { sendMail } from './internals/email';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
@@ -24,7 +24,8 @@ import {
   createNotification,
   wasLastAcceptedOn,
   wasLastSubmittedOn,
-  getMoviePublishStatus
+  getMoviePublishStatus,
+  RequestAskingPriceData
 } from '@blockframes/model';
 import { BlockframesChange, BlockframesSnapshot, getDocument } from '@blockframes/firebase-utils';
 
@@ -207,17 +208,24 @@ export async function onMovieUpdate(change: BlockframesChange<Movie>) {
   }
 }
 
-export async function createAskingPriceRequest(
-  data: { uid: string; movieId: string; territories: string; message: string },
-  context: CallableContext
-) {
-  const { uid, movieId, territories, message } = data;
+export async function createAskingPriceRequest(data: RequestAskingPriceData, context: CallableContext) {
+  const { uid, movieId, territories, medias, message, exclusive, app } = data;
 
   if (!context?.auth) throw new Error('Permission denied: missing auth context.');
   if (!uid) throw new Error('User id is mandatory for requesting asking price');
   if (!movieId) throw new Error('Movie id is mandatory for requesting asking price');
 
-  const [user, movie] = await Promise.all([getDocument<PublicUser>(`users/${uid}`), getDocument<Movie>(`movies/${movieId}`)]);
+  const notificationData: { territories: string, medias?: string, message?: string, exclusive?: string } = { territories };
+  if (medias) notificationData.medias = medias;
+  if (message) notificationData.message = message;
+  if (exclusive !== undefined) notificationData.exclusive = exclusive ? 'yes' : 'no';
+
+  const [user, movie] = await Promise.all([
+    getDocument<PublicUser>(`users/${uid}`),
+    getDocument<Movie>(`movies/${movieId}`)
+  ]);
+
+  const buyerOrg = await getDocument<Organization>(`orgs/${user.orgId}`);
 
   const getNotifications = (org: Organization) =>
     org.userIds.map((userId) =>
@@ -225,26 +233,82 @@ export async function createAskingPriceRequest(
         toUserId: userId,
         type: 'movieAskingPriceRequested',
         docId: movieId,
-        data: { territories, message },
+        data: notificationData,
         user: createPublicUser(user),
-        _meta: createInternalDocumentMeta({ createdFrom: 'festival' }),
+        _meta: createInternalDocumentMeta({ createdFrom: app }),
       })
     );
 
-  for (const orgId of movie.orgIds) {
-    getDocument<Organization>(`orgs/${orgId}`).then(getNotifications).then(triggerNotifications);
-  }
+
+  const sellerOrgs = await Promise.all(movie.orgIds.map(orgId => getDocument<Organization>(`orgs/${orgId}`)));
+  sellerOrgs.map(getNotifications).map(triggerNotifications);
 
   // Send notification to user who requested the asking price
   const notification = createNotification({
     toUserId: uid,
     type: 'movieAskingPriceRequestSent',
     docId: movieId,
-    data: { territories, message },
+    data: notificationData,
     user: createPublicUser(user),
-    _meta: createInternalDocumentMeta({ createdFrom: 'festival' }),
+    _meta: createInternalDocumentMeta({ createdFrom: app }),
   });
   triggerNotifications([notification]);
+
+  const adminEmail = askingPriceRequested(movie, buyerOrg, sellerOrgs, data);
+  const from = getMailSender(app);
+  return sendMail(adminEmail, from, groupIds.noUnsubscribeLink).catch(e => console.warn(e.message));
+}
+
+export async function createScreenerRequest(
+  data: { uid: string; movieId: string },
+  context: CallableContext
+) {
+  const { uid, movieId } = data;
+
+  if (!context?.auth) {
+    throw new Error('Permission denied: missing auth context.');
+  }
+  if (!uid) {
+    throw new Error('User id is mandatory for screener requested');
+  }
+  if (!movieId) {
+    throw new Error('Movie id is mandatory for screener requested');
+  }
+
+  const [user, movie] = await Promise.all([
+    getDocument<PublicUser>(`users/${uid}`),
+    getDocument<Movie>(`movies/${movieId}`),
+  ]);
+
+  const buyerOrg = await getDocument<Organization>(`orgs/${user.orgId}`);
+
+  const getNotifications = (org: Organization) =>
+    org.userIds.map((userId) =>
+      createNotification({
+        toUserId: userId,
+        type: 'screenerRequested',
+        docId: movieId,
+        user: createPublicUser(user),
+        _meta: createInternalDocumentMeta({ createdFrom: 'catalog' }),
+      })
+    );
+
+  const sellerOrgs = await Promise.all(movie.orgIds.map(orgId => getDocument<Organization>(`orgs/${orgId}`)));
+  sellerOrgs.map(getNotifications).map(triggerNotifications);
+
+  // notification to user who requested the screener
+  const notification = createNotification({
+    toUserId: uid,
+    type: 'screenerRequestSent',
+    docId: movieId,
+    user: createPublicUser(user),
+    _meta: createInternalDocumentMeta({ createdFrom: 'catalog' }),
+  });
+  triggerNotifications([notification]);
+
+  const adminEmail = screenerRequested(movie, buyerOrg, sellerOrgs);
+  const from = getMailSender('catalog');
+  return sendMail(adminEmail, from, groupIds.noUnsubscribeLink).catch(e => console.warn(e.message));
 }
 
 /** Checks if the store status is going from draft to submitted. */

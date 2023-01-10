@@ -8,6 +8,7 @@ import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { trimString, toGroupLabel } from '@blockframes/utils/pipes';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
+import { format } from 'date-fns';
 
 export const { projectId } = firebase();
 
@@ -112,6 +113,14 @@ export class PdfService {
         const territories = toGroupLabel(availForm.territories, 'territories', 'World').join(', ');
         const rights = toGroupLabel(availForm.medias, 'medias', 'All Rights').join(', ');
         filters.avails = `${trimString(territories, 50, true)} in ${trimString(rights, 50, true)}`;
+
+        if (availForm.exclusive !== undefined) {
+          filters.avails = `${filters.avails}, ${availForm.exclusive ? 'exclusive': 'non exclusive'} rights`;
+        }
+  
+        if (availForm.duration.from && availForm.duration.to) {
+          filters.avails = `${filters.avails} for ${format(availForm.duration.from, 'MM/dd/yyyy')} - ${format(availForm.duration.to, 'MM/dd/yyyy')}`;
+        }
       }
 
     }
