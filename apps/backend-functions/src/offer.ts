@@ -24,9 +24,10 @@ export async function onOfferCreate(snap: BlockframesSnapshot<Offer>): Promise<v
   // Empty bucket
   db.doc(`buckets/${orgId}`).update({ contracts: [], uid: null });
 
+  // Append extra data to bucketContracts stored on notification document
   for (const contract of bucket.contracts) {
     const movie = await getDocument<Movie>(`movies/${contract.titleId}`);
-    contract['title'] = movie.title.international;
+    contract.title = movie.title.international;
   }
 
   // Send copy of offer to user who created the offer
