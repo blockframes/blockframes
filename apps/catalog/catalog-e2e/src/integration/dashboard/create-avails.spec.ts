@@ -92,7 +92,6 @@ describe('Create avails', () => {
         //check contract in database
         expect(contracts).to.have.lengthOf(1);
         const contract = contracts[0];
-        console.log(contract)
         const buyerId = contract.buyerId;
         expect(contract).to.deep.include({ ...expectedContract, buyerId, stakeholders: [buyerId, org.id] });
         //check term in database
@@ -100,7 +99,7 @@ describe('Create avails', () => {
         const termId = contract.termIds[0];
         firestore
           .get(`terms/${termId}`)
-          .then((term: Term) => console.log(term));
+          .then((term: Term) => expect(term).to.deep.include({ ...expectedTerm, contractId: contract.id }));
       });
   });
 });
