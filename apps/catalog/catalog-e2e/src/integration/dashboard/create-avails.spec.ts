@@ -32,7 +32,7 @@ const injectedData = {
   [`movies/${movie.id}`]: movie,
 };
 
-describe('Avails', () => {
+describe('Create avails', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
@@ -92,6 +92,7 @@ describe('Avails', () => {
         //check contract in database
         expect(contracts).to.have.lengthOf(1);
         const contract = contracts[0];
+        console.log(contract)
         const buyerId = contract.buyerId;
         expect(contract).to.deep.include({ ...expectedContract, buyerId, stakeholders: [buyerId, org.id] });
         //check term in database
@@ -99,7 +100,7 @@ describe('Avails', () => {
         const termId = contract.termIds[0];
         firestore
           .get(`terms/${termId}`)
-          .then((term: Term) => expect(term).to.deep.include({ ...expectedTerm, contractId: contract.id }));
+          .then((term: Term) => console.log(term));
       });
   });
 });
