@@ -417,7 +417,7 @@ export function buyerOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
   const pageUrl = `${appUrl.content}/c/o/marketplace/offer/${offer.id}`;
   const data = {
     app: { name: appName.catalog },
-    bucket: mailBucket, // TODO #8132 remove data from mail templates & other mails ?
+    bucket: mailBucket,
     user: toUser,
     pageUrl,
     baseUrl: appUrl.content,
