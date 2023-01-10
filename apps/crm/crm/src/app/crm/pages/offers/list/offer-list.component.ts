@@ -92,7 +92,6 @@ export class OffersListComponent {
             'bucket reference': bucket.id,
             'org name': org ? org.name : '--deleted org--',
             '# of title': bucket.contracts.length,
-            delivery: bucket.delivery ?? '--',
             specificity: bucket.specificity ?? '--',
             'total bucket price': `${sum(bucket.contracts.map(c => c.price).filter(value => typeof value === 'number' && !isNaN(value)))} ${bucket.currency || ''}`
           });

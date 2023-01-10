@@ -115,13 +115,11 @@ export interface EmailTemplateRequest {
   };
 }
 
-interface BucketEmailData {
+interface BucketEmailData { // TODO #8132 check related emails
   id: string;
   currency: string;
   /** One contract per orgId / titleId / parent terms Id */
   contracts: ContractEmailData[];
-  specificity: string;
-  delivery: string;
   /** Needed to show user in email to business team */
   uid?: string;
 }
