@@ -46,7 +46,8 @@
         [soldMarkers]="availabilities.sold" 
         [inSelectionMarkers]="availabilities.inBucket"
         [selectedMarker]="availabilities.selected" 
-        (selected)="selected($event)">
+        (selected)="selected($event)"
+        test-id="calendar">
       </avails-calendar>
     </ng-container>
     <ng-template #loading>
@@ -55,7 +56,7 @@
       </article>
     </ng-template>
     <div *ngIf="(status$ | async) === 'INVALID' && mandates.length" class="overlay" fxLayoutAlign="center center">
-      <article class="mat-body-2">
+      <article class="mat-body-2" test-id="missing-criteria">
         Please fill in Avail Search Criteria section to show results on the Calendar.
       </article>
     </div>
