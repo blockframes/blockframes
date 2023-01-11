@@ -12,7 +12,8 @@ import {
   eventTypes,
   isAppNotification,
   displayName,
-  toLabel
+  toLabel,
+  createMovie
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { applicationUrl } from '@blockframes/utils/apps';
@@ -146,7 +147,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         };
       }
       case 'movieSubmitted': {
-        const movie = await this.movieService.load(notification.docId);
+        const movie = await this.movieService.load(notification.docId).catch(_ => createMovie());
         const imgRef = this.getPoster(movie);
         const message = `<a href="/c/o/dashboard/title/${movie.id}" target="_blank">${movie.title.international}</a> was successfully submitted to the ${appName[notification._meta.createdFrom]} team.`;
 
@@ -161,7 +162,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         };
       }
       case 'movieAskingPriceRequestSent': {
-        const movie = await this.movieService.load(notification.docId);
+        const movie = await this.movieService.load(notification.docId).catch(_ => createMovie());
         const imgRef = this.getPoster(movie);
         const message = `Your request for ${movie.title.international}'s asking price was successfully sent.`;
 
@@ -178,7 +179,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'eventIsAboutToStart': {
         const event = await this.eventService.load(notification.docId);
         const titleId = isScreening(event) ? event.meta.titleId : undefined;
-        const movie = await this.movieService.load(titleId);
+        const movie = await this.movieService.load(titleId).catch(_ => createMovie());
         const imgRef = this.getPoster(movie);
         const org = await this.orgService.load(event.ownerOrgId);
         const message = `REMINDER - ${org.name}'s ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" is about to start.`;
@@ -216,7 +217,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         };
       }
       case 'movieAccepted': {
-        const movie = await this.movieService.load(notification.docId);
+        const movie = await this.movieService.load(notification.docId).catch(_ => createMovie());
         const imgRef = this.getPoster(movie);
         const message = `<a href="/c/o/dashboard/title/${movie.id}" target="_blank">${movie.title.international}</a> was successfully published on the marketplace.`;
 
@@ -231,7 +232,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         };
       }
       case 'movieAskingPriceRequested': {
-        const movie = await this.movieService.load(notification.docId);
+        const movie = await this.movieService.load(notification.docId).catch(_ => createMovie());
         const message = `${displayName(notification.user)} requested an asking price for ${movie.title.international}. Please check your emails for details.`;
 
         return {
@@ -245,7 +246,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         };
       }
       case 'screeningRequested': {
-        const movie = await this.movieService.load(notification.docId);
+        const movie = await this.movieService.load(notification.docId).catch(_ => createMovie());
         const message = `<a href="mailto:${notification.user.email}">${displayName(notification.user)}</a> requested a screening for <a href="/c/o/dashboard/title/${movie.id}">${movie.title.international}</a>`;
 
         return {
@@ -259,7 +260,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         };
       }
       case 'screeningRequestSent': {
-        const movie = await this.movieService.load(notification.docId);
+        const movie = await this.movieService.load(notification.docId).catch(_ => createMovie());
         const message = `Your screening request for ${movie.title.international} was successfully sent.`;
 
         return {
@@ -283,7 +284,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         }
       case 'contractCreated': {
         const contract = await this.contractService.load(notification.docId);
-        const movie = await this.movieService.load(contract.titleId);
+        const movie = await this.movieService.load(contract.titleId).catch(_ => createMovie());
         const org = await this.orgService.load(contract.buyerId);
         const message = `${org.name} sent an offer for ${movie.title.international}.`;
 
@@ -302,7 +303,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const contract = await this.contractService.load(notification.docId);
         const negotiation = await this.negotiationService.load(notification.docPath);
         const { name } = await this.orgService.load(getReviewer(negotiation));
-        const movie = await this.movieService.load(contract.titleId);
+        const movie = await this.movieService.load(contract.titleId).catch(_ => createMovie());
         const message = `Your counter-offer for ${movie.title.international} was successfully sent to ${name}.`;
 
         return {
@@ -318,7 +319,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         const contract = await this.contractService.load(notification.docId);
-        const movie = await this.movieService.load(contract.titleId);
+        const movie = await this.movieService.load(contract.titleId).catch(_ => createMovie());
         const negotiation = await this.negotiationService.load(notification.docPath);
         const { name } = await this.orgService.load(negotiation.createdByOrg);
         const message = `${name} sent a counter-offer for ${movie.title.international}.`;
@@ -385,7 +386,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         const contract = await this.contractService.load(notification.docId);
-        const movie = await this.movieService.load(contract.titleId);
+        const movie = await this.movieService.load(contract.titleId).catch(_ => createMovie());
 
         return {
           ...notification,
@@ -400,7 +401,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         const contract = await this.contractService.load(notification.docId);
-        const movie = await this.movieService.load(contract.titleId);
+        const movie = await this.movieService.load(contract.titleId).catch(_ => createMovie());
 
         return {
           ...notification,
