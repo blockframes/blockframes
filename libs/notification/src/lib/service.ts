@@ -28,6 +28,7 @@ import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 import { NegotiationService } from '@blockframes/contract/negotiation/service';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
 import { where } from 'firebase/firestore';
+import { SentryService } from '@blockframes/utils/sentry.service';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService extends BlockframesCollection<Notification> {
@@ -59,7 +60,8 @@ export class NotificationService extends BlockframesCollection<Notification> {
     private negotiationService: NegotiationService,
     private contractService: ContractService,
     private userService: UserService,
-    private eventService: EventService
+    private eventService: EventService,
+    private sentryService: SentryService,
   ) {
     super();
   }
@@ -468,10 +470,17 @@ export class NotificationService extends BlockframesCollection<Notification> {
     );
   }
 
+  /**
+   * Prevent load error if provided id does not exists
+   * Mainly used to prevent errors during E2E tests with possible remaining data stored in indexedDB (CF #8968)
+   * @param id 
+   * @returns 
+   */
   private loadMovie(id: string) {
-    return this.movieService.load(id).catch(_ =>
-      createMovie({ id, title: createTitle({ international: 'missing title' }) })
-    );
+    return this.movieService.load(id).catch(_ => {
+      this.sentryService.triggerError({ message: `Failed to load movie ${id}`, bugType: 'firebase-error', location: 'notification-service' });
+      return createMovie({ id, title: createTitle({ international: 'missing title' }) })
+    });
   }
 
 }
