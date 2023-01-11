@@ -16,43 +16,46 @@
 
 <!-- Titles -->
 <ng-template #titles let-section>
-
+  <section class="titles cards">
+    <header fxLayout fxLayoutAlign="space-between center">
+      <h2>{{ section.title }}</h2>
+      <a mat-button [routerLink]="section.link | getLink: '../title'" [queryParams]="section.link | getParams" color="primary" test-id="title-link">
+        <span>See all</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </header>
+    <ng-container *ngIf="section | queryTitles | async | sortBy:section.sorting as movies">
+      <bf-carousel [columns]="{ gtMd: 4, md: 3, ltMd: 2 }">
+        <ng-container *ngFor="let movie of movies">
+          <ng-template carouselItem>
+            <movie-card [movie]="movie" [size]="section.mode" [link]="['../title', movie.id]">
+              <event-request-screening [movieId]="movie.id" iconOnly></event-request-screening>
+            </movie-card>
+          </ng-template>
+        </ng-container>
+      </bf-carousel>
+    </ng-container>
+  </section>
 </ng-template>
 
 <!-- Orgs -->
 <ng-template #orgs let-section>
-
+  
 </ng-template>
 
 <!-- Slider -->
 <ng-template #slider let-section>
-  <section class="slider">
-    <bf-slider loop class="dark-contrast-theme">
-      <ng-container *ngFor="let movie of section | queryTitles | async" >
-        <bf-slide overlayColor="gradient" [image]="movie.banner" asset="empty_slider.png">
-          <movie-slide [movie]="movie">
-            <movie-slide-cta>
-              <a mat-flat-button color="primary" [routerLink]="['../title', movie.id]" class="detail">
-                More Details
-              </a>
-            </movie-slide-cta>
-            <movie-slide-actions>
-              <wishlist-button [movieId]="movie.id"></wishlist-button>
-            </movie-slide-actions>
-          </movie-slide>
-        </bf-slide>
-      </ng-container>
-    </bf-slider>
-  </section>
+ 
 </ng-template>
 
 <!-- Events Slider -->
 <ng-template #eventsSlider let-section>
+  
 </ng-template>
 
 <!-- Org Titles -->
 <ng-template #orgTitles let-section>
-
+  
 </ng-template>
 
 
