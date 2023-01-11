@@ -36,7 +36,18 @@
 
 <!-- Org Titles -->
 <ng-template #orgTitles let-section>
-
+  <section class="org-titles cards">
+    <header fxLayout fxLayoutAlign="space-between center">
+      <h2>{{ section.title }}</h2>
+      <a mat-button [routerLink]="section.link || '../organization'" color="primary" test-id="organization-link">
+        <span>See all</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </header>
+    <org-banner [org]="section.orgId | getOrg | async" [titles]="section | queryTitles | async">
+      <p class="description">{{ section.description }}</p>
+    </org-banner>
+  </section>
 </ng-template>
 
 
