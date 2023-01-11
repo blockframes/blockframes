@@ -33,6 +33,11 @@ const routes: Routes = createRoutes({
     path: 'event',
     canActivate: [AnonymousAuthGuard],
     loadChildren: () => import('./event/event.module').then(m => m.EventModule)
+  },
+  organization: {
+    path: 'organization',
+    canActivate: [AnonymousAuthGuard],
+    loadChildren: () => import('./organization/organization.module').then(m => m.OrganizationModule)
   }
 });
 

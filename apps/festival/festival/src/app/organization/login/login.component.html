@@ -1,0 +1,36 @@
+<header>
+  <a app-logo routerLink="/"></a>
+</header>
+
+<article>
+  <form [formGroup]="form" (ngSubmit)="validateLogin()">
+    <h1>Welcome to Archipel Market!</h1>
+    <p class="mat-body-1">I don't have an account</p>
+    <a routerLink="/auth/identity">Sign up</a>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input test-id="email" matInput type="text" placeholder="Email" formControlName="email" required />
+      <mat-error *ngIf="form.get('email').hasError('required')">
+        Email is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <password-input [control]="form.get('password')" placeholder="Password" label="Password" test-id="password">
+      <mat-error *ngIf="form.get('password').hasError('required')">
+        Password is <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="form.get('password').hasError('minlength')">
+        New password with less than <strong>6</strong> characters.
+      </mat-error>
+      <mat-error *ngIf="form.get('password').hasError('maxlength')">
+        New password with more than <strong>24</strong> characters.
+      </mat-error>
+      <mat-hint>Between 6 and 24 characters.</mat-hint>
+    </password-input>
+
+    <footer>
+      <a routerLink="/auth/reset-password">Forgot your password ?</a>
+      <button mat-flat-button color="primary" type="submit">{{ buttonText }}</button>
+    </footer>
+  </form>
+</article>

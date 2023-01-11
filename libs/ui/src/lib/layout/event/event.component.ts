@@ -19,7 +19,7 @@ import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
-  selector: 'layout-event',
+  selector: 'layout-event', // TODO #9124 move and rename to layout-public ?
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.scss'],
   animations: [routeAnimation],
