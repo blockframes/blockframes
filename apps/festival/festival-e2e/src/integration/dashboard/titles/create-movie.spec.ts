@@ -13,7 +13,8 @@ import {
   snackbarShould,
   getAllStartingWith,
   assertUrlIncludes,
-  saveTitle
+  saveTitle,
+  escapeKey,
 } from '@blockframes/testing/cypress/browser';
 import {
   Movie,
@@ -257,7 +258,7 @@ describe('Movie tunnel', () => {
     get('goals').click();
     get(`option_${movie.audience.goals[0]}`).click();
     get(`option_${movie.audience.goals[1]}`).click();
-    cy.get('body').type('{esc}');
+    escapeKey();
     get('next').click();
 
     //shooting information

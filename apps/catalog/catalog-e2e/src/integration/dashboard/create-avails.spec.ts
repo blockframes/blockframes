@@ -9,6 +9,7 @@ import {
   findIn,
   assertUrlIncludes,
   snackbarShould,
+  escapeKey,
 } from '@blockframes/testing/cypress/browser';
 import {
   user,
@@ -61,13 +62,13 @@ describe('Create avails', () => {
     get('Europe').click();
     get('Latin America').click();
     get('nepal').click();
-    cy.get('body').type('{esc}');
+    escapeKey();
     get('territories').should('contain', 'Europe').and('contain', 'Latin America').and('contain', 'Nepal');
     get('medias').click();
     get('TV').click();
     get('Festivals').click();
     get('rental').click();
-    cy.get('body').type('{esc}');
+    escapeKey();
     get('medias').should('contain', 'TV').and('contain', 'Festivals').and('contain', 'Rental');
     get('dateFrom').clear().type(`01/01/${nextYear}`);
     get('dateTo').clear().type(`12/12/${nextYear}`);
