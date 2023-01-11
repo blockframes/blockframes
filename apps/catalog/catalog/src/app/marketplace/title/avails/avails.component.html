@@ -6,8 +6,8 @@
   </button>
 </header>
 <nav fxLayout fxLayoutAlign="center center" fxLayoutGap="16px">
-  <a mat-flat-button routerLink="map" routerLinkActive="mat-primary">Multiple Territory</a>
-  <a mat-flat-button routerLink="calendar" routerLinkActive="mat-primary">Single Territory</a>
+  <a mat-flat-button routerLink="map" routerLinkActive="mat-primary" test-id="multiple-territory">Multiple Territory</a>
+  <a mat-flat-button routerLink="calendar" routerLinkActive="mat-primary" test-id="single-territory">Single Territory</a>
 </nav>
 
 <router-outlet></router-outlet>
@@ -84,7 +84,7 @@
                 </ng-template>
 
                 <ng-template #default>
-                  <mat-chip-list aria-label="Territories" *ngIf="territories.length <= maxTerritories; else moreTerritories">
+                  <mat-chip-list aria-label="Territories" *ngIf="territories.length <= maxTerritories; else moreTerritories" test-id="selected-territories">
                     <mat-chip disableRipple *ngFor="let territory of territories">{{ territory }}</mat-chip>
                   </mat-chip-list>
                 </ng-template>
@@ -96,7 +96,7 @@
                         <mat-chip disableRipple>{{ territory }}</mat-chip>
                       </ng-container>
                     </mat-chip-list>
-                    <button mat-button class="spacing" (click)="openTerritoryModal(term)">
+                    <button mat-button class="spacing" (click)="openTerritoryModal(term)" test-id="see-more">
                       ...See {{ territories.length - maxTerritories }} More
                     </button>
                   </div>
@@ -107,7 +107,7 @@
           </mat-expansion-panel>
 
           <!-- MEDIAS -->
-          <mat-expansion-panel>
+          <mat-expansion-panel test-id="selected-medias">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Rights

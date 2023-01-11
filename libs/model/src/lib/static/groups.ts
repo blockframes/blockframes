@@ -1,9 +1,9 @@
-import { GetKeys } from './static-model';
+import { GetKeys, MediaGroup, TerritoryGroup } from './static-model';
 
 export type GroupScope = keyof typeof staticGroups;
 
 export interface StaticGroup<S extends GroupScope = any> {
-  label: string;
+  label: MediaGroup | TerritoryGroup;
   items: Extract<GetKeys<S>, string>[];
 }
 

@@ -4,6 +4,7 @@ import { WhereFilterOp } from 'firebase/firestore';
 
 const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
 const isEventsPath = (path: string) => path.split('/')[0] === 'events';
+const isTermsPath = (path: string) => path.split('/')[0] === 'terms';
 
 //* IMPORT DATA*-----------------------------------------------------------------
 
@@ -26,6 +27,15 @@ export function importData(data: Record<string, object>[]) {
           ...content,
           start: new Date(content['start']), // TODO #8614
           end: new Date(content['end']), // TODO #8614
+          _meta: { e2e: true },
+        };
+      } else if (isTermsPath(path)) {
+        content = {
+          ...content,
+          duration: {
+            from: new Date(content['duration']['from']),
+            to: new Date(content['duration']['to']),
+          },
           _meta: { e2e: true },
         };
       } else if ('_meta' in content) {
