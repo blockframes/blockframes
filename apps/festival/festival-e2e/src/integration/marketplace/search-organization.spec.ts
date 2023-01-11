@@ -50,7 +50,6 @@ describe('Search sale organization in marketplace', () => {
     cy.visit('');
     browserAuth.signinWithEmailAndPassword(user.email);
     cy.visit('');
-    get('skip-preferences').click();
     get('cookies').click();
     assertUrlIncludes('c/o/marketplace/home');
   });

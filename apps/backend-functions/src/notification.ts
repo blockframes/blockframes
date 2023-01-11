@@ -632,7 +632,7 @@ async function sendOfferCreatedConfirmation(recipient: User, notification: Notif
   const app: App = 'catalog';
   const from = getMailSender(app);
   const toUser = getUserEmailData(recipient);
-  const emailData = adminOfferCreatedConfirmationEmail(toUser, getOrgEmailData(org));
+  const emailData = adminOfferCreatedConfirmationEmail(toUser, getOrgEmailData(org), offer.id);
   const buyerTemplate = buyerOfferCreatedConfirmationEmail(toUser, getOrgEmailData(buyerOrg), offer, notification.bucket);
   await Promise.all([
     sendMail(emailData, from, groupIds.noUnsubscribeLink),

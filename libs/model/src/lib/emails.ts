@@ -128,6 +128,7 @@ interface BucketEmailData {
 
 interface ContractEmailData {
   titleId: string;
+  title: string;
   price: string;
   terms: TermEmailData[];
 }
@@ -208,9 +209,10 @@ export function getBucketEmailData(bucket: Bucket): BucketEmailData {
   };
 }
 
-export function getContractEmailData({ titleId, price, terms }: BucketContract): ContractEmailData {
+export function getContractEmailData({ titleId, price, terms, title }: BucketContract): ContractEmailData {
   return {
     titleId,
+    title,
     price: price ? formatter.format(price) : '',
     terms: getTermEmailData(terms)
   };
