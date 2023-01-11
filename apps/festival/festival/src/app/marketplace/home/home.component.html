@@ -6,22 +6,24 @@
 
 <!-- Banner -->
 <ng-template #banner let-section>
-
-</ng-template>
-
-<!-- Hero -->
-<ng-template #hero let-section>
-  <section class="hero" bgAsset="hero.png" [bgRef]="section.background">
-    <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
-      <h1 *ngIf="section.title">{{ section.title }}</h1>
+  <header class="banner dark-contrast-theme" [bgRef]="section.background" bgAsset="banner.png">
+    <div class="banner-details">
+      <h4 *ngIf="section.subtitle">{{ section.subtitle }}</h4>
+      <h1 class="mat-display-2" *ngIf="section.title">{{ section.title }}</h1>
       <p *ngIf="section.description">{{ section.description }}</p>
-      <div class="links" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
+      <div class="links">
         <ng-container *ngFor="let link of section.links">
           <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
         </ng-container>
       </div>
     </div>
-  </section>
+    <img *ngIf="section.image?.storagePath" asset="" [ref]="section.image"/>
+  </header>
+</ng-template>
+
+<!-- Hero -->
+<ng-template #hero let-section>
+
 </ng-template>
 
 <!-- Titles -->
