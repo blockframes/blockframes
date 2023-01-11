@@ -11,31 +11,22 @@
 
 <!-- Hero -->
 <ng-template #hero let-section>
-
+  <section class="hero" bgAsset="hero.png" [bgRef]="section.background">
+    <div fxLayout="column" fxLayoutAlign="center center" class="dark-contrast-theme">
+      <h1 *ngIf="section.title">{{ section.title }}</h1>
+      <p *ngIf="section.description">{{ section.description }}</p>
+      <div class="links" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
+        <ng-container *ngFor="let link of section.links">
+          <ng-container *ngTemplateOutlet="linkBtn; context: {$implicit: link}"></ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </section>
 </ng-template>
 
 <!-- Titles -->
 <ng-template #titles let-section>
-  <section class="titles cards">
-    <header fxLayout fxLayoutAlign="space-between center">
-      <h2>{{ section.title }}</h2>
-      <a mat-button [routerLink]="section.link | getLink: '../title'" [queryParams]="section.link | getParams" color="primary" test-id="title-link">
-        <span>See all</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
-      </a>
-    </header>
-    <ng-container *ngIf="section | queryTitles | async | sortBy:section.sorting as movies">
-      <bf-carousel [columns]="{ gtMd: 4, md: 3, ltMd: 2 }">
-        <ng-container *ngFor="let movie of movies">
-          <ng-template carouselItem>
-            <movie-card [movie]="movie" [size]="section.mode" [link]="['../title', movie.id]">
-              <event-request-screening [movieId]="movie.id" iconOnly></event-request-screening>
-            </movie-card>
-          </ng-template>
-        </ng-container>
-      </bf-carousel>
-    </ng-container>
-  </section>
+  
 </ng-template>
 
 <!-- Orgs -->
@@ -45,7 +36,7 @@
 
 <!-- Slider -->
 <ng-template #slider let-section>
- 
+  
 </ng-template>
 
 <!-- Events Slider -->
