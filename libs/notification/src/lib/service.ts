@@ -479,7 +479,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
   private loadMovie(id: string) {
     return this.movieService.load(id).catch(_ => {
       this.sentryService.triggerError({ message: `Failed to load movie ${id}`, bugType: 'firebase-error', location: 'notification-service' });
-      return createMovie({ id, title: createTitle({ international: 'missing title' }) })
+      return createMovie({ id, title: createTitle({ international: 'missing title' }) });
     });
   }
 
