@@ -43,6 +43,6 @@ export class TitleComponent implements OnInit {
       map(movies => movies.sort((a, b) => a._meta.createdAt < b._meta.createdAt ? 1 : -1)),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
-    this.isAnonymous = await this.authService.isSignedInAnonymously(); // TODO #9124 hide add to wishlist
+    this.isAnonymous = await this.authService.isSignedInAnonymously();
   }
 }
