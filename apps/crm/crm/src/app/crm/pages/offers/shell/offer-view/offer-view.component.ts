@@ -25,8 +25,7 @@ export class OfferViewComponent implements OnDestroy, OnInit {
   public offerStatus = Object.keys(staticModel['offerStatus']);
   public form = new FormGroup({
     status: new FormControl('pending'),
-    specificity: new FormControl(''),
-    delivery: new FormControl(''),
+    specificity: new FormControl('')
   })
   subscription: Subscription;
 
@@ -42,8 +41,8 @@ export class OfferViewComponent implements OnDestroy, OnInit {
   ) { }
 
   ngOnInit() {
-    this.subscription = this.offer$.subscribe(({ status, specificity, delivery, }) => {
-      this.form.patchValue({ status, specificity, delivery })
+    this.subscription = this.offer$.subscribe(({ status, specificity }) => {
+      this.form.patchValue({ status, specificity });
     });
   }
 
@@ -64,11 +63,11 @@ export class OfferViewComponent implements OnDestroy, OnInit {
   }
 
   async update(offerId: string, contracts: Contract[]) {
-    const { status, specificity, delivery } = this.form.value;
+    const { status, specificity } = this.form.value;
     const updateOffer = async () => {
       const sale = { specificity } as const;
       const write = this.offerService.batch();
-      await this.offerService.update(offerId, { specificity, status, delivery }, { write });
+      await this.offerService.update(offerId, { specificity, status }, { write });
       const updateContract = contract => this.contractService.update(contract.id, sale, { write });
       const updateNegotiation = (contract) => {
         const config = { write, params: { contractId: contract.id } };

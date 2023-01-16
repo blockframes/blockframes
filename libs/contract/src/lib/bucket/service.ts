@@ -58,13 +58,12 @@ export class BucketService extends BlockframesCollection<Bucket> {
     return firstValueFrom(this.active$);
   }
 
-  async createOffer(specificity: string, delivery: string, currency: MovieCurrency) {
+  async createOffer(specificity: string, currency: MovieCurrency) {
     const orgId = this.orgService.org.id;
     const orgName = this.orgService.org.name;
     const bucket = await this.getActive();
     await this.update(orgId, {
       specificity,
-      delivery,
       uid: this.authService.uid  // Specify who is updating the bucket (this is used in the backend)
     });
 
@@ -77,7 +76,6 @@ export class BucketService extends BlockframesCollection<Bucket> {
       status: 'pending',
       currency,
       _meta: createDocumentMeta({ createdAt: new Date() }),
-      delivery,
       id: offerId,
     });
 
@@ -104,7 +102,6 @@ export class BucketService extends BlockframesCollection<Bucket> {
         holdbacks: contract.holdbacks,
         offerId,
         specificity,
-        delivery,
         ...commonFields
       });
 

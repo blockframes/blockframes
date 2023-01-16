@@ -9,13 +9,13 @@ export interface Bucket {
   /** One contract per orgId / titleId / parent terms Id */
   contracts: BucketContract[];
   specificity: string;
-  delivery: string;
   /** Needed to show user in email to business team */
   uid?: string;
 }
 
 export interface BucketContract {
   titleId: string;
+  title?: string; // Used only in bucketContract stored in notifications (offerCreatedConfirmation for example)
   /** The orgId that own the contract (mandate in this case) that  */
   orgId: string;
   /** Price used to create the income */
@@ -57,7 +57,6 @@ export function createBucket(params: Partial<Bucket> = {}): Bucket {
     id: '',
     currency: 'EUR',
     specificity: '',
-    delivery: '',
     ...params,
     contracts: params.contracts?.map(createBucketContract) ?? [],
   };

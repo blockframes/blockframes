@@ -121,16 +121,16 @@ export interface EmailTemplateRequest {
 interface BucketEmailData {
   id: string;
   currency: string;
+  specificity: string;
   /** One contract per orgId / titleId / parent terms Id */
   contracts: ContractEmailData[];
-  specificity: string;
-  delivery: string;
   /** Needed to show user in email to business team */
   uid?: string;
 }
 
 interface ContractEmailData {
   titleId: string;
+  title: string;
   price: string;
   terms: TermEmailData[];
 }
@@ -211,9 +211,10 @@ export function getBucketEmailData(bucket: Bucket): BucketEmailData {
   };
 }
 
-export function getContractEmailData({ titleId, price, terms }: BucketContract): ContractEmailData {
+export function getContractEmailData({ titleId, price, terms, title }: BucketContract): ContractEmailData {
   return {
     titleId,
+    title,
     price: price ? formatter.format(price) : '',
     terms: getTermEmailData(terms)
   };

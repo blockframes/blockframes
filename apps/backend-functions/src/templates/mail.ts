@@ -621,7 +621,8 @@ export function eventCreatedAdminEmail(app: App, event: Event<EventMeta>) {
 }
 
 /** Inform Archipel Content admins a new offer has been created*/
-export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrgEmailData) {
+export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrgEmailData, offerId: string) {
+  const pageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
   return {
     to: getSupportEmail('catalog'),
     subject: `${org.name} created a new Offer.`,
@@ -630,6 +631,7 @@ export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
       Organization name: ${org.name}
       Buyer name: ${displayName(toUser)}
       Buyer email: ${toUser.email}
+      To review it: ${pageUrl}
     `
   };
 }
