@@ -6,20 +6,20 @@
     </header>
 
     <nav mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="applyFilter('')" [active]="(filter$ | async) === ''">
+      <button mat-tab-link (click)="applyFilter('')" [active]="(filter$ | async) === ''" test-id="all-offers">
         All Offers ({{offers.length}})
       </button>
-      <button mat-tab-link (click)="applyFilter('pending')" [active]="(filter$ | async) === 'pending'">
+      <button mat-tab-link (click)="applyFilter('pending')" [active]="(filter$ | async) === 'pending'" test-id="offers">
         <ng-container *ngIf="(offers | filterBy: filterByStatus: 'pending') as offers">
           Offers ({{offers.length}})
         </ng-container>
       </button>
-      <button mat-tab-link (click)="applyFilter('on_going')" [active]="(filter$ | async) === 'on_going'">
+      <button mat-tab-link (click)="applyFilter('on_going')" [active]="(filter$ | async) === 'on_going'" test-id="ongoing-deals">
         <ng-container *ngIf="(offers | filterBy: filterByStatus: 'on_going') as offers">
           Ongoing Deals ({{offers.length}})
         </ng-container>
       </button>
-      <button mat-tab-link (click)="applyFilter('past_deals')" [active]="(filter$ | async) === 'past_deals'">
+      <button mat-tab-link (click)="applyFilter('past_deals')" [active]="(filter$ | async) === 'past_deals'" test-id="past-deals">
         <ng-container *ngIf="(offers | filterBy: filterByStatus: 'past_deals') as offers">
           Past Deals ({{offers.length}})
         </ng-container>

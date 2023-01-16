@@ -1,5 +1,5 @@
 import { WhereFilterOp } from 'firebase/firestore';
-import { Contract, Event, Movie } from '@blockframes/model';
+import { Contract, Event, Movie, Offer, Notification } from '@blockframes/model';
 
 interface UpdateParameters {
   docPath: string;
@@ -58,5 +58,32 @@ export const firestore = {
         }
         return Promise.all(promises);
       });
+  },
+
+  deleteOffers(orgId: string) {
+    return firestore
+      .queryData({ collection: 'offers', field: 'buyerId', operator: '==', value: orgId })
+      .then((offers: Offer[]) => {
+        const promises = [];
+        for (const offer of offers) {
+          promises.push(firestore.delete(`offers/${offer.id}`));
+        }
+        return Promise.all(promises);
+      });
+  },
+
+  deleteNotifications(userIds: string | string[]) {
+    if (!Array.isArray(userIds)) userIds = [userIds];
+    const promises = [];
+    for (const userId of userIds) {
+      firestore
+        .queryData({ collection: 'notifications', field: 'toUserId', operator: '==', value: userId })
+        .then((notifications: Notification[]) => {
+          for (const notification of notifications) {
+            promises.push(firestore.delete(`notifications/${notification.id}`));
+          }
+        });
+    }
+    return Promise.all(promises);
   },
 };

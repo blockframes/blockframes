@@ -1,4 +1,4 @@
-import { territories, MediaGroup, medias, TerritoryGroup } from '@blockframes/model';
+import { territories, MediaGroup, medias, TerritoryGroup, Notification, User } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -11,6 +11,10 @@ import {
   assertUrlIncludes,
   syncMovieToAlgolia,
   escapeKey,
+  check,
+  connectOtherUser,
+  // cypress tasks
+  interceptEmail,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller } from '../../fixtures/marketplace/deal-create-offer';
 import { add } from 'date-fns';
@@ -36,6 +40,8 @@ describe('Deal negociation', () => {
     maintenance.start();
     algolia.deleteMovie({ app: 'catalog', objectId: seller.movie.id });
     firestore.deleteContractsAndTerms(seller.org.id);
+    firestore.deleteOffers(buyer.org.id);
+    firestore.deleteNotifications([buyer.user.uid, seller.user.uid]);
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
@@ -148,6 +154,91 @@ describe('Deal negociation', () => {
       selectCell({ row: 2, column: 4 });
       assertCalendarPeriod();
     });
+
+    it('no availabilty should appear if search criteria does not match term', () => {
+      get('missing-criteria').should('exist');
+      fillInputs({
+        territory: ['Europe'],
+        rights: ['TV'],
+        exclusive: false,
+      });
+      get('missing-criteria').should('not.exist');
+      assertCalendarAvailabilities();
+
+      //with wrong countries
+      get('territories').click();
+      get('Europe').click();
+      get('CIS').click();
+      escapeKey();
+      get('calendar').find('.available').should('not.exist');
+
+      get('territories').click(); //back to 6 available
+      get('CIS').click();
+      get('Europe').click();
+      escapeKey();
+      get('calendar').find('.available').should('have.length', 6);
+
+      //with wrong media
+      get('medias').click();
+      get('TV').click();
+      get('VOD').click();
+      escapeKey();
+      get('calendar').find('.available').should('not.exist');
+
+      get('medias').click(); //back to 6 available
+      get('TV').click();
+      get('VOD').click();
+      escapeKey();
+      get('calendar').find('.available').should('have.length', 6);
+
+      //with wrong exclusivity
+      get('exclusivity').click(); //back to 6 available
+      get('exclusive').click();
+      get('calendar').find('.available').should('not.exist');
+    });
+
+    it('checking the application flow when an offer is sent', () => {
+      firestore.deleteOffers(buyer.org.id);
+      firestore.deleteNotifications([buyer.user.uid, seller.user.uid]);
+      fillInputs({
+        territory: ['Europe'],
+        rights: ['TV'],
+        exclusive: false,
+      });
+      selectCell({ row: 2, column: 1 });
+      selectCell({ row: 2, column: 4 });
+      get('add-to-selection').click();
+      assertUrlIncludes('c/o/marketplace/selection');
+      assertSelectionTableData();
+      get('price').type('10000');
+      get('validate-offer').click();
+      get('specific-terms').type('E2E Specific terms');
+      check('accept-terms');
+      get('send-offer').click();
+      assertUrlIncludes('c/o/marketplace/selection/congratulations');
+      get('see-offers-and-deals').click();
+      assertUrlIncludes('c/o/marketplace/offer');
+      assertOfferTableData();
+      get('notifications-link').should('contain', '1').click();
+      assertUrlIncludes('c/o/marketplace/notifications');
+      getNotificationId().then((docId: string) => {
+        get('notification-message').should('have.length', 1).and('contain', `Your offer ${docId} was successfully sent.`);
+        checkOfferEmail(buyer.user, docId);
+        checkOfferEmail(seller.user, docId);
+      });
+      get('mark-as-read').click();
+      get('notifications-link').should('not.contain', '1');
+      get('already-read').should('exist');
+      //connect as seller to verify his notification
+      connectOtherUser(seller.user.email);
+      get('notifications-link').should('contain', '1').click();
+      get('notification-message')
+        .should('have.length', 1)
+        .and('contain', `${buyer.org.name} sent an offer for ${seller.movie.title.international}.`);
+      get('mark-as-read').click();
+      get('notifications-link').should('not.contain', '1');
+      get('already-read').should('exist');
+    });
   });
 });
 
@@ -232,4 +323,51 @@ function assertCalendarPeriod() {
   get('calendar').find('tr').eq(2).find('td').eq(3).should('have.class', 'selected');
   get('calendar').find('tr').eq(2).find('td').eq(4).should('have.class', 'selected').and('contain', 'end');
   get('calendar').find('tr').eq(2).find('td').eq(0).should('have.class', 'available');
+}
+
+function assertSelectionTableData() {
+  const nextYear = new Date().getFullYear() + 1;
+  get('row_0_col_0').should('contain', `2/1/${nextYear}`);
+  get('row_0_col_1').should('contain', `5/1/${nextYear}`);
+  get('row_0_col_2').should('contain', 'Europe');
+  get('row_0_col_3').should('contain', 'TV');
+  get('row_0_col_4').should('contain', 'No');
+}
+
+function assertOfferTableData() {
+  const today = new Date().toLocaleDateString('en-US');
+  get('all-offers').should('contain', '(1)');
+  get('offers').should('contain', '(1)');
+  get('ongoing-deals').should('contain', '(0)');
+  get('past-deals').should('contain', '(0)');
+  get('row_0_col_0').should('contain', `${buyer.org.name.substring(0, 3).toUpperCase()}-`);
+  get('row_0_col_0').invoke('text').should('have.length', 10);
+  get('row_0_col_1').should('contain', today);
+  get('row_0_col_2').should('contain', '1');
+  get('row_0_col_3').should('contain', seller.movie.title.international);
+  get('row_0_col_4').should('contain', 'YES');
+  get('row_0_col_5').should('contain', '10,000.00');
+  get('row_0_col_6').should('contain', 'New');
+}
+
+function getNotificationId() {
+  return firestore
+    .queryData({ collection: 'notifications', field: 'toUserId', operator: '==', value: buyer.user.uid })
+    .then((notifications: Notification[]) => {
+      expect(notifications).to.have.lengthOf(1);
+      return notifications[0].docId;
+    });
+}
+
+function checkOfferEmail(user: User, docId: string) {
+  const isUserBuyer = user.uid.includes('buyer');
+  interceptEmail({ sentTo: user.email }).then(mail => {
+    expect(mail.subject).to.eq(
+      isUserBuyer
+        ? `Your offer ${docId} was successfully submitted`
+        : `You just received an offer for ${seller.movie.title.international} from ${buyer.org.name}`
+    );
+    const offerLinkPresent = mail.html.links.some(link => link.text === (isUserBuyer ? 'See Offer' : 'Start discussions'));
+    expect(offerLinkPresent).to.be.true;
+  });
 }
