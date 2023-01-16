@@ -21,7 +21,7 @@ const routes = [{
     data: { animation: 0 },
   }, {
     path: 'member',
-    loadChildren: () => import('@blockframes/organization/pages/information/information.module').then(m => m.OrganizationInformationModule),
+    loadChildren: () => import('../member/member.module').then(m => m.OrganizationMemberModule),
     data: { animation: 1 },
   }]
 }]

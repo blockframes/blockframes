@@ -2,18 +2,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { InformationComponent } from './information.component';
+import { MemberComponent } from './member.component';
 import { UserCardModule } from '@blockframes/user/components/card/card.module';
-import { OrgAddressModule } from '../../pipes/org-address.pipe';
+import { OrgAddressModule } from '@blockframes/organization/pipes/org-address.pipe';
 
 @NgModule({
-  declarations: [InformationComponent],
+  declarations: [MemberComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     UserCardModule,
     OrgAddressModule,
-    RouterModule.forChild([{ path: '', component: InformationComponent }])
+    RouterModule.forChild([{ path: '', component: MemberComponent }])
   ]
 })
-export class OrganizationInformationModule { }
+export class OrganizationMemberModule { }

@@ -1,34 +1,30 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { pluck, switchMap } from 'rxjs/operators';
+import { ViewComponent } from '../view/view.component';
+import { switchMap } from 'rxjs/operators';
 import { fade, fadeList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { AuthService } from '@blockframes/auth/service';
 import { combineLatest } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'organization-information',
-  templateUrl: './information.component.html',
-  styleUrls: ['./information.component.scss'],
+  selector: 'festival-marketplace-organization-member',
+  templateUrl: './member.component.html',
+  styleUrls: ['./member.component.scss'],
   animations: [fade, fadeList('user-card')],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InformationComponent implements OnInit {
+export class MemberComponent implements OnInit {
   @HostBinding('@fade') animation = true;
 
-  public org$ = this.route.params.pipe(
-    pluck('orgId'),
-    switchMap((orgId: string) => this.orgService.getValue(orgId))
-  );
-
+  public org$ = this.parent.org$;
   public isAnonymous: boolean;
   public members$ = combineLatest([this.org$, this.authService.isSignedInAnonymously()]).pipe(
     switchMap(([org, isAnonymous]) => this.orgService.getMembers(org, { removeConcierges: true, hideEmails: isAnonymous }))
   );
 
   constructor(
-    private route: ActivatedRoute,
+    private parent: ViewComponent,
     private orgService: OrganizationService,
     private authService: AuthService,
     private dynTitle: DynamicTitleService,
