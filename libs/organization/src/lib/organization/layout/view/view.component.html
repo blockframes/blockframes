@@ -2,7 +2,7 @@
   <!-- Page Bar -->
   <ng-template pageBar targetId="nav">
     <div class="page-bar" fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
-      <app-menu></app-menu>
+      <app-menu *ngIf="!isAnonymous"></app-menu>
       <div fxFlex fxLayout fxLayoutAlign="start center">
         <ng-container *ngFor="let link of navLinks">
           <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive
