@@ -34,7 +34,7 @@ describe('Login test', () => {
     refreshIfMaintenance('festival');
     get('login').click();
     assertUrlIncludes('/connexion');
-    ensureInput('signin-email', user.email)
+    ensureInput('signin-email', user.email);
     get('password').type(USER_FIXTURES_PASSWORD);
     get('submit').click();
     check('terms');

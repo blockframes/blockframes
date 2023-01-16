@@ -78,7 +78,6 @@ describe('Signup', () => {
     get('email-ok').should('exist');
     get('refresh').click();
     assertUrlIncludes('c/o/marketplace/home');
-    get('skip-preferences').click();
   });
 
   it('User from a known organization with access to festival marketplace can signup', () => {
@@ -107,10 +106,9 @@ describe('Signup', () => {
     get('org-approval-ok').should('exist');
     get('refresh').click();
     assertUrlIncludes('c/o/marketplace/home');
-    get('skip-preferences').click();
     browserAuth.clearBrowserAuth();
     cy.visit('');
-    verifyInvitation(orgAdmin.email, newUser, 'marketplace');
+    verifyInvitation(orgAdmin.email, newUser, 'marketplace', 'festival');
   });
 
   it('User from a known organization with access to festival dashboard can signup', () => {
@@ -141,6 +139,6 @@ describe('Signup', () => {
     assertUrlIncludes('c/o/dashboard/home');
     browserAuth.clearBrowserAuth();
     cy.visit('');
-    verifyInvitation(orgAdmin.email, newUser, 'dashboard');
+    verifyInvitation(orgAdmin.email, newUser, 'dashboard', 'festival');
   });
 });
