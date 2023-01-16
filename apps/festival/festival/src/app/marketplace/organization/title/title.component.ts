@@ -40,6 +40,8 @@ export class TitleComponent implements OnInit {
         facets: { storeStatus: 'accepted', orgNames: [org.name] }
       })),
       switchMap(({ hits }) => this.service.valueChanges(hits.map(h => h.objectID))),
+      map(movies => movies.filter(m => m.app.festival.status === 'accepted')),
+      map(movies => movies.filter(m => m.app.festival.access === true)),
       map(movies => movies.sort((a, b) => a._meta.createdAt < b._meta.createdAt ? 1 : -1)),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
