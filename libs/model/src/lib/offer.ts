@@ -9,5 +9,4 @@ export interface Offer {
   status: OfferStatus;
   currency: MovieCurrency;
   _meta: DocumentMeta;
-  delivery: string;
 }

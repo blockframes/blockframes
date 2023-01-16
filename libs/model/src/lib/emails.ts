@@ -121,10 +121,9 @@ export interface EmailTemplateRequest {
 interface BucketEmailData {
   id: string;
   currency: string;
+  specificity: string;
   /** One contract per orgId / titleId / parent terms Id */
   contracts: ContractEmailData[];
-  specificity: string;
-  delivery: string;
   /** Needed to show user in email to business team */
   uid?: string;
 }
