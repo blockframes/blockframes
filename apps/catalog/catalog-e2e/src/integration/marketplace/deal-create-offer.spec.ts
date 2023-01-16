@@ -225,7 +225,7 @@ describe('Deal negociation', () => {
       getOfferIdFromNotification().then((docId: string) => {
         get('notification-message').should('have.length', 1).and('contain', `Your offer ${docId} was successfully sent.`);
         checkOfferEmail('buyer', docId);
-        checkOfferEmail('seller', docId);
+        checkOfferEmail('seller');
         checkOfferEmail('admin');
       });
       get('mark-as-read').click();
@@ -299,7 +299,7 @@ function assertAvailableCountries(number: number) {
 
 function assertSelectedMedias(medias: string | string[]) {
   if (!Array.isArray(medias)) medias = [medias];
-  const selector = get('selected-medias').eq(0)
+  const selector = get('selected-medias').eq(0);
   selector.click();
   for (const media of medias) {
     selector.should('contain', media);
@@ -309,7 +309,7 @@ function assertSelectedMedias(medias: string | string[]) {
 
 function assertCalendarAvailabilities() {
   get('calendar').find('.available').should('have.length', 6); //6 available months with related class
-  get('calendar').find('.empty').should('have.length', 114); //114 from the 120 months (10 years) with 'emplty' class
+  get('calendar').find('.empty').should('have.length', 114); //114 from the 120 months (10 years) with 'empty' class
   for (let column = 0; column < 5; column++) {
     //checking that the 6 first months of the second row (next year) are available
     //(therefore proving the 114 other months have 'empty' class)
