@@ -43,7 +43,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: () => import('./view/view.module').then(m => m.OrganizationViewModule),
+            loadChildren: () => import('../marketplace/organization/view/view.module').then(m => m.OrganizationViewModule),
           }
         ]
       }

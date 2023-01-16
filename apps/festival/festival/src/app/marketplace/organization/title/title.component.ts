@@ -1,12 +1,13 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ViewComponent } from '../view/view.component';
 import { Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
-import { orderBy, where } from 'firebase/firestore';
+import { AlgoliaService } from '@blockframes/utils/algolia';
+import { AuthService } from '@blockframes/auth/service';
 
 @Component({
   selector: 'festival-marketplace-organization-title',
@@ -18,26 +19,30 @@ import { orderBy, where } from 'firebase/firestore';
 export class TitleComponent implements OnInit {
   public titles$: Observable<Movie[]>;
 
+  public isAnonymous: boolean;
+
   trackById = (i: number, doc: { id: string }) => doc.id;
 
   constructor(
     private service: MovieService,
     private parent: ViewComponent,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    private algoliaService: AlgoliaService,
+    private authService: AuthService,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.dynTitle.setPageTitle('Sales Agent', 'Line-up');
     this.titles$ = this.parent.org$.pipe(
-      switchMap((org) => {
-        return this.service.valueChanges([
-          where('orgIds', 'array-contains', org.id),
-          where('app.festival.status', '==', 'accepted'),
-          where('app.festival.access', '==', true),
-          orderBy('_meta.createdAt', 'desc')
-        ]);
-      }),
+      switchMap((org) => this.algoliaService.query('movie', {
+        activePage: 0,
+        limitResultsTo: 1000,
+        facets: { storeStatus: 'accepted', orgNames: [org.name] }
+      })),
+      switchMap(({ hits }) => this.service.valueChanges(hits.map(h => h.objectID))),
+      map(movies => movies.sort((a, b) => a._meta.createdAt < b._meta.createdAt ? 1 : -1)),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
+    this.isAnonymous = await this.authService.isSignedInAnonymously();
   }
 }
