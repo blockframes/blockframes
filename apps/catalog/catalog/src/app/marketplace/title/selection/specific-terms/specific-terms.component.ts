@@ -15,7 +15,6 @@ export class SpecificTermsComponent implements OnInit {
 
   form = new FormGroup({
     specificity: new FormControl(),
-    delivery: new FormControl(),
     acceptTerms: new FormControl(false)
   });
 
@@ -27,15 +26,14 @@ export class SpecificTermsComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const { specificity = '', delivery = '' } = await this.bucketService.getActive();
-    this.form.setValue({ specificity, delivery, acceptTerms:false });
+    const { specificity = '' } = await this.bucketService.getActive();
+    this.form.setValue({ specificity, acceptTerms: false });
   }
-
   async createOffer() {
     try {
       this.form.disable();
-      const { specificity, delivery } = this.form.value;
-      await this.bucketService.createOffer(specificity, delivery, this.data.currency ?? 'EUR');
+      const { specificity } = this.form.value;
+      await this.bucketService.createOffer(specificity, this.data.currency ?? 'EUR');
       this.router.navigate(['/c/o/marketplace/selection/congratulations']);
       this.dialog.close();
     } catch (err) {
