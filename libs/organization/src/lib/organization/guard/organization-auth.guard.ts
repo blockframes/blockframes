@@ -62,7 +62,7 @@ export class OrganizationAuthGuard implements CanActivate, CanDeactivate<unknown
 
     // we don't show the confirm dialog if the user wants to go to homepage or identity page
     const nextPage = nextState.url.split('/').pop();
-    if (nextPage === '' || nextPage === 'identity') {
+    if (nextPage === '' || nextPage === 'identity' || nextPage === 'reset-password') {
       return true;
     }
 

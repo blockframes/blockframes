@@ -17,7 +17,7 @@ import { NoOrganizationAuthGuard } from '@blockframes/organization/guard/no-orga
 const routes: Routes = [
   {
     path: ':orgId',
-    canActivate: [OrganizationAuthGuard], // TODO #9124 check guards
+    canActivate: [OrganizationAuthGuard],
     canDeactivate: [OrganizationAuthGuard],
     children: [
       {
@@ -27,18 +27,18 @@ const routes: Routes = [
       },
       {
         path: 'email',
-        canActivate: [],
+        canActivate: [NoOrganizationAuthGuard],
         loadChildren: () => import('./email/email.module').then(m => m.EmailModule),
 
       },
       {
         path: 'login',
-        canActivate: [NoOrganizationAuthGuard], // TODO #9124 check guards
+        canActivate: [NoOrganizationAuthGuard],
         loadChildren: () => import('./login/login.module').then(m => m.LoginModule),
       },
       {
         path: 'i',
-        canActivate: [IdentityGuard], // TODO #9124 check guards
+        canActivate: [IdentityGuard],
         component: OrganizationComponent,
         children: [
           {
