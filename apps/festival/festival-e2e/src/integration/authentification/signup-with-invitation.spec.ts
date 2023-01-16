@@ -146,7 +146,6 @@ describe('Signup following an invitation', () => {
     get('email-ok').should('exist');
     get('refresh').click();
     assertUrlIncludes('c/o/marketplace/home');
-    get('skip-preferences').click();
     //check organization data
     get('auth-user').click();
     get('widget-organization').click();

@@ -680,10 +680,10 @@ async function sendOfferCreatedConfirmation(recipient: User, notification: Notif
   const app: App = 'catalog';
   const from = getMailSender(app);
   const toUser = getUserEmailData(recipient);
-  const emailData = adminOfferCreatedConfirmationEmail(toUser, getOrgEmailData(org));
+  const emailData = adminOfferCreatedConfirmationEmail(toUser, getOrgEmailData(org), offer.id);
   const buyerTemplate = buyerOfferCreatedConfirmationEmail(toUser, getOrgEmailData(buyerOrg), offer, notification.bucket);
   await Promise.all([
-    sendMail(emailData, from, groupIds.unsubscribeAll),
+    sendMail(emailData, from, groupIds.noUnsubscribeLink),
     sendMailFromTemplate(buyerTemplate, app, groupIds.unsubscribeAll)
   ]);
 }
@@ -709,7 +709,7 @@ async function sendCreatedCounterOfferConfirmation(recipient: User, notification
 
   return Promise.all([
     sendMailFromTemplate(senderTemplate, app, groupIds.unsubscribeAll),
-    sendMail(adminEmailData, from, groupIds.unsubscribeAll)
+    sendMail(adminEmailData, from, groupIds.noUnsubscribeLink)
   ]);
 }
 
@@ -805,7 +805,7 @@ async function sendContractStatusChangedConfirmation(recipient: User, notificati
   const mailToSend = [sendMailFromTemplate(template, app, groupIds.unsubscribeAll)];
 
   if (adminEmailData) {
-    mailToSend.push(sendMail(adminEmailData, from, groupIds.unsubscribeAll))
+    mailToSend.push(sendMail(adminEmailData, from, groupIds.noUnsubscribeLink));
   }
   return Promise.all(mailToSend);
 }
