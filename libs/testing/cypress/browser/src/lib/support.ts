@@ -99,6 +99,8 @@ export function connectOtherUser(email: string) {
   cy.visit('');
 }
 
+export const escapeKey = () => cy.get('body').type('{esc}');
+
 //* AUTHENTIFICATION *//
 
 export function fillCommonInputs(user: PublicUser, fillEmail = true) {
@@ -128,12 +130,12 @@ export function selectCompany(orgName: string) {
   get(`org_${orgName}`).click();
 }
 
-export function verifyInvitation(orgAdminEmail: string, user: PublicUser, expectedModule?: Module) {
+export function verifyInvitation(orgAdminEmail: string, user: PublicUser, expectedModule: Module, app: App) {
   browserAuth.signinWithEmailAndPassword(orgAdminEmail);
   cy.visit('');
 
   assertUrlIncludes(`${expectedModule}/home`);
-  if (expectedModule === 'marketplace') get('skip-preferences').click();
+  if (expectedModule === 'marketplace' && app === 'catalog') get('skip-preferences').click();
   get('invitations-link').click();
   get('invitation').first().should('contain', `${user.firstName} ${user.lastName} wants to join your organization.`);
   get('invitation-status').first().should('contain', 'Accepted');

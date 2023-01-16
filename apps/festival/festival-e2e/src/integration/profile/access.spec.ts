@@ -37,7 +37,6 @@ describe('Profile test', () => {
     check('terms');
     check('privacy-policy');
     get('access').click();
-    get('skip-preferences').click();
     get('auth-user').click();
     get('profile').click();
     assertUrlIncludes('c/o/account/profile/view/settings');

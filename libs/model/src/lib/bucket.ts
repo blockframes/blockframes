@@ -15,6 +15,7 @@ export interface Bucket {
 
 export interface BucketContract {
   titleId: string;
+  title?: string; // Used only in bucketContract stored in notifications (offerCreatedConfirmation for example)
   /** The orgId that own the contract (mandate in this case) that  */
   orgId: string;
   /** Price used to create the income */

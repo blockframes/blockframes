@@ -229,6 +229,19 @@ export const languages = {
   welsh: 'Welsh'
 } as const
 
+export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, BluRay)' | 'Festivals';
+
+export type TerritoryGroup =
+  | 'Europe'
+  | 'CIS'
+  | 'Africa'
+  | 'North America'
+  | 'Latin America'
+  | 'Caribbean'
+  | 'Oceania'
+  | 'Middle East'
+  | 'Asia';
+
 export const medias = {
   payTv: 'Pay TV',
   freeTv: 'Free TV',
