@@ -504,16 +504,13 @@ service cloud.firestore {
     ////////////////////////////////
 
     match /analytics/{docId} {
-      allow read: if userHasValidOrg()
+      allow read: if isSignedIn()
         && notInMaintenance()
-        && (resource == null
-          || isMyAnalytics()
-          || isAllowedToReadTitleAnalytics()
-        );
-       allow create, update: if userHasValidOrg()
+        && (resource == null || isMyAnalytics() || isAllowedToReadTitleAnalytics());
+      allow create, update: if isSignedIn()
         && notInMaintenance()
         && isRequestFieldValueEqualTo(['id'], docId)
-        && isRequestFieldValueEqualTo(['meta', 'orgId'], userOrgId())
+        && isRequestFieldValueEqualToOrNotSetted(['meta', 'orgId'], userOrgId())
         && isRequestFieldValueEqualTo(['meta', 'uid'], userId());
     }
 

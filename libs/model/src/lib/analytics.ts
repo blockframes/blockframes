@@ -3,11 +3,13 @@ import { DocumentMeta } from './meta';
 import { Movie } from './movie';
 import { Organization } from './organisation';
 import { Module } from './static';
-import { User } from './user';
+import { createPublicUser, PublicUser, User } from './user';
+import { AnonymousCredentials } from './identity';
 
 const analyticsEvents = [
-  // Title type
+  // Title or Organization type
   'pageView',
+  // Title type
   'promoElementOpened',
   'addedToWishlist',
   'removedFromWishlist',
@@ -28,6 +30,7 @@ export type EventName = typeof analyticsEvents[number];
 export interface AnalyticsTypeRecord {
   title: MetaTitle;
   titleSearch: MetaTitleSearch;
+  organization: MetaOrganization
 }
 
 export type AnalyticsTypes = keyof AnalyticsTypeRecord;
@@ -51,11 +54,18 @@ interface MetaTitleSearch {
   search?: MovieAvailsSearch;
   module: Module,
   uid: string;
-  orgId?: string;
+  orgId: string;
   titleId?: string;
   ownerOrgIds?: string[];
   titleCount?: number;
   status: boolean;
+}
+
+interface MetaOrganization {
+  organizationId: string;
+  uid: string;
+  orgId?: string;
+  profile: PublicUser | AnonymousCredentials
 }
 
 export interface AnalyticsInteraction {
@@ -104,6 +114,15 @@ export function createTitleSearchMeta(meta: Partial<MetaTitleSearch>): MetaTitle
     uid: '',
     status: true,
     ...meta
+  };
+};
+
+export function createOrganizationMeta(meta: Partial<MetaOrganization>): MetaOrganization {
+  return {
+    organizationId: '',
+    uid: '',
+    ...meta,
+    profile: createPublicUser(meta.profile),
   };
 };
 

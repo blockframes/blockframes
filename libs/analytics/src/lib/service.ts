@@ -16,7 +16,9 @@ import {
   createDocumentMeta,
   MovieAvailsSearch,
   Module,
-  createTitleSearchMeta
+  createTitleSearchMeta,
+  Organization,
+  createOrganizationMeta
 } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
@@ -70,7 +72,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
   }
 
   toFirestore(analytic: Partial<Analytics<AnalyticsTypes>>, actionType: 'add' | 'update') {
-    const profile = this.authService.profile;
+    const profile = this.authService.anonymouseOrRegularProfile;
     if (actionType === 'update') return analytic;
 
     return {
@@ -204,6 +206,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
       where('_meta.createdBy', '==', profile.uid),
       where('_meta.createdFrom', '==', this.app),
       where('meta.titleId', '==', title.id),
+      where('type', '==', 'title'),
       where('name', '==', 'pageView')
     ]);
     // only one pageView event per day per title per user is recorded.
@@ -219,6 +222,37 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     return this.add({
       name: 'pageView',
       type: 'title',
+      meta
+    });
+  }
+
+  async addOrganizationPageView(org: Organization) {
+    if (await this.isOperator()) return;
+
+    const profile = this.authService.anonymouseOrRegularProfile;
+    if (!profile) return;
+
+    const start = startOfDay(new Date());
+    const analytics = await this.getValue([
+      where('_meta.createdBy', '==', profile.uid),
+      where('_meta.createdFrom', '==', this.app),
+      where('meta.organizationId', '==', org.id),
+      where('type', '==', 'organization'),
+      where('name', '==', 'pageView')
+    ]);
+    // only one pageView event per day per org per user is recorded.
+    if (analytics.some(analytic => analytic._meta.createdAt > start)) return;
+
+    const meta = createOrganizationMeta({
+      organizationId: org.id,
+      orgId: profile.orgId,
+      uid: profile.uid,
+      profile
+    });
+
+    return this.add({
+      name: 'pageView',
+      type: 'organization',
       meta
     });
   }
