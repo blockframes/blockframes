@@ -17,6 +17,7 @@ import {
   interceptEmail,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller } from '../../fixtures/marketplace/deal-create-offer';
+import { supportMailosaur } from '@blockframes/utils/constants';
 import { add } from 'date-fns';
 
 const injectedData = {
@@ -221,10 +222,11 @@ describe('Deal negociation', () => {
       assertOfferTableData();
       get('notifications-link').should('contain', '1').click();
       assertUrlIncludes('c/o/marketplace/notifications');
-      getNotificationId().then((docId: string) => {
+      getOfferIdFromNotification().then((docId: string) => {
         get('notification-message').should('have.length', 1).and('contain', `Your offer ${docId} was successfully sent.`);
-        checkOfferEmail(buyer.user, docId);
-        checkOfferEmail(seller.user, docId);
+        checkOfferEmail('buyer', docId);
+        checkOfferEmail('seller', docId);
+        checkOfferEmail('admin');
       });
       get('mark-as-read').click();
       get('notifications-link').should('not.contain', '1');
@@ -305,9 +307,11 @@ function assertSelectedMedias(medias: string | string[]) {
 }
 
 function assertCalendarAvailabilities() {
-  get('calendar').find('.available').should('have.length', 6);
-  get('calendar').find('.empty').should('have.length', 114);
+  get('calendar').find('.available').should('have.length', 6); //6 available months with related class
+  get('calendar').find('.empty').should('have.length', 114); //114 from the 120 months (10 years) with 'emplty' class
   for (let column = 0; column < 5; column++) {
+    //checking that the 6 first months of the second row (next year) are available
+    //(therefore proving the 114 other months have 'empty' class)
     get('calendar').find('tr').eq(2).find('td').eq(column).should('have.class', 'available');
   }
 }
@@ -350,7 +354,7 @@ function assertOfferTableData() {
   get('row_0_col_6').should('contain', 'New');
 }
 
-function getNotificationId() {
+function getOfferIdFromNotification() {
   return firestore
     .queryData({ collection: 'notifications', field: 'toUserId', operator: '==', value: buyer.user.uid })
     .then((notifications: Notification[]) => {
@@ -359,15 +363,30 @@ function getNotificationId() {
     });
 }
 
-function checkOfferEmail(user: User, docId: string) {
-  const isUserBuyer = user.uid.includes('buyer');
-  interceptEmail({ sentTo: user.email }).then(mail => {
-    expect(mail.subject).to.eq(
-      isUserBuyer
-        ? `Your offer ${docId} was successfully submitted`
-        : `You just received an offer for ${seller.movie.title.international} from ${buyer.org.name}`
-    );
-    const offerLinkPresent = mail.html.links.some(link => link.text === (isUserBuyer ? 'See Offer' : 'Start discussions'));
-    expect(offerLinkPresent).to.be.true;
+function checkOfferEmail(user: 'buyer' | 'seller' | 'admin', docId?: string) {
+  const mailData = {
+    buyer: {
+      recipient: buyer.user.email,
+      subject: `Your offer ${docId} was successfully submitted`,
+      linkText: 'See Offer',
+    },
+    seller: {
+      recipient: seller.user.email,
+      subject: `You just received an offer for ${seller.movie.title.international} from ${buyer.org.name}`,
+      linkText: 'Start discussions',
+    },
+    admin: {
+      recipient: supportMailosaur,
+      subject: `${buyer.org.name} created a new Offer.`,
+      linkText: null,
+    },
+  };
+
+  interceptEmail({ sentTo: mailData[user].recipient }).then(mail => {
+    expect(mail.subject).to.eq(mailData[user].subject);
+    if (user !== 'admin') {
+      const offerLinkPresent = mail.html.links.some(link => link.text === mailData[user].linkText);
+      expect(offerLinkPresent).to.be.true;
+    }
   });
 }

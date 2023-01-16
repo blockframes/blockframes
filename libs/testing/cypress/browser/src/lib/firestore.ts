@@ -63,13 +63,7 @@ export const firestore = {
   deleteOffers(orgId: string) {
     return firestore
       .queryData({ collection: 'offers', field: 'buyerId', operator: '==', value: orgId })
-      .then((offers: Offer[]) => {
-        const promises = [];
-        for (const offer of offers) {
-          promises.push(firestore.delete(`offers/${offer.id}`));
-        }
-        return Promise.all(promises);
-      });
+      .then((offers: Offer[]) => firestore.delete(offers.map(({ id }) => `offers/${id}`)));
   },
 
   deleteNotifications(userIds: string | string[]) {
