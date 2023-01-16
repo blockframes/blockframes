@@ -17,7 +17,7 @@
       <ng-container *ngIf="this.availsForm.invalid && mandates.length">
         <section class="overlay" >
           <article>
-            <h3>
+            <h3 test-id="missing-criteria">
               Please fill in Avail Search Criteria section <br /> to show results on the Map.
             </h3>
           </article>
@@ -50,7 +50,7 @@
         <map-feature [tag]="tag.isoA3" color="#1a49f5"
           (mouseover)="displayTerritoryTooltip(tag.label, 'Already in selection')" (mouseout)="clearTerritoryTooltip()">
         </map-feature>
-      </ng-container>      
+      </ng-container>
       <ng-container *ngFor="let tag of availabilities.notLicensed">
         <map-feature [tag]="tag.isoA3" 
           (mouseover)="displayTerritoryTooltip(tag.label, 'Not Licensed')" (mouseout)="clearTerritoryTooltip()">
@@ -98,7 +98,7 @@
   </ng-template>
 
   <article fxLayout fxLayoutAlign="end" *ngIf="!availsForm.invalid">
-    <button mat-button color="primary" (click)="selectAll()">
+    <button mat-button color="primary" (click)="selectAll()" test-id="select-all">
       <mat-icon svgIcon="add"></mat-icon>
       <span>Select all available territories</span>
     </button>

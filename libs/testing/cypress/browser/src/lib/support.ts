@@ -99,6 +99,8 @@ export function connectOtherUser(email: string) {
   cy.visit('');
 }
 
+export const escapeKey = () => cy.get('body').type('{esc}');
+
 //* AUTHENTIFICATION *//
 
 export function fillCommonInputs(user: PublicUser, fillEmail = true) {
