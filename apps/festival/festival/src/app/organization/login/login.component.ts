@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { AuthService } from '@blockframes/auth/service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationLoginComponent implements OnInit, OnDestroy {
+export class OrganizationLoginComponent implements OnDestroy {
   public form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(24)])
@@ -26,11 +26,6 @@ export class OrganizationLoginComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
   ) { }
-
-  ngOnInit() {
-    const { email } = this.route.snapshot.queryParams;
-    this.form.get('email').setValue(email);
-  }
 
   ngOnDestroy(): void {
     this.snackBar.dismiss();
@@ -49,8 +44,8 @@ export class OrganizationLoginComponent implements OnInit, OnDestroy {
       this.service.updateAnonymousCredentials({}, { reset: true });
       await this.service.signin(email.trim(), password);
 
-      // Redirect user to event view
-      this.router.navigate(['../i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
+      // Redirect user to org view
+      this.router.navigate(['../i'], { relativeTo: this.route });
     } catch (err) {
       this.buttonText = 'Log in';
       console.error(err); // let the devs see what happened

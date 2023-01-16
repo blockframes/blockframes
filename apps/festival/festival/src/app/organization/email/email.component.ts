@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./email.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmailComponent implements OnInit {
+export class EmailComponent {
 
   constructor(
     private authService: AuthService,
@@ -27,11 +27,6 @@ export class EmailComponent implements OnInit {
     privacyPolicy: new FormControl(false),
   });
 
-  ngOnInit() {
-    const { email } = this.route.snapshot.queryParams;
-    this.form.get('email').setValue(email);
-  }
-
   validateForm() {
     if (!this.form.valid) {
       this.snackBar.open('Form invalid, please check error messages', 'close', { duration: 2000 });
@@ -40,7 +35,7 @@ export class EmailComponent implements OnInit {
     // Update store with from value
     this.authService.updateAnonymousCredentials({ ...this.form.value, role: 'guest' });
     // Redirect user to org view
-    this.router.navigate(['../i'], { relativeTo: this.route, queryParams: this.route.snapshot.queryParams });
+    this.router.navigate(['../i'], { relativeTo: this.route });
   }
 
 }
