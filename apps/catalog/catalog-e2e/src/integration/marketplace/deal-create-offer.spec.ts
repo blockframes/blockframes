@@ -299,11 +299,12 @@ function assertAvailableCountries(number: number) {
 
 function assertSelectedMedias(medias: string | string[]) {
   if (!Array.isArray(medias)) medias = [medias];
-  get('selected-medias').click();
+  const selector = get('selected-medias').eq(0)
+  selector.click();
   for (const media of medias) {
-    get('selected-medias').should('contain', media);
+    selector.should('contain', media);
   }
-  get('selected-medias').click();
+  selector.click();
 }
 
 function assertCalendarAvailabilities() {
