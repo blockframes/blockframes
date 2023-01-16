@@ -128,6 +128,7 @@ describe('Movie search in marketplace', () => {
     findIn(`org-card_${saleOrg.id}`, 'logo').click();
     get(`movie-card_${movie.id}`).should('exist');
     firestore.update({ docPath: `movies/${movie.id}`, field: 'app.festival.status', value: 'draft' });
+    syncMovieToAlgolia(movie.id);
     get(`movie-card_${movie.id}`).should('not.exist');
   });
 });
