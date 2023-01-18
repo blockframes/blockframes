@@ -13,7 +13,9 @@ import {
   displayName,
   toLabel,
   AvailsFilter,
-  EventName
+  EventName,
+  PublicUser,
+  AnonymousCredentials
 } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -111,7 +113,7 @@ export class UsersComponent implements OnInit {
 
       const titleQuery = [where('type', '==', 'title'), where('name', '==', 'pageView')];
       const titleAnalytics = await this.analyticsService.load<Analytics<'title'>>(titleQuery);
-  
+
       const titleSearchQuery = [where('type', '==', 'titleSearch')];
       const titleSearchAnalytics = await this.analyticsService.load<Analytics<'titleSearch'>>(titleSearchQuery);
 
@@ -235,6 +237,68 @@ export class UsersComponent implements OnInit {
       }
     }
     downloadCsvFromJson(exportedRows, 'users-analytics-list');
+
+    this.exportingAnalytics = false;
+    this.cdr.markForCheck();
+  }
+
+  public async exportOrgAnalyticsPageViews(users: CrmUser[]) {
+    this.exportingAnalytics = true;
+    this.cdr.markForCheck();
+
+    const organizationQuery = [where('type', '==', 'organization'), where('name', '==', 'pageView')];
+    const organizationAnalytics = await this.analyticsService.load<Analytics<'organization'>>(organizationQuery);
+
+    const aggregator: Record<string, {
+      profile: PublicUser | AnonymousCredentials,
+      isAnonymous: boolean,
+      views: Record<string, Date[]>
+    }> = {};
+
+    const exportedRows = [];
+    for (const analytic of organizationAnalytics) {
+      if (!aggregator[analytic.meta.profile.email]) {
+        aggregator[analytic.meta.profile.email] = {
+          profile: analytic.meta.profile,
+          isAnonymous: !users.find(({ uid }) => uid === analytic.meta.profile.uid),
+          views: {}
+        }
+      }
+
+      if (!aggregator[analytic.meta.profile.email].views[analytic.meta.organizationId]) {
+        aggregator[analytic.meta.profile.email].views[analytic.meta.organizationId] = [];
+      }
+      aggregator[analytic.meta.profile.email].views[analytic.meta.organizationId].push(analytic._meta.createdAt);
+    }
+
+    for (const [email, aggregated] of Object.entries(aggregator)) {
+      const userOrg = aggregated.profile.orgId ? this.orgs.find(o => o.id === aggregated.profile.orgId) : undefined;
+      const userOrgName = userOrg ? userOrg.name : '--deleted org--';
+
+      for (const [orgId, hits] of Object.entries(aggregated.views)) {
+        const org = this.orgs.find(o => o.id === orgId);
+        for (const date of hits) {
+          exportedRows.push({
+            uid: aggregated.profile.uid,
+            email,
+            firstName: aggregated.profile.firstName,
+            lastName: aggregated.profile.lastName,
+            'user org id': aggregated.profile.orgId,
+            'user org name': aggregated.isAnonymous ? '' : userOrgName,
+            anonymous: aggregated.isAnonymous ? 'yes' : 'no',
+            'visited org id': orgId,
+            'visited org name': org ? org.name : '--deleted org--',
+            date
+          });
+        }
+      }
+    }
+
+    if (exportedRows.length) {
+      downloadCsvFromJson(exportedRows, 'users-orgs-page-views');
+    } else {
+      this.snackbar.open('No data to export', 'close', { duration: 5000 });
+    }
 
     this.exportingAnalytics = false;
     this.cdr.markForCheck();
