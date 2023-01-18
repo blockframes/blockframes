@@ -162,7 +162,7 @@ export async function clearUsers() {
 export async function updateUsersPassword(emailPrefix: string, password: string, dryRun = true) {
   if (!emailPrefix) throw Error('Email prefix cannot be empty');
   if (!password || password.length < 6) throw Error('Password must be at least 6 characters long');
-  if (dryRun) console.log('[WARNING] This is only a simulation, to actually run the command, add "execute".')
+  if (dryRun) console.log('[WARNING] This is only a simulation, to actually run the command, add "execute".');
   if (dryRun) console.log(`New password is "${password}"`);
 
   const db = getDb();
