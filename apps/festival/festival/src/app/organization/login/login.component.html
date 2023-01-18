@@ -3,6 +3,12 @@
 </header>
 
 <article>
+  <menu>
+    <button mat-icon-button (click)="goBack()" color="black">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </button>
+  </menu>
+  
   <form [formGroup]="form" (ngSubmit)="validateLogin()">
     <h1>Welcome to Archipel Market!</h1>
     <p class="mat-body-1">I don't have an account</p>

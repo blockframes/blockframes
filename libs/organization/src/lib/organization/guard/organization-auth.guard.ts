@@ -62,26 +62,29 @@ export class OrganizationAuthGuard implements CanActivate, CanDeactivate<unknown
 
     // we don't show the confirm dialog if the user wants to go to homepage or identity page
     const nextPage = nextState.url.split('/').pop();
-    if (nextPage === '' || nextPage === 'identity' || nextPage === 'reset-password') {
-      return true;
-    }
+    if (['', 'identity', 'reset-password', 'connexion'].includes(nextPage)) return true;
 
     // If userId is undefined, that means the user has disconnected. If she/he wants to logout, we don't show the confirm message
-    if (this.authService.uid === undefined) {
-      return true;
-    } else {
+    if (this.authService.uid === undefined) return true;
 
-      const dialogRef = this.dialog.open(ConfirmComponent, {
-        data: createModalData({
-          title: 'You\'re about to quit the public mode.',
-          question: 'To access these details you need to be full registered.',
-          confirm: 'Full register',
-          cancel: 'Stay'
-        }),
-        autoFocus: false
-      });
-      return firstValueFrom(dialogRef.afterClosed());
-    }
+    const onClose = async (closedFrom?: 'button') => {
+      this.dialog.closeAll();
+      if (closedFrom === 'button') {
+        return this.router.navigate(['/auth/connexion']);
+      }
+    };
+
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      data: createModalData({
+        title: 'You\'re about to quit the public mode.',
+        question: 'To access these details you need to be full registered.',
+        confirm: 'Full register',
+        cancel: 'I already have an account',
+        onClose
+      }),
+      autoFocus: false
+    });
+    return firstValueFrom(dialogRef.afterClosed());
 
   }
 

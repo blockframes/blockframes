@@ -18,7 +18,6 @@ export class MemberComponent implements OnInit {
   @HostBinding('@fade') animation = true;
 
   public org$ = this.parent.org$;
-  public isAnonymous: boolean;
   public members$ = combineLatest([this.org$, this.authService.isSignedInAnonymously()]).pipe(
     switchMap(([org, isAnonymous]) => this.orgService.getMembers(org, { removeConcierges: true, hideEmails: isAnonymous }))
   );
@@ -30,9 +29,8 @@ export class MemberComponent implements OnInit {
     private dynTitle: DynamicTitleService,
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.dynTitle.setPageTitle('Sales Agent', 'Contact');
-    this.isAnonymous = await this.authService.isSignedInAnonymously();
   }
 
 }

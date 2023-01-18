@@ -67,4 +67,9 @@ export class OrganizationLoginComponent implements OnDestroy {
     this.signinIn = false;
   }
 
+  goBack() {
+    this.service.updateAnonymousCredentials({ role: undefined });
+    this.router.navigate(['../email'], { relativeTo: this.route });
+  }
+
 }
