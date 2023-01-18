@@ -225,7 +225,7 @@ describe('Deal negociation', () => {
       getOfferIdFromNotification().then((docId: string) => {
         get('notification-message').should('have.length', 1).and('contain', `Your offer ${docId} was successfully sent.`);
         checkOfferEmail('buyer', docId);
-        getContractId(docId).then(offerId => checkOfferEmail('seller', offerId));
+        getContractId(docId).then(contractId => checkOfferEmail('seller', contractId));
         checkOfferEmail('admin');
       });
       get('mark-as-read').click();
