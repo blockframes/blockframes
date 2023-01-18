@@ -8,6 +8,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { Observable } from 'rxjs';
 import { AlgoliaService } from '@blockframes/utils/algolia';
 import { AuthService } from '@blockframes/auth/service';
+
 @Component({
   selector: 'festival-marketplace-organization-title',
   templateUrl: './title.component.html',
@@ -27,7 +28,7 @@ export class TitleComponent implements OnInit {
     private parent: ViewComponent,
     private dynTitle: DynamicTitleService,
     private algoliaService: AlgoliaService,
-    private authService: AuthService
+    private authService: AuthService,
   ) { }
 
   async ngOnInit() {
