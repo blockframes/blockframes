@@ -10,7 +10,7 @@
     <h5>Phone Number</h5>
     <p>{{ org.addresses.main.phoneNumber }}</p>
   </article>
-  <article *ngIf="org.email && !isAnonymous">
+  <article *ngIf="org.email">
     <h5>Email Address</h5>
     <a [href]="'mailto:' + org.email">{{ org.email }}</a>
   </article>

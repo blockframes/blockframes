@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 
 // Blockframes
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
@@ -24,6 +25,7 @@ import { PasswordInputModule } from '@blockframes/ui/form/password-input/passwor
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatIconModule,
     AppLogoModule,
     SnackbarErrorModule,
     PasswordInputModule,
