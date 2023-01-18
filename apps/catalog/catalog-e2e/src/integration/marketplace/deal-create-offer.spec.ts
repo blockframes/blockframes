@@ -1,4 +1,4 @@
-import { territories, MediaGroup, medias, TerritoryGroup, Notification, User } from '@blockframes/model';
+import { territories, MediaGroup, medias, TerritoryGroup, Notification, Contract } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -225,7 +225,7 @@ describe('Deal negociation', () => {
       getOfferIdFromNotification().then((docId: string) => {
         get('notification-message').should('have.length', 1).and('contain', `Your offer ${docId} was successfully sent.`);
         checkOfferEmail('buyer', docId);
-        checkOfferEmail('seller');
+        getContractId(docId).then(offerId => checkOfferEmail('seller', offerId));
         checkOfferEmail('admin');
       });
       get('mark-as-read').click();
@@ -364,30 +364,45 @@ function getOfferIdFromNotification() {
     });
 }
 
+function getContractId(offerId: string) {
+  return firestore
+    .queryData({ collection: 'contracts', field: 'offerId', operator: '==', value: offerId })
+    .then((contracts: Contract[]) => {
+      expect(contracts).to.have.lengthOf(1);
+      return contracts[0].id;
+    });
+}
+
 function checkOfferEmail(user: 'buyer' | 'seller' | 'admin', docId?: string) {
   const mailData = {
     buyer: {
       recipient: buyer.user.email,
       subject: `Your offer ${docId} was successfully submitted`,
       linkText: 'See Offer',
+      redirect: `c/o/marketplace/offer/${docId}`,
     },
     seller: {
       recipient: seller.user.email,
       subject: `You just received an offer for ${seller.movie.title.international} from ${buyer.org.name}`,
       linkText: 'Start discussions',
+      redirect: `c/o/dashboard/sales/${docId}`,
     },
     admin: {
       recipient: supportMailosaur,
       subject: `${buyer.org.name} created a new Offer.`,
-      linkText: null,
     },
   };
 
   interceptEmail({ sentTo: mailData[user].recipient }).then(mail => {
     expect(mail.subject).to.eq(mailData[user].subject);
     if (user !== 'admin') {
-      const offerLinkPresent = mail.html.links.some(link => link.text === mailData[user].linkText);
-      expect(offerLinkPresent).to.be.true;
+      const offerLink = mail.html.links.filter(link => link.text === mailData[user].linkText)[0];
+      cy.request(offerLink.href).then(response => {
+        expect(response.redirects).to.have.lengthOf(1);
+        const redirect = response.redirects[0];
+        expect(redirect).to.include('302');
+        expect(redirect).to.include(mailData[user].redirect);
+      });
     }
   });
 }
