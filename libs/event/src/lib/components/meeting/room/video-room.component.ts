@@ -51,10 +51,10 @@ export class MeetingVideoRoomComponent implements OnInit, OnDestroy {
 
     this.attendees$ = this.twilioService.attendees$;
 
-    const name = displayName(this.authService.anonymouseOrRegularProfile);
+    const name = displayName(this.authService.anonymousOrRegularProfile);
     await this.twilioService.initLocal(name);
 
-    this.twilioService.connect(eventId, this.authService.anonymouseOrRegularProfile);
+    this.twilioService.connect(eventId, this.authService.anonymousOrRegularProfile);
   }
 
   ngOnDestroy() {

@@ -72,7 +72,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
   }
 
   toFirestore(analytic: Partial<Analytics<AnalyticsTypes>>, actionType: 'add' | 'update') {
-    const profile = this.authService.anonymouseOrRegularProfile;
+    const profile = this.authService.anonymousOrRegularProfile;
     if (actionType === 'update') return analytic;
 
     return {
@@ -229,7 +229,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
   async addOrganizationPageView(org: Organization) {
     if (await this.isOperator()) return;
 
-    const profile = this.authService.anonymouseOrRegularProfile;
+    const profile = this.authService.anonymousOrRegularProfile;
     if (!profile) return;
 
     const start = startOfDay(new Date());
