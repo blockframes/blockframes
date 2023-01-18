@@ -5,11 +5,9 @@ import { Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { firstValueFrom, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AlgoliaService } from '@blockframes/utils/algolia';
 import { AuthService } from '@blockframes/auth/service';
-import { AnalyticsService } from '@blockframes/analytics/service';
-
 @Component({
   selector: 'festival-marketplace-organization-title',
   templateUrl: './title.component.html',
@@ -29,8 +27,7 @@ export class TitleComponent implements OnInit {
     private parent: ViewComponent,
     private dynTitle: DynamicTitleService,
     private algoliaService: AlgoliaService,
-    private authService: AuthService,
-    private analyticsService: AnalyticsService
+    private authService: AuthService
   ) { }
 
   async ngOnInit() {
@@ -48,8 +45,5 @@ export class TitleComponent implements OnInit {
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
     this.isAnonymous = await this.authService.isSignedInAnonymously();
-
-    const org = await firstValueFrom(this.parent.org$);
-    this.analyticsService.addOrganizationPageView(org);
   }
 }
