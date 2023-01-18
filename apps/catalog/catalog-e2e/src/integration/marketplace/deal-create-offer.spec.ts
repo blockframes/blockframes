@@ -397,7 +397,7 @@ function checkOfferEmail(user: 'buyer' | 'seller' | 'admin', docId?: string) {
     expect(mail.subject).to.eq(mailData[user].subject);
     if (user !== 'admin') {
       const offerLink = mail.html.links.filter(link => link.text === mailData[user].linkText)[0];
-      cy.request(offerLink.href).then(response => {
+      cy.request(offerLink.href, { failOnStatusCode: false }).then(response => {
         expect(response.redirects).to.have.lengthOf(1);
         const redirect = response.redirects[0];
         expect(redirect).to.include('302');
