@@ -21,7 +21,7 @@
         </ng-template>
       </button>
     </article>
-    <bf-table [source]="movies" useFilter pagination="50">
+    <bf-table [source]="movies" clickable useFilter pagination="50" (rowClick)="goToEdit($event)">
       <ng-template colRef="poster" let-poster>
         <img class="poster" [ref]="poster" asset="empty_poster.svg">
       </ng-template>
@@ -74,7 +74,7 @@
         <span [matTooltip]="releaseMedias | join"> {{ releaseMedias | join | maxLength: 30 }} </span>
       </ng-template>
       <ng-template colRef="id" label="Action" let-movieId sticky>
-        <a target="_blank" [routerLink]="['/c/o/dashboard/crm/movie', movieId]">
+        <a target="_blank" [routerLink]="['/c/o/dashboard/crm/movie', movieId]" (click)="$event.stopPropagation()">
           <mat-icon svgIcon="launch"></mat-icon>
         </a>
       </ng-template>
