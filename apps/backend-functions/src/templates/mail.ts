@@ -624,7 +624,7 @@ export function eventCreatedAdminEmail(app: App, event: Event<EventMeta>) {
 export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: OrgEmailData, offerId: string) {
   const pageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
   return {
-    to: supportEmails.catalog,
+    to: getSupportEmail('catalog'),
     subject: `${org.name} created a new Offer.`,
     text: `
       Date: ${format(new Date(), 'dd MMM, yyyy')}
@@ -639,7 +639,7 @@ export function adminOfferCreatedConfirmationEmail(toUser: UserEmailData, org: O
 export function toAdminCounterOfferEmail(title: Movie, offerId: string) {
   const pageUrl = `${appUrl.crm}/c/o/dashboard/crm/offer/${offerId}/view`;
   return {
-    to: supportEmails.catalog,
+    to: getSupportEmail('catalog'),
     subject: 'Counter offer created',
     text: `The counter-offer for ${title.title.international} was successfully sent.
     To review it: ${pageUrl}`
@@ -648,7 +648,7 @@ export function toAdminCounterOfferEmail(title: Movie, offerId: string) {
 
 export function toAdminContractAccepted(title: Movie, pageUrl: string) {
   return {
-    to: supportEmails.catalog,
+    to: getSupportEmail('catalog'),
     subject: 'Contract accepted',
     text: `The contract for ${title.title.international} has been accepted.
     To review it: ${pageUrl}`
@@ -657,7 +657,7 @@ export function toAdminContractAccepted(title: Movie, pageUrl: string) {
 
 export function toAdminContractDeclined(title: Movie, pageUrl: string) {
   return {
-    to: supportEmails.catalog,
+    to: getSupportEmail('catalog'),
     subject: 'Contract declined',
     text: `The contract for ${title.title.international} has been declined.
     To review it: ${pageUrl}`
@@ -667,7 +667,7 @@ export function toAdminContractDeclined(title: Movie, pageUrl: string) {
 export function screenerRequested(title: Movie, buyerOrg: Organization, sellerOrgs: Organization[]) {
   const orgNames = sellerOrgs.map(org => `${org.name} (${org.addresses.main.country})`).join(', ');
   return {
-    to: supportEmails.catalog,
+    to: getSupportEmail('catalog'),
     subject: 'New screener request',
     text: `Organization(s) ${orgNames} received a screener request from ${buyerOrg.name} (${buyerOrg.activity}-${buyerOrg.addresses.main.country}) to watch the screener for Title ${title.title.international}.`
   };
@@ -676,7 +676,7 @@ export function screenerRequested(title: Movie, buyerOrg: Organization, sellerOr
 export function askingPriceRequested(title: Movie, buyerOrg: Organization, sellerOrgs: Organization[], data: RequestAskingPriceData) {
   const orgNames = sellerOrgs.map(org => `${org.name} (${org.addresses.main.country})`).join(', ');
   return {
-    to: supportEmails.catalog,
+    to: getSupportEmail('catalog'),
     subject: 'New asking price request',
     text: `
       Organization(s) ${orgNames} received an asking price request from ${buyerOrg.name} (${buyerOrg.activity}-${buyerOrg.addresses.main.country}) for Title ${title.title.international}.
