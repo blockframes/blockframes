@@ -19,7 +19,7 @@
     </div>
   </article>
 
-  <bf-table [source]="orgs" pagination="50" useFilter>
+  <bf-table [source]="orgs" clickable pagination="50" useFilter (rowClick)="goToEdit($event)">
     <ng-template colRef="id" let-id>{{ id }}</ng-template>
     <ng-template colRef="status" let-status sort>
       <bf-tag>{{ status }}</bf-tag>
@@ -44,7 +44,7 @@
       </ul>
     </ng-template>
     <ng-template colRef="id" label="Action" let-orgId sticky>
-      <a target="_blank" [routerLink]="['/c/o/dashboard/crm/organization', orgId]">
+      <a target="_blank" [routerLink]="['/c/o/dashboard/crm/organization', orgId]" (click)="$event.stopPropagation()">
         <mat-icon svgIcon="launch"></mat-icon>
       </a>
     </ng-template>
