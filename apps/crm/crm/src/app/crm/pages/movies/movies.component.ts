@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { Router } from '@angular/router';
 
 import {
-  Movie,
   isScreening,
   CrmMovie,
   smartJoin,
@@ -79,7 +78,7 @@ export class MoviesComponent implements OnInit {
     );
   }
 
-  goToEdit(movie: Movie) {
+  goToEdit(movie: CrmMovie) {
     this.router.navigate([`/c/o/dashboard/crm/movie/${movie.id}`]);
   }
 
@@ -88,7 +87,7 @@ export class MoviesComponent implements OnInit {
       this.exporting = true;
       this.cdr.markForCheck();
 
-      const getLanguage = (m: Movie, key: keyof MovieLanguageSpecification) => {
+      const getLanguage = (m: CrmMovie, key: keyof MovieLanguageSpecification) => {
         const result: Language[] = [];
         for (const [language, specification] of Object.entries(m.languages)) {
           if (specification[key]) result.push(language as Language);
