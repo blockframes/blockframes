@@ -10,7 +10,7 @@ import { unique } from '@blockframes/utils/helpers';
 import { APP } from '@blockframes/utils/routes/utils';
 
 import { joinWith } from 'ngfire';
-import { firstValueFrom } from 'rxjs';
+import { combineLatest, firstValueFrom } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
 @Component({
@@ -47,12 +47,19 @@ export class BuyersAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  buyersAnalytics$ = this.analyticsWithUsersAndOrgs$.pipe(
-    map(({ users, orgs, analytics }) => {
+  private buyerOrgAnalytics$ = this.analytics.getOrganizationAnalytics().pipe(
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  buyersAnalytics$ = combineLatest([this.analyticsWithUsersAndOrgs$, this.buyerOrgAnalytics$]).pipe(
+    map(([{ users, orgs, analytics }, organization]) => {
       return users.map(user => {
         const org = orgs.find(o => o.id === user.orgId);
         const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === user.uid);
-        return aggregate(analyticsOfUser, { user, org });
+        const mainData = aggregate(analyticsOfUser, { user, org });
+        const { pageView: orgPageViews } = aggregate(organization.filter(a => a.name === 'pageView' && a.meta.uid === user.uid)); // TODO #9124
+        // TODO #9158 mainData.interactions.global.count += orgPageViews; for pie orgActivity 
+        return { ...mainData, orgPageViews };
       });
     }),
     shareReplay({ bufferSize: 1, refCount: true })
@@ -62,9 +69,12 @@ export class BuyersAnalyticsComponent {
     map(aggregated => counter(aggregated, 'org.activity', (item: AggregatedAnalytic) => item.interactions.global.count)),
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
   ));
-  
-  aggregatedCards$ = firstValueFrom(this.analyticsWithUsersAndOrgs$.pipe(
-    map(({ analytics }) => aggregate(analytics)),
+
+  aggregatedCards$ = firstValueFrom(combineLatest([this.analyticsWithUsersAndOrgs$, this.buyerOrgAnalytics$]).pipe(
+    map(([{ analytics }, organization]) => {
+      const { pageView: orgPageViews } = aggregate(organization.filter(a => a.type === 'organization' && a.name === 'pageView'));  // TODO #9124
+      return { ...aggregate(analytics.filter(a => a.type === 'title')), orgPageViews };
+    }),
     map(toCards)
   ));
 

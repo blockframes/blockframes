@@ -50,6 +50,7 @@ export class HomeComponent {
     })
   ));
 
+  // TODO #9158
   titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
@@ -58,6 +59,20 @@ export class HomeComponent {
       return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard);
     }),
     shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  private organizationAnalytics$ = this.analyticsService.getOrganizationAnalytics().pipe(
+    joinWith({
+      org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
+    }, { shouldAwait: true }),
+    map(analyticsWithOrg => {
+      return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard);
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  private titleAndOrganizationAnalytics$ = combineLatest([this.titleAnalytics$, this.organizationAnalytics$]).pipe(
+    map(([titleAnalytics, organizationAnalytics]) => [...titleAnalytics, ...organizationAnalytics])
   );
 
   popularTitle$ = firstValueFrom(this.titleAnalytics$.pipe(
@@ -92,12 +107,12 @@ export class HomeComponent {
     map(analytics => analytics.filter(analytic => analytic.name === 'pageView'))
   ));
 
-  activeCountries$ = firstValueFrom(this.titleAnalytics$.pipe(
+  activeCountries$ = firstValueFrom(this.titleAnalytics$.pipe(  // TODO #9158
     map(analytics => counter(analytics, 'org.addresses.main.country')),
     map(counted => countedToAnalyticData(counted, 'territories'))
   ));
 
-  activeBuyers$ = firstValueFrom(this.titleAnalytics$.pipe(
+  activeBuyers$ = firstValueFrom(this.titleAndOrganizationAnalytics$.pipe(
     filter(analytics => analytics.length > 0),
     map(analytics => {
       const uids = unique(analytics.map(analytic => analytic.meta.uid));
@@ -113,7 +128,9 @@ export class HomeComponent {
         const user = users.filter(u => !!u).find(u => u.uid === uid) || createUser({ uid, lastName: deletedUserIdentifier });
         const org = user?.orgId ? orgs.find(o => o?.id === user.orgId) : undefined;
         const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === uid);
-        return aggregate(analyticsOfUser, { user, org });
+        const mainData = aggregate(analyticsOfUser.filter(a => a.type === 'title'), { user, org });
+        const { pageView: orgPageViews } = aggregate(analyticsOfUser.filter(a => a.type === 'organization' && a.name === 'pageView'));  // TODO #9124
+        return { ...mainData, orgPageViews };
       });
     }),
     map(users => users.sort((userA, userB) => userB.interactions.global.count - userA.interactions.global.count))

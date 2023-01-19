@@ -6,7 +6,7 @@ import {
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate, counter, countedToAnalyticData, MetricCard, events, toCards } from '@blockframes/analytics/utils';
+import { aggregate, counter, countedToAnalyticData, MetricCard, toCards } from '@blockframes/analytics/utils';
 import {
   AggregatedAnalytic,
   isScreening,
@@ -25,7 +25,6 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { convertToTimeString, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { joinWith } from 'ngfire';
 import {
-  BehaviorSubject,
   combineLatest,
   firstValueFrom,
   map,
@@ -40,14 +39,6 @@ import { scrollIntoView } from "@blockframes/utils/browser/utils";
 import { formatDate } from '@angular/common';
 
 interface MovieWithAnalytics extends Movie { analytics: Analytics<'title'>[]; };
-
-
-function filterAnalytics(title: string, analytics: AggregatedAnalytic[]) {
-  const name = events.find(event => event.title === title)?.name;
-  return name
-    ? analytics.filter(aggregated => aggregated[name] > 0)
-    : analytics;
-}
 
 function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
   return data.map(({ title, interactions }) => ({
@@ -110,6 +101,7 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
     }, { shouldAwait: true })
   );
 
+  // TODO #9158
   buyerAnalytics$ = this.titleService.valueChanges(fromOrgAndAccessible(this.orgService.org.id, this.app)).pipe(
     joinWith({
       analytics: title => {
@@ -120,9 +112,17 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  aggregatedCards$ = this.buyerAnalytics$.pipe(
-    map(titles => titles.map(title => title.analytics).flat()),
-    map(analytics => aggregate(analytics)),
+  // TODO #9158
+  private buyerOrgAnalytics$ = this.analytics.getOrganizationAnalytics({ uid: this.route.snapshot.params.userId }).pipe(
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  aggregatedCards$ = combineLatest([this.buyerAnalytics$, this.buyerOrgAnalytics$]).pipe(
+    map(([titles, organization]) => [...titles.map(title => title.analytics).flat(), ...organization]),
+    map(analytics => {
+      const { pageView: orgPageViews } = aggregate(analytics.filter(a => a.type === 'organization' && a.name === 'pageView'));  // TODO #9124
+      return { ...aggregate(analytics.filter(a => a.type === 'title')), orgPageViews };
+    }),
     map(toCards)
   );
 
@@ -147,14 +147,8 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
     }),
   );
 
-  filter$ = new BehaviorSubject('');
-  filtered$ = combineLatest([
-    this.filter$.asObservable(),
-    this.aggregatedPerTitle$.pipe(
-      map(aggregated => aggregated.filter(a => a.interactions.global.count > 0))
-    )
-  ]).pipe(
-    map(([filter, analytics]) => filterAnalytics(filter, analytics))
+  filtered$ = this.aggregatedPerTitle$.pipe(
+    map(aggregated => aggregated.filter(a => a.interactions.global.count > 0))
   );
 
   invitations$ = combineLatest([

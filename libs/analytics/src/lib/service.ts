@@ -85,7 +85,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     }
   }
 
-  getTitleAnalytics(params?: { titleId?: string, uid?: string, eventName?: EventName }) {
+  getTitleAnalytics(params?: { titleId?: string, uid?: string }) {
     const { orgId } = this.authService.profile;
 
     const query = [
@@ -96,10 +96,25 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
 
     if (params?.titleId) query.push(where('meta.titleId', '==', params.titleId));
     if (params?.uid) query.push(where('meta.uid', '==', params.uid));
-    if (params?.eventName) query.push(where('name', '==', params.eventName));
 
     return this.valueChanges(query).pipe(
       map((analytics: Analytics<'title'>[]) => filterOwnerEvents(analytics))
+    );
+  }
+
+  getOrganizationAnalytics(params?: { uid?: string }) {
+    const { orgId } = this.authService.profile;
+
+    const query = [
+      where('type', '==', 'organization'),
+      where('meta.organizationId', '==', orgId),
+      where('_meta.createdFrom', '==', this.app)
+    ];
+
+    if (params?.uid) query.push(where('meta.uid', '==', params.uid));
+
+    return this.valueChanges(query).pipe(
+      map((analytics: Analytics<'organization'>[]) => filterOwnerEvents(analytics))
     );
   }
 

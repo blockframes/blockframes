@@ -123,8 +123,8 @@ export class UsersComponent implements OnInit {
       const rows = users.map(r => {
         const userAnalytics = allAnalytics.filter(analytic => analytic.meta.uid === r.uid);
         const a = aggregate(userAnalytics);
-        const titleViews = aggregate(userAnalytics.filter(a => a.type === 'title' && a.name === 'pageView'));
-        const orgViews = aggregate(userAnalytics.filter(a => a.type === 'organization' && a.name === 'pageView'));
+        const titleViews = aggregate(userAnalytics.filter(a => a.type === 'title' && a.name === 'pageView'));  // TODO #9124
+        const orgViews = aggregate(userAnalytics.filter(a => a.type === 'organization' && a.name === 'pageView'));  // TODO #9124
         const role = getMemberRole(r);
         const type = r.org ? getOrgModuleAccess(r.org).includes('dashboard') ? 'seller' : 'buyer' : '--';
         const row = {
