@@ -15,7 +15,8 @@ import {
   AvailsFilter,
   EventName,
   PublicUser,
-  AnonymousCredentials
+  AnonymousCredentials,
+  filterOwnerEvents
 } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -111,19 +112,19 @@ export class UsersComponent implements OnInit {
         return role.roles[r.uid];
       }
 
-      const titleQuery = [where('type', '==', 'title'), where('name', '==', 'pageView')];
-      const titleAnalytics = await this.analyticsService.load<Analytics<'title'>>(titleQuery);
+      const titleOrgQuery = [where('type', 'in', ['title', 'organization']), where('name', '==', 'pageView')];
+      const titleOrgAnalytics = await this.analyticsService.load<Analytics<'title' | 'organization'>>(titleOrgQuery);
 
       const titleSearchQuery = [where('type', '==', 'titleSearch')];
       const titleSearchAnalytics = await this.analyticsService.load<Analytics<'titleSearch'>>(titleSearchQuery);
 
-      const allAnalytics = [...titleAnalytics, ...titleSearchAnalytics].filter(analytic => {
-        return (analytic.meta.titleId && !analytic.meta.ownerOrgIds?.includes(analytic.meta.orgId)) || true;
-      });
+      const allAnalytics = filterOwnerEvents([...titleOrgAnalytics, ...titleSearchAnalytics]);
 
       const rows = users.map(r => {
         const userAnalytics = allAnalytics.filter(analytic => analytic.meta.uid === r.uid);
         const a = aggregate(userAnalytics);
+        const titleViews = aggregate(userAnalytics.filter(a => a.type === 'title' && a.name === 'pageView'));
+        const orgViews = aggregate(userAnalytics.filter(a => a.type === 'organization' && a.name === 'pageView'));
         const role = getMemberRole(r);
         const type = r.org ? getOrgModuleAccess(r.org).includes('dashboard') ? 'seller' : 'buyer' : '--';
         const row = {
@@ -155,7 +156,8 @@ export class UsersComponent implements OnInit {
           'first interaction on catalog': a.interactions.catalog.first ? a.interactions.catalog.first : '--',
           'last interaction on catalog': a.interactions.catalog.last ? a.interactions.catalog.last : '--',
           'last interaction on festival': a.interactions.festival.last ? a.interactions.festival.last : '--',
-          'title views': a.pageView,
+          'line-up views': orgViews.pageView,
+          'title views': titleViews.pageView,
           'exported Titles': a.exportedTitles,
           'filtered Titles': a.filteredTitles,
           'saved Filters': a.savedFilters,
@@ -191,7 +193,7 @@ export class UsersComponent implements OnInit {
     const availsSearchQuery = [where('type', '==', 'titleSearch'), where('name', 'in', ['filteredAvailsCalendar', 'filteredAvailsMap'])];
     const availsSearchAnalytics = await this.analyticsService.load<Analytics<'titleSearch'>>(availsSearchQuery);
 
-    const allAnalytics = [...titleAnalytics, ...availsSearchAnalytics].filter(analytic => !analytic.meta.ownerOrgIds?.includes(analytic.meta.orgId));
+    const allAnalytics = filterOwnerEvents([...titleAnalytics, ...availsSearchAnalytics]);
 
     const allTitleIds = unique(allAnalytics.map(analytic => analytic.meta.titleId).filter(t => !!t));
     const allTitles = await this.movieService.load(allTitleIds);
@@ -256,7 +258,7 @@ export class UsersComponent implements OnInit {
     }> = {};
 
     const exportedRows = [];
-    for (const analytic of organizationAnalytics) {
+    for (const analytic of filterOwnerEvents(organizationAnalytics)) {
       if (!aggregator[analytic.meta.profile.email]) {
         aggregator[analytic.meta.profile.email] = {
           profile: analytic.meta.profile,

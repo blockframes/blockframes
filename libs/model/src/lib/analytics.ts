@@ -149,3 +149,21 @@ export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>):
     ...analytic
   };
 }
+
+const isTitleAnalytics = (analytic: Analytics): analytic is Analytics<'title'> => analytic.type === 'title';
+const isTitleSearchAnalytics = (analytic: Analytics): analytic is Analytics<'titleSearch'> => analytic.type === 'titleSearch';
+const isOrganizationAnalytics = (analytic: Analytics): analytic is Analytics<'organization'> => analytic.type === 'organization';
+
+/**
+ * Filter out analytics events created by owner of movie or organization
+ * @param analytics 
+ * @returns 
+ */
+export function filterOwnerEvents<K extends keyof AnalyticsTypeRecord>(analytics: Analytics<K>[]): Analytics<K>[] {
+  return analytics.filter(analytic => {
+    if (isTitleAnalytics(analytic)) return !analytic.meta.ownerOrgIds?.includes(analytic.meta.orgId);
+    if (isTitleSearchAnalytics(analytic)) return analytic.meta.titleId ? !analytic.meta.ownerOrgIds?.includes(analytic.meta.orgId) : true;
+    if (isOrganizationAnalytics(analytic)) return analytic.meta.organizationId !== analytic.meta.orgId;
+    return false; // Unknown analytics type..
+  });
+}

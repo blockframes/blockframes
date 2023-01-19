@@ -14,6 +14,7 @@ import {
   ReleaseMediaValue,
   isMandate,
   Organization,
+  filterOwnerEvents,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
@@ -198,7 +199,7 @@ export class MoviesComponent implements OnInit {
     const availsSearchQuery = [where('type', '==', 'titleSearch'), where('name', 'in', ['filteredAvailsCalendar', 'filteredAvailsMap'])];
     const availsSearchAnalytics = await this.analyticsService.load<Analytics<'titleSearch'>>(availsSearchQuery);
 
-    const allAnalytics = [...titleAnalytics, ...availsSearchAnalytics].filter(analytic => !analytic.meta.ownerOrgIds?.includes(analytic.meta.orgId));
+    const allAnalytics = filterOwnerEvents([...titleAnalytics, ...availsSearchAnalytics]);
 
     const allUids = unique(allAnalytics.map(analytic => analytic.meta.uid));
     const allUsers = await this.userService.load(allUids);

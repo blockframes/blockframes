@@ -18,7 +18,8 @@ import {
   Module,
   createTitleSearchMeta,
   Organization,
-  createOrganizationMeta
+  createOrganizationMeta,
+  filterOwnerEvents
 } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
@@ -98,8 +99,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     if (params?.eventName) query.push(where('name', '==', params.eventName));
 
     return this.valueChanges(query).pipe(
-      // Filter out analytics from owners of title
-      map((analytics: Analytics<'title'>[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId)))
+      map((analytics: Analytics<'title'>[]) => filterOwnerEvents(analytics))
     );
   }
 
