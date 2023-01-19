@@ -86,10 +86,6 @@ export class MoviesComponent implements OnInit {
     window.open(url, '_blank', 'noreferrer');
   }
 
-  goToEdit(movie: Movie) {
-    this.router.navigate([`/c/o/dashboard/crm/movie/${movie.id}`]);
-  }
-
   public exportTable(movies: CrmMovie[]) {
     try {
       this.exporting = true;
