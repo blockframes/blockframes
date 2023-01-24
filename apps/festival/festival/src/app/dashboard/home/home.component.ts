@@ -23,7 +23,7 @@ import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter, distinctUntilChanged } from 'rxjs/operators';
-import { combineLatest, firstValueFrom } from 'rxjs';
+import { combineLatest, firstValueFrom, of } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
@@ -50,8 +50,7 @@ export class HomeComponent {
     })
   ));
 
-  // TODO #9158 if no titleAnalytics$ but has orgAnalytics$, page will display no data
-  titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
+  private titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
     }, { shouldAwait: true }),
@@ -71,16 +70,15 @@ export class HomeComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  private titleAndOrgAnalytics$ = combineLatest([this.titleAnalytics$, this.orgAnalytics$]).pipe(
+  titleAndOrgAnalytics$ = combineLatest([this.titleAnalytics$, this.orgAnalytics$]).pipe(
     map(([titleAnalytics, orgAnalytics]) => [...titleAnalytics, ...orgAnalytics])
   );
 
   popularTitle$ = firstValueFrom(this.titleAnalytics$.pipe(
-    filter(analytics => analytics.length > 0),
     map(analytics => counter(analytics, 'meta.titleId')),
     map(counted => countedToAnalyticData(counted)),
     map(analyticData => analyticData.sort((a, b) => a.count > b.count ? -1 : 1)),
-    switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key))
+    switchMap(([popularEvent]) => popularEvent ? this.movieService.valueChanges(popularEvent.key) : of(undefined))
   ));
 
   private titleAnalyticsOfPopularTitle$ = combineLatest([this.popularTitle$, this.titleAnalytics$]).pipe(
