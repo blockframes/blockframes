@@ -1,7 +1,7 @@
 ﻿import { NgModule } from '@angular/core';
 import { EventComponent } from './event.component';
 import { AsideModule } from './../marketplace/layout/aside/aside.module';
-import { EventLayoutModule } from '@blockframes/ui/layout/event/event.module';
+import { AnonymousLayoutModule } from '@blockframes/ui/layout/anonymous/anonymous.module';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -114,7 +114,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     CommonModule,
     FlexLayoutModule,
-    EventLayoutModule,
+    AnonymousLayoutModule,
     AsideModule,
     ImageModule,
     SafariBannerModule

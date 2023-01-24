@@ -26,6 +26,8 @@ export class CardComponent {
   public ltLg$ = this.breakpointsService.ltLg;
 
   @Input() size: 'banner' | 'poster' | 'avatar';
+  @Input() showWishlistButton = true;
+
   private _movie: Movie;
   get movie() {
     return this._movie;
@@ -35,7 +37,7 @@ export class CardComponent {
   }
   @Input() link: string | string[] = '..';
 
-  constructor(private breakpointsService: BreakpointsService) {}
+  constructor(private breakpointsService: BreakpointsService) { }
 
   get placeholderAsset() {
     return this.size === 'banner' ? 'empty_banner.png' : 'empty_poster.svg';

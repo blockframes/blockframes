@@ -154,11 +154,13 @@ export class OrganizationService extends BlockframesCollection<Organization> {
     return this.update(orgId, { userIds });
   }
 
-  public async getMembers(_org: string | Organization, options?: { removeConcierges: boolean }): Promise<PublicUser[]> {
+  public async getMembers(_org: string | Organization, options?: { removeConcierges: boolean, hideEmails?: boolean }): Promise<PublicUser[]> {
     const org = typeof _org === 'string' ? await this.getValue(_org) : _org;
     const promises = org.userIds.map((uid) => this.userService.getValue(uid));
     const users = await Promise.all(promises);
-    return users.map((u) => createPublicUser(u)).filter(member => options?.removeConcierges ? !member.email.includes('concierge+') : true);
+    return users.map((u) => createPublicUser(u))
+      .filter(member => options?.removeConcierges ? !member.email.includes('concierge+') : true)
+      .map(member => options?.hideEmails ? ({ ...member, hideEmail: true }) : member);
   }
 
   public async getMemberRole(_org: Organization | string, uid): Promise<UserRole> {

@@ -6,6 +6,7 @@ import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { NavigationService } from '@blockframes/ui/navigation.service';
+import { AuthService } from '@blockframes/auth/service';
 
 @Component({
   selector: 'org-view',
@@ -21,16 +22,20 @@ export class ViewComponent implements OnInit, OnDestroy {
   public navClicked = false;
   private countRouteEvents = 1;
   private sub: Subscription;
+  public isAnonymous: boolean;
 
   constructor(
     private router: Router,
-    private navService: NavigationService    
+    private navService: NavigationService,
+    private authService: AuthService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.sub = this.router.events
       .pipe(filter((evt: Event) => evt instanceof NavigationEnd))
       .subscribe(() => this.countRouteEvents++);
+
+    this.isAnonymous = await this.authService.isSignedInAnonymously();
   }
 
   ngOnDestroy() {

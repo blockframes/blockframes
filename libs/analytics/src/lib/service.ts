@@ -16,7 +16,10 @@ import {
   createDocumentMeta,
   MovieAvailsSearch,
   Module,
-  createTitleSearchMeta
+  createTitleSearchMeta,
+  Organization,
+  createOrganizationMeta,
+  filterOwnerEvents
 } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
@@ -70,7 +73,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
   }
 
   toFirestore(analytic: Partial<Analytics<AnalyticsTypes>>, actionType: 'add' | 'update') {
-    const profile = this.authService.profile;
+    const profile = this.authService.anonymousOrRegularProfile;
     if (actionType === 'update') return analytic;
 
     return {
@@ -82,7 +85,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     }
   }
 
-  getTitleAnalytics(params?: { titleId?: string, uid?: string, eventName?: EventName }) {
+  getTitleAnalytics(params?: { titleId?: string, uid?: string }) {
     const { orgId } = this.authService.profile;
 
     const query = [
@@ -93,11 +96,27 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
 
     if (params?.titleId) query.push(where('meta.titleId', '==', params.titleId));
     if (params?.uid) query.push(where('meta.uid', '==', params.uid));
-    if (params?.eventName) query.push(where('name', '==', params.eventName));
 
     return this.valueChanges(query).pipe(
-      // Filter out analytics from owners of title
-      map((analytics: Analytics<'title'>[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId)))
+      map((analytics: Analytics<'title'>[]) => filterOwnerEvents(analytics))
+    );
+  }
+
+  getOrganizationAnalytics(params?: { uid?: string }) {
+    const { orgId } = this.authService.profile;
+
+    const query = [
+      where('type', '==', 'organization'),
+      where('meta.organizationId', '==', orgId),
+      where('_meta.createdFrom', '==', this.app)
+    ];
+
+    if (params?.uid) query.push(where('meta.uid', '==', params.uid));
+
+    return this.valueChanges(query).pipe(
+      map((analytics: Analytics<'organization'>[]) => filterOwnerEvents(analytics)),
+      // We don't want to display anonymous data on seller's dashboard, we filter it out here directly
+      map((analytics: Analytics<'organization'>[]) => analytics.filter(a => !!a.meta.orgId)) // TODO #9158
     );
   }
 
@@ -200,10 +219,11 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     if (!profile) return;
 
     const start = startOfDay(new Date());
-    const analytics = await this.getValue([
+    const analytics: Analytics<'title'>[] = await this.getValue([
       where('_meta.createdBy', '==', profile.uid),
       where('_meta.createdFrom', '==', this.app),
       where('meta.titleId', '==', title.id),
+      where('type', '==', 'title'),
       where('name', '==', 'pageView')
     ]);
     // only one pageView event per day per title per user is recorded.
@@ -219,6 +239,53 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     return this.add({
       name: 'pageView',
       type: 'title',
+      meta
+    });
+  }
+
+  async addOrganizationPageView(org: Organization) {
+    if (await this.isOperator()) return;
+
+    const profile = this.authService.anonymousOrRegularProfile;
+    if (!profile) return;
+
+    const start = startOfDay(new Date());
+    const analytics: Analytics<'organization'>[] = await this.getValue([
+      where('_meta.createdBy', '==', profile.uid),
+      where('_meta.createdFrom', '==', this.app),
+      where('meta.organizationId', '==', org.id),
+      where('type', '==', 'organization'),
+      where('name', '==', 'orgPageView')
+    ]);
+
+    // only one orgPageView event per day per org per user is recorded.
+    if (analytics.some(analytic => analytic._meta.createdAt > start)) {
+
+      if (profile.orgId) { // User is not anonymous
+        // Check if previous events where made with same uid but as anonymous 
+        // (user converted his anonymous account to a real one when signin-up)
+        const anonymousAnalytics = analytics.filter(a => !a.meta.orgId);
+
+        // Append missing orgId to previous events made the same day
+        return Promise.all(anonymousAnalytics
+          .map(a => ({ ...a, meta: { ...a.meta, orgId: profile.orgId } }))
+          .map(a => this.update(a.id, a))
+        );
+      }
+
+      return;
+    };
+
+    const meta = createOrganizationMeta({
+      organizationId: org.id,
+      orgId: profile.orgId,
+      uid: profile.uid,
+      profile
+    });
+
+    return this.add({
+      name: 'orgPageView',
+      type: 'organization',
       meta
     });
   }

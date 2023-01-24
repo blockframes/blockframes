@@ -2,7 +2,18 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
-import { Movie, storeStatus, productionStatus, getAllAppsExcept, Analytics, AggregatedAnalytic, StoreStatus, Organization, User } from '@blockframes/model';
+import {
+  Movie,
+  storeStatus,
+  productionStatus,
+  getAllAppsExcept,
+  Analytics,
+  AggregatedAnalytic,
+  StoreStatus,
+  Organization,
+  User,
+  filterOwnerEvents
+} from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -80,8 +91,7 @@ export class MovieComponent implements OnInit {
       where('meta.titleId', '==', this.movieId)
     ];
     this.analytics$ = this.analytics.valueChanges(query).pipe(
-      // Filter out analytics from owners of title
-      map((analytics: Analytics<'title'>[]) => analytics.filter(analytic => !analytic.meta.ownerOrgIds.includes(analytic.meta.orgId))),
+      map((analytics: Analytics<'title'>[]) => filterOwnerEvents(analytics)),
       joinWith({
         org: analytic => this.organizationService.valueChanges(analytic.meta.orgId),
         user: analytic => this.userService.valueChanges(analytic.meta.uid)

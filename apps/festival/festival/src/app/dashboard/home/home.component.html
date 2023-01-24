@@ -15,55 +15,53 @@
       </div>
     </header>
 
-    <ng-container *ngIf="titleAnalytics$ | async as analytics; else loading">
+    <ng-container *ngIf="titleAndOrgAnalytics$ | async as analytics; else loading">
       <ng-container *ngIf="analytics.length else empty">
-        <section class="surface carousel-container">
-          <ng-container *ngIf="popularTitle$ | async as title else loading">
-            <header>
-              <section>
-                <h3>{{ title.title.international }}</h3>
-                <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
-              </section>
-              <a mat-button [routerLink]="['title', title.id]">
-                <span>See Analytics details</span>
-                <mat-icon svgIcon="arrow_forward"></mat-icon>
-              </a>
-            </header>
-            <bf-carousel [columns]="{ gtSm: 2, ltMd: 1 }">
-              <ng-template carouselItem>
-                <analytics-pie-chart class="surface" [data]="orgActivityOfPopularTitle$ | async">
-                  <mat-icon svgIcon="business"></mat-icon>
-                  <h5>Split by Company Activity</h5>
-                  <p class="mat-caption">Learn who are the users who were interested in this Title.</p>
-                </analytics-pie-chart>
-              </ng-template>
+        <section class="surface carousel-container" *ngIf="(popularTitle$ | async) !== undefined">
+          <header *ngIf="popularTitle$ | async as title">
+            <section>
+              <h3>{{ title.title.international }}</h3>
+              <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
+            </section>
+            <a mat-button [routerLink]="['title', title.id]">
+              <span>See Analytics details</span>
+              <mat-icon svgIcon="arrow_forward"></mat-icon>
+            </a>
+          </header>
+          <bf-carousel [columns]="{ gtSm: 2, ltMd: 1 }">
+            <ng-template carouselItem>
+              <analytics-pie-chart class="surface" [data]="orgActivityOfPopularTitle$ | async">
+                <mat-icon svgIcon="business"></mat-icon>
+                <h5>Split by Company Activity</h5>
+                <p class="mat-caption">Learn who are the users who were interested in this Title.</p>
+              </analytics-pie-chart>
+            </ng-template>
 
-              <ng-template carouselItem>
-                <analytics-map class="surface carousel-map" [data]="territoryActivityOfPopularTitle$ | async">
-                  <mat-icon svgIcon="landscape"></mat-icon>
-                  <h5>Split by Company Territory</h5>
-                  <p class="mat-caption">Learn where are the interested people from.</p>
-                </analytics-map>
-              </ng-template>
+            <ng-template carouselItem>
+              <analytics-map class="surface carousel-map" [data]="territoryActivityOfPopularTitle$ | async">
+                <mat-icon svgIcon="landscape"></mat-icon>
+                <h5>Split by Company Territory</h5>
+                <p class="mat-caption">Learn where are the interested people from.</p>
+              </analytics-map>
+            </ng-template>
 
-              <ng-template carouselItem>
-                <analytics-line-chart class="surface" [eventNames]="interactions"
-                  [data]="interactionsOfPopularTitle$ | async">
-                  <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
-                  <h5>Interactions</h5>
-                  <p class="mat-caption">Learn how people interact with your Title.</p>
-                </analytics-line-chart>
-              </ng-template>
+            <ng-template carouselItem>
+              <analytics-line-chart class="surface" [eventNames]="interactions"
+                [data]="interactionsOfPopularTitle$ | async">
+                <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
+                <h5>Interactions</h5>
+                <p class="mat-caption">Learn how people interact with your Title.</p>
+              </analytics-line-chart>
+            </ng-template>
 
-              <ng-template carouselItem>
-                <analytics-line-chart class="surface" [eventNames]="['pageView']" [data]="pageViewsOfPopularTitle$ | async">
-                  <mat-icon svgIcon="visibility"></mat-icon>
-                  <h5>Film Page Views</h5>
-                  <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
-                </analytics-line-chart>
-              </ng-template>
-            </bf-carousel>
-          </ng-container>
+            <ng-template carouselItem>
+              <analytics-line-chart class="surface" [eventNames]="['pageView']" [data]="pageViewsOfPopularTitle$ | async">
+                <mat-icon svgIcon="visibility"></mat-icon>
+                <h5>Film Page Views</h5>
+                <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
+              </analytics-line-chart>
+            </ng-template>
+          </bf-carousel>
 
           <a mat-button class="link_buttons" routerLink="title">
             <span>View all Titles Activity</span>
@@ -114,6 +112,9 @@
             </ng-template>
             <ng-template colRef="org.activity" label="Activity" let-activity sort [filter]="filters.orgActivity">
               {{ activity | toLabel:'orgActivity' }}
+            </ng-template>
+            <ng-template colRef="orgPageView" label="# Line-up Page Views" let-orgPageView sort>
+              {{ orgPageView }}
             </ng-template>
             <ng-template colRef="pageView" label="# Title Page Views" let-pageView sort>
               {{ pageView }}
