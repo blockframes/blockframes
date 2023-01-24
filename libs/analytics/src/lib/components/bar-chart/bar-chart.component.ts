@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import { AnalyticData } from '@blockframes/model';
-import { trimString } from '@blockframes/utils/pipes';
+import { trimString } from '@blockframes/model';
 
 import {
   ApexAxisChartSeries,

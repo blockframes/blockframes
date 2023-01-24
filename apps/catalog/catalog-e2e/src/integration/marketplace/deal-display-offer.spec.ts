@@ -10,12 +10,10 @@ import {
   syncMovieToAlgolia,
   connectOtherUser,
   assertTableRowData,
-  assertUrl,
-  // helper function
-  trimString,
+  assertUrl
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller, offer, saleContract, negotiation, bucket } from '../../fixtures/marketplace/deal-display-offer';
-import { Organization, displayName } from '@blockframes/model';
+import { Organization, displayName, trimString } from '@blockframes/model';
 import { centralOrgId } from '@env';
 
 const injectedData = {

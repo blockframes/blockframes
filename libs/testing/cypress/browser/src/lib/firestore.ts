@@ -64,9 +64,11 @@ export const firestore = {
     return firestore
       .queryData({ collection: 'contracts', field: 'buyerId', operator: '==', value: orgId })
       .then((contracts: Contract[]) => {
+        const promises = [];
         for (const contract of contracts) {
-          firestore.delete(`contracts/${contract.id}`);
+          promises.push(firestore.delete(`contracts/${contract.id}`));
         }
+        return Promise.all(promises);
       });
   },
 

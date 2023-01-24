@@ -1,6 +1,7 @@
 import { db } from '../testing-cypress';
 import { metaDoc } from '@blockframes/utils/maintenance';
 import { WhereFilterOp } from 'firebase/firestore';
+import { BucketTerm, createDuration } from '@blockframes/model';
 
 const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
 const isEventsPath = (path: string) => path.split('/')[0] === 'events';
@@ -32,17 +33,13 @@ export function importData(data: Record<string, object>[]) {
       } else if (isTermsPath(path)) {
         content = {
           ...content,
-          duration: {
-            from: new Date(content['duration']['from']),
-            to: new Date(content['duration']['to']),
-          },
+          ...createDuration(content['duration']),
           _meta: { e2e: true },
         };
       } else if (isNegotiationPath(path)) {
-        for (const [index, term] of content['terms'].entries()) {
-          content['terms'][index]['duration']['from'] = new Date(term.duration.from);
-          content['terms'][index]['duration']['to'] = new Date(term.duration.to);
-        }
+        content['terms'].forEach((t: BucketTerm) => {
+          t.duration = createDuration(t.duration)
+        })
         content['initial'] = new Date(content['initial']);
         content['_meta']['e2e'] = true;
       } else if ('_meta' in content) {

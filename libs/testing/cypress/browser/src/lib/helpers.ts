@@ -44,18 +44,3 @@ export const fakeKeyword = () => `E2E_${faker.word.noun()}`;
 
 /** @see Angular TitleCasePipe */
 export const titleCase = (txt: string) => `${txt[0].toUpperCase()}${txt.substr(1).toLowerCase()}`;
-
-/**
- * Trims a string without cropping the last word if keepLastWordComplete is set to true
- * Origin : libs\utils\src\lib\pipes\max-length.pipe.ts
- */
-export function trimString(string: string, length: number, keepLastWordComplete?: boolean) {
-  if (!string?.length || string.length <= length) return string;
-
-  let trimmedString = string.substr(0, length);
-  if (keepLastWordComplete) {
-    const lastWordIndex = Math.min(trimmedString.length, trimmedString.lastIndexOf(' '));
-    trimmedString = trimmedString.substr(0, lastWordIndex);
-  }
-  return `${trimmedString}...`;
-}

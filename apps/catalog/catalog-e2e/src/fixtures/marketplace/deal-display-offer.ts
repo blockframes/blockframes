@@ -7,6 +7,8 @@ import {
   Media,
   Territory,
   territoriesGroup,
+  createDuration,
+  createBucketTerm,
 } from '@blockframes/model';
 import { centralOrgId } from '@env';
 import { buyer, seller } from './deal-create-offer';
@@ -75,16 +77,16 @@ const negotiation: Negotiation = {
   status: 'pending',
   titleId: seller.movie.id,
   terms: [
-    {
+    createBucketTerm({
       territories: bucketTermTerritories,
       medias: bucketTermMedias,
       exclusive: false,
-      duration: {
+      duration: createDuration({
         from: add(seller.term.duration.from, { months: 1 }),
         to: sub(seller.term.duration.to, { months: 1 }),
-      },
+      }),
       languages: {},
-    },
+    }),
   ],
   holdbacks: [],
 };
