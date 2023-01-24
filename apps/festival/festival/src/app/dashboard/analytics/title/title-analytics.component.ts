@@ -73,7 +73,7 @@ export class TitleAnalyticsComponent {
       user: analytic => this.userService.valueChanges(analytic.meta.uid)
     }, { shouldAwait: true }),
     map(analyticsWithOrg => {
-      return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard);
+      return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard); // TODO #9158 factorize with removeSellers ?
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   );

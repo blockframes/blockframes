@@ -53,6 +53,7 @@ describe('Movie search in marketplace', () => {
     firestore.create([injectedData]);
     algolia.storeOrganization(saleOrg);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
+    syncMovieToAlgolia(movie.id);
     maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
@@ -60,7 +61,6 @@ describe('Movie search in marketplace', () => {
     cy.visit('');
     get('cookies').click();
     assertUrlIncludes('c/o/marketplace/home');
-    syncMovieToAlgolia(movie.id);
   });
 
   it('Find with filters, save & load filters', () => {
