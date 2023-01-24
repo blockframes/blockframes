@@ -65,12 +65,13 @@ export class PieChartComponent {
     }
   };
 
-  @Input() set data(data: AnalyticData[]) {
-    if (!data) return;
+  @Input() set data(analytics: AnalyticData[]) {
+    if (!analytics) return;
     this.isLoading = false;
+    if (!analytics.some(a => a.count > 0)) return;
 
-    this.pieChartOptions.labels = Object.values(data).map(d => d.label);
-    this.pieChartOptions.series = Object.values(data).map(d => d.count);
+    this.pieChartOptions.labels = Object.values(analytics).map(d => d.label);
+    this.pieChartOptions.series = Object.values(analytics).map(d => d.count);
 
     this.chart?.updateOptions(this.pieChartOptions);
   }

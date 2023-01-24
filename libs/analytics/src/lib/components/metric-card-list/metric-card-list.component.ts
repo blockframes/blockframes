@@ -11,7 +11,7 @@ import { MetricCard } from '@blockframes/analytics/utils';
 export class MetricCardListComponent {
   public selected = '';
   @Input() cards: MetricCard[];
-  @Input() @boolean selectable = false; // TODO #9124 remove input
+  @Input() @boolean selectable = false;
 
   @Output() selection: EventEmitter<string> = new EventEmitter();
 

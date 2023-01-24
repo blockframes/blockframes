@@ -156,7 +156,7 @@ interface VanityMetricEvent {
 
 export const events: VanityMetricEvent[] = [
   {
-    name: 'orgPageViews' as any, // TODO #9124 add this event for type=organization instead of pageView
+    name: 'orgPageView',
     title: 'Line-up Views',
     icon: 'business'
   },

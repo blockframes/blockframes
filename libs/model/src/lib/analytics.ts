@@ -7,15 +7,17 @@ import { createPublicUser, PublicUser, User } from './user';
 import { AnonymousCredentials } from './identity';
 
 const analyticsEvents = [
-  // Title or Organization type
-  'pageView',
   // Title type
+  'pageView',
   'promoElementOpened',
   'addedToWishlist',
   'removedFromWishlist',
   'screeningRequested',
   'askingPriceRequested',
   'screenerRequested',
+
+  // Organization type
+  'orgPageView',
 
   // TitleSearch type
   'exportedTitles',
@@ -136,6 +138,7 @@ export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>):
     addedToWishlist: 0,
     askingPriceRequested: 0,
     pageView: 0,
+    orgPageView: 0,
     promoElementOpened: 0,
     removedFromWishlist: 0,
     screeningRequested: 0,

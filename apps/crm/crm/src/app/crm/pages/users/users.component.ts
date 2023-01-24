@@ -105,19 +105,20 @@ export class UsersComponent implements OnInit {
         return role.roles[r.uid];
       }
 
-      const titleOrgQuery = [where('type', 'in', ['title', 'organization']), where('name', '==', 'pageView')];
-      const titleOrgAnalytics = await this.analyticsService.load<Analytics<'title' | 'organization'>>(titleOrgQuery);
+      const titleQuery = [where('type', '==', 'title'), where('name', '==', 'pageView')];
+      const titleAnalytics = await this.analyticsService.load<Analytics<'title'>>(titleQuery);
+
+      const orgQuery = [where('type', '==', 'organization'), where('name', '==', 'orgPageView')];
+      const orgAnalytics = await this.analyticsService.load<Analytics<'organization'>>(orgQuery);
 
       const titleSearchQuery = [where('type', '==', 'titleSearch')];
       const titleSearchAnalytics = await this.analyticsService.load<Analytics<'titleSearch'>>(titleSearchQuery);
 
-      const allAnalytics = filterOwnerEvents([...titleOrgAnalytics, ...titleSearchAnalytics]);
+      const allAnalytics = filterOwnerEvents([...titleAnalytics, ...orgAnalytics, ...titleSearchAnalytics]);
 
       const rows = users.map(r => {
         const userAnalytics = allAnalytics.filter(analytic => analytic.meta.uid === r.uid);
         const a = aggregate(userAnalytics);
-        const titleViews = aggregate(userAnalytics.filter(a => a.type === 'title' && a.name === 'pageView'));  // TODO #9124
-        const orgViews = aggregate(userAnalytics.filter(a => a.type === 'organization' && a.name === 'pageView'));  // TODO #9124
         const role = getMemberRole(r);
         const type = r.org ? getOrgModuleAccess(r.org).includes('dashboard') ? 'seller' : 'buyer' : '--';
         const row = {
@@ -149,8 +150,8 @@ export class UsersComponent implements OnInit {
           'first interaction on catalog': a.interactions.catalog.first ? a.interactions.catalog.first : '--',
           'last interaction on catalog': a.interactions.catalog.last ? a.interactions.catalog.last : '--',
           'last interaction on festival': a.interactions.festival.last ? a.interactions.festival.last : '--',
-          'line-up views': orgViews.pageView,
-          'title views': titleViews.pageView,
+          'line-up views': a.orgPageView,
+          'title views': a.pageView,
           'exported Titles': a.exportedTitles,
           'filtered Titles': a.filteredTitles,
           'saved Filters': a.savedFilters,
@@ -237,11 +238,11 @@ export class UsersComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  public async exportOrgAnalyticsPageViews(users: CrmUser[]) {
+  public async exportOrgAnalyticsPageViews() {
     this.exportingAnalytics = true;
     this.cdr.markForCheck();
 
-    const organizationQuery = [where('type', '==', 'organization'), where('name', '==', 'pageView')];
+    const organizationQuery = [where('type', '==', 'organization'), where('name', '==', 'orgPageView')];
     const organizationAnalytics = await this.analyticsService.load<Analytics<'organization'>>(organizationQuery);
 
     const aggregator: Record<string, {
@@ -255,7 +256,7 @@ export class UsersComponent implements OnInit {
       if (!aggregator[analytic.meta.profile.email]) {
         aggregator[analytic.meta.profile.email] = {
           profile: analytic.meta.profile,
-          isAnonymous: !users.find(({ uid }) => uid === analytic.meta.profile.uid),
+          isAnonymous: !analytic.meta.orgId,
           views: {}
         }
       }

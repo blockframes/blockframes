@@ -119,10 +119,7 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
 
   aggregatedCards$ = combineLatest([this.buyerAnalytics$, this.buyerOrgAnalytics$]).pipe(
     map(([titles, organization]) => [...titles.map(title => title.analytics).flat(), ...organization]),
-    map(analytics => {
-      const { pageView: orgPageViews } = aggregate(analytics.filter(a => a.type === 'organization' && a.name === 'pageView'));  // TODO #9124
-      return { ...aggregate(analytics.filter(a => a.type === 'title')), orgPageViews };
-    }),
+    map(analytics => aggregate(analytics)),
     map(toCards)
   );
 
@@ -214,7 +211,7 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
       'Asking Price Requested': aggregated.askingPriceRequested
     }));
 
-    downloadCsvFromJson(analytics, 'buyer-analytics');
+    if (analytics.length) downloadCsvFromJson(analytics, 'buyer-analytics');
   }
 
   async exportScreenerAnalytics() {
