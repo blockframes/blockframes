@@ -41,7 +41,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     );
 
     this.local$ = this.twilioService.localAttendee$;
-    const name = displayName(this.authService.anonymouseOrRegularProfile);
+    const name = displayName(this.authService.anonymousOrRegularProfile);
     this.twilioService.initLocal(name);
 
     this.sub = this.event$.subscribe((e) => {
@@ -69,7 +69,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   requestAccess() {
-    const attendee = createMeetingAttendee(this.authService.anonymouseOrRegularProfile, 'requesting');
+    const attendee = createMeetingAttendee(this.authService.anonymousOrRegularProfile, 'requesting');
     const meta: Meeting = { ...this.event.meta, attendees: { ...this.event.meta.attendees, [this.authService.uid]: attendee } };
     this.eventService.update(this.event.id, { meta });
   }

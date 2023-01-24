@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { pluck, switchMap } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/service';
 import { AuthService } from '@blockframes/auth/service';
+import { firstValueFrom } from 'rxjs';
+import { AnalyticsService } from '@blockframes/analytics/service';
 
 @Component({
   selector: 'festival-marketplace-organization-view',
@@ -34,10 +36,14 @@ export class ViewComponent implements OnInit {
     private service: OrganizationService,
     private route: ActivatedRoute,
     private authService: AuthService,
+    private analyticsService: AnalyticsService
   ) { }
 
   async ngOnInit() {
     this.isAnonymous = await this.authService.isSignedInAnonymously();
+
+    const org = await firstValueFrom(this.org$);
+    this.analyticsService.addOrganizationPageView(org);
   }
 
 }
