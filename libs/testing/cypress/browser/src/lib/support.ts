@@ -78,6 +78,10 @@ export function assertUrlIncludes(partialUrl: string) {
   return cy.url().should('include', partialUrl);
 }
 
+export function assertTableRowData(row: number, strings: string[]) {
+  return Promise.all(strings.map((string, index) => get(`row_${row}_col_${index}`).should('contain', string)));
+}
+
 interface InterceptOption {
   sentTo?: string;
   subject?: string;

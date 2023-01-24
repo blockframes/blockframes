@@ -5,6 +5,7 @@ import { WhereFilterOp } from 'firebase/firestore';
 const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
 const isEventsPath = (path: string) => path.split('/')[0] === 'events';
 const isTermsPath = (path: string) => path.split('/')[0] === 'terms';
+const isNegotiationPath = (path: string) => path.split('/').length > 2 && path.split('/')[2] === 'negotiations';
 
 //* IMPORT DATA*-----------------------------------------------------------------
 
@@ -21,7 +22,6 @@ export function importData(data: Record<string, object>[]) {
           startedAt: !content['startedAt'] ? null : new Date(content['startedAt']), // TODO #8614
           endedAt: !content['endedAt'] ? null : new Date(content['endedAt']), // TODO #8614
         };
-
       } else if (isEventsPath(path)) {
         content = {
           ...content,
@@ -38,6 +38,10 @@ export function importData(data: Record<string, object>[]) {
           },
           _meta: { e2e: true },
         };
+      } else if (isNegotiationPath(path)) {
+        content['terms'][0]['duration']['from'] = new Date(content['terms'][0]['duration']['from']);
+        content['terms'][0]['duration']['to'] = new Date(content['terms'][0]['duration']['to']);
+        content['initial'] = new Date(content['initial']);
       } else if ('_meta' in content) {
         content['_meta']['e2e'] = true;
       } else {

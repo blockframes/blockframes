@@ -13,6 +13,7 @@ import {
   escapeKey,
   check,
   connectOtherUser,
+  assertTableRowData,
   // cypress tasks
   interceptEmail,
 } from '@blockframes/testing/cypress/browser';
@@ -332,11 +333,13 @@ function assertCalendarPeriod() {
 
 function assertSelectionTableData() {
   const nextYear = new Date().getFullYear() + 1;
-  get('row_0_col_0').should('contain', `2/1/${nextYear}`);
-  get('row_0_col_1').should('contain', `5/1/${nextYear}`);
-  get('row_0_col_2').should('contain', 'Europe');
-  get('row_0_col_3').should('contain', 'TV');
-  get('row_0_col_4').should('contain', 'No');
+  assertTableRowData(0, [
+    `2/1/${nextYear}`,
+    `5/1/${nextYear}`,
+    'Europe',
+    'TV',
+    'No'
+  ])
 }
 
 function assertOfferTableData() {
@@ -345,14 +348,16 @@ function assertOfferTableData() {
   get('offers').should('contain', '(1)');
   get('ongoing-deals').should('contain', '(0)');
   get('past-deals').should('contain', '(0)');
-  get('row_0_col_0').should('contain', `${buyer.org.name.substring(0, 3).toUpperCase()}-`);
   get('row_0_col_0').invoke('text').should('have.length', 10);
-  get('row_0_col_1').should('contain', today);
-  get('row_0_col_2').should('contain', '1');
-  get('row_0_col_3').should('contain', seller.movie.title.international);
-  get('row_0_col_4').should('contain', 'YES');
-  get('row_0_col_5').should('contain', '10,000.00');
-  get('row_0_col_6').should('contain', 'New');
+  assertTableRowData(0, [
+    `${buyer.org.name.substring(0, 3).toUpperCase()}-`,
+    today,
+    '1',
+    seller.movie.title.international,
+    'YES',
+    '10,000.00',
+    'New'
+  ])
 }
 
 function getOfferIdFromNotification() {
