@@ -101,8 +101,7 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
     }, { shouldAwait: true })
   );
 
-  // TODO #9158
-  buyerAnalytics$ = this.titleService.valueChanges(fromOrgAndAccessible(this.orgService.org.id, this.app)).pipe(
+  private buyerAnalytics$ = this.titleService.valueChanges(fromOrgAndAccessible(this.orgService.org.id, this.app)).pipe(
     joinWith({
       analytics: title => {
         const { userId } = this.route.snapshot.params;
@@ -112,7 +111,6 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  // TODO #9158
   private buyerOrgAnalytics$ = this.analytics.getOrganizationAnalytics({ uid: this.route.snapshot.params.userId }).pipe(
     shareReplay({ bufferSize: 1, refCount: true })
   );

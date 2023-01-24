@@ -41,7 +41,7 @@ export class HomeComponent {
   @ViewChild('tableTitle') tableTitle: ElementRef;
   public selectedCountry?: string;
   public titles$ = firstValueFrom(this.orgService.currentOrg$.pipe(
-    switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
+    switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))), // TODO #9158
     map((titles) => titles.filter((title) => title.app[this.app].access)),
     tap(titles => {
       titles.filter(hasAppStatus(this.app, ['accepted', 'submitted'])).length
@@ -50,7 +50,7 @@ export class HomeComponent {
     })
   ));
 
-  private titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
+  private titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe( // TODO #9158 use titles$ to filter analytics data
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
     }, { shouldAwait: true }),
