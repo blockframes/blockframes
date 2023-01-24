@@ -19,13 +19,13 @@ import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
-  selector: 'layout-event',
-  templateUrl: './event.component.html',
-  styleUrls: ['./event.component.scss'],
+  selector: 'layout-anonymous',
+  templateUrl: './anonymous.component.html',
+  styleUrls: ['./anonymous.component.scss'],
   animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventComponent implements OnInit {
+export class AnonymousComponent implements OnInit {
   public user$ = this.authService.profile$;
   public wishlistCount$: Observable<number>;
   public notificationCount$ = this.notificationService.myNotificationsCount$;

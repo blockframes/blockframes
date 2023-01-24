@@ -1,0 +1,99 @@
+@use 'surface';
+@import '@angular/flex-layout/mq';
+
+:host {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-image: url("/assets/images/light/stars_wallpaper.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+
+  p {
+    margin: 0;
+  }
+
+  .snackbar-bar-text {
+    margin-right: 24px;
+  }
+
+  article {
+    text-align: center;
+
+    menu {
+      padding: 0;
+      text-align: left;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+
+      a {
+        text-decoration: underline;
+        font-weight: bold;
+        margin-bottom: 24px;
+      }
+
+      password-input {
+        margin-bottom: 58px;
+      }
+
+      footer {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+}
+
+@include layout-bp(gt-xs) {
+  :host {
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    header {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+    }
+
+    article {
+      @include surface.surface;
+      padding: 24px;
+
+      menu {
+        margin: 0;
+      }
+
+      form {
+        padding: 40px;
+      }
+    }
+  }
+}
+
+@include layout-bp(xs) {
+  :host {
+    header {
+      align-self: center;
+      margin-top: auto;
+      padding-top: 24px;
+
+      a[app-logo] {
+        height: 48px;
+      }
+    }
+
+    article {
+      padding: 24px;
+      margin-bottom: auto;
+
+      menu {
+        margin: 0 0 12px;
+      }
+    }
+  }
+}

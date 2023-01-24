@@ -2,7 +2,7 @@
   <!-- Page Bar -->
   <ng-template pageBar targetId="nav">
     <div class="page-bar" fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
-      <app-menu></app-menu>
+      <app-menu *ngIf="!isAnonymous"></app-menu>
       <div fxFlex fxLayout fxLayoutAlign="start center">
         <ng-container *ngFor="let link of navLinks">
           <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive
@@ -22,7 +22,7 @@
   </ng-template>
 
   <header fxLayout="column" fxLayoutGap="20px" class="dark-contrast-theme" bgAsset="profil_banner.png">
-    <a mat-icon-button (click)="goBack()">
+    <a *ngIf="!isAnonymous" mat-icon-button (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
     <div class="org-info" fxLayout="row" fxLayout.xs="column" fxLayoutAlign.xs="center center" fxLayoutGap="20px">

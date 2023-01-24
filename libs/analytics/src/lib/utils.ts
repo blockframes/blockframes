@@ -156,8 +156,13 @@ interface VanityMetricEvent {
 
 export const events: VanityMetricEvent[] = [
   {
+    name: 'orgPageView',
+    title: 'Line-up Views',
+    icon: 'business'
+  },
+  {
     name: 'pageView',
-    title: 'Views',
+    title: 'Title Views',
     icon: 'visibility'
   },
   {

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
-import { EventComponent } from './event.component';
+import { AnonymousComponent } from './anonymous.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { RouterModule } from '@angular/router';
 import { ScrollingModule } from '@angular/cdk/scrolling';
@@ -22,8 +22,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
-  declarations: [EventComponent],
-  exports: [EventComponent],
+  declarations: [AnonymousComponent],
+  exports: [AnonymousComponent],
   imports: [
     // Angular
     RouterModule,
@@ -50,4 +50,4 @@ import { MatDialogModule } from '@angular/material/dialog';
     AuthWidgetModule,
   ]
 })
-export class EventLayoutModule { }
+export class AnonymousLayoutModule { }

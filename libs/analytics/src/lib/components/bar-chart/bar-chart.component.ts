@@ -71,13 +71,14 @@ export class BarChartComponent {
 
   @Input() set data(analytics: AnalyticData[]) {
     if (!analytics) return;
+    this.isLoading = false;
+    if (!analytics.some(a => a.count > 0)) return;
 
     const data = Object.values(analytics).map(d => d.count);
     this.barChartOptions.series = data.length ? [{ data }] : [];
     this.barChartOptions.labels = Object.values(analytics).map(d => trimString(d.label, 16));
 
     this.chart?.updateOptions(this.barChartOptions);
-    this.isLoading = false;
   }
 
 }
