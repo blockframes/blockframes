@@ -13,7 +13,7 @@ import { buyer, seller } from './deal-create-offer';
 import { add, sub } from 'date-fns';
 
 const offerId = '0-e2e-offerId';
-const saleContractId = '0-e2e-saleContractid';
+const saleContractId = '0-e2e-saleContractId';
 const negotiationId = '0-e2e-negotitationId';
 
 seller.movie.release.year = new Date().getFullYear() as number;
@@ -24,7 +24,7 @@ seller.movie.directors = [
   },
   {
     firstName: 'Jane',
-    lastName: 'Doe',
+    lastName: 'Smith',
   },
 ];
 

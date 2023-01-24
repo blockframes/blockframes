@@ -41,7 +41,7 @@ describe('Deal negociation', () => {
     cy.visit('');
     maintenance.start();
     algolia.deleteMovie({ app: 'catalog', objectId: seller.movie.id });
-    firestore.deleteContractsAndTerms(seller.org.id);
+    firestore.deleteContractsAndTerms(buyer.org.id);
     firestore.deleteOffers(buyer.org.id);
     firestore.deleteNotifications([buyer.user.uid, seller.user.uid]);
     firestore.clearTestData();
@@ -333,13 +333,7 @@ function assertCalendarPeriod() {
 
 function assertSelectionTableData() {
   const nextYear = new Date().getFullYear() + 1;
-  assertTableRowData(0, [
-    `2/1/${nextYear}`,
-    `5/1/${nextYear}`,
-    'Europe',
-    'TV',
-    'No'
-  ])
+  assertTableRowData(0, [`2/1/${nextYear}`, `5/1/${nextYear}`, 'Europe', 'TV', 'No']);
 }
 
 function assertOfferTableData() {
@@ -356,8 +350,8 @@ function assertOfferTableData() {
     seller.movie.title.international,
     'YES',
     '10,000.00',
-    'New'
-  ])
+    'New',
+  ]);
 }
 
 function getOfferIdFromNotification() {

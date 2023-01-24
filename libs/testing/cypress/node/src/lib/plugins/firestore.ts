@@ -39,9 +39,12 @@ export function importData(data: Record<string, object>[]) {
           _meta: { e2e: true },
         };
       } else if (isNegotiationPath(path)) {
-        content['terms'][0]['duration']['from'] = new Date(content['terms'][0]['duration']['from']);
-        content['terms'][0]['duration']['to'] = new Date(content['terms'][0]['duration']['to']);
+        for (const [index, term] of content['terms'].entries()) {
+          content['terms'][index]['duration']['from'] = new Date(term.duration.from);
+          content['terms'][index]['duration']['to'] = new Date(term.duration.to);
+        }
         content['initial'] = new Date(content['initial']);
+        content['_meta']['e2e'] = true;
       } else if ('_meta' in content) {
         content['_meta']['e2e'] = true;
       } else {

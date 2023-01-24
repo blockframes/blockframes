@@ -60,6 +60,16 @@ export const firestore = {
       });
   },
 
+  deleteBuyerContracts(orgId: string) {
+    return firestore
+      .queryData({ collection: 'contracts', field: 'buyerId', operator: '==', value: orgId })
+      .then((contracts: Contract[]) => {
+        for (const contract of contracts) {
+          firestore.delete(`contracts/${contract.id}`);
+        }
+      });
+  },
+
   deleteOffers(orgId: string) {
     return firestore
       .queryData({ collection: 'offers', field: 'buyerId', operator: '==', value: orgId })

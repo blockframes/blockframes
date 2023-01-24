@@ -11,9 +11,11 @@ import {
   connectOtherUser,
   assertTableRowData,
   assertUrl,
+  // helper function
+  trimString,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller, offer, saleContract, negotiation, bucket } from '../../fixtures/marketplace/deal-display-offer';
-import { Organization } from '@blockframes/model';
+import { Organization, displayName } from '@blockframes/model';
 import { centralOrgId } from '@env';
 
 const injectedData = {
@@ -41,6 +43,7 @@ describe('Deal negociation', () => {
     cy.visit('');
     maintenance.start();
     firestore.deleteContractsAndTerms(seller.org.id);
+    firestore.deleteBuyerContracts(buyer.org.id);
     firestore.deleteOffers(buyer.org.id);
     firestore.deleteNotifications([buyer.user.uid, seller.user.uid]);
     firestore.clearTestData();
@@ -84,10 +87,10 @@ describe('Deal negociation', () => {
       assertTableRowData(0, [
         seller.movie.title.international,
         seller.movie.release.year.toString(),
-        seller.movie.directors.map(director => `${director.firstName} ${director.lastName}`).join(', '),
+        seller.movie.directors.map(director => `${displayName(director)}`).join(', '),
         '€10,000.00',
         'New',
-        `Waiting for ${seller.org.name} answer`,
+        trimString(`Waiting for ${seller.org.name} answer`, 50),
       ]);
       //sale contract page
       get('row_0_col_0').click();
