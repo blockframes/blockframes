@@ -10,6 +10,7 @@ import {
   syncMovieToAlgolia,
   connectOtherUser,
   assertTableRowData,
+  assertUrl,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller, offer, saleContract, negotiation, bucket } from '../../fixtures/marketplace/deal-display-offer';
 import { Organization } from '@blockframes/model';
@@ -100,6 +101,9 @@ describe('Deal negociation', () => {
         'No',
         '-',
       ]);
+      //go back to previous page
+      get('back').click();
+      assertUrl(`c/o/marketplace/offer/${offer.id}`);
     });
   });
 
