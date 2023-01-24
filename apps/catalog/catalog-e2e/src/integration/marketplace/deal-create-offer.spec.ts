@@ -41,7 +41,7 @@ describe('Deal negociation', () => {
     cy.visit('');
     maintenance.start();
     algolia.deleteMovie({ app: 'catalog', objectId: seller.movie.id });
-    firestore.deleteContractsAndTerms(buyer.org.id);
+    firestore.deleteContractsAndTerms(seller.org.id);
     firestore.deleteOffers(buyer.org.id);
     firestore.deleteNotifications([buyer.user.uid, seller.user.uid]);
     firestore.clearTestData();
