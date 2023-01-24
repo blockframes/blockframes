@@ -159,15 +159,21 @@ export async function clearUsers() {
   return endMaintenance(db);
 }
 
-export async function updateUsersPassword(emailPrefix: string, password: string) {
+export async function updateUsersPassword(emailPrefix: string, password: string, dryRun = true) {
   if (!emailPrefix) throw Error('Email prefix cannot be empty');
   if (!password || password.length < 6) throw Error('Password must be at least 6 characters long');
+  if (dryRun) console.log('[WARNING] This is only a simulation, to actually run the command, add "execute".');
+  if (dryRun) console.log(`New password is "${password}"`);
 
   const db = getDb();
 
   const allUsers = await getUsersFromDb(db);
-  const matchingUids = allUsers.filter(u => u.email.includes(emailPrefix)).map(u => u.uid);
-  return updateUsers(matchingUids, { password });
+  const matchingUids = allUsers.filter(u => u.email.includes(emailPrefix)).map(u => {
+    console.log(`${u.email} - ${u.uid} password will be updated.`);
+    return u.uid;
+  });
+  console.log(`Will update ${matchingUids.length} users`);
+  return !dryRun ? updateUsers(matchingUids, { password }) : undefined;
 }
 
 async function updateUsers(uidsToUpdate: string[], properties: admin.auth.UpdateRequest) {
@@ -176,8 +182,11 @@ async function updateUsers(uidsToUpdate: string[], properties: admin.auth.Update
   const timeMsg = 'Updating users took';
   console.time(timeMsg); // eslint-disable-line no-restricted-syntax
 
+  let cpt = 0;
+  const uidsCount = uidsToUpdate.length;
   for (const uidToUpdate of uidsToUpdate) {
-    console.log(`Updating ${uidToUpdate}`);
+    cpt++;
+    console.log(`[${cpt}/${uidsCount}] Updating ${uidToUpdate}`);
     await auth.updateUser(uidToUpdate, properties)
       .catch(e => console.log(`An error occured : ${e.message || 'unknown error'}`));
     await sleep(1000); // @see https://groups.google.com/u/1/g/firebase-talk/c/4VkOBKIsBxU

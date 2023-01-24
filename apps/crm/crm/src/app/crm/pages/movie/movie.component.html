@@ -2,7 +2,20 @@
   <crm-bread-crumb>{{ movie.title.international }}</crm-bread-crumb>
 
   <article>
-    <movie-header [movie]="movie"></movie-header>
+    <movie-header [movie]="movie">
+      <movie-header-cta fxLayout="column" fxLayoutGap="32px">
+        <section class="orgs">
+          <ng-container *ngFor="let org of orgs">
+            <org-chip [org]="org" baseUrl="/c/o/dashboard/crm/organization"></org-chip>
+          </ng-container>
+        </section>
+        <section>
+          <p>
+            Created at {{ movie._meta.createdAt | date: 'MM/dd/yyyy' }} by <a [routerLink]="['/c/o/dashboard/crm/user', createdBy.uid]">{{ createdBy | displayName }}</a>
+          </p>
+        </section>
+      </movie-header-cta>
+    </movie-header>
   </article>
 
   <section fxLayout="row" fxLayoutAlign="start" fxLayoutGap="24px" fxFlex class="surface">
