@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
-import { Movie, storeStatus, productionStatus, getAllAppsExcept, Analytics, AggregatedAnalytic, StoreStatus } from '@blockframes/model';
+import { Movie, storeStatus, productionStatus, getAllAppsExcept, Analytics, AggregatedAnalytic, StoreStatus, Organization, User } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -38,6 +38,8 @@ export class MovieComponent implements OnInit {
   public storeStatus = storeStatus;
   public productionStatus = productionStatus;
   public apps = getAllAppsExcept(['crm']);
+  public orgs: Organization[];
+  public createdBy: User;
 
   public keywords$: Observable<string[]>;
   public keywordForm = new FormControl();
@@ -65,6 +67,9 @@ export class MovieComponent implements OnInit {
   async ngOnInit() {
     this.movieId = this.route.snapshot.paramMap.get('movieId');
     this.movie = await this.movieService.getValue(this.movieId);
+    this.orgs = await this.organizationService.getValue(this.movie.orgIds);
+    this.createdBy = this.movie._meta.createdBy ? await this.userService.getValue(this.movie._meta.createdBy) : undefined;
+
     this.movieForm = new MovieCrmForm(this.movie);
     this.movieAppConfigForm = new MovieAppConfigForm(this.movie.app);
 
@@ -212,14 +217,7 @@ export class MovieComponent implements OnInit {
       output.push(`${invitationsCount} invitations to events will be removed.`);
     }
 
-    const orgPromises = movie.orgIds.map((o) =>
-      this.organizationService.getValue([where('id', '==', o)])
-    );
-    const orgs = await Promise.all(orgPromises);
-    const promises = orgs
-      .flat()
-      .map((o) => this.permissionsService.getDocumentPermissions(movie.id, o.id));
-    const documentPermissions = await Promise.all(promises);
+    const documentPermissions = await Promise.all(movie.orgIds.map(orgId => this.permissionsService.getDocumentPermissions(movie.id, orgId)));
     if (documentPermissions.length) {
       output.push(`${documentPermissions.length} permission document will be removed.`);
     }

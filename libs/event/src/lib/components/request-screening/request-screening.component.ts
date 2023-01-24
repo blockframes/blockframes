@@ -6,7 +6,18 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 import { BehaviorSubject } from 'rxjs';
 import { MovieService } from '@blockframes/movie/service';
 import { CallableFunctions } from 'ngfire';
-import { RequestStatus } from '@blockframes/model';
+import { OrgActivity, RequestStatus } from '@blockframes/model';
+import { OrganizationService } from '@blockframes/organization/service';
+
+const allowedOrgActivities: OrgActivity[] = [
+  'buyersRep',
+  'distribution',
+  'inflight',
+  'tvBroadcast',
+  'theatricalExhibition',
+  'vodPlatform',
+  'press'
+]
 
 @Component({
   selector: '[movieId] event-request-screening',
@@ -26,12 +37,15 @@ export class RequestScreeningComponent {
     sent: 'Screening requested'
   };
 
+  canAskForScreening = allowedOrgActivities.includes(this.orgService.org.activity);
+
   constructor(
     private authService: AuthService,
     private functions: CallableFunctions,
     private analytics: AnalyticsService,
     private snackbar: MatSnackBar,
-    private titleService: MovieService
+    private titleService: MovieService,
+    private orgService: OrganizationService
   ) { }
 
   async requestScreening() {
