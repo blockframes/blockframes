@@ -33,6 +33,14 @@ import { MovieVideoUploadModule } from '@blockframes/movie/components/video-uplo
 import { MoviePictureUploadModule } from '@blockframes/movie/components/picture-upload/picture-upload.module';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { GetEventPipeModule } from '@blockframes/event/pipes/get-event.pipe';
+import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
+import { StaticSelectModule } from "@blockframes/ui/static-autocomplete/select/static-select.module";
+import { DashboardModule } from './components/dashboard/dashboard.module';
+import { BreadCrumbModule } from './components/bread-crumb/bread-crumb.module';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
+import { BuyingPreferencesModalModule } from './components/buying-preferences-modal/buying-preferences-modal.module';
+import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -45,13 +53,6 @@ import { MailsComponent } from './pages/mails/mails.component';
 import { DevAreaComponent } from './pages/dev-area/dev-area.component';
 import { InvitationsComponent } from './pages/invitations/invitations.component';
 import { OrganizationCreateComponent } from './components/organization/create-organization/create.component';
-import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
-import { StaticSelectModule } from "@blockframes/ui/static-autocomplete/select/static-select.module";
-import { DashboardModule } from './components/dashboard/dashboard.module';
-import { BreadCrumbModule } from './components/bread-crumb/bread-crumb.module';
-import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
-import { BuyingPreferencesModalModule } from './components/buying-preferences-modal/buying-preferences-modal.module';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -122,6 +123,7 @@ export const panelRoutes: Routes = [
     UploadWidgetModule,
     DisplayNameModule,
     BuyingPreferencesModalModule,
+    OrgChipModule,
 
     RouterModule.forChild(panelRoutes),
   ],

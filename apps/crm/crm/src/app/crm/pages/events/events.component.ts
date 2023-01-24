@@ -3,8 +3,9 @@ import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { EventService } from '@blockframes/event/service';
 import { InvitationService } from '@blockframes/invitation/service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { isScreening, toLabel } from '@blockframes/model';
+import { isScreening, toLabel, Event } from '@blockframes/model';
 import { where } from 'firebase/firestore';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'crm-events',
@@ -20,6 +21,7 @@ export class EventsComponent implements OnInit {
     private eventService: EventService,
     private invitationService: InvitationService,
     private cdRef: ChangeDetectorRef,
+    private router: Router,
     private orgService: OrganizationService
   ) { }
 
@@ -68,5 +70,9 @@ export class EventsComponent implements OnInit {
       'hidden on marketplace': i.isSecret
     }))
     downloadCsvFromJson(exportedRows, 'events-list');
+  }
+
+  goToEdit(event: Event) {
+    this.router.navigate([`/c/o/dashboard/crm/event/${event.id}`]);
   }
 }

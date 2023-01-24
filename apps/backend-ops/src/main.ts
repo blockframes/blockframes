@@ -45,7 +45,7 @@ import { join } from 'path';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
-const [arg1, arg2] = flags;
+const [arg1, arg2, arg3] = flags;
 
 async function runCommand() {
   const db = getDb();
@@ -145,7 +145,7 @@ async function runCommand() {
       await createUsers();
       break;
     case 'updateUsersPassword':
-      await updateUsersPassword(arg1, arg2);
+      await updateUsersPassword(arg1, arg2, arg3 === 'execute' ? false : true);
       break;
     case 'clearDb':
       await clearDb(db, false);

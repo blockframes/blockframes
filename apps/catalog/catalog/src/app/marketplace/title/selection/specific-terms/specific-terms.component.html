@@ -17,13 +17,13 @@
         </textarea>
         <mat-hint>You can precise any specific conditions such as: MG, Revenue Sharing, Delivery Specifications... ).</mat-hint>
       </mat-form-field>
-      <mat-checkbox class="example-margin" formControlName="acceptTerms">
+      <mat-checkbox class="example-margin" formControlName="acceptTerms" test-id="accept-terms">
         <p>
           I confirm that I have read and agree the <a routerLink="/c/o/marketplace/terms" target="_blank">Terms & Conditions</a> that will applied to the offer.
         </p>
       </mat-checkbox>
       <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-flat-button color="primary" [disabled]="form.disabled || !form.value.acceptTerms" type="submit">
+        <button mat-flat-button color="primary" [disabled]="form.disabled || !form.value.acceptTerms" type="submit" test-id="send-offer">
           <span>
             Send your Offer
           </span>

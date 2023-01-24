@@ -89,15 +89,8 @@ export class UsersComponent implements OnInit {
     )
   }
 
-  public goToEdit(user) {
+  public goToEdit(user: CrmUser) {
     this.router.navigate([`c/o/dashboard/crm/user/${user.uid}`]);
-  }
-
-  public goToEditNewTab(uid: string, $event: Event) {
-    $event.stopPropagation();
-    const urlTree = this.router.createUrlTree([`c/o/dashboard/crm/user/${uid}`])
-    const url = this.router.serializeUrl(urlTree);
-    window.open(url, '_blank', 'noreferrer');
   }
 
   public async exportTable(users: CrmUser[]) {
