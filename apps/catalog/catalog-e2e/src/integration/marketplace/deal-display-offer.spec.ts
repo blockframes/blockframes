@@ -68,7 +68,7 @@ describe('Deal negociation', () => {
   });
 
   context('buyer side', () => {
-    before(() => {
+    beforeEach(() => {
       connectOtherUser(buyer.user.email);
       cy.visit('/c/o/marketplace/offer');
     });
@@ -109,7 +109,7 @@ describe('Deal negociation', () => {
   });
 
   context('seller side', () => {
-    before(() => {
+    beforeEach(() => {
       connectOtherUser(seller.user.email);
       cy.visit('/c/o/dashboard/sales');
     });
