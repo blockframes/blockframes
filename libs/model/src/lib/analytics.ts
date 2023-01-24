@@ -3,7 +3,8 @@ import { DocumentMeta } from './meta';
 import { Movie } from './movie';
 import { Organization } from './organisation';
 import { Module } from './static';
-import { User } from './user';
+import { createPublicUser, PublicUser, User } from './user';
+import { AnonymousCredentials } from './identity';
 
 const analyticsEvents = [
   // Title type
@@ -14,6 +15,9 @@ const analyticsEvents = [
   'screeningRequested',
   'askingPriceRequested',
   'screenerRequested',
+
+  // Organization type
+  'orgPageView',
 
   // TitleSearch type
   'exportedTitles',
@@ -28,6 +32,7 @@ export type EventName = typeof analyticsEvents[number];
 export interface AnalyticsTypeRecord {
   title: MetaTitle;
   titleSearch: MetaTitleSearch;
+  organization: MetaOrganization
 }
 
 export type AnalyticsTypes = keyof AnalyticsTypeRecord;
@@ -51,11 +56,18 @@ interface MetaTitleSearch {
   search?: MovieAvailsSearch;
   module: Module,
   uid: string;
-  orgId?: string;
+  orgId: string;
   titleId?: string;
   ownerOrgIds?: string[];
   titleCount?: number;
   status: boolean;
+}
+
+interface MetaOrganization {
+  organizationId: string;
+  uid: string;
+  orgId?: string;
+  profile: PublicUser | AnonymousCredentials
 }
 
 export interface AnalyticsInteraction {
@@ -107,6 +119,15 @@ export function createTitleSearchMeta(meta: Partial<MetaTitleSearch>): MetaTitle
   };
 };
 
+export function createOrganizationMeta(meta: Partial<MetaOrganization>): MetaOrganization {
+  return {
+    organizationId: '',
+    uid: '',
+    ...meta,
+    profile: createPublicUser(meta.profile),
+  };
+};
+
 export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>): AggregatedAnalytic {
   return {
     interactions: {
@@ -117,6 +138,7 @@ export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>):
     addedToWishlist: 0,
     askingPriceRequested: 0,
     pageView: 0,
+    orgPageView: 0,
     promoElementOpened: 0,
     removedFromWishlist: 0,
     screeningRequested: 0,
@@ -129,4 +151,22 @@ export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>):
     filteredAvailsMap: 0,
     ...analytic
   };
+}
+
+const isTitleAnalytics = (analytic: Analytics): analytic is Analytics<'title'> => analytic.type === 'title';
+const isTitleSearchAnalytics = (analytic: Analytics): analytic is Analytics<'titleSearch'> => analytic.type === 'titleSearch';
+const isOrganizationAnalytics = (analytic: Analytics): analytic is Analytics<'organization'> => analytic.type === 'organization';
+
+/**
+ * Filter out analytics events created by owner of movie or organization
+ * @param analytics 
+ * @returns 
+ */
+export function filterOwnerEvents<K extends keyof AnalyticsTypeRecord>(analytics: Analytics<K>[]): Analytics<K>[] {
+  return analytics.filter(analytic => {
+    if (isTitleAnalytics(analytic)) return !analytic.meta.ownerOrgIds?.includes(analytic.meta.orgId);
+    if (isTitleSearchAnalytics(analytic)) return analytic.meta.titleId ? !analytic.meta.ownerOrgIds?.includes(analytic.meta.orgId) : true;
+    if (isOrganizationAnalytics(analytic)) return analytic.meta.organizationId !== analytic.meta.orgId;
+    return false; // Unknown analytics type..
+  });
 }

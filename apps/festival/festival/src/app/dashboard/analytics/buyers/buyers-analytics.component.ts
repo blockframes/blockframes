@@ -10,7 +10,7 @@ import { unique } from '@blockframes/utils/helpers';
 import { APP } from '@blockframes/utils/routes/utils';
 
 import { joinWith } from 'ngfire';
-import { firstValueFrom } from 'rxjs';
+import { combineLatest, firstValueFrom } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
 @Component({
@@ -21,13 +21,21 @@ import { map, shareReplay } from 'rxjs/operators';
 })
 export class BuyersAnalyticsComponent {
 
-  // The analytics of each buyer who interacted with sellers' title
-  private analyticsWithUsersAndOrgs$ = this.titleService.valueChanges(fromOrgAndAccessible(this.orgService.org.id, this.app)).pipe(
+  private titleAnalytics$ = this.titleService.valueChanges(fromOrgAndAccessible(this.orgService.org.id, this.app)).pipe(
     joinWith({
       analytics: title => this.analytics.getTitleAnalytics({ titleId: title.id }),
     }, { shouldAwait: true }),
-    map(titles => {
-      const analytics = titles.map(title => title.analytics).flat();
+    map(titles => titles.map(title => title.analytics).flat())
+  );
+
+  private orgAnalytics$ = this.analytics.getOrganizationAnalytics().pipe(
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  // The analytics of each buyer who interacted with sellers' title or organization
+  private analyticsWithUsersAndOrgs$ = combineLatest([this.titleAnalytics$, this.orgAnalytics$]).pipe(
+    map(([titles, organizations]) => {
+      const analytics = [...titles, ...organizations];
       const uids = unique(analytics.map(analytic => analytic.meta.uid));
       const orgIds = unique(analytics.map(analytic => analytic.meta.orgId));
       return { uids, orgIds, analytics };
@@ -58,11 +66,11 @@ export class BuyersAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  orgActivity$ = firstValueFrom(this.buyersAnalytics$.pipe(
+  orgActivity$ = firstValueFrom(this.buyersAnalytics$.pipe( // TODO #9158
     map(aggregated => counter(aggregated, 'org.activity', (item: AggregatedAnalytic) => item.interactions.global.count)),
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
   ));
-  
+
   aggregatedCards$ = firstValueFrom(this.analyticsWithUsersAndOrgs$.pipe(
     map(({ analytics }) => aggregate(analytics)),
     map(toCards)
@@ -78,7 +86,7 @@ export class BuyersAnalyticsComponent {
     @Inject(APP) public app: App
   ) { }
 
-  private removeSellerData(orgs: Organization[], analytics: Analytics<'title'>[], users: User[]) {
+  private removeSellerData(orgs: Organization[], analytics: Analytics<'title' | 'organization'>[], users: User[]) {
     const buyerOrg = orgs.filter(org => org && !org.appAccess.festival.dashboard);
     const buyerOrgIds = buyerOrg.map(({ id }) => id);
     const buyerAnalytics = analytics.filter(({ meta }) => buyerOrgIds.includes(meta.orgId));

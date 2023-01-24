@@ -15,9 +15,11 @@ export interface RouteOptions {
   landing?: Route,
   /** Event routes if any */
   events?: Route,
+  /** Organization routes if any */
+  organization?: Route,
 }
 
-export function createRoutes({ appsRoutes, landing, events }: RouteOptions) {
+export function createRoutes({ appsRoutes, landing, events, organization }: RouteOptions) {
   // Used for internal app
   landing = landing || { path: '', redirectTo: 'auth', pathMatch: 'full' };
   landing.canActivate = landing.canActivate
@@ -37,6 +39,10 @@ export function createRoutes({ appsRoutes, landing, events }: RouteOptions) {
 
   if (events) {
     endRules.unshift(events);
+  }
+
+  if (organization) {
+    endRules.unshift(organization);
   }
 
   // We need to put the spread operator in a local variable to make build works on prod

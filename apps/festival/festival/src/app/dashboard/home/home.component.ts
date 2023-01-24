@@ -23,7 +23,7 @@ import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 // RxJs
 import { map, switchMap, shareReplay, tap, filter, distinctUntilChanged } from 'rxjs/operators';
-import { combineLatest, firstValueFrom } from 'rxjs';
+import { combineLatest, firstValueFrom, of } from 'rxjs';
 
 // Intercom
 import { Intercom } from 'ng-intercom';
@@ -41,7 +41,7 @@ export class HomeComponent {
   @ViewChild('tableTitle') tableTitle: ElementRef;
   public selectedCountry?: string;
   public titles$ = firstValueFrom(this.orgService.currentOrg$.pipe(
-    switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
+    switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))), // TODO #9158
     map((titles) => titles.filter((title) => title.app[this.app].access)),
     tap(titles => {
       titles.filter(hasAppStatus(this.app, ['accepted', 'submitted'])).length
@@ -50,22 +50,35 @@ export class HomeComponent {
     })
   ));
 
-  titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe(
+  private titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe( // TODO #9158 use titles$ to filter analytics data
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
     }, { shouldAwait: true }),
     map(analyticsWithOrg => {
-      return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard);
+      return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard); // TODO #9158 factorize with removeSellers ?
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
+  private orgAnalytics$ = this.analyticsService.getOrganizationAnalytics().pipe(
+    joinWith({
+      org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
+    }, { shouldAwait: true }),
+    map(analyticsWithOrg => {
+      return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard); // TODO #9158 factorize with removeSellers ?
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  titleAndOrgAnalytics$ = combineLatest([this.titleAnalytics$, this.orgAnalytics$]).pipe(
+    map(([titleAnalytics, orgAnalytics]) => [...titleAnalytics, ...orgAnalytics])
+  );
+
   popularTitle$ = firstValueFrom(this.titleAnalytics$.pipe(
-    filter(analytics => analytics.length > 0),
     map(analytics => counter(analytics, 'meta.titleId')),
     map(counted => countedToAnalyticData(counted)),
     map(analyticData => analyticData.sort((a, b) => a.count > b.count ? -1 : 1)),
-    switchMap(([popularEvent]) => this.movieService.valueChanges(popularEvent.key))
+    switchMap(([popularEvent]) => popularEvent ? this.movieService.valueChanges(popularEvent.key) : of(undefined))
   ));
 
   private titleAnalyticsOfPopularTitle$ = combineLatest([this.popularTitle$, this.titleAnalytics$]).pipe(
@@ -92,12 +105,12 @@ export class HomeComponent {
     map(analytics => analytics.filter(analytic => analytic.name === 'pageView'))
   ));
 
-  activeCountries$ = firstValueFrom(this.titleAnalytics$.pipe(
+  activeCountries$ = firstValueFrom(this.titleAndOrgAnalytics$.pipe(  // TODO #9158
     map(analytics => counter(analytics, 'org.addresses.main.country')),
     map(counted => countedToAnalyticData(counted, 'territories'))
   ));
 
-  activeBuyers$ = firstValueFrom(this.titleAnalytics$.pipe(
+  activeBuyers$ = firstValueFrom(this.titleAndOrgAnalytics$.pipe(
     filter(analytics => analytics.length > 0),
     map(analytics => {
       const uids = unique(analytics.map(analytic => analytic.meta.uid));
@@ -118,7 +131,6 @@ export class HomeComponent {
     }),
     map(users => users.sort((userA, userB) => userB.interactions.global.count - userA.interactions.global.count))
   ));
-
 
   interactions: EventName[] = [
     'addedToWishlist',
