@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { aggregate, countedToAnalyticData, counter, deletedUserIdentifier, toCards } from '@blockframes/analytics/utils';
-import { AggregatedAnalytic, App, Organization, Analytics, User, createUser } from '@blockframes/model';
+import { AggregatedAnalytic, App, createUser, removeSellerData } from '@blockframes/model';
 import { fromOrgAndAccessible, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { UserService } from '@blockframes/user/service';
@@ -49,7 +49,7 @@ export class BuyersAnalyticsComponent {
       ...rest
     })),
     map(({ orgs, analytics, users, ...rest }) => {
-      const filteredData = this.removeSellerData(orgs, analytics, users);
+      const filteredData = removeSellerData(orgs, analytics, users);
       return { ...rest, ...filteredData };
     }),
     shareReplay({ bufferSize: 1, refCount: true })
@@ -85,15 +85,6 @@ export class BuyersAnalyticsComponent {
     private orgService: OrganizationService,
     @Inject(APP) public app: App
   ) { }
-
-  private removeSellerData(orgs: Organization[], analytics: Analytics<'title' | 'organization'>[], users: User[]) {
-    const buyerOrg = orgs.filter(org => org && !org.appAccess.festival.dashboard);
-    const buyerOrgIds = buyerOrg.map(({ id }) => id);
-    const buyerAnalytics = analytics.filter(({ meta }) => buyerOrgIds.includes(meta.orgId));
-    const buyerUsers = buyerAnalytics.map(({ meta }) => meta.uid);
-    const filteredUsers = users.filter(({ uid }) => buyerUsers.includes(uid));
-    return { users: filteredUsers, orgs: buyerOrg, analytics: buyerAnalytics };
-  }
 
   goToBuyer(data: AggregatedAnalytic) {
     if (data.user.lastName !== deletedUserIdentifier) {

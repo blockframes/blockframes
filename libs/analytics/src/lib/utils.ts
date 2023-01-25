@@ -23,7 +23,7 @@ export const deletedUserIdentifier = '(Deleted User)';
  * Counts number of occurances
  * @param array 
  * @param keyPath Path to key in object that needs to be counted.
- * @param deltaFn Function that returns the delta with which to count. For example a length of an array or an already aggrigated number.
+ * @param deltaFn Function that returns the delta with which to count. For example a length of an array or an already aggregated number.
  * @example 
  * // Count number of analytics per genre in array of analytics joined with Movie.
  * counter(analytics, 'title.genres')

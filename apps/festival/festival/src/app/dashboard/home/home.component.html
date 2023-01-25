@@ -1,5 +1,5 @@
-<ng-container *ngIf="titles$ | async as titles; else loading">
-  <ng-container *ngIf="titles | hasAppStatus:'accepted'; else noAcceptedMovies">
+<ng-container *ngIf="titleAndOrgAnalytics$ | async as analytics; else loading">
+  <ng-container *ngIf="analytics.length else noAnalytics">
     <header>
       <h1>Dashboard</h1>
       <div fxLayoutGap="24px">
@@ -15,173 +15,180 @@
       </div>
     </header>
 
-    <ng-container *ngIf="titleAndOrgAnalytics$ | async as analytics; else loading">
-      <ng-container *ngIf="analytics.length else empty">
-        <section class="surface carousel-container" *ngIf="(popularTitle$ | async) !== undefined">
-          <header *ngIf="popularTitle$ | async as title">
-            <section>
-              <h3>{{ title.title.international }}</h3>
-              <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
-            </section>
-            <a mat-button [routerLink]="['title', title.id]">
-              <span>See Analytics details</span>
-              <mat-icon svgIcon="arrow_forward"></mat-icon>
-            </a>
-          </header>
-          <bf-carousel [columns]="{ gtSm: 2, ltMd: 1 }">
-            <ng-template carouselItem>
-              <analytics-pie-chart class="surface" [data]="orgActivityOfPopularTitle$ | async">
-                <mat-icon svgIcon="business"></mat-icon>
-                <h5>Split by Company Activity</h5>
-                <p class="mat-caption">Learn who are the users who were interested in this Title.</p>
-              </analytics-pie-chart>
-            </ng-template>
-
-            <ng-template carouselItem>
-              <analytics-map class="surface carousel-map" [data]="territoryActivityOfPopularTitle$ | async">
-                <mat-icon svgIcon="landscape"></mat-icon>
-                <h5>Split by Company Territory</h5>
-                <p class="mat-caption">Learn where are the interested people from.</p>
-              </analytics-map>
-            </ng-template>
-
-            <ng-template carouselItem>
-              <analytics-line-chart class="surface" [eventNames]="interactions"
-                [data]="interactionsOfPopularTitle$ | async">
-                <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
-                <h5>Interactions</h5>
-                <p class="mat-caption">Learn how people interact with your Title.</p>
-              </analytics-line-chart>
-            </ng-template>
-
-            <ng-template carouselItem>
-              <analytics-line-chart class="surface" [eventNames]="['pageView']" [data]="pageViewsOfPopularTitle$ | async">
-                <mat-icon svgIcon="visibility"></mat-icon>
-                <h5>Film Page Views</h5>
-                <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
-              </analytics-line-chart>
-            </ng-template>
-          </bf-carousel>
-
-          <a mat-button class="link_buttons" routerLink="title">
-            <span>View all Titles Activity</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
-          </a>
+    <section class="surface carousel-container" *ngIf="(popularTitle$ | async) !== undefined">
+      <header *ngIf="popularTitle$ | async as title">
+        <section>
+          <h3>{{ title.title.international }}</h3>
+          <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
         </section>
+        <a mat-button [routerLink]="['title', title.id]">
+          <span>See Analytics details</span>
+          <mat-icon svgIcon="arrow_forward"></mat-icon>
+        </a>
+      </header>
+      <bf-carousel [columns]="{ gtSm: 2, ltMd: 1 }">
+        <ng-template carouselItem>
+          <analytics-pie-chart class="surface" [data]="orgActivityOfPopularTitle$ | async">
+            <mat-icon svgIcon="business"></mat-icon>
+            <h5>Split by Company Activity</h5>
+            <p class="mat-caption">Learn who are the users who were interested in this Title.</p>
+          </analytics-pie-chart>
+        </ng-template>
 
-        <section class="surface">
-          <analytics-map
-            class="margin-bottom"
-            [data]="activeCountries$ | async"
-            (selection)="selectCountry($event)"
-            [topCount]="5"
-            horizontal
-            showLegend
-            selectable
-          >
-            <mat-icon class="title_margin" svgIcon="buyer_insights"></mat-icon>
-            <h3 class="title_margin">
-              <span>Buyers' Insights</span>
-              <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
-            </h3>
-            <!-- #8696 h4 should be "TOP 5 COUNTRIES" line 76 above -->
-            <h4 listTitle>TOP COUNTRIES</h4>
+        <ng-template carouselItem>
+          <analytics-map class="surface carousel-map" [data]="territoryActivityOfPopularTitle$ | async">
+            <mat-icon svgIcon="landscape"></mat-icon>
+            <h5>Split by Company Territory</h5>
+            <p class="mat-caption">Learn where are the interested people from.</p>
           </analytics-map>
+        </ng-template>
 
-          <h3 #tableTitle>Most Active Buyers</h3>
-          <bf-table
-            [source]="activeBuyers$ | async"
-            [filterValue]="selectedCountry"
-            (rowClick)="showBuyer($event)"
-            class="margin-bottom"
-            clickable
-            useFilter
-            pagination="10"
-          >
-            <ng-template colRef="user" label="Name" let-item sort [filter]="filters.displayName">
-              <b>{{ item | displayName }}</b>
-            </ng-template>
-            <ng-template colRef="user.email" label="Email" let-email sort>
-              {{ email }}
-            </ng-template>
-            <ng-template colRef="org.name" label="Company name" let-name sort>
-              {{ name }}
-            </ng-template>
-            <ng-template colRef="org.addresses.main.country" label="Country" let-country sort [filter]="filters.territories">
-              {{ country | toLabel:'territories' }}
-            </ng-template>
-            <ng-template colRef="org.activity" label="Activity" let-activity sort [filter]="filters.orgActivity">
-              {{ activity | toLabel:'orgActivity' }}
-            </ng-template>
-            <ng-template colRef="orgPageView" label="# Line-up Page Views" let-orgPageView sort>
-              {{ orgPageView }}
-            </ng-template>
-            <ng-template colRef="pageView" label="# Title Page Views" let-pageView sort>
-              {{ pageView }}
-            </ng-template>
-            <ng-template colRef="addedToWishlist" label="Titles in Wishlist" let-wishlist sort>
-              {{ wishlist }}
-            </ng-template>
-            <ng-template colRef="promoElementOpened" label="Promo Elements Opened" let-promoElementOpened sort>
-              {{ promoElementOpened }}
-            </ng-template>
-            <ng-template colRef="screeningRequested" label="Screening Requests" let-screeningRequested sort>
-              {{ screeningRequested }}
-            </ng-template>
-            <ng-template colRef="askingPriceRequested" label="Asking Price Requested" let-askingPriceRequested sort>
-              {{ askingPriceRequested }}
-            </ng-template>
-          </bf-table>
+        <ng-template carouselItem>
+          <analytics-line-chart class="surface" [eventNames]="interactions"
+            [data]="interactionsOfPopularTitle$ | async">
+            <mat-icon svgIcon="switch_access_shortcut"></mat-icon>
+            <h5>Interactions</h5>
+            <p class="mat-caption">Learn how people interact with your Title.</p>
+          </analytics-line-chart>
+        </ng-template>
 
-          <a mat-button class="link_buttons" routerLink="buyer">
-            <span>View All Buyers' Activities</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
-          </a>
-        </section>
-      </ng-container>
+        <ng-template carouselItem>
+          <analytics-line-chart class="surface" [eventNames]="['pageView']" [data]="pageViewsOfPopularTitle$ | async">
+            <mat-icon svgIcon="visibility"></mat-icon>
+            <h5>Film Page Views</h5>
+            <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
+          </analytics-line-chart>
+        </ng-template>
+      </bf-carousel>
+
+      <a mat-button class="link_buttons" routerLink="title">
+        <span>View all Titles Activity</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </section>
+
+    <section class="surface">
+      <analytics-map
+        class="margin-bottom"
+        [data]="activeCountries$ | async"
+        (selection)="selectCountry($event)"
+        [topCount]="5"
+        horizontal
+        showLegend
+        selectable
+      >
+        <mat-icon class="title_margin" svgIcon="buyer_insights"></mat-icon>
+        <h3 class="title_margin">
+          <span>Buyers' Insights</span>
+          <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
+        </h3>
+        <!-- #8696 h4 should be "TOP 5 COUNTRIES" line 76 above -->
+        <h4 listTitle>TOP COUNTRIES</h4>
+      </analytics-map>
+
+      <h3 #tableTitle>Most Active Buyers</h3>
+      <bf-table
+        [source]="activeBuyers$ | async"
+        [filterValue]="selectedCountry"
+        (rowClick)="showBuyer($event)"
+        class="margin-bottom"
+        clickable
+        useFilter
+        pagination="10"
+      >
+        <ng-template colRef="user" label="Name" let-item sort [filter]="filters.displayName">
+          <b>{{ item | displayName }}</b>
+        </ng-template>
+        <ng-template colRef="user.email" label="Email" let-email sort>
+          {{ email }}
+        </ng-template>
+        <ng-template colRef="org.name" label="Company name" let-name sort>
+          {{ name }}
+        </ng-template>
+        <ng-template colRef="org.addresses.main.country" label="Country" let-country sort [filter]="filters.territories">
+          {{ country | toLabel:'territories' }}
+        </ng-template>
+        <ng-template colRef="org.activity" label="Activity" let-activity sort [filter]="filters.orgActivity">
+          {{ activity | toLabel:'orgActivity' }}
+        </ng-template>
+        <ng-template colRef="orgPageView" label="# Line-up Page Views" let-orgPageView sort>
+          {{ orgPageView }}
+        </ng-template>
+        <ng-template colRef="pageView" label="# Title Page Views" let-pageView sort>
+          {{ pageView }}
+        </ng-template>
+        <ng-template colRef="addedToWishlist" label="Titles in Wishlist" let-wishlist sort>
+          {{ wishlist }}
+        </ng-template>
+        <ng-template colRef="promoElementOpened" label="Promo Elements Opened" let-promoElementOpened sort>
+          {{ promoElementOpened }}
+        </ng-template>
+        <ng-template colRef="screeningRequested" label="Screening Requests" let-screeningRequested sort>
+          {{ screeningRequested }}
+        </ng-template>
+        <ng-template colRef="askingPriceRequested" label="Asking Price Requested" let-askingPriceRequested sort>
+          {{ askingPriceRequested }}
+        </ng-template>
+      </bf-table>
+
+      <a mat-button class="link_buttons" routerLink="buyer">
+        <span>View All Buyers' Activities</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </section>
+  </ng-container>
+</ng-container>
+
+<ng-template #noAnalytics>
+  <ng-container *ngIf="(titles$ | async) as titles">
+    <ng-container *ngIf="titles | hasAppStatus:'accepted'; else noAcceptedMovies">
+      <section class="no-analytics">
+        <img asset="wait.svg" alt="waiting">
+        <p class="mat-body-2">There are no statistics available here yet.</p>
+      </section>
     </ng-container>
   </ng-container>
+</ng-template>
 
-  <ng-template #noAcceptedMovies>
-    <section fxLayout="column" fxLayoutAlign="center center" class="no-accepted-movies">
-      <ng-container *ngIf="titles.length; else noMovies">
-        <h1>No title to display.</h1>
-        <p class="mat-body-1">
-          As long as don't have any title to display, your organization will not appear on the marketplace.
-          <br>
-          You can either add several titles at once through bulk import, or just one at a time.
-        </p>
-        <p class="mat-body-2">
-          N.B.: Only submitted projects will appear on the marketplace, not drafts.
-        </p>
-      </ng-container>
-      <ng-template #noMovies>
-        <dashboard-no-title></dashboard-no-title>
-      </ng-template>
-      <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
-        <!-- Should only be shown for noAcceptedMovies && !noMovies -->
-        <ng-container *ngIf="titles | hasAppStatus:'draft'">
-          <div class="surface" fxLayout="column" fxLayoutalign="center center">
-            <img asset="add_draft.svg" alt="Manage Drafts">
-            <a routerLink="../title" mat-button color="primary">Manage Drafts</a>
-          </div>
-        </ng-container>
+<ng-template #noAcceptedMovies>
+  <section *ngIf="(titles$ | async) as titles" fxLayout="column" fxLayoutAlign="center center" class="no-accepted-movies">
+    <ng-container *ngIf="titles.length; else noMovies">
+      <h1>No title to display.</h1>
+      <p class="mat-body-1">
+        As long as don't have any title to display, your organization will not appear on the marketplace.
+        <br>
+        You can either add several titles at once through bulk import, or just one at a time.
+      </p>
+      <p class="mat-body-2">
+        N.B.: Only submitted projects will appear on the marketplace, not drafts.
+      </p>
+    </ng-container>
+    <ng-template #noMovies>
+      <dashboard-no-title></dashboard-no-title>
+    </ng-template>
+    <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
+      <!-- Should only be shown for noAcceptedMovies && !noMovies -->
+      <ng-container *ngIf="titles | hasAppStatus:'draft'">
         <div class="surface" fxLayout="column" fxLayoutalign="center center">
-          <img asset="add_title.svg" alt="Add title image">
-          <a routerLink="../title/lobby" mat-button color="primary">Add one Title</a>
+          <img asset="add_draft.svg" alt="Manage Drafts">
+          <a routerLink="../title" mat-button color="primary">Manage Drafts</a>
         </div>
-        <div class="surface" fxLayout="column">
-          <img asset="add_files.svg" alt="Upload files image">
-          <a routerLink="../import" mat-button color="primary" test-id="import">Import Titles in bulk</a>
-        </div>
-      </article>
-      <h3>Or</h3>
-      <button (click)="openIntercom()" mat-flat-button color="primary">
-        Contact the {{ app | appName }} team
-      </button>
-    </section>
-  </ng-template>
-</ng-container>
+      </ng-container>
+      <div class="surface" fxLayout="column" fxLayoutalign="center center">
+        <img asset="add_title.svg" alt="Add title image">
+        <a routerLink="../title/lobby" mat-button color="primary">Add one Title</a>
+      </div>
+      <div class="surface" fxLayout="column">
+        <img asset="add_files.svg" alt="Upload files image">
+        <a routerLink="../import" mat-button color="primary" test-id="import">Import Titles in bulk</a>
+      </div>
+    </article>
+    <h3>Or</h3>
+    <button (click)="openIntercom()" mat-flat-button color="primary">
+      Contact the {{ app | appName }} team
+    </button>
+  </section>
+</ng-template>
 
 <ng-template #loading>
   <article class="spinner">

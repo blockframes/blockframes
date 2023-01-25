@@ -3,18 +3,12 @@ import { Component, ChangeDetectionStrategy, Optional, Inject, ViewChild, Elemen
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Blockframes
-import { fromOrg, MovieService } from '@blockframes/movie/service';
+import { fromOrgAndAccessible, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import {
-  EventName,
-  hasAppStatus,
-  App,
-  AggregatedAnalytic,
-  createUser,
-} from '@blockframes/model';
+import { EventName, App, AggregatedAnalytic, createUser, isBuyer } from '@blockframes/model';
 import { aggregate, counter, countedToAnalyticData, deletedUserIdentifier } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
@@ -22,7 +16,7 @@ import { filters } from '@blockframes/ui/list/table/filters';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 // RxJs
-import { map, switchMap, shareReplay, tap, filter, distinctUntilChanged } from 'rxjs/operators';
+import { map, switchMap, shareReplay, filter, distinctUntilChanged } from 'rxjs/operators';
 import { combineLatest, firstValueFrom, of } from 'rxjs';
 
 // Intercom
@@ -40,23 +34,22 @@ import { joinWith } from 'ngfire';
 export class HomeComponent {
   @ViewChild('tableTitle') tableTitle: ElementRef;
   public selectedCountry?: string;
-  public titles$ = firstValueFrom(this.orgService.currentOrg$.pipe(
-    switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))), // TODO #9158
-    map((titles) => titles.filter((title) => title.app[this.app].access)),
-    tap(titles => {
-      titles.filter(hasAppStatus(this.app, ['accepted', 'submitted'])).length
-        ? this.dynTitle.setPageTitle('Dashboard')
-        : this.dynTitle.setPageTitle('Dashboard', 'Empty');
-    })
-  ));
 
-  private titleAnalytics$ = this.analyticsService.getTitleAnalytics().pipe( // TODO #9158 use titles$ to filter analytics data
+  private accessibleTitles$ = this.orgService.currentOrg$.pipe(
+    switchMap(({ id }) => this.movieService.valueChanges(fromOrgAndAccessible(id, this.app))),
+  );
+
+  public titles$ = firstValueFrom(this.accessibleTitles$);
+
+  private titleAnalytics$ = this.accessibleTitles$.pipe(
+    joinWith({
+      analytics: title => this.analyticsService.getTitleAnalytics({ titleId: title.id }),
+    }, { shouldAwait: true }),
+    map(titles => titles.map(title => title.analytics).flat()),
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
     }, { shouldAwait: true }),
-    map(analyticsWithOrg => {
-      return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard); // TODO #9158 factorize with removeSellers ?
-    }),
+    map(analyticsWithOrg => analyticsWithOrg.filter(({ org }) => isBuyer(org))),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -64,9 +57,7 @@ export class HomeComponent {
     joinWith({
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId)
     }, { shouldAwait: true }),
-    map(analyticsWithOrg => {
-      return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard); // TODO #9158 factorize with removeSellers ?
-    }),
+    map(analyticsWithOrg => analyticsWithOrg.filter(({ org }) => isBuyer(org))),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -74,7 +65,7 @@ export class HomeComponent {
     map(([titleAnalytics, orgAnalytics]) => [...titleAnalytics, ...orgAnalytics])
   );
 
-  popularTitle$ = firstValueFrom(this.titleAnalytics$.pipe(
+  popularTitle$ = firstValueFrom(this.titleAnalytics$.pipe( // TODO #9158
     map(analytics => counter(analytics, 'meta.titleId')),
     map(counted => countedToAnalyticData(counted)),
     map(analyticData => analyticData.sort((a, b) => a.count > b.count ? -1 : 1)),
@@ -87,12 +78,12 @@ export class HomeComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  orgActivityOfPopularTitle$ = firstValueFrom(this.titleAnalyticsOfPopularTitle$.pipe(
+  orgActivityOfPopularTitle$ = firstValueFrom(this.titleAnalyticsOfPopularTitle$.pipe( // TODO #9158
     map(analytics => counter(analytics, 'org.activity')),
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
   ));
 
-  territoryActivityOfPopularTitle$ = firstValueFrom(this.titleAnalyticsOfPopularTitle$.pipe(
+  territoryActivityOfPopularTitle$ = firstValueFrom(this.titleAnalyticsOfPopularTitle$.pipe( // TODO #9158
     map(analytics => counter(analytics, 'org.addresses.main.country')),
     map(counted => countedToAnalyticData(counted, 'territories'))
   ));
@@ -151,7 +142,9 @@ export class HomeComponent {
     @Inject(APP) public app: App,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) {
+    this.dynTitle.setPageTitle('Dashboard');
+  }
 
   showBuyer(row: AggregatedAnalytic) {
     if (row.user.lastName !== deletedUserIdentifier) {

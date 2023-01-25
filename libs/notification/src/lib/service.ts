@@ -379,7 +379,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
-          message: `Your offer ${contract.offerId} was accepted. The ${this.appName} team will contact you shortly`,
+          message: `Your offer ${contract.offerId} was accepted. The ${this.appName} team will contact you shortly.`,
           placeholderUrl: 'list_offer.svg',
           actionText: 'See Offer',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,

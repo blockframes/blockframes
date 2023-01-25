@@ -121,7 +121,7 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
     map(toCards)
   );
 
-  aggregatedPerGenre$ = this.buyerAnalytics$.pipe(
+  aggregatedPerGenre$ = this.buyerAnalytics$.pipe( // TODO #9158
     map(titles => {
       const getDelta = (movie: MovieWithAnalytics) => movie.analytics.length;
       return counter(titles, 'genres', getDelta);

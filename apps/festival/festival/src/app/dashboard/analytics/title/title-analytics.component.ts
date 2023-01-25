@@ -10,6 +10,7 @@ import {
   EventName,
   getGuest,
   invitationStatus,
+  isBuyer,
 } from '@blockframes/model';
 import { filters } from '@blockframes/ui/list/table/filters';
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -72,18 +73,16 @@ export class TitleAnalyticsComponent {
       org: analytic => this.orgService.valueChanges(analytic.meta.orgId),
       user: analytic => this.userService.valueChanges(analytic.meta.uid)
     }, { shouldAwait: true }),
-    map(analyticsWithOrg => {
-      return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard); // TODO #9158 factorize with removeSellers ?
-    }),
+    map(analyticsWithOrg => analyticsWithOrg.filter(({ org }) => isBuyer(org))),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  orgActivity$ = firstValueFrom(this.titleAnalytics$.pipe(
+  orgActivity$ = firstValueFrom(this.titleAnalytics$.pipe( // TODO #9158
     map(analytics => counter(analytics, 'org.activity')),
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
   ));
 
-  territoryActivity$ = firstValueFrom(this.titleAnalytics$.pipe(
+  territoryActivity$ = firstValueFrom(this.titleAnalytics$.pipe(  // TODO #9158
     map(analytics => counter(analytics, 'org.addresses.main.country')),
     map(counted => countedToAnalyticData(counted, 'territories'))
   ));
