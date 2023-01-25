@@ -16,6 +16,7 @@ import {
   assertTableRowData,
   // cypress tasks
   interceptEmail,
+  deleteEmail,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller } from '../../fixtures/marketplace/deal-create-offer';
 import { supportMailosaur } from '@blockframes/utils/constants';
@@ -403,5 +404,6 @@ function checkOfferEmail(user: 'buyer' | 'seller' | 'admin', docId?: string) {
         expect(redirect).to.include(mailData[user].redirect);
       });
     }
+    deleteEmail(mail.id)
   });
 }

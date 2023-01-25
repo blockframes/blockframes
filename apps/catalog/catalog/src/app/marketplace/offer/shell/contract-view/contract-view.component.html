@@ -6,7 +6,7 @@
   <ng-container *ngIf="sale.negotiation as negotiation">
     <ng-container *ngIf="negotiation | canNegotiate:activeOrgId ">
       <header fxLayout fxLayoutAlign="center center" fxLayoutGap="24px">
-        <button mat-stroked-button color="primary" (click)="accept()" [disabled]="!sale.negotiation.price">
+        <button mat-stroked-button color="primary" (click)="accept()" [disabled]="!sale.negotiation.price" test-id="accept">
           <mat-icon svgIcon="check"></mat-icon>
           <span>Accept</span>
         </button>

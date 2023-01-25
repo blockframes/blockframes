@@ -10,7 +10,7 @@
         </ng-container>
         <div fxLayoutAlign="center start" fxLayoutGap="16px">
           <ng-container *ngIf="negotiation.price else noPrice">
-            <button mat-stroked-button color="primary" (click)="accept(negotiation.id, sale.id, sale.title)">
+            <button mat-stroked-button color="primary" (click)="accept(negotiation.id, sale.id, sale.title)" test-id="accept">
               <mat-icon svgIcon="check"></mat-icon>
               <span>Accept</span>
             </button>
@@ -21,7 +21,7 @@
               <span matTooltip="You cannot accept a contract without a price">Accept</span>
             </button>
           </ng-template>
-          <a [disabled]="negotiation.createdByOrg === orgId" mat-stroked-button color="primary" routerLink="../negotiation">
+          <a [disabled]="negotiation.createdByOrg === orgId" mat-stroked-button color="primary" routerLink="../negotiation" test-id="negotiate">
             <mat-icon svgIcon="negotiate"></mat-icon>
             <span>Negotiate</span>
           </a>

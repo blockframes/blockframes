@@ -28,21 +28,20 @@ export function importData(data: Record<string, object>[]) {
           ...content,
           start: new Date(content['start']), // TODO #8614
           end: new Date(content['end']), // TODO #8614
-          _meta: { e2e: true },
         };
       } else if (isTermsPath(path)) {
         content = {
           ...content,
           duration: createDuration(content['duration']),
-          _meta: { e2e: true },
         };
       } else if (isNegotiationPath(path)) {
         content['terms'].forEach((t: BucketTerm) => {
           t.duration = createDuration(t.duration);
         });
         content['initial'] = new Date(content['initial']);
-        content['_meta']['e2e'] = true;
-      } else if ('_meta' in content) {
+      }
+      if ('_meta' in content) {
+        content['_meta']['createdAt'] = new Date(content['_meta']['createdAt']);
         content['_meta']['e2e'] = true;
       } else {
         content['_meta'] = { e2e: true };

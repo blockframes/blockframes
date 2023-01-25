@@ -4,7 +4,7 @@
     <!-- Internal -->
     <ng-container *ngIf="sale.sellerId === centralOrgId.catalog; else externalSale">
       <div fxLayout fxlayoutAlign="space-between center">
-        <bf-tag *ngIf="sale.negotiation">
+        <bf-tag *ngIf="sale.negotiation" test-id="status-tag">
           {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
         </bf-tag>
         <a mat-button routerLink="/c/o/dashboard/terms" target="_blank">
