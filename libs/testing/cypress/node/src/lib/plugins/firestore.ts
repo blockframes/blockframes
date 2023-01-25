@@ -1,10 +1,12 @@
 import { db } from '../testing-cypress';
 import { metaDoc } from '@blockframes/utils/maintenance';
 import { WhereFilterOp } from 'firebase/firestore';
+import { BucketTerm, createDuration } from '@blockframes/model';
 
 const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
 const isEventsPath = (path: string) => path.split('/')[0] === 'events';
 const isTermsPath = (path: string) => path.split('/')[0] === 'terms';
+const isNegotiationPath = (path: string) => path.split('/').length > 2 && path.split('/')[2] === 'negotiations';
 
 //* IMPORT DATA*-----------------------------------------------------------------
 
@@ -21,7 +23,6 @@ export function importData(data: Record<string, object>[]) {
           startedAt: !content['startedAt'] ? null : new Date(content['startedAt']), // TODO #8614
           endedAt: !content['endedAt'] ? null : new Date(content['endedAt']), // TODO #8614
         };
-
       } else if (isEventsPath(path)) {
         content = {
           ...content,
@@ -32,12 +33,15 @@ export function importData(data: Record<string, object>[]) {
       } else if (isTermsPath(path)) {
         content = {
           ...content,
-          duration: {
-            from: new Date(content['duration']['from']),
-            to: new Date(content['duration']['to']),
-          },
+          duration: createDuration(content['duration']),
           _meta: { e2e: true },
         };
+      } else if (isNegotiationPath(path)) {
+        content['terms'].forEach((t: BucketTerm) => {
+          t.duration = createDuration(t.duration);
+        });
+        content['initial'] = new Date(content['initial']);
+        content['_meta']['e2e'] = true;
       } else if ('_meta' in content) {
         content['_meta']['e2e'] = true;
       } else {

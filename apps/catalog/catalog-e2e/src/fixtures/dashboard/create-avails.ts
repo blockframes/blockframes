@@ -11,7 +11,6 @@ import {
   createOrgAppAccess,
   fakeLegalTerms,
   Contract,
-  Term,
   territoriesGroup,
 } from '@blockframes/model';
 
