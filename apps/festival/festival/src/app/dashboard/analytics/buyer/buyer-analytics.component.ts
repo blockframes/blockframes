@@ -6,7 +6,7 @@ import {
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate, counter, countedToAnalyticData, MetricCard, toCards } from '@blockframes/analytics/utils';
+import { aggregate, counter, countedToAnalyticData, MetricCard, toCards, oneAnalyticsPerUser } from '@blockframes/analytics/utils';
 import {
   AggregatedAnalytic,
   isScreening,
@@ -123,7 +123,7 @@ export class BuyerAnalyticsComponent implements AfterViewInit {
 
   aggregatedPerGenre$ = this.buyerAnalytics$.pipe(
     map(titles => {
-      const getDelta = (movie: MovieWithAnalytics) => movie.analytics.length;
+      const getDelta = (movie: MovieWithAnalytics) => oneAnalyticsPerUser(movie.analytics).length;
       return counter(titles, 'genres', getDelta);
     }),
     map(counted => countedToAnalyticData(counted, 'genres'))

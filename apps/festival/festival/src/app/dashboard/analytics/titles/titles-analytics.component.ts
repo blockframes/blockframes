@@ -5,7 +5,7 @@ import { joinWith } from 'ngfire';
 import { firstValueFrom } from 'rxjs';
 
 // Blockframes
-import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie, App, Event } from '@blockframes/model';
+import { AggregatedAnalytic, Analytics, createAggregatedAnalytic, Movie, App, Event, isBuyer } from '@blockframes/model';
 import { fromOrgAndAccessible, MovieService } from '@blockframes/movie/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { EventService } from '@blockframes/event/service';
@@ -72,9 +72,7 @@ export class TitlesAnalyticsComponent {
       joinWith({
         org: ({ meta }) => this.orgService.valueChanges(meta.orgId)
       }, { shouldAwait: true }),
-      map(analyticsWithOrg => {
-        return analyticsWithOrg.filter(({ org }) => org && !org.appAccess.festival.dashboard); // TODO #9158 factorize with removeSellers ?
-      })
+      map(analyticsWithOrg => analyticsWithOrg.filter(({ org }) => isBuyer(org)))
     );
   }
 
