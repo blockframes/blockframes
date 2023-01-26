@@ -185,7 +185,7 @@ export const events: VanityMetricEvent[] = [
   {
     name: 'pageView',
     title: 'Title Views',
-    icon: 'visibility'
+    icon: 'movie'
   },
   {
     name: 'promoElementOpened',
