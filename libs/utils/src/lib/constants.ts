@@ -4,4 +4,4 @@ export const serverId = 'fteeksuu';
 export const supportMailosaur = `support@${serverId}.mailosaur.net`;
 
 // Used to be compared against appVersion data stored in db ${META_COLLECTION_NAME}/${APP_DOCUMENT_NAME}`
-export const appVersion = '4.5.6';
+export const appVersion = '4.6';
