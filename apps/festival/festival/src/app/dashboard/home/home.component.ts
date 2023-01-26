@@ -9,7 +9,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { EventName, App, AggregatedAnalytic, createUser, isBuyer } from '@blockframes/model';
-import { aggregate, counter, countedToAnalyticData, deletedUserIdentifier } from '@blockframes/analytics/utils';
+import { aggregate, counter, countedToAnalyticData, deletedUserIdentifier, oneAnalyticsPerUser } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 import { filters } from '@blockframes/ui/list/table/filters';
@@ -65,8 +65,8 @@ export class HomeComponent {
     map(([titleAnalytics, orgAnalytics]) => [...titleAnalytics, ...orgAnalytics])
   );
 
-  popularTitle$ = firstValueFrom(this.titleAnalytics$.pipe( // TODO #9158
-    map(analytics => counter(analytics, 'meta.titleId')),
+  popularTitle$ = firstValueFrom(this.titleAnalytics$.pipe(
+    map(analytics => counter(oneAnalyticsPerUser(analytics), 'meta.titleId')),
     map(counted => countedToAnalyticData(counted)),
     map(analyticData => analyticData.sort((a, b) => a.count > b.count ? -1 : 1)),
     switchMap(([popularEvent]) => popularEvent ? this.movieService.valueChanges(popularEvent.key) : of(undefined))
@@ -78,13 +78,13 @@ export class HomeComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  orgActivityOfPopularTitle$ = firstValueFrom(this.titleAnalyticsOfPopularTitle$.pipe( // TODO #9158
-    map(analytics => counter(analytics, 'org.activity')),
+  orgActivityOfPopularTitle$ = firstValueFrom(this.titleAnalyticsOfPopularTitle$.pipe(
+    map(analytics => counter(oneAnalyticsPerUser(analytics), 'org.activity')),
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
   ));
 
-  territoryActivityOfPopularTitle$ = firstValueFrom(this.titleAnalyticsOfPopularTitle$.pipe( // TODO #9158
-    map(analytics => counter(analytics, 'org.addresses.main.country')),
+  territoryActivityOfPopularTitle$ = firstValueFrom(this.titleAnalyticsOfPopularTitle$.pipe(
+    map(analytics => counter(oneAnalyticsPerUser(analytics), 'org.addresses.main.country')),
     map(counted => countedToAnalyticData(counted, 'territories'))
   ));
 
@@ -96,8 +96,8 @@ export class HomeComponent {
     map(analytics => analytics.filter(analytic => analytic.name === 'pageView'))
   ));
 
-  activeCountries$ = firstValueFrom(this.titleAndOrgAnalytics$.pipe(  // TODO #9158
-    map(analytics => counter(analytics, 'org.addresses.main.country')),
+  activeCountries$ = firstValueFrom(this.titleAndOrgAnalytics$.pipe(
+    map(analytics => counter(oneAnalyticsPerUser(analytics), 'org.addresses.main.country')),
     map(counted => countedToAnalyticData(counted, 'territories'))
   ));
 

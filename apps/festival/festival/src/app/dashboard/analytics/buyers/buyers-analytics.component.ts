@@ -66,8 +66,8 @@ export class BuyersAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  orgActivity$ = firstValueFrom(this.buyersAnalytics$.pipe( // TODO #9158
-    map(aggregated => counter(aggregated, 'org.activity', (item: AggregatedAnalytic) => item.interactions.global.count)),
+  orgActivity$ = firstValueFrom(this.buyersAnalytics$.pipe(
+    map(aggregated => counter(aggregated, 'org.activity')),
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
   ));
 

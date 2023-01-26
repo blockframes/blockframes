@@ -15,7 +15,7 @@ import {
 import { filters } from '@blockframes/ui/list/table/filters';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
-import { aggregatePerUser, countedToAnalyticData, counter, deletedUserIdentifier } from '@blockframes/analytics/utils';
+import { aggregatePerUser, countedToAnalyticData, counter, deletedUserIdentifier, oneAnalyticsPerUser } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { convertToTimeString, downloadCsvFromJson } from '@blockframes/utils/helpers';
@@ -77,13 +77,13 @@ export class TitleAnalyticsComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  orgActivity$ = firstValueFrom(this.titleAnalytics$.pipe( // TODO #9158
-    map(analytics => counter(analytics, 'org.activity')),
+  orgActivity$ = firstValueFrom(this.titleAnalytics$.pipe(
+    map(analytics => counter(oneAnalyticsPerUser(analytics), 'org.activity')),
     map(counted => countedToAnalyticData(counted, 'orgActivity'))
   ));
 
-  territoryActivity$ = firstValueFrom(this.titleAnalytics$.pipe(  // TODO #9158
-    map(analytics => counter(analytics, 'org.addresses.main.country')),
+  territoryActivity$ = firstValueFrom(this.titleAnalytics$.pipe(
+    map(analytics => counter(oneAnalyticsPerUser(analytics), 'org.addresses.main.country')),
     map(counted => countedToAnalyticData(counted, 'territories'))
   ));
 
@@ -191,7 +191,7 @@ export class TitleAnalyticsComponent {
 
   public viewBuyerActivity(analytic: AggregatedAnalytic) {
     if (analytic.user.lastName !== deletedUserIdentifier) {
-      this.router.navigate([`../../buyer/`, analytic.user.uid], { relativeTo: this.route } );
+      this.router.navigate([`../../buyer/`, analytic.user.uid], { relativeTo: this.route });
     }
   }
 }
