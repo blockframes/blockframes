@@ -319,7 +319,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
 
   private resetAnonymousCredentials() {
     const keys = ['uid', 'role', 'email', 'invitationId', 'lastName', 'firstName'];  // keys of AnonymousCredentials
-    keys.forEach(k => sessionStorage.removeItem(`anonymousCredentials.${k}`));
+    keys.forEach(k => localStorage.removeItem(`anonymousCredentials.${k}`));
   }
 
   updateAnonymousCredentials(creds: Partial<AnonymousCredentials>, options?: { reset: boolean }) {
@@ -329,7 +329,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
     }
 
     for (const [key, value] of Object.entries(creds)) {
-      !value ? sessionStorage.removeItem(`anonymousCredentials.${key}`) : sessionStorage.setItem(`anonymousCredentials.${key}`, value as string);
+      !value ? localStorage.removeItem(`anonymousCredentials.${key}`) : localStorage.setItem(`anonymousCredentials.${key}`, value as string);
     }
 
     this.anonymousCredentials$.next(this.anonymousCredentials);
@@ -339,12 +339,12 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
 
   get anonymousCredentials(): AnonymousCredentials {
     return {
-      uid: sessionStorage.getItem('anonymousCredentials.uid'),
-      lastName: sessionStorage.getItem('anonymousCredentials.lastName'),
-      firstName: sessionStorage.getItem('anonymousCredentials.firstName'),
-      role: sessionStorage.getItem('anonymousCredentials.role') as AnonymousRole,
-      email: sessionStorage.getItem('anonymousCredentials.email'),
-      invitationId: sessionStorage.getItem('anonymousCredentials.invitationId'),
+      uid: localStorage.getItem('anonymousCredentials.uid'),
+      lastName: localStorage.getItem('anonymousCredentials.lastName'),
+      firstName: localStorage.getItem('anonymousCredentials.firstName'),
+      role: localStorage.getItem('anonymousCredentials.role') as AnonymousRole,
+      email: localStorage.getItem('anonymousCredentials.email'),
+      invitationId: localStorage.getItem('anonymousCredentials.invitationId'),
     };
   }
 }

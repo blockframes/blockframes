@@ -116,7 +116,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     return this.valueChanges(query).pipe(
       map((analytics: Analytics<'organization'>[]) => filterOwnerEvents(analytics)),
       // We don't want to display anonymous data on seller's dashboard, we filter it out here directly
-      map((analytics: Analytics<'organization'>[]) => analytics.filter(a => !!a.meta.orgId)) // TODO #9158
+      map((analytics: Analytics<'organization'>[]) => analytics.filter(a => !!a.meta.orgId))
     );
   }
 
