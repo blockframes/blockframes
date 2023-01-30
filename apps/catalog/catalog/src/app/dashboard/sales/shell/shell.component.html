@@ -7,7 +7,7 @@
         <bf-tag *ngIf="sale.negotiation" test-id="status-tag">
           {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}
         </bf-tag>
-        <a mat-button routerLink="/c/o/dashboard/terms" target="_blank">
+        <a mat-button routerLink="/c/o/dashboard/terms" target="_blank" test-id="see-terms">
           <mat-icon svgIcon="file"></mat-icon>
           <span>See Terms & Conditions</span>
         </a>

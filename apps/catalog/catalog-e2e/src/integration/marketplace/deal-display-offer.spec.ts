@@ -9,7 +9,7 @@ import {
   assertUrlIncludes,
   connectOtherUser,
   assertTableRowData,
-  assertUrl
+  assertUrl,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller, offer, saleContract, negotiation, bucket } from '../../fixtures/marketplace/deal-display-offer';
 import { Organization, displayName, trimString } from '@blockframes/model';
@@ -136,6 +136,7 @@ describe('Deal negociation', () => {
       //specific sale page
       get('row_0_col_0').click();
       assertUrlIncludes(`/c/o/dashboard/sales/${saleContract.id}/view`);
+      get('see-terms').should('exist');
       checkAvailsSection();
       assertTableRowData(0, [
         negotiation.terms[0].duration.from.toLocaleDateString('en-US'),
@@ -145,6 +146,19 @@ describe('Deal negociation', () => {
         'No',
         '-',
       ]);
+    });
+
+    it('If the offer has no price, seller can only negotiate', () => {
+      cy.visit(`/c/o/dashboard/sales/${saleContract.id}/view`);
+      get('accept').should('exist');
+      get('negotiate').should('exist');
+      firestore.update({
+        docPath: `contracts/${saleContract.id}/negotiations/${negotiation.id}`,
+        field: 'price',
+        value: null,
+      });
+      get('accept').should('not.exist');
+      get('negotiate').should('exist');
     });
   });
 });
