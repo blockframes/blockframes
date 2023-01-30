@@ -50,6 +50,7 @@ describe('Testing bridge between Cypress and node', () => {
     //*** docs without subcollections */
 
     it('document', () => {
+      console.log('*** cypress test', examples.simpleDoc1);
       firestore.create([examples.simpleDoc1]);
       const path = Object.keys(examples.simpleDoc1)[0];
       const exampleValues = exampleValuesFrom([examples.simpleDoc1]);
@@ -262,14 +263,20 @@ describe('Testing bridge between Cypress and node', () => {
 //* FUNCTIONS -------------------------------*//
 
 const exampleValuesFrom = (examples: Record<string, object>[]) => {
+  /** Why cloning ?
+   * It seems that Cypress finishes ALL synchronous tasks before launching any test.
+   * As a consequence, synchronous task from, let's say, 5th test will happen before the 1 test launches.
+   * in this case, not cloning alters the original object where not intended, and the tests fails.
+   */
+  const exampleClones = <typeof examples>JSON.parse(JSON.stringify(examples));
   const result = [];
-  examples.forEach(example => {
+  for (const example of exampleClones) {
     const values = [];
     for (const [path, document] of Object.entries(example)) {
       document['_meta'] = { e2e: true };
       const partsInPath = path.split('/').length;
       // data in document
-      if (partsInPath === 2) values.push({...document});
+      if (partsInPath === 2) values.push({ ...document });
       // data in subcollection
       const subcollection = path.split('/')[2];
       if (partsInPath === 4) {
@@ -282,7 +289,7 @@ const exampleValuesFrom = (examples: Record<string, object>[]) => {
       }
     }
     result.push(values);
-  });
+  }
   return result;
 };
 
