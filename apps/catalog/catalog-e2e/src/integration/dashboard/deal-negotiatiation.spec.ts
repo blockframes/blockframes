@@ -232,32 +232,6 @@ describe('Deal negociation', () => {
 
 function checkConfirmationEmails(decision: 'accepted' | 'declined' | 'negotiation') {
   for (const user of ['buyer', 'seller', 'admin']) {
-    const mailData = {
-      buyer: {
-        recipient: buyer.user.email,
-        subject: {
-          accepted: `Your offer for ${seller.movie.title.international} was just accepted!`,
-          declined: 'Your offer was declined',
-          negotiation: `You just received a counter-offer for ${seller.movie.title.international}`,
-        },
-      },
-      seller: {
-        recipient: seller.user.email,
-        subject: {
-          accepted: `You accepted an offer`,
-          declined: 'You declined an offer',
-          negotiation: `Counter-offer for ${seller.movie.title.international} was successfully submitted`,
-        },
-      },
-      admin: {
-        recipient: supportMailosaur,
-        subject: {
-          accepted: 'Contract accepted',
-          declined: 'Contract declined',
-          negotiation: 'Counter offer created',
-        },
-      },
-    };
     interceptEmail({ sentTo: mailData[user].recipient }).then(mail => {
       expect(mail.subject).to.eq(mailData[user].subject[decision]);
       deleteEmail(mail.id);
@@ -266,21 +240,51 @@ function checkConfirmationEmails(decision: 'accepted' | 'declined' | 'negotiatio
 }
 
 function checkNotification(user: 'buyer' | 'seller', decision: 'accepted' | 'declined' | 'negotiation') {
-  const notificationText = {
-    buyer: {
-      accepted: `Your offer ${offer.id} was accepted. The Archipel Content team will contact you shortly.`,
-      declined: `Your offer for ${seller.movie.title.international} was declined.`,
-      negotiation: `${seller.org.name} sent a counter-offer for ${seller.movie.title.international}.`,
-    },
-    seller: {
-      accepted: `Congrats for accepting the offer ${offer.id}. The agreement will now be drafted offline.`,
-      declined: `The offer for ${seller.movie.title.international} was successfully declined.`,
-      negotiation: `Your counter-offer for ${seller.movie.title.international} was successfully sent to ${buyer.org.name}.`,
-    },
-  };
   get('notifications-link').should('contain', '1').click();
   get('notification-message').should('have.length', 1).and('contain', notificationText[user][decision]);
   get('mark-as-read').click();
   get('notifications-link').should('not.contain', '1');
   get('already-read').should('exist');
 }
+
+//* functions' consts
+
+const mailData = {
+  buyer: {
+    recipient: buyer.user.email,
+    subject: {
+      accepted: `Your offer for ${seller.movie.title.international} was just accepted!`,
+      declined: 'Your offer was declined',
+      negotiation: `You just received a counter-offer for ${seller.movie.title.international}`,
+    },
+  },
+  seller: {
+    recipient: seller.user.email,
+    subject: {
+      accepted: `You accepted an offer`,
+      declined: 'You declined an offer',
+      negotiation: `Counter-offer for ${seller.movie.title.international} was successfully submitted`,
+    },
+  },
+  admin: {
+    recipient: supportMailosaur,
+    subject: {
+      accepted: 'Contract accepted',
+      declined: 'Contract declined',
+      negotiation: 'Counter offer created',
+    },
+  },
+};
+
+const notificationText = {
+  buyer: {
+    accepted: `Your offer ${offer.id} was accepted. The Archipel Content team will contact you shortly.`,
+    declined: `Your offer for ${seller.movie.title.international} was declined.`,
+    negotiation: `${seller.org.name} sent a counter-offer for ${seller.movie.title.international}.`,
+  },
+  seller: {
+    accepted: `Congrats for accepting the offer ${offer.id}. The agreement will now be drafted offline.`,
+    declined: `The offer for ${seller.movie.title.international} was successfully declined.`,
+    negotiation: `Your counter-offer for ${seller.movie.title.international} was successfully sent to ${buyer.org.name}.`,
+  },
+};

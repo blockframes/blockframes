@@ -40,12 +40,10 @@ export function importData(data: Record<string, object>[]) {
         });
         content['initial'] = new Date(content['initial']);
       }
-      if ('_meta' in content) {
-        content['_meta']['createdAt'] = new Date(content['_meta']['createdAt']);
-        content['_meta']['e2e'] = true;
-      } else {
-        content['_meta'] = { e2e: true };
-      }
+      content['_meta'] =
+        content['_meta'] && content['_meta']['createdAt']
+          ? { e2e: true, createdAt: new Date(content['_meta']['createdAt']) }
+          : { e2e: true };
 
       createAll.push(db.doc(path).set(content));
     });
