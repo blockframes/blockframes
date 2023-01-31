@@ -268,7 +268,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
 
         // Append missing orgId to previous events made the same day
         return Promise.all(anonymousAnalytics
-          .map(a => ({ ...a, meta: { ...a.meta, orgId: profile.orgId } }))
+          .map(a => ({ ...a, meta: createOrganizationMeta({ ...a.meta, orgId: profile.orgId, profile }) }))
           .map(a => this.update(a.id, a))
         );
       }
