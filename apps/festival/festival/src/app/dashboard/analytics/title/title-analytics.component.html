@@ -124,7 +124,7 @@
   <ng-container *ngIf="endedOrOngoingScreenings$ | async as endedOrOngoingScreenings; else loading">
     <ng-container *ngIf="endedOrOngoingScreenings.length else noScreenings">
       <p class="mat-body-1">Check the cumulative statistics of this title's Screenings.</p>
-      <article class="surface">
+      <article class="surface" *ngIf="aggregatedScreeningCards$ | async; else loading">
         <p>"0s" means the user watched less than a minute.</p>
         <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
         <ng-container *ngIf="invitations$ | async as invitations">
