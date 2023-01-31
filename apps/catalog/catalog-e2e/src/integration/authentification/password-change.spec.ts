@@ -57,7 +57,7 @@ describe('Password reset & change test', () => {
       // because of E2E environement, we can only check if we received a reset link
       const resetLink = mail.html.links.filter(link => link.text === 'Reset Password');
       expect(resetLink).to.have.length(1);
-      deleteEmail(mail.id);
+      return deleteEmail(mail.id);
     });
   });
 

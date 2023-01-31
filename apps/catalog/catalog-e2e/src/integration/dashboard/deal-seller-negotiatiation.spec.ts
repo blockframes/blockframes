@@ -15,8 +15,9 @@ import {
   acceptCookies,
 } from '@blockframes/testing/cypress/browser';
 //no need for a new fixture
-import { buyer, seller, offer, saleContract, negotiation, bucket } from '../../fixtures/marketplace/deal-display-offer';
+import { buyer, seller, offer, saleContract, buyerNegotiation, bucket } from '../../fixtures/shared/deal-shared-fixture';
 import { supportMailosaur } from '@blockframes/utils/constants';
+import { capitalize } from '@blockframes/utils/helpers';
 
 const injectedData = {
   //buyer
@@ -34,7 +35,7 @@ const injectedData = {
   //offer, sale contract & bucket
   [`offers/${offer.id}`]: offer,
   [`contracts/${saleContract.id}`]: saleContract,
-  [`contracts/${saleContract.id}/negotiations/${negotiation.id}`]: negotiation,
+  [`contracts/${saleContract.id}/negotiations/${buyerNegotiation.id}`]: buyerNegotiation,
   [`buckets/${bucket.id}`]: bucket,
 };
 
@@ -73,13 +74,7 @@ describe('Deal negociation', () => {
     snackbarShould('contain', 'You accepted contract for International title');
     get('status-tag').should('contain', 'Accepted');
     //sales main page
-    get('sales').click();
-    get('all').should('contain', '(1)');
-    get('new').should('not.contain', '(1)');
-    get('ongoing').should('not.contain', '(1)');
-    get('accepted').should('contain', '(1)');
-    get('declined').should('not.contain', '(1)');
-    get('row_0_col_6').should('contain', 'Accepted');
+    checkMainSalePage('accepted');
     //emails & notifications creation
     checkConfirmationEmails('accepted');
     checkNotification('seller', 'accepted');
@@ -111,18 +106,12 @@ describe('Deal negociation', () => {
     //confirm
     get('reason-select').click();
     get('Other').click();
-    get('text-area').type('E2E decline');
+    get('text-area').type('E2E - seller declines');
     get('confirm').click();
     snackbarShould('contain', 'Offer declined.');
     get('status-tag').should('contain', 'Declined');
     //sales main page
-    get('sales').click();
-    get('all').should('contain', '(1)');
-    get('new').should('not.contain', '(1)');
-    get('ongoing').should('not.contain', '(1)');
-    get('accepted').should('not.contain', '(1)');
-    get('declined').should('contain', '(1)');
-    get('row_0_col_6').should('contain', 'Declined');
+    checkMainSalePage('declined');
     //emails & notifications creation
     checkConfirmationEmails('declined');
     checkNotification('seller', 'declined');
@@ -184,13 +173,7 @@ describe('Deal negociation', () => {
     snackbarShould('contain', 'Your counter offer has been sent');
     get('status-tag').should('contain', 'In Negotiation');
     //sales main page
-    get('sales').click();
-    get('all').should('contain', '(1)');
-    get('new').should('not.contain', '(1)');
-    get('ongoing').should('contain', '(1)');
-    get('accepted').should('not.contain', '(1)');
-    get('declined').should('not.contain', '(1)');
-    get('row_0_col_6').should('contain', 'In Negotiation');
+    checkMainSalePage('negotiation');
     //emails & notifications creation
     checkConfirmationEmails('negotiation');
     checkNotification('seller', 'negotiation');
@@ -234,7 +217,7 @@ function checkConfirmationEmails(decision: 'accepted' | 'declined' | 'negotiatio
   for (const user of ['buyer', 'seller', 'admin']) {
     interceptEmail({ sentTo: mailData[user].recipient }).then(mail => {
       expect(mail.subject).to.eq(mailData[user].subject[decision]);
-      deleteEmail(mail.id);
+      return deleteEmail(mail.id);
     });
   }
 }
@@ -245,6 +228,16 @@ function checkNotification(user: 'buyer' | 'seller', decision: 'accepted' | 'dec
   get('mark-as-read').click();
   get('notifications-link').should('not.contain', '1');
   get('already-read').should('exist');
+}
+
+function checkMainSalePage(decision: 'accepted' | 'declined' | 'negotiation') {
+  get('sales').click();
+  get('all').should('contain', '(1)');
+  get('new').should('not.contain', '(1)');
+  get('ongoing').should(decision === 'negotiation' ? 'contain' : 'not.contain', '(1)');
+  get('accepted').should(decision === 'accepted' ? 'contain' : 'not.contain', '(1)');
+  get('declined').should(decision === 'declined' ? 'contain' : 'not.contain', '(1)');
+  get('row_0_col_6').should('contain', decision === 'negotiation' ? 'In Negotiation' : capitalize(decision));
 }
 
 //* functions' consts

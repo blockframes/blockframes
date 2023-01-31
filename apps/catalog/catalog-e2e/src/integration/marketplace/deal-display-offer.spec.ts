@@ -11,7 +11,7 @@ import {
   assertTableRowData,
   assertUrl,
 } from '@blockframes/testing/cypress/browser';
-import { buyer, seller, offer, saleContract, negotiation, bucket } from '../../fixtures/marketplace/deal-display-offer';
+import { buyer, seller, offer, saleContract, buyerNegotiation, bucket } from '../../fixtures/shared/deal-shared-fixture';
 import { Organization, displayName, trimString } from '@blockframes/model';
 import { centralOrgId } from '@env';
 
@@ -31,7 +31,7 @@ const injectedData = {
   //offer, sale contract & bucket
   [`offers/${offer.id}`]: offer,
   [`contracts/${saleContract.id}`]: saleContract,
-  [`contracts/${saleContract.id}/negotiations/${negotiation.id}`]: negotiation,
+  [`contracts/${saleContract.id}/negotiations/${buyerNegotiation.id}`]: buyerNegotiation,
   [`buckets/${bucket.id}`]: bucket,
 };
 
@@ -93,8 +93,8 @@ describe('Deal negociation', () => {
       assertUrlIncludes(`c/o/marketplace/offer/${offer.id}/${saleContract.id}`);
       checkAvailsSection();
       assertTableRowData(0, [
-        negotiation.terms[0].duration.from.toLocaleDateString('en-US'),
-        negotiation.terms[0].duration.to.toLocaleDateString('en-US'),
+        buyerNegotiation.terms[0].duration.from.toLocaleDateString('en-US'),
+        buyerNegotiation.terms[0].duration.to.toLocaleDateString('en-US'),
         'Europe',
         'TV',
         'No',
@@ -139,8 +139,8 @@ describe('Deal negociation', () => {
       get('see-terms').should('exist');
       checkAvailsSection();
       assertTableRowData(0, [
-        negotiation.terms[0].duration.from.toLocaleDateString('en-US'),
-        negotiation.terms[0].duration.to.toLocaleDateString('en-US'),
+        buyerNegotiation.terms[0].duration.from.toLocaleDateString('en-US'),
+        buyerNegotiation.terms[0].duration.to.toLocaleDateString('en-US'),
         'Europe',
         'TV',
         'No',
@@ -153,7 +153,7 @@ describe('Deal negociation', () => {
       get('accept').should('exist');
       get('negotiate').should('exist');
       firestore.update({
-        docPath: `contracts/${saleContract.id}/negotiations/${negotiation.id}`,
+        docPath: `contracts/${saleContract.id}/negotiations/${buyerNegotiation.id}`,
         field: 'price',
         value: null,
       });

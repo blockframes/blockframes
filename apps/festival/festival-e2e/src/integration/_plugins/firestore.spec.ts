@@ -50,10 +50,9 @@ describe('Testing bridge between Cypress and node', () => {
     //*** docs without subcollections */
 
     it('document', () => {
-      console.log('*** cypress test', examples.simpleDoc1);
-      firestore.create([examples.simpleDoc1]);
       const path = Object.keys(examples.simpleDoc1)[0];
       const exampleValues = exampleValuesFrom([examples.simpleDoc1]);
+      firestore.create([examples.simpleDoc1]);
       firestore.get([path]).then(data => expect(data).to.eql(exampleValues.flat()));
       firestore.delete([path]);
       firestore.get([path]).then(data => expect(data[0]).to.eql({}));
@@ -61,9 +60,9 @@ describe('Testing bridge between Cypress and node', () => {
 
     it('collection', () => {
       const docs = [examples.simpleDoc2, examples.simpleDoc3];
-      firestore.create(docs);
       const collectionPath = Object.keys(examples.simpleDoc2)[0].split('/')[0];
       const exampleValues = exampleValuesFrom(docs);
+      firestore.create(docs);
       firestore.get([collectionPath]).then((data: []) => expect(data.flat()).to.eql(exampleValues.flat()));
       firestore.delete([collectionPath]);
       firestore.get([collectionPath]).then((data: []) => expect(data.flat()).to.eql([]));
@@ -71,9 +70,9 @@ describe('Testing bridge between Cypress and node', () => {
 
     it('array of documents', () => {
       const docs = [examples.simpleDoc4, examples.simpleDoc5];
-      firestore.create(docs);
       const docPaths = docs.map(doc => Object.keys(doc)[0]);
       const exampleValues = exampleValuesFrom(docs);
+      firestore.create(docs);
       firestore.get(docPaths).then((data: []) => expect(data.flat()).to.eql(exampleValues.flat()));
       firestore.delete(docPaths);
       firestore.get(docPaths).then((data: []) => expect(data.flat()).to.eql([{}, {}]));
@@ -81,9 +80,9 @@ describe('Testing bridge between Cypress and node', () => {
 
     it('array of collection', () => {
       const docs = [examples.simpleDoc6, examples.simpleDoc7, examples.simpleDoc8];
-      firestore.create(docs);
       const collectionsPaths = [...new Set(docs.map(doc => Object.keys(doc)[0]))];
       const exampleValues = exampleValuesFrom(docs);
+      firestore.create(docs);
       firestore.get(collectionsPaths).then((data: []) => expect(data.flat()).to.eql(exampleValues.flat()));
       firestore.delete(collectionsPaths);
       firestore.get(collectionsPaths).then((data: []) => expect(data.flat()).to.eql([{}, {}, {}]));
@@ -92,10 +91,10 @@ describe('Testing bridge between Cypress and node', () => {
     //*** docs with subcollections */
 
     it('document with subcollections', () => {
-      firestore.create([examples.docWithSubcollection1]);
       const path = Object.keys(examples.docWithSubcollection1)[0];
       const parentDocPath = path.split('/').slice(0, 2).join('/');
       const exampleValues = exampleValuesFrom([examples.docWithSubcollection1]);
+      firestore.create([examples.docWithSubcollection1]);
       firestore.get([parentDocPath]).then(data => expect(data).to.eql(exampleValues.flat()));
       firestore.delete([parentDocPath]);
       firestore.get([parentDocPath]).then(data => expect(data[0]).to.eql({}));
@@ -103,9 +102,9 @@ describe('Testing bridge between Cypress and node', () => {
 
     it('collection of documents with subcollections', () => {
       const docs = [examples.docWithSubcollection2, examples.docWithSubcollection3];
-      firestore.create(docs);
       const collectionPath = Object.keys(docs[0])[0].split('/')[0];
       const exampleValues = exampleValuesFrom(docs);
+      firestore.create(docs);
       firestore.get([collectionPath]).then(data => expect(data[0]).to.eql(exampleValues.flat()));
       firestore.delete([collectionPath]);
       firestore.get([collectionPath]).then((data: []) => expect(data.flat()).to.eql([]));
@@ -113,9 +112,9 @@ describe('Testing bridge between Cypress and node', () => {
 
     it('array of documents with subcollections', () => {
       const docs = [examples.docWithSubcollection4, examples.docWithSubcollection5];
-      firestore.create(docs);
       const docPaths = docs.map(doc => Object.keys(doc)[1].split('/').slice(0, 2).join('/'));
       const exampleValues = exampleValuesFrom(docs);
+      firestore.create(docs);
       firestore.get(docPaths).then(data => expect(data).to.eql(exampleValues.flat()));
       firestore.delete(docPaths);
       firestore.get(docPaths).then((data: []) => expect(data.flat()).to.eql([{}, {}]));
@@ -123,9 +122,9 @@ describe('Testing bridge between Cypress and node', () => {
 
     it('array of collections of documents with subcollections', () => {
       const docs = [examples.docWithSubcollection6, examples.docWithSubcollection7, examples.docWithSubcollection8];
-      firestore.create(docs);
       const collectionsPaths = [...new Set(docs.map(doc => Object.keys(doc)[0].split('/')[0]))];
       const exampleValues = exampleValuesFrom(docs);
+      firestore.create(docs);
       firestore.get(collectionsPaths).then((data: []) => expect(data.flat()).to.eql(exampleValues.flat()));
       firestore.delete(collectionsPaths);
       firestore.get(collectionsPaths).then((data: []) => expect(data.flat()).to.eql([]));
@@ -140,10 +139,8 @@ describe('Testing bridge between Cypress and node', () => {
     });
 
     it('a doc', () => {
-      firestore.create([examples.simpleDoc1]);
       const docPath = Object.keys(examples.simpleDoc1)[0];
       const exampleValues = exampleValuesFrom([examples.simpleDoc1]);
-      firestore.get([docPath]).then(data => expect(data).to.eql(exampleValues.flat()));
       const updateExamples = {
         boolean: true,
         string: 'value',
@@ -155,16 +152,16 @@ describe('Testing bridge between Cypress and node', () => {
       for (const [key, value] of Object.entries(updateExamples)) {
         updates.push({ docPath, field: key, value });
       }
+      firestore.create([examples.simpleDoc1]);
+      firestore.get([docPath]).then(data => expect(data).to.eql(exampleValues.flat()));
       firestore.update(updates);
       firestore.get([docPath]).then(data => expect(data[0]).to.deep.include(updateExamples));
     });
 
     it('a doc in a subcollection', () => {
-      firestore.create([examples.docWithSubcollection1]);
       const docPath = Object.keys(examples.docWithSubcollection1)[0];
       const subDocPath = Object.keys(examples.docWithSubcollection1)[1];
       const exampleValues = exampleValuesFrom([examples.docWithSubcollection1]);
-      firestore.get([docPath]).then(data => expect(data).to.eql(exampleValues.flat()));
       const updateExamples = {
         boolean: true,
         string: 'value',
@@ -176,8 +173,10 @@ describe('Testing bridge between Cypress and node', () => {
       for (const [key, value] of Object.entries(updateExamples)) {
         updates.push({ docPath: subDocPath, field: key, value });
       }
-      firestore.update(updates);
       const subCollectionName = Object.keys(examples.docWithSubcollection1)[1].split('/')[2];
+      firestore.create([examples.docWithSubcollection1]);
+      firestore.get([docPath]).then(data => expect(data).to.eql(exampleValues.flat()));
+      firestore.update(updates);
       firestore.get([docPath]).then(data => expect(data[0][subCollectionName][0]).to.deep.include(updateExamples));
     });
   });
@@ -262,21 +261,16 @@ describe('Testing bridge between Cypress and node', () => {
 
 //* FUNCTIONS -------------------------------*//
 
-const exampleValuesFrom = (examples: Record<string, object>[]) => {
-  /** Why cloning ?
-   * It seems that Cypress finishes ALL synchronous tasks before launching any test.
-   * As a consequence, synchronous task from, let's say, 5th test will happen before the 1 test launches.
-   * in this case, not cloning alters the original object where not intended, and the tests fails.
-   */
-  const exampleClones = <typeof examples>JSON.parse(JSON.stringify(examples));
+const exampleValuesFrom = (_examples: Record<string, object>[]) => {
+  const examples: typeof _examples = JSON.parse(JSON.stringify(_examples)); //to avoid original object being altered
   const result = [];
-  for (const example of exampleClones) {
+  for (const example of examples) {
     const values = [];
     for (const [path, document] of Object.entries(example)) {
       document['_meta'] = { e2e: true };
       const partsInPath = path.split('/').length;
       // data in document
-      if (partsInPath === 2) values.push({ ...document });
+      if (partsInPath === 2) values.push(document);
       // data in subcollection
       const subcollection = path.split('/')[2];
       if (partsInPath === 4) {

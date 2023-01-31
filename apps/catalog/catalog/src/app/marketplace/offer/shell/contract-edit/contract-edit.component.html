@@ -5,11 +5,11 @@
   </a>
   <negotiation-form [form]="form" [activeTerm]="activeTerm" [currency]="negotiation?.currency"></negotiation-form>
   <footer fxLayout fxLayoutAlign="space-between center">
-    <button mat-stroked-button color="primary" type="button" (click)="decline()">
+    <button mat-stroked-button color="primary" type="button" (click)="decline()" test-id="decline">
       <mat-icon svgIcon="refuse"></mat-icon>
       <span>Decline</span>
     </button>
-    <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+    <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid" test-id="submit">
       <span>Submit</span>
     </button>
   </footer>

@@ -404,6 +404,6 @@ function checkOfferEmail(user: 'buyer' | 'seller' | 'admin', docId?: string) {
         expect(redirect).to.include(mailData[user].redirect);
       });
     }
-    deleteEmail(mail.id);
+    return deleteEmail(mail.id);
   });
 }
