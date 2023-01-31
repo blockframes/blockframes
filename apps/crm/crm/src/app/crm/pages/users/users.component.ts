@@ -247,6 +247,7 @@ export class UsersComponent implements OnInit {
 
     const aggregator: Record<string, {
       profile: PublicUser | AnonymousCredentials,
+      orgId?: string,
       isAnonymous: boolean,
       views: Record<string, Date[]>
     }> = {};
@@ -256,6 +257,7 @@ export class UsersComponent implements OnInit {
       if (!aggregator[analytic.meta.profile.email]) {
         aggregator[analytic.meta.profile.email] = {
           profile: analytic.meta.profile,
+          orgId: analytic.meta.orgId,
           isAnonymous: !analytic.meta.orgId,
           views: {}
         }
@@ -268,11 +270,11 @@ export class UsersComponent implements OnInit {
     }
 
     for (const [email, aggregated] of Object.entries(aggregator)) {
-      const userOrg = aggregated.profile.orgId ? this.orgs.find(o => o.id === aggregated.profile.orgId) : undefined;
+      const userOrg = aggregated.orgId ? this.orgs.find(o => o.id === aggregated.orgId) : undefined;
       const userOrgName = userOrg ? userOrg.name : '--deleted org--';
 
-      for (const [orgId, hits] of Object.entries(aggregated.views)) {
-        const org = this.orgs.find(o => o.id === orgId);
+      for (const [visitedOrgId, hits] of Object.entries(aggregated.views)) {
+        const visitedOrg = this.orgs.find(o => o.id === visitedOrgId);
         for (const date of hits) {
           exportedRows.push({
             uid: aggregated.profile.uid,
@@ -282,8 +284,8 @@ export class UsersComponent implements OnInit {
             'user org id': aggregated.profile.orgId,
             'user org name': aggregated.isAnonymous ? '' : userOrgName,
             anonymous: aggregated.isAnonymous ? 'yes' : 'no',
-            'visited org id': orgId,
-            'visited org name': org ? org.name : '--deleted org--',
+            'visited org id': visitedOrgId,
+            'visited org name': visitedOrg ? visitedOrg.name : '--deleted org--',
             date
           });
         }
