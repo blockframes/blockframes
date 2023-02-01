@@ -5,10 +5,10 @@
   <bf-form-table [form]="form.get('terms')" [columns]="termColumns" [active]="activeTerm" [defaultFormValue]="defaultValue" disableDelete (itemSelected)="scrollToTop()" tablePosition="bottom">
     <!-- Columns -->
     <ng-template colRef="duration.from" let-from>
-      {{ from | date:'M/d/y' }}
+      {{ from | date:'MM/dd/yyyy' }}
     </ng-template>
     <ng-template colRef="duration.to" let-to>
-      {{ to | date:'M/d/y' }}
+      {{ to | date:'MM/dd/yyyy' }}
     </ng-template>
     <ng-template colRef="territories" let-territories>
       <span class="group-label" (click)="openDetails(territories, 'territories')">

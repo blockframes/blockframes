@@ -7,12 +7,13 @@ import {
   // cypress commands
   get,
   assertUrlIncludes,
-  syncMovieToAlgolia,
   connectOtherUser,
   assertTableRowData,
-  assertUrl
+  assertUrl,
+  // helpers
+  dateToMMDDYYYY,
 } from '@blockframes/testing/cypress/browser';
-import { buyer, seller, offer, saleContract, negotiation, bucket } from '../../fixtures/marketplace/deal-display-offer';
+import { buyer, seller, offer, saleContract, buyerNegotiation, bucket } from '../../fixtures/shared/deal-shared-fixture';
 import { Organization, displayName, trimString } from '@blockframes/model';
 import { centralOrgId } from '@env';
 
@@ -32,7 +33,7 @@ const injectedData = {
   //offer, sale contract & bucket
   [`offers/${offer.id}`]: offer,
   [`contracts/${saleContract.id}`]: saleContract,
-  [`contracts/${saleContract.id}/negotiations/${negotiation.id}`]: negotiation,
+  [`contracts/${saleContract.id}/negotiations/${buyerNegotiation.id}`]: buyerNegotiation,
   [`buckets/${bucket.id}`]: bucket,
 };
 
@@ -49,7 +50,6 @@ describe('Deal negociation', () => {
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: buyer.user.uid, email: buyer.user.email, emailVerified: true });
     adminAuth.createUser({ uid: seller.user.uid, email: seller.user.email, emailVerified: true });
-    syncMovieToAlgolia(seller.movie.id);
     maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
@@ -78,7 +78,7 @@ describe('Deal negociation', () => {
       get('row_0_col_0').click();
       assertUrlIncludes(`c/o/marketplace/offer/${offer.id}`);
       get('offer-id').should('contain', offer.id);
-      get('offer-creation').should('contain', `Offer created: ${new Date().toLocaleDateString('en-US', { month: '2-digit' })}`);
+      get('offer-creation').should('contain', `Offer created: ${dateToMMDDYYYY(new Date())}`);
       get('offer-length').should('contain', '1 Title');
       get('offer-price').should('contain', 'Total: €10,000.00');
       get('offer-specificity').should('contain', offer.specificity);
@@ -95,8 +95,8 @@ describe('Deal negociation', () => {
       assertUrlIncludes(`c/o/marketplace/offer/${offer.id}/${saleContract.id}`);
       checkAvailsSection();
       assertTableRowData(0, [
-        negotiation.terms[0].duration.from.toLocaleDateString('en-US'),
-        negotiation.terms[0].duration.to.toLocaleDateString('en-US'),
+        dateToMMDDYYYY(buyerNegotiation.terms[0].duration.from),
+        dateToMMDDYYYY(buyerNegotiation.terms[0].duration.to),
         'Europe',
         'TV',
         'No',
@@ -125,7 +125,7 @@ describe('Deal negociation', () => {
         .get(`orgs/${centralOrgId.catalog}`)
         .then((org: Organization) =>
           assertTableRowData(0, [
-            new Date().toLocaleDateString('en-US'),
+            dateToMMDDYYYY(new Date()),
             org.name,
             buyer.org.name,
             offer.id,
@@ -138,15 +138,29 @@ describe('Deal negociation', () => {
       //specific sale page
       get('row_0_col_0').click();
       assertUrlIncludes(`/c/o/dashboard/sales/${saleContract.id}/view`);
+      get('see-terms').should('exist');
       checkAvailsSection();
       assertTableRowData(0, [
-        negotiation.terms[0].duration.from.toLocaleDateString('en-US'),
-        negotiation.terms[0].duration.to.toLocaleDateString('en-US'),
+        dateToMMDDYYYY(buyerNegotiation.terms[0].duration.from),
+        dateToMMDDYYYY(buyerNegotiation.terms[0].duration.to),
         'Europe',
         'TV',
         'No',
         '-',
       ]);
+    });
+
+    it('If the offer has no price, seller can only negotiate', () => {
+      cy.visit(`/c/o/dashboard/sales/${saleContract.id}/view`);
+      get('accept').should('exist');
+      get('negotiate').should('exist');
+      firestore.update({
+        docPath: `contracts/${saleContract.id}/negotiations/${buyerNegotiation.id}`,
+        field: 'price',
+        value: null,
+      });
+      get('accept').should('not.exist');
+      get('negotiate').should('exist');
     });
   });
 });

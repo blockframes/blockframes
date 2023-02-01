@@ -1,6 +1,6 @@
 <ng-container *ngIf="offer$ | async as offer">
   <header>
-    <bf-tag>{{ offer.status | toLabel:'offerStatus' }}</bf-tag>
+    <bf-tag test-id="status-tag">{{ offer.status | toLabel:'offerStatus' }}</bf-tag>
     <article>
       <div>
         <h1 test-id="offer-id">{{ offer.id }}</h1>
