@@ -13,6 +13,8 @@ import {
   deleteEmail,
   escapeKey,
   acceptCookies,
+  // helpers
+  dateToMMDDYYYY,
 } from '@blockframes/testing/cypress/browser';
 //no need for a new fixture
 import { buyer, seller, offer, saleContract, buyerNegotiation, bucket } from '../../fixtures/shared/deal-shared-fixture';
@@ -143,8 +145,8 @@ describe('Deal negociation', () => {
     get('freeTv').click();
     escapeKey();
     //adding one month before and after
-    get('dateFrom').clear().type(seller.term.duration.from.toLocaleDateString('en-US'));
-    get('dateTo').clear().type(seller.term.duration.to.toLocaleDateString('en-US'));
+    get('dateFrom').clear().type(dateToMMDDYYYY(seller.term.duration.from));
+    get('dateTo').clear().type(dateToMMDDYYYY(seller.term.duration.to));
     //changing to exclusive
     get('exclusivity').click();
     get('exclusive').click();
@@ -158,8 +160,8 @@ describe('Deal negociation', () => {
     get('caption').click();
     //save & submit
     assertTableRowData(0, [
-      seller.term.duration.from.toLocaleDateString('en-US'),
-      seller.term.duration.to.toLocaleDateString('en-US'),
+      dateToMMDDYYYY(seller.term.duration.from),
+      dateToMMDDYYYY(seller.term.duration.to),
       'Latin America, Europe',
       'Pay TV, Pay Per View',
       'Yes',
@@ -190,8 +192,8 @@ describe('Deal negociation', () => {
     cy.visit(`c/o/marketplace/offer/${offer.id}/${saleContract.id}`);
     get('offer-price').should('contain', '€15,000.00');
     assertTableRowData(0, [
-      seller.term.duration.from.toLocaleDateString('en-US'),
-      seller.term.duration.to.toLocaleDateString('en-US'),
+      dateToMMDDYYYY(seller.term.duration.from),
+      dateToMMDDYYYY(seller.term.duration.to),
       'Latin America, Europe',
       'Pay TV, Pay Per View',
       'Yes',

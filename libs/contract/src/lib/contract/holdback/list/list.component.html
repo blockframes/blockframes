@@ -2,10 +2,10 @@
   <h3>Holdbacks</h3>
   <bf-table [source]="holdbacks" pagination="50" useFilter>
     <ng-template colRef="duration" label="Duration Start Date" let-duration sort>
-      {{ duration.from | date:'M/d/y' }}
+      {{ duration.from | date:'MM/dd/yyyy' }}
     </ng-template>
     <ng-template colRef="duration" label="Duration End Date" let-duration sort>
-      {{ duration.to | date:'M/d/y' }}
+      {{ duration.to | date:'MM/dd/yyyy' }}
     </ng-template>
 
     <ng-template colRef="territories" label="Territories" let-territories>

@@ -10,6 +10,8 @@ import {
   connectOtherUser,
   assertTableRowData,
   assertUrl,
+  // helpers
+  dateToMMDDYYYY,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller, offer, saleContract, buyerNegotiation, bucket } from '../../fixtures/shared/deal-shared-fixture';
 import { Organization, displayName, trimString } from '@blockframes/model';
@@ -76,7 +78,7 @@ describe('Deal negociation', () => {
       get('row_0_col_0').click();
       assertUrlIncludes(`c/o/marketplace/offer/${offer.id}`);
       get('offer-id').should('contain', offer.id);
-      get('offer-creation').should('contain', `Offer created: ${new Date().toLocaleDateString('en-US', { month: '2-digit' })}`);
+      get('offer-creation').should('contain', `Offer created: ${dateToMMDDYYYY(new Date())}`);
       get('offer-length').should('contain', '1 Title');
       get('offer-price').should('contain', 'Total: €10,000.00');
       get('offer-specificity').should('contain', offer.specificity);
@@ -93,8 +95,8 @@ describe('Deal negociation', () => {
       assertUrlIncludes(`c/o/marketplace/offer/${offer.id}/${saleContract.id}`);
       checkAvailsSection();
       assertTableRowData(0, [
-        buyerNegotiation.terms[0].duration.from.toLocaleDateString('en-US'),
-        buyerNegotiation.terms[0].duration.to.toLocaleDateString('en-US'),
+        dateToMMDDYYYY(buyerNegotiation.terms[0].duration.from),
+        dateToMMDDYYYY(buyerNegotiation.terms[0].duration.to),
         'Europe',
         'TV',
         'No',
@@ -123,7 +125,7 @@ describe('Deal negociation', () => {
         .get(`orgs/${centralOrgId.catalog}`)
         .then((org: Organization) =>
           assertTableRowData(0, [
-            new Date().toLocaleDateString('en-US'),
+            dateToMMDDYYYY(new Date()),
             org.name,
             buyer.org.name,
             offer.id,
@@ -139,8 +141,8 @@ describe('Deal negociation', () => {
       get('see-terms').should('exist');
       checkAvailsSection();
       assertTableRowData(0, [
-        buyerNegotiation.terms[0].duration.from.toLocaleDateString('en-US'),
-        buyerNegotiation.terms[0].duration.to.toLocaleDateString('en-US'),
+        dateToMMDDYYYY(buyerNegotiation.terms[0].duration.from),
+        dateToMMDDYYYY(buyerNegotiation.terms[0].duration.to),
         'Europe',
         'TV',
         'No',

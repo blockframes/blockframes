@@ -13,6 +13,8 @@ import {
   deleteEmail,
   escapeKey,
   acceptCookies,
+  // helpers
+  dateToMMDDYYYY,
 } from '@blockframes/testing/cypress/browser';
 //no need for a new fixture
 import {
@@ -75,8 +77,8 @@ describe('Deal negociation', () => {
     get('status-tag').should('contain', 'In Negotiation');
     get('offer-price').should('contain', '€15,000.00');
     assertTableRowData(0, [
-      seller.term.duration.from.toLocaleDateString('en-US'),
-      seller.term.duration.to.toLocaleDateString('en-US'),
+      dateToMMDDYYYY(seller.term.duration.from),
+      dateToMMDDYYYY(seller.term.duration.to),
       'Latin America, Europe',
       'Pay TV, Pay Per View',
       'Yes',
@@ -138,17 +140,17 @@ describe('Deal negociation', () => {
     escapeKey();
     get('dateFrom')
       .clear()
-      .type(add(seller.term.duration.from, { days: 15 }).toLocaleDateString('en-US'));
+      .type(dateToMMDDYYYY(add(seller.term.duration.from, { days: 15 })));
     get('dateTo')
       .clear()
-      .type(sub(seller.term.duration.to, { days: 15 }).toLocaleDateString('en-US'));
+      .type(dateToMMDDYYYY(sub(seller.term.duration.to, { days: 15 })));
     get('exclusivity').click();
     get('non-exclusive').click();
     get('caption').click(); //cunchecking this option
     //save & submit
     assertTableRowData(0, [
-      add(seller.term.duration.from, { days: 15 }).toLocaleDateString('en-US'),
-      sub(seller.term.duration.to, { days: 15 }).toLocaleDateString('en-US'),
+      dateToMMDDYYYY(add(seller.term.duration.from, { days: 15 })),
+      dateToMMDDYYYY(sub(seller.term.duration.to, { days: 15 })),
       'Latin America, CIS, Europe',
       'VOD, Pay TV, Pay Per View',
       'No',
