@@ -42,9 +42,12 @@ export const fakeLastName = () => `E2E_${faker.name.lastName()}`;
 
 export const fakeKeyword = () => `E2E_${faker.word.noun()}`;
 
+/**
+* Take a Date as input and convert it into en-US string with two digits for month and day.
+* @example: 01/01/2024
+**/
 export function dateToMMDDYYYY(date: Date) {
-  // example : converts 1/1/2024 to 01/01/2024
-  return date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })
+  return date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
 }
 
 /** @see Angular TitleCasePipe */

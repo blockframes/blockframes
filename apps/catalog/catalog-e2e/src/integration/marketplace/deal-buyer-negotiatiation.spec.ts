@@ -29,6 +29,7 @@ import {
 import { supportMailosaur } from '@blockframes/utils/constants';
 import { capitalize } from '@blockframes/utils/helpers';
 import { add, sub } from 'date-fns';
+import { ContractStatus } from '@blockframes/model';
 
 const injectedData = {
   //buyer
@@ -55,7 +56,7 @@ const injectedData = {
  * We simulate the actions a buyer can make, AFTER a seller made a counter-offer regarding the buyer first offer.
  */
 
-describe('Deal negociation', () => {
+describe('Deal negotiation', () => {
   beforeEach(() => {
     cy.visit('');
     maintenance.start();
@@ -163,16 +164,16 @@ describe('Deal negociation', () => {
     get('confirm').click();
     snackbarShould('contain', 'Your counter offer has been sent');
     get('status-tag').should('contain', 'In Negotiation');
-    checkConfirmationEmails('negotiation');
-    checkNotification('buyer', 'negotiation');
-    checkMainOfferPage('negotiation');
-    checkMainSalePage('negotiation');
+    checkConfirmationEmails('negotiating');
+    checkNotification('buyer', 'negotiating');
+    checkMainOfferPage('negotiating');
+    checkMainSalePage('negotiating');
   });
 });
 
 //* functions
 
-function checkConfirmationEmails(decision: 'accepted' | 'declined' | 'negotiation') {
+function checkConfirmationEmails(decision: ContractStatus) {
   for (const user of ['buyer', 'seller', 'admin']) {
     interceptEmail({ sentTo: mailData[user].recipient }).then(mail => {
       expect(mail.subject).to.eq(mailData[user].subject[decision]);
@@ -181,7 +182,7 @@ function checkConfirmationEmails(decision: 'accepted' | 'declined' | 'negotiatio
   }
 }
 
-function checkNotification(user: 'buyer' | 'seller', decision: 'accepted' | 'declined' | 'negotiation') {
+function checkNotification(user: 'buyer' | 'seller', decision: ContractStatus) {
   get('notifications-link').should('contain', '1').click();
   get('notification-message').should('have.length', 1).and('contain', notificationText[user][decision]);
   get('mark-as-read').click();
@@ -189,24 +190,24 @@ function checkNotification(user: 'buyer' | 'seller', decision: 'accepted' | 'dec
   get('already-read').should('exist');
 }
 
-function checkMainOfferPage(decision: 'accepted' | 'declined' | 'negotiation') {
+function checkMainOfferPage(decision: ContractStatus) {
   cy.visit('/c/o/marketplace/offer');
   get('all-offers').should('contain', '(1)');
   get('offers').should('not.contain', '(1)');
   get('ongoing-deals').should(decision !== 'declined' ? 'contain' : 'not.contain', '(1)');
   get('past-deals').should(decision === 'declined' ? 'contain' : 'not.contain', '(1)');
-  get('row_0_col_6').should('contain', decision === 'negotiation' ? 'In Negotiation' : capitalize(decision));
+  get('row_0_col_6').should('contain', decision === 'negotiating' ? 'In Negotiation' : capitalize(decision));
 }
 
-function checkMainSalePage(decision: 'accepted' | 'declined' | 'negotiation') {
+function checkMainSalePage(decision: ContractStatus) {
   connectOtherUser(seller.user.email);
   get('sales').click();
   get('all').should('contain', '(1)');
   get('new').should('not.contain', '(1)');
-  get('ongoing').should(decision === 'negotiation' ? 'contain' : 'not.contain', '(1)');
+  get('ongoing').should(decision === 'negotiating' ? 'contain' : 'not.contain', '(1)');
   get('accepted').should(decision === 'accepted' ? 'contain' : 'not.contain', '(1)');
   get('declined').should(decision === 'declined' ? 'contain' : 'not.contain', '(1)');
-  get('row_0_col_6').should('contain', decision === 'negotiation' ? 'In Negotiation' : capitalize(decision));
+  get('row_0_col_6').should('contain', decision === 'negotiating' ? 'In Negotiation' : capitalize(decision));
 }
 
 //* functions' consts
@@ -217,7 +218,7 @@ const mailData = {
     subject: {
       accepted: `You accepted an offer`,
       declined: 'You declined an offer',
-      negotiation: `Counter-offer for ${seller.movie.title.international} was successfully submitted`,
+      negotiating: `Counter-offer for ${seller.movie.title.international} was successfully submitted`,
     },
   },
   seller: {
@@ -225,7 +226,7 @@ const mailData = {
     subject: {
       accepted: `Your offer for ${seller.movie.title.international} was just accepted!`,
       declined: 'Your offer was declined',
-      negotiation: `You just received a counter-offer for ${seller.movie.title.international}`,
+      negotiating: `You just received a counter-offer for ${seller.movie.title.international}`,
     },
   },
   admin: {
@@ -233,7 +234,7 @@ const mailData = {
     subject: {
       accepted: 'Contract accepted',
       declined: 'Contract declined',
-      negotiation: 'Counter offer created',
+      negotiating: 'Counter offer created',
     },
   },
 };
@@ -242,11 +243,11 @@ const notificationText = {
   buyer: {
     accepted: `Congrats for accepting the offer ${offer.id}. The agreement will now be drafted offline.`,
     declined: `The offer for ${seller.movie.title.international} was successfully declined.`,
-    negotiation: `Your counter-offer for ${seller.movie.title.international} was successfully sent to ${seller.org.name}.`,
+    negotiating: `Your counter-offer for ${seller.movie.title.international} was successfully sent to ${seller.org.name}.`,
   },
   seller: {
     accepted: `Your offer ${offer.id} was accepted. The Archipel Content team will contact you shortly.`,
     declined: `Your offer for ${seller.movie.title.international} was declined.`,
-    negotiation: `${buyer.org.name} sent a counter-offer for ${seller.movie.title.international}.`,
+    negotiating: `${buyer.org.name} sent a counter-offer for ${seller.movie.title.international}.`,
   },
 };

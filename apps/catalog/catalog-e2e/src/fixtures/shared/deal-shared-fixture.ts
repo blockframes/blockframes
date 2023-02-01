@@ -65,7 +65,7 @@ const bucketTermTerritories: Territory[] = europeCountries.map(country => Array(
 
 const buyerNegotiation: Negotiation = {
   /** Moving this document in the past to avoid below issue :
-   * if 'initial' from a new negocitation has the same hour and minute as 'createAt', the document won't move to 'negotiating'
+   * if 'initial' from a new negotiation has the same hour and minute as 'createdAt', the document won't move to 'negotiating'
    * E2E tests being quick, it would happen a lot, making the test crash randomly
    */
   _meta: createDocumentMeta({ createdAt: sub(new Date(), { minutes: 2 }) }),
