@@ -42,6 +42,8 @@ import {
   updateUsersPassword
 } from '@blockframes/devops';
 import { join } from 'path';
+import { decrypt, encrypt } from './tool';
+import { readFileSync } from 'fs';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -164,6 +166,14 @@ async function runCommand() {
       break;
     case 'writeRuntimeConfig':
       writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));
+      break;
+    case 'encrypt':
+      // npm run backend-ops encrypt
+      console.log(encrypt(JSON.stringify(process.env)));
+      break;
+    case 'decrypt':
+      // npm run backend-ops decrypt inputFilePath > outputFilePath
+      console.log(decrypt(readFileSync(arg1, 'utf8')));
       break;
     default:
       return Promise.reject('Command Args not detected... exiting..');

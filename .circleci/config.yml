@@ -4,10 +4,6 @@
 #     change this version when you need to trigger a global cache refresh on the ci,
 #     use case is: we move from node v9 to node v10 and we need to make sure the binaries are recompiled.
 #     currently "v1" in circleci.
-#   FIREBASE_SERVICE_ACCOUNT:
-#     contains the service account credentials for the blockframes-ci project.
-#     use case is: we want to use the firebase admin SDK and trigger deploys.
-#     /!\ secret value.
 #
 version: 2.1
 references:
@@ -244,6 +240,7 @@ jobs:
     steps:
       - prepare_environment
       - run: npm start writeRuntimeConfig
+      - run: npm start encrypt
       - start_unit_tests_emulators
       - run:
           command: npm run affected:test
