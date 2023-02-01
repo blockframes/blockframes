@@ -240,7 +240,6 @@ jobs:
     steps:
       - prepare_environment
       - run: npm start writeRuntimeConfig
-      - run: npm start encrypt
       - start_unit_tests_emulators
       - run:
           command: npm run affected:test
