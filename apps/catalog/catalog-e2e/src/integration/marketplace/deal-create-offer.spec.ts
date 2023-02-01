@@ -340,7 +340,7 @@ function assertSelectionTableData() {
 }
 
 function assertOfferTableData() {
-  const today = new Date().toLocaleDateString('en-US');
+  const today = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
   get('all-offers').should('contain', '(1)');
   get('offers').should('contain', '(1)');
   get('ongoing-deals').should('contain', '(0)');
