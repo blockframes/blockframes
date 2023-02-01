@@ -4,25 +4,24 @@
   </mat-card-header>
   <mat-form-field appearance="outline">
     <mat-label>Street</mat-label>
-    <input test-id="address-street" matInput placeholder="Street" aria-label="street" formControlName="street" />
+    <input matInput placeholder="Street" aria-label="street" formControlName="street" test-id="street"/>
   </mat-form-field>
   <div>
     <mat-form-field appearance="outline">
       <mat-label>City</mat-label>
-      <input test-id="address-city" matInput placeholder="City" aria-label="city" formControlName="city" />
+      <input matInput placeholder="City" aria-label="city" formControlName="city"  test-id="city"/>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Zip Code</mat-label>
-      <input test-id="address-zipCode" matInput placeholder="Zip Code" aria-label="zip code"
-        formControlName="zipCode" />
+      <input test-id="zip" matInput placeholder="Zip Code" aria-label="zip code" formControlName="zipCode" test-id="zip"/>
     </mat-form-field>
   </div>
-  <static-select [withoutValues]="['world']" required [control]="form.get('country')" scope="territories">
+  <static-select [withoutValues]="['world']" required [control]="form.get('country')" scope="territories" test-id="country">
     <mat-label>Country</mat-label>
   </static-select>
   <mat-form-field appearance="outline">
     <mat-label>Phone Number</mat-label>
-    <input test-id="address-phoneNumber" matInput placeholder="Phone Number" aria-label="Company phone number"
-      formControlName="phoneNumber" />
+    <input matInput placeholder="Phone Number" aria-label="Company phone number"
+      formControlName="phoneNumber" test-id="phone"/>
   </mat-form-field>
 </form>
