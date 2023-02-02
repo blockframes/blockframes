@@ -1,9 +1,9 @@
-import { createFakeUserDataArray } from '@blockframes/testing/cypress/browser';
+import { fakeUserData } from '@blockframes/testing/cypress/browser';
 import { createPermissions, createUser, createOrganization, createOrgAppAccess, fakeLegalTerms } from '@blockframes/model';
 
 const blockframesAdminId = '0-e2e-blockframesAdminId';
 const blockframesOrgAdminId = '0-e2e-orgAdminId';
-const [blockframesAdminData, newUserData] = createFakeUserDataArray(2);
+const blockframesAdminData = fakeUserData();
 
 //* blockframes admin
 
@@ -39,15 +39,54 @@ export const admin = {
   permissions,
 };
 
-//* new org
+//* new organizations
 
-export const newUser = createUser({
-  firstName: newUserData.firstName,
-  lastName: newUserData.lastName,
-  email: newUserData.email,
-});
+export const newcomers = {
+  accepted: {
+    catalog: {
+      marketplace: createOrgWithuser(),
+      dashboard: createOrgWithuser(),
+    },
+    festival: {
+      marketplace: createOrgWithuser(),
+      dashboard: createOrgWithuser(),
+    },
+  },
+  pending: {
+    catalog: {
+      marketplace: createOrgWithuser(),
+      dashboard: createOrgWithuser(),
+    },
+    festival: {
+      marketplace: createOrgWithuser(),
+      dashboard: createOrgWithuser(),
+    },
+  },
+  onhold: {
+    catalog: {
+      marketplace: createOrgWithuser(),
+      dashboard: createOrgWithuser(),
+    },
+    festival: {
+      marketplace: createOrgWithuser(),
+      dashboard: createOrgWithuser(),
+    },
+  },
+};
 
-export const newOrg = createOrganization({
-  name: newUserData.company.name,
-  email: newUserData.email,
-});
+//* functions
+
+function createOrgWithuser() {
+  const data = fakeUserData();
+  return {
+    org: createOrganization({
+      name: data.company.name,
+      email: data.email,
+    }),
+    user: createUser({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+    }),
+  };
+}
