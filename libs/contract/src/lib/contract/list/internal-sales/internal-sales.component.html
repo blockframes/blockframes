@@ -1,18 +1,18 @@
 <ng-container *rxLet="filter$; let filter">
   <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-    <button mat-tab-link (click)="resetFilter()" [active]="filter === ''">
+    <button mat-tab-link (click)="resetFilter()" [active]="filter === ''" test-id="all">
       All <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.all }})</span>
     </button>
-    <button mat-tab-link (click)="applyFilter('pending')" [active]="filter === 'pending'">
+    <button mat-tab-link (click)="applyFilter('pending')" [active]="filter === 'pending'" test-id="new">
       New <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.new }})</span>
     </button>
-    <button mat-tab-link (click)="applyFilter('negotiating')" [active]="filter === 'negotiating'">
+    <button mat-tab-link (click)="applyFilter('negotiating')" [active]="filter === 'negotiating'" test-id="ongoing">
       Ongoing <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.negotiating }})</span>
     </button>
-    <button mat-tab-link (click)="applyFilter('accepted')" [active]="filter === 'accepted'">
+    <button mat-tab-link (click)="applyFilter('accepted')" [active]="filter === 'accepted'" test-id="accepted">
       Accepted <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.accepted }})</span>
     </button>
-    <button mat-tab-link (click)="applyFilter('declined')" [active]="filter === 'declined'">
+    <button mat-tab-link (click)="applyFilter('declined')" [active]="filter === 'declined'" test-id="declined">
       Declined <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.declined }})</span>
     </button>
   </header>

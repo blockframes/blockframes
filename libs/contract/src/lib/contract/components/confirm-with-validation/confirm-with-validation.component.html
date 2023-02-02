@@ -6,15 +6,15 @@
     </div>
     <div fxLayout="column" fxLayoutAlign="center center">
       <p><strong>Before you accept this contract, please agree on the following:</strong></p>
-      <mat-checkbox [formControl]="acceptTerms" color="primary">
+      <mat-checkbox [formControl]="acceptTerms" color="primary" test-id="terms">
         <span class="mat-caption">I hereby accept the policy regarding accepted offers, as mentioned in the <a [routerLink]="termsPath" fragment="article11" target="_blank">Terms and Conditions.</a></span>
       </mat-checkbox>
     </div>
     <div mat-dialog-actions fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
-      <button test-id="confirm" mat-flat-button color="primary" [disabled]="!acceptTerms.value" (click)="confirm()">
+      <button mat-flat-button color="primary" [disabled]="!acceptTerms.value" (click)="confirm()" test-id="confirm">
         {{ data.confirm || "Confirm" }}
       </button>
-      <button mat-button color="primary" (click)="close()">
+      <button mat-button color="primary" (click)="close()" test-id="close">
         {{ data.cancel || "Cancel" }}
       </button>
     </div>

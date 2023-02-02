@@ -62,7 +62,7 @@ const sellerAdminUid = '0-e2e-sellerOrgAdminUid';
 const sellerOrgId = '0-e2e-sellerOrgId';
 const sellerMovieId = '0-e2e-sellerMovieId';
 const sellerContractId = '0-e2e-sellerContractId';
-const sellertermId = '0-e2e-sellertermId';
+const sellertermId = '0-e2e-sellerTermId';
 const sellerData = fakeUserData();
 
 const sellerUser = createUser({

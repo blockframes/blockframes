@@ -60,6 +60,18 @@ export const firestore = {
       });
   },
 
+  deleteBuyerContracts(orgId: string) {
+    return firestore
+      .queryData({ collection: 'contracts', field: 'buyerId', operator: '==', value: orgId })
+      .then((contracts: Contract[]) => {
+        const promises = [];
+        for (const contract of contracts) {
+          promises.push(firestore.delete(`contracts/${contract.id}`));
+        }
+        return Promise.all(promises);
+      });
+  },
+
   deleteOffers(orgId: string) {
     return firestore
       .queryData({ collection: 'offers', field: 'buyerId', operator: '==', value: orgId })

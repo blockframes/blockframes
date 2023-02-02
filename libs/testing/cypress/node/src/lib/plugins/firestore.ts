@@ -1,10 +1,12 @@
 import { db } from '../testing-cypress';
 import { metaDoc } from '@blockframes/utils/maintenance';
 import { WhereFilterOp } from 'firebase/firestore';
+import { BucketTerm, createDuration } from '@blockframes/model';
 
 const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
 const isEventsPath = (path: string) => path.split('/')[0] === 'events';
 const isTermsPath = (path: string) => path.split('/')[0] === 'terms';
+const isNegotiationPath = (path: string) => path.split('/').length > 2 && path.split('/')[2] === 'negotiations';
 
 //* IMPORT DATA*-----------------------------------------------------------------
 
@@ -21,28 +23,27 @@ export function importData(data: Record<string, object>[]) {
           startedAt: !content['startedAt'] ? null : new Date(content['startedAt']), // TODO #8614
           endedAt: !content['endedAt'] ? null : new Date(content['endedAt']), // TODO #8614
         };
-
       } else if (isEventsPath(path)) {
         content = {
           ...content,
           start: new Date(content['start']), // TODO #8614
           end: new Date(content['end']), // TODO #8614
-          _meta: { e2e: true },
         };
       } else if (isTermsPath(path)) {
         content = {
           ...content,
-          duration: {
-            from: new Date(content['duration']['from']),
-            to: new Date(content['duration']['to']),
-          },
-          _meta: { e2e: true },
+          duration: createDuration(content['duration']),
         };
-      } else if ('_meta' in content) {
-        content['_meta']['e2e'] = true;
-      } else {
-        content['_meta'] = { e2e: true };
+      } else if (isNegotiationPath(path)) {
+        content['terms'].forEach((t: BucketTerm) => {
+          t.duration = createDuration(t.duration);
+        });
+        content['initial'] = new Date(content['initial']);
       }
+      content['_meta'] =
+        content['_meta'] && content['_meta']['createdAt']
+          ? { e2e: true, createdAt: new Date(content['_meta']['createdAt']) }
+          : { e2e: true };
 
       createAll.push(db.doc(path).set(content));
     });

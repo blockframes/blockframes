@@ -1,4 +1,4 @@
-<a mat-button routerLink="..">
+<a mat-button routerLink=".." test-id="back">
   <mat-icon svgIcon="arrow_back"></mat-icon>
   <span>Come back to Contract List</span>
 </a>
@@ -6,11 +6,19 @@
   <ng-container *ngIf="sale.negotiation as negotiation">
     <ng-container *ngIf="negotiation | canNegotiate:activeOrgId ">
       <header fxLayout fxLayoutAlign="center center" fxLayoutGap="24px">
-        <button mat-stroked-button color="primary" (click)="accept()" [disabled]="!sale.negotiation.price">
-          <mat-icon svgIcon="check"></mat-icon>
-          <span>Accept</span>
-        </button>
-        <a mat-stroked-button color="primary" routerLink="negotiate">
+        <ng-container *ngIf="negotiation.price else noPrice">
+          <button mat-stroked-button color="primary" (click)="accept()" test-id="accept">
+            <mat-icon svgIcon="check"></mat-icon>
+            <span>Accept</span>
+          </button>
+        </ng-container>
+        <ng-template #noPrice>
+          <button disabled mat-stroked-button>
+            <mat-icon svgIcon="check"></mat-icon>
+            <span matTooltip="You cannot accept a contract without a price">Accept</span>
+          </button>
+        </ng-template>
+        <a mat-stroked-button color="primary" routerLink="negotiate" test-id="negotiate">
           <mat-icon svgIcon="negotiate"></mat-icon>
           <span>Negotiate</span>
         </a>
