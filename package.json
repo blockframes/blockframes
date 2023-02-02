@@ -55,7 +55,6 @@
     "help": "nx help",
     "affected": "nx affected",
     "pwm": "pwmetrics --config",
-    "bundlesize": "bundlesize",
     "postinstall": "ngcc --properties es2015 browser module main && node ./decorate-angular-cli.js",
     "prerender:festival": "nx build festival --prod && nx run festival:server --configuration production && angular-prerender --browser-target festival:build --server-target festival:server",
     "backend-ops": "ts-node -P tools/tsconfig.tools.json apps/backend-ops/src/main.ts"
@@ -160,7 +159,6 @@
     "@types/tmp": "0.1.0",
     "@typescript-eslint/eslint-plugin": "5.10.2",
     "@typescript-eslint/parser": "5.10.2",
-    "bundlesize": "^0.18.0",
     "camelcase": "^6.1.0",
     "codelyzer": "6.0.1",
     "commander": "^7.0.0",
@@ -203,18 +201,6 @@
   "pwmetrics": {
     "url": "http://localhost:4200/"
   },
-  "bundlesize": [
-    {
-      "path": "./dist/apps/catalog/main**.js",
-      "maxSize": "7 MB",
-      "compression": "none"
-    },
-    {
-      "path": "./dist/apps/backend-functions/main**.js",
-      "maxSize": "1 MB",
-      "compression": "none"
-    }
-  ],
   "husky": {
     "hooks": {
       "pre-commit": "node tools/scripts/pre-commit.js"
