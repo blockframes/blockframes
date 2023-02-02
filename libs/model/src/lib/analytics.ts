@@ -2,7 +2,7 @@ import { MovieAvailsSearch } from './algolia';
 import { DocumentMeta } from './meta';
 import { Movie } from './movie';
 import { Organization } from './organisation';
-import { Module } from './static';
+import { App, Module } from './static';
 import { createPublicUser, PublicUser, User } from './user';
 import { AnonymousCredentials } from './identity';
 
@@ -169,4 +169,17 @@ export function filterOwnerEvents<K extends keyof AnalyticsTypeRecord>(analytics
     if (isOrganizationAnalytics(analytic)) return analytic.meta.organizationId !== analytic.meta.orgId;
     return false; // Unknown analytics type..
   });
+}
+
+export function isBuyer(org: Organization, app: App = 'festival') {
+  return org && !org.appAccess[app].dashboard;
+}
+
+export function removeSellerData(orgs: Organization[], analytics: Analytics<'title' | 'organization'>[], users: User[]) {
+  const buyerOrgs = orgs.filter(org => isBuyer(org));
+  const buyerOrgIds = buyerOrgs.map(({ id }) => id);
+  const buyerAnalytics = analytics.filter(({ meta }) => buyerOrgIds.includes(meta.orgId));
+  const buyerUsers = buyerAnalytics.map(({ meta }) => meta.uid);
+  const filteredUsers = users.filter(({ uid }) => buyerUsers.includes(uid));
+  return { users: filteredUsers, orgs: buyerOrgs, analytics: buyerAnalytics };
 }
