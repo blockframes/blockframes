@@ -362,13 +362,17 @@ export function movieAskingPriceRequested(
   notificationData: Record<string, string>,
   app: App
 ): EmailTemplateRequest {
+  const pageUrl = app === 'festival' ?
+    `mailto:${fromBuyer.email}?subject=Interest in ${movie.title.international} via ${appName[app]}` :
+    `mailto:${supportEmails[app]}?subject=Give a Price for ${movie.title.international}. Request by (${buyerOrg.activity} ${buyerOrg.country})`;
+
   const data = {
     user: toUser,
     buyer: fromBuyer,
     org: buyerOrg,
     movie,
     ...notificationData,
-    pageUrl: `mailto:${fromBuyer.email}?subject=Interest in ${movie.title.international} via ${appName[app]}`
+    pageUrl
   };
   const templateId = app === 'festival' ? templateIds.movie.askingPriceRequested : templateIds.movie.askingPriceRequestedEnhanced;
   return { to: toUser.email, templateId, data };

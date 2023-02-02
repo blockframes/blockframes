@@ -16,6 +16,9 @@ import {
   assertTableRowData,
   // cypress tasks
   interceptEmail,
+  deleteEmail,
+  // helpers
+  dateToMMDDYYYY,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller } from '../../fixtures/marketplace/deal-create-offer';
 import { supportMailosaur } from '@blockframes/utils/constants';
@@ -108,18 +111,18 @@ describe('Deal negociation', () => {
       //with a start before term beginning
       get('dateFrom')
         .clear()
-        .type(add(seller.term.duration.from, { days: -1 }).toLocaleDateString('en-US'));
+        .type(dateToMMDDYYYY(add(seller.term.duration.from, { days: -1 })));
       assertAvailableCountries(0);
 
-      get('dateFrom').clear().type(seller.term.duration.from.toLocaleDateString('en-US')); //back to 69 available
+      get('dateFrom').clear().type(dateToMMDDYYYY(seller.term.duration.from)); //back to 69 available
       assertAvailableCountries(69);
       //with a end after end term
       get('dateTo')
         .clear()
-        .type(add(seller.term.duration.to, { days: 1 }).toLocaleDateString('en-US'));
+        .type(dateToMMDDYYYY(add(seller.term.duration.to, { days: 1 })));
       assertAvailableCountries(0);
 
-      get('dateTo').clear().type(seller.term.duration.to.toLocaleDateString('en-US')); //back to 69 available
+      get('dateTo').clear().type(dateToMMDDYYYY(seller.term.duration.to)); //back to 69 available
       assertAvailableCountries(69);
 
       //with wrong rights (VOD)
@@ -270,8 +273,8 @@ function fillInputs({
   get('medias').click();
   for (const right of rights) get(right).click();
   escapeKey();
-  if (dateFrom) get('dateFrom').clear().type(dateFrom.toLocaleDateString('en-US'));
-  if (dateTo) get('dateTo').clear().type(dateTo.toLocaleDateString('en-US'));
+  if (dateFrom) get('dateFrom').clear().type(dateToMMDDYYYY(dateFrom));
+  if (dateTo) get('dateTo').clear().type(dateToMMDDYYYY(dateTo));
   get('exclusivity').click();
   get(exclusive ? 'exclusive' : 'non-exclusive').click();
 }
@@ -333,11 +336,11 @@ function assertCalendarPeriod() {
 
 function assertSelectionTableData() {
   const nextYear = new Date().getFullYear() + 1;
-  assertTableRowData(0, [`2/1/${nextYear}`, `5/1/${nextYear}`, 'Europe', 'TV', 'No']);
+  assertTableRowData(0, [`02/01/${nextYear}`, `05/01/${nextYear}`, 'Europe', 'TV', 'No']);
 }
 
 function assertOfferTableData() {
-  const today = new Date().toLocaleDateString('en-US');
+  const today = dateToMMDDYYYY(new Date());
   get('all-offers').should('contain', '(1)');
   get('offers').should('contain', '(1)');
   get('ongoing-deals').should('contain', '(0)');
@@ -403,5 +406,6 @@ function checkOfferEmail(user: 'buyer' | 'seller' | 'admin', docId?: string) {
         expect(redirect).to.include(mailData[user].redirect);
       });
     }
+    return deleteEmail(mail.id);
   });
 }

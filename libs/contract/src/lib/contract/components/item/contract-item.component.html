@@ -16,10 +16,10 @@
   <ng-container *ngIf="contract | getTermsFromContract | async as terms">
     <bf-table [source]="terms" useFilter pagination="50">
       <ng-template colRef="duration.from" label="Terms Start Date" let-from>
-        {{ from | date:'M/d/y' }}
+        {{ from | date:'MM/dd/yyyy' }}
       </ng-template>
       <ng-template colRef="duration.to" label="Terms End Date" let-to>
-        {{ to | date:'M/d/y' }}
+        {{ to | date:'MM/dd/yyyy' }}
       </ng-template>
       <ng-template colRef="territories" label="Territories" let-territories>
         <span class="group-label" (click)="openDetails(territories, 'territories')">

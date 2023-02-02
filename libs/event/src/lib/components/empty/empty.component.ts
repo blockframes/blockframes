@@ -1,5 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { EventTypes } from '@blockframes/model';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'event-empty',
@@ -7,6 +6,4 @@ import { EventTypes } from '@blockframes/model';
   styleUrls: ['./empty.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmptyComponent {
-  @Input() type: EventTypes;
-}
+export class EmptyComponent { }

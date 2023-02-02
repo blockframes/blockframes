@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { where } from 'firebase/firestore';
 
 // Blockframes
-import { fromOrg, MovieService } from '@blockframes/movie/service';
+import { fromOrgAndAccessible, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { hasAppStatus, App } from '@blockframes/model';
@@ -27,8 +27,7 @@ import { Intercom } from 'ng-intercom';
 })
 export class HomeComponent {
   public titles$ = this.orgService.currentOrg$.pipe(
-    switchMap(({ id }) => this.movieService.valueChanges(fromOrg(id))),
-    map((titles) => titles.filter((title) => title.app[this.app].access)),
+    switchMap(({ id }) => this.movieService.valueChanges(fromOrgAndAccessible(id, this.app))),
     tap(titles => {
       titles.filter(hasAppStatus(this.app, ['accepted', 'submitted'])).length
         ? this.dynTitle.setPageTitle('Dashboard')
