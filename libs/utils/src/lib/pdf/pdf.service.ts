@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
-import { App, appName, toLabel, MovieAvailsSearch, AvailsFilter } from '@blockframes/model';
+import { App, appName, toLabel, MovieAvailsSearch, AvailsFilter, trimString } from '@blockframes/model';
 import { firebaseRegion, firebase } from '@env';
 import { EmulatorsConfig, EMULATORS_CONFIG } from '../emulator-front-setup';
 import { APP } from '../routes/utils';
 import { PdfParams, PdfParamsFilters } from './pdf.interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { trimString, toGroupLabel } from '@blockframes/utils/pipes';
+import { toGroupLabel } from '@blockframes/utils/pipes';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { format } from 'date-fns';

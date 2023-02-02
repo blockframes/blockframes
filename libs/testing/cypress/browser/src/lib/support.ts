@@ -15,6 +15,7 @@ import { startOfWeek, add, isPast, isFuture } from 'date-fns';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 import { capitalize } from '@blockframes/utils/helpers';
+import { sub } from 'date-fns';
 
 interface ScreeningVerification {
   title: string;
@@ -77,6 +78,10 @@ export function assertUrlIncludes(partialUrl: string) {
   return cy.url().should('include', partialUrl);
 }
 
+export function assertTableRowData(row: number, strings: string[]) {
+  return Promise.all(strings.map((string, index) => get(`row_${row}_col_${index}`).should('contain', string)));
+}
+
 interface InterceptOption {
   sentTo?: string;
   subject?: string;
@@ -84,8 +89,8 @@ interface InterceptOption {
 }
 
 export function interceptEmail(option: InterceptOption) {
-  const now = new Date();
-  return cy.mailosaurGetMessage(serverId, option, { receivedAfter: now, timeout: 30000 });
+  const oneMinuteAgo = sub(new Date(), { minutes: 1 }); //to allow checking multiple emails from a single flow (ex: offers)
+  return cy.mailosaurGetMessage(serverId, option, { receivedAfter: oneMinuteAgo, timeout: 30000 });
 }
 
 export function deleteEmail(id: string) {
@@ -223,7 +228,12 @@ export function fillDashboardCalendarPopin({ type, title }: { type: EventTypes; 
   get('more-details').click();
 }
 
-export function fillDashboardCalendarDetails({ movieId, title, accessibility, secret }: {
+export function fillDashboardCalendarDetails({
+  movieId,
+  title,
+  accessibility,
+  secret,
+}: {
   movieId: string;
   title: string;
   accessibility: AccessibilityTypes;
@@ -238,11 +248,12 @@ export function fillDashboardCalendarDetails({ movieId, title, accessibility, se
 }
 
 export function verifyScreening({ title, accessibility, expected }: ScreeningVerification) {
-  return firestore.queryData({ collection: 'events', field: 'title', operator: '==', value: title })
+  return firestore
+    .queryData({ collection: 'events', field: 'title', operator: '==', value: title })
     .then(([dbEvent]: Event[]) => {
       get(`event_${dbEvent.id}`).should(expected ? 'exist' : 'not.exist');
       if (expected) get(`event_${dbEvent.id}`).should('contain', `${capitalize(accessibility)} Screening`);
-  });
+    });
 }
 
 //this function is used during movie creation to validate each upload

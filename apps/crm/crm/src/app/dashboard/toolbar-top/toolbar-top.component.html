@@ -4,22 +4,21 @@
     <mat-icon svgIcon="home"></mat-icon><span matLine></span>
   </button>
 
-  <button mat-button routerLink="/c/o/dashboard/crm/users">
+  <a mat-button routerLink="/c/o/dashboard/crm/users">
     <mat-icon svgIcon="account_circle"></mat-icon><span matLine>Users</span>
-  </button>
+  </a>
 
-  <button mat-button routerLink="/c/o/dashboard/crm/organizations" test-id="orgs">
+  <a mat-button routerLink="/c/o/dashboard/crm/organizations" test-id="orgs">
     <mat-icon svgIcon="group"></mat-icon><span matLine>Organizations</span>
-  </button>
+  </a>
 
-  <button mat-button routerLink="/c/o/dashboard/crm/movies">
+  <a mat-button routerLink="/c/o/dashboard/crm/movies">
     <mat-icon svgIcon="movie"></mat-icon><span matLine>Movies</span>
-  </button>
+  </a>
 
   <button mat-button [matMenuTriggerFor]="eventsMenu">
     <mat-icon svgIcon="calendar_today"></mat-icon><span matLine>Events</span>
   </button>
-
 
   <a mat-button routerLink="crm/contracts">
     <mat-icon svgIcon="document"></mat-icon><span matLine>Contracts</span>
@@ -44,9 +43,9 @@
 </mat-toolbar>
 
 <mat-menu #homeMenu="matMenu">
-  <button mat-menu-item routerLink="/c/o/dashboard/crm/overview">
+  <a mat-menu-item routerLink="/c/o/dashboard/crm/overview">
     <mat-icon svgIcon="home"></mat-icon><span matLine>Admin panel</span>
-  </button>
+  </a>
 
   <button mat-menu-item [matMenuTriggerFor]="contentMenu">
     <mat-icon svgIcon="logo_archipel_content_fill"></mat-icon><span matLine>Archipel Content</span>
@@ -59,8 +58,6 @@
   <button mat-menu-item [matMenuTriggerFor]="financiersMenu">
     <mat-icon svgIcon="logo_media_financiers_fill"></mat-icon><span matLine>Media Financiers</span>
   </button>
-
-
 </mat-menu>
 
 <mat-menu #contentMenu="matMenu">
@@ -91,19 +88,19 @@
 </mat-menu>
 
 <mat-menu #eventsMenu="matMenu">
-  <button mat-menu-item routerLink="/c/o/dashboard/crm/events">
+  <a mat-menu-item routerLink="/c/o/dashboard/crm/events">
     <mat-icon svgIcon="calendar_today"></mat-icon><span matLine>Events list</span>
-  </button>
-  <button mat-menu-item routerLink="/c/o/dashboard/crm/invitations">
+  </a>
+  <a mat-menu-item routerLink="/c/o/dashboard/crm/invitations">
     <mat-icon svgIcon="person_add"></mat-icon><span matLine>Invitations list</span>
-  </button>
+  </a>
 </mat-menu>
 
 <mat-menu #toolsMenu="matMenu">
-  <button mat-menu-item routerLink="/c/o/dashboard/crm/mails">
+  <a mat-menu-item routerLink="/c/o/dashboard/crm/mails">
     <mat-icon svgIcon="mail"></mat-icon><span matLine>Emails</span>
-  </button>
-  <button mat-menu-item routerLink="/c/o/dashboard/crm/dev-area">
+  </a>
+  <a mat-menu-item routerLink="/c/o/dashboard/crm/dev-area">
     <mat-icon class="unicorn" svgIcon="unicorn"></mat-icon><span matLine>Developpers playground</span>
-  </button>
+  </a>
 </mat-menu>

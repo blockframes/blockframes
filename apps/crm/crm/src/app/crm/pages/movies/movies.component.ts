@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { Router } from '@angular/router';
 
 import {
-  Movie,
   isScreening,
   CrmMovie,
   smartJoin,
@@ -14,6 +13,7 @@ import {
   ReleaseMediaValue,
   isMandate,
   Organization,
+  filterOwnerEvents,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
@@ -79,14 +79,7 @@ export class MoviesComponent implements OnInit {
     );
   }
 
-  goToEditNewTab(id: string, $event: Event) {
-    $event.stopPropagation();
-    const urlTree = this.router.createUrlTree([`c/o/dashboard/crm/movie/${id}`]);
-    const url = this.router.serializeUrl(urlTree);
-    window.open(url, '_blank', 'noreferrer');
-  }
-
-  goToEdit(movie: Movie) {
+  goToEdit(movie: CrmMovie) {
     this.router.navigate([`/c/o/dashboard/crm/movie/${movie.id}`]);
   }
 
@@ -95,7 +88,7 @@ export class MoviesComponent implements OnInit {
       this.exporting = true;
       this.cdr.markForCheck();
 
-      const getLanguage = (m: Movie, key: keyof MovieLanguageSpecification) => {
+      const getLanguage = (m: CrmMovie, key: keyof MovieLanguageSpecification) => {
         const result: Language[] = [];
         for (const [language, specification] of Object.entries(m.languages)) {
           if (specification[key]) result.push(language as Language);
@@ -198,7 +191,7 @@ export class MoviesComponent implements OnInit {
     const availsSearchQuery = [where('type', '==', 'titleSearch'), where('name', 'in', ['filteredAvailsCalendar', 'filteredAvailsMap'])];
     const availsSearchAnalytics = await this.analyticsService.load<Analytics<'titleSearch'>>(availsSearchQuery);
 
-    const allAnalytics = [...titleAnalytics, ...availsSearchAnalytics].filter(analytic => !analytic.meta.ownerOrgIds?.includes(analytic.meta.orgId));
+    const allAnalytics = filterOwnerEvents([...titleAnalytics, ...availsSearchAnalytics]);
 
     const allUids = unique(allAnalytics.map(analytic => analytic.meta.uid));
     const allUsers = await this.userService.load(allUids);

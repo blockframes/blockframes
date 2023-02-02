@@ -49,6 +49,7 @@ interface MovieIndexConfig {
   originCountries: Territory;
   status: ProductionStatus;
   storeStatus: StoreStatus;
+  orgNames: [string];
 }
 
 interface OrganizationIndexConfig {

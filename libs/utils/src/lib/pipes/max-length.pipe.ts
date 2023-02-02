@@ -1,20 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
-
-/**
- * Trims a string without cropping the last word if keepLastWordComplete is set to true
- */
-export function trimString(string: string, length: number, keepLastWordComplete?: boolean) {
-  if (!string?.length || string.length <= length) return string;
-
-  let trimmedString = string.substr(0, length);
-  if (keepLastWordComplete) {
-    const lastWordIndex = Math.min(trimmedString.length, trimmedString.lastIndexOf(' '));
-    trimmedString = trimmedString.substr(0, lastWordIndex);
-  }
-  return `${trimmedString}...`;
-}
+import { trimString } from '@blockframes/model';
 
 /**
  * Cuts the text to provided length

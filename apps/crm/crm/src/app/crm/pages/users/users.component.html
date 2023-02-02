@@ -27,6 +27,10 @@
           Title Analytics
           <mat-icon svgIcon="arrow_upward"></mat-icon>
         </button>
+        <button mat-menu-item (click)="exportOrgAnalyticsPageViews()">
+          Org Analytics
+          <mat-icon svgIcon="arrow_upward"></mat-icon>
+        </button>
         <button mat-menu-item (click)="exportSearchAnalytics(users)">
           Search Analytics
           <mat-icon svgIcon="arrow_upward"></mat-icon>
@@ -39,9 +43,6 @@
         <span>{{ uid }}</span>
         <button mat-icon-button [cdkCopyToClipboard]="uid" (click)="$event.stopPropagation()">
           <mat-icon svgIcon="file_copy"></mat-icon>
-        </button>
-        <button mat-icon-button (click)="goToEditNewTab(uid, $event)">
-          <mat-icon svgIcon="launch"></mat-icon>
         </button>
       </ng-template>
       <ng-template colRef="email" sort let-email>
@@ -69,6 +70,11 @@
       <ng-template colRef="createdFrom" label="Created From" sort let-app>{{ app }}</ng-template>
       <ng-template colRef="org.addresses.main.country" sort label="Country" let-country>
         {{ country ? country : '--' }}
+      </ng-template>
+      <ng-template colRef="id" label="Action" let-userId sticky>
+        <a target="_blank" [routerLink]="['/c/o/dashboard/crm/user', userId]" (click)="$event.stopPropagation()">
+          <mat-icon svgIcon="launch"></mat-icon>
+        </a>
       </ng-template>
     </bf-table>
 

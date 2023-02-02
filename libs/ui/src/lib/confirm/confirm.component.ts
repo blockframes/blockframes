@@ -7,7 +7,8 @@ interface ConfirmationData {
   advice?: string,
   confirm: string,
   cancel: string,
-  onConfirm?: () => void
+  onConfirm?: () => void,
+  onClose?: (closedFrom: 'button') => void,
 }
 
 @Component({
@@ -30,6 +31,7 @@ export class ConfirmComponent {
   }
 
   public close(): void {
+    if (this.data.onClose) this.data.onClose('button');
     this.dialogRef.close(false);
   }
 }

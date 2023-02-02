@@ -4,8 +4,8 @@
   <form fxLayout="column" [formGroup]="form" (ngSubmit)="decline()">
     <mat-form-field appearance="outline">
       <mat-label>Reason of refusal</mat-label>
-      <mat-select formControlName="reason">
-        <mat-option *ngFor="let reason of reasons[data.type]" [value]="reason">
+      <mat-select formControlName="reason" test-id="reason-select">
+        <mat-option *ngFor="let reason of reasons[data.type]" [value]="reason" [attr.test-id]="reason">
           {{reason}}
         </mat-option>
       </mat-select>
@@ -13,22 +13,21 @@
     <mat-form-field appearance="outline">
       <textarea matInput
         placeholder='"Offer price is too low", "Title is not available anymore", "Bad previous experience with buyer"'
-        cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="4" maxlength="500"
-        test-id="specific-terms" formControlName="message">
+        cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="4" maxlength="500" formControlName="message" test-id="text-area">
       </textarea>
       <mat-hint>Please specify why you want to decline this offer.</mat-hint>
     </mat-form-field>
     <div *ngIf="data.showAcceptTermsCheckbox" class="validation-checkbox" fxLayout="column" fxLayoutAlign="center center">
       <p><strong>Before you confirm your refusal, please agree on the following:</strong></p>
-      <mat-checkbox formControlName="acceptTerms" color="primary">
+      <mat-checkbox formControlName="acceptTerms" color="primary" test-id="terms">
         <span class="mat-caption">I hereby accept the policy regarding accepted offers, as mentioned in the <a [routerLink]="termsPath" fragment="article11" target="_blank">Terms and Conditions.</a></span>
       </mat-checkbox>
     </div>
     <footer fxLayout="column" fxLayoutAlign="center center">
-      <button mat-flat-button color="primary" [disabled]="data.showAcceptTermsCheckbox && !form.get('acceptTerms').value" type="submit">
+      <button mat-flat-button color="primary" [disabled]="data.showAcceptTermsCheckbox && !form.get('acceptTerms').value" type="submit" test-id="confirm">
         Confirm refusal
       </button>
-      <button mat-button (click)="cancel()" type="button">
+      <button mat-button (click)="cancel()" type="button" test-id="cancel">
         Cancel
       </button>
     </footer>
