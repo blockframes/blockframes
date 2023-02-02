@@ -46,7 +46,7 @@ export const algolia = {
   indexNameUsers: 'nicolas_users',
 };
 
-// Support emails
+// Emails
 // =======
 
 export const supportEmails = {
@@ -55,6 +55,8 @@ export const supportEmails = {
   festival: 'ngermain+festival@cascade8.com',
   financiers: 'ngermain+financiers@cascade8.com',
 }
+
+export const mailchimpServer = 'us20';
 
 // Yandex
 // =======

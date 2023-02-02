@@ -31,7 +31,8 @@ export {
   centralOrgId,
   supportEmails,
   playerId,
-  testVideoId
+  testVideoId,
+  mailchimpServer
 } from '@env';
 
 export const { projectId, storageBucket } = firebase();
@@ -50,5 +51,4 @@ export const twilioApiKeySecret = mockConfigIfNeeded('twilio', 'api', 'key', 'se
 export const twilioApiKeySid = mockConfigIfNeeded('twilio', 'api', 'key', 'sid');
 
 export const mailchimpAPIKey = mockConfigIfNeeded('mailchimp', 'api_key');
-export const mailchimpServer = mockConfigIfNeeded('mailchimp', 'server');
 export const mailchimpListId = mockConfigIfNeeded('mailchimp', 'list_id');

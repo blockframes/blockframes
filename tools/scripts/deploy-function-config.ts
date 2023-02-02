@@ -33,7 +33,6 @@ function getKeyValFormat(env: string): string[] {
 async function setFirebaseConfig() {
   if (existsSync(absSecretPath) || existsSync(absTemplatePath)) {
     console.warn('ERROR: To prevent this error message coming up, migrate your secrets.sh file to .env');
-    console.warn('Please run "npm run migrate:deploy-secrets".');
     console.warn('After migration, please delete your secrets.sh & secrets.template.sh');
     loadSecretsFile();
   }
@@ -41,7 +40,7 @@ async function setFirebaseConfig() {
 
   // * Check if we are in CI
   const FIREBASE_CONFIG: firebaseTools.FirebaseConfig = {};
-  if (process.env.FIREBASE_CI_TOKEN) FIREBASE_CONFIG.token = process.env.FIREBASE_CI_TOKEN;
+  if (process.env.FIREBASE_CI_TOKEN) FIREBASE_CONFIG.token = process.env.FIREBASE_CI_TOKEN; //TODO #8863 check
   if (arg) FIREBASE_CONFIG.project = arg;
 
   const keyVal = getKeyValFormat(arg); // TODO(#3620) Parse .env rather than read hardcoded values

@@ -65,7 +65,7 @@ async function updateSAKPathInDotenv(projectId: string) {
     const SAKPath = join(process.cwd(), SAKDirPath, SAKFilename);
     return updateDotenv(SAK_KEY, SAKPath);
   } else {
-    console.warn('WARNING: Service account key may not exist or have correct permissions! Run health check to confirm...');
+    throw new Error('ERROR: Service account key may not exist or have correct permissions! Run health check to confirm...');
   }
 }
 

@@ -77,7 +77,7 @@ export const algolia = {
   indexNameUsers: 'staging_users',
 };
 
-// Support emails
+// Emails
 // =======
 
 export const supportEmails = {
@@ -86,6 +86,8 @@ export const supportEmails = {
   festival: 'dev+staging_festival@blockframes.io',
   financiers: 'dev+staging_financiers@blockframes.io'
 }
+
+export const mailchimpServer = 'us20';
 
 // Yandex
 // =======

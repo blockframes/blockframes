@@ -1,8 +1,6 @@
 [
   { "key": "SENDGRID_API_KEY", "msg": "API key for Sendgrid, the emailer service, is missing." },
-  { "key": "ALGOLIA_APP_ID", "msg": "API key for Algolia is missing." },
   { "key": "ALGOLIA_API_KEY", "msg": "API key for Algolia is missing." },
-  { "key": "ALGOLIA_SEARCH_KEY", "msg": "API key for Algolia is missing." },
   { "key": "JWPLAYER_KEY", "msg": "API key for the video player is missing." },
   { "key": "JWPLAYER_SECRET", "msg": "API key for the video player is missing." },
   { "key": "JWPLAYER_APIV2SECRET", "msg": "API V2 key for the video player is missing." },
@@ -13,6 +11,5 @@
   { "key": "TWILIO_API_KEY_SID", "msg": "SID key for Twilio token video is missing. Please see : https://www.notion.so/Twilio-Video-Usage-Feedback-f67d060127b64bd8902960bdb781ae42" },
   { "key": "PROJECT_ID", "msg": "Please specify your Firebase projectId in your .env file. This is used when executing build and deploy commands, such as nx deploy or nx build" },
   { "key": "MAILCHIMP_API_KEY", "msg": "API key for Mailchimp, the marketing emailer service, is missing." },
-  { "key": "MAILCHIMP_SERVER", "msg": "Server location for Mailchimp, the marketing emailer service, is missing." },
   { "key": "MAILCHIMP_LIST_ID", "msg": "List id for Mailchimp, the marketing emailer service, is missing." }
 ]

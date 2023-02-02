@@ -79,7 +79,7 @@ export const algolia = {
   indexNameUsers: 'prod_users',
 };
 
-// Support emails
+// Emails
 // =======
 
 export const supportEmails = {
@@ -88,6 +88,8 @@ export const supportEmails = {
   festival: 'support@archipelmarket.com',
   financiers: 'support@mediafinanciers.com'
 }
+
+export const mailchimpServer = 'us4';
 
 // Yandex
 // =======

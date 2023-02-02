@@ -47,7 +47,7 @@ export const algolia = {
 };
 
 
-// Support emails
+// Emails
 // =======
 
 export const supportEmails = {
@@ -56,6 +56,8 @@ export const supportEmails = {
   festival: 'dev+ci_festival@blockframes.io',
   financiers: 'dev+ci_financiers@blockframes.io'
 }
+
+export const mailchimpServer = 'us20';
 
 // Yandex
 // =======

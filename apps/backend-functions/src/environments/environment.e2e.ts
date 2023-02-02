@@ -19,7 +19,8 @@ export {
   centralOrgId,
   supportEmails,
   playerId,
-  testVideoId
+  testVideoId,
+  mailchimpServer
 } from '@env';
 
 import { firebase } from '@env';
@@ -38,6 +39,5 @@ export const twilioApiKeySecret = functions.config().twilio.api.key.secret;
 export const twilioApiKeySid = functions.config().twilio.api.key.sid;
 
 export const mailchimpAPIKey = functions.config().mailchimp.api_key;
-export const mailchimpServer = functions.config().mailchimp.server;
 export const mailchimpListId = functions.config().mailchimp.list_id;
 
