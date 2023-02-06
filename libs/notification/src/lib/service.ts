@@ -285,7 +285,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'screenerRequested': {
         const movie = await this.loadMovie(notification.docId);
         const org = await this.orgService.load(notification.user.orgId);
-        const message = `${org.activity} - ${org.addresses.main.country} requested a screener for <a href="/c/o/dashboard/title/${movie.id}">${movie.title.international}</a>.`;
+        const message = `${toLabel(org.activity, 'orgActivity')} - ${toLabel(org.addresses.main.country, 'territories')} requested a screener for <a href="/c/o/dashboard/title/${movie.id}">${movie.title.international}</a>.`;
 
         return {
           ...notification,

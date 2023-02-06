@@ -9,8 +9,8 @@ import { DOCUMENT } from '@angular/common';
 
 function createDate({ day, time }: { day: Date, time: string }): Date {
   const [h, m] = time.split(':');
-  day.setHours(parseInt(h, 10));
-  day.setMinutes(parseInt(m, 10));
+  day.setHours(h ? parseInt(h, 10) : 0);
+  day.setMinutes(m ? parseInt(m, 10) : 0);
   return day;
 }
 
@@ -30,7 +30,7 @@ const hours = (new Array(24)).fill('').map((_, i) => {
   selector: 'time-picker',
   templateUrl: './time-picker.component.html',
   styleUrls: ['./time-picker.component.scss'],
-  providers: [{provide: MatFormFieldControl, useExisting: TimePickerComponent}]
+  providers: [{ provide: MatFormFieldControl, useExisting: TimePickerComponent }]
 })
 export class TimePickerComponent implements ControlValueAccessor, MatFormFieldControl<Date>, OnDestroy {
   static ngAcceptInputType_disabled: boolean | string | null | undefined;
@@ -134,18 +134,16 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     }
   }
 
-  @Output() timeChange = new EventEmitter()
+  @Output() timeChange = new EventEmitter();
 
   get empty() {
-    const {value: {day, time}} = this.form;
+    const { value: { day, time } } = this.form;
     return !day && !time;
   }
 
   get shouldLabelFloat() {
     return this.focused || !this.empty;
   }
-
-
 
   constructor(
     private _focusMonitor: FocusMonitor,
@@ -215,11 +213,11 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
 
   /* Allow us to display the "pre-selected" mat-option */
   scrollToOption() {
-    const time =this.form.get('time').value
+    const time = this.form.get('time').value;
     const index = hours.indexOf(time);
     const id = `${this.tagID}-${index}`;
     const option = this.document.getElementById(id);
-    if (!option) return console.log(`There is no option with id "${id}".`)
+    if (!option) return console.log(`There is no option with id "${id}".`);
     option.scrollIntoView();
   }
 }

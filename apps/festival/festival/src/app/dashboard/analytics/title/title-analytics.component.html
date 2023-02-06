@@ -101,7 +101,7 @@
 
   <article class="surface title_performance">
     <analytics-line-chart class="surface" [eventNames]="['pageView']" [data]="titleAnalytics$ | async">
-      <mat-icon svgIcon="visibility"></mat-icon>
+      <mat-icon svgIcon="movie"></mat-icon>
       <h5>Film Page Views</h5>
       <p class="mat-caption">See how many Buyers viewed your Film Page recently.</p>
     </analytics-line-chart>
@@ -124,7 +124,7 @@
   <ng-container *ngIf="endedOrOngoingScreenings$ | async as endedOrOngoingScreenings; else loading">
     <ng-container *ngIf="endedOrOngoingScreenings.length else noScreenings">
       <p class="mat-body-1">Check the cumulative statistics of this title's Screenings.</p>
-      <article class="surface">
+      <article class="surface" *ngIf="aggregatedScreeningCards$ | async; else loading">
         <p>"0s" means the user watched less than a minute.</p>
         <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
         <ng-container *ngIf="invitations$ | async as invitations">

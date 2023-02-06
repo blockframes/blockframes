@@ -14,7 +14,7 @@
 
   <!-- Storyline Information -->
   <section *ngIf="movie | hasKeys: keys.main">
-    <h3>Storyline Elements</h3>
+    <h3 *ngIf="movie.logline || movie.keywords.length">Storyline Elements</h3>
     <article *ngIf="movie.logline">
       <h5>Logline</h5>
       <p test-id="logline">{{ movie.logline }}</p>
