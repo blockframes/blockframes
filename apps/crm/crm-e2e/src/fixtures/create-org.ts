@@ -1,5 +1,19 @@
 import { fakeUserData } from '@blockframes/testing/cypress/browser';
-import { createPermissions, createUser, createOrganization, createOrgAppAccess, fakeLegalTerms } from '@blockframes/model';
+import {
+  createPermissions,
+  createUser,
+  createOrganization,
+  createOrgAppAccess,
+  fakeLegalTerms,
+  OrganizationStatus,
+  App,
+  Module,
+  Organization,
+  User,
+  orgActivity,
+  territories,
+} from '@blockframes/model';
+import faker from '@faker-js/faker';
 
 const blockframesAdminId = '0-e2e-blockframesAdminId';
 const blockframesOrgAdminId = '0-e2e-orgAdminId';
@@ -13,9 +27,6 @@ const blockframesAdmin = createUser({
   lastName: blockframesAdminData.lastName,
   email: blockframesAdminData.email,
   orgId: blockframesOrgAdminId,
-  termsAndConditions: {
-    catalog: fakeLegalTerms,
-  },
   privacyPolicy: fakeLegalTerms,
 });
 
@@ -41,35 +52,74 @@ export const admin = {
 
 //* new organizations
 
-export const newcomers = {
+type ModuleCombination = Module | 'bothAccess';
+type AppCombination = Exclude<App, 'crm' | 'financiers'> | 'bothApps';
+
+type Newcomers = Record<
+  OrganizationStatus,
+  Record<
+    AppCombination,
+    Record<
+      ModuleCombination,
+      {
+        org: Organization;
+        user: User;
+      }
+    >
+  >
+>;
+
+export const newcomers: Newcomers = {
   accepted: {
     catalog: {
       marketplace: createOrgWithuser(),
       dashboard: createOrgWithuser(),
+      bothAccess: createOrgWithuser(),
     },
     festival: {
       marketplace: createOrgWithuser(),
       dashboard: createOrgWithuser(),
+      bothAccess: createOrgWithuser(),
+    },
+    bothApps: {
+      marketplace: createOrgWithuser(),
+      dashboard: createOrgWithuser(),
+      bothAccess: createOrgWithuser(),
     },
   },
+  // no need to test all combinations again
   pending: {
     catalog: {
       marketplace: createOrgWithuser(),
-      dashboard: createOrgWithuser(),
+      dashboard: null,
+      bothAccess: null,
     },
     festival: {
-      marketplace: createOrgWithuser(),
+      marketplace: null,
       dashboard: createOrgWithuser(),
+      bothAccess: null,
+    },
+    bothApps: {
+      marketplace: null,
+      dashboard: null,
+      bothAccess: createOrgWithuser(),
     },
   },
   onhold: {
     catalog: {
-      marketplace: createOrgWithuser(),
-      dashboard: createOrgWithuser(),
+      marketplace: null,
+      dashboard: null,
+      bothAccess: createOrgWithuser(),
     },
     festival: {
       marketplace: createOrgWithuser(),
+      dashboard: null,
+      bothAccess: null,
+    },
+    bothApps: {
+      marketplace: null,
       dashboard: createOrgWithuser(),
+      bothAccess: null,
     },
   },
 };
@@ -81,7 +131,18 @@ function createOrgWithuser() {
   return {
     org: createOrganization({
       name: data.company.name,
-      email: data.email,
+      email: 'contact@' + data.email.split('@')[1],
+      activity: randomValue(orgActivity),
+      addresses: {
+        main: {
+          country: randomValue(territories),
+          region: '', // not in the form
+          city: faker.address.cityName(),
+          zipCode: faker.address.zipCode(),
+          street: 'E2E street',
+          phoneNumber: faker.phone.phoneNumber(),
+        },
+      },
     }),
     user: createUser({
       firstName: data.firstName,
@@ -89,4 +150,9 @@ function createOrgWithuser() {
       email: data.email,
     }),
   };
+}
+
+function randomValue(obj) {
+  const keys = Object.keys(obj);
+  return obj[keys[(keys.length * Math.random()) << 0]];
 }

@@ -1,5 +1,5 @@
 import { WhereFilterOp } from 'firebase/firestore';
-import { Contract, Event, Movie, Offer, Notification } from '@blockframes/model';
+import { Contract, Event, Movie, Offer, Notification, Organization, User } from '@blockframes/model';
 
 interface UpdateParameters {
   docPath: string;
@@ -91,5 +91,22 @@ export const firestore = {
         });
     }
     return Promise.all(promises);
+  },
+
+  queryDeleteOrgsWithUsers(data: { collection: string; field: string; operator: WhereFilterOp; value: string }) {
+    const promises = [];
+    firestore.queryData(data).then((orgs: Organization[]) => {
+      for (const org of orgs) {
+        firestore.queryData({ collection: 'users', field: 'orgId', operator: '==', value: org.id }).then((users: User[]) => {
+          for (const user of users) {
+            promises.push(firestore.delete(`users/${user.uid}`));
+          }
+        });
+        // if we delete the org first, the orgId of the user becomes null and we cannot target it anymore
+        promises.push(firestore.delete(`orgs/${org.id}`));
+        promises.push(firestore.delete(`permissions/${org.id}`));
+      }
+    });
+    return Promise.all(promises)
   },
 };
