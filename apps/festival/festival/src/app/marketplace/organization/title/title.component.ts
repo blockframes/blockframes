@@ -42,7 +42,7 @@ export class TitleComponent implements OnInit {
       switchMap(({ hits }) => this.service.valueChanges(hits.map(h => h.objectID))),
       map(movies => movies.filter(m => m.app.festival.status === 'accepted')),
       map(movies => movies.filter(m => m.app.festival.access === true)),
-      map(movies => movies.sort((a, b) => a._meta.createdAt < b._meta.createdAt ? 1 : -1)),
+      map(movies => movies.sort((a, b) => (a._meta.updatedAt || a._meta.createdAt) < (b._meta.updatedAt || b._meta.createdAt) ? 1 : -1)),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
     this.isAnonymous = await this.authService.isSignedInAnonymously();

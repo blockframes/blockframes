@@ -1,12 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ViewComponent } from '../view/view.component';
 import { MovieService } from '@blockframes/movie/service';
 import { Movie } from '@blockframes/model';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
-import { orderBy, where } from 'firebase/firestore';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'catalog-marketplace-organization-title',
@@ -34,9 +34,9 @@ export class TitleComponent implements OnInit {
           where('orgIds', 'array-contains', org.id),
           where('app.catalog.status', '==', 'accepted'),
           where('app.catalog.access', '==', true),
-          orderBy('_meta.createdAt', 'desc')
         ]);
       }),
+      map(movies => movies.sort((a, b) => (a._meta.updatedAt || a._meta.createdAt) < (b._meta.updatedAt || b._meta.createdAt) ? 1 : -1)),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     );
   }

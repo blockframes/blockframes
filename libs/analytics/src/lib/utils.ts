@@ -23,7 +23,7 @@ export const deletedUserIdentifier = '(Deleted User)';
  * Counts number of occurances
  * @param array 
  * @param keyPath Path to key in object that needs to be counted.
- * @param deltaFn Function that returns the delta with which to count. For example a length of an array or an already aggrigated number.
+ * @param deltaFn Function that returns the delta with which to count. For example a length of an array or an already aggregated number.
  * @example 
  * // Count number of analytics per genre in array of analytics joined with Movie.
  * counter(analytics, 'title.genres')
@@ -81,6 +81,12 @@ function aggregateInteractions(analytics: Analytics[]): AnalyticsInteraction {
   };
 }
 
+/**
+ * Groups analytic event per user
+ * Used to summarize all interations made by an user. For tables
+ * @param analytics[]
+ * @returns AggregatedAnalytic[]
+ */
 export function aggregatePerUser(analytics: (Analytics<'title'> & { user: User, org: Organization })[]) {
   const aggregator: Record<string, AggregatedAnalytic> = {};
   for (const analytic of analytics) {
@@ -96,6 +102,22 @@ export function aggregatePerUser(analytics: (Analytics<'title'> & { user: User, 
   }
   return Object.values(aggregator);
 }
+
+/**
+ * Keep only one analytics event per user
+ * For graphs
+ * @param analytics[] 
+ * @returns analytics[]
+ */
+export const oneAnalyticsPerUser = (analytics: Analytics<'title' | 'organization'>[]) => {
+  const aggregator: Record<string, Analytics<'title' | 'organization'>> = {};
+
+  for (const analytic of analytics) {
+    if (!aggregator[analytic.meta.uid]) aggregator[analytic.meta.uid] = analytic;
+  };
+
+  return Object.values(aggregator);
+};
 
 export interface MetricCard {
   title: string;
@@ -163,7 +185,7 @@ export const events: VanityMetricEvent[] = [
   {
     name: 'pageView',
     title: 'Title Views',
-    icon: 'visibility'
+    icon: 'movie'
   },
   {
     name: 'promoElementOpened',
