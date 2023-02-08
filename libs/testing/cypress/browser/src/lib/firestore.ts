@@ -1,5 +1,5 @@
 import { WhereFilterOp } from 'firebase/firestore';
-import { Contract, Event, Movie, Offer, Notification, Organization, User } from '@blockframes/model';
+import { Contract, Event, Movie, Offer, Notification, Organization } from '@blockframes/model';
 
 interface UpdateParameters {
   docPath: string;
@@ -28,18 +28,6 @@ export const firestore = {
 
   queryData<T>(data: { collection: string; field: string; operator: WhereFilterOp; value: unknown }): Cypress.Chainable<T> {
     return cy.task('queryData', data);
-  },
-
-  queryDelete(data: { collection: string; field: string; operator: WhereFilterOp; value: string }) {
-    return firestore.queryData(data).then((docs: any[]) => {
-      const promises = [];
-      for (const doc of docs) {
-        if (doc.uid) doc.id = doc.uid;
-        promises.push(firestore.delete(`${data.collection}/${doc.id}`));
-      }
-      Promise.all(promises);
-      return docs;
-    });
   },
 
   update(data: UpdateParameters[] | UpdateParameters) {
@@ -92,6 +80,7 @@ export const firestore = {
 
   deleteNotifications(userIds: string | string[]) {
     if (!Array.isArray(userIds)) userIds = [userIds];
+    if (userIds.length > 10) throw new Error('deleteNotifications() cannot receice an array with more than 10 userIds');
     return firestore
       .queryData<Notification[]>({ collection: 'notifications', field: 'toUserId', operator: 'in', value: userIds })
       .then(notifications => {
