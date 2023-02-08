@@ -1,9 +1,17 @@
 import { WhereFilterOp } from 'firebase/firestore';
 import { Contract, Event, Movie, Offer, Notification } from '@blockframes/model';
+import { VPC_EGRESS_SETTINGS_OPTIONS } from 'firebase-functions/v1';
 
 interface UpdateParameters {
   docPath: string;
   field: string;
+  value: unknown;
+}
+
+interface QueryParameters {
+  collection: string;
+  field: string;
+  operator: WhereFilterOp;
   value: unknown;
 }
 
@@ -26,8 +34,12 @@ export const firestore = {
     return cy.task('getData', [paths]).then(array => array[0]);
   },
 
-  queryData(data: { collection: string; field: string; operator: WhereFilterOp; value: unknown }) {
+  queryData(data: QueryParameters) {
     return cy.task('queryData', data);
+  },
+
+  queryDelete(data: QueryParameters) {
+    return cy.task('queryDelete', data);
   },
 
   update(data: UpdateParameters[] | UpdateParameters) {
@@ -36,46 +48,29 @@ export const firestore = {
   },
 
   deleteOrgEvents(orgId: string) {
-    return firestore
-      .queryData({ collection: 'events', field: 'ownerOrgId', operator: '==', value: orgId })
-      .then((events: Event[]) => firestore.delete(events.map(event => `events/${event.id}`)));
+    return firestore.queryDelete({ collection: 'events', field: 'ownerOrgId', operator: '==', value: orgId });
   },
 
   deleteOrgMovies(orgId: string) {
-    return firestore
-      .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: orgId })
-      .then((movies: Movie[]) => Promise.all(movies.map(movie => firestore.delete(`movies/${movie.id}`))));
+    return firestore.queryDelete({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: orgId });
   },
 
   deleteContractsAndTerms(orgId: string) {
     return firestore
-      .queryData({ collection: 'contracts', field: 'sellerId', operator: '==', value: orgId })
+      .queryDelete({ collection: 'contracts', field: 'sellerId', operator: '==', value: orgId })
       .then((contracts: Contract[]) => {
-        const promises = [];
-        for (const contract of contracts) {
-          promises.push(firestore.delete(`contracts/${contract.id}`));
-          for (const termId of contract.termIds) promises.push(firestore.delete(`terms/${termId}`));
-        }
-        return Promise.all(promises);
+        const termIds = contracts.map(contract => contract.termIds).flat();
+        const termPaths = termIds.map(termId => `terms/${termId}`);
+        return firestore.delete(termPaths);
       });
   },
 
   deleteBuyerContracts(orgId: string) {
-    return firestore
-      .queryData({ collection: 'contracts', field: 'buyerId', operator: '==', value: orgId })
-      .then((contracts: Contract[]) => {
-        const promises = [];
-        for (const contract of contracts) {
-          promises.push(firestore.delete(`contracts/${contract.id}`));
-        }
-        return Promise.all(promises);
-      });
+    return firestore.queryDelete({ collection: 'contracts', field: 'buyerId', operator: '==', value: orgId });
   },
 
   deleteOffers(orgId: string) {
-    return firestore
-      .queryData({ collection: 'offers', field: 'buyerId', operator: '==', value: orgId })
-      .then((offers: Offer[]) => firestore.delete(offers.map(({ id }) => `offers/${id}`)));
+    return firestore.queryDelete({ collection: 'offers', field: 'buyerId', operator: '==', value: orgId });
   },
 
   deleteNotifications(userIds: string | string[]) {

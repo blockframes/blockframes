@@ -93,6 +93,16 @@ export async function clearTestData() {
   return deleteData(docsToDelete);
 }
 
+export async function queryDelete(data: { collection: string; field: string; operator: WhereFilterOp; value: unknown }) {
+  const { collection, field, operator, value } = data;
+  const snapshot = await db.collection(collection).where(field, operator, value).get();
+  const batch = db.batch();
+  const docs = snapshot.docs;
+  const deletedData = docs.map(doc => doc.data());
+  for (const doc of docs) batch.delete(doc.ref);
+  return batch.commit().then(() => deletedData);
+}
+
 //* GET DATA*------------------------------------------------------------------
 
 export async function getData(paths: string[]) {
