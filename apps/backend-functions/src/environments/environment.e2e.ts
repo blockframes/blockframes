@@ -18,9 +18,8 @@ export {
   bigQueryAnalyticsTable,
   centralOrgId,
   supportEmails,
-  playerId,
-  testVideoId,
-  mailchimpServer
+  jwplayer,
+  mailchimp
 } from '@env';
 
 import { firebase } from '@env';
@@ -29,7 +28,7 @@ export const { projectId, storageBucket } = firebase();
 export const sendgridAPIKey = functions.config().sendgrid.api_key;
 
 export const jwplayerSecret = functions.config().jwplayer.secret;
-export const jwplayerKey = functions.config().jwplayer.key;
+export const jwplayerApiV2Secret = functions.config().jwplayer.apiv2secret;
 
 export const imgixToken = functions.config().imgix.token;
 
@@ -39,5 +38,4 @@ export const twilioApiKeySecret = functions.config().twilio.api.key.secret;
 export const twilioApiKeySid = functions.config().twilio.api.key.sid;
 
 export const mailchimpAPIKey = functions.config().mailchimp.api_key;
-export const mailchimpListId = functions.config().mailchimp.list_id;
 

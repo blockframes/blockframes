@@ -22,7 +22,7 @@ import {
   QuerySnapshot,
   runChunks,
 } from '@blockframes/firebase-utils';
-import { firebase, testVideoId } from '@env';
+import { firebase, jwplayer } from '@env';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { Queue } from '../../internals/queue';
 import { META_COLLECTION_NAME } from '@blockframes/utils/maintenance';
@@ -108,7 +108,7 @@ function updateOrg(org: Organization | PublicOrganization) {
 }
 
 function updateHostedVideo(screener: MovieVideo): MovieVideo {
-  const jwPlayerId = testVideoId;
+  const jwPlayerId = jwplayer.testVideoId;
   return {
     ...screener,
     jwPlayerId,

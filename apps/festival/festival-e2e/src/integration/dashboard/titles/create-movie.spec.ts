@@ -38,7 +38,7 @@ import {
 } from '@blockframes/model';
 import { user, org, permissions, inDevelopmentMovie as movie } from '../../../fixtures/dashboard/movie-tunnel';
 import { addDays, subDays, format } from 'date-fns';
-import { testVideoId } from '@env';
+import { jwplayer } from '@env';
 
 interface UploadCheckParameters {
   movie: Movie;
@@ -534,7 +534,7 @@ function checkUpload({ movie, baseField, index, privacy = 'public', isVideo = fa
   expect(value.field).to.equal(baseField);
   expect(value.docId).to.equal(movie.id);
   expect(value.privacy).to.equal(privacy);
-  if (isVideo) expect(value.jwPlayerId).to.equal(testVideoId);
+  if (isVideo) expect(value.jwPlayerId).to.equal(jwplayer.testVideoId);
   expect(value.storagePath).to.contain(`movies/${movie.id}/${baseField}/default-`);
 
   storage.exists(`${value.privacy}/${value.storagePath}`).then(exists => expect(exists).to.be.true);

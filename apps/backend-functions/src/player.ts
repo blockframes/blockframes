@@ -5,7 +5,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { jwplayerApiV2 } from '@blockframes/firebase-utils/jwplayer-api';
 import { StorageVideo, linkDuration, ErrorResultResponse } from '@blockframes/model';
 import { isAllowedToAccessMedia } from './internals/media';
-import { jwplayerKey, jwplayerApiV2Secret, jwplayerSecret, production, playerId, e2eMode, testVideoId } from './environments/environment';
+import { jwplayerApiV2Secret, jwplayerSecret, production, e2eMode, jwplayer } from './environments/environment';
 import { getDocument } from '@blockframes/firebase-utils';
 
 export interface ReadVideoParams {
@@ -86,7 +86,7 @@ export const getPrivateVideoUrl = async (
   const signedUrl = `https://cdn.jwplayer.com/manifests/${jwPlayerId}.m3u8?exp=${expires}&sig=${signature}`;
   try {
     // FETCH VIDEO METADATA
-    const info = await jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret).getVideoInfo(jwPlayerId);
+    const info = await jwplayerApiV2(jwplayer.propertyId, jwplayerApiV2Secret).getVideoInfo(jwPlayerId);
 
     return {
       error: '',
@@ -122,7 +122,7 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
   message?: string
 }> => {
 
-  if (e2eMode) return { success: true, key: testVideoId };
+  if (e2eMode) return { success: true, key: jwplayer.testVideoId };
 
   const expires = new Date().getTime() + 7200000; // now + 2 hours
 
@@ -130,9 +130,9 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
   const tag = production ? 'production' : 'test';
 
   try {
-    const result = await jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret).createVideo(videoUrl, tag);
+    const result = await jwplayerApiV2(jwplayer.propertyId, jwplayerApiV2Secret).createVideo(videoUrl, tag);
 
-    return { success: true, key: result.id }
+    return { success: true, key: result.id };
   } catch (error: unknown) {
     return { success: false, message: 'UPLOAD FAILED' };
   }
@@ -142,17 +142,17 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
 export const deleteFromJWPlayer = async (jwPlayerId: string) => {
 
   try {
-    const result = await jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret).deleteVideo(jwPlayerId);
+    const result = await jwplayerApiV2(jwplayer.propertyId, jwplayerApiV2Secret).deleteVideo(jwPlayerId);
 
-    return { success: true, keys: result }
+    return { success: true, keys: result };
   } catch (error: unknown) {
-    return { success: false, message: `DELETE FAILED, please delete ${jwPlayerId} manually` }
+    return { success: false, message: `DELETE FAILED, please delete ${jwPlayerId} manually` };
   }
 };
 
 
 export const getPlayerUrl = async (
-  data: unknown,
+  _: unknown,
   context: CallableContext
 ): Promise<string> => {
   if (!context.auth) {
@@ -161,11 +161,11 @@ export const getPlayerUrl = async (
 
   const expires = Math.floor(new Date().getTime() / 1000) + linkDuration; // now + 5 hours
 
-  const toSign = `libraries/${playerId}.js:${expires}:${jwplayerSecret}`;
+  const toSign = `libraries/${jwplayer.playerId}.js:${expires}:${jwplayerSecret}`;
   const md5 = createHash('md5');
 
   const signature = md5.update(toSign).digest('hex');
 
-  const signedUrl = `https://cdn.jwplayer.com/libraries/${playerId}.js?exp=${expires}&sig=${signature}`;
+  const signedUrl = `https://cdn.jwplayer.com/libraries/${jwplayer.playerId}.js?exp=${expires}&sig=${signature}`;
   return signedUrl;
 };

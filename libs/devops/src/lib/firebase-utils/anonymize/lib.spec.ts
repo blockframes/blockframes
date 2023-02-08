@@ -1,6 +1,6 @@
 import { DbRecord } from '@blockframes/firebase-utils';
 import { metaDoc, META_COLLECTION_NAME } from '@blockframes/utils/maintenance';
-import { testVideoId } from '@env';
+import { jwplayer } from '@env';
 import { anonymizeDocument } from './lib';
 
 //@TODO #5543 unit-test runAnonymization and loadDb 
@@ -151,7 +151,7 @@ describe('Test NOTIFICATIONS anonymization function', () => {
 
 describe('Test MOVIES anonymization function', () => {
   it('should anonymize movie documents', async () => {
-    const anonymizedJwplayerId = testVideoId;
+    const anonymizedJwplayerId = jwplayer.testVideoId;
     const id = 'MOV01';
     const titleRecord: DbRecord = {
       docPath: `movies/${id}`,

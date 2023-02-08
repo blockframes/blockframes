@@ -160,7 +160,7 @@ async function runCommand() {
       await upgradeAlgoliaUsers();
       break;
     case 'rescueJWP':
-      await rescueJWP({ jwplayerKey: arg1, jwplayerApiV2Secret: arg2 });
+      await rescueJWP({ propertyId: arg1, jwplayerApiV2Secret: arg2 });
       break;
     case 'writeRuntimeConfig':
       writeRuntimeConfig(functionsConfigMap, join(process.cwd(), './.runtimeconfig.json'));

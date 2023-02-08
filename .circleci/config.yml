@@ -1,9 +1,6 @@
 ﻿#
 # ENV VARIABLES:
-#   CACHE_VERSION:
-#     change this version when you need to trigger a global cache refresh on the ci,
-#     use case is: we move from node v9 to node v10 and we need to make sure the binaries are recompiled.
-#     currently "20200417" in circleci.
+# see https://www.notion.so/cascade8/CircleCi-Environment-variables-1f80cb80b560489bad1f88c6b220b757
 #
 version: 2.1
 references:
