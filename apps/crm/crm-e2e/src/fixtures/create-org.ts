@@ -52,77 +52,33 @@ export const admin = {
 
 //* new organizations
 
-type ModuleCombination = Module | 'bothAccess';
-type AppCombination = Exclude<App, 'crm' | 'financiers'> | 'bothApps';
-
-type Newcomers = Record<
-  OrganizationStatus,
-  Record<
-    AppCombination,
-    Record<
-      ModuleCombination,
-      {
-        org: Organization;
-        user: User;
-      }
-    >
-  >
->;
-
-export const newcomers: Newcomers = {
-  accepted: {
-    catalog: {
-      marketplace: createOrgWithuser(),
-      dashboard: createOrgWithuser(),
-      bothAccess: createOrgWithuser(),
-    },
-    festival: {
-      marketplace: createOrgWithuser(),
-      dashboard: createOrgWithuser(),
-      bothAccess: createOrgWithuser(),
-    },
-    bothApps: {
-      marketplace: createOrgWithuser(),
-      dashboard: createOrgWithuser(),
-      bothAccess: createOrgWithuser(),
-    },
-  },
-  // no need to test all combinations again
-  pending: {
-    catalog: {
-      marketplace: createOrgWithuser(),
-      dashboard: null,
-      bothAccess: null,
-    },
-    festival: {
-      marketplace: null,
-      dashboard: createOrgWithuser(),
-      bothAccess: null,
-    },
-    bothApps: {
-      marketplace: null,
-      dashboard: null,
-      bothAccess: createOrgWithuser(),
-    },
-  },
-  onhold: {
-    catalog: {
-      marketplace: null,
-      dashboard: null,
-      bothAccess: createOrgWithuser(),
-    },
-    festival: {
-      marketplace: createOrgWithuser(),
-      dashboard: null,
-      bothAccess: null,
-    },
-    bothApps: {
-      marketplace: null,
-      dashboard: createOrgWithuser(),
-      bothAccess: null,
-    },
-  },
+export type Newcomer = {
+  status: OrganizationStatus;
+  apps: Exclude<App, 'crm' | 'financiers'>[];
+  modules: Module[];
+  data: {
+    org: Organization;
+    user: User;
+  };
 };
+
+export const newcomers: Newcomer[] = [
+  { status: 'accepted', apps: ['catalog'], modules: ['dashboard'], data: createOrgWithuser() },
+  { status: 'accepted', apps: ['catalog'], modules: ['marketplace'], data: createOrgWithuser() },
+  { status: 'accepted', apps: ['catalog'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
+  { status: 'accepted', apps: ['festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
+  { status: 'accepted', apps: ['festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
+  { status: 'accepted', apps: ['festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
+  { status: 'accepted', apps: ['catalog', 'festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
+  { status: 'accepted', apps: ['catalog', 'festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
+  { status: 'accepted', apps: ['catalog', 'festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
+  { status: 'pending', apps: ['catalog'], modules: ['dashboard'], data: createOrgWithuser() },
+  { status: 'pending', apps: ['festival'], modules: ['marketplace'], data: createOrgWithuser() },
+  { status: 'pending', apps: ['catalog', 'festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
+  { status: 'onhold', apps: ['catalog'], modules: ['dashboard'], data: createOrgWithuser() },
+  { status: 'onhold', apps: ['festival'], modules: ['marketplace'], data: createOrgWithuser() },
+  { status: 'onhold', apps: ['catalog', 'festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
+];
 
 //* functions
 
