@@ -1,6 +1,5 @@
 import { WhereFilterOp } from 'firebase/firestore';
-import { Contract, Event, Movie, Offer, Notification } from '@blockframes/model';
-import { VPC_EGRESS_SETTINGS_OPTIONS } from 'firebase-functions/v1';
+import { Contract, Notification } from '@blockframes/model';
 
 interface UpdateParameters {
   docPath: string;
@@ -47,14 +46,6 @@ export const firestore = {
     return cy.task('updateData', [data]);
   },
 
-  deleteOrgEvents(orgId: string) {
-    return firestore.queryDelete({ collection: 'events', field: 'ownerOrgId', operator: '==', value: orgId });
-  },
-
-  deleteOrgMovies(orgId: string) {
-    return firestore.queryDelete({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: orgId });
-  },
-
   deleteContractsAndTerms(orgId: string) {
     return firestore
       .queryDelete({ collection: 'contracts', field: 'sellerId', operator: '==', value: orgId })
@@ -63,14 +54,6 @@ export const firestore = {
         const termPaths = termIds.map(termId => `terms/${termId}`);
         return firestore.delete(termPaths);
       });
-  },
-
-  deleteBuyerContracts(orgId: string) {
-    return firestore.queryDelete({ collection: 'contracts', field: 'buyerId', operator: '==', value: orgId });
-  },
-
-  deleteOffers(orgId: string) {
-    return firestore.queryDelete({ collection: 'offers', field: 'buyerId', operator: '==', value: orgId });
   },
 
   deleteNotifications(userIds: string | string[]) {

@@ -50,8 +50,8 @@ describe('Deal negotiation', () => {
     adminAuth.createUser({ uid: buyer.user.uid, email: buyer.user.email, emailVerified: true });
     adminAuth.createUser({ uid: seller.user.uid, email: seller.user.email, emailVerified: true });
     firestore.deleteContractsAndTerms(seller.org.id);
-    firestore.deleteBuyerContracts(buyer.org.id);
-    firestore.deleteOffers(buyer.org.id);
+    firestore.queryDelete({ collection: 'contracts', field: 'buyerId', operator: '==', value: buyer.org.id });
+    firestore.queryDelete({ collection: 'offers', field: 'buyerId', operator: '==', value: buyer.org.id });
     firestore.deleteNotifications([buyer.user.uid, seller.user.uid]);
     firestore.clearTestData();
     firestore.create([injectedData]);
