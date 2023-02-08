@@ -1,4 +1,4 @@
-import { mailchimpAPIKey, mailchimpServer, mailchimpListId } from './environments/environment';
+import { mailchimpAPIKey, mailchimp as mailchimpConfig } from './environments/environment';
 import { MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 import { createHash } from 'crypto';
 
@@ -17,10 +17,10 @@ export const registerToNewsletters = async (data: { email: string, tags: string[
 
   mailchimp.setConfig({
     apiKey: mailchimpAPIKey,
-    server: mailchimpServer,
+    server: mailchimpConfig.server,
   });
 
-  return mailchimp.lists.addListMember(mailchimpListId,
+  return mailchimp.lists.addListMember(mailchimpConfig.listId,
     {
       email_address,
       tags,
@@ -34,9 +34,9 @@ export async function updateMemberTags(email: string, tags: MailchimpTag[]): Pro
 
   mailchimp.setConfig({
     apiKey: mailchimpAPIKey,
-    server: mailchimpServer
+    server: mailchimpConfig.server
   });
 
   const subscriber_hash = createHash('md5').update(email).digest('hex');
-  return mailchimp.lists.updateListMemberTags(mailchimpListId, subscriber_hash, { tags });
+  return mailchimp.lists.updateListMemberTags(mailchimpConfig.listId, subscriber_hash, { tags });
 }

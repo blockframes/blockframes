@@ -2,7 +2,7 @@ import 'tsconfig-paths/register'
 import { runShellCommand } from '@blockframes/devops';
 import { config } from 'dotenv';
 
-config()
+config();
 
 async function predeploy() {
   if (!process.env['SKIP_PREDEPLOY_HOOKS']) {

@@ -1,4 +1,4 @@
-import { Firestore, maintenanceRef, startMaintenance } from '@blockframes/firebase-utils';
+import { Firestore, maintenanceRef, SAK_VALUE, startMaintenance } from '@blockframes/firebase-utils';
 import * as env from '@env';
 import { config } from 'dotenv';
 import { resolve } from 'path';
@@ -23,7 +23,7 @@ export async function displayCredentials() {
   console.log('\n\nContents of .env secrets:');
   console.log(config({ debug: true }));
 
-  const GAC = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  const GAC = SAK_VALUE();
   if (!GAC) {
     console.log('NO GAC value detected, will not display SAK');
     return;

@@ -46,7 +46,7 @@ export const algolia = {
   indexNameUsers: 'nicolas_users',
 };
 
-// Support emails
+// Emails
 // =======
 
 export const supportEmails = {
@@ -55,6 +55,11 @@ export const supportEmails = {
   festival: 'ngermain+festival@cascade8.com',
   financiers: 'ngermain+financiers@cascade8.com',
 }
+
+export const mailchimp = {
+  server: 'us20',
+  listId: 'efaccd1d28'
+};
 
 // Yandex
 // =======
@@ -112,8 +117,11 @@ export const heavyChunkSize = 7;
 export const chunkSize = 15;
 
 // JwPlayer
-// @see https://dashboard.jwplayer.com/#/content/detail?key=7R9ttesP&property=75507f12-83b6-11ea-ab11-3e60acbe08db&spotlight=default&tab=metadata&view=list
+// @see https://dashboard.jwplayer.com/p/M0ZSpeUV/media/YlSFNnkR
 // ========
 
-export const playerId = 'LVeBD5vf';
-export const testVideoId = 'YlSFNnkR';
+export const jwplayer = {
+  propertyId: 'M0ZSpeUV',
+  playerId: 'LVeBD5vf',
+  testVideoId: 'YlSFNnkR'
+}

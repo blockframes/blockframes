@@ -1,8 +1,8 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-export const SECRETS_FILEPATH = 'secrets.sh';
-export const SECRETS_TEMPLATE_FILEPATH = 'secrets.template.sh';
+const SECRETS_FILEPATH = 'secrets.sh';
+const SECRETS_TEMPLATE_FILEPATH = 'secrets.template.sh';
 export const absSecretPath = join(process.cwd(), SECRETS_FILEPATH);
 export const absTemplatePath = join(process.cwd(), SECRETS_TEMPLATE_FILEPATH);
 
@@ -30,7 +30,7 @@ export function loadSecretsFile() {
  * @param input a string with the contents of the file
  * @returns a map with key-value pairs
  */
-export function parseBashExports(input: string): { [key: string]: string } {
+function parseBashExports(input: string): { [key: string]: string } {
   const lines = input.split('\n');
   const output = {};
   lines.forEach(line => {
