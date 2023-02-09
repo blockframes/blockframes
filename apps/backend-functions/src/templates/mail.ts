@@ -364,7 +364,7 @@ export function movieAskingPriceRequested(
 ): EmailTemplateRequest {
   const pageUrl = app === 'festival' ?
     `mailto:${fromBuyer.email}?subject=Interest in ${movie.title.international} via ${appName[app]}` :
-    `mailto:${supportEmails[app]}?subject=Give a Price for ${movie.title.international}. Request by (${buyerOrg.activity} ${buyerOrg.country})`;
+    `mailto:${supportEmails[app]}?subject=Give a Price for ${movie.title.international}. Request by ${buyerOrg.activity} ${buyerOrg.country}`;
 
   const data = {
     user: toUser,
