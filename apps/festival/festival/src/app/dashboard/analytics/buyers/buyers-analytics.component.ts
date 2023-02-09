@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate, countedToAnalyticData, counter, deletedUserIdentifier, toCards } from '@blockframes/analytics/utils';
-import { AggregatedAnalytic, App, createUser, removeSellerData } from '@blockframes/model';
+import { aggregate, countedToAnalyticData, counter, toCards } from '@blockframes/analytics/utils';
+import { AggregatedAnalytic, App, createUser, deletedIdentifier, removeSellerData } from '@blockframes/model';
 import { fromOrgAndAccessible, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { UserService } from '@blockframes/user/service';
@@ -45,7 +45,7 @@ export class BuyersAnalyticsComponent {
       orgs: ({ orgIds }) => this.orgService.load(orgIds)
     }, { shouldAwait: true }),
     map(({ uids, users, ...rest }) => ({
-      users: uids.map(uid => users.filter(u => !!u).find(u => u.uid === uid) || createUser({ uid, lastName: deletedUserIdentifier })),
+      users: uids.map(uid => users.filter(u => !!u).find(u => u.uid === uid) || createUser({ uid, lastName: deletedIdentifier.user })),
       ...rest
     })),
     map(({ orgs, analytics, users, ...rest }) => {
@@ -87,7 +87,7 @@ export class BuyersAnalyticsComponent {
   ) { }
 
   goToBuyer(data: AggregatedAnalytic) {
-    if (data.user.lastName !== deletedUserIdentifier) {
+    if (data.user.lastName !== deletedIdentifier.user) {
       this.router.navigate([data.user.uid], { relativeTo: this.route });
     }
   }
