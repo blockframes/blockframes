@@ -1,5 +1,7 @@
 import { firebase } from '@env';
-import { StorageFile, privacies, Privacy } from '@blockframes/model';
+import { StorageFile, privacies } from '@blockframes/model';
+
+export const protectedImgixSuffix = 'protected01';
 
 /**
  * Interface that hold the image options for imgix processing.
@@ -70,12 +72,11 @@ export function getImgIxResourceUrl(file: StorageFile, parameters: ImageParamete
    * @dev This is the directory that must be set in imgIx source config.
    * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
    * If parameters contains "s" attribute, the file is protected and then the protected imgix source
-   * must be used (it should be "blockframes-firstName-protected")
+   * must be used (it should be "blockframes-${protectedImgixSuffix}")
    */
-  const protectedMediaDir: Privacy = 'protected';
   const query = formatParameters(parameters);
   const imgixSource = parameters.s
-    ? `${firebase().projectId}-${protectedMediaDir}`
+    ? `${firebase().projectId}-${protectedImgixSuffix}`
     : firebase().projectId;
 
   // This is a safeguard for old storagePaths. Image wont work if privacy is still in the path and is therefore removed in case its there.

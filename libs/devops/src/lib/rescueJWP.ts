@@ -33,8 +33,8 @@ function checkStorageFile(video: StorageVideo) {
   return storageFileExist(filePath);
 }
 
-async function checkJWP(jwplayerKey: string, jwplayerApiV2Secret: string, videoId: string) {
-  const api = jwplayerApiV2(jwplayerKey, jwplayerApiV2Secret);
+async function checkJWP(propertyId: string, jwplayerApiV2Secret: string, videoId: string) {
+  const api = jwplayerApiV2(propertyId, jwplayerApiV2Secret);
 
   // if we send empty string '' it will list all videos
   const info = await api.getVideoInfo(videoId ?? 'thisIdDoesNotExist');
@@ -52,13 +52,13 @@ function isMissingStorage(video: StorageVideo) {
   return !!video.jwPlayerId && !video.storagePath;
 }
 
-export async function rescueJWP(options: { jwplayerKey: string; jwplayerApiV2Secret: string }) {
-  const { jwplayerKey, jwplayerApiV2Secret } = options;
+export async function rescueJWP(options: { propertyId: string; jwplayerApiV2Secret: string }) {
+  const { propertyId, jwplayerApiV2Secret } = options;
 
-  if (!jwplayerKey) {
-    console.log('\nMISSING JWPLAYER KEY ! you should pass it as the 1st argument');
+  if (!propertyId) {
+    console.log('\nMISSING JWPLAYER PROPERTY ID ! you should pass it as the 1st argument');
     console.log(
-      '\ncommand syntax :\n\tnpm run backend-ops rescueJWP <JWP-KEY> <JPW-API-V2-SECRET>\n'
+      '\ncommand syntax :\n\tnpm run backend-ops rescueJWP <PROPERTY-ID> <JPW-API-V2-SECRET>\n'
     );
     return;
   }
@@ -66,7 +66,7 @@ export async function rescueJWP(options: { jwplayerKey: string; jwplayerApiV2Sec
   if (!jwplayerApiV2Secret) {
     console.log('\nMISSING JWPLAYER API V2 SECRET ! you should pass it as the 2nd argument');
     console.log(
-      '\ncommand syntax :\n\tnpm run backend-ops rescueJWP <JWP-KEY> <JPW-API-V2-SECRET>\n'
+      '\ncommand syntax :\n\tnpm run backend-ops rescueJWP <PROPERTY-ID> <JPW-API-V2-SECRET>\n'
     );
     return;
   }
@@ -112,7 +112,7 @@ export async function rescueJWP(options: { jwplayerKey: string; jwplayerApiV2Sec
   for (let i = 0; i < toCheck.length; i++) {
     const video = toCheck[i];
 
-    const isJWPok = await checkJWP(jwplayerKey, jwplayerApiV2Secret, video.jwPlayerId);
+    const isJWPok = await checkJWP(propertyId, jwplayerApiV2Secret, video.jwPlayerId);
     await delay(1200); // delay is needed to avoid reaching jwp api rate limit (i.e. 60 calls/min)
 
     const isStorageOk = await checkStorageFile(video);

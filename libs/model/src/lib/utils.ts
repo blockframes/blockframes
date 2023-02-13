@@ -27,7 +27,7 @@ export interface SentryError {
   bugType: 'invalid-metadata' | 'network' | 'front-version' | 'jwplayer-api' | 'firebase-error'
 }
 
-export interface RequestAskingPriceData { 
+export interface RequestAskingPriceData {
   movieId: string;
   uid: string;
   territories: string;
@@ -56,7 +56,7 @@ export function titleCase(text: string) {
  * Trims a string without cropping the last word if keepLastWordComplete is set to true
  * Origin : libs\utils\src\lib\pipes\max-length.pipe.ts
  */
- export function trimString(string: string, length: number, keepLastWordComplete?: boolean) {
+export function trimString(string: string, length: number, keepLastWordComplete?: boolean) {
   if (!string?.length || string.length <= length) return string;
 
   let trimmedString = string.substr(0, length);
@@ -350,4 +350,10 @@ export function decodeDate(date: string | Date): Date {
   if (!date || date === 'now') return new Date();
   // Issue #8655: Add more date magic string later ('nextYear', 'lastYear', ...)
   return new Date(date);
+}
+
+export const deletedIdentifier = {
+  user: '(Deleted User)',
+  org: '(Deleted Org)',
+  title: '(Deleted Title)'
 }

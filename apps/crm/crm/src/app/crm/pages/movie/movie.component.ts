@@ -12,7 +12,8 @@ import {
   StoreStatus,
   Organization,
   User,
-  filterOwnerEvents
+  filterOwnerEvents,
+  deletedIdentifier
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { MatDialog } from '@angular/material/dialog';
@@ -51,6 +52,7 @@ export class MovieComponent implements OnInit {
   public apps = getAllAppsExcept(['crm']);
   public orgs: Organization[];
   public createdBy: User;
+  public deletedUserIdentifier = deletedIdentifier.user;
 
   public keywords$: Observable<string[]>;
   public keywordForm = new FormControl();

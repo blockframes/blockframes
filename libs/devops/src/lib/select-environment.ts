@@ -1,13 +1,9 @@
 import { join, resolve } from 'path';
-import { getServiceAccountObj } from '@blockframes/firebase-utils';
+import { getServiceAccountObj, SAK_KEY, SAK_VALUE } from '@blockframes/firebase-utils';
 import { promises } from 'fs';
 import { execSync } from 'child_process';
 import camelcase from 'camelcase';
 import { runShellCommand } from './firebase-utils';
-
-const SAKDirPath = join('tools', 'credentials');
-
-const SAKKeyName = 'GOOGLE_APPLICATION_CREDENTIALS';
 
 /**
  * Will return true if SAK project corresponds to given project.
@@ -15,7 +11,7 @@ const SAKKeyName = 'GOOGLE_APPLICATION_CREDENTIALS';
 function SAKIsCorrect(projectId: string) {
   let key;
   try {
-    key = getServiceAccountObj(process.env[SAKKeyName]);
+    key = getServiceAccountObj(SAK_VALUE());
     console.log('Current SAK projectId:', key.project_id);
   } catch (e) {
     console.log('Was unable to detect previously set SAK');
@@ -34,37 +30,43 @@ function isJSON(input: string) {
 }
 
 /**
- * This function will find the correct SAK and set `GOOGLE_APPLICATION_CREDENTIALS` to
- * point to it.
+ * This function will find the correct SAK and set `GOOGLE_APPLICATION_CREDENTIALS` in .env to
+ * point to it as a path.
  * @param projectId project ID to find and update SAK path in dotenv
  */
 async function updateSAKPathInDotenv(projectId: string) {
   console.log('Attempting to find and set correct service account key.');
 
+  // Solution 1 : GAP_projectId (example: GAP_blockframes) env var is set (path or JSON), 
+  // set `GOOGLE_APPLICATION_CREDENTIALS` in .env as a path.
+  const SAKDirPath = join('tools', 'credentials');
   const GAPKey = `GAP_${camelcase(projectId)}`;
   if (GAPKey in process.env) {
     console.log(`GAP key found in env: ${GAPKey}`);
     if (isJSON(process.env[GAPKey])) {
       // * Is an object, write to disk
       await promises.writeFile(resolve(SAKDirPath, 'creds.json'), process.env[GAPKey], 'utf-8');
-      return updateDotenv(SAKKeyName, join(process.cwd(), SAKDirPath, 'creds.json'));
-    } else return updateDotenv(SAKKeyName, process.env[GAPKey]); // * Is a path
+      return updateDotenv(SAK_KEY, join(process.cwd(), SAKDirPath, 'creds.json'));
+    } else return updateDotenv(SAK_KEY, process.env[GAPKey]); // * Is a path
   }
 
+  // Solution 2 : GOOGLE_APPLICATION_CREDENTIALS corresponding to current projectId was already set previously (path or JSON),
+  // This does not update .env file.
+  // WARNING: if SAK_VALUE() is a JSON, setGcloudProject will fail as it expects SAK_VALUE() to be a file path pointing to a JSON document
   if (SAKIsCorrect(projectId)) {
     console.log('Correct service account key already set!');
     return;
   }
 
+  // Solution 3 : Try to find correct json file in tools/credentials folder
+  // set `GOOGLE_APPLICATION_CREDENTIALS` in .env as a path.
   const SAKFilename = await findSAKFilename(SAKDirPath, projectId);
-
   if (SAKFilename) {
     const SAKPath = join(process.cwd(), SAKDirPath, SAKFilename);
-    return updateDotenv(SAKKeyName, SAKPath);
+    return updateDotenv(SAK_KEY, SAKPath);
   } else {
     console.warn('WARNING: Service account key may not exist or have correct permissions! Run health check to confirm...');
   }
-
 }
 
 /**
@@ -77,7 +79,7 @@ async function findSAKFilename(dirPath: string, projectId: string) {
   const credFileNames = await promises.readdir(resolve(dirPath));
   const jsonFiles = credFileNames.filter((fileName) => fileName.split('.').pop() === 'json');
   // tslint:disable-next-line: no-eval
-  const SAKS = jsonFiles.map((fileName) => ({ fileName, key: eval('require')(resolve(dirPath, fileName)), }));
+  const SAKS = jsonFiles.map((fileName) => ({ fileName, key: eval('require')(resolve(dirPath, fileName)) }));
   return SAKS.find((account) => account.key.project_id === projectId)?.fileName;
 }
 
@@ -94,17 +96,17 @@ export async function selectEnvironment(projectId: string) {
 
   await updateDotenv('PROJECT_ID', projectId);
 
-  if (!isDemo) await updateSAKPathInDotenv(projectId);
-  else updateDotenv('GOOGLE_APPLICATION_CREDENTIALS', '');
-
   if (!isDemo) {
+    await updateSAKPathInDotenv(projectId);
     await setFirebaseToolsProject();
     await setGcloudProject();
+  } else {
+    updateDotenv(SAK_KEY, '');
   }
 
-  await updateEnvFile();
+  await updateEnvTsFile();
 
-  async function updateEnvFile() {
+  async function updateEnvTsFile() {
     const fileName = `env.${projectId}`;
     const envLine = `export * from 'env/${fileName}'`;
     const localEnvFile = join(process.cwd(), 'env', 'env.ts');
@@ -117,7 +119,7 @@ export async function selectEnvironment(projectId: string) {
     console.log('Run:', cmd);
     await runShellCommand(cmd);
 
-    cmd = `gcloud auth activate-service-account --key-file=${process.env[SAKKeyName]}`;
+    cmd = `gcloud auth activate-service-account --key-file=${SAK_VALUE()}`;
     console.log('Run:', cmd);
     output = execSync(cmd).toString();
     console.log(output);

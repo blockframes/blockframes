@@ -15,7 +15,7 @@ import {
   fakeLegalTerms,
   createMovieVideos,
 } from '@blockframes/model';
-import { testVideoId } from '@env';
+import { jwplayer } from '@env';
 
 const dashboardAdminUid = '0-e2e-dashboardAdminUid';
 const marketplaceUserUid = '0-e2e-marketplaceUserUid';
@@ -107,7 +107,7 @@ export const screenerMovie = createMovie({
   app: createMovieAppConfig({
     festival: createAppConfig({ status: 'accepted', access: true }),
   }),
-  promotional: createMoviePromotional({ videos: createMovieVideos({ screener: createMovieVideo({ jwPlayerId: testVideoId }) }) }),
+  promotional: createMoviePromotional({ videos: createMovieVideos({ screener: createMovieVideo({ jwPlayerId: jwplayer.testVideoId }) }) }),
 });
 
 export const noScreenerMovie = createMovie({
