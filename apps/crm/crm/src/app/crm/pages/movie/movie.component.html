@@ -11,7 +11,12 @@
         </section>
         <section>
           <p>
-            Created at {{ movie._meta.createdAt | date: 'MM/dd/yyyy' }} by <a [routerLink]="['/c/o/dashboard/crm/user', createdBy.uid]">{{ createdBy | displayName }}</a>
+            Created at {{ movie._meta.createdAt | date: 'MM/dd/yyyy' }} by 
+            <a *ngIf="createdBy" [routerLink]="['/c/o/dashboard/crm/user', createdBy.uid]">{{ createdBy | displayName }}</a>
+            <span *ngIf="!createdBy">
+              <span>{{ deletedUserIdentifier }}</span>
+              <span *ngIf="movie._meta.createdBy"> ({{ movie._meta.createdBy }})</span>
+            </span>
           </p>
         </section>
       </movie-header-cta>

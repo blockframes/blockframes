@@ -11,13 +11,12 @@ import {
   averageWatchDuration,
   EventName,
   createUser,
-  AnalyticsInteraction
+  AnalyticsInteraction,
+  deletedIdentifier
 } from '@blockframes/model';
 import { convertToTimeString } from '@blockframes/utils/helpers';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { IconSvg } from '@blockframes/ui/icon.service';
-
-export const deletedUserIdentifier = '(Deleted User)';
 
 /**
  * Counts number of occurances
@@ -91,7 +90,7 @@ export function aggregatePerUser(analytics: (Analytics<'title'> & { user: User, 
   const aggregator: Record<string, AggregatedAnalytic> = {};
   for (const analytic of analytics) {
     if (!analytic.meta?.uid) continue;
-    if (!analytic.user?.uid) analytic.user = createUser({ uid: analytic.meta.uid, lastName: deletedUserIdentifier });
+    if (!analytic.user?.uid) analytic.user = createUser({ uid: analytic.meta.uid, lastName: deletedIdentifier.user });
     if (!aggregator[analytic.user.uid]) {
       aggregator[analytic.user.uid] = createAggregatedAnalytic({
         user: analytic.user,

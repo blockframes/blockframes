@@ -37,7 +37,7 @@ type AppConfigMap = Partial<{ [app in App]: MovieAppConfig }>;
 export async function onMovieCreate(snap: BlockframesSnapshot<Movie>) {
   const movie = snap.data();
 
-  if (!movie) {
+  if (!movie || !movie.id) {
     console.error('Invalid movie data:', movie);
     throw new Error('movie update function got invalid movie data');
   }
@@ -127,9 +127,7 @@ export async function onMovieDelete(snap: BlockframesSnapshot<Movie>, context: E
 export async function onMovieUpdate(change: BlockframesChange<Movie>) {
   const before = change.before.data();
   const after = change.after.data();
-  if (!after) {
-    return;
-  }
+  if (!after || !after.id) return;
 
   await cleanMovieMedias(before, after);
   await moveMovieMedia(before, after);

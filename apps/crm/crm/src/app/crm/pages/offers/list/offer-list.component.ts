@@ -4,7 +4,7 @@ import { OfferService } from '@blockframes/contract/offer/service';
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { orderBy, where } from 'firebase/firestore';
-import { Contract, Movie, Negotiation, Offer, toLabel, sum, Bucket } from '@blockframes/model';
+import { Contract, Movie, Negotiation, Offer, toLabel, sum, Bucket, deletedIdentifier } from '@blockframes/model';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { format } from 'date-fns';
 import { BucketService } from '@blockframes/contract/bucket/service';
@@ -90,7 +90,7 @@ export class OffersListComponent {
           const org = orgs.find(o => o.id === bucket.id);
           exportedRows.push({
             'bucket reference': bucket.id,
-            'org name': org ? org.name : '--deleted org--',
+            'org name': org ? org.name : deletedIdentifier.org,
             '# of title': bucket.contracts.length,
             specificity: bucket.specificity ?? '--',
             'total bucket price': `${sum(bucket.contracts.map(c => c.price).filter(value => typeof value === 'number' && !isNaN(value)))} ${bucket.currency || ''}`

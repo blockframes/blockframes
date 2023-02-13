@@ -22,7 +22,7 @@ import { ImageParameters, formatParameters } from '@blockframes/media/image/dire
 
 // Internal dependencies
 import { deleteFromJWPlayer, uploadToJWPlayer } from './player';
-import { imgixToken, storageBucket, testVideoId } from './environments/environment';
+import { imgixToken, storageBucket, jwplayer } from './environments/environment';
 import { db } from './internals/firebase';
 import { isAllowedToAccessMedia } from './internals/media';
 import { getDeepValue } from './internals/utils';
@@ -249,7 +249,7 @@ export const deleteMedia = async (file: StorageFile) => {
 
     // if the file has a jwPlayerId, we need to delete the video from JWPlayer's CDN
     // to avoid orphaned videos taking storage space
-    if (file.jwPlayerId && file.jwPlayerId !== testVideoId) {
+    if (file.jwPlayerId && file.jwPlayerId !== jwplayer.testVideoId) {
       const deleted = await deleteFromJWPlayer(file.jwPlayerId);
       if (!deleted.success) {
         logger.warn(`WARNING: file was delete from our system, but we failed to also delete it from JWPlayer! ${file}`);
