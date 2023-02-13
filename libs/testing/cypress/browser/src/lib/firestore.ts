@@ -1,18 +1,4 @@
-import { WhereFilterOp } from 'firebase/firestore';
-import { Contract, Notification } from '@blockframes/model';
-
-interface UpdateParameters {
-  docPath: string;
-  field: string;
-  value: unknown;
-}
-
-interface QueryParameters {
-  collection: string;
-  field: string;
-  operator: WhereFilterOp;
-  value: unknown;
-}
+import { Contract, Notification, QueryParameters, UpdateParameters } from '@blockframes/model';
 
 export const firestore = {
   clearTestData() {
@@ -33,11 +19,11 @@ export const firestore = {
     return cy.task('getData', [paths]).then(array => array[0]);
   },
 
-  queryData(data: QueryParameters) {
+  queryData<T>(data: QueryParameters): Cypress.Chainable<T[]> {
     return cy.task('queryData', data);
   },
 
-  queryDelete(data: QueryParameters) {
+  queryDelete<T>(data: QueryParameters): Cypress.Chainable<T[]> {
     return cy.task('queryDelete', data);
   },
 
@@ -48,9 +34,9 @@ export const firestore = {
 
   deleteContractsAndTerms(orgId: string) {
     return firestore
-      .queryDelete({ collection: 'contracts', field: 'sellerId', operator: '==', value: orgId })
-      .then((contracts: Contract[]) => {
-        const termIds = contracts.map(contract => contract.termIds).flat();
+      .queryDelete<Contract>({ collection: 'contracts', field: 'sellerId', operator: '==', value: orgId })
+      .then(contracts => {
+        const termIds = Array.from(new Set(contracts.map(contract => contract.termIds).flat()));
         const termPaths = termIds.map(termId => `terms/${termId}`);
         return firestore.delete(termPaths);
       });
@@ -58,16 +44,9 @@ export const firestore = {
 
   deleteNotifications(userIds: string | string[]) {
     if (!Array.isArray(userIds)) userIds = [userIds];
-    const promises = [];
-    for (const userId of userIds) {
-      firestore
-        .queryData({ collection: 'notifications', field: 'toUserId', operator: '==', value: userId })
-        .then((notifications: Notification[]) => {
-          for (const notification of notifications) {
-            promises.push(firestore.delete(`notifications/${notification.id}`));
-          }
-        });
-    }
+    const promises = userIds.map(userId =>
+      firestore.queryDelete<Notification>({ collection: 'notifications', field: 'toUserId', operator: '==', value: userId })
+    );
     return Promise.all(promises);
   },
 };
