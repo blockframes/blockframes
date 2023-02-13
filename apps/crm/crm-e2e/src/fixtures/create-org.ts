@@ -10,8 +10,10 @@ import {
   Module,
   Organization,
   User,
-  orgActivity,
-  territories,
+  Scope,
+  staticModel,
+  StaticModel,
+  createModuleAccess,
 } from '@blockframes/model';
 import faker from '@faker-js/faker';
 
@@ -53,45 +55,44 @@ export const admin = {
 //* new organizations
 
 export type Newcomer = {
-  status: OrganizationStatus;
-  apps: Exclude<App, 'crm' | 'financiers'>[];
-  modules: Module[];
-  data: {
-    org: Organization;
-    user: User;
-  };
+  org: Organization;
+  user: User;
 };
 
 export const newcomers: Newcomer[] = [
-  { status: 'accepted', apps: ['catalog'], modules: ['dashboard'], data: createOrgWithuser() },
-  { status: 'accepted', apps: ['catalog'], modules: ['marketplace'], data: createOrgWithuser() },
-  { status: 'accepted', apps: ['catalog'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
-  { status: 'accepted', apps: ['festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
-  { status: 'accepted', apps: ['festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
-  { status: 'accepted', apps: ['festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
-  { status: 'accepted', apps: ['catalog', 'festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
-  { status: 'accepted', apps: ['catalog', 'festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
-  { status: 'accepted', apps: ['catalog', 'festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
-  { status: 'pending', apps: ['catalog'], modules: ['dashboard'], data: createOrgWithuser() },
-  { status: 'pending', apps: ['festival'], modules: ['marketplace'], data: createOrgWithuser() },
-  { status: 'pending', apps: ['catalog', 'festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
-  { status: 'onhold', apps: ['catalog'], modules: ['dashboard'], data: createOrgWithuser() },
-  { status: 'onhold', apps: ['festival'], modules: ['marketplace'], data: createOrgWithuser() },
-  { status: 'onhold', apps: ['catalog', 'festival'], modules: ['dashboard', 'marketplace'], data: createOrgWithuser() },
+  createOrgWithuser('accepted', ['catalog'], ['dashboard']),
+  createOrgWithuser('accepted', ['catalog'], ['dashboard', 'marketplace']),
+  createOrgWithuser('accepted', ['festival'], ['marketplace']),
+  createOrgWithuser('accepted', ['festival'], ['dashboard', 'marketplace']),
+  createOrgWithuser('accepted', ['catalog', 'festival'], ['dashboard', 'marketplace']),
+  createOrgWithuser('pending', ['catalog'], ['dashboard']),
+  createOrgWithuser('onhold', ['catalog'], ['dashboard']),
 ];
 
 //* functions
 
-function createOrgWithuser() {
+function createOrgWithuser(status: OrganizationStatus, apps: Exclude<App, 'crm' | 'financiers'>[], modules: Module[]) {
   const data = fakeUserData();
   return {
     org: createOrganization({
       name: data.company.name,
       email: 'contact@' + data.email.split('@')[1],
-      activity: randomValue(orgActivity),
+      activity: getRandom('orgActivity'),
+      status,
+      appAccess: createOrgAppAccess({
+        festival: createModuleAccess({
+          marketplace: apps.includes('festival') && modules.includes('marketplace'),
+          dashboard: apps.includes('festival') && modules.includes('dashboard'),
+        }),
+        catalog: createModuleAccess({
+          marketplace: apps.includes('catalog') && modules.includes('marketplace'),
+          dashboard: apps.includes('catalog') && modules.includes('dashboard'),
+        }),
+      }),
+      description: `E2E ${status} - ${apps.join(' & ')} - ${modules.join(' & ')} org`,
       addresses: {
         main: {
-          country: randomValue(territories),
+          country: getRandom('territories'),
           region: '', // not in the form
           city: faker.address.cityName(),
           zipCode: faker.address.zipCode(),
@@ -108,7 +109,7 @@ function createOrgWithuser() {
   };
 }
 
-function randomValue(obj) {
-  const keys = Object.keys(obj);
-  return obj[keys[(keys.length * Math.random()) << 0]];
+function getRandom<S extends Scope>(base: S): keyof StaticModel[S] {
+  const keys = Object.keys(staticModel[base]);
+  return keys[(keys.length * Math.random()) << 0] as any;
 }

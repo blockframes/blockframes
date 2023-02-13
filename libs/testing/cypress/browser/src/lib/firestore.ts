@@ -26,7 +26,7 @@ export const firestore = {
     return cy.task('getData', [paths]).then(array => array[0]);
   },
 
-  queryData<T>(data: { collection: string; field: string; operator: WhereFilterOp; value: unknown }): Cypress.Chainable<T> {
+  queryData<T>(data: { collection: string; field: string; operator: WhereFilterOp; value: unknown }): Cypress.Chainable<T[]> {
     return cy.task('queryData', data);
   },
 
@@ -37,19 +37,19 @@ export const firestore = {
 
   deleteOrgEvents(orgId: string) {
     return firestore
-      .queryData<Event[]>({ collection: 'events', field: 'ownerOrgId', operator: '==', value: orgId })
+      .queryData<Event>({ collection: 'events', field: 'ownerOrgId', operator: '==', value: orgId })
       .then(events => firestore.delete(events.map(event => `events/${event.id}`)));
   },
 
   deleteOrgMovies(orgId: string) {
     return firestore
-      .queryData<Movie[]>({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: orgId })
+      .queryData<Movie>({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: orgId })
       .then(movies => Promise.all(movies.map(movie => firestore.delete(`movies/${movie.id}`))));
   },
 
   deleteContractsAndTerms(orgId: string) {
     return firestore
-      .queryData<Contract[]>({ collection: 'contracts', field: 'sellerId', operator: '==', value: orgId })
+      .queryData<Contract>({ collection: 'contracts', field: 'sellerId', operator: '==', value: orgId })
       .then(contracts => {
         const promises = [];
         for (const contract of contracts) {
@@ -62,7 +62,7 @@ export const firestore = {
 
   deleteBuyerContracts(orgId: string) {
     return firestore
-      .queryData<Contract[]>({ collection: 'contracts', field: 'buyerId', operator: '==', value: orgId })
+      .queryData<Contract>({ collection: 'contracts', field: 'buyerId', operator: '==', value: orgId })
       .then(contracts => {
         const promises = [];
         for (const contract of contracts) {
@@ -74,7 +74,7 @@ export const firestore = {
 
   deleteOffers(orgId: string) {
     return firestore
-      .queryData<Offer[]>({ collection: 'offers', field: 'buyerId', operator: '==', value: orgId })
+      .queryData<Offer>({ collection: 'offers', field: 'buyerId', operator: '==', value: orgId })
       .then(offers => firestore.delete(offers.map(({ id }) => `offers/${id}`)));
   },
 
@@ -82,7 +82,7 @@ export const firestore = {
     if (!Array.isArray(userIds)) userIds = [userIds];
     if (userIds.length > 10) throw new Error('deleteNotifications() cannot receice an array with more than 10 userIds');
     return firestore
-      .queryData<Notification[]>({ collection: 'notifications', field: 'toUserId', operator: 'in', value: userIds })
+      .queryData<Notification>({ collection: 'notifications', field: 'toUserId', operator: 'in', value: userIds })
       .then(notifications => {
         const promises = [];
         for (const notification of notifications) {
@@ -93,7 +93,7 @@ export const firestore = {
   },
 
   queryDeleteOrgsWithUsers(data: { collection: string; field: string; operator: WhereFilterOp; value: string }) {
-    return firestore.queryData(data).then((orgs: Organization[]) => {
+    return firestore.queryData<Organization>(data).then(orgs => {
       const promises = [];
       for (const org of orgs) {
         promises.push(firestore.delete(`orgs/${org.id}`));

@@ -11,14 +11,14 @@
           <li test-id="org-street"><b>Street</b> {{ main.street }}</li>
           <li test-id="org-zip"><b>Zip code</b> {{ main.zipCode }}</li>
           <li test-id="org-city"><b>City</b> {{ main.city }}</li>
-          <li test-id="org-country"><b>Country</b> {{ main.country }}</li>
+          <li test-id="org-country"><b>Country</b> {{ main.country | toLabel: 'territories' }}</li>
           <li *ngIf="main.region"><b>Region</b> {{ main.region }}</li>
           <li test-id="org-phone"><b>Phone number</b> {{ main.phoneNumber }}</li>
         </ul>
         <h3>Other informations</h3>
         <ul>
           <li test-id="org-email"><b>Email</b> {{ org.email }}</li>
-          <li test-id="org-activity"><b>Activity</b> {{ org.activity }}</li>
+          <li test-id="org-activity"><b>Activity</b> {{ org.activity | toLabel:'orgActivity' }}</li>
         </ul>
         <div class="action-button">
           <button *ngIf="isAdmin" mat-icon-button (click)="editing.emit()" color="primary">
