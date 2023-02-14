@@ -7,7 +7,7 @@
       <div fxLayout="column">
         <mat-form-field appearance="outline">
           <mat-label>Company Name</mat-label>
-          <input test-id="name" matInput placeholder="Company Name" formControlName="name" type="text" (blur)="uniqueOrgName()" required/>
+          <input matInput placeholder="Company Name" formControlName="name" type="text" (blur)="uniqueOrgName()" required test-id="name"/>
           <mat-error *ngIf="form.get('name').hasError('required')">Company name is required</mat-error>
           <mat-error *ngIf="form.get('name').hasError('notUnique')">The name is already taken</mat-error>
         </mat-form-field>
@@ -20,6 +20,7 @@
           aria-label="Contact Email Address"
           type="email"
           formControlName="email"
+          test-id="email"
         />
         <mat-error *ngIf="form.get('email').hasError('email')">Email not valid</mat-error>
       </mat-form-field>
@@ -56,10 +57,10 @@
   <section fxLayout="row" fxFlex fxLayoutGap="32px">
     <article fxFlex fxLayout="column">
       <h2>Admin settings</h2>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" test-id="status">
         <mat-label>Org Status</mat-label>
         <mat-select formControlName="status" required>
-          <mat-option *ngFor="let status of organizationStatus | keyvalue" [value]="status.key">
+          <mat-option *ngFor="let status of organizationStatus | keyvalue" [value]="status.key" [attr.test-id]="'option_' + status.key">
             {{ status.value }}
           </mat-option>
         </mat-select>
@@ -71,10 +72,10 @@
       <div *ngFor="let a of app">
         <div [formGroup]="form.appAccess.get(a)">
           <strong>{{ a | titlecase }}</strong>
-          <mat-checkbox formControlName="dashboard" color="primary">
+          <mat-checkbox formControlName="dashboard" color="primary" [attr.test-id]="a + '-dashboard'">
             Dashboard
           </mat-checkbox>
-          <mat-checkbox formControlName="marketplace" color="primary">
+          <mat-checkbox formControlName="marketplace" color="primary" [attr.test-id]="a + '-marketplace'">
             Marketplace
           </mat-checkbox>
         </div>

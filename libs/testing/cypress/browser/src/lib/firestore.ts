@@ -1,4 +1,4 @@
-import { Contract, Notification } from '@blockframes/model';
+import { Contract, Notification, Organization } from '@blockframes/model';
 import { QueryParameters, UpdateParameters } from '../../../commons';
 
 export const firestore = {
@@ -49,5 +49,13 @@ export const firestore = {
       firestore.queryDelete<Notification>({ collection: 'notifications', field: 'toUserId', operator: '==', value: userId })
     );
     return Promise.all(promises);
+  },
+
+  queryDeleteOrgsWithUsers(data: QueryParameters) {
+    return firestore.queryDelete<Organization>(data).then(orgs => {
+      const userIds = [...new Set(orgs.map(org => org.userIds))];
+      const promises = userIds.map(uid => firestore.delete(`users/${uid}`));
+      return Promise.all(promises);
+    });
   },
 };
