@@ -4,8 +4,12 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { firebase } from '@env';
 
-const SAK_KEY = 'GOOGLE_APPLICATION_CREDENTIALS';
-const SAK_VALUE = process.env[SAK_KEY] as string;
+export const SAK_KEY = 'GOOGLE_APPLICATION_CREDENTIALS';
+/**
+ * @dev instead of const SAK_VALUE = process.env[SAK_KEY] as string
+ * a function is used to obtain new value when updateDotenv is called
+ */
+export const SAK_VALUE = () => process.env[SAK_KEY] as string;
 
 interface ServiceAccountKey {
   type: string;
@@ -31,7 +35,7 @@ export function initAdmin(...args: Parameters<typeof admin.initializeApp>) {
 
 function getCredentials(): admin.credential.Credential | undefined {
   try {
-    const serviceAccount = JSON.parse(SAK_VALUE) as admin.ServiceAccount;
+    const serviceAccount = JSON.parse(SAK_VALUE()) as admin.ServiceAccount;
     return admin.credential.cert(serviceAccount);
   } catch (e) {
     return admin.credential.applicationDefault();

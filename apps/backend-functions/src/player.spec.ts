@@ -4,7 +4,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { getTestingProjectId, initFunctionsTestMock, populate } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { StorageVideo } from '@blockframes/model';
-import { testVideoId } from './environments/environment';
+import { jwplayer } from './environments/environment';
 
 const testInvitations = [
   {
@@ -87,7 +87,7 @@ const userC = {
 const testUsers = [userA, userB, userC];
 
 const screener = {
-  jwPlayerId: testVideoId,
+  jwPlayerId: jwplayer.testVideoId,
   privacy: 'protected',
   docId: 'movieA',
   field: 'promotional.videos.screener',

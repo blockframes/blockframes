@@ -8,8 +8,8 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { EventName, App, AggregatedAnalytic, createUser, isBuyer } from '@blockframes/model';
-import { aggregate, counter, countedToAnalyticData, deletedUserIdentifier, oneAnalyticsPerUser } from '@blockframes/analytics/utils';
+import { EventName, App, AggregatedAnalytic, createUser, isBuyer, deletedIdentifier } from '@blockframes/model';
+import { aggregate, counter, countedToAnalyticData, oneAnalyticsPerUser } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { unique } from '@blockframes/utils/helpers';
 import { filters } from '@blockframes/ui/list/table/filters';
@@ -114,7 +114,7 @@ export class HomeComponent {
     }, { shouldAwait: true }),
     map(({ uids, users, orgs, analytics }) => {
       return uids.map(uid => {
-        const user = users.filter(u => !!u).find(u => u.uid === uid) || createUser({ uid, lastName: deletedUserIdentifier });
+        const user = users.filter(u => !!u).find(u => u.uid === uid) || createUser({ uid, lastName: deletedIdentifier.user });
         const org = user?.orgId ? orgs.find(o => o?.id === user.orgId) : undefined;
         const analyticsOfUser = analytics.filter(analytic => analytic.meta.uid === uid);
         return aggregate(analyticsOfUser, { user, org });
@@ -147,7 +147,7 @@ export class HomeComponent {
   }
 
   showBuyer(row: AggregatedAnalytic) {
-    if (row.user.lastName !== deletedUserIdentifier) {
+    if (row.user.lastName !== deletedIdentifier.user) {
       this.router.navigate(['buyer', row.user.uid], { relativeTo: this.route });
     }
   }

@@ -11,11 +11,12 @@ import {
   getGuest,
   invitationStatus,
   isBuyer,
+  deletedIdentifier,
 } from '@blockframes/model';
 import { filters } from '@blockframes/ui/list/table/filters';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
-import { aggregatePerUser, countedToAnalyticData, counter, deletedUserIdentifier, oneAnalyticsPerUser } from '@blockframes/analytics/utils';
+import { aggregatePerUser, countedToAnalyticData, counter, oneAnalyticsPerUser } from '@blockframes/analytics/utils';
 import { UserService } from '@blockframes/user/service';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { convertToTimeString, downloadCsvFromJson } from '@blockframes/utils/helpers';
@@ -190,7 +191,7 @@ export class TitleAnalyticsComponent {
   }
 
   public viewBuyerActivity(analytic: AggregatedAnalytic) {
-    if (analytic.user.lastName !== deletedUserIdentifier) {
+    if (analytic.user.lastName !== deletedIdentifier.user) {
       this.router.navigate([`../../buyer/`, analytic.user.uid], { relativeTo: this.route });
     }
   }

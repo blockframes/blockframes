@@ -2,7 +2,7 @@
 import { TestBed } from '@angular/core/testing';
 import { MediaService } from './service';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
-import { ImageParameters, formatParameters } from './image/directives/imgix-helpers';
+import { ImageParameters, formatParameters, protectedImgixSuffix } from './image/directives/imgix-helpers';
 import { firebase } from '@env';
 import { createStorageFile, UploadData } from '@blockframes/model';
 import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
@@ -45,7 +45,7 @@ describe('Media Service Test Suite', () => {
       s: 'FOO123bar'
     }
     const query = formatParameters(imgParam);
-    const expURL = `https://${firebase().projectId}-protected.imgix.net/test?${query}`;
+    const expURL = `https://${firebase().projectId}-${protectedImgixSuffix}.imgix.net/test?${query}`;
     const storageFile = createStorageFile({
       storagePath: 'test',
       collection: TESTDATA.metadata.collection,

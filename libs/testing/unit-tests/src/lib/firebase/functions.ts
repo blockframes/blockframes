@@ -1,6 +1,6 @@
 ﻿import type * as admin from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
-import { getDb, initAdmin, runChunks } from '@blockframes/firebase-utils';
+import { getDb, initAdmin, runChunks, SAK_VALUE } from '@blockframes/firebase-utils';
 import { join, resolve } from 'path';
 import { config } from 'dotenv';
 import { firebase as firebaseEnv } from '@env';
@@ -45,7 +45,7 @@ export function initFunctionsTestMock(emulator = true, overrideConfig?: AppOptio
     return firebaseTest;
   }
 
-  const pathToServiceAccountKey = resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS);
+  const pathToServiceAccountKey = resolve(process.cwd(), SAK_VALUE());
   const testObj: FeaturesList = firebaseFunctionsTest({ ...firebaseEnv(), ...overrideConfig }, pathToServiceAccountKey);
   testObj.mockConfig(runtimeConfig);
   return testObj;

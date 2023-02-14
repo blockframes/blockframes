@@ -16,7 +16,8 @@ import {
   EventName,
   PublicUser,
   AnonymousCredentials,
-  filterOwnerEvents
+  filterOwnerEvents,
+  deletedIdentifier
 } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -209,9 +210,9 @@ export class UsersComponent implements OnInit {
           user: displayName(user),
           email: user.email,
           'user org id': user.orgId,
-          'org name': org ? org.name : '--deleted org--',
+          'org name': org ? org.name : deletedIdentifier.org,
           titleId: id,
-          title: title?.title.international ?? '--deleted title--',
+          title: title?.title.international ?? deletedIdentifier.title,
           'title org id(s)': title?.orgIds?.join(', '),
           'title org(s) name': orgs.map(o => o.name).join(', '),
           'total interactions': a.interactions.global.count,
@@ -271,7 +272,7 @@ export class UsersComponent implements OnInit {
 
     for (const [email, aggregated] of Object.entries(aggregator)) {
       const userOrg = aggregated.orgId ? this.orgs.find(o => o.id === aggregated.orgId) : undefined;
-      const userOrgName = userOrg ? userOrg.name : '--deleted org--';
+      const userOrgName = userOrg ? userOrg.name : deletedIdentifier.org;
 
       for (const [visitedOrgId, hits] of Object.entries(aggregated.views)) {
         const visitedOrg = this.orgs.find(o => o.id === visitedOrgId);
@@ -285,7 +286,7 @@ export class UsersComponent implements OnInit {
             'user org name': aggregated.isAnonymous ? '' : userOrgName,
             anonymous: aggregated.isAnonymous ? 'yes' : 'no',
             'visited org id': visitedOrgId,
-            'visited org name': visitedOrg ? visitedOrg.name : '--deleted org--',
+            'visited org name': visitedOrg ? visitedOrg.name : deletedIdentifier.org,
             date
           });
         }
@@ -331,10 +332,10 @@ export class UsersComponent implements OnInit {
       const row = {
         // Common
         uid: titleSearch._meta.createdBy,
-        user: user ? displayName(user) : '--deleted user--',
+        user: user ? displayName(user) : deletedIdentifier.user, 
         email: user.email,
         orgId: user.orgId,
-        'org name': org ? org.name : '--deleted org--',
+        'org name': org ? org.name : deletedIdentifier.org, 
         date: titleSearch._meta.createdAt,
         'event name': titleSearch.name,
         app: titleSearch._meta.createdFrom,
@@ -385,7 +386,7 @@ export class UsersComponent implements OnInit {
         const title = allTitles.find(t => t?.id === titleSearch.meta.titleId);
         const orgs = this.orgs.filter(o => title?.orgIds.includes(o.id));
         row.titleId = titleSearch.meta.titleId ?? '--';
-        row.title = title?.title.international ?? '--deleted title--';
+        row.title = title?.title.international ?? deletedIdentifier.title;
         row['title org id(s)'] = title?.orgIds?.join(', ');
         row['title org(s) name'] = orgs.map(o => o.name).join(', ');
       }

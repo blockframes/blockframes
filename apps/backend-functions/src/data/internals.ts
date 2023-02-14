@@ -18,9 +18,11 @@ import {
  * @returns the organizations that have movie id in organization.movieIds
  */
 export async function getOrganizationsOfMovie(movieId: string) {
-  const { orgIds } = await getDocument<Movie>(`movies/${movieId}`);
-  const promises = orgIds.map(id => getDocument<Organization>(`orgs/${id}`));
-  return Promise.all(promises);
+  const movie = await getDocument<Movie>(`movies/${movieId}`);
+  if (!movie || !movie.orgIds) return [];
+  const promises = movie.orgIds.map(id => getDocument<Organization>(`orgs/${id}`));
+  const orgs = await Promise.all(promises);
+  return orgs.filter(o => !!o?.id);
 }
 
 /** Retrieve the list of superAdmins and admins of an organization */

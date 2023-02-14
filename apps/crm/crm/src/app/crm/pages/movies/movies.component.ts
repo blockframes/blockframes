@@ -14,6 +14,7 @@ import {
   isMandate,
   Organization,
   filterOwnerEvents,
+  deletedIdentifier,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
@@ -214,7 +215,7 @@ export class MoviesComponent implements OnInit {
           'title org id(s)': title?.orgIds?.join(', '),
           'title org(s) name': orgs.map(o => o.name).join(', '),
           uid,
-          user: user ? displayName(user) : '--deleted user--',
+          user: user ? displayName(user) : deletedIdentifier.user,
           'user email': user?.email ?? '--',
           'user org id': user?.orgId ?? '--',
           'org name': org ? org.name : '--',

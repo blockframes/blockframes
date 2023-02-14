@@ -1,13 +1,6 @@
 ﻿#
 # ENV VARIABLES:
-#   CACHE_VERSION:
-#     change this version when you need to trigger a global cache refresh on the ci,
-#     use case is: we move from node v9 to node v10 and we need to make sure the binaries are recompiled.
-#     currently "v1" in circleci.
-#   FIREBASE_SERVICE_ACCOUNT:
-#     contains the service account credentials for the blockframes-ci project.
-#     use case is: we want to use the firebase admin SDK and trigger deploys.
-#     /!\ secret value.
+# see https://www.notion.so/cascade8/CircleCi-Environment-variables-1f80cb80b560489bad1f88c6b220b757
 #
 version: 2.1
 references:
@@ -122,9 +115,8 @@ commands:
     description: 'Checkout project and select env'
     steps:
         - checkout_project
-        - run: echo $FIREBASE_CI_SERVICE_ACCOUNT > tools/credentials/ci-sak.json
-        - run: echo $FIREBASE_PRODUCTION_SERVICE_ACCOUNT > tools/credentials/prod-sak.json
-        - run: echo $FIREBASE_STAGING_SERVICE_ACCOUNT > tools/credentials/staging-sak.json
+        # Indirect redirection: will put FIREBASE_CI_SERVICE_ACCOUNT env var content (see DockerFile) 
+        # into file defined in GOOGLE_APPLICATION_CREDENTIALS (/home/circleci/repo/tools/credentials/creds.json see DockerFile)
         - run: echo "${!SERVICE_ACCOUNT}" > ${GOOGLE_APPLICATION_CREDENTIALS}
         - select_environment
   replace_prod_files:
