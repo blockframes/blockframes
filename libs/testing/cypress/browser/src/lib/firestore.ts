@@ -1,4 +1,5 @@
-import { Contract, Notification, QueryParameters, UpdateParameters } from '@blockframes/model';
+import { Contract, Notification } from '@blockframes/model';
+import { QueryParameters, UpdateParameters } from '../../../commons';
 
 export const firestore = {
   clearTestData() {

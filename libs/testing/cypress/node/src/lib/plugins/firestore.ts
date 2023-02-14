@@ -1,6 +1,7 @@
 import { db } from '../testing-cypress';
 import { metaDoc } from '@blockframes/utils/maintenance';
-import { BucketTerm, createDuration, QueryParameters, UpdateParameters } from '@blockframes/model';
+import { BucketTerm, createDuration } from '@blockframes/model';
+import { QueryParameters, UpdateParameters } from '../../../../commons';
 
 const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
 const isEventsPath = (path: string) => path.split('/')[0] === 'events';
