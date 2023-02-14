@@ -69,7 +69,7 @@ describe('Create organization', () => {
 function createOrg(newcomer: Newcomer) {
   const { org, user } = newcomer;
   const apps = getOrgAppAccess(org);
-  const fromApp = apps[0];
+  const [fromApp] = apps;
   get('orgs').click();
   assertUrl('c/o/dashboard/crm/organizations');
   get('create-org').click();
@@ -122,8 +122,8 @@ function checkDbDocs(newcomer: Newcomer) {
   // checking org
   return firestore.queryData<Organization>({ collection: 'orgs', field: 'name', operator: '==', value: org.name }).then(orgs => {
     expect(orgs).to.have.lengthOf(1);
-    const dbOrg = orgs[0];
-    const fromApp = getOrgAppAccess(org).includes('festival') ? 'festival' : 'catalog';
+    const [dbOrg] = orgs;
+    const [fromApp] = getOrgAppAccess(org);
     expect(dbOrg._meta.createdFrom).to.eq(fromApp);
     expect(dbOrg.activity).to.eq(org.activity);
     expect(dbOrg.addresses).to.deep.eq({
