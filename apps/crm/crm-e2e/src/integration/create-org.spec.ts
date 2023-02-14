@@ -69,8 +69,7 @@ describe('Create organization', () => {
 function createOrg(newcomer: Newcomer) {
   const { org, user } = newcomer;
   const apps = getOrgAppAccess(org);
-  const modules = getOrgModuleAccess(org);
-  const fromApp = apps.includes('festival') ? 'festival' : 'catalog';
+  const fromApp = apps[0];
   get('orgs').click();
   assertUrl('c/o/dashboard/crm/organizations');
   get('create-org').click();
@@ -92,6 +91,7 @@ function createOrg(newcomer: Newcomer) {
   get('status').click();
   get(`option_${org.status}`).click();
   for (const app of apps) {
+    const modules = getOrgModuleAccess(org, app); // With app specified so we test modules access for specific app (even if fixtures does not allow different modules)
     for (const module of modules) {
       get(`${app}-${module}`).click();
     }
@@ -120,48 +120,46 @@ function checkEmail(newcomer: Newcomer) {
 function checkDbDocs(newcomer: Newcomer) {
   const { org, user } = newcomer;
   // checking org
-  return firestore
-    .queryData({ collection: 'orgs', field: 'name', operator: '==', value: org.name })
-    .then((orgs: Organization[]) => {
-      expect(orgs).to.have.lengthOf(1);
-      const dbOrg = orgs[0];
-      const fromApp = getOrgAppAccess(org).includes('festival') ? 'festival' : 'catalog';
-      expect(dbOrg._meta.createdFrom).to.eq(fromApp);
-      expect(dbOrg.activity).to.eq(org.activity);
-      expect(dbOrg.addresses).to.deep.eq({
-        main: {
-          country: org.addresses.main.country,
-          region: '',
-          city: org.addresses.main.city,
-          zipCode: org.addresses.main.zipCode,
-          street: org.addresses.main.street,
-          phoneNumber: org.addresses.main.phoneNumber,
-        },
-      });
-      expect(dbOrg.appAccess).to.deep.eq({
-        catalog: {
-          dashboard: canAccessModule('dashboard', org, 'catalog'),
-          marketplace: canAccessModule('marketplace', org, 'catalog'),
-        },
-        festival: {
-          dashboard: canAccessModule('dashboard', org, 'festival'),
-          marketplace: canAccessModule('marketplace', org, 'festival'),
-        },
-        crm: createModuleAccess(),
-        financiers: createModuleAccess(),
-      });
-      expect(dbOrg.description).to.eq(org.description);
-      expect(dbOrg.email).to.eq(org.email);
-      expect(dbOrg.name).to.eq(org.name);
-      expect(dbOrg.status).to.eq(org.status);
-      // checking user
-      firestore.get(`users/${dbOrg.userIds[0]}`).then((dbUser: User) => {
-        expect(dbUser._meta.createdFrom).to.eq(fromApp);
-        expect(dbUser._meta.emailVerified).to.be.true;
-        expect(dbUser.email).to.eq(user.email);
-        expect(dbUser.orgId).to.eq(dbOrg.id);
-      });
+  return firestore.queryData<Organization>({ collection: 'orgs', field: 'name', operator: '==', value: org.name }).then(orgs => {
+    expect(orgs).to.have.lengthOf(1);
+    const dbOrg = orgs[0];
+    const fromApp = getOrgAppAccess(org).includes('festival') ? 'festival' : 'catalog';
+    expect(dbOrg._meta.createdFrom).to.eq(fromApp);
+    expect(dbOrg.activity).to.eq(org.activity);
+    expect(dbOrg.addresses).to.deep.eq({
+      main: {
+        country: org.addresses.main.country,
+        region: '',
+        city: org.addresses.main.city,
+        zipCode: org.addresses.main.zipCode,
+        street: org.addresses.main.street,
+        phoneNumber: org.addresses.main.phoneNumber,
+      },
     });
+    expect(dbOrg.appAccess).to.deep.eq({
+      catalog: {
+        dashboard: canAccessModule('dashboard', org, 'catalog'),
+        marketplace: canAccessModule('marketplace', org, 'catalog'),
+      },
+      festival: {
+        dashboard: canAccessModule('dashboard', org, 'festival'),
+        marketplace: canAccessModule('marketplace', org, 'festival'),
+      },
+      crm: createModuleAccess(),
+      financiers: createModuleAccess(),
+    });
+    expect(dbOrg.description).to.eq(org.description);
+    expect(dbOrg.email).to.eq(org.email);
+    expect(dbOrg.name).to.eq(org.name);
+    expect(dbOrg.status).to.eq(org.status);
+    // checking user
+    firestore.get(`users/${dbOrg.userIds[0]}`).then((dbUser: User) => {
+      expect(dbUser._meta.createdFrom).to.eq(fromApp);
+      expect(dbUser._meta.emailVerified).to.be.true;
+      expect(dbUser.email).to.eq(user.email);
+      expect(dbUser.orgId).to.eq(dbOrg.id);
+    });
+  });
 }
 
 function checkUI(newcomer: Newcomer) {

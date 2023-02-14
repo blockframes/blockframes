@@ -92,6 +92,7 @@ export const firestore = {
       });
   },
 
+  // TODO : to be reworked when #9189 has been merged
   queryDeleteOrgsWithUsers(data: { collection: string; field: string; operator: WhereFilterOp; value: string }) {
     return firestore.queryData<Organization>(data).then(orgs => {
       const promises = [];
