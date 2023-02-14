@@ -53,8 +53,11 @@ export const firestore = {
 
   queryDeleteOrgsWithUsers(data: QueryParameters) {
     return firestore.queryDelete<Organization>(data).then(orgs => {
-      const userIds = [...new Set(orgs.map(org => org.userIds))];
-      const promises = userIds.map(uid => firestore.delete(`users/${uid}`));
+      const promises = [];
+      for (const org of orgs) {
+        promises.push(firestore.delete(`permissions/${org.id}`));
+        for (const uid of org.userIds) promises.push(firestore.delete(`users/${uid}`));
+      }
       return Promise.all(promises);
     });
   },
