@@ -27,7 +27,6 @@ import {
   syncAuthEmulatorWithFirestoreEmulator,
   rescueJWP,
   loadAndShrinkLatestAnonDbAndUpload,
-  cleanBackups,
   auditUsers,
   prepareForTesting,
   upgrade,
@@ -77,9 +76,6 @@ async function runCommand() {
       break;
     case 'prepareEmulators':
       await prepareEmulators({ dbBackupURL: arg1 });
-      break;
-    case 'cleanBackups':
-      await cleanBackups({ maxDays: arg1, bucketName: arg2 });
       break;
     case 'anonProdDb':
       await keepAlive(anonymizeLatestProdDb());

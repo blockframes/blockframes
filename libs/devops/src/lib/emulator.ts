@@ -20,7 +20,7 @@ import { ChildProcess } from 'child_process';
 import { join, resolve } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
 import admin from 'firebase-admin';
-import { backupBucket, firebase } from '@env';
+import { backupBucket } from '@env';
 import { migrate } from './migrations';
 import { syncUsers } from './users';
 import { cleanDeprecatedData } from './db-cleaning';
@@ -30,9 +30,10 @@ import {
   latestAnonDbDir,
   latestAnonStorageDir,
   CI_STORAGE_BACKUP,
-  restoreStorageFromCi,
   getLatestFolderURL,
-  runAnonymization
+  runAnonymization,
+  getLatestDirName,
+  CI_ANONYMIZED_DATA
 } from './firebase-utils';
 import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 
@@ -181,7 +182,6 @@ async function anonDbProcess() {
   const db = getFirestoreEmulator();
   const storage = getStorage();
   const auth = getAuth();
-  const ciApp = initAdmin(firebaseCI(), 'CI env');
   const o = await db.listCollections();
   if (!o.length) throw Error('THERE IS NO DB TO PROCESS - DANGER!');
   console.log(o.map(snap => snap.id));
@@ -195,19 +195,12 @@ async function anonDbProcess() {
   console.log('Anonymization complete!');
 
   console.info('Syncing users from db...');
-  const p1 = syncUsers({ db });
-
-  console.info('Syncing storage with production backup stored in blockframes-ci...');
-  const p2 = restoreStorageFromCi(ciApp);
-
-  await Promise.all([p1, p2]);
-  console.info('Storage synced!');
+  await syncUsers({ db });
   console.info('Users synced!');
 
   console.info('Cleaning unused DB data...');
   await cleanDeprecatedData(db, auth);
   console.info('DB data clean and fresh!');
-
 }
 
 /**
@@ -232,23 +225,21 @@ export async function anonymizeLatestProdDb() {
   console.log('Storing golden database data');
   await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonDbDir });
 
-  // try {
-  //   proc = await firebaseEmulatorExec({
-  //     emulators: 'firestore',
-  //     importPath: defaultEmulatorBackupPath,
-  //     exportData: true,
-  //   });
-  //   const db = connectFirestoreEmulator();
-  //   await shrinkDb(db);
-  // } finally {
-  //   await shutdownEmulator(proc, defaultEmulatorBackupPath, 30);
-  // }
-  // console.log('Storing shrunk golden database data');
-  // await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonShrinkedDbDir });
 
   console.log('Storing golden storage data');
-  const anonBucketBackupDirURL = `gs://${CI_STORAGE_BACKUP}/${latestAnonStorageDir}/`;
-  await gsutilTransfer({ from: `gs://${firebase().storageBucket}`, to: anonBucketBackupDirURL, mirror: true, quiet: true });
+  const ciStorage = initAdmin(firebaseCI(), 'CI env').storage();
+  const folderName = await getLatestDirName(ciStorage.bucket(CI_STORAGE_BACKUP));
+  console.log('Latest backup:', folderName);
+
+  // Extension list defined in libs/model/src/lib/utils.ts allowedFiles.video.extension
+  const exclude = 'protected.*.mp4$|protected.*.mov$|protected.*.mkv$|protected.*.3gp$|protected.*.wmv$|protected.*.avi$|protected.*.m4v$|public.*.mp4$|public.*.mov$|public.*.mkv$|public.*.3gp$|public.*.wmv$|public.*.avi$|public.*.m4v$';
+  await gsutilTransfer({
+    exclude,
+    quiet: true,
+    mirror: true,
+    from: `gs://${CI_STORAGE_BACKUP}/${folderName}`,
+    to: `gs://${CI_ANONYMIZED_DATA}/${latestAnonStorageDir}/`,
+  });
 }
 
 /**

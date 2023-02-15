@@ -153,7 +153,7 @@ commands:
     steps:
       - deploy
       - run:
-          command: npm run backend-ops prepareForTesting gs://ci-backups-blockframes/LATEST-ANON-SHRINKED-DB
+          command: npm run backend-ops prepareForTesting gs://blockframes-ci-anonymized-data/LATEST-ANON-SHRINKED-DB
           no_output_timeout: 30m
       - slack/status
 orbs:
@@ -170,15 +170,6 @@ executors:
     working_directory: ~/repo
     resource_class: large
 jobs:
-  clean-backups:
-    executor: blockframes-ci
-    environment:
-      PROJECT_ID: blockframes-ci
-    steps:
-      - prepare_environment
-      - run: npm start cleanBackups 45 gs://blockframes-ci-storage-backup
-      - run: npm start use blockframes
-      - run: npm start cleanBackups 45 gs://blockframes-backups
   build-deploy-prepare-branch-against-selected-env:
     executor: blockframes-ci
     environment:
@@ -278,7 +269,7 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: gsutil -m cp -r "gs://blockframes.appspot.com/*" "gs://blockframes-ci-storage-backup/storage-backup-$(date +%d-%m-%Y)/"
+      - run: gsutil -m cp -r "gs://blockframes.appspot.com/*" "gs://blockframes-ci-backups/storage-backup-$(date +%d-%m-%Y)/"
   backup-prod-db:
     executor: blockframes-ci
     environment:
@@ -370,7 +361,7 @@ jobs:
     steps:
       - prepare_environment
       - run:
-          command: npm start prepareEmulators gs://ci-backups-blockframes/LATEST-ANON-SHRINKED-DB
+          command: npm start prepareEmulators gs://blockframes-ci-anonymized-data/LATEST-ANON-SHRINKED-DB
           no_output_timeout: 30m
       # ? - run: npx nx build backend-functions --configuration=e2e
       - save_cache:
@@ -450,7 +441,6 @@ workflows:
               only:
                 - develop
     jobs:
-      - clean-backups
       - copy-storage-from-prod
       - push-anon-db-to-ci:
           requires:

@@ -1,9 +1,8 @@
 import { endMaintenance, removeAllSubcollections, startMaintenance } from '@blockframes/firebase-utils';
 import { defaultEmulatorBackupPath, firebaseEmulatorExec, getFirestoreExportPath, importFirestoreEmulatorBackup, shutdownEmulator } from './firebase-utils/firestore/emulator';
 import { uploadBackup } from './emulator';
-import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
-import { backupBucket } from '@env'
-import { latestAnonDbDir, latestAnonShrinkedDbDir } from './firebase-utils';
+import { backupBucket } from '@env';
+import { CI_ANONYMIZED_DATA, latestAnonDbDir, latestAnonShrinkedDbDir } from './firebase-utils';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import type { ChildProcess } from 'child_process';
 import { CollectionData, DatabaseData, DocumentDescriptor, getAllDocumentCount, inspectDocumentRelations, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
@@ -27,7 +26,7 @@ export async function loadAndShrinkLatestAnonDbAndUpload() {
   let proc: ChildProcess;
   try {
     // STEP 1 load-latest anon-db into emulator and keep it running with auth & firestore
-    const importFrom = `gs://${ciBucketName}/${latestAnonDbDir}`;
+    const importFrom = `gs://${CI_ANONYMIZED_DATA}/${latestAnonDbDir}`;
     await importFirestoreEmulatorBackup(importFrom, defaultEmulatorBackupPath);
 
     proc = await firebaseEmulatorExec({
