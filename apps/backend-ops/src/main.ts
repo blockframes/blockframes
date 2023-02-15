@@ -81,7 +81,7 @@ async function runCommand() {
       await keepAlive(anonymizeLatestProdDb());
       break;
     case 'shrinkDb':
-      await loadAndShrinkLatestAnonDbAndUpload();
+      await keepAlive(loadAndShrinkLatestAnonDbAndUpload());
       break;
     case 'downloadProdDbBackup':
       await downloadProdDbBackup(arg1);
