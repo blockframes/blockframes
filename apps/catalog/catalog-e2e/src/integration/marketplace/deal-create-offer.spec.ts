@@ -45,7 +45,7 @@ describe('Deal negociation', () => {
     maintenance.start();
     algolia.deleteMovie({ app: 'catalog', objectId: seller.movie.id });
     firestore.deleteContractsAndTerms(seller.org.id);
-    firestore.deleteOffers(buyer.org.id);
+    firestore.queryDelete({ collection: 'offers', field: 'buyerId', operator: '==', value: buyer.org.id });
     firestore.deleteNotifications([buyer.user.uid, seller.user.uid]);
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
@@ -203,7 +203,7 @@ describe('Deal negociation', () => {
     });
 
     it('checking the application flow when an offer is sent', () => {
-      firestore.deleteOffers(buyer.org.id);
+      firestore.queryDelete({ collection: 'offers', field: 'buyerId', operator: '==', value: buyer.org.id });
       firestore.deleteNotifications([buyer.user.uid, seller.user.uid]);
       fillInputs({
         territory: ['Europe'],
