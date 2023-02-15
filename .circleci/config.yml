@@ -351,7 +351,7 @@ jobs:
       - run: npm start upgradeEmulators
       - run:
           command: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e,cms-e2e
-          no_output_timeout: 30m
+          no_output_timeout: 45m
       - store_test_results:
           path: dist/test-reports/
       - store_artifacts:

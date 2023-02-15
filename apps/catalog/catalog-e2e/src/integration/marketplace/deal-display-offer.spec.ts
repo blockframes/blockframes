@@ -42,8 +42,8 @@ describe('Deal negociation', () => {
     cy.visit('');
     maintenance.start();
     firestore.deleteContractsAndTerms(seller.org.id);
-    firestore.deleteBuyerContracts(buyer.org.id);
-    firestore.deleteOffers(buyer.org.id);
+    firestore.queryDelete({ collection: 'contracts', field: 'buyerId', operator: '==', value: buyer.org.id });
+    firestore.queryDelete({ collection: 'offers', field: 'buyerId', operator: '==', value: buyer.org.id });
     firestore.deleteNotifications([buyer.user.uid, seller.user.uid]);
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();

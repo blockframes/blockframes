@@ -13,5 +13,7 @@
   "reporter": "junit",
   "reporterOptions": {
     "mochaFile": "../../../dist/test-reports/festival-[hash].xml"
-  }
+  },
+  "viewportWidth": 1920,
+  "viewportHeight": 1080
 }

@@ -48,7 +48,7 @@ describe('Movie search in marketplace', () => {
     firestore.clearTestData();
     algolia.deleteMovie({ app: 'festival', objectId: movie.id });
     algolia.deleteOrg({ app: 'festival', objectId: saleOrg.id });
-    firestore.deleteOrgMovies(org.id);
+    firestore.queryDelete({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id });
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     algolia.storeOrganization(saleOrg);
