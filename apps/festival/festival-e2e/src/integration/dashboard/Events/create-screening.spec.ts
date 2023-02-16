@@ -53,7 +53,7 @@ describe('Screenings', () => {
     cy.visit('');
     maintenance.start();
     firestore.clearTestData();
-    firestore.deleteOrgEvents(dashboardOrg.id);
+    firestore.queryDelete({ collection: 'events', field: 'ownerOrgId', operator: '==', value: dashboardOrg.id });
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true });

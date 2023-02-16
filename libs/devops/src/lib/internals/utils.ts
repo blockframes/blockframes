@@ -41,8 +41,7 @@ const userMap: Partial<Record<Collections, string[]>> = {
     'toUserId',
     'user.uid',
     '_meta.createdBy',
-    '_meta.updatedBy',
-    '_meta.deletedBy'
+    '_meta.updatedBy'
   ],
   invitations: [
     'toUser.uid',
@@ -60,8 +59,7 @@ const userMap: Partial<Record<Collections, string[]>> = {
   orgs: [
     'userIds',
     '_meta.createdBy',
-    '_meta.updatedBy',
-    '_meta.deletedBy'
+    '_meta.updatedBy'
   ],
   permissions: [
     'roles{}',
@@ -72,8 +70,7 @@ const userMap: Partial<Record<Collections, string[]>> = {
   ],
   movies: [
     '_meta.createdBy',
-    '_meta.updatedBy',
-    '_meta.deletedBy'
+    '_meta.updatedBy'
   ]
 }
 

@@ -1,10 +1,8 @@
-import { endMaintenance, removeAllSubcollections, startMaintenance } from '@blockframes/firebase-utils';
+import { removeAllSubcollections, startMaintenance } from '@blockframes/firebase-utils';
 import { defaultEmulatorBackupPath, firebaseEmulatorExec, getFirestoreExportPath, importFirestoreEmulatorBackup, shutdownEmulator } from './firebase-utils/firestore/emulator';
 import { uploadBackup } from './emulator';
-import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
-import { backupBucket } from '@env'
-import { latestAnonDbDir, latestAnonShrinkedDbDir } from './firebase-utils';
-import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
+import { backupBucket } from '@env';
+import { CI_ANONYMIZED_DATA, latestAnonDbDir, latestAnonShrinkedDbDir } from './firebase-utils';
 import type { ChildProcess } from 'child_process';
 import { CollectionData, DatabaseData, DocumentDescriptor, getAllDocumentCount, inspectDocumentRelations, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
 import { cleanDeprecatedData } from './db-cleaning';
@@ -27,7 +25,7 @@ export async function loadAndShrinkLatestAnonDbAndUpload() {
   let proc: ChildProcess;
   try {
     // STEP 1 load-latest anon-db into emulator and keep it running with auth & firestore
-    const importFrom = `gs://${ciBucketName}/${latestAnonDbDir}`;
+    const importFrom = `gs://${CI_ANONYMIZED_DATA}/${latestAnonDbDir}`;
     await importFirestoreEmulatorBackup(importFrom, defaultEmulatorBackupPath);
 
     proc = await firebaseEmulatorExec({
@@ -40,7 +38,6 @@ export async function loadAndShrinkLatestAnonDbAndUpload() {
     const db = getFirestoreEmulator();
     await startMaintenance(db);
     const status = await shrinkDb(db);
-    await endMaintenance(db, EIGHT_MINUTES_IN_MS);
 
     // STEP 3 shutdown emulator & export db
     await shutdownEmulator(proc, defaultEmulatorBackupPath);
@@ -51,7 +48,9 @@ export async function loadAndShrinkLatestAnonDbAndUpload() {
       await uploadBackup({ localRelPath: getFirestoreExportPath(defaultEmulatorBackupPath), remoteDir: latestAnonShrinkedDbDir });
 
       console.log(`Upload to gs://${backupBucket}/${latestAnonShrinkedDbDir} complete !`);
-      console.log(`If you want to test it, run : npm run backend-ops importEmulator gs://${backupBucket}/${latestAnonShrinkedDbDir}`);
+      console.log('If you want to test it, run :');
+      console.log(`npm run backend-ops importEmulator gs://${backupBucket}/${latestAnonShrinkedDbDir}`);
+      console.log('npm run backend-ops endMaintenance');
 
       /**
        * @dev to test on live firebase project, run:
@@ -162,10 +161,6 @@ function getOrgsAndUsersToKeep(dbData: DatabaseData) {
 
     if (movie._meta.updatedBy) {
       _usersLinked.push(movie._meta.updatedBy);
-    }
-
-    if (movie._meta.deletedBy) {
-      _usersLinked.push(movie._meta.deletedBy);
     }
 
     for (const orgId of movie.orgIds) {
