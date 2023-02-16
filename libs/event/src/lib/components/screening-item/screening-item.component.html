@@ -12,7 +12,7 @@
       <div fxLayout fxLayoutAlign="space-between">
         <h3><a [routerLink]="['/event', event.id, 'r', 'i']">{{ event.title }}</a></h3>
         <ng-container *ngIf="(event | eventTime) === 'onTime'">
-          <a ongoing-event-button [routerLink]="['/event', event.id, 'r', 'i']">Ongoing Screening</a>
+          <a ongoing-event-button [routerLink]="['/event', event.id, 'r', 'i']" test-id="ongoing-screening">Ongoing Screening</a>
         </ng-container>
       </div>
       <h5>

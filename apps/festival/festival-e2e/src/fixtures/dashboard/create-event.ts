@@ -107,7 +107,17 @@ export const screenerMovie = createMovie({
   app: createMovieAppConfig({
     festival: createAppConfig({ status: 'accepted', access: true }),
   }),
-  promotional: createMoviePromotional({ videos: createMovieVideos({ screener: createMovieVideo({ jwPlayerId: jwplayer.testVideoId }) }) }),
+  promotional: createMoviePromotional({
+    videos: createMovieVideos({
+      screener: createMovieVideo({
+        docId: '0-e2e-screenerMovie',
+        jwPlayerId: jwplayer.testVideoId,
+        privacy: 'protected',
+        field: 'promotional.videos.screener',
+        storagePath: 'movies/0-e2e-screenerMovie/promotional.videos.screener/default.mp4',
+      }),
+    }),
+  }),
 });
 
 export const noScreenerMovie = createMovie({
