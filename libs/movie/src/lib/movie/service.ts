@@ -6,7 +6,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { map } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
-import { where, doc, updateDoc, DocumentSnapshot } from 'firebase/firestore';
+import { where, doc, DocumentSnapshot } from 'firebase/firestore';
 import { WriteOptions } from 'ngfire';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
@@ -83,18 +83,6 @@ export class MovieService extends BlockframesCollection<Movie> {
       '_meta.updatedBy', this.authService.uid,
       '_meta.updatedAt', new Date(),
     );
-  }
-
-  /** Update deletedBy (_meta field of movie) with the current user and remove the movie. */
-  public async remove(movieId: string) {
-    const userId = this.authService.uid;
-    // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
-    const movieRef = doc(this.db, `movies/${movieId}`);
-    await updateDoc(movieRef, {
-      '_meta.deletedBy': userId,
-      '_meta.deletedAt': new Date(),
-    });
-    return super.remove(movieId);
   }
 
   /**

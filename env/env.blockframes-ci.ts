@@ -112,7 +112,7 @@ export const centralOrgId = {
 // Import / Export parameters
 // =======
 
-export const backupBucket = 'ci-backups-blockframes';
+export const backupBucket = 'blockframes-ci-anonymized-data';
 export const heavyChunkSize = 15;
 export const chunkSize = 30;
 
