@@ -3,10 +3,8 @@ import { App } from './static';
 export interface DocumentMeta {
   createdBy: string,
   updatedBy?: string,
-  deletedBy?: string,
   createdAt: Date,
   updatedAt?: Date,
-  deletedAt?: Date,
   createdFrom?: App,
   emailVerified?: boolean
 }
