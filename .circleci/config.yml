@@ -264,7 +264,9 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: npm start shrinkDb
+      - run: 
+          command: npm start shrinkDb
+          no_output_timeout: 20m
   copy-storage-from-prod:
     executor: blockframes-ci
     steps:
