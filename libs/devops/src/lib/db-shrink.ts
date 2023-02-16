@@ -163,10 +163,6 @@ function getOrgsAndUsersToKeep(dbData: DatabaseData) {
       _usersLinked.push(movie._meta.updatedBy);
     }
 
-    if (movie._meta.deletedBy) {
-      _usersLinked.push(movie._meta.deletedBy);
-    }
-
     for (const orgId of movie.orgIds) {
       _orgsLinked.push(orgId);
     }
