@@ -1,11 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-
-const sortFn = {
-  random: () => Math.random() - .5
-}
-export type SortingOptions = 'default' | keyof typeof sortFn;
-export const sortingOptions: SortingOptions[] = ['default', 'random'];
-
+import { sortFn, SortingOptions } from '@blockframes/model';
 
 @Pipe({ name: 'sortBy' })
 export class SortByPipe implements PipeTransform {
