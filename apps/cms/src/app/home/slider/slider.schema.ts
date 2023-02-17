@@ -1,5 +1,5 @@
 import { FormGroupSchema } from 'ng-form-factory';
-import { SliderSection, TemplateParams } from '@blockframes/admin/cms';
+import { SliderSection, TemplateParams } from '@blockframes/model';
 import { firestoreQuery, titlesFromApp } from '../../forms/firestore';
 import { matMultiSelect } from '../../forms/select';
 

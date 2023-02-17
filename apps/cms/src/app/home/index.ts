@@ -1,4 +1,4 @@
-import { BannerSection, HeroSection, OrgTitlesSection, TemplateParams } from '@blockframes/admin/cms';
+import { BannerSection, HeroSection, OrgTitlesSection, TemplateParams } from '@blockframes/model';
 import { bannerSchema } from './banner/banner.component';
 import { TitlesSchema, titlesSchema } from './titles/titles.component';
 import { OrgsSchema, orgsSchema } from './orgs/orgs.component';

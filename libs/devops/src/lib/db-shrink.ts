@@ -23,7 +23,15 @@ import {
 import { cleanDeprecatedData } from './db-cleaning';
 import { getFirestoreEmulator } from '@blockframes/firebase-utils/initialize';
 import { unique } from '@blockframes/utils/helpers';
-import { getAllAppsExcept, isMovieAccepted, Movie, pdfExportLimit } from '@blockframes/model';
+import {
+  CmsPage,
+  getAllAppsExcept,
+  isMovieAccepted,
+  Movie,
+  OrgsSection,
+  OrgTitlesSection,
+  pdfExportLimit
+} from '@blockframes/model';
 
 export async function loadAndShrinkLatestAnonDbAndUpload() {
   let proc: ChildProcess;
@@ -366,13 +374,13 @@ async function cleanCmsDocuments(db: FirebaseFirestore.Firestore, titleIds: stri
       const { docs: documentRefs } = await db.collection(x.path).get();
 
       for (const snap of documentRefs) {
-        const doc = snap.data();
+        const doc = snap.data() as CmsPage;
         for (const section of doc.sections) {
-          if (section.titleIds?.length) {
-            section.titleIds = section.titleIds.filter(id => titleIds.includes(id));
+          if ((section as OrgTitlesSection).titleIds?.length) {
+            (section as OrgTitlesSection).titleIds = (section as OrgTitlesSection).titleIds.filter(id => titleIds.includes(id));
           }
-          if (section.orgIds?.length) {
-            section.orgIds = section.orgIds.filter(id => orgIds.includes(id));
+          if ((section as OrgsSection).orgIds?.length) {
+            (section as OrgsSection).orgIds = (section as OrgsSection).orgIds.filter(id => orgIds.includes(id));
           }
         }
         await snap.ref.update(doc);

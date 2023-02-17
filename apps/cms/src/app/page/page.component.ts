@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
-import { CmsTemplate } from '@blockframes/admin/cms';
+import { CmsTemplate } from '@blockframes/model';
 import { CmsService } from '../cms.service';
 
 @Component({

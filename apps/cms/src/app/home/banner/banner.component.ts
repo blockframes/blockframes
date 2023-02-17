@@ -2,7 +2,7 @@ import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/co
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormEntity, FormFactoryModule, FormGroupSchema } from 'ng-form-factory';
-import { BannerSection } from '@blockframes/admin/cms';
+import { BannerSection } from '@blockframes/model';
 import { TextFormModule, matText } from '../../forms/text';
 import { LinkModule, linkSchema } from '../../forms/link';
 import { MatFormFieldModule } from '@angular/material/form-field';

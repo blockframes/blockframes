@@ -69,7 +69,7 @@ export interface TitlesSection extends Section {
   query: FirestoreQuery;
 }
 
-export type HomeSection =
+type HomeSection =
   | BannerSection
   | HeroSection
   | OrgTitlesSection
@@ -145,4 +145,4 @@ export interface StartAtQuery extends CollectionQuery {
   value: string | boolean | number;
 }
 
-export type FirestoreQuery = CollectionQuery[];
+type FirestoreQuery = CollectionQuery[];
