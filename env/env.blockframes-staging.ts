@@ -125,16 +125,6 @@ export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/154
 
 export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.events_';
 
-// Data Studio
-// ========
-
-export const datastudio = {
-  user: '1564ae35-5e86-4632-bfef-ef7f4db7a865/page/P9czB',
-  users: '9789ffcf-a04c-43cb-8845-64a2c92f8a0d/page/00YOC',
-  events: 'a98badcf-df61-4f32-903d-6e703c75fd3d/page/TK5PC'
-}
-
-
 // Archipel OrgIds
 // ========
 
