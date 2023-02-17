@@ -17,11 +17,11 @@ import {
 import { SearchIndex } from 'algoliasearch';
 
 // Blockframes
-import { AlgoliaService, AlgoliaIndex } from '@blockframes/utils/algolia';
+import { AlgoliaService, AlgoliaIndex, maxQueryLength } from '@blockframes/utils/algolia';
 
 // RxJs
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, filter, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, filter, tap, map } from 'rxjs/operators';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Directive({ selector: '[optionRef]' })
@@ -129,12 +129,13 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     this.algoliaSearchResults$ = this.control.valueChanges.pipe(
       debounceTime(300),
       filter(text => typeof text === 'string' && !!text.trim()),
+      map(text => maxQueryLength(text)),
       distinctUntilChanged(),
       switchMap(async text => {
         if (this.indexGroup) {
           return multipleSearch(text);
         } else {
-          return this.facet.trim() ? facetSearch(text) : regularSearch(text)
+          return this.facet.trim() ? facetSearch(text) : regularSearch(text);
         }
       }),
       tap(data => this.lastValue$.next(data)),

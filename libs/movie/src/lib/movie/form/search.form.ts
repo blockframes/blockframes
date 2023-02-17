@@ -5,6 +5,7 @@ import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@bloc
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { max } from './filters/budget/budget.component';
+import { maxQueryLength } from '@blockframes/utils/algolia';
 
 export const runningTimeFilters = {
   // 0 is all values
@@ -145,7 +146,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   private prepareSearch(needMultipleQueries = false, override?: { hitsPerPage: number, page: number }) {
     const search: AlgoliaSearchQuery = {
       hitsPerPage: this.hitsPerPage.value,
-      query: this.query.value,
+      query: maxQueryLength(this.query.value),
       page: this.page.value,
       facetFilters: [
         this.genres.value.map(genre => `genres:${genre}`), // same facet inside an array means OR for algolia
@@ -182,7 +183,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     */
     if (needMultipleQueries) {
       const multipleQueries: string[] = this.query.value.split(',' || ' ');
-      search['optionalWords'] = multipleQueries;
+      search['optionalWords'] = maxQueryLength(multipleQueries);
     }
 
     return search;

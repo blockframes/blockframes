@@ -3,7 +3,7 @@ import { AlgoliaObject, AlgoliaQueries, App } from '@blockframes/model';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { APP } from '../routes/utils';
-import { parseFilters, parseFacets, algoliaIndex } from './helper.utils';
+import { parseFilters, parseFacets, algoliaIndex, maxQueryLength } from './helper.utils';
 import { SearchResponse } from '@algolia/client-search';
 
 @Injectable({ providedIn: 'root' })
@@ -26,7 +26,7 @@ export class AlgoliaService {
   }
 
   query<K extends keyof AlgoliaQueries>(name: K, config: AlgoliaQueries[K]): Promise<SearchResponse<AlgoliaObject[K]>> {
-    return this.getIndex(name).search<AlgoliaObject[K]>(config.text ?? '', {
+    return this.getIndex(name).search<AlgoliaObject[K]>(maxQueryLength(config.text) ?? '', {
       hitsPerPage: config.limitResultsTo,
       page: config.activePage,
       facetFilters: parseFacets(config.facets),
@@ -48,7 +48,7 @@ export class AlgoliaService {
     Object.values(algolia[indexGroup]).forEach(indexName => {
       queries.push({
         indexName,
-        query: text
+        query: maxQueryLength(text)
       })
     });
 
