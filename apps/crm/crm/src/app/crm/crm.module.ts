@@ -35,7 +35,6 @@ import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { GetEventPipeModule } from '@blockframes/event/pipes/get-event.pipe';
 import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
 import { StaticSelectModule } from "@blockframes/ui/static-autocomplete/select/static-select.module";
-import { DashboardModule } from './components/dashboard/dashboard.module';
 import { BreadCrumbModule } from './components/bread-crumb/bread-crumb.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
@@ -114,7 +113,6 @@ export const panelRoutes: Routes = [
     AppPipeModule,
     MoviePictureUploadModule,
     StaticSelectModule,
-    DashboardModule,
     BreadCrumbModule,
     FormListModule,
     GetEventPipeModule,
