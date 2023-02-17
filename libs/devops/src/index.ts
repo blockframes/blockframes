@@ -4,7 +4,6 @@ export * from './lib/db-cleaning';
 export * from './lib/db-shrink';
 export * from './lib/emulator';
 export * from './lib/firebaseSetup';
-export * from './lib/generate-fixtures';
 export * from './lib/health-check';
 export * from './lib/migrations';
 export * from './lib/rescueJWP';

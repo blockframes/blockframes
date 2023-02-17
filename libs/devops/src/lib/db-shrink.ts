@@ -9,18 +9,6 @@ import { cleanDeprecatedData } from './db-cleaning';
 import { getFirestoreEmulator } from '@blockframes/firebase-utils/initialize';
 import { unique } from '@blockframes/utils/helpers';
 
-/**
- * Temp this should be removed when fixtures are updated.
- *  - apps/festival/festival-e2e/src/fixtures/screening-events.ts
- */
-
-const USERS = [
-  'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
-  '2OJUZoWtTVcew27YDZa8FQQdg5q2',
-  'B8UsXliuxwY6ztjtLuh6f7UD1GV2',
-  'mVUZ097xoAeubsPiQlqrzgUF8y83'
-];
-
 export async function loadAndShrinkLatestAnonDbAndUpload() {
   let proc: ChildProcess;
   try {
@@ -151,7 +139,7 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
 }
 
 function getOrgsAndUsersToKeep(dbData: DatabaseData) {
-  const _usersLinked: string[] = USERS;
+  const _usersLinked: string[] = [];
   const _orgsLinked: string[] = [];
 
   for (const movie of dbData.movies.documents) {
