@@ -5,7 +5,7 @@ import {
   maintenance,
   // cypress commands
   get,
-  connectOtherUser,
+  connectUser,
   assertTableRowData,
   snackbarShould,
   interceptEmail,
@@ -56,7 +56,7 @@ describe('Deal negotiation', () => {
     firestore.clearTestData();
     firestore.create([injectedData]);
     maintenance.end();
-    connectOtherUser(seller.user.email);
+    connectUser(seller.user.email);
     cy.visit(`/c/o/dashboard/sales/${saleContract.id}/view`);
   });
 
@@ -82,7 +82,7 @@ describe('Deal negotiation', () => {
     checkConfirmationEmails('accepted');
     checkNotification('seller', 'accepted');
     //buyer's offers main page
-    connectOtherUser(buyer.user.email);
+    connectUser(buyer.user.email);
     cy.visit('/c/o/marketplace/offer');
     get('row_0_col_6').should('contain', 'Accepted');
     //offer page
@@ -119,7 +119,7 @@ describe('Deal negotiation', () => {
     checkConfirmationEmails('declined');
     checkNotification('seller', 'declined');
     //buyer's offers main page
-    connectOtherUser(buyer.user.email);
+    connectUser(buyer.user.email);
     cy.visit('/c/o/marketplace/offer');
     get('row_0_col_6').should('contain', 'Declined');
     //offer page
@@ -181,7 +181,7 @@ describe('Deal negotiation', () => {
     checkConfirmationEmails('negotiating');
     checkNotification('seller', 'negotiating');
     //buyer's offers main page
-    connectOtherUser(buyer.user.email);
+    connectUser(buyer.user.email);
     cy.visit('/c/o/marketplace/offer');
     get('row_0_col_6').should('contain', 'In Negotiation');
     //offer page
@@ -207,7 +207,7 @@ describe('Deal negotiation', () => {
     snackbarShould('contain', `You accepted contract for ${seller.movie.title.international}`);
     get('status-tag').should('contain', 'Accepted');
     //checking on seller's side
-    connectOtherUser(seller.user.email);
+    connectUser(seller.user.email);
     cy.visit('c/o/dashboard/sales');
     get('row_0_col_5').should('contain', '€15,000.00');
     get('row_0_col_6').should('contain', 'Accepted');

@@ -12,7 +12,7 @@ import {
   syncMovieToAlgolia,
   escapeKey,
   check,
-  connectOtherUser,
+  connectUser,
   assertTableRowData,
   // cypress tasks
   interceptEmail,
@@ -236,7 +236,7 @@ describe('Deal negociation', () => {
       get('notifications-link').should('not.contain', '1');
       get('already-read').should('exist');
       //connect as seller to verify his notification
-      connectOtherUser(seller.user.email);
+      connectUser(seller.user.email);
       get('notifications-link').should('contain', '1').click();
       get('notification-message')
         .should('have.length', 1)
