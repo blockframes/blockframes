@@ -79,6 +79,7 @@ export type AlgoliaIndex = keyof typeof algoliaIndex;
 export function maxQueryLength(query: string): string;
 export function maxQueryLength(query: string[]): string[];
 export function maxQueryLength(query: string | string[]) {
+  if (!query) return '';
   if (!Array.isArray(query)) return query.substring(0, 510);
 
   // Overall array size is < 512 bytes

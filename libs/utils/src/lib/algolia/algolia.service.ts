@@ -26,7 +26,7 @@ export class AlgoliaService {
   }
 
   query<K extends keyof AlgoliaQueries>(name: K, config: AlgoliaQueries[K]): Promise<SearchResponse<AlgoliaObject[K]>> {
-    return this.getIndex(name).search<AlgoliaObject[K]>(maxQueryLength(config.text) ?? '', {
+    return this.getIndex(name).search<AlgoliaObject[K]>(maxQueryLength(config.text ?? ''), {
       hitsPerPage: config.limitResultsTo,
       page: config.activePage,
       facetFilters: parseFacets(config.facets),
