@@ -1,4 +1,4 @@
-<p class="mat-body-1" *ngIf="features.length" fxLayout>
+<p class="mat-body-1" *ngIf="features?.length" fxLayout>
   <ng-container *ngFor="let feature of features; let isLast = last">
     <span [matTooltip]="feature.tooltip" *ngIf="feature.view">
       {{ feature.view }}
