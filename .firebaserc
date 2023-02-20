@@ -10,14 +10,8 @@
   "targets": {
     "blockframes": {
       "hosting": {
-        "next": [
-          "blockframes-next"
-        ],
         "catalog": [
           "blockframes"
-        ],
-        "maintenance": [
-          "blockframes-maintenance"
         ],
         "festival": [
           "blockframes-festival"

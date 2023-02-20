@@ -6,6 +6,7 @@ import { Organization, Territory, App, OrganizationSearch, AlgoliaModule } from 
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { algolia } from '@env';
 import { FormControl } from '@angular/forms';
+import { maxQueryLength } from '@blockframes/utils/algolia/helper.utils';
 
 export function createOrganizationSearch(search: Partial<OrganizationSearch> = {}): OrganizationSearch {
   return {
@@ -55,7 +56,7 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
 
   search() {
     const appModule: string[] = this.appModule.value.map((module: AlgoliaModule) => `appModule:${module}`);
-    return this.organizationIndex.search<Organization>(this.query.value, {
+    return this.organizationIndex.search<Organization>(maxQueryLength(this.query.value), {
       hitsPerPage: this.hitsPerPage.value,
       page: this.page.value,
       facetFilters: [
