@@ -74,7 +74,12 @@
                 </section>
               </ng-container>
               <ng-template #controlReady>
-                <file-viewers [eventId]="event.id" [ref]="event.meta.files | selectedFile: event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></file-viewers>
+                <file-viewers
+                  *ngIf="event.meta.controls[event.meta.selectedFile]"
+                  [eventId]="event.id" 
+                  [ref]="event.meta.files | selectedFile: event.meta.selectedFile" 
+                  [control]="event.meta.controls[event.meta.selectedFile]"
+                ></file-viewers>
               </ng-template>
               <section *ngIf="event.isOwner">
                 <mat-divider></mat-divider>
