@@ -11,17 +11,6 @@ import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 import { sub } from 'date-fns';
 
-export function awaitElementDeletion(selector: string, timeout?: number) {
-  const settings = { timeout };
-  if (timeout) {
-    cy.get(selector).should('exist');
-    cy.get(selector, settings).should('not.exist');
-  } else {
-    cy.get(selector).should('exist');
-    cy.get(selector).should('not.exist');
-  }
-}
-
 export function acceptCookies() {
   return cy.get('body').then($body => {
     if ($body.children('cookie-banner')) {
@@ -65,7 +54,7 @@ export function assertUrl(url: string) {
 export function assertUrlIncludes(partialUrl: string) {
   return cy.url().should('include', partialUrl);
 }
-
+  
 export function assertTableRowData(row: number, strings: string[]) {
   return Promise.all(strings.map((string, index) => get(`row_${row}_col_${index}`).should('contain', string)));
 }

@@ -25,9 +25,15 @@ import {
   dashboardDocumentPermissions,
   dummyEvent,
 } from '../../../fixtures/dashboard/create-event';
-import { Event, EventTypes, AccessibilityTypes, Invitation, displayName } from '@blockframes/model';
+import {
+  Event,
+  EventTypes,
+  AccessibilityTypes,
+  Invitation,
+  displayName,
+  accessibility as accessibilityModel,
+} from '@blockframes/model';
 import { startOfWeek, add, isFuture } from 'date-fns';
-import { capitalize } from '@blockframes/utils/helpers';
 
 const injectedData = {
   // dashboard user
@@ -291,11 +297,11 @@ function checkInvitationEmail(eventTitle: string, invitee: string) {
       expect(response.redirects).to.have.lengthOf(1);
       const redirect = response.redirects[0];
       expect(redirect).to.include('302');
-      getDbEvent(eventTitle).then(([event]) => {
+      getDbEvent(eventTitle).then(dbEvent => {
         firestore
-          .queryData<Invitation>({ collection: 'invitations', field: 'eventId', operator: '==', value: event.id })
+          .queryData<Invitation>({ collection: 'invitations', field: 'eventId', operator: '==', value: dbEvent.id })
           .then(([invitation]) => {
-            expect(redirect).to.include(`/event/${event.id}/r/i?email=${invitee.replace('@', '%40')}&i=${invitation.id}`);
+            expect(redirect).to.include(`/event/${dbEvent.id}/r/i?email=${invitee.replace('@', '%40')}&i=${invitation.id}`);
           });
       });
     });
@@ -304,12 +310,14 @@ function checkInvitationEmail(eventTitle: string, invitee: string) {
 }
 
 function verifyScreening({ title, accessibility, expected }: ScreeningVerification) {
-  return getDbEvent(title).then(([dbEvent]) => {
+  return getDbEvent(title).then(dbEvent => {
     get(`event_${dbEvent.id}`).should(expected ? 'exist' : 'not.exist');
-    if (expected) get(`event_${dbEvent.id}`).should('contain', `${capitalize(accessibility)} Screening`);
+    if (expected) get(`event_${dbEvent.id}`).should('contain', `${accessibilityModel[accessibility]} Screening`);
   });
 }
 
 function getDbEvent(eventTitle: string) {
-  return firestore.queryData<Event>({ collection: 'events', field: 'title', operator: '==', value: eventTitle });
+  return firestore
+    .queryData<Event>({ collection: 'events', field: 'title', operator: '==', value: eventTitle })
+    .then(([dbEvent]) => dbEvent);
 }
