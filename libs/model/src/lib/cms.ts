@@ -7,7 +7,7 @@ export interface CmsApp {
 }
 
 //////////////////
-// TEMPLATE
+// HOME
 //////////////////
 
 export interface BannerSection extends Section {

@@ -275,34 +275,6 @@ function getOrgsAndUsersToKeep(dbData: DatabaseData) {
     }
   }
 
-  for (const contract of dbData.contracts.documents) { // remove
-    if (contract.buyerUserId) {
-      _usersLinked.push(contract.buyerUserId);
-    }
-
-    if (contract.buyerId) {
-      _orgsLinked.push(contract.buyerId);
-    }
-
-    if (contract.sellerId) {
-      _orgsLinked.push(contract.sellerId);
-    }
-
-    if (contract.stakeholders) {
-      for (const orgId of contract.stakeholders) {
-        _orgsLinked.push(orgId);
-      }
-    }
-  }
-
-  for (const event of dbData.events.documents) { // remove
-    _orgsLinked.push(event.ownerOrgId);
-
-    if (event.meta?.organizerUid) {
-      _usersLinked.push(event.meta.organizerUid);
-    }
-  }
-
   const getOrgSuperAdmin = (orgId: string) => {
     const permission = dbData.permissions.documents.find(p => p.id === orgId);
     return Object.keys(permission.roles).find(userId => permission.roles[userId] === 'superAdmin');
@@ -315,7 +287,7 @@ function getOrgsAndUsersToKeep(dbData: DatabaseData) {
 
   const usersLinkedOrgIds: string[] = unique(_usersLinked).map(userId => getOrgIdOfUser(userId)).filter(o => o);
   const orgSuperAdmins = unique(_orgsLinked.filter(o => o).concat(usersLinkedOrgIds)).map(orgId => getOrgSuperAdmin(orgId)).filter(u => u);
-  // keep org createdBy updated By users ?
+
   const usersLinked = unique(_usersLinked).concat(orgSuperAdmins);
 
   const usersToKeep = unique(usersLinked).filter(uid => dbData.users.refs.docs.find(d => d.id === uid));

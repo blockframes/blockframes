@@ -15,7 +15,7 @@ export interface PdfParams {
   orgId?: string,
   filters: PdfParamsFilters
 }
- 
+
 export interface PdfRequest {
   method: string,
   body: PdfParams
