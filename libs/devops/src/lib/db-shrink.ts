@@ -119,7 +119,6 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   await shrinkMovieCollection(db, pdfExportLimit).catch(_ => console.log('Error while shrinking movies collection.'));
   console.log('Movies collection shrinked.');
 
-
   const { dbData, collectionData } = await loadAllCollections(db);
 
   // Data consistency check before cleaning data
