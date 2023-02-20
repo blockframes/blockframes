@@ -126,7 +126,7 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
 
   //////////////////
   // CHECK WHAT CAN BE DELETED
-  // We want to keep only the users and orgs related to movies along with the documents in others collections they are linked to them
+  // We want to keep only the users and orgs related to movies
   //////////////////
 
   const { usersToKeep, orgsToKeep } = getOrgsAndUsersToKeep(dbData);
