@@ -7,7 +7,7 @@ import {
   shutdownEmulator
 } from './firebase-utils/firestore/emulator';
 import { uploadBackup } from './emulator';
-import { backupBucket } from '@env';
+import { backupBucket, centralOrgId } from '@env';
 import { CI_ANONYMIZED_DATA, latestAnonDbDir, latestAnonShrinkedDbDir } from './firebase-utils';
 import type { ChildProcess } from 'child_process';
 import {
@@ -258,7 +258,7 @@ async function removeDocuments(db: FirebaseFirestore.Firestore, docs: FirebaseFi
 
 function getOrgsAndUsersToKeep(dbData: DatabaseData) {
   const _usersLinked: string[] = [];
-  const _orgsLinked: string[] = [];
+  const _orgsLinked: string[] = Object.values(centralOrgId);
 
   for (const movie of dbData.movies.documents) {
     if (movie._meta.createdBy) {
