@@ -115,7 +115,7 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   // We don't need all movies to perform E2E tests
   //////////////////
 
-  console.log(`Shrinking movies collection to keep a minimum of ${pdfExportLimit} documents.`);
+  console.log(`Shrinking movies collection to keep a minimum of ${pdfExportLimit} documents per application.`);
   await shrinkMovieCollection(db, pdfExportLimit).catch(_ => console.log('Error while shrinking movies collection.'));
   console.log('Movies collection shrinked.');
 
@@ -139,7 +139,7 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   //////////////////
 
   await cleanCmsDocuments(db, dbData.movies.documents.map(d => d.id), orgsToKeep);
-  console.log('Cleaned CMS collection');
+  console.log('Cleaned CMS collection.');
 
   //////////////////
   // FILTER DOCUMENT TO DELETE
