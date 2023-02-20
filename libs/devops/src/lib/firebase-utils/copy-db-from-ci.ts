@@ -1,13 +1,9 @@
 import { backupBucket } from '@env';
-import { backupBucket as ciBucketName } from 'env/env.blockframes-ci'
 import { gsutilTransfer } from './commands';
-
-export const latestAnonDbDir = 'LATEST-ANON-DB';
-
-export const latestAnonShrinkedDbDir = 'LATEST-ANON-SHRINKED-DB';
+import { CI_ANONYMIZED_DATA, latestAnonDbDir } from './utils';
 
 export async function copyFirestoreExportFromCiBucket(dbBackupURL?: string) {
-  if (!dbBackupURL && ciBucketName as unknown === backupBucket) {
+  if (!dbBackupURL && CI_ANONYMIZED_DATA as unknown === backupBucket) {
     console.log('Skipping copying of DB to local bucket since it\'s already in the local CI bucket since we are in CI')
     return;
   }
@@ -20,7 +16,7 @@ export async function copyFirestoreExportFromCiBucket(dbBackupURL?: string) {
     importFirestoreDirName = latestAnonDbDir;
   }
 
-  const anonBackupURL = dbBackupURL || `gs://${ciBucketName}/${latestAnonDbDir}`;
+  const anonBackupURL = dbBackupURL || `gs://${CI_ANONYMIZED_DATA}/${latestAnonDbDir}`;
   const localBucketURL = `gs://${backupBucket}/${importFirestoreDirName}`;
 
   console.log('Copying golden data from CI. From\n', anonBackupURL, ' To:\n', localBucketURL);

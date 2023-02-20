@@ -8,7 +8,6 @@ import { UsersComponent } from './users.component';
 import { BreadCrumbModule } from '../../components/bread-crumb/bread-crumb.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { DashboardModule } from '../../components/dashboard/dashboard.module';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,7 +22,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     BreadCrumbModule,
     TableModule,
     ImageModule,
-    DashboardModule,
     MatIconModule,
     MatButtonModule,
     ClipboardModule,
