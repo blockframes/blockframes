@@ -5,7 +5,7 @@ import {
   maintenance,
   // cypress commands
   get,
-  connectOtherUser,
+  connectUser,
   assertTableRowData,
   snackbarShould,
   interceptEmail,
@@ -70,7 +70,7 @@ describe('Deal negotiation', () => {
     firestore.clearTestData();
     firestore.create([injectedData]);
     maintenance.end();
-    connectOtherUser(buyer.user.email);
+    connectUser(buyer.user.email);
     cy.visit(`/c/o/marketplace/offer/${offer.id}/${saleContract.id}`);
   });
 
@@ -200,7 +200,7 @@ function checkMainOfferPage(decision: ContractStatus) {
 }
 
 function checkMainSalePage(decision: ContractStatus) {
-  connectOtherUser(seller.user.email);
+  connectUser(seller.user.email);
   get('sales').click();
   get('all').should('contain', '(1)');
   get('new').should('not.contain', '(1)');

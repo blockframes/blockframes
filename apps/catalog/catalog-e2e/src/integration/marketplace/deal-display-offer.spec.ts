@@ -7,7 +7,7 @@ import {
   // cypress commands
   get,
   assertUrlIncludes,
-  connectOtherUser,
+  connectUser,
   assertTableRowData,
   assertUrl,
   // helpers
@@ -62,14 +62,14 @@ describe('Deal negociation', () => {
     get('menu').click();
     get('offers').click();
     assertUrlIncludes('/c/o/marketplace/offer');
-    connectOtherUser(seller.user.email);
+    connectUser(seller.user.email);
     get('sales').click();
     assertUrlIncludes('/c/o/dashboard/sales');
   });
 
   context('buyer side', () => {
     beforeEach(() => {
-      connectOtherUser(buyer.user.email);
+      connectUser(buyer.user.email);
       cy.visit('/c/o/marketplace/offer');
     });
 
@@ -110,7 +110,7 @@ describe('Deal negociation', () => {
 
   context('seller side', () => {
     beforeEach(() => {
-      connectOtherUser(seller.user.email);
+      connectUser(seller.user.email);
       cy.visit('/c/o/dashboard/sales');
     });
 

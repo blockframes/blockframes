@@ -85,7 +85,7 @@ export function deleteEmail(id: string) {
   return cy.mailosaurDeleteMessage(id);
 }
 
-export function connectOtherUser(email: string) {
+export function connectUser(email: string) {
   browserAuth.clearBrowserAuth();
   cy.visit('');
   browserAuth.signinWithEmailAndPassword(email);
