@@ -1,21 +1,17 @@
 import {
   // plugins
   adminAuth,
-  browserAuth,
   firestore,
   maintenance,
   // cypress commands
   assertUrlIncludes,
   get,
+  check,
   // cypress dashboard specific cpmmands
-  connectOtherUser,
-  getEventSlot,
-  selectSlot,
-  fillDashboardCalendarPopin,
-  fillDashboardCalendarDetails,
-  verifyScreening,
-  // cypress specific functions
-  createFutureSlot,
+  connectUser,
+  interceptEmail,
+  getByClass,
+  deleteEmail,
 } from '@blockframes/testing/cypress/browser';
 import {
   dashboardUser,
@@ -29,6 +25,15 @@ import {
   dashboardDocumentPermissions,
   dummyEvent,
 } from '../../../fixtures/dashboard/create-event';
+import {
+  Event,
+  EventTypes,
+  AccessibilityTypes,
+  Invitation,
+  displayName,
+  accessibility as accessibilityModel,
+} from '@blockframes/model';
+import { startOfWeek, add, isFuture } from 'date-fns';
 
 const injectedData = {
   // dashboard user
@@ -54,15 +59,19 @@ describe('Screenings', () => {
     maintenance.start();
     firestore.clearTestData();
     firestore.queryDelete({ collection: 'events', field: 'ownerOrgId', operator: '==', value: dashboardOrg.id });
+    firestore.queryDelete({ collection: 'invitations', field: 'toUser.uid', operator: '==', value: marketplaceUser.uid });
+    firestore.queryDelete({
+      collection: 'notifications',
+      field: 'toUserId',
+      operator: 'in',
+      value: [dashboardUser.uid, marketplaceUser.uid],
+    });
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true });
     adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true });
     maintenance.end();
-    browserAuth.clearBrowserAuth();
-    cy.visit('');
-    browserAuth.signinWithEmailAndPassword(dashboardUser.email);
-    cy.visit('');
+    connectUser(dashboardUser.email);
     get('calendar').click();
     get('cookies').click();
   });
@@ -75,7 +84,7 @@ describe('Screenings', () => {
     // create event
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
-    fillDashboardCalendarDetails({ movieId: screenerMovie.id, title: eventTitle, accessibility: 'public' });
+    fillDashboardCalendarDetails({ movieId: screenerMovie.id, eventTitle, accessibility: 'public' });
     get('event-save-disabled').should('be.disabled');
     get('missing-screener').should('not.exist');
     get('warning-screener').should('not.exist');
@@ -87,7 +96,7 @@ describe('Screenings', () => {
     get('missing-screener').should('exist');
     get('arrow-back').click();
     getEventSlot(futureSlot).should('contain', noScreenerTitle);
-    connectOtherUser(marketplaceUser.email);
+    connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
     verifyScreening({ title: eventTitle, accessibility: 'public', expected: true });
@@ -100,8 +109,8 @@ describe('Screenings', () => {
     // create event
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
-    fillDashboardCalendarDetails({ movieId: screenerMovie.id, title: eventTitle, accessibility: 'private' });
-    connectOtherUser(marketplaceUser.email);
+    fillDashboardCalendarDetails({ movieId: screenerMovie.id, eventTitle, accessibility: 'private' });
+    connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
     verifyScreening({ title: eventTitle, accessibility: 'private', expected: true });
@@ -114,8 +123,8 @@ describe('Screenings', () => {
     // create event
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
-    fillDashboardCalendarDetails({ movieId: screenerMovie.id, title: eventTitle, accessibility: 'protected' });
-    connectOtherUser(marketplaceUser.email);
+    fillDashboardCalendarDetails({ movieId: screenerMovie.id, eventTitle, accessibility: 'protected' });
+    connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
     verifyScreening({ title: eventTitle, accessibility: 'protected', expected: true });
@@ -128,11 +137,187 @@ describe('Screenings', () => {
     const eventTitle = `Admin public screening / d${futureSlot.day}, h${futureSlot.hours}:${futureSlot.minutes} - ${screenerTitle}`;
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
-    fillDashboardCalendarDetails({ movieId: screenerMovie.id, title: eventTitle, accessibility: 'public', secret: true });
-    connectOtherUser(marketplaceUser.email);
+    fillDashboardCalendarDetails({ movieId: screenerMovie.id, eventTitle, accessibility: 'public', secret: true });
+    connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
     verifyScreening({ title: dummyEvent.title, accessibility: 'public', expected: true });
     verifyScreening({ title: eventTitle, accessibility: 'public', expected: false });
   });
+
+  it('create today all day screening that willing invitee can attend', () => {
+    const screenerTitle = screenerMovie.title.international;
+    const todaySlot: EventSlot = { day: new Date().getDay(), hours: 1, minutes: 0 };
+    const eventTitle = `Admin private screening / all day - ${screenerTitle}`;
+    // create event
+    selectSlot(todaySlot);
+    fillDashboardCalendarPopin({ type: 'screening', title: eventTitle, allDay: true });
+    fillDashboardCalendarDetails({
+      movieId: screenerMovie.id,
+      eventTitle,
+      accessibility: 'private',
+      invitee: marketplaceUser.email,
+    });
+    connectUser(marketplaceUser.email);
+    get('invitations-link').click();
+    get('invitation').should('have.length', 1).and('contain', `${dashboardOrg.name} invited you to ${eventTitle}`);
+    get('invitation')
+      .find('a')
+      .then(links => {
+        firestore
+          .queryData<Event>({ collection: 'events', field: 'ownerOrgId', operator: '==', value: dashboardOrg.id })
+          .then(events => {
+            const [invitationEvent] = events.filter(e => e.id !== dummyEvent.id);
+            expect(links[0].href).to.contain(`c/o/marketplace/organization/${dashboardOrg.id}`);
+            expect(links[1].href).to.contain(`http://localhost:4200/event/${invitationEvent.id}/r/i/session`);
+          });
+      });
+    get('invitation-accept').click();
+    get('invitation-status').should('contain', 'Accepted');
+    cy.visit('c/o/marketplace/event');
+    verifyScreening({ title: eventTitle, accessibility: 'private', expected: true });
+    get('invitation-status').should('contain', 'Invitation Accepted');
+    get('ongoing-screening').click();
+    get('event-room').click();
+    get('play').click();
+    get('festival-spinner').should('not.exist');
+    get('viewer').click();
+    getByClass('jw-video').should('exist');
+    cy.wait(5000); // just to see in the e2e record if the video launched
+  });
+
+  it('create today all day screening that unwilling invitee cannot attend', () => {
+    const screenerTitle = screenerMovie.title.international;
+    const todaySlot: EventSlot = { day: new Date().getDay(), hours: 1, minutes: 0 };
+    const eventTitle = `Admin private screening / all day - ${screenerTitle}`;
+    // create event
+    selectSlot(todaySlot);
+    fillDashboardCalendarPopin({ type: 'screening', title: eventTitle, allDay: true });
+    fillDashboardCalendarDetails({
+      movieId: screenerMovie.id,
+      eventTitle,
+      accessibility: 'private',
+      invitee: marketplaceUser.email,
+    });
+    connectUser(marketplaceUser.email);
+    get('event-link').click();
+    assertUrlIncludes('c/o/marketplace/event');
+    verifyScreening({ title: eventTitle, accessibility: 'private', expected: true });
+    get('invitation-refuse').click();
+    get('invitation-status').should('contain', 'Invitation Declined');
+    get('ongoing-screening').click();
+    get('event-room').should('not.exist');
+  });
 });
+
+//* Functions
+
+interface EventSlot {
+  day: number;
+  hours: number;
+  minutes: 0 | 30;
+}
+
+interface ScreeningVerification {
+  title: string;
+  accessibility: AccessibilityTypes;
+  expected: boolean;
+}
+
+function createFutureSlot() {
+  const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
+  do {
+    slot.day = new Date().getDay() + Math.floor(Math.random() * (7 - new Date().getDay()));
+    slot.hours = Math.floor(Math.random() * 24);
+    slot.minutes = Math.random() < 0.5 ? 0 : 30;
+  } while (!isFuture(add(startOfWeek(new Date()), { days: slot.day, hours: slot.hours, minutes: slot.minutes })));
+  return slot;
+}
+
+function selectSlot({ day, hours, minutes }: EventSlot) {
+  return cy
+    .get('.cal-day-column')
+    .eq(day)
+    .find('.cal-hour')
+    .eq(hours)
+    .children()
+    .eq(!minutes ? 0 : 1)
+    .click();
+}
+
+function getEventSlot({ day, hours, minutes }: EventSlot) {
+  //30 minutes are 30px high, an hour 60px
+  let topOffset = hours * 60;
+  if (minutes === 30) topOffset += 30;
+  return cy.get('.cal-day-column').eq(day).find('.cal-events-container').find(`[style^="top: ${topOffset}px"]`);
+}
+
+function fillDashboardCalendarPopin({ type, title, allDay }: { type: EventTypes; title: string; allDay?: boolean }) {
+  get('event-type').click();
+  get(`option_${type}`).click();
+  if (allDay) get('all-day').click();
+  get('event-title-modal').clear().type(title);
+  get('more-details').click();
+}
+
+function fillDashboardCalendarDetails({
+  movieId,
+  eventTitle,
+  accessibility,
+  secret,
+  invitee,
+}: {
+  movieId: string;
+  eventTitle: string;
+  accessibility: AccessibilityTypes;
+  secret?: boolean;
+  invitee?: string;
+}) {
+  get('screening-title').click();
+  get(`option_${movieId}`).click();
+  get('description').type(`Description : ${eventTitle}`);
+  get(accessibility).click();
+  if (secret) check('secret');
+  if (invitee) {
+    get('invitations').click();
+    get('invite-guests').type(invitee);
+    get('event-invite').click();
+    checkInvitationEmail(eventTitle, invitee);
+    get(`invitation_${marketplaceUser.uid}`).should('contain', `${displayName(marketplaceUser)} (${marketplaceOrg.name})`);
+  } else {
+    get('event-save').click();
+  }
+}
+
+function checkInvitationEmail(eventTitle: string, invitee: string) {
+  return interceptEmail({ sentTo: invitee }).then(mail => {
+    expect(mail.subject).to.eq(`You were invited to ${eventTitle} on Archipel Market`);
+    const invitationLink = mail.html.links.filter(link => link.text === 'Answer Invitation')[0];
+    cy.request({ url: invitationLink.href, failOnStatusCode: false }).then(response => {
+      expect(response.redirects).to.have.lengthOf(1);
+      const redirect = response.redirects[0];
+      expect(redirect).to.include('302');
+      getDbEvent(eventTitle).then(dbEvent => {
+        firestore
+          .queryData<Invitation>({ collection: 'invitations', field: 'eventId', operator: '==', value: dbEvent.id })
+          .then(([invitation]) => {
+            expect(redirect).to.include(`/event/${dbEvent.id}/r/i?email=${invitee.replace('@', '%40')}&i=${invitation.id}`);
+          });
+      });
+    });
+    deleteEmail(mail.id);
+  });
+}
+
+function verifyScreening({ title, accessibility, expected }: ScreeningVerification) {
+  return getDbEvent(title).then(dbEvent => {
+    get(`event_${dbEvent.id}`).should(expected ? 'exist' : 'not.exist');
+    if (expected) get(`event_${dbEvent.id}`).should('contain', `${accessibilityModel[accessibility]} Screening`);
+  });
+}
+
+function getDbEvent(eventTitle: string) {
+  return firestore
+    .queryData<Event>({ collection: 'events', field: 'title', operator: '==', value: eventTitle })
+    .then(([dbEvent]) => dbEvent);
+}

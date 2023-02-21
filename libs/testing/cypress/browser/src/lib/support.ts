@@ -5,34 +5,11 @@ import {
   territories,
   PublicUser,
   Module,
-  Event,
-  EventTypes,
-  AccessibilityTypes,
 } from '@blockframes/model';
 import { browserAuth } from './browserAuth';
-import { firestore } from './firestore';
-import { startOfWeek, add, isPast, isFuture } from 'date-fns';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
-import { capitalize } from '@blockframes/utils/helpers';
 import { sub } from 'date-fns';
-
-interface ScreeningVerification {
-  title: string;
-  accessibility: AccessibilityTypes;
-  expected: boolean;
-}
-
-export function awaitElementDeletion(selector: string, timeout?: number) {
-  const settings = { timeout };
-  if (timeout) {
-    cy.get(selector).should('exist');
-    cy.get(selector, settings).should('not.exist');
-  } else {
-    cy.get(selector).should('exist');
-    cy.get(selector).should('not.exist');
-  }
-}
 
 export function acceptCookies() {
   return cy.get('body').then($body => {
@@ -77,7 +54,7 @@ export function assertUrl(url: string) {
 export function assertUrlIncludes(partialUrl: string) {
   return cy.url().should('include', partialUrl);
 }
-
+  
 export function assertTableRowData(row: number, strings: string[]) {
   return Promise.all(strings.map((string, index) => get(`row_${row}_col_${index}`).should('contain', string)));
 }
@@ -97,7 +74,7 @@ export function deleteEmail(id: string) {
   return cy.mailosaurDeleteMessage(id);
 }
 
-export function connectOtherUser(email: string) {
+export function connectUser(email: string) {
   browserAuth.clearBrowserAuth();
   cy.visit('');
   browserAuth.signinWithEmailAndPassword(email);
@@ -157,104 +134,6 @@ export function ensureInput(input: string, value: string) {
 //* ------------------------------------- *//
 
 //* DASHBOARD *//
-
-//* js functions
-
-export function createFutureSlot() {
-  const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
-  do {
-    slot.day = new Date().getDay() + Math.floor(Math.random() * (7 - new Date().getDay()));
-    slot.hours = Math.floor(Math.random() * 24);
-    slot.minutes = Math.random() < 0.5 ? 0 : 30;
-  } while (!isFuture(add(startOfWeek(new Date()), { days: slot.day, hours: slot.hours, minutes: slot.minutes })));
-  return slot;
-}
-
-// not used yet, need to wait for issue #8203 to be resolved
-export function createPastSlot() {
-  const slot: EventSlot = { day: 0, hours: 0, minutes: 0 };
-  do {
-    slot.day = Math.floor(Math.random() * new Date().getDay());
-    slot.hours = Math.floor(Math.random() * 24);
-    slot.minutes = Math.random() < 0.5 ? 0 : 30;
-  } while (!isPast(add(startOfWeek(new Date()), { days: slot.day, hours: slot.hours, minutes: slot.minutes })));
-  return slot;
-}
-
-export function getCurrentWeekDays() {
-  const d = new Date();
-  const weekDays: { day: string; date: string }[] = [];
-  d.setDate(d.getDate() - d.getDay());
-  for (let i = 0; i < 7; i++) {
-    weekDays.push({
-      day: d.toLocaleString('en-us', { weekday: 'long' }),
-      date: `${new Date(d).toLocaleString('en-us', { month: 'short' })} ${new Date(d).getDate()}`,
-    });
-    d.setDate(d.getDate() + 1);
-  }
-  return weekDays;
-}
-
-export interface EventSlot {
-  day: number;
-  hours: number;
-  minutes: 0 | 30;
-}
-
-//* cypress commands
-
-export function selectSlot({ day, hours, minutes }: EventSlot) {
-  return cy
-    .get('.cal-day-column')
-    .eq(day)
-    .find('.cal-hour')
-    .eq(hours)
-    .children()
-    .eq(!minutes ? 0 : 1)
-    .click();
-}
-
-export function getEventSlot({ day, hours, minutes }: EventSlot) {
-  //30 minutes are 30px high, an hour 60px
-  let topOffset = hours * 60;
-  if (minutes === 30) topOffset += 30;
-  return cy.get('.cal-day-column').eq(day).find('.cal-events-container').find(`[style^="top: ${topOffset}px"]`);
-}
-
-export function fillDashboardCalendarPopin({ type, title }: { type: EventTypes; title: string }) {
-  get('event-type').click();
-  get(`option_${type}`).click();
-  get('event-title-modal').clear().type(title);
-  get('more-details').click();
-}
-
-export function fillDashboardCalendarDetails({
-  movieId,
-  title,
-  accessibility,
-  secret,
-}: {
-  movieId: string;
-  title: string;
-  accessibility: AccessibilityTypes;
-  secret?: boolean;
-}) {
-  get('screening-title').click();
-  get(`option_${movieId}`).click();
-  get('description').type(`Description : ${title}`);
-  get(accessibility).click();
-  if (secret) check('secret');
-  get('event-save').click();
-}
-
-export function verifyScreening({ title, accessibility, expected }: ScreeningVerification) {
-  return firestore
-    .queryData({ collection: 'events', field: 'title', operator: '==', value: title })
-    .then(([dbEvent]: Event[]) => {
-      get(`event_${dbEvent.id}`).should(expected ? 'exist' : 'not.exist');
-      if (expected) get(`event_${dbEvent.id}`).should('contain', `${capitalize(accessibility)} Screening`);
-    });
-}
 
 //this function is used during movie creation to validate each upload
 //has they tend to fail in batch. See #9002
