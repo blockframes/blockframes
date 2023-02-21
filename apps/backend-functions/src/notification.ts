@@ -579,14 +579,14 @@ function getEventLink(data: { invitation: PublicInvitation, eventData: EventEmai
   const isPrivateInvitation = invitation.mode === 'invitation' && eventData.accessibility === 'private';
   if (invitation.mode === 'request' || isPrivateInvitation) {
     if (canAccessModule('marketplace', org)) {
-      return '/c/o/marketplace/invitations';
+      return 'c/o/marketplace/invitations';
     } else if (canAccessModule('dashboard', org)) {
-      return '/c/o/dashboard/invitations';
+      return 'c/o/dashboard/invitations';
     } else {
       return '';
     }
   } else {
-    return `/event/${eventData.id}/r/i?email=${email}&i=${invitation.id}`;
+    return `event/${eventData.id}/r/i?email=${email}&i=${invitation.id}`;
   }
 }
 

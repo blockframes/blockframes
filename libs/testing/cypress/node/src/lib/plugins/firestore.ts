@@ -8,6 +8,20 @@ const isEventsPath = (path: string) => path.split('/')[0] === 'events';
 const isTermsPath = (path: string) => path.split('/')[0] === 'terms';
 const isNegotiationPath = (path: string) => path.split('/').length > 2 && path.split('/')[2] === 'negotiations';
 
+const collectionsToClean: string[] = [
+  'analytics',
+  'buckets',
+  'campaigns',
+  'consents',
+  'contracts',
+  'events',
+  'incomes',
+  'invitations',
+  'notifications',
+  'offers',
+  'terms',
+];
+
 //* IMPORT DATA*-----------------------------------------------------------------
 
 export function importData(data: Record<string, object>[]) {
@@ -40,11 +54,12 @@ export function importData(data: Record<string, object>[]) {
         });
         content['initial'] = new Date(content['initial']);
       }
-      content['_meta'] =
-        content['_meta'] && content['_meta']['createdAt']
-          ? { e2e: true, createdAt: new Date(content['_meta']['createdAt']) }
-          : { e2e: true };
-
+      if (path !== metaDoc) {
+        content['_meta'] =
+          content['_meta'] && content['_meta']['createdAt']
+            ? { e2e: true, createdAt: new Date(content['_meta']['createdAt']) }
+            : { e2e: true };
+      }
       createAll.push(db.doc(path).set(content));
     });
   }
@@ -83,14 +98,18 @@ const subcollectionsDocsOf = async (path: string) => {
 };
 
 export async function clearTestData() {
-  const docsToDelete: string[] = [];
+  const pathsToDelete: string[] = [];
   const collections = await db.listCollections();
   for (const collection of collections) {
-    const snapshot = await collection.where('_meta.e2e', '==', true).get();
-    const docs = snapshot.docs;
-    for (const doc of docs) docsToDelete.push(`${collection.id}/${doc.id}`);
+    if (collectionsToClean.includes(collection.path)) {
+      pathsToDelete.push(collection.path);
+    } else {
+      const snapshot = await collection.where('_meta.e2e', '==', true).get();
+      const docs = snapshot.docs;
+      for (const doc of docs) pathsToDelete.push(`${collection.id}/${doc.id}`);
+    }
   }
-  return deleteData(docsToDelete);
+  return deleteData(pathsToDelete);
 }
 
 export async function queryDelete(data: QueryParameters) {
