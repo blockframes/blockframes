@@ -34,7 +34,6 @@ import {
   upgradeEmulators,
   printDatabaseInconsistencies,
   keepAlive,
-  generateFixtures,
   writeRuntimeConfig,
   functionsConfigMap,
   clearDb,
@@ -91,9 +90,6 @@ async function runCommand() {
       break;
     case 'use':
       await selectEnvironment(arg1);
-      break;
-    case 'generateFixtures':
-      await generateFixtures(db);
       break;
     case 'upgrade':
       await upgrade();

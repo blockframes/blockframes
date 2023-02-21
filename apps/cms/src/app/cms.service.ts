@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CmsTemplate, CmsApp } from '@blockframes/admin/cms';
+import { CmsTemplate, CmsApp } from '@blockframes/model';
 import { CollectionReference, DocumentReference, updateDoc } from 'firebase/firestore';
 import { fromRef, FirestoreService } from 'ngfire';
 import { map } from 'rxjs';

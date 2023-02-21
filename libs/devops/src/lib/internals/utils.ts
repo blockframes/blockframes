@@ -23,6 +23,23 @@ const collections = {
   users: true,
 };
 
+/**
+ * Not mandatory collections for E2E testing
+ */
+export const notMandatoryCollections: Collections[] = [
+  'analytics',
+  'buckets',
+  'campaigns',
+  'consents',
+  'contracts',
+  'events',
+  'incomes',
+  'invitations',
+  'notifications',
+  'offers',
+  'terms'
+];
+
 export type Collections = keyof typeof collections;
 
 export interface CollectionData {

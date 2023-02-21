@@ -2,25 +2,12 @@ import { db } from '../testing-cypress';
 import { metaDoc } from '@blockframes/utils/maintenance';
 import { BucketTerm, createDuration } from '@blockframes/model';
 import { QueryParameters, UpdateParameters } from '../../../../commons';
+import { Collections, notMandatoryCollections } from '@blockframes/devops';
 
 const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
 const isEventsPath = (path: string) => path.split('/')[0] === 'events';
 const isTermsPath = (path: string) => path.split('/')[0] === 'terms';
 const isNegotiationPath = (path: string) => path.split('/').length > 2 && path.split('/')[2] === 'negotiations';
-
-const collectionsToClean: string[] = [
-  'analytics',
-  'buckets',
-  'campaigns',
-  'consents',
-  'contracts',
-  'events',
-  'incomes',
-  'invitations',
-  'notifications',
-  'offers',
-  'terms',
-];
 
 //* IMPORT DATA*-----------------------------------------------------------------
 
@@ -101,7 +88,7 @@ export async function clearTestData() {
   const pathsToDelete: string[] = [];
   const collections = await db.listCollections();
   for (const collection of collections) {
-    if (collectionsToClean.includes(collection.path)) {
+    if (notMandatoryCollections.includes(collection.path as Collections)) {
       pathsToDelete.push(collection.path);
     } else {
       const snapshot = await collection.where('_meta.e2e', '==', true).get();
