@@ -5,20 +5,20 @@
       <!-- using organizationInformations to update display as user type in the form -->
       <img mat-card-avatar type="logo" [ref]="org.logo" asset="empty_organization.svg" alt="Organization logo">
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
-        <h4>{{ organization.name }}</h4>
+        <h4 test-id="org-name">{{ organization.name }}</h4>
         <h3>Main address</h3>
         <ul *ngIf="org.addresses.main as main">
-          <li><b>Street</b> {{ main.street }}</li>
-          <li><b>Zip code</b> {{ main.zipCode }}</li>
-          <li><b>City</b> {{ main.city }}</li>
-          <li><b>Country</b> {{ main.country }}</li>
+          <li test-id="org-street"><b>Street</b> {{ main.street }}</li>
+          <li test-id="org-zip"><b>Zip code</b> {{ main.zipCode }}</li>
+          <li test-id="org-city"><b>City</b> {{ main.city }}</li>
+          <li test-id="org-country"><b>Country</b> {{ main.country | toLabel: 'territories' }}</li>
           <li *ngIf="main.region"><b>Region</b> {{ main.region }}</li>
-          <li><b>Phone number</b> {{ main.phoneNumber }}</li>
+          <li test-id="org-phone"><b>Phone number</b> {{ main.phoneNumber }}</li>
         </ul>
         <h3>Other informations</h3>
         <ul>
-          <li><b>Email</b> {{ org.email }}</li>
-          <li><b>Activity</b> {{ org.activity }}</li>
+          <li test-id="org-email"><b>Email</b> {{ org.email }}</li>
+          <li test-id="org-activity"><b>Activity</b> {{ org.activity | toLabel:'orgActivity' }}</li>
         </ul>
         <div class="action-button">
           <button *ngIf="isAdmin" mat-icon-button (click)="editing.emit()" color="primary">

@@ -94,13 +94,6 @@ export const sentryDsn = undefined;
 
 export const bigQueryAnalyticsTable = 'blockframes-francois.analytics_229093027.events_';
 
-// Data Studio
-// ========
-
-export const datastudio = {
-  user: ''
-}
-
 // Archipel OrgIds
 // ========
 

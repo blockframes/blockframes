@@ -95,13 +95,6 @@ export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/154
 
 export const bigQueryAnalyticsTable = '';
 
-// Data Studio
-// ========
-
-export const datastudio = {
-  user: ''
-}
-
 // Archipel OrgIds
 // ========
 
@@ -113,7 +106,7 @@ export const centralOrgId = {
 // Import / Export parameters
 // =======
 
-export const backupBucket = 'ci-backups-blockframes';
+export const backupBucket = 'blockframes-ci-anonymized-data';
 export const heavyChunkSize = 25;
 export const chunkSize = 50;
 

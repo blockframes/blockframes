@@ -1,9 +1,8 @@
 import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
-import { backupBucket } from 'env/env.blockframes-ci';
 import type { Bucket } from '@google-cloud/storage';
 import type { firestore, storage } from 'firebase-admin';
-import { latestAnonDbDir, CI_STORAGE_BACKUP, getBackupBucket } from './firebase-utils';
+import { latestAnonDbDir, CI_STORAGE_BACKUP, getBackupBucket, CI_ANONYMIZED_DATA } from './firebase-utils';
 import { getDb, getStorage, initAdmin } from '@blockframes/firebase-utils/initialize';
 import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 
@@ -23,15 +22,21 @@ export async function healthCheck() {
   console.log(`Local tmp Folder - WRITE: ${fileAccess.write ? 'ALLOW' : 'DENY'}`);
   console.log(`Local tmp Folder - READ: ${fileAccess.read ? 'ALLOW' : 'DENY'}`);
 
-  // * Do we have get access to CI storage db backups?
-  const CIAccess = await checkCIBucketAccess(getCI.storage());
-  console.log(`CI Backup Bucket - GET FILE: ${CIAccess.get ? 'ALLOW' : 'DENY'}`);
-  console.log(`CI Backup Bucket - LIST FILE: ${CIAccess.list ? 'ALLOW' : 'DENY'}`);
+  // * Do we have get access to CI Anonymized db backups?
+  const CIAccess = await checkCIBucketAccess(getCI.storage(), CI_ANONYMIZED_DATA);
+  console.log(`CI Anonymized DB access - GET FILE: ${CIAccess.get ? 'ALLOW' : 'DENY'}`);
+  console.log(`CI Anonymized DB access - LIST FILE: ${CIAccess.list ? 'ALLOW' : 'DENY'}`);
 
   // * Do we have get access to CI storage backups?
-  const CIStorageBackupAccess = await checkCIStorageBackupBucketAccess(getCI.storage());
+  // * @dev Note that regular users/developers have to reason to have access to this.
+  const CIStorageBackupAccess = await checkCIStorageBackupBucketAccess(getCI.storage(), CI_STORAGE_BACKUP);
   console.log(`CI Storage Backup Bucket - GET FILE: ${CIStorageBackupAccess.get ? 'ALLOW' : 'DENY'}`);
   console.log(`CI Storage Backup Bucket - LIST FILE: ${CIStorageBackupAccess.list ? 'ALLOW' : 'DENY'}`);
+
+  // * Do we have get access to CI anonymized data?
+  const CIAnonymizedDataAccess = await checkCIStorageBackupBucketAccess(getCI.storage(), CI_ANONYMIZED_DATA);
+  console.log(`CI Anonymized Data Bucket - GET FILE: ${CIAnonymizedDataAccess.get ? 'ALLOW' : 'DENY'}`);
+  console.log(`CI Anonymized Data Bucket - LIST FILE: ${CIAnonymizedDataAccess.list ? 'ALLOW' : 'DENY'}`);
 
   // * Do we have access to our own firestore?
   const firestoreAccess = await checkFirestoreAccess(db);
@@ -47,8 +52,8 @@ async function checkFirestoreAccess(db: firestore.Firestore) {
   }
 }
 
-async function checkCIStorageBackupBucketAccess(gcs: storage.Storage) {
-  const bucket = gcs.bucket(CI_STORAGE_BACKUP);
+async function checkCIStorageBackupBucketAccess(gcs: storage.Storage, bucketName: string) {
+  const bucket = gcs.bucket(bucketName);
 
   let list = false;
   let get = false;
@@ -126,8 +131,8 @@ function checkDiskWriteAccess() {
   return { read, write };
 }
 
-async function checkCIBucketAccess(gcs: storage.Storage) {
-  const bucket = gcs.bucket(backupBucket);
+async function checkCIBucketAccess(gcs: storage.Storage, bucketName: string) {
+  const bucket = gcs.bucket(bucketName);
   let list = false;
   let get = false;
 

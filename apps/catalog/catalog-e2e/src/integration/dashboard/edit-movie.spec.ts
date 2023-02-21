@@ -10,7 +10,7 @@ import {
   findIn,
   assertUrlIncludes,
   checkMovieTunnelSideNav,
-  saveTitle
+  saveTitle,
 } from '@blockframes/testing/cypress/browser';
 import {
   Movie,
@@ -55,7 +55,7 @@ describe('Movie tunnel', () => {
     cy.visit('');
     maintenance.start();
     firestore.clearTestData();
-    firestore.deleteOrgMovies(org.id);
+    firestore.queryDelete({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id });
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });

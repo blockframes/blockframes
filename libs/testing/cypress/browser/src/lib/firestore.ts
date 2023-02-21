@@ -1,11 +1,5 @@
-import { WhereFilterOp } from 'firebase/firestore';
-import { Contract, Event, Movie, Offer, Notification } from '@blockframes/model';
-
-interface UpdateParameters {
-  docPath: string;
-  field: string;
-  value: unknown;
-}
+import { Contract, Notification, Organization } from '@blockframes/model';
+import { QueryParameters, UpdateParameters } from '../../../commons';
 
 export const firestore = {
   clearTestData() {
@@ -26,8 +20,12 @@ export const firestore = {
     return cy.task('getData', [paths]).then(array => array[0]);
   },
 
-  queryData(data: { collection: string; field: string; operator: WhereFilterOp; value: unknown }) {
+  queryData<T>(data: QueryParameters): Cypress.Chainable<T[]> {
     return cy.task('queryData', data);
+  },
+
+  queryDelete<T>(data: QueryParameters): Cypress.Chainable<T[]> {
+    return cy.task('queryDelete', data);
   },
 
   update(data: UpdateParameters[] | UpdateParameters) {
@@ -35,61 +33,32 @@ export const firestore = {
     return cy.task('updateData', [data]);
   },
 
-  deleteOrgEvents(orgId: string) {
-    return firestore
-      .queryData({ collection: 'events', field: 'ownerOrgId', operator: '==', value: orgId })
-      .then((events: Event[]) => firestore.delete(events.map(event => `events/${event.id}`)));
-  },
-
-  deleteOrgMovies(orgId: string) {
-    return firestore
-      .queryData({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: orgId })
-      .then((movies: Movie[]) => Promise.all(movies.map(movie => firestore.delete(`movies/${movie.id}`))));
-  },
-
   deleteContractsAndTerms(orgId: string) {
     return firestore
-      .queryData({ collection: 'contracts', field: 'sellerId', operator: '==', value: orgId })
-      .then((contracts: Contract[]) => {
-        const promises = [];
-        for (const contract of contracts) {
-          promises.push(firestore.delete(`contracts/${contract.id}`));
-          for (const termId of contract.termIds) promises.push(firestore.delete(`terms/${termId}`));
-        }
-        return Promise.all(promises);
+      .queryDelete<Contract>({ collection: 'contracts', field: 'sellerId', operator: '==', value: orgId })
+      .then(contracts => {
+        const termIds = Array.from(new Set(contracts.map(contract => contract.termIds).flat()));
+        const termPaths = termIds.map(termId => `terms/${termId}`);
+        return firestore.delete(termPaths);
       });
-  },
-
-  deleteBuyerContracts(orgId: string) {
-    return firestore
-      .queryData({ collection: 'contracts', field: 'buyerId', operator: '==', value: orgId })
-      .then((contracts: Contract[]) => {
-        const promises = [];
-        for (const contract of contracts) {
-          promises.push(firestore.delete(`contracts/${contract.id}`));
-        }
-        return Promise.all(promises);
-      });
-  },
-
-  deleteOffers(orgId: string) {
-    return firestore
-      .queryData({ collection: 'offers', field: 'buyerId', operator: '==', value: orgId })
-      .then((offers: Offer[]) => firestore.delete(offers.map(({ id }) => `offers/${id}`)));
   },
 
   deleteNotifications(userIds: string | string[]) {
     if (!Array.isArray(userIds)) userIds = [userIds];
-    const promises = [];
-    for (const userId of userIds) {
-      firestore
-        .queryData({ collection: 'notifications', field: 'toUserId', operator: '==', value: userId })
-        .then((notifications: Notification[]) => {
-          for (const notification of notifications) {
-            promises.push(firestore.delete(`notifications/${notification.id}`));
-          }
-        });
-    }
+    const promises = userIds.map(userId =>
+      firestore.queryDelete<Notification>({ collection: 'notifications', field: 'toUserId', operator: '==', value: userId })
+    );
     return Promise.all(promises);
+  },
+
+  queryDeleteOrgsWithUsers(data: QueryParameters) {
+    return firestore.queryDelete<Organization>(data).then(orgs => {
+      const promises = [];
+      for (const org of orgs) {
+        promises.push(firestore.delete(`permissions/${org.id}`));
+        for (const uid of org.userIds) promises.push(firestore.delete(`users/${uid}`));
+      }
+      return Promise.all(promises);
+    });
   },
 };
