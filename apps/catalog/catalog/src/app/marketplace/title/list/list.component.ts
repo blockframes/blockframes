@@ -17,7 +17,7 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, shareReplay, 
 
 // Blockframes
 import { algolia, centralOrgId } from '@env';
-import { DownloadSettings, PdfService } from '@blockframes/utils/pdf/pdf.service';
+import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 import {
   StoreStatus,
   Mandate,

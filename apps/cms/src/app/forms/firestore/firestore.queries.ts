@@ -1,6 +1,5 @@
 // Prebuilt queries for titles form
-import { LimitQuery, OrderByQuery, StartAtQuery, WhereQuery } from '@blockframes/admin/cms';
-import { App } from '@blockframes/model';
+import { App, LimitQuery, OrderByQuery, StartAtQuery, WhereQuery } from '@blockframes/model';
 
 export function titlesFromApp(app: App): WhereQuery[] {
   return [{
