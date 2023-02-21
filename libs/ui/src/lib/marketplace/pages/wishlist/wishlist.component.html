@@ -1,6 +1,12 @@
 <section *ngIf="isDataLoaded; else loading">
   <ng-container *ngIf="hasWishlist; else noWishlist">
-    <h1>Company's Wishlist</h1>
+    <div fxLayout="row" fxLayoutAlign="space-between end">
+      <h1>Company's Wishlist</h1>
+      <button [disabled]="exporting" mat-button (click)="export()" matTooltip="Export to PDF" test-id="export">
+        <mat-icon svgIcon="pdf"></mat-icon>
+        <span>Export {movieIds.length, plural, =1 {title} other {titles}}</span>
+      </button>
+    </div>
     <table mat-table [dataSource]="dataSource">
       <!-- Movie -->
       <ng-container matColumnDef="movie">
