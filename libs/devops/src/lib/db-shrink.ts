@@ -13,6 +13,7 @@ import type { ChildProcess } from 'child_process';
 import {
   CollectionData,
   Collections,
+  notMandatoryCollections,
   DatabaseData,
   DocumentDescriptor,
   getAllDocumentCount,
@@ -90,22 +91,8 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   // Keeping only collections that will allow apps to run. ie : blockframesAdmin, cms, docsIndex, movies, orgs, permissions, users
   //////////////////
 
-  const collectionsToClean: Collections[] = [
-    'analytics',
-    'buckets',
-    'campaigns',
-    'consents',
-    'contracts',
-    'events',
-    'incomes',
-    'invitations',
-    'notifications',
-    'offers',
-    'terms'
-  ];
-
-  console.log(`Cleaning non mandatory collections: ${collectionsToClean.join(', ')}.`);
-  for (const collection of collectionsToClean) {
+  console.log(`Cleaning not mandatory collections: ${notMandatoryCollections.join(', ')}.`);
+  for (const collection of notMandatoryCollections) {
     await cleanCollection(db, collection).catch(_ => console.log(`Error while cleaning ${collection} collection.`));
     console.log(`Cleaned collection : ${collection}.`);
   }
