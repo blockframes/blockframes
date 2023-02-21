@@ -19,7 +19,7 @@ const collectionsToClean: string[] = [
   'invitations',
   'notifications',
   'offers',
-  'terms'
+  'terms',
 ];
 
 //* IMPORT DATA*-----------------------------------------------------------------
@@ -101,8 +101,8 @@ export async function clearTestData() {
   const pathsToDelete: string[] = [];
   const collections = await db.listCollections();
   for (const collection of collections) {
-    if(collectionsToClean.includes(collection.path)) {
-      pathsToDelete.push(collection.path)
+    if (collectionsToClean.includes(collection.path)) {
+      pathsToDelete.push(collection.path);
     } else {
       const snapshot = await collection.where('_meta.e2e', '==', true).get();
       const docs = snapshot.docs;
