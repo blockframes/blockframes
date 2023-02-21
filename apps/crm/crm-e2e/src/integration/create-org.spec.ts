@@ -18,7 +18,7 @@ import {
   maintenance,
   // cypress commands
   get,
-  connectOtherUser,
+  connectUser,
   assertUrl,
   interceptEmail,
   deleteEmail,
@@ -42,7 +42,7 @@ describe('Create organization', () => {
     adminAuth.createUser({ uid: admin.user.uid, email: admin.user.email, emailVerified: true });
     maintenance.end();
     cy.visit('');
-    connectOtherUser(admin.user.email);
+    connectUser(admin.user.email);
   });
 
   for (const newcomer of newcomers) {

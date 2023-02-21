@@ -300,8 +300,8 @@ export function getEventEmailData({ event, orgName, attachment = true, email, in
     },
     end: format(eventEndDate, 'Pppp'),
     type: eventTypes[event.type],
-    viewUrl: `/event/${event.id}/r/i${eventUrlParams}`,
-    sessionUrl: `/event/${event.id}/r/i/session${eventUrlParams}`,
+    viewUrl: `event/${event.id}/r/i${eventUrlParams}`,
+    sessionUrl: `event/${event.id}/r/i/session${eventUrlParams}`,
     accessibility: event.accessibility,
     calendar: attachment ? getEventEmailAttachment(event, organizerEmail, orgName, applicationUrl) : undefined,
     duration: getEventDuration(eventStartDate, eventEndDate)
