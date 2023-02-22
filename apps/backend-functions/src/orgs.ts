@@ -173,7 +173,7 @@ export async function onOrganizationUpdate(change: BlockframesChange<Organizatio
     promises.push(storeSearchableMovie(movie, organizations));
   }
 
-  return Promise.resolve(promises);
+  return Promise.all(promises);
 }
 
 export async function onOrganizationDelete(
