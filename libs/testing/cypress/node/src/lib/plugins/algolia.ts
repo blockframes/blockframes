@@ -7,8 +7,8 @@ export async function storeOrganization(org: Organization) {
   return await storeSearchableOrg(org, process.env['ALGOLIA_API_KEY'], db);
 }
 
-export async function storeMovie({ movie, organizationNames }: { movie: Movie; organizationNames: string[] }) {
-  return await storeSearchableMovie(movie, organizationNames, process.env['ALGOLIA_API_KEY']);
+export async function storeMovie({ movie, orgs }: { movie: Movie; orgs: Organization[] }) {
+  return await storeSearchableMovie(movie, orgs, process.env['ALGOLIA_API_KEY']);
 }
 
 export async function deleteAlgoliaMovie({ app, objectId }: { app: AlgoliaApp; objectId: string }) {
