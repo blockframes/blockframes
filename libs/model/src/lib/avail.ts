@@ -374,11 +374,15 @@ function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter
 
   const matchingMandates: FullMandate[] = subAvails.map(avail => mandates
     .map(({ terms, ...rest }) => ({
-      terms: terms.filter(term => isMapTermInAvails(term, avail)).map(t => ({ ...t, medias: t.medias.filter(m => avails.medias.includes(m)) })),
+      terms: terms.filter(term => isMapTermInAvails(term, avail)),
       ...rest
     }))
     .filter(mandate => mandate.terms.length)
   ).flat();
+
+  // If one of requested medias is not found in any mandate, no results
+  const medias = getAllMedias(matchingMandates);
+  if (avails.medias.some(m => !medias.includes(m))) return [];
 
   const territoriesIntersect = getTerritoriesIntersection(matchingMandates);
 
@@ -392,19 +396,35 @@ function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter
 
 }
 
+function getAllMedias(mandates: FullMandate[]) {
+  let medias: Media[] = [];
+  for (const mandate of mandates) {
+    for (const term of mandate.terms) {
+      medias = Array.from(new Set(medias.concat(term.medias)));
+    }
+  }
+  return medias;
+}
+
+/**
+ * Return territories intersection for a set of medias
+ * @param mandates 
+ * @returns 
+ */
 function getTerritoriesIntersection(mandates: FullMandate[]): Territory[] {
   const territoriesPerMedia: Partial<Record<Media, Territory[]>> = {};
 
-  mandates.forEach(t => {
-    t.terms.forEach(term => {
-      term.medias.forEach(media => {
+  for (const mandate of mandates) {
+    for (const term of mandate.terms) {
+      for (const media of term.medias) {
         if (!territoriesPerMedia[media]) territoriesPerMedia[media] = [];
         territoriesPerMedia[media] = Array.from(new Set(territoriesPerMedia[media].concat(term.territories)));
-      });
-    })
-  })
+      }
+    }
+  }
 
-  return Object.values(territoriesPerMedia).reduce((a, b) => a.filter(c => b.includes(c)));
+  const territories: Territory[][] = Object.values(territoriesPerMedia);
+  return territories.length ? territories.reduce((a, b) => a.filter(c => b.includes(c))) : [];
 }
 
 function getMatchingMapSales(sales: FullSale[], avails: MapAvailsFilter) {
@@ -471,7 +491,6 @@ export function territoryAvailabilities({
     label: territories[territory],
   });
 
-
   // 1) "paint" the `available` layer
   const availableMandates = isOverlapping
     ? getOverlappingMapMandates(existingMandates, avails)
@@ -479,7 +498,8 @@ export function territoryAvailabilities({
   for (const mandate of availableMandates) {
     for (const term of mandate.terms) {
       for (const territory of term.territories as Territory[]) {
-        availabilities[`${territory}-${term.id}`] = {
+        // Key is not "territory" to allow multiple terms for a single territory
+        availabilities[`${territory}-${term.medias.join(',')}`] = {
           type: 'available',
           slug: territory,
           isoA3: territoriesISOA3[territory],
@@ -490,7 +510,6 @@ export function territoryAvailabilities({
       }
     }
   }
-
 
   // 2) "paint" the `sold` layer on top
   const salesToExclude = getMatchingMapSales(sales, avails);
@@ -542,10 +561,16 @@ export function territoryAvailabilities({
   const correctAvailabilities = Object.values(availabilities).filter(a => !!a.isoA3);
 
   const notLicensed = correctAvailabilities.filter(a => a.type === 'not-licensed') as NotLicensedTerritoryMarker[];
-  const available = correctAvailabilities.filter(a => a.type === 'available') as AvailableTerritoryMarker[];
   const sold = correctAvailabilities.filter(a => a.type === 'sold') as SoldTerritoryMarker[];
   const inBucket = correctAvailabilities.filter(a => a.type === 'in-bucket') as BucketTerritoryMarker[];
   const selected = correctAvailabilities.filter(a => a.type === 'selected') as BucketTerritoryMarker[];
+
+  // Since key is not "territory" we need to removed other layers that could have been added on top
+  const available = correctAvailabilities
+    .filter(a => a.type === 'available')
+    .filter(a => !sold.some(s => a.slug === s.slug))
+    .filter(a => !selected.some(s => a.slug === s.slug))
+    .filter(a => !inBucket.some(s => a.slug === s.slug)) as AvailableTerritoryMarker[];
 
   return { notLicensed, available, sold, inBucket, selected };
 }
