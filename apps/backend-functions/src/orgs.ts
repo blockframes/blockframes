@@ -201,7 +201,12 @@ export async function onOrganizationDelete(
   for (const snap of moviesSnap.docs) {
     const movie = snap.data() as Movie;
     // If we don't have orgIds different that the one being deleted
-    if (!movie.orgIds.some(orgId => orgId !== org.id)) await snap.ref.delete();
+    if (movie.orgIds.some(orgId => orgId !== org.id)) {
+      const orgIds = movie.orgIds.filter(orgId => orgId !== org.id);
+      await snap.ref.update({ orgIds });
+    } else {
+      await snap.ref.delete();
+    }
   }
 
   // Delete all events where organization is involved
