@@ -565,7 +565,7 @@ export function territoryAvailabilities({
   const inBucket = correctAvailabilities.filter(a => a.type === 'in-bucket') as BucketTerritoryMarker[];
   const selected = correctAvailabilities.filter(a => a.type === 'selected') as BucketTerritoryMarker[];
 
-  // Since key is not "territory" we need to removed other layers that could have been added on top
+  // Since key is not "territory" we need to remove other layers that could have been added on top
   const available = correctAvailabilities
     .filter(a => a.type === 'available')
     .filter(a => !sold.some(s => a.slug === s.slug))
