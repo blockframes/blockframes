@@ -92,8 +92,15 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
     this.hoveredTerritory = null;
   }
 
-  public addTerritory(territory: AvailableTerritoryMarker) {
-    const added = this.shell.bucketForm.addTerritory(this.availsForm.value, territory);
+  public async addTerritory(territory: AvailableTerritoryMarker) {
+    const { available } = await firstValueFrom(this.availabilities$);
+    let added = false;
+    available.filter(marker => marker.slug === territory.slug).forEach(marker => {
+      added = this.shell.bucketForm.addTerritory({
+        ...this.availsForm.value,
+        medias: this.availsForm.value.medias.filter(m => marker.term.medias.includes(m))
+      }, marker);
+    });
     if (added) this.onNewRight();
   }
 

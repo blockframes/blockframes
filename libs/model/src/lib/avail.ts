@@ -83,18 +83,18 @@ function combineAvailResults<A extends CalendarAvailsFilter | AvailsFilter>(resu
     .flat()
 
   //combine all sub-avails with the same matching term.
-  const termIds = availableResults.map(({ mandate }) => mandate.terms[0].id)
+  const termIds = availableResults.map(({ mandate }) => mandate.terms[0].id);
   const uniqueTermIds = Array.from(new Set(termIds).values());
   const combinedAvailableResults: AvailSearchResult<A>[] = [];
 
   for (const termId of uniqueTermIds) {
-    const correspondingResults = availableResults.filter(({ mandate }) => mandate.terms[0].id === termId)
+    const correspondingResults = availableResults.filter(({ mandate }) => mandate.terms[0].id === termId);
     const mandate = correspondingResults[0].mandate;
     const subavailTerritories: Territory[] = [];
     const subavailMedias: Media[] = [];
     for (const result of correspondingResults) {
-      subavailMedias.push(...result.avail.medias)
-      subavailTerritories.push(...result.avail.territories)
+      subavailMedias.push(...result.avail.medias);
+      subavailTerritories.push(...result.avail.territories);
     }
     const avail = {
       ...correspondingResults[0].avail,
@@ -167,7 +167,7 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
 
       }
     }
-    results.push(result as AvailResult<A>)
+    results.push(result as AvailResult<A>);
   }
 
   // Get the none empty sold result
@@ -177,7 +177,7 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
     .flat();
 
   // If one of the subAvails has no availability, return empty result
-  const unavailableSubAvail = results.find(result => !result.available.length)
+  const unavailableSubAvail = results.find(result => !result.available.length);
 
   // Take the intersection of all the available duration
   const from = max(results.map((result) => result.periodAvailable?.from));
@@ -199,7 +199,7 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
     }
   }
 
-  const combinedAvailableResults = combineAvailResults(results)
+  const combinedAvailableResults = combineAvailResults(results);
 
   return {
     periodAvailable: { from, to },
@@ -370,12 +370,41 @@ function isAvailInTerm<T extends BucketTerm | Term>(avail: MapAvailsFilter, term
 }
 
 function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter): FullMandate[] {
-  return mandates
+  const subAvails = avails.medias.map(m => ({ ...avails, medias: [m] }));
+
+  const matchingMandates: FullMandate[] = subAvails.map(avail => mandates
     .map(({ terms, ...rest }) => ({
-      terms: terms.filter(term => isMapTermInAvails(term, avails)),
+      terms: terms.filter(term => isMapTermInAvails(term, avail)).map(t => ({ ...t, medias: t.medias.filter(m => avails.medias.includes(m)) })),
       ...rest
     }))
-    .filter(mandate => mandate.terms.length);
+    .filter(mandate => mandate.terms.length)
+  ).flat();
+
+  const territoriesIntersect = getTerritoriesIntersection(matchingMandates);
+
+  return matchingMandates.map(mandate => ({
+    ...mandate,
+    terms: mandate.terms.map(term => ({
+      ...term,
+      territories: term.territories.filter(t => territoriesIntersect.includes(t))
+    }))
+  }));
+
+}
+
+function getTerritoriesIntersection(mandates: FullMandate[]): Territory[] {
+  const territoriesPerMedia: Partial<Record<Media, Territory[]>> = {};
+
+  mandates.forEach(t => {
+    t.terms.forEach(term => {
+      term.medias.forEach(media => {
+        if (!territoriesPerMedia[media]) territoriesPerMedia[media] = [];
+        territoriesPerMedia[media] = Array.from(new Set(territoriesPerMedia[media].concat(term.territories)));
+      });
+    })
+  })
+
+  return Object.values(territoriesPerMedia).reduce((a, b) => a.filter(c => b.includes(c)));
 }
 
 function getMatchingMapSales(sales: FullSale[], avails: MapAvailsFilter) {
@@ -429,7 +458,7 @@ export function territoryAvailabilities({
 
   // Note: The function doesn't perform any check, from its point of view a `sold` territory can become `selected`
   // Note: The checks should be performed by the parent component to prevent a user to select a `sold` territory
-  const isOverlapping = !!existingMandates.length
+  const isOverlapping = !!existingMandates.length;
 
   assertValidTitle(isOverlapping ? existingMandates : mandates, sales, bucketContracts);
 
@@ -450,7 +479,7 @@ export function territoryAvailabilities({
   for (const mandate of availableMandates) {
     for (const term of mandate.terms) {
       for (const territory of term.territories as Territory[]) {
-        availabilities[territory] = {
+        availabilities[`${territory}-${term.id}`] = {
           type: 'available',
           slug: territory,
           isoA3: territoriesISOA3[territory],
