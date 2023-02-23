@@ -1,8 +1,7 @@
-import { festival, App, Movie, smartJoin, displayName, Organization, appName } from '@blockframes/model';
+import { festival, App, Movie, smartJoin, displayName, Organization, appName, PdfParamsFilters, PdfRequest } from '@blockframes/model';
 import { toLabel } from '@blockframes/model';
 import { Response } from 'firebase-functions';
 import { applicationUrl } from '@blockframes/utils/apps';
-import { PdfParamsFilters, PdfRequest } from '@blockframes/utils/pdf/pdf.interfaces';
 import { getImgIxResourceUrl } from '@blockframes/media/image/directives/imgix-helpers';
 import { getDocument, getStorage } from '@blockframes/firebase-utils';
 import { storageBucket } from './environments/environment';

@@ -16,6 +16,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { OrganizationService } from '@blockframes/organization/service';
 import { MovieService } from '@blockframes/movie/service';
 import { APP } from '@blockframes/utils/routes/utils';
+import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 
 @Component({
   selector: 'marketplace-wishlist',
@@ -38,6 +39,8 @@ export class WishlistComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
   public isDataLoaded = false;
+  public exporting = false;
+  public movieIds: string[] = [];
 
   constructor(
     private router: Router,
@@ -48,8 +51,9 @@ export class WishlistComponent implements OnInit, OnDestroy {
     private dynTitle: DynamicTitleService,
     private orgService: OrganizationService,
     private movieService: MovieService,
+    private pdfService: PdfService,
     @Inject(APP) private app: App
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.sub = this.orgService.currentOrg$
@@ -61,6 +65,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
           ? this.dynTitle.setPageTitle('Wishlist')
           : this.dynTitle.setPageTitle('Wishlist', 'Empty');
         this.dataSource = new MatTableDataSource(movies);
+        this.movieIds = movies.map(m => m.id);
         this.isDataLoaded = true;
         this.cdr.markForCheck();
       });
@@ -77,6 +82,25 @@ export class WishlistComponent implements OnInit, OnDestroy {
     this.snackbar.open(`${title} has been removed from your selection.`, 'close', {
       duration: 2000,
     });
+  }
+
+  async export() {
+    const downloadSettings: DownloadSettings = { titleIds: this.movieIds };
+    const canDownload = this.pdfService.canDownload(downloadSettings);
+
+    if (!canDownload.status) {
+      this.snackbar.open(canDownload.message, 'close', { duration: 5000 });
+      return;
+    }
+
+    const snackbarRef = this.snackbar.open('Please wait, your export is being generated...');
+    this.exporting = true;
+    const exportStatus = await this.pdfService.download(downloadSettings);
+    snackbarRef.dismiss();
+    if (!exportStatus) {
+      this.snackbar.open('The export you want has too many titles. Try to reduce your research.', 'close', { duration: 5000 });
+    }
+    this.exporting = false;
   }
 
   ngOnDestroy() {

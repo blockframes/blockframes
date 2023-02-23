@@ -31,7 +31,7 @@ import { IncomeService } from '@blockframes/contract/income/service';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { DownloadSettings, PdfService } from '@blockframes/utils/pdf/pdf.service';
+import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface TotalIncome {

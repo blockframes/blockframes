@@ -8,7 +8,7 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
 
 // Blockframes
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { CmsPage } from '@blockframes/admin/cms/template';
+import { CmsPage } from '@blockframes/model';
 
 @Component({
   selector: 'festival-marketplace-home',

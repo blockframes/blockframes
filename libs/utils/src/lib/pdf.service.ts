@@ -1,9 +1,18 @@
 import { Inject, Injectable } from '@angular/core';
-import { App, appName, toLabel, MovieAvailsSearch, AvailsFilter, trimString } from '@blockframes/model';
+import { 
+  App,
+  appName,
+  toLabel,
+  MovieAvailsSearch,
+  AvailsFilter,
+  trimString,
+  PdfParams,
+  PdfParamsFilters,
+  pdfExportLimit
+} from '@blockframes/model';
 import { firebaseRegion, firebase } from '@env';
-import { EmulatorsConfig, EMULATORS_CONFIG } from '../emulator-front-setup';
-import { APP } from '../routes/utils';
-import { PdfParams, PdfParamsFilters } from './pdf.interfaces';
+import { EmulatorsConfig, EMULATORS_CONFIG } from './emulator-front-setup';
+import { APP } from './routes/utils';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { toGroupLabel } from '@blockframes/utils/pipes';
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -26,7 +35,7 @@ export class PdfService {
    * @see https://firebase.google.com/docs/functions/quotas#resource_limits
    * So we need to add a maximum of movies that can be exported to PDF.
    */
-  public exportLimit = 450;
+  public exportLimit = pdfExportLimit;
 
   constructor(
     @Inject(APP) private app: App,

@@ -2,7 +2,7 @@ import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/co
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormEntity, FormGroupSchema, FormFactoryModule } from 'ng-form-factory';
-import { Link } from '@blockframes/admin/cms';
+import { Link } from '@blockframes/model';
 import { TextFormModule, matText } from '../../forms/text';
 import { SelectFormModule, matSelect } from '../../forms/select';
 

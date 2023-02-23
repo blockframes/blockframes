@@ -5,14 +5,13 @@ import { ActivatedRoute } from '@angular/router';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { OrganizationService } from '@blockframes/organization/service';
-import { OrgsSection, TemplateParams } from '@blockframes/admin/cms';
 import { TextFormModule, matText } from '../../forms/text';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { matMultiSelect } from '../../forms/select';
 import { getOrgsQueryConstraints, toMap } from '../pipes';
 import { FirestoreFormModule, firestoreQuery, orgsFromApp } from '../../forms/firestore';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { Organization } from '@blockframes/model';
+import { Organization, OrgsSection, TemplateParams } from '@blockframes/model';
 
 export type OrgsSchema = FormGroupSchema<OrgsSection>;
 
