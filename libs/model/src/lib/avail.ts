@@ -374,7 +374,7 @@ function getMatchingMapMandates(mandates: FullMandate[], avails: MapAvailsFilter
 
   const matchingMandates: FullMandate[] = subAvails.map(avail => mandates
     .map(({ terms, ...rest }) => ({
-      terms: terms.filter(term => isMapTermInAvails(term, avail)),
+      terms: terms.filter(term => isMapTermInAvails(term, avail)).map(t => ({ ...t, medias: t.medias.filter(m => avails.medias.includes(m)) })),
       ...rest
     }))
     .filter(mandate => mandate.terms.length)
@@ -507,6 +507,8 @@ export function territoryAvailabilities({
           term,
           contract: mandate,
         };
+        // Delete previous "not-licensed" for this territory
+        delete availabilities[territory];
       }
     }
   }
