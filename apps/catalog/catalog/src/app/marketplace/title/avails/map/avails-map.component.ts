@@ -96,11 +96,15 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
     const { available } = await firstValueFrom(this.availabilities$);
     let added = false;
     for (const marker of available.filter(marker => marker.slug === territory.slug)) {
-      const result = this.shell.bucketForm.addTerritory({
+      const avails: MapAvailsFilter = {
         ...this.availsForm.value,
         medias: this.availsForm.value.medias.filter(m => marker.term.medias.includes(m))
-      }, marker);
-      if (result) added = true;
+      };
+      const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(avails, marker);
+      if (!alreadyInBucket) {
+        const result = this.shell.bucketForm.addTerritory(avails, marker);
+        if (result) added = true;
+      }
     };
     if (added) this.onNewRight();
   }
@@ -114,18 +118,16 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
     let added = false;
     const { available } = await firstValueFrom(this.availabilities$);
     for (const marker of available) {
-      const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(
-        this.availsForm.value,
-        marker
-      );
+      const avails: MapAvailsFilter = {
+        ...this.availsForm.value,
+        medias: this.availsForm.value.medias.filter(m => marker.term.medias.includes(m))
+      };
+      const alreadyInBucket = this.shell.bucketForm.isAlreadyInBucket(avails, marker);
       if (!alreadyInBucket) {
-        const result = this.shell.bucketForm.addTerritory({
-          ...this.availsForm.value,
-          medias: this.availsForm.value.medias.filter(m => marker.term.medias.includes(m))
-        }, marker);
+        const result = this.shell.bucketForm.addTerritory(avails, marker);
         if (result) added = true;
       }
-    }
+    };
     if (added) this.onNewRight();
   }
 
