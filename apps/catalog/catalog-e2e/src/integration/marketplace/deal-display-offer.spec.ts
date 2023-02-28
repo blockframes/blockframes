@@ -7,7 +7,7 @@ import {
   // cypress commands
   get,
   assertUrlIncludes,
-  connectOtherUser,
+  connectUser,
   assertTableRowData,
   assertUrl,
   // helpers
@@ -42,8 +42,8 @@ describe('Deal negociation', () => {
     cy.visit('');
     maintenance.start();
     firestore.deleteContractsAndTerms(seller.org.id);
-    firestore.deleteBuyerContracts(buyer.org.id);
-    firestore.deleteOffers(buyer.org.id);
+    firestore.queryDelete({ collection: 'contracts', field: 'buyerId', operator: '==', value: buyer.org.id });
+    firestore.queryDelete({ collection: 'offers', field: 'buyerId', operator: '==', value: buyer.org.id });
     firestore.deleteNotifications([buyer.user.uid, seller.user.uid]);
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
@@ -62,14 +62,14 @@ describe('Deal negociation', () => {
     get('menu').click();
     get('offers').click();
     assertUrlIncludes('/c/o/marketplace/offer');
-    connectOtherUser(seller.user.email);
+    connectUser(seller.user.email);
     get('sales').click();
     assertUrlIncludes('/c/o/dashboard/sales');
   });
 
   context('buyer side', () => {
     beforeEach(() => {
-      connectOtherUser(buyer.user.email);
+      connectUser(buyer.user.email);
       cy.visit('/c/o/marketplace/offer');
     });
 
@@ -110,7 +110,7 @@ describe('Deal negociation', () => {
 
   context('seller side', () => {
     beforeEach(() => {
-      connectOtherUser(seller.user.email);
+      connectUser(seller.user.email);
       cy.visit('/c/o/dashboard/sales');
     });
 

@@ -12,7 +12,7 @@ import {
   syncMovieToAlgolia,
   escapeKey,
   check,
-  connectOtherUser,
+  connectUser,
   assertTableRowData,
   // cypress tasks
   interceptEmail,
@@ -45,7 +45,7 @@ describe('Deal negociation', () => {
     maintenance.start();
     algolia.deleteMovie({ app: 'catalog', objectId: seller.movie.id });
     firestore.deleteContractsAndTerms(seller.org.id);
-    firestore.deleteOffers(buyer.org.id);
+    firestore.queryDelete({ collection: 'offers', field: 'buyerId', operator: '==', value: buyer.org.id });
     firestore.deleteNotifications([buyer.user.uid, seller.user.uid]);
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
@@ -203,7 +203,7 @@ describe('Deal negociation', () => {
     });
 
     it('checking the application flow when an offer is sent', () => {
-      firestore.deleteOffers(buyer.org.id);
+      firestore.queryDelete({ collection: 'offers', field: 'buyerId', operator: '==', value: buyer.org.id });
       firestore.deleteNotifications([buyer.user.uid, seller.user.uid]);
       fillInputs({
         territory: ['Europe'],
@@ -236,7 +236,7 @@ describe('Deal negociation', () => {
       get('notifications-link').should('not.contain', '1');
       get('already-read').should('exist');
       //connect as seller to verify his notification
-      connectOtherUser(seller.user.email);
+      connectUser(seller.user.email);
       get('notifications-link').should('contain', '1').click();
       get('notification-message')
         .should('have.length', 1)

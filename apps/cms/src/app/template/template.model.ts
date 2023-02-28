@@ -1,4 +1,4 @@
-import { CmsTemplate, Section } from '@blockframes/admin/cms';
+import { CmsTemplate, Section } from '@blockframes/model';
 import { FormArraySchema, FormGroupSchema } from 'ng-form-factory';
 
 

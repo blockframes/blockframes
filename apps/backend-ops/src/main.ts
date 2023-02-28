@@ -27,7 +27,6 @@ import {
   syncAuthEmulatorWithFirestoreEmulator,
   rescueJWP,
   loadAndShrinkLatestAnonDbAndUpload,
-  cleanBackups,
   auditUsers,
   prepareForTesting,
   upgrade,
@@ -35,7 +34,6 @@ import {
   upgradeEmulators,
   printDatabaseInconsistencies,
   keepAlive,
-  generateFixtures,
   writeRuntimeConfig,
   functionsConfigMap,
   clearDb,
@@ -78,14 +76,11 @@ async function runCommand() {
     case 'prepareEmulators':
       await prepareEmulators({ dbBackupURL: arg1 });
       break;
-    case 'cleanBackups':
-      await cleanBackups({ maxDays: arg1, bucketName: arg2 });
-      break;
     case 'anonProdDb':
       await keepAlive(anonymizeLatestProdDb());
       break;
     case 'shrinkDb':
-      await loadAndShrinkLatestAnonDbAndUpload();
+      await keepAlive(loadAndShrinkLatestAnonDbAndUpload());
       break;
     case 'downloadProdDbBackup':
       await downloadProdDbBackup(arg1);
@@ -95,9 +90,6 @@ async function runCommand() {
       break;
     case 'use':
       await selectEnvironment(arg1);
-      break;
-    case 'generateFixtures':
-      await generateFixtures(db);
       break;
     case 'upgrade':
       await upgrade();

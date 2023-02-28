@@ -1,4 +1,6 @@
-import { App } from '@blockframes/model';
+import { App } from './static';
+
+export const pdfExportLimit = 450;
 
 export interface PdfParamsFilters {
   avails?: string,

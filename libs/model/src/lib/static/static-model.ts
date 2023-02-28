@@ -1384,7 +1384,7 @@ export const emailErrorCodes: Record<string, { code: typeof emailErrorCode[numbe
   }
 };
 
-type StaticModel = typeof staticModel;
+export type StaticModel = typeof staticModel;
 export type Scope = keyof StaticModel;
 export type GetKeys<S extends Scope> = keyof StaticModel[S];
 

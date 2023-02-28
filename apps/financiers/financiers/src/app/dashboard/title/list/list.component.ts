@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { filters } from '@blockframes/ui/list/table/filters';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DownloadSettings, PdfService } from '@blockframes/utils/pdf/pdf.service';
+import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';
 

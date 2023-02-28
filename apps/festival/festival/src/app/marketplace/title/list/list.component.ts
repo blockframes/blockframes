@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { debounceTime, switchMap, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
-import { DownloadSettings, PdfService } from '@blockframes/utils/pdf/pdf.service';
+import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 import { StoreStatus, AlgoliaMovie, MovieSearch, MovieAvailsSearch } from '@blockframes/model';
 import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';

@@ -1,7 +1,7 @@
 import { NgModule, ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HeroSection } from '@blockframes/admin/cms';
+import { HeroSection } from '@blockframes/model';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { LinkModule, linkSchema } from '../../forms/link';
 import { TextFormModule, matText } from '../../forms/text';

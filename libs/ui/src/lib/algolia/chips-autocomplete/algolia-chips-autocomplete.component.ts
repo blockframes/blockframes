@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, Content
 import { FormList } from '@blockframes/utils/form';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
-import { AlgoliaIndex, AlgoliaService } from '@blockframes/utils/algolia';
+import { AlgoliaIndex, AlgoliaService, maxQueryLength } from '@blockframes/utils/algolia';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, startWith, map } from 'rxjs/operators';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
@@ -112,6 +112,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     this.algoliaSearchResults$ = this.searchCtrl.valueChanges.pipe(
       debounceTime(300),
       filter(text => typeof text === 'string' && !!text.trim()),
+      map(text => maxQueryLength(text)),
       distinctUntilChanged(),
       switchMap(text => this.facet?.trim() ? facetSearch(text) : regularSearch(text)),
     );

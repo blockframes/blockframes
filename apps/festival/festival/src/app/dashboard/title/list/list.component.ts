@@ -10,7 +10,7 @@ import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.compon
 import { displayPerson } from '@blockframes/utils/pipes';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { filters } from '@blockframes/ui/list/table/filters';
-import { DownloadSettings, PdfService } from '@blockframes/utils/pdf/pdf.service';
+import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 

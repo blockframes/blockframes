@@ -1,7 +1,8 @@
 import { db } from '../testing-cypress';
 import { metaDoc } from '@blockframes/utils/maintenance';
-import { WhereFilterOp } from 'firebase/firestore';
 import { BucketTerm, createDuration } from '@blockframes/model';
+import { QueryParameters, UpdateParameters } from '../../../../commons';
+import { Collections, notMandatoryCollections } from '@blockframes/devops';
 
 const isDocumentPath = (path: string) => path.split('/').length % 2 === 0;
 const isEventsPath = (path: string) => path.split('/')[0] === 'events';
@@ -40,11 +41,12 @@ export function importData(data: Record<string, object>[]) {
         });
         content['initial'] = new Date(content['initial']);
       }
-      content['_meta'] =
-        content['_meta'] && content['_meta']['createdAt']
-          ? { e2e: true, createdAt: new Date(content['_meta']['createdAt']) }
-          : { e2e: true };
-
+      if (path !== metaDoc) {
+        content['_meta'] =
+          content['_meta'] && content['_meta']['createdAt']
+            ? { e2e: true, createdAt: new Date(content['_meta']['createdAt']) }
+            : { e2e: true };
+      }
       createAll.push(db.doc(path).set(content));
     });
   }
@@ -83,19 +85,33 @@ const subcollectionsDocsOf = async (path: string) => {
 };
 
 export async function clearTestData() {
-  const docsToDelete: string[] = [];
+  const pathsToDelete: string[] = [];
   const collections = await db.listCollections();
   for (const collection of collections) {
-    const snapshot = await collection.where('_meta.e2e', '==', true).get();
-    const docs = snapshot.docs;
-    for (const doc of docs) docsToDelete.push(`${collection.id}/${doc.id}`);
+    if (notMandatoryCollections.includes(collection.path as Collections)) {
+      pathsToDelete.push(collection.path);
+    } else {
+      const snapshot = await collection.where('_meta.e2e', '==', true).get();
+      const docs = snapshot.docs;
+      for (const doc of docs) pathsToDelete.push(`${collection.id}/${doc.id}`);
+    }
   }
-  return deleteData(docsToDelete);
+  return deleteData(pathsToDelete);
+}
+
+export async function queryDelete(data: QueryParameters) {
+  const { collection, field, operator, value } = data;
+  const snapshot = await db.collection(collection).where(field, operator, value).get();
+  const batch = db.batch();
+  const docs = snapshot.docs;
+  const deletedData = docs.map(doc => doc.data());
+  for (const doc of docs) batch.delete(doc.ref);
+  return batch.commit().then(() => deletedData);
 }
 
 //* GET DATA*------------------------------------------------------------------
 
-export async function getData(paths: string[]) {
+export function getData(paths: string[]) {
   const getAll: Promise<Record<string, unknown> | Record<string, unknown>[]>[] = [];
   for (const path of paths) {
     if (isDocumentPath(path)) {
@@ -143,7 +159,7 @@ const subcollectionsDataOf = async (path: string) => {
   return result;
 };
 
-export async function queryData(data: { collection: string; field: string; operator: WhereFilterOp; value: unknown }) {
+export async function queryData(data: QueryParameters) {
   const { collection, field, operator, value } = data;
   const snapshot = await db.collection(collection).where(field, operator, value).get();
   return snapshot.docs.map(doc => doc.data());
@@ -151,7 +167,7 @@ export async function queryData(data: { collection: string; field: string; opera
 
 //* UPDATE DATA*-----------------------------------------------------------------
 
-export async function updateData(data: { docPath: string; field: string; value: unknown }[]) {
+export function updateData(data: UpdateParameters[]) {
   const updateAll: Promise<FirebaseFirestore.WriteResult>[] = [];
   for (const update of data) {
     const { docPath, field, value } = update;

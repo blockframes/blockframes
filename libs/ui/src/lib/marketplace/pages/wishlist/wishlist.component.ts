@@ -16,7 +16,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { OrganizationService } from '@blockframes/organization/service';
 import { MovieService } from '@blockframes/movie/service';
 import { APP } from '@blockframes/utils/routes/utils';
-import { DownloadSettings, PdfService } from '@blockframes/utils/pdf/pdf.service';
+import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 
 @Component({
   selector: 'marketplace-wishlist',

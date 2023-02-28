@@ -17,6 +17,7 @@ import { OrganizationDisplayComponent } from './organization-display.component';
 
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   imports: [
@@ -32,13 +33,10 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
     MatSelectModule,
     MatCheckboxModule,
     FlexLayoutModule,
-    ImageModule
+    ImageModule,
+    ToLabelModule,
   ],
-  declarations: [
-    OrganizationDisplayComponent,
-  ],
-  exports: [
-    OrganizationDisplayComponent
-  ]
+  declarations: [OrganizationDisplayComponent],
+  exports: [OrganizationDisplayComponent],
 })
-export class OrganizationDisplayModule { }
+export class OrganizationDisplayModule {}

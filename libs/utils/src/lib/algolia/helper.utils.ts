@@ -70,3 +70,28 @@ export const algoliaIndex = {
 };
 
 export type AlgoliaIndex = keyof typeof algoliaIndex;
+
+/**
+ * Algolia search parameter expects string shorter than 512 bytes,
+ * @param query 
+ * @returns 
+ */
+export function maxQueryLength(query: string): string;
+export function maxQueryLength(query: string[]): string[];
+export function maxQueryLength(query: string | string[]) {
+  if (!query) return '';
+  if (!Array.isArray(query)) return query.substring(0, 510);
+
+  // Overall array size is < 512 bytes
+  if (JSON.stringify(query).length < 512) return query;
+
+  // Try to remove items from array until size < 512 bytes
+  const reducedArray = query;
+  while (JSON.stringify(reducedArray).length >= 512 && reducedArray.length > 1) {
+    reducedArray.shift();
+  }
+
+  // If array only have one item left with size > 512
+  reducedArray[0] = reducedArray[0].substring(0, 508);
+  return reducedArray;
+}
