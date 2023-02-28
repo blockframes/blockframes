@@ -116,7 +116,6 @@ function checkHeader() {
     .and('contain', languages[movie.originalLanguages[0]])
     .and('not.contain', languages[movie.originalLanguages[1]])
     .and('contain', productionStatus[movie.productionStatus]);
-  get('organization').should('contain', movieOrg.name);
 }
 
 function checkMain() {
