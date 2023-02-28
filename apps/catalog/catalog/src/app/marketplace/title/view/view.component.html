@@ -2,11 +2,6 @@
   <title-marketplace-shell [routes]="navLinks">
     <movie-header [movie]="movie">
       <movie-header-cta fxLayout="column" fxLayoutGap="32px">
-        <section class="orgs">
-          <ng-container *ngFor="let org of orgs$ | async">
-            <org-chip [org]="org" test-id="organization"></org-chip>
-          </ng-container>
-        </section>
         <section>
           <ng-container *ngIf="requestStatus | async as status">
             <span *ngIf="!movie.promotional?.videos?.publicScreener?.jwPlayerId" [matTooltip]="screenerRequest[status]">
