@@ -37,7 +37,7 @@ export class TitleComponent implements OnInit {
       switchMap((org) => this.algoliaService.query('movie', {
         activePage: 0,
         limitResultsTo: 1000,
-        facets: { storeStatus: 'accepted', orgNames: [org.name] }
+        facets: { storeStatus: 'accepted', orgIds: [org.id] }
       })),
       switchMap(({ hits }) => this.service.valueChanges(hits.map(h => h.objectID))),
       map(movies => movies.filter(m => m.app.festival.status === 'accepted')),
