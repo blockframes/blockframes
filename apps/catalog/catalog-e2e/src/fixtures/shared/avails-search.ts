@@ -55,49 +55,53 @@ const buyer = {
   orgPermissions: buyerOrgPermissions,
 };
 
-//* seller 1 data */
+//* seller data */
 
-const seller1AdminUid = '0-e2e-seller1OrgAdminUid';
-const seller1OrgId = '0-e2e-seller1OrgId';
-const seller1MovieId = '0-e2e-seller1MovieId';
-const seller1ContractId = '0-e2e-seller1ContractId';
-const seller1TermId = '0-e2e-seller1TermId';
-const seller1Data = fakeUserData();
+const sellerAdminUid = '0-e2e-sellerOrgAdminUid';
+const sellerOrgId = '0-e2e-sellerOrgId';
+const sellerMovieId = '0-e2e-sellerMovieId';
+const sellerContractId = '0-e2e-sellerContractId';
+const sellerTerm1Id = '0-e2e-sellerTerm1Id';
+const sellerTerm2Id = '0-e2e-sellerTerm2Id';
+const sellerTerm3Id = '0-e2e-sellerTerm3Id';
+const sellerTerm4Id = '0-e2e-sellerTerm4Id';
+const sellerTerm5Id = '0-e2e-sellerTerm5Id';
+const sellerData = fakeUserData();
 
-const seller1User = createUser({
-  uid: seller1AdminUid,
-  firstName: seller1Data.firstName,
-  lastName: seller1Data.lastName,
-  email: seller1Data.email,
-  orgId: seller1OrgId,
+const sellerUser = createUser({
+  uid: sellerAdminUid,
+  firstName: sellerData.firstName,
+  lastName: sellerData.lastName,
+  email: sellerData.email,
+  orgId: sellerOrgId,
   termsAndConditions: {
     catalog: fakeLegalTerms,
   },
   privacyPolicy: fakeLegalTerms,
 });
 
-const seller1Org = createOrganization({
-  id: seller1OrgId,
-  name: seller1Data.company.name,
-  userIds: [seller1AdminUid],
-  email: seller1Data.email,
+const sellerOrg = createOrganization({
+  id: sellerOrgId,
+  name: sellerData.company.name,
+  userIds: [sellerAdminUid],
+  email: sellerData.email,
   status: 'accepted',
   appAccess: createOrgAppAccess({ catalog: { marketplace: true, dashboard: true } }),
 });
 
-const seller1OrgPermissions = createPermissions({
-  id: seller1OrgId,
-  roles: { [seller1AdminUid]: 'superAdmin' },
+const sellerOrgPermissions = createPermissions({
+  id: sellerOrgId,
+  roles: { [sellerAdminUid]: 'superAdmin' },
 });
 
-const seller1MoviePermissions = createDocPermissions({
-  id: seller1MovieId,
-  ownerId: seller1OrgId,
+const sellerMoviePermissions = createDocPermissions({
+  id: sellerMovieId,
+  ownerId: sellerOrgId,
 });
 
-const seller1AcceptedMovie = createMovie({
-  id: seller1MovieId,
-  orgIds: [seller1OrgId],
+const sellerAcceptedMovie = createMovie({
+  id: sellerMovieId,
+  orgIds: [sellerOrgId],
   app: createMovieAppConfig({
     catalog: createAppConfig({ status: 'accepted', access: true }),
   }),
@@ -109,40 +113,88 @@ const seller1AcceptedMovie = createMovie({
   }),
 });
 
-const seller1Contract = createMandate({
-  id: seller1ContractId,
-  titleId: seller1MovieId,
-  sellerId: seller1OrgId,
-  termIds: [seller1TermId],
-  stakeholders: [centralOrgId.catalog, seller1OrgId],
+const sellerContract = createMandate({
+  id: sellerContractId,
+  titleId: sellerMovieId,
+  sellerId: sellerOrgId,
+  termIds: [sellerTerm1Id, sellerTerm2Id, sellerTerm3Id],
+  stakeholders: [centralOrgId.catalog, sellerOrgId],
   buyerId: centralOrgId.catalog,
   status: 'accepted',
 });
 
-const nextJanuaryFirst = startOfYear(add(new Date(), { years: 1 }));
+const januaryFirstNextYear = startOfYear(add(new Date(), { years: 1 }));
+const januaryFirstInTwoYears = startOfYear(add(new Date(), { years: 2 }));
+const januaryFirstInThreeYears = startOfYear(add(new Date(), { years: 3 }));
 
-const seller1Term = createTerm({
-  id: seller1TermId,
-  contractId: seller1ContractId,
+export const europeanCountries = territoriesGroup
+  .map(group => group.label === 'Europe' && group.items)
+  .filter(Boolean)
+  .flat(2);
+
+const sellerTerm1 = createTerm({
+  id: sellerTerm1Id,
+  contractId: sellerContractId,
   duration: {
-    from: nextJanuaryFirst,
-    to: endOfMonth(add(nextJanuaryFirst, { months: 5 })), //June 30th of next year
+    from: januaryFirstNextYear,
+    to: endOfMonth(add(januaryFirstNextYear, { months: 5 })), //June 30th of next year
   },
   medias: ['payTv', 'freeTv', 'payPerView', 'rental', 'festival'],
-  territories: [
-    //all territories in Europe and Latin America, plus Nepal = 69 countries
-    territoriesGroup.map(group => group.label === 'Europe' && group.items).filter(Boolean),
-  ].flat(2),
+  territories: europeanCountries,
 });
 
-const seller1 = {
-  user: seller1User,
-  org: seller1Org,
-  orgPermissions: seller1OrgPermissions,
-  movie: seller1AcceptedMovie,
-  moviePermissions: seller1MoviePermissions,
-  contract: seller1Contract,
-  term: seller1Term,
+// sellerTerm2 and 3 should overlap when searching : Europe, TV, non-exclusive
+const sellerTerm2 = createTerm({
+  id: sellerTerm2Id,
+  contractId: sellerContractId,
+  duration: {
+    from: januaryFirstInTwoYears,
+    to: endOfMonth(add(januaryFirstInTwoYears, { months: 5 })),
+  },
+  medias: ['payTv', 'payPerView'], // TV media part 1
+  territories: europeanCountries,
+});
+const sellerTerm3 = createTerm({
+  id: sellerTerm3Id,
+  contractId: sellerTerm2.contractId,
+  duration: sellerTerm2.duration,
+  medias: ['freeTv'], // TV media part 2
+  territories: sellerTerm2.territories,
+  exclusive: true,
+});
+
+// sellerTerm4 and 5 should overlap when searching : Europe, TV, non-exclusive
+const sellerTerm4 = createTerm({
+  id: sellerTerm4Id,
+  contractId: sellerContractId,
+  duration: {
+    from: januaryFirstInThreeYears,
+    to: endOfMonth(add(januaryFirstInThreeYears, { months: 5 })),
+  },
+  medias: ['payTv', 'freeTv', 'payPerView'],
+  territories: europeanCountries.filter(territory => territory !== 'france'), // Europe part 1
+});
+const sellerTerm5 = createTerm({
+  id: sellerTerm5Id,
+  contractId: sellerTerm4.contractId,
+  duration: sellerTerm4.duration,
+  medias: sellerTerm4.medias,
+  territories: ['france'], // Europe part 2
+  exclusive: true,
+});
+
+const seller = {
+  user: sellerUser,
+  org: sellerOrg,
+  orgPermissions: sellerOrgPermissions,
+  movie: sellerAcceptedMovie,
+  moviePermissions: sellerMoviePermissions,
+  contract: sellerContract,
+  term1: sellerTerm1,
+  term2: sellerTerm2,
+  term3: sellerTerm3,
+  term4: sellerTerm4,
+  term5: sellerTerm5,
 };
 
-export { buyer, seller1 };
+export { buyer, seller };
