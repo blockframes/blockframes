@@ -289,8 +289,8 @@ function selectAllAvailable() {
 function assertModalTerritories() {
   const modal = cy.get('global-modal');
   for (const territory of seller.term.territories) {
-    //Holy See and Vatican is the same territory, and Holy See prevails when clicking on its coordinates
-    if (territory !== 'vatican') modal.should('contain', `${territories[territory]}`);
+    //Holy See and Vatican is the same territory, and Vatican City prevails when clicking on its coordinates
+    if (territory !== 'holy-see') modal.should('contain', `${territories[territory]}`);
   }
   modal.should('contain', 'Europe').and('contain', 'Latin America').and('contain', 'Asia');
   modal.find('button').click(); //the only existing button is to close the modal

@@ -240,9 +240,9 @@ function fetchEventStartingIn(from: number, to: number) {
 }
 
 /** Fetch screenings finished since a specific time */
-async function fetchFinishedScreenings(since: number) {
+function fetchFinishedScreenings(since: number) {
   const db = getDb();
-  const query = await db.collection('events')
+  const query = db.collection('events')
     .where('type', '==', 'screening')
     .where('end', '>=', new Date(Date.now() - since))
     .where('end', '<', new Date());

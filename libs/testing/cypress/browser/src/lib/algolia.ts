@@ -5,7 +5,7 @@ export const algolia = {
     return cy.task('storeOrganization', org);
   },
 
-  storeMovie(data: { movie: Movie; organizationNames: string[] }) {
+  storeMovie(data: { movie: Movie; orgs: Organization[] }) {
     return cy.task('storeMovie', data);
   },
 

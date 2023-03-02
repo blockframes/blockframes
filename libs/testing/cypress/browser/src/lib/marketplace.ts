@@ -8,8 +8,7 @@ export function syncMovieToAlgolia(movieId: string) {
       firestore
         .queryData({ collection: 'orgs', field: 'id', operator: 'in', value: dbMovie.orgIds })
         .then((orgs: Organization[]) => {
-          const organizationNames = orgs.map(org => org.name);
-          algolia.storeMovie({ movie: dbMovie, organizationNames });
+          algolia.storeMovie({ movie: dbMovie, orgs });
         });
     })
     .then(() => cy.wait(5000)); // i don't like it, but algolia needs some time to catch up
