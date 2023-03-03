@@ -13,7 +13,7 @@ import {
   dateToMMDDYYYY,
 } from '@blockframes/testing/cypress/browser';
 import { Media, MediaGroup, medias, Term, Territory, TerritoryGroup } from '@blockframes/model';
-import { buyer, seller } from '../../fixtures/shared/avails-search';
+import { buyer, seller } from '../../fixtures/marketplace/avails-search';
 import { add, sub } from 'date-fns';
 
 const injectedData = {
