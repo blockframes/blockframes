@@ -5,10 +5,10 @@ import { sendMail } from './internals/email';
 import { organizationCreated, organizationRequestedAccessToApp } from './templates/mail';
 import { triggerNotifications } from './notification';
 import { getMailSender } from '@blockframes/utils/apps';
-import { getAdminIds } from './data/internals';
+import { getAdminIds, getOrganizationsOfMovie } from './data/internals';
 import { cleanOrgMedias } from './media';
 import { EventContext } from 'firebase-functions';
-import { algolia, deleteObject, storeSearchableOrg, storeSearchableUser } from '@blockframes/firebase-utils/algolia';
+import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg, storeSearchableUser } from '@blockframes/firebase-utils/algolia';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import {
   User,
@@ -25,10 +25,11 @@ import {
   createPublicOrganization,
   createInternalDocumentMeta,
   createPublicUser,
-  createNotification
+  createNotification,
+  Movie
 } from '@blockframes/model';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { BlockframesChange, BlockframesSnapshot, getDocument } from '@blockframes/firebase-utils';
+import { BlockframesChange, BlockframesSnapshot, getDocument, queryDocuments } from '@blockframes/firebase-utils';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: Organization, user: PublicUser) {
@@ -158,12 +159,21 @@ export async function onOrganizationUpdate(change: BlockframesChange<Organizatio
   /* If an org gets his accepted status removed, we want to remove it also from all the indices on algolia */
   if (before.status === 'accepted' && after.status !== 'accepted') {
     const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id) as Promise<boolean>)
-    await Promise.all(promises)
+    await Promise.all(promises);
   }
 
   await storeSearchableOrg(after);
 
-  return Promise.resolve(true); // no-op by default
+  // Update movies related to this org
+  const movies = await queryDocuments<Movie>(db.collection('movies').where('orgIds', 'array-contains', after.id));
+
+  const promises = [];
+  for (const movie of movies) {
+    const organizations = await getOrganizationsOfMovie(movie.id);
+    promises.push(storeSearchableMovie(movie, organizations));
+  }
+
+  return Promise.all(promises);
 }
 
 export async function onOrganizationDelete(
@@ -177,7 +187,7 @@ export async function onOrganizationDelete(
   for (const userId of org.userIds) {
     const userSnapshot = await db.doc(`users/${userId}`).get();
     const user = userSnapshot.data() as PublicUser;
-    await userSnapshot.ref.update({ ...user, orgId: null })
+    await userSnapshot.ref.update({ ...user, orgId: null });
   }
 
   // Delete persmission document related to the organization
@@ -188,8 +198,15 @@ export async function onOrganizationDelete(
   // Delete movies belonging to organization
   const movieCollectionRef = db.collection('movies').where('orgIds', 'array-contains', org.id);
   const moviesSnap = await movieCollectionRef.get();
-  for (const movie of moviesSnap.docs) {
-    await movie.ref.delete();
+  for (const snap of moviesSnap.docs) {
+    const movie = snap.data() as Movie;
+    // If we don't have orgIds different that the one being deleted
+    if (movie.orgIds.some(orgId => orgId !== org.id)) {
+      const orgIds = movie.orgIds.filter(orgId => orgId !== org.id);
+      await snap.ref.update({ orgIds });
+    } else {
+      await snap.ref.delete();
+    }
   }
 
   // Delete all events where organization is involved

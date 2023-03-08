@@ -1,25 +1,38 @@
-import { removeAllSubcollections, startMaintenance } from '@blockframes/firebase-utils';
-import { defaultEmulatorBackupPath, firebaseEmulatorExec, getFirestoreExportPath, importFirestoreEmulatorBackup, shutdownEmulator } from './firebase-utils/firestore/emulator';
+import { runChunks, startMaintenance } from '@blockframes/firebase-utils';
+import {
+  defaultEmulatorBackupPath,
+  firebaseEmulatorExec,
+  getFirestoreExportPath,
+  importFirestoreEmulatorBackup,
+  shutdownEmulator
+} from './firebase-utils/firestore/emulator';
 import { uploadBackup } from './emulator';
-import { backupBucket } from '@env';
+import { backupBucket, centralOrgId } from '@env';
 import { CI_ANONYMIZED_DATA, latestAnonDbDir, latestAnonShrinkedDbDir } from './firebase-utils';
 import type { ChildProcess } from 'child_process';
-import { CollectionData, DatabaseData, DocumentDescriptor, getAllDocumentCount, inspectDocumentRelations, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
+import {
+  CollectionData,
+  Collections,
+  notMandatoryCollections,
+  DatabaseData,
+  DocumentDescriptor,
+  getAllDocumentCount,
+  inspectDocumentRelations,
+  loadAllCollections,
+  printDatabaseInconsistencies
+} from './internals/utils';
 import { cleanDeprecatedData } from './db-cleaning';
 import { getFirestoreEmulator } from '@blockframes/firebase-utils/initialize';
 import { unique } from '@blockframes/utils/helpers';
-
-/**
- * Temp this should be removed when fixtures are updated.
- *  - apps/festival/festival-e2e/src/fixtures/screening-events.ts
- */
-
-const USERS = [
-  'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
-  '2OJUZoWtTVcew27YDZa8FQQdg5q2',
-  'B8UsXliuxwY6ztjtLuh6f7UD1GV2',
-  'mVUZ097xoAeubsPiQlqrzgUF8y83'
-];
+import {
+  CmsPage,
+  getAllAppsExcept,
+  isMovieAccepted,
+  Movie,
+  OrgsSection,
+  OrgTitlesSection,
+  pdfExportLimit
+} from '@blockframes/model';
 
 export async function loadAndShrinkLatestAnonDbAndUpload() {
   let proc: ChildProcess;
@@ -73,6 +86,26 @@ export async function loadAndShrinkLatestAnonDbAndUpload() {
 
 export async function shrinkDb(db: FirebaseFirestore.Firestore) {
 
+  //////////////////
+  // PRE CLEANING
+  // Keeping only collections that will allow apps to run. ie : blockframesAdmin, cms, docsIndex, movies, orgs, permissions, users
+  //////////////////
+
+  console.log(`Cleaning not mandatory collections: ${notMandatoryCollections.join(', ')}.`);
+  for (const collection of notMandatoryCollections) {
+    await cleanCollection(db, collection).catch(_ => console.log(`Error while cleaning ${collection} collection.`));
+    console.log(`Cleaned collection : ${collection}.`);
+  }
+
+  //////////////////
+  // Shrinking Movies
+  // We don't need all movies to perform E2E tests
+  //////////////////
+
+  console.log(`Shrinking movies collection to keep a minimum of ${pdfExportLimit} documents per application.`);
+  await shrinkMovieCollection(db, pdfExportLimit).catch(_ => console.log('Error while shrinking movies collection.'));
+  console.log('Movies collection shrinked.');
+
   const { dbData, collectionData } = await loadAllCollections(db);
 
   // Data consistency check before cleaning data
@@ -80,12 +113,20 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
 
   //////////////////
   // CHECK WHAT CAN BE DELETED
-  // We want to keep only the users and orgs related to movies, contracts, events and the ones used in e2e tests (staticUsers) along with the documents in others collections they are linked to
+  // We want to keep only the users and orgs related to movies
   //////////////////
 
   const { usersToKeep, orgsToKeep } = getOrgsAndUsersToKeep(dbData);
   console.log('Users to keep :', usersToKeep.length);
   console.log('Orgs to keep :', orgsToKeep.length);
+
+  //////////////////
+  // CLEAN CMS COLLECTION
+  // Remove missing orgIds and titleIds
+  //////////////////
+
+  await cleanCmsDocuments(db, dbData.movies.documents.map(d => d.id), orgsToKeep);
+  console.log('Cleaned CMS collection.');
 
   //////////////////
   // FILTER DOCUMENT TO DELETE
@@ -99,14 +140,8 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   // ACTUAL DELETION
   //////////////////
 
-  for (const document of documentsToDelete) {
-    const doc = dbData[document.collection].refs.docs.find(d => d.id === document.docId);
-    await doc.ref.delete();
-
-    const batch = db.batch();
-    await removeAllSubcollections(doc, batch, db, { verbose: false });
-    await batch.commit();
-  }
+  const docs = documentsToDelete.map(document => dbData[document.collection].refs.docs.find(d => d.id === document.docId));
+  await removeDocuments(db, docs).catch(_ => console.log('Error while deleting remaining documents.'));
 
   //////////////////
   // DELETION SUMMARY
@@ -150,9 +185,67 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   return !errors;
 }
 
+/**
+ * Removes all documents from a collection
+ * @param db 
+ * @param collection 
+ * @param verbose 
+ * @returns 
+ */
+async function cleanCollection(db: FirebaseFirestore.Firestore, collection: Collections) {
+  const { docs: documents } = await db.collection(collection).get();
+  return removeDocuments(db, documents);
+}
+
+/**
+ * Shrinks movies collection by keeping only a given number of documents with status accepted
+ * @param db 
+ * @param collection 
+ * @param keep 
+ * @param verbose 
+ * @returns 
+ */
+async function shrinkMovieCollection(db: FirebaseFirestore.Firestore, keep: number) {
+  const { docs: allMovies } = await db.collection('movies').get();
+  const movies = allMovies.map(m => m.data() as Movie);
+
+  const apps = getAllAppsExcept(['crm']);
+  let acceptedMovieIds: string[] = [];
+  for (const app of apps) {
+    acceptedMovieIds = acceptedMovieIds.concat(movies.filter(m => isMovieAccepted(m, app)).slice(0, keep).map(m => m.id));
+  }
+
+  const movieIdsToKeep = unique(acceptedMovieIds);
+  const refsToDelete = allMovies.filter(doc => !movieIdsToKeep.find(id => id === doc.id));
+  return removeDocuments(db, refsToDelete, 500);
+}
+
+async function removeDocuments(db: FirebaseFirestore.Firestore, docs: FirebaseFirestore.QueryDocumentSnapshot[], rowsConcurrency = 200) {
+  const refsToDelete: FirebaseFirestore.DocumentReference[] = [];
+  await runChunks(
+    docs,
+    async (doc) => {
+      refsToDelete.push(doc.ref);
+      const subCollections = await doc.ref.listCollections();
+      for (const x of subCollections) {
+        const documents = await db.collection(x.path).listDocuments();
+        documents.forEach(ref => refsToDelete.push(ref));
+      }
+    }, rowsConcurrency, false
+  );
+
+  const chunkSize = 500; // Max items allowed in a batch
+  for (let i = 0; i < refsToDelete.length; i += chunkSize) {
+    const chunk = refsToDelete.slice(i, i + chunkSize);
+    const batch = db.batch();
+    chunk.forEach(ref => batch.delete(ref));
+    await batch.commit();
+  }
+}
+
 function getOrgsAndUsersToKeep(dbData: DatabaseData) {
-  const _usersLinked: string[] = USERS;
-  const _orgsLinked: string[] = [];
+  const _usersLinked: string[] = [];
+  const _orgsLinked: string[] = Object.values(centralOrgId);
 
   for (const movie of dbData.movies.documents) {
     if (movie._meta.createdBy) {
@@ -165,34 +258,6 @@ function getOrgsAndUsersToKeep(dbData: DatabaseData) {
 
     for (const orgId of movie.orgIds) {
       _orgsLinked.push(orgId);
-    }
-  }
-
-  for (const contract of dbData.contracts.documents) {
-    if (contract.buyerUserId) {
-      _usersLinked.push(contract.buyerUserId);
-    }
-
-    if (contract.buyerId) {
-      _orgsLinked.push(contract.buyerId);
-    }
-
-    if (contract.sellerId) {
-      _orgsLinked.push(contract.sellerId);
-    }
-
-    if (contract.stakeholders) {
-      for (const orgId of contract.stakeholders) {
-        _orgsLinked.push(orgId);
-      }
-    }
-  }
-
-  for (const event of dbData.events.documents) {
-    _orgsLinked.push(event.ownerOrgId);
-
-    if (event.meta?.organizerUid) {
-      _usersLinked.push(event.meta.organizerUid);
     }
   }
 
@@ -257,4 +322,27 @@ function getDocumentsToKeepOrDelete(dbData: DatabaseData, collectionData: Collec
   }
 
   return { usedDocuments, documentsToDelete };
+}
+
+async function cleanCmsDocuments(db: FirebaseFirestore.Firestore, titleIds: string[], orgIds: string[]) {
+  const { docs: cmsDocs } = await db.collection('cms').get();
+  for (const cmsDoc of cmsDocs) {
+    const subCollections = await cmsDoc.ref.listCollections();
+    for (const x of subCollections) {
+      const { docs: documentRefs } = await db.collection(x.path).get();
+
+      for (const snap of documentRefs) {
+        const doc = snap.data() as CmsPage;
+        for (const section of doc.sections) {
+          if ((section as OrgTitlesSection).titleIds?.length) {
+            (section as OrgTitlesSection).titleIds = (section as OrgTitlesSection).titleIds.filter(id => titleIds.includes(id));
+          }
+          if ((section as OrgsSection).orgIds?.length) {
+            (section as OrgsSection).orgIds = (section as OrgsSection).orgIds.filter(id => orgIds.includes(id));
+          }
+        }
+        await snap.ref.update(doc);
+      }
+    }
+  }
 }

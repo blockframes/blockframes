@@ -93,8 +93,6 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = getDb()) {
             console.error(`Movie ${movie.id} is not part of any orgs`);
           }
 
-          const organizationNames = orgs.map((org) => org.name);
-
           if (appConfig === 'financiers') {
             const campaign = await getDocument<Campaign>(`campaign/${movie.id}`, db);
             if (campaign?.minPledge) {
@@ -102,7 +100,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = getDb()) {
             }
           }
 
-          await storeSearchableMovie(movie, organizationNames, process.env['ALGOLIA_API_KEY']);
+          await storeSearchableMovie(movie, orgs, process.env['ALGOLIA_API_KEY']);
         } catch (error) {
           console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
           console.error(error);
@@ -176,7 +174,8 @@ const baseConfig: AlgoliaConfig = {
     'storeStatus',
     'contentType',
     'festivals',
-    'certifications'
+    'certifications',
+    'orgIds'
   ],
   customRanking: ['asc(title.international)', 'asc(title.original)'],
   paginationLimitedTo: 2000,

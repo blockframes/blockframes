@@ -105,7 +105,7 @@ export function createAlgoliaOrganization(org: Organization): AlgoliaOrganizatio
 
 export function storeSearchableMovie(
   movie: Movie,
-  organizationNames: string[],
+  organizations: Organization[],
   adminKey?: string
 ): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
@@ -114,6 +114,8 @@ export function storeSearchableMovie(
   }
 
   try {
+    const organizationNames = organizations.map(org => org.name).filter(orgName => !!orgName);
+    const orgIds = organizations.map(org => org.id).filter(orgId => !!orgId);
     const movieRecord: AlgoliaMovie = {
       objectID: movie.id,
 
@@ -157,6 +159,7 @@ export function storeSearchableMovie(
       storeStatus: '',
       budget: movie.estimatedBudget || null,
       orgNames: organizationNames,
+      orgIds,
       originalLanguages: movie.originalLanguages,
       runningTime: {
         status: movie.runningTime.status,

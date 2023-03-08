@@ -50,6 +50,7 @@ interface MovieIndexConfig {
   status: ProductionStatus;
   storeStatus: StoreStatus;
   orgNames: [string];
+  orgIds: [string];
 }
 
 interface OrganizationIndexConfig {
@@ -149,6 +150,7 @@ export interface AlgoliaMovie extends AlgoliaDefaultProperty {
   storeStatus: StoreStatus | string;
   budget: number;
   orgNames: string[];
+  orgIds: string[];
   poster: string;
   banner: string;
   originalLanguages: Language[];

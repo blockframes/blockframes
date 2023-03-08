@@ -12,7 +12,6 @@ import {
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { firebase } from '@env';
-import { generateFixtures } from './generate-fixtures';
 import { ensureMaintenanceMode, isMigrationRequired } from './tools';
 import { EIGHT_MINUTES_IN_MS } from '@blockframes/utils/maintenance';
 import { CI_ANONYMIZED_DATA, copyFirestoreExportFromCiBucket, latestAnonDbDir, restoreAnonStorageFromCI } from './firebase-utils';
@@ -55,10 +54,6 @@ export async function prepareForTesting({ dbBackupURL }: { dbBackupURL?: string 
   await migrate({ db, storage, withBackup: false });
   console.info('Migrations complete!');
 
-  console.info('Generating fixtures...');
-  await generateFixtures(db);
-  console.info('Fixtures generated in: tools/fixtures/*.json');
-
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs(null, db);
   await upgradeAlgoliaMovies(null, db);
@@ -96,10 +91,6 @@ export async function prepareEmulators({ dbBackupURL }: { dbBackupURL?: string }
   console.info('Preparing database & storage by running migrations...');
   await migrate({ db, storage, withBackup: false });
   console.info('Migrations complete!');
-
-  console.info('Generating fixtures...');
-  await generateFixtures(db);
-  console.info('Fixtures generated in: tools/fixtures/*.json');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs(null, db);

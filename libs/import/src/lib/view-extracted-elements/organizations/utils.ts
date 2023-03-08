@@ -65,7 +65,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
     },
     /* b */ 'org.email': async (value: string) => {
       const lower = value.toLowerCase();
-      if (!lower) throw mandatoryError(value, 'Contract Email');
+      if (!lower) throw optionalWarning('Organization Email');
       return lower;
     },
     /* c */ 'org.activity': (value: string) => {

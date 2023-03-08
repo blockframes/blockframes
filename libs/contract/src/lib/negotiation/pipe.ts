@@ -22,7 +22,7 @@ export class NegotiationStagePipe implements PipeTransform {
     if (negotiation?.createdByOrg !== this.activeOrgId) return of('To be Reviewed');
     const reviewer = getReviewer(negotiation);
     return this.orgService.valueChanges(reviewer).pipe(
-      map(org => `Waiting for ${org.name} answer`)
+      map(org => `Waiting for ${org?.name || 'reviewer'} answer`)
     );
   }
 }

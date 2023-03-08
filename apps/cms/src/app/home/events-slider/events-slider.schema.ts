@@ -1,5 +1,5 @@
 import { FormGroupSchema } from 'ng-form-factory';
-import { EventsSliderSection } from '@blockframes/admin/cms';
+import { EventsSliderSection } from '@blockframes/model';
 import { events, firestoreQuery } from '../../forms/firestore';
 import { matMultiSelect } from '../../forms/select';
 import { matText } from '../../forms/text';

@@ -46,8 +46,8 @@ export async function onMovieCreate(snap: BlockframesSnapshot<Movie>) {
   for (const org of organizations) {
     await storeSearchableOrg(org);
   }
-  const orgNames = organizations.map((org) => org.name).filter((orgName) => !!orgName);
-  return storeSearchableMovie(movie, orgNames);
+
+  return storeSearchableMovie(movie, organizations);
 }
 
 /** Remove a movie and send notifications to all users of concerned organizations. */
@@ -192,12 +192,13 @@ export async function onMovieUpdate(change: BlockframesChange<Movie>) {
   const removedPromises = removedOrgIds.map((orgId) => db.doc(`permissions/${orgId}/documentPermissions/${after.id}`).delete());
   await Promise.all([...addedPromises, ...removedPromises]);
 
-  // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
+  // Update orgs related to movies
   for (const org of organizations) {
     await storeSearchableOrg(org);
   }
-  const orgNames = organizations.map((org) => org.name).filter((orgName) => !!orgName);
-  await storeSearchableMovie(after, orgNames);
+
+  // insert orgName & orgId to the algolia movie index (this is needed in order to filter on the frontend)
+  await storeSearchableMovie(after, organizations);
 
   for (const app in after.app) {
     if (after.app[app].access === false && before.app[app].access !== after.app[app].access) {

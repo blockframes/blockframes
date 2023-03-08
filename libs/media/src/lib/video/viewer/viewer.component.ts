@@ -49,7 +49,6 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-
   private _control: MeetingVideoControl;
   get control() { return this._control; }
   @Input() set control(value: MeetingVideoControl) {
@@ -58,7 +57,7 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
       || this.control.position !== value.position;
 
     if (!!value && controlChange) {
-      this._control = value;
+      this._control = { ...value };
       this.updatePlayer();
     }
   }
@@ -86,7 +85,6 @@ export class VideoViewerComponent implements AfterViewInit, OnDestroy {
   trackFullScreenMode() {
     this.fullScreen = !this.fullScreen;
   }
-
 
   constructor(
     @Inject(DOCUMENT) private document: Document,

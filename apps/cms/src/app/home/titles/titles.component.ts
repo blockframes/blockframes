@@ -7,16 +7,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
-import { Movie } from '@blockframes/model';
+import { Movie, sortingOptions, TitlesSection, TemplateParams } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
-import { TitlesSection, TemplateParams } from '@blockframes/admin/cms';
 import { TextFormModule, matText } from '../../forms/text';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';
 import { SelectFormModule, matMultiSelect, matSelect } from '../../forms/select';
 import { FirestoreFormModule, firestoreQuery, titlesFromApp } from '../../forms/firestore';
 import { getTitlesQueryConstraints, toMap } from '../pipes';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { sortingOptions } from '@blockframes/utils/pipes/sort-array.pipe';
 
 export type TitlesSchema = FormGroupSchema<TitlesSection>;
 
