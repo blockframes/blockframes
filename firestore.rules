@@ -348,6 +348,10 @@ service cloud.firestore {
         && data.app.financiers.status == status
     }
 
+    function getMovie(movieId) {
+      return get(/databases/$(database)/documents/movies/$(movieId)).data;
+    }
+
     ////////////////////////////////
     // CONTRACTS RULES            //
     ////////////////////////////////
@@ -522,6 +526,43 @@ service cloud.firestore {
 
     function isMyAnalytics() {
       return existingData()._meta.createdBy == userId();
+    }
+
+    ////////////////////////////////
+    // WATERFALL & BLOCKS RULES   //
+    ////////////////////////////////
+
+    match /waterfall/{waterfallId} {
+      allow read: if userHasValidOrg()
+        && notInMaintenance()
+        && isOrgMember(userOrgId())
+        && userOrgId() in existingData().orgIds;
+      allow create: if userHasValidOrg()
+        && isRequestFieldValueEqualToOrNotSetted(['id'], waterfallId)
+        && notInMaintenance()
+        && userOrgId() in getMovie(waterfallId).orgIds;
+      allow update: if isAllowedToUpdateWaterfall() && notInMaintenance();
+      allow delete: if false;
+
+      match /blocks/{blockId} {
+        allow read: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && userOrgId() in getMovie(waterfallId).orgIds
+        allow create: if false; // TODO
+        allow update: if false; // TODO
+        allow delete: if false; // TODO
+      }
+    }
+
+    /// FUNCTIONS ///
+
+    function isAllowedToUpdateWaterfall() {
+      return isOrgMember(userOrgId())
+        && isNotUpdatingId('id', existingData().id)
+        && isNotUpdatingField(['_meta', 'createdBy'])
+        && isNotUpdatingField(['_meta', 'createdAt'])
+        && userOrgId() in getMovie(existingData().id).orgIds;
     }
 
     /////////////////////////////////////////////////////////////////////////////////
