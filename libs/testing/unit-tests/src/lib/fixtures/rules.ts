@@ -343,6 +343,15 @@ export const rulesFixtures = {
   'waterfall/MI-0d7': {
     id: 'MI-0d7',
     orgIds: ['O002']
+  },
+  'waterfall/MI-0d7/blocks/B001': {
+    id: 'B001',
+  },
+  'waterfall/MI-0d7/permissions/O002': {
+    id: 'O002',
+  },
+  'waterfall/MI-0d7/permissions/O003': {
+    id: 'O003',
   }
 };
 

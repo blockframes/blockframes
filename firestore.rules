@@ -541,28 +541,48 @@ service cloud.firestore {
         && isRequestFieldValueEqualToOrNotSetted(['id'], waterfallId)
         && notInMaintenance()
         && userOrgId() in getMovie(waterfallId).orgIds;
-      allow update: if isAllowedToUpdateWaterfall() && notInMaintenance();
+      allow update: if userHasValidOrg()
+        && isNotUpdatingId('id', existingData().id)
+        && notInMaintenance()
+        && isOrgMember(userOrgId())
+        && userOrgId() in getMovie(existingData().id).orgIds;
       allow delete: if false;
 
       match /blocks/{blockId} {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && userOrgId() in getMovie(waterfallId).orgIds
-        allow create: if false; // TODO
-        allow update: if false; // TODO
-        allow delete: if false; // TODO
+          && userOrgId() in getMovie(waterfallId).orgIds;
+        allow create: if userHasValidOrg()
+          && isRequestFieldValueEqualToOrNotSetted(['id'], blockId)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && userOrgId() in getMovie(waterfallId).orgIds;
+        allow update: if userHasValidOrg()
+          && isNotUpdatingId('id', existingData().id)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && userOrgId() in getMovie(waterfallId).orgIds;
+        allow delete: if false;
       }
-    }
 
-    /// FUNCTIONS ///
-
-    function isAllowedToUpdateWaterfall() {
-      return isOrgMember(userOrgId())
-        && isNotUpdatingId('id', existingData().id)
-        && isNotUpdatingField(['_meta', 'createdBy'])
-        && isNotUpdatingField(['_meta', 'createdAt'])
-        && userOrgId() in getMovie(existingData().id).orgIds;
+      match /permissions/{orgId} {
+        allow read: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && (userOrgId() in getMovie(waterfallId).orgIds || userOrgId() == orgId);
+        allow create: if userHasValidOrg()
+          && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && userOrgId() in getMovie(waterfallId).orgIds;
+        allow update: if userHasValidOrg()
+          && isNotUpdatingId('id', existingData().id)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && userOrgId() in getMovie(waterfallId).orgIds;
+        allow delete: if false;
+      }
     }
 
     /////////////////////////////////////////////////////////////////////////////////
