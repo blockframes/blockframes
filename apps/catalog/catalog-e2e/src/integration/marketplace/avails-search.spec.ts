@@ -11,8 +11,13 @@ import {
   selectFilter,
   escapeKey,
   dateToMMDDYYYY,
+  // avails functions
+  selectTerritories,
+  selectMedias,
+  selectDates,
+  selectNonExclusive,
 } from '@blockframes/testing/cypress/browser';
-import { Media, MediaGroup, medias, Term, Territory, TerritoryGroup } from '@blockframes/model';
+import { medias } from '@blockframes/model';
 import { buyer, seller } from '../../fixtures/marketplace/avails-search';
 import { add, sub } from 'date-fns';
 
@@ -73,7 +78,7 @@ describe('Marketplace avails search', () => {
 
     context('Failing territories', () => {
       it('Buyer cannot find an avail with wrong territories', () => {
-        resetTerritories('Europe');
+        resetEurope();
         get('CIS').click();
         escapeKey();
         get('save-filter').click();
@@ -81,7 +86,7 @@ describe('Marketplace avails search', () => {
       });
 
       it('Buyer cannot find an avail with both good and wrong territories', () => {
-        resetTerritories('Europe');
+        resetEurope();
         get('CIS').click();
         get('Europe').click();
         escapeKey();
@@ -92,7 +97,7 @@ describe('Marketplace avails search', () => {
 
     context('Failing medias', () => {
       it('Buyer cannot find an avail with wrong media group', () => {
-        resetMedias('TV');
+        resetTv();
         get('VOD').click();
         escapeKey();
         get('save-filter').click();
@@ -100,7 +105,7 @@ describe('Marketplace avails search', () => {
       });
 
       it('Buyer cannot find an avail with both good and wrong media groups', () => {
-        resetMedias('TV');
+        resetTv();
         get('VOD').click();
         get('TV').click();
         escapeKey();
@@ -145,14 +150,15 @@ describe('Marketplace avails search', () => {
 
     context('Avails with media overlapping leads to 2 differents terms', () => {
       it('in multiple territories', () => {
+        const { from, to } = seller.term2.duration;
         searchAvailsMediaOverlap();
         get(`movie-card_${seller.movie.id}`).click();
         get('Avails').click();
-        cy.get('[fill="#7795ff"]').should('not.exist');
+        cy.get('[color="#7795ff"]').should('not.exist');
         selectMedias('TV');
-        selectDates(seller.term2);
+        selectDates(from, to);
         selectNonExclusive();
-        cy.get('[fill="#7795ff"]').should('have.length', seller.term2.territories.length);
+        cy.get('[color="#7795ff"]').should('have.length', seller.term2.territories.length * 2); // x2 because 2 terms per territory
         get('select-all').click();
         assertMediaOverlapTerms();
       });
@@ -185,14 +191,15 @@ describe('Marketplace avails search', () => {
       });
 
       it('in multiple territories', () => {
+        const { from, to } = seller.term4.duration;
         searchAvailsTerritoryOverlap();
         get(`movie-card_${seller.movie.id}`).click();
         get('Avails').click();
-        cy.get('[fill="#7795ff"]').should('not.exist');
+        cy.get('[color="#7795ff"]').should('not.exist');
         selectMedias('TV');
-        selectDates(seller.term4);
+        selectDates(from, to);
         selectNonExclusive();
-        cy.get('[fill="#7795ff"]').should('have.length', seller.term2.territories.length);
+        cy.get('[color="#7795ff"]').should('have.length', seller.term2.territories.length);
         get('select-all').click();
         assertTerritoryOverlapTerms();
       });
@@ -219,52 +226,31 @@ describe('Marketplace avails search', () => {
 //* functions
 
 function searchAvailsForMovieTerm1() {
+  const { from, to } = seller.term1.duration;
   selectTerritories('Europe');
   selectMedias('TV');
-  selectDates(seller.term1);
+  selectDates(from, to);
   selectNonExclusive();
   saveAndAssertMovieCardExists();
 }
 
 // overlap of sellerTerm2 & 3
 function searchAvailsMediaOverlap() {
+  const { from, to } = seller.term2.duration;
   selectTerritories('Europe');
   selectMedias('TV');
-  selectDates(seller.term2);
+  selectDates(from, to);
   selectNonExclusive();
   saveAndAssertMovieCardExists();
 }
 
 function searchAvailsTerritoryOverlap() {
+  const { from, to } = seller.term4.duration;
   selectTerritories('Europe');
   selectMedias('TV');
-  selectDates(seller.term4);
+  selectDates(from, to);
   selectNonExclusive();
   saveAndAssertMovieCardExists();
-}
-
-function selectTerritories(territories: (Territory | TerritoryGroup) | (Territory | TerritoryGroup)[]) {
-  if (!Array.isArray(territories)) territories = [territories];
-  get('territories').click();
-  for (const territory of territories) get(territory).click();
-  escapeKey();
-}
-
-function selectMedias(medias: (Media | MediaGroup) | (Media | MediaGroup)[]) {
-  if (!Array.isArray(medias)) medias = [medias];
-  get('medias').click();
-  for (const media of medias) get(media).click();
-  escapeKey();
-}
-
-function selectDates(term: Term) {
-  get('dateFrom').clear().type(dateToMMDDYYYY(term.duration.from));
-  get('dateTo').clear().type(dateToMMDDYYYY(term.duration.to));
-}
-
-function selectNonExclusive() {
-  get('exclusivity').click();
-  get('non-exclusive').click();
 }
 
 function saveAndAssertMovieCardExists() {
@@ -273,17 +259,15 @@ function saveAndAssertMovieCardExists() {
   get(`movie-card_${seller.movie.id}`).should('exist');
 }
 
-function resetTerritories(baseTerritories: (Territory | TerritoryGroup) | (Territory | TerritoryGroup)[]) {
-  if (!Array.isArray(baseTerritories)) baseTerritories = [baseTerritories];
+function resetEurope() {
   get('territories').click();
-  for (const territory of baseTerritories) get(territory).click();
+  get('Europe').click();
   waitForUpdate();
 }
 
-function resetMedias(baseMedias: (Media | MediaGroup) | (Media | MediaGroup)[]) {
-  if (!Array.isArray(baseMedias)) baseMedias = [baseMedias];
+function resetTv() {
   get('medias').click();
-  for (const media of baseMedias) get(media).click();
+  get('TV').click();
   waitForUpdate();
 }
 

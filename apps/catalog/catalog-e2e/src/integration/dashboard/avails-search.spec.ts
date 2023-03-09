@@ -8,8 +8,18 @@ import {
   connectUser,
   escapeKey,
   dateToMMDDYYYY,
+  findIn,
+  assertUrlIncludes,
+  assertMultipleTexts,
+  snackbarShould,
+  // avails functions
+  selectTerritories,
+  selectMedias,
+  selectDates,
+  selectNonExclusive,
+  selectExclusive,
 } from '@blockframes/testing/cypress/browser';
-import { Media, MediaGroup, Territory, TerritoryGroup } from '@blockframes/model';
+import { Term } from '@blockframes/model';
 import { buyer, seller } from '../../fixtures/dashboard/avails-search';
 import { add, sub } from 'date-fns';
 
@@ -55,11 +65,11 @@ describe('Dashboard avails search', () => {
     connectUser(seller.user.email);
   });
 
-  context('Avails main page', () => {
-    beforeEach(() => {
-      cy.visit('c/o/dashboard/avails');
-    });
+  beforeEach(() => {
+    cy.visit('c/o/dashboard/avails');
+  });
 
+  context('Avails main page', () => {
     it('The 3 movies appears on avails main page', () => {
       get('row_0_col_0').should('contain', movies[0].title.international);
       get('row_1_col_0').should('contain', movies[1].title.international);
@@ -67,16 +77,16 @@ describe('Dashboard avails search', () => {
     });
 
     it('Can find first movie only', () => {
-      firestMovieFilters();
+      firstMovieFilters();
     });
 
     it('Can find second movie only', () => {
       selectTerritories('Europe');
-      selectMedias('festival');
+      selectMedias('Festivals');
       selectDates(terms[1].duration.from, terms[1].duration.to);
       selectNonExclusive();
-      get('row_1_col_0').should('not.exist');
       get('row_0_col_0').should('contain', movies[1].title.international);
+      get('row_1_col_0').should('not.exist');
     });
 
     it('Can find third movie only', () => {
@@ -84,88 +94,145 @@ describe('Dashboard avails search', () => {
       selectMedias('TV');
       selectDates(terms[2].duration.from, terms[2].duration.to);
       selectExclusive();
-      get('row_1_col_0').should('not.exist');
       get('row_0_col_0').should('contain', movies[2].title.international);
+      get('row_1_col_0').should('not.exist');
     });
 
     it('Can find first and second movies with festival and common dates', () => {
       selectTerritories('Europe');
-      selectMedias('festival');
+      selectMedias('Festivals');
       selectDates(terms[1].duration.from, terms[0].duration.to);
       selectNonExclusive();
-      get('row_2_col_0').should('not.exist');
       get('row_0_col_0').should('contain', movies[0].title.international);
       get('row_1_col_0').should('contain', movies[1].title.international);
+      get('row_2_col_0').should('not.exist');
     });
 
     context('Filters discard as intended', () => {
-      it('Teritories', () => {
-        firestMovieFilters();
+      it('Territories', () => {
+        firstMovieFilters();
         selectTerritories('CIS');
         get('empty').should('exist');
       });
       it('Medias', () => {
-        firestMovieFilters();
+        firstMovieFilters();
         selectMedias('VOD');
         get('empty').should('exist');
       });
       it('From date', () => {
-        firestMovieFilters();
+        firstMovieFilters();
         get('dateFrom')
           .clear()
           .type(dateToMMDDYYYY(sub(terms[0].duration.from, { days: 1 })));
         get('empty').should('exist');
       });
       it('To date', () => {
-        firestMovieFilters();
+        firstMovieFilters();
         get('dateTo')
           .clear()
           .type(dateToMMDDYYYY(add(terms[0].duration.to, { days: 1 })));
         get('empty').should('exist');
       });
       it('Exclusivity', () => {
-        firestMovieFilters();
+        firstMovieFilters();
         selectExclusive();
         get('empty').should('exist');
       });
     });
   });
+
+  context('Checking avails links', () => {
+    it('can find the available territories in the map component', () => {
+      get('row_0_col_0').should('contain', movies[0].title.international);
+      findIn('row_0_col_4', 'map').click();
+      assertUrlIncludes(`dashboard/avails/${movies[0].id}/map`);
+      cy.get('[color="#7795ff"]').should('not.exist');
+      selectMedias('TV');
+      cy.get('[color="#7795ff"]').should('not.exist');
+      selectDates(terms[0].duration.from, terms[0].duration.to);
+      cy.get('[color="#7795ff"]').should('not.exist');
+      selectNonExclusive();
+      cy.get('[color="#7795ff"]').should('have.length', terms[0].territories.length);
+    });
+
+    it('can find the available months in the calendar component', () => {
+      get('row_0_col_0').should('contain', movies[0].title.international);
+      findIn('row_0_col_4', 'calendar').should('have.attr', 'href', `/c/o/dashboard/avails/${movies[0].id}/calendar`);
+      cy.visit(`/c/o/dashboard/avails/${movies[0].id}/calendar`);
+      assertUrlIncludes(`dashboard/avails/${movies[0].id}/calendar`);
+      cy.get('.available').should('not.exist');
+      selectTerritories('Europe');
+      cy.get('.available').should('not.exist');
+      selectMedias('TV');
+      cy.get('.available').should('not.exist');
+      selectNonExclusive();
+      cy.get('.available').should('have.length', 7);
+      cy.get('tr')
+        .eq(2)
+        .find('td')
+        .then($cells => {
+          $cells
+            .toArray()
+            .forEach((cell, index) =>
+              index < 7 ? expect(cell).to.have.class('available') : expect(cell).to.not.have.class('available')
+            );
+        });
+    });
+
+    it('can modify the avail via manage component', () => {
+      get('row_0_col_0').should('contain', movies[0].title.international);
+      findIn('row_0_col_4', 'manage').should('have.attr', 'href', `/c/o/dashboard/avails/select/${movies[0].id}/manage`);
+      cy.visit(`/c/o/dashboard/avails/select/${movies[0].id}/manage`);
+      assertUrlIncludes(`/c/o/dashboard/avails/select/${movies[0].id}/manage`);
+      // checking content
+      get('territories').should('contain', 'Europe');
+      assertMultipleTexts('medias', ['TV', 'Rental', 'Festivals']);
+      get('dateFrom')
+        .invoke('val')
+        .then((val: string) => expect(dateToMMDDYYYY(new Date(val))).to.eq(dateToMMDDYYYY(terms[0].duration.from)));
+      get('dateTo')
+        .invoke('val')
+        .then((val: string) => expect(dateToMMDDYYYY(new Date(val))).to.eq(dateToMMDDYYYY(terms[0].duration.to)));
+      get('exclusivity').should('contain', 'Non exclusive');
+      get('row_0_col_0').should('contain', dateToMMDDYYYY(terms[0].duration.from));
+      get('row_0_col_1').should('contain', dateToMMDDYYYY(terms[0].duration.to));
+      get('row_0_col_2').should('contain', 'Europe');
+      get('row_0_col_3').click();
+      assertMultipleTexts('modal', ['Pay TV', 'Free TV', 'Pay Per View', 'Rental', 'Festival']);
+      get('row_0_col_4').should('contain', 'No');
+      escapeKey();
+      // edit term
+      selectTerritories('france');
+      selectMedias('Festivals');
+      selectDates(add(terms[0].duration.from, { months: 1 }), sub(terms[0].duration.to, { months: 1 }));
+      selectExclusive();
+      get('save').click();
+      snackbarShould('contain', '1 Terms updated.');
+      // check db
+      firestore.get<Term>(`terms/${terms[0].id}`).then(term =>
+        expect(term).to.deep.include({
+          duration: {
+            from: toFirebaseTimestamp(add(terms[0].duration.from, { months: 1 })),
+            to: toFirebaseTimestamp(sub(terms[0].duration.to, { months: 1 })),
+          },
+          exclusive: true,
+          medias: terms[0].medias.filter(media => media !== 'festival'),
+          territories: terms[0].territories.filter(country => country !== 'france'),
+        })
+      );
+    });
+  });
 });
 
-function selectTerritories(territories: (Territory | TerritoryGroup) | (Territory | TerritoryGroup)[]) {
-  if (!Array.isArray(territories)) territories = [territories];
-  get('territories').click();
-  for (const territory of territories) get(territory).click();
-  escapeKey();
-}
+//* Functions
 
-function selectMedias(medias: (Media | MediaGroup) | (Media | MediaGroup)[]) {
-  if (!Array.isArray(medias)) medias = [medias];
-  get('medias').click();
-  for (const media of medias) get(media).click();
-  escapeKey();
-}
+const toFirebaseTimestamp = (date: Date) => ({ _nanoseconds: 0, _seconds: date.getTime() / 1000 });
 
-function selectDates(from: Date, to: Date) {
-  get('dateFrom').clear().type(dateToMMDDYYYY(from));
-  get('dateTo').clear().type(dateToMMDDYYYY(to));
-}
-
-function selectNonExclusive() {
-  get('exclusivity').click();
-  get('non-exclusive').click();
-}
-
-function selectExclusive() {
-  get('exclusivity').click();
-  get('exclusive').click();
-}
-
-function firestMovieFilters() {
+function firstMovieFilters() {
   selectTerritories('Europe');
   selectMedias('TV');
   selectDates(terms[0].duration.from, terms[0].duration.to);
   selectNonExclusive();
-  get('row_1_col_0').should('not.exist');
   get('row_0_col_0').should('contain', movies[0].title.international);
+  get('row_1_col_0').should('not.exist');
 }
