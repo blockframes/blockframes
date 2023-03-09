@@ -157,6 +157,7 @@ describe('Dashboard avails search', () => {
 
     it('can find the available months in the calendar component', () => {
       get('row_0_col_0').should('contain', movies[0].title.international);
+      // in Cypress, the calendar icon leads to the map component, but it works manually => using url instead
       findIn('row_0_col_4', 'calendar').should('have.attr', 'href', `/c/o/dashboard/avails/${movies[0].id}/calendar`);
       cy.visit(`/c/o/dashboard/avails/${movies[0].id}/calendar`);
       assertUrlIncludes(`dashboard/avails/${movies[0].id}/calendar`);
@@ -181,6 +182,7 @@ describe('Dashboard avails search', () => {
 
     it('can modify the avail via manage component', () => {
       get('row_0_col_0').should('contain', movies[0].title.international);
+      // same as previous 'it' about using url
       findIn('row_0_col_4', 'manage').should('have.attr', 'href', `/c/o/dashboard/avails/select/${movies[0].id}/manage`);
       cy.visit(`/c/o/dashboard/avails/select/${movies[0].id}/manage`);
       assertUrlIncludes(`/c/o/dashboard/avails/select/${movies[0].id}/manage`);
