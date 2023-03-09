@@ -19,6 +19,7 @@ import {
   deleteEmail,
   // helpers
   dateToMMDDYYYY,
+  assertMultipleTexts,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller } from '../../fixtures/marketplace/deal-create-offer';
 import { supportMailosaur } from '@blockframes/utils/constants';
@@ -94,10 +95,7 @@ describe('Deal negociation', () => {
         exclusive: false,
       });
       get('select-all').click();
-      get('selected-territories')
-        .should('contain', 'Europe')
-        .and('contain', 'Latin America')
-        .and('contain', territories['nepal']);
+      assertMultipleTexts('selected-territories', ['Europe', 'Latin America', territories['nepal']]);
     });
 
     it('no country should be available if filters search outside of term data', () => {

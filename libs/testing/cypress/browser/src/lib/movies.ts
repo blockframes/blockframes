@@ -1,22 +1,23 @@
 import { ProductionStatus } from '@blockframes/model';
-import { get } from '@blockframes/testing/cypress/browser';
+import { assertMultipleTexts, get } from '@blockframes/testing/cypress/browser';
 
 export function checkMovieTunnelSideNav(status: ProductionStatus) {
-  get('steps-list')
-    .should('contain', 'First Step')
-    .and('contain', 'Title Information')
-    .and('contain', 'Main Information')
-    .and('contain', 'Storyline Elements')
-    .and('contain', 'Production Information')
-    .and('contain', 'Artistic Team')
-    .and('contain', 'Additional Information')
-    .and('contain', 'Technical Specification')
-    .and('contain', 'Promotional Elements')
-    .and('contain', 'Files')
-    .and('contain', 'Images')
-    .and('contain', 'Videos')
-    .and('contain', 'Screener')
-    .and('contain', 'Last Step');
+  assertMultipleTexts('steps-list', [
+    'First Step',
+    'Title Information',
+    'Main Information',
+    'Storyline Elements',
+    'Production Information',
+    'Artistic Team',
+    'Additional Information',
+    'Technical Specification',
+    'Promotional Elements',
+    'Files',
+    'Images',
+    'Videos',
+    'Screener',
+    'Last Step',
+  ]);
   if (status !== 'development') {
     get('steps-list').should('contain', 'Versions');
   } else {
