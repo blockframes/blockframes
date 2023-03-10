@@ -218,8 +218,8 @@ describe('Deal negotiation', () => {
 
 function checkConfirmationEmails(decision: ContractStatus) {
   for (const user of ['buyer', 'seller', 'admin']) {
-    interceptEmail({ sentTo: mailData[user].recipient }).then(mail => {
-      expect(mail.subject).to.eq(mailData[user].subject[decision]);
+    interceptEmail({ sentTo: mailData[user].recipient, subject: mailData[user].subject[decision] }).then(mail => {
+      cy.log(`mail received by ${user} ${mailData[user].recipient}: ${mailData[user].subject[decision]}`);
       return deleteEmail(mail.id);
     });
   }
