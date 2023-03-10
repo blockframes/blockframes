@@ -270,7 +270,7 @@ describe('Movie tunnel', () => {
     assertMultipleTexts('rating', [territories[update.rating[0].country], update.rating[0].value]);
     get('budget-range').should('contain', budgetRange[movie.estimatedBudget]);
     assertMultipleTexts('qualifications', [certifications[update.certifications[0]], certifications[update.certifications[1]]]);
-    assertMultipleTexts('target', [movie.audience.targets[0], movie.audience.targets[1]]);
+    get('target').should('contain', movie.audience.targets[0]).and('not.contain', movie.audience.targets[1]);
     assertMultipleTexts('goals', [socialGoals[movie.audience.goals[0]], socialGoals[movie.audience.goals[1]]]);
     ///technical specifications
     get('ratio').should('contain', movieFormat[update.format]);
