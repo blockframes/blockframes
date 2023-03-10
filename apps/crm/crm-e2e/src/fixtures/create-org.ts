@@ -110,6 +110,8 @@ function createOrgWithuser(status: OrganizationStatus, apps: Exclude<App, 'crm' 
 }
 
 function getRandom<S extends Scope>(base: S): keyof StaticModel[S] {
-  const keys = Object.keys(staticModel[base]);
+  // we filter to avoid 'world' as there is not such option in mat-select
+  // it won't affect the result for random orgActivity
+  const keys = Object.keys(staticModel[base]).filter(territory => territory !== 'world');
   return keys[(keys.length * Math.random()) << 0] as any;
 }
