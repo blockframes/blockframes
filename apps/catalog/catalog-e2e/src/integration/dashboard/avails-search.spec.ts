@@ -18,6 +18,7 @@ import {
   selectDates,
   selectNonExclusive,
   selectExclusive,
+  assertInputValue,
 } from '@blockframes/testing/cypress/browser';
 import { Term } from '@blockframes/model';
 import { buyer, seller } from '../../fixtures/dashboard/avails-search';
@@ -189,9 +190,7 @@ describe('Dashboard avails search', () => {
       // checking content
       get('territories').should('contain', 'Europe');
       assertMultipleTexts('medias', ['TV', 'Rental', 'Festivals']);
-      get('dateFrom')
-        .invoke('val')
-        .then((val: string) => expect(dateToMMDDYYYY(new Date(val))).to.eq(dateToMMDDYYYY(terms[0].duration.from)));
+      assertInputValue('dateFrom', dateToMMDDYYYY(terms[0].duration.from));
       get('dateTo')
         .invoke('val')
         .then((val: string) => expect(dateToMMDDYYYY(new Date(val))).to.eq(dateToMMDDYYYY(terms[0].duration.to)));

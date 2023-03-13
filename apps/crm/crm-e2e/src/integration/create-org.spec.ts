@@ -22,6 +22,7 @@ import {
   assertUrl,
   interceptEmail,
   deleteEmail,
+  assertInputValue,
 } from '@blockframes/testing/cypress/browser';
 import { admin, Newcomer, newcomers } from '../fixtures/create-org';
 
@@ -175,15 +176,15 @@ function checkUI(newcomer: Newcomer) {
   get('org-email').should('contain', org.email);
   get('org-activity').should('contain', orgActivity[org.activity]);
   // form
-  get('name').invoke('val').should('contain', org.name);
-  get('email').invoke('val').should('contain', org.email);
+  assertInputValue('name', org.name);
+  assertInputValue('email', org.email);
   get('activity').should('contain', orgActivity[org.activity]);
-  get('description').invoke('val').should('contain', org.description);
-  get('street').invoke('val').should('contain', org.addresses.main.street);
-  get('city').invoke('val').should('contain', org.addresses.main.city);
-  get('zip').invoke('val').should('contain', org.addresses.main.zipCode);
+  assertInputValue('description', org.description);
+  assertInputValue('street', org.addresses.main.street);
+  assertInputValue('city', org.addresses.main.city);
+  assertInputValue('zip', org.addresses.main.zipCode);
   get('country').should('contain', territories[org.addresses.main.country]);
-  get('phone').invoke('val').should('contain', org.addresses.main.phoneNumber);
+  assertInputValue('phone', org.addresses.main.phoneNumber);
   get('status').should('contain', organizationStatus[org.status]);
   assertCheckbox('catalog', 'dashboard', org);
   assertCheckbox('festival', 'dashboard', org);
