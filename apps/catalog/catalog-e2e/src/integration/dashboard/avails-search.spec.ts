@@ -190,7 +190,9 @@ describe('Dashboard avails search', () => {
       // checking content
       get('territories').should('contain', 'Europe');
       assertMultipleTexts('medias', ['TV', 'Rental', 'Festivals']);
-      assertInputValue('dateFrom', dateToMMDDYYYY(terms[0].duration.from));
+      get('dateFrom')
+        .invoke('val')
+        .then((val: string) => expect(dateToMMDDYYYY(new Date(val))).to.eq(dateToMMDDYYYY(terms[0].duration.from)));
       get('dateTo')
         .invoke('val')
         .then((val: string) => expect(dateToMMDDYYYY(new Date(val))).to.eq(dateToMMDDYYYY(terms[0].duration.to)));
