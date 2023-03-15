@@ -71,6 +71,12 @@ export function assertMultipleTexts(selector: string, content: string[], previou
   return previous.and('contain', content[0]);
 }
 
+export function assertInputValue(selector: string, expected: string) {
+  return get(selector)
+    .invoke('val')
+    .then(val => expect(val).to.eq(expected));
+}
+
 interface InterceptOption {
   sentTo?: string;
   subject?: string;
