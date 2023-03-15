@@ -14,6 +14,7 @@ import {
   // firebase-utils
   validateOrg,
   snackbarShould,
+  assertMultipleTexts,
 } from '@blockframes/testing/cypress/browser';
 import {
   userWithJoinOrgInvitation,
@@ -52,8 +53,18 @@ describe('Signup following an invitation', () => {
     adminAuth.deleteAllTestUsers();
     browserAuth.clearBrowserAuth();
     adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email, emailVerified: true });
-    adminAuth.createUser({ uid: userWithJoinOrgInvitation.uid, email: userWithJoinOrgInvitation.email, emailVerified: true, password: orgInvitationCode });
-    adminAuth.createUser({ uid: userWithEventInvitation.uid, email: userWithEventInvitation.email, emailVerified: true, password: meetingInvitationCode });
+    adminAuth.createUser({
+      uid: userWithJoinOrgInvitation.uid,
+      email: userWithJoinOrgInvitation.email,
+      emailVerified: true,
+      password: orgInvitationCode,
+    });
+    adminAuth.createUser({
+      uid: userWithEventInvitation.uid,
+      email: userWithEventInvitation.email,
+      emailVerified: true,
+      password: meetingInvitationCode,
+    });
     firestore.create([injectedData]);
     maintenance.end();
   });
@@ -73,10 +84,7 @@ describe('Signup following an invitation', () => {
     //check organization data
     get('auth-user').click();
     get('widget-organization').click();
-    get('header')
-      .should('contain', org.name)
-      .and('contain', orgActivity[org.activity])
-      .and('contain', territories[org.addresses.main.country]);
+    assertMultipleTexts('header', [org.name, orgActivity[org.activity], territories[org.addresses.main.country]]);
     get('Members').click();
     get('row_0_col_1').should('contain', orgAdmin.firstName);
     get('row_0_col_2').should('contain', orgAdmin.lastName);
@@ -149,10 +157,7 @@ describe('Signup following an invitation', () => {
     //check organization data
     get('auth-user').click();
     get('widget-organization').click();
-    get('header')
-      .should('contain', newOrg.name)
-      .and('contain', orgActivity[newOrg.activity])
-      .and('contain', territories[newOrg.addresses.main.country]);
+    assertMultipleTexts('header', [newOrg.name, orgActivity[newOrg.activity], territories[newOrg.addresses.main.country]]);
     get('Members').click();
     get('row_0_col_1').should('contain', newUser.firstName);
     get('row_0_col_2').should('contain', newUser.lastName);

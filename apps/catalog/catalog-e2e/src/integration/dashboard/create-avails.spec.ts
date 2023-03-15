@@ -10,6 +10,7 @@ import {
   assertUrlIncludes,
   snackbarShould,
   escapeKey,
+  assertMultipleTexts,
 } from '@blockframes/testing/cypress/browser';
 import {
   user,
@@ -55,7 +56,7 @@ describe('Create avails', () => {
     get('avails').click();
     get('add').click();
     get('title-select').click();
-    get(`title_${movie.id}`).should('contain', movie.title.international).and('contain', '(Accepted)').click();
+    assertMultipleTexts(`title_${movie.id}`, [movie.title.international, '(Accepted)']).click();
     get('next').click();
     assertUrlIncludes(`c/o/dashboard/avails/select/${movie.id}/manage`);
     get('territories').click();
@@ -63,13 +64,13 @@ describe('Create avails', () => {
     get('Latin America').click();
     get('nepal').click();
     escapeKey();
-    get('territories').should('contain', 'Europe').and('contain', 'Latin America').and('contain', 'Nepal');
+    assertMultipleTexts('territories', ['Europe', 'Latin America', 'Nepal']);
     get('medias').click();
     get('TV').click();
     get('Festivals').click();
     get('rental').click();
     escapeKey();
-    get('medias').should('contain', 'TV').and('contain', 'Festivals').and('contain', 'Rental');
+    assertMultipleTexts('medias', ['TV', 'Festivals', 'Rental']);
     get('dateFrom').clear().type(`01/01/${nextYear}`);
     get('dateTo').clear().type(`12/12/${nextYear}`);
     get('exclusivity').click();
