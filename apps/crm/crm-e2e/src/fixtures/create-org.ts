@@ -92,7 +92,7 @@ function createOrgWithuser(status: OrganizationStatus, apps: Exclude<App, 'crm' 
       description: `E2E ${status} - ${apps.join(' & ')} - ${modules.join(' & ')} org`,
       addresses: {
         main: {
-          country: getRandom('territories'),
+          country: getRandom('territories', ['world']),
           region: '', // not in the form
           city: faker.address.cityName(),
           zipCode: faker.address.zipCode(),
@@ -109,9 +109,7 @@ function createOrgWithuser(status: OrganizationStatus, apps: Exclude<App, 'crm' 
   };
 }
 
-function getRandom<S extends Scope>(base: S): keyof StaticModel[S] {
-  // we filter to avoid 'world' as there is not such option in mat-select
-  // it won't affect the result for random orgActivity
-  const keys = Object.keys(staticModel[base]).filter(territory => territory !== 'world');
+function getRandom<S extends Scope>(base: S, withoutValues: string[] = []): keyof StaticModel[S] {
+  const keys = Object.keys(staticModel[base]).filter(k => !withoutValues.includes(k));
   return keys[(keys.length * Math.random()) << 0] as any;
 }
