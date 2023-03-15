@@ -15,6 +15,7 @@ import {
   assertUrlIncludes,
   saveTitle,
   escapeKey,
+  assertMultipleTexts,
 } from '@blockframes/testing/cypress/browser';
 import {
   Movie,
@@ -366,75 +367,81 @@ describe('Movie tunnel', () => {
     get('language').should('contain', `${languages[movie.originalLanguages[0]]}, ${languages[movie.originalLanguages[1]]}`);
     get('genres').should('contain', `${genres[movie.genres[0]]}, ${genres[movie.genres[1]]}`);
     get('runtime').should('contain', screeningStatus[movie.runningTime.status]);
-    get('director_0')
-      .should('contain', movie.directors[0].firstName)
-      .and('contain', movie.directors[0].lastName)
-      .and('contain', directorCategory[movie.directors[0].category])
-      .and('contain', movie.directors[0].description);
+    assertMultipleTexts('director_0', [
+      movie.directors[0].firstName,
+      movie.directors[0].lastName,
+      directorCategory[movie.directors[0].category],
+      movie.directors[0].description,
+    ]);
     ///storyline elements
     get('logline').should('contain', movie.logline);
     get('synopsis').should('contain', movie.synopsis);
     get('key-assets').should('contain', movie.keyAssets);
-    get('keywords').should('contain', movie.keywords[0]).and('contain', movie.keywords[1]);
+    assertMultipleTexts('keywords', [movie.keywords[0], movie.keywords[1]]);
     ///production information
-    get('prod-company_0')
-      .should(
-        'contain',
-        `${territories[movie.stakeholders.productionCompany[0].countries[0]]}, ${
-          territories[movie.stakeholders.productionCompany[0].countries[1]]
-        }`
-      )
-      .and('contain', movie.stakeholders.productionCompany[0].displayName);
-    get('prod-company_1')
-      .should(
-        'contain',
-        `${territories[movie.stakeholders.productionCompany[1].countries[0]]}, ${
-          territories[movie.stakeholders.productionCompany[1].countries[1]]
-        }`
-      )
-      .and('contain', movie.stakeholders.productionCompany[1].displayName);
-    get('coprod-company_0')
-      .should('contain', territories[movie.stakeholders.coProductionCompany[0].countries[0]])
-      .and('contain', movie.stakeholders.coProductionCompany[0].displayName);
-    get('producer_0')
-      .should('contain', producerRoles[movie.producers[0].role])
-      .and('contain', movie.producers[0].firstName)
-      .and('contain', movie.producers[0].lastName);
-    get('producer_1')
-      .should('contain', producerRoles[movie.producers[1].role])
-      .and('contain', movie.producers[1].firstName)
-      .and('contain', movie.producers[1].lastName);
-    get('distributor_0')
-      .should('contain', territories[movie.stakeholders.distributor[0].countries[0]])
-      .and('contain', movie.stakeholders.distributor[0].displayName);
-    get('sales-agent_0')
-      .should('contain', territories[movie.stakeholders.salesAgent[0].countries[0]])
-      .and('contain', movie.stakeholders.salesAgent[0].displayName);
+    assertMultipleTexts('prod-company_0', [
+      `${territories[movie.stakeholders.productionCompany[0].countries[0]]}, ${
+        territories[movie.stakeholders.productionCompany[0].countries[1]]
+      }`,
+      movie.stakeholders.productionCompany[0].displayName,
+    ]);
+    assertMultipleTexts('prod-company_1', [
+      `${territories[movie.stakeholders.productionCompany[1].countries[0]]}, ${
+        territories[movie.stakeholders.productionCompany[1].countries[1]]
+      }`,
+      movie.stakeholders.productionCompany[1].displayName,
+    ]);
+    assertMultipleTexts('coprod-company_0', [
+      territories[movie.stakeholders.coProductionCompany[0].countries[0]],
+      movie.stakeholders.coProductionCompany[0].displayName,
+    ]);
+    assertMultipleTexts('producer_0', [
+      producerRoles[movie.producers[0].role],
+      movie.producers[0].firstName,
+      movie.producers[0].lastName,
+    ]);
+    assertMultipleTexts('producer_1', [
+      producerRoles[movie.producers[1].role],
+      movie.producers[1].firstName,
+      movie.producers[1].lastName,
+    ]);
+    assertMultipleTexts('distributor_0', [
+      territories[movie.stakeholders.distributor[0].countries[0]],
+      movie.stakeholders.distributor[0].displayName,
+    ]);
+    assertMultipleTexts('sales-agent_0', [
+      territories[movie.stakeholders.salesAgent[0].countries[0]],
+      movie.stakeholders.salesAgent[0].displayName,
+    ]);
     ///artistic team
-    get('cast_0')
-      .should('contain', movie.cast[0].firstName)
-      .and('contain', movie.cast[0].lastName)
-      .and('contain', `${movie.cast[0].filmography[0].title} (${movie.cast[0].filmography[0].year})`)
-      .and('contain', `${movie.cast[0].filmography[1].title} (${movie.cast[0].filmography[1].year})`);
-    get('cast_1')
-      .should('contain', movie.cast[1].firstName)
-      .and('contain', movie.cast[1].lastName)
-      .and('contain', `${movie.cast[1].filmography[0].title} (${movie.cast[1].filmography[0].year})`)
-      .and('contain', `${movie.cast[1].filmography[1].title} (${movie.cast[1].filmography[1].year})`);
-    get('crew_0')
-      .should('contain', movie.crew[0].firstName)
-      .and('contain', movie.crew[0].lastName)
-      .and('contain', `${movie.crew[0].filmography[0].title} (${movie.crew[0].filmography[0].year})`)
-      .and('contain', `${movie.crew[0].filmography[1].title} (${movie.crew[0].filmography[1].year})`);
-    get('crew_1')
-      .should('contain', movie.crew[1].firstName)
-      .and('contain', movie.crew[1].lastName)
-      .and('contain', `${movie.crew[1].filmography[0].title} (${movie.crew[1].filmography[0].year})`)
-      .and('contain', `${movie.crew[1].filmography[1].title} (${movie.crew[1].filmography[1].year})`);
+    assertMultipleTexts('cast_0', [
+      movie.cast[0].firstName,
+      movie.cast[0].lastName,
+      `${movie.cast[0].filmography[0].title} (${movie.cast[0].filmography[0].year})`,
+      `${movie.cast[0].filmography[1].title} (${movie.cast[0].filmography[1].year})`,
+    ]);
+    assertMultipleTexts('cast_1', [
+      movie.cast[1].firstName,
+      movie.cast[1].lastName,
+      `${movie.cast[1].filmography[0].title} (${movie.cast[1].filmography[0].year})`,
+      `${movie.cast[1].filmography[1].title} (${movie.cast[1].filmography[1].year})`,
+    ]);
+    assertMultipleTexts('crew_0', [
+      movie.crew[0].firstName,
+      movie.crew[0].lastName,
+      `${movie.crew[0].filmography[0].title} (${movie.crew[0].filmography[0].year})`,
+      `${movie.crew[0].filmography[1].title} (${movie.crew[0].filmography[1].year})`,
+    ]);
+    assertMultipleTexts('crew_1', [
+      movie.crew[1].firstName,
+      movie.crew[1].lastName,
+      `${movie.crew[1].filmography[0].title} (${movie.crew[1].filmography[0].year})`,
+      `${movie.crew[1].filmography[1].title} (${movie.crew[1].filmography[1].year})`,
+    ]);
     ///additional information
     get('budget-range').should('contain', budgetRange[movie.estimatedBudget]);
-    get('target').should('contain', movie.audience.targets[0]).and('contain', movie.audience.targets[1]);
-    get('goals').should('contain', socialGoals[movie.audience.goals[0]]).and('contain', socialGoals[movie.audience.goals[1]]);
+    assertMultipleTexts('target', [movie.audience.targets[0], movie.audience.targets[1]]);
+    assertMultipleTexts('goals', [socialGoals[movie.audience.goals[0]], socialGoals[movie.audience.goals[1]]]);
     ///shooting information
     get('shooting-from-period').should('contain', shootingPeriod[movie.shooting.dates.planned.from.period]);
     get('shooting-from-month').should('contain', months[movie.shooting.dates.planned.from.month]);
