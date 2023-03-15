@@ -4,13 +4,13 @@
     <header class="dark-contrast-theme main-header" bgAsset="banner_header_page.png">
       <div class="main-title" fxLayout="column" fxLayoutAlign="center center">
         <h1>My Selection</h1>
-        <p *ngIf="bucket.contracts.length === 1">
+        <p *ngIf="bucket.contracts.length === 1" test-id="one-title">
           There is 1 Title in my Selection:
         </p>
         <p *ngIf="bucket.contracts.length > 1">
           There are {{ bucket.contracts.length }} Titles in my Selection:
         </p>
-        <p *ngIf="bucket | bucketTitles | getTitle | async as titles">
+        <p *ngIf="bucket | bucketTitles | getTitle | async as titles" test-id="selected-titles">
           {{ (titles | join:'title.international') }}
         </p>
         <a mat-stroked-button color="primary" routerLink="/c/o/marketplace/title">
@@ -21,8 +21,7 @@
 
     <section class="currency">
       <h2>Please select a currency</h2>
-      <static-select test-id="selection-currency" [control]="currencyForm" scope="movieCurrencies"
-        [withoutValues]="withoutCurrencies">
+      <static-select [control]="currencyForm" scope="movieCurrencies" [withoutValues]="withoutCurrencies" test-id="selection-currency">
         <mat-label>Currency</mat-label>
       </static-select>
     </section>

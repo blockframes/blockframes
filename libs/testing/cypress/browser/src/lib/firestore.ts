@@ -15,7 +15,7 @@ export const firestore = {
     return cy.task('deleteData', [paths]);
   },
 
-  get(paths: string[] | string) {
+  get<T>(paths: string[] | string): Cypress.Chainable<T | T[]> {
     if (Array.isArray(paths)) return cy.task('getData', paths);
     return cy.task('getData', [paths]).then(array => array[0]);
   },

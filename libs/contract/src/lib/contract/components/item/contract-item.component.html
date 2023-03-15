@@ -1,8 +1,8 @@
 <ng-container *ngIf="contract?.titleId | getTitle | async as title">
   <header fxLayout fxLayoutAlign="space-between start">
-    <section fxLayout="column">
-      <h2>{{ title?.title?.international }}</h2>
-      <article fxLayout fxLayoutGap="12px">
+    <section fxLayout="column" [attr.test-id]="'movie-card_' + title.id">
+      <h2 test-id="movie-title">{{ title?.title?.international }}</h2>
+      <article fxLayout fxLayoutGap="12px" test-id="movie-article">
         <img [ref]="title.poster | storageFile: 'movies':'poster':title.id" asset="empty_poster.svg"
           alt="Movie Illustration" [routerLink]="['/c/o/marketplace/title/', title.id]">
         <div fxLayout="column">

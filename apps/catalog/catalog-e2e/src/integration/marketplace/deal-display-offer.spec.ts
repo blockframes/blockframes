@@ -12,6 +12,7 @@ import {
   assertUrl,
   // helpers
   dateToMMDDYYYY,
+  assertMultipleTexts,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller, offer, saleContract, buyerNegotiation, bucket } from '../../fixtures/shared/deal-shared-fixture';
 import { Organization, displayName, trimString } from '@blockframes/model';
@@ -168,9 +169,10 @@ describe('Deal negociation', () => {
 //* functions
 
 function checkAvailsSection() {
-  return get('avails-section')
-    .should('contain', seller.movie.title.international)
-    .and('contain', seller.movie.directors.map(director => `${director.firstName} ${director.lastName}`).join(', '))
-    .and('contain', seller.movie.release.year.toString())
-    .and('contain', '€10,000.00');
+  return assertMultipleTexts('avails-section', [
+    seller.movie.title.international,
+    seller.movie.directors.map(director => `${director.firstName} ${director.lastName}`).join(', '),
+    seller.movie.release.year.toString(),
+    '€10,000.00',
+  ]);
 }

@@ -5,11 +5,15 @@ import {
   territories,
   PublicUser,
   Module,
+  Territory,
+  MediaGroup,
+  TerritoryGroup,
 } from '@blockframes/model';
 import { browserAuth } from './browserAuth';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { serverId } from '@blockframes/utils/constants';
 import { sub } from 'date-fns';
+import { dateToMMDDYYYY } from './helpers';
 
 export function acceptCookies() {
   return cy.get('body').then($body => {
@@ -54,9 +58,23 @@ export function assertUrl(url: string) {
 export function assertUrlIncludes(partialUrl: string) {
   return cy.url().should('include', partialUrl);
 }
-  
+
 export function assertTableRowData(row: number, strings: string[]) {
   return Promise.all(strings.map((string, index) => get(`row_${row}_col_${index}`).should('contain', string)));
+}
+
+export function assertMultipleTexts(selector: string, content: string[], previous?: Cypress.Chainable) {
+  if (content.length <= 1 && !previous) throw new Error('assertMultipleTexts() needs more than one string');
+  if (selector !== 'previous')
+    return assertMultipleTexts('previous', content.slice(1), get(selector).should('contain', content[0]));
+  if (content.length > 1) return assertMultipleTexts('previous', content.slice(1), previous.and('contain', content[0]));
+  return previous.and('contain', content[0]);
+}
+
+export function assertInputValue(selector: string, expected: string) {
+  return get(selector)
+    .invoke('val')
+    .then(val => expect(val).to.eq(expected));
 }
 
 interface InterceptOption {
@@ -159,3 +177,32 @@ export function refreshIfMaintenance(app: App) {
 }
 
 //* ------------------------------------- *//
+
+//* CATALOG AVAILS *//
+
+export function selectTerritories(territory: Territory | TerritoryGroup) {
+  get('territories').click();
+  get(territory).click();
+  escapeKey();
+}
+
+export function selectMedias(mediaGroup: MediaGroup) {
+  get('medias').click();
+  get(mediaGroup).click();
+  escapeKey();
+}
+
+export function selectDates(from: Date, to: Date) {
+  get('dateFrom').clear().type(dateToMMDDYYYY(from));
+  get('dateTo').clear().type(dateToMMDDYYYY(to));
+}
+
+export function selectNonExclusive() {
+  get('exclusivity').click();
+  get('non-exclusive').click();
+}
+
+export function selectExclusive() {
+  get('exclusivity').click();
+  get('exclusive').click();
+}
