@@ -23,9 +23,14 @@ describe('Movie Owner', () => {
       await assertSucceeds(ref.get());
     });
 
-    test('Should not be able to list waterfall documents', async () => {
+    test('Should not be able to list all waterfall documents', async () => {
       const ref = db.collection('waterfall');
       await assertFails(ref.get());
+    });
+
+    test('Should be able to query waterfall documents', async () => {
+      const ref = db.collection('waterfall').where('orgIds', 'array-contains', 'O001');
+      await assertSucceeds(ref.get());
     });
 
     test('Should be able to update waterfall document', async () => {
@@ -184,9 +189,14 @@ describe('User that is linked to waterfall', () => {
       await assertSucceeds(ref.get());
     });
 
-    test('Should not be able to list waterfall documents', async () => {
+    test('Should not be able to list all waterfall documents', async () => {
       const ref = db.collection('waterfall');
       await assertFails(ref.get());
+    });
+
+    test('Should be able to query waterfall documents', async () => {
+      const ref = db.collection('waterfall').where('orgIds', 'array-contains', 'O002');
+      await assertSucceeds(ref.get());
     });
 
     test('Should not be able to update waterfall document', async () => {
