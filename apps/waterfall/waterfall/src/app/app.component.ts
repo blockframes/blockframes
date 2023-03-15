@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'blockframes-root',
+  selector: 'waterfall-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
