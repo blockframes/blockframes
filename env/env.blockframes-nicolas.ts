@@ -81,7 +81,7 @@ export const hotjar = {
 // Intercom
 // ========
 
-export const intercomId = '';
+export const intercomId = 'srwfltp4';
 
 // Sentry
 // =======

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, Optional } from '@angular/core';
 import { combineLatest, firstValueFrom, Subscription } from 'rxjs';
 import { debounceTime, map, shareReplay } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,6 +18,7 @@ import {
 } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
+import { Intercom } from 'ng-intercom';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -80,6 +81,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService,
     private movieService: MovieService,
+    @Optional() private intercom: Intercom
   ) { }
 
   /** Display the territories information in the tooltip */
@@ -168,5 +170,9 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
 
     this.availsForm.patchValue(avails);
     this.analyticsService.addTitleFilter({ avails: this.availsForm.value }, 'marketplace', 'filteredAvailsMap', true);
+  }
+
+  public openIntercom() {
+    return this.intercom.show();
   }
 }
