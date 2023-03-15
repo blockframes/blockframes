@@ -111,6 +111,8 @@ const sellerAcceptedMovie = createMovie({
     original: 'Original title',
     international: 'International title',
   }),
+  directors: [{ firstName: 'John', lastName: 'Doe' }],
+  genres: ['documentary', 'crime'],
 });
 
 const sellerContract = createMandate({
