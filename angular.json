@@ -1550,6 +1550,201 @@
         }
       },
       "tags": ["browser", "deprecated"]
+    },
+    "waterfall": {
+      "projectType": "application",
+      "root": "apps/waterfall/waterfall",
+      "sourceRoot": "apps/waterfall/waterfall/src",
+      "prefix": "waterfall",
+      "targets": {
+        "build": {
+          "executor": "@angular-devkit/build-angular:browser",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/waterfall",
+            "index": "apps/waterfall/waterfall/src/index.html",
+            "main": "apps/waterfall/waterfall/src/main.ts",
+            "polyfills": "apps/waterfall/waterfall/src/polyfills.ts",
+            "tsConfig": "apps/waterfall/waterfall/tsconfig.app.json",
+            "sourceMap": true,
+            "stylePreprocessorOptions": {
+              "includePaths": ["styles"]
+            },
+            "assets": [
+              "apps/waterfall/waterfall/src/favicon.ico",
+              "apps/waterfall/waterfall/src/assets",
+              "apps/waterfall/waterfall/src/robots.txt",
+              {
+                "glob": "**/*",
+                "input": "./assets",
+                "output": "./assets"
+              }
+            ],
+            "styles": ["apps/waterfall/waterfall/src/styles.scss"],
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "optimization": false,
+            "namedChunks": true
+          },
+          "configurations": {
+            "emulator": {
+              "buildOptimizer": false,
+              "optimization": {
+                "scripts": false,
+                "styles": false,
+                "fonts": false
+              },
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": false,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "apps/waterfall/waterfall/src/environment/environment.ts",
+                  "with": "apps/waterfall/waterfall/src/environment/environment.emulator.ts"
+                }
+              ]
+            },
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
+            }
+          }
+        },
+        "serve": {
+          "executor": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "waterfall:build"
+          },
+          "configurations": {
+            "emulator": {
+              "browserTarget": "waterfall:build:emulator"
+            }
+          }
+        },
+        "extract-i18n": {
+          "executor": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "waterfall:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/waterfall/waterfall/src/**/*.ts", "apps/waterfall/waterfall/src/**/*.html"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/waterfall/waterfall"],
+          "options": {
+            "jestConfig": "apps/waterfall/waterfall/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "deploy": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              "npx cross-env nx build waterfall --configuration=$NG_CONFIG",
+              "npx cross-env waterfall deploy --project=$PROJECT_ID --only hosting:waterfall"
+            ],
+            "parallel": false,
+            "color": true
+          }
+        }
+      },
+      "tags": ["browser"]
+    },
+    "waterfall-e2e": {
+      "root": "apps/waterfall/waterfall-e2e",
+      "sourceRoot": "apps/waterfall/waterfall-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "serve": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/waterfall/waterfall-e2e/cypress.json",
+            "tsConfig": "apps/waterfall/waterfall-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "watch": true,
+            "headless": false,
+            "exit": false,
+            "record": false,
+            "browser": "chrome",
+            "devServerTarget": "waterfall:serve",
+            "env": {
+              "notice": "Env is being read"
+            }
+          },
+          "configurations": {
+            "emulator": {
+              "devServerTarget": "waterfall:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            }
+          }
+        },
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/waterfall/waterfall-e2e/cypress.json",
+            "tsConfig": "apps/waterfall/waterfall-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "browser": "chrome",
+            "devServerTarget": "waterfall:serve"
+          },
+          "configurations": {
+            "emulator": {
+              "devServerTarget": "waterfall:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true
+              }
+            },
+            "emulator-incognito": {
+              "devServerTarget": "waterfall:serve:emulator",
+              "env": {
+                "notice": "Env is being read",
+                "emulator": true,
+                "incognito": true
+              }
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/waterfall/waterfall-e2e/src/**/*.ts", "apps/waterfall/waterfall-e2e/src/**/*.html"]
+          },
+          "outputs": ["{options.outputFile}"]
+        }
+      },
+      "tags": ["browser", "e2e"],
+      "implicitDependencies": ["waterfall"]
     }
   }
 }
