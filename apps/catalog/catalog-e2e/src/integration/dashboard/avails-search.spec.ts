@@ -18,7 +18,6 @@ import {
   selectDates,
   selectNonExclusive,
   selectExclusive,
-  assertInputValue,
 } from '@blockframes/testing/cypress/browser';
 import { Term } from '@blockframes/model';
 import { buyer, seller } from '../../fixtures/dashboard/avails-search';
