@@ -120,6 +120,9 @@
         ],
         "cms": [
           "cms-blockframes-pl"
+        ],
+        "waterfall": [
+          "waterfall-blockframes-pl"
         ]
       }
     }
