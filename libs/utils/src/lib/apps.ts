@@ -19,7 +19,7 @@ export const appLogo = {
   catalog: `${appUrl.content}/assets/email/archipel-content.png`,
   festival: `${appUrl.market}/assets/email/archipel-market.png`,
   financiers: `${appUrl.financiers}/assets/email/media-financiers.png`,
-  waterfall: `${appUrl.waterfall}/assets/email/archipel-market.png`, // TODO #9257 change this
+  waterfall: `${appUrl.waterfall}/assets/email/blockframes.png`,
   crm: '',
 };
 export type AppLogoValue = typeof appLogo[App];

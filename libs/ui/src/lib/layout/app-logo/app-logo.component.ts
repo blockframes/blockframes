@@ -8,7 +8,7 @@ const appLogos: Record<App, string> = {
   festival: 'archipel_market.svg',
   financiers: 'media_financiers.svg',
   crm: 'archipel_market.svg',
-  waterfall: 'archipel_content.svg' // TODO #9257 change this
+  waterfall: 'blockframes.svg'
 };
 
 @Component({
