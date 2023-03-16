@@ -6,7 +6,7 @@
   <p>
     Click on the territories you're interested in to add them to your Selection. For territories that are not
     licensed,
-    feel free to <button (click)="openIntercom()">contact Archipel Content Team</button>.
+    feel free to <button (click)="openIntercom()">contact {{appName}} Team</button>.
   </p>
 
   <ng-container *ngIf="availabilities$ | async as availabilities; else loading">

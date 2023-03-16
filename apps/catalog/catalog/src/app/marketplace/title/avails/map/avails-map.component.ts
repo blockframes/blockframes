@@ -15,6 +15,7 @@ import {
   MapAvailsFilter,
   territoryAvailabilities,
   decodeDate,
+  appName,
 } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
@@ -41,6 +42,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
   private sub: Subscription;
 
   private titleId: string = this.route.snapshot.params.movieId;
+  public appName = appName.catalog;
 
   public availabilities$ = combineLatest([
     this.availsForm.value$,
