@@ -20,7 +20,7 @@
     <mat-label>Company Country of Origin</mat-label>
   </static-select>
 
-  <ng-container *ngIf="form.get('appAccess').enabled">
+  <ng-container *ngIf="form.get('appAccess').enabled && app !== 'waterfall' ">
     <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column">
       <div fxLayout="row">
         <p>Choose your role * :</p>
