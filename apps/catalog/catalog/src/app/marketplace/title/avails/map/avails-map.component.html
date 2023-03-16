@@ -3,14 +3,11 @@
 
   <h2>Available Territories</h2>
 
-  <ng-container *ngIf="org$ | async as org">
-    <p>
-      Click on the territories you're interested in to add them to your Selection. For territories that are not
-      licensed,
-      feel free to
-      <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org.name }}</a>.
-    </p>
-  </ng-container>
+  <p>
+    Click on the territories you're interested in to add them to your Selection. For territories that are not
+    licensed,
+    feel free to <button (click)="openIntercom()">contact {{appName}} Team</button>.
+  </p>
 
   <ng-container *ngIf="availabilities$ | async as availabilities; else loading">
     <world-map>

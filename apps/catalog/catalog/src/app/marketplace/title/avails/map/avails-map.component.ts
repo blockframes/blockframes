@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, Optional } from '@angular/core';
 import { combineLatest, firstValueFrom, Subscription } from 'rxjs';
 import { debounceTime, map, shareReplay } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,9 +15,11 @@ import {
   MapAvailsFilter,
   territoryAvailabilities,
   decodeDate,
+  appName,
 } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
+import { Intercom } from 'ng-intercom';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -31,7 +33,6 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
     status: string;
   };
 
-  public org$ = this.shell.movieOrg$;
   public availsForm = this.shell.avails.mapForm;
   public mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
@@ -41,6 +42,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
   private sub: Subscription;
 
   private titleId: string = this.route.snapshot.params.movieId;
+  public appName = appName.catalog;
 
   public availabilities$ = combineLatest([
     this.availsForm.value$,
@@ -80,6 +82,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService,
     private movieService: MovieService,
+    @Optional() private intercom: Intercom
   ) { }
 
   /** Display the territories information in the tooltip */
@@ -168,5 +171,11 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
 
     this.availsForm.patchValue(avails);
     this.analyticsService.addTitleFilter({ avails: this.availsForm.value }, 'marketplace', 'filteredAvailsMap', true);
+  }
+
+  public openIntercom() {
+    const isIntercomAvailable = document.getElementById('intercom-frame');
+    if (isIntercomAvailable) return this.intercom.show();
+    return this.router.navigate(['/c/o/marketplace/contact']);
   }
 }
