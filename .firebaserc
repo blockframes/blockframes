@@ -24,6 +24,9 @@
         ],
         "cms": [
           "blockframes-cms"
+        ],
+        "waterfall": [
+          "blockframes-waterfall"
         ]
       }
     },
@@ -43,6 +46,9 @@
         ],
         "cms": [
           "staging-blockframes-cms"
+        ],
+        "waterfall": [
+          "staging-blockframes-waterfall"
         ]
       }
     },
@@ -62,6 +68,9 @@
         ],
         "cms": [
           "blockframes-francois-cms"
+        ],
+        "waterfall": [
+          "blockframes-francois-waterfall"
         ]
       }
     },
@@ -81,6 +90,9 @@
         ],
         "cms": [
           "cms-blockframes-bruce"
+        ],
+        "waterfall": [
+          "waterfall-blockframes-bruce"
         ]
       }
     },

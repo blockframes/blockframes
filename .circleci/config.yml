@@ -125,6 +125,7 @@ commands:
       - run: cp assets/robots.prod.txt apps/catalog/catalog/src/robots.txt
       - run: cp assets/robots.prod.txt apps/festival/festival/src/robots.txt
       - run: cp assets/robots.prod.txt apps/financiers/financiers/src/robots.txt
+      - run: cp assets/robots.prod.txt apps/waterfall/waterfall/src/robots.txt
   deploy:
     description: 'Run full deployment'
     steps:
@@ -289,7 +290,7 @@ jobs:
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
-      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,cms-e2e
+      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,cms-e2e,waterfall-e2e
       - store_test_results:
           path: dist/test-reports/
       - store_artifacts:
@@ -304,7 +305,7 @@ jobs:
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
-      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,crm-e2e
+      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,catalog-e2e,financiers-e2e,crm-e2e,waterfall-e2e
       - store_test_results:
           path: dist/test-reports/
       - store_artifacts:
@@ -320,7 +321,7 @@ jobs:
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run:
-          command: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e,cms-e2e
+          command: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e,cms-e2e,waterfall-e2e
           no_output_timeout: 30m
       - store_test_results:
           path: dist/test-reports/
@@ -336,7 +337,7 @@ jobs:
       - run: npx nx build backend-functions --configuration=e2e
       - start_e2e_emulators
       - run: npm start upgradeEmulators
-      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e,cms-e2e
+      - run: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,catalog-e2e,cms-e2e,waterfall-e2e
       - store_test_results:
           path: dist/test-reports/
       - store_artifacts:
@@ -352,7 +353,24 @@ jobs:
       - start_e2e_emulators
       - run: npm start upgradeEmulators
       - run:
-          command: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e,cms-e2e
+          command: npx nx affected:e2e --configuration=emulator --exclude=festival-e2e,crm-e2e,financiers-e2e,cms-e2e,waterfall-e2e
+          no_output_timeout: 45m
+      - store_test_results:
+          path: dist/test-reports/
+      - store_artifacts:
+          path: dist/cypress/apps
+  waterfall-e2e:
+    executor: blockframes-ci
+    resource_class: xlarge
+    environment:
+      PROJECT_ID: demo-blockframes
+    steps:
+      - prepare_environment
+      - run: npx nx build backend-functions --configuration=e2e
+      - start_e2e_emulators
+      - run: npm start upgradeEmulators
+      - run:
+          command: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,festival-e2e,crm-e2e,financiers-e2e,cms-e2e
           no_output_timeout: 45m
       - store_test_results:
           path: dist/test-reports/
@@ -498,6 +516,10 @@ workflows:
             branches:
               ignore: *deployment_branches
       - cms-e2e:
+          filters:
+            branches:
+              ignore: *deployment_branches
+      - waterfall-e2e:
           filters:
             branches:
               ignore: *deployment_branches

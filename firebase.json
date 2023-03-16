@@ -89,6 +89,25 @@
           "destination": "/index.html"
         }
       ]
+    },
+    {
+      "target": "waterfall",
+      "public": "dist/apps/waterfall/browser",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/admin{,/**}",
+          "function": "admin"
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
     }
   ],
   "functions": {
