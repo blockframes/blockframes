@@ -32,7 +32,6 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
     status: string;
   };
 
-  public org$ = this.shell.movieOrg$;
   public availsForm = this.shell.avails.mapForm;
   public mandates$ = this.shell.mandates$;
   private mandateTerms$ = this.shell.mandateTerms$;
