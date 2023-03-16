@@ -56,6 +56,7 @@ export const notifications = {
   ] as const,
   financiers: [] as const,
   crm: [] as const,
+  waterfall: [] as const,
 }
 
 type AppNotificationType = typeof notifications;
