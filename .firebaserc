@@ -5,7 +5,8 @@
     "staging": "blockframes-staging",
     "francois": "blockframes-francois",
     "bruce": "blockframes-bruce",
-    "nicolas": "blockframes-nicolas"
+    "nicolas": "blockframes-nicolas",
+    "pl": "blockframes-pl-3"
   },
   "targets": {
     "blockframes": {
@@ -100,6 +101,25 @@
       "hosting": {
         "catalog": [
           "blockframes-nicolas"
+        ]
+      }
+    },
+    "blockframes-pl-3": {
+      "hosting": {
+        "catalog": [
+          "catalog-blockframes-pl"
+        ],
+        "festival": [
+          "festival-blockframes-pl"
+        ],
+        "crm": [
+          "crm-blockframes-pl"
+        ],
+        "financiers": [
+          "financiers-blockframes-pl"
+        ],
+        "cms": [
+          "cms-blockframes-pl"
         ]
       }
     }
