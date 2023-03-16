@@ -173,6 +173,8 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
   }
 
   public openIntercom() {
-    return this.intercom.show();
+    const isIntercomAvailable = document.getElementById('intercom-frame');
+    if (isIntercomAvailable) return this.intercom.show();
+    return this.router.navigate(['/c/o/marketplace/contact']);
   }
 }
