@@ -48,5 +48,42 @@
 import 'zone.js'; // Included with Angular CLI.
 
 /***************************************************************************************************
+ * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
+ */
+import '@angular/localize/init';
+
+/***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+/***************************************************************************************************
+* ALGOLIA CONFIG
+*/
+(window as any).process = {
+  env: { DEBUG: undefined },
+};
+
+/***************************************************************************************************
+* TWILIO
+*/
+(window as any).global = window;
+
+/***************************************************************************************************
+* allSettled
+*/
+if (!(Promise as any).allSettled) {
+  (Promise as any).allSettled = (promises: Promise<any>[]) =>
+    Promise.all(
+      promises.map(promise =>
+        promise
+          .then(value => ({
+            status: 'fulfilled',
+            value,
+          }))
+          .catch(reason => ({
+            status: 'rejected',
+            reason,
+          }))
+      )
+    );
+}
