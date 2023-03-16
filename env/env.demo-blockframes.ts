@@ -8,6 +8,7 @@ export const appUrl = {
   market: 'http://localhost:4200',
   financiers: 'http://localhost:4200',
   crm: 'http://localhost:4200',
+  waterfall: 'http://localhost:4200',
 }
 
 const firebaseConfig = {
@@ -36,12 +37,14 @@ export const algolia = {
   indexNameOrganizations: {
     festival: 'ci_festival_org',
     financiers: 'ci_financiers_org',
-    catalog: 'ci_catalog_org'
+    catalog: 'ci_catalog_org',
+    waterfall: 'ci_waterfall_org',
   },
   indexNameMovies: {
     festival: 'ci_festival_movies',
     financiers: 'ci_financiers_movies',
     catalog: 'ci_catalog_movies',
+    waterfall: 'ci_waterfall_movies',
   },
   indexNameUsers: 'ci_users',
 };
@@ -54,7 +57,8 @@ export const supportEmails = {
   default: 'dev+ci@blockframes.io', // redirect to => blockframes.dev@gmail.com
   catalog: 'dev+ci_catalog@blockframes.io',
   festival: 'dev+ci_festival@blockframes.io',
-  financiers: 'dev+ci_financiers@blockframes.io'
+  financiers: 'dev+ci_financiers@blockframes.io',
+  waterfall: 'dev+ci_waterfall@blockframes.io'
 }
 
 export const mailchimp = {
@@ -68,7 +72,8 @@ export const mailchimp = {
 export const yandex = {
   festival: 0,
   financiers: 0,
-  catalog: 0
+  catalog: 0,
+  waterfall: 0
 };
 
 // Hotjar
@@ -76,7 +81,8 @@ export const yandex = {
 export const hotjar = {
   festival: 0,
   financiers: 0,
-  catalog: 0
+  catalog: 0,
+  waterfall: 0
 }
 
 // Intercom

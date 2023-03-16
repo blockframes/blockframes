@@ -103,7 +103,8 @@ export type AppStatus = 'none' | 'requested' | 'accepted';
 export const organizationRoles = {
   catalog: { dashboard: 'Seller', marketplace: 'Buyer' },
   festival: { dashboard: 'Sales Agent', marketplace: 'Buyer' },
-  financiers: { dashboard: 'Partners', marketplace: 'Investor' }
+  financiers: { dashboard: 'Partners', marketplace: 'Investor' },
+  waterfall: { dashboard: 'dashboard', marketplace: 'marketplace' } // TODO #9257 this app have only dashboard
 };
 
 export interface OrganizationForm {
