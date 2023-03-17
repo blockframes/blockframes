@@ -75,7 +75,7 @@
           <mat-checkbox formControlName="dashboard" color="primary" [attr.test-id]="a + '-dashboard'">
             Dashboard
           </mat-checkbox>
-          <mat-checkbox formControlName="marketplace" color="primary" [attr.test-id]="a + '-marketplace'">
+          <mat-checkbox [disabled]="a === 'waterfall'"  formControlName="marketplace" color="primary" [attr.test-id]="a + '-marketplace'">
             Marketplace
           </mat-checkbox>
         </div>

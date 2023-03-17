@@ -1,0 +1,13 @@
+<layout-dashboard>
+  <aside fxLayout="column" fxLayoutAlign="space-between">
+    <mat-nav-list fxFlex>
+      <a mat-list-item routerLink="home" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
+        <span matLine><b>Dashboard</b></span>
+      </a>
+      <auth-sidenav fxHide.gt-xs></auth-sidenav>
+    </mat-nav-list>
+
+    <auth-sidenav-widget fxHide.gt-xs></auth-sidenav-widget>
+  </aside>
+</layout-dashboard>

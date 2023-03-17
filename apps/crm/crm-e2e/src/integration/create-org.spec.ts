@@ -148,6 +148,7 @@ function checkDbDocs(newcomer: Newcomer) {
       },
       crm: createModuleAccess(),
       financiers: createModuleAccess(),
+      waterfall: createModuleAccess(),
     });
     expect(dbOrg.description).to.eq(org.description);
     expect(dbOrg.email).to.eq(org.email);

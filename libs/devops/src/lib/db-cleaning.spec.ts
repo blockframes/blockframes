@@ -401,21 +401,24 @@ describe('DB cleaning script', () => {
         id: 'mov-A', app: {
           catalog: { status: 'accepted', access: true },
           festival: { status: 'draft', access: false },
-          financiers: { status: 'draft', access: false }
+          financiers: { status: 'draft', access: false },
+          waterfall: { status: 'draft', access: false }
         }
       },
       {
         id: 'mov-B', app: {
           catalog: { status: 'draft', access: true },
           festival: { status: 'draft', access: false },
-          financiers: { status: 'draft', access: false }
+          financiers: { status: 'draft', access: false },
+          waterfall: { status: 'draft', access: false }
         }
       },
       {
         id: 'mov-C', app: {
           catalog: { status: 'refused', access: false },
           festival: { status: 'draft', access: false },
-          financiers: { status: 'draft', access: false }
+          financiers: { status: 'draft', access: false },
+          waterfall: { status: 'draft', access: false }
         }
       }
     ];

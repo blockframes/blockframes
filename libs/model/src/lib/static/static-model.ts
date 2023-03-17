@@ -1,4 +1,4 @@
-export const app = ['catalog', 'festival', 'financiers', 'crm'] as const;
+export const app = ['catalog', 'festival', 'financiers', 'crm', 'waterfall'] as const;
 
 export const modules = ['dashboard', 'marketplace'] as const;
 
@@ -13,6 +13,7 @@ export const appShortName = {
   blockframes: 'BF',
   crm: 'CRM',
   cms: 'CMS',
+  waterfall: 'BF',
 };
 
 export const appName = {
@@ -22,6 +23,7 @@ export const appName = {
   blockframes: 'Blockframes',
   crm: 'Blockframes CRM',
   cms: 'Blockframes CMS',
+  waterfall: 'Blockframes',
 };
 
 export const appDescription = {

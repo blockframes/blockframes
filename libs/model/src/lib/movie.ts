@@ -365,9 +365,9 @@ export function createAppConfig(params: Partial<MovieAppConfig>): MovieAppConfig
     status: 'draft',
     access: false,
     ...params,
-    acceptedAt: params?.acceptedAt,
-    refusedAt: params?.refusedAt,
-    submittedAt: params?.submittedAt,
+    acceptedAt: params?.acceptedAt || null,
+    refusedAt: params?.refusedAt || null,
+    submittedAt: params?.submittedAt || null,
   };
 }
 

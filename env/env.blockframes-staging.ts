@@ -8,6 +8,7 @@ export const appUrl = {
   market: 'https://staging.archipelmarket.com',
   financiers: 'https://staging.mediafinanciers.com',
   crm: 'https://staging.crm.blockframes.io',
+  waterfall: 'https://staging.blockframes.io',
 };
 
 const firebaseConfig = {
@@ -40,6 +41,10 @@ const appConfigs = {
     appId: "1:176629403574:web:eacdbef9a019b1c33afb17",
     measurementId: "G-WFBNNFQZZM"
   },
+  waterfall: { // TODO #9257 change this
+    appId: "1:176629403574:web:e97f704329b41f233afb17",
+    measurementId: "G-XXXXXXXXXX"
+  },
   default: {
     appId: "1:176629403574:web:e97f704329b41f233afb17",
     measurementId: "G-46P00JHXXK"
@@ -53,9 +58,9 @@ export function firebase(app?: keyof typeof appConfigs) {
     ...firebaseConfig,
     ...appConfigs[app]
   } : {
-      ...firebaseConfig,
-      ...appConfigs.default
-    }
+    ...firebaseConfig,
+    ...appConfigs.default
+  }
 }
 
 // Algolia
@@ -67,12 +72,14 @@ export const algolia = {
   indexNameOrganizations: {
     festival: 'staging_festival_org',
     financiers: 'staging_financiers_org',
-    catalog: 'staging_catalog_org'
+    catalog: 'staging_catalog_org',
+    waterfall: 'staging_waterfall_org',
   },
   indexNameMovies: {
     festival: 'staging_festival_movies',
     financiers: 'staging_financiers_movies',
     catalog: 'staging_catalog_movies',
+    waterfall: 'staging_waterfall_movies',
   },
   indexNameUsers: 'staging_users',
 };
@@ -84,7 +91,8 @@ export const supportEmails = {
   default: 'dev+staging@blockframes.io', // redirect to => blockframes.dev@gmail.com
   catalog: 'dev+staging_catalog@blockframes.io',
   festival: 'dev+staging_festival@blockframes.io',
-  financiers: 'dev+staging_financiers@blockframes.io'
+  financiers: 'dev+staging_financiers@blockframes.io',
+  waterfall: 'dev+staging_waterfall@blockframes.io',
 }
 
 export const mailchimp = {
@@ -98,7 +106,8 @@ export const mailchimp = {
 export const yandex = {
   festival: 0,
   financiers: 0,
-  catalog: 0
+  catalog: 0,
+  waterfall: 0
 };
 
 // Hotjar
@@ -106,7 +115,8 @@ export const yandex = {
 export const hotjar = {
   festival: 0,
   financiers: 0,
-  catalog: 0
+  catalog: 0,
+  waterfall: 0
 }
 
 // Intercom

@@ -42,8 +42,13 @@ export class OrgRequestAccessComponent implements OnInit {
     this.orgExistingAccess$ = this.org$.pipe(map(org => getOrgAppAccess(org)));
   }
 
-  joinOptions() {
-    this.step.next('request');
+  async joinOptions() {
+    if (this.currentApp === 'waterfall') {
+      this.formControl.setValue('dashboard');
+      await this.requestAccess()
+    } else {
+      this.step.next('request');
+    }
   }
 
   async requestAccess() {
