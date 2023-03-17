@@ -348,6 +348,10 @@ service cloud.firestore {
         && data.app.financiers.status == status
     }
 
+    function getMovie(movieId) {
+      return get(/databases/$(database)/documents/movies/$(movieId)).data;
+    }
+
     ////////////////////////////////
     // CONTRACTS RULES            //
     ////////////////////////////////
@@ -522,6 +526,63 @@ service cloud.firestore {
 
     function isMyAnalytics() {
       return existingData()._meta.createdBy == userId();
+    }
+
+    ////////////////////////////////
+    // WATERFALL & BLOCKS RULES   //
+    ////////////////////////////////
+
+    match /waterfall/{waterfallId} {
+      allow read: if userHasValidOrg()
+        && notInMaintenance()
+        && isOrgMember(userOrgId())
+        && userOrgId() in existingData().orgIds;
+      allow create: if userHasValidOrg()
+        && isRequestFieldValueEqualToOrNotSetted(['id'], waterfallId)
+        && notInMaintenance()
+        && userOrgId() in getMovie(waterfallId).orgIds;
+      allow update: if userHasValidOrg()
+        && isNotUpdatingId('id', existingData().id)
+        && notInMaintenance()
+        && isOrgMember(userOrgId())
+        && userOrgId() in getMovie(existingData().id).orgIds;
+      allow delete: if false;
+
+      match /blocks/{blockId} {
+        allow read: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && userOrgId() in getMovie(waterfallId).orgIds;
+        allow create: if userHasValidOrg()
+          && isRequestFieldValueEqualToOrNotSetted(['id'], blockId)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && userOrgId() in getMovie(waterfallId).orgIds;
+        allow update: if userHasValidOrg()
+          && isNotUpdatingId('id', existingData().id)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && userOrgId() in getMovie(waterfallId).orgIds;
+        allow delete: if false;
+      }
+
+      match /permissions/{orgId} {
+        allow read: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && (userOrgId() in getMovie(waterfallId).orgIds || userOrgId() == orgId);
+        allow create: if userHasValidOrg()
+          && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && userOrgId() in getMovie(waterfallId).orgIds;
+        allow update: if userHasValidOrg()
+          && isNotUpdatingId('id', existingData().id)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && userOrgId() in getMovie(waterfallId).orgIds;
+        allow delete: if false;
+      }
     }
 
     /////////////////////////////////////////////////////////////////////////////////
