@@ -110,7 +110,8 @@ describe('Movie search in marketplace', () => {
     get('slider').find('.mat-slider-thumb-label').should('contain', '2020');
     get('save-filter').click();
     selectFilter('Running Time');
-    get('90min - 180min').click();
+    get('min-running-time').type('90');
+    get('max-running-time').type('180');
     get('save-filter').click();
     selectFilter('Festival Selection');
     get(festival[movie.prizes[0].name]).click();
@@ -189,7 +190,8 @@ describe('Movie search in marketplace', () => {
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Running Time');
-    get('13min - 26min').click();
+    get('min-running-time').type('13');
+    get('max-running-time').type('25');
     get('empty').should('exist');
     get(`movie-card_${movie.id}`).should('not.exist');
     get('clear-filter').click();

@@ -225,6 +225,10 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   load(savedSearch: MovieAvailsSearch) {
+    const runningTime = savedSearch.search.runningTime;
+    if (!runningTime) savedSearch.search.runningTime = { min: null, max: null };
+    if (Object.keys(retroOptionToMinMax).includes(runningTime.toString()))
+      savedSearch.search.runningTime = retroCompatibleRunningTime(runningTime as unknown as keyof typeof retroOptionToMinMax);
     this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
 
     // Avails Form
@@ -298,3 +302,14 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     this.isLoading = false;
   }
 }
+
+const retroOptionToMinMax = {
+  1: { min: null, max: 12 },
+  2: { min: 13, max: 25 },
+  3: { min: 26, max: 51 },
+  4: { min: 52, max: 89 },
+  5: { min: 90, max: 180 },
+  6: { min: 181, max: null },
+};
+
+const retroCompatibleRunningTime = (option: keyof typeof retroOptionToMinMax) => retroOptionToMinMax[option];
