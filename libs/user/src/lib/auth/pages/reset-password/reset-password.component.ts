@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
 import { AuthService } from '../../service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
@@ -12,11 +12,11 @@ import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ResetPasswordComponent implements OnInit {
-  public emailForm: FormGroup;
+  public emailForm: UntypedFormGroup;
   public submitted = false;
 
   constructor(
-    private builder: FormBuilder,
+    private builder: UntypedFormBuilder,
     private service: AuthService,
     private snackBar: MatSnackBar
   ) { }

@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
@@ -9,7 +9,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DisplayNameComponent {
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() labelSuffix: string;
   @Input() @boolean required = false;
 }

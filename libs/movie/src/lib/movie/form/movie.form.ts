@@ -44,7 +44,7 @@ import {
   App,
   Privacy
 } from '@blockframes/model';
-import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, Validators, ValidatorFn } from '@angular/forms';
 import {
   FormStaticValue,
   FormStaticValueArray,
@@ -66,29 +66,29 @@ function createMovieControls(movie: Partial<Movie>) {
     banner: new StorageFileForm(entity.banner),
     boxOffice: FormList.factory(entity.boxOffice, (el) => new BoxOfficeForm(el)),
     cast: FormList.factory(entity.cast, (el) => new CreditForm(el)),
-    certifications: new FormControl(entity.certifications),
-    color: new FormControl(entity.color),
-    contentType: new FormControl(entity.contentType, [Validators.required]),
+    certifications: new UntypedFormControl(entity.certifications),
+    color: new UntypedFormControl(entity.color),
+    contentType: new UntypedFormControl(entity.contentType, [Validators.required]),
     crew: FormList.factory(entity.crew, (el) => new CreditForm(el)),
-    customGenres: FormList.factory(entity.customGenres, (el) => new FormControl(el)),
+    customGenres: FormList.factory(entity.customGenres, (el) => new UntypedFormControl(el)),
     directors: FormList.factory(entity.directors, (el) => new DirectorForm(el), [
       Validators.required,
     ]),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
-    estimatedBudget: new FormControl(entity.estimatedBudget),
+    estimatedBudget: new UntypedFormControl(entity.estimatedBudget),
     expectedPremiere: new ExpectedPremiereForm(entity.expectedPremiere),
-    format: new FormControl(entity.format),
-    formatQuality: new FormControl(entity.formatQuality),
+    format: new UntypedFormControl(entity.format),
+    formatQuality: new UntypedFormControl(entity.formatQuality),
     genres: FormList.factory(entity.genres, (el) => new FormStaticValue(el, 'genres'), [
       Validators.required,
     ]),
-    internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
-    keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(1500)]),
-    keywords: FormList.factory(entity.keywords, (el) => new FormControl(el)),
+    internalRef: new UntypedFormControl(entity.internalRef, [Validators.maxLength(30)]),
+    keyAssets: new UntypedFormControl(entity.keyAssets, [Validators.maxLength(1500)]),
+    keywords: FormList.factory(entity.keywords, (el) => new UntypedFormControl(el)),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
-    logline: new FormControl(entity.logline, [Validators.maxLength(350)]),
+    logline: new UntypedFormControl(entity.logline, [Validators.maxLength(350)]),
     /* If no value is set for this property we want it to be true by default */
-    isOriginalVersionAvailable: new FormControl(entity.isOriginalVersionAvailable ?? true),
+    isOriginalVersionAvailable: new UntypedFormControl(entity.isOriginalVersionAvailable ?? true),
     originalLanguages: FormList.factory(
       entity.originalLanguages,
       (el) => new FormStaticValue<'languages'>(el, 'languages'),
@@ -104,17 +104,17 @@ function createMovieControls(movie: Partial<Movie>) {
     prizes: FormList.factory(entity.prizes, (el) => new MoviePrizeForm(el)),
     customPrizes: FormList.factory(entity.customPrizes, (el) => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, (el) => new CreditForm(el)),
-    productionStatus: new FormControl(entity.productionStatus, [Validators.required]),
+    productionStatus: new UntypedFormControl(entity.productionStatus, [Validators.required]),
     rating: FormList.factory(entity.rating, (el) => new MovieRatingForm(el)),
     release: new ReleaseYearForm(entity.release),
     review: FormList.factory(entity.review, (el) => new MovieReviewForm(el)),
     runningTime: new RunningTimeForm(entity.runningTime),
-    scoring: new FormControl(entity.scoring),
+    scoring: new UntypedFormControl(entity.scoring),
     shooting: new MovieShootingForm(entity.shooting),
-    soundFormat: new FormControl(entity.soundFormat),
+    soundFormat: new UntypedFormControl(entity.soundFormat),
     stakeholders: new StakeholderMapForm(entity.stakeholders),
     app: new MovieAppConfigForm(entity.app),
-    synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1500)]),
+    synopsis: new UntypedFormControl(entity.synopsis, [Validators.required, Validators.maxLength(1500)]),
     title: new TitleForm(entity.title),
     delivery: new MovieDeliveryForm(entity.delivery),
   };
@@ -302,7 +302,7 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
   protected clearFormArrays() {
     Object.keys(this.controls).forEach((key: string) => {
       const abstractControl = this.controls[key];
-      if (abstractControl instanceof FormArray) {
+      if (abstractControl instanceof UntypedFormArray) {
         abstractControl.clear();
       }
     });
@@ -317,8 +317,8 @@ function createBoxOfficeFormControl(boxOffice?: Partial<BoxOffice>) {
   const { unit, territory, value } = createBoxOffice(boxOffice);
   return {
     unit: new FormValue(unit),
-    territory: new FormControl(territory, Validators.required),
-    value: new FormControl(value, [Validators.min(1), Validators.required]),
+    territory: new UntypedFormControl(territory, Validators.required),
+    value: new UntypedFormControl(value, [Validators.min(1), Validators.required]),
   };
 }
 
@@ -346,10 +346,10 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
 function createPrizeFormControl(entity?: Partial<Prize>) {
   const { name, year, prize, premiere } = createPrize(entity);
   return {
-    name: new FormControl(name, [Validators.required]),
-    year: new FormControl(year, [yearValidators()]),
-    prize: new FormControl(prize, [Validators.maxLength(200)]),
-    premiere: new FormControl(premiere),
+    name: new UntypedFormControl(name, [Validators.required]),
+    year: new UntypedFormControl(year, [yearValidators()]),
+    prize: new UntypedFormControl(prize, [Validators.maxLength(200)]),
+    premiere: new UntypedFormControl(premiere),
   };
 }
 
@@ -377,16 +377,16 @@ export function createPrize(prize: Partial<Prize> = {}): Prize {
 function createCreditFormControl(credit?: Partial<Credit>) {
   const { firstName, lastName, role, status, description, filmography } = createCredit(credit);
   return {
-    firstName: new FormControl(firstName, [Validators.required]),
-    lastName: new FormControl(lastName, [Validators.required]),
-    role: new FormControl(role),
-    filmography: new FormArray([
+    firstName: new UntypedFormControl(firstName, [Validators.required]),
+    lastName: new UntypedFormControl(lastName, [Validators.required]),
+    role: new UntypedFormControl(role),
+    filmography: new UntypedFormArray([
       new FilmographyForm(filmography[0]),
       new FilmographyForm(filmography[1]),
       new FilmographyForm(filmography[2]),
     ]),
-    description: new FormControl(description, Validators.maxLength(500)),
-    status: new FormControl(status),
+    description: new UntypedFormControl(description, Validators.maxLength(500)),
+    status: new UntypedFormControl(status),
   };
 }
 
@@ -419,16 +419,16 @@ export class DirectorForm extends FormEntity<DirectorFormControl> {
 function createDirectorFormControl(director?: Partial<Director>) {
   const { firstName, lastName, filmography, status, description, category } = createDirector(director);
   return {
-    firstName: new FormControl(firstName, Validators.required),
-    lastName: new FormControl(lastName, Validators.required),
-    filmography: new FormArray([
+    firstName: new UntypedFormControl(firstName, Validators.required),
+    lastName: new UntypedFormControl(lastName, Validators.required),
+    filmography: new UntypedFormArray([
       new FilmographyForm(filmography[0]),
       new FilmographyForm(filmography[1]),
       new FilmographyForm(filmography[2]),
     ]),
-    description: new FormControl(description, Validators.maxLength(500)),
-    status: new FormControl(status),
-    category: new FormControl(category),
+    description: new UntypedFormControl(description, Validators.maxLength(500)),
+    status: new UntypedFormControl(status),
+    category: new UntypedFormControl(category),
   };
 }
 
@@ -441,8 +441,8 @@ type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
 function createFilmographyFormControl(filmography?: Partial<Filmography>) {
   const { year, title } = createFilmography(filmography);
   return {
-    year: new FormControl(year, [yearValidators()]),
-    title: new FormControl(title),
+    year: new UntypedFormControl(year, [yearValidators()]),
+    title: new UntypedFormControl(title),
   };
 }
 
@@ -467,7 +467,7 @@ export class StakeholderForm extends FormEntity<StakeholderControl, Stakeholder>
 function createStakeholderControl(stakeholder?: Partial<Stakeholder>) {
   const { displayName, countries } = createStakeholder(stakeholder);
   return {
-    displayName: new FormControl(displayName, Validators.required),
+    displayName: new UntypedFormControl(displayName, Validators.required),
     countries: FormList.factory(
       countries,
       (e) => new FormStaticValue<'territories'>(e, 'territories'),
@@ -516,9 +516,9 @@ export class TitleForm extends FormEntity<TitleFormControl> {
 function createTitleFormControl(title?: Partial<Movie['title']>) {
   const { original, international, series } = createTitle(title);
   return {
-    original: new FormControl(original),
-    international: new FormControl(international, Validators.required),
-    series: new FormControl(series, [Validators.max(100), Validators.min(1)]),
+    original: new UntypedFormControl(original),
+    international: new UntypedFormControl(international, Validators.required),
+    series: new UntypedFormControl(series, [Validators.max(100), Validators.min(1)]),
   };
 }
 
@@ -537,8 +537,8 @@ export class ReleaseYearForm extends FormEntity<ReleaseYearFormControl> {
 function createReleaseYearFormControl(release?: Partial<Movie['release']>) {
   const { year, status } = createReleaseYear(release);
   return {
-    year: new FormControl(year, [yearValidators(), Validators.required]),
-    status: new FormControl(status, [Validators.required]),
+    year: new UntypedFormControl(year, [yearValidators(), Validators.required]),
+    status: new UntypedFormControl(status, [Validators.required]),
   };
 }
 
@@ -557,9 +557,9 @@ export class RunningTimeForm extends FormEntity<RunningTimeFormControl> {
 function createRunningTimeFormControl(runningTime?: Partial<Movie['runningTime']>) {
   const { time, status, episodeCount } = runningTime;
   return {
-    time: new FormControl(time, [Validators.min(1)]),
-    status: new FormControl(status),
-    episodeCount: new FormControl(episodeCount, [Validators.max(1000)]),
+    time: new UntypedFormControl(time, [Validators.min(1)]),
+    status: new UntypedFormControl(status),
+    episodeCount: new UntypedFormControl(episodeCount, [Validators.max(1000)]),
   };
 }
 
@@ -598,11 +598,11 @@ export class AppConfigForm extends FormEntity<AppConfigControl> {
 function createAppConfigFormControl(appAccess?: Partial<MovieAppConfig>) {
   const { acceptedAt, submittedAt, access, refusedAt, status } = createAppConfig(appAccess);
   return {
-    acceptedAt: new FormControl(acceptedAt),
-    submittedAt: new FormControl(submittedAt),
-    access: new FormControl(access),
-    refusedAt: new FormControl(refusedAt),
-    status: new FormControl(status),
+    acceptedAt: new UntypedFormControl(acceptedAt),
+    submittedAt: new UntypedFormControl(submittedAt),
+    access: new UntypedFormControl(access),
+    refusedAt: new UntypedFormControl(refusedAt),
+    status: new UntypedFormControl(status),
   };
 }
 
@@ -652,10 +652,10 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
 function createMovieNoteControls(note?: Partial<MovieNote>) {
   const entity = createStorageFile(note);
   return {
-    role: new FormControl(entity.role),
-    firstName: new FormControl(entity.firstName),
-    lastName: new FormControl(entity.lastName),
-    storagePath: new FormControl(entity.storagePath),
+    role: new UntypedFormControl(entity.role),
+    firstName: new UntypedFormControl(entity.firstName),
+    lastName: new UntypedFormControl(entity.lastName),
+    storagePath: new UntypedFormControl(entity.storagePath),
   };
 }
 
@@ -674,10 +674,10 @@ export class MovieNotesForm extends FormEntity<MovieNotesControl> {
 function createMovieReviewControl(review: Partial<MovieReview> = {}) {
   const { criticName, journalName, criticQuote, revueLink } = createMovieReview(review);
   return {
-    criticName: new FormControl(criticName),
-    journalName: new FormControl(journalName, [Validators.required]),
-    criticQuote: new FormControl(criticQuote, Validators.maxLength(500)),
-    revueLink: new FormControl(revueLink, urlValidators),
+    criticName: new UntypedFormControl(criticName),
+    journalName: new UntypedFormControl(journalName, [Validators.required]),
+    criticQuote: new UntypedFormControl(criticQuote, Validators.maxLength(500)),
+    revueLink: new UntypedFormControl(revueLink, urlValidators),
   };
 }
 
@@ -707,9 +707,9 @@ function createRatingFormControl(entity?: Partial<MovieRating>) {
   const { country, reason, system, value } = createMovieRating(entity);
   return {
     country: new FormStaticValue<'territories'>(country, 'territories'),
-    reason: new FormControl(reason),
-    system: new FormControl(system),
-    value: new FormControl(value),
+    reason: new UntypedFormControl(reason),
+    system: new UntypedFormControl(system),
+    value: new UntypedFormControl(value),
   };
 }
 
@@ -737,8 +737,8 @@ function createOriginalReleaseFormControl(entity?: Partial<MovieOriginalRelease>
   const { country, date, media } = createMovieOriginalRelease(entity);
   return {
     country: new FormStaticValue<'territories'>(country, 'territories'),
-    date: new FormControl(date),
-    media: new FormControl(media),
+    date: new UntypedFormControl(date),
+    media: new UntypedFormControl(media),
   };
 }
 
@@ -782,9 +782,9 @@ export class VersionSpecificationForm extends FormEntity<any> {
   constructor(versionSpecification: MovieLanguageSpecification, validators: ValidatorFn[] = []) {
     super(
       {
-        dubbed: new FormControl(versionSpecification.dubbed),
-        subtitle: new FormControl(versionSpecification.subtitle),
-        caption: new FormControl(versionSpecification.caption),
+        dubbed: new UntypedFormControl(versionSpecification.dubbed),
+        subtitle: new UntypedFormControl(versionSpecification.subtitle),
+        caption: new UntypedFormControl(versionSpecification.caption),
       },
       [...validators, versionLanguagesValidator]
     );
@@ -804,8 +804,8 @@ const versionLanguagesValidator: ValidatorFn = (version: VersionSpecificationFor
 function createExpectedPremiereFormControl(entity?: Partial<MovieExpectedPremiere>) {
   const { event, date } = createExpectedPremiere(entity);
   return {
-    date: new FormControl(date),
-    event: new FormControl(event),
+    date: new UntypedFormControl(date),
+    event: new UntypedFormControl(event),
   };
 }
 
@@ -844,8 +844,8 @@ function createShootingFormControl(entity?: Partial<MovieShooting>) {
 function createShootingDateFormControl(entity?: Partial<MovieShootingDate>) {
   const { completed, progress, planned } = entity;
   return {
-    completed: new FormControl(completed),
-    progress: new FormControl(progress),
+    completed: new UntypedFormControl(completed),
+    progress: new UntypedFormControl(progress),
     planned: new ShootingPlannedForm(planned),
   };
 }
@@ -899,9 +899,9 @@ export class ShootingPlannedObjectForm extends FormEntity<MoviePlannedShootingCo
 function createShootingPlannedFormControl(entity: Partial<MoviePlannedShooting> = {}) {
   const { period, month, year } = createShootingPlannedObject(entity);
   return {
-    period: new FormControl(period),
-    month: new FormControl(month),
-    year: new FormControl(year, yearValidators()),
+    period: new UntypedFormControl(period),
+    month: new UntypedFormControl(month),
+    year: new UntypedFormControl(year, yearValidators()),
   };
 }
 
@@ -920,8 +920,8 @@ export class ShootingLocationsForm extends FormEntity<MovieShootingLocationsCont
 function createShootingLocationsFormControl(entity?: Partial<MovieShootingLocations>) {
   const { cities, country } = createShootingLocations(entity);
   return {
-    cities: new FormControl(cities),
-    country: new FormControl(country),
+    cities: new UntypedFormControl(cities),
+    country: new UntypedFormControl(country),
   };
 }
 
@@ -949,7 +949,7 @@ function createAudienceAndGoalsFormControl(entity?: Partial<MovieGoalsAudience>)
   return {
     targets: FormList.factory(
       targets.filter((t) => !!t),
-      (el) => new FormControl(el)
+      (el) => new UntypedFormControl(el)
     ),
     goals: new FormStaticValueArray<'socialGoals'>(goals.filter((g) => !!g) ?? [], 'socialGoals'),
   };
@@ -964,15 +964,15 @@ type MovieAudienceAndGoalsControl = ReturnType<typeof createAudienceAndGoalsForm
 function createMovieVideoControl(movieVideo: Partial<MovieVideo> = {}) {
   const file = createStorageFile(movieVideo);
   return {
-    privacy: new FormControl(file.privacy),
-    collection: new FormControl(file.collection),
-    docId: new FormControl(file.docId),
-    field: new FormControl(file.field),
-    storagePath: new FormControl(file.storagePath),
-    title: new FormControl(movieVideo?.title ?? ''),
-    description: new FormControl(movieVideo?.description ?? '', Validators.maxLength(1500)),
-    type: new FormControl(movieVideo?.type ?? ''),
-    jwPlayerId: new FormControl(movieVideo?.jwPlayerId ?? ''),
+    privacy: new UntypedFormControl(file.privacy),
+    collection: new UntypedFormControl(file.collection),
+    docId: new UntypedFormControl(file.docId),
+    field: new UntypedFormControl(file.field),
+    storagePath: new UntypedFormControl(file.storagePath),
+    title: new UntypedFormControl(movieVideo?.title ?? ''),
+    description: new UntypedFormControl(movieVideo?.description ?? '', Validators.maxLength(1500)),
+    type: new UntypedFormControl(movieVideo?.type ?? ''),
+    jwPlayerId: new UntypedFormControl(movieVideo?.jwPlayerId ?? ''),
   };
 }
 
@@ -1053,15 +1053,15 @@ export class MovieNoteForm extends FormEntity<MovieNoteControl> {
 function createMovieNoteFormControl(entity?: Partial<MovieNote>) {
   const note = createMovieNote(entity);
   return {
-    firstName: new FormControl(note.firstName),
-    lastName: new FormControl(note.lastName),
-    role: new FormControl(note.role),
+    firstName: new UntypedFormControl(note.firstName),
+    lastName: new UntypedFormControl(note.lastName),
+    role: new UntypedFormControl(note.role),
 
-    privacy: new FormControl(note.privacy),
-    collection: new FormControl(note.collection),
-    docId: new FormControl(note.docId),
-    field: new FormControl(note.field),
-    storagePath: new FormControl(note.storagePath),
+    privacy: new UntypedFormControl(note.privacy),
+    collection: new UntypedFormControl(note.collection),
+    docId: new UntypedFormControl(note.docId),
+    field: new UntypedFormControl(note.field),
+    storagePath: new UntypedFormControl(note.storagePath),
   };
 }
 

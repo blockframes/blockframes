@@ -5,7 +5,7 @@ import { Organization, Territory, App, OrganizationSearch, AlgoliaModule } from 
 // Utils
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { algolia } from '@env';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { maxQueryLength } from '@blockframes/utils/algolia/helper.utils';
 
 export function createOrganizationSearch(search: Partial<OrganizationSearch> = {}): OrganizationSearch {
@@ -23,13 +23,13 @@ export function createOrganizationSearch(search: Partial<OrganizationSearch> = {
 
 function createOrganizationSearchControl(search: OrganizationSearch) {
   return {
-    query: new FormControl(search.query),
-    page: new FormControl(search.page),
-    hitsPerPage: new FormControl(search.hitsPerPage),
+    query: new UntypedFormControl(search.query),
+    page: new UntypedFormControl(search.page),
+    hitsPerPage: new UntypedFormControl(search.hitsPerPage),
     countries: FormList.factory<Territory>(search.countries),
-    appModule: new FormControl(search.appModule),
-    isAccepted: new FormControl(search.isAccepted),
-    hasAcceptedMovies: new FormControl(search.hasAcceptedMovies)
+    appModule: new UntypedFormControl(search.appModule),
+    isAccepted: new UntypedFormControl(search.isAccepted),
+    hasAcceptedMovies: new UntypedFormControl(search.hasAcceptedMovies)
   };
 }
 

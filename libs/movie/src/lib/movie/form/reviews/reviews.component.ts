@@ -3,7 +3,7 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 import { premiereType } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
   selector: 'movie-form-reviews',
@@ -24,7 +24,7 @@ export class MovieFormReviewsComponent {
     this.toggleChanged = true;
   }
 
-  onClick(group: MatButtonToggleGroup, form: FormControl) {
+  onClick(group: MatButtonToggleGroup, form: UntypedFormControl) {
     // We need to make sure not to set value to undefined in the form, firebase will throw an error
     const value = !this.toggleChanged || typeof group.value === 'undefined' ? ''  : group.value;
     form.setValue(value);

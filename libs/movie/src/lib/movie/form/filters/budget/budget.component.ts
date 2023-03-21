@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
@@ -13,7 +13,7 @@ export const max = 20000000;
 })
 export class BudgetFilterComponent implements OnInit, OnDestroy {
 
-  @Input() form: FormControl; // FormControl of number
+  @Input() form: UntypedFormControl; // FormControl of number
   private sub: Subscription;
 
   max = max;

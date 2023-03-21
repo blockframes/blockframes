@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { runningTimeFilters } from '../../search.form';
 
 @Component({
@@ -9,7 +9,7 @@ import { runningTimeFilters } from '../../search.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RunningTimeFilterComponent {
-  @Input() form: FormControl;
+  @Input() form: UntypedFormControl;
 
   filters = runningTimeFilters;
 }

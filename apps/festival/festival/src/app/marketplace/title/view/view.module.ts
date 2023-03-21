@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Component
 import { MarketplaceMovieViewComponent } from './view.component';
 import { MovieShellModule } from '@blockframes/movie/marketplace/shell/shell.module';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
@@ -20,7 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-const routes = [
+const routes: Routes = [
   {
     path: '',
     component: MarketplaceMovieViewComponent,

@@ -1,5 +1,5 @@
 import { Validator } from './types';
-import { FormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { defer, Observable } from 'rxjs';
 import { shareReplay, startWith } from 'rxjs/operators';
 import { FormList } from '.';
@@ -10,7 +10,7 @@ export type EntityControl<E = any> = {
 }
 
 /** Generic FormGroup for Entity */
-export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
+export class FormEntity<C extends EntityControl<T>, T = any> extends UntypedFormGroup {
   value: T;
   valueChanges: Observable<T>;
   controls: C;

@@ -1,4 +1,4 @@
-import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { FormEntity, FormList, FormStaticValue } from '@blockframes/utils/form';
 import { Campaign, createCampaign, Perk, createPerk, Funding, Budget } from '@blockframes/model';
@@ -27,7 +27,7 @@ export function comparePerkAmount(form: PerkForm): ValidationErrors | null {
   }
 };
 
-function compareProfits(form: FormGroup): ValidationErrors | null {
+function compareProfits(form: UntypedFormGroup): ValidationErrors | null {
   const { low, medium, high } = form.value;
   const errors = {};
   if (low && medium && low > medium) errors['lowOverMedium'] = true;
@@ -44,12 +44,12 @@ function compareProfits(form: FormGroup): ValidationErrors | null {
 function createPerkControls(value?: Partial<Perk>) {
   const perk = createPerk(value);
   return {
-    title: new FormControl(perk.title, [Validators.required]),
-    description: new FormControl(perk.description, Validators.required),
-    minPledge: new FormControl(perk.minPledge, [Validators.min(0)]),
+    title: new UntypedFormControl(perk.title, [Validators.required]),
+    description: new UntypedFormControl(perk.description, Validators.required),
+    minPledge: new UntypedFormControl(perk.minPledge, [Validators.min(0)]),
     amount: new FormEntity({
-      current: new FormControl(perk.amount.current, [Validators.min(0)]),
-      total: new FormControl(perk.amount.total, [Validators.required, Validators.min(0)]),
+      current: new UntypedFormControl(perk.amount.current, [Validators.min(0)]),
+      total: new UntypedFormControl(perk.amount.total, [Validators.required, Validators.min(0)]),
     })
   };
 }
@@ -69,10 +69,10 @@ export class PerkForm extends FormEntity<PerkControls, Perk> {
 /////////////
 function createFundingControls(funding: Partial<Funding> = {}) {
   return {
-    name: new FormControl(funding.name),
-    amount: new FormControl(funding.amount, Validators.min(0)),
-    kind: new FormControl(funding.kind),
-    status: new FormControl(funding.status),
+    name: new UntypedFormControl(funding.name),
+    amount: new UntypedFormControl(funding.amount, Validators.min(0)),
+    kind: new UntypedFormControl(funding.kind),
+    status: new UntypedFormControl(funding.status),
   }
 }
 
@@ -91,11 +91,11 @@ export class FundingForm extends FormEntity<FundingControls, Funding> {
 ////////////
 function createBudgetFormControl(budget: Partial<Budget> = {}) {
   return {
-    development: new FormControl(budget.development, Validators.min(0)),
-    administration: new FormControl(budget.administration, Validators.min(0)),
-    contingency: new FormControl(budget.contingency, Validators.min(0)),
-    postProduction: new FormControl(budget.postProduction, Validators.min(0)),
-    shooting: new FormControl(budget.shooting, Validators.min(0))
+    development: new UntypedFormControl(budget.development, Validators.min(0)),
+    administration: new UntypedFormControl(budget.administration, Validators.min(0)),
+    contingency: new UntypedFormControl(budget.contingency, Validators.min(0)),
+    postProduction: new UntypedFormControl(budget.postProduction, Validators.min(0)),
+    shooting: new UntypedFormControl(budget.shooting, Validators.min(0))
   }
 }
 
@@ -116,13 +116,13 @@ function createCampaignControls(value?: Partial<Campaign>) {
   const campaign = createCampaign(value);
   return {
     currency: new FormStaticValue(campaign.currency, 'movieCurrencies', [Validators.required]),
-    cap: new FormControl(campaign.cap, [Validators.required, Validators.min(0)]),
-    minPledge: new FormControl(campaign.minPledge, [Validators.required, Validators.min(0)]),
-    received: new FormControl(campaign.received, Validators.min(0)),
-    profits: new FormGroup({
-      low: new FormControl(campaign.profits.low, Validators.min(0)),
-      medium: new FormControl(campaign.profits.medium, Validators.min(0)),
-      high: new FormControl(campaign.profits.high, Validators.min(0)),
+    cap: new UntypedFormControl(campaign.cap, [Validators.required, Validators.min(0)]),
+    minPledge: new UntypedFormControl(campaign.minPledge, [Validators.required, Validators.min(0)]),
+    received: new UntypedFormControl(campaign.received, Validators.min(0)),
+    profits: new UntypedFormGroup({
+      low: new UntypedFormControl(campaign.profits.low, Validators.min(0)),
+      medium: new UntypedFormControl(campaign.profits.medium, Validators.min(0)),
+      high: new UntypedFormControl(campaign.profits.high, Validators.min(0)),
     }, compareProfits),
     perks: FormList.factory(
       campaign.perks,
@@ -133,7 +133,7 @@ function createCampaignControls(value?: Partial<Campaign>) {
       (funding?: Partial<Funding>) => new FundingForm(funding),
     ),
     budget: new BudgetForm(campaign.budget),
-    files: new FormGroup({
+    files: new UntypedFormGroup({
       financingPlan: new StorageFileForm(campaign.files.financingPlan),
       waterfall: new StorageFileForm(campaign.files.waterfall),
       budget: new StorageFileForm(campaign.files.budget),
