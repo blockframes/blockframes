@@ -70,6 +70,7 @@ const routes = createAdminRoutes({
   imports: [
     IdlePreloadModule.forRoot(),
     RouterModule.forRoot(routes, {
+      initialNavigation: 'enabledBlocking',
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
       paramsInheritanceStrategy: 'always',
