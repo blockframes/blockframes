@@ -58,7 +58,6 @@ import { VersionModule } from '@blockframes/utils/version/version.module';
       loadChildren: () => import('./catalog.module').then(m => m.CatalogModule)
     }], {
       preloadingStrategy: IdlePreload,
-      initialNavigation: 'enabled',
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
       paramsInheritanceStrategy: 'always',

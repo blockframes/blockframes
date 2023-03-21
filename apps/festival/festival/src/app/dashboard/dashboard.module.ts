@@ -144,6 +144,7 @@ const routes: Routes = [{
                 {
                   path: '',
                   canActivate: [EventTypeGuard],
+                  children: []
                 },
                 {
                   path: 'screening',

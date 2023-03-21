@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from "@angular/material/button";
 
 import { TermFormModule as FormModule } from '@blockframes/contract/term/components/form/form.module';
-import { LetModule } from '@rx-angular/template';
+import { LetModule } from '@rx-angular/template/let';
 
 @NgModule({
   declarations: [TermFormComponent],

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Route } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@blockframes/auth/guard/auth.guard';
 import { OrganizationGuard } from '@blockframes/organization/guard/organization.guard';
 import { PermissionsGuard } from '@blockframes/permissions/guard/permissions.guard';
@@ -7,7 +7,7 @@ import { MaintenanceGuard } from '@blockframes/ui/maintenance/maintenance.guard'
 import { RouteOptions } from '@blockframes/utils/routes/create-routes';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
-export function createAdminRoutes({ appsRoutes }: RouteOptions) {
+export function createAdminRoutes({ appsRoutes }: RouteOptions): Routes {
   return [
     {
       path: 'maintenance',
@@ -57,7 +57,7 @@ export function createAdminRoutes({ appsRoutes }: RouteOptions) {
     }];
 }
 
-const routes: Route[] = createAdminRoutes({
+const routes = createAdminRoutes({
   appsRoutes: [{
     path: '',
     loadChildren: () => import('./shell/shell.module').then(m => m.ShellModule)
@@ -70,7 +70,6 @@ const routes: Route[] = createAdminRoutes({
   imports: [
     IdlePreloadModule.forRoot(),
     RouterModule.forRoot(routes, {
-      initialNavigation: 'enabled',
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
       paramsInheritanceStrategy: 'always',

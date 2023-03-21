@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { MandateListComponent } from './mandates.component';
 
-import { LetModule } from '@rx-angular/template';
+import { LetModule } from '@rx-angular/template/let';
 
 // Blockframes
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';

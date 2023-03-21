@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 import { AnonymousAuthGuard } from '@blockframes/auth/guard/anonymous-auth-guard';
 
-const routes: Routes = createRoutes({
+const routes = createRoutes({
   landing: {
     path: '',
     canActivate: [NoAuthGuard],
@@ -47,7 +47,6 @@ const routes: Routes = createRoutes({
   imports: [
     IdlePreloadModule.forRoot(),
     RouterModule.forRoot(routes, {
-      initialNavigation: 'enabled',
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
       paramsInheritanceStrategy: 'always',
