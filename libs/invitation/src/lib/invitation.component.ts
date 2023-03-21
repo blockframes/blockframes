@@ -3,7 +3,7 @@ import { InvitationService } from './service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { combineLatest, map, startWith, tap } from 'rxjs';
 import { APP } from '@blockframes/utils/routes/utils';
 import { Invitation, App, getOrgModuleAccess } from '@blockframes/model';
@@ -20,9 +20,9 @@ const applyFilters = (invitations: Invitation[], filters: { type: string[], stat
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationComponent {
-  form = new FormGroup({
-    type: new FormControl([]),
-    status: new FormControl([]),
+  form = new UntypedFormGroup({
+    type: new UntypedFormControl([]),
+    status: new UntypedFormControl([]),
   });
 
   // Invitation count for conditions

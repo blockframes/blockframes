@@ -1,6 +1,6 @@
 import { getCurrencySymbol } from '@angular/common';
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/service';
@@ -22,7 +22,7 @@ interface EmailData {
 }
 
 export interface ContactPartnerModalData {
-  form: FormGroup;
+  form: UntypedFormGroup;
   orgs: Organization[];
   movie: Movie;
   campaign: Observable<Campaign>;

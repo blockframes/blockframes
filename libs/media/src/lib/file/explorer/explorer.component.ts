@@ -17,6 +17,7 @@ import { getDirectories, Directory, FileDirectory } from './explorer.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
+import { StorageFileForm } from '@blockframes/media/form/media.form';
 
 function getDir(root: Directory, path: string) {
   return path.split('/').reduce((parent, segment) => parent?.children[segment] ?? parent, root);
@@ -123,7 +124,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     if (file?.togglePrivacy) {
       const metadata = getFileMetadata(file.meta[0], file.meta[1], file.meta[2]);
       const ref = this.firestore.getRef(`${metadata.collection}/${metadata.docId}`) as DocumentReference;
-      updateDoc(ref, { [`${metadata.field}.privacy`]: file.form.get('privacy').value });
+      updateDoc(ref, { [`${metadata.field}.privacy`]: (file.form as StorageFileForm).get('privacy').value });
     }
 
     this.service.upload();

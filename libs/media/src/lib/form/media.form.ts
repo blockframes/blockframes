@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { createStorageFile, StorageFile, Privacy } from '@blockframes/model';
 
@@ -9,11 +9,11 @@ import { createStorageFile, StorageFile, Privacy } from '@blockframes/model';
 function createStorageFileControl(storageFile: Partial<StorageFile> = {}) {
   const file = createStorageFile(storageFile);
   return {
-    privacy: new FormControl(file.privacy),
-    collection: new FormControl(file.collection),
-    docId: new FormControl(file.docId),
-    field: new FormControl(file.field),
-    storagePath: new FormControl(file.storagePath),
+    privacy: new UntypedFormControl(file.privacy),
+    collection: new UntypedFormControl(file.collection),
+    docId: new UntypedFormControl(file.docId),
+    field: new UntypedFormControl(file.field),
+    storagePath: new UntypedFormControl(file.storagePath),
   };
 }
 

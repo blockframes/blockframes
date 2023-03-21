@@ -7,7 +7,7 @@ import { CookieDialogComponent } from '../cookie-dialog/cookie-dialog.component'
 import { GDPRService } from '../gdpr-service/gdpr.service'
 import { AuthService } from '@blockframes/auth/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'cookie-banner',
@@ -18,9 +18,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class CookieBannerComponent implements OnInit {
 
   public hasAccepted = false;
-  public form = new FormGroup({
-    hotjar: new FormControl(true),
-    intercom: new FormControl(true),
+  public form = new UntypedFormGroup({
+    hotjar: new UntypedFormControl(true),
+    intercom: new UntypedFormControl(true),
   });
 
   constructor(

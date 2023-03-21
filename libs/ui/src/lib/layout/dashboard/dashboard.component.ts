@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy, Inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatSidenav } from '@angular/material/sidenav';
 
 // Blockframes
@@ -39,7 +39,7 @@ type BridgeRecord = Partial<Record<App, AppBridge>>;
 })
 export class DashboardComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
-  public searchCtrl: FormControl = new FormControl('');
+  public searchCtrl: UntypedFormControl = new UntypedFormControl('');
   public notificationCount$ = this.notificationService.myNotificationsCount$;
   public appBridge: BridgeRecord = {
     catalog: {

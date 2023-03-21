@@ -5,7 +5,7 @@ import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
-const routes: Routes = createRoutes({
+const routes = createRoutes({
   landing: {
     path: '',
     canActivate: [NoAuthGuard],
@@ -36,7 +36,7 @@ const routes: Routes = createRoutes({
   imports: [
     IdlePreloadModule.forRoot(),
     RouterModule.forRoot(routes, {
-      initialNavigation: 'enabled',
+      initialNavigation: 'enabledBlocking',
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
       paramsInheritanceStrategy: 'always',

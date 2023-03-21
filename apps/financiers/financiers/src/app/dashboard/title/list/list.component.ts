@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { fromOrg, MovieService } from '@blockframes/movie/service';
 import { Movie, MovieCampaign } from '@blockframes/model';
 import { CampaignService } from '@blockframes/campaign/service';
@@ -45,7 +45,7 @@ function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
 export class ListComponent implements OnInit {
   titles$: Observable<MovieCampaign[]>;
   titleCount$: Observable<Record<string, number>>;
-  filter = new FormControl('all');
+  filter = new UntypedFormControl('all');
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
   filters = filters;
   exporting = false;

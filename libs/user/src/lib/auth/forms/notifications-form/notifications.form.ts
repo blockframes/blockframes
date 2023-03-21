@@ -1,11 +1,11 @@
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { NotificationSettings, NotificationSettingsTemplate } from '@blockframes/model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 function createNotificationSettingsControls(settings: Partial<NotificationSettingsTemplate> = {}, disabled = false) {
   return {
-    email: new FormControl({ value: settings.email ?? true, disabled: false }, Validators.required),
-    app: new FormControl({ value: settings.app ?? true, disabled }, Validators.required),
+    email: new UntypedFormControl({ value: settings.email ?? true, disabled: false }, Validators.required),
+    app: new UntypedFormControl({ value: settings.app ?? true, disabled }, Validators.required),
   }
 }
 

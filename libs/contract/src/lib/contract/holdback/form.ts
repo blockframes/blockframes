@@ -1,4 +1,4 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { createHoldback, Holdback } from '@blockframes/model';
 import { FormEntity, FormStaticValueArray } from '@blockframes/utils/form';
 import { compareDates, isDateInFuture } from '@blockframes/utils/form/validators/validators';
@@ -11,9 +11,9 @@ function createHoldbackControl(params: Partial<Holdback> = {}) {
   return {
     territories: new FormStaticValueArray<'territories'>(term.territories, 'territories'),
     medias: new FormStaticValueArray<'medias'>(term.medias, 'medias'),
-    duration: new FormGroup({
-      from: new FormControl(term.duration?.from, fromValidators),
-      to: new FormControl(term.duration?.to, toValidators)
+    duration: new UntypedFormGroup({
+      from: new UntypedFormControl(term.duration?.from, fromValidators),
+      to: new UntypedFormControl(term.duration?.to, toValidators)
     }),
   }
 }

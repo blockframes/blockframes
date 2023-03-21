@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BucketService } from '@blockframes/contract/bucket/service';
@@ -13,9 +13,9 @@ import { MovieCurrency } from '@blockframes/model';
 })
 export class SpecificTermsComponent implements OnInit {
 
-  form = new FormGroup({
-    specificity: new FormControl(),
-    acceptTerms: new FormControl(false)
+  form = new UntypedFormGroup({
+    specificity: new UntypedFormControl(),
+    acceptTerms: new UntypedFormControl(false)
   });
 
   constructor(

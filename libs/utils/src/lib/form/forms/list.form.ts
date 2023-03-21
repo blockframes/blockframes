@@ -1,5 +1,5 @@
 import { AbstractControl } from '@angular/forms';
-import { FormArray } from '@angular/forms';
+import { UntypedFormArray } from '@angular/forms';
 import { FormEntity } from './entity.form';
 import { Validator, AsyncValidator } from './types';
 import { createControlForm } from './create-control';
@@ -28,7 +28,7 @@ function hasValue(value: any): boolean {
 }
 
 /** A list of FormField */
-export class FormList<T, Control extends AbstractControl = any> extends FormArray {
+export class FormList<T, Control extends AbstractControl = any> extends UntypedFormArray {
   private _value: T[];
   createControl: (value?: Partial<T>, index?: number) => Control = createControlForm;
   controls: Control[];

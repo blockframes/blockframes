@@ -5,7 +5,7 @@ import { fromOrg, MovieService } from '@blockframes/movie/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Organization, Movie, Invitation, UserRole, createOrganizationMember, App, getAllAppsExcept } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/service';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
@@ -31,7 +31,7 @@ export class OrganizationComponent implements OnInit {
   public orgForm: OrganizationCrmForm;
   public movies: Movie[];
   public members;
-  public notifyCheckbox = new FormControl(true);
+  public notifyCheckbox = new UntypedFormControl(true);
   public storagePath: string;
   public apps = getAllAppsExcept(['crm']);
 

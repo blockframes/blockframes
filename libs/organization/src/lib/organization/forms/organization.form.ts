@@ -1,4 +1,4 @@
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { FormStaticValue, FormEntity } from '@blockframes/utils/form';
 import { AddressSet, createAddressSet, createOrganization, Organization, Location, createLocation } from '@blockframes/model';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
@@ -17,12 +17,12 @@ export class OrganizationAddressesForm extends FormEntity<OrganizationAddressesC
 function createLoactionControls(location: Partial<Location> = {}) {
   const entity = createLocation(location);
   return {
-    street: new FormControl(entity.street),
-    zipCode: new FormControl(entity.zipCode),
-    city: new FormControl(entity.city),
+    street: new UntypedFormControl(entity.street),
+    zipCode: new UntypedFormControl(entity.zipCode),
+    city: new UntypedFormControl(entity.city),
     country: new FormStaticValue<'territories'>(entity.country, 'territories', [Validators.required]),
-    phoneNumber: new FormControl(entity.phoneNumber),
-    region: new FormControl(entity.phoneNumber),
+    phoneNumber: new UntypedFormControl(entity.phoneNumber),
+    region: new UntypedFormControl(entity.phoneNumber),
   }
 }
 
@@ -37,11 +37,11 @@ export class AddressForm extends FormEntity<LocationControl>{
 function createOrganizationFormControl(params?: Organization) {
   const organization = createOrganization(params);
   return {
-    name: new FormControl(organization.name, Validators.required),
-    description: new FormControl(organization.description),
+    name: new UntypedFormControl(organization.name, Validators.required),
+    description: new UntypedFormControl(organization.description),
     addresses: new OrganizationAddressesForm(organization.addresses),
-    email: new FormControl(organization.email, Validators.email),
-    activity: new FormControl(organization.activity),
+    email: new UntypedFormControl(organization.email, Validators.email),
+    activity: new UntypedFormControl(organization.activity),
     logo: new StorageFileForm(organization.logo),
     documents: new OrganizationMediasForm(organization.documents),
   }

@@ -1,14 +1,14 @@
-import { FormControl, Validators } from "@angular/forms";
+import { UntypedFormControl, Validators } from "@angular/forms";
 import { createAddressSet } from "@blockframes/model";
 import { FormEntity } from "@blockframes/utils/form";
 import { OrganizationAddressesForm } from "./organization.form";
 
 function createOrganizationLiteFormControl() {
   return {
-    name: new FormControl('', Validators.required),
+    name: new UntypedFormControl('', Validators.required),
     addresses: new OrganizationAddressesForm(createAddressSet()),
-    activity: new FormControl('', Validators.required),
-    appAccess: new FormControl('', Validators.required),
+    activity: new UntypedFormControl('', Validators.required),
+    appAccess: new UntypedFormControl('', Validators.required),
   }
 }
 
