@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TermFormComponent } from './term-form.component';
 import { RouterModule } from '@angular/router';
+import { LetModule } from '@rx-angular/template/let';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from "@angular/material/button";
+import { MatButtonModule } from '@angular/material/button';
 
 import { TermFormModule as FormModule } from '@blockframes/contract/term/components/form/form.module';
-import { LetModule } from '@rx-angular/template';
 
 @NgModule({
   declarations: [TermFormComponent],
