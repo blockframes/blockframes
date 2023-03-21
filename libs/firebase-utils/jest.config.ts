@@ -1,6 +1,6 @@
 ﻿module.exports = {
   name: 'firebase-utils',
-  preset: '../../jest.preset.js',
+
   globals: {
     'ts-jest': { tsconfig: '<rootDir>/tsconfig.spec.json' },
   },
@@ -11,4 +11,5 @@
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'html'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory: '../../coverage/libs/firebase-utils',
+  preset: '../../jest.preset.ts',
 };

@@ -1,6 +1,6 @@
 ﻿module.exports = {
   name: 'admin',
-  preset: '../../jest.preset.js',
+
   coverageDirectory: '../../coverage/libs/admin',
   globals: {
     'ts-jest': {
@@ -10,4 +10,5 @@
   },
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory: '../../coverage/libs/admin',
+  preset: '../../jest.preset.ts',
 };

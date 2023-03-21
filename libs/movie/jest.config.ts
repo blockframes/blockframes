@@ -1,6 +1,6 @@
 ﻿module.exports = {
-  name: 'ui',
-  preset: '../../jest.preset.js',
+  name: 'movie',
+
   globals: {
     'ts-jest': {
       stringifyContentPathRegex: '\\.(html|svg)$',
@@ -12,5 +12,6 @@
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/ui',
+  coverageDirectory: '../../coverage/libs/movie',
+  preset: '../../jest.preset.ts',
 };

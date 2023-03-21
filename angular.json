@@ -10,7 +10,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/admin/jest.config.js",
+            "jestConfig": "libs/admin/jest.config.ts",
             "passWithNoTests": true
           }
         },
@@ -34,7 +34,7 @@
           "executor": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/analytics"],
           "options": {
-            "jestConfig": "libs/analytics/jest.config.js",
+            "jestConfig": "libs/analytics/jest.config.ts",
             "passWithNoTests": true
           }
         },
@@ -113,7 +113,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/backend-functions/jest.config.js",
+            "jestConfig": "apps/backend-functions/jest.config.ts",
             "passWithNoTests": true,
             "runInBand": true
           }
@@ -167,7 +167,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/campaign/jest.config.js",
+            "jestConfig": "libs/campaign/jest.config.ts",
             "passWithNoTests": true,
             "setupFile": "libs/campaign/src/test-setup.ts"
           }
@@ -272,7 +272,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/catalog/catalog/jest.config.js",
+            "jestConfig": "apps/catalog/catalog/jest.config.ts",
             "passWithNoTests": true
           }
         },
@@ -543,7 +543,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/consents/jest.config.js",
+            "jestConfig": "libs/consents/jest.config.ts",
             "passWithNoTests": true,
             "setupFile": "libs/consents/src/test-setup.ts"
           }
@@ -560,7 +560,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/contract/jest.config.js",
+            "jestConfig": "libs/contract/jest.config.ts",
             "passWithNoTests": true
           }
         },
@@ -668,7 +668,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/crm/crm/jest.config.js",
+            "jestConfig": "apps/crm/crm/jest.config.ts",
             "passWithNoTests": true
           }
         },
@@ -769,7 +769,7 @@
           "executor": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/devops"],
           "options": {
-            "jestConfig": "libs/devops/jest.config.js",
+            "jestConfig": "libs/devops/jest.config.ts",
             "passWithNoTests": true,
             "runInBand": true
           }
@@ -793,7 +793,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/event/jest.config.js",
+            "jestConfig": "libs/event/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -906,7 +906,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/festival/festival/jest.config.js",
+            "jestConfig": "apps/festival/festival/jest.config.ts",
             "passWithNoTests": true
           }
         },
@@ -1077,7 +1077,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/financiers/financiers/jest.config.js",
+            "jestConfig": "apps/financiers/financiers/jest.config.ts",
             "passWithNoTests": true,
             "setupFile": "apps/financiers/financiers/src/test-setup.ts"
           }
@@ -1179,7 +1179,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/firebase-utils/jest.config.js",
+            "jestConfig": "libs/firebase-utils/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -1202,7 +1202,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/import/jest.config.js",
+            "jestConfig": "libs/import/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -1225,7 +1225,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/invitation/jest.config.js",
+            "jestConfig": "libs/invitation/jest.config.ts",
             "passWithNoTests": true,
             "setupFile": "libs/invitation/src/test-setup.ts"
           }
@@ -1249,7 +1249,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/landing/jest.config.js",
+            "jestConfig": "libs/landing/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -1272,7 +1272,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/media/jest.config.js",
+            "jestConfig": "libs/media/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -1295,7 +1295,7 @@
           "executor": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/model"],
           "options": {
-            "jestConfig": "libs/model/jest.config.js",
+            "jestConfig": "libs/model/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -1318,7 +1318,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/movie/jest.config.js",
+            "jestConfig": "libs/movie/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -1334,7 +1334,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/notification/jest.config.js",
+            "jestConfig": "libs/notification/jest.config.ts",
             "passWithNoTests": true
           }
         },
@@ -1365,7 +1365,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/organization/jest.config.js",
+            "jestConfig": "libs/organization/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -1400,7 +1400,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/rules/jest.config.js",
+            "jestConfig": "apps/rules/jest.config.ts",
             "passWithNoTests": true,
             "runInBand": true
           }
@@ -1424,7 +1424,7 @@
           "executor": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/testing/cypress/browser"],
           "options": {
-            "jestConfig": "libs/testing/cypress/browser/jest.config.js",
+            "jestConfig": "libs/testing/cypress/browser/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -1447,7 +1447,7 @@
           "executor": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/testing/cypress/node"],
           "options": {
-            "jestConfig": "libs/testing/cypress/node/jest.config.js",
+            "jestConfig": "libs/testing/cypress/node/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -1470,7 +1470,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/testing/unit-tests/jest.config.js",
+            "jestConfig": "libs/testing/unit-tests/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -1493,7 +1493,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/ui/jest.config.js",
+            "jestConfig": "libs/ui/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -1516,7 +1516,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/user/jest.config.js",
+            "jestConfig": "libs/user/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -1539,7 +1539,7 @@
         "test": {
           "executor": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/utils/jest.config.js",
+            "jestConfig": "libs/utils/jest.config.ts",
             "passWithNoTests": true
           }
         }

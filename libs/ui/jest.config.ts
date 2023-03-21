@@ -1,6 +1,6 @@
 ﻿module.exports = {
-  name: 'contract',
-  preset: '../../jest.preset.js',
+  name: 'ui',
+
   globals: {
     'ts-jest': {
       stringifyContentPathRegex: '\\.(html|svg)$',
@@ -8,10 +8,10 @@
     },
   },
   transform: {
-    '^.+.(ts|mjs|js|html)$': 'jest-preset-angular'
+    '^.+\\.(ts|html)$': 'ts-jest',
   },
-  transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
   moduleFileExtensions: ['ts', 'js', 'html'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/contract',
+  coverageDirectory: '../../coverage/libs/ui',
+  preset: '../../jest.preset.ts',
 };

@@ -1,6 +1,6 @@
 ﻿module.exports = {
-  name: 'consents',
-  preset: '../../jest.preset.js',
+  name: 'financiers',
+
   globals: {
     'ts-jest': {
       stringifyContentPathRegex: '\\.(html|svg)$',
@@ -8,15 +8,16 @@
     },
   },
   transform: {
-    '^.+.(ts|mjs|js|html)$': 'jest-preset-angular'
+    '^.+\\.(ts|html)$': 'ts-jest',
   },
-  testEnvironment: '<rootDir>/jest-environment.js',
   transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
+  moduleFileExtensions: ['ts', 'js', 'html'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/consents',
+  coverageDirectory: '../../../coverage/apps/financiers/financiers',
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
   ],
+  preset: '../../../jest.preset.ts',
 };

@@ -1,6 +1,6 @@
 module.exports = {
   displayName: 'devops',
-  preset: '../../jest.preset.js',
+
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
@@ -12,4 +12,5 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   testEnvironment: 'node',
   coverageDirectory: '../../coverage/libs/devops',
+  preset: '../../jest.preset.ts',
 };

@@ -1,21 +1,20 @@
 ﻿module.exports = {
-  name: 'invitation',
-  preset: '../../jest.preset.js',
+  name: 'import',
 
   globals: {
     'ts-jest': { tsconfig: '<rootDir>/tsconfig.spec.json' },
   },
-  transform: { 
-    '^.+.(ts|mjs|js|html)$': 'jest-preset-angular'
+  transform: {
+    '^.+\\.(ts|html)$': 'ts-jest',
   },
-  testEnvironment: '<rootDir>/jest-environment.js',
   transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
   moduleFileExtensions: ['ts', 'js', 'html'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/invitation',
+  coverageDirectory: '../../coverage/libs/import',
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
   ],
+  preset: '../../jest.preset.ts',
 };

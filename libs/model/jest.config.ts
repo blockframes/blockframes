@@ -1,6 +1,6 @@
 module.exports = {
-  displayName: 'testing-cypress-browser',
-  preset: '../../../../jest.preset.js',
+  displayName: 'model',
+
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
@@ -10,5 +10,6 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../../coverage/libs/testing/cypress/browser',
+  coverageDirectory: '../../coverage/libs/model',
+  preset: '../../jest.preset.ts',
 };

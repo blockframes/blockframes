@@ -1,6 +1,6 @@
 ﻿module.exports = {
   name: 'backend-functions',
-  preset: '../../jest.preset.js',
+
   globals: {
     'ts-jest': { tsconfig: '<rootDir>/tsconfig.spec.json' },
   },
@@ -11,4 +11,5 @@
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   testEnvironment: 'node',
   coverageDirectory: '../../coverage/apps/backend-functions',
+  preset: '../../jest.preset.ts',
 };
