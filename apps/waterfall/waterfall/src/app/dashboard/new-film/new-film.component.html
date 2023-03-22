@@ -1,0 +1,45 @@
+
+<header>
+  <a mat-icon-button color="black" routerLink="../home" matTooltip="Go Back">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+  </a>
+  <h1>Movie Tunnel</h1>
+</header>
+
+<div class="surface">
+  <h3>Main Information</h3>
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>Project Reference</mat-label>
+      <input matInput type="text" placeholder="Project Reference" required />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>International Title</mat-label>
+      <input matInput type="text" placeholder="International Title" />
+    </mat-form-field>
+  </div>
+  <div>
+
+  </div>
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>Director's First Name</mat-label>
+      <input matInput type="text" placeholder="Director's First Name" required />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Director's Last Name</mat-label>
+      <input matInput type="text" placeholder="Director's Last Name" required />
+    </mat-form-field>
+  </div>
+  <div>
+    <chips-autocomplete [form]="countries" placeholder="Country of Origin" scope="territories">
+      <mat-label>Type and select Country</mat-label>
+    </chips-autocomplete>
+  </div>
+</div>
+
+<div>
+  <button mat-flat-button color="primary" matTooltip="Save Film">
+    <span>Save Film</span>
+  </button>
+</div>

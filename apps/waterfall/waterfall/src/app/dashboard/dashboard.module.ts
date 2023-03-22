@@ -70,6 +70,15 @@ const routes: Routes = [{
       ]
     },
     {
+      path: 'new-film',
+      children: [
+        {
+          path: '',
+          loadChildren: () => import('./new-film/new-film.module').then(m => m.NewFilmModule),
+        }
+      ]
+    },
+    {
       path: 'notifications',
       loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule)
     },
