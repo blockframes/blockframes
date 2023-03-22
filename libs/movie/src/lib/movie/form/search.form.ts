@@ -59,7 +59,7 @@ function createRunningTimeControl(data: AlgoliaRunningTime) {
   };
 }
 
-export type RunningTimeControl = ReturnType<typeof createRunningTimeControl>;
+type RunningTimeControl = ReturnType<typeof createRunningTimeControl>;
 
 export class RunningTimeForm extends FormEntity<RunningTimeControl> {
   constructor(data?: AlgoliaRunningTime) {
