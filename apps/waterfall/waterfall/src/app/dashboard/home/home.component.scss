@@ -1,0 +1,17 @@
+@import '@angular/flex-layout/mq';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 24px;
+  min-height: 412px;
+}
+
+div {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
