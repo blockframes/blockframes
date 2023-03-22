@@ -1,5 +1,5 @@
 import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, festival, recursiveSearch, AlgoliaSearchQuery, MovieSearch, LanguageVersion, Versions } from '@blockframes/model';
-import type { StoreStatus, Territory } from '@blockframes/model';
+import type { StoreStatus, Territory, AlgoliaRunningTime } from '@blockframes/model';
 import { FormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { algolia } from '@env';
@@ -7,33 +7,6 @@ import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { max } from './filters/budget/budget.component';
 import { maxQueryLength } from '@blockframes/utils/algolia';
 
-export const runningTimeFilters = {
-  // 0 is all values
-  1: {
-    label: '< 13min',
-    filter: 'runningTime.time < 13'
-  },
-  2: {
-    label: '13min - 26min',
-    filter: 'runningTime.time: 13 TO 26'
-  },
-  3: {
-    label: '26min - 52min',
-    filter: 'runningTime.time: 26 TO 52'
-  },
-  4: {
-    label: '52min - 90min',
-    filter: 'runningTime.time: 52 TO 90'
-  },
-  5: {
-    label: '90min - 180min',
-    filter: 'runningTime.time: 90 TO 180'
-  },
-  6: {
-    label: '> 180min',
-    filter: 'runningTime.time > 180'
-  }
-}
 
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
 
@@ -51,14 +24,14 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
         dubbed: false,
         subtitle: false,
         caption: false,
-      }
+      },
     },
     productionStatus: [],
     minBudget: 0,
     minReleaseYear: 0,
     sellers: [],
     socialGoals: [],
-    runningTime: 0,
+    runningTime: { min: null, max: null },
     festivals: [],
     certifications: [],
     ...search,
@@ -79,6 +52,21 @@ function createLanguageVersionControl(data: LanguageVersion) {
 
 export type LanguageVersionControl = ReturnType<typeof createLanguageVersionControl>;
 
+function createRunningTimeControl(data: AlgoliaRunningTime) {
+  return {
+    min: new FormControl(data.min),
+    max: new FormControl(data.max),
+  };
+}
+
+type RunningTimeControl = ReturnType<typeof createRunningTimeControl>;
+
+export class RunningTimeForm extends FormEntity<RunningTimeControl> {
+  constructor(data?: AlgoliaRunningTime) {
+    super(createRunningTimeControl(data));
+  }
+}
+
 function createMovieSearchControl(search: MovieSearch) {
   return {
     query: new FormControl(search.query),
@@ -93,7 +81,7 @@ function createMovieSearchControl(search: MovieSearch) {
     sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
     socialGoals: new FormStaticValueArray<'socialGoals'>(search.socialGoals, 'socialGoals'),
     contentType: new FormControl(search.contentType),
-    runningTime: new FormControl(search.runningTime),
+    runningTime: new RunningTimeForm(search.runningTime),
     // Max is 1000, see docs: https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/
     hitsPerPage: new FormControl(50, Validators.max(1000)),
     festivals: new FormStaticValueArray<'festival'>(search.festivals, 'festival'),
@@ -168,12 +156,16 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       search.filters = `budget >= ${max - this.minBudget.value ?? 0}`;
     }
     if (this.minReleaseYear.value) {
-      if (search.filters) search.filters += ` AND `;
+      if (search.filters) search.filters += ' AND ';
       search.filters += `release.year >= ${this.minReleaseYear.value}`;
     }
-    if (this.runningTime.value) {
-      if (search.filters) search.filters += ` AND `;
-      search.filters += runningTimeFilters[this.runningTime.value].filter
+    if (this.runningTime.value.min) {
+      if (search.filters) search.filters += ' AND ';
+      search.filters += `runningTime.time >= ${this.runningTime.value.min}`;
+    }
+    if (this.runningTime.value.max) {
+      if (search.filters) search.filters += ' AND ';
+      search.filters += `runningTime.time <= ${this.runningTime.value.max}`;
     }
 
     /*

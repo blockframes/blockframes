@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { runningTimeFilters } from '../../search.form';
+import { RunningTimeForm } from '../../search.form';
 
 @Component({
   selector: '[form] filter-running-time',
@@ -9,7 +8,5 @@ import { runningTimeFilters } from '../../search.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RunningTimeFilterComponent {
-  @Input() form: FormControl;
-
-  filters = runningTimeFilters;
+  @Input() form: RunningTimeForm;
 }

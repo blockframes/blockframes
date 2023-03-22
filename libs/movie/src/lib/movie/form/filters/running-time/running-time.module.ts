@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
 import { RunningTimeFilterComponent } from './running-time.component';
 
 // Material
-import { MatRadioModule } from '@angular/material/radio';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [RunningTimeFilterComponent],
@@ -15,10 +15,10 @@ import { MatRadioModule } from '@angular/material/radio';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    FlexLayoutModule,
 
     // Material
-    MatRadioModule
+    MatInputModule,
+    MatFormFieldModule,
   ],
 })
 export class RunningTimeFilterModule { }
