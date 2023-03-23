@@ -1,8 +1,8 @@
-import { LetModule } from '@rx-angular/template/let';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TermFormComponent } from './term-form.component';
 import { RouterModule } from '@angular/router';
+import { LetModule } from '@rx-angular/template/let';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
