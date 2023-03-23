@@ -1,3 +1,4 @@
+import { LetModule } from '@rx-angular/template/let';
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -5,9 +6,6 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { MandateListComponent } from './mandates.component';
-
-import { LetModule } from '@rx-angular/template';
-
 // Blockframes
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 
@@ -23,9 +21,7 @@ import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [
-    MandateListComponent
-  ],
+  declarations: [MandateListComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -44,10 +40,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTabsModule,
 
     // Router
-    RouterModule.forChild([])
+    RouterModule.forChild([]),
   ],
-  exports: [
-    MandateListComponent
-  ]
+  exports: [MandateListComponent],
 })
-export class MandatesListModule { }
+export class MandatesListModule {}
