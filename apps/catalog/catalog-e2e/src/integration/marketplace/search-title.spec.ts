@@ -187,8 +187,8 @@ describe('Movie search in marketplace', () => {
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Running Time');
-    get('min-running-time').type('13');
-    get('max-running-time').type('25');
+    get('min-input').type('13');
+    get('max-input').type('25');
     get('empty').should('exist');
     get(`movie-card_${movie.id}`).should('not.exist');
     get('clear-filter').click();
