@@ -5,7 +5,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { getKeyIfExists } from '../helpers';
-import { unique } from '@blockframes/utils/helpers';
+import { unique } from './../helpers';
 
 interface MyapimoviesMovie {
   imdbId: string;
