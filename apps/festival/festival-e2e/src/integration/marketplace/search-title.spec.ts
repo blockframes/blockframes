@@ -24,7 +24,6 @@ import {
   getByClass,
   //marketplace lib
   selectFilter,
-  selectYear,
   syncMovieToAlgolia,
   snackbarShould,
 } from '@blockframes/testing/cypress/browser';
@@ -88,9 +87,8 @@ describe('Movie search in marketplace', () => {
     get('save-filter').click();
     //budget is cannot be filtered yet, see issue https://github.com/blockframes/blockframes/issues/8932
     selectFilter('Release Year');
-    get('slider').focus();
-    selectYear(movie.release.year - (movie.release.year % 10));
-    get('slider').find('.mat-slider-thumb-label').should('contain', '2020');
+    get('min-input').type('2020');
+    get('max-input').type(movie.release.year.toString());
     get('save-filter').click();
     selectFilter('Festival Selection');
     get(festival[movie.prizes[0].name]).click();

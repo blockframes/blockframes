@@ -18,12 +18,6 @@ export function selectFilter(name: string) {
   return get('filters').contains(name).click();
 }
 
-export function selectYear(year: number) {
-  const steps = Math.floor((year - 1980) / 10);
-  if (steps) return cy.get('body').type('{downArrow}'.repeat(steps));
-  return;
-}
-
 export function selectToggle(prefix: string, text: string) {
   return getAllStartingWith(prefix).then($elements => {
     const $toggles = $elements.children();

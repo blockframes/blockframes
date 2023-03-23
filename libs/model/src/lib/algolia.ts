@@ -97,7 +97,7 @@ export interface AlgoliaResult<T> {
   nbHits: number;
 }
 
-export interface AlgoliaRunningTime {
+export interface AlgoliaMinMax {
   min: number;
   max: number;
 }
@@ -109,11 +109,12 @@ export interface MovieSearch extends AlgoliaSearch {
   languages: LanguageVersion;
   productionStatus: ProductionStatus[];
   minBudget: number;
-  minReleaseYear: number;
+  releaseYear: AlgoliaMinMax;
+  minReleaseYear?: number; // deprecated but kept for retrocompatibily for saved researchs
   sellers: AlgoliaOrganization[];
   socialGoals: SocialGoal[];
   contentType?: ContentType;
-  runningTime: AlgoliaRunningTime;
+  runningTime: AlgoliaMinMax;
   festivals: Festival[];
   certifications: Certification[];
 }

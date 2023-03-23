@@ -335,7 +335,7 @@ export const expectedSavedSearch: { search: Omit<MovieSearch, 'page'> } = {
     },
     productionStatus: ['released'],
     minBudget: 0,
-    minReleaseYear: 2020,
+    releaseYear: { min: 2020, max: displayMovie.release.year },
     sellers: [
       {
         name: saleOrg.name,

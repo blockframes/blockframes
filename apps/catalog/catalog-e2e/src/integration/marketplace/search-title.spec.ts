@@ -23,7 +23,6 @@ import {
   //marketplace lib
   selectFilter,
   selectToggle,
-  selectYear,
   syncMovieToAlgolia,
 } from '@blockframes/testing/cypress/browser';
 
@@ -105,13 +104,12 @@ describe('Movie search in marketplace', () => {
     check('Dubs');
     get('save-filter').click();
     selectFilter('Release Year');
-    get('slider').focus();
-    selectYear(movie.release.year - (movie.release.year % 10));
-    get('slider').find('.mat-slider-thumb-label').should('contain', '2020');
+    get('min-input').type('2020');
+    get('max-input').type(movie.release.year.toString());
     get('save-filter').click();
     selectFilter('Running Time');
-    get('min-running-time').type('90');
-    get('max-running-time').type('180');
+    get('min-input').type('90');
+    get('max-input').type('180');
     get('save-filter').click();
     selectFilter('Festival Selection');
     get(festival[movie.prizes[0].name]).click();
@@ -182,8 +180,7 @@ describe('Movie search in marketplace', () => {
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Release Year');
-    get('slider').focus();
-    selectYear(2030);
+    get('min-input').type('2030');
     get('empty').should('exist');
     get('clear-filter').click();
     get('save-filter').click();

@@ -59,8 +59,8 @@
       <filter-budget fxLayout="column" [form]="searchForm.minBudget"></filter-budget>
     </ng-template>
 
-    <ng-template filter label="Release Year" [form]="searchForm.minReleaseYear">
-      <filter-release-year fxLayout="column" [form]="searchForm.minReleaseYear"></filter-release-year>
+    <ng-template filter label="Release Year" [form]="searchForm.releaseYear">
+      <filter-min-max [form]="searchForm.releaseYear" [labels]="{min: 'From', max: 'To'}" [placeholder]="'YYYY'"></filter-min-max>
     </ng-template>
 
     <ng-template filter label="Festival Selection" [form]="searchForm.festivals">
