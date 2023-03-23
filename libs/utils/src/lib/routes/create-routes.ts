@@ -19,7 +19,7 @@ export interface RouteOptions {
   organization?: Route,
 }
 
-export function createRoutes({ appsRoutes, landing, events, organization }: RouteOptions) {
+export function createRoutes({ appsRoutes, landing, events, organization }: RouteOptions): Routes {
   // Used for internal app
   landing = landing || { path: '', redirectTo: 'auth', pathMatch: 'full' };
   landing.canActivate = landing.canActivate
