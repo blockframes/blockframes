@@ -24,7 +24,7 @@ export default (async (on, config) => {
   // works by calling : npx cross-env nx e2e festival-e2e --configuration=emulator-incognito
   // see angular.json at the root of the project
   on('before:browser:launch', (browser, launchOptions) => {
-    if (browser.name === 'chrome' && config.env.incognito) {
+    if (browser.name === 'electron' && config.env.incognito) {
       launchOptions.args.push('--incognito');
     }
     return launchOptions;
