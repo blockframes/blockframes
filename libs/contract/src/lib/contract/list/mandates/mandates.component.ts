@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, shareReplay, startWith } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractStatus, Mandate, toLabel } from '@blockframes/model';
@@ -17,7 +17,7 @@ export class MandateListComponent {
   private title = 'All Mandates';
   private _mandates = new BehaviorSubject<Mandate[]>([]);
 
-  filterForm = new FormControl();
+  filterForm = new UntypedFormControl();
   filter$: Observable<ContractStatus | ''> = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value || ''));
 
   mandateCount$ = this._mandates.pipe(

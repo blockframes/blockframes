@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { startWith, map, tap, shareReplay } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { Movie, Person, StoreStatus } from '@blockframes/model';
@@ -21,7 +21,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent {
-  filter = new FormControl();
+  filter = new UntypedFormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
 
   titles$ = this.service.queryDashboard('festival').pipe(

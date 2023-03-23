@@ -1,5 +1,5 @@
 ﻿import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CampaignService } from '@blockframes/campaign/service';
@@ -71,13 +71,13 @@ export class MarketplaceMovieViewComponent {
   ) { }
 
   openForm(orgs: Organization[], movie: Movie) {
-    const form = new FormGroup({
-      subject: new FormControl('', Validators.required),
-      scope: new FormGroup({
-        from: new FormControl(),
-        to: new FormControl()
+    const form = new UntypedFormGroup({
+      subject: new UntypedFormControl('', Validators.required),
+      scope: new UntypedFormGroup({
+        from: new UntypedFormControl(),
+        to: new UntypedFormControl()
       }),
-      message: new FormControl(),
+      message: new UntypedFormControl(),
     });
     this.dialog.open(ContactPartnerModalComponent, {
       data: createModalData<ContactPartnerModalData>({

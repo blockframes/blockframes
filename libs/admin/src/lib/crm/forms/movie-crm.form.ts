@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { Movie, createMovie } from '@blockframes/model';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
@@ -7,10 +7,10 @@ import { FormList } from '@blockframes/utils/form/forms/list.form';
 function createMovieCrmControls(entity: Partial<Movie>) {
   const movie = createMovie(entity);
   return {
-    productionStatus: new FormControl(movie.productionStatus),
-    internalRef: new FormControl(movie.internalRef),
-    orgIds: FormList.factory(movie.orgIds, (el) => new FormControl(el)),
-    keywords: FormList.factory(entity.keywords, (el) => new FormControl(el)),
+    productionStatus: new UntypedFormControl(movie.productionStatus),
+    internalRef: new UntypedFormControl(movie.internalRef),
+    orgIds: FormList.factory(movie.orgIds, (el) => new UntypedFormControl(el)),
+    keywords: FormList.factory(entity.keywords, (el) => new UntypedFormControl(el)),
   };
 }
 

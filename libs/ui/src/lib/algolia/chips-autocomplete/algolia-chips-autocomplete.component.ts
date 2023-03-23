@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, ContentChild, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { FormList } from '@blockframes/utils/form';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { AlgoliaIndex, AlgoliaService, maxQueryLength } from '@blockframes/utils/algolia';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, startWith, map } from 'rxjs/operators';
@@ -27,7 +27,7 @@ function splitValue(value: string, keycodes: number[]) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
-  public searchCtrl = new FormControl();
+  public searchCtrl = new UntypedFormControl();
   /** Holds the results of algolia */
   public algoliaSearchResults$: Observable<unknown[]>;
   public values$: Observable<unknown[]>;

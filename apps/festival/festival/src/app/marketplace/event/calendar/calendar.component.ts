@@ -4,7 +4,7 @@ import { EventService } from '@blockframes/event/service';
 import { Event, EventTypes, Invitation } from '@blockframes/model';
 import { InvitationService } from '@blockframes/invitation/service';
 import { map, switchMap, startWith } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
@@ -23,7 +23,7 @@ const typesLabel = {
 export class EventCalendarComponent implements OnInit {
   typesLabel = typesLabel;
   types: EventTypes[] = ['screening', 'meeting', 'slate'];
-  filter = new FormControl(this.types);
+  filter = new UntypedFormControl(this.types);
   events$: Observable<Event[]>;
   viewDate = new Date();
 

@@ -1,7 +1,7 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
@@ -17,7 +17,7 @@ import { MatMenuModule } from '@angular/material/menu';
 // Modules
 import { OrgAccessModule } from '@blockframes/organization/pipes';
 
-const routes = [{
+const routes: Routes = [{
   path: '',
   component: TitleViewComponent,
   children: [

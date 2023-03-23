@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, shareReplay, startWith } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
@@ -27,7 +27,7 @@ export class InternalSaleListComponent implements OnInit {
 
   private _sales = new BehaviorSubject<InternalSale[]>([]);
 
-  filterForm = new FormControl();
+  filterForm = new UntypedFormControl();
   filter$: Observable<ContractStatus | ''> = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value || ''));
 
   public salesCount$ = this._sales.pipe(

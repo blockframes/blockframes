@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { shootingPeriod, months } from '@blockframes/model';
@@ -19,7 +19,7 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
   private sub: Subscription;
 
   form = this.shell.getForm('movie');
-  disabledForm = new FormControl();
+  disabledForm = new UntypedFormControl();
   public periods = Object.keys(shootingPeriod);
   public months = Object.keys(months);
   public separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -67,7 +67,7 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
     }
   }
 
-  public add(event: MatChipInputEvent, control: FormControl): void {
+  public add(event: MatChipInputEvent, control: UntypedFormControl): void {
     const state = control.value;
 
     // Add new value to the array
@@ -78,7 +78,7 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
     event.input.value = '';
   }
 
-  public remove(i: number, control: FormControl): void {
+  public remove(i: number, control: UntypedFormControl): void {
     const shadowValue = control.value.length === 0 ? [] : control.value.slice();
     shadowValue.splice(i, 1);
 
