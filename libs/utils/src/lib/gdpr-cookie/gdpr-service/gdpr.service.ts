@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
 import { CookiesConsent } from '../cookie-form/cookie.form';
-import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
+import { IntercomService } from './../../intercom/intercom.service';
 import { App, User } from '@blockframes/model';
 // #7936 this may be reactivated later
-// import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
-import { APP } from '@blockframes/utils/routes/utils';
-import { HotjarService } from '@blockframes/utils/hotjar/hotjar.service';
+// import { YandexMetricaService } from './../../yandex-metrica/yandex-metrica.service';
+import { APP } from './../../routes/utils';
+import { HotjarService } from './../../hotjar/hotjar.service';
 
 @Injectable({ providedIn: 'root' })
 export class GDPRService {
