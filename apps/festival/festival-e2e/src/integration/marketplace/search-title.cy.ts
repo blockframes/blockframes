@@ -26,6 +26,7 @@ import {
   selectFilter,
   syncMovieToAlgolia,
   snackbarShould,
+  escapeKey,
 } from '@blockframes/testing/cypress/browser';
 
 const injectedData = {
@@ -74,8 +75,9 @@ describe('Movie search in marketplace', () => {
     get(`option_${movie.genres[0]}`).click();
     get('save-filter').click();
     selectFilter('Country of Origin');
-    get('country').find('input').click();
-    get(`option_${movie.originCountries[0]}`).click();
+    get('origin-countries').click();
+    get(movie.originCountries[0]).click();
+    escapeKey();
     get('save-filter').click();
     selectFilter('Language & Version');
     get('language').find('input').click();
