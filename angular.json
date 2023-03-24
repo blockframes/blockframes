@@ -1711,7 +1711,7 @@
         "e2e": {
           "executor": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/waterfall/waterfall-e2e/cypress.json",
+            "cypressConfig": "apps/waterfall/waterfall-e2e/cypress.config.js",
             "tsConfig": "apps/waterfall/waterfall-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
             "browser": "chrome",
