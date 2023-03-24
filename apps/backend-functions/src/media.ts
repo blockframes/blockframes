@@ -3,7 +3,7 @@
 import { createHash } from 'crypto';
 import { get, set } from 'lodash';
 import { logger, storage } from 'firebase-functions';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 
 // Blockframes dependencies
 import {

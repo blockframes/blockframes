@@ -1,5 +1,5 @@
 import { db } from './internals/firebase';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 import { triggerNotifications } from './notification';
 import { Movie, Organization, PublicUser, EventMeta, Event, createInternalDocumentMeta, createPublicUser, createNotification } from '@blockframes/model';
 import { getDocument, BlockframesSnapshot } from '@blockframes/firebase-utils';

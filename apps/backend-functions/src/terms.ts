@@ -12,7 +12,7 @@ export async function onTermDelete(termSnapshot: BlockframesSnapshot<Term>) {
 
     const bucketsCollectionRef = db.collection('buckets');
     const bucketsSnap = await tx.get(bucketsCollectionRef);
-    
+
     const incomesCollectionRef = db.collection('incomes').where('termId', '==', term.id);
     const incomesSnap = await tx.get(incomesCollectionRef);
 
@@ -26,7 +26,7 @@ export async function onTermDelete(termSnapshot: BlockframesSnapshot<Term>) {
       const bucket = doc.data() as Bucket;
       if (bucket.contracts.some(c => c.parentTermId === term.id)) {
         bucket.contracts = bucket.contracts.filter(c => c.parentTermId !== term.id);
-        await tx.update(doc.ref, bucket);
+        await tx.update(doc.ref, { ...bucket });
       }
     }
 

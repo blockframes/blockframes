@@ -1,5 +1,5 @@
 
-import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 import { ErrorResultResponse, displayName, PublicUser, Event, Meeting } from '@blockframes/model';
 import { projectId, twilioAccountSid, twilioAccountSecret, twilioApiKeySecret, twilioApiKeySid } from './environments/environment';
 import Twilio from 'twilio/lib/rest/Twilio';

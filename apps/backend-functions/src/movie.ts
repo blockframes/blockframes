@@ -8,7 +8,7 @@ import { getMailSender } from '@blockframes/utils/apps';
 import { askingPriceRequested, screenerRequested, sendMovieSubmittedEmail } from './templates/mail';
 import { sendMail } from './internals/email';
 import { groupIds } from '@blockframes/utils/emails/ids';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 import {
   Bucket,
   Movie,
@@ -108,7 +108,7 @@ export async function onMovieDelete(snap: BlockframesSnapshot<Movie>, context: E
 
       if (bucket.contracts.some((c) => c.titleId === movie.id)) {
         bucket.contracts = bucket.contracts.filter((c) => c.titleId !== movie.id);
-        tx.update(doc.ref, bucket);
+        tx.update(doc.ref, { ...bucket });
       }
     }
   });

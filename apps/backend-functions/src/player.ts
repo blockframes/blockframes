@@ -1,7 +1,7 @@
 import { get } from 'lodash';
 import { createHash } from 'crypto';
 import { File as GFile } from '@google-cloud/storage';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 import { jwplayerApiV2 } from '@blockframes/firebase-utils/jwplayer-api';
 import { StorageVideo, linkDuration, ErrorResultResponse } from '@blockframes/model';
 import { isAllowedToAccessMedia } from './internals/media';
