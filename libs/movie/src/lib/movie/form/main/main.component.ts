@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 // Component
@@ -32,7 +32,7 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
   form = this.shell.getForm('movie');
   public movieId = this.route.snapshot.params.movieId;
   valuesCustomGenres$: Observable<string[]>;
-  customGenreCtrl = new FormControl();
+  customGenreCtrl = new UntypedFormControl();
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public maxReleaseYear = maxYear;
 

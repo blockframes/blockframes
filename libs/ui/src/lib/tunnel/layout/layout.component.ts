@@ -18,7 +18,7 @@ import { FormSaveOptions, RouteDescription } from '@blockframes/model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import type { ShellConfig } from '@blockframes/movie/form/movie.shell.interfaces';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
@@ -192,10 +192,10 @@ export class TunnelLayoutComponent implements OnInit {
 }
 
 /* Utils function to get the list of invalid form. */
-export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
+export function findInvalidControls(formToInvestigate: UntypedFormGroup | UntypedFormArray) {
   const errorFields = [];
   const missingFields = [];
-  const recursiveFunc = (form: FormGroup | FormArray, rootControlName?: string) => {
+  const recursiveFunc = (form: UntypedFormGroup | UntypedFormArray, rootControlName?: string) => {
 
     for (const field in form.controls) {
       const control = form.get(field);
@@ -212,7 +212,7 @@ export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
         }
       }
 
-      if (control instanceof FormArray || control instanceof FormGroup) {
+      if (control instanceof UntypedFormArray || control instanceof UntypedFormGroup) {
         missingFields.concat(recursiveFunc(control, getName(control.parent) || getName(control)));
       }
     }
@@ -231,7 +231,7 @@ export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
  * @returns the name of the control
  */
 function getName(control: AbstractControl): string | null {
-  const group = control.parent as FormGroup;
+  const group = control.parent as UntypedFormGroup;
   if (!group) return null;
   const name = Object.keys(group.controls).find(key => group.get(key) === control);
   return name;

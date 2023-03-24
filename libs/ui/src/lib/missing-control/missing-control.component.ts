@@ -10,7 +10,7 @@ import {
   OnDestroy
 } from '@angular/core';
 
-import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 
 // Blockframes
 import { Scope } from '@blockframes/model';
@@ -50,7 +50,7 @@ export class MissingControlComponent implements OnInit, OnDestroy {
 function getStatus(control: AbstractControl): 'error' | 'valid' | 'missing' {
   if (control.invalid) return 'error';
 
-  if (control instanceof FormArray) {
+  if (control instanceof UntypedFormArray) {
     if (!control.controls.length) return 'missing';
 
     const hasError = control.controls.some(ctrl => getStatus(ctrl) === 'error');
@@ -58,7 +58,7 @@ function getStatus(control: AbstractControl): 'error' | 'valid' | 'missing' {
     if (hasError) return 'error';
     return 'valid';
   }
-  if (control instanceof FormGroup) {
+  if (control instanceof UntypedFormGroup) {
     const controls = Object.values(control.controls)
     if (!controls.length) return 'missing';
 

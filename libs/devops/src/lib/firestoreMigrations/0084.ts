@@ -19,7 +19,7 @@ async function updateMovies(db: Firestore) {
     // Remove Sub Collection
     const subCollection = await doc.ref.listCollections();
 
-    if (subCollection !== []) {
+    if (subCollection.length) {
       const batch = db.batch();
       await removeAllSubcollections(doc, batch, db, { verbose: false });
       await batch.commit();

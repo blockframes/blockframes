@@ -4,7 +4,7 @@ import { InvitationService } from '@blockframes/invitation/service';
 import { BehaviorSubject } from 'rxjs';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { Movie, Organization } from '@blockframes/model';
-import { AbstractControl, FormControl, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormControl, Validators } from '@angular/forms';
 import { FormList } from '@blockframes/utils/form';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
@@ -21,8 +21,8 @@ export class MemberAddComponent {
   private _isSending = new BehaviorSubject<boolean>(false);
   public isSending$ = this._isSending.asObservable();
   public separatorKeysCodes = [ENTER, COMMA, SEMICOLON, SPACE];
-  public emailForm = new FormControl('', Validators.email);
-  public form = FormList.factory<string, FormControl>([], email => new FormControl(email, [Validators.required, Validators.email]));
+  public emailForm = new UntypedFormControl('', Validators.email);
+  public form = FormList.factory<string, UntypedFormControl>([], email => new UntypedFormControl(email, [Validators.required, Validators.email]));
   public error: string;
 
   constructor(

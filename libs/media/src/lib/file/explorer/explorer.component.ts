@@ -9,6 +9,7 @@ import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { getFileMetadata } from '@blockframes/media/utils';
 import { APP } from '@blockframes/utils/routes/utils';
 import { ActivatedRoute } from "@angular/router";
+import { StorageFileForm } from '@blockframes/media/form/media.form';
 
 // File Explorer
 import { getDirectories, Directory, FileDirectory } from './explorer.model';
@@ -123,7 +124,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     if (file?.togglePrivacy) {
       const metadata = getFileMetadata(file.meta[0], file.meta[1], file.meta[2]);
       const ref = this.firestore.getRef(`${metadata.collection}/${metadata.docId}`) as DocumentReference;
-      updateDoc(ref, { [`${metadata.field}.privacy`]: file.form.get('privacy').value });
+      updateDoc(ref, { [`${metadata.field}.privacy`]: (file.form as StorageFileForm).get('privacy').value });
     }
 
     this.service.upload();

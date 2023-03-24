@@ -5,7 +5,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { Router } from '@angular/router';
 import { createPublicUser, getOrgAppAccess, OrgEmailData } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
-import { FormControl, Validators, AbstractControl } from '@angular/forms';
+import { UntypedFormControl, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from '@blockframes/user/service';
 import { FormEntity } from '@blockframes/utils/form';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
@@ -19,8 +19,8 @@ import { where } from 'firebase/firestore';
 })
 export class OrganizationCreateComponent {
   public form = new OrganizationCrmForm();
-  public superAdminForm = new FormEntity({ email: new FormControl('', [Validators.required, Validators.email], this.emailValidator.bind(this)) }, { updateOn: 'blur' });
-  public fromApp = new FormControl('');
+  public superAdminForm = new FormEntity({ email: new UntypedFormControl('', [Validators.required, Validators.email], this.emailValidator.bind(this)) }, { updateOn: 'blur' });
+  public fromApp = new UntypedFormControl('');
   public creatingOrg = false;
 
   constructor(

@@ -1,4 +1,4 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -38,10 +38,10 @@ export function createBucketTermControl(params: Partial<BucketTerm> = {}) {
   return {
     territories: new FormStaticValueArray<'territories'>(term.territories, 'territories'),
     medias: new FormStaticValueArray<'medias'>(term.medias, 'medias'),
-    exclusive: new FormControl(term.exclusive ?? true),
-    duration: new FormGroup({
-      from: new FormControl(term.duration?.from, fromValidators),
-      to: new FormControl(term.duration?.to, toValidators)
+    exclusive: new UntypedFormControl(term.exclusive ?? true),
+    duration: new UntypedFormGroup({
+      from: new UntypedFormControl(term.duration?.from, fromValidators),
+      to: new UntypedFormControl(term.duration?.to, toValidators)
     }),
     languages: MovieVersionInfoForm.factory(term.languages, createLanguageControl),
   }
@@ -63,12 +63,12 @@ export class BucketTermForm extends FormEntity<BucketTermControl, BucketTerm> {
 function createBucketContractControl(params: Partial<BucketContract> = {}) {
   const contract = createBucketContract(params);
   return {
-    titleId: new FormControl(contract.titleId),
-    orgId: new FormControl(contract.orgId),
-    price: new FormControl(contract.price),
-    parentTermId: new FormControl(contract.parentTermId),
+    titleId: new UntypedFormControl(contract.titleId),
+    orgId: new UntypedFormControl(contract.orgId),
+    price: new UntypedFormControl(contract.price),
+    parentTermId: new UntypedFormControl(contract.parentTermId),
     terms: FormList.factory(contract.terms, term => BucketTermForm.factory(term, createBucketTermControl)),
-    specificity: new FormControl(contract.price),
+    specificity: new UntypedFormControl(contract.price),
     holdbacks: FormList.factory(contract.holdbacks, holdback => new HoldbackForm(holdback), [])
   }
 }
@@ -114,7 +114,7 @@ function toBucketContract(
 function createBucketControl(params: Partial<Bucket> = {}) {
   const bucket = createBucket(params);
   return {
-    currency: new FormControl(bucket.currency),
+    currency: new UntypedFormControl(bucket.currency),
     contracts: FormList.factory(bucket.contracts, (contract) => new BucketContractForm(contract))
   }
 }

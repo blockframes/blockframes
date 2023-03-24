@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 // Blockframes  Utils
 import { budgetRange } from '@blockframes/model';
@@ -12,7 +12,7 @@ import { budgetRange } from '@blockframes/model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormBudgetRangeComponent {
-  @Input() form: FormControl;
+  @Input() form: UntypedFormControl;
   @Input() placeholder?: string;
   @Input() appearance = 'outline'
 

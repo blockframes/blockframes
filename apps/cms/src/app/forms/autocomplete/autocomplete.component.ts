@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy, EventEmitter, Output, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { FormField } from 'ng-form-factory';
 import { MatSelectSchema } from '../select';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
@@ -26,7 +26,7 @@ export class FormAutocompleteComponent<O> implements OnInit {
   }
 
   filteredOptions: Observable<string[]>;
-  control = new FormControl();
+  control = new UntypedFormControl();
 
   get schema() {
     return this.form.schema;

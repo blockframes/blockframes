@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormList } from 'ng-form-factory';
 import { MatMultiSelectSchema } from '../select';
@@ -27,7 +27,7 @@ export class FormChipsAutocompleteComponent<T, O> implements OnInit {
 
   filteredOptions: Observable<string[]>;
   chips: T[] = [];
-  control = new FormControl();
+  control = new UntypedFormControl();
 
   get schema() {
     return this.form.schema as MatMultiSelectSchema<T>;

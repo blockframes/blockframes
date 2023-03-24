@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -11,11 +11,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventIdenityComponent {
-  public form = new FormGroup({
-    firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required]),
-    termsOfUse: new FormControl(false),
-    privacyPolicy: new FormControl(false)
+  public form = new UntypedFormGroup({
+    firstName: new UntypedFormControl('', [Validators.required]),
+    lastName: new UntypedFormControl('', [Validators.required]),
+    termsOfUse: new UntypedFormControl(false),
+    privacyPolicy: new UntypedFormControl(false)
   });
 
   constructor(

@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
 
 // Guards
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 
-const routes: Routes = createRoutes({
+const routes = createRoutes({
   landing: {
     path: '',
     canActivate: [NoAuthGuard],
@@ -27,7 +27,7 @@ const routes: Routes = createRoutes({
     canActivate: [ModuleGuard],
     loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
   }
-]
+  ]
 });
 
 @NgModule({
