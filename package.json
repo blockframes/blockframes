@@ -120,9 +120,9 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "14.2.11",
-    "@angular-eslint/eslint-plugin": "13.0.1",
-    "@angular-eslint/eslint-plugin-template": "13.0.1",
-    "@angular-eslint/template-parser": "13.0.1",
+    "@angular-eslint/eslint-plugin": "14.4.0",
+    "@angular-eslint/eslint-plugin-template": "14.4.0",
+    "@angular-eslint/template-parser": "14.4.0",
     "@angular/cli": "^14.2.11",
     "@angular/compiler-cli": "14.3.0",
     "@angular/language-service": "14.3.0",
