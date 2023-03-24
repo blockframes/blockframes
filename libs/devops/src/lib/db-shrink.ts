@@ -341,7 +341,7 @@ async function cleanCmsDocuments(db: FirebaseFirestore.Firestore, titleIds: stri
             (section as OrgsSection).orgIds = (section as OrgsSection).orgIds.filter(id => orgIds.includes(id));
           }
         }
-        await snap.ref.update(doc);
+        await snap.ref.update({ ...doc });
       }
     }
   }

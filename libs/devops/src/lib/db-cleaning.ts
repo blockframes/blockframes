@@ -147,7 +147,7 @@ async function cleanOneNotification(
     notification.user.avatar = d?.avatar || EMPTY_MEDIA;
   }
 
-  await doc.ref.update(notification);
+  await doc.ref.update({ ...notification });
 }
 
 export function cleanInvitations(
@@ -198,7 +198,7 @@ async function cleanOneInvitation(
     delete (invitation.toUser as any).watermark;
   }
 
-  await doc.ref.update(invitation);
+  await doc.ref.update({ ...invitation });
 }
 
 export async function cleanUsers(
