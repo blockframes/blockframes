@@ -32,6 +32,7 @@ import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/chec
 import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
 import { FormContentTypeModule } from '@blockframes/ui/form/content-type/content-type.module';
 import { MinMaxFilterModule } from '@blockframes/movie/form/filters/min-max/min-max.module';
+import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -52,6 +53,7 @@ import { MinMaxFilterModule } from '@blockframes/movie/form/filters/min-max/min-
     AvailsFilterModule,
     FormContentTypeModule,
     MinMaxFilterModule,
+    StaticGroupModule,
 
     // Material
     MatIconModule,

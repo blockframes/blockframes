@@ -73,7 +73,7 @@ function createMovieSearchControl(search: MovieSearch) {
     page: new FormControl(search.page),
     storeStatus: FormList.factory<StoreStatus>(search.storeStatus),
     genres: FormList.factory<GetKeys<'genres'>>(search.genres),
-    originCountries: FormList.factory<Territory>(search.originCountries),
+    originCountries: new FormStaticValueArray<'territories'>(search.originCountries, 'territories'),
     languages: createLanguageVersionControl(search.languages),
     productionStatus: new FormStaticValueArray<'productionStatus'>(search.productionStatus, 'productionStatus'),
     minBudget: new FormControl(search.minBudget),
