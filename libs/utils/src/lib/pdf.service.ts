@@ -13,10 +13,10 @@ import {
 import { firebaseRegion, firebase } from '@env';
 import { EmulatorsConfig, EMULATORS_CONFIG } from './emulator-front-setup';
 import { APP } from './routes/utils';
-import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { toGroupLabel } from '@blockframes/utils/pipes';
+import { sanitizeFileName } from './file-sanitizer';
+import { toGroupLabel } from './pipes';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
+import { ModuleGuard } from './routes/module.guard';
 import { format } from 'date-fns';
 
 export const { projectId } = firebase();

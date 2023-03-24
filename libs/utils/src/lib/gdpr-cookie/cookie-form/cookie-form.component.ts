@@ -4,7 +4,7 @@ import { startWith } from 'rxjs/operators';
 
 // Blockframes
 import { CookiesConsent, CookiesConsentForm } from './cookie.form';
-import { APP } from '@blockframes/utils/routes/utils';
+import { APP } from './../../routes/utils';
 import { App } from '@blockframes/model';
 
 // Material

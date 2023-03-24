@@ -2,17 +2,25 @@ import { ErrorHandler, Injectable, NgModule } from '@angular/core';
 import { sentryDsn, sentryEnv } from '@env';
 import * as Sentry from '@sentry/browser';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { AuthService } from '@blockframes/auth/service';
 import { SentryService } from './sentry.service';
 import { appVersion } from './constants';
+import { FireAuth, FirestoreService, fromRef } from 'ngfire';
+import { User } from '@blockframes/model';
+import { map, of, switchMap } from 'rxjs';
+import { DocumentReference } from 'firebase/firestore';
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
   constructor(
-    private authService: AuthService,
+    private authService: FireAuth<User>,
+    private firestore: FirestoreService,
     private sentryService: SentryService,
   ) {
-    this.authService.profile$.subscribe(user => {
+    this.authService.user$.pipe(switchMap(u => {
+      if (!u?.uid) return of(undefined);
+      const ref = this.firestore.getRef(`users/${u.uid}`) as DocumentReference<User>;
+      return fromRef(ref).pipe(map(snap => snap.data()));
+    })).subscribe(user => {
       if (!user) {
         Sentry.configureScope(scope => {
           scope.setTag('appVersion', appVersion);
