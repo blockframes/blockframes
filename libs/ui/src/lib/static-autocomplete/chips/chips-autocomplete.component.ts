@@ -11,7 +11,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
@@ -60,7 +60,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   @Output() removed = new EventEmitter<number>();
 
   // the local form control for the input
-  public ctrl = new FormControl();
+  public ctrl = new UntypedFormControl();
 
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public filteredItems$: Observable<unknown[]>;

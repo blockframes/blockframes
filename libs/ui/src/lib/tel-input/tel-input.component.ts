@@ -1,7 +1,7 @@
 // Angular
-import { FormBuilder, NgControl, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, NgControl, UntypedFormControl } from '@angular/forms';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ControlValueAccessor, FormGroup } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormGroup } from '@angular/forms';
 import { Component, OnDestroy, Input, ElementRef, Optional, Self } from '@angular/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -38,7 +38,7 @@ export class TelInputComponent implements ControlValueAccessor, MatFormFieldCont
   private _placeholder: string;
   private _disabled = false;
 
-  parts: FormGroup;
+  parts: UntypedFormGroup;
   stateChanges = new Subject<void>();
   focused = false;
   errorState = false;
@@ -47,7 +47,7 @@ export class TelInputComponent implements ControlValueAccessor, MatFormFieldCont
   describedBy = '';
 
   @Input()
-  form: FormControl;
+  form: UntypedFormControl;
 
   @Input()
   get placeholder(): string { return this._placeholder; }
@@ -89,7 +89,7 @@ export class TelInputComponent implements ControlValueAccessor, MatFormFieldCont
   onTouched = () => void 0;
 
   constructor(
-    formBuilder: FormBuilder,
+    formBuilder: UntypedFormBuilder,
     private _focusMonitor: FocusMonitor,
     private _elementRef: ElementRef<HTMLElement>,
     @Optional() @Self() public ngControl: NgControl) {

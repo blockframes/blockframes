@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { joinWith } from 'ngfire';
@@ -32,7 +32,7 @@ export class ContractViewComponent {
     tap(contract => this.statusForm.setValue(contract.status))
   );
 
-  statusForm = new FormControl('pending');
+  statusForm = new UntypedFormControl('pending');
 
   constructor(
     private dialog: MatDialog,

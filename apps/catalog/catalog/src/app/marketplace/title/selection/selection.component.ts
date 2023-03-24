@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
 import { OrganizationService } from '@blockframes/organization/service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
@@ -22,7 +22,7 @@ export class MarketplaceSelectionComponent {
   withoutCurrencies = Object.keys(movieCurrencies).filter(
     (currency) => currency !== 'EUR' && currency !== 'USD'
   );
-  public currencyForm = new FormControl('EUR');
+  public currencyForm = new UntypedFormControl('EUR');
 
   bucket$: Observable<Bucket>;
   private prices: number[] = [];

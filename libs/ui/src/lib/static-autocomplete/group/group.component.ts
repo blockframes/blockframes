@@ -4,7 +4,7 @@ import {
   OnDestroy, Optional, Self, HostBinding
 } from "@angular/core";
 import {
-  FormControl, ControlValueAccessor,
+  UntypedFormControl, ControlValueAccessor,
   Validators, NgControl,
 } from "@angular/forms";
 import { BehaviorSubject, combineLatest, Observable, Subscription, defer, Subject } from "rxjs";
@@ -95,7 +95,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
     this.stateChanges.next();
   };
 
-  form = new FormControl([], []);
+  form = new UntypedFormControl([], []);
 
   @Input() get required() { return this._required; };
   set required(req) {
@@ -132,7 +132,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
     return !this.form.value?.length;
   }
 
-  search = new FormControl();
+  search = new UntypedFormControl();
   trackByLabel = (i: number, group: StaticGroup) => group.label;
 
   constructor(

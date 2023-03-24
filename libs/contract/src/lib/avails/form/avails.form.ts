@@ -1,4 +1,4 @@
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FormStaticValueArray } from '@blockframes/utils/form/forms/static-value.form';
 import { compareDates, isDateInFuture } from '@blockframes/utils/form/validators/validators';
@@ -26,8 +26,8 @@ function createDurationControl(duration: Partial<{ from: Date, to: Date }> = {})
   const toValidators = [compareDates('from', 'to', 'to'), isDateInFuture, Validators.required];
 
   return {
-    from: new FormControl(from, fromValidators),
-    to: new FormControl(to, toValidators)
+    from: new UntypedFormControl(from, fromValidators),
+    to: new UntypedFormControl(to, toValidators)
   };
 }
 
@@ -47,7 +47,7 @@ function createTerritoriesControl(territories: Territory[] = []) {
 function createBaseAvailControl(avail: Partial<BaseAvailsFilter> = {}) {
   return {
     medias: new FormStaticValueArray<'medias'>(avail.medias, 'medias', [Validators.required, Validators.minLength(0)]),
-    exclusive: new FormControl(avail.exclusive ?? true, Validators.required),
+    exclusive: new UntypedFormControl(avail.exclusive ?? true, Validators.required),
   };
 }
 

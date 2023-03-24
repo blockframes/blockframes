@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 
 @Component({
   selector: '[form] user-hide-email',
@@ -8,5 +8,5 @@ import { FormControl } from "@angular/forms";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HideEmailComponent {
-  @Input() form: FormControl;
+  @Input() form: UntypedFormControl;
 }

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,14 +14,14 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class ChangePasswordComponent implements OnInit, OnDestroy {
 
-  public passwordForm: FormGroup;
+  public passwordForm: UntypedFormGroup;
   public actionCode: string;
   public actionCodeChecked: boolean;
 
   private destroyed = new Subject();
 
   constructor(
-    private builder: FormBuilder,
+    private builder: UntypedFormBuilder,
     private service: AuthService,
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,

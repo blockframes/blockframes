@@ -5,7 +5,7 @@ import { EventForm } from '@blockframes/event/form/event.form';
 import { OrganizationService } from '@blockframes/organization/service';
 import { Observable, combineLatest } from 'rxjs';
 import { filter, switchMap, startWith, tap } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { AgendaService } from '@blockframes/utils/agenda/agenda.service';
 import { eventTime } from '@blockframes/event/pipes/event-time.pipe';
@@ -27,7 +27,7 @@ const typesLabel = {
 export class EventListComponent implements OnInit {
   typesLabel = typesLabel;
   types: EventTypes[] = ['screening', 'meeting', 'slate'];
-  filter = new FormControl(this.types);
+  filter = new UntypedFormControl(this.types);
   editDialog: MatDialogRef<unknown>
   events$: Observable<Event[]>;
   viewDate = new Date();

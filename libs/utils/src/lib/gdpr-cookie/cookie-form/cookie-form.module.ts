@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { CookieFormComponent } from './cookie-form.component';
-import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
+import { AppPipeModule } from './../../pipes/app.pipe';
 
 // Material
 import { MatCheckboxModule } from '@angular/material/checkbox';

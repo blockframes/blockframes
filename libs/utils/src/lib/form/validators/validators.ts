@@ -1,11 +1,11 @@
 import {
   AbstractControl,
-  FormControl,
-  FormGroup,
+  UntypedFormControl,
+  UntypedFormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators,
-  FormArray
+  UntypedFormArray
 } from '@angular/forms';
 import { languages, isInKeys, Scope, staticModel } from '@blockframes/model';
 
@@ -34,7 +34,7 @@ export function confirmPasswords(
   password: string = 'password',
   confirm: string = 'confirm'
 ): ValidatorFn {
-  return (group: FormGroup): { [key: string]: boolean } | null => {
+  return (group: UntypedFormGroup): { [key: string]: boolean } | null => {
     return group.controls[password].value === group.controls[confirm].value
       ? null
       : { passwordsNotMatching: true };
@@ -43,7 +43,7 @@ export function confirmPasswords(
 
 /** Require current and new password to be different */
 export function differentPassword(current: string = 'current', next: string = 'next'): ValidatorFn {
-  return (group: FormGroup): { [key: string]: boolean } | null => {
+  return (group: UntypedFormGroup): { [key: string]: boolean } | null => {
     const currentControl = group.controls[current];
     const nextControl = group.controls[next];
     if (currentControl.value !== nextControl.value) return null;
@@ -53,7 +53,7 @@ export function differentPassword(current: string = 'current', next: string = 'n
 }
 
 /** Checks if the sum of all percentages controls of all FormGroups of FormArray does not exceed 100%  */
-export function validPercentageList(control: FormArray): ValidationErrors {
+export function validPercentageList(control: UntypedFormArray): ValidationErrors {
   let sum = 0;
   // Counts the total percentages
   control.controls.forEach(formGroup => {
@@ -79,7 +79,7 @@ export function validPercentageList(control: FormArray): ValidationErrors {
 }
 
 /** Checks if the value of the control is between 0 and 100 */
-export function validPercentage(control: FormControl): ValidationErrors {
+export function validPercentage(control: UntypedFormControl): ValidationErrors {
   const value = Number(control.value);
   return value >= 0 && value <= 100 ? null : { invalidPercentage: true };
 }
@@ -98,7 +98,7 @@ export function languageValidator(control: AbstractControl): { [key: string]: bo
  * @param to range to
  */
 export function numberRangeValidator(from: string, to: string): ValidatorFn {
-  return (group: FormGroup): ValidationErrors => {
+  return (group: UntypedFormGroup): ValidationErrors => {
     const controlFrom = group.controls[from];
     const controlTo = group.controls[to];
     if (controlFrom instanceof Date && controlTo instanceof Date) {
@@ -119,7 +119,7 @@ export function numberRangeValidator(from: string, to: string): ValidatorFn {
  * @description Check in a number-range that from is below to, and to is above from
  */
 export function validRange(): ValidatorFn {
-  return (parent: FormGroup): ValidationErrors => {
+  return (parent: UntypedFormGroup): ValidationErrors => {
     return parent.value.from > parent.value.to ? { invalidOrder: true } : null;
   };
 }
@@ -130,7 +130,7 @@ export function validRange(): ValidatorFn {
  * @param scope defines where to look. For instance 'TERRITORIES'
  */
 export function valueIsInConstantValidator(scope: Scope): ValidatorFn {
-  return (parent: FormGroup | FormArray): ValidationErrors => {
+  return (parent: UntypedFormGroup | UntypedFormArray): ValidationErrors => {
     if (parent.value.filter(val => staticModel[scope][val]).length) {
       return null;
     } else {
@@ -144,7 +144,7 @@ export function valueIsInConstantValidator(scope: Scope): ValidatorFn {
  * @param scope Scope inside the static constant
  */
 export function isKeyValidator(scope: Scope): ValidatorFn {
-  return (control: FormControl): ValidationErrors => {
+  return (control: UntypedFormControl): ValidationErrors => {
     if (!control.value) {
       return null;
     } else {
@@ -158,7 +158,7 @@ export function isKeyValidator(scope: Scope): ValidatorFn {
  * @param scope Scope inside the static model
  */
 export function isKeyArrayValidator(scope: Scope): ValidatorFn {
-  return (control: FormControl): ValidationErrors => {
+  return (control: UntypedFormControl): ValidationErrors => {
     return control.value?.every(value => isInKeys(scope, value)) ? null : { invalidValue: true }
   };
 }
@@ -170,8 +170,8 @@ export function isKeyArrayValidator(scope: Scope): ValidatorFn {
  * @returns
  */
 export function compareDates(fromKey: string, toKey: string, keyOnControl?: string): ValidatorFn {
-  return (control: FormControl): ValidationErrors => {
-    const parentForm = control?.parent as FormGroup;
+  return (control: UntypedFormControl): ValidationErrors => {
+    const parentForm = control?.parent as UntypedFormGroup;
 
     if (!parentForm) return null;
 
@@ -214,7 +214,7 @@ export function compareDates(fromKey: string, toKey: string, keyOnControl?: stri
 /**
  * Check if date is not before today
  */
-export function isDateInFuture(form: FormControl) {
+export function isDateInFuture(form: UntypedFormControl) {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
   return form.value < now ? { inPast: true } : null;

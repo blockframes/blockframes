@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Inject, Optional, OnInit } from '@angular/core';
 import { AuthService } from '../../service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
@@ -15,9 +15,9 @@ import { Router } from '@angular/router';
 })
 export class CheckPolicyAndTermsComponent implements OnInit {
 
-  public form = new FormGroup({
-    termsOfUse: new FormControl(),
-    privacyPolicy: new FormControl()
+  public form = new UntypedFormGroup({
+    termsOfUse: new UntypedFormControl(),
+    privacyPolicy: new UntypedFormControl()
   });
 
   constructor(

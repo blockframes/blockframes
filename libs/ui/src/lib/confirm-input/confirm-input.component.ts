@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -24,7 +24,7 @@ interface ConfirmationData {
 })
 export class ConfirmInputComponent implements OnInit {
 
-  public actionConfirm = new FormControl('');
+  public actionConfirm = new UntypedFormControl('');
   public isValid = false;
   constructor(
     @Inject(MAT_DIALOG_DATA)

@@ -1,5 +1,5 @@
 import { Component, Input, Optional, Self, ElementRef, OnDestroy, EventEmitter, Output, Inject } from '@angular/core';
-import { FormGroup, FormControl, NgControl, ControlValueAccessor, NgForm, FormGroupDirective } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, NgControl, ControlValueAccessor, NgForm, FormGroupDirective } from '@angular/forms';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Subject } from 'rxjs';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -42,9 +42,9 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   private previousTime: string; // Used if timepicker should use allDay
   private parent: NgForm | FormGroupDirective;
 
-  form = new FormGroup({
-    day: new FormControl(new Date()),
-    time: new FormControl('00:00')
+  form = new UntypedFormGroup({
+    day: new UntypedFormControl(new Date()),
+    time: new UntypedFormControl('00:00')
   });
 
   hours = hours;
@@ -114,7 +114,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
 
   get errorState() {
     if (this.errorStateMatcher) {
-      const control = this.ngControl.control as FormControl ?? null;
+      const control = this.ngControl.control as UntypedFormControl ?? null;
       return this.errorStateMatcher.isErrorState(control, this.parent);
     }
     return this.ngControl.touched && this.ngControl.invalid;

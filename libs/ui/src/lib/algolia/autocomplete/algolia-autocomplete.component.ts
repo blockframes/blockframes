@@ -1,5 +1,5 @@
 // Angular
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import {
   Component,
   Input,
@@ -66,7 +66,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   @Input() facet = '';
 
   /** Optional input if you want to use your own form control */
-  @Input() control = new FormControl();
+  @Input() control = new UntypedFormControl();
 
   /** Set if it's required */
   @Input() required = false;

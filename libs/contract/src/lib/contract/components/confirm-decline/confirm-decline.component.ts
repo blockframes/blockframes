@@ -1,7 +1,7 @@
 
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 
@@ -30,10 +30,10 @@ export class ConfirmDeclineComponent {
     ]
   };
 
-  form = new FormGroup({
-    reason: new FormControl(''),
-    message: new FormControl(''),
-    acceptTerms: new FormControl(false)
+  form = new UntypedFormGroup({
+    reason: new UntypedFormControl(''),
+    message: new UntypedFormControl(''),
+    acceptTerms: new UntypedFormControl(false)
   });
 
   termsPath = `/c/o/${this.moduleGuard.currentModule}/terms`;
