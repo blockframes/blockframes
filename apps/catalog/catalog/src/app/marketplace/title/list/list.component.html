@@ -1,4 +1,4 @@
-﻿<list-page [isLoading]="isLoading" [items]="movies$ | async">
+<list-page [isLoading]="isLoading" [items]="movies$ | async">
 
   <!-- App Bar Search -->
   <list-page-app-bar>
@@ -51,7 +51,7 @@
     </ng-template>
 
     <ng-template filter label="Release Year" [form]="searchForm.releaseYear">
-      <filter-min-max [form]="searchForm.releaseYear" [labels]="{min: 'From', max: 'To'}" [placeholder]="'YYYY'"></filter-min-max>
+      <filter-min-max [form]="searchForm.releaseYear"></filter-min-max>
     </ng-template>
 
     <ng-template filter label="Running Time" [form]="searchForm.runningTime">

@@ -9,6 +9,6 @@ import { minMaxForm } from '../../search.form';
 })
 export class MinMaxFilterComponent {
   @Input() form: minMaxForm;
-  @Input() labels: { min: string; max: string };
-  @Input() placeholder: string;
+  @Input() labels= { min: 'From', max: 'To' };
+  @Input() placeholder= 'YYYY';
 }

@@ -226,19 +226,20 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
 
   load(savedSearch: MovieAvailsSearch) {
     // Retro compatibility for old filters
-    const retrocompatibilityOptions = {
-      runningTime: {
+    const retroRunningTimeOptions = {
         1: { min: null, max: 12 },
         2: { min: 13, max: 25 },
         3: { min: 26, max: 51 },
         4: { min: 52, max: 89 },
         5: { min: 90, max: 180 },
         6: { min: 181, max: null },
-      }
     };
     const oldRunningTimeFormat = savedSearch?.search?.runningTime as unknown as number;
-    if (!isNaN(oldRunningTimeFormat)) savedSearch.search.runningTime = retrocompatibilityOptions.runningTime[oldRunningTimeFormat];
-    if (savedSearch?.search?.minReleaseYear) savedSearch.search.releaseYear = { min: savedSearch.search.minReleaseYear, max: null };
+    if (!isNaN(oldRunningTimeFormat)) savedSearch.search.runningTime = retroRunningTimeOptions[oldRunningTimeFormat];
+    if (savedSearch?.search?.minReleaseYear) {
+      savedSearch.search.releaseYear = { min: savedSearch.search.minReleaseYear, max: null };
+      delete savedSearch.search.minReleaseYear;
+    }
     // End of retrocompatibility
 
     this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
