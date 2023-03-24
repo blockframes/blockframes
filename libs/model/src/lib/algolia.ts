@@ -97,6 +97,11 @@ export interface AlgoliaResult<T> {
   nbHits: number;
 }
 
+export interface AlgoliaRunningTime {
+  min: number;
+  max: number;
+}
+
 export interface MovieSearch extends AlgoliaSearch {
   storeStatus: StoreStatus[];
   genres: Genre[];
@@ -108,7 +113,7 @@ export interface MovieSearch extends AlgoliaSearch {
   sellers: AlgoliaOrganization[];
   socialGoals: SocialGoal[];
   contentType?: ContentType;
-  runningTime: number;
+  runningTime: AlgoliaRunningTime;
   festivals: Festival[];
   certifications: Certification[];
 }

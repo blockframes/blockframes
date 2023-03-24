@@ -21,7 +21,7 @@ import {
   createLocation,
   fakeLegalTerms,
   createDocumentMeta,
-  MovieSearch
+  MovieSearch,
 } from '@blockframes/model';
 import { sub } from 'date-fns';
 
@@ -350,9 +350,9 @@ export const expectedSavedSearch: { search: Omit<MovieSearch, 'page'> } = {
     ],
     socialGoals: [],
     contentType: null,
-    runningTime: 0,
+    runningTime: { min: null, max: null },
     hitsPerPage: 50,
     festivals: ['cannes'],
     certifications: ['eof', 'europeanQualification'],
-  }
+  },
 };

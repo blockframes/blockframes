@@ -41,9 +41,10 @@
   <ng-container *ngIf="sale.negotiation as negotiation">
     <contract-item [contract]="negotiation">
       <div class="price" price>
-        <h2 *ngIf="negotiation?.price else askPrice">
-          {{ negotiation.price | currency: negotiation.currency }}
-        </h2>
+        <ng-container *ngIf="negotiation?.price else askPrice">
+          <h2>{{ negotiation.price | currency: negotiation.currency }}</h2>
+          <p class="mat-caption">This amount includes the commission due to Archipel Content</p>
+        </ng-container>
         <ng-template #askPrice>
           <h3>Asking Price requested</h3>
           <ng-container *ngIf="negotiation | canNegotiate:orgId">

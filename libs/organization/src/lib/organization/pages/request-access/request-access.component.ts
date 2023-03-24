@@ -4,7 +4,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
 import { organizationRoles, App, getOrgAppAccess } from '@blockframes/model';
@@ -23,7 +23,7 @@ export class OrgRequestAccessComponent implements OnInit {
   private orgId = this.orgService.org.id;
   public orgExistingAccess$: Observable<App[]>;
   public disabledRequest = false;
-  public formControl = new FormControl();
+  public formControl = new UntypedFormControl();
 
   public step$: Observable<Steps>;
   private step = new BehaviorSubject<Steps>('initial');

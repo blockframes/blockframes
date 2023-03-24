@@ -11,7 +11,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { Intercom } from 'ng-intercom';
 import { createLocation } from '@blockframes/model';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DifferentPasswordStateMatcher, RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
 import { filter } from 'rxjs/operators';
@@ -32,7 +32,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public creating = false;
   public indexGroup = 'indexNameOrganizations';
   public form = new IdentityForm();
-  public orgControl = new FormControl();
+  public orgControl = new UntypedFormControl();
   public orgForm = new OrganizationLiteForm();
   public useAlgolia = true;
   public existingUser = false;

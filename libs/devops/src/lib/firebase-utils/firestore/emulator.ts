@@ -90,7 +90,7 @@ export async function firebaseEmulatorExec({
 }: FirebaseEmulatorSettings = {}) {
 
   function isOrHasValue<T, K extends T | T[]>(input: K, testValue: T) {
-    const result = input === testValue || (input instanceof Array && input.find((name) => name === testValue))
+    const result = (input as any) === testValue || (input instanceof Array && input.find(name => name === testValue));
     return Boolean(result);
   }
 

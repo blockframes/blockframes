@@ -1,9 +1,9 @@
-import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { UntypedFormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 /** Error when the parent is invalid */
 export class CrossFieldErrorMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     return control.touched && form.invalid;
   }
 }
@@ -15,7 +15,7 @@ export class RepeatPasswordStateMatcher implements ErrorStateMatcher {
     private confirm = 'confirm'
   ) { }
 
-  isErrorState(control: FormControl | null): boolean {
+  isErrorState(control: UntypedFormControl | null): boolean {
     if (control.touched && control.invalid) return true;
     return (control && control.parent.get(this.password).value !== control.parent.get(this.confirm).value && control.dirty);
   }
@@ -28,7 +28,7 @@ export class DifferentPasswordStateMatcher implements ErrorStateMatcher {
     private next = 'next'
   ) { }
 
-  isErrorState(control: FormControl | null): boolean {
+  isErrorState(control: UntypedFormControl | null): boolean {
     if (control.touched && control.invalid) return true;
     return (control?.value && control.parent.get(this.current).value === control.parent.get(this.next).value && control.dirty);
   }

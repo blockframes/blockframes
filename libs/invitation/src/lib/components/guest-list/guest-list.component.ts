@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChild, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { algolia } from '@env';
@@ -34,7 +34,7 @@ const points: Record<InvitationStatus, number> = {
 export class GuestListComponent implements OnInit {
   private _invitations = new BehaviorSubject<Invitation[]>([]);
   userIndex = algolia.indexNameUsers;
-  searchControl = new FormControl();
+  searchControl = new UntypedFormControl();
   search$: Observable<Invitation[]>;
   @Input() title: string
 

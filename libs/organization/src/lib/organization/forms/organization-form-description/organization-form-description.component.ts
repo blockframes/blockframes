@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { orgActivity } from '@blockframes/model';
 
 @Component({
@@ -10,7 +10,7 @@ import { orgActivity } from '@blockframes/model';
 })
 export class OrganizationFormDescriptionComponent {
   activities = orgActivity;
-  @Input() activity: FormControl;
-  @Input() description: FormControl;
+  @Input() activity: UntypedFormControl;
+  @Input() description: UntypedFormControl;
 
 }

@@ -18,7 +18,7 @@ const routes: Routes = [{
   path: '',
   component: OfferShellComponent,
   children: [
-    { path: '', redirectTo: 'view' },
+    { path: '', redirectTo: 'view', pathMatch: 'full' },
     { path: 'view', loadChildren: () => import('./offer-view/offer-view.module').then(m => m.OfferViewModule) },
     { path: ':contractId', loadChildren: () => import('./contract-view/contract-view.module').then(m => m.ContractViewModule) },
     { path: ':contractId/form', loadChildren: () => import('./contract-form/contract-form.module').then(m => m.ContractFormModule) },

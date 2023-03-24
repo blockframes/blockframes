@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { APP } from '@blockframes/utils/routes/utils';
@@ -13,9 +13,9 @@ import { CallableFunctions } from 'ngfire';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContactComponent implements OnInit {
-  public form = new FormGroup({
-    subject: new FormControl('', Validators.required),
-    message: new FormControl('', Validators.required)
+  public form = new UntypedFormGroup({
+    subject: new UntypedFormControl('', Validators.required),
+    message: new UntypedFormControl('', Validators.required)
   });
   public center: google.maps.LatLngLiteral;
   public markerLabel: Record<string, string>;

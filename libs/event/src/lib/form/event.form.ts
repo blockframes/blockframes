@@ -12,22 +12,22 @@ import {
   Screening,
   Slate
 } from '@blockframes/model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 
 // Event
 export function createEventControl(params?: Partial<Event>) {
   const event = createEvent(params);
   return {
-    id: new FormControl(event.id),
-    accessibility: new FormControl(event.accessibility),
-    isSecret: new FormControl(event.isSecret),
-    ownerOrgId: new FormControl(event.ownerOrgId),
-    type: new FormControl(event.type, Validators.required),
-    title: new FormControl(event.title, Validators.required),
-    start: new FormControl(event.start, compareDates('start', 'end', 'start')),
-    end: new FormControl(event.end, compareDates('start', 'end', 'end')),
-    allDay: new FormControl(event.allDay),
+    id: new UntypedFormControl(event.id),
+    accessibility: new UntypedFormControl(event.accessibility),
+    isSecret: new UntypedFormControl(event.isSecret),
+    ownerOrgId: new UntypedFormControl(event.ownerOrgId),
+    type: new UntypedFormControl(event.type, Validators.required),
+    title: new UntypedFormControl(event.title, Validators.required),
+    start: new UntypedFormControl(event.start, compareDates('start', 'end', 'start')),
+    end: new UntypedFormControl(event.end, compareDates('start', 'end', 'end')),
+    allDay: new UntypedFormControl(event.allDay),
     meta: createMetaControl(event)
   };
 }
@@ -49,7 +49,7 @@ export class EventForm extends FormEntity<EventControl, Event> {
 }
 
 // Meta
-function createMetaControl(event: Event): MeetingForm | ScreeningForm | SlateForm | FormGroup {
+function createMetaControl(event: Event): MeetingForm | ScreeningForm | SlateForm | UntypedFormGroup {
   if (isMeeting(event)) {
     return new MeetingForm(event.meta)
   } else if (isScreening(event)) {
@@ -57,7 +57,7 @@ function createMetaControl(event: Event): MeetingForm | ScreeningForm | SlateFor
   } else if (isSlate(event)) {
     return new SlateForm(event.meta);
   } else {
-    return new FormGroup({});
+    return new UntypedFormGroup({});
   }
 }
 
@@ -65,9 +65,9 @@ function createMetaControl(event: Event): MeetingForm | ScreeningForm | SlateFor
 export function createMeetingControl(params?: Partial<Meeting>) {
   const meeting = createMeeting(params);
   return {
-    organizerUid: new FormControl(meeting.organizerUid),
-    description: new FormControl(meeting.description, [Validators.maxLength(500)]),
-    files: FormList.factory(meeting.files, el => new FormControl(el)),
+    organizerUid: new UntypedFormControl(meeting.organizerUid),
+    description: new UntypedFormControl(meeting.description, [Validators.maxLength(500)]),
+    files: FormList.factory(meeting.files, el => new UntypedFormControl(el)),
   }
 }
 
@@ -87,9 +87,9 @@ export class MeetingForm extends FormEntity<MeetingControl, Meeting> {
 export function createScreeningControl(params?: Partial<Screening>) {
   const screening = createScreening(params);
   return {
-    titleId: new FormControl(screening.titleId),
-    description: new FormControl(screening.description, [Validators.maxLength(500)]),
-    organizerUid: new FormControl(screening.organizerUid)
+    titleId: new UntypedFormControl(screening.titleId),
+    description: new UntypedFormControl(screening.description, [Validators.maxLength(500)]),
+    organizerUid: new UntypedFormControl(screening.organizerUid)
   }
 }
 
@@ -109,10 +109,10 @@ export class ScreeningForm extends FormEntity<ScreeningControl, Screening> {
 export function createSlateControl(params?: Partial<Slate>) {
   const slate = createSlate(params);
   return {
-    description: new FormControl(slate.description, [Validators.maxLength(500)]),
-    organizerUid: new FormControl(slate.organizerUid),
-    titleIds: new FormControl(slate.titleIds),
-    videoId: new FormControl(slate.videoId)
+    description: new UntypedFormControl(slate.description, [Validators.maxLength(500)]),
+    organizerUid: new UntypedFormControl(slate.organizerUid),
+    titleIds: new UntypedFormControl(slate.titleIds),
+    videoId: new UntypedFormControl(slate.videoId)
   }
 }
 

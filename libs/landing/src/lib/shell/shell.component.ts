@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, OnDestroy, ViewEncapsulation, ChangeDetectorRef, Inject } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
@@ -60,18 +60,18 @@ export class LandingShellComponent implements OnDestroy {
     'other'
   ];
 
-  public form = new FormGroup({
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
-    email: new FormControl('', Validators.email),
-    phoneNumber: new FormControl(''),
-    companyName: new FormControl(''),
-    role: new FormControl(''),
-    newsletters: new FormControl(false)
+  public form = new UntypedFormGroup({
+    firstName: new UntypedFormControl(''),
+    lastName: new UntypedFormControl(''),
+    email: new UntypedFormControl('', Validators.email),
+    phoneNumber: new UntypedFormControl(''),
+    companyName: new UntypedFormControl(''),
+    role: new UntypedFormControl(''),
+    newsletters: new UntypedFormControl(false)
   });
 
-  public newslettersForm = new FormGroup({
-    email: new FormControl('', Validators.email)
+  public newslettersForm = new UntypedFormGroup({
+    email: new UntypedFormControl('', Validators.email)
   });
 
   @ContentChild(LandingContactDirective) landingContactDirective: LandingContactDirective
@@ -108,7 +108,7 @@ export class LandingShellComponent implements OnDestroy {
   }
 
   /** Triggers when a user click on the button from LearnMoreComponent.  */
-  public async sendRequest(form: FormGroup) {
+  public async sendRequest(form: UntypedFormGroup) {
     if (form.invalid) {
       this.snackBar.open('Please fill the required informations.', 'close', { duration: 2000 });
       return;
@@ -135,7 +135,7 @@ export class LandingShellComponent implements OnDestroy {
     }
   }
 
-  public async subscribe(form: FormGroup) {
+  public async subscribe(form: UntypedFormGroup) {
     if (form.invalid) {
       this.snackBar.open('Please enter a valid email address.', 'close', { duration: 2000 });
       return;

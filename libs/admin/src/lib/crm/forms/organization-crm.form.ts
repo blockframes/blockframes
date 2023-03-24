@@ -1,4 +1,4 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { createOrganization, getAllAppsExcept, Organization } from '@blockframes/model';
 import { OrganizationAddressesForm } from '@blockframes/organization/forms/organization.form';
@@ -7,20 +7,20 @@ import { ModuleAccessCrmForm } from './module-access-crm.form';
 
 function createOrgCrmControls(entity: Partial<Organization>) {
   const org = createOrganization(entity);
-  const appAccess = new FormGroup({});
+  const appAccess = new UntypedFormGroup({});
   const apps = getAllAppsExcept(['crm']);
   for (const a of apps) {
     appAccess.addControl(a, new ModuleAccessCrmForm(org.appAccess[a]));
   }
   return {
-    name: new FormControl(org.name),
-    description: new FormControl(org.description),
+    name: new UntypedFormControl(org.name),
+    description: new UntypedFormControl(org.description),
     addresses: new OrganizationAddressesForm(org.addresses),
-    email: new FormControl(org.email, Validators.email),
-    activity: new FormControl(org.activity),
+    email: new UntypedFormControl(org.email, Validators.email),
+    activity: new UntypedFormControl(org.activity),
     logo: new StorageFileForm(org.logo),
     appAccess,
-    status: new FormControl(org.status),
+    status: new UntypedFormControl(org.status),
   };
 }
 

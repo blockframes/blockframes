@@ -16,7 +16,7 @@ import {
 import { BehaviorSubject, merge, Observable, of, Subscription } from 'rxjs';
 import { debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { Paginator, PageState } from './paginator';
@@ -49,7 +49,7 @@ function filterTable<T>(data: T[], value: string, columns: QueryList<ColumnDirec
 
 @Directive({ selector: '[colRef]' })
 export class ColumnDirective<T> {
-  control = new FormControl(true);
+  control = new UntypedFormControl(true);
 
   /** Path of the value in the row */
   @Input('colRef') name!: string;
@@ -112,7 +112,7 @@ export class ColumnDirective<T> {
 })
 export class TableComponent<T> implements AfterContentInit, OnDestroy {
   private dataSource = new BehaviorSubject<T[]>([]);
-  search = new FormControl();
+  search = new UntypedFormControl();
   paginator = new Paginator({
     onChange: page => this.page.emit(page),
   });

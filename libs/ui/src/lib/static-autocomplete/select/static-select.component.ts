@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input, ContentChild, TemplateRef, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 // Blockframes
 import { Scope, staticModel } from '@blockframes/model';
@@ -17,7 +17,7 @@ export class StaticSelectComponent implements OnInit {
   @ContentChild(TemplateRef) template: TemplateRef<unknown>;
   @Input() scope: Scope
   @Input() @boolean multiple: boolean;
-  @Input() control: FormControl;
+  @Input() control: UntypedFormControl;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() placeholder: string;
   @Input() @boolean required: boolean;

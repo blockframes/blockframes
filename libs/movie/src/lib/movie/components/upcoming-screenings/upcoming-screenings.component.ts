@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, HostBinding, ChangeDetectorRef, Inject } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
@@ -29,7 +29,7 @@ export class UpcomingScreeningsComponent {
 
   public sessions = ['first', 'second', 'third', 'fourth', 'fifth'];
 
-  public sessionCtrl = new FormControl(0);
+  public sessionCtrl = new UntypedFormControl(0);
 
   private movie$ = this.route.params.pipe(
     pluck('movieId'),

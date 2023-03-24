@@ -1,9 +1,9 @@
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, filter, startWith } from 'rxjs/operators';
 import { EntityControl, FormEntity } from './entity.form';
 
-export abstract class FormBatch<E, C extends EntityControl<E>> extends FormGroup {
+export abstract class FormBatch<E, C extends EntityControl<E>> extends UntypedFormGroup {
   protected idKey = 'id';
   private active = new BehaviorSubject<string>(null);
   public active$ = this.active.asObservable();

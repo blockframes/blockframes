@@ -299,7 +299,7 @@
         "serve": {
           "executor": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/catalog/catalog-e2e/cypress.json",
+            "cypressConfig": "apps/catalog/catalog-e2e/cypress.config.js",
             "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
             "watch": true,
@@ -322,7 +322,7 @@
         "e2e": {
           "executor": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/catalog/catalog-e2e/cypress.json",
+            "cypressConfig": "apps/catalog/catalog-e2e/cypress.config.js",
             "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
             "browser": "chrome",
@@ -469,7 +469,7 @@
         "serve": {
           "executor": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/cms/cms-e2e/cypress.json",
+            "cypressConfig": "apps/cms/cms-e2e/cypress.config.js",
             "tsConfig": "apps/cms/cms-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
             "watch": true,
@@ -492,7 +492,7 @@
         "e2e": {
           "executor": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/cms/cms-e2e/cypress.json",
+            "cypressConfig": "apps/cms/cms-e2e/cypress.config.js",
             "tsConfig": "apps/cms/cms-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
             "browser": "chrome",
@@ -695,7 +695,7 @@
         "serve": {
           "executor": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/crm/crm-e2e/cypress.json",
+            "cypressConfig": "apps/crm/crm-e2e/cypress.config.js",
             "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
             "watch": true,
@@ -718,7 +718,7 @@
         "e2e": {
           "executor": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/crm/crm-e2e/cypress.json",
+            "cypressConfig": "apps/crm/crm-e2e/cypress.config.js",
             "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
             "browser": "chrome",
@@ -933,7 +933,7 @@
         "serve": {
           "executor": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/festival/festival-e2e/cypress.json",
+            "cypressConfig": "apps/festival/festival-e2e/cypress.config.js",
             "tsConfig": "apps/festival/festival-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
             "watch": true,
@@ -959,7 +959,7 @@
         "e2e": {
           "executor": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/festival/festival-e2e/cypress.json",
+            "cypressConfig": "apps/festival/festival-e2e/cypress.config.js",
             "tsConfig": "apps/festival/festival-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
             "browser": "chrome",
@@ -1105,7 +1105,7 @@
         "serve": {
           "executor": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/financiers/financiers-e2e/cypress.json",
+            "cypressConfig": "apps/financiers/financiers-e2e/cypress.config.js",
             "tsConfig": "apps/financiers/financiers-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
             "watch": true,
@@ -1128,7 +1128,7 @@
         "e2e": {
           "executor": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/financiers/financiers-e2e/cypress.json",
+            "cypressConfig": "apps/financiers/financiers-e2e/cypress.config.js",
             "tsConfig": "apps/financiers/financiers-e2e/tsconfig.e2e.json",
             "baseUrl": "http://localhost:4200",
             "browser": "chrome",
