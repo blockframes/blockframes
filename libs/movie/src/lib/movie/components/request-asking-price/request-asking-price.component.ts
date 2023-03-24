@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -19,7 +19,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 })
 export class RequestAskingPriceComponent {
 
-  form: FormGroup;
+  form: UntypedFormGroup;
   sending = false;
 
   constructor(
@@ -33,16 +33,16 @@ export class RequestAskingPriceComponent {
     @Inject(MAT_DIALOG_DATA) public data: { movieId: string, enhanced?: boolean }
   ) {
 
-    this.form = new FormGroup({
+    this.form = new UntypedFormGroup({
       territories: new FormStaticValueArray<'territories'>([], 'territories', [Validators.required]),
-      message: new FormControl()
+      message: new UntypedFormControl()
     });
 
     if (data.enhanced) {
-      this.form = new FormGroup({
+      this.form = new UntypedFormGroup({
         territories: new FormStaticValueArray<'territories'>([], 'territories', [Validators.required]),
         medias: new FormStaticValueArray<'medias'>([], 'medias', [Validators.required]),
-        exclusive: new FormControl(true, Validators.required),
+        exclusive: new UntypedFormControl(true, Validators.required),
       });
     }
   }

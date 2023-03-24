@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 // Blockframes
 import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/actions/actions.module';
 import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
@@ -20,7 +20,7 @@ import { UpdateFundingStatusModalModule } from '../update-funding-status-modal/u
 // Components
 import { TitleViewComponent } from './view.component';
 
-const routes = [{
+const routes: Routes = [{
   path: '',
   component: TitleViewComponent,
   children: [

@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter, map, pluck } from 'rxjs/operators';
 import { combineLatest, Subscription } from 'rxjs';
@@ -36,8 +36,8 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     filter(contract => !!contract),
   );
 
-  form = new FormGroup({
-    status: new FormControl('pending')
+  form = new UntypedFormGroup({
+    status: new UntypedFormControl('pending')
   });
 
   private sub: Subscription;

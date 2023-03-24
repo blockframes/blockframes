@@ -1,9 +1,9 @@
-import { FormControl, ValidatorFn } from '@angular/forms';
+import { UntypedFormControl, ValidatorFn } from '@angular/forms';
 import { Scope, GetKeys } from '@blockframes/model';
 import { isKeyValidator, isKeyArrayValidator } from '../validators';
 import { Observable } from 'rxjs';
 
-export class FormStaticValue<S extends Scope> extends FormControl {
+export class FormStaticValue<S extends Scope> extends UntypedFormControl {
   value: GetKeys<S>;
   valueChanges: Observable<GetKeys<S>>;
   constructor(value: GetKeys<S>, scope: S, validators: ValidatorFn[] = []) {
@@ -11,7 +11,7 @@ export class FormStaticValue<S extends Scope> extends FormControl {
   }
 }
 
-export class FormStaticValueArray<S extends Scope> extends FormControl {
+export class FormStaticValueArray<S extends Scope> extends UntypedFormControl {
   value: GetKeys<S>[];
   valueChanges: Observable<GetKeys<S>[]>;
   constructor(value: GetKeys<S>[], scope: S, validators: ValidatorFn[] = []) {

@@ -32,7 +32,7 @@ import { map, Observable, startWith } from 'rxjs';
 import { aggregatePerUser } from '@blockframes/analytics/utils';
 import { joinWith } from 'ngfire';
 import { UserService } from '@blockframes/user/service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
@@ -55,7 +55,7 @@ export class MovieComponent implements OnInit {
   public deletedUserIdentifier = deletedIdentifier.user;
 
   public keywords$: Observable<string[]>;
-  public keywordForm = new FormControl();
+  public keywordForm = new UntypedFormControl();
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   public analytics$: Observable<AggregatedAnalytic[]>;

@@ -1,4 +1,4 @@
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity } from './../../form/forms/entity.form';
 
 export interface CookiesConsent {
@@ -19,9 +19,9 @@ function createCookiesConsent(params?: Partial<CookiesConsent>): CookiesConsent 
 function createCookiesConsentControls(entity: Partial<CookiesConsent>): EntityControl<CookiesConsent> {
   const cookies = createCookiesConsent(entity);
   return {
-    intercom: new FormControl(cookies.intercom, Validators.required),
-    yandex: new FormControl(cookies.yandex, Validators.required),
-    hotjar: new FormControl(cookies.hotjar, Validators.required)
+    intercom: new UntypedFormControl(cookies.intercom, Validators.required),
+    yandex: new UntypedFormControl(cookies.yandex, Validators.required),
+    hotjar: new UntypedFormControl(cookies.hotjar, Validators.required)
   }
 }
 

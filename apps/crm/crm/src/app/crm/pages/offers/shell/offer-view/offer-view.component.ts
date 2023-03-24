@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { OfferShellComponent } from '../shell.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -23,9 +23,9 @@ export class OfferViewComponent implements OnDestroy, OnInit {
 
   public offer$ = this.shell.offer$;
   public offerStatus = Object.keys(staticModel['offerStatus']);
-  public form = new FormGroup({
-    status: new FormControl('pending'),
-    specificity: new FormControl('')
+  public form = new UntypedFormGroup({
+    status: new UntypedFormControl('pending'),
+    specificity: new UntypedFormControl('')
   })
   subscription: Subscription;
 

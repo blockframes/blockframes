@@ -1,6 +1,6 @@
 import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, festival, recursiveSearch, AlgoliaSearchQuery, MovieSearch, LanguageVersion, Versions } from '@blockframes/model';
 import type { StoreStatus, Territory, AlgoliaRunningTime } from '@blockframes/model';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
@@ -42,10 +42,10 @@ function createLanguageVersionControl(data: LanguageVersion) {
   return new FormEntity<EntityControl<LanguageVersion>, LanguageVersion>({
     languages: FormList.factory<GetKeys<'languages'>>(data.languages),
     versions: new FormEntity<EntityControl<Versions>, Versions>({
-      original: new FormControl(data.versions.original),
-      dubbed: new FormControl(data.versions.dubbed),
-      subtitle: new FormControl(data.versions.subtitle),
-      caption: new FormControl(data.versions.caption),
+      original: new UntypedFormControl(data.versions.original),
+      dubbed: new UntypedFormControl(data.versions.dubbed),
+      subtitle: new UntypedFormControl(data.versions.subtitle),
+      caption: new UntypedFormControl(data.versions.caption),
     })
   })
 }
@@ -54,8 +54,8 @@ export type LanguageVersionControl = ReturnType<typeof createLanguageVersionCont
 
 function createRunningTimeControl(data: AlgoliaRunningTime) {
   return {
-    min: new FormControl(data.min),
-    max: new FormControl(data.max),
+    min: new UntypedFormControl(data.min),
+    max: new UntypedFormControl(data.max),
   };
 }
 
@@ -69,21 +69,21 @@ export class RunningTimeForm extends FormEntity<RunningTimeControl> {
 
 function createMovieSearchControl(search: MovieSearch) {
   return {
-    query: new FormControl(search.query),
-    page: new FormControl(search.page),
+    query: new UntypedFormControl(search.query),
+    page: new UntypedFormControl(search.page),
     storeStatus: FormList.factory<StoreStatus>(search.storeStatus),
     genres: FormList.factory<GetKeys<'genres'>>(search.genres),
     originCountries: FormList.factory<Territory>(search.originCountries),
     languages: createLanguageVersionControl(search.languages),
     productionStatus: new FormStaticValueArray<'productionStatus'>(search.productionStatus, 'productionStatus'),
-    minBudget: new FormControl(search.minBudget),
-    minReleaseYear: new FormControl(search.minReleaseYear),
+    minBudget: new UntypedFormControl(search.minBudget),
+    minReleaseYear: new UntypedFormControl(search.minReleaseYear),
     sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
     socialGoals: new FormStaticValueArray<'socialGoals'>(search.socialGoals, 'socialGoals'),
-    contentType: new FormControl(search.contentType),
+    contentType: new UntypedFormControl(search.contentType),
     runningTime: new RunningTimeForm(search.runningTime),
     // Max is 1000, see docs: https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/
-    hitsPerPage: new FormControl(50, Validators.max(1000)),
+    hitsPerPage: new UntypedFormControl(50, Validators.max(1000)),
     festivals: new FormStaticValueArray<'festival'>(search.festivals, 'festival'),
     certifications: new FormStaticValueArray<'certifications'>(search.certifications, 'certifications')
   };

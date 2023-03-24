@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
 import { Contract, Movie, Negotiation, Offer } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -24,7 +24,7 @@ interface OfferView extends Offer {
 })
 export class ListComponent {
   @Input() offers?: null | OfferView[];
-  filter = new FormControl('');
+  filter = new UntypedFormControl('');
   filter$: Observable<AllOfferStatus> = this.filter.valueChanges.pipe(
     startWith(this.filter.value ?? '')
   );

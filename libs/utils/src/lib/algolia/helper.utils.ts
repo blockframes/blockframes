@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { AlgoliaUser, MovieIndexFilters } from '@blockframes/model';
 import { FormList } from '../form/forms/list.form';
 import { Validator } from '../form/forms/types';
@@ -12,8 +12,8 @@ export function createAlgoliaUserForm(validators?: Validator) {
   const createAlgoliaUser = (user: (string | Partial<AlgoliaUser>)) => {
     return typeof user === 'string' ? { email: user } : user;
   }
-  const factory = user => new FormControl(createAlgoliaUser(user));
-  return FormList.factory<AlgoliaUser | { email: string }, FormControl>([], factory, validators);
+  const factory = user => new UntypedFormControl(createAlgoliaUser(user));
+  return FormList.factory<AlgoliaUser | { email: string }, UntypedFormControl>([], factory, validators);
 }
 
 export function parseFilters(filters: MovieIndexFilters, operator: ' AND ' | ' OR ' = ' OR ',

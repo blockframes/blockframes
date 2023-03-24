@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { StoreStatus, storeStatus, Person, Movie } from '@blockframes/model';
@@ -21,7 +21,7 @@ import { OrganizationService } from '@blockframes/organization/service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TitleListComponent {
-  filter = new FormControl();
+  filter = new UntypedFormControl();
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(
     startWith(this.filter.value || '')
   );
