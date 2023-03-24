@@ -1,5 +1,5 @@
 import { FormControl, Validators } from '@angular/forms';
-import { EntityControl, FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { EntityControl, FormEntity } from './../../form/forms/entity.form';
 
 export interface CookiesConsent {
   intercom: boolean;
