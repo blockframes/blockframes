@@ -4,9 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
-
-import { LetModule } from '@rx-angular/template';
+import { LetModule } from '@rx-angular/template/let';
 
 // Blockframes
 import { InternalSaleListComponent } from './internal-sales.component';
@@ -23,9 +21,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [
-    InternalSaleListComponent,
-  ],
+  declarations: [InternalSaleListComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -45,10 +41,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTabsModule,
 
     // Router
-    RouterModule.forChild([])
+    RouterModule.forChild([]),
   ],
-  exports: [
-    InternalSaleListComponent,
-  ]
+  exports: [InternalSaleListComponent],
 })
-export class InternalSalesListModule { }
+export class InternalSalesListModule {}

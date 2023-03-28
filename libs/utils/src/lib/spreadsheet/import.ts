@@ -1,6 +1,6 @@
 import { WorkBook, WorkSheet, utils, read } from 'xlsx';
 import { GetKeys, GroupScope, StaticGroup, staticGroups, parseToAll, Scope } from '@blockframes/model';
-import { ImportLog, mandatoryError, SpreadsheetImportError, WrongTemplateError, wrongValueWarning } from 'libs/import/src/lib/utils';
+import { ImportLog, mandatoryError, SpreadsheetImportError, WrongTemplateError, wrongValueWarning } from '@blockframes/import/utils';
 import { getKeyIfExists } from '../helpers';
 
 type Matrix = any[][]; // @todo find better type

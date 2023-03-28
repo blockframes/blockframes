@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
@@ -13,9 +13,9 @@ export class ReleaseYearFilterComponent implements OnInit, OnDestroy {
 
   minReleaseYear = 1980;
   maxReleaseYear = 2030;
-  inverted = new FormControl(this.minReleaseYear);
+  inverted = new UntypedFormControl(this.minReleaseYear);
 
-  @Input() form: FormControl;
+  @Input() form: UntypedFormControl;
 
   private subs: Subscription[] = [];
 

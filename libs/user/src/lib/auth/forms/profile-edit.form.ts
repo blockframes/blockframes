@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { createStorageFile, StorageFile, User } from '@blockframes/model';
@@ -29,13 +29,13 @@ export function createProfile(params: Partial<User> = {}): Profile {
 function createProfileControls(entity: Partial<User>) {
   const profile = createProfile(entity);
   return {
-    firstName: new FormControl(profile.firstName),
-    lastName: new FormControl(profile.lastName),
-    phoneNumber: new FormControl(profile.phoneNumber),
-    position: new FormControl(profile.position),
+    firstName: new UntypedFormControl(profile.firstName),
+    lastName: new UntypedFormControl(profile.lastName),
+    phoneNumber: new UntypedFormControl(profile.phoneNumber),
+    position: new UntypedFormControl(profile.position),
     avatar: new StorageFileForm(profile.avatar),
-    email: new FormControl({ value: profile.email, disabled: true }),
-    hideEmail: new FormControl(profile.hideEmail),
+    email: new UntypedFormControl({ value: profile.email, disabled: true }),
+    hideEmail: new UntypedFormControl(profile.hideEmail),
   };
 }
 

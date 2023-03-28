@@ -27,7 +27,11 @@ const routes: Route[] = [
   {
     path: '', component: SaleShellComponent,
     children: [
-      { path: '', redirectTo: 'view', },
+      {
+        path: '',
+        redirectTo: 'view',
+        pathMatch: 'full',
+      },
       {
         path: 'external',
         loadChildren: () => import('./external/external.module').then(m => m.ExternalSaleModule)

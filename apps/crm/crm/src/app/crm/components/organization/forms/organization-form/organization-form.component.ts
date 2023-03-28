@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@a
 // Blockframes
 import { organizationStatus, getAllAppsExcept } from '@blockframes/model';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { OrganizationService } from '@blockframes/organization/service';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
@@ -20,7 +20,7 @@ export class CrmOrganizationFormComponent {
 
   public organizationStatus = organizationStatus;
   public app = getAllAppsExcept(['crm']);
-  public notifyCheckbox = new FormControl(false);
+  public notifyCheckbox = new UntypedFormControl(false);
 
   constructor(
     private organizationService: OrganizationService,

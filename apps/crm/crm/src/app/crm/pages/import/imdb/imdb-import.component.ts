@@ -1,6 +1,6 @@
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ImdbImportLogs, MyapimoviesService } from '@blockframes/utils/myapimovies/myapimovies.service';
 import { BehaviorSubject } from 'rxjs';
@@ -13,10 +13,10 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ImdbImportComponent {
 
-  public form = new FormGroup({
-    token: new FormControl('', [Validators.required]),
-    imdbIds: new FormControl('', [Validators.required]),
-    orgId: new FormControl('', [Validators.required]),
+  public form = new UntypedFormGroup({
+    token: new UntypedFormControl('', [Validators.required]),
+    imdbIds: new UntypedFormControl('', [Validators.required]),
+    orgId: new UntypedFormControl('', [Validators.required]),
   });
 
   public logs$ = new BehaviorSubject<ImdbImportLogs>({

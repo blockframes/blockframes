@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -19,12 +19,12 @@ export class EmailComponent {
     private snackBar: MatSnackBar,
   ) { }
 
-  public form = new FormGroup({
-    firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    termsOfUse: new FormControl(false),
-    privacyPolicy: new FormControl(false),
+  public form = new UntypedFormGroup({
+    firstName: new UntypedFormControl('', [Validators.required]),
+    lastName: new UntypedFormControl('', [Validators.required]),
+    email: new UntypedFormControl('', [Validators.required, Validators.email]),
+    termsOfUse: new UntypedFormControl(false),
+    privacyPolicy: new UntypedFormControl(false),
   });
 
   validateForm() {

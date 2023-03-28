@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -16,7 +16,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class MovieFormStoryElementsComponent implements OnInit {
   values$: Observable<string[]>;
   form = this.shell.getForm('movie');
-  keyword = new FormControl();
+  keyword = new UntypedFormControl();
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {

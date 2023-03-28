@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 
@@ -19,7 +19,7 @@ interface ConfirmationData {
 })
 export class ConfirmWithValidationComponent {
 
-  acceptTerms = new FormControl(false);
+  acceptTerms = new UntypedFormControl(false);
   termsPath = `/c/o/${this.moduleGuard.currentModule}/terms`;
 
   constructor(

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { createMovieLanguageSpecification, Language } from '@blockframes/model';
 import { MovieVersionInfoForm, VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
@@ -12,7 +12,7 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 })
 export class LanguagesFormComponent {
   @Input() form: MovieVersionInfoForm;
-  public languageCtrl = new FormControl();
+  public languageCtrl = new UntypedFormControl();
   public showButtons = true;
 
   addLanguage() {
