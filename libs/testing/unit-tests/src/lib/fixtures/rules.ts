@@ -349,9 +349,13 @@ export const rulesFixtures = {
   },
   'waterfall/MI-0d7/permissions/O002': {
     id: 'O002',
+    roles: ['financier']
   },
   'waterfall/MI-0d7/permissions/O003': {
     id: 'O003',
+  },
+  'waterfall/MI-0d7/budget/MI-0d7': {
+    id: 'MI-0d7',
   }
 };
 

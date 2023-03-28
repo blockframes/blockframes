@@ -583,6 +583,32 @@ service cloud.firestore {
           && userOrgId() in getMovie(waterfallId).orgIds;
         allow delete: if false;
       }
+
+      match /budget/{budgetId} {
+        allow read: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && (userOrgId() in getMovie(waterfallId).orgIds || hasWaterfallRole(waterfallId, 'financier'));
+        allow create: if userHasValidOrg()
+          && isRequestFieldValueEqualToOrNotSetted(['id'], waterfallId)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && userOrgId() in getMovie(waterfallId).orgIds;
+        allow update: if userHasValidOrg()
+          && isNotUpdatingId('id', existingData().id)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && userOrgId() in getMovie(waterfallId).orgIds;
+        allow delete: if false;
+      }
+    }
+
+    function hasWaterfallRole(waterfallId, role){
+      return role in getWaterfallPermissions(waterfallId).roles;
+    }
+
+    function getWaterfallPermissions(waterfallId) {
+      return get(/databases/$(database)/documents/waterfall/$(waterfallId)/permissions/$(userOrgId())).data;
     }
 
     /////////////////////////////////////////////////////////////////////////////////
