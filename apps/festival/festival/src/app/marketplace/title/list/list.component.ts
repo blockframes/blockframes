@@ -130,7 +130,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   load(savedSearch: MovieAvailsSearch) {
-    // Retro compatibility for old filters
+    // Retro compatibility for old filters (see issue #9243)
     const minReleaseYear = (savedSearch?.search as any)?.minReleaseYear as number;
     if(minReleaseYear) {
       savedSearch.search.releaseYear = { min: minReleaseYear, max: null };

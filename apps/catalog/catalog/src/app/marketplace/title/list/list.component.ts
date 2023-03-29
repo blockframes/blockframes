@@ -225,7 +225,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   load(savedSearch: MovieAvailsSearch) {
-    // Retro compatibility for old filters
+    // Retro compatibility for old filters (see issue #9240 and #9243)
     const retroRunningTimeOptions = {
       1: { min: null, max: 12 },
       2: { min: 13, max: 25 },
