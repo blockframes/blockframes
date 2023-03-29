@@ -225,8 +225,8 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   load(savedSearch: MovieAvailsSearch) {
-    // Retro compatibility for old running time format
-    const retroOptionToMinMax = {
+    // Retro compatibility for old filters (see issue #9240 and #9243)
+    const retroRunningTimeOptions = {
       1: { min: null, max: 12 },
       2: { min: 13, max: 25 },
       3: { min: 26, max: 51 },
@@ -235,9 +235,14 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
       6: { min: 181, max: null },
     };
     const oldRunningTimeFormat = savedSearch?.search?.runningTime as unknown as number;
-    if (!isNaN(oldRunningTimeFormat)) {
-      savedSearch.search.runningTime = retroOptionToMinMax[oldRunningTimeFormat];
+    if (!isNaN(oldRunningTimeFormat)) savedSearch.search.runningTime = retroRunningTimeOptions[oldRunningTimeFormat];
+    const minReleaseYear = (savedSearch?.search as any)?.minReleaseYear as number;
+    if (minReleaseYear) {
+      savedSearch.search.releaseYear = { min: minReleaseYear, max: null };
+      delete (savedSearch.search as any).minReleaseYear;
     }
+    // End of retrocompatibility
+
     this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
 
     // Avails Form

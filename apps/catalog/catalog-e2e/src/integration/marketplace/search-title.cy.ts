@@ -7,6 +7,7 @@ import {
   movieOrgMoviePermissions,
   displayMovie as movie,
 } from '../../fixtures/marketplace/search-display-title';
+import { europeanCountries } from '../../fixtures/shared/commons';
 import { festival, certifications } from '@blockframes/model';
 import {
   // plugins
@@ -23,8 +24,8 @@ import {
   //marketplace lib
   selectFilter,
   selectToggle,
-  selectYear,
   syncMovieToAlgolia,
+  escapeKey,
 } from '@blockframes/testing/cypress/browser';
 
 const injectedData = {
@@ -96,8 +97,9 @@ describe('Movie search in marketplace', () => {
     get(`option_${movie.genres[0]}`).click();
     get('save-filter').click();
     selectFilter('Country of Origin');
-    get('country').find('input').click();
-    get(`option_${movie.originCountries[0]}`).click();
+    get('origin-countries').click();
+    get(movie.originCountries[0]).click();
+    escapeKey();
     get('save-filter').click();
     selectFilter('Language & Version');
     get('language').find('input').click();
@@ -105,13 +107,12 @@ describe('Movie search in marketplace', () => {
     check('Dubs');
     get('save-filter').click();
     selectFilter('Release Year');
-    get('slider').focus();
-    selectYear(movie.release.year - (movie.release.year % 10));
-    get('slider').find('.mat-slider-thumb-label').should('contain', '2020');
+    get('min-input').type('2020');
+    get('max-input').type(movie.release.year.toString());
     get('save-filter').click();
     selectFilter('Running Time');
-    get('min-running-time').type('90');
-    get('max-running-time').type('180');
+    get('min-input').type('90');
+    get('max-input').type('180');
     get('save-filter').click();
     selectFilter('Festival Selection');
     get(festival[movie.prizes[0].name]).click();
@@ -156,8 +157,9 @@ describe('Movie search in marketplace', () => {
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Country of Origin');
-    get('country').find('input').click();
-    get('option_cayman-islands').click();
+    get('origin-countries').click();
+    get('cayman-islands').click();
+    escapeKey();
     get('empty').should('exist');
     get('clear-filter').click();
     get('save-filter').click();
@@ -182,16 +184,15 @@ describe('Movie search in marketplace', () => {
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Release Year');
-    get('slider').focus();
-    selectYear(2030);
+    get('min-input').type('2030');
     get('empty').should('exist');
     get('clear-filter').click();
     get('save-filter').click();
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Running Time');
-    get('min-running-time').type('13');
-    get('max-running-time').type('25');
+    get('min-input').type('13');
+    get('max-input').type('25');
     get('empty').should('exist');
     get(`movie-card_${movie.id}`).should('not.exist');
     get('clear-filter').click();
@@ -232,5 +233,30 @@ describe('Movie search in marketplace', () => {
     getAllStartingWith('movie-card_').should('have.length', 50);
     get('load-more').click();
     getAllStartingWith('movie-card_').should('have.length', 100);
+  });
+
+  it('Group in Country of Origin filter works properly', () => {
+    get('title-link').eq(0).click();
+    selectFilter('Country of Origin');
+    get('origin-countries').click();
+    get('Europe').click();
+    escapeKey();
+    get('origin-countries').should('contain', 'Europe');
+    get('save-filter').click();
+    // url should include all european countries, and not contain the group name (Europe)
+    europeanCountries.forEach(country => cy.url().should('include', country));
+    cy.url().should('not.include', 'Europe');
+    cy.url().should('not.include', 'europe');
+    get('save').click();
+    // clearing filters should remove 'Europe' in filter and european countries in url
+    get('clear-filters').click();
+    cy.url({ decode: true }).should('include', '"originCountries":[]');
+    selectFilter('Country of Origin');
+    get('origin-countries').should('contain', '');
+    get('save-filter').click();
+    // loading filters should bring back 'Europe' in the filter
+    get('load').click();
+    selectFilter('Country of Origin');
+    get('origin-countries').should('contain', 'Europe');
   });
 });

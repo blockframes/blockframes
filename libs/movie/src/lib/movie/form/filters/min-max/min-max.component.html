@@ -1,0 +1,24 @@
+<form [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <mat-label>{{ labels.min }}</mat-label>
+    <input
+      matInput
+      formControlName="min"
+      type="number"
+      [placeholder]="placeholder"
+      [value]="form.get('min').value"
+      test-id="min-input"
+    />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>{{ labels.max }}</mat-label>
+    <input
+      matInput
+      formControlName="max"
+      type="number"
+      [placeholder]="placeholder"
+      [value]="form.get('max').value"
+      test-id="max-input"
+    />
+  </mat-form-field>
+</form>

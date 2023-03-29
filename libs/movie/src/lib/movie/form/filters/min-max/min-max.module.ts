@@ -3,22 +3,22 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Components
-import { RunningTimeFilterComponent } from './running-time.component';
+import { MinMaxFilterComponent } from './min-max.component';
 
 // Material
-import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
-  declarations: [RunningTimeFilterComponent],
-  exports: [RunningTimeFilterComponent],
+  declarations: [MinMaxFilterComponent],
+  exports: [MinMaxFilterComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
 
     // Material
-    MatInputModule,
     MatFormFieldModule,
+    MatInputModule,
   ],
 })
-export class RunningTimeFilterModule { }
+export class MinMaxFilterModule { }
