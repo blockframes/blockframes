@@ -16,6 +16,7 @@ import {
 import { add, startOfYear } from 'date-fns';
 import { fakeUserData } from '@blockframes/testing/cypress/browser';
 import { centralOrgId } from '@env';
+import { europeanCountries } from '../shared/commons';
 
 //* buyer data */
 
@@ -159,11 +160,6 @@ const juneFirstNextYears = add(januaryFirstNextYear, { months: 5 });
 function addSixMonthsTo(date: Date) {
   return add(date, { months: 6 });
 }
-
-export const europeanCountries = territoriesGroup
-  .map(group => group.label === 'Europe' && group.items)
-  .filter(Boolean)
-  .flat(2);
 
 export const northAmericanCountries = territoriesGroup
   .map(group => group.label === 'North America' && group.items)

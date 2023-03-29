@@ -7,7 +7,7 @@ import {
   movieOrgMoviePermissions,
   displayMovie as movie,
 } from '../../fixtures/marketplace/search-display-title';
-import { europeanCountries } from '../../fixtures/marketplace/avails-search';
+import { europeanCountries } from '../../fixtures/shared/commons';
 import { festival, certifications } from '@blockframes/model';
 import {
   // plugins
