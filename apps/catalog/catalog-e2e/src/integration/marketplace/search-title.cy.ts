@@ -7,6 +7,7 @@ import {
   movieOrgMoviePermissions,
   displayMovie as movie,
 } from '../../fixtures/marketplace/search-display-title';
+import { europeanCountries } from '../../fixtures/marketplace/avails-search';
 import { festival, certifications } from '@blockframes/model';
 import {
   // plugins
@@ -232,5 +233,30 @@ describe('Movie search in marketplace', () => {
     getAllStartingWith('movie-card_').should('have.length', 50);
     get('load-more').click();
     getAllStartingWith('movie-card_').should('have.length', 100);
+  });
+
+  it('Group in Country of Origin filter works properly', () => {
+    get('title-link').eq(0).click();
+    selectFilter('Country of Origin');
+    get('origin-countries').click();
+    get('Europe').click();
+    escapeKey();
+    get('origin-countries').should('contain', 'Europe');
+    get('save-filter').click();
+    // url should include all european countries, and not contain the group name (Europe)
+    europeanCountries.forEach(country => cy.url().should('include', country));
+    cy.url().should('not.include', 'Europe');
+    cy.url().should('not.include', 'europe');
+    get('save').click();
+    // clearing filters should remove 'Europe' in filter and european countries in url
+    get('clear-filters').click();
+    cy.url({ decode: true }).should('include', '"originCountries":[]');
+    selectFilter('Country of Origin');
+    get('origin-countries').should('contain', '');
+    get('save-filter').click();
+    // loading filters should bring back 'Europe' in the filter
+    get('load').click();
+    selectFilter('Country of Origin');
+    get('origin-countries').should('contain', 'Europe');
   });
 });

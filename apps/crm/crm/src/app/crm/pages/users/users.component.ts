@@ -355,7 +355,7 @@ export class UsersComponent implements OnInit {
         version: '',
         ['festival selection']: '',
         qualifications: '',
-        'min release year': '',
+        'release year': '',
         'min budget': '',
         titleId: '',
         title: '',
@@ -377,7 +377,7 @@ export class UsersComponent implements OnInit {
         row.version = `${search?.languages?.versions.caption ? 'captioned ' : ''}${search?.languages?.versions.dubbed ? 'dubbed ' : ''}${search?.languages?.versions.subtitle ? 'subtitled ' : ''}${search?.languages?.versions.original ? 'original' : ''}`;
         row['festival selection'] = toLabel(search?.festivals ?? [], 'festival');
         row['qualifications'] = toLabel(search?.certifications, 'certifications');
-        row['min release year'] = search?.minReleaseYear.toFixed(0) ?? '--';
+        row['release year'] = search?.releaseYear.min.toFixed(0) ?? '--' + ' -> ' + search?.releaseYear.max.toFixed(0) ?? '--';
         row['min budget'] = search?.minBudget.toFixed(0) ?? '--';
       }
 

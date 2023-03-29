@@ -110,7 +110,6 @@ export interface MovieSearch extends AlgoliaSearch {
   productionStatus: ProductionStatus[];
   minBudget: number;
   releaseYear: AlgoliaMinMax;
-  minReleaseYear?: number; // deprecated but kept for retrocompatibily for saved researchs
   sellers: AlgoliaOrganization[];
   socialGoals: SocialGoal[];
   contentType?: ContentType;
