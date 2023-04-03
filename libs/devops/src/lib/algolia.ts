@@ -148,13 +148,6 @@ const baseConfig: AlgoliaConfig = {
     'title.original',
     'directors',
     'keywords',
-    'originCountries',
-    'genres',
-    'originalLanguages',
-    'orgNames',
-    'festivals',
-    'productionCompany',
-    'salesAgent'
   ],
   attributesForFaceting: [
     // filters
@@ -191,7 +184,7 @@ function movieConfig(appConfig: App): AlgoliaConfig {
           'socialGoals',
           'filterOnly(minPledge)',
         ],
-        paginationLimitedTo: 2000
+        paginationLimitedTo: baseConfig.paginationLimitedTo
       };
     default:
       return baseConfig;

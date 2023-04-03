@@ -14,7 +14,8 @@ import {
   SocialGoal,
   Festival,
   Certification,
-  modules
+  modules,
+  SearchableElements
 } from './static';
 
 export interface AlgoliaConfig {
@@ -88,6 +89,7 @@ export interface AlgoliaSearchQuery {
   hitsPerPage?: number;
   page?: number;
   query?: string;
+  restrictSearchableAttributes?: SearchableElements[];
   facetFilters?: string[][];
   filters?: string;
 }
@@ -116,6 +118,7 @@ export interface MovieSearch extends AlgoliaSearch {
   runningTime: AlgoliaMinMax;
   festivals: Festival[];
   certifications: Certification[];
+  searchBy: SearchableElements[];
 }
 
 export interface MovieAvailsSearch {

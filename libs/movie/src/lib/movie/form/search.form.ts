@@ -12,6 +12,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
 
   return {
     query: '',
+    searchBy: [],
     page: 0,
     hitsPerPage: 50,
     storeStatus: [],
@@ -70,6 +71,7 @@ export class minMaxForm extends FormEntity<minMaxControl> {
 function createMovieSearchControl(search: MovieSearch) {
   return {
     query: new UntypedFormControl(search.query),
+    searchBy: new UntypedFormControl(search.searchBy),
     page: new UntypedFormControl(search.page),
     storeStatus: FormList.factory<StoreStatus>(search.storeStatus),
     genres: FormList.factory<GetKeys<'genres'>>(search.genres),
@@ -105,6 +107,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   }
 
   get query() { return this.get('query'); }
+  get searchBy() { return this.get('searchBy')}
   get page() { return this.get('page'); }
   get genres() { return this.get('genres'); }
   get originCountries() { return this.get('originCountries'); }
@@ -135,6 +138,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     const search: AlgoliaSearchQuery = {
       hitsPerPage: this.hitsPerPage.value,
       query: maxQueryLength(this.query.value),
+      restrictSearchableAttributes: this.searchBy.value,
       page: this.page.value,
       facetFilters: [
         this.genres.value.map(genre => `genres:${genre}`), // same facet inside an array means OR for algolia
