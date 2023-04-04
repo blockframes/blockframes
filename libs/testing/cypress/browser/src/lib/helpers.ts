@@ -32,15 +32,15 @@ export function createFakeUserDataArray(number: number) {
   return fakeUserDataArray;
 }
 
-export const fakeMovieTitle = () => `E2E_${faker.lorem.slug(3)}_movie`;
+export const fakeMovieTitle = () => `E2E${faker.lorem.word(10)}Movie`;
 
-export const fakeOrgName = () => `E2E_${faker.lorem.slug(3)}_org`;
+export const fakeOrgName = () => `E2E${faker.lorem.word(9)}Org`;
 
-export const fakeFirstName = () => `E2E_${faker.name.firstName()}`;
+export const fakeFirstName = () => `E2E${faker.name.firstName()}`;
 
-export const fakeLastName = () => `E2E_${faker.name.lastName()}`;
+export const fakeLastName = () => `E2E${faker.name.lastName()}`;
 
-export const fakeKeyword = () => `E2E_${faker.word.noun()}`;
+export const fakeKeyword = () => `E2E${faker.lorem.word(8)}`;
 
 /**
 * Take a Date as input and convert it into en-US string with two digits for month and day.
