@@ -23,6 +23,7 @@ export interface AlgoliaConfig {
   attributesForFaceting: string[];
   customRanking?: string[];
   paginationLimitedTo: number;
+  typoTolerance: boolean;
 }
 
 export interface AlgoliaQueries {
