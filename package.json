@@ -89,7 +89,6 @@
     "@sentry/browser": "^7.16.0",
     "@sentry/node": "^7.16.0",
     "@rive-app/canvas-advanced": "^1.0.103",
-    "@rive-app/webgl-advanced": "^1.0.103",
     "algoliasearch": "^4.13.0",
     "angular-calendar": "^0.28.5",
     "angular-idle-preload": "^3.0.0",
