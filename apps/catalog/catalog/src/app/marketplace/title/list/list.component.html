@@ -41,21 +41,29 @@
     </ng-template>
 
     <ng-template filter label="Country of Origin" [form]="searchForm.originCountries">
-      <chips-autocomplete [form]="searchForm.originCountries" placeholder="Country of Origin" scope="territories" [withoutValues]="['world']" test-id="country">
-        <mat-label>Type and select Country</mat-label>
-      </chips-autocomplete>
+      <mat-form-field appearance="outline">
+        <mat-label>Select Territories</mat-label>
+        <mat-icon matPrefix svgIcon="world"></mat-icon>
+        <static-group
+          [formControl]="searchForm.get('originCountries')"
+          scope="territories"
+          displayAll="World"
+          placeholder="Specify territory to filter"
+          test-id="origin-countries">
+        </static-group>
+      </mat-form-field>
     </ng-template>
 
     <ng-template filter label="Language & Version" [form]="searchForm.languages">
       <title-language-filter [form]="searchForm.languages"></title-language-filter>
     </ng-template>
 
-    <ng-template filter label="Release Year" [form]="searchForm.minReleaseYear">
-      <filter-release-year fxLayout="column" [form]="searchForm.minReleaseYear"></filter-release-year>
+    <ng-template filter label="Release Year" [form]="searchForm.releaseYear">
+      <filter-min-max [form]="searchForm.releaseYear"></filter-min-max>
     </ng-template>
 
     <ng-template filter label="Running Time" [form]="searchForm.runningTime">
-      <filter-running-time [form]="searchForm.runningTime"></filter-running-time>
+      <filter-min-max [form]="searchForm.runningTime" [labels]="{min: 'Min Running Time', max: 'Max Running Time'}" [placeholder]="'in minutes'"></filter-min-max>
     </ng-template>
 
     <ng-template filter label="Festival Selection" [form]="searchForm.festivals">

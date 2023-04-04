@@ -28,11 +28,11 @@ import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module
 import { ListFilterButtonsModule } from '@blockframes/ui/list/buttons/list-filter-buttons.module';
 import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';
 import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
-import { ReleaseYearFilterModule } from '@blockframes/movie/form/filters/release-year/release-year.module';
-import { RunningTimeFilterModule } from '@blockframes/movie/form/filters/running-time/running-time.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
 import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
 import { FormContentTypeModule } from '@blockframes/ui/form/content-type/content-type.module';
+import { MinMaxFilterModule } from '@blockframes/movie/form/filters/min-max/min-max.module';
+import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -49,11 +49,11 @@ import { FormContentTypeModule } from '@blockframes/ui/form/content-type/content
     ListFilterButtonsModule,
     LanguageFilterModule,
     BudgetFilterModule,
-    ReleaseYearFilterModule,
-    RunningTimeFilterModule,
     StaticCheckBoxesModule,
     AvailsFilterModule,
     FormContentTypeModule,
+    MinMaxFilterModule,
+    StaticGroupModule,
 
     // Material
     MatIconModule,

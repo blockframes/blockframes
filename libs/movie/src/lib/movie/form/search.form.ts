@@ -1,5 +1,5 @@
 import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, festival, recursiveSearch, AlgoliaSearchQuery, MovieSearch, LanguageVersion, Versions } from '@blockframes/model';
-import type { StoreStatus, Territory, AlgoliaRunningTime } from '@blockframes/model';
+import type { StoreStatus, AlgoliaMinMax } from '@blockframes/model';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { algolia } from '@env';
@@ -28,7 +28,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     },
     productionStatus: [],
     minBudget: 0,
-    minReleaseYear: 0,
+    releaseYear: { min: null, max: null },
     sellers: [],
     socialGoals: [],
     runningTime: { min: null, max: null },
@@ -52,18 +52,18 @@ function createLanguageVersionControl(data: LanguageVersion) {
 
 export type LanguageVersionControl = ReturnType<typeof createLanguageVersionControl>;
 
-function createRunningTimeControl(data: AlgoliaRunningTime) {
+function createMinMaxControl(data: AlgoliaMinMax) {
   return {
     min: new UntypedFormControl(data.min),
     max: new UntypedFormControl(data.max),
   };
 }
 
-type RunningTimeControl = ReturnType<typeof createRunningTimeControl>;
+type minMaxControl = ReturnType<typeof createMinMaxControl>;
 
-export class RunningTimeForm extends FormEntity<RunningTimeControl> {
-  constructor(data?: AlgoliaRunningTime) {
-    super(createRunningTimeControl(data));
+export class minMaxForm extends FormEntity<minMaxControl> {
+  constructor(data?: AlgoliaMinMax) {
+    super(createMinMaxControl(data));
   }
 }
 
@@ -73,15 +73,15 @@ function createMovieSearchControl(search: MovieSearch) {
     page: new UntypedFormControl(search.page),
     storeStatus: FormList.factory<StoreStatus>(search.storeStatus),
     genres: FormList.factory<GetKeys<'genres'>>(search.genres),
-    originCountries: FormList.factory<Territory>(search.originCountries),
+    originCountries: new FormStaticValueArray<'territories'>(search.originCountries, 'territories'),
     languages: createLanguageVersionControl(search.languages),
     productionStatus: new FormStaticValueArray<'productionStatus'>(search.productionStatus, 'productionStatus'),
     minBudget: new UntypedFormControl(search.minBudget),
-    minReleaseYear: new UntypedFormControl(search.minReleaseYear),
+    releaseYear: new minMaxForm(search.releaseYear),
     sellers: FormList.factory<AlgoliaOrganization>(search.sellers),
     socialGoals: new FormStaticValueArray<'socialGoals'>(search.socialGoals, 'socialGoals'),
     contentType: new UntypedFormControl(search.contentType),
-    runningTime: new RunningTimeForm(search.runningTime),
+    runningTime: new minMaxForm(search.runningTime),
     // Max is 1000, see docs: https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/
     hitsPerPage: new UntypedFormControl(50, Validators.max(1000)),
     festivals: new FormStaticValueArray<'festival'>(search.festivals, 'festival'),
@@ -111,7 +111,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get languages() { return this.get('languages'); }
   get productionStatus() { return this.get('productionStatus'); }
   get minBudget() { return this.get('minBudget'); }
-  get minReleaseYear() { return this.get('minReleaseYear'); }
+  get releaseYear() { return this.get('releaseYear'); }
   get sellers() { return this.get('sellers'); }
   get storeStatus() { return this.get('storeStatus'); }
   get socialGoals() { return this.get('socialGoals'); }
@@ -155,9 +155,13 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     if (this.minBudget.value) {
       search.filters = `budget >= ${max - this.minBudget.value ?? 0}`;
     }
-    if (this.minReleaseYear.value) {
+    if (this.releaseYear.value.min) {
       if (search.filters) search.filters += ' AND ';
-      search.filters += `release.year >= ${this.minReleaseYear.value}`;
+      search.filters += `release.year >= ${this.releaseYear.value.min}`;
+    }
+    if (this.releaseYear.value.max) {
+      if (search.filters) search.filters += ' AND ';
+      search.filters += `release.year <= ${this.releaseYear.value.max}`;
     }
     if (this.runningTime.value.min) {
       if (search.filters) search.filters += ' AND ';

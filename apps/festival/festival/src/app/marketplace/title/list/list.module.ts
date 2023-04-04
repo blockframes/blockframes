@@ -31,7 +31,8 @@ import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budge
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { RequestScreeningModule } from '@blockframes/event/components/request-screening/request-screening.module';
-import { ReleaseYearFilterModule } from '@blockframes/movie/form/filters/release-year/release-year.module';
+import { MinMaxFilterModule } from '@blockframes/movie/form/filters/min-max/min-max.module';
+import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -51,7 +52,8 @@ import { ReleaseYearFilterModule } from '@blockframes/movie/form/filters/release
     StaticCheckBoxesModule,
     ImageModule,
     RequestScreeningModule,
-    ReleaseYearFilterModule,
+    MinMaxFilterModule,
+    StaticGroupModule,
 
     // Material
     MatIconModule,
