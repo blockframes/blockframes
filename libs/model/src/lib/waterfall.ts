@@ -10,9 +10,16 @@ export interface WaterfallPermissions {
   roles: Role[]
 }
 
+export interface Version {
+  id: string;
+  name: string;
+  description?: string;
+  blockIds: string[]
+}
+
 export interface Waterfall {
   id: string;
-  versions: Record<string, string[]>;
+  versions: Version[]
   orgIds: string[]; // Orgs linked to waterfall, can read document if in it
 }
 
