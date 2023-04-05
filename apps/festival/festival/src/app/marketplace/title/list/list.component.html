@@ -22,7 +22,7 @@
         <input matInput type="text" formControlName="query" [value]="searchForm.get('query').value" test-id="search-input"/>
       </mat-form-field>
       <static-select [control]="searchForm.searchBy" multiple scope="movieSearchableElements" test-id="search-by">
-        <mat-label>Search by...</mat-label>
+        <mat-label>Restrict Search</mat-label>
       </static-select>
     </form>
   </list-page-search>

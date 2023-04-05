@@ -119,7 +119,7 @@ describe('Movie search in marketplace', () => {
     get('titles-count').should('contain', twoTitlesSentence);
   });
 
-  it('"Search by" option works as expected', () => {
+  it('"Restrict Search" option works as expected', () => {
     get('title-link').eq(0).click();
     get('search-input').type(keywordMovie.keywords[2]);
     // both movie should exist (one has the input value only in the keywords, the other in keywords AND title)
