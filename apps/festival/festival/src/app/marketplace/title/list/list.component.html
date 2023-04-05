@@ -21,7 +21,7 @@
         <mat-icon matPrefix svgIcon="search"></mat-icon>
         <input matInput type="text" formControlName="query" [value]="searchForm.get('query').value" test-id="search-input"/>
       </mat-form-field>
-      <static-select [control]="searchForm.searchBy" multiple scope="searchableElements" test-id="search-by">
+      <static-select [control]="searchForm.searchBy" multiple scope="movieSearchableElements" test-id="search-by">
         <mat-label>Search by...</mat-label>
       </static-select>
     </form>

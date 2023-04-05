@@ -15,7 +15,7 @@ import {
   Festival,
   Certification,
   modules,
-  SearchableElements
+  MovieSearchableElements
 } from './static';
 
 export interface AlgoliaConfig {
@@ -23,7 +23,7 @@ export interface AlgoliaConfig {
   attributesForFaceting: string[];
   customRanking?: string[];
   paginationLimitedTo: number;
-  typoTolerance: boolean;
+  advancedSyntax: boolean;
 }
 
 export interface AlgoliaQueries {
@@ -90,7 +90,8 @@ export interface AlgoliaSearchQuery {
   hitsPerPage?: number;
   page?: number;
   query?: string;
-  restrictSearchableAttributes?: SearchableElements[];
+  optionalWords?: string[];
+  restrictSearchableAttributes?: MovieSearchableElements[];
   facetFilters?: string[][];
   filters?: string;
 }
@@ -119,7 +120,7 @@ export interface MovieSearch extends AlgoliaSearch {
   runningTime: AlgoliaMinMax;
   festivals: Festival[];
   certifications: Certification[];
-  searchBy: SearchableElements[];
+  searchBy: MovieSearchableElements[];
 }
 
 export interface MovieAvailsSearch {

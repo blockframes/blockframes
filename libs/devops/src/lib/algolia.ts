@@ -39,7 +39,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = getDb()) {
       ],
       customRanking: ['asc(name)'],
       paginationLimitedTo: 1000,
-      typoTolerance: false
+      advancedSyntax: true,
     };
     await clearIndex(algolia.indexNameOrganizations[appConfig], process.env['ALGOLIA_API_KEY']);
     await setIndexConfiguration(
@@ -122,7 +122,7 @@ export async function upgradeAlgoliaUsers(db = getDb()) {
     searchableAttributes: ['email', 'firstName', 'lastName', 'orgNames'],
     attributesForFaceting: ['email'],
     paginationLimitedTo: 1000,
-    typoTolerance: false
+    advancedSyntax: true,
   };
 
   await clearIndex(algolia.indexNameUsers, process.env['ALGOLIA_API_KEY']);
@@ -174,7 +174,7 @@ const baseConfig: AlgoliaConfig = {
   ],
   customRanking: ['asc(title.international)', 'asc(title.original)'],
   paginationLimitedTo: 2000,
-  typoTolerance: false
+  advancedSyntax: true,
 };
 
 function movieConfig(appConfig: App): AlgoliaConfig {
@@ -188,7 +188,7 @@ function movieConfig(appConfig: App): AlgoliaConfig {
           'filterOnly(minPledge)',
         ],
         paginationLimitedTo: baseConfig.paginationLimitedTo,
-        typoTolerance: baseConfig.typoTolerance
+        advancedSyntax: baseConfig.advancedSyntax,
       };
     default:
       return baseConfig;
