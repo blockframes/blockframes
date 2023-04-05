@@ -11,11 +11,11 @@ import {
   createTitle,
   createUser,
   fakeLegalTerms,
-  territoriesGroup,
 } from '@blockframes/model';
 import { add, startOfYear, endOfMonth } from 'date-fns';
 import { fakeUserData } from '@blockframes/testing/cypress/browser';
 import { centralOrgId } from '@env';
+import { europeanCountries } from '../shared/commons';
 
 //* buyer data */
 
@@ -129,10 +129,7 @@ const januaryFirstNextYear = startOfYear(add(new Date(), { years: 1 }));
 const januaryFirstInTwoYears = startOfYear(add(new Date(), { years: 2 }));
 const januaryFirstInThreeYears = startOfYear(add(new Date(), { years: 3 }));
 
-export const europeanCountries = territoriesGroup
-  .map(group => group.label === 'Europe' && group.items)
-  .filter(Boolean)
-  .flat(2);
+
 
 const sellerTerm1 = createTerm({
   id: sellerTerm1Id,
