@@ -148,6 +148,24 @@ describe('Movie search in marketplace', () => {
     get(`movie-card_${keywordMovie.id}`).should('exist');
   });
 
+  it('User cannot find a movie if there is a typo in his search', () => {
+    get('title-link').eq(0).click();
+    get('search-input').type(movie.title.international);
+    get('titles-count').should('contain', oneTitleSentence);
+    get(`movie-card_${movie.id}`).should('exist');
+    get('search-input').clear().type(movie.title.international.replace('movie', 'movye'));
+    get('empty').should('exist');
+  });
+
+  it('A search with 2 words should give results containing both', () => {
+    get('title-link').eq(0).click();
+    get('search-input').type('E2E movie');
+    get('titles-count').should('contain', twoTitlesSentence);
+    get('search-input').clear().type(`E2E ${movie.title.international.split(' ')[1]}`);
+    get('titles-count').should('contain', oneTitleSentence);
+    get(`movie-card_${movie.id}`).should('exist');
+  });
+
   it('Published movie is displayed in org page', () => {
     get('organization-link').click();
     get('search-input').type(saleOrg.name);

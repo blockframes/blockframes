@@ -57,7 +57,7 @@ export function setIndexConfiguration(indexName: string, config: AlgoliaConfig, 
     searchableAttributes: config.searchableAttributes,
     customRanking: config.customRanking,
     paginationLimitedTo: config.paginationLimitedTo,
-    advancedSyntax: config.advancedSyntax,
+    typoTolerance: config.typoTolerance,
   });
 }
 

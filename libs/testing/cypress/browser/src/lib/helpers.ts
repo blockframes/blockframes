@@ -32,20 +32,20 @@ export function createFakeUserDataArray(number: number) {
   return fakeUserDataArray;
 }
 
-export const fakeMovieTitle = () => `E2E_${faker.lorem.slug(3)}Movie`;
+export const fakeMovieTitle = () => `E2E ${faker.lorem.slug(3).replace(/-/g, ' ')} movie`;
 
-export const fakeOrgName = () => `E2E_${faker.lorem.slug(3)}Org`;
+export const fakeOrgName = () => `E2E_${faker.lorem.slug(3)} org`;
 
 export const fakeFirstName = () => `E2E_${faker.name.firstName()}`;
 
 export const fakeLastName = () => `E2E_${faker.name.lastName()}`;
 
-export const fakeKeyword = () => `E2E_${faker.lorem.slug(3)}`;
+export const fakeKeyword = () => `E2E ${faker.word.noun()}`;
 
 /**
-* Take a Date as input and convert it into en-US string with two digits for month and day.
-* @example: 01/01/2024
-**/
+ * Take a Date as input and convert it into en-US string with two digits for month and day.
+ * @example: 01/01/2024
+ **/
 export function dateToMMDDYYYY(date: Date) {
   return date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
 }

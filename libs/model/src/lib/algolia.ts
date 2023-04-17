@@ -23,7 +23,7 @@ export interface AlgoliaConfig {
   attributesForFaceting: string[];
   customRanking?: string[];
   paginationLimitedTo: number;
-  advancedSyntax: boolean;
+  typoTolerance: boolean;
 }
 
 export interface AlgoliaQueries {
@@ -90,7 +90,6 @@ export interface AlgoliaSearchQuery {
   hitsPerPage?: number;
   page?: number;
   query?: string;
-  optionalWords?: string[];
   restrictSearchableAttributes?: MovieSearchableElements[];
   facetFilters?: string[][];
   filters?: string;

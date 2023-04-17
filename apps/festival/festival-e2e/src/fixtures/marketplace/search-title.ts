@@ -34,7 +34,7 @@ const keywordMovieId = '0-e2e-keywordMovieId';
 const userData = fakeUserData();
 const movieTitle = fakeMovieTitle();
 const keyword = fakeKeyword();
-const keywordMovieTitle = `${keyword}Movie`;
+const keywordMovieTitle = `${keyword} movie`;
 
 export const user = createUser({
   uid: adminUid,

@@ -138,7 +138,6 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     const search: AlgoliaSearchQuery = {
       hitsPerPage: this.hitsPerPage.value,
       query: maxQueryLength(this.query.value),
-      optionalWords: maxQueryLength([this.query.value]),
       restrictSearchableAttributes: this.searchBy.value,
       page: this.page.value,
       facetFilters: [
