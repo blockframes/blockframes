@@ -54,8 +54,8 @@ export function dateToMMDDYYYY(date: Date) {
  * Transform the first letter of each word to uppercase
  * @example: a magic letter => A Magic Letter
  **/
-export const titleCase = (txt: string) =>
-  txt
+export const titleCase = (str: string) =>
+  str
     .split(' ')
     .map(word => word[0].toUpperCase() + word.substring(1).toLowerCase())
     .join(' ');
