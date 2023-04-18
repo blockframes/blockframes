@@ -1,4 +1,4 @@
-import { fakeOrgName, fakeUserData, fakeMovieTitle } from '@blockframes/testing/cypress/browser';
+import { fakeOrgName, fakeUserData, fakeMovieTitle, fakeKeyword } from '@blockframes/testing/cypress/browser';
 import {
   createMovie,
   createDocPermissions,
@@ -30,8 +30,11 @@ const orgId = '0-e2e-orgId';
 const saleOrgId = '0-e2e-saleOrgId';
 const saleOrgName = `${fakeOrgName()}_sale`;
 const movieId = '0-e2e-movieId';
+const keywordMovieId = '0-e2e-keywordMovieId';
 const userData = fakeUserData();
 const movieTitle = fakeMovieTitle();
+const keyword = fakeKeyword();
+const keywordMovieTitle = `${keyword} movie`;
 
 export const user = createUser({
   uid: adminUid,
@@ -122,7 +125,7 @@ export const displayMovie = createMovie({
   logline: 'A random character in a movie',
   synopsis: 'We follow the life of a random character',
   keyAssets: 'Filmed with a phone',
-  keywords: ['random', 'phone'],
+  keywords: ['random', 'phone', keyword],
   //production information
   stakeholders: createMovieStakeholders({
     productionCompany: [
@@ -318,9 +321,19 @@ export const displayMovie = createMovie({
   },
 });
 
+export const keywordMovie = createMovie({
+  ...displayMovie,
+  id: keywordMovieId,
+  title: createTitle({
+    original: keywordMovieTitle,
+    international: keywordMovieTitle,
+  }),
+});
+
 export const expectedSavedSearch: { search: Omit<MovieSearch, 'page'> } = {
   search: {
     query: '',
+    searchBy: [],
     storeStatus: ['accepted'],
     genres: ['action'],
     originCountries: ['france'],

@@ -1313,6 +1313,15 @@ const movieFormFields = {
   delivery: 'Files',
 } as const;
 
+export const movieSearchableElements = {
+  'title.international': 'International Title',
+  'title.original': 'Original Title',
+  directors: 'Director',
+  keywords: 'Keywords',
+} as const;
+
+export type MovieSearchableElements = keyof typeof movieSearchableElements;
+
 export const staticModel = {
   budgetRange,
   contractStatus,
@@ -1360,7 +1369,8 @@ export const staticModel = {
   appName,
   offerStatus,
   movieFormFields,
-  accessibility
+  accessibility,
+  movieSearchableElements
 };
 
 export const emailErrorCode = ['E01-unauthorized', 'E02-general-error', 'E03-missing-api-key', 'E04-no-template-available'] as const;

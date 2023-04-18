@@ -378,12 +378,7 @@ export class UsersComponent implements OnInit {
         row.version = `${search?.languages?.versions.caption ? 'captioned ' : ''}${search?.languages?.versions.dubbed ? 'dubbed ' : ''}${search?.languages?.versions.subtitle ? 'subtitled ' : ''}${search?.languages?.versions.original ? 'original' : ''}`;
         row['festival selection'] = toLabel(search?.festivals ?? [], 'festival');
         row['qualifications'] = toLabel(search?.certifications, 'certifications');
-        const minReleaseYear = (search as any)?.minReleaseYear as number; //retrocompatibility (see issue #9243)
-        if (minReleaseYear) {
-          row['min release year'] = minReleaseYear.toFixed(0) ?? '--';
-        } else {
-          row['min release year'] = search?.releaseYear?.min ? search.releaseYear.min.toFixed(0) : '--';
-        }
+        row['min release year'] = search?.releaseYear?.min ? search.releaseYear.min.toFixed(0) : '--';
         row['max release year'] = search?.releaseYear?.max ? search.releaseYear.max.toFixed(0) : '--';
         row['min budget'] = search?.minBudget.toFixed(0) ?? '--';
       }

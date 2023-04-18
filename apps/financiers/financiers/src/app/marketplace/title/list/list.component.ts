@@ -68,7 +68,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
           }
           this.previousSearch = currentSearch;
         }),
-        switchMap(async () => [await this.searchForm.search(true), await this.searchForm.search(true, { hitsPerPage: this.pdfService.exportLimit, page: 0 })]),
+        switchMap(async () => [await this.searchForm.search(), await this.searchForm.search({ hitsPerPage: this.pdfService.exportLimit, page: 0 })]),
         tap(([res]) => this.nbHits = res.nbHits),
       ).subscribe(([movies, moviesToExport]) => {
         this.movieIds = moviesToExport.hits.map(m => m.objectID);
