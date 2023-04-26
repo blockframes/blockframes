@@ -1,5 +1,5 @@
 import { SearchIndex } from 'algoliasearch';
-import { AvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from './avail';
+import { AvailsFilter, AvailsFilterWithEncodedTerritories, CalendarAvailsFilter, MapAvailsFilter } from './avail';
 import { MovieLanguageSpecification, MovieRunningTime, MovieRelease, LanguageVersion } from './movie';
 import {
   Genre,
@@ -127,8 +127,9 @@ export interface MovieAvailsSearch {
   avails?: AvailsFilter | CalendarAvailsFilter | MapAvailsFilter;
 }
 
-export interface MovieAvailsFilterSearch extends MovieAvailsSearch{
-  avails?: AvailsFilter;
+export interface MovieAvailsFilterSearch {
+  search?: MovieSearch;
+  avails?: AvailsFilter | AvailsFilterWithEncodedTerritories;
 }
 
 export interface OrganizationSearch extends AlgoliaSearch {

@@ -993,9 +993,6 @@ export const territoriesISOA2 = {
   zimbabwe: 'ZW',
 } as const
 
-type TerritoriesISOA2Key = keyof typeof territoriesISOA2
-export type TerritoriesISOA2Value = typeof territoriesISOA2[TerritoriesISOA2Key]
-
 // Please keep territories' values in an alphabetic order and in sync with territories and territoriesISOA2
 export const territoriesISOA3 = {
   world: '',
