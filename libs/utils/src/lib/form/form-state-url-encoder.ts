@@ -1,16 +1,21 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Territory, TerritoryGroup, territories, territoriesGroup, territoriesISOA2 } from '@blockframes/model';
+import {
+  AvailsFilter,
+  MovieAvailsSearch,
+  Territory,
+  TerritoryGroup,
+  territories,
+  territoriesGroup,
+  territoriesISOA2,
+  TerritoriesISOA2Value,
+  MovieAvailsFilterSearch,
+} from '@blockframes/model';
 
 /**
  * Decode the app url and save it as form state
  */
 export function decodeUrl<T = any>(route: ActivatedRoute): T {
-  let { formValue } = route.snapshot.queryParams;
-
-  if (formValue.includes('"avails":')) {
-    const data = JSON.parse(formValue);
-    formValue = replaceContinents(data);
-  }
+  const { formValue } = route.snapshot.queryParams;
 
   try {
     const fromUrl = decodeURIComponent(formValue ?? '{}');
@@ -25,20 +30,6 @@ export function decodeUrl<T = any>(route: ActivatedRoute): T {
  * for possible sharing of form state as app url
  */
 export function encodeUrl<T>(router: Router, route: ActivatedRoute, data: T) {
-  let availTerritories: Territory[] = data['avails']['territories'];
-  let availContinents: string[] = [];
-
-  if (availTerritories.length) {
-    for (const continent of territoriesGroup) {
-      if (continent.items.every(country => availTerritories.includes(country))) {
-        availTerritories = availTerritories.filter(country => !continent.items.includes(country));
-        availContinents.push(continent.label.toLowerCase());
-        if (availContinents.length === territoriesGroup.length) availContinents = ['world'];
-      }
-    }
-    data['avails']['territories'] = [...availTerritories, ...availContinents];
-  }
-
   const formValue = JSON.stringify(data);
   //url musn't be longer than 2000 characters
   if (formValue.length < 1500) {
@@ -50,25 +41,67 @@ export function encodeUrl<T>(router: Router, route: ActivatedRoute, data: T) {
   }
 }
 
-function replaceContinents(data: any) {
-  let availTerritories: string[] = data.avails.territories;
-  if (!availTerritories.length) return;
+export function encodeAvailsSearchUrl(router: Router, route: ActivatedRoute, data: MovieAvailsFilterSearch) {
+  const availTerritories = data.avails.territories;
 
-  if (availTerritories[0] === 'world') {
-    availTerritories = Object.keys(territories).filter(e => e !== 'world');
-  } else {
-    for (const continent of territoriesGroup) {
-      if (availTerritories.includes(continent.label.toLowerCase())) {
-        const replacementTerritories = territoriesGroup
-          .map(group => group.label === continent.label && group.items)
-          .filter(Boolean)
-          .flat(2);
-        availTerritories = availTerritories.filter(e => e !== continent.label.toLowerCase());
-        availTerritories.push(...replacementTerritories);
-      }
+  if (availTerritories.length) data.avails.territories = encodeTerritories(availTerritories as Territory[]);
+
+  return encodeUrl(router, route, data);
+}
+
+export function decodeAvailsSearchUrl(route: ActivatedRoute) {
+  const { formValue } = route.snapshot.queryParams;
+
+  const data = JSON.parse(formValue);
+  const availsFilter = data.avails;
+
+  if (availsFilter.territories.length) data.avails.territories = decodeTerritories(availsFilter.territories);
+
+  return data;
+}
+
+function encodeTerritories(_countries: Territory[]) {
+  let countries = _countries;
+  const continents: TerritoryGroup[] = [];
+  const countriesISOA2: TerritoriesISOA2Value[] = [];
+  for (const continent of territoriesGroup) {
+    if (continent.items.every(country => countries.includes(country))) {
+      continents.push(continent.label as TerritoryGroup);
+      countries = countries.filter(country => !continentCountries(continent.label as TerritoryGroup).includes(country));
     }
   }
+  for (const country of countries) countriesISOA2.push(territoriesISOA2[country]);
 
-  data.avails.territories = availTerritories;
-  return JSON.stringify(data);
+  return [...countriesISOA2, ...continents];
+}
+
+export function decodeTerritories(_territories: (Territory | TerritoriesISOA2Value | TerritoryGroup)[]): Territory[] {
+  const continents = extractContinents(_territories);
+  const countriesISOA2 = extractCountriesISOA2(_territories);
+  const countries = _territories.filter(territory => Object.keys(territories).includes(territory));
+  for (const continent of continents) countries.push(...continentCountries(continent));
+  for (const country of countriesISOA2) countries.push(countryISOA2ToTerritory(country));
+
+  return countries as Territory[];
+}
+
+const continentCountries = (continent: TerritoryGroup): Territory[] =>
+  territoriesGroup
+    .map(group => group.label === continent && group.items)
+    .filter(Boolean)
+    .flat(2);
+
+const countryISOA2ToTerritory = (_countryISOA2: TerritoriesISOA2Value) =>
+  Object.keys(territoriesISOA2).find(key => territoriesISOA2[key] === _countryISOA2) as Territory;
+
+function extractContinents(_territories: (Territory | TerritoriesISOA2Value | TerritoryGroup)[]): TerritoryGroup[] {
+  const continentsList = territoriesGroup.map(group => group.label) as string[];
+  const continents = _territories.filter(territory => continentsList.includes(territory));
+  return continents as TerritoryGroup[];
+}
+
+function extractCountriesISOA2(_territories: (Territory | TerritoriesISOA2Value | TerritoryGroup)[]): TerritoriesISOA2Value[] {
+  const countriesISOA2List = Object.values(territoriesISOA2);
+  const countriesISOA2 = _territories.filter(territory => countriesISOA2List.includes(territory as TerritoriesISOA2Value));
+  return countriesISOA2 as TerritoriesISOA2Value[];
 }

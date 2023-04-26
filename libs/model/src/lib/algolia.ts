@@ -127,6 +127,10 @@ export interface MovieAvailsSearch {
   avails?: AvailsFilter | CalendarAvailsFilter | MapAvailsFilter;
 }
 
+export interface MovieAvailsFilterSearch extends MovieAvailsSearch{
+  avails?: AvailsFilter;
+}
+
 export interface OrganizationSearch extends AlgoliaSearch {
   appModule: AlgoliaModule[],
   isAccepted: boolean,
