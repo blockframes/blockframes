@@ -42,9 +42,11 @@ export function encodeUrl<T>(router: Router, route: ActivatedRoute, data: T) {
 
 export function encodeAvailsSearchUrl(router: Router, route: ActivatedRoute, data: MovieAvailsFilterSearch) {
   const availTerritories = data.avails.territories;
-
+  const originCountries = data.search.originCountries;
+  
   if (availTerritories.length) data.avails.territories = encodeTerritories(availTerritories as Territory[]);
-
+  if (originCountries.length) data.search.originCountries = encodeTerritories(originCountries as Territory[]);
+  
   return encodeUrl(router, route, data);
 }
 
@@ -52,9 +54,11 @@ export function decodeAvailsSearchUrl(route: ActivatedRoute) {
   const { formValue } = route.snapshot.queryParams;
 
   const data = JSON.parse(formValue);
-  const availsFilter = data.avails;
+  const availTerritories = data.avails.territories;
+  const originCountries = data.search.originCountries;
 
-  if (availsFilter.territories.length) data.avails.territories = decodeTerritories(availsFilter.territories);
+  if (availTerritories.length) data.avails.territories = decodeTerritories(availTerritories);
+  if (originCountries.length) data.search.originCountries = decodeTerritories(originCountries);
 
   return data;
 }
@@ -69,9 +73,14 @@ function encodeTerritories(_countries: Territory[]): encodedTerritory[] {
       countries = countries.filter(country => !continentCountries(continent.label as TerritoryGroup).includes(country));
     }
   }
-  for (const country of countries) countriesISOA2.push(territoriesISOA2[country]);
+  for (const country of countries) {
+    if (Object.keys(territories).includes(country)) {
+      countriesISOA2.push(territoriesISOA2[country]);
+      countries = countries.filter(c => c !== country);
+    }
+  }
 
-  return [...countriesISOA2, ...continents];
+  return [...countriesISOA2, ...countries, ...continents];
 }
 
 export function decodeTerritories(_territories: encodedTerritory[]): Territory[] {

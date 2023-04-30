@@ -227,6 +227,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
 
   load(savedSearch: MovieAvailsFilterSearch) {
     if (savedSearch.avails.territories.length) savedSearch.avails.territories = decodeTerritories(savedSearch.avails.territories);
+    if (savedSearch.search.originCountries.length) savedSearch.search.originCountries = decodeTerritories(savedSearch.search.originCountries);
 
     this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
 

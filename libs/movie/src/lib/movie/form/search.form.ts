@@ -1,4 +1,4 @@
-import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, festival, recursiveSearch, AlgoliaSearchQuery, MovieSearch, LanguageVersion, Versions } from '@blockframes/model';
+import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, festival, recursiveSearch, AlgoliaSearchQuery, MovieSearch, LanguageVersion, Versions, Territory } from '@blockframes/model';
 import type { StoreStatus, AlgoliaMinMax } from '@blockframes/model';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
@@ -75,7 +75,7 @@ function createMovieSearchControl(search: MovieSearch) {
     page: new UntypedFormControl(search.page),
     storeStatus: FormList.factory<StoreStatus>(search.storeStatus),
     genres: FormList.factory<GetKeys<'genres'>>(search.genres),
-    originCountries: new FormStaticValueArray<'territories'>(search.originCountries, 'territories'),
+    originCountries: new FormStaticValueArray<'territories'>(search.originCountries as Territory[], 'territories'),
     languages: createLanguageVersionControl(search.languages),
     productionStatus: new FormStaticValueArray<'productionStatus'>(search.productionStatus, 'productionStatus'),
     minBudget: new UntypedFormControl(search.minBudget),

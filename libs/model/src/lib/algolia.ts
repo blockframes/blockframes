@@ -15,7 +15,8 @@ import {
   Festival,
   Certification,
   modules,
-  MovieSearchableElements
+  MovieSearchableElements,
+  encodedTerritory
 } from './static';
 
 export interface AlgoliaConfig {
@@ -108,7 +109,7 @@ export interface AlgoliaMinMax {
 export interface MovieSearch extends AlgoliaSearch {
   storeStatus: StoreStatus[];
   genres: Genre[];
-  originCountries: Territory[];
+  originCountries: encodedTerritory[];
   languages: LanguageVersion;
   productionStatus: ProductionStatus[];
   minBudget: number;
