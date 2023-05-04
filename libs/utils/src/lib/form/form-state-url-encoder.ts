@@ -59,8 +59,8 @@ export function decodeAvailsSearchUrl(route: ActivatedRoute) {
   const data = decodeUrl<MovieAvailsSearchWithEncodedTerritories>(route);
   const search: MovieAvailsSearch = {
     search: { ...data.search, originCountries: decodeTerritories(data.search?.originCountries) },
-    avails: { ...data.avails, territories: decodeTerritories(data.avails?.territories) }
   };
+  if (data.avails) search.avails = { ...data.avails, territories: decodeTerritories(data.avails?.territories) };
   return search;
 }
 
