@@ -22,7 +22,7 @@ const nonCollidingTerritoriesB: Territory[] = [
   'lesotho', 'liberia', 'libya', 'liechtenstein',
   'lithuania', 'luxembourg', 'macao', 'madagascar',
   'malawi', 'malaysia', 'maldives', 'mali', 'malta',
-  'marshall', 'mauritania', 'mauritius',
+  'marshall', 'martinique', 'mauritania', 'mauritius',
   'mexico', 'micronesia',
 ]
 const collidingTerritoriesA = nonCollidingTerritoriesA

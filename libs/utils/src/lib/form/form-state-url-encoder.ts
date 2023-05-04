@@ -75,7 +75,7 @@ function encodeTerritories(_countries: Territory[] = []): EncodedTerritory[] {
     }
   }
   for (const country of countries) {
-    if (Object.keys(territories).includes(country)) {
+    if (territoriesISOA2[country]) {
       countriesISOA2.push(territoriesISOA2[country]);
       countries = countries.filter(c => c !== country);
     }
