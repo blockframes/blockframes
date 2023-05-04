@@ -15,7 +15,7 @@ import {
   Festival,
   Certification,
   modules,
-  MovieSearchableElements,
+  MovieSearchableElements
 } from './static';
 
 export interface AlgoliaConfig {

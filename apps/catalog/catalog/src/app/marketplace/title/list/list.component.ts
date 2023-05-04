@@ -31,7 +31,7 @@ import {
   recursiveSearch,
   Term,
   AlgoliaResult,
-  MovieAvailsSearch,
+  MovieAvailsSearch
 } from '@blockframes/model';
 import { AvailsForm, createAvailsSearch } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
