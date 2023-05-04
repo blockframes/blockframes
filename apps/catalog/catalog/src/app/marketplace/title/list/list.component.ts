@@ -36,7 +36,7 @@ import {
 import { AvailsForm, createAvailsSearch } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
-import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeAvailsSearchUrl, encodeAvailsSearchUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -143,7 +143,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.load(decodeUrl<MovieAvailsSearch>(this.route));
+    this.load(decodeAvailsSearchUrl(this.route));
 
     const sub = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
@@ -151,7 +151,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     ]).pipe(debounceTime(1000))
       .subscribe(([search, avails]) => {
         this.analyticsService.addTitleFilter({ search, avails }, 'marketplace', 'filteredTitles');
-        return encodeUrl<MovieAvailsSearch>(this.router, this.route, { search, avails });
+        return encodeAvailsSearchUrl(this.router, this.route, { search, avails });
       });
 
     this.subs.push(sub);
@@ -225,24 +225,6 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   load(savedSearch: MovieAvailsSearch) {
-    // Retro compatibility for old filters (see issue #9240 and #9243)
-    const retroRunningTimeOptions = {
-      1: { min: null, max: 12 },
-      2: { min: 13, max: 25 },
-      3: { min: 26, max: 51 },
-      4: { min: 52, max: 89 },
-      5: { min: 90, max: 180 },
-      6: { min: 181, max: null },
-    };
-    const oldRunningTimeFormat = savedSearch?.search?.runningTime as unknown as number;
-    if (!isNaN(oldRunningTimeFormat)) savedSearch.search.runningTime = retroRunningTimeOptions[oldRunningTimeFormat];
-    const minReleaseYear = (savedSearch?.search as any)?.minReleaseYear as number;
-    if (minReleaseYear) {
-      savedSearch.search.releaseYear = { min: minReleaseYear, max: null };
-      delete (savedSearch.search as any).minReleaseYear;
-    }
-    // End of retrocompatibility
-
     this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
 
     // Avails Form

@@ -38,7 +38,8 @@ export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = getDb()) {
         'hasAcceptedMovies',
       ],
       customRanking: ['asc(name)'],
-      paginationLimitedTo: 1000
+      paginationLimitedTo: 1000,
+      typoTolerance: true,
     };
     await clearIndex(algolia.indexNameOrganizations[appConfig], process.env['ALGOLIA_API_KEY']);
     await setIndexConfiguration(
@@ -120,7 +121,8 @@ export async function upgradeAlgoliaUsers(db = getDb()) {
   const config: AlgoliaConfig = {
     searchableAttributes: ['email', 'firstName', 'lastName', 'orgNames'],
     attributesForFaceting: ['email'],
-    paginationLimitedTo: 1000
+    paginationLimitedTo: 1000,
+    typoTolerance: true,
   };
 
   await clearIndex(algolia.indexNameUsers, process.env['ALGOLIA_API_KEY']);
@@ -148,13 +150,6 @@ const baseConfig: AlgoliaConfig = {
     'title.original',
     'directors',
     'keywords',
-    'originCountries',
-    'genres',
-    'originalLanguages',
-    'orgNames',
-    'festivals',
-    'productionCompany',
-    'salesAgent'
   ],
   attributesForFaceting: [
     // filters
@@ -179,6 +174,7 @@ const baseConfig: AlgoliaConfig = {
   ],
   customRanking: ['asc(title.international)', 'asc(title.original)'],
   paginationLimitedTo: 2000,
+  typoTolerance: false,
 };
 
 function movieConfig(appConfig: App): AlgoliaConfig {
@@ -191,7 +187,8 @@ function movieConfig(appConfig: App): AlgoliaConfig {
           'socialGoals',
           'filterOnly(minPledge)',
         ],
-        paginationLimitedTo: 2000
+        paginationLimitedTo: baseConfig.paginationLimitedTo,
+        typoTolerance: baseConfig.typoTolerance,
       };
     default:
       return baseConfig;

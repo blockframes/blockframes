@@ -6,6 +6,7 @@ import {
   saleOrgPermissions,
   moviePermissions,
   displayMovie as movie,
+  keywordMovie,
   expectedSavedSearch,
 } from '../../fixtures/marketplace/search-title';
 import { productionStatus, festival, certifications, User } from '@blockframes/model';
@@ -37,9 +38,11 @@ const injectedData = {
   [`permissions/${orgPermissions.id}/documentPermissions/${moviePermissions.id}`]: moviePermissions,
   [`permissions/${saleOrgPermissions.id}`]: saleOrgPermissions,
   [`movies/${movie.id}`]: movie,
+  [`movies/${keywordMovie.id}`]: keywordMovie,
 };
 
 const oneTitleSentence = 'There is 1 title available.';
+const twoTitlesSentence = 'There are 2 titles available.';
 
 describe('Movie search in marketplace', () => {
   beforeEach(() => {
@@ -47,6 +50,7 @@ describe('Movie search in marketplace', () => {
     maintenance.start();
     firestore.clearTestData();
     algolia.deleteMovie({ app: 'festival', objectId: movie.id });
+    algolia.deleteMovie({ app: 'festival', objectId: keywordMovie.id });
     algolia.deleteOrg({ app: 'festival', objectId: saleOrg.id });
     firestore.queryDelete({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id });
     adminAuth.deleteAllTestUsers();
@@ -54,6 +58,7 @@ describe('Movie search in marketplace', () => {
     algolia.storeOrganization(saleOrg);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     syncMovieToAlgolia(movie.id);
+    syncMovieToAlgolia(keywordMovie.id);
     maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
@@ -99,7 +104,7 @@ describe('Movie search in marketplace', () => {
     get(certifications[movie.certifications[0]]).click();
     get(certifications[movie.certifications[1]]).click();
     get('save-filter').click();
-    get('titles-count').should('contain', oneTitleSentence);
+    get('titles-count').should('contain', twoTitlesSentence);
     get(`movie-card_${movie.id}`).should('exist');
     // Wait for the last parameter to be present in URL before saving filters
     assertUrlIncludes('%22certifications%22:%5B%22eof%22,%22europeanQualification%22');
@@ -109,9 +114,56 @@ describe('Movie search in marketplace', () => {
       expect(JSON.parse(user.savedSearches.festival)).to.deep.equal(expectedSavedSearch);
     });
     get('clear-filters').click();
-    get('titles-count').should('not.contain', oneTitleSentence);
+    get('titles-count').should('not.contain', twoTitlesSentence);
     get('load').click();
+    get('titles-count').should('contain', twoTitlesSentence);
+  });
+
+  it('"Restrict Search" option works as expected', () => {
+    get('title-link').eq(0).click();
+    get('search-input').type(keywordMovie.keywords[2]);
+    // both movie should exist (one has the input value only in the keywords, the other in keywords AND title)
+    get('titles-count').should('contain', twoTitlesSentence);
+    get(`movie-card_${movie.id}`).should('exist');
+    get(`movie-card_${keywordMovie.id}`).should('exist');
+    // only one has the input value in its title
+    get('search-by').click();
+    get('option_title.international').click();
+    escapeKey();
     get('titles-count').should('contain', oneTitleSentence);
+    get(`movie-card_${movie.id}`).should('not.exist');
+    get(`movie-card_${keywordMovie.id}`).should('exist');
+    // none have the input value in their directors
+    get('search-by').click();
+    get('option_title.international').click();
+    get('option_directors').click();
+    escapeKey();
+    get('empty').should('exist');
+    // both have the input value in their keywords
+    get('search-by').click();
+    get('option_keywords').click();
+    escapeKey();
+    get('titles-count').should('contain', twoTitlesSentence);
+    get(`movie-card_${movie.id}`).should('exist');
+    get(`movie-card_${keywordMovie.id}`).should('exist');
+  });
+
+  it('User cannot find a movie if there is a typo in his search', () => {
+    get('title-link').eq(0).click();
+    get('search-input').type(movie.title.international);
+    get('titles-count').should('contain', oneTitleSentence);
+    get(`movie-card_${movie.id}`).should('exist');
+    get('search-input').clear().type(movie.title.international.replace('movie', 'movye'));
+    get('empty').should('exist');
+  });
+
+  it('A search with 2 words should give results containing both', () => {
+    get('title-link').eq(0).click();
+    get('search-input').type('E2E movie');
+    get('titles-count').should('contain', twoTitlesSentence);
+    get('search-input').clear().type(`E2E ${movie.title.international.split(' ')[1]}`);
+    get('titles-count').should('contain', oneTitleSentence);
+    get(`movie-card_${movie.id}`).should('exist');
   });
 
   it('Published movie is displayed in org page', () => {

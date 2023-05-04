@@ -1,5 +1,5 @@
 import { SearchIndex } from 'algoliasearch';
-import { AvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from './avail';
+import { AvailsFilter } from './avail';
 import { MovieLanguageSpecification, MovieRunningTime, MovieRelease, LanguageVersion } from './movie';
 import {
   Genre,
@@ -14,7 +14,8 @@ import {
   SocialGoal,
   Festival,
   Certification,
-  modules
+  modules,
+  MovieSearchableElements
 } from './static';
 
 export interface AlgoliaConfig {
@@ -22,6 +23,7 @@ export interface AlgoliaConfig {
   attributesForFaceting: string[];
   customRanking?: string[];
   paginationLimitedTo: number;
+  typoTolerance: boolean;
 }
 
 export interface AlgoliaQueries {
@@ -88,6 +90,7 @@ export interface AlgoliaSearchQuery {
   hitsPerPage?: number;
   page?: number;
   query?: string;
+  restrictSearchableAttributes?: MovieSearchableElements[];
   facetFilters?: string[][];
   filters?: string;
 }
@@ -116,11 +119,12 @@ export interface MovieSearch extends AlgoliaSearch {
   runningTime: AlgoliaMinMax;
   festivals: Festival[];
   certifications: Certification[];
+  searchBy: MovieSearchableElements[];
 }
 
 export interface MovieAvailsSearch {
   search?: MovieSearch;
-  avails?: AvailsFilter | CalendarAvailsFilter | MapAvailsFilter;
+  avails?: AvailsFilter;
 }
 
 export interface OrganizationSearch extends AlgoliaSearch {

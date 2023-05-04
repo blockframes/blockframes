@@ -152,7 +152,7 @@ describe('Deal negotiation', () => {
     assertTableRowData(0, [
       dateToMMDDYYYY(add(seller.term.duration.from, { days: 15 })),
       dateToMMDDYYYY(sub(seller.term.duration.to, { days: 15 })),
-      'Latin America, CIS, Europe',
+      'Latin America, Europe, CIS',
       'VOD, Pay TV, Pay Per View',
       'No',
       'French: Dubs, Subs',

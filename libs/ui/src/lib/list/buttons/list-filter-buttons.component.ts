@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { AuthService } from '@blockframes/auth/service';
 import { App, MovieAvailsSearch } from '@blockframes/model';
-import { decodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeAvailsSearchUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { APP } from '@blockframes/utils/routes/utils';
 import { Subscription } from 'rxjs';
 import { createMovieSearch } from '@blockframes/movie/form/search.form';
@@ -57,7 +57,7 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
   }
 
   async save() {
-    const routeParams = decodeUrl<MovieAvailsSearch>(this.route);
+    const routeParams = decodeAvailsSearchUrl(this.route);
     delete routeParams.search?.page;
     const savedSearches = this.authService.profile.savedSearches ?? {};
     savedSearches[this.app] = JSON.stringify(routeParams);
@@ -78,7 +78,7 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
     const savedSearches = this.authService.profile.savedSearches ?? {};
     const savedSearch = savedSearches[this.app];
 
-    const currentRouteParams: MovieAvailsSearch = JSON.parse(this.route.snapshot.queryParams.formValue ?? '{}');
+    const currentRouteParams = decodeAvailsSearchUrl(this.route);
     delete currentRouteParams.search?.page;
 
     if (savedSearch) this.buttonsState.save = 'active', this.buttonsState.load = 'enabled';

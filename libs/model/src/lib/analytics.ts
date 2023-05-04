@@ -1,10 +1,11 @@
-import { MovieAvailsSearch } from './algolia';
+import { MovieSearch } from './algolia';
 import { DocumentMeta } from './meta';
 import { Movie } from './movie';
 import { Organization } from './organisation';
 import { App, Module } from './static';
 import { createPublicUser, PublicUser, User } from './user';
 import { AnonymousCredentials } from './identity';
+import { AvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from './avail';
 
 const analyticsEvents = [
   // Title type
@@ -52,8 +53,13 @@ interface MetaTitle {
   ownerOrgIds: string[];
 }
 
+export interface MovieMixedSearch {
+  search?: MovieSearch;
+  avails?: AvailsFilter | CalendarAvailsFilter | MapAvailsFilter;
+}
+
 interface MetaTitleSearch {
-  search?: MovieAvailsSearch;
+  search?: MovieMixedSearch;
   module: Module,
   uid: string;
   orgId: string;

@@ -19,7 +19,8 @@ import {
   createTitleSearchMeta,
   Organization,
   createOrganizationMeta,
-  filterOwnerEvents
+  filterOwnerEvents,
+  MovieMixedSearch
 } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
@@ -50,7 +51,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
   private subscription?: Subscription;
 
   private analyticsCache: ConnectedUserInfo[] = [];
-  private nonUiTitleSearch: MovieAvailsSearch;
+  private nonUiTitleSearch: MovieMixedSearch;
 
   private getAnalyticsActiveUsers = this.functions.prepare<unknown, AnalyticsActiveUser[]>('getAnalyticsActiveUsers');
 
@@ -153,7 +154,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
     return this.add({ type: 'titleSearch', name: 'exportedTitles', meta });
   }
 
-  async addTitleFilter(_search: MovieAvailsSearch & { titleId?: string, ownerOrgIds?: string[] }, module: Module, eventName: 'filteredTitles' | 'filteredAvailsCalendar' | 'filteredAvailsMap', nonUiSearch = false) {
+  async addTitleFilter(_search: MovieMixedSearch & { titleId?: string, ownerOrgIds?: string[] }, module: Module, eventName: 'filteredTitles' | 'filteredAvailsCalendar' | 'filteredAvailsMap', nonUiSearch = false) {
     if (await this.isOperator()) return;
     const profile = this.authService.profile;
     if (!profile) return;

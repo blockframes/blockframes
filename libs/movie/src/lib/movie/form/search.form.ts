@@ -12,6 +12,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
 
   return {
     query: '',
+    searchBy: [],
     page: 0,
     hitsPerPage: 50,
     storeStatus: [],
@@ -70,6 +71,7 @@ export class minMaxForm extends FormEntity<minMaxControl> {
 function createMovieSearchControl(search: MovieSearch) {
   return {
     query: new UntypedFormControl(search.query),
+    searchBy: new UntypedFormControl(search.searchBy),
     page: new UntypedFormControl(search.page),
     storeStatus: FormList.factory<StoreStatus>(search.storeStatus),
     genres: FormList.factory<GetKeys<'genres'>>(search.genres),
@@ -105,6 +107,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   }
 
   get query() { return this.get('query'); }
+  get searchBy() { return this.get('searchBy') }
   get page() { return this.get('page'); }
   get genres() { return this.get('genres'); }
   get originCountries() { return this.get('originCountries'); }
@@ -121,8 +124,8 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get festivals() { return this.get('festivals'); }
   get certifications() { return this.get('certifications'); }
 
-  search(needMultipleQueries = false, override?: { hitsPerPage: number, page: number }) {
-    const search = this.prepareSearch(needMultipleQueries, override);
+  search(override?: { hitsPerPage: number, page: number }) {
+    const search = this.prepareSearch(override);
     return this.movieIndex.search<AlgoliaMovie>(search.query, search);
   }
 
@@ -131,10 +134,11 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     return recursiveSearch<AlgoliaMovie>(this.movieIndex, search);
   }
 
-  private prepareSearch(needMultipleQueries = false, override?: { hitsPerPage: number, page: number }) {
+  private prepareSearch(override?: { hitsPerPage: number, page: number }) {
     const search: AlgoliaSearchQuery = {
       hitsPerPage: this.hitsPerPage.value,
       query: maxQueryLength(this.query.value),
+      restrictSearchableAttributes: this.searchBy.value,
       page: this.page.value,
       facetFilters: [
         this.genres.value.map(genre => `genres:${genre}`), // same facet inside an array means OR for algolia
@@ -170,16 +174,6 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     if (this.runningTime.value.max) {
       if (search.filters) search.filters += ' AND ';
       search.filters += `runningTime.time <= ${this.runningTime.value.max}`;
-    }
-
-    /*
-    Allow the user to use comma or space to separate their research.
-    ex : `France, Berlinale, Action` can be a research but without the `optionalWords`
-    it will be considered as one string/research and not 3 differents.
-    */
-    if (needMultipleQueries) {
-      const multipleQueries: string[] = this.query.value.split(',' || ' ');
-      search['optionalWords'] = maxQueryLength(multipleQueries);
     }
 
     return search;
