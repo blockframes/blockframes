@@ -888,6 +888,7 @@ export const territoriesISOA2 = {
   mali: 'ML',
   malta: 'MT',
   marshall: 'MH',
+  martinique: 'MQ',
   mauritania: 'MR',
   mauritius: 'MU',
   mexico: 'MX',
