@@ -1,4 +1,4 @@
-import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, festival, recursiveSearch, AlgoliaSearchQuery, MovieSearch, LanguageVersion, Versions, Territory } from '@blockframes/model';
+import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, festival, recursiveSearch, AlgoliaSearchQuery, MovieSearch, LanguageVersion, Versions } from '@blockframes/model';
 import type { StoreStatus, AlgoliaMinMax } from '@blockframes/model';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
@@ -75,7 +75,7 @@ function createMovieSearchControl(search: MovieSearch) {
     page: new UntypedFormControl(search.page),
     storeStatus: FormList.factory<StoreStatus>(search.storeStatus),
     genres: FormList.factory<GetKeys<'genres'>>(search.genres),
-    originCountries: new FormStaticValueArray<'territories'>(search.originCountries as Territory[], 'territories'),
+    originCountries: new FormStaticValueArray<'territories'>(search.originCountries, 'territories'),
     languages: createLanguageVersionControl(search.languages),
     productionStatus: new FormStaticValueArray<'productionStatus'>(search.productionStatus, 'productionStatus'),
     minBudget: new UntypedFormControl(search.minBudget),
@@ -107,7 +107,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   }
 
   get query() { return this.get('query'); }
-  get searchBy() { return this.get('searchBy')}
+  get searchBy() { return this.get('searchBy') }
   get page() { return this.get('page'); }
   get genres() { return this.get('genres'); }
   get originCountries() { return this.get('originCountries'); }
