@@ -243,10 +243,9 @@ describe('Movie search in marketplace', () => {
     escapeKey();
     get('origin-countries').should('contain', 'Europe');
     get('save-filter').click();
-    // url should include all european countries, and not contain the group name (Europe)
-    europeanCountries.forEach(country => cy.url().should('include', country));
-    cy.url().should('not.include', 'Europe');
-    cy.url().should('not.include', 'europe');
+    // url should include Europe and not countries of Europe
+    europeanCountries.forEach(country => cy.url().should('not.include', country));
+    cy.url().should('include', 'Europe');
     get('save').click();
     // clearing filters should remove 'Europe' in filter and european countries in url
     get('clear-filters').click();

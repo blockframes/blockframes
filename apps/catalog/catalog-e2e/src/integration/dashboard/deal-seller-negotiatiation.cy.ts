@@ -129,7 +129,7 @@ describe('Deal negotiation', () => {
     checkNotification('buyer', 'declined');
   });
 
-  it('Seller negociates the offer', () => {
+  it('Seller negotiates the offer', () => {
     get('negotiate').click();
     //negotitation page
     assertUrl(`c/o/dashboard/sales/${saleContract.id}/negotiation`);

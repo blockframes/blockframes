@@ -50,8 +50,8 @@ interface MovieAvailsSearchWithEncodedTerritories {
 export function encodeAvailsSearchUrl(router: Router, route: ActivatedRoute, data: MovieAvailsSearch) {
   const search: MovieAvailsSearchWithEncodedTerritories = {
     search: { ...data.search, originCountries: encodeTerritories(data.search?.originCountries) },
-    avails: { ...data.avails, territories: encodeTerritories(data.avails?.territories) }
   };
+  if (data.avails) search.avails = { ...data.avails, territories: encodeTerritories(data.avails?.territories) };
   return encodeUrl<MovieAvailsSearchWithEncodedTerritories>(router, route, search);
 }
 
