@@ -1,10 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
-import { 
+import {
   App,
   appName,
   toLabel,
   MovieAvailsSearch,
-  AvailsFilter,
   trimString,
   PdfParams,
   PdfParamsFilters,
@@ -116,7 +115,7 @@ export class PdfService {
     const filters: PdfParamsFilters = {};
 
     if (search?.avails) {
-      const availForm = search.avails as AvailsFilter;
+      const availForm = search.avails;
 
       if (availForm.territories?.length && availForm.medias?.length) {
         const territories = toGroupLabel(availForm.territories, 'territories', 'World').join(', ');
@@ -124,9 +123,9 @@ export class PdfService {
         filters.avails = `${trimString(territories, 50, true)} in ${trimString(rights, 50, true)}`;
 
         if (availForm.exclusive !== undefined) {
-          filters.avails = `${filters.avails}, ${availForm.exclusive ? 'exclusive': 'non exclusive'} rights`;
+          filters.avails = `${filters.avails}, ${availForm.exclusive ? 'exclusive' : 'non exclusive'} rights`;
         }
-  
+
         if (availForm.duration.from && availForm.duration.to) {
           filters.avails = `${filters.avails} for ${format(availForm.duration.from, 'MM/dd/yyyy')} - ${format(availForm.duration.to, 'MM/dd/yyyy')}`;
         }

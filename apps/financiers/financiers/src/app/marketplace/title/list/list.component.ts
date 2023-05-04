@@ -16,7 +16,7 @@ import type { MovieAvailsSearch, StoreStatus } from '@blockframes/model';
 import { AlgoliaMovie, MovieSearch } from '@blockframes/model';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { decodeAvailsSearchUrl, encodeAvailsSearchUrl } from "@blockframes/utils/form/form-state-url-encoder";
 
 @Component({
   selector: 'financiers-marketplace-title-list',
@@ -64,7 +64,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
           const currentSearch = JSON.stringify(search);
           if (this.previousSearch !== currentSearch && this.searchForm.page.value !== 0) {
             this.searchForm.page.setValue(0, { onlySelf: false, emitEvent: false });
-            encodeUrl<MovieAvailsSearch>(this.router, this.route, { search: this.searchForm.value });
+            encodeAvailsSearchUrl(this.router, this.route, { search: this.searchForm.value });
           }
           this.previousSearch = currentSearch;
         }),
@@ -84,12 +84,11 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const decodedData = decodeUrl<MovieAvailsSearch>(this.route);
-    this.load(decodedData);
+    this.load(decodeAvailsSearchUrl(this.route));
 
     const sub = this.searchForm.valueChanges.pipe(
       debounceTime(1000),
-    ).subscribe(search => encodeUrl<MovieAvailsSearch>(this.router, this.route, { search }));
+    ).subscribe(search => encodeAvailsSearchUrl(this.router, this.route, { search }));
     this.subs.push(sub);
   }
 

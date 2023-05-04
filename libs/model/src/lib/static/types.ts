@@ -48,7 +48,6 @@ import {
   movieNoteRoles,
   releaseMedias,
   screenerTypes,
-  TerritoryGroup,
   territoriesISOA2
 } from './static-model';
 
@@ -163,7 +162,6 @@ export type TerritoryISOA2 = keyof typeof territoriesISOA2;
 export type TerritoryISOA2Value = typeof territoriesISOA2[TerritoryISOA2];
 export type TerritoryISOA3 = keyof typeof territoriesISOA3;
 export type TerritoryISOA3Value = typeof territoriesISOA3[TerritoryISOA3];
-export type EncodedTerritory = Territory | TerritoryISOA2Value | TerritoryGroup;
 
 export type AccessibilityTypes = keyof typeof accessibility;
 export type AccessibilityTypesValue = typeof accessibility[AccessibilityTypes];

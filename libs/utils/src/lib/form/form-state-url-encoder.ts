@@ -6,8 +6,9 @@ import {
   territoriesGroup,
   territoriesISOA2,
   TerritoryISOA2Value,
-  MovieAvailsFilterSearch,
-  EncodedTerritory,
+  MovieAvailsSearch,
+  MovieSearch,
+  AvailsFilter,
 } from '@blockframes/model';
 
 /**
@@ -40,30 +41,30 @@ export function encodeUrl<T>(router: Router, route: ActivatedRoute, data: T) {
   }
 }
 
-export function encodeAvailsSearchUrl(router: Router, route: ActivatedRoute, data: MovieAvailsFilterSearch) {
-  const availTerritories = data.avails.territories;
-  const originCountries = data.search.originCountries;
-  
-  if (availTerritories.length) data.avails.territories = encodeTerritories(availTerritories as Territory[]);
-  if (originCountries.length) data.search.originCountries = encodeTerritories(originCountries as Territory[]);
-  
-  return encodeUrl(router, route, data);
+type EncodedTerritory = Territory | TerritoryISOA2Value | TerritoryGroup;
+interface MovieAvailsSearchWithEncodedTerritories {
+  search?: Omit<MovieSearch, 'originCountries'> & { originCountries: EncodedTerritory[] };
+  avails?: Omit<AvailsFilter, 'territories'> & { territories: EncodedTerritory[] };
+}
+
+export function encodeAvailsSearchUrl(router: Router, route: ActivatedRoute, data: MovieAvailsSearch) {
+  const search: MovieAvailsSearchWithEncodedTerritories = {
+    search: { ...data.search, originCountries: encodeTerritories(data.search?.originCountries) },
+    avails: { ...data.avails, territories: encodeTerritories(data.avails?.territories) }
+  };
+  return encodeUrl<MovieAvailsSearchWithEncodedTerritories>(router, route, search);
 }
 
 export function decodeAvailsSearchUrl(route: ActivatedRoute) {
-  const { formValue } = route.snapshot.queryParams;
-
-  const data = JSON.parse(formValue);
-  const availTerritories = data.avails.territories;
-  const originCountries = data.search.originCountries;
-
-  if (availTerritories.length) data.avails.territories = decodeTerritories(availTerritories);
-  if (originCountries.length) data.search.originCountries = decodeTerritories(originCountries);
-
-  return data;
+  const data = decodeUrl<MovieAvailsSearchWithEncodedTerritories>(route);
+  const search: MovieAvailsSearch = {
+    search: { ...data.search, originCountries: decodeTerritories(data.search?.originCountries) },
+    avails: { ...data.avails, territories: decodeTerritories(data.avails?.territories) }
+  };
+  return search;
 }
 
-function encodeTerritories(_countries: Territory[]): EncodedTerritory[] {
+function encodeTerritories(_countries: Territory[] = []): EncodedTerritory[] {
   let countries = _countries;
   const continents: TerritoryGroup[] = [];
   const countriesISOA2: TerritoryISOA2Value[] = [];
@@ -83,7 +84,7 @@ function encodeTerritories(_countries: Territory[]): EncodedTerritory[] {
   return [...countriesISOA2, ...countries, ...continents];
 }
 
-export function decodeTerritories(_territories: EncodedTerritory[]): Territory[] {
+function decodeTerritories(_territories: EncodedTerritory[] = []): Territory[] {
   const continents = extractContinents(_territories);
   const countriesISOA2 = extractCountriesISOA2(_territories);
   const countries = _territories.filter(territory => Object.keys(territories).includes(territory));
@@ -99,17 +100,17 @@ const continentCountries = (continent: TerritoryGroup): Territory[] =>
     .filter(Boolean)
     .flat(2);
 
-const countryISOA2ToTerritory = (_countryISOA2: TerritoryISOA2Value) =>
-  Object.keys(territoriesISOA2).find(key => territoriesISOA2[key] === _countryISOA2) as Territory;
+const countryISOA2ToTerritory = (countryISOA2: TerritoryISOA2Value) =>
+  Object.keys(territoriesISOA2).find(key => territoriesISOA2[key] === countryISOA2) as Territory;
 
-function extractContinents(_territories: EncodedTerritory[]): TerritoryGroup[] {
+function extractContinents(territories: EncodedTerritory[]) {
   const continentsList = territoriesGroup.map(group => group.label) as string[];
-  const continents = _territories.filter(territory => continentsList.includes(territory));
+  const continents = territories.filter(territory => continentsList.includes(territory));
   return continents as TerritoryGroup[];
 }
 
-function extractCountriesISOA2(_territories: EncodedTerritory[]): TerritoryISOA2Value[] {
+function extractCountriesISOA2(territories: EncodedTerritory[]) {
   const countriesISOA2List = Object.values(territoriesISOA2);
-  const countriesISOA2 = _territories.filter(territory => countriesISOA2List.includes(territory as TerritoryISOA2Value));
+  const countriesISOA2 = territories.filter(territory => countriesISOA2List.includes(territory as TerritoryISOA2Value));
   return countriesISOA2 as TerritoryISOA2Value[];
 }

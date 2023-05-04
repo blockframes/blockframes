@@ -1,5 +1,5 @@
 import { SearchIndex } from 'algoliasearch';
-import { AvailsFilter, AvailsFilterWithEncodedTerritories, CalendarAvailsFilter, MapAvailsFilter } from './avail';
+import { AvailsFilter } from './avail';
 import { MovieLanguageSpecification, MovieRunningTime, MovieRelease, LanguageVersion } from './movie';
 import {
   Genre,
@@ -16,7 +16,6 @@ import {
   Certification,
   modules,
   MovieSearchableElements,
-  EncodedTerritory
 } from './static';
 
 export interface AlgoliaConfig {
@@ -109,7 +108,7 @@ export interface AlgoliaMinMax {
 export interface MovieSearch extends AlgoliaSearch {
   storeStatus: StoreStatus[];
   genres: Genre[];
-  originCountries: EncodedTerritory[];
+  originCountries: Territory[];
   languages: LanguageVersion;
   productionStatus: ProductionStatus[];
   minBudget: number;
@@ -125,12 +124,7 @@ export interface MovieSearch extends AlgoliaSearch {
 
 export interface MovieAvailsSearch {
   search?: MovieSearch;
-  avails?: AvailsFilter | CalendarAvailsFilter | MapAvailsFilter;
-}
-
-export interface MovieAvailsFilterSearch {
-  search?: MovieSearch;
-  avails?: AvailsFilter | AvailsFilterWithEncodedTerritories;
+  avails?: AvailsFilter;
 }
 
 export interface OrganizationSearch extends AlgoliaSearch {

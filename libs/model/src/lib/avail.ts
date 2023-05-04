@@ -3,7 +3,7 @@ import { max, min } from 'date-fns';
 import { Bucket, BucketContract } from './bucket';
 import { FullMandate, FullSale, Holdback, Mandate, Sale } from './contract';
 import { territories, territoriesISOA3 } from './static';
-import { Media, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue, EncodedTerritory } from './static/types';
+import { Media, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from './static/types';
 import { BucketTerm, Term, Duration } from './terms';
 
 export interface BaseAvailsFilter {
@@ -215,11 +215,6 @@ function getMatchingAvailabilities<A extends AvailsFilter | CalendarAvailsFilter
 export interface AvailsFilter extends BaseAvailsFilter {
   duration: Duration,
   territories: Territory[],
-}
-
-export interface AvailsFilterWithEncodedTerritories extends BaseAvailsFilter {
-  duration: Duration,
-  territories: EncodedTerritory[],
 }
 
 function isAvailAllInTerm(term: Term, avails: AvailsFilter) {

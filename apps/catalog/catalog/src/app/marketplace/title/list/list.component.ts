@@ -32,12 +32,11 @@ import {
   Term,
   AlgoliaResult,
   MovieAvailsSearch,
-  MovieAvailsFilterSearch,
 } from '@blockframes/model';
 import { AvailsForm, createAvailsSearch } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
-import { decodeAvailsSearchUrl, decodeTerritories, encodeAvailsSearchUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeAvailsSearchUrl, encodeAvailsSearchUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -225,14 +224,11 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     this.exporting = false;
   }
 
-  load(savedSearch: MovieAvailsFilterSearch) {
-    if (savedSearch.avails.territories.length) savedSearch.avails.territories = decodeTerritories(savedSearch.avails.territories);
-    if (savedSearch.search.originCountries.length) savedSearch.search.originCountries = decodeTerritories(savedSearch.search.originCountries);
-
+  load(savedSearch: MovieAvailsSearch) {
     this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
 
     // Avails Form
-    this.availsForm.hardReset(createAvailsSearch(savedSearch.avails as AvailsFilter));
+    this.availsForm.hardReset(createAvailsSearch(savedSearch.avails));
 
     this.analyticsService.addTitleFilter({ search: this.searchForm.value, avails: this.availsForm.value }, 'marketplace', 'filteredTitles', true);
   }
