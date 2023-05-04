@@ -7,7 +7,7 @@ import {
   territoriesISOA2,
   TerritoryISOA2Value,
   MovieAvailsFilterSearch,
-  encodedTerritory,
+  EncodedTerritory,
 } from '@blockframes/model';
 
 /**
@@ -63,7 +63,7 @@ export function decodeAvailsSearchUrl(route: ActivatedRoute) {
   return data;
 }
 
-function encodeTerritories(_countries: Territory[]): encodedTerritory[] {
+function encodeTerritories(_countries: Territory[]): EncodedTerritory[] {
   let countries = _countries;
   const continents: TerritoryGroup[] = [];
   const countriesISOA2: TerritoryISOA2Value[] = [];
@@ -83,7 +83,7 @@ function encodeTerritories(_countries: Territory[]): encodedTerritory[] {
   return [...countriesISOA2, ...countries, ...continents];
 }
 
-export function decodeTerritories(_territories: encodedTerritory[]): Territory[] {
+export function decodeTerritories(_territories: EncodedTerritory[]): Territory[] {
   const continents = extractContinents(_territories);
   const countriesISOA2 = extractCountriesISOA2(_territories);
   const countries = _territories.filter(territory => Object.keys(territories).includes(territory));
@@ -102,13 +102,13 @@ const continentCountries = (continent: TerritoryGroup): Territory[] =>
 const countryISOA2ToTerritory = (_countryISOA2: TerritoryISOA2Value) =>
   Object.keys(territoriesISOA2).find(key => territoriesISOA2[key] === _countryISOA2) as Territory;
 
-function extractContinents(_territories: encodedTerritory[]): TerritoryGroup[] {
+function extractContinents(_territories: EncodedTerritory[]): TerritoryGroup[] {
   const continentsList = territoriesGroup.map(group => group.label) as string[];
   const continents = _territories.filter(territory => continentsList.includes(territory));
   return continents as TerritoryGroup[];
 }
 
-function extractCountriesISOA2(_territories: encodedTerritory[]): TerritoryISOA2Value[] {
+function extractCountriesISOA2(_territories: EncodedTerritory[]): TerritoryISOA2Value[] {
   const countriesISOA2List = Object.values(territoriesISOA2);
   const countriesISOA2 = _territories.filter(territory => countriesISOA2List.includes(territory as TerritoryISOA2Value));
   return countriesISOA2 as TerritoryISOA2Value[];

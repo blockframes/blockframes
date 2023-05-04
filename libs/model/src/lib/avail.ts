@@ -3,7 +3,7 @@ import { max, min } from 'date-fns';
 import { Bucket, BucketContract } from './bucket';
 import { FullMandate, FullSale, Holdback, Mandate, Sale } from './contract';
 import { territories, territoriesISOA3 } from './static';
-import { Media, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue, encodedTerritory } from './static/types';
+import { Media, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue, EncodedTerritory } from './static/types';
 import { BucketTerm, Term, Duration } from './terms';
 
 export interface BaseAvailsFilter {
@@ -219,7 +219,7 @@ export interface AvailsFilter extends BaseAvailsFilter {
 
 export interface AvailsFilterWithEncodedTerritories extends BaseAvailsFilter {
   duration: Duration,
-  territories: encodedTerritory[],
+  territories: EncodedTerritory[],
 }
 
 function isAvailAllInTerm(term: Term, avails: AvailsFilter) {
