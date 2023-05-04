@@ -107,7 +107,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   }
 
   get query() { return this.get('query'); }
-  get searchBy() { return this.get('searchBy')}
+  get searchBy() { return this.get('searchBy') }
   get page() { return this.get('page'); }
   get genres() { return this.get('genres'); }
   get originCountries() { return this.get('originCountries'); }

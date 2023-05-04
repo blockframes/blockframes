@@ -36,7 +36,7 @@ import {
 import { AvailsForm, createAvailsSearch } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { TermService } from '@blockframes/contract/term/service';
-import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
+import { decodeAvailsSearchUrl, encodeAvailsSearchUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -143,7 +143,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.load(decodeUrl<MovieAvailsSearch>(this.route));
+    this.load(decodeAvailsSearchUrl(this.route));
 
     const sub = combineLatest([
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
@@ -151,7 +151,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     ]).pipe(debounceTime(1000))
       .subscribe(([search, avails]) => {
         this.analyticsService.addTitleFilter({ search, avails }, 'marketplace', 'filteredTitles');
-        return encodeUrl<MovieAvailsSearch>(this.router, this.route, { search, avails });
+        return encodeAvailsSearchUrl(this.router, this.route, { search, avails });
       });
 
     this.subs.push(sub);

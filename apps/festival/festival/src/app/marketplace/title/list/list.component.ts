@@ -12,7 +12,7 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, tap } from 'r
 
 import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 import { StoreStatus, AlgoliaMovie, MovieSearch, MovieAvailsSearch } from '@blockframes/model';
-import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { decodeAvailsSearchUrl, encodeAvailsSearchUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -62,7 +62,7 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
         const currentSearch = JSON.stringify(search);
         if (this.previousSearch !== currentSearch && this.searchForm.page.value !== 0) {
           this.searchForm.page.setValue(0, { onlySelf: false, emitEvent: false });
-          encodeUrl<MovieAvailsSearch>(this.router, this.route, { search: this.searchForm.value });
+          encodeAvailsSearchUrl(this.router, this.route, { search: this.searchForm.value });
         }
         this.previousSearch = currentSearch;
       }),
@@ -82,14 +82,13 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const decodedData = decodeUrl<MovieAvailsSearch>(this.route);
-    this.load(decodedData);
+    this.load(decodeAvailsSearchUrl(this.route));
 
     const sub = this.searchForm.valueChanges.pipe(
       debounceTime(1000),
     ).subscribe(search => {
       this.analyticsService.addTitleFilter({ search }, 'marketplace', 'filteredTitles');
-      return encodeUrl<MovieAvailsSearch>(this.router, this.route, { search });
+      return encodeAvailsSearchUrl(this.router, this.route, { search });
     });
     this.subs.push(sub);
   }
