@@ -1,0 +1,42 @@
+:host {
+  display: flex;
+  height: 100vh;
+}
+main {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+}
+table {
+  // border-collapse: collapse;
+  margin-block: 24px;
+}
+td {
+  padding: 4px 8px;
+  border: 1px solid gray;
+  text-align: center;
+}
+td.empty {
+  border: none;
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-left: 0;
+  list-style: none;
+  margin-block: 0;
+}
+
+aside {
+  background-color: white;
+  border-left: solid 1px black;
+  min-width: 250px;
+  padding: 16px;
+  header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+}

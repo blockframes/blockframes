@@ -1,0 +1,50 @@
+<main>
+  <table>
+    <tr *rxFor="let row of table; trackBy: trackByIndex">
+      <td *rxFor="let cell of row; trackBy: 'id'" [attr.colspan]="cell.span" [ngClass]="{ empty: !cell.id}">
+        <ng-container *ngIf="groups[cell.id] || columns[cell.id]; else right">
+          <button (click)="select(cell.id)">{{ cell.id }}</button>
+        </ng-container>
+        <ng-template #right>
+          {{ cell.id }}
+        </ng-template>
+      </td>
+    </tr>
+    <caption>{{ title }}</caption>
+  </table>
+  <section>
+  
+  </section>
+  <ul>
+    <li [id]="group.key" *rxFor="let group of groups | keyvalue">
+      <table>
+        <tr *rxFor="let row of group.value; trackBy: trackByIndex">
+          <td *rxFor="let cell of row; trackBy: 'id'" [attr.colspan]="cell.span" [ngClass]="{ empty: !cell.id}">
+            {{ cell.id }}
+          </td>
+        </tr>
+        <caption>{{ group.key }}</caption>
+      </table>
+    </li>
+  </ul>
+</main>
+<aside *ngIf="currentColumn">
+  <header>
+    <button (click)="currentColumn = undefined">
+      Close
+    </button>
+  </header>
+  <table>
+    <tr *rxFor="let row of columns[currentColumn]; trackBy: trackByIndex">
+      <td *rxFor="let cell of row; trackBy: 'id'" [attr.colspan]="cell.span" [ngClass]="{ empty: !cell.id}">
+        <ng-container *ngIf="groups[cell.id] || columns[cell.id]; else right">
+          <button (click)="select(cell.id)">{{ cell.id }}</button>
+        </ng-container>
+        <ng-template #right>
+          {{ cell.id }}
+        </ng-template>
+      </td>
+    </tr>
+    <caption>{{ currentColumn }}</caption>
+  </table>
+</aside>
