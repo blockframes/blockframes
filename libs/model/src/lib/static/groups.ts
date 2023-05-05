@@ -7,11 +7,6 @@ export interface StaticGroup<S extends GroupScope = any> {
   items: Extract<GetKeys<S>, string>[];
 }
 
-export type StaticGroupMap = Partial<{
-  [key in GroupScope]: StaticGroup<key>[]
-}>;
-
-
 export const mediaGroup: StaticGroup<'medias'>[] = [{
   label: 'TV',
   items: ['payTv', 'freeTv', 'payPerView'],

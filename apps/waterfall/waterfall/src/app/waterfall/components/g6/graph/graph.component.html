@@ -1,0 +1,42 @@
+<main>
+  <g6-graph autoFit *rxIf="data$; let data" (click)="unselect()">
+    <ng-container *rxFor="let node of data.nodes; trackBy: trackBy">
+      <g6-node [config]="node" (click)="select($event)"></g6-node>
+    </ng-container>
+    <ng-container *rxFor="let edge of data.edges; trackBy: trackBy">
+      <g6-edge [config]="edge" (click)="select($event)"></g6-edge>
+    </ng-container>
+    <ng-container *rxFor="let combo of data.combos; trackBy: trackBy">
+      <g6-combo [config]="combo" (click)="select($event)"></g6-combo>
+    </ng-container>
+  </g6-graph>
+  <aside *ngIf="!hideDetails">
+    <ng-container *rxIf="right">
+      <h4>{{ right.id }}</h4>
+      <p>
+        Org: {{ right.orgId }}<br>
+        Revenu: {{ right.revenu| currency }}<br>
+        Percent: {{ right.percent | percent: '1.0-2' }}<br>
+      </p>
+    </ng-container>
+    <ng-container *rxIf="transfer">
+      <h4>{{ transfer.from }} -> {{ transfer.to }}</h4>
+      <p>Total: {{ transfer.amount | currency }}</p>
+      <ul>
+        <li *rxFor="let value of transfer.history">{{ value.amount| currency }}</li>
+      </ul>
+    </ng-container>
+    <ng-container *rxIf="org">
+      <h4>{{ org.id }}</h4>
+      <p>
+        Revenu: {{ org.revenu| currency }}<br>
+        Investment: {{ org.investment| currency }}<br>
+        Expense: {{ org.expense| currency }}<br>
+        Bonus: {{ org.bonus| currency }}
+      </p>
+    </ng-container>
+  </aside>
+</main>
+<footer>
+  <input type="range" min="0" [max]="history.length - 1" [formControl]="control">
+</footer>

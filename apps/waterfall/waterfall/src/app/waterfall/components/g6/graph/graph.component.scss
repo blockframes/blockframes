@@ -1,0 +1,46 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 5px); // quick fix on the height of the canvas
+}
+
+main {
+  flex: 1;
+  display: flex;
+  margin: 16px;
+  gap: 16px;
+  g6-graph {
+    flex: 1;
+    border-radius: 4px;
+    border: 1px solid black;
+    overflow: hidden;
+  }
+  aside {
+    width: 250px;
+  }
+}
+
+ul {
+  padding-left: 0;
+  margin-block: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  li {
+    padding: 8px 16px;
+    background-color: #E7E7E9;
+    border-radius: 4px;
+  }
+}
+
+footer {
+  padding: 24px;
+  input {
+    width: 100%;
+  }
+}
+
+
+
+

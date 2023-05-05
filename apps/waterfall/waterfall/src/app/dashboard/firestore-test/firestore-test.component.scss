@@ -1,0 +1,19 @@
+main {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 5px); // quick fix on the height of the canvas
+}
+
+section, ul {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.red {
+  color:red;
+}
+
+.green {
+  color:green;
+}

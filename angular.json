@@ -1745,6 +1745,29 @@
       },
       "tags": ["browser", "e2e"],
       "implicitDependencies": ["waterfall"]
+    },
+    "waterfall-library": {
+      "projectType": "library",
+      "root": "libs/waterfall",
+      "sourceRoot": "libs/waterfall/src",
+      "prefix": "blockframes",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/waterfall"],
+          "options": {
+            "jestConfig": "libs/waterfall/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/waterfall/src/**/*.ts", "libs/waterfall/src/**/*.html"]
+          }
+        }
+      },
+      "tags": ["browser"]
     }
   }
 }

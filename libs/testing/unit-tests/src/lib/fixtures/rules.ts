@@ -15,6 +15,12 @@ export const rulesFixtures = {
     },
     id: 'O001',
   },
+  'permissions/O002': {
+    roles: {
+      'uid-user3': 'member',
+    },
+    id: 'O002',
+  },
   'permissions/O003': {
     id: 'O003',
   },
@@ -332,6 +338,25 @@ export const rulesFixtures = {
     access: [],
     share: []
   },
+
+  // Waterfall
+  'waterfall/MI-0d7': {
+    id: 'MI-0d7',
+    orgIds: ['O002']
+  },
+  'waterfall/MI-0d7/blocks/B001': {
+    id: 'B001',
+  },
+  'waterfall/MI-0d7/permissions/O002': {
+    id: 'O002',
+    roles: ['financier']
+  },
+  'waterfall/MI-0d7/permissions/O003': {
+    id: 'O003',
+  },
+  'waterfall/MI-0d7/budget/MI-0d7': {
+    id: 'MI-0d7',
+  }
 };
 
 

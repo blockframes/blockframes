@@ -33,6 +33,43 @@ const routes: Routes = [{
       ]
     },
     {
+      path: 'graph',
+      children: [
+        {
+          path: '',
+          redirectTo: 'casablancas',
+          pathMatch: 'full'
+        },
+        {
+          path: ':waterfallId',
+          loadChildren: () => import('./graph/graph.module').then(m => m.GraphModule),
+        }
+      ]
+    },
+    {
+      path: 'table',
+      children: [
+        {
+          path: '',
+          loadChildren: () => import('./table/table.module').then(m => m.TableModule),
+        }
+      ]
+    },
+    {
+      path: 'firestore-test',
+      children: [
+        {
+          path: '',
+          redirectTo: 'side-stories-mg',
+          pathMatch: 'full'
+        },
+        {
+          path: ':titleId',
+          loadChildren: () => import('./firestore-test/firestore-test.module').then(m => m.FirestoreTestModule)
+        }
+      ]
+    },
+    {
       path: 'notifications',
       loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule)
     },
