@@ -1,19 +1,20 @@
+
 import { Firestore, runChunks } from '@blockframes/firebase-utils';
-import { createMovieAppConfig, Movie } from '@blockframes/model';
+import { isInKeys, Term } from '@blockframes/model';
 
 /**
- * Adds default movie access for waterfall app
- * @param db
+ * Fix old terms medias & territories
  * @returns
  */
 export async function upgrade(db: Firestore) {
-  const movies = await db.collection('movies').get();
+  const terms = await db.collection('terms').get();
 
-  return runChunks(movies.docs, async (doc) => {
-    const movie = doc.data() as Movie;
+  return runChunks(terms.docs, async (doc) => {
+    const term = doc.data() as Term;
 
-    movie.app = createMovieAppConfig(movie.app);
-    await doc.ref.set(movie);
+    term.territories = term.territories.filter(t => isInKeys('territories', t));
+    term.medias = term.medias.filter(m => isInKeys('medias', m));
 
-  }).catch(err => console.error(err));
+    await doc.ref.set(term);
+  });
 }
