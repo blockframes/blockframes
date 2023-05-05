@@ -1,4 +1,4 @@
-import { waterfall } from './main';
+import { waterfall } from '@blockframes/waterfall/main';
 import { Action, action } from './action';
 import { and, condition } from './conditions';
 
