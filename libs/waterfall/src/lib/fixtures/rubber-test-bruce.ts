@@ -1,5 +1,4 @@
-import { and, condition, or } from '../conditions';
-import { Action, action } from '../action';
+import { and, condition, Action, action } from '@blockframes/model';
 
 const investments: Action[] = [
   action('invest', { orgId: 'realistism', amount: 156_696 }),

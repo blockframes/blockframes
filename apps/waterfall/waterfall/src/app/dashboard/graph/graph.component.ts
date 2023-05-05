@@ -4,9 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 
 // Blockframes
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { waterfall, History } from '@blockframes/waterfall/main';
-import { TitleState } from '@blockframes/waterfall/state';
-
+import { waterfall } from '@blockframes/waterfall/main';
+import { TitleState, History } from '@blockframes/model';
 
 import { actions as casablancas } from '@blockframes/waterfall/fixtures/casablancas';
 import { actions as casablancasGroup } from '@blockframes/waterfall/fixtures/casablancas-group';
@@ -19,7 +18,7 @@ import { actions as terrawillyGroup } from '@blockframes/waterfall/fixtures/terr
 import { actions as terrawilly } from '@blockframes/waterfall/fixtures/terrawilly';
 import { actions as casablancasV2 } from '@blockframes/waterfall/fixtures/casablancas-v2';
 import { actions as origineDuMal } from '@blockframes/waterfall/fixtures/origine-du-mal';
-import { actions as blameExample }from '@blockframes/waterfall/fixtures/examples/blame-example';
+import { actions as blameExample } from '@blockframes/waterfall/fixtures/examples/blame-example';
 
 
 @Component({
@@ -44,7 +43,7 @@ export class GraphComponent {
     'blame-example': blameExample,
   }
   private waterfallId: keyof typeof this.actions = this.route.snapshot.params['waterfallId'];
-  
+
   tree: { state: TitleState, history: History[] };
 
   constructor(

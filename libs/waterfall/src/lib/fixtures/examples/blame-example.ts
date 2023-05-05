@@ -1,4 +1,4 @@
-import { Action, action } from '../../action';
+import { Action, action } from '@blockframes/model';
 
 export const actions: Action[] = [
   action('append', { id: 'first-parent', orgId: 'org-0', percent: 0.5, previous: ['horizontal-group'] }),

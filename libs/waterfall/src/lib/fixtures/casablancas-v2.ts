@@ -1,5 +1,4 @@
-import { and, condition } from '../conditions';
-import { Action, action } from '../action';
+import { and, condition, Action, action } from '@blockframes/model';
 
 const contracts: Action[] = [
   // --------- BLOCK 09/03/16 --------- 

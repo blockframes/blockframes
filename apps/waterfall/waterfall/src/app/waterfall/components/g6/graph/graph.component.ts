@@ -3,8 +3,7 @@ import { FormControl } from '@angular/forms';
 import { map, Observable } from 'rxjs';
 import { ComboConfig, EdgeConfig, GraphData, IG6GraphEvent, NodeConfig } from '@antv/g6';
 import { toG6 } from '../../g6/utils';
-import { History } from '@blockframes/waterfall/main';
-import { OrgState, RightState, TransferState, TitleState } from '@blockframes/waterfall/state';
+import { OrgState, RightState, TransferState, TitleState, History } from '@blockframes/model';
 
 @Component({
   selector: 'waterfall-g6-graph',

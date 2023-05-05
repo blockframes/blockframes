@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BlockService } from '@blockframes/waterfall/block.service';
-import { createWaterfall, WaterfallService } from '@blockframes/waterfall/waterfall.service';
-import { History } from '@blockframes/waterfall/main';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   compensation1 as compensation1_mg,
@@ -23,12 +22,8 @@ import {
   stories as stories_incomes,
   next as next_incomes
 } from '@blockframes/waterfall/fixtures/examples/side-stories-incomes';
-
-
 import { ActivatedRoute } from '@angular/router';
-
-import { OrgState, TitleState } from '@blockframes/waterfall/state';
-import { Version, Waterfall } from '@blockframes/waterfall/waterfall';
+import { Version, Waterfall, createWaterfall, OrgState, TitleState, History } from '@blockframes/model';
 
 @Component({
   selector: 'waterfall-firestore-test',

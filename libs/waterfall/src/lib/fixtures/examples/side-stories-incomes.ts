@@ -1,4 +1,4 @@
-import { Action, action } from '../../action';
+import { Action, action } from '@blockframes/model';
 
 const history_1: Action[] = [
   action('append', { id: 'investor_1_rnpp', orgId: 'investor_1', percent: 0.3, previous: [] }),

@@ -1,7 +1,4 @@
-import { and, condition } from '../conditions';
-import { Action, action } from '../action';
-
-
+import { and, condition, Action, action } from '@blockframes/model';
 
 export const actions: Action[] = [
   /////////

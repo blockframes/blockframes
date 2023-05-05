@@ -1,6 +1,5 @@
 ﻿import { waterfall } from '../../main';
 import { actions } from './blame-example';
-require('../../test-utils');
 
 describe('Test blame functionality', () => {
   it('check bonus values', () => {

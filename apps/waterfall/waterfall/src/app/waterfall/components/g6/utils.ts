@@ -1,4 +1,4 @@
-import { TitleState } from '@blockframes/waterfall/state';
+import { TitleState } from '@blockframes/model';
 import { EdgeConfig, NodeConfig, ComboConfig, GraphData, TreeGraph, Tooltip, GraphOptions } from '@antv/g6';
 import { DagreLayout } from '@antv/layout';
 

@@ -164,3 +164,12 @@ export function convertToTimeString(time: number) {
 
   return `${dayStr}${hourStr}${minuteStr}${secondStr}` || '0s';
 }
+
+const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,}|)Z$/;
+export const jsonDateReviver = (_: string, value: unknown) => typeof value === 'string' && dateFormat.test(value) ? new Date(value) : value;
+
+// Provide structuredClone method not available in node 16
+export function structuredClone(objectToClone: unknown) {
+  const stringified = JSON.stringify(objectToClone);
+  return JSON.parse(stringified);
+}

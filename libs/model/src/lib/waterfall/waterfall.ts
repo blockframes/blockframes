@@ -1,5 +1,3 @@
-export type Action = Record<string, unknown>; // TODO #9257 update with poc-waterfall model
-
 type Role = 'productor' | 'coProductor' | 'distributor' | 'salesAgent' | 'financier'; // TODO #9257 define & move to static-models
 
 export interface WaterfallPermissions {
@@ -17,17 +15,31 @@ export interface Version {
   blockIds: string[]
 }
 
+export function createVersion(params: Partial<Version> = {}) {
+  const version: Version = {
+    id: '',
+    name: '',
+    blockIds: [],
+    ...params
+  }
+
+  if (!version.name) version.name = version.id;
+  return version;
+}
+
 export interface Waterfall {
   id: string;
   versions: Version[]
   orgIds: string[]; // Orgs linked to waterfall, can read document if in it
 }
 
-export interface Block {
-  id: string;
-  timestamp: number;
-  name: string;
-  actions: Record<number, Action>
+export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
+  return {
+    id: '',
+    versions: [],
+    orgIds: [],
+    ...params,
+  }
 }
 
 export interface WaterfallBudget {

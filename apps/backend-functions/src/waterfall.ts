@@ -1,6 +1,6 @@
 import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 import * as admin from 'firebase-admin';
-import { Block, Waterfall } from '@blockframes/waterfall/waterfall';
+import { Block, Waterfall } from '@blockframes/model';
 import { waterfall } from '@blockframes/waterfall/main';
 import { toDate } from '@blockframes/firebase-utils/firebase-utils';
 

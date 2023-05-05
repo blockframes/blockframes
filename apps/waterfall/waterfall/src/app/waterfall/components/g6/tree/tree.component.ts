@@ -4,7 +4,7 @@ import { TreeGraph, TreeGraphData } from '@antv/g6';
 import { setupTreeGraph } from './../utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { sha1 } from 'object-hash';
-import { Block, Version, Waterfall } from '@blockframes/waterfall/waterfall';
+import { Block, Version, Waterfall } from '@blockframes/model';
 import { BlockService } from '@blockframes/waterfall/block.service';
 
 
