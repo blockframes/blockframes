@@ -1,0 +1,15 @@
+
+<h2>waterfall : {{ waterfallId }} </h2>
+<main>
+  <section *rxFor="let story of stories">
+    <h3>{{ story.version.name }}</h3>
+    <p>{{ story.version.description }}</p>
+    <waterfall-g6-graph [tree]="story.waterfall" [hideDetails]="true"></waterfall-g6-graph>
+    <ul>
+      <li *rxFor="let org of story.waterfall.state.orgs | keyvalue">
+        <b>{{org.key}}</b> revenue : <b [class]="diff(org.value, stories[0].waterfall.state)">{{ org.value.revenu | number: '1.0-0' }}</b>
+      </li>
+    </ul>
+  </section>
+</main>
+<waterfall-g6-tree *rxIf="waterfall" [waterfall]="waterfall"></waterfall-g6-tree>
