@@ -12,7 +12,7 @@ import { debounceTime, switchMap, startWith, distinctUntilChanged, tap } from 'r
 
 import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 import { StoreStatus, AlgoliaMovie, MovieSearch, MovieAvailsSearch } from '@blockframes/model';
-import { decodeUrl, encodeUrl } from "@blockframes/utils/form/form-state-url-encoder";
+import { decodeAvailsSearchUrl, encodeAvailsSearchUrl } from "@blockframes/utils/form/form-state-url-encoder";
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { AnalyticsService } from '@blockframes/analytics/service';
@@ -62,11 +62,11 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
         const currentSearch = JSON.stringify(search);
         if (this.previousSearch !== currentSearch && this.searchForm.page.value !== 0) {
           this.searchForm.page.setValue(0, { onlySelf: false, emitEvent: false });
-          encodeUrl<MovieAvailsSearch>(this.router, this.route, { search: this.searchForm.value });
+          encodeAvailsSearchUrl(this.router, this.route, { search: this.searchForm.value });
         }
         this.previousSearch = currentSearch;
       }),
-      switchMap(async () => [await this.searchForm.search(true), await this.searchForm.search(true, { hitsPerPage: this.pdfService.exportLimit, page: 0 })]),
+      switchMap(async () => [await this.searchForm.search(), await this.searchForm.search({ hitsPerPage: this.pdfService.exportLimit, page: 0 })]),
       tap(([res]) => this.nbHits = res.nbHits),
     ).subscribe(([movies, moviesToExport]) => {
       this.movieIds = moviesToExport.hits.map(m => m.objectID);
@@ -82,14 +82,13 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const decodedData = decodeUrl<MovieAvailsSearch>(this.route);
-    this.load(decodedData);
+    this.load(decodeAvailsSearchUrl(this.route));
 
     const sub = this.searchForm.valueChanges.pipe(
       debounceTime(1000),
     ).subscribe(search => {
       this.analyticsService.addTitleFilter({ search }, 'marketplace', 'filteredTitles');
-      return encodeUrl<MovieAvailsSearch>(this.router, this.route, { search });
+      return encodeAvailsSearchUrl(this.router, this.route, { search });
     });
     this.subs.push(sub);
   }
@@ -130,13 +129,6 @@ export class ListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   load(savedSearch: MovieAvailsSearch) {
-    // Retro compatibility for old filters (see issue #9243)
-    const minReleaseYear = (savedSearch?.search as any)?.minReleaseYear as number;
-    if(minReleaseYear) {
-      savedSearch.search.releaseYear = { min: minReleaseYear, max: null };
-      delete (savedSearch.search as any).minReleaseYear;
-    }
-
     this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
     this.analyticsService.addTitleFilter({ search: this.searchForm.value }, 'marketplace', 'filteredTitles', true);
   }

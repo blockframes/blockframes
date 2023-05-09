@@ -17,7 +17,8 @@ import {
   PublicUser,
   AnonymousCredentials,
   filterOwnerEvents,
-  deletedIdentifier
+  deletedIdentifier,
+  maxBudget
 } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -325,17 +326,17 @@ export class UsersComponent implements OnInit {
     const exportedRows = [];
     for (const titleSearch of all) {
       const user = users.find(u => u.uid === titleSearch._meta.createdBy);
-      const org = this.orgs.find(o => o.id === user.orgId);
+      const org = this.orgs.find(o => o.id === user?.orgId);
       const availsSearch = titleSearch.meta.search?.avails as AvailsFilter;
       const search = titleSearch.meta.search?.search;
 
       const row = {
         // Common
         uid: titleSearch._meta.createdBy,
-        user: user ? displayName(user) : deletedIdentifier.user, 
-        email: user.email,
-        orgId: user.orgId,
-        'org name': org ? org.name : deletedIdentifier.org, 
+        user: user ? displayName(user) : deletedIdentifier.user,
+        email: user?.email ?? '--',
+        orgId: user?.orgId ?? '--',
+        'org name': org ? org.name : deletedIdentifier.org,
         date: titleSearch._meta.createdAt,
         'event name': titleSearch.name,
         app: titleSearch._meta.createdFrom,
@@ -378,14 +379,9 @@ export class UsersComponent implements OnInit {
         row.version = `${search?.languages?.versions.caption ? 'captioned ' : ''}${search?.languages?.versions.dubbed ? 'dubbed ' : ''}${search?.languages?.versions.subtitle ? 'subtitled ' : ''}${search?.languages?.versions.original ? 'original' : ''}`;
         row['festival selection'] = toLabel(search?.festivals ?? [], 'festival');
         row['qualifications'] = toLabel(search?.certifications, 'certifications');
-        const minReleaseYear = (search as any)?.minReleaseYear as number; //retrocompatibility (see issue #9243)
-        if (minReleaseYear) {
-          row['min release year'] = minReleaseYear.toFixed(0) ?? '--';
-        } else {
-          row['min release year'] = search?.releaseYear?.min ? search.releaseYear.min.toFixed(0) : '--';
-        }
+        row['min release year'] = search?.releaseYear?.min ? search.releaseYear.min.toFixed(0) : '--';
         row['max release year'] = search?.releaseYear?.max ? search.releaseYear.max.toFixed(0) : '--';
-        row['min budget'] = search?.minBudget.toFixed(0) ?? '--';
+        row['min budget'] = search?.minBudget ? (maxBudget - search.minBudget).toFixed(0) : '--';
       }
 
       // Avails Search

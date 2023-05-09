@@ -75,9 +75,9 @@ export const expectedContract: Partial<Contract> = {
 
 export const expectedTerm = {
   territories: [
-    //all territories in Europe and Latin America, plus Nepal
-    territoriesGroup.map(group => (group.label === 'Europe' || group.label === 'Latin America') && group.items).filter(Boolean),
+    // Nepal plus all territories in Europe and Latin America 
     'nepal',
+    territoriesGroup.map(group => (group.label === 'Europe' || group.label === 'Latin America') && group.items).filter(Boolean)
   ].flat(2),
   medias: ['payTv', 'freeTv', 'payPerView', 'rental', 'festival'],
   languages: {

@@ -47,7 +47,8 @@ import {
   festival,
   movieNoteRoles,
   releaseMedias,
-  screenerTypes
+  screenerTypes,
+  territoriesISOA2
 } from './static-model';
 
 export type App = typeof app[number];
@@ -157,6 +158,8 @@ export type UnitBox = keyof typeof unitBox;
 
 export type Territory = keyof typeof territories;
 export type TerritoryValue = typeof territories[Territory];
+type TerritoryISOA2 = keyof typeof territoriesISOA2;
+export type TerritoryISOA2Value = typeof territoriesISOA2[TerritoryISOA2];
 export type TerritoryISOA3 = keyof typeof territoriesISOA3;
 export type TerritoryISOA3Value = typeof territoriesISOA3[TerritoryISOA3];
 

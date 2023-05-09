@@ -33,6 +33,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { RequestScreeningModule } from '@blockframes/event/components/request-screening/request-screening.module';
 import { MinMaxFilterModule } from '@blockframes/movie/form/filters/min-max/min-max.module';
 import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -54,6 +55,7 @@ import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/gro
     RequestScreeningModule,
     MinMaxFilterModule,
     StaticGroupModule,
+    StaticSelectModule,
 
     // Material
     MatIconModule,

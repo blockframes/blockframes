@@ -234,15 +234,15 @@ export const languages = {
 export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, BluRay)' | 'Festivals';
 
 export type TerritoryGroup =
-  | 'Europe'
-  | 'CIS'
   | 'Africa'
-  | 'North America'
-  | 'Latin America'
+  | 'Asia'
   | 'Caribbean'
-  | 'Oceania'
+  | 'CIS'
+  | 'Europe'
+  | 'Latin America'
   | 'Middle East'
-  | 'Asia';
+  | 'North America'
+  | 'Oceania';
 
 export const medias = {
   payTv: 'Pay TV',
@@ -507,7 +507,7 @@ export const festival = {
   venice: 'Venice International Film Festival',
 } as const
 
-// Please keep territories' values in an alphabetic order !
+// Please keep territories' values in an alphabetic order and in sync with territoriesISOA2 and territoriesISOA3
 export const territories = {
   world: 'World',
   "aland-islands": "Åland Islands",
@@ -753,9 +753,11 @@ export const territories = {
   zimbabwe: "Zimbabwe",
 } as const
 
+// Please keep territories' values in an alphabetic order and in sync with territories and territoriesISOA3
 export const territoriesISOA2 = {
   world: '',
   afghanistan: 'AF',
+  'aland-islands': 'AX',
   albania: 'AL',
   algeria: 'DZ',
   'american-samoa': 'AS',
@@ -810,7 +812,6 @@ export const territoriesISOA2 = {
   cyprus: 'CY',
   'northern-cyprus': '-97',
   czech: 'CZ',
-  'ivory-coast-cote-d-ivoire': 'CI',
   denmark: 'DK',
   djibouti: 'DJ',
   dominica: 'DM',
@@ -859,6 +860,7 @@ export const territoriesISOA2 = {
   'isle-of-man': 'IM',
   israel: 'IL',
   italy: 'IT',
+  'ivory-coast-cote-d-ivoire': 'CI',
   jamaica: 'JM',
   japan: 'JP',
   jersey: 'JE',
@@ -994,12 +996,13 @@ export const territoriesISOA2 = {
   yemen: 'YE',
   zambia: 'ZM',
   zimbabwe: 'ZW',
-  'aland-islands': 'AX'
 } as const
 
+// Please keep territories' values in an alphabetic order and in sync with territories and territoriesISOA2
 export const territoriesISOA3 = {
   world: '',
   afghanistan: 'AFG',
+  'aland-islands': 'ALA',
   albania: 'ALB',
   algeria: 'DZA',
   'american-samoa': 'ASM',
@@ -1054,7 +1057,6 @@ export const territoriesISOA3 = {
   cyprus: 'CYP',
   'northern-cyprus': '-97',
   czech: 'CZE',
-  'ivory-coast-cote-d-ivoire': 'CIV',
   denmark: 'DNK',
   djibouti: 'DJI',
   dominica: 'DMA',
@@ -1103,6 +1105,7 @@ export const territoriesISOA3 = {
   'isle-of-man': 'IMN',
   israel: 'ISR',
   italy: 'ITA',
+  'ivory-coast-cote-d-ivoire': 'CIV',
   jamaica: 'JAM',
   japan: 'JPN',
   jersey: 'JEY',
@@ -1237,7 +1240,6 @@ export const territoriesISOA3 = {
   yemen: 'YEM',
   zambia: 'ZMB',
   zimbabwe: 'ZWE',
-  'aland-islands': 'ALA'
 } as const
 
 export const months = {
@@ -1315,6 +1317,15 @@ const movieFormFields = {
   delivery: 'Files',
 } as const;
 
+export const movieSearchableElements = {
+  'title.international': 'International Title',
+  'title.original': 'Original Title',
+  directors: 'Director',
+  keywords: 'Keywords',
+} as const;
+
+export type MovieSearchableElements = keyof typeof movieSearchableElements;
+
 export const staticModel = {
   budgetRange,
   contractStatus,
@@ -1362,7 +1373,8 @@ export const staticModel = {
   appName,
   offerStatus,
   movieFormFields,
-  accessibility
+  accessibility,
+  movieSearchableElements
 };
 
 export const emailErrorCode = ['E01-unauthorized', 'E02-general-error', 'E03-missing-api-key', 'E04-no-template-available'] as const;

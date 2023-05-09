@@ -33,6 +33,7 @@ import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.m
 import { FormContentTypeModule } from '@blockframes/ui/form/content-type/content-type.module';
 import { MinMaxFilterModule } from '@blockframes/movie/form/filters/min-max/min-max.module';
 import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -54,6 +55,7 @@ import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/gro
     FormContentTypeModule,
     MinMaxFilterModule,
     StaticGroupModule,
+    StaticSelectModule,
 
     // Material
     MatIconModule,

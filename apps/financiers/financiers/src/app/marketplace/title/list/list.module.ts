@@ -31,6 +31,7 @@ import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/
 import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
 import { CampaignPipeModule } from '@blockframes/campaign/pipes';
+import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -49,6 +50,7 @@ import { CampaignPipeModule } from '@blockframes/campaign/pipes';
     BudgetFilterModule,
     StaticCheckBoxesModule,
     CampaignPipeModule,
+    StaticGroupModule,
   
     // Material
     MatIconModule,
