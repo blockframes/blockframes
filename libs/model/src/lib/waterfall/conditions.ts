@@ -159,7 +159,6 @@ export const isConditionGroup = (condition: Condition | ConditionGroup): conditi
 
 interface ConditionResult {
   checked: boolean;
-  blocked: boolean;
 }
 
 function runCondition(ctx: ConditionContext, condition: Condition) {
@@ -168,32 +167,26 @@ function runCondition(ctx: ConditionContext, condition: Condition) {
 }
 
 function checkGroupCondition(ctx: ConditionContext, group: ConditionGroup): ConditionResult {
-  const { operator, conditions: allConditions, blocking } = group;
-  if (!allConditions.length) return { checked: true, blocked: false };
+  const { operator, conditions: allConditions } = group;
+  if (!allConditions.length) return { checked: true };
   const result: ConditionResult[] = [];
   for (const condition of allConditions) {
     if (isConditionGroup(condition)) {
       const { checked } = checkGroupCondition(ctx, condition);
-      const blocked = !checked && !!condition.blocking;
-      result.push({ checked, blocked });
+      result.push({ checked });
     } else {
       // TODO: condition should return false when condition not ready...
       const checked = runCondition(ctx, condition);
-      const blocked = !checked && !!condition.payload.blocking;
-      result.push({ checked, blocked });
+      result.push({ checked });
     }
   }
 
   if (operator === 'AND') {
     const checked = result.every(r => r.checked);
-    const blocked = result.some(r => !r.checked && r.blocked);
-    const groupBlocked = blocking && !checked;
-    return { checked, blocked: blocked || groupBlocked };
+    return { checked };
   } else {
     const checked = result.some(r => r.checked);
-    const blocked = result.every(r => !r.checked && r.blocked);
-    const groupBlocked = blocking && !checked;
-    return { checked, blocked: blocked || groupBlocked };
+    return { checked };
   }
 }
 
@@ -204,20 +197,15 @@ export const condition = <N extends ConditionName>(name: N, payload: ConditionLi
 export interface ConditionGroup {
   operator: 'OR' | 'AND';
   conditions: (Condition | ConditionGroup)[];
-  blocking: boolean;
 }
 
-export function and(conditions: (Condition | ConditionGroup)[], config?: { blocking: boolean }): ConditionGroup {
-  return { operator: 'AND', conditions, blocking: !!config?.blocking };
+export function and(conditions: (Condition | ConditionGroup)[]): ConditionGroup {
+  return { operator: 'AND', conditions };
 }
-export function or(conditions: (Condition | ConditionGroup)[], config?: { blocking: boolean }): ConditionGroup {
-  return { operator: 'OR', conditions, blocking: !!config?.blocking };
+export function or(conditions: (Condition | ConditionGroup)[]): ConditionGroup {
+  return { operator: 'OR', conditions };
 }
 
-
-interface BaseCondition {
-  blocking?: boolean;
-}
 
 ///////////////
 // REFERENCE //
@@ -248,7 +236,7 @@ export function toTargetValue(state: TitleState, target: TargetValue) {
   }
 }
 
-interface OrgRevenuCondition extends BaseCondition {
+interface OrgRevenuCondition {
   orgId: string;
   target: TargetValue;
   operator: NumberOperator;
@@ -268,7 +256,7 @@ function orgTurnover(ctx: ConditionContext, payload: OrgRevenuCondition) {
   return numericOperator(operator, org.turnover, targetValue);
 }
 
-interface PoolCondition extends BaseCondition {
+interface PoolCondition {
   pool: string;
   target: TargetValue;
   operator: NumberOperator;
@@ -287,7 +275,7 @@ function poolTurnover(ctx: ConditionContext, payload: PoolCondition) {
   const targetValue = toTargetValue(state, target);
   return numericOperator(operator, currentValue, targetValue);
 }
-interface RightCondition extends BaseCondition {
+interface RightCondition {
   rightId: string;
   target: TargetValue;
   operator: NumberOperator;
@@ -309,7 +297,7 @@ function rightTurnover(ctx: ConditionContext, payload: RightCondition) {
   return numericOperator(operator, right.turnover, targetValue);
 }
 
-interface GroupCondition extends BaseCondition {
+interface GroupCondition {
   groupId: string;
   target: TargetValue;
   operator: NumberOperator;
@@ -335,7 +323,7 @@ function groupTurnover(ctx: ConditionContext, payload: GroupCondition) {
 // EVENT //
 ///////////
 
-interface EventCondition extends BaseCondition {
+interface EventCondition {
   eventId: string;
   value: unknown;
   operator: NumberOperator | ArrayOperator;
@@ -397,7 +385,7 @@ function event(ctx: ConditionContext, payload: EventCondition) {
 // DURATION //
 //////////////
 
-interface ConditionDuration extends BaseCondition {
+interface ConditionDuration {
   from?: Date;
   to?: Date;
 }
@@ -433,7 +421,7 @@ function contractDate(ctx: ConditionContext, payload: ConditionDuration) {
 // INCOME AMOUNT //
 ///////////////////
 
-interface ConditionAmount extends BaseCondition {
+interface ConditionAmount {
   operator: NumberOperator;
   target: number;
 }
@@ -444,7 +432,7 @@ function amount(ctx: ConditionContext, payload: ConditionAmount) {
 }
 
 
-interface ConditionTerms extends BaseCondition {
+interface ConditionTerms {
   operator: ArrayOperator;
   type: 'territory' | 'media';
   list: string[];
@@ -459,7 +447,7 @@ function terms(ctx: ConditionContext, payload: ConditionTerms) {
 }
 
 
-interface ConditionTermsLength extends BaseCondition {
+interface ConditionTermsLength {
   operator: NumberOperator;
   type: 'territory' | 'media';
   target: number;
@@ -471,7 +459,7 @@ function termsLength(ctx: ConditionContext, payload: ConditionTermsLength) {
   return numericOperator(operator, terms.length, target);
 }
 
-interface ConditionContract extends BaseCondition {
+interface ConditionContract {
   operator: ArrayOperator;
   contractIds: string[];
 }
@@ -485,7 +473,7 @@ function contract(ctx: ConditionContext, payload: ConditionContract) {
   throw new Error('Terms condition should have at least the operators "in" or "not-in"');
 }
 
-interface ConditionContractAmount extends BaseCondition {
+interface ConditionContractAmount {
   operator: NumberOperator;
   target: number;
 }
@@ -503,7 +491,7 @@ function contractAmount(ctx: ConditionContext, payload: ConditionContractAmount)
 // INTEREST //
 //////////////
 
-interface ConditionInterest extends BaseCondition {
+interface ConditionInterest {
   orgId: string;
   rate: number;
   isComposite?: boolean;
