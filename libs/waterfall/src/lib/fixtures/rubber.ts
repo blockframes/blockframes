@@ -23,17 +23,17 @@ export const actions: Action[] = [
   action('prepend', { id: 'rnpp_arte', orgId: 'arte', next: 'rnpp', percent: 0.2, pools: ['rnpp'], conditions: and([
     condition('contract', { operator: 'not-in', contractIds: ['cnc_support<->rnpp'] }),
     condition('poolRevenu', { pool: 'rnpp', operator: '<', target: 70_000 }),
-  ], { blocking: true }) }),
+  ]) }),
   
   action('prepend', { id: 'support_arte', orgId: 'arte', next: 'rnpp', percent: 0.2, pools: ['rnpp'], conditions: and([
     condition('rightTurnover', { rightId: 'support_arte', operator: '>=', target: 50_000 }),
     condition('contract', { operator: 'in', contractIds: ['cnc_support<->rnpp'] }),
     condition('poolRevenu', { pool: 'rnpp', operator: '<', target: 70_000 }), // rnpp < 70_000 : arte
-  ], { blocking: true }) }),
+  ]) }),
   
   action('prepend', { id: 'rnpp_2_arte', orgId: 'arte', next: ['rnpp_arte', 'support_arte'], percent: 0.15, pools: ['rnpp'], conditions: and([
-    condition('poolRevenu', { pool: 'rnpp', operator: '<', target: 120_000, blocking: true }),
-  ], { blocking: true }) }),
+    condition('poolRevenu', { pool: 'rnpp', operator: '<', target: 120_000 }),
+  ]) }),
   
   action('prepend', { id: 'rnpp_3_arte', orgId: 'arte', next: 'rnpp_2_arte', percent: 0.1 }),
 
@@ -106,12 +106,12 @@ export const actions: Action[] = [
   action('appendHorizontal', { id: 'row_author', blameId: 'realistism', previous: 'rnpp', children: [
     { type: 'right', id: 'row_all_except_tv_author', orgId: 'author', percent: 0.005, conditions: and([
       condition('orgTurnover', { orgId: 'author', operator: '>=', target: 11_000 }),
-      condition('terms', { type: 'media', operator: 'not-in', list: ['tv'], blocking: true }),
+      condition('terms', { type: 'media', operator: 'not-in', list: ['tv'] }),
     ])},
     { type: 'right', id: 'row_tv_author', orgId: 'author', percent: 0.01, conditions: and([
       condition('orgTurnover', { orgId: 'author', operator: '>=', target: 11_000 }),
-      condition('terms', { type: 'media', operator: 'in', list: ['tv'], blocking: true }),
-      condition('terms', { type: 'territory', operator: 'not-in', list: ['france', 'germany'], blocking: true }),
+      condition('terms', { type: 'media', operator: 'in', list: ['tv'] }),
+      condition('terms', { type: 'territory', operator: 'not-in', list: ['france', 'germany'] }),
       // TODO: add not-in sacd dynamic terms -> Update Right
     ])}
   ]}),
