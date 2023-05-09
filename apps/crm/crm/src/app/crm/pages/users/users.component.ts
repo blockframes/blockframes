@@ -325,17 +325,17 @@ export class UsersComponent implements OnInit {
     const exportedRows = [];
     for (const titleSearch of all) {
       const user = users.find(u => u.uid === titleSearch._meta.createdBy);
-      const org = this.orgs.find(o => o.id === user.orgId);
+      const org = this.orgs.find(o => o.id === user?.orgId);
       const availsSearch = titleSearch.meta.search?.avails as AvailsFilter;
       const search = titleSearch.meta.search?.search;
 
       const row = {
         // Common
         uid: titleSearch._meta.createdBy,
-        user: user ? displayName(user) : deletedIdentifier.user, 
-        email: user.email,
-        orgId: user.orgId,
-        'org name': org ? org.name : deletedIdentifier.org, 
+        user: user ? displayName(user) : deletedIdentifier.user,
+        email: user?.email ?? '--',
+        orgId: user?.orgId ?? '--',
+        'org name': org ? org.name : deletedIdentifier.org,
         date: titleSearch._meta.createdAt,
         'event name': titleSearch.name,
         app: titleSearch._meta.createdFrom,
