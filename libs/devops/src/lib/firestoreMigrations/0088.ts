@@ -1,6 +1,5 @@
 
 
-
 /**
  * Does nothing expect triggering algolia upgrade
  * @returns
