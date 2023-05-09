@@ -105,6 +105,7 @@ export interface AlgoliaMinMax {
   max: number;
 }
 
+export const maxBudget = 20000000;
 export interface MovieSearch extends AlgoliaSearch {
   storeStatus: StoreStatus[];
   genres: Genre[];

@@ -17,7 +17,8 @@ import {
   PublicUser,
   AnonymousCredentials,
   filterOwnerEvents,
-  deletedIdentifier
+  deletedIdentifier,
+  maxBudget
 } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -380,7 +381,7 @@ export class UsersComponent implements OnInit {
         row['qualifications'] = toLabel(search?.certifications, 'certifications');
         row['min release year'] = search?.releaseYear?.min ? search.releaseYear.min.toFixed(0) : '--';
         row['max release year'] = search?.releaseYear?.max ? search.releaseYear.max.toFixed(0) : '--';
-        row['min budget'] = search?.minBudget.toFixed(0) ?? '--';
+        row['min budget'] = search?.minBudget ? (maxBudget - search.minBudget).toFixed(0) : '--';
       }
 
       // Avails Search
