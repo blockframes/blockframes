@@ -1,9 +1,8 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
+import { maxBudget } from '@blockframes/model';
 import { Subscription } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
-
-export const max = 20000000;
 
 @Component({
   selector: '[form] filter-budget',
@@ -16,7 +15,7 @@ export class BudgetFilterComponent implements OnInit, OnDestroy {
   @Input() form: UntypedFormControl; // FormControl of number
   private sub: Subscription;
 
-  max = max;
+  max = maxBudget;
 
   ngOnInit() {
     this.sub = this.form.valueChanges.pipe(
@@ -30,7 +29,7 @@ export class BudgetFilterComponent implements OnInit, OnDestroy {
   }
 
   formatLabel(value: number) {
-    const minBudget = max - value;
+    const minBudget = this.max - value;
     if (minBudget >= 1000 && minBudget < 1000000) {
       return Math.round(minBudget / 1000) + 'k';
     } else if (minBudget >= 1000000) {
