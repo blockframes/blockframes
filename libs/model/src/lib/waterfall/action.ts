@@ -6,7 +6,7 @@ import {
   TitleState,
   OrgState,
   createTransfer,
-  createGroup,
+  createHorizontal,
   createVertical,
   createContract,
   Operation,
@@ -179,9 +179,9 @@ interface AppendHorizontal extends AppendGroup {
 
 function appendHorizontal(state: TitleState, payload: AppendHorizontal) {
   createGroupChildren(state, payload.children);
-  state.horizontals[payload.id] = createGroup({
+  state.horizontals[payload.id] = createHorizontal({
     id: payload.id,
-    percent: payload.percent ?? 1,
+    percent: payload.percent,
     previous: toArray(payload.previous),
     children: payload.children,
     blameId: payload.blameId,
@@ -201,9 +201,9 @@ interface PrependHorizontal extends PrependGroup {
 function prependHorizontal(state: TitleState, payload: PrependHorizontal) {
   createGroupChildren(state, payload.children);
   prependNode(state, toArray(payload.next), payload.id);
-  state.horizontals[payload.id] = createGroup({
+  state.horizontals[payload.id] = createHorizontal({
     id: payload.id,
-    percent: payload.percent ?? 1,
+    percent: payload.percent,
     previous: [],
     children: payload.children,
     blameId: payload.blameId,
@@ -342,7 +342,7 @@ function createGroupChildren(state: TitleState, children: GroupChild[]) {
       }
     }
     if (child.type === 'horizontal') {
-      state.horizontals[child.id] = createGroup(child);
+      state.horizontals[child.id] = createHorizontal(child);
       createGroupChildren(state, child.children);
     }
     if (child.type === 'vertical') {

@@ -56,10 +56,13 @@ interface CreateGroup {
   percent?: number;
 }
 
+type CreateVertical = CreateGroup;
+
 interface CreateHorizontal extends CreateGroup {
   blameId: string;
 }
-export function createGroup(group: CreateHorizontal): HorizontalState {
+
+export function createHorizontal(group: CreateHorizontal): HorizontalState {
   const { id, children, previous, percent } = group;
   return {
     id,
@@ -72,7 +75,7 @@ export function createGroup(group: CreateHorizontal): HorizontalState {
   }
 }
 
-export function createVertical(group: CreateGroup): VerticalState {
+export function createVertical(group: CreateVertical): VerticalState {
   const { id, children, previous, percent } = group;
   return {
     id,
