@@ -70,11 +70,11 @@ const routes: Routes = [{
       ]
     },
     {
-      path: 'new-film',
+      path: 'title',
       children: [
         {
           path: '',
-          loadChildren: () => import('./new-film/new-film.module').then(m => m.NewFilmModule),
+          loadChildren: () => import('./title/title.module').then(m => m.TitleModule),
         }
       ]
     },

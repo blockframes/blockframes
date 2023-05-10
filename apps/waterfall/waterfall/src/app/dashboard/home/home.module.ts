@@ -1,7 +1,9 @@
 // Angular
-import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 // Pages
 import { HomeComponent } from './home.component';
@@ -10,6 +12,9 @@ import { HomeComponent } from './home.component';
   declarations: [HomeComponent],
   imports: [
     CommonModule,
+
+    MatIconModule,
+    MatButtonModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: HomeComponent }])

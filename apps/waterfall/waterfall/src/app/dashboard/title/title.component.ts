@@ -7,14 +7,15 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { FormList } from '@blockframes/utils/form';
 
 @Component({
-  selector: 'dashboard-new-film',
-  templateUrl: './new-film.component.html',
-  styleUrls: ['./new-film.component.scss'],
+  selector: 'dashboard-title',
+  templateUrl: './title.component.html',
+  styleUrls: ['./title.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewFilmComponent {
+export class TitleComponent {
  
   countries = FormList.factory<Territory>([]);
+
   constructor(
     private dynTitle: DynamicTitleService,
   ) {
