@@ -26,8 +26,6 @@ import { Intercom } from 'ng-intercom';
 export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, OnDestroy {
   public availsForm = this.shell.avails.calendarForm;
 
-  public org$ = this.shell.movieOrg$;
-
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.status));
 
   private sub: Subscription;
