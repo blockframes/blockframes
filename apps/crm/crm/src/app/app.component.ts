@@ -4,7 +4,7 @@ import { IconService } from '@blockframes/ui/icon.service';
 
 @Component({
   selector: 'crm-root',
-  template: '<router-outlet></router-outlet><app-version></app-version>',
+  template: '<router-outlet></router-outlet><app-utils></app-utils>',
   styles: [':host{ display: block; height: 100vh; }'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

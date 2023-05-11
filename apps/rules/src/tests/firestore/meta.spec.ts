@@ -1,6 +1,7 @@
 ﻿import { assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
 import { deleteApp, getApps } from 'firebase/app';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
+import { algoliaAnonymousSearchKeyDoc, algoliaSearchKeyDoc, appVersionDoc, metaDoc } from '@blockframes/utils/maintenance';
 
 describe('_META Rules Tests', () => {
   const projectId = `metarules-spec-${Date.now()}`;
@@ -14,22 +15,22 @@ describe('_META Rules Tests', () => {
     afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should be able to read _META/_MAINTENANCE document', async () => {
-      const metaDocRef = db.doc('_META/_MAINTENANCE');
+      const metaDocRef = db.doc(metaDoc);
       await assertSucceeds(metaDocRef.get());
     });
 
     test('should be able to read _META/_APP document', async () => {
-      const metaDocRef = db.doc('_META/_APP');
+      const metaDocRef = db.doc(appVersionDoc);
       await assertSucceeds(metaDocRef.get());
     });
 
     test('should not be able to read _META/_ALGOLIA_ANONYMOUS_SEARCH_KEY document', async () => {
-      const metaDocRef = db.doc('_META/_ALGOLIA_ANONYMOUS_SEARCH_KEY');
+      const metaDocRef = db.doc(algoliaAnonymousSearchKeyDoc);
       await assertFails(metaDocRef.get());
     });
 
     test('should not be able to read _META/_ALGOLIA_SEARCH_KEY document', async () => {
-      const metaDocRef = db.doc('_META/_ALGOLIA_SEARCH_KEY');
+      const metaDocRef = db.doc(algoliaSearchKeyDoc);
       await assertFails(metaDocRef.get());
     });
   });
@@ -42,12 +43,12 @@ describe('_META Rules Tests', () => {
     afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should be able to read _META/_ALGOLIA_ANONYMOUS_SEARCH_KEY document', async () => {
-      const metaDocRef = db.doc('_META/_ALGOLIA_ANONYMOUS_SEARCH_KEY');
+      const metaDocRef = db.doc(algoliaAnonymousSearchKeyDoc);
       await assertSucceeds(metaDocRef.get());
     });
 
     test('should not be able to read _META/_ALGOLIA_SEARCH_KEY document', async () => {
-      const metaDocRef = db.doc('_META/_ALGOLIA_SEARCH_KEY');
+      const metaDocRef = db.doc(algoliaSearchKeyDoc);
       await assertFails(metaDocRef.get());
     });
   });
@@ -60,12 +61,12 @@ describe('_META Rules Tests', () => {
     afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should be able to read _META/_ALGOLIA_ANONYMOUS_SEARCH_KEY document', async () => {
-      const metaDocRef = db.doc('_META/_ALGOLIA_ANONYMOUS_SEARCH_KEY');
+      const metaDocRef = db.doc(algoliaAnonymousSearchKeyDoc);
       await assertSucceeds(metaDocRef.get());
     });
 
     test('should not be able to read _META/_ALGOLIA_SEARCH_KEY document', async () => {
-      const metaDocRef = db.doc('_META/_ALGOLIA_SEARCH_KEY');
+      const metaDocRef = db.doc(algoliaSearchKeyDoc);
       await assertFails(metaDocRef.get());
     });
   });
@@ -78,32 +79,32 @@ describe('_META Rules Tests', () => {
     afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
     test('should not be able to update _META/_MAINTENANCE document', async () => {
-      const metaDocRef = db.doc('_META/_MAINTENANCE');
+      const metaDocRef = db.doc(metaDoc);
       await assertFails(metaDocRef.update({ note: 'document updated' }));
     });
 
     test('should not be able to update _META/_APP document', async () => {
-      const metaDocRef = db.doc('_META/_APP');
+      const metaDocRef = db.doc(appVersionDoc);
       await assertFails(metaDocRef.update({ note: 'document updated' }));
     });
 
     test('should not be able to update _META/_ALGOLIA_ANONYMOUS_SEARCH_KEY document', async () => {
-      const metaDocRef = db.doc('_META/_ALGOLIA_ANONYMOUS_SEARCH_KEY');
+      const metaDocRef = db.doc(algoliaAnonymousSearchKeyDoc);
       await assertFails(metaDocRef.update({ note: 'document updated' }));
     });
 
     test('should not be able to update _META/_ALGOLIA_SEARCH_KEY document', async () => {
-      const metaDocRef = db.doc('_META/_ALGOLIA_SEARCH_KEY');
+      const metaDocRef = db.doc(algoliaSearchKeyDoc);
       await assertFails(metaDocRef.update({ note: 'document updated' }));
     });
 
     test('should be able to read _META/_ALGOLIA_ANONYMOUS_SEARCH_KEY document', async () => {
-      const metaDocRef = db.doc('_META/_ALGOLIA_ANONYMOUS_SEARCH_KEY');
+      const metaDocRef = db.doc(algoliaAnonymousSearchKeyDoc);
       await assertSucceeds(metaDocRef.get());
     });
 
     test('should be able to read _META/_ALGOLIA_SEARCH_KEY document', async () => {
-      const metaDocRef = db.doc('_META/_ALGOLIA_SEARCH_KEY');
+      const metaDocRef = db.doc(algoliaSearchKeyDoc);
       await assertSucceeds(metaDocRef.get());
     });
 

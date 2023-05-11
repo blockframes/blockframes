@@ -140,6 +140,10 @@ export async function upgrade() {
 
 export async function upgradeEmulators() {
   const db = getFirestoreEmulator();
+  
+  await updateAppVersion(db, appVersion);
+  await updateAlgoliaSearchKeys(db);
+
   if (!await isMigrationRequired(db)) {
     console.log('Skipping upgrade because migration is not required...');
     return;

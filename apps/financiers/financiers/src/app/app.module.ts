@@ -36,7 +36,7 @@ import { getBrowserWithVersion } from '@blockframes/utils/browser/utils';
 import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { EMULATORS_CONFIG, setupEmulators } from '@blockframes/utils/emulator-front-setup';
-import { VersionModule } from '@blockframes/utils/version/version.module';
+import { AppUtilsModule } from '@blockframes/utils/app-utils/app-utils.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -59,7 +59,7 @@ import { VersionModule } from '@blockframes/utils/version/version.module';
 
     // Blockframes
     CookieBannerModule,
-    VersionModule
+    AppUtilsModule
   ],
   providers: [
     { provide: APP, useValue: 'financiers' },

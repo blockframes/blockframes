@@ -9,6 +9,7 @@ import { last } from 'lodash';
 import { exportFirestoreToBucketBeta, getFirestoreExportDirname } from './firebase-utils';
 import { isMigrationRequired } from './tools';
 import { getDb, getStorage } from '@blockframes/firebase-utils/initialize';
+import { ALGOLIA_ANONYMOUS_SEARCH_KEY, ALGOLIA_SEARCH_KEY } from '@blockframes/utils/maintenance';
 
 export const VERSION_ZERO = 2;
 
@@ -42,10 +43,8 @@ export async function updateAppVersion(db: Firestore, version: string) {
 }
 
 export async function updateAlgoliaSearchKeys(db: Firestore) {
-  const algoliaAnonymousSearchKey = process.env.ALGOLIA_ANONYMOUS_SEARCH_KEY;
-  const algoliaSearchKey = process.env.ALGOLIA_SEARCH_KEY;
-  await algoliaKeyRef(db, 'ALGOLIA_ANONYMOUS_SEARCH_KEY').set({ key: algoliaAnonymousSearchKey });
-  return algoliaKeyRef(db, 'ALGOLIA_SEARCH_KEY').set({ key: algoliaSearchKey });
+  await algoliaKeyRef(db, ALGOLIA_ANONYMOUS_SEARCH_KEY).set({ key: process.env.ALGOLIA_ANONYMOUS_SEARCH_KEY });
+  return algoliaKeyRef(db, ALGOLIA_SEARCH_KEY).set({ key: process.env.ALGOLIA_SEARCH_KEY });
 }
 
 export function selectAndOrderMigrations(afterVersion: number): IMigrationWithVersion[] {
