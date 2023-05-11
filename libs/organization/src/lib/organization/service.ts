@@ -20,7 +20,7 @@ import {
 import { PermissionsService } from '@blockframes/permissions/service';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { combineLatest, Observable, of } from 'rxjs';
-import { DocumentSnapshot, where } from 'firebase/firestore';
+import { DocumentSnapshot } from 'firebase/firestore';
 import { CallableFunctions, WriteOptions } from 'ngfire';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
@@ -74,12 +74,6 @@ export class OrganizationService extends BlockframesCollection<Organization> {
     private authService: AuthService,
   ) {
     super();
-  }
-
-  public async getOrgIdFromName(orgName: string) {
-    // @TODO #6908 a better solution for this should be found.
-    const [org] = await this.getValue([where('name', '==', orgName.trim())]);
-    return org?.id;
   }
 
   /**

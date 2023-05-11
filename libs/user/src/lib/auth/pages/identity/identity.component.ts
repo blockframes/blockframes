@@ -19,6 +19,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { where } from 'firebase/firestore';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { AlgoliaService } from '@blockframes/utils/algolia';
 
 @Component({
   selector: 'auth-identity',
@@ -50,6 +51,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private router: Router,
     private invitationService: InvitationService,
     private orgService: OrganizationService,
+    private algoliaService: AlgoliaService,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     @Optional() private intercom: Intercom,
@@ -63,12 +65,12 @@ export class IdentityComponent implements OnInit, OnDestroy {
     const existingUserWithoutDisplayName = !!this.authService.profile && !hasDisplayName(this.authService.profile);
     if (!this.authService.profile) {
       /**
-     * @dev This anonymous user is used to call "this.orgService.uniqueOrgName()"
-     * without forcing us to allow orgs collection reads for non-logged-in users in firestore rules
-     * Once the account is converted from anonymous to real, authState will remain as anonymous for a few seconds 
-     * (this explain the need to allow the anonymous sign-in for user update in firestore rules)
-     * #6908
-     */
+       * @dev This anonymous user is used to call "this.orgService.uniqueOrgName()"
+       * without forcing us to allow orgs collection reads for non-logged-in users in firestore rules
+       * Once the account is converted from anonymous to real, authState will remain as anonymous for a few seconds 
+       * (this explain the need to allow the anonymous sign-in for user update in firestore rules)
+       * #6908
+       */
       await this.authService.signInAnonymously();
     }
 
@@ -207,7 +209,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.isAnonymous = (await this.authService.user).isAnonymous;
 
       // Check if the org name is already existing
-      const orgId = await this.orgService.getOrgIdFromName(name);
+      const orgId = await this.algoliaService.getOrgIdFromName(name);
       if (orgId) {
         this.orgForm.get('name').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
@@ -350,7 +352,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const { name, addresses, activity, appAccess } = this.orgForm.value;
 
       // Check if the org name is already existing
-      const orgId = await this.orgService.getOrgIdFromName(name);
+      const orgId = await this.algoliaService.getOrgIdFromName(name);
       if (orgId) {
         this.orgForm.get('name').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });

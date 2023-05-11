@@ -18,6 +18,11 @@ describe('Organization Rules Tests', () => {
       await assertFails(orgDocRef.get());
     });
 
+    test('should not be able to list all orgs', async () => {
+      const allDocs = db.collection('orgs');
+      await assertFails(allDocs.get());
+    });
+
     test('should not be able to create document', async () => {
       const orgDocRef = db.doc('orgs/O007');
       await assertFails(orgDocRef.set({ status: 'pending' }));
@@ -66,8 +71,7 @@ describe('Organization Rules Tests', () => {
       await assertFails(orgDocRef.delete());
     });
 
-    // @TODO #6908 updated with userHasValidOrg() when a solution for this is found.
-    test.skip('should not be able to list all orgs', async () => {
+    test('should not be able to list all orgs', async () => {
       const allDocs = db.collection('orgs');
       await assertFails(allDocs.get());
     });
@@ -90,9 +94,9 @@ describe('Organization Rules Tests', () => {
       await assertSucceeds(orgDocRef.get());
     });
 
-    test('should be able to list all orgs', async () => {
+    test('should not be able to list all orgs', async () => {
       const allDocs = db.collection('orgs');
-      await assertSucceeds(allDocs.get());
+      await assertFails(allDocs.get());
     });
 
     test('doc status: pending, should be able to create document', async () => {
@@ -121,6 +125,11 @@ describe('Organization Rules Tests', () => {
     test('should be able to read own Org document', async () => {
       const orgDocRef = db.doc('orgs/O005');
       await assertSucceeds(orgDocRef.get());
+    });
+
+    test('should not be able to list all orgs', async () => { //
+      const allDocs = db.collection('orgs');
+      await assertFails(allDocs.get());
     });
 
     test('id ≠ orgId, should not be able to create document', async () => {
@@ -162,6 +171,20 @@ describe('Organization Rules Tests', () => {
         await assertSucceeds(orgRef.update({ note: 'document updated' }));
       });
     });
+  });
+
+  describe('With User member of valid org', () => {
+    beforeAll(async () => {
+      db = await initFirestoreApp(projectId, 'firestore.rules', testFixture, 'uid-user2', { firebase: { sign_in_provider: 'password' } });
+    });
+
+    afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
+
+    test('should be able to list all orgs', async () => { //
+      const allDocs = db.collection('orgs');
+      await assertSucceeds(allDocs.get());
+    });
+
   });
 
   describe('With User as Org Admin', () => {
