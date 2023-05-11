@@ -13,6 +13,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
+import { ScopeMultiselectModule } from '@blockframes/ui/static-autocomplete/scope/scope-multiselect.module';
 
 // Material
 
@@ -28,6 +29,7 @@ import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/chec
     ReactiveFormsModule,
     ChipsAutocompleteModule,
     StaticCheckBoxesModule,
+    ScopeMultiselectModule,
     FlexLayoutModule,
 
     // Material

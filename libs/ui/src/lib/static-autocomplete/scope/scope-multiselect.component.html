@@ -1,0 +1,17 @@
+<mat-form-field>
+  <input type="text" placeholder="Select Languages" matInput [matAutocomplete]="auto" [formControl]="control" />
+</mat-form-field>
+
+<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+  <mat-option *ngFor="let language of filteredLanguages | async" [value]="selectedLanguages">
+    <div (click)="optionClicked($event, language)">
+      <mat-checkbox
+        [checked]="selectedLanguages.includes(language)"
+        (change)="toggleSelection(language)"
+        (click)="$event.stopPropagation()"
+      >
+        {{ languagesObject[language] }}
+      </mat-checkbox>
+    </div>
+  </mat-option>
+</mat-autocomplete>
