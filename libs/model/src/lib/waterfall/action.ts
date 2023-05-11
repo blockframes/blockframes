@@ -6,7 +6,7 @@ import {
   TitleState,
   OrgState,
   createTransfer,
-  createGroup,
+  createHorizontal,
   createVertical,
   createContract,
   Operation,
@@ -120,7 +120,7 @@ function append(state: TitleState, payload: AppendRight) {
   state.rights[right.id] = right;
   state.orgs[right.orgId] ||= createOrg({ id: right.orgId });
   for (const pool of right.pools) {
-    state.pools[pool] ||= { revenu: 0, turnover: 0 };
+    state.pools[pool] ||= { revenu: 0, turnover: 0, shadowRevenu: 0 };
   }
   return right.id;
 }
@@ -135,7 +135,7 @@ function prepend(state: TitleState, payload: PrependRight) {
   state.rights[right.id] = right;
   state.orgs[right.orgId] ||= createOrg({ id: right.orgId });
   for (const pool of right.pools) {
-    state.pools[pool] ||= { revenu: 0, turnover: 0 };
+    state.pools[pool] ||= { revenu: 0, turnover: 0, shadowRevenu: 0 };
   }
   return right.id;
 }
@@ -179,9 +179,9 @@ interface AppendHorizontal extends AppendGroup {
 
 function appendHorizontal(state: TitleState, payload: AppendHorizontal) {
   createGroupChildren(state, payload.children);
-  state.horizontals[payload.id] = createGroup({
+  state.horizontals[payload.id] = createHorizontal({
     id: payload.id,
-    percent: payload.percent ?? 1,
+    percent: payload.percent,
     previous: toArray(payload.previous),
     children: payload.children,
     blameId: payload.blameId,
@@ -201,9 +201,9 @@ interface PrependHorizontal extends PrependGroup {
 function prependHorizontal(state: TitleState, payload: PrependHorizontal) {
   createGroupChildren(state, payload.children);
   prependNode(state, toArray(payload.next), payload.id);
-  state.horizontals[payload.id] = createGroup({
+  state.horizontals[payload.id] = createHorizontal({
     id: payload.id,
-    percent: payload.percent ?? 1,
+    percent: payload.percent,
     previous: [],
     children: payload.children,
     blameId: payload.blameId,
@@ -338,11 +338,11 @@ function createGroupChildren(state: TitleState, children: GroupChild[]) {
       state.rights[child.id] = createRight(child);
       state.orgs[child.orgId] ||= createOrg({ id: child.orgId });
       for (const pool of child.pools || []) {
-        state.pools[pool] ||= { revenu: 0, turnover: 0 };
+        state.pools[pool] ||= { revenu: 0, turnover: 0, shadowRevenu: 0 };
       }
     }
     if (child.type === 'horizontal') {
-      state.horizontals[child.id] = createGroup(child);
+      state.horizontals[child.id] = createHorizontal(child);
       createGroupChildren(state, child.children);
     }
     if (child.type === 'vertical') {
@@ -415,6 +415,7 @@ function income(state: TitleState, payload: IncomeAction) {
     for (const pool in pools) {
       if (!state.pools[pool]) throw new Error(`Pool "${pool}" doesn't exist`);
       state.pools[pool].revenu += pools[pool].revenuRate * amount;
+      state.pools[pool].shadowRevenu += pools[pool].shadowRevenuRate * amount;
       state.pools[pool].turnover += pools[pool].turnoverRate * amount;
     }
     for (const orgId in orgs) {
@@ -422,10 +423,6 @@ function income(state: TitleState, payload: IncomeAction) {
       state.orgs[orgId].revenu += orgs[orgId].revenuRate * amount;
       state.orgs[orgId].turnover += orgs[orgId].turnoverRate * amount;
 
-      // Income (TODO: is it useful ?)
-      state.orgs[orgId].incomes[incomeId] ||= { revenu: 0, turnover: 0 };
-      state.orgs[orgId].incomes[incomeId].revenu += state.orgs[orgId].revenu;
-      state.orgs[orgId].incomes[incomeId].turnover += state.orgs[orgId].turnover;
 
       // Operation
       if (orgs[orgId].revenuRate) {

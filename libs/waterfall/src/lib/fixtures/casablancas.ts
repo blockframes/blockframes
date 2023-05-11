@@ -134,10 +134,10 @@ export const actions: Action[] = [
   action('appendHorizontal', { id: 'france_tv_playtime', blameId: 'playtime', previous: 'expense_playtime', children: [
     { type: 'right', id: 'france_tv_10_playtime', orgId: 'playtime', percent: 0.10, conditions: and([
       condition('amount',  { operator: '>=', target: 50_000 })
-    ], { blocking: true })},
+    ])},
     { type: 'right', id: 'france_tv_15_playtime', orgId: 'playtime', percent: 0.15, conditions: and([
       condition('amount',  { operator: '<', target: 50_000 })
-    ], { blocking: true })}
+    ])}
   ]}),
 
 

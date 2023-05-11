@@ -94,10 +94,10 @@ export const actions: Action[] = [
   action('append', { id: 'bac_fr_com_vod', orgId: 'bac', previous: 'bac_fr_expense', percent: 0.5 }),
   action('appendHorizontal', { id: 'bac_fr_com_svod', blameId: 'tat', previous: 'bac_fr_expense', children: [
     { type: 'right', id: 'bac_fr_com_svod_0', orgId: 'bac', percent: 0.5, conditions: and([
-      condition('amount', { operator: '<', target: 20_000, blocking: true }),
+      condition('amount', { operator: '<', target: 20_000, }),
     ]) },
     { type: 'right',  id: 'bac_fr_com_svod_1', orgId: 'bac', percent: 0.3, conditions: and([
-      condition('amount', { operator: '>=', target: 20_000, blocking: true }),
+      condition('amount', { operator: '>=', target: 20_000 }),
     ]) }
   ]}),
   action('append', { id: 'bac_row_com', orgId: 'bac', previous: 'bac_row_expense', percent: 0.3 }),
