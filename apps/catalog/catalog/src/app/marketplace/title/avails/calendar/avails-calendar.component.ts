@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, Optional } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { combineLatest, Subscription } from 'rxjs';
@@ -10,10 +10,12 @@ import {
   filterContractsByTitle,
   CalendarAvailsFilter,
   durationAvailabilities,
-  DurationMarker
+  DurationMarker,
+  appName
 } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
+import { Intercom } from 'ng-intercom';
 
 @Component({
   selector: 'catalog-movie-avails-calendar',
@@ -23,8 +25,6 @@ import { MovieService } from '@blockframes/movie/service';
 })
 export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, OnDestroy {
   public availsForm = this.shell.avails.calendarForm;
-
-  public org$ = this.shell.movieOrg$;
 
   public status$ = this.availsForm.statusChanges.pipe(startWith(this.availsForm.status));
 
@@ -37,6 +37,8 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
   private salesTerms$ = this.shell.salesTerms$;
 
   private titleId: string = this.route.snapshot.params.movieId;
+
+  public appName = appName.catalog;
 
   public availabilities$ = combineLatest([
     this.availsForm.value$,
@@ -69,6 +71,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService,
     private movieService: MovieService,
+    @Optional() private intercom: Intercom
   ) { }
 
   clear() {
@@ -120,5 +123,11 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
 
     this.availsForm.patchValue(avails);
     this.analyticsService.addTitleFilter({ avails: this.availsForm.value }, 'marketplace', 'filteredAvailsCalendar', true);
+  }
+
+  public openIntercom() {
+    const isIntercomAvailable = document.getElementById('intercom-frame');
+    if (isIntercomAvailable) return this.intercom.show();
+    return this.router.navigate(['/c/o/marketplace/contact']);
   }
 }
