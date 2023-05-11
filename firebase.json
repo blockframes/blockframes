@@ -92,7 +92,7 @@
     },
     {
       "target": "waterfall",
-      "public": "dist/apps/waterfall/browser",
+      "public": "dist/apps/waterfall",
       "ignore": [
         "firebase.json",
         "**/.*",

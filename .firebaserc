@@ -93,7 +93,7 @@
           "cms-blockframes-bruce"
         ],
         "waterfall": [
-          "waterfall-blockframes-bruce"
+          "waterfall-blockframes-demo"
         ]
       }
     },
@@ -126,5 +126,6 @@
         ]
       }
     }
-  }
+  },
+  "etags": {}
 }
