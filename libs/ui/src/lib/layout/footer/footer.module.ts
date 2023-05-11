@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { FooterComponent } from './footer.component';
 
 // Blockframes
-import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 
 // Material
@@ -20,7 +19,6 @@ import { MatDividerModule } from '@angular/material/divider';
     CommonModule,
     FlexLayoutModule,
     RouterModule,
-    AppLogoModule,
     AppPipeModule,
 
     // Material

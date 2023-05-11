@@ -39,19 +39,19 @@
       <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
         <!-- Should only be shown for noAcceptedMovies && !noMovies -->
         <ng-container *ngIf="titles | hasAppStatus:'draft'">
-          <div class="surface" fxLayout="column" fxLayoutalign="center center">
+          <a routerLink="../title" class="surface" fxLayout="column" fxLayoutalign="center center">
             <img asset="add_draft.svg" alt="Manage Drafts">
-            <a routerLink="../title" mat-button color="primary">Manage Drafts</a>
-          </div>
+            <button mat-button color="primary">Manage Drafts</button>
+          </a>
         </ng-container>
-        <div class="surface" fxLayout="column" fxLayoutalign="center center">
+        <a routerLink="../title/lobby" class="surface" fxLayout="column" fxLayoutalign="center center">
           <img asset="add_title.svg" alt="Add title image">
-          <a routerLink="../title/lobby" mat-button color="primary">Add one Title</a>
-        </div>
-        <div class="surface" fxLayout="column">
+          <button mat-button color="primary">Add one Title</button>
+        </a>
+        <a routerLink="../import" class="surface" fxLayout="column">
           <img asset="add_files.svg" alt="Upload files image">
-          <a routerLink="../import" mat-button color="primary" test-id="import">Import Titles in bulk</a>
-        </div>
+          <button mat-button color="primary" test-id="import">Import Titles in bulk</button>
+        </a>
       </article>
       <h3>Or</h3>
       <button (click)="openIntercom()" mat-flat-button color="primary">
