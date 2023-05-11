@@ -10,10 +10,14 @@
     <!-- TOOLBAR -->
     <app-bar #app>
       <header fxLayout fxLayoutAlign="space-between center">
-        <ng-container *ngIf="currentApp === 'waterfall'; else notWaterfall">
+        <ng-container *ngIf="currentApp === 'waterfall'; else showMenuIcon">
           <a app-logo routerLink="."></a>
+          <!-- TODO REMOVE THIS BEFORE RELEASE issue#9336 -->
+          <button mat-button test-id="menu" color="warn" (click)="sidenav.toggle()">
+            DEV MENU
+          </button>
         </ng-container>
-        <ng-template #notWaterfall>
+        <ng-template #showMenuIcon>
           <button mat-icon-button test-id="menu" (click)="sidenav.toggle()">
             <mat-icon svgIcon="menu"></mat-icon>
           </button>
