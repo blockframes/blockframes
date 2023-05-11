@@ -3,7 +3,7 @@
  * to the LAST version.
  */
 import { importFirestore } from './admin';
-import { Firestore, startMaintenance, endMaintenance, versionRef, appVersionRef } from '@blockframes/firebase-utils';
+import { Firestore, startMaintenance, endMaintenance, versionRef, appVersionRef, algoliaKeyRef } from '@blockframes/firebase-utils';
 import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
 import { last } from 'lodash';
 import { exportFirestoreToBucketBeta, getFirestoreExportDirname } from './firebase-utils';
@@ -39,6 +39,13 @@ export async function updateAppVersion(db: Firestore, version: string) {
   } else {
     return appVersionRef(db).update({ currentVersion: version });
   }
+}
+
+export async function updateAlgoliaSearchKeys(db: Firestore) {
+  const algoliaAnonymousSearchKey = process.env.ALGOLIA_ANONYMOUS_SEARCH_KEY;
+  const algoliaSearchKey = process.env.ALGOLIA_SEARCH_KEY;
+  await algoliaKeyRef(db, 'ALGOLIA_ANONYMOUS_SEARCH_KEY').set({ key: algoliaAnonymousSearchKey });
+  return algoliaKeyRef(db, 'ALGOLIA_SEARCH_KEY').set({ key: algoliaSearchKey });
 }
 
 export function selectAndOrderMigrations(afterVersion: number): IMigrationWithVersion[] {

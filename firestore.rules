@@ -55,6 +55,16 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /_META/_ALGOLIA_ANONYMOUS_SEARCH_KEY {
+      allow read: if isSignedIn() && notInMaintenance();
+      allow write: if false;
+    }
+
+    match /_META/_ALGOLIA_SEARCH_KEY {
+      allow read: if userHasValidOrg() && notInMaintenance();
+      allow write: if false;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////
     ///                                 COLLECTIONS                               ///
     ///             rules defined at the collections or document level            ///

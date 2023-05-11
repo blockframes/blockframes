@@ -21,6 +21,10 @@ export const appVersionRef = (db = getDb()) => {
   return db.collection(META_COLLECTION_NAME).doc(APP_DOCUMENT_NAME);
 };
 
+export const algoliaKeyRef = (db = getDb(), algoliaKeyId: 'ALGOLIA_ANONYMOUS_SEARCH_KEY' | 'ALGOLIA_SEARCH_KEY') => {
+  return db.collection(META_COLLECTION_NAME).doc(`_${algoliaKeyId}`);
+};
+
 export function startMaintenance(db?: FirebaseFirestore.Firestore) {
   return maintenanceRef(db).set(
     { startedAt: new Date(), endedAt: null },
