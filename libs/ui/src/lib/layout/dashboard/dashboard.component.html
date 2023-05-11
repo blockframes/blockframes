@@ -1,5 +1,5 @@
 <mat-sidenav-container>
-  <mat-sidenav class="dark-theme" id="dashboard-navbar" role="navigation" [mode]="mode$ | async" [opened]="(mode$ | async) === 'side'">
+  <mat-sidenav class="dark-theme" id="dashboard-navbar" role="navigation" [mode]="mode$ | async" [opened]="(mode$ | async) === 'side' && currentApp !== 'waterfall'">
     <mat-toolbar fxLayout fxLayoutAlign="space-between center">
       <a app-logo routerLink="."></a>
     </mat-toolbar>
@@ -10,9 +10,14 @@
     <!-- TOOLBAR -->
     <app-bar #app>
       <header fxLayout fxLayoutAlign="space-between center">
-        <button mat-icon-button test-id="menu" (click)="sidenav.toggle()">
-          <mat-icon svgIcon="menu"></mat-icon>
-        </button>
+        <ng-container *ngIf="currentApp === 'waterfall'; else notWaterfall">
+          <a app-logo routerLink="."></a>
+        </ng-container>
+        <ng-template #notWaterfall>
+          <button mat-icon-button test-id="menu" (click)="sidenav.toggle()">
+            <mat-icon svgIcon="menu"></mat-icon>
+          </button>
+        </ng-template>
         <div fxLayout="row" fxLayoutGap="24px">
           <ng-container *ngIf="currentApp === 'festival' || currentApp === 'catalog'">
             <a fxHide.xs mat-button class="link-to-app" color="primary" [href]="appBridge[currentApp].link" target="_blank">        

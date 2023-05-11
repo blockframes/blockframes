@@ -1,1 +1,14 @@
-<h1>Blockframes Dashboard</h1>
+
+<!-- TODO issue #9327 display this only if there is no movies and display a movie list otherwise -->
+<!-- TODO you can have a look about how it's done in libs/ui/src/lib/dashboard/pages/home/home.component.html -->
+
+<h1>You have no Movie yet.</h1>
+<p class="mat-body-1">
+  Please add a Movie that you're going to work with. After creating a movie you will be
+  <br>
+  able to add the Right Holders and have access to the Waterfall & Revenue distribution.
+</p>
+<a routerLink="." class="surface">
+  <img asset="add_title.svg" alt="Add title image">
+  <button mat-button color="primary">Add Movie</button>
+</a>
