@@ -27,14 +27,14 @@ export const actions: Action[] = [
   action('prepend', { id: 'rnpp', orgId: 'tat', next: [], percent: 0}),
   action('prependVertical', { id: 'france_tv_com', next: ['rnpp', 'tat_cnc_support'], children: [
     { type: 'right', id: 'france_tv_com_1', orgId: 'france_tv', percent: 0.1, conditions: and([
-      condition('orgRevenu', { orgId: 'france_tv', operator: '<', target: 160_000, blocking: true }),
+      condition('orgRevenu', { orgId: 'france_tv', operator: '<', target: 160_000 }),
     ]) },
     { type: 'right',  id: 'france_tv_com_2', orgId: 'france_tv', percent: 0.07  },
   ] }),
 
   action('prependVertical', { id: 'bac_rnpp_com', next: ['rnpp', 'tat_cnc_support'], children: [
     { type: 'right', id: 'bac_rnpp_com_1', orgId: 'bac', percent: 0.2, conditions: and([
-      condition('rightRevenu', { rightId: 'bac_rnpp_com', operator: '<', target: 50_000, blocking: true })
+      condition('rightRevenu', { rightId: 'bac_rnpp_com', operator: '<', target: 50_000 })
     ]) },
     { type: 'right', id: 'bac_rnpp_com_2', orgId: 'bac', percent: 0.15 }
   ] }),
@@ -73,10 +73,10 @@ export const actions: Action[] = [
   action('append', { id: 'bac_fr_com_vod', orgId: 'bac', previous: 'bac_fr_expense', percent: 0.5 }),
   action('appendHorizontal', { id: 'bac_fr_com_svod', blameId: 'tat', previous: 'bac_fr_expense', children: [
     { type: 'right', id: 'bac_fr_com_svod_0', orgId: 'bac', percent: 0.5, conditions: and([
-      condition('amount', { operator: '<', target: 20_000, blocking: true }),
+      condition('amount', { operator: '<', target: 20_000 }),
     ]) },
     { type: 'right',  id: 'bac_fr_com_svod_1', orgId: 'bac', percent: 0.3, conditions: and([
-      condition('amount', { operator: '>=', target: 20_000, blocking: true }),
+      condition('amount', { operator: '>=', target: 20_000 }),
     ]) }
   ]}),
   action('append', { id: 'bac_row_com', orgId: 'bac', previous: 'bac_row_expense', percent: 0.3 }),

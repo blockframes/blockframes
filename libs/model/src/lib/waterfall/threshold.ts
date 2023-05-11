@@ -13,6 +13,7 @@ interface IncomeState {
   }>;
   rights: Record<string, {
     revenuRate: number;
+    shadowRevenuRate: number;
     turnoverRate: number;
   }>;
   orgs: Record<string, {
@@ -21,6 +22,7 @@ interface IncomeState {
   }>;
   pools: Record<string, {
     revenuRate: number;
+    shadowRevenuRate: number;
     turnoverRate: number;
   }>;
   transfers: Record<`${string}->${string}`, number>;
@@ -70,10 +72,11 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
     // Update conditions
     incomeState.conditions.push(...thresholdCdts);
     // Update right
-    const { checked } = checkCondition({ state, right, income: payload });
+    const { checked, shadow } = checkCondition({ state, right, income: payload });
     const incomeRight = initRight(incomeState, to);
     incomeRight.turnoverRate += basePercent;
     incomeRight.revenuRate += checked ? (right.percent * basePercent) : 0;
+    incomeRight.shadowRevenuRate += shadow ? (right.percent * basePercent) : 0;
     // Update orgs
     const incomeOrg = initOrg(incomeState, right.orgId);
     incomeOrg.revenuRate += incomeRight.revenuRate;
@@ -83,6 +86,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
       for (const pool of right.pools) {
         const incomePool = initPool(incomeState, pool);
         incomePool.revenuRate += incomeRight.revenuRate;
+        incomePool.shadowRevenuRate += incomeRight.shadowRevenuRate;
         if (!incomePool.turnoverRate) incomePool.turnoverRate = basePercent;
       }
     }
@@ -90,14 +94,14 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
   } else if (state.horizontals[to]) {
     const group = state.horizontals[to];
     const groupRate = basePercent * group.percent;
-    incomeState.groups[to] ||= { revenuRate: 0, turnoverRate: 0 };
-    incomeState.groups[to].turnoverRate += groupRate;
+    const incomeGroup = initGroup(incomeState, to);
+    incomeGroup.turnoverRate += groupRate;
     for (const child of state.horizontals[to].children) {
       // Get rid of "from" for a better outcome on the graph with the transfers
       const income = { ...payload, to: child, from: undefined as any }
       taken += runThreshold(state, income, incomeState, groupRate);
     }
-    incomeState.groups[to].revenuRate += taken;
+    incomeGroup.revenuRate += taken;
 
     if (groupRate < taken) {
       const blameId = state.horizontals[to].blameId;
@@ -107,8 +111,8 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
   } else if (state.verticals[to]) {
     const group = state.verticals[to];
     const groupRate = basePercent * group.percent;
-    incomeState.groups[to] ||= { revenuRate: 0, turnoverRate: 0 };
-    incomeState.groups[to].turnoverRate += groupRate;
+    const incomeGroup = initGroup(incomeState, to);
+    incomeGroup.turnoverRate += groupRate;
     for (const child of state.verticals[to].children) {
       // Get rid of "from" for a better outcome on the graph with the transfers
       const income = { ...payload, to: child, from: undefined as any }
@@ -118,7 +122,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
         break;
       }
     }
-    incomeState.groups[to].revenuRate += taken;
+    incomeGroup.revenuRate += taken;
   }
   const rest = basePercent - taken;
   // Continue
@@ -133,7 +137,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
 }
 
 function initRight(incomeState: IncomeState, rightId: string) {
-  return incomeState.rights[rightId] ||= { revenuRate: 0, turnoverRate: 0 };
+  return incomeState.rights[rightId] ||= { revenuRate: 0, turnoverRate: 0, shadowRevenuRate: 0 };
 }
 
 function initOrg(incomeState: IncomeState, orgId: string) {
@@ -141,7 +145,11 @@ function initOrg(incomeState: IncomeState, orgId: string) {
 }
 
 function initPool(incomeState: IncomeState, poolName: string) {
-  return incomeState.pools[poolName] ||= { revenuRate: 0, turnoverRate: 0 };
+  return incomeState.pools[poolName] ||= { revenuRate: 0, turnoverRate: 0, shadowRevenuRate: 0 };
+}
+
+function initGroup(incomeState: IncomeState, groupId: string) {
+  return incomeState.groups[groupId] ||= { revenuRate: 0, turnoverRate: 0 };
 }
 
 function initBonus(incomeState: IncomeState, groupId: string, orgId: string) {
@@ -183,6 +191,15 @@ const incomeConditions: AllIncomeConditions = {
     const value = toTargetValue(state, target);
     if (current >= value) return Infinity;
     return (value - current) / revenuRate;
+  },
+  poolShadowRevenu(incomeState, state, condition) {
+    const { pool, target } = condition;
+    if (!incomeState.pools[pool]) return Infinity;
+    const shadowRevenuRate = incomeState.pools[pool].shadowRevenuRate;
+    const current = state.pools[pool]?.shadowRevenu ?? 0;
+    const value = toTargetValue(state, target);
+    if (current >= value) return Infinity;
+    return (value - current) / shadowRevenuRate;
   },
   poolTurnover(incomeState, state, condition) {
     const { pool, target } = condition;

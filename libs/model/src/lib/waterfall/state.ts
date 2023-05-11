@@ -56,10 +56,13 @@ interface CreateGroup {
   percent?: number;
 }
 
+type CreateVertical = CreateGroup;
+
 interface CreateHorizontal extends CreateGroup {
   blameId: string;
 }
-export function createGroup(group: CreateHorizontal): HorizontalState {
+
+export function createHorizontal(group: CreateHorizontal): HorizontalState {
   const { id, children, previous, percent } = group;
   return {
     id,
@@ -72,7 +75,7 @@ export function createGroup(group: CreateHorizontal): HorizontalState {
   }
 }
 
-export function createVertical(group: CreateGroup): VerticalState {
+export function createVertical(group: CreateVertical): VerticalState {
   const { id, children, previous, percent } = group;
   return {
     id,
@@ -98,10 +101,6 @@ export interface OrgState {
   expense: number;
   bonus: number;
   operations: Operation[];
-  incomes: Record<string, {
-    revenu: number;
-    turnover: number;
-  }>;
 }
 export const createOrg = (org: Partial<OrgState>): OrgState => ({
   id: `org_${Math.round(Math.random() * 10000)}`,
@@ -111,13 +110,13 @@ export const createOrg = (org: Partial<OrgState>): OrgState => ({
   bonus: 0,
   expense: 0,
   operations: [],
-  incomes: {},
   ...org
 })
 
 interface PoolState {
   revenu: number;
   turnover: number;
+  shadowRevenu: number;
 }
 
 interface IncomeState {

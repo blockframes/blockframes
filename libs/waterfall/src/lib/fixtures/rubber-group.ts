@@ -65,7 +65,7 @@ export const actions: Action[] = [
       ]) },
       { type:"right", id: 'arte_support_2', orgId: 'arte',percent: 0.15, pools: ['rnpp'], conditions: and([
         condition('rightTurnover', { rightId: 'cnc_support', operator: '>=', target: 50_000 }),
-        condition('poolRevenu', { pool: 'rnpp', operator: '<', target: 120_000, blocking: true }),
+        condition('poolRevenu', { pool: 'rnpp', operator: '<', target: 120_000 }),
       ]) }
     ]},
     // Elledriver

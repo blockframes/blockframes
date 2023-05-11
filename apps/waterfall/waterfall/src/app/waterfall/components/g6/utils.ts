@@ -28,7 +28,7 @@ export function toG6(state: TitleState): GraphData {
 
   // Horizontal Group
   for (const group of Object.values(state.horizontals)) {
-    const comboLabel = group.percent
+    const comboLabel = group.percent !== 1
       ? `${group.id} (${roundCent(group.percent * 100)}%): ${roundCent(group.revenu)}€`
       : `${group.id}: ${roundCent(group.revenu)}€`;
     combos.push({
