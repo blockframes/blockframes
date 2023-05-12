@@ -78,6 +78,7 @@ describe('Movie display in marketplace', () => {
     get('skip-preferences').click();
     get('cookies').click();
     assertUrlIncludes('c/o/marketplace/home');
+    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
   });
 
   it('Access to title page by clicking on the movie card', () => {

@@ -56,6 +56,7 @@ describe('Signup', () => {
     deleteOrg(newOrg.name);
     deleteUser(newUser.email);
     cy.visit('auth/identity');
+    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
     get('cookies').click();
     fillCommonInputs(newUser);
     addNewCompany(newOrg);
@@ -90,6 +91,7 @@ describe('Signup', () => {
     firestore.create([marketplaceInjectedData]);
     maintenance.end();
     cy.visit('auth/identity');
+    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
     get('cookies').click();
     fillCommonInputs(newUser);
     selectCompany(marketplaceData.org.name);
@@ -121,6 +123,7 @@ describe('Signup', () => {
     firestore.create([dashboardInjectedData]);
     maintenance.end();
     cy.visit('auth/identity');
+    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
     get('cookies').click();
     fillCommonInputs(newUser);
     selectCompany(dashboardData.org.name);

@@ -29,7 +29,7 @@ export function firebase(app?: string) {
 
 // Algolia
 // =======
-
+// TODO dire aux dev de maj leur .env
 export const algolia = {
   appId: '8E9YO1I9HB',
   indexNameOrganizations: {

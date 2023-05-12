@@ -67,6 +67,7 @@ describe('Marketplace avails search', () => {
     beforeEach(() => {
       cy.visit(searchAvailsForTerm1Url || 'c/o/marketplace/title');
       selectFilter('Avails');
+      cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
     });
 
     it('Buyer can find an avail with the good inputs', () => {
@@ -146,6 +147,7 @@ describe('Marketplace avails search', () => {
     beforeEach(() => {
       cy.visit('c/o/marketplace/title');
       selectFilter('Avails');
+      cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
     });
 
     context('Avails with media overlapping leads to 2 differents terms', () => {

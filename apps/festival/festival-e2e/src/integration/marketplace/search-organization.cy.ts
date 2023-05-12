@@ -52,6 +52,7 @@ describe('Search sale organization in marketplace', () => {
     cy.visit('');
     get('cookies').click();
     assertUrlIncludes('c/o/marketplace/home');
+    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
   });
 
   it('Only an accepted org, with access to festival marketplace should be visible', () => {

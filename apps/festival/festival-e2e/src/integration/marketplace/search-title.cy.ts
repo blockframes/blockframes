@@ -66,6 +66,7 @@ describe('Movie search in marketplace', () => {
     cy.visit('');
     get('cookies').click();
     assertUrlIncludes('c/o/marketplace/home');
+    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
   });
 
   it('Find with filters, save & load filters', () => {

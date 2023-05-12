@@ -51,6 +51,7 @@ describe('Search buyer organizations in dashboard', () => {
     cy.visit('');
     get('cookies').click();
     cy.visit('c/o/dashboard/home');
+    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
   });
 
   it('Only an accepted org, with access to festival marketplace and not dashboard should be visible', () => {
