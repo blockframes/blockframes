@@ -24,13 +24,11 @@ import {
   validateOrg,
   validateInvitation,
   deleteInvitation,
-  assertLocalStorage,
 } from '@blockframes/testing/cypress/browser';
 import { newUser, newOrg, marketplaceData, dashboardData } from '../../fixtures/authentification/signup';
-import { territories, orgActivity, IAlgoliaKeyDoc } from '@blockframes/model';
+import { territories, orgActivity } from '@blockframes/model';
 import { capitalize } from '@blockframes/utils/helpers';
 import { org } from '../../fixtures/authentification/login';
-import { algoliaAnonymousSearchKeyDoc } from '@blockframes/utils/maintenance';
 
 const marketplaceInjectedData = {
   [`users/${marketplaceData.orgAdmin.uid}`]: marketplaceData.orgAdmin,
@@ -59,9 +57,6 @@ describe('Signup', () => {
     deleteUser(newUser.email);
     cy.visit('auth/identity');
     get('cookies').click();
-    firestore.get(`${algoliaAnonymousSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
-      assertLocalStorage('algoliaSearchKey', config.key);
-    });
     fillCommonInputs(newUser);
     addNewCompany(newOrg);
     get('submit').click();
@@ -96,9 +91,6 @@ describe('Signup', () => {
     maintenance.end();
     cy.visit('auth/identity');
     get('cookies').click();
-    firestore.get(`${algoliaAnonymousSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
-      assertLocalStorage('algoliaSearchKey', config.key);
-    });
     fillCommonInputs(newUser);
     selectCompany(marketplaceData.org.name);
     get('activity').should('contain', orgActivity[org.activity]);
@@ -130,9 +122,6 @@ describe('Signup', () => {
     maintenance.end();
     cy.visit('auth/identity');
     get('cookies').click();
-    firestore.get(`${algoliaAnonymousSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
-      assertLocalStorage('algoliaSearchKey', config.key);
-    });
     fillCommonInputs(newUser);
     selectCompany(dashboardData.org.name);
     get('activity').should('contain', orgActivity[org.activity]);

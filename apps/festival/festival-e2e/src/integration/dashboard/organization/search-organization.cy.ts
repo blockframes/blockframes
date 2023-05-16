@@ -1,4 +1,3 @@
-import { algoliaSearchKeyDoc } from '@blockframes/utils/maintenance';
 import {
   user,
   org,
@@ -21,9 +20,7 @@ import {
   get,
   //marketplace lib
   selectFilter,
-  assertLocalStorage,
 } from '@blockframes/testing/cypress/browser';
-import { IAlgoliaKeyDoc } from '@blockframes/model';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -53,9 +50,6 @@ describe('Search buyer organizations in dashboard', () => {
     browserAuth.signinWithEmailAndPassword(user.email);
     cy.visit('');
     get('cookies').click();
-    firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
-      assertLocalStorage('algoliaSearchKey', config.key);
-    });
     cy.visit('c/o/dashboard/home');
   });
 

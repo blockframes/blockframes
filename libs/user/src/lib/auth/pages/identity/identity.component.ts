@@ -61,16 +61,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
 
     const existingUserWithDisplayName = !!this.authService.profile && !!hasDisplayName(this.authService.profile);
     const existingUserWithoutDisplayName = !!this.authService.profile && !hasDisplayName(this.authService.profile);
-    if (!this.authService.profile) {
-      /**
-     * @dev This anonymous user is used to call "this.orgService.uniqueOrgName()"
-     * without forcing us to allow orgs collection reads for non-logged-in users in firestore rules
-     * Once the account is converted from anonymous to real, authState will remain as anonymous for a few seconds 
-     * (this explain the need to allow the anonymous sign-in for user update in firestore rules)
-     * #6908
-     */
-      await this.authService.signInAnonymously();
-    }
 
     // Try to set update form from query params or from existing user query (already logged in but without display name setted)
     const { code, email } = this.route.snapshot.queryParams;

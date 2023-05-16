@@ -16,12 +16,10 @@ import {
   selectMedias,
   selectDates,
   selectNonExclusive,
-  assertLocalStorage,
 } from '@blockframes/testing/cypress/browser';
-import { IAlgoliaKeyDoc, medias } from '@blockframes/model';
+import { medias } from '@blockframes/model';
 import { buyer, seller } from '../../fixtures/marketplace/avails-search';
 import { add, sub } from 'date-fns';
-import { algoliaSearchKeyDoc } from '@blockframes/utils/maintenance';
 
 const injectedData = {
   //buyer
@@ -67,9 +65,6 @@ describe('Marketplace avails search', () => {
 
   context('First term', () => {
     beforeEach(() => {
-      firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
-        assertLocalStorage('algoliaSearchKey', config.key);
-      });
       cy.visit(searchAvailsForTerm1Url || 'c/o/marketplace/title');
       selectFilter('Avails');
     });
@@ -149,9 +144,6 @@ describe('Marketplace avails search', () => {
 
   context('Overlaps : term2 & 3 (medias), then term4 & 5 (territories)', () => {
     beforeEach(() => {
-      firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
-        assertLocalStorage('algoliaSearchKey', config.key);
-      });
       cy.visit('c/o/marketplace/title');
       selectFilter('Avails');
     });

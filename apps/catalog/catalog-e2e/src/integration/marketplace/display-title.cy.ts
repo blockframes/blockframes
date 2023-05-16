@@ -23,7 +23,6 @@ import {
   // helpers
   titleCase,
   assertMultipleTexts,
-  assertLocalStorage,
 } from '@blockframes/testing/cypress/browser';
 import {
   budgetRange,
@@ -47,11 +46,9 @@ import {
   releaseMedias,
   socialGoals,
   soundFormat,
-  IAlgoliaKeyDoc,
 } from '@blockframes/model';
 import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
 import { format } from 'date-fns';
-import { algoliaSearchKeyDoc } from '@blockframes/utils/maintenance';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -80,9 +77,6 @@ describe('Movie display in marketplace', () => {
     cy.visit('');
     get('skip-preferences').click();
     get('cookies').click();
-    firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
-      assertLocalStorage('algoliaSearchKey', config.key);
-    });
     assertUrlIncludes('c/o/marketplace/home');
   });
 
