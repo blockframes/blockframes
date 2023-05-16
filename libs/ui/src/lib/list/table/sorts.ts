@@ -1,4 +1,4 @@
-import { MovieVideos, Organization } from '@blockframes/model';
+import { Movie, MovieVideos, Organization } from '@blockframes/model';
 
 export const sorts = {
   byOrgName: (a: Organization, b: Organization) => {
@@ -17,5 +17,10 @@ export const sorts = {
     if (a.length > b.length) return 1;
     if (a.length < b.length) return -1;
     return 0;
+  },
+  byTitle: (a: Movie, b: Movie) => {
+    if (!a.title.international) return -1;
+    if (!b.title.international) return 1;
+    return a.title.international.localeCompare(b.title.international);
   },
 }

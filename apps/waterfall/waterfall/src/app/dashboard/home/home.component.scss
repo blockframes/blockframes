@@ -11,6 +11,32 @@
   }
 }
 
+header {
+  margin-top: 64px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+bf-table.surface,
+bf-table ::ng-deep .table-container,
+bf-table ::ng-deep mat-form-field {
+  width: 100%;
+}
+
+bf-table.surface .poster {
+  width: 35px;
+}
+
+.title-info-container {
+  padding: 8px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 30px;
+}
+
 h1 {
   margin: 0;
 }

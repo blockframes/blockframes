@@ -1,6 +1,7 @@
 import {
   Director,
   displayName,
+  Movie,
   Organization,
   Person,
   Scope,
@@ -25,9 +26,10 @@ export const filters = {
     return directors.map(director => displayName(director))
       .some(name => name.toLocaleLowerCase().includes(input));
   },
-  movieTitle: (input: string, title: string) => {
+  movieTitle: (input: string, title: string | Movie) => {
     if (!title) return false;
-    return title.toLocaleLowerCase().includes(input);
+    if (typeof title === 'string') return title.toLocaleLowerCase().includes(input);
+    return title.title.international.toLocaleLowerCase().includes(input);
   },
   orgName: (input: string, org: Organization) => {
     if (!org?.name) return false;
