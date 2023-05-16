@@ -19,7 +19,7 @@ import { actions as terrawilly } from '@blockframes/waterfall/fixtures/terrawill
 import { actions as casablancasV2 } from '@blockframes/waterfall/fixtures/casablancas-v2';
 import { actions as origineDuMal } from '@blockframes/waterfall/fixtures/origine-du-mal';
 import { actions as blameExample } from '@blockframes/waterfall/fixtures/examples/blame-example';
-
+import { actions as terrawillyDemo } from '@blockframes/waterfall/fixtures/terrawilly-demo';
 
 @Component({
   selector: 'dashboard-graph',
@@ -41,6 +41,7 @@ export class GraphComponent {
     'rubber-test-bruce': rubberBruce,
     'origine-du-mal': origineDuMal,
     'blame-example': blameExample,
+    'terrawilly-demo': terrawillyDemo
   }
   private waterfallId: keyof typeof this.actions = this.route.snapshot.params['waterfallId'];
 
