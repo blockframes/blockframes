@@ -37,7 +37,7 @@ const routes: Routes = [{
       children: [
         {
           path: '',
-          redirectTo: 'casablancas',
+          redirectTo: 'terrawilly-demo',
           pathMatch: 'full'
         },
         {
