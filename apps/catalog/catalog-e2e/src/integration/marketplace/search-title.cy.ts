@@ -59,10 +59,10 @@ describe('Movie search in marketplace', () => {
     cy.visit('');
     get('skip-preferences').click();
     get('cookies').click();
-    assertUrlIncludes('c/o/marketplace/home');
     firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
       assertLocalStorage('algoliaSearchKey', config.key);
     });
+    assertUrlIncludes('c/o/marketplace/home');
   });
 
   it('Find with title', () => {

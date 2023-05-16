@@ -53,10 +53,10 @@ describe('Search buyer organizations in dashboard', () => {
     browserAuth.signinWithEmailAndPassword(user.email);
     cy.visit('');
     get('cookies').click();
-    cy.visit('c/o/dashboard/home');
     firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
       assertLocalStorage('algoliaSearchKey', config.key);
     });
+    cy.visit('c/o/dashboard/home');
   });
 
   it('Only an accepted org, with access to festival marketplace and not dashboard should be visible', () => {

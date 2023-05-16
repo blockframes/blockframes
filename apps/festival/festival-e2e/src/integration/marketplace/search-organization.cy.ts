@@ -54,10 +54,10 @@ describe('Search sale organization in marketplace', () => {
     browserAuth.signinWithEmailAndPassword(user.email);
     cy.visit('');
     get('cookies').click();
-    assertUrlIncludes('c/o/marketplace/home');
     firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
       assertLocalStorage('algoliaSearchKey', config.key);
     });
+    assertUrlIncludes('c/o/marketplace/home');
   });
 
   it('Only an accepted org, with access to festival marketplace should be visible', () => {

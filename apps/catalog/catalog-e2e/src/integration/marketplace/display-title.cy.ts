@@ -80,10 +80,10 @@ describe('Movie display in marketplace', () => {
     cy.visit('');
     get('skip-preferences').click();
     get('cookies').click();
-    assertUrlIncludes('c/o/marketplace/home');
     firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
       assertLocalStorage('algoliaSearchKey', config.key);
     });
+    assertUrlIncludes('c/o/marketplace/home');
   });
 
   it('Access to title page by clicking on the movie card', () => {

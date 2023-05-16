@@ -67,11 +67,11 @@ describe('Marketplace avails search', () => {
 
   context('First term', () => {
     beforeEach(() => {
-      cy.visit(searchAvailsForTerm1Url || 'c/o/marketplace/title');
-      selectFilter('Avails');
       firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
         assertLocalStorage('algoliaSearchKey', config.key);
       });
+      cy.visit(searchAvailsForTerm1Url || 'c/o/marketplace/title');
+      selectFilter('Avails');
     });
 
     it('Buyer can find an avail with the good inputs', () => {
@@ -149,11 +149,11 @@ describe('Marketplace avails search', () => {
 
   context('Overlaps : term2 & 3 (medias), then term4 & 5 (territories)', () => {
     beforeEach(() => {
-      cy.visit('c/o/marketplace/title');
-      selectFilter('Avails');
       firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
         assertLocalStorage('algoliaSearchKey', config.key);
       });
+      cy.visit('c/o/marketplace/title');
+      selectFilter('Avails');
     });
 
     context('Avails with media overlapping leads to 2 differents terms', () => {

@@ -81,8 +81,9 @@ export function assertLocalStorage(key: string, expected: string, retriesLeft = 
   const maxRetry = 5;
   const value = localStorage.getItem(key);
   if (retriesLeft === 0) return expect(`localstorage key ${key}`).to.be.true;
-  if (!value) return cy.wait(500 * ((maxRetry - retriesLeft) + 1) ).then(() => assertLocalStorage(key, expected, retriesLeft - 1));
-  return expect(localStorage.getItem(key)).to.eq(expected);
+  if (value !== expected) return cy.wait(500 * (maxRetry - retriesLeft))
+    .then(() => assertLocalStorage(key, expected, retriesLeft - 1));
+  return expect(value).to.eq(expected);
 }
 
 interface InterceptOption {

@@ -67,10 +67,10 @@ describe('Movie search in marketplace', () => {
     browserAuth.signinWithEmailAndPassword(user.email);
     cy.visit('');
     get('cookies').click();
-    assertUrlIncludes('c/o/marketplace/home');
     firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
       assertLocalStorage('algoliaSearchKey', config.key);
     });
+    assertUrlIncludes('c/o/marketplace/home');
   });
 
   it('Find with filters, save & load filters', () => {

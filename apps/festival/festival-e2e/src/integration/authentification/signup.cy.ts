@@ -59,10 +59,10 @@ describe('Signup', () => {
     deleteUser(newUser.email);
     cy.visit('auth/identity');
     get('cookies').click();
-    fillCommonInputs(newUser);
     firestore.get(`${algoliaAnonymousSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
       assertLocalStorage('algoliaSearchKey', config.key);
     });
+    fillCommonInputs(newUser);
     addNewCompany(newOrg);
     get('submit').click();
     interceptEmail({ sentTo: newUser.email }).then(mail => deleteEmail(mail.id));
@@ -96,10 +96,10 @@ describe('Signup', () => {
     maintenance.end();
     cy.visit('auth/identity');
     get('cookies').click();
-    fillCommonInputs(newUser);
     firestore.get(`${algoliaAnonymousSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
       assertLocalStorage('algoliaSearchKey', config.key);
     });
+    fillCommonInputs(newUser);
     selectCompany(marketplaceData.org.name);
     get('activity').should('contain', orgActivity[org.activity]);
     get('country').should('contain', capitalize(territories[org.addresses.main.country]));
@@ -130,10 +130,10 @@ describe('Signup', () => {
     maintenance.end();
     cy.visit('auth/identity');
     get('cookies').click();
-    fillCommonInputs(newUser);
     firestore.get(`${algoliaAnonymousSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
       assertLocalStorage('algoliaSearchKey', config.key);
     });
+    fillCommonInputs(newUser);
     selectCompany(dashboardData.org.name);
     get('activity').should('contain', orgActivity[org.activity]);
     get('country').should('contain', capitalize(territories[org.addresses.main.country]));
