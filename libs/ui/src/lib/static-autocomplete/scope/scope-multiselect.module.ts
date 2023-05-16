@@ -7,9 +7,9 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 // Material
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from "@angular/material/select";
 
 @NgModule({
   imports: [
@@ -18,9 +18,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     ToLabelModule,
     MatFormFieldModule,
     MatInputModule,
-    MatAutocompleteModule,
     MatIconModule,
     MatCheckboxModule,
+    MatSelectModule
   ],
   declarations: [ScopeMultiselectComponent],
   exports: [ScopeMultiselectComponent],

@@ -1,3 +1,26 @@
 mat-form-field {
-    width: 100%;
+  width: 100%;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-bottom: solid 1px var(--foreground-divider);
+  position: sticky;
+  top: 0;
+  background-color: var(--background-card);
+  z-index: 1;
+
+  mat-checkbox {
+    padding: 8px;
+  }
+  input {
+    margin: 0 8px;
+    flex: 1;
+  }
+}
+
+mat-option.hidden {
+  display: none;
 }

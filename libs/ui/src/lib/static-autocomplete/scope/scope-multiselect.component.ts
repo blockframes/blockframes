@@ -1,18 +1,22 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 // Blockframes
-import { Language, languages } from '@blockframes/model';
+import { Scope, staticModel } from '@blockframes/model';
+import { FormStaticValueArray } from '@blockframes/utils/form';
+import { Observable } from 'rxjs';
 
 // RxJs
-import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
-export class User {
-  constructor(public firstname: string, public lastname: string, public selected?: boolean) {
-    if (selected === undefined) selected = false;
+function getVisible(items: string[]) {
+  const visible: Record<string, boolean> = {};
+  for (const item of items) {
+    visible[item] = true;
   }
+  return visible;
 }
 
 @Component({
@@ -22,64 +26,44 @@ export class User {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScopeMultiselectComponent implements OnInit {
-  control = new UntypedFormControl();
+  @Input() control: FormStaticValueArray<Scope>;
+  @Input() scope: Scope;
+  @Input() placeholder: string;
 
-  languages = Object.keys(languages) as Language[];
-  languagesObject = languages;
+  search = new FormControl('');
 
-  selectedLanguages: Language[] = [];
+  items: string[];
+  selectedItems = [];
 
-  filteredLanguages: Observable<Language[]>;
+  indeterminate: Observable<boolean>;
+  checked: Observable<boolean>;
+
+  visible = this.search.valueChanges.pipe(
+    startWith(''),
+    map(value => (typeof value === 'string' ? value : this.lastFilter)),
+    map(filter => getVisible(this.filter(filter)))
+  );
+
   lastFilter = '';
 
   ngOnInit() {
-    this.filteredLanguages = this.control.valueChanges.pipe(
-      startWith(''),
-      map(value => (typeof value === 'string' ? value : this.lastFilter)),
-      map(filter => this.filter(filter))
-    );
+    this.items = Object.keys(staticModel[this.scope]);
+    this.indeterminate = this.control.valueChanges.pipe(map(value => !!value.length && value.length < this.items.length));
+    this.checked = this.control.valueChanges.pipe(map(value => value.length === this.items.length));
   }
 
-  filter(filter: string): Language[] {
+  filter(filter: string) {
     this.lastFilter = filter;
-    if (filter) {
-      return this.languages.filter(option => {
-        return option.indexOf(filter) >= 0;
-      });
-    } else {
-      return this.languages.slice();
-    }
+    if (filter) return this.items.filter(option => option.indexOf(filter) >= 0);
+    return this.items.slice();
   }
 
-  displayFn(value: Language[] | string): string | undefined {
-    let displayValue: string;
-    if (Array.isArray(value)) {
-      value.forEach((language, index) => {
-        if (index === 0) {
-          displayValue = languages[language];
-        } else {
-          displayValue += ', ' + languages[language];
-        }
-      });
-    } else {
-      displayValue = value;
-    }
-    return displayValue;
+  checkAll(checked: MatCheckboxChange) {
+    if (!checked) return this.control.reset([]);
+    return this.control.setValue(this.items);
   }
 
-  optionClicked(event: Event, language: Language) {
-    event.stopPropagation();
-    this.toggleSelection(language);
-  }
-
-  toggleSelection(language: Language) {
-    if (!this.selectedLanguages.includes(language)) {
-      this.selectedLanguages.push(language);
-    } else {
-      const i = this.selectedLanguages.findIndex(value => value === language);
-      this.selectedLanguages.splice(i, 1);
-    }
-
-    this.control.setValue(this.selectedLanguages);
+  resetSearch() {
+    return this.search.setValue('');
   }
 }

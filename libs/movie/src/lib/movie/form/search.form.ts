@@ -41,7 +41,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
 
 function createLanguageVersionControl(data: LanguageVersion) {
   return new FormEntity<EntityControl<LanguageVersion>, LanguageVersion>({
-    languages: FormList.factory<GetKeys<'languages'>>(data.languages),
+    languages: new FormStaticValueArray<'languages'>(data.languages, 'languages'),
     versions: new FormEntity<EntityControl<Versions>, Versions>({
       original: new UntypedFormControl(data.versions.original),
       dubbed: new UntypedFormControl(data.versions.dubbed),
