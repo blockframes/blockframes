@@ -29,7 +29,6 @@ export function firebase(app?: string) {
 
 // Algolia
 // =======
-
 export const algolia = {
   appId: '8E9YO1I9HB',
   indexNameOrganizations: {
