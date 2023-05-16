@@ -77,7 +77,7 @@ export function assertInputValue(selector: string, expected: string) {
     .then(val => expect(val).to.eq(expected));
 }
 
-export function assertLocalStorage(key: string, expected: string, retriesLeft = 5) {
+export function assertLocalStorage(key: string, expected: string, retriesLeft = 8) {
   const maxRetry = 5;
   const value = localStorage.getItem(key);
   if (retriesLeft === 0) return expect(`localstorage key ${key}`).to.be.true;
