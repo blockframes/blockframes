@@ -24,11 +24,13 @@ import {
   validateOrg,
   validateInvitation,
   deleteInvitation,
+  assertLocalStorage,
 } from '@blockframes/testing/cypress/browser';
 import { newUser, newOrg, marketplaceData, dashboardData } from '../../fixtures/authentification/signup';
-import { territories, orgActivity } from '@blockframes/model';
+import { territories, orgActivity, IAlgoliaKeyDoc } from '@blockframes/model';
 import { capitalize } from '@blockframes/utils/helpers';
 import { org } from '../../fixtures/authentification/login';
+import { algoliaAnonymousSearchKeyDoc } from '@blockframes/utils/maintenance';
 
 const marketplaceInjectedData = {
   [`users/${marketplaceData.orgAdmin.uid}`]: marketplaceData.orgAdmin,
@@ -56,9 +58,11 @@ describe('Signup', () => {
     deleteOrg(newOrg.name);
     deleteUser(newUser.email);
     cy.visit('auth/identity');
-    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
     get('cookies').click();
     fillCommonInputs(newUser);
+    firestore.get(`${algoliaAnonymousSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
+      assertLocalStorage('algoliaSearchKey', config.key);
+    });
     addNewCompany(newOrg);
     get('submit').click();
     interceptEmail({ sentTo: newUser.email }).then(mail => deleteEmail(mail.id));
@@ -91,9 +95,11 @@ describe('Signup', () => {
     firestore.create([marketplaceInjectedData]);
     maintenance.end();
     cy.visit('auth/identity');
-    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
     get('cookies').click();
     fillCommonInputs(newUser);
+    firestore.get(`${algoliaAnonymousSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
+      assertLocalStorage('algoliaSearchKey', config.key);
+    });
     selectCompany(marketplaceData.org.name);
     get('activity').should('contain', orgActivity[org.activity]);
     get('country').should('contain', capitalize(territories[org.addresses.main.country]));
@@ -123,9 +129,11 @@ describe('Signup', () => {
     firestore.create([dashboardInjectedData]);
     maintenance.end();
     cy.visit('auth/identity');
-    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
     get('cookies').click();
     fillCommonInputs(newUser);
+    firestore.get(`${algoliaAnonymousSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
+      assertLocalStorage('algoliaSearchKey', config.key);
+    });
     selectCompany(dashboardData.org.name);
     get('activity').should('contain', orgActivity[org.activity]);
     get('country').should('contain', capitalize(territories[org.addresses.main.country]));

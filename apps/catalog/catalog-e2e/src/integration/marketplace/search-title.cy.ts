@@ -1,3 +1,4 @@
+import { algoliaSearchKeyDoc } from '@blockframes/utils/maintenance';
 import {
   user,
   org,
@@ -8,7 +9,7 @@ import {
   displayMovie as movie,
 } from '../../fixtures/marketplace/search-display-title';
 import { europeanCountries } from '../../fixtures/shared/commons';
-import { festival, certifications } from '@blockframes/model';
+import { festival, certifications, IAlgoliaKeyDoc } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -26,6 +27,7 @@ import {
   selectToggle,
   syncMovieToAlgolia,
   escapeKey,
+  assertLocalStorage,
 } from '@blockframes/testing/cypress/browser';
 
 const injectedData = {
@@ -58,7 +60,9 @@ describe('Movie search in marketplace', () => {
     get('skip-preferences').click();
     get('cookies').click();
     assertUrlIncludes('c/o/marketplace/home');
-    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
+    firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
+      assertLocalStorage('algoliaSearchKey', config.key);
+    });
   });
 
   it('Find with title', () => {

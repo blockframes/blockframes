@@ -23,6 +23,7 @@ import {
   // helpers
   titleCase,
   assertMultipleTexts,
+  assertLocalStorage,
 } from '@blockframes/testing/cypress/browser';
 import {
   budgetRange,
@@ -46,9 +47,11 @@ import {
   releaseMedias,
   socialGoals,
   soundFormat,
+  IAlgoliaKeyDoc,
 } from '@blockframes/model';
 import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
 import { format } from 'date-fns';
+import { algoliaSearchKeyDoc } from '@blockframes/utils/maintenance';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -78,7 +81,9 @@ describe('Movie display in marketplace', () => {
     get('skip-preferences').click();
     get('cookies').click();
     assertUrlIncludes('c/o/marketplace/home');
-    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
+    firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
+      assertLocalStorage('algoliaSearchKey', config.key);
+    });
   });
 
   it('Access to title page by clicking on the movie card', () => {

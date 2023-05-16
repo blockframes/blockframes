@@ -19,8 +19,10 @@ import {
   assertUrlIncludes,
   assertMultipleTexts,
   assertInputValue,
+  assertLocalStorage,
 } from '@blockframes/testing/cypress/browser';
-import { displayName, genres } from '@blockframes/model';
+import { IAlgoliaKeyDoc, displayName, genres } from '@blockframes/model';
+import { algoliaSearchKeyDoc } from '@blockframes/utils/maintenance';
 
 // using same feature with a little simplification
 import { buyer, seller } from '../../fixtures/marketplace/avails-search';
@@ -66,7 +68,9 @@ describe('Marketplace : add to selection', () => {
       const { movie, term1 } = seller;
       const { from, to } = term1.duration;
       cy.visit('c/o/marketplace/title');
-      cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
+      firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
+        assertLocalStorage('algoliaSearchKey', config.key);
+      });
       get('add-to-bucket').eq(0).click();
       snackbarShould('contain', 'Please fill in your Avail Search Criteria first.');
       snackbarShould('not.exist');

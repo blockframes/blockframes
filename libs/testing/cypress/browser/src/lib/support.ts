@@ -77,6 +77,14 @@ export function assertInputValue(selector: string, expected: string) {
     .then(val => expect(val).to.eq(expected));
 }
 
+export function assertLocalStorage(key: string, expected: string, retriesLeft = 5) {
+  const maxRetry = 5;
+  const value = localStorage.getItem(key);
+  if (retriesLeft === 0) return expect(`localstorage key ${key}`).to.be.true;
+  if (!value) return cy.wait(500 * ((maxRetry - retriesLeft) + 1) ).then(() => assertLocalStorage(key, expected, retriesLeft - 1));
+  return expect(localStorage.getItem(key)).to.eq(expected);
+}
+
 interface InterceptOption {
   sentTo?: string;
   subject?: string;

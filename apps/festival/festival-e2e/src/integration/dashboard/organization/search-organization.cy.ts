@@ -1,3 +1,4 @@
+import { algoliaSearchKeyDoc } from '@blockframes/utils/maintenance';
 import {
   user,
   org,
@@ -20,7 +21,9 @@ import {
   get,
   //marketplace lib
   selectFilter,
+  assertLocalStorage,
 } from '@blockframes/testing/cypress/browser';
+import { IAlgoliaKeyDoc } from '@blockframes/model';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -51,7 +54,9 @@ describe('Search buyer organizations in dashboard', () => {
     cy.visit('');
     get('cookies').click();
     cy.visit('c/o/dashboard/home');
-    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
+    firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
+      assertLocalStorage('algoliaSearchKey', config.key);
+    });
   });
 
   it('Only an accepted org, with access to festival marketplace and not dashboard should be visible', () => {

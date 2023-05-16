@@ -16,10 +16,12 @@ import {
   selectMedias,
   selectDates,
   selectNonExclusive,
+  assertLocalStorage,
 } from '@blockframes/testing/cypress/browser';
-import { medias } from '@blockframes/model';
+import { IAlgoliaKeyDoc, medias } from '@blockframes/model';
 import { buyer, seller } from '../../fixtures/marketplace/avails-search';
 import { add, sub } from 'date-fns';
+import { algoliaSearchKeyDoc } from '@blockframes/utils/maintenance';
 
 const injectedData = {
   //buyer
@@ -67,7 +69,9 @@ describe('Marketplace avails search', () => {
     beforeEach(() => {
       cy.visit(searchAvailsForTerm1Url || 'c/o/marketplace/title');
       selectFilter('Avails');
-      cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
+      firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
+        assertLocalStorage('algoliaSearchKey', config.key);
+      });
     });
 
     it('Buyer can find an avail with the good inputs', () => {
@@ -147,7 +151,9 @@ describe('Marketplace avails search', () => {
     beforeEach(() => {
       cy.visit('c/o/marketplace/title');
       selectFilter('Avails');
-      cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
+      firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
+        assertLocalStorage('algoliaSearchKey', config.key);
+      });
     });
 
     context('Avails with media overlapping leads to 2 differents terms', () => {

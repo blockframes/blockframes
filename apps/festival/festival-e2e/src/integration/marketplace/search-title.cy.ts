@@ -9,7 +9,7 @@ import {
   keywordMovie,
   expectedSavedSearch,
 } from '../../fixtures/marketplace/search-title';
-import { productionStatus, festival, certifications, User } from '@blockframes/model';
+import { productionStatus, festival, certifications, User, IAlgoliaKeyDoc } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -28,7 +28,9 @@ import {
   syncMovieToAlgolia,
   snackbarShould,
   escapeKey,
+  assertLocalStorage,
 } from '@blockframes/testing/cypress/browser';
+import { algoliaSearchKeyDoc } from '@blockframes/utils/maintenance';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -66,7 +68,9 @@ describe('Movie search in marketplace', () => {
     cy.visit('');
     get('cookies').click();
     assertUrlIncludes('c/o/marketplace/home');
-    cy.then(() => expect(localStorage.getItem('algoliaSearchKey')).not.to.be.null);
+    firestore.get(`${algoliaSearchKeyDoc}`).then((config: IAlgoliaKeyDoc) => {
+      assertLocalStorage('algoliaSearchKey', config.key);
+    });
   });
 
   it('Find with filters, save & load filters', () => {
