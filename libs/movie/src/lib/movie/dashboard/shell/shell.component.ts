@@ -39,6 +39,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   public movie = firstValueFrom(this.movie$);
 
   @Input() routes: RouteDescription[];
+  @Input() editRoute?: string | any[]; // same type as expected by [routerLink]
 
   constructor(
     @Inject(FORMS_CONFIG) private configs: ShellConfig,
