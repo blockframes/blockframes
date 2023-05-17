@@ -9,6 +9,10 @@ import {
   MovieAvailsSearch,
   MovieSearch,
   AvailsFilter,
+  languagesISO3,
+  Language,
+  LanguageVersion,
+  LanguageISO3,
 } from '@blockframes/model';
 
 /**
@@ -42,24 +46,38 @@ export function encodeUrl<T>(router: Router, route: ActivatedRoute, data: T) {
 }
 
 type EncodedTerritory = Territory | TerritoryISOA2Value | TerritoryGroup;
-interface MovieAvailsSearchWithEncodedTerritories {
-  search?: Omit<MovieSearch, 'originCountries'> & { originCountries: EncodedTerritory[] };
+type EncodedLanguageVersion = Omit<LanguageVersion, 'languages'> & { languages: Language[] | string };
+
+interface MovieAvailsSearchEncoded {
+  search?: Omit<MovieSearch, 'originCountries' | 'languages'> & {
+    originCountries: EncodedTerritory[];
+    languages?: EncodedLanguageVersion;
+  };
   avails?: Omit<AvailsFilter, 'territories'> & { territories: EncodedTerritory[] };
 }
 
 export function encodeAvailsSearchUrl(router: Router, route: ActivatedRoute, data: MovieAvailsSearch) {
-  const search: MovieAvailsSearchWithEncodedTerritories = {
-    search: { ...data.search, originCountries: encodeTerritories(data.search?.originCountries) },
+  const search: MovieAvailsSearchEncoded = {
+    search: {
+      ...data.search,
+      originCountries: encodeTerritories(data.search?.originCountries),
+    },
   };
+  if (search.search?.languages) search.search.languages = encodeLanguages(data.search.languages);
   if (data.avails) search.avails = { ...data.avails, territories: encodeTerritories(data.avails?.territories) };
-  return encodeUrl<MovieAvailsSearchWithEncodedTerritories>(router, route, search);
+  return encodeUrl<MovieAvailsSearchEncoded>(router, route, search);
 }
 
 export function decodeAvailsSearchUrl(route: ActivatedRoute) {
-  const data = decodeUrl<MovieAvailsSearchWithEncodedTerritories>(route);
+  const data = decodeUrl<MovieAvailsSearchEncoded>(route);
   const search: MovieAvailsSearch = {
-    search: { ...data.search, originCountries: decodeTerritories(data.search?.originCountries) },
+    search: {
+      ...data.search,
+      originCountries: decodeTerritories(data.search?.originCountries),
+      languages: decodeLanguages(data.search.languages),
+    },
   };
+  if (data.search?.languages) search.search.languages = decodeLanguages(data.search.languages);
   if (data.avails) search.avails = { ...data.avails, territories: decodeTerritories(data.avails?.territories) };
   return search;
 }
@@ -114,3 +132,33 @@ function extractCountriesISOA2(territories: EncodedTerritory[]) {
   const countriesISOA2 = territories.filter(territory => countriesISOA2List.includes(territory as TerritoryISOA2Value));
   return countriesISOA2 as TerritoryISOA2Value[];
 }
+
+function encodeLanguages(languages: LanguageVersion): EncodedLanguageVersion {
+  let encodedLanguages = '';
+  for (const language of languages.languages) encodedLanguages += languagesISO3[language];
+  return { ...languages, languages: encodedLanguages };
+}
+
+function decodeLanguages(languageVersion: EncodedLanguageVersion): LanguageVersion {
+  if (!languageVersion) return defaultLanguageVersion;
+  const { languages } = languageVersion;
+  const decodedLanguages: Language[] = [];
+  for (let i = 0; i < languages.length; i += 3) {
+    const extract = (languages as string).substring(i, i + 3) as LanguageISO3;
+    decodedLanguages.push(languageISO3ToLanguage(extract));
+  }
+  return { ...languageVersion, languages: decodedLanguages };
+}
+
+const languageISO3ToLanguage = (encodedLanguage: LanguageISO3) =>
+  Object.keys(languagesISO3).find(key => languagesISO3[key] === encodedLanguage) as Language;
+
+const defaultLanguageVersion = {
+  languages: [],
+  versions: {
+    original: false,
+    dubbed: false,
+    subtitle: false,
+    caption: false,
+  },
+};
