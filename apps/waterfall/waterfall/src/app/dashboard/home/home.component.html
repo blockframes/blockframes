@@ -1,7 +1,7 @@
 
 <ng-container *ngIf="titles$ | async as titles; else loading">
   
-  <ng-container *ngIf="titles | hasAppStatus:'accepted'; else noAcceptedMovies">
+  <ng-container *ngIf="titles.length; else noAcceptedMovies">
     <header>
       <h1>My Movies</h1>
       <a mat-flat-button color="primary" routerLink="." matTooltip="Add Title">
@@ -11,15 +11,13 @@
     </header>
 
     <bf-table [source]="titles" clickable useFilter pagination="50" (rowClick)="goToEdit($event)">
-      <ng-template colRef label="Title" [filter]="filters.movieTitle" [sort]="sorts.byTitle" let-movie>
-
-        <div class="title-info-container">
-          <img class="poster" [ref]="movie.poster" asset="empty_poster.svg">
-          <span>{{ movie.title.international }}</span>
-        </div>
-
+      <ng-template colRef="poster" label=" " let-poster>
+        <img class="poster" [ref]="poster" asset="empty_poster.svg">
       </ng-template>
-      <ng-template colRef="directors" label="Director(s)" [filter]="filters.movieDirectors" sort let-directors >
+      <ng-template colRef="title.international" label="Title" [filter]="filters.movieTitle" sort let-title>
+        {{ title }}
+      </ng-template>
+      <ng-template colRef="directors" label="Director(s)" [filter]="filters.movieDirectors" let-directors>
         <span>
           {{ directors | displayName | maxLength:50 }}
         </span>
@@ -28,7 +26,7 @@
   </ng-container>
 
   <ng-template #noAcceptedMovies>
-    <h1>You have no Movie yet.</h1>
+    <h1 class="no-movie">You have no Movie yet.</h1>
     <p class="mat-body-1">
       Please add a Movie that you're going to work with. After creating a movie you will be
       <br>
@@ -43,9 +41,7 @@
 </ng-container>
 
 <ng-template #loading>
-  <article class="spinner">
-    <logo-spinner></logo-spinner>
-  </article>
+  <logo-spinner></logo-spinner>
 </ng-template>
 
 

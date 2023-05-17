@@ -27,7 +27,7 @@ export class HomeComponent {
   public titles$ = this.orgService.currentOrg$.pipe(
     switchMap(({ id }) => this.movieService.valueChanges(fromOrgAndAccessible(id, this.app))),
     tap(titles => {
-      titles.filter(hasAppStatus(this.app, ['accepted', 'submitted'])).length
+      titles.length
         ? this.dynTitle.setPageTitle('Dashboard')
         : this.dynTitle.setPageTitle('Dashboard', 'Empty');
     })
@@ -39,9 +39,7 @@ export class HomeComponent {
     private dynTitle: DynamicTitleService,
     private router: Router,
     @Inject(APP) public app: App,
-  ) {
-    this.dynTitle.setPageTitle('Dashboard');
-  }
+  ) { }
 
   goToEdit(movie: Movie) {
     this.router.navigate([`/c/o/dashboard/title/${movie.id}`]);

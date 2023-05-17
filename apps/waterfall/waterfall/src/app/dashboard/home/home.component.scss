@@ -5,47 +5,41 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-
-  & > * {
-    margin-bottom: 24px;
-  }
 }
 
 header {
   margin-top: 64px;
+  margin-bottom: 24px;
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-bf-table.surface,
-bf-table ::ng-deep .table-container,
-bf-table ::ng-deep mat-form-field {
+bf-table {
   width: 100%;
 }
 
-bf-table.surface .poster {
+.poster {
+  margin-top: 8px;
   width: 35px;
-}
-
-.title-info-container {
-  padding: 8px 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 30px;
 }
 
 h1 {
   margin: 0;
 }
 
+.no-movie {
+  margin-top: 128px;
+  margin-bottom: 24px;
+}
+
 p {
   text-align: center;
 }
 
-.surface {
+a.surface {
+  margin-top: 42px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,4 +50,9 @@ p {
     width: 100px;
     align-self: center;
   }
+}
+
+
+logo-spinner {
+  margin-top: 256px;
 }
