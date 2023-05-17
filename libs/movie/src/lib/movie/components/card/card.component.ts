@@ -27,6 +27,7 @@ export class CardComponent {
 
   @Input() size: 'banner' | 'poster' | 'avatar';
   @Input() showWishlistButton = true;
+  @Input() showMovieFeature = true;
 
   private _movie: Movie;
   get movie() {

@@ -1,0 +1,47 @@
+
+<ng-container *rxLet="data$; let items">
+  <article>
+    <button mat-button color="primary"  (click)="switchView()">
+      <ng-container *ngIf="mode === 'grid'">
+        <mat-icon svgIcon="view_list"></mat-icon>
+        <span>Switch to List View</span>
+      </ng-container>
+      <ng-container *ngIf="mode === 'table'">
+        <mat-icon svgIcon="view_module"></mat-icon>
+        <span>Switch to Grid View</span>
+      </ng-container>
+    </button>
+    <mat-divider></mat-divider>
+  </article>
+
+  <ng-container *ngIf="mode === 'grid' else tableView">
+    <section class="surface">
+      <mat-form-field>
+        <mat-label>Tap to filter in the list below</mat-label>
+        <input matInput type="text" [formControl]="search" />
+        <mat-icon matPrefix svgIcon="filter_list"></mat-icon>
+      </mat-form-field>
+  
+      <ul class="grid" [@fadeList]="items.length">
+        <li *ngFor="let item of items; trackBy:trackById" >
+          <movie-card 
+            [movie]="item"
+            [link]="[item.id]"
+            size="poster"
+            [showWishlistButton]="false"
+            ><!-- TODO #9330 add [showMovieFeature]="app !== 'waterfall' ? true : false"  -->
+            
+          </movie-card>
+        </li>
+      </ul>
+
+    </section>
+  </ng-container>
+
+  <ng-template #tableView> <!-- TODO #9330 remove one ng-template -->
+    <ng-template [ngTemplateOutlet]="tableTemplate"></ng-template>
+  </ng-template>
+
+
+</ng-container>
+

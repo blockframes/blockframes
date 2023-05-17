@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { LetModule } from '@rx-angular/template/let';
 
 // Component
 import { ListComponent } from './list.component';
@@ -19,6 +20,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { MovieGridModule } from '@blockframes/movie/dashboard/grid/grid.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -33,6 +35,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
+    LetModule,
 
     // Blockframes
     TableModule,
@@ -46,6 +49,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MaxLengthModule,
     CellModalModule,
     LogoSpinnerModule,
+    MovieGridModule,
 
     // Material
     MatButtonModule,
