@@ -1,7 +1,7 @@
 
 <ng-container *ngIf="titles$ | async as titles; else loading">
   
-  <ng-container *ngIf="titles.length; else noAcceptedMovies">
+  <ng-container *ngIf="titles.length; else noMovies">
     <header>
       <h1>My Movies</h1>
       <a mat-flat-button color="primary" routerLink="." matTooltip="Add Title">
@@ -25,7 +25,7 @@
     </bf-table>
   </ng-container>
 
-  <ng-template #noAcceptedMovies>
+  <ng-template #noMovies>
     <h1 class="no-movie">You have no Movie yet.</h1>
     <p class="mat-body-1">
       Please add a Movie that you're going to work with. After creating a movie you will be
@@ -41,7 +41,9 @@
 </ng-container>
 
 <ng-template #loading>
-  <logo-spinner></logo-spinner>
+  <article>
+    <logo-spinner></logo-spinner>
+  </article>
 </ng-template>
 
 

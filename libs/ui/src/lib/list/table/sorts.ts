@@ -1,4 +1,4 @@
-import { Movie, MovieVideos, Organization } from '@blockframes/model';
+import { MovieVideos, Organization } from '@blockframes/model';
 
 export const sorts = {
   byOrgName: (a: Organization, b: Organization) => {

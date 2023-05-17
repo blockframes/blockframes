@@ -4,10 +4,10 @@ import { Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 
 // Blockframes
+import { App, Movie } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { sorts } from '@blockframes/ui/list/table/sorts';
 import { filters } from '@blockframes/ui/list/table/filters';
-import { App, Movie, hasAppStatus } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MovieService, fromOrgAndAccessible } from '@blockframes/movie/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
