@@ -136,6 +136,7 @@ export const hostedVideoTypes = {
 } as const
 
 // @TODO (#1658) Update LANGUAGES static model to be RFC-5646 compliant
+// Please keep languages' values in an alphabetic order and in sync with languagesISO3
 export const languages = {
   abkhaz: 'Abkhaz',
   afar: 'Afar',
@@ -395,6 +396,7 @@ export const languages = {
 } as const;
 
 // from ISO 639-3
+// Please keep languagesISO3' values in an alphabetic order and in sync with languages
 export const languagesISO3 = {
   abkhaz: 'abk',
   afar: 'aar',
@@ -558,7 +560,7 @@ export const languagesISO3 = {
   'moroccan-arabic': 'ary',
   myene: 'mye',
   nahua: 'nhn',
-  nauruan: 'na',
+  nauru: 'nau',
   ndebele: 'nde',
   nepali: 'nep',
   newar: 'new',
@@ -1763,6 +1765,7 @@ export const staticModel = {
   invitationType,
   invitationStatus,
   languages,
+  languagesISO3,
   medias,
   releaseMedias,
   memberStatus,
