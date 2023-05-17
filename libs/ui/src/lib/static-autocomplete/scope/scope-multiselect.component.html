@@ -2,6 +2,10 @@
   <header>
     <mat-checkbox [checked]="checked | async"  [indeterminate]="indeterminate | async" (change)="checkAll($event.checked)"></mat-checkbox>
     <input [placeholder]="placeholder" [formControl]="search" />
+    <mat-icon *ngIf="!search.value" svgIcon="search"></mat-icon>
+    <button *ngIf="search.value" mat-icon-button type="button" (click)="search.reset('')" matTooltip="Clear text">
+      <mat-icon svgIcon="refresh"></mat-icon>
+    </button>
   </header>
   <ng-container *ngIf="visible | async as isVisible">
     <ng-container *ngFor="let item of items">
