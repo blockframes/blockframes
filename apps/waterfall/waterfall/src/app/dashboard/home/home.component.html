@@ -1,14 +1,49 @@
 
-<!-- TODO issue #9327 display this only if there is no movies and display a movie list otherwise -->
-<!-- TODO you can have a look about how it's done in libs/ui/src/lib/dashboard/pages/home/home.component.html -->
+<ng-container *ngIf="titles$ | async as titles; else loading">
+  
+  <ng-container *ngIf="titles.length; else noMovies">
+    <header>
+      <h1>My Movies</h1>
+      <a mat-flat-button color="primary" routerLink="." matTooltip="Add Title">
+        <mat-icon svgIcon="add"></mat-icon>
+        <span>Add Movie</span>
+      </a>
+    </header>
 
-<h1>You have no Movie yet.</h1>
-<p class="mat-body-1">
-  Please add a Movie that you're going to work with. After creating a movie you will be
-  <br>
-  able to add the Right Holders and have access to the Waterfall & Revenue distribution.
-</p>
-<a routerLink="." class="surface">
-  <img asset="add_title.svg" alt="Add title image">
-  <button mat-button color="primary">Add Movie</button>
-</a>
+    <bf-table [source]="titles" clickable useFilter pagination="50" (rowClick)="goToEdit($event)">
+      <ng-template colRef="poster" label=" " let-poster>
+        <img class="poster" [ref]="poster" asset="empty_poster.svg">
+      </ng-template>
+      <ng-template colRef="title.international" label="Title" [filter]="filters.movieTitle" sort let-title>
+        {{ title }}
+      </ng-template>
+      <ng-template colRef="directors" label="Director(s)" [filter]="filters.movieDirectors" let-directors>
+        <span>
+          {{ directors | displayName | maxLength:50 }}
+        </span>
+      </ng-template>
+    </bf-table>
+  </ng-container>
+
+  <ng-template #noMovies>
+    <h1 class="no-movie">You have no Movie yet.</h1>
+    <p class="mat-body-1">
+      Please add a Movie that you're going to work with. After creating a movie you will be
+      <br>
+      able to add the Right Holders and have access to the Waterfall & Revenue distribution.
+    </p>
+    <a routerLink="." class="surface">
+      <img asset="add_title.svg" alt="Add title image">
+      <button mat-button color="primary">Add Movie</button>
+    </a>
+  </ng-template>
+
+</ng-container>
+
+<ng-template #loading>
+  <article>
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-template>
+
+
