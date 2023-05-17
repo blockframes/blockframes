@@ -22,7 +22,7 @@ import {
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
 const userData = fakeUserData();
-const movieTitle = fakeMovieTitle();
+const movieTitle = fakeMovieTitle('tunnel');
 
 export const user = createUser({
   uid: adminUid,
