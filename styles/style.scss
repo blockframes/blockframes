@@ -123,3 +123,7 @@ body {
     z-index: 999; // It needs to be above everything except the cdk-overlay, which has a z-index: 1000
   }
 }
+
+a.mat-button.main-dashboard-cta {
+  background-color: var(--dashboard-cta);
+}
