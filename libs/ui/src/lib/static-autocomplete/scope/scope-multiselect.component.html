@@ -1,17 +1,20 @@
-<mat-select multiple [formControl]="control" (openedChange)="resetSearch()">
-  <header>
-    <mat-checkbox [checked]="checked | async"  [indeterminate]="indeterminate | async" (change)="checkAll($event.checked)"></mat-checkbox>
-    <input [placeholder]="placeholder" [formControl]="search" />
-    <mat-icon *ngIf="!search.value" svgIcon="search"></mat-icon>
-    <button *ngIf="search.value" mat-icon-button type="button" (click)="search.reset('')" matTooltip="Clear text">
-      <mat-icon svgIcon="refresh"></mat-icon>
-    </button>
-  </header>
-  <ng-container *ngIf="visible | async as isVisible">
-    <ng-container *ngFor="let item of items">
-      <mat-option [value]="item" [ngClass]="{hidden: !isVisible[item]}">
-        {{item | toLabel: scope}}
-      </mat-option>
+<mat-form-field appearance="outline">
+  <mat-label>{{label}}</mat-label>
+  <mat-select multiple [formControl]="control" (openedChange)="resetSearch()">
+    <header>
+      <mat-checkbox color="primary" [checked]="checked | async"  [indeterminate]="indeterminate | async" (change)="checkAll($event.checked)"></mat-checkbox>
+      <input [placeholder]="filterPlaceholder" [formControl]="search" />
+      <mat-icon *ngIf="!search.value" svgIcon="search"></mat-icon>
+      <button *ngIf="!!search.value" mat-icon-button type="button" (click)="search.reset('')" matTooltip="Clear text">
+        <mat-icon svgIcon="refresh"></mat-icon>
+      </button>
+    </header>
+    <ng-container *ngIf="visible | async as isVisible">
+      <ng-container *ngFor="let item of items">
+        <mat-option [value]="item" [ngClass]="{hidden: !isVisible[item]}">
+          {{item | toLabel: scope}}
+        </mat-option>
+      </ng-container>
     </ng-container>
-  </ng-container>
-</mat-select>
+  </mat-select>
+</mat-form-field>

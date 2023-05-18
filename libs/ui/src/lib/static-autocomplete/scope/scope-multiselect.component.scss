@@ -15,9 +15,17 @@ header {
   mat-checkbox {
     padding: 8px;
   }
-  input {
-    margin: 0 8px;
-    flex: 1;
+}
+
+input {
+  margin: 0 8px;
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  font: inherit;
+
+  &:focus {
+    outline: none;
   }
 }
 

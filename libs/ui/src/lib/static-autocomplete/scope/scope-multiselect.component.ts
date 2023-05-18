@@ -28,7 +28,8 @@ function getVisible(items: string[]) {
 export class ScopeMultiselectComponent implements OnInit {
   @Input() control: FormStaticValueArray<Scope>;
   @Input() scope: Scope;
-  @Input() placeholder: string;
+  @Input() label: string;
+  @Input() filterPlaceholder: string;
 
   search = new FormControl('');
 

@@ -1,4 +1,4 @@
-<scope-multiselect scope="languages"  placeholder="Select Languages" [control]="form.get('languages')"></scope-multiselect>
+<scope-multiselect scope="languages" label="Select Languages" filterPlaceholder="Specify language to filter" [control]="form.get('languages')"></scope-multiselect>
 
 <ng-container *ngFor="let item of items | keyvalue: keepOrder">
   <mat-checkbox [formControl]="form.get('versions').get(item.key)" [value]="item.key" color="primary" [attr.test-id]="item.value">
