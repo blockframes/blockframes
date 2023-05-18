@@ -21,7 +21,7 @@ const routes: Routes = [{
   children: [
     {
       path: '',
-      redirectTo: 'financing-plan',
+      redirectTo: 'waterfall',
       pathMatch: 'full'
     },
     {
@@ -40,8 +40,8 @@ const routes: Routes = [{
       data: { animation: 2 }
     },
     {
-      path: 'contacts',
-      loadChildren: () => import('../contacts/contacts.module').then(m => m.ContactsModule),
+      path: 'contracts',
+      loadChildren: () => import('../contracts/contracts.module').then(m => m.ContractsModule),
       data: { animation: 3 }
     },
     {
@@ -53,6 +53,11 @@ const routes: Routes = [{
       path: 'charts',
       loadChildren: () => import('../charts/charts.module').then(m => m.ChartsModule),
       data: { animation: 5 }
+    },
+    {
+      path: 'avails',
+      loadChildren: () => import('../avails/avails.module').then(m => m.AvailsModule),
+      data: { animation: 6 }
     },
   ]
 }];
