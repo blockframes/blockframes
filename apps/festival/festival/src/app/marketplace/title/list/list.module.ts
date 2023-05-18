@@ -20,8 +20,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
-import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
-import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module";
 import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module";
 import { ListPageModule } from "@blockframes/ui/list/page/list-page.module";
 import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module';
@@ -34,6 +32,7 @@ import { RequestScreeningModule } from '@blockframes/event/components/request-sc
 import { MinMaxFilterModule } from '@blockframes/movie/form/filters/min-max/min-max.module';
 import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
+import { ScopeMultiselectModule } from '@blockframes/ui/static-autocomplete/scope/scope-multiselect.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -42,8 +41,6 @@ import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/s
     FlexLayoutModule,
     ReactiveFormsModule,
     MovieCardModule,
-    ChipsAutocompleteModule,
-    AlgoliaAutocompleteModule,
     AlgoliaChipsAutocompleteModule,
     ListPageModule,
     ListFilterModule,
@@ -56,6 +53,7 @@ import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/s
     MinMaxFilterModule,
     StaticGroupModule,
     StaticSelectModule,
+    ScopeMultiselectModule,
 
     // Material
     MatIconModule,
