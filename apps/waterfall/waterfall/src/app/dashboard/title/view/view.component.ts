@@ -32,8 +32,8 @@ export class TitleViewComponent {
       label: 'Budget'
     },
     {
-      path: 'contacts',
-      label: 'Contacts'
+      path: 'contracts',
+      label: 'Contracts'
     },
     {
       path: 'waterfall',
@@ -42,6 +42,10 @@ export class TitleViewComponent {
     {
       path: 'charts',
       label: 'Charts',
+    },
+    {
+      path: 'avails',
+      label: 'Avails',
     },
   ];
 

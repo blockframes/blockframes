@@ -4,17 +4,17 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 // Pages
-import { ContactsComponent } from './contacts.component';
+import { ContractsComponent } from './contracts.component';
 
 @NgModule({
-  declarations: [ContactsComponent],
+  declarations: [ContractsComponent],
   imports: [
     CommonModule,
 
     // Material
 
     // Routing
-    RouterModule.forChild([{ path: '', component: ContactsComponent }]),
+    RouterModule.forChild([{ path: '', component: ContractsComponent }]),
   ],
 })
-export class ContactsModule { }
+export class ContractsModule { }
