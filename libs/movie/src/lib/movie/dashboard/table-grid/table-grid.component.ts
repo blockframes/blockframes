@@ -26,7 +26,6 @@ export class MovieTableGridComponent {
 
   filters = filters;
 
-  /** The content to display in the table */
   @Input() set titles(titles: Movie[]) {
     this.dataSource.next(titles ?? []);
   }

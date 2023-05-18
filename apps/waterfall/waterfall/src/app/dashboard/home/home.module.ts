@@ -3,11 +3,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { DisplayNameModule, MaxLengthModule } from '@blockframes/utils/pipes';
+// Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { MovieTableGridModule } from '@blockframes/movie/dashboard/table-grid/table-grid.module';
 
+// Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -20,9 +21,7 @@ import { HomeComponent } from './home.component';
     CommonModule,
     ImageModule,
     LogoSpinnerModule,
-    TableModule,
-    DisplayNameModule,
-    MaxLengthModule,
+    MovieTableGridModule,
 
     // Material
     MatButtonModule,
