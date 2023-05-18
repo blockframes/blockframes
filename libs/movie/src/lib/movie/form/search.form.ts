@@ -74,7 +74,7 @@ function createMovieSearchControl(search: MovieSearch) {
     searchBy: new UntypedFormControl(search.searchBy),
     page: new UntypedFormControl(search.page),
     storeStatus: FormList.factory<StoreStatus>(search.storeStatus),
-    genres: FormList.factory<GetKeys<'genres'>>(search.genres),
+    genres: new FormStaticValueArray<'genres'>(search.genres, 'genres'),
     originCountries: new FormStaticValueArray<'territories'>(search.originCountries, 'territories'),
     languages: createLanguageVersionControl(search.languages),
     productionStatus: new FormStaticValueArray<'productionStatus'>(search.productionStatus, 'productionStatus'),
