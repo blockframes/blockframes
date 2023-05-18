@@ -53,7 +53,6 @@ import { ScopeMultiselectModule } from '@blockframes/ui/static-autocomplete/scop
     StaticSelectModule,
     ScopeMultiselectModule,
 
-    // Material
     MatIconModule,
     MatSnackBarModule,
     MatButtonModule,

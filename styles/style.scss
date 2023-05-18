@@ -112,8 +112,18 @@ main {
   @include surface.surface;
 }
 
+a.surface {
+  &:hover {
+    filter: drop-shadow(0px 5px 5px var(--card-shadow));
+  }
+}
+
 body {
   .intercom-lightweight-app, .intercom-namespace {
     z-index: 999; // It needs to be above everything except the cdk-overlay, which has a z-index: 1000
   }
+}
+
+a.mat-button.main-dashboard-cta {
+  background-color: var(--dashboard-cta);
 }

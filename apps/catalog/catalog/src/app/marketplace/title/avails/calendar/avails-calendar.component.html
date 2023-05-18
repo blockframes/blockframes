@@ -2,14 +2,10 @@
   <form [availsFilter]="availsForm" [disabled]="!mandates?.length" (cleared)="clear()"></form>
 
   <h2>Available Dates</h2>
-  <ng-container *ngIf="org$ | async as org">
-    <p>
-      Select the time window you're interested in to add it to your Selection. For periods that are not licensed, feel
-      free to
-      <a [routerLink]="['/c/o/marketplace/organization', org.id, 'member']">contact {{ org.name }}</a>.
-    </p>
-
-  </ng-container>
+  <p>
+    Select the time window you're interested in to add it to your Selection. For periods that are not licensed, feel
+    free to <button (click)="openIntercom()">contact {{appName}} Team</button>.
+  </p>
 
   <section class="surface" fxLayout="column">
     <!-- CALENDAR LEGEND -->

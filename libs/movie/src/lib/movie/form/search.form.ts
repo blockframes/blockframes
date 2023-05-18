@@ -1,10 +1,9 @@
-import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, festival, recursiveSearch, AlgoliaSearchQuery, MovieSearch, LanguageVersion, Versions } from '@blockframes/model';
+import { GetKeys, AlgoliaMovie, AlgoliaOrganization, App, festival, recursiveSearch, AlgoliaSearchQuery, MovieSearch, LanguageVersion, Versions, maxBudget } from '@blockframes/model';
 import type { StoreStatus, AlgoliaMinMax } from '@blockframes/model';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
-import { max } from './filters/budget/budget.component';
 import { maxQueryLength } from '@blockframes/utils/algolia';
 
 
@@ -157,7 +156,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     };
 
     if (this.minBudget.value) {
-      search.filters = `budget >= ${max - this.minBudget.value ?? 0}`;
+      search.filters = `budget >= ${maxBudget - this.minBudget.value}`;
     }
     if (this.releaseYear.value.min) {
       if (search.filters) search.filters += ' AND ';

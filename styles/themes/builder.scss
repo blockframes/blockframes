@@ -58,6 +58,7 @@
 }
 
 @function getTheme($theme) {
+  $is-dark: map.get($theme, "is-dark");
   $primary: map.get($theme, "primary");
   $accent: map.get($theme, "accent");
   $warn: map.get($theme, "warn");
@@ -106,6 +107,16 @@
     slider-off-active: rgba(map.get($foreground, 700), 0.38),
   );
 
+  $mat-surface-shadow: rgba(map.get($foreground, 900), 0.20);
+  @if $is-dark {
+    $mat-surface-shadow: rgba(map.get($foreground, 800), 0.20);
+  }
+
+  $mat-dashboard-cta: rgba(map.get($primary, 800), 0.1);
+  @if $is-dark {
+    $mat-dashboard-cta: rgba(map.get($primary, 500), 0.1);
+  }
+
   //////////
   // FONT //
   //////////
@@ -136,7 +147,9 @@
     is-dark: map.get($theme, "is-dark"),
     foreground: $mat-foreground,
     background: $mat-background,
-    font: $font
+    font: $font,
+    shadow: $mat-surface-shadow,
+    dashboard-cta: $mat-dashboard-cta,
   );
 
   @return (
@@ -188,6 +201,8 @@
   $config: mat.get-color-config($theme);
   $background: map.get($config, 'background');
   $foreground: map.get($config, 'foreground');
+  $shadow: map.get($config, 'shadow');
+  $dashboard-cta: map.get($config, 'dashboard-cta');
   $primary: map.get($config, 'primary');
   $accent: map.get($config, 'accent');
   $warn: map.get($config, 'warn');
@@ -214,5 +229,10 @@
   --foreground-base: #{mat.get-color-from-palette($foreground, 'base')};
   --primary-lighter: #{mat.get-color-from-palette($primary, 200)};
   --primary-lighter-contrast: #{mat.get-color-from-palette($primary, 'lighter-contrast')};
+  // Shadow
+  --card-shadow: #{$shadow};
+
+  // Dashboard Main CTA background color
+  --dashboard-cta: #{$dashboard-cta};
 }
 
