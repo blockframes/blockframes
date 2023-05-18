@@ -27,31 +27,10 @@
       </ng-container>
     </header>
 
-    <movie-grid *rxLet="result$; let results" [titles]="results">
-      <ng-template movieGridTable>
-        <!-- TODO #9330 only give what is inside table ? -->
-        <bf-table [source]="results" pagination="50" useFilter>
-          <ng-template colRef="title.international" label="Title" let-title let-movie="item" sort [filter]="filters.movieTitle">
-            <a [routerLink]="movie.id" [matTooltip]="title">
-              <u>{{ title | maxLength:50 }}</u>
-            </a>
-          </ng-template>
-          <ng-template colRef="directors" label="Director(s)" let-directors [filter]="filters.movieDirectors">
-            <span (click)="openDetails('Director\'s', directors)">
-              {{ directors | displayName | maxLength:50 }}
-            </span>
-          </ng-template>
-          <ng-template colRef="productionStatus" label="Production Status" let-prod sort>
-            {{ prod | toLabel: 'productionStatus' }}
-          </ng-template>
-          <ng-template colRef="app.festival.status" label="Status" let-status>
-            <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
-          </ng-template>
-          <ng-template colRef label="Actions" let-movie sticky>
-            <dashboard-movie-table-actions [movie]="movie"></dashboard-movie-table-actions>
-          </ng-template>
-        </bf-table>
-      </ng-template>
+    <movie-grid 
+      *ngIf="(result$ | async) as results" 
+      [titles]="results" 
+      [columns]="['title.international','directors','productionStatus','app.festival.status','Actions']">
     </movie-grid>
 
   </ng-container>

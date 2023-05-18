@@ -1,4 +1,3 @@
-
 <ng-container *rxLet="data$; let items">
   <article>
     <button mat-button color="primary"  (click)="switchView()">
@@ -38,10 +37,50 @@
     </section>
   </ng-container>
 
-  <ng-template #tableView> <!-- TODO #9330 remove one ng-template -->
-    <ng-template [ngTemplateOutlet]="tableTemplate"></ng-template>
+  <ng-template #tableView>
+    <bf-table [source]="items" pagination="50" useFilter>
+      <ng-template *ngIf="columns.includes('title.international')" colRef="title.international" label="Title" let-title let-movie="item" sort defaultSort [filter]="filters.movieTitle">
+        <a [routerLink]="movie.id" [matTooltip]="title">
+          <u>{{ title | maxLength:50 }}</u>
+        </a>
+      </ng-template>
+      <ng-template *ngIf="columns.includes('directors')" colRef="directors" label="Director(s)" let-directors [filter]="filters.movieDirectors">
+        <span (click)="openDetails('Director\'s', directors)">
+          {{ directors | displayName | maxLength:50 }}
+        </span>
+      </ng-template>
+      <ng-template *ngIf="columns.includes('release.year')" colRef="release.year" label="Release Year" let-year sort>
+        {{ year }}
+      </ng-template>
+      <ng-template *ngIf="columns.includes('id')" colRef="id" label="#Sales (Total Gross Receipt)" let-titleId>
+        <ng-container *ngIf="titleId | getIncomesFromTitle | async as incomes">
+          {{ incomes.length }}
+          <ng-container *ngIf="incomes.length > 0; else noIncome">
+            ({{ incomes | sum : 'price' | currency:incomes[0].currency }})
+          </ng-container>
+          <ng-template #noIncome>($0)</ng-template>
+        </ng-container>
+      </ng-template>
+      <ng-template *ngIf="columns.includes('productionStatus')" colRef="productionStatus" label="Production Status" let-prod sort>
+        {{ prod | toLabel: 'productionStatus' }}
+      </ng-template>
+      <ng-template *ngIf="columns.includes('campaign.cap')" colRef="campaign.cap" label="Goal Funding" let-cap let-movie="item" sort>
+        {{ cap ? (cap | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
+      </ng-template>
+      <ng-template *ngIf="columns.includes('campaign.received')" colRef="campaign.received" label="Funding Raised" let-received let-movie="item" sort>
+        {{ received ? (received | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
+      </ng-template>
+      <ng-template *ngIf="columns.includes('campaignStarted')" colRef="campaignStarted" label="Campaign Started" let-date sort>{{ date | date: 'short' }}</ng-template>
+      <ng-template *ngIf="columns.includes('app.festival.status')" colRef="app.festival.status" label="Status" let-status>
+        <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
+      </ng-template>
+      <ng-template *ngIf="columns.includes('app.catalog.status')" colRef="app.catalog.status" label="Status" let-status>
+        <bf-tag>{{ status | toLabel: 'storeStatus' }}</bf-tag>
+      </ng-template>
+      <ng-template *ngIf="columns.includes('Actions')" colRef label="Actions" let-movie sticky>
+        <dashboard-movie-table-actions [movie]="movie"></dashboard-movie-table-actions>
+      </ng-template>
+    </bf-table>
   </ng-template>
-
-
 </ng-container>
 

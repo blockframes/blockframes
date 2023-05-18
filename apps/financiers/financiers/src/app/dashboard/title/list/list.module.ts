@@ -9,12 +9,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ListComponent } from './list.component';
 
 // Blockframes
-import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 import { EmptyMovieModule } from '@blockframes/ui/dashboard/components/empty-movie/empty-movie.module';
-import { TableActionsModule } from '@blockframes/ui/dashboard/components/movie-table-actions/movie-table-actions.module';
 import { MovieListHeaderModule } from '@blockframes/ui/dashboard/components/movie-list-header/movie-list-header.module';
-import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { MaxLengthModule } from '@blockframes/utils/pipes';
+import { MovieGridModule } from '@blockframes/movie/dashboard/grid/grid.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -32,11 +29,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     FlexLayoutModule,
 
     // Blockframes
-    TableModule,
-    ToLabelModule,
     EmptyMovieModule,
-    TableActionsModule,
     MovieListHeaderModule,
+    MovieGridModule,
 
     // Material
     MatButtonModule,
@@ -44,7 +39,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatIconModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    MaxLengthModule,
     MatSnackBarModule,
 
     // Router
