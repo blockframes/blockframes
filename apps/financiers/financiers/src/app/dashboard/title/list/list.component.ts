@@ -7,7 +7,6 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
-import { filters } from '@blockframes/ui/list/table/filters';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 
@@ -47,7 +46,6 @@ export class ListComponent implements OnInit {
   titleCount$: Observable<Record<string, number>>;
   filter = new UntypedFormControl('all');
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
-  filters = filters;
   exporting = false;
 
   constructor(
