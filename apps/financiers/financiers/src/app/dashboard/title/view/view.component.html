@@ -1,13 +1,13 @@
 <title-dashboard-shell *ngIf="movie$ | async as movie" [routes]="navLinks">
   <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
-    <button *ngIf="movie.app.financiers.status === 'accepted'" mat-button color="primary" (click)="openDialog()">
+    <button *ngIf="movie.app.financiers.status === 'accepted'" mat-button color="primary" (click)="openDialog()" class="main-dashboard-cta">
       <mat-icon svgIcon="update" color="primary"></mat-icon>
       Update Funding Status
     </button>
-    <a *ngIf="movie.app.financiers.status === 'draft'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" mat-button color="primary" fragment="submit">
+    <a *ngIf="movie.app.financiers.status === 'draft'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" mat-button color="primary" fragment="submit" class="main-dashboard-cta">
       <mat-icon svgIcon="cloud_upload"></mat-icon><span>Submit Title</span>
     </a>
-    <a *ngIf="movie.app.financiers.status === 'submitted'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-button color="primary">
+    <a *ngIf="movie.app.financiers.status === 'submitted'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-button color="primary" class="main-dashboard-cta">
       <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
     </a>
     <actions-dashboard-shell [movie]="movie" fxFlex #actions="actionsDashboardShell">
