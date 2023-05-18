@@ -14,13 +14,13 @@ import { displayPerson } from '@blockframes/utils/pipes';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
-  selector: 'movie-grid',
-  templateUrl: './grid.component.html',
-  styleUrls: ['./grid.component.scss'],
+  selector: 'movie-table-grid',
+  templateUrl: './table-grid.component.html',
+  styleUrls: ['./table-grid.component.scss'],
   animations: [fadeList('.card')],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MovieGridComponent { // TODO #9330 rename
+export class MovieTableGridComponent {
 
   private dataSource = new BehaviorSubject<Movie[]>([]);
 

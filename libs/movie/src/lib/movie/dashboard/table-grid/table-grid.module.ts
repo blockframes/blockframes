@@ -6,7 +6,7 @@ import { LetModule } from '@rx-angular/template/let';
 import { RouterModule } from '@angular/router';
 
 // Component
-import { MovieGridComponent } from './grid.component';
+import { MovieTableGridComponent } from './table-grid.component';
 
 // Blockframes
 import { MovieCardModule } from '../../components/card/card.module';
@@ -26,7 +26,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [MovieGridComponent],
+  declarations: [MovieTableGridComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -53,6 +53,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatDividerModule,
     MatTooltipModule
   ],
-  exports: [MovieGridComponent]
+  exports: [MovieTableGridComponent]
 })
-export class MovieGridModule { }
+export class MovieTableGridModule { }

@@ -27,11 +27,11 @@
       </ng-container>
     </header>
 
-    <movie-grid 
+    <movie-table-grid 
       *ngIf="(result$ | async) as results" 
       [titles]="results" 
       [columns]="['title.international','directors','productionStatus','app.festival.status','Actions']">
-    </movie-grid>
+    </movie-table-grid>
 
   </ng-container>
 </ng-container>

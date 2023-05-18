@@ -11,7 +11,7 @@ import { ListComponent } from './list.component';
 // Blockframes
 import { EmptyMovieModule } from '@blockframes/ui/dashboard/components/empty-movie/empty-movie.module';
 import { MovieListHeaderModule } from '@blockframes/ui/dashboard/components/movie-list-header/movie-list-header.module';
-import { MovieGridModule } from '@blockframes/movie/dashboard/grid/grid.module';
+import { MovieTableGridModule } from '@blockframes/movie/dashboard/table-grid/table-grid.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -31,7 +31,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     // Blockframes
     EmptyMovieModule,
     MovieListHeaderModule,
-    MovieGridModule,
+    MovieTableGridModule,
 
     // Material
     MatButtonModule,

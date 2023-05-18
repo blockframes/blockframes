@@ -12,7 +12,7 @@ import { ListComponent } from './list.component';
 import { EmptyMovieModule } from '@blockframes/ui/dashboard/components/empty-movie/empty-movie.module';
 import { MovieListHeaderModule } from '@blockframes/ui/dashboard/components/movie-list-header/movie-list-header.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
-import { MovieGridModule } from '@blockframes/movie/dashboard/grid/grid.module';
+import { MovieTableGridModule } from '@blockframes/movie/dashboard/table-grid/table-grid.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -32,7 +32,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     EmptyMovieModule,
     MovieListHeaderModule,
     LogoSpinnerModule,
-    MovieGridModule,
+    MovieTableGridModule,
 
     // Material
     MatButtonModule,
