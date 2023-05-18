@@ -5,7 +5,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { RouteDescription } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
-import { OrganizationService } from '@blockframes/organization/service';
 
 
 @Component({
@@ -18,8 +17,6 @@ export class TitleViewComponent {
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)));
-
-  public org$ = this.orgService.currentOrg$;
 
   navLinks: RouteDescription[] = [
     {
@@ -49,9 +46,8 @@ export class TitleViewComponent {
   ];
 
   constructor(
+    private route: ActivatedRoute,
     private movieService: MovieService,
-    private orgService: OrganizationService,
-    private route: ActivatedRoute
   ) { }
 
 }
