@@ -46,7 +46,7 @@ export function encodeUrl<T>(router: Router, route: ActivatedRoute, data: T) {
 }
 
 type EncodedTerritory = Territory | TerritoryISOA2Value | TerritoryGroup;
-type EncodedLanguageVersion = Omit<LanguageVersion, 'languages'> & { languages: Language[] | string };
+type EncodedLanguageVersion = Omit<LanguageVersion, 'languages'> & { languages: string };
 
 interface MovieAvailsSearchEncoded {
   search?: Omit<MovieSearch, 'originCountries' | 'languages'> & {
@@ -61,6 +61,7 @@ export function encodeAvailsSearchUrl(router: Router, route: ActivatedRoute, dat
     search: {
       ...data.search,
       originCountries: encodeTerritories(data.search?.originCountries),
+      languages: encodeLanguages(data.search?.languages),
     },
   };
   if (search.search?.languages) search.search.languages = encodeLanguages(data.search.languages);
@@ -74,7 +75,7 @@ export function decodeAvailsSearchUrl(route: ActivatedRoute) {
     search: {
       ...data.search,
       originCountries: decodeTerritories(data.search?.originCountries),
-      languages: decodeLanguages(data.search.languages),
+      languages: decodeLanguages(data.search?.languages),
     },
   };
   if (data.search?.languages) search.search.languages = decodeLanguages(data.search.languages);
@@ -133,10 +134,10 @@ function extractCountriesISOA2(territories: EncodedTerritory[]) {
   return countriesISOA2 as TerritoryISOA2Value[];
 }
 
-function encodeLanguages(languages: LanguageVersion): EncodedLanguageVersion {
+function encodeLanguages(languageVersion: LanguageVersion): EncodedLanguageVersion {
   let encodedLanguages = '';
-  for (const language of languages.languages) encodedLanguages += languagesISO3[language];
-  return { ...languages, languages: encodedLanguages };
+  for (const language of languageVersion.languages) encodedLanguages += languagesISO3[language];
+  return { ...languageVersion, languages: encodedLanguages };
 }
 
 function decodeLanguages(languageVersion: EncodedLanguageVersion): LanguageVersion {
@@ -153,7 +154,7 @@ function decodeLanguages(languageVersion: EncodedLanguageVersion): LanguageVersi
 const languageISO3ToLanguage = (encodedLanguage: LanguageISO3) =>
   Object.keys(languagesISO3).find(key => languagesISO3[key] === encodedLanguage) as Language;
 
-const defaultLanguageVersion = {
+const defaultLanguageVersion: LanguageVersion = {
   languages: [],
   versions: {
     original: false,

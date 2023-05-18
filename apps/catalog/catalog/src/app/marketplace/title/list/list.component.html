@@ -38,7 +38,13 @@
     </ng-template>
 
     <ng-template filter label="Genre" [form]="searchForm.genres">
-      <scope-multiselect scope="genres" label="Select Genres" filterPlaceholder="Specify genre to filter" [control]="searchForm.genres"></scope-multiselect>
+      <scope-multiselect
+        scope="genres"
+        label="Select Genres"
+        selectIcon="style"
+        filterPlaceholder="Specify genre to filter"
+        [control]="searchForm.genres">
+      </scope-multiselect>
     </ng-template>
 
     <ng-template filter label="Country of Origin" [form]="searchForm.originCountries">
@@ -68,7 +74,13 @@
     </ng-template>
 
     <ng-template filter label="Festival Selection" [form]="searchForm.festivals">
-      <scope-multiselect scope="festival" label="Select Festivals" filterPlaceholder="Specify festival to filter" [control]="searchForm.festivals"></scope-multiselect>
+      <scope-multiselect
+        scope="festival"
+        label="Select Festivals"
+        selectIcon="theaters"
+        filterPlaceholder="Specify festival to filter"
+        [control]="searchForm.festivals">
+      </scope-multiselect>
     </ng-template>
 
     <ng-template filter label="Qualifications" [form]="searchForm.certifications">

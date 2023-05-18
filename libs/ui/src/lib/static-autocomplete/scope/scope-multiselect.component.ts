@@ -6,10 +6,10 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 // Blockframes
 import { Scope, staticModel } from '@blockframes/model';
 import { FormStaticValueArray } from '@blockframes/utils/form';
-import { Observable } from 'rxjs';
 
 // RxJs
 import { startWith, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 function getVisible(items: string[]) {
   const visible: Record<string, boolean> = {};
@@ -29,6 +29,7 @@ export class ScopeMultiselectComponent implements OnInit {
   @Input() control: FormStaticValueArray<Scope>;
   @Input() scope: Scope;
   @Input() label: string;
+  @Input() selectIcon = 'world';
   @Input() filterPlaceholder: string;
 
   search = new FormControl('');
