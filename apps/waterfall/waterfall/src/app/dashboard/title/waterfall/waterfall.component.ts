@@ -2,6 +2,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 // Blockframes
+import { waterfall } from '@blockframes/waterfall/main';
+import { actions } from '@blockframes/waterfall/fixtures/terrawilly-demo';
 
 
 @Component({
@@ -11,4 +13,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaterfallComponent {
+
+  tree = waterfall('terrawilly-demo', actions);
 }
