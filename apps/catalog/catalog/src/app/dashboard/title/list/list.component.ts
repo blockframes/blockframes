@@ -2,13 +2,10 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/
 import { UntypedFormControl } from '@angular/forms';
 import { map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { StoreStatus, storeStatus, Person, Movie } from '@blockframes/model';
+import { StoreStatus, storeStatus, Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
-import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
-import { displayPerson } from '@blockframes/utils/pipes';
-import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { filters } from '@blockframes/ui/list/table/filters';
 import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -71,13 +68,6 @@ export class TitleListComponent {
   resetFilter() {
     this.filter.reset('');
     this.dynTitle.useDefault();
-  }
-
-  openDetails(title: string, values: Person[]) {
-    this.dialog.open(CellModalComponent, {
-      data: createModalData({ title, values: displayPerson(values) }),
-      autoFocus: false
-    });
   }
 
   async export(movies: Movie[]) {

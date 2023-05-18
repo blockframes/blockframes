@@ -1,6 +1,5 @@
 // Pages
 import { ListComponent } from './list.component';
-import { MovieCardModule } from "@blockframes/movie/components/card/card.module";
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,6 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
 import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module";
+import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
 import { ListPageModule } from "@blockframes/ui/list/page/list-page.module";
 import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module';
 import { ListFilterButtonsModule } from '@blockframes/ui/list/buttons/list-filter-buttons.module';

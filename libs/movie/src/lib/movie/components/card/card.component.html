@@ -19,7 +19,7 @@
   <div fxLayout fxLayoutAlign="space-between end" fxLayoutGap="8px">
     <div class="description" fxLayout="column">
       <p class="mat-caption">{{ movie.directors | displayName }}</p>
-      <span class="mat-caption">{{ movie | movieFeature }}</span>
+      <span class="mat-caption" *ngIf="showMovieFeature">{{ movie | movieFeature }}</span>
     </div>
     <ng-content></ng-content>
   </div>
