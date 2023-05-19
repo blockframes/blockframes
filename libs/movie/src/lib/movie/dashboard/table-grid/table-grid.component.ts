@@ -36,7 +36,7 @@ export class MovieTableGridComponent {
 
   search = new UntypedFormControl();
 
-  mode : 'grid' | 'table' = 'table';
+  @Input() mode : 'grid' | 'table' = 'table';
 
   constructor(
     @Inject(APP) public app: App,
