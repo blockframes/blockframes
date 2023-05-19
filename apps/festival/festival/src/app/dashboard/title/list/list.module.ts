@@ -9,16 +9,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ListComponent } from './list.component';
 
 // Blockframes
-import { ToLabelModule, DisplayNameModule } from '@blockframes/utils/pipes';
 import { EmptyMovieModule } from '@blockframes/ui/dashboard/components/empty-movie/empty-movie.module';
-import { TableActionsModule } from '@blockframes/ui/dashboard/components/movie-table-actions/movie-table-actions.module';
 import { MovieListHeaderModule } from '@blockframes/ui/dashboard/components/movie-list-header/movie-list-header.module';
-import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
-import { TagModule } from '@blockframes/ui/tag/tag.module';
-import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { MaxLengthModule } from '@blockframes/utils/pipes';
-import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { MovieTableGridModule } from '@blockframes/movie/dashboard/table-grid/table-grid.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -35,17 +29,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     FlexLayoutModule,
 
     // Blockframes
-    TableModule,
-    ToLabelModule,
-    DisplayNameModule,
     EmptyMovieModule,
-    TableActionsModule,
     MovieListHeaderModule,
-    FilterByModule,
-    TagModule,
-    MaxLengthModule,
-    CellModalModule,
     LogoSpinnerModule,
+    MovieTableGridModule,
 
     // Material
     MatButtonModule,
