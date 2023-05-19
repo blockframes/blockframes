@@ -1,6 +1,6 @@
 <title-dashboard-shell *ngIf="movie$ | async as movie" [routes]="navLinks">
   <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
-    <a mat-button color="primary" [routerLink]="['/c/o/dashboard/avails/select', movie.id, 'manage']">
+    <a mat-button color="primary" [routerLink]="['/c/o/dashboard/avails/select', movie.id, 'manage']" class="main-dashboard-cta">
       Manage Avails
     </a>
     <actions-dashboard-shell [movie]="movie" fxFlex #actions="actionsDashboardShell">

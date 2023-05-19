@@ -1,6 +1,5 @@
 // Pages
 import { ListComponent } from './list.component';
-import { MovieCardModule } from "@blockframes/movie/components/card/card.module";
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,6 +19,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
+import { MovieCardModule } from "@blockframes/movie/components/card/card.module";
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
 import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module";
 import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module";
