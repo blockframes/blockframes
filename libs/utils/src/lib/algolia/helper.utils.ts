@@ -1,5 +1,5 @@
 import { UntypedFormControl } from '@angular/forms';
-import { AlgoliaUser, MovieIndexFilters } from '@blockframes/model';
+import { AlgoliaUser, IAlgoliaKeyDoc, MovieIndexFilters } from '@blockframes/model';
 import { FormList } from '../form/forms/list.form';
 import { Validator } from '../form/forms/types';
 import { algolia } from '@env';
@@ -94,4 +94,13 @@ export function maxQueryLength(query: string | string[]) {
   // If array only have one item left with size > 512
   reducedArray[0] = reducedArray[0].substring(0, 508);
   return reducedArray;
+}
+
+const localStorageKey = 'algoliaSearchKey';
+export function setSearchKey(doc: IAlgoliaKeyDoc) {
+  return localStorage.setItem(localStorageKey, doc.key);
+}
+
+export function getSearchKey() {
+  return localStorage.getItem(localStorageKey);
 }

@@ -4,7 +4,7 @@ import { UntypedFormControl, Validators } from '@angular/forms';
 import { EntityControl, FormEntity, FormList, FormStaticValueArray } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
-import { maxQueryLength } from '@blockframes/utils/algolia';
+import { getSearchKey, maxQueryLength } from '@blockframes/utils/algolia';
 
 
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
@@ -100,8 +100,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     const movieSearch = createMovieSearch({});
     const control = createMovieSearchControl(movieSearch);
     super(control);
-
-    this.movieIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameMovies[app]);
+    this.movieIndex = algoliasearch(algolia.appId, getSearchKey()).initIndex(algolia.indexNameMovies[app]);
     this.storeStatus.add(storeStatus);
   }
 

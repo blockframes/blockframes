@@ -9,7 +9,6 @@ import {
   // cypress commands
   get,
   assertUrlIncludes,
-  syncMovieToAlgolia,
   escapeKey,
   check,
   connectUser,
@@ -53,7 +52,6 @@ describe('Deal negociation', () => {
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: buyer.user.uid, email: buyer.user.email, emailVerified: true });
     adminAuth.createUser({ uid: seller.user.uid, email: seller.user.email, emailVerified: true });
-    syncMovieToAlgolia(seller.movie.id);
     maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
