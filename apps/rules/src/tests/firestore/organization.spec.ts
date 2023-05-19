@@ -127,7 +127,7 @@ describe('Organization Rules Tests', () => {
       await assertSucceeds(orgDocRef.get());
     });
 
-    test('should not be able to list all orgs', async () => { //
+    test('should not be able to list all orgs', async () => {
       const allDocs = db.collection('orgs');
       await assertFails(allDocs.get());
     });
@@ -180,7 +180,7 @@ describe('Organization Rules Tests', () => {
 
     afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
 
-    test('should be able to list all orgs', async () => { //
+    test('should be able to list all orgs', async () => {
       const allDocs = db.collection('orgs');
       await assertSucceeds(allDocs.get());
     });
