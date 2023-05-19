@@ -21,7 +21,7 @@ const routes: Routes = [{
   children: [
     {
       path: '',
-      redirectTo: 'waterfall',
+      redirectTo: 'statements',
       pathMatch: 'full'
     },
     {

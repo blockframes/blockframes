@@ -16,6 +16,7 @@ import { App } from '@blockframes/model';
 // RxJs
 import { Observable, Subscription } from 'rxjs';
 import { filter, map, shareReplay } from 'rxjs/operators';
+import { AuthService } from '@blockframes/auth/service';
 
 interface SearchResult {
   title: string;
@@ -56,6 +57,9 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   public invitationCount$ = this.invitationService.invitationCount();
 
+  // TODO REMOVE THIS BEFORE RELEASE issue#9336
+  public isAdmin$ = this.authService.isBlockframesAdmin$;
+
   public mode$ = this.breakpointsService.ltMd.pipe(
     map(ltMd => ltMd ? 'over' : 'side'),
     shareReplay({ refCount: true, bufferSize: 1 }),
@@ -73,6 +77,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     private breakpointsService: BreakpointsService,
     private invitationService: InvitationService,
     private notificationService: NotificationService,
+    private authService: AuthService,
     private router: Router,
     @Inject(APP) public currentApp: App
   ) { }
@@ -81,7 +86,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     // https://github.com/angular/components/issues/4280
     this.sub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => this.cdkScrollable.scrollTo({ top: 0 }))
+    ).subscribe(() => this.cdkScrollable.scrollTo({ top: 0 }));
   }
 
   ngOnDestroy() {
