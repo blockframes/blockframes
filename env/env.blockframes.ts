@@ -79,8 +79,7 @@ export const algolia = {
   indexNameMovies: {
     festival: 'prod_festival_movies',
     financiers: 'prod_financiers_movies',
-    catalog: 'prod_catalog_movies',
-    waterfall: 'prod_waterfall_movies'
+    catalog: 'prod_catalog_movies'
   },
   indexNameUsers: 'prod_users',
 };
