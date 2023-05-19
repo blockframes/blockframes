@@ -33,7 +33,6 @@ export function firebase(app?: string) {
 
 export const algolia = {
   appId: '8E9YO1I9HB',
-  searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
   indexNameOrganizations: {
     festival: 'francois_festival_org',
     financiers: 'francois_financiers_org',

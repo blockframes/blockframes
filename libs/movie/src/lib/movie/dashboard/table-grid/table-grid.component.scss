@@ -1,3 +1,5 @@
+@import '@angular/flex-layout/mq';
+
 article {
   display: flex;
   place-content: stretch flex-start;
@@ -7,7 +9,9 @@ article {
     border-top-color: var(--primary);
     border-top-width: 2px;
     margin-left: 16px;
-    width: 100%;
+  }
+  button {
+    width: 300px;
   }
 }
 
@@ -21,4 +25,22 @@ section {
 
 mat-form-field {
   display: block;
+}
+
+@include layout-bp(lg) {
+  mat-divider {
+    width: 100%;
+  }
+}
+
+@include layout-bp(lt-lg) {
+  mat-divider {
+    width: 64%;
+  }
+}
+
+@include layout-bp(xs) {
+  mat-divider {
+    width: 0%;
+  }
 }

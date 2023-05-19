@@ -33,7 +33,6 @@ export function firebase(app?: string) {
 // ! CI ALGOLIA VALUES - needed for test runs
 export const algolia = {
   appId: '8E9YO1I9HB',
-  searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
   indexNameOrganizations: {
     festival: 'ci_festival_org',
     financiers: 'ci_financiers_org',

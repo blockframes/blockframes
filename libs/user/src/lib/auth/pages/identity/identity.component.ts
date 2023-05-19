@@ -195,15 +195,6 @@ export class IdentityComponent implements OnInit, OnDestroy {
     } else {
       const { name, addresses, activity, appAccess } = this.orgForm.value;
 
-
-      /**
-       * @dev This anonymous user is used to call "this.orgService.uniqueOrgName()"
-       * without forcing us to allow orgs collection reads for non-logged-in users in firestore rules
-       * Once the account is converted from anonymous to real, authState will remain as anonymous for a few seconds 
-       * (this explain the need to allow the anonymous sign-in for user update in firestore rules)
-       * #6908
-       */
-      await this.authService.signInAnonymously();
       this.isAnonymous = (await this.authService.user).isAnonymous;
 
       // Check if the org name is already existing
