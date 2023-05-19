@@ -42,6 +42,7 @@ import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/sear
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import algoliasearch from 'algoliasearch';
 import { AnalyticsService } from '@blockframes/analytics/service';
+import { getSearchKey } from '@blockframes/utils/algolia/helper.utils';
 
 const mandatesQuery = [
   where('type', '==', 'mandate'),
@@ -240,7 +241,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
   private async cacheAlgoliaResults() {
     if (this.cachedAlgoliaResults) return;
 
-    const movieIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameMovies['catalog']);
+    const movieIndex = algoliasearch(algolia.appId, getSearchKey()).initIndex(algolia.indexNameMovies['catalog']);
 
     const search = { facetFilters: [[`storeStatus:${this.storeStatus}`]] };
     this.cachedAlgoliaResults = await recursiveSearch<AlgoliaMovie>(movieIndex, search);

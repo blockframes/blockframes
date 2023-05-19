@@ -6,7 +6,7 @@ import { Organization, Territory, App, OrganizationSearch, AlgoliaModule } from 
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { algolia } from '@env';
 import { UntypedFormControl } from '@angular/forms';
-import { maxQueryLength } from '@blockframes/utils/algolia/helper.utils';
+import { getSearchKey, maxQueryLength } from '@blockframes/utils/algolia/helper.utils';
 
 export function createOrganizationSearch(search: Partial<OrganizationSearch> = {}): OrganizationSearch {
   return {
@@ -43,7 +43,7 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
     const organizationSearch = createOrganizationSearch(search);
     const control = createOrganizationSearchControl(organizationSearch);
     super(control);
-    this.organizationIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameOrganizations[app]);
+    this.organizationIndex = algoliasearch(algolia.appId, getSearchKey()).initIndex(algolia.indexNameOrganizations[app]);
   }
 
   get query() { return this.get('query'); }

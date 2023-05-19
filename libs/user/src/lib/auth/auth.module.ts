@@ -33,6 +33,7 @@ import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-err
 import { IdentityGuard } from './guard/identity.guard';
 import { NoAuthGuard } from './guard/no-auth.guard';
 import { NoLegalTermsGuard } from './guard/no-legal-terms.guard';
+import { AnonymousAuthGuard } from './guard/anonymous-auth-guard';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'connexion', pathMatch: 'full' },
@@ -56,7 +57,7 @@ export const AuthRoutes: Routes = [
   },
   {
     path: 'identity',
-    canActivate: [IdentityGuard],
+    canActivate: [AnonymousAuthGuard, IdentityGuard],
     loadChildren: () => import('./pages/identity/identity.module').then(m => m.IdentityModule)
   },
   { path: 'reset-password', component: ResetPasswordComponent },
