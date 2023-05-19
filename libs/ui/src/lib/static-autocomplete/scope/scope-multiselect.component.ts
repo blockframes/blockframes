@@ -56,7 +56,7 @@ export class ScopeMultiselectComponent implements OnInit {
 
   filter(filter: string) {
     this.lastFilter = filter;
-    if (filter) return this.items.filter(option => option.toLowerCase().includes(filter.toLowerCase()));
+    if (filter) return this.items.filter(option => staticModel[this.scope][option].toLowerCase().includes(filter.toLowerCase()));
     return this.items.slice();
   }
 
