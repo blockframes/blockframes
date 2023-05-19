@@ -6,3 +6,7 @@ export interface IMaintenanceDoc {
 export interface IVersionDoc {
   currentVersion: number | string;
 }
+
+export interface IAlgoliaKeyDoc {
+  key: string;
+}

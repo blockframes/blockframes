@@ -13,7 +13,7 @@
         <ng-container *ngIf="currentApp === 'waterfall'; else showMenuIcon">
           <a app-logo routerLink="."></a>
           <!-- TODO REMOVE THIS BEFORE RELEASE issue#9336 -->
-          <button mat-button test-id="menu" color="warn" (click)="sidenav.toggle()">
+          <button *ngIf="isAdmin$ | async" mat-button test-id="menu" color="warn" (click)="sidenav.toggle()">
             DEV MENU
           </button>
         </ng-container>

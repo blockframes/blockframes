@@ -55,6 +55,16 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /_META/_ALGOLIA_ANONYMOUS_SEARCH_KEY {
+      allow read: if isSignedIn() && notInMaintenance();
+      allow write: if false;
+    }
+
+    match /_META/_ALGOLIA_SEARCH_KEY {
+      allow read: if userHasValidOrg() && notInMaintenance();
+      allow write: if false;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////
     ///                                 COLLECTIONS                               ///
     ///             rules defined at the collections or document level            ///
@@ -223,7 +233,7 @@ service cloud.firestore {
     match /orgs/{orgId} {
       allow get: if isSignedIn()
         && notInMaintenance()
-      allow list: if isSignedIn() // @TODO #6908 updated with userHasValidOrg() when a solution for this is found.
+      allow list: if isSignedIn() // @TODO #6908 update with userHasValidOrg() when a solution for this is found.
         && notInMaintenance();
     	allow create: if isSignedIn()
         && isRequestFieldValueEqualTo(['status'], 'pending')
