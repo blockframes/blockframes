@@ -130,6 +130,7 @@ export const icons = [
   { name: 'send', url: 'assets/icons/send.svg' },
   { name: 'sentiment_satisfied', url: 'assets/icons/sentiment_satisfied.svg' },
   { name: 'shopping_basket', url: 'assets/icons/shopping_basket.svg' },
+  { name: 'social_leaderboard', url: 'assets/icons/social_leaderboard.svg' },
   { name: 'specific_delivery_list', url: 'assets/icons/specific_delivery_list.svg' },
   { name: 'star', url: 'assets/icons/star.svg' },
   { name: 'star_fill', url: 'assets/icons/star_fill.svg' },
