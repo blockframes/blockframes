@@ -13,7 +13,8 @@ import {
   getMovieAppAccess,
   getOrgAppAccess,
   Movie,
-  Organization
+  Organization,
+  App
 } from '@blockframes/model';
 import { hasAcceptedMovies } from './util';
 import { getDb } from './initialize';
@@ -22,6 +23,11 @@ export const algolia = {
   ...algoliaClient,
   adminKey: functions.config().algolia?.api_key,
 };
+
+type AlgoliaIndexGroup = keyof Omit<typeof algoliaClient, 'appId'>;
+export const indexExists = (indexGroup: AlgoliaIndexGroup, app: App) => {
+  return !!algolia[indexGroup][app];
+}
 
 export const indexBuilder = (indexName: string, adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
@@ -65,7 +71,12 @@ export function setIndexConfiguration(indexName: string, config: AlgoliaConfig, 
 //           ORGANIZATIONS
 // ------------------------------------
 
-export function storeSearchableOrg(org: Organization, adminKey?: string, db = getDb()): Promise<any> {
+export function storeSearchableOrg(
+  org: Organization,
+  adminKey?: string,
+  db = getDb(),
+  app?: App
+): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -74,7 +85,7 @@ export function storeSearchableOrg(org: Organization, adminKey?: string, db = ge
   if (Object.values(centralOrgId).includes(org.id)) return;
 
   /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
-  const orgAppAccess = getOrgAppAccess(org);
+  const orgAppAccess = app ? getOrgAppAccess(org).filter(a => a === app) : getOrgAppAccess(org);
 
   // Update algolia's index
   const promises = orgAppAccess.map(async (appName) => {
@@ -107,7 +118,8 @@ export function createAlgoliaOrganization(org: Organization): AlgoliaOrganizatio
 export function storeSearchableMovie(
   movie: Movie,
   organizations: Organization[],
-  adminKey?: string
+  adminKey?: string,
+  app?: App
 ): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
@@ -183,14 +195,16 @@ export function storeSearchableMovie(
       movieRecord['minPledge'] = movie['minPledge'];
     }
 
-    const movieAppAccess = getMovieAppAccess(movie);
+    const movieAppAccess = app ? getMovieAppAccess(movie).filter(a => a === app) : getMovieAppAccess(movie);
 
-    const promises = movieAppAccess.map((appName) =>
-      indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject({
-        ...movieRecord,
-        storeStatus: movie.app[appName]?.status || '',
-      })
-    );
+    const promises = movieAppAccess
+      .filter(appName => indexExists('indexNameMovies', appName))
+      .map(appName =>
+        indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject({
+          ...movieRecord,
+          storeStatus: movie.app[appName]?.status || '',
+        })
+      );
 
     return Promise.all(promises);
   } catch (error) {
