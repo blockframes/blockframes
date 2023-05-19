@@ -220,7 +220,7 @@ export const graphOptions: Omit<GraphOptions, 'container'> = {
   defaultNode: {
     shape: 'rect',
     anchorPoints: [[0.5, 0], [0.5, 1]],
-    size: [200, 64],
+    size: [220, 64],
     style: {
       fill: '#37373f',
       stroke: 'transparent',
