@@ -3,7 +3,7 @@ import { AlgoliaObject, AlgoliaQueries, App } from '@blockframes/model';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { APP } from '../routes/utils';
-import { parseFilters, parseFacets, algoliaIndex, maxQueryLength } from './helper.utils';
+import { parseFilters, parseFacets, algoliaIndex, maxQueryLength, getSearchKey } from './helper.utils';
 import { SearchResponse } from '@algolia/client-search';
 
 @Injectable({ providedIn: 'root' })
@@ -16,9 +16,9 @@ export class AlgoliaService {
   getIndex(name: 'movie' | 'org' | 'user'): SearchIndex {
     if (!this.indices[name]) {
       if (name === 'user') {
-        this.indices[name] = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name]);
+        this.indices[name] = algoliasearch(algolia.appId, getSearchKey()).initIndex(algoliaIndex[name]);
       } else {
-        this.indices[name] = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algoliaIndex[name][this.app]);
+        this.indices[name] = algoliasearch(algolia.appId, getSearchKey()).initIndex(algoliaIndex[name][this.app]);
       }
     }
     return this.indices[name];
@@ -36,7 +36,7 @@ export class AlgoliaService {
 
   multipleQuery(indexGroup: string, text: string) {
     const queries = this.createMultipleQueries(indexGroup, text);
-    return algoliasearch(algolia.appId, algolia.searchKey).multipleQueries(queries).then(output => {
+    return algoliasearch(algolia.appId, getSearchKey()).multipleQueries(queries).then(output => {
       const hits = [];
       output.results.forEach(r => { r.hits.forEach(hit => { if (!hits.some(h => h.objectID === hit.objectID)) hits.push(hit) }) });
       return hits;

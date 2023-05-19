@@ -1,6 +1,6 @@
 import { syncUsers } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
-import { migrate, updateAppVersion } from './migrations';
+import { migrate, updateAlgoliaSearchKeys, updateAppVersion } from './migrations';
 import { importFirestore } from './admin';
 import { endMaintenance, startMaintenance } from '@blockframes/firebase-utils';
 import {
@@ -109,6 +109,7 @@ export async function upgrade() {
   const storage = getStorage();
 
   await updateAppVersion(db, appVersion);
+  await updateAlgoliaSearchKeys(db);
 
   if (!await isMigrationRequired(db)) {
     console.log('Skipping upgrade because migration is not required...');
@@ -139,6 +140,10 @@ export async function upgrade() {
 
 export async function upgradeEmulators() {
   const db = getFirestoreEmulator();
+  
+  await updateAppVersion(db, appVersion);
+  await updateAlgoliaSearchKeys(db);
+
   if (!await isMigrationRequired(db)) {
     console.log('Skipping upgrade because migration is not required...');
     return;

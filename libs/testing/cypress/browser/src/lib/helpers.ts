@@ -32,7 +32,7 @@ export function createFakeUserDataArray(number: number) {
   return fakeUserDataArray;
 }
 
-export const fakeMovieTitle = () => `E2E ${faker.lorem.slug(3).replace(/-/g, ' ')} movie`;
+export const fakeMovieTitle = (suffix = 'movie') => `E2E ${faker.lorem.slug(3).replace(/-/g, ' ')} ${suffix}`;
 
 export const fakeOrgName = () => `E2E_${faker.lorem.slug(3)} org`;
 
