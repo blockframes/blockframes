@@ -12,7 +12,7 @@ const rgbColors = [
   'rgb(197, 149, 6)',
   'rgb(75, 180, 80)',
   'rgb(128, 66, 209)',
-  'rgb(85, 92, 105)',
+  'rgb(126, 127, 129)',
   'rgb(251, 200, 49)',
   'rgb(112, 95, 85)',
   'rgb(210, 201, 196)',
@@ -220,7 +220,7 @@ export const graphOptions: Omit<GraphOptions, 'container'> = {
   defaultNode: {
     shape: 'rect',
     anchorPoints: [[0.5, 0], [0.5, 1]],
-    size: [200, 64],
+    size: [220, 64],
     style: {
       fill: '#37373f',
       stroke: 'transparent',
