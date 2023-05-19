@@ -10,19 +10,11 @@
       </a>
     </header>
 
-    <bf-table [source]="titles" clickable useFilter pagination="50" (rowClick)="goToEdit($event)">
-      <ng-template colRef="poster" label=" " let-poster>
-        <img class="poster" [ref]="poster" asset="empty_poster.svg">
-      </ng-template>
-      <ng-template colRef="title.international" label="Title" [filter]="filters.movieTitle" sort let-title>
-        {{ title }}
-      </ng-template>
-      <ng-template colRef="directors" label="Director(s)" [filter]="filters.movieDirectors" let-directors>
-        <span>
-          {{ directors | displayName | maxLength:50 }}
-        </span>
-      </ng-template>
-    </bf-table>
+    <movie-table-grid 
+      [titles]="titles" 
+      [columns]="['poster','title.international','directors']">
+    </movie-table-grid>
+
   </ng-container>
 
   <ng-template #noMovies>
@@ -41,9 +33,7 @@
 </ng-container>
 
 <ng-template #loading>
-  <article>
-    <logo-spinner></logo-spinner>
-  </article>
+  <logo-spinner></logo-spinner>
 </ng-template>
 
 

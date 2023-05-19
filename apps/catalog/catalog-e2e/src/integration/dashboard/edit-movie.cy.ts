@@ -70,8 +70,8 @@ describe('Movie tunnel', () => {
 
   it('Edit an existing movie', () => {
     get('title').click();
-    get('row_0_col_0').should('contain', movie.title.international);
-    findIn('row_0_col_5', 'edit').click();
+    get('row_0_col_1').should('contain', movie.title.international);
+    findIn('row_0_col_6', 'edit').click();
     get('next').click();
     checkMovieTunnelSideNav('released');
     //main information
