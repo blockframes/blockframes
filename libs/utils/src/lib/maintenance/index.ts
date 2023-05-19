@@ -6,10 +6,15 @@ export const META_COLLECTION_NAME = '_META';
 export const MAINTENANCE_DOCUMENT_NAME = '_MAINTENANCE';
 export const DB_DOCUMENT_NAME = '_VERSION';
 export const APP_DOCUMENT_NAME = '_APP';
+export const ALGOLIA_ANONYMOUS_SEARCH_KEY = '_ALGOLIA_ANONYMOUS_SEARCH_KEY';
+export const ALGOLIA_SEARCH_KEY = '_ALGOLIA_SEARCH_KEY';
+export type AlgoliaSearchKey = typeof ALGOLIA_SEARCH_KEY | typeof ALGOLIA_ANONYMOUS_SEARCH_KEY;
 
 export const metaDoc = `${META_COLLECTION_NAME}/${MAINTENANCE_DOCUMENT_NAME}`;
 export const dbVersionDoc = `${META_COLLECTION_NAME}/${DB_DOCUMENT_NAME}`;
 export const appVersionDoc = `${META_COLLECTION_NAME}/${APP_DOCUMENT_NAME}`;
+export const algoliaSearchKeyDoc = `${META_COLLECTION_NAME}/${ALGOLIA_SEARCH_KEY}`;
+export const algoliaAnonymousSearchKeyDoc = `${META_COLLECTION_NAME}/${ALGOLIA_ANONYMOUS_SEARCH_KEY}`;
 
 export function _isInMaintenance(maintenanceDoc: IMaintenanceDoc, delay = EIGHT_MINUTES_IN_MS): boolean {
   try {
