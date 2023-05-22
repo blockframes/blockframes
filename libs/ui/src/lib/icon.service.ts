@@ -112,6 +112,7 @@ export const icons = [
   { name: 'pending', url: 'assets/icons/pending.svg' },
   { name: 'percent', url: 'assets/icons/percent.svg' },
   { name: 'person_add', url: 'assets/icons/person_add.svg' },
+  { name: 'person_off', url: 'assets/icons/person_off.svg' },
   { name: 'play_arrow', url: 'assets/icons/play_arrow.svg' },
   { name: 'play_circle', url: 'assets/icons/play_circle.svg' },
   { name: 'publish', url: 'assets/icons/publish.svg' },
