@@ -16,6 +16,7 @@ import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { TableActionsModule } from '@blockframes/ui/dashboard/components/movie-table-actions/movie-table-actions.module';
 import { IncomePipeModule } from '@blockframes/contract/income/pipe';
 import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -44,6 +45,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     IncomePipeModule,
     NumberPipeModule,
     CellModalModule,
+    ImageModule,
     
     // Material
     MatIconModule,
