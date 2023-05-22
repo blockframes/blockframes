@@ -6,6 +6,7 @@ import {
   storeSearchableOrg,
   storeSearchableUser,
   getDocument,
+  indexExists,
 } from '@blockframes/firebase-utils';
 import { algolia } from '@env';
 import {
@@ -71,6 +72,8 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = getDb()) {
   } else {
     // reset config, clear index and fill it up from the db (which is the only source of truth)
     const config = movieConfig(appConfig);
+
+    if (!indexExists('indexNameMovies', appConfig)) return;
 
     await clearIndex(algolia.indexNameMovies[appConfig], process.env['ALGOLIA_API_KEY']);
     await setIndexConfiguration(

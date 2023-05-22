@@ -61,6 +61,7 @@ export const algoliaIndex = {
     financiers: algolia.indexNameOrganizations.financiers,
     festival: algolia.indexNameOrganizations.festival,
     catalog: algolia.indexNameOrganizations.catalog,
+    waterfall: algolia.indexNameOrganizations.waterfall
   },
   movie: {
     financiers: algolia.indexNameMovies.financiers,

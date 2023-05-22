@@ -3,7 +3,7 @@ import { triggerNotifications } from './notification';
 import { getOrganizationsOfMovie } from './data/internals';
 import { cleanMovieMedias, moveMovieMedia } from './media';
 import { EventContext } from 'firebase-functions';
-import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils/algolia';
+import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg, indexExists } from '@blockframes/firebase-utils/algolia';
 import { getMailSender } from '@blockframes/utils/apps';
 import { askingPriceRequested, screenerRequested, sendMovieSubmittedEmail } from './templates/mail';
 import { sendMail } from './internals/email';
@@ -114,7 +114,7 @@ export async function onMovieDelete(snap: BlockframesSnapshot<Movie>, context: E
   });
 
   // Update algolia's index
-  const movieAppAccess = getMovieAppAccess(movie);
+  const movieAppAccess = getMovieAppAccess(movie).filter(app => indexExists('indexNameMovies', app));
   const promises = movieAppAccess.map(
     (appName) => deleteObject(algolia.indexNameMovies[appName], context.params.movieId) as Promise<boolean>
   );
@@ -201,7 +201,8 @@ export async function onMovieUpdate(change: BlockframesChange<Movie>) {
   await storeSearchableMovie(after, organizations);
 
   for (const app in after.app) {
-    if (after.app[app].access === false && before.app[app].access !== after.app[app].access) {
+    const movieLostAccess = after.app[app].access === false && before.app[app].access !== after.app[app].access;
+    if (movieLostAccess && indexExists('indexNameMovies', app as App)) {
       await deleteObject(algolia.indexNameMovies[app], before.id);
     }
   }
