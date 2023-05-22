@@ -426,6 +426,18 @@ export const stakeholderRoles = {
   broadcasterCoproducer: 'Broadcaster coproducer'
 } as const
 
+export const rightholderRoles = {
+  salesAgent: 'Sales Agent',
+  mainDistributor: 'Main Distributor',
+  localDistributor: 'Local Distributor',
+  author: 'Author',
+  producer: 'Producer',
+  coProducer: 'Co-Producer',
+  financier: 'Financiers',
+  institution: 'Institution',
+  performer: 'Performer',
+} as const
+
 export const movieNoteRoles = {
   producer: 'Producer',
   director: 'Director',
@@ -482,7 +494,8 @@ export const organizationStatus = {
 
 export const invitationType = {
   attendEvent: 'Attend Event',
-  joinOrganization: 'Join Organization'
+  joinOrganization: 'Join Organization',
+  joinWaterfall: 'Join Waterfall',
 } as const
 
 export const invitationStatus = {
@@ -1358,6 +1371,7 @@ export const staticModel = {
   orgActivity,
   soundFormat,
   stakeholderRoles,
+  rightholderRoles,
   movieNoteRoles,
   storeStatus,
   unitBox,
