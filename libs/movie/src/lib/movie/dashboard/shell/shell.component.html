@@ -8,7 +8,7 @@
         <section fxLayout fxLayoutGap="16px" fxFlex>
           <div class="poster-container">
             <img fxHide.xs [ref]="movie.poster" asset="empty_poster.svg" alt="movie poster">
-            <a *ngIf="editRoute !== undefined" mat-mini-fab color="primary" [routerLink]="editRoute">
+            <a *ngIf="editRoute" mat-mini-fab color="primary" [routerLink]="editRoute">
               <mat-icon svgIcon="edit"></mat-icon>
             </a>
           </div>
