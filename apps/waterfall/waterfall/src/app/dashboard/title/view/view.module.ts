@@ -21,7 +21,7 @@ const routes: Routes = [{
   children: [
     {
       path: '',
-      redirectTo: 'waterfall',
+      redirectTo: 'statements',
       pathMatch: 'full'
     },
     {
@@ -46,7 +46,7 @@ const routes: Routes = [{
     },
     {
       path: 'waterfall',
-      loadChildren: () => import('../waterfall/waterfall.module').then(m => m.WaterfallModule),
+      loadChildren: () => import('../waterfall-demo/waterfall-demo.module').then(m => m.WaterfallDemoModule),
       data: { animation: 4 }
     },
     {
@@ -58,6 +58,11 @@ const routes: Routes = [{
       path: 'avails',
       loadChildren: () => import('../avails/avails.module').then(m => m.AvailsModule),
       data: { animation: 6 }
+    },
+    {
+      path: 'waterfall-live',
+      loadChildren: () => import('../waterfall/waterfall.module').then(m => m.WaterfallModule),
+      data: { animation: 7 }
     },
   ]
 }];

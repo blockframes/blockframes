@@ -26,7 +26,6 @@ export class MovieTableGridComponent {
 
   filters = filters;
 
-  /** The content to display in the table */
   @Input() set titles(titles: Movie[]) {
     this.dataSource.next(titles ?? []);
   }
@@ -37,7 +36,7 @@ export class MovieTableGridComponent {
 
   search = new UntypedFormControl();
 
-  mode : 'grid' | 'table' = 'table';
+  @Input() mode : 'grid' | 'table' = 'table';
 
   constructor(
     @Inject(APP) public app: App,

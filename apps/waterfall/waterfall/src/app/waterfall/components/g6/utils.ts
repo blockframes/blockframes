@@ -3,18 +3,36 @@ import { EdgeConfig, NodeConfig, ComboConfig, GraphData, TreeGraph, Tooltip, Gra
 import { DagreLayout } from '@antv/layout';
 
 const roundCent = (value: number) => Math.round(value * 100) / 100;
+
+const rgbColors = [
+  'rgb(247, 8, 69)',
+  'rgb(249, 62, 110)',
+  'rgb(16, 131, 167)',
+  'rgb(56, 193, 236)',
+  'rgb(197, 149, 6)',
+  'rgb(75, 180, 80)',
+  'rgb(128, 66, 209)',
+  'rgb(126, 127, 129)',
+  'rgb(251, 200, 49)',
+  'rgb(112, 95, 85)',
+  'rgb(210, 201, 196)',
+  'rgb(212, 147, 147)',
+  'rgb(236, 112, 99)',
+  'rgb(37, 139, 207)',
+  'rgb(99, 173, 215)',
+  'rgb(144, 128, 29)',
+  'rgb(130, 106, 114)',
+  'rgb(113, 0, 5)',
+  'rgb(0, 69, 66)',
+];
+
+const bindedColors: Record<string, string> = {};
+
 const toColor = (str: string) => {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    hash = hash & hash;
+  if (!bindedColors[str]) {
+    bindedColors[str] = rgbColors.shift() ?? `#${Math.floor(Math.random() * 16777215).toString(16)}`;
   }
-  const [r, g, b] = [
-    (hash >> (0 * 8)) & 255,
-    (hash >> (1 * 8)) & 255,
-    (hash >> (2 * 8)) & 255,
-  ];
-  return `rgb(${r}, ${g}, ${b})`;
+  return bindedColors[str];
 }
 
 export function toG6(state: TitleState): GraphData {
@@ -103,7 +121,8 @@ export function toG6(state: TitleState): GraphData {
 
   // Rights -> node
   for (const right of Object.values(state.rights)) {
-    const labelLines: string[] = [`${roundCent(right.percent * 100)}%`];
+    const isIncome = () => Object.values(state.incomes).some(i => i.from === right.id);
+    const labelLines: string[] = isIncome() ? [right.id] : [`${roundCent(right.percent * 100)}%`, right.id];
     nodes.push({
       id: right.id,
       label: labelLines.join('\n'),
@@ -201,7 +220,7 @@ export const graphOptions: Omit<GraphOptions, 'container'> = {
   defaultNode: {
     shape: 'rect',
     anchorPoints: [[0.5, 0], [0.5, 1]],
-    size: [120, 64],
+    size: [220, 64],
     style: {
       fill: '#37373f',
       stroke: 'transparent',
@@ -209,7 +228,7 @@ export const graphOptions: Omit<GraphOptions, 'container'> = {
     },
     labelCfg: {
       style: {
-        fill: '#fff',
+        fill: '#000',
         fontSize: 14
       }
     },
