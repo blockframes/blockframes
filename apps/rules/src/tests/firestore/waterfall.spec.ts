@@ -195,7 +195,7 @@ describe('User that is not owner of movie', () => {
   });
 
   describe('Budget', () => {
-    test('Should be able to create budget document', async () => {
+    test('Should not be able to create budget document', async () => {
       const ref = db.doc('waterfall/M001/budget/M001');
       await assertFails(ref.set({ id: 'M001' }));
     });
@@ -295,7 +295,7 @@ describe('User that is linked to waterfall', () => {
   });
 
   describe('Budget', () => {
-    test('Should be able to create budget document', async () => {
+    test('Should not be able to create budget document', async () => {
       const ref = db.doc('waterfall/M001/budget/M001');
       await assertFails(ref.set({ id: 'M001' }));
     });
