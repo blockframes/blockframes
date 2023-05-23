@@ -64,7 +64,6 @@ export function encodeAvailsSearchUrl(router: Router, route: ActivatedRoute, dat
       languages: encodeLanguages(data.search?.languages),
     },
   };
-  if (search.search?.languages) search.search.languages = encodeLanguages(data.search.languages);
   if (data.avails) search.avails = { ...data.avails, territories: encodeTerritories(data.avails?.territories) };
   return encodeUrl<MovieAvailsSearchEncoded>(router, route, search);
 }
@@ -78,7 +77,6 @@ export function decodeAvailsSearchUrl(route: ActivatedRoute) {
       languages: decodeLanguages(data.search?.languages),
     },
   };
-  if (data.search?.languages) search.search.languages = decodeLanguages(data.search.languages);
   if (data.avails) search.avails = { ...data.avails, territories: decodeTerritories(data.avails?.territories) };
   return search;
 }
@@ -145,7 +143,7 @@ function decodeLanguages(languageVersion: EncodedLanguageVersion): LanguageVersi
   const { languages } = languageVersion;
   const decodedLanguages: Language[] = [];
   for (let i = 0; i < languages.length; i += 3) {
-    const extract = (languages as string).substring(i, i + 3) as LanguageISO3;
+    const extract = languages.substring(i, i + 3) as LanguageISO3;
     decodedLanguages.push(languageISO3ToLanguage(extract));
   }
   return { ...languageVersion, languages: decodedLanguages };

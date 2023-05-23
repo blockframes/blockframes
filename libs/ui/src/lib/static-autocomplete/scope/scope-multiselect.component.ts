@@ -35,10 +35,9 @@ export class ScopeMultiselectComponent implements OnInit {
   search = new FormControl('');
 
   items: string[];
-  selectedItems = [];
 
-  indeterminate: Observable<boolean>;
-  checked: Observable<boolean>;
+  indeterminate$: Observable<boolean>;
+  checked$: Observable<boolean>;
 
   visible = this.search.valueChanges.pipe(
     startWith(''),
@@ -46,18 +45,18 @@ export class ScopeMultiselectComponent implements OnInit {
     map(filter => getVisible(this.filter(filter)))
   );
 
-  lastFilter = '';
+  private lastFilter = '';
 
   ngOnInit() {
     this.items = Object.keys(staticModel[this.scope]);
-    this.indeterminate = this.control.valueChanges.pipe(map(value => !!value.length && value.length < this.items.length));
-    this.checked = this.control.valueChanges.pipe(map(value => value.length === this.items.length));
+    this.indeterminate$ = this.control.valueChanges.pipe(map(value => !!value.length && value.length < this.items.length));
+    this.checked$ = this.control.valueChanges.pipe(map(value => value.length === this.items.length));
   }
 
   filter(filter: string) {
     this.lastFilter = filter;
     if (filter) return this.items.filter(option => staticModel[this.scope][option].toLowerCase().includes(filter.toLowerCase()));
-    return this.items.slice();
+    return this.items;
   }
 
   checkAll(checked: MatCheckboxChange) {

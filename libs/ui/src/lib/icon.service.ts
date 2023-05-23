@@ -138,7 +138,6 @@ export const icons = [
   { name: 'switch_access_shortcut', url: 'assets/icons/switch_access_shortcut.svg' },
   { name: 'territories_avails', url: 'assets/icons/territories_avails.svg' },
   { name: 'theater_comedy', url: 'assets/icons/theater_comedy.svg' },
-  { name: 'theaters', url: 'assets/icons/theaters.svg' },
   { name: 'thumb_up', url: 'assets/icons/thumb_up.svg' },
   { name: 'timer', url: 'assets/icons/timer.svg' },
   { name: 'translate', url: 'assets/icons/translate.svg' },

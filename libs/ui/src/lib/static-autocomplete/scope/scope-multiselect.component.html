@@ -5,8 +5,8 @@
     <header>
       <mat-checkbox
         color="primary"
-        [checked]="checked | async"
-        [indeterminate]="indeterminate | async"
+        [checked]="checked$ | async"
+        [indeterminate]="indeterminate$ | async"
         (change)="checkAll($event.checked)"
       ></mat-checkbox>
       <input [placeholder]="filterPlaceholder" [formControl]="search" />
