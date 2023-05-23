@@ -39,7 +39,7 @@ export class ScopeMultiselectComponent implements OnInit {
   indeterminate$: Observable<boolean>;
   checked$: Observable<boolean>;
 
-  visible = this.search.valueChanges.pipe(
+  visible$ = this.search.valueChanges.pipe(
     startWith(''),
     map(value => (typeof value === 'string' ? value : this.lastFilter)),
     map(filter => getVisible(this.filter(filter)))

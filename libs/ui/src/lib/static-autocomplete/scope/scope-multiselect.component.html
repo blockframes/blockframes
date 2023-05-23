@@ -15,7 +15,7 @@
         <mat-icon svgIcon="refresh"></mat-icon>
       </button>
     </header>
-    <ng-container *ngIf="visible | async as isVisible">
+    <ng-container *ngIf="visible$ | async as isVisible">
       <ng-container *ngFor="let item of items">
         <mat-option [value]="item" [ngClass]="{ hidden: !isVisible[item] }" [attr.test-id]="'option_' + item">
           {{ item | toLabel: scope }}
