@@ -11,7 +11,7 @@
       ></mat-checkbox>
       <input [placeholder]="filterPlaceholder" [formControl]="search" />
       <mat-icon *ngIf="!search.value" svgIcon="search"></mat-icon>
-      <button *ngIf="!!search.value" mat-icon-button type="button" (click)="search.reset('')" matTooltip="Clear text">
+      <button *ngIf="!!search.value" mat-icon-button type="button" (click)="resetSearch()" matTooltip="Clear text">
         <mat-icon svgIcon="refresh"></mat-icon>
       </button>
     </header>
