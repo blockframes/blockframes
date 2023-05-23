@@ -6,7 +6,6 @@ import { StoreStatus, storeStatus, Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
-import { filters } from '@blockframes/ui/list/table/filters';
 import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -22,7 +21,6 @@ export class TitleListComponent {
   filter$: Observable<StoreStatus | ''> = this.filter.valueChanges.pipe(
     startWith(this.filter.value || '')
   );
-  filters = filters;
 
   movies$ = this.service.queryDashboard('catalog').pipe(
     tap((movies) => this.dynTitle.setPageTitle('My titles', movies.length ? '' : 'Empty')),

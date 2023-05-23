@@ -1,4 +1,4 @@
-<title-dashboard-shell *ngIf="movie$ | async as movie" [routes]="navLinks">
+<title-dashboard-shell *ngIf="movie$ | async as movie" [routes]="navLinks" [editRoute]="['/c/o/dashboard/tunnel/movie', movie.id, 'main']">
   <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
     <button *ngIf="movie.app.financiers.status === 'accepted'" mat-button color="primary" (click)="openDialog()" class="main-dashboard-cta">
       <mat-icon svgIcon="update" color="primary"></mat-icon>

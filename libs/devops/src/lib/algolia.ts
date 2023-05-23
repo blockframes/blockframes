@@ -54,13 +54,13 @@ export async function upgradeAlgoliaOrgs(appConfig?: AlgoliaApp, db = getDb()) {
       300
     );
     for await (const orgs of orgsIterator) {
-      const promises = orgs.map((org) => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY'], db));
+      const promises = orgs.map((org) => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY'], db, appConfig));
 
       await Promise.all(promises);
       console.log(`chunk of ${orgs.length} orgs processed...`);
     }
 
-    console.log('Algolia Orgs index updated with success !');
+    console.log(`Algolia Orgs ${algolia.indexNameOrganizations[appConfig]} index updated with success !`);
   }
 }
 
@@ -101,7 +101,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = getDb()) {
             }
           }
 
-          await storeSearchableMovie(movie, orgs, process.env['ALGOLIA_API_KEY']);
+          await storeSearchableMovie(movie, orgs, process.env['ALGOLIA_API_KEY'], appConfig);
         } catch (error) {
           console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
           console.error(error);
@@ -112,7 +112,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App, db = getDb()) {
       console.log(`chunk of ${movies.length} movies processed...`);
     }
 
-    console.log('Algolia Movies index updated with success !');
+    console.log(`Algolia Movies ${algolia.indexNameMovies[appConfig]} index updated with success !`);
   }
 }
 
@@ -141,7 +141,7 @@ export async function upgradeAlgoliaUsers(db = getDb()) {
     await Promise.all(promises);
     console.log(`chunk of ${users.length} users processed...`);
   }
-  console.log('Algolia Users index updated with success !');
+  console.log(`Algolia Users ${algolia.indexNameUsers} index updated with success !`);
 }
 
 const baseConfig: AlgoliaConfig = {

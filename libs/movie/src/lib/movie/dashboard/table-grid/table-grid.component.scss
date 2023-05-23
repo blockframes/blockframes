@@ -1,5 +1,9 @@
 @import '@angular/flex-layout/mq';
 
+:host {
+  width: 100%;
+}
+
 article {
   display: flex;
   place-content: stretch flex-start;
@@ -15,12 +19,9 @@ article {
   }
 }
 
-section {
-  padding: clamp(8px, 3vw, 24px);
-  width: 100%;
-  img {
-    width: 500px;
-  }
+.poster {
+  margin-top: 8px;
+  width: 35px;
 }
 
 mat-form-field {

@@ -5,7 +5,6 @@ import { combineLatest, Observable } from 'rxjs';
 import { Movie, StoreStatus } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { filters } from '@blockframes/ui/list/table/filters';
 import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -42,8 +41,6 @@ export class ListComponent {
       archived: m.filter((m) => m.app.festival.status === 'archived').length,
     }))
   );
-
-  filters = filters;
 
   exporting = false;
 

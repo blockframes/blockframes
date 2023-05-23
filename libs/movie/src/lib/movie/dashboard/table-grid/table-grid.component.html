@@ -39,8 +39,13 @@
 
   <ng-template #tableView>
     <bf-table [source]="items" pagination="50" useFilter>
+      <ng-template *ngIf="columns.includes('poster')" colRef="poster" label=" " let-poster let-movie="item">
+        <a [routerLink]="['/c/o/dashboard/title/', movie.id]">
+          <img class="poster" [ref]="poster" asset="empty_poster.svg">
+        </a>
+      </ng-template>
       <ng-template *ngIf="columns.includes('title.international')" colRef="title.international" label="Title" let-title let-movie="item" sort defaultSort [filter]="filters.movieTitle">
-        <a [routerLink]="movie.id" [matTooltip]="title">
+        <a [routerLink]="['/c/o/dashboard/title/', movie.id]" [matTooltip]="title">
           <u>{{ title | maxLength:50 }}</u>
         </a>
       </ng-template>
