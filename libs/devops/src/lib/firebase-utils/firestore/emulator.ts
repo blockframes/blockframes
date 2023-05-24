@@ -332,4 +332,7 @@ export const functionsConfigMap: { [key: string]: string } = {
   'twilio.api.key.secret': 'TWILIO_API_KEY_SECRET',
   'twilio.api.key.sid': 'TWILIO_API_KEY_SID',
   'mailchimp.api_key': 'MAILCHIMP_API_KEY',
+  'gmail.client.id': 'GMAIL_CLIENT_ID',
+  'gmail.client.secret': 'GMAIL_CLIENT_SECRET',
+  'gmail.refresh.token': 'GMAIL_REFRESH_TOKEN'
 };
