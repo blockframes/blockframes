@@ -10,7 +10,7 @@ import {
   createInternalDocumentMeta,
   createNotification,
   createPublicInvitation,
-  createWaterfallPermisisons
+  createWaterfallPermissions
 } from '@blockframes/model';
 import { getDb } from '@blockframes/firebase-utils';
 import { triggerNotifications } from '../../notification';
@@ -108,7 +108,7 @@ async function addOrgToWaterfall(userId: string, waterfallId: string, roles: Rig
 
     console.debug('add org :', userData.orgId, 'to waterfall:', waterfallId);
 
-    const permissionData = permission.exists ? permission.data() as WaterfallPermissions : createWaterfallPermisisons({ id: userData.orgId });
+    const permissionData = permission.exists ? permission.data() as WaterfallPermissions : createWaterfallPermissions({ id: userData.orgId });
 
     return Promise.all([
       // Update organization

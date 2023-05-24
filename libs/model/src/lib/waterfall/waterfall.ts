@@ -8,7 +8,7 @@ export interface WaterfallPermissions {
   roles: RightholderRole[]
 }
 
-export function createWaterfallPermisisons(params: Partial<WaterfallPermissions> = {}) : WaterfallPermissions {
+export function createWaterfallPermissions(params: Partial<WaterfallPermissions> = {}) : WaterfallPermissions {
   return {
     id: '',
     scope: [],
