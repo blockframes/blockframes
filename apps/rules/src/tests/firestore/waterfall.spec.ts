@@ -151,8 +151,8 @@ describe('User that is not owner of movie', () => {
 
   describe('Movies', () => {
     test('Should not be able to update movie document', async () => {
-      const ref = db.doc('movies/MI-0d7');
-      await assertFails(ref.set({ id: 'MI-0d7', notes: 'unit test update' }));
+      const ref = db.doc('movies/M001');
+      await assertFails(ref.set({ id: 'M001', notes: 'unit test update' }));
     });
   });
 

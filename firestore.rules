@@ -332,20 +332,24 @@ service cloud.firestore {
     /// FUNCTIONS ///
 
     function isAllowedToUpdateMovie() {
-      return isOrgMember(userOrgId())
-        && isNotUpdatingId('id', existingData().id)
-        && isNotUpdatingField(['_meta', 'createdBy'])
-        && isNotUpdatingField(['_meta', 'createdAt'])
-        && isNotUpdatingField(['_type'])
-        && ( isNotUpdatingField(['app', 'catalog', 'status']) || ( existingData().app.catalog.access == true && incomingData().app.catalog.status in ['submitted', 'draft', 'archived'] ) )
-        && ( isNotUpdatingField(['app', 'waterfall', 'status']) || ( existingData().app.waterfall.access == true && incomingData().app.waterfall.status in ['accepted'] ) )
-        && ( isNotUpdatingField(['app', 'festival', 'status']) || ( existingData().app.festival.access == true && incomingData().app.festival.status in ['submitted', 'draft', 'accepted', 'archived'] ) )
-        && ( isNotUpdatingField(['app', 'financiers', 'status']) || ( existingData().app.financiers.access == true && incomingData().app.financiers.status in ['submitted', 'draft', 'archived'] ) )
-        && ( isNotUpdatingField(['app', 'catalog', 'access']) || incomingData().app.catalog.access == false )
-        && ( isNotUpdatingField(['app', 'waterfall', 'access']) || incomingData().app.waterfall.access == false )
-        && ( isNotUpdatingField(['app', 'festival', 'access']) || incomingData().app.festival.access == false )
-        && ( isNotUpdatingField(['app', 'financiers', 'access']) || incomingData().app.financiers.access == false )
-        && (orgCan('canUpdate', userOrgId(), existingData().id) || userOrgId() in getWaterfall(movieId).orgIds );
+      let orgId = userOrgId();
+      let currAppAccess = existingData().app;
+      let movie = incomingData();
+      let newAppAccess = movie.app;
+      return isOrgMember(orgId)
+        && isNotUpdatingId('id', movie.id)
+        && isNotUpdatingFieldDepth2(['_meta', 'createdBy'])
+        && isNotUpdatingFieldDepth2(['_meta', 'createdAt'])
+        && isNotUpdatingFieldDepth1(['_type'])
+        && ( isNotUpdatingFieldDepth3(['app', 'catalog', 'status']) || ( currAppAccess.catalog.access == true && newAppAccess.catalog.status in ['submitted', 'draft', 'archived'] ) )
+        && ( isNotUpdatingFieldDepth3(['app', 'waterfall', 'status']) || ( currAppAccess.waterfall.access == true && newAppAccess.waterfall.status in ['accepted'] ) )
+        && ( isNotUpdatingFieldDepth3(['app', 'festival', 'status']) || ( currAppAccess.festival.access == true && newAppAccess.festival.status in ['submitted', 'draft', 'accepted', 'archived'] ) )
+        && ( isNotUpdatingFieldDepth3(['app', 'financiers', 'status']) || ( currAppAccess.financiers.access == true && newAppAccess.financiers.status in ['submitted', 'draft', 'archived'] ) )
+        && ( isNotUpdatingFieldDepth3(['app', 'catalog', 'access']) || newAppAccess.catalog.access == false )
+        && ( isNotUpdatingFieldDepth3(['app', 'waterfall', 'access']) || newAppAccess.waterfall.access == false )
+        && ( isNotUpdatingFieldDepth3(['app', 'festival', 'access']) || newAppAccess.festival.access == false )
+        && ( isNotUpdatingFieldDepth3(['app', 'financiers', 'access']) || newAppAccess.financiers.access == false )
+        && (orgCan('canUpdate', orgId, movie.id) || orgId in getWaterfall(movie.id).orgIds );
     }
 
     function checkStatus(data, status) {
@@ -718,9 +722,10 @@ service cloud.firestore {
 
 		// Parameter "action" can either be "canCreate", "canRead", "canUpdate" or "canDelete"
     function orgCan(action, orgId, docId) {
-      return (getDocumentPermissions(orgId, docId).ownerId == orgId)
-        || (getDocumentPermissions(orgId, docId).isAdmin == true)
-        || (getDocumentPermissions(orgId, docId)[action] == true)
+      let documentPermissions = getDocumentPermissions(orgId, docId);
+      return (documentPermissions.ownerId == orgId)
+        || (documentPermissions.isAdmin == true)
+        || (documentPermissions[action] == true)
         || (isOrgAdmin(orgId) && orgId == docId);
     }
 
@@ -734,31 +739,47 @@ service cloud.firestore {
     }
 
     function isNotUpdatingFieldDepth3(fieldArray) {
-			return ( !incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) ||  incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == existingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] )
-        || ( !incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) ||  incomingData()[fieldArray[0]][fieldArray[1]] == existingData()[fieldArray[0]][fieldArray[1]] )
-        || ( !incomingData().keys().hasAll([fieldArray[0]]) ||  incomingData()[fieldArray[0]] == existingData()[fieldArray[0]] );
+      let incoming = incomingData();
+      let existing = existingData();
+      let firstArg = fieldArray[0];
+      let secondArg = fieldArray[1];
+      let thirdArg = fieldArray[2];
+      let firstLevel = incoming[firstArg];
+      let secondLevel = firstLevel[secondArg];
+			return ( !secondLevel.keys().hasAll([thirdArg]) || secondLevel[thirdArg] == existing[firstArg][secondArg][thirdArg] )
+        || ( !firstLevel.keys().hasAll([secondArg]) || secondLevel == existing[firstArg][secondArg] )
+        || ( !incoming.keys().hasAll([firstArg]) || firstLevel == existing[firstArg] );
     }
 
     function isNotUpdatingFieldDepth2(fieldArray) {
-			return ( !incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) ||  incomingData()[fieldArray[0]][fieldArray[1]] == existingData()[fieldArray[0]][fieldArray[1]] )
-        || ( !incomingData().keys().hasAll([fieldArray[0]]) ||  incomingData()[fieldArray[0]] == existingData()[fieldArray[0]] );
+      let incoming = incomingData();
+      let existing = existingData();
+      let firstArg = fieldArray[0];
+      let secondArg = fieldArray[1];
+      let firstLevel = incoming[firstArg];
+			return ( !firstLevel.keys().hasAll([secondArg]) || firstLevel[secondArg] == existing[firstArg][secondArg] )
+        || ( !incoming.keys().hasAll([firstArg]) || firstLevel == existing[firstArg] );
     }
 
     function isNotUpdatingFieldDepth1(fieldArray) {
-			return ( !incomingData().keys().hasAll([fieldArray[0]]) ||  incomingData()[fieldArray[0]] == existingData()[fieldArray[0]] );
+      let incoming = incomingData();
+      let firstArg = fieldArray[0];
+			return ( !incoming.keys().hasAll([firstArg]) || incoming[firstArg] == existingData()[firstArg] );
     }
 
     // Checks that the user is not trying to change document id
     function isNotUpdatingId(fieldName, value) {
-			return ( !incomingData().keys().hasAll([fieldName]) ||  incomingData()[fieldName] == value );
+      let incoming = incomingData();
+			return ( !incoming.keys().hasAll([fieldName]) || incoming[fieldName] == value );
     }
 
     // Incoming field path must be setted with a value equal to "value"
     function isRequestFieldValueEqualTo(fieldArray, value) {
-      return (incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]][fieldArray[3]] == value)
-        || (incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == value)
-        || (incomingData()[fieldArray[0]][fieldArray[1]] == value)
-        || (incomingData()[fieldArray[0]] == value);
+      let incoming = incomingData();
+      return (incoming[fieldArray[0]][fieldArray[1]][fieldArray[2]][fieldArray[3]] == value)
+        || (incoming[fieldArray[0]][fieldArray[1]][fieldArray[2]] == value)
+        || (incoming[fieldArray[0]][fieldArray[1]] == value)
+        || (incoming[fieldArray[0]] == value);
     }
 
     // Incoming field is not sent or equal to value
@@ -768,16 +789,19 @@ service cloud.firestore {
 
     // The call doest not contain path fieldArray
     function isRequestFieldValueNotSetted(fieldArray) {
-    	return (!incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]))
-       || (!incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]))
-       || !incomingData().keys().hasAll([fieldArray[0]]);
+      let incoming = incomingData();
+    	return (!incoming[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]))
+       || (!incoming[fieldArray[0]].keys().hasAll([fieldArray[1]]))
+       || !incoming.keys().hasAll([fieldArray[0]]);
     }
 
     // The field is sent and not already existing
     function isCreatingField(fieldArray) {
-      return ( incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && (resource == null || !existingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]])) )
-        || ( incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) && (resource == null || !existingData()[fieldArray[0]].keys().hasAll([fieldArray[1]])) )
-        || ( incomingData().keys().hasAll([fieldArray[0]]) && (resource == null || !existingData().keys().hasAll([fieldArray[0]])) );
+      let incoming = incomingData();
+      let existing = existingData();
+      return ( incoming[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && (resource == null || !existing[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]])) )
+        || ( incoming[fieldArray[0]].keys().hasAll([fieldArray[1]]) && (resource == null || !existing[fieldArray[0]].keys().hasAll([fieldArray[1]])) )
+        || ( incoming.keys().hasAll([fieldArray[0]]) && (resource == null || !existing.keys().hasAll([fieldArray[0]])) );
     }
 
     //updating only the specified fields?
@@ -787,9 +811,11 @@ service cloud.firestore {
 
     // The field is removed
     function isRemovingField(fieldArray) {
-      return ( existingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && !incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) )
-        || ( existingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) && !incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) )
-        || ( existingData().keys().hasAll([fieldArray[0]]) && !incomingData().keys().hasAll([fieldArray[0]]) );
+      let incoming = incomingData();
+      let existing = existingData();
+      return ( existing[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && !incoming[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) )
+        || ( existing[fieldArray[0]].keys().hasAll([fieldArray[1]]) && !incoming[fieldArray[0]].keys().hasAll([fieldArray[1]]) )
+        || ( existing.keys().hasAll([fieldArray[0]]) && !incoming.keys().hasAll([fieldArray[0]]) );
     }
 
     function notInMaintenance() {
