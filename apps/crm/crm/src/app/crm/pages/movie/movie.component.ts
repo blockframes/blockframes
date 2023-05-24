@@ -177,6 +177,7 @@ export class MovieComponent implements OnInit {
 
       this.movie.app[application].access = this.movieAppConfigForm.controls[application].get('access').value;
       this.movie.app[application].status = newStatus;
+
     }
 
     return this.movie.app;
