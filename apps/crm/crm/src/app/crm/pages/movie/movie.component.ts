@@ -35,6 +35,8 @@ import { UserService } from '@blockframes/user/service';
 import { UntypedFormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
 
 @Component({
   selector: 'crm-movie',
@@ -65,6 +67,8 @@ export class MovieComponent implements OnInit {
     private movieService: MovieService,
     private organizationService: OrganizationService,
     private permissionsService: PermissionsService,
+    private waterfallService: WaterfallService,
+    private waterfallPermissionService: WaterfallPermissionsService,
     private eventService: EventService,
     private invitationService: InvitationService,
     private contractService: ContractService,
@@ -129,6 +133,16 @@ export class MovieComponent implements OnInit {
       this.movie.campaignStarted = new Date();
     }
 
+    const hasWaterfall = await this.waterfallService.getValue(this.movie.id);
+
+    if (!hasWaterfall && this.movie.app.waterfall.access) {
+      await this.waterfallService.create(this.movie.id, this.movie.orgIds);
+      const promises = this.movie.orgIds.map(orgId =>
+        this.waterfallPermissionService.create(this.movie.id, { id: orgId, roles: ['producer'] })
+      );
+      await Promise.all(promises);
+    }
+
     await this.movieService.update(this.movieId, this.movie);
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
@@ -163,7 +177,6 @@ export class MovieComponent implements OnInit {
 
       this.movie.app[application].access = this.movieAppConfigForm.controls[application].get('access').value;
       this.movie.app[application].status = newStatus;
-
     }
 
     return this.movie.app;
