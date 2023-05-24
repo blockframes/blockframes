@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { CallableFunctions, FireCollection } from 'ngfire';
-import { DocumentSnapshot } from '@firebase/firestore';
+import { where, DocumentSnapshot } from '@firebase/firestore';
 import { Version, Waterfall, createVersion, createWaterfall, TitleState, History } from '@blockframes/model';
 import { jsonDateReviver } from '@blockframes/utils/helpers';
+
+export const fromOrg = (orgId: string) => [where('orgIds', 'array-contains', orgId)];
 
 @Injectable({ providedIn: 'root' })
 export class WaterfallService extends FireCollection<Waterfall> {
@@ -48,5 +50,11 @@ export class WaterfallService extends FireCollection<Waterfall> {
       waterfall.versions.push(createVersion({ id: versionId, blockIds }));
     await this.update(waterfall);
     return waterfall;
+  }
+
+  public async removeOrg(waterfallId: string, orgId: string) {
+    const waterfall = await this.getValue(waterfallId);
+    const orgIds = waterfall.orgIds.filter(id => id !== orgId);
+    return this.update(waterfallId, { orgIds });
   }
 }

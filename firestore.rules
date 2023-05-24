@@ -313,12 +313,12 @@ service cloud.firestore {
       allow get: if isSignedIn()
         && notInMaintenance()
         && ( checkStatus(existingData(), 'accepted')
-        || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
+        || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds || userOrgId() in getWaterfall(movieId).orgIds)) // TODO #9335 create corresponding unit tests
         );
       allow list: if userHasValidOrg()
         && notInMaintenance()
         && ( checkStatus(existingData(), 'accepted')
-        || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds ))
+        || ( isOrgMember(userOrgId()) && ( userOrgId() in existingData().orgIds || userOrgId() in getWaterfall(movieId).orgIds)) // TODO #9335 create corresponding unit tests
         );
       allow create: if userHasValidOrg()
         && checkAllStatusAreEqual(incomingData(), 'draft')
@@ -343,7 +343,7 @@ service cloud.firestore {
         && ( isNotUpdatingField(['app', 'catalog', 'access']) || incomingData().app.catalog.access == false )
         && ( isNotUpdatingField(['app', 'festival', 'access']) || incomingData().app.festival.access == false )
         && ( isNotUpdatingField(['app', 'financiers', 'access']) || incomingData().app.financiers.access == false )
-        && orgCan('canUpdate', userOrgId(), existingData().id);
+        && orgCan('canUpdate', userOrgId(), existingData().id); // TODO #9335 add rule if we want all waterfall members to be able to edit movie
     }
 
     function checkStatus(data, status) {
@@ -619,6 +619,10 @@ service cloud.firestore {
 
     function getWaterfallPermissions(waterfallId) {
       return get(/databases/$(database)/documents/waterfall/$(waterfallId)/permissions/$(userOrgId())).data;
+    }
+
+    function getWaterfall(waterfallId) {
+      return get(/databases/$(database)/documents/waterfall/$(waterfallId)).data;
     }
 
     /////////////////////////////////////////////////////////////////////////////////

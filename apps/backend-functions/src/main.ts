@@ -33,7 +33,7 @@ import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
 import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
-import { buildWaterfall as _buildWaterfall } from './waterfall';
+import { buildWaterfall as _buildWaterfall, onWaterfallUpdate } from './waterfall';
 import { projectId } from './environments/environment';
 
 console.log('Function instance loaded');
@@ -287,3 +287,8 @@ export const downloadVideoToStorage = functions(superHeavyConfig).https.onReques
 //--------------------------------
 
 export const buildWaterfall = functions().https.onCall(skipInMaintenance(_buildWaterfall));
+
+/**
+ * Trigger: when a waterfall is updated
+ */
+export const onWaterfallUpdateEvent = onDocumentUpdate('waterfall/{waterfallId}', onWaterfallUpdate);

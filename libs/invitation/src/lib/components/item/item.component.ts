@@ -83,6 +83,8 @@ export class ItemComponent {
     } else if (this._invitation.type === 'joinOrganization') {
       const orgId = this._invitation.fromOrg ? this._invitation.fromOrg.id : this._invitation.toOrg.id;
       return `${this.applicationUrl[this.app]}/c/o/organization/${orgId}/view/members`;
+    } else if (this._invitation.type === 'joinWaterfall') {
+      return `${this.applicationUrl[this.app]}/c/o/dashboard/title/${this._invitation.waterfallId}`;
     }
   }
 

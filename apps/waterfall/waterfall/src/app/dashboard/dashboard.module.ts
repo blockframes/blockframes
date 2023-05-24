@@ -56,6 +56,31 @@ const routes: Routes = [{
       ],
     },
     {
+      path: 'waterfall',
+      children: [
+        {
+          path: '',
+          pathMatch: 'full',
+          redirectTo: '/c/o/dashboard/home',
+        },
+        {
+          path: ':movieId',
+          canActivate: [MovieActiveGuard, MovieTunnelGuard],
+          children: [
+            {
+              path: '',
+              pathMatch: 'full',
+              redirectTo: 'right-holders',
+            },
+            {
+              path: 'right-holders',
+              loadChildren: () => import('./waterfall/right-holders/right-holders.module').then(m => m.RightHoldersModule),
+            },
+          ],
+        },
+      ],
+    },
+    {
       path: 'graph',
       children: [
         {

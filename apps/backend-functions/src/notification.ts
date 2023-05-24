@@ -116,6 +116,7 @@ async function appendNotificationSettings(notification: Notification) {
     'invitationToAttendScreeningCreated',
     'invitationToAttendSlateCreated',
     'invitationToAttendMeetingCreated',
+    'invitationToJoinWaterfallCreated',
 
     // notifications only used to send email
     'requestFromUserToJoinOrgPending',
@@ -328,6 +329,12 @@ export async function onNotificationCreate(snap: BlockframesSnapshot<Notificatio
         await attendedScreeningEmail(recipient, notification)
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
+        break;
+      case 'invitationToJoinWaterfallCreated':
+        // TODO #9335
+        break;
+      case 'invitationToJoinWaterfallUpdated':
+        // TODO #9335
         break;
       default:
         notification.email.error = emailErrorCodes.noTemplate.code;

@@ -90,6 +90,8 @@ export const getOrInviteUserByMail = async (
         if (invitation.mode === 'invitation' && eventData?.accessibility === 'public') {
           invitationStatus = 'accepted';
         }
+      } else if (invitation.type === 'joinWaterfall') {
+        templateId = credsTemplates.joinWaterfall;
       }
 
       const template = userInvite(toUser, orgEmailData, urlToUse, templateId, eventData);

@@ -68,6 +68,9 @@
           {{ _invitation.fromUser | displayName }} wants to join your organization.
         </ng-container>
       </ng-container>
+      <ng-container *ngSwitchCase="'joinWaterfall'">
+        {{ _invitation.fromOrg.name  }} invited you to join a waterfall.
+      </ng-container>
     </ng-container>
   </div>
   <span matLine>

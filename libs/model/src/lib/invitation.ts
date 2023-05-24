@@ -1,4 +1,4 @@
-import type { App, InvitationStatus, InvitationType } from './static';
+import type { App, InvitationStatus, InvitationType, RightholderRole } from './static';
 import { Organization, PublicOrganization } from './organisation';
 import { PublicUser } from './user';
 import { Movie } from './movie';
@@ -32,10 +32,17 @@ export interface Invitation extends PublicInvitation {
    * If empty, the invitation is about Organization and we use directly fromOrg.id or toOrg.id
    */
   eventId?: string;
+  waterfallId?: string;
+
   message?: string;
 
   /** Watch information only used for 'screening' and slates events */
   watchInfos?: WatchInfos;
+
+  /** Extra data */
+  data?: {
+    roles?: RightholderRole[]
+  }
 }
 
 /** Public interface of an invitation (for notifications). */
