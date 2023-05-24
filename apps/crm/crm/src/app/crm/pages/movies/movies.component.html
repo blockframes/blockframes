@@ -50,6 +50,9 @@
       <ng-template colRef="app.financiers.status" label="Financiers Status" sort let-status>
         <bf-tag>{{ status }}</bf-tag>
       </ng-template>
+      <ng-template colRef="app.waterfall.status" label="Blockframes Status" sort let-status>
+        <bf-tag>{{ status }}</bf-tag>
+      </ng-template>
       <ng-template colRef="keywords" label="Keywords" [sort]="sorts.byLength" let-keywords>
         <span [matTooltip]="keywords | join">
           {{ keywords | join | maxLength:30 }}
