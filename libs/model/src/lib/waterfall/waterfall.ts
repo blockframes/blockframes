@@ -13,7 +13,7 @@ export function createWaterfallPermissions(params: Partial<WaterfallPermissions>
     id: '',
     scope: [],
     roles: [],
-    ...params
+    ...params,
   }
 }
 

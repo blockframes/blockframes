@@ -1,0 +1,43 @@
+
+section {
+  margin: 32px 0;
+
+  mat-form-field {
+    width: 50%;
+  }
+
+  .title {
+    padding-right: 84px;
+  }
+}
+
+div {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  gap: 64px;
+}
+
+.mat-icon-button {
+  margin-top: 18px;
+}
+
+.divider {
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 32px;
+
+  p {
+    margin: 0;
+    flex-shrink: 0;
+    cursor: pointer;
+    color: var(--primary);
+  }
+
+  mat-divider {
+    border-top-color: var(--primary);
+    border-top-width: 2px;
+    margin-left: 16px;
+    width: 100%;
+  }
+}

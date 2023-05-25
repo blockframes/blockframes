@@ -4,7 +4,7 @@
   <ng-container *ngIf="titles.length; else noMovies">
     <header>
       <h1>My Movies</h1>
-      <a mat-flat-button color="primary" routerLink="." matTooltip="Add Title">
+      <a mat-flat-button color="primary" routerLink="../title/create" matTooltip="Add Title">
         <mat-icon svgIcon="add"></mat-icon>
         <span>Add Movie</span>
       </a>
@@ -25,7 +25,7 @@
       <br>
       able to add the Right Holders and have access to the Waterfall & Revenue distribution.
     </p>
-    <a routerLink="." class="surface">
+    <a routerLink="../title/create" class="surface">
       <img asset="add_title.svg" alt="Add title image">
       <button mat-button color="primary">Add Movie</button>
     </a>

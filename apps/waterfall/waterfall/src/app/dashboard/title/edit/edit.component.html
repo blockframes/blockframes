@@ -1,0 +1,20 @@
+
+<ng-container *ngIf="loading$ | async; else ready">
+  <p>loading...</p>
+</ng-container>
+<ng-template #ready>
+  <a mat-icon-button routerLink="..">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+  </a>
+  <h1>Edit Movie</h1>
+
+  <waterfall-title-form
+    [movieId]="movieId"
+    [movieForm]="movieForm"
+    [waterfallForm]="waterfallForm"
+  ></waterfall-title-form>
+
+  <section>
+    <button mat-flat-button color="primary" (click)="update()" [disabled]="invalid$ | async">Edit Movie</button>
+  </section>
+</ng-template>

@@ -48,10 +48,23 @@ const routes: Routes = [{
           redirectTo: '/c/o/dashboard/home',
         },
         {
+          path: 'create',
+          loadChildren: () => import('./title/create/create.module').then(m => m.CreateModule),
+        },
+        {
           path: ':movieId',
-          canActivate: [MovieActiveGuard, MovieTunnelGuard],
-          loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule),
-          data: { redirect: '/c/o/dashboard/home' }
+          children: [
+            {
+              path: '',
+              canActivate: [MovieActiveGuard, MovieTunnelGuard],
+              loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule),
+              data: { redirect: '/c/o/dashboard/home' }
+            },
+            {
+              path: 'edit',
+              loadChildren: () => import('./title/edit/edit.module').then(m => m.EditModule),
+            },
+          ],
         },
       ],
     },
