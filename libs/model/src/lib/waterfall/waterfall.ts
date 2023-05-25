@@ -1,11 +1,20 @@
-type Role = 'productor' | 'coProductor' | 'distributor' | 'salesAgent' | 'financier'; // TODO #9257 define & move to static-models
+import { RightholderRole } from '../static';
 
 export interface WaterfallPermissions {
   id: string; // orgId
   // #9254 If not movie owner, define the orgIds visible in the waterfall by the current org
   scope: string[];
   // Roles will define what can org do on waterfall/blocks/actions/...
-  roles: Role[]
+  roles: RightholderRole[]
+}
+
+export function createWaterfallPermissions(params: Partial<WaterfallPermissions> = {}) : WaterfallPermissions {
+  return {
+    id: '',
+    scope: [],
+    roles: [],
+    ...params
+  }
 }
 
 export interface Version {

@@ -23,6 +23,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils/algolia';
 import { BlockframesChange, getDocument } from '@blockframes/firebase-utils';
 import { applicationUrl, sendgridEmailsFrom } from '@blockframes/utils/apps';
+import { onInvitationToWaterfallUpdate } from './internals/invitations/waterfall';
 export { hasUserAnOrgOrIsAlreadyInvited } from './internals/invitations/utils';
 
 /**
@@ -116,6 +117,9 @@ export async function onInvitationWrite(change: BlockframesChange<Invitation>) {
         needUpdate = needUpdate && invitation.status === invitationDoc.status;
         break;
       }
+      case 'joinWaterfall':
+        await onInvitationToWaterfallUpdate(invitationDocBefore, invitationDoc, invitationDoc);
+        break;
       default:
         console.log(`Unhandled invitation: ${JSON.stringify(invitationDoc)}`);
         break;

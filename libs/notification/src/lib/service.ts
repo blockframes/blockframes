@@ -464,6 +464,19 @@ export class NotificationService extends BlockframesCollection<Notification> {
           url: `${applicationUrl[notification.appAccess]}`,
         };
       }
+      case 'invitationToJoinWaterfallUpdated': {
+        const movie = await this.movieService.load(notification.docId);
+        const subject = await this.notificationSubject(notification);
+        const message = `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to join ${movie.title.international}'s Waterfall.`;
+        return {
+          ...notification,
+          _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
+          message,
+          imgRef: notification.user?.avatar || notification.organization?.logo,
+          placeholderUrl: 'profil_user.svg',
+          url: `${applicationUrl['waterfall']}/c/o/${module}/title/${notification.docId}`,
+        };
+      }
       default:
         return {
           ...notification,

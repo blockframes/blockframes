@@ -18,7 +18,7 @@ import {
   Organization,
 } from '@blockframes/model';
 
-async function addUserToOrg(userId: string, organizationId: string) {
+function addUserToOrg(userId: string, organizationId: string) {
   const db = getDb();
   if (!organizationId || !userId) {
     throw new Error(`missing data: userId=${userId}, organizationId=${organizationId}`);
@@ -65,7 +65,7 @@ async function addUserToOrg(userId: string, organizationId: string) {
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
-async function onInvitationToOrgAccept({ toUser, fromOrg }: Invitation) {
+function onInvitationToOrgAccept({ toUser, fromOrg }: Invitation) {
   if (!toUser || !fromOrg) {
     console.error('No user or org provided');
     return;
@@ -142,7 +142,7 @@ async function onRequestFromUserToJoinOrgAccept({
 * Dispatch the invitation update call depending on whether the invitation
 * was 'created' or 'accepted'.
 */
-export async function onInvitationToJoinOrgUpdate(
+export function onInvitationToJoinOrgUpdate(
   before: Invitation,
   after: Invitation,
   invitation: Invitation
@@ -157,7 +157,7 @@ export async function onInvitationToJoinOrgUpdate(
 * Dispatch the invitation update call depending on whether the invitation
 * was 'created' or 'accepted'.
 */
-export async function onRequestToJoinOrgUpdate(
+export function onRequestToJoinOrgUpdate(
   before: Invitation,
   after: Invitation,
   invitation: Invitation

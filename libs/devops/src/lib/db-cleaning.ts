@@ -68,13 +68,14 @@ export async function auditUsers(db: FirebaseFirestore.Firestore, auth = getAuth
 async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
 
   // Getting existing document ids to compare
-  const [movieIds, organizationIds, eventIds, invitationIds, offerIds, contractIds] = [
+  const [movieIds, organizationIds, eventIds, invitationIds, offerIds, contractIds, waterfallIds] = [
     dbData.movies.refs.docs.map((ref) => ref.id),
     dbData.orgs.refs.docs.map((ref) => ref.id),
     dbData.events.refs.docs.map((ref) => ref.id),
     dbData.invitations.refs.docs.map((ref) => ref.id),
     dbData.offers.refs.docs.map((ref) => ref.id),
     dbData.contracts.refs.docs.map((ref) => ref.id),
+    dbData.waterfall.refs.docs.map((ref) => ref.id),
   ];
 
   // Compare and update/delete documents with references to non existing documents
@@ -96,7 +97,8 @@ async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, 
     userIds,
     invitationIds,
     offerIds,
-    contractIds
+    contractIds,
+    waterfallIds
   );
 
   await cleanPermissions(dbData.permissions.refs, organizationIds2, userIds, db);
@@ -402,7 +404,7 @@ function isNotificationValid(notification: Notification, existingIds: string[]):
   if (notification.organization?.id && !existingIds.includes(notification.organization?.id))
     return false;
   if (notification.user?.uid && !existingIds.includes(notification.user?.uid)) return false;
-  if (notification.docId && !existingIds.includes(notification.docId)) return false; // docId can refer to : events, offers, movies, orgs, contracts
+  if (notification.docId && !existingIds.includes(notification.docId)) return false; // docId can refer to : events, offers, movies, orgs, contracts, waterfalls
   if (notification.invitation?.id && !existingIds.includes(notification.invitation?.id))
     return false;
   if (notification.bucket?.id && !existingIds.includes(notification.bucket?.id)) return false; // buckets Ids are orgs Ids
@@ -441,6 +443,24 @@ function isInvitationValid(invitation: Invitation, existingIds: string[]): boole
           existingIds.includes(invitation.toUser?.uid)) ||
         (existingIds.includes(invitation.fromUser?.uid) &&
           existingIds.includes(invitation.toOrg?.id))
+      );
+    }
+    case 'joinWaterfall': {
+      // Cleaning not pending invitations older than n days
+      const invitationTimestamp = invitation.date.getTime();
+      if (
+        invitation.status !== 'pending' &&
+        invitationTimestamp < subDays(Date.now(), numberOfDaysToKeepNotifications).getTime()
+      ) {
+        return false;
+      }
+      return (
+        (existingIds.includes(invitation.fromOrg?.id) &&
+          existingIds.includes(invitation.toUser?.uid) &&
+          existingIds.includes(invitation.waterfallId)) ||
+        (existingIds.includes(invitation.fromUser?.uid) &&
+          existingIds.includes(invitation.toOrg?.id) &&
+          existingIds.includes(invitation.waterfallId))
       );
     }
     default:

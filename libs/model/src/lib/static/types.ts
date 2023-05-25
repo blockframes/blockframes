@@ -48,7 +48,8 @@ import {
   movieNoteRoles,
   releaseMedias,
   screenerTypes,
-  territoriesISOA2
+  territoriesISOA2,
+  rightholderRoles
 } from './static-model';
 
 export type App = typeof app[number];
@@ -149,6 +150,8 @@ export type SoundFormat = keyof typeof soundFormat;
 
 export type StakeholderRole = keyof typeof stakeholderRoles;
 export type StakeholderRoleValue = keyof typeof stakeholderRoles[StakeholderRole] & string;
+
+export type RightholderRole = keyof typeof rightholderRoles;
 
 export type MovieNoteRole = keyof typeof movieNoteRoles;
 

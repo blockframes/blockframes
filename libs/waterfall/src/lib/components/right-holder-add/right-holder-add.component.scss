@@ -1,0 +1,23 @@
+
+:host {
+  width: 100%;
+}
+
+article {
+  display: flex;
+  gap: 24px;
+
+  algolia-chips-autocomplete, static-select{
+    flex-grow: 1;
+  }
+  
+  div {
+    margin-top: 10px;
+  }
+}
+
+.profile-item {
+  img {
+    height: 24px;
+  }
+}

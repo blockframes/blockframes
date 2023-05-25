@@ -18,7 +18,8 @@ export const templateIds = {
     credentials: {
       attendEvent: 'd-de129a43fb43430a8e1d4e8de4d43e46',
       attendNonPrivateEvent: 'd-13e08d0d89d94cc880a8f40b9880e683',
-      joinOrganization: 'd-5c03ed5bde6d40768a44e3d1e1c95b67'
+      joinOrganization: 'd-5c03ed5bde6d40768a44e3d1e1c95b67',
+      joinWaterfall: 'd-15fb499c411448dd9328af06d11eb0a0'
     },
   },
   // Templates for the org management flow
