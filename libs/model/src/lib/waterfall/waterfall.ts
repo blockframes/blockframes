@@ -1,6 +1,8 @@
+import { DocumentMeta } from '../meta';
 import { RightholderRole } from '../static';
 
 export interface WaterfallPermissions {
+  _meta?: DocumentMeta;
   id: string; // orgId
   // #9254 If not movie owner, define the orgIds visible in the waterfall by the current org
   scope: string[];
@@ -37,6 +39,7 @@ export function createVersion(params: Partial<Version> = {}) {
 }
 
 export interface Waterfall {
+  _meta?: DocumentMeta;
   id: string;
   versions: Version[]
   orgIds: string[]; // Orgs linked to waterfall, can read document if in it

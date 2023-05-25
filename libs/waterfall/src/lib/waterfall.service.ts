@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CallableFunctions, FireCollection } from 'ngfire';
 import { where, DocumentSnapshot } from '@firebase/firestore';
-import { Version, Waterfall, createVersion, createWaterfall, TitleState, History } from '@blockframes/model';
+import { Version, Waterfall, createVersion, createWaterfall, TitleState, History, createDocumentMeta } from '@blockframes/model';
 import { jsonDateReviver } from '@blockframes/utils/helpers';
+import { AuthService } from '@blockframes/auth/service';
 
 export const fromOrg = (orgId: string) => [where('orgIds', 'array-contains', orgId)];
 
@@ -15,7 +16,10 @@ export class WaterfallService extends FireCollection<Waterfall> {
 
   readonly path = 'waterfall';
 
-  constructor(private functions: CallableFunctions) {
+  constructor(
+    private functions: CallableFunctions,
+    private authService: AuthService,
+  ) {
     super();
   }
 
@@ -31,7 +35,11 @@ export class WaterfallService extends FireCollection<Waterfall> {
   }
 
   public async create(id: string, orgIds?: string[]) {
-    const waterfall = createWaterfall({ id });
+    const createdBy = this.authService.uid;
+    const waterfall = createWaterfall({
+      _meta: createDocumentMeta({ createdBy }),
+      id,
+    });
     if (orgIds?.length) waterfall.orgIds = orgIds;
     await this.add(waterfall);
     return waterfall;

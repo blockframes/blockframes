@@ -1,6 +1,8 @@
+import { DocumentMeta } from '../meta';
 import { Action } from './action';
 
 export interface Block {
+  _meta?: DocumentMeta;
   id: string;
   timestamp: number;
   name: string;
