@@ -17,7 +17,8 @@ import {
   createPublicUser,
   getUserEmailData,
   getOrgEmailData,
-  EventEmailData
+  EventEmailData,
+  WaterfallEmailData
 } from '@blockframes/model';
 import { logger } from 'firebase-functions';
 import { hasUserAnOrgOrIsAlreadyInvited } from '../invitation';
@@ -41,7 +42,8 @@ export const getOrInviteUserByMail = async (
   email: string,
   invitation: { id: string, type: InvitationType, mode: InvitationMode, fromOrg: PublicOrganization },
   app: App = 'catalog',
-  eventData?: EventEmailData
+  eventData?: EventEmailData,
+  waterfallData?: WaterfallEmailData
 ): Promise<{ user: UserProposal | PublicUser, invitationStatus?: InvitationStatus }> => {
   const fromOrgId = invitation.fromOrg.id;
   let invitationStatus: InvitationStatus;
@@ -94,7 +96,7 @@ export const getOrInviteUserByMail = async (
         templateId = credsTemplates.joinWaterfall;
       }
 
-      const template = userInvite(toUser, orgEmailData, urlToUse, templateId, eventData);
+      const template = userInvite(toUser, orgEmailData, urlToUse, templateId, eventData, waterfallData);
       await sendMailFromTemplate(template, app);
       return {
         user: newUser.user,

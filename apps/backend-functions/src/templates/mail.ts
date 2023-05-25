@@ -31,7 +31,8 @@ import {
   EventEmailData,
   EmailTemplateRequest,
   displayName,
-  RequestAskingPriceData
+  RequestAskingPriceData,
+  WaterfallEmailData
 } from '@blockframes/model';
 import { format } from 'date-fns';
 import { supportMailosaur } from '@blockframes/utils/constants';
@@ -100,13 +101,15 @@ export function userInvite(
   org: OrgEmailData,
   pageUrl: string = appUrl.market,
   templateId: string = templateIds.user.credentials.joinOrganization,
-  event?: EventEmailData
+  event?: EventEmailData,
+  waterfall?: WaterfallEmailData
 ): EmailTemplateRequest {
   const data = {
     user: toUser,
     org,
     pageUrl: `${pageUrl}${USER_CREDENTIAL_INVITATION}?code=${encodeURIComponent(toUser.password)}&email=${encodeURIComponent(toUser.email)}`,
     event,
+    waterfall,
   };
   return { to: toUser.email, templateId, data };
 }
@@ -218,7 +221,7 @@ export function invitationToEventFromOrgUpdated(
     userSubject,
     org: userOrg,
     event,
-    pageUrl: `${appUrl.market}/c/o/marketplace/organization/${orgId}}/title`
+    pageUrl: `${appUrl.market}/c/o/marketplace/organization/${orgId}/title`
   };
   return { to: toAdmin.email, templateId, data };
 }
@@ -691,4 +694,39 @@ export function askingPriceRequested(title: Movie, buyerOrg: Organization, selle
       ${data.message ? 'Message: ' + data.message : ''}
     `
   };
+}
+
+export function invitationToJoinWaterfall(
+  toUser: UserEmailData,
+  org: OrgEmailData,
+  waterfall: WaterfallEmailData,
+  link: string,
+  url: string = appUrl.waterfall,
+): EmailTemplateRequest {
+  const data = {
+    user: toUser,
+    org,
+    waterfall,
+    pageUrl: `${url}/${link}`,
+  };
+  return { to: toUser.email, templateId: templateIds.invitation.joinWaterfall.created, data };
+}
+
+/** Generate an email for org's admin when an user accepted/declined their invitation to join a waterfall */
+export function invitationToJoinWaterfallUpdated(
+  toAdmin: UserEmailData,
+  userSubject: UserEmailData,
+  userOrg: OrgEmailData,
+  waterfall: WaterfallEmailData,
+  orgId: string,
+  templateId: string
+): EmailTemplateRequest {
+  const data = {
+    user: toAdmin,
+    userSubject,
+    org: userOrg,
+    waterfall,
+    pageUrl: `${appUrl.waterfall}/c/o/dashboard/title/${orgId}`
+  };
+  return { to: toAdmin.email, templateId, data };
 }

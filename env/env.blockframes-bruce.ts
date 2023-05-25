@@ -8,7 +8,7 @@ export const appUrl = {
   market: 'https://festival-blockframes-bruce.web.app',
   crm: 'https://crm-blockframes-bruce.web.app',
   financiers: 'https://financiers-blockframes-bruce.web.app',
-  waterfall: 'https://waterfall-blockframes-bruce.web.app',
+  waterfall: 'https://waterfall-blockframes-demo.web.app',
 };
 
 const firebaseConfig = {

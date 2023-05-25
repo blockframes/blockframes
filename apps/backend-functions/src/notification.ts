@@ -24,7 +24,8 @@ import {
   getMovieEmailData,
   EventEmailData,
   getEventEmailData,
-  Sale
+  Sale,
+  getWaterfallEmailData
 } from '@blockframes/model';
 import { sendMail, sendMailFromTemplate } from './internals/email';
 import {
@@ -57,6 +58,8 @@ import {
   toAdminContractDeclined,
   screenerRequestedToSeller,
   screenerRequestFromUserSent,
+  invitationToJoinWaterfall,
+  invitationToJoinWaterfallUpdated,
   // #7946 this may be reactivated later
   // offerUnderSignature,
   // offerAcceptedOrDeclined,
@@ -72,6 +75,7 @@ import { getDocument, BlockframesSnapshot, getDb } from '@blockframes/firebase-u
 
 // @TODO (#2848) forcing to festival since invitations to events are only on this one
 const eventAppKey: App = 'festival';
+const waterfallAppKey: App = 'waterfall';
 const organizerEmail = sendgridEmailsFrom.festival.email;
 
 /** Takes one or more notifications and add them on the notifications collection */
@@ -331,10 +335,14 @@ export async function onNotificationCreate(snap: BlockframesSnapshot<Notificatio
           .catch(e => notification.email.error = e.message);
         break;
       case 'invitationToJoinWaterfallCreated':
-        // TODO #9335
+        await sendInvitationToJoinWaterfallCreatedEmail(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
         break;
       case 'invitationToJoinWaterfallUpdated':
-        // TODO #9335
+        await sendInvitationToJoinWaterfallUpdatedEmail(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
         break;
       default:
         notification.email.error = emailErrorCodes.noTemplate.code;
@@ -905,4 +913,42 @@ async function attendedScreeningEmail(recipient: User, notification: Notificatio
   const template = { to: recipient.email, templateId: templateIds.invitation.attendEvent.attendedScreening, data };
 
   await sendMailFromTemplate(template, 'festival', groupIds.unsubscribeAll);
+}
+
+async function sendInvitationToJoinWaterfallCreatedEmail(recipient: User, notification: Notification) {
+  const movie = await getDocument<Movie>(`movies/${notification.docId}`);
+  const org = await getDocument<Organization>(`orgs/${notification.organization.id}`);
+  const orgData = getOrgEmailData(org);
+  const toUser = getUserEmailData(recipient);
+  const waterfallEmailData = getWaterfallEmailData(movie);
+  const urlToUse = applicationUrl[waterfallAppKey];
+  const link = `c/o/dashboard/invitations`;
+  logger.log(`Sending invitation email for waterfall (${notification.docId}) from ${orgData.name} to : ${toUser.email}`);
+  const templateInvitation = invitationToJoinWaterfall(toUser, orgData, waterfallEmailData, link, urlToUse);
+  return sendMailFromTemplate(templateInvitation, waterfallAppKey, groupIds.unsubscribeAll).catch(e => logger.warn(e.message));
+}
+
+async function sendInvitationToJoinWaterfallUpdatedEmail(recipient: User, notification: Notification) {
+  const invitation = await getDocument<Invitation>(`invitations/${notification.invitation.id}`);
+  if (invitation.fromOrg) {
+    const movie = await getDocument<Movie>(`movies/${notification.docId}`);
+    const user = await getDocument<User>(`users/${notification.user.uid}`);
+    const userOrg = await getDocument<Organization>(`orgs/${user.orgId}`);
+    const userOrgData = getOrgEmailData(userOrg);
+    const waterfallData = getWaterfallEmailData(movie)
+    const userSubject = getUserEmailData(user);
+    const toAdmin = getUserEmailData(recipient);
+
+    if (notification.invitation.status === 'accepted') {
+      const templateId = templateIds.invitation.joinWaterfall.accepted;
+      const template = invitationToJoinWaterfallUpdated(toAdmin, userSubject, userOrgData, waterfallData, invitation.fromOrg.id, templateId);
+      return sendMailFromTemplate(template, waterfallAppKey, groupIds.unsubscribeAll);
+    } else {
+      const templateId = templateIds.invitation.joinWaterfall.declined;
+      const template = invitationToJoinWaterfallUpdated(toAdmin, userSubject, userOrgData, waterfallData, invitation.fromOrg.id, templateId);
+      return sendMailFromTemplate(template, waterfallAppKey, groupIds.unsubscribeAll);
+    }
+  } else {
+    throw new Error('Invitation with mode === "invitation" can only have "fromOrg" attribute');
+  }
 }

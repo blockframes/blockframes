@@ -51,6 +51,11 @@ export const templateIds = {
       declined: 'd-0fbe1de6a0834430a0683e495a4f2b0a',
       missedScreening: 'd-1d75256d03cf486cac275033ecdcc389',
       attendedScreening: 'd-6a8df635e1ce42e2a2a7ef071f9159fc'
+    },
+    joinWaterfall: {
+      created: 'd-8be5d46bcc764f04964ffbd17f094a52',
+      accepted: 'd-80a560156925474292a3cf589f72f421',
+      declined: 'd-6a5bd8adf8914e2394a068c2049696ac'
     }
   },
   // Used only in front (see title view component of MF)
