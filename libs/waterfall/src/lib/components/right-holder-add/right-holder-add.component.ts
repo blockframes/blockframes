@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,6 +9,7 @@ import { FormEntity } from '@blockframes/utils/form';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia/helper.utils';
 import { BehaviorSubject } from 'rxjs';
 import { OrganizationService } from '@blockframes/organization/service';
+import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
 
 @Component({
   selector: 'waterfall-right-holder-add',
@@ -17,7 +18,7 @@ import { OrganizationService } from '@blockframes/organization/service';
   animations: [slideUp, slideDown],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RightHolderAddComponent {
+export class RightHolderAddComponent implements OnInit {
 
   public form = new FormEntity({
     users: createAlgoliaUserForm([Validators.maxLength(50), Validators.required]),
@@ -27,7 +28,9 @@ export class RightHolderAddComponent {
   private _isSending = new BehaviorSubject(false);
   public isSending$ = this._isSending.asObservable();
 
-  separators = [ENTER, COMMA, SEMICOLON];
+  public isProducer = false;
+
+  public separators = [ENTER, COMMA, SEMICOLON];
 
   @Input() invitations: Invitation[] = [];
   @Input() waterfallId: string;
@@ -35,8 +38,14 @@ export class RightHolderAddComponent {
   constructor(
     private snackBar: MatSnackBar,
     private invitationService: InvitationService,
-    private organizationService: OrganizationService
+    private organizationService: OrganizationService,
+    private permissionsService: WaterfallPermissionsService,
   ) { }
+
+  async ngOnInit() {
+    this.isProducer = await this.permissionsService.hasRole(this.waterfallId, this.organizationService.org.id, 'producer');
+    if (!this.isProducer) this.form.get('roles').setValue(['producer']);
+  }
 
   async invite() {
     if (this.form.valid) {

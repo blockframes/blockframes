@@ -149,6 +149,13 @@ describe('User that is not owner of movie', () => {
     });
   });
 
+  describe('Movies', () => {
+    test('Should not be able to update movie document', async () => {
+      const ref = db.doc('movies/M001');
+      await assertFails(ref.set({ id: 'M001', notes: 'unit test update' }));
+    });
+  });
+
   describe('Blocks', () => {
 
     test('Should not be able to create block document', async () => {
@@ -242,6 +249,13 @@ describe('User that is linked to waterfall', () => {
     test('Should not be able to update waterfall document', async () => {
       const ref = db.doc('waterfall/MI-0d7');
       await assertFails(ref.set({ id: 'MI-0d7', orgIds: ['O002', 'O003'] }));
+    });
+  });
+
+  describe('Movies', () => {
+    test('Should be able to update movie document', async () => {
+      const ref = db.doc('movies/MI-0d7');
+      await assertSucceeds(ref.set({ id: 'MI-0d7', notes: 'unit test update' }));
     });
   });
 

@@ -30,8 +30,9 @@ export class WaterfallService extends FireCollection<Waterfall> {
     return createWaterfall(block);
   }
 
-  public async create(id: string) {
+  public async create(id: string, orgIds?: string[]) {
     const waterfall = createWaterfall({ id });
+    if (orgIds?.length) waterfall.orgIds = orgIds;
     await this.add(waterfall);
     return waterfall;
   }
