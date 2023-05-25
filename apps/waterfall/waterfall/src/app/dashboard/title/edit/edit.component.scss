@@ -4,6 +4,12 @@
   padding: 48px 24px;
 }
 
+article {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 section {
   display: flex;
   flex-direction: row;

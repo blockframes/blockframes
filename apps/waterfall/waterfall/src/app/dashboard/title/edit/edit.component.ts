@@ -1,6 +1,7 @@
 // Angular
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest, map, startWith } from 'rxjs';
 
@@ -10,7 +11,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { OrganizationService } from '@blockframes/organization/service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
-import { WaterfallPermissionsService } from '@blockframes/waterfall/permission.service';
+import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
 
 
 @Component({
@@ -30,8 +31,10 @@ export class EditComponent implements OnInit {
   invalid$: Observable<boolean>;
 
   loading$ = new BehaviorSubject(true);
+  updating$ = new BehaviorSubject(false);
 
   constructor(
+    private snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private movieService: MovieService,
     private orgService: OrganizationService,
@@ -72,6 +75,7 @@ export class EditComponent implements OnInit {
 
   // update a new movie along with its waterfall & waterfall permissions
   async update() {
+    this.updating$.next(true);
     await this.movieService.update({
       ...this.movieForm.value,
       id: this.movieId,
@@ -80,6 +84,9 @@ export class EditComponent implements OnInit {
     this.uploadService.upload();
 
     const orgId = this.orgService.org.id;
-    this.permissionsService.update(this.movieId, { id: orgId, roles: this.waterfallForm.value });
+    await this.permissionsService.update(orgId, { roles: this.waterfallForm.value }, { params: { waterfallId: this.movieId }  });
+
+    this.updating$.next(false);
+    this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
   }
 }

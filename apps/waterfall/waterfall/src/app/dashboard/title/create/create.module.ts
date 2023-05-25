@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Blockframes
 import { FormModule } from '../form/form.module';
@@ -23,6 +24,7 @@ import { CreateComponent } from './create.component';
     // Material
     MatIconModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: CreateComponent }]),

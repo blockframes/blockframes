@@ -11,5 +11,10 @@
 ></waterfall-title-form>
 
 <section>
-  <button mat-flat-button color="primary" (click)="create()" [disabled]="invalid$ | async">Create Movie</button>
+  <ng-container *ngIf="creating$ | async; else canCreate">
+    <mat-spinner></mat-spinner>
+  </ng-container>
+  <ng-template #canCreate>
+    <button mat-flat-button color="primary" (click)="create()" [disabled]="invalid$ | async">Create Movie</button>
+  </ng-template>
 </section>

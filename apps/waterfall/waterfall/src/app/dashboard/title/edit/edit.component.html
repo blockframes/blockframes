@@ -1,6 +1,8 @@
 
 <ng-container *ngIf="loading$ | async; else ready">
-  <p>loading...</p>
+  <article>
+    <mat-spinner></mat-spinner>
+  </article>
 </ng-container>
 <ng-template #ready>
   <a mat-icon-button routerLink="..">
@@ -15,6 +17,11 @@
   ></waterfall-title-form>
 
   <section>
-    <button mat-flat-button color="primary" (click)="update()" [disabled]="invalid$ | async">Edit Movie</button>
+    <ng-container *ngIf="updating$ | async; else edit">
+      <mat-spinner></mat-spinner>
+    </ng-container>
+    <ng-template #edit>
+      <button mat-flat-button color="primary" (click)="update()" [disabled]="invalid$ | async">Edit Movie</button>
+    </ng-template>
   </section>
 </ng-template>
