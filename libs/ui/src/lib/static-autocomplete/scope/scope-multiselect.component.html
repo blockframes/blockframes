@@ -9,7 +9,7 @@
         [indeterminate]="indeterminate$ | async"
         (change)="checkAll($event.checked)"
       ></mat-checkbox>
-      <input [placeholder]="filterPlaceholder" [formControl]="search" />
+      <input [placeholder]="filterPlaceholder" [formControl]="search" (keydown)="$event.stopPropagation()">
       <mat-icon *ngIf="!search.value" svgIcon="search"></mat-icon>
       <button *ngIf="!!search.value" mat-icon-button type="button" (click)="resetSearch()" matTooltip="Clear text">
         <mat-icon svgIcon="refresh"></mat-icon>
