@@ -1,17 +1,11 @@
 import { Injectable } from '@angular/core';
-import { FireSubCollection } from 'ngfire';
 import { DocumentSnapshot } from '@firebase/firestore';
-
 import { RightholderRole, WaterfallPermissions, createDocumentMeta, createWaterfallPermissions } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
+import { BlockframesSubCollection } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
-export class WaterfallPermissionsService extends FireSubCollection<WaterfallPermissions> {
-
-  override memorize = true;
-
-  override storeId = true;
-
+export class WaterfallPermissionsService extends BlockframesSubCollection<WaterfallPermissions> {
   readonly path = 'waterfall/:waterfallId/permissions';
 
   constructor(

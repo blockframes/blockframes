@@ -1,16 +1,11 @@
 import { Injectable } from '@angular/core';
-import { FireSubCollection } from 'ngfire';
 import { DocumentSnapshot } from '@firebase/firestore';
 import { Block, createBlock, createAction, Action, createDocumentMeta } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
+import { BlockframesSubCollection } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
-export class BlockService extends FireSubCollection<Block> {
-
-  override memorize = true;
-
-  override storeId = true;
-
+export class BlockService extends BlockframesSubCollection<Block> {
   readonly path = 'waterfall/:waterfallId/blocks';
 
   constructor(
