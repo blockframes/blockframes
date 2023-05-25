@@ -6,10 +6,10 @@ import { CommonModule } from '@angular/common';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Blockframes
-import { FormModule } from '../form/form.module';
+import { FormModule } from '@blockframes/waterfall/components/form/form.module';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Pages
 import { EditComponent } from './edit.component';
@@ -20,11 +20,11 @@ import { EditComponent } from './edit.component';
   imports: [
     CommonModule,
     FormModule,
+    LogoSpinnerModule,
 
     // Material
     MatIconModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: EditComponent }]),

@@ -7,12 +7,12 @@
 <waterfall-title-form
   [movieId]="movieId"
   [movieForm]="movieForm"
-  [waterfallForm]="waterfallForm"
+  [waterfallRoleControl]="waterfallRoleControl"
 ></waterfall-title-form>
 
 <section>
   <ng-container *ngIf="creating$ | async; else canCreate">
-    <mat-spinner></mat-spinner>
+    <logo-spinner></logo-spinner>
   </ng-container>
   <ng-template #canCreate>
     <button mat-flat-button color="primary" (click)="create()" [disabled]="invalid$ | async">Create Movie</button>

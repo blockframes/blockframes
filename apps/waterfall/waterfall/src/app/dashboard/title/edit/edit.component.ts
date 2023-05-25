@@ -2,8 +2,8 @@
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { BehaviorSubject, combineLatest, map, startWith } from 'rxjs';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, combineLatest, map, startWith } from 'rxjs';
 
 // Blockframes
 import { RightholderRole } from '@blockframes/model';
@@ -23,12 +23,29 @@ import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.
 export class EditComponent implements OnInit {
 
   movieForm = new MovieForm({ directors: [{ firstName: '', lastName: '' }] });
-
-  waterfallForm = new FormControl<RightholderRole[]>(undefined, [Validators.required]);
+  waterfallRoleControl = new FormControl<RightholderRole[]>(undefined, [Validators.required]);
 
   movieId = '';
 
-  invalid$: Observable<boolean>;
+  // check the invalidity of the forms value to disable/enable the create button
+  invalid$ = combineLatest([
+    this.movieForm.valueChanges,
+    this.waterfallRoleControl.valueChanges,
+  ]).pipe(
+    map(([ movie, waterfall ]) => {
+      // check movie
+      if (!movie.title.international) return true;
+      if (movie.directors.length === 0) return true;
+      const missing = movie.directors.some(d => !d.firstName || !d.lastName);
+      if (missing) return true;
+
+      // check waterfall
+      if (waterfall.length === 0) return true;
+      
+      return false;
+    }),
+    startWith(false),
+  );
 
   loading$ = new BehaviorSubject(true);
   updating$ = new BehaviorSubject(false);
@@ -44,36 +61,19 @@ export class EditComponent implements OnInit {
 
   async ngOnInit() {
     this.movieId = this.route.snapshot.params.movieId;
-    const [ movie ] = await this.movieService.getValue([this.movieId]);
+    
+    const [ movie, permissions ] = await Promise.all([
+      this.movieService.getValue(this.movieId),
+      this.permissionsService.getValue(this.orgService.org.id, { waterfallId: this.movieId }),
+    ]);
+
     this.movieForm.patchValue(movie);
+    this.waterfallRoleControl.patchValue(permissions.roles);
 
-    const permissions = await this.permissionsService.getValue(this.orgService.org.id, { waterfallId: this.movieId });
-    this.waterfallForm.patchValue(permissions.roles as any);
-
-    this.loading$.next(false);
-
-    // check the invalidity of the forms value to disable/enable the create button
-    this.invalid$ = combineLatest([
-      this.movieForm.valueChanges,
-      this.waterfallForm.valueChanges,
-    ]).pipe(
-      map(([ movie, waterfall ]) => {
-        // check movie
-        if (!movie.title.international) return true;
-        if (movie.directors.length === 0) return true;
-        const missing = movie.directors.some(d => !d.firstName || !d.lastName);
-        if (missing) return true;
-
-        // check waterfall
-        if (waterfall.length === 0) return true;
-        
-        return false;
-      }),
-      startWith(false),
-    );
+    this.loading$.next(false);    
   }
 
-  // update a new movie along with its waterfall & waterfall permissions
+  // update a new movie along with its waterfall permissions
   async update() {
     this.updating$.next(true);
     await this.movieService.update({
@@ -84,7 +84,7 @@ export class EditComponent implements OnInit {
     this.uploadService.upload();
 
     const orgId = this.orgService.org.id;
-    await this.permissionsService.update(orgId, { roles: this.waterfallForm.value }, { params: { waterfallId: this.movieId }  });
+    await this.permissionsService.update(orgId, { roles: this.waterfallRoleControl.value }, { params: { waterfallId: this.movieId }  });
 
     this.updating$.next(false);
     this.snackBar.open('Movie updated!', 'close', { duration: 3000 });

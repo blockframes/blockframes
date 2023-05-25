@@ -1,5 +1,5 @@
 // Angular
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 // Blockframes
@@ -15,9 +15,10 @@ import { RightholderRole, rightholderRoles } from '@blockframes/model';
 })
 export class FormComponent {
 
-  @Input() movieForm = new MovieForm({ directors: [{ firstName: '', lastName: '' }] });
-  @Input() waterfallForm = new FormControl<RightholderRole[]>([], [Validators.required]);
+  @Input() movieForm: MovieForm;
+  @Input() waterfallRoleControl: FormControl<RightholderRole[]>;
   @Input() movieId = '';
+  @Input() edit = false;
 
   rightholderRoles = rightholderRoles;
 

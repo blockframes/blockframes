@@ -171,7 +171,8 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
         }
       });
 
-      if (this.pushSubToStack) this.newSubscription.emit(this.docSub);
+        if (this.pushSubToStack) this.newSubscription.emit(this.docSub);
+      
     }
   }
 
