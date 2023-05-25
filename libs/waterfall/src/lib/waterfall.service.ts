@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
-import { CallableFunctions, FireCollection } from 'ngfire';
+import { CallableFunctions, WriteOptions } from 'ngfire';
 import { where, DocumentSnapshot } from '@firebase/firestore';
-import { Version, Waterfall, createVersion, createWaterfall, TitleState, History } from '@blockframes/model';
+import { Version, Waterfall, createVersion, createWaterfall, TitleState, History, createDocumentMeta } from '@blockframes/model';
 import { jsonDateReviver } from '@blockframes/utils/helpers';
+import { AuthService } from '@blockframes/auth/service';
+import { doc } from 'firebase/firestore';
+import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
 export const fromOrg = (orgId: string) => [where('orgIds', 'array-contains', orgId)];
 
 @Injectable({ providedIn: 'root' })
-export class WaterfallService extends FireCollection<Waterfall> {
-
-  override memorize = true;
-
-  override storeId = true;
-
+export class WaterfallService extends BlockframesCollection<Waterfall> {
   readonly path = 'waterfall';
 
-  constructor(private functions: CallableFunctions) {
+  constructor(
+    private functions: CallableFunctions,
+    private authService: AuthService,
+  ) {
     super();
   }
 
@@ -30,8 +31,20 @@ export class WaterfallService extends FireCollection<Waterfall> {
     return createWaterfall(block);
   }
 
+  onUpdate(waterfall: Waterfall, { write }: WriteOptions) {
+    const waterfallRef = doc(this.db, `${this.path}/${waterfall.id}`);
+    write.update(waterfallRef,
+      '_meta.updatedBy', this.authService.uid,
+      '_meta.updatedAt', new Date(),
+    );
+  }
+
   public async create(id: string, orgIds?: string[]) {
-    const waterfall = createWaterfall({ id });
+    const createdBy = this.authService.uid;
+    const waterfall = createWaterfall({
+      _meta: createDocumentMeta({ createdBy }),
+      id,
+    });
     if (orgIds?.length) waterfall.orgIds = orgIds;
     await this.add(waterfall);
     return waterfall;
