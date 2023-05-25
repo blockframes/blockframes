@@ -17,6 +17,8 @@ import {
   createPublicOrganization,
   Organization,
   getEventEmailData,
+  Movie,
+  getWaterfallEmailData,
 } from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
@@ -178,10 +180,13 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
 
   const eventId = invitation.type === 'attendEvent' && invitation.eventId;
   const event = eventId ? await getDocument<Event<EventMeta>>(`events/${eventId}`) : undefined;
+  const movie = invitation.waterfallId ? await getDocument<Movie>(`movies/${invitation.waterfallId}`) : undefined;
 
   for (const email of data.emails) {
     const invitationId = db.collection('invitations').doc().id;
     const { type, mode, fromOrg } = invitation;
+
+    // Data for invitations to attendEvent
     const eventData = type == 'attendEvent' ? getEventEmailData({
       event,
       orgName: fromOrg.name,
@@ -190,7 +195,12 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
       organizerEmail: sendgridEmailsFrom.festival.email,
       applicationUrl: applicationUrl.festival
     }) : undefined;
-    const user = await getOrInviteUserByMail(email, { id: invitationId, type, mode, fromOrg }, data.app, eventData);
+
+    // Data for invitation to joinWaterfall
+    const waterfallData = type === 'joinWaterfall' ? getWaterfallEmailData(movie) : undefined;
+
+
+    const user = await getOrInviteUserByMail(email, { id: invitationId, type, mode, fromOrg }, data.app, eventData, waterfallData);
 
     if (user.invitationStatus) invitation.status = user.invitationStatus;
 

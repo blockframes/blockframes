@@ -69,7 +69,9 @@
         </ng-container>
       </ng-container>
       <ng-container *ngSwitchCase="'joinWaterfall'">
-        {{ _invitation.fromOrg.name  }} invited you to join a waterfall.
+        <ng-container *ngIf="_invitation | movieFromWaterfallInvitation | async as movie">
+          {{ _invitation.fromOrg.name  }} invited you to join {{ movie.title.international}}'s Waterfall.
+        </ng-container>
       </ng-container>
     </ng-container>
   </div>
