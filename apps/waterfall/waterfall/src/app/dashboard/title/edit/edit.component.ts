@@ -10,6 +10,7 @@ import { RightholderRole } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { OrganizationService } from '@blockframes/organization/service';
+import { WaterfallFormGuardedComponent } from '@blockframes/waterfall/guard';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
 
@@ -20,7 +21,7 @@ import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.
   styleUrls: ['./edit.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnInit, WaterfallFormGuardedComponent {
 
   movieForm = new MovieForm({ directors: [{ firstName: '', lastName: '' }] });
   waterfallRoleControl = new FormControl<RightholderRole[]>(undefined, [Validators.required]);
