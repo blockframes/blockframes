@@ -33,9 +33,9 @@ describe('Movie Owner', () => {
       await assertSucceeds(ref.get());
     });
 
-    test('Should be able to update waterfall document', async () => {
+    test('Should not be able to update waterfall document', async () => {
       const ref = db.doc('waterfall/M001');
-      await assertSucceeds(ref.set({ id: 'M001', orgIds: ['O001', 'O003'] }));
+      await assertFails(ref.set({ id: 'M001', orgIds: ['O001', 'O003'] }));
     });
 
     test('Should not be able to change waterfall document id', async () => {
@@ -45,14 +45,14 @@ describe('Movie Owner', () => {
   });
 
   describe('Blocks', () => {
-    test('Should be able to create block document', async () => {
+    test('Should not be able to create block document', async () => {
       const ref = db.doc('waterfall/M001/blocks/B001');
-      await assertSucceeds(ref.set({ id: 'B001', actions: {} }));
+      await assertFails(ref.set({ id: 'B001', actions: {} }));
     });
 
-    test('Should be able to update block document', async () => {
+    test('Should not be able to update block document', async () => {
       const ref = db.doc('waterfall/M001/blocks/B001');
-      await assertSucceeds(ref.set({ id: 'B001', actions: { 1: { name: 'init' } } }));
+      await assertFails(ref.set({ id: 'B001', actions: { 1: { name: 'init' } } }));
     });
 
     test('Should not be able to change block document id', async () => {
@@ -60,26 +60,31 @@ describe('Movie Owner', () => {
       await assertFails(ref.set({ id: 'B002' }));
     });
 
-    test('Should be able to read block document', async () => {
+    test('Should not be able to read block document', async () => {
       const ref = db.doc('waterfall/M001/blocks/B001');
-      await assertSucceeds(ref.get());
+      await assertFails(ref.get());
     });
 
-    test('Should be able to list block documents', async () => {
+    test('Should not be able to list block documents', async () => {
       const ref = db.collection('waterfall/M001/blocks');
-      await assertSucceeds(ref.get());
+      await assertFails(ref.get());
     });
   });
 
   describe('Permissions', () => {
-    test('Should be able to create permissions document', async () => {
-      const ref = db.doc('waterfall/M001/permissions/O003');
-      await assertSucceeds(ref.set({ id: 'O003', roles: ['financier'] }));
+    test('Should be able to create his own permissions document', async () => {
+      const ref = db.doc('waterfall/M001/permissions/O001');
+      await assertSucceeds(ref.set({ id: 'O001', roles: ['author'] }));
     });
 
-    test('Should be able to update permissions document', async () => {
+    test('Should not be able to create others permissions document', async () => {
       const ref = db.doc('waterfall/M001/permissions/O003');
-      await assertSucceeds(ref.set({ id: 'O003', roles: ['financier'], scope: ['O001'] }));
+      await assertFails(ref.set({ id: 'O003', roles: ['financier'] }));
+    });
+
+    test('Should not be able to update permissions document', async () => {
+      const ref = db.doc('waterfall/M001/permissions/O003');
+      await assertFails(ref.set({ id: 'O003', roles: ['financier'], scope: ['O001'] }));
     });
 
     test('Should not be able to change permissions document id', async () => {
@@ -87,26 +92,26 @@ describe('Movie Owner', () => {
       await assertFails(ref.set({ id: 'O002' }));
     });
 
-    test('Should be able to read permissions document', async () => {
+    test('Should not be able to read permissions document', async () => {
       const ref = db.doc('waterfall/M001/permissions/O003');
-      await assertSucceeds(ref.get());
+      await assertFails(ref.get());
     });
 
-    test('Should be able to list permissions documents', async () => {
+    test('Should not be able to list permissions documents', async () => {
       const ref = db.collection('waterfall/M001/permissions');
-      await assertSucceeds(ref.get());
+      await assertFails(ref.get());
     });
   });
 
   describe('Budget', () => {
-    test('Should be able to create budget document', async () => {
+    test('Should not be able to create budget document', async () => {
       const ref = db.doc('waterfall/M001/budget/M001');
-      await assertSucceeds(ref.set({ id: 'M001' }));
+      await assertFails(ref.set({ id: 'M001' }));
     });
 
-    test('Should be able to update budget document', async () => {
+    test('Should not be able to update budget document', async () => {
       const ref = db.doc('waterfall/M001/budget/M001');
-      await assertSucceeds(ref.set({ id: 'M001', foo:'bar' }));
+      await assertFails(ref.set({ id: 'M001', foo:'bar' }));
     });
 
     test('Should not be able to change budget document id', async () => {
@@ -114,9 +119,9 @@ describe('Movie Owner', () => {
       await assertFails(ref.set({ id: 'M00X' }));
     });
 
-    test('Should be able to read budget document', async () => {
+    test('Should not be able to read budget document', async () => {
       const ref = db.doc('waterfall/M001/budget/M001');
-      await assertSucceeds(ref.get());
+      await assertFails(ref.get());
     });
 
   });
@@ -384,6 +389,29 @@ describe('User that is linked to waterfall with producer role', () => {
       const ref = db.collection('waterfall/WF-001/blocks');
       await assertSucceeds(ref.get());
     });
+  });
+
+  describe('Budget', () => {
+    test('Should be able to create budget document', async () => {
+      const ref = db.doc('waterfall/WF-001/budget/WF-001');
+      await assertSucceeds(ref.set({ id: 'WF-001' }));
+    });
+
+    test('Should be able to update budget document', async () => {
+      const ref = db.doc('waterfall/WF-001/budget/WF-001');
+      await assertSucceeds(ref.set({ id: 'WF-001', foo:'bar' }));
+    });
+
+    test('Should not be able to change budget document id', async () => {
+      const ref = db.doc('waterfall/WF-001/budget/WF-001');
+      await assertFails(ref.set({ id: 'M00X' }));
+    });
+
+    test('Should be able to read budget document', async () => {
+      const ref = db.doc('waterfall/WF-001/budget/WF-001');
+      await assertSucceeds(ref.get());
+    });
+
   });
 
   describe('Permissions', () => {

@@ -563,24 +563,24 @@ service cloud.firestore {
         && isNotUpdatingId('id', existingData().id)
         && notInMaintenance()
         && isOrgMember(userOrgId())
-        && ( userOrgId() in getMovie(existingData().id).orgIds || hasWaterfallRole(waterfallId, 'producer') );
+        && hasWaterfallRole(waterfallId, 'producer');
       allow delete: if false;
 
       match /blocks/{blockId} {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( userOrgId() in getMovie(waterfallId).orgIds || hasWaterfallRole(waterfallId, 'producer') );
+          && hasWaterfallRole(waterfallId, 'producer');
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], blockId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( userOrgId() in getMovie(waterfallId).orgIds || hasWaterfallRole(waterfallId, 'producer') );
+          && hasWaterfallRole(waterfallId, 'producer');
         allow update: if userHasValidOrg()
           && isNotUpdatingId('id', existingData().id)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( userOrgId() in getMovie(waterfallId).orgIds || hasWaterfallRole(waterfallId, 'producer') );
+          && hasWaterfallRole(waterfallId, 'producer');
         allow delete: if false;
       }
 
@@ -588,21 +588,20 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( 
-            userOrgId() in getMovie(waterfallId).orgIds ||
-            userOrgId() == orgId ||
-            hasWaterfallRole(waterfallId, 'producer')
-          );
+          && ( userOrgId() == orgId || hasWaterfallRole(waterfallId, 'producer'));
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( userOrgId() in getMovie(waterfallId).orgIds || hasWaterfallRole(waterfallId, 'producer') );
+          && ( 
+            ( userOrgId() in getMovie(waterfallId).orgIds && userOrgId() == orgId ) ||
+            hasWaterfallRole(waterfallId, 'producer')
+          );
         allow update: if userHasValidOrg()
           && isNotUpdatingId('id', existingData().id)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( userOrgId() in getMovie(waterfallId).orgIds || hasWaterfallRole(waterfallId, 'producer') );
+          && hasWaterfallRole(waterfallId, 'producer');
         allow delete: if false;
       }
 
@@ -610,17 +609,17 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && (userOrgId() in getMovie(waterfallId).orgIds || hasWaterfallRole(waterfallId, 'financier'));
+          && ( hasWaterfallRole(waterfallId, 'producer') || hasWaterfallRole(waterfallId, 'financier'));
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], waterfallId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && userOrgId() in getMovie(waterfallId).orgIds;
+          && hasWaterfallRole(waterfallId, 'producer');
         allow update: if userHasValidOrg()
           && isNotUpdatingId('id', existingData().id)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && userOrgId() in getMovie(waterfallId).orgIds;
+          && hasWaterfallRole(waterfallId, 'producer');
         allow delete: if false;
       }
     }
