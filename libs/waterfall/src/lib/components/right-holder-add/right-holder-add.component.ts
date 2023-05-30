@@ -43,7 +43,7 @@ export class RightHolderAddComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.isProducer = await this.permissionsService.hasRole(this.waterfallId, this.organizationService.org.id, 'producer');
+    this.isProducer = await this.permissionsService.hasRole(this.waterfallId, 'producer', this.organizationService.org.id);
     if (!this.isProducer) this.form.get('roles').setValue(['producer']);
   }
 

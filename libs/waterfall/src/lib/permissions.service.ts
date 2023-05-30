@@ -3,6 +3,7 @@ import { DocumentSnapshot } from '@firebase/firestore';
 import { RightholderRole, WaterfallPermissions, createDocumentMeta, createWaterfallPermissions } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
 import { BlockframesSubCollection } from '@blockframes/utils/abstract-service';
+import { OrganizationService } from '@blockframes/organization/service';
 
 @Injectable({ providedIn: 'root' })
 export class WaterfallPermissionsService extends BlockframesSubCollection<WaterfallPermissions> {
@@ -10,6 +11,7 @@ export class WaterfallPermissionsService extends BlockframesSubCollection<Waterf
 
   constructor(
     private authService: AuthService,
+    private orgService: OrganizationService,
   ) {
     super();
   }
@@ -29,7 +31,7 @@ export class WaterfallPermissionsService extends BlockframesSubCollection<Waterf
     return this.add(perm, { params: { waterfallId } });
   }
 
-  public async hasRole(waterfallId: string, orgId: string, role: RightholderRole) {
+  public async hasRole(waterfallId: string, role: RightholderRole, orgId = this.orgService.org.id) {
     const permissions = await this.getValue(orgId, { waterfallId });
     return permissions.roles.includes(role);
   }

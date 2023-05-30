@@ -1,1 +1,22 @@
-<waterfall-g6-graph [tree]="tree"></waterfall-g6-graph>
+<ng-container *ngIf="(isLoading$ | async ) === false else loading">
+  <waterfall-g6-graph *ngIf="tree else noWaterfall" [tree]="tree"></waterfall-g6-graph>
+</ng-container>
+
+<ng-template #noWaterfall>
+  <section>
+    <h1>Waterfall not initialized.</h1>
+    <p class="mat-body-1">
+      Please initalize a first version that you're going to work with.
+    </p>
+    <a (click)="initWaterfall()" class="surface">
+      <img asset="add_draft.svg" alt="Add waterfall image">
+      <button mat-button color="primary">Initialize Waterfall</button>
+    </a>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <article>
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-template>
