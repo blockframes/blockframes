@@ -1,4 +1,4 @@
-<title-dashboard-shell *ngIf="movie$ | async as movie" [routes]="navLinks">
+<title-dashboard-shell *ngIf="movie$ | async as movie" [routes]="navLinks" [editRoute]="['/c/o/dashboard/tunnel/movie', movie.id, 'main']">
   <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
     <a *ngIf="(org$ | async | canAccess: 'marketplace': 'festival') && movie.app.festival.status !== 'archived'" mat-button color="primary" [routerLink]="['/c/o/marketplace/title', movie.id, 'main']" class="main-dashboard-cta">
       <mat-icon svgIcon="visibility" color="primary"></mat-icon>
