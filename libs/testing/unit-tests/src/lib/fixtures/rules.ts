@@ -344,12 +344,31 @@ export const rulesFixtures = {
     id: 'MI-0d7',
     orgIds: ['O002']
   },
+  'waterfall/MI-077': {
+    id: 'MI-077',
+    orgIds: ['O002']
+  },
+  'waterfall/WF-001': {
+    id: 'WF-001',
+    orgIds: ['O001']
+  },
   'waterfall/MI-0d7/blocks/B001': {
+    id: 'B001',
+  },
+  'waterfall/WF-001/blocks/B001': {
     id: 'B001',
   },
   'waterfall/MI-0d7/permissions/O002': {
     id: 'O002',
     roles: ['financier']
+  },
+  'waterfall/WF-001/permissions/O001': {
+    id: 'O001',
+    roles: ['producer']
+  },
+  'waterfall/WF-001/permissions/foo': {
+    id: 'foo',
+    roles: []
   },
   'waterfall/MI-0d7/permissions/O003': {
     id: 'O003',
