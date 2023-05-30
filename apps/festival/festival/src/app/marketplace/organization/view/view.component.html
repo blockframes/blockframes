@@ -1,3 +1,4 @@
+<span id="top"></span>
 <ng-container *ngIf="org$ | async as org">
   <org-view [org]="org" [navLinks]="navLinks">
     <ng-container *ngIf="org.email && !isAnonymous">
