@@ -74,7 +74,7 @@ export class MarketplaceMovieViewComponent implements AfterViewInit {
     private analytics: AnalyticsService
   ) { }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     setTimeout(() => {
       scrollIntoView(document.querySelector('#top'));
     });

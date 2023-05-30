@@ -47,7 +47,7 @@ export class ViewComponent implements OnInit, AfterViewInit {
     this.analyticsService.addOrganizationPageView(org);
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     setTimeout(() => {
       scrollIntoView(document.querySelector('#top'));
     });

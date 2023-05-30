@@ -32,7 +32,7 @@ export class ViewComponent implements AfterViewInit {
     private route: ActivatedRoute
   ) { }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     setTimeout(() => {
       scrollIntoView(document.querySelector('#top'));
     });

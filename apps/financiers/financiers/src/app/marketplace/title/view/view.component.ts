@@ -71,7 +71,7 @@ export class MarketplaceMovieViewComponent implements AfterViewInit {
     public router: Router
   ) { }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     setTimeout(() => {
       scrollIntoView(document.querySelector('#top'));
     });

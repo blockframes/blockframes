@@ -7,7 +7,7 @@ import { scrollIntoView } from '@blockframes/utils/browser/utils';
 const navLinks = [{
   path: 'title',
   label: 'Catalog'
-},  {
+}, {
   path: 'member',
   label: 'Contact'
 }];
@@ -32,7 +32,7 @@ export class ViewComponent implements AfterViewInit {
     private route: ActivatedRoute
   ) { }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     setTimeout(() => {
       scrollIntoView(document.querySelector('#top'));
     });

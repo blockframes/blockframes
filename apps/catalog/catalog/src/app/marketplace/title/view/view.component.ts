@@ -66,7 +66,7 @@ export class MarketplaceMovieViewComponent implements AfterViewInit {
     @Optional() private intercom: Intercom
   ) { }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     setTimeout(() => {
       scrollIntoView(document.querySelector('#top'));
     });
