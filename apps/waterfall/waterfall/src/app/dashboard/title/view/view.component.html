@@ -1,4 +1,4 @@
-<title-dashboard-shell *ngIf="movie$ | async as movie" [routes]="navLinks">
+<title-dashboard-shell *ngIf="movie$ | async as movie" [routes]="navLinks" editRoute="./edit">
   <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
     <a mat-button color="primary" [routerLink]="['/c/o/dashboard/waterfall', movie.id, 'right-holders']" class="main-dashboard-cta">
       <mat-icon svgIcon="group"></mat-icon>

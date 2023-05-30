@@ -1,0 +1,27 @@
+
+<ng-container *ngIf="loading$ | async; else ready">
+  <article>
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-container>
+<ng-template #ready>
+  <a mat-icon-button routerLink="..">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+  </a>
+  <h1>Edit Movie</h1>
+
+  <waterfall-title-form
+    [movieId]="movieId"
+    [movieForm]="movieForm"
+    [waterfallRoleControl]="waterfallRoleControl"
+  ></waterfall-title-form>
+
+  <section>
+    <ng-container *ngIf="updating$ | async; else edit">
+      <logo-spinner></logo-spinner>
+    </ng-container>
+    <ng-template #edit>
+      <button mat-flat-button color="primary" (click)="update()" [disabled]="invalid$ | async">Edit Movie</button>
+    </ng-template>
+  </section>
+</ng-template>

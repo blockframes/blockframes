@@ -162,13 +162,17 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     if (this.listenToChanges) {
       const ref = this.firestore.getRef(`${this.metadata.collection}/${this.metadata.docId}`) as DocumentReference;
-      this.docSub = fromRef(ref).pipe(map(snap => snap.data())).subscribe(data => {
-        const media: StorageFile = this.formIndex !== undefined
-          ? getDeepValue(data, this.metadata.field)[this.formIndex]
-          : getDeepValue(data, this.metadata.field);
-        if (media?.storagePath) {
-          this.form.setValue(media);
-        }
+      this.docSub = fromRef(ref).pipe(map(snap => snap.data())).subscribe({
+        next: data => {
+          const media: StorageFile = this.formIndex !== undefined
+            ? getDeepValue(data, this.metadata.field)[this.formIndex]
+            : getDeepValue(data, this.metadata.field);
+          if (media?.storagePath) {
+            this.form.setValue(media);
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        error: () => {}, // do nothing
       });
 
       if (this.pushSubToStack) this.newSubscription.emit(this.docSub);

@@ -1,0 +1,53 @@
+
+<section class="surface">
+  <h2>Main Information</h2>
+
+  <mat-form-field appearance="outline" class="title">
+    <mat-label>Title</mat-label>
+    <input matInput type="text" placeholder="Title" [formControl]="movieForm.title.controls.international" required />
+    <mat-error>This field is mandatory</mat-error>
+  </mat-form-field>
+
+  <div *ngFor="let director of movieForm.directors.controls; let index = index">
+    <mat-form-field appearance="outline">
+      <mat-label>Director's First Name</mat-label>
+      <input matInput type="text" placeholder="Director's First Name" [formControl]="director.controls.firstName" />
+      <mat-error>This field is mandatory</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Director's Last Name</mat-label>
+      <input matInput type="text" placeholder="Director's Last Name" [formControl]="director.controls.lastName" />
+      <mat-error>This field is mandatory</mat-error>
+    </mat-form-field>
+
+    <button mat-icon-button color="danger" (click)="removeDirector(index)">
+      <mat-icon svgIcon="delete"></mat-icon>
+    </button>
+  </div>
+
+  <div class="divider">
+    <mat-divider></mat-divider>
+    <p (click)="addDirector()">Add a Director</p>
+    <button mat-mini-fab color="primary" (click)="addDirector()">
+      <mat-icon svgIcon="add"></mat-icon>
+    </button>
+  </div>
+
+  <image-uploader
+    [meta]="['movies', 'poster', movieId]"
+    ratio="poster"
+    [form]="movieForm.poster"
+    listenToChanges
+  >
+    <h3 title>Movie Poster</h3>
+  </image-uploader>
+</section>
+
+<section class="surface">
+  <h2>Your Role in Waterfall</h2>
+  <static-select [control]="waterfallRoleControl" scope="rightholderRoles" mode="outline" multiple required>
+    <mat-label>Waterfall Role</mat-label>
+    <mat-error>This field is mandatory</mat-error>
+  </static-select>
+</section>
