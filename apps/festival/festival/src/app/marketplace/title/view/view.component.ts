@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { OrganizationService } from '@blockframes/organization/service';
 import { RouteDescription } from '@blockframes/model';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
@@ -12,6 +12,7 @@ import { AnalyticsService } from '@blockframes/analytics/service';
 import { Organization } from '@blockframes/model';
 import { orderBy, startAt, where } from 'firebase/firestore';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({
   selector: 'festival-movie-view',
@@ -19,7 +20,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieViewComponent {
+export class MarketplaceMovieViewComponent implements AfterViewInit {
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.getValue(movieId)),
@@ -72,6 +73,12 @@ export class MarketplaceMovieViewComponent {
     private cdr: ChangeDetectorRef,
     private analytics: AnalyticsService
   ) { }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      scrollIntoView(document.querySelector('#top'));
+    });
+  }
 
   getEmails(orgs: Organization[]) {
     return orgs.map(org => org.email).join(', ')
