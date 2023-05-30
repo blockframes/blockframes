@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@a
 import { OrganizationService } from './../../service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { AlgoliaService } from '@blockframes/utils/algolia';
 
 @Component({
   selector: '[form] organization-form',
@@ -18,12 +19,13 @@ export class OrganizationFormComponent {
 
   constructor(
     private service: OrganizationService,
+    private algoliaService: AlgoliaService,
     private cdr: ChangeDetectorRef
   ) { }
 
   public async uniqueOrgName() {
     const orgName = this.form.get('name').value.trim();
-    const orgId = await this.service.getOrgIdFromName(orgName);
+    const orgId = await this.algoliaService.getOrgIdFromName(orgName);
     if (orgId && orgId !== this.orgId) {
       this.form.get('name').setErrors({ notUnique: true });
       this.cdr.markForCheck();
