@@ -7,12 +7,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 // Blockframes
 import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Pages
 import { FormComponent } from './form.component';
@@ -25,12 +25,12 @@ import { FormComponent } from './form.component';
     CommonModule,
     ReactiveFormsModule,
     ImageUploaderModule,
+    StaticSelectModule,
 
     // Material
     MatIconModule,
     MatInputModule,
     MatButtonModule,
-    MatSelectModule,
     MatDividerModule,
     MatFormFieldModule,
   ],

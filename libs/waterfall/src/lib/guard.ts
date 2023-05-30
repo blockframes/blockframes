@@ -1,8 +1,8 @@
 // Angular
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { CanDeactivate } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { CanActivate, CanDeactivate } from '@angular/router';
 import { RightholderRole } from '@blockframes/model';
 
 // Blockframes
@@ -17,22 +17,18 @@ export interface WaterfallFormGuardedComponent {
 };
 
 @Injectable({ providedIn: 'root' })
-export class WaterfallFormGuard<T extends WaterfallFormGuardedComponent> implements CanActivate, CanDeactivate<T>{
+export class WaterfallFormGuard<T extends WaterfallFormGuardedComponent> implements CanDeactivate<T>{
 
   constructor(
     private dialog: MatDialog,
   ) { }
 
-  async canActivate() {
-    return true;
-  }
-
   canDeactivate(component: T) {
     if (component.movieForm.pristine && component.waterfallRoleControl.pristine) return true;
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: `You are about to leave the form`,
-        question: `Some changes have not been saved. If you leave now, you might lose these changes`,
+        title: 'You are about to leave the form',
+        question: 'Some changes have not been saved. If you leave now, you might lose these changes',
         cancel: 'Cancel',
         confirm: 'Leave anyway'
       }, 'small'),

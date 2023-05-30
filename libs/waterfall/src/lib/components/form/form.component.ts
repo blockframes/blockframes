@@ -3,8 +3,8 @@ import { FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 // Blockframes
+import { RightholderRole } from '@blockframes/model';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
-import { RightholderRole, rightholderRoles } from '@blockframes/model';
 
 
 @Component({
@@ -18,9 +18,6 @@ export class FormComponent {
   @Input() movieForm: MovieForm;
   @Input() waterfallRoleControl: FormControl<RightholderRole[]>;
   @Input() movieId = '';
-  @Input() edit = false;
-
-  rightholderRoles = rightholderRoles;
 
   addDirector() {
     this.movieForm.directors.add({ firstName: '', lastName: '' });

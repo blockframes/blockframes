@@ -31,7 +31,7 @@ import { CreateComponent } from './create.component';
     RouterModule.forChild([{
       path: '',
       component: CreateComponent,
-      canDeactivate: [WaterfallFormGuard]
+      canDeactivate: [WaterfallFormGuard],
     }]),
   ],
 })

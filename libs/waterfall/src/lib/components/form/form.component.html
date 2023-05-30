@@ -38,7 +38,7 @@
     [meta]="['movies', 'poster', movieId]"
     ratio="poster"
     [form]="movieForm.poster"
-    [listenToChanges]="edit"
+    listenToChanges
   >
     <h3 title>Movie Poster</h3>
   </image-uploader>
@@ -46,14 +46,8 @@
 
 <section class="surface">
   <h2>Your Role in Waterfall</h2>
-
-  <mat-form-field appearance="outline">
-    <mat-label>Production Status</mat-label>
-    <mat-select [formControl]="waterfallRoleControl" required multiple>
-      <mat-option *ngFor="let role of rightholderRoles | keyvalue" [value]="role.key">
-        {{ role.value }}
-      </mat-option>
-    </mat-select>
+  <static-select [control]="waterfallRoleControl" scope="rightholderRoles" mode="outline" multiple required>
+    <mat-label>Waterfall Role</mat-label>
     <mat-error>This field is mandatory</mat-error>
-  </mat-form-field>
+  </static-select>
 </section>
