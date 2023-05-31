@@ -55,8 +55,8 @@ const routes: Routes = [{
       data: { animation: 5 }
     },
     {
-      path: 'avails',
-      loadChildren: () => import('../avails/avails.module').then(m => m.AvailsModule),
+      path: 'sales',
+      loadChildren: () => import('../sales/sales.module').then(m => m.SalesModule),
       data: { animation: 6 }
     },
   ]
