@@ -72,6 +72,10 @@ export class CreateComponent implements WaterfallFormGuardedComponent {
 
     await this.waterfallService.create(this.movieId, movie.orgIds);
     await this.permissionsService.create(this.movieId, { id: movie.orgIds[0], roles: this.waterfallRoleControl.value });
+
+    this.movieForm.markAsPristine();
+    this.waterfallRoleControl.markAsPristine();
+
     this.creating$.next(false);
     this.router.navigate(['..', this.movieId], { relativeTo: this.route });
   }

@@ -87,6 +87,9 @@ export class EditComponent implements OnInit, WaterfallFormGuardedComponent {
     const orgId = this.orgService.org.id;
     await this.permissionsService.update(orgId, { roles: this.waterfallRoleControl.value }, { params: { waterfallId: this.movieId }  });
 
+    this.movieForm.markAsPristine();
+    this.waterfallRoleControl.markAsPristine();
+
     this.updating$.next(false);
     this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
   }
