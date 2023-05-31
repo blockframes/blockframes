@@ -22,6 +22,9 @@ export const mediaGroup: StaticGroup<'medias'>[] = [{
 }, {
   label: 'Festivals',
   items: ['festival']
+}, {
+  label: 'Theatrical',
+  items: ['theatrical', 'nonTheatrical']
 }];
 
 export const territoriesGroup: StaticGroup<'territories'>[] = [

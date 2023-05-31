@@ -231,7 +231,7 @@ export const languages = {
   welsh: 'Welsh'
 } as const
 
-export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, BluRay)' | 'Festivals';
+export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, BluRay)' | 'Festivals' | 'Theatrical';
 
 export type TerritoryGroup =
   | 'Africa'
@@ -260,6 +260,8 @@ export const medias = {
   educational: 'Educational',
   festival: 'Festival',
   rental: 'Rental',
+  theatrical: 'Theatrical',
+  nonTheatrical: 'Non theatrical',
   through: 'Sell Through',
 } as const
 

@@ -157,7 +157,7 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
         const hiddenValues = prev.filter(value => !filteredItems.includes(value));
         if (hiddenValues.length && !next.includes(hiddenValues[0])) {
           // add back the values
-          this.form.setValue(next.concat(hiddenValues),{emitEvent:false});
+          this.form.setValue(next.concat(hiddenValues), { emitEvent: false });
         }
       }
       this.allItems = this.form.value;
@@ -165,14 +165,14 @@ export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDes
   }
 
   ngOnInit() {
-    const groups = staticGroups[this.scope];
+    const groups: StaticGroup[] = staticGroups[this.scope];
     if (this.withoutValues.length) {
       for (const group of groups) {
         /* eslint-disable */
         group.items = (group.items as any[]).filter((item: string) => !this.withoutValues.includes(item));
       }
     }
-    this.groups$.next(groups);
+    this.groups$.next(groups.filter(g => g.items.length && !this.withoutValues.includes(g.label)));
   }
 
   onOpen(opened: boolean) {
