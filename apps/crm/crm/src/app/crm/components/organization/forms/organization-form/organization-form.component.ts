@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@a
 import { organizationStatus, getAllAppsExcept } from '@blockframes/model';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { UntypedFormControl } from '@angular/forms';
-import { OrganizationService } from '@blockframes/organization/service';
+import { AlgoliaService } from '@blockframes/utils/algolia';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
@@ -23,14 +23,14 @@ export class CrmOrganizationFormComponent {
   public notifyCheckbox = new UntypedFormControl(false);
 
   constructor(
-    private organizationService: OrganizationService,
+    private algoliaService: AlgoliaService,
     private cdr: ChangeDetectorRef
   ) { }
 
   public async uniqueOrgName() {
     if (!this.form.get('name').value) return;
     const orgName = this.form.get('name').value.trim();
-    const orgId = await this.organizationService.getOrgIdFromName(orgName);
+    const orgId = await this.algoliaService.getOrgIdFromName(orgName);
     if (orgId && orgId !== this.orgId) {
       this.form.get('name').setErrors({ notUnique: true });
       this.cdr.markForCheck();

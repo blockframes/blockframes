@@ -1,12 +1,13 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { pluck, switchMap } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/service';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 const navLinks = [{
   path: 'title',
   label: 'Catalog'
-},  {
+}, {
   path: 'member',
   label: 'Contact'
 }];
@@ -17,7 +18,7 @@ const navLinks = [{
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewComponent {
+export class ViewComponent implements AfterViewInit {
   // Cannot use Guard Active + selectActive as the active organization is the one from the user
   org$ = this.route.params.pipe(
     pluck('orgId'),
@@ -31,4 +32,9 @@ export class ViewComponent {
     private route: ActivatedRoute
   ) { }
 
+  ngAfterViewInit() {
+    setTimeout(() => {
+      scrollIntoView(document.querySelector('#top'));
+    });
+  }
 }
