@@ -1,0 +1,99 @@
+<section class="surface" *ngIf="territoriesSold$ | async as territoriesSold; else loading">
+  <world-map>
+    <!-- MAP LAYERS -->
+    <ng-container *ngFor="let tag of territoriesSold.all">
+      <map-feature [tag]="tag.isoA3" color="#67DF9C" (mouseover)="displayTerritoryTooltip(tag.label, 'All Rights Sold')"
+        (mouseout)="clearTerritoryTooltip()"
+        (click)="showDetails(tag)">
+      </map-feature>
+    </ng-container>
+    <ng-container *ngFor="let tag of territoriesSold.tv">
+      <map-feature [tag]="tag.isoA3" color="#F3B244" (mouseover)="displayTerritoryTooltip(tag.label, 'TV Rights Sold')"
+        (mouseout)="clearTerritoryTooltip()"
+        (click)="showDetails(tag)">
+      </map-feature>
+    </ng-container>
+    <ng-container *ngFor="let tag of territoriesSold.vod">
+      <map-feature [tag]="tag.isoA3" color="#3A90F3" (mouseover)="displayTerritoryTooltip(tag.label, 'VOD Rights Sold')"
+        (mouseout)="clearTerritoryTooltip()"
+        (click)="showDetails(tag)">
+      </map-feature>
+    </ng-container>
+    <ng-container *ngFor="let tag of territoriesSold.other">
+      <map-feature [tag]="tag.isoA3" color="#7262CA" (mouseover)="displayTerritoryTooltip(tag.label, 'Other Rights Sold')"
+        (mouseout)="clearTerritoryTooltip()"
+        (click)="showDetails(tag)">
+      </map-feature>
+    </ng-container>
+    <ng-container *ngFor="let tag of territoriesSold.available">
+      <map-feature [tag]="tag.isoA3" color="#F3F3F3" (mouseover)="displayTerritoryTooltip(tag.label, 'Available')"
+        (mouseout)="clearTerritoryTooltip()">
+      </map-feature>
+    </ng-container>
+
+    <!-- TOOLTIP ON HOVERING-->
+    <article *ngIf="hoveredTerritory" class="territory-card hovered-territory-card">
+      <ul>
+        <li><b>{{ hoveredTerritory.name }}</b></li>
+        <li class="mat-caption">{{ hoveredTerritory.status }}</li>
+      </ul>
+    </article>
+
+    <!-- DETAILS ON CLICK-->
+    <article *ngIf="clickedTerritory" class="territory-card clicked-territory-card">
+      <section>
+        <mat-icon svgIcon="world"></mat-icon>
+        <h3>{{ clickedTerritory.name }}</h3>
+        <button mat-icon-button (click)="closeDetails()">
+          <mat-icon svgIcon="close"></mat-icon>
+        </button>
+      </section>
+      <mat-divider></mat-divider>
+      <!-- TODO #9372 -->
+    </article>
+
+    <!-- MAP LEGEND -->
+    <article class="colors-card">
+      <mat-list>
+
+        <mat-list-item>
+          <svg viewBox="0 0 100 100" width="10px" height="10px">
+            <rect fill="#67DF9C" x="0" y="0" width="100" height="100" rx="10" />
+          </svg>
+          <span class="mat-caption">All Rights Sold</span>
+        </mat-list-item>
+        <mat-list-item>
+          <svg viewBox="0 0 100 100" width="10px" height="10px">
+            <rect fill="#F3B244" x="0" y="0" width="100" height="100" rx="10" />
+          </svg>
+          <span class="mat-caption">TV Rights Sold</span>
+        </mat-list-item>
+        <mat-list-item>
+          <svg viewBox="0 0 100 100" width="10px" height="10px">
+            <rect fill="#3A90F3" x="0" y="0" width="100" height="100" rx="10" />
+          </svg>
+          <span class="mat-caption">VOD Rights Sold</span>
+        </mat-list-item>
+        <mat-list-item>
+          <svg viewBox="0 0 100 100" width="10px" height="10px">
+            <rect fill="#7262CA" x="0" y="0" width="100" height="100" rx="10" />
+          </svg>
+          <span class="mat-caption">Other Rights Sold</span>
+        </mat-list-item>
+        <mat-list-item>
+          <svg viewBox="0 0 100 100" width="10px" height="10px">
+            <rect fill="#F3F3F3" x="0" y="0" width="100" height="100" rx="10" />
+          </svg>
+          <span class="mat-caption" fxLayout fxLayoutAlign="start center">
+            Available
+          </span>
+        </mat-list-item>
+      </mat-list>
+    </article>
+  </world-map>
+</section>
+<ng-template #loading>
+  <article class="spinner">
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-template>

@@ -2,7 +2,7 @@
 import { max, min } from 'date-fns';
 import { Bucket, BucketContract } from './bucket';
 import { FullMandate, FullSale, Holdback, Mandate, Sale } from './contract';
-import { territories, territoriesISOA3 } from './static';
+import { mediaGroup, territories, territoriesISOA3 } from './static';
 import { Media, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from './static/types';
 import { BucketTerm, Term, Duration } from './terms';
 
@@ -575,6 +575,65 @@ export function territoryAvailabilities({
     .filter(a => !inBucket.some(s => a.slug === s.slug)) as AvailableTerritoryMarker[];
 
   return { notLicensed, available, sold, inBucket, selected };
+}
+
+type MediaFamily = 'available' | 'all' | 'tv' | 'vod' | 'other';
+export interface TerritorySoldMarker {
+  slug: Territory,
+  isoA3: TerritoryISOA3Value,
+  label: TerritoryValue,
+  type: MediaFamily
+  data?: FullSale[]
+}
+
+export function territoriesSold(sales: FullSale[]) {
+  const availabilities = {} as Record<Territory, TerritorySoldMarker>;
+  const allTerms = sales.map(s => s.terms).flat();
+
+  Object.keys(territories).forEach((territory: Territory) => {
+    const termsTerritory = allTerms.filter(t => t.territories.includes(territory));
+    if (termsTerritory.length) {
+      const contracts = Array.from(termsTerritory.map(t => sales.find(s => s.id === t.contractId)));
+      const data: FullSale[] = contracts.map(c => ({
+        ...c,
+        terms: c.terms.filter(t => t.territories.includes(territory))
+      }));
+
+      const family = getMediaFamily(termsTerritory);
+      availabilities[territory] = {
+        type: family,
+        slug: territory,
+        isoA3: territoriesISOA3[territory],
+        label: territories[territory],
+        data
+      }
+    } else {
+      availabilities[territory] = {
+        type: 'available',
+        slug: territory,
+        isoA3: territoriesISOA3[territory],
+        label: territories[territory],
+      }
+    }
+  });
+
+  const correctAvailabilities = Object.values(availabilities).filter(a => !!a.isoA3);
+  const available = correctAvailabilities.filter(a => a.type === 'available');
+  const all = correctAvailabilities.filter(a => a.type === 'all');
+  const tv = correctAvailabilities.filter(a => a.type === 'tv');
+  const vod = correctAvailabilities.filter(a => a.type === 'vod');
+  const other = correctAvailabilities.filter(a => a.type === 'other');
+  return { available, all, tv, vod, other };
+}
+
+function getMediaFamily(terms: Term[]): MediaFamily {
+  const medias = Array.from(new Set(terms.map(t => t.medias).flat()));
+  const groups = Array.from(new Set(medias.map(m => mediaGroup.find(g => g.items.includes(m)).label)));
+
+  if (groups.length === 1 && groups[0] === 'TV') return 'tv';
+  if (groups.length === 1 && groups[0] === 'VOD') return 'vod';
+  if (groups.length >= 3) return 'all';
+  return 'other';
 }
 
 // ----------------------------
