@@ -2,6 +2,7 @@ import {
   // plugins
   adminAuth,
   firestore,
+  gmail,
   maintenance,
   // cypress commands
   assertUrlIncludes,
@@ -9,9 +10,12 @@ import {
   check,
   // cypress dashboard specific cpmmands
   connectUser,
-  interceptEmail,
+  interceptEmailGmail,
   getByClass,
-  deleteEmail,
+  //helpers
+  getTextBody,
+  getBodyLinks,
+  getSubject,
 } from '@blockframes/testing/cypress/browser';
 import {
   dashboardUser,
@@ -96,6 +100,7 @@ describe('Screenings', () => {
     get('missing-screener').should('exist');
     get('arrow-back').click();
     getEventSlot(futureSlot).should('contain', noScreenerTitle);
+    interceptEmailGmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
     connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
@@ -110,6 +115,7 @@ describe('Screenings', () => {
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
     fillDashboardCalendarDetails({ movieId: screenerMovie.id, eventTitle, accessibility: 'private' });
+    interceptEmailGmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
     connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
@@ -124,6 +130,7 @@ describe('Screenings', () => {
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
     fillDashboardCalendarDetails({ movieId: screenerMovie.id, eventTitle, accessibility: 'protected' });
+    interceptEmailGmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
     connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
@@ -138,6 +145,7 @@ describe('Screenings', () => {
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
     fillDashboardCalendarDetails({ movieId: screenerMovie.id, eventTitle, accessibility: 'public', secret: true });
+    interceptEmailGmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
     connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
@@ -158,6 +166,7 @@ describe('Screenings', () => {
       accessibility: 'private',
       invitee: marketplaceUser.email,
     });
+    interceptEmailGmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
     connectUser(marketplaceUser.email);
     get('invitations-link').click();
     get('invitation').should('have.length', 1).and('contain', `${dashboardOrg.name} invited you to ${eventTitle}`);
@@ -174,6 +183,13 @@ describe('Screenings', () => {
       });
     get('invitation-accept').click();
     get('invitation-status').should('contain', 'Accepted');
+    interceptEmailGmail(`to:${dashboardUser.email}`).then(mail => {
+      const subject = getSubject(mail);
+      expect(subject).to.eq(
+        `${marketplaceUser.firstName} ${marketplaceUser.lastName} accepted your invitation to ${eventTitle} on Archipel Market`
+      );
+      gmail.deleteEmail(mail.id);
+    });
     cy.visit('c/o/marketplace/event');
     verifyScreening({ title: eventTitle, accessibility: 'private', expected: true });
     get('invitation-status').should('contain', 'Invitation Accepted');
@@ -199,12 +215,22 @@ describe('Screenings', () => {
       accessibility: 'private',
       invitee: marketplaceUser.email,
     });
+    interceptEmailGmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
     connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
     verifyScreening({ title: eventTitle, accessibility: 'private', expected: true });
     get('invitation-refuse').click();
     get('invitation-status').should('contain', 'Invitation Declined');
+    /* decline mail takes around 4min to arrive for some reason => not testing it
+    interceptEmailGmail(`to:${dashboardUser.email}`).then(mail => {
+      const subject = getSubject(mail);
+      expect(subject).to.eq(
+        `${marketplaceUser.firstName} ${marketplaceUser.lastName} declined your invitation to ${eventTitle} on Archipel Market`
+      );
+      gmail.deleteEmail(mail.id);
+    });
+    */
     get('ongoing-screening').click();
     get('event-room').should('not.exist');
   });
@@ -290,22 +316,28 @@ function fillDashboardCalendarDetails({
 }
 
 function checkInvitationEmail(eventTitle: string, invitee: string) {
-  return interceptEmail({ sentTo: invitee }).then(mail => {
-    expect(mail.subject).to.eq(`You were invited to ${eventTitle} on Archipel Market`);
-    const invitationLink = mail.html.links.filter(link => link.text === 'Answer Invitation')[0];
-    cy.request({ url: invitationLink.href, failOnStatusCode: false }).then(response => {
+  return interceptEmailGmail(`to: ${invitee}`).then(mail => {
+    console.log(mail);
+    const subject = getSubject(mail);
+    expect(subject).to.eq(`You were invited to ${eventTitle} on Archipel Market`);
+    const body = getTextBody(mail);
+    const links = getBodyLinks(body);
+    //const invitationLink = links.filter(link => link.text === 'Answer Invitation')[0];
+    cy.request({ url: links['Invitation'], failOnStatusCode: false }).then(response => {
       expect(response.redirects).to.have.lengthOf(1);
       const redirect = response.redirects[0];
-      expect(redirect).to.include('302');
       getDbEvent(eventTitle).then(dbEvent => {
         firestore
           .queryData<Invitation>({ collection: 'invitations', field: 'eventId', operator: '==', value: dbEvent.id })
           .then(([invitation]) => {
-            expect(redirect).to.include(`/event/${dbEvent.id}/r/i?email=${invitee.replace('@', '%40')}&i=${invitation.id}`);
+            expect(redirect).to.include('302');
+            expect(redirect).to.include(dbEvent.id);
+            expect(redirect).to.include(invitee.replace('@', '%40').replace('+', '%2B'));
+            expect(redirect).to.include(invitation.id);
           });
       });
     });
-    deleteEmail(mail.id);
+    gmail.deleteEmail(mail.id);
   });
 }
 

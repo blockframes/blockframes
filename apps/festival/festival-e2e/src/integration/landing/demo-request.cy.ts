@@ -1,15 +1,16 @@
 import {
   browserAuth,
+  gmail,
   // cypress commands
   get,
   check,
   // cypress tasks
-  interceptEmail,
-  deleteEmail,
+  interceptEmailGmail,
   // fixture data
   fakeUserData,
+  getTextBody,
 } from '@blockframes/testing/cypress/browser';
-import { supportMailosaur } from '@blockframes/utils/constants';
+import { gmailSupport } from '@blockframes/utils/constants';
 
 const user = fakeUserData();
 
@@ -31,6 +32,10 @@ describe('Demo Request Email', () => {
     cy.get('@phoneInputs').last().type(user.phone);
     check('checkbox-newsletters');
     get('submit-demo-request').click();
-    interceptEmail({ sentTo: supportMailosaur }).then(mail => deleteEmail(mail.id));
+    interceptEmailGmail(`to:${gmailSupport}`).then(mail => {
+      const body = getTextBody(mail);
+      expect(body).to.include(user.email);
+      gmail.deleteEmail(mail.id);
+    });
   });
 });

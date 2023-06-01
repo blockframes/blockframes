@@ -4,6 +4,7 @@ import {
   algolia,
   browserAuth,
   firestore,
+  gmail,
   maintenance,
   // cypress commands
   get,
@@ -15,8 +16,7 @@ import {
   selectCompany,
   verifyInvitation,
   // cypress tasks
-  interceptEmail,
-  deleteEmail,
+  interceptEmailGmail,
   // firebase-utils
   deleteOrg,
   deleteUser,
@@ -24,11 +24,15 @@ import {
   validateOrg,
   validateInvitation,
   deleteInvitation,
+  // helpers
+  getTextBody,
+  getSubject,
 } from '@blockframes/testing/cypress/browser';
 import { newUser, newOrg, marketplaceData, dashboardData } from '../../fixtures/authentification/signup';
 import { territories, orgActivity } from '@blockframes/model';
 import { capitalize } from '@blockframes/utils/helpers';
 import { org } from '../../fixtures/authentification/login';
+import { gmailSupport } from '@blockframes/utils/constants';
 
 const marketplaceInjectedData = {
   [`users/${marketplaceData.orgAdmin.uid}`]: marketplaceData.orgAdmin,
@@ -60,11 +64,19 @@ describe('Signup', () => {
     fillCommonInputs(newUser);
     addNewCompany(newOrg);
     get('submit').click();
-    interceptEmail({ sentTo: newUser.email }).then(mail => deleteEmail(mail.id));
-    interceptEmail({ subject: `Archipel Market - ${newOrg.name} was created and needs a review` }).then(mail =>
-      deleteEmail(mail.id)
+    interceptEmailGmail(`to:${newUser.email}`).then(mail => {
+      const body = getTextBody(mail);
+      expect(body).to.include('Thank you for signing up and welcome');
+      gmail.deleteEmail(mail.id);
+    });
+    interceptEmailGmail(`subject:Archipel Market - ${newOrg.name} was created and needs a review`).then(mail =>
+      gmail.deleteEmail(mail.id)
     );
-    interceptEmail({ body: `${newUser.email}` }).then(mail => deleteEmail(mail.id));
+    interceptEmailGmail('subject:New user connexion').then(mail => {
+      const body = getTextBody(mail);
+      expect(body).to.include(newUser.email);
+      gmail.deleteEmail(mail.id);
+    });
     cy.log('all mails received');
     assertUrl('c/organization/create-congratulations');
     get('profile-data-ok').should('exist');
@@ -76,6 +88,11 @@ describe('Signup', () => {
     validateOrg(newOrg.name);
     get('org-approval-ok').should('exist');
     get('email-ok').should('exist');
+    interceptEmailGmail(`to:${newUser.email}`).then(mail => {
+      const body = getTextBody(mail);
+      expect(body).to.include('Congratulations, your organization was successfully created!');
+      gmail.deleteEmail(mail.id);
+    });
     get('refresh').click();
     assertUrlIncludes('c/o/marketplace/home');
   });
@@ -96,14 +113,34 @@ describe('Signup', () => {
     get('activity').should('contain', orgActivity[org.activity]);
     get('country').should('contain', capitalize(territories[org.addresses.main.country]));
     get('submit').click();
-    interceptEmail({ sentTo: newUser.email }).then(mail => deleteEmail(mail.id));
-    interceptEmail({ body: `${newUser.email}` }).then(mail => deleteEmail(mail.id));
+    interceptEmailGmail(`to:${newUser.email}`).then(mail => {
+      const subject = getSubject(mail);
+      expect(subject).to.include(`Your request to join ${org.name} on Archipel Market is being processed`);
+      gmail.deleteEmail(mail.id);
+    });
+    interceptEmailGmail('subject:New user connexion').then(mail => {
+      const body = getTextBody(mail);
+      expect(body).to.include(newUser.email);
+      gmail.deleteEmail(mail.id);
+    });
     cy.log('all mails received');
     assertUrl('c/organization/join-congratulations');
     validateUser(newUser.email);
     get('email-ok').should('exist');
+    interceptEmailGmail(`to:${orgAdmin.email}`).then(mail => {
+      const subject = getSubject(mail);
+      expect(subject).to.include(
+        `${newUser.firstName} ${newUser.lastName} would like to join your organization on Archipel Market`
+      );
+      gmail.deleteEmail(mail.id);
+    });
     validateInvitation(newUser.email);
     get('org-approval-ok').should('exist');
+    interceptEmailGmail(`to:${newUser.email}`).then(mail => {
+      const body = getTextBody(mail);
+      expect(body).to.include(`your request to join ${org.name} on Archipel Market was accepted`);
+      gmail.deleteEmail(mail.id);
+    });
     get('refresh').click();
     assertUrlIncludes('c/o/marketplace/home');
     browserAuth.clearBrowserAuth();
@@ -127,14 +164,34 @@ describe('Signup', () => {
     get('activity').should('contain', orgActivity[org.activity]);
     get('country').should('contain', capitalize(territories[org.addresses.main.country]));
     get('submit').click();
-    interceptEmail({ sentTo: newUser.email }).then(mail => deleteEmail(mail.id));
-    interceptEmail({ body: `${newUser.email}` }).then(mail => deleteEmail(mail.id));
+    interceptEmailGmail(`to:${newUser.email}`).then(mail => {
+      const subject = getSubject(mail);
+      expect(subject).to.include(`Your request to join ${org.name} on Archipel Market is being processed`);
+      gmail.deleteEmail(mail.id);
+    });
+    interceptEmailGmail(`to:${gmailSupport}`).then(mail => {
+      const body = getTextBody(mail);
+      expect(body).to.include(newUser.email);
+      gmail.deleteEmail(mail.id);
+    });
     cy.log('all mails received');
     assertUrl('c/organization/join-congratulations');
     validateUser(newUser.email);
     get('email-ok').should('exist');
+    interceptEmailGmail(`to:${orgAdmin.email}`).then(mail => {
+      const subject = getSubject(mail);
+      expect(subject).to.include(
+        `${newUser.firstName} ${newUser.lastName} would like to join your organization on Archipel Market`
+      );
+      gmail.deleteEmail(mail.id);
+    });
     validateInvitation(newUser.email);
     get('org-approval-ok').should('exist');
+    interceptEmailGmail(`to:${newUser.email}`).then(mail => {
+      const body = getTextBody(mail);
+      expect(body).to.include(`your request to join ${org.name} on Archipel Market was accepted`);
+      gmail.deleteEmail(mail.id);
+    });
     get('refresh').click();
     assertUrlIncludes('c/o/dashboard/home');
     browserAuth.clearBrowserAuth();

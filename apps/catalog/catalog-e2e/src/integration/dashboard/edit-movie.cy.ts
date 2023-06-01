@@ -3,6 +3,7 @@ import {
   adminAuth,
   browserAuth,
   firestore,
+  gmail,
   maintenance,
   // cypress commands
   check,
@@ -12,6 +13,9 @@ import {
   checkMovieTunnelSideNav,
   saveTitle,
   assertMultipleTexts,
+  interceptEmailGmail,
+  // helpers
+  getSubject,
 } from '@blockframes/testing/cypress/browser';
 import {
   Movie,
@@ -42,6 +46,7 @@ import {
   update,
 } from '../../fixtures/dashboard/movie-tunnel';
 import { format } from 'date-fns';
+import { gmailSupport } from '@blockframes/utils/constants';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -292,6 +297,11 @@ describe('Movie tunnel', () => {
     get('end-button').click();
     assertUrlIncludes(`c/o/dashboard/title/${movie.id}/main`);
     get('titles-header-title').should('contain', movie.title.international) + ' edited';
+    interceptEmailGmail(`to:${gmailSupport}`).then(mail => {
+      const subject = getSubject(mail);
+      expect(subject).to.include(`${movie.title.international} edited was submitted by ${org.name}`);
+      gmail.deleteEmail(mail.id);
+    });
   });
 });
 

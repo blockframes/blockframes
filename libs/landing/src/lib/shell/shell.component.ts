@@ -9,7 +9,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';
 //TODO define proper way to import next line #8071
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { supportMailosaur } from '@blockframes/utils/constants';
+import { gmailSupport } from '@blockframes/utils/constants';
 import { CallableFunctions } from 'ngfire';
 
 @Directive({
@@ -117,7 +117,7 @@ export class LandingShellComponent implements OnDestroy {
       this.buttonText = 'Sending Request...';
       const information: RequestDemoInformations = createDemoRequestInformations({ app: this.app, ...form.value });
       if ('Cypress' in window) {
-        information.testEmailTo = supportMailosaur;
+        information.testEmailTo = gmailSupport;
       }
 
       await this.sendDemoRequest(information);

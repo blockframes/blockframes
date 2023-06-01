@@ -10,8 +10,9 @@ import {
   TerritoryGroup,
 } from '@blockframes/model';
 import { browserAuth } from './browserAuth';
+import { gmail } from './gmail';
+import { gmail_v1 } from 'googleapis';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
-import { serverId } from '@blockframes/utils/constants';
 import { sub } from 'date-fns';
 import { dateToMMDDYYYY } from './helpers';
 
@@ -77,19 +78,21 @@ export function assertInputValue(selector: string, expected: string) {
     .then(val => expect(val).to.eq(expected));
 }
 
-interface InterceptOption {
-  sentTo?: string;
-  subject?: string;
-  body?: string;
-}
-
-export function interceptEmail(option: InterceptOption) {
-  const oneMinuteAgo = sub(new Date(), { minutes: 1 }); //to allow checking multiple emails from a single flow (ex: offers)
-  return cy.mailosaurGetMessage(serverId, option, { receivedAfter: oneMinuteAgo, timeout: 30000 });
-}
-
-export function deleteEmail(id: string) {
-  return cy.mailosaurDeleteMessage(id);
+export function interceptEmailGmail(_query: string, twoMinutesLimit = true, loop = 0): Cypress.Chainable<gmail_v1.Schema$Message> {
+  const timeStamp2MinutesAgo = sub(new Date(), { minutes: 2 }).getTime();
+  const twoMinutesAgo = Math.floor(timeStamp2MinutesAgo / 1000); //to allow checking multiple emails from a single flow (ex: offers)
+  const query = _query + (twoMinutesLimit ? ` after:${twoMinutesAgo}` : '');
+  return gmail.queryEmails(query).then(emailsList => {
+    if (!emailsList.length) {
+      if (loop > 20) throw new Error('No email found for this query, check node console for more data');
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(interceptEmailGmail(_query, twoMinutesLimit, loop + 1));
+        }, 1000);
+      });
+    }
+    return gmail.getEmail(emailsList[0].id);
+  });
 }
 
 export function connectUser(email: string) {

@@ -2,19 +2,20 @@ import {
   // plugins
   adminAuth,
   firestore,
+  gmail,
   maintenance,
   // cypress commands
   get,
   connectUser,
   assertTableRowData,
   snackbarShould,
-  interceptEmail,
+  interceptEmailGmail,
   assertUrl,
-  deleteEmail,
   escapeKey,
   acceptCookies,
   // helpers
   dateToMMDDYYYY,
+  getSubject,
 } from '@blockframes/testing/cypress/browser';
 //no need for a new fixture
 import {
@@ -26,7 +27,7 @@ import {
   sellerNegotiation,
   bucket,
 } from '../../fixtures/shared/deal-shared-fixture';
-import { supportMailosaur } from '@blockframes/utils/constants';
+import { gmailSupport } from '@blockframes/utils/constants';
 import { capitalize } from '@blockframes/utils/helpers';
 import { add, sub } from 'date-fns';
 import { ContractStatus } from '@blockframes/model';
@@ -175,9 +176,10 @@ describe('Deal negotiation', () => {
 
 function checkConfirmationEmails(decision: ContractStatus) {
   for (const user of ['buyer', 'seller', 'admin']) {
-    interceptEmail({ sentTo: mailData[user].recipient }).then(mail => {
-      expect(mail.subject).to.eq(mailData[user].subject[decision]);
-      return deleteEmail(mail.id);
+    interceptEmailGmail(`to:${mailData[user].recipient}`).then(mail => {
+      const subject = getSubject(mail);
+      expect(subject).to.eq(mailData[user].subject[decision]);
+      return gmail.deleteEmail(mail.id);
     });
   }
 }
@@ -230,7 +232,7 @@ const mailData = {
     },
   },
   admin: {
-    recipient: supportMailosaur,
+    recipient: gmailSupport,
     subject: {
       accepted: 'Contract accepted',
       declined: 'Contract declined',

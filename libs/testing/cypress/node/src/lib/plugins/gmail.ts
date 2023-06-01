@@ -1,5 +1,5 @@
 import { JWT, UserRefreshClient } from 'google-auth-library';
-import { google } from 'googleapis';
+import { google, gmail_v1 } from 'googleapis';
 
 //* AUTH FUNCTIONS
 
@@ -7,7 +7,7 @@ type Client = UserRefreshClient | JWT
 
 let client: Client;
 
-async function authorize() {
+function authorize() {
   if (client) return client;
   client = google.auth.fromJSON({
     type: 'authorized_user',
@@ -20,27 +20,29 @@ async function authorize() {
 
 //* CYPRESS ORIENTED FUNCTIONS
 
-export async function getMessagesTotal() {
-  const auth = await authorize();
-  const gmail = google.gmail({ version: 'v1', auth });
-  const res = await gmail.users.getProfile({ userId: 'me' });
-  const total = res.data.messagesTotal;
-  return total;
-}
-
-export async function queryEmails(query: string) {
+export async function queryEmails(query: string): Promise<gmail_v1.Schema$Message[]> {
   // see possibles queries at https://support.google.com/mail/answer/7190?hl=fr
-  const auth = await authorize();
+  const auth = authorize();
   const gmail = google.gmail({ version: 'v1', auth });
   const res = await gmail.users.messages.list({ userId: 'me', q: query });
-  return res.data.messages;
+  const messages = res.data.messages;
+  if(messages) return messages
+  console.log(`No message found for the query : ${query}`)
+  return [];
 }
 
-export async function getEmail(emailId: string) {
-  const auth = await authorize();
+export async function getEmail(emailId: string): Promise<gmail_v1.Schema$Message> {
+  const auth = authorize();
   const gmail = google.gmail({ version: 'v1', auth });
   const res = await gmail.users.messages.get({ userId: 'me', id: emailId });
   return res.data;
+}
+
+export async function deleteEmail(emailId: string): Promise<string> {
+  const auth = authorize();
+  const gmail = google.gmail({ version: 'v1', auth });
+  await gmail.users.messages.delete({ userId: 'me', id: emailId });
+  return `email ${emailId} deleted`;
 }
 
 //* OBSOLETE CODE
