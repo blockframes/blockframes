@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { AlgoliaObject, AlgoliaQueries, App } from '@blockframes/model';
+import { AlgoliaObject, AlgoliaOrganization, AlgoliaQueries, App } from '@blockframes/model';
 import { algolia } from '@env';
 import algoliasearch, { SearchIndex } from 'algoliasearch';
 import { APP } from '../routes/utils';
@@ -41,6 +41,12 @@ export class AlgoliaService {
       output.results.forEach(r => { r.hits.forEach(hit => { if (!hits.some(h => h.objectID === hit.objectID)) hits.push(hit) }) });
       return hits;
     });
+  }
+
+  public async getOrgIdFromName(orgName: string) {
+    const algoliaOrgs: AlgoliaOrganization[] = await this.multipleQuery('indexNameOrganizations', orgName.trim());
+    const matchingOrg = algoliaOrgs.find(o => o.name.toLowerCase().trim() === orgName.toLowerCase().trim());
+    return matchingOrg?.objectID;
   }
 
   private createMultipleQueries(indexGroup: string, text: string) {
