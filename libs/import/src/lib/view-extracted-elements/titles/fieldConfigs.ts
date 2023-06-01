@@ -66,7 +66,7 @@ export interface FieldsConfig {
     media: ReleaseMedia;
     date: Date;
   }[];
-  originalLanguages: Language[];
+  originalLanguages: Language[]; 
   genres: Genre[];
   customGenres: string[];
   runningTime: MovieRunningTime;
@@ -107,7 +107,7 @@ export interface FieldsConfig {
   soundFormat: SoundFormat;
   isOriginalVersionAvailable: boolean;
   languages: {
-    language: string;
+    language: Language;
     dubbed: boolean;
     subtitle: boolean;
     caption: boolean;
