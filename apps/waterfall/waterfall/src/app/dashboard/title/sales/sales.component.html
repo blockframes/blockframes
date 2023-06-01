@@ -49,7 +49,25 @@
         </button>
       </section>
       <mat-divider></mat-divider>
-      <!-- TODO #9372 -->
+      <article class="territory-infos">
+        <ng-container *ngFor="let infos of clickedTerritory.infos; let isLast = last">
+          <h4>{{ infos.buyerName }}</h4>
+          <ul>
+            <li><span><b>Contract Duration: </b>{{ infos.duration.from | date:'MM/dd/yyyy' }} - {{ infos.duration.to | date:'MM/dd/yyyy' }}</span></li>
+            <li><span><b>Signature Date </b>--</span></li>
+            <li><span><b>Rights Type: </b>{{ infos.type | toLabel: 'contractType' }}</span></li>
+            <li><span><b>Territories: </b>{{ infos.territories | toGroupLabel:'territories':'World'| join | maxLength:120 }}</span></li>
+            <li><span><b>Medias: </b>{{ infos.medias | toGroupLabel:'medias':'All' | join | maxLength:120 }}</span></li>
+            <li><span><b>Declared Amount: </b>--</span></li>
+            <li><span><b>Amount Paid: </b>--</span></li>
+          </ul>
+          <a mat-button color="primary" class="main-dashboard-cta">
+            <mat-icon svgIcon="document_signed"></mat-icon>
+            <span>See Contract</span>
+          </a>
+          <mat-divider *ngIf="!isLast"></mat-divider>
+        </ng-container>
+      </article>
     </article>
 
     <!-- MAP LEGEND -->

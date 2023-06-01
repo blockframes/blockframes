@@ -25,20 +25,18 @@ world-map {
     z-index: 2;
     padding: 12px;
     background-color: #ffffff;
-  }
-
-  .hovered-territory-card {
-    border-radius: 4px;
     @include mat.elevation(1);
     ul {
       margin: 0;
     }
   }
 
+  .hovered-territory-card {
+    border-radius: 4px;
+  }
+
   .clicked-territory-card {
     width: 30%;
-    @include mat.elevation(1);
-
     section {
       display: flex;
       gap: 8px;
@@ -58,6 +56,18 @@ world-map {
         mat-icon {
           width: 14px;
         }
+      }
+    }
+
+    .territory-infos {
+      max-height: 360px;
+      overflow-y: scroll;
+      a {
+        margin: 24px 0px;
+      }
+
+      ul li:not(:last-child) {
+        margin-bottom: 4px;
       }
     }
 

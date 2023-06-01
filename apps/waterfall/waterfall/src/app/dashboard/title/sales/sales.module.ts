@@ -10,13 +10,13 @@ import { SalesComponent } from './sales.component';
 // Blockframes
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { MapModule } from '@blockframes/ui/map';
+import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-
 
 @NgModule({
   declarations: [SalesComponent],
@@ -25,6 +25,10 @@ import { MatDividerModule } from '@angular/material/divider';
     LogoSpinnerModule,
     FlexLayoutModule,
     MapModule,
+    ToLabelModule,
+    ToGroupLabelPipeModule,
+    JoinPipeModule,
+    MaxLengthModule,
 
     // Material
     MatButtonModule,
