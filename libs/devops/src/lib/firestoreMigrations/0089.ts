@@ -1,10 +1,10 @@
 
 import { Firestore, runChunks } from '@blockframes/firebase-utils';
-import { isInKeys, Language, Movie, Organization, Term, Territory } from '@blockframes/model';
+import { Genre, isInKeys, Language, Movie, Organization, Term, Territory } from '@blockframes/model';
 import { Collections } from './../internals/utils';
 
 /**
- * Fix languages & territories on terms, movies & orgs
+ * Fix languages, territories, genres on terms, movies & orgs
  * @returns
  */
 export async function upgrade(db: Firestore) {
@@ -16,7 +16,7 @@ export async function upgrade(db: Firestore) {
   await runChunks(terms.docs, async (doc) => {
     const term = doc.data() as Term;
 
-    term.territories = term.territories.map(t => correctTerritory(t, 'terms', term.id)).filter(t => !!t);
+    term.territories = Array.from(new Set(term.territories.map(t => correctTerritory(t, 'terms', term.id)).filter(t => !!t)));
 
     for (const lang of Object.keys(term.languages)) {
       const correctedValue = correctLanguage(lang as Language, 'terms', term.id);
@@ -38,8 +38,8 @@ export async function upgrade(db: Firestore) {
   await runChunks(movies.docs, async (doc) => {
     const movie = doc.data() as Movie;
 
-    movie.originalLanguages = movie.originalLanguages.map(t => correctLanguage(t, 'movies', movie.id)).filter(t => !!t);
-    movie.originCountries = movie.originCountries.map(t => correctTerritory(t, 'movies', movie.id)).filter(t => !!t);
+    movie.originalLanguages = Array.from(new Set(movie.originalLanguages.map(t => correctLanguage(t, 'movies', movie.id)).filter(t => !!t)));
+    movie.originCountries = Array.from(new Set(movie.originCountries.map(t => correctTerritory(t, 'movies', movie.id)).filter(t => !!t)));
 
     for (const lang of Object.keys(movie.languages)) {
       const correctedValue = correctLanguage(lang as Language, 'movies', movie.id);
@@ -53,6 +53,8 @@ export async function upgrade(db: Firestore) {
       }
 
     }
+
+    movie.genres = Array.from(new Set(movie.genres.map(t => correctGenre(t, 'movies', movie.id)).filter(t => !!t)));
 
     await doc.ref.set(movie);
   }, undefined, false);
@@ -147,6 +149,27 @@ function correctLanguage(givenValue: Language, collection: Collections, docId: s
         return 'sangho';
       default:
         console.log(`Error in ${collection}/${docId} scope "languages": value ${givenValue} not found in static models`);
+        return undefined
+    }
+  }
+}
+
+function correctGenre(givenValue: Genre, collection: Collections, docId: string): Genre {
+  if (isInKeys('genres', givenValue)) {
+    return givenValue;
+  } else {
+    switch (givenValue.trim() as any) {
+      case 'Thriler':
+        console.log(`Corrected ${collection}/${docId} scope "genres": value ${givenValue} => thriller`);
+        return 'thriller';
+      case 'Adventue':
+        console.log(`Corrected ${collection}/${docId} scope "genres": value ${givenValue} => adventure`);
+        return 'adventure';
+      case 'Western':
+        console.log(`Corrected ${collection}/${docId} scope "genres": value ${givenValue} => action`);
+        return 'action';
+      default:
+        console.log(`Error in ${collection}/${docId} scope "genres": value ${givenValue} not found in static models`);
         return undefined
     }
   }
