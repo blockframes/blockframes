@@ -1838,7 +1838,7 @@ export const isInKeys = (scope: Scope, givenValue: string) => {
 export function getISO3166TerritoryFromSlug(slug: keyof typeof territories) {
   const territory = Object.keys(territories).find(i => i.toLowerCase() === slug.toLowerCase());
   if (!territory) {
-    throw new Error(`Failed to get territory: ${slug}.`); 
+    throw new Error(`Failed to get territory: ${slug}.`);
   }
   return {
     [territory]: territory,

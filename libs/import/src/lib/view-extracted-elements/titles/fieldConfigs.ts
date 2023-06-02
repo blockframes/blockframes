@@ -66,7 +66,7 @@ export interface FieldsConfig {
     media: ReleaseMedia;
     date: Date;
   }[];
-  originalLanguages: Language[]; 
+  originalLanguages: Language[];
   genres: Genre[];
   customGenres: string[];
   runningTime: MovieRunningTime;
