@@ -44,7 +44,7 @@ export class SalesComponent {
 
   public hoveredTerritory: {
     name: string;
-    orgName: string;
+    data: string;
   }
 
   public clickedTerritory: {
@@ -71,8 +71,8 @@ export class SalesComponent {
     }),
     tap(async markers => {
       const allMarkers = Object.values(markers).flat();
-      const orgIds = Array.from(new Set(allMarkers.map(t => t.data.filter(s => s.buyerId).map(s => s.buyerId)).flat()));
-      this.orgsCache = await this.orgService.getValue(orgIds);
+      const orgIds = Array.from(new Set(allMarkers.map(t => t.data?.filter(s => s.buyerId).map(s => s.buyerId)).flat().filter(o => !!o)));
+      if (orgIds.length) this.orgsCache = await this.orgService.getValue(orgIds);
     }),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
@@ -98,9 +98,14 @@ export class SalesComponent {
 
   /** Display the territories information in the tooltip */
   public displayTerritoryTooltip(territory: TerritorySoldMarker) {
-    const orgIds = Array.from(new Set(territory.data.filter(s => s.buyerId).map(s => s.buyerId)));
-    const orgs = this.orgsCache.filter(o => orgIds.includes(o.id));
-    this.hoveredTerritory = { name: territory.label, orgName: orgs.length ? orgs[0].name : externalOrgIdentifier };
+    if (territory.data) {
+      const orgIds = Array.from(new Set(territory.data.filter(s => s.buyerId).map(s => s.buyerId)));
+      const orgs = this.orgsCache.filter(o => orgIds.includes(o.id));
+      this.hoveredTerritory = { name: territory.label, data: orgs.length ? orgs[0].name : externalOrgIdentifier };
+    } else {
+      this.hoveredTerritory = { name: territory.label, data: 'Available' };
+    }
+
   }
 
   /** Clear the territories information */
