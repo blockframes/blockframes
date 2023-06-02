@@ -22,8 +22,13 @@ export async function upgrade(db: Firestore) {
       const correctedValue = correctLanguage(lang as Language, 'terms', term.id);
       if (correctedValue) {
         term.languages[correctedValue] = term.languages[lang];
+        if(correctedValue !== lang){
+          delete term.languages[lang];
+        }
+      } else {
+        delete term.languages[lang];
       }
-      delete term.languages[lang];
+      
     }
 
     await doc.ref.set(term);
@@ -40,8 +45,13 @@ export async function upgrade(db: Firestore) {
       const correctedValue = correctLanguage(lang as Language, 'movies', movie.id);
       if (correctedValue) {
         movie.languages[correctedValue] = movie.languages[lang];
+        if(correctedValue !== lang){
+          delete movie.languages[lang];
+        }
+      } else {
+        delete movie.languages[lang];
       }
-      delete movie.languages[lang];
+      
     }
 
     await doc.ref.set(movie);
