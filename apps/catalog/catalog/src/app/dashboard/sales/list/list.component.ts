@@ -7,7 +7,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { getSeller } from '@blockframes/contract/contract/utils'
-import { deletedIdentifier, Sale } from '@blockframes/model';
+import { deletedIdentifier, externalOrgIdentifier, Sale } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { orderBy, where } from 'firebase/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -61,7 +61,7 @@ export class SaleListComponent implements OnInit {
   public externalSales$ = this.contractService.valueChanges(queryConstraints(this.orgId, { internal: false })).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(org => org.name)),
-      licensee: () => of('External'),
+      licensee: () => of(externalOrgIdentifier),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(
         map(title => title.title.international),
         catchError(_ => {

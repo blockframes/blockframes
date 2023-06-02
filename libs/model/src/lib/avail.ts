@@ -583,18 +583,18 @@ export interface TerritorySoldMarker {
   isoA3: TerritoryISOA3Value,
   label: TerritoryValue,
   type: MediaFamily
-  data?: FullSale[]
+  data?: (FullSale | FullMandate)[]
 }
 
-export function territoriesSold(sales: FullSale[]) {
+export function territoriesSold(contracts: (FullSale | FullMandate)[]) {
   const availabilities = {} as Record<Territory, TerritorySoldMarker>;
-  const allTerms = sales.map(s => s.terms).flat();
+  const allTerms = contracts.map(s => s.terms).flat();
 
   Object.keys(territories).forEach((territory: Territory) => {
     const termsTerritory = allTerms.filter(t => t.territories.includes(territory));
     if (termsTerritory.length) {
-      const contracts = Array.from(termsTerritory.map(t => sales.find(s => s.id === t.contractId)));
-      const data: FullSale[] = contracts.map(c => ({
+      const territoryContracts = Array.from(termsTerritory.map(t => contracts.find(s => s.id === t.contractId)));
+      const data: (FullSale | FullMandate)[] = territoryContracts.map(c => ({
         ...c,
         terms: c.terms.filter(t => t.territories.includes(territory))
       }));

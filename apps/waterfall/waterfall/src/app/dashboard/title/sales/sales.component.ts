@@ -1,13 +1,26 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { filterContractsByTitle, TerritoryValue, Contract, Term, Movie, isSale, territoriesSold, TerritorySoldMarker, isMandate, ContractType, Media, Territory } from '@blockframes/model';
+import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import {
+  filterContractsByTitle,
+  Contract,
+  Term,
+  Movie,
+  isSale,
+  territoriesSold,
+  TerritorySoldMarker,
+  isMandate,
+  ContractType,
+  Media,
+  Territory,
+  Organization,
+  externalOrgIdentifier
+} from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { TermService } from '@blockframes/contract/term/service';
 import { where } from 'firebase/firestore';
 import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell/shell.component';
 import { OrganizationService } from '@blockframes/organization/service';
-
 
 @Component({
   selector: 'waterfall-title-sales',
@@ -23,17 +36,20 @@ export class SalesComponent {
       where('status', '==', 'accepted')
     ]))
   );
+
+  private mandates$ = this.contracts$.pipe(map((contracts) => contracts.filter(isMandate)));
+  private mandateTerms$ = this.getTerms(this.mandates$);
   private sales$ = this.contracts$.pipe(map((contracts) => contracts.filter(isSale)));
   private salesTerms$ = this.getTerms(this.sales$);
 
   public hoveredTerritory: {
     name: string;
-    status: string;
+    orgName: string;
   }
 
   public clickedTerritory: {
     name: string;
-    infos: { 
+    infos: {
       buyerName: string,
       type: ContractType,
       duration: Duration,
@@ -46,13 +62,22 @@ export class SalesComponent {
     this.shell.movie$,
     this.sales$,
     this.salesTerms$,
+    this.mandates$,
+    this.mandateTerms$
   ]).pipe(
-    map(([movie, sales, salesTerms]) => {
-      const res = filterContractsByTitle(movie.id, [], [], sales, salesTerms);
-      return territoriesSold(res.sales);
+    map(([movie, sales, salesTerms, mandates, mandateTerms]) => {
+      const res = filterContractsByTitle(movie.id, mandates, mandateTerms, sales, salesTerms);
+      return territoriesSold([...res.mandates, ...res.sales]);
+    }),
+    tap(async markers => {
+      const allMarkers = Object.values(markers).flat();
+      const orgIds = Array.from(new Set(allMarkers.map(t => t.data.filter(s => s.buyerId).map(s => s.buyerId)).flat()));
+      this.orgsCache = await this.orgService.getValue(orgIds);
     }),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
+
+  private orgsCache: Organization[] = [];
 
   constructor(
     private termsService: TermService,
@@ -72,8 +97,10 @@ export class SalesComponent {
   }
 
   /** Display the territories information in the tooltip */
-  public displayTerritoryTooltip(territory: TerritoryValue, status: string) {
-    this.hoveredTerritory = { name: territory, status };
+  public displayTerritoryTooltip(territory: TerritorySoldMarker) {
+    const orgIds = Array.from(new Set(territory.data.filter(s => s.buyerId).map(s => s.buyerId)));
+    const orgs = this.orgsCache.filter(o => orgIds.includes(o.id));
+    this.hoveredTerritory = { name: territory.label, orgName: orgs.length ? orgs[0].name : externalOrgIdentifier };
   }
 
   /** Clear the territories information */
@@ -81,17 +108,17 @@ export class SalesComponent {
     this.hoveredTerritory = null;
   }
 
-  public async showDetails(territory: TerritorySoldMarker) {
+  public showDetails(territory: TerritorySoldMarker) {
     if (this.clickedTerritory?.name === territory.label) this.clickedTerritory = null;
     else {
       const orgIds = Array.from(new Set(territory.data.filter(s => s.buyerId).map(s => s.buyerId)));
-      const orgs = await this.orgService.getValue(orgIds);
+      const orgs = this.orgsCache.filter(o => orgIds.includes(o.id));
       const infos = [];
-      for (const sale of territory.data) {
-        for (const term of sale.terms) {
+      for (const contract of territory.data) {
+        for (const term of contract.terms) {
           const termInfos = {
-            buyerName: sale.buyerId ? orgs.find(o => o.id === sale.buyerId).name : 'External',
-            type: sale.type, // TODO #9372 display only sales ? If so, type is maybe not necessary to display
+            buyerName: contract.buyerId ? orgs.find(o => o.id === contract.buyerId).name : externalOrgIdentifier,
+            type: contract.type,
             // TODO #9372 signature
             duration: term.duration,
             medias: term.medias,

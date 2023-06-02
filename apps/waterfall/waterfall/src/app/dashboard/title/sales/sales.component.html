@@ -2,31 +2,31 @@
   <world-map>
     <!-- MAP LAYERS -->
     <ng-container *ngFor="let tag of territoriesSold.all">
-      <map-feature [tag]="tag.isoA3" color="#67DF9C" (mouseover)="displayTerritoryTooltip(tag.label, 'All Rights Sold')"
+      <map-feature [tag]="tag.isoA3" color="#67DF9C" (mouseover)="displayTerritoryTooltip(tag)"
         (mouseout)="clearTerritoryTooltip()"
         (click)="showDetails(tag)">
       </map-feature>
     </ng-container>
     <ng-container *ngFor="let tag of territoriesSold.tv">
-      <map-feature [tag]="tag.isoA3" color="#F3B244" (mouseover)="displayTerritoryTooltip(tag.label, 'TV Rights Sold')"
+      <map-feature [tag]="tag.isoA3" color="#F3B244" (mouseover)="displayTerritoryTooltip(tag)"
         (mouseout)="clearTerritoryTooltip()"
         (click)="showDetails(tag)">
       </map-feature>
     </ng-container>
     <ng-container *ngFor="let tag of territoriesSold.vod">
-      <map-feature [tag]="tag.isoA3" color="#3A90F3" (mouseover)="displayTerritoryTooltip(tag.label, 'VOD Rights Sold')"
+      <map-feature [tag]="tag.isoA3" color="#3A90F3" (mouseover)="displayTerritoryTooltip(tag)"
         (mouseout)="clearTerritoryTooltip()"
         (click)="showDetails(tag)">
       </map-feature>
     </ng-container>
     <ng-container *ngFor="let tag of territoriesSold.other">
-      <map-feature [tag]="tag.isoA3" color="#7262CA" (mouseover)="displayTerritoryTooltip(tag.label, 'Other Rights Sold')"
+      <map-feature [tag]="tag.isoA3" color="#7262CA" (mouseover)="displayTerritoryTooltip(tag)"
         (mouseout)="clearTerritoryTooltip()"
         (click)="showDetails(tag)">
       </map-feature>
     </ng-container>
     <ng-container *ngFor="let tag of territoriesSold.available">
-      <map-feature [tag]="tag.isoA3" color="#F3F3F3" (mouseover)="displayTerritoryTooltip(tag.label, 'Available')"
+      <map-feature [tag]="tag.isoA3" color="#F3F3F3" (mouseover)="displayTerritoryTooltip(tag)"
         (mouseout)="clearTerritoryTooltip()">
       </map-feature>
     </ng-container>
@@ -35,7 +35,7 @@
     <article *ngIf="hoveredTerritory" class="territory-card hovered-territory-card">
       <ul>
         <li><b>{{ hoveredTerritory.name }}</b></li>
-        <li class="mat-caption">{{ hoveredTerritory.status }}</li>
+        <li class="mat-caption">{{ hoveredTerritory.orgName }}</li>
       </ul>
     </article>
 
