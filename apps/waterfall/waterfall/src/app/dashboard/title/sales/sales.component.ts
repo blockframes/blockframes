@@ -112,8 +112,8 @@ export class SalesComponent {
 
   /** Display the territories information in the tooltip */
   public displayTerritoryTooltip(territory: TerritorySoldMarker) {
-    if (territory.data) {
-      const firstContract = territory.data.find(s => s.buyerId);
+    const firstContract = (territory.data || []).find(s => s.buyerId);
+    if (firstContract) {
       const org = this.orgsCache.find(o => firstContract.buyerId === o.id);
       const orgName = org.name || externalOrgIdentifier;
 
