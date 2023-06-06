@@ -27,7 +27,6 @@ import {
   MovieNoteRole,
   ReleaseMedia,
   ReleaseMediaValue,
-  GetKeys
 } from './static';
 import type {
   Producer,
@@ -273,7 +272,7 @@ export interface Versions {
 }
 
 export interface LanguageVersion {
-  languages: GetKeys<'languages'>[],
+  languages: Language[],
   versions: Versions
 }
 

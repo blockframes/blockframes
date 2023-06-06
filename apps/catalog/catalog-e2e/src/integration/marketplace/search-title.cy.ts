@@ -8,7 +8,7 @@ import {
   displayMovie as movie,
 } from '../../fixtures/marketplace/search-display-title';
 import { europeanCountries } from '../../fixtures/shared/commons';
-import { festival, certifications } from '@blockframes/model';
+import { certifications } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -93,8 +93,9 @@ describe('Movie search in marketplace', () => {
     selectToggle('content_', 'Movie');
     get('save-filter').click();
     selectFilter('Genre');
-    get('genre').find('input').click();
+    get('filter-select').click();
     get(`option_${movie.genres[0]}`).click();
+    escapeKey();
     get('save-filter').click();
     selectFilter('Country of Origin');
     get('origin-countries').click();
@@ -102,8 +103,9 @@ describe('Movie search in marketplace', () => {
     escapeKey();
     get('save-filter').click();
     selectFilter('Language & Version');
-    get('language').find('input').click();
+    get('filter-select').click();
     get(`option_${Object.keys(movie.languages)[0]}`).click();
+    escapeKey();
     check('Dubs');
     get('save-filter').click();
     selectFilter('Release Year');
@@ -115,7 +117,9 @@ describe('Movie search in marketplace', () => {
     get('max-input').type('180');
     get('save-filter').click();
     selectFilter('Festival Selection');
-    get(festival[movie.prizes[0].name]).click();
+    get('filter-select').click();
+    get(`option_${movie.prizes[0].name}`).click();
+    escapeKey();
     get('save-filter').click();
     selectFilter('Qualifications');
     get(certifications[movie.certifications[0]]).click();
@@ -149,8 +153,9 @@ describe('Movie search in marketplace', () => {
     get('titles-count').should('contain', oneTitleSentence);
     get(`movie-card_${movie.id}`).should('exist');
     selectFilter('Genre');
-    get('genre').find('input').click();
+    get('filter-select').click();
     get('option_erotic').click();
+    escapeKey();
     get('empty').should('exist');
     get('clear-filter').click();
     get('save-filter').click();
@@ -166,8 +171,9 @@ describe('Movie search in marketplace', () => {
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Language & Version');
-    get('language').find('input').click();
+    get('filter-select').click();
     get('option_belarussian').click();
+    escapeKey();
     check('Dubs');
     get('empty').should('exist');
     get('clear-filter').click();
@@ -175,8 +181,9 @@ describe('Movie search in marketplace', () => {
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Language & Version');
-    get('language').find('input').click();
+    get('filter-select').click();
     get(`option_${Object.keys(movie.languages)[0]}`).click();
+    escapeKey();
     check('Subs');
     get('empty').should('exist');
     get('clear-filter').click();
@@ -193,6 +200,15 @@ describe('Movie search in marketplace', () => {
     selectFilter('Running Time');
     get('min-input').type('13');
     get('max-input').type('25');
+    get('empty').should('exist');
+    get(`movie-card_${movie.id}`).should('not.exist');
+    get('clear-filter').click();
+    get('save-filter').click();
+    get(`movie-card_${movie.id}`).should('exist');
+    selectFilter('Festival Selection');
+    get('filter-select').click();
+    get('option_locarno').click();
+    escapeKey();
     get('empty').should('exist');
     get(`movie-card_${movie.id}`).should('not.exist');
     get('clear-filter').click();
