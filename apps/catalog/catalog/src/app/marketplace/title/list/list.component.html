@@ -38,9 +38,13 @@
     </ng-template>
 
     <ng-template filter label="Genre" [form]="searchForm.genres">
-      <chips-autocomplete [form]="searchForm.genres" scope="genres" test-id="genre">
-        <mat-label>Genre</mat-label>
-      </chips-autocomplete>
+      <scope-multiselect
+        scope="genres"
+        label="Select Genres"
+        selectIcon="style"
+        filterPlaceholder="Specify genre to filter"
+        [control]="searchForm.genres">
+      </scope-multiselect>
     </ng-template>
 
     <ng-template filter label="Country of Origin" [form]="searchForm.originCountries">
@@ -70,9 +74,13 @@
     </ng-template>
 
     <ng-template filter label="Festival Selection" [form]="searchForm.festivals">
-      <static-check-boxes fxLayout="column" fxLayoutGap="12px" [form]="searchForm.festivals"
-        scope="festival">
-      </static-check-boxes>
+      <scope-multiselect
+        scope="festival"
+        label="Select Festivals"
+        selectIcon="social_leaderboard"
+        filterPlaceholder="Specify festival to filter"
+        [control]="searchForm.festivals">
+      </scope-multiselect>
     </ng-template>
 
     <ng-template filter label="Qualifications" [form]="searchForm.certifications">

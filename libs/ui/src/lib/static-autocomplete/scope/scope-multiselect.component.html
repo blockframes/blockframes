@@ -1,0 +1,26 @@
+<mat-form-field appearance="outline">
+  <mat-label>{{ label }}</mat-label>
+  <mat-icon matPrefix [svgIcon]="selectIcon"></mat-icon>
+  <mat-select multiple [formControl]="control" (openedChange)="resetSearch()" test-id="filter-select">
+    <header>
+      <mat-checkbox
+        color="primary"
+        [checked]="checked$ | async"
+        [indeterminate]="indeterminate$ | async"
+        (change)="checkAll($event.checked)"
+      ></mat-checkbox>
+      <input [placeholder]="filterPlaceholder" [formControl]="search" (keydown)="$event.stopPropagation()">
+      <mat-icon *ngIf="!search.value" svgIcon="search"></mat-icon>
+      <button *ngIf="!!search.value" mat-icon-button type="button" (click)="resetSearch()" matTooltip="Clear text">
+        <mat-icon svgIcon="refresh"></mat-icon>
+      </button>
+    </header>
+    <ng-container *ngIf="visible$ | async as isVisible">
+      <ng-container *ngFor="let item of items">
+        <mat-option [value]="item" [ngClass]="{ hidden: !isVisible[item] }" [attr.test-id]="'option_' + item">
+          {{ item | toLabel: scope }}
+        </mat-option>
+      </ng-container>
+    </ng-container>
+  </mat-select>
+</mat-form-field>
