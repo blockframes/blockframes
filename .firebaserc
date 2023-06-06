@@ -6,7 +6,8 @@
     "francois": "blockframes-francois",
     "bruce": "blockframes-bruce",
     "nicolas": "blockframes-nicolas",
-    "pl": "blockframes-pl-3"
+    "pl": "blockframes-pl-3",
+    "vincent": "blockframes-vincent-2"
   },
   "targets": {
     "blockframes": {
@@ -93,7 +94,7 @@
           "cms-blockframes-bruce"
         ],
         "waterfall": [
-          "waterfall-blockframes-demo"
+          "waterfall-blockframes-bruce"
         ]
       }
     },
@@ -123,6 +124,28 @@
         ],
         "waterfall": [
           "waterfall-blockframes-pl"
+        ]
+      }
+    },
+    "blockframes-vincent-2": {
+      "hosting": {
+        "catalog": [
+          "catalog-blockframes-demo"
+        ],
+        "festival": [
+          "festival-blockframes-demo"
+        ],
+        "crm": [
+          "crm-blockframes-demo"
+        ],
+        "financiers": [
+          "financiers-blockframes-demo"
+        ],
+        "cms": [
+          "cms-blockframes-demo"
+        ],
+        "waterfall": [
+          "waterfall-blockframes-demo-1"
         ]
       }
     }
