@@ -35,7 +35,13 @@
     <article *ngIf="hoveredTerritory" class="territory-card hovered-territory-card">
       <ul>
         <li><b>{{ hoveredTerritory.name }}</b></li>
-        <li class="mat-caption">{{ hoveredTerritory.data }}</li>
+        <ng-container *ngIf="hoveredTerritory.data else available">
+          <li><b>{{ hoveredTerritory.data.orgName }}</b></li>
+          <li class="mat-caption">{{ hoveredTerritory.data.termStatus }}</li>
+        </ng-container>
+        <ng-template #available>
+          <li class="mat-caption">Available</li>
+        </ng-template>
       </ul>
     </article>
 

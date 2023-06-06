@@ -14,13 +14,24 @@ import {
   Media,
   Territory,
   Organization,
-  externalOrgIdentifier
+  externalOrgIdentifier,
+  getTermDurationStatus
 } from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { TermService } from '@blockframes/contract/term/service';
 import { where } from 'firebase/firestore';
 import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell/shell.component';
 import { OrganizationService } from '@blockframes/organization/service';
+import { differenceInDays, differenceInMonths, differenceInYears } from 'date-fns';
+
+function getDateDifference(a: Date, b: Date) {
+  const yearDiff = differenceInYears(a, b);
+  if (yearDiff > 0) return { value: yearDiff, label: yearDiff === 1 ? 'year' : 'years' };
+  const monthDiff = differenceInMonths(a, b);
+  if (monthDiff > 0) return { value: monthDiff, label: monthDiff === 1 ? 'month' : 'months' };
+  const dayDiff = differenceInDays(a, b);
+  if (dayDiff > 0) return { value: dayDiff, label: dayDiff === 1 ? 'day' : 'days' };
+}
 
 @Component({
   selector: 'waterfall-title-sales',
@@ -44,7 +55,10 @@ export class SalesComponent {
 
   public hoveredTerritory: {
     name: string;
-    data: string;
+    data?: {
+      orgName: string;
+      termStatus: string;
+    };
   }
 
   public clickedTerritory: {
@@ -99,11 +113,31 @@ export class SalesComponent {
   /** Display the territories information in the tooltip */
   public displayTerritoryTooltip(territory: TerritorySoldMarker) {
     if (territory.data) {
-      const orgIds = Array.from(new Set(territory.data.filter(s => s.buyerId).map(s => s.buyerId)));
-      const orgs = this.orgsCache.filter(o => orgIds.includes(o.id));
-      this.hoveredTerritory = { name: territory.label, data: orgs.length ? orgs[0].name : externalOrgIdentifier };
+      const firstContract = territory.data.find(s => s.buyerId);
+      const org = this.orgsCache.find(o => firstContract.buyerId === o.id);
+      const orgName = org.name || externalOrgIdentifier;
+
+      const termsStatus = firstContract.terms.map(t => ({ duration: t.duration, status: getTermDurationStatus(t) }));
+
+      let termStatus = '';
+      const onGoingTerm = termsStatus.find(t => t.status === 'ongoing');
+      const endedTerm = termsStatus.find(t => t.status === 'past');
+      const notStartedTerm = termsStatus.find(t => t.status === 'future');
+      const now = new Date();
+      if (onGoingTerm) {
+        const infos = getDateDifference(onGoingTerm.duration.to, now);
+        termStatus = `Contract expires in ${infos.value} ${infos.label}`;
+      } else if (endedTerm) {
+        const infos = getDateDifference(now, endedTerm.duration.to);
+        termStatus = `Contract expired ${infos.value} ${infos.label} ago`;
+      } else {
+        const infos = getDateDifference(notStartedTerm.duration.from, now);
+        termStatus = `Contract begins in ${infos.value} ${infos.label}`;
+      }
+
+      this.hoveredTerritory = { name: territory.label, data: { orgName, termStatus } };
     } else {
-      this.hoveredTerritory = { name: territory.label, data: 'Available' };
+      this.hoveredTerritory = { name: territory.label };
     }
 
   }
