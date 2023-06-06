@@ -10,7 +10,7 @@ import {
   // cypress commands
   get,
   assertUrlIncludes,
-  interceptEmailGmail,
+  interceptEmail,
   snackbarShould,
   ensureInput,
   // helpers
@@ -56,7 +56,7 @@ describe('Password reset & change test', () => {
     assertUrlIncludes('auth/reset-password');
     ensureInput('email', user.email);
     get('reset').click();
-    interceptEmailGmail(`to:${user.email}`).then(mail => {
+    interceptEmail(`to:${user.email}`).then(mail => {
       const body = getTextBody(mail);
       const links = getBodyLinks(body);
       // because of E2E environement, we can only check if we received a reset link

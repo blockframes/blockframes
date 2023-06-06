@@ -13,7 +13,7 @@ import {
   checkMovieTunnelSideNav,
   saveTitle,
   assertMultipleTexts,
-  interceptEmailGmail,
+  interceptEmail,
   // helpers
   getSubject,
 } from '@blockframes/testing/cypress/browser';
@@ -46,7 +46,7 @@ import {
   update,
 } from '../../fixtures/dashboard/movie-tunnel';
 import { format } from 'date-fns';
-import { gmailSupport } from '@blockframes/utils/constants';
+import { e2eSupportEmail } from '@blockframes/utils/constants';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
@@ -297,7 +297,7 @@ describe('Movie tunnel', () => {
     get('end-button').click();
     assertUrlIncludes(`c/o/dashboard/title/${movie.id}/main`);
     get('titles-header-title').should('contain', movie.title.international) + ' edited';
-    interceptEmailGmail(`to:${gmailSupport}`).then(mail => {
+    interceptEmail(`to:${e2eSupportEmail}`).then(mail => {
       const subject = getSubject(mail);
       expect(subject).to.include(`${movie.title.international} edited was submitted by ${org.name}`);
       gmail.deleteEmail(mail.id);

@@ -12,7 +12,7 @@ import {
   // cypress specific functions
   addNewCompany,
   fillCommonInputs,
-  interceptEmailGmail,
+  interceptEmail,
   // firebase-utils
   validateOrg,
   snackbarShould,
@@ -33,7 +33,7 @@ import {
 } from '../../fixtures/authentification/signup-with-invitation';
 import { territories, orgActivity } from '@blockframes/model';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
-import { gmailSupport } from '@blockframes/utils/constants';
+import { e2eSupportEmail } from '@blockframes/utils/constants';
 
 const { org, orgAdmin, permissions } = dashboardData;
 const orgInvitationCode = 'E2eOrgInvitCode';
@@ -77,7 +77,7 @@ describe('Signup following an invitation', () => {
 
   it('User invited by an organization admin can signup', () => {
     const newUser = userWithJoinOrgInvitation;
-    cy.visit(`auth/identity?code=${orgInvitationCode}&email=${urlFriendlyEmail(newUser.email)}`);
+    cy.visit(`auth/identity?code=${orgInvitationCode}&email=${encodeURIComponent(newUser.email)}`);
     get('cookies').click();
     get('email').should('be.disabled').and('have.value', newUser.email);
     fillCommonInputs(newUser, false);
@@ -100,12 +100,12 @@ describe('Signup following an invitation', () => {
     get('row_1_col_2').should('contain', newUser.lastName);
     get('row_1_col_3').should('contain', newUser.email);
     get('row_1_col_5').should('contain', 'Member');
-    interceptEmailGmail(`to:${gmailSupport}`).then(mail => {
+    interceptEmail(`to:${e2eSupportEmail}`).then(mail => {
       const body = getTextBody(mail);
       expect(body).to.include(newUser.email);
       gmail.deleteEmail(mail.id);
     });
-    interceptEmailGmail(`to:${orgAdmin.email}`).then(mail => {
+    interceptEmail(`to:${orgAdmin.email}`).then(mail => {
       const subject = getSubject(mail);
       expect(subject).to.include(`${newUser.firstName} ${newUser.lastName} accepted your invitation to join ${org.name}`);
       gmail.deleteEmail(mail.id);
@@ -114,7 +114,7 @@ describe('Signup following an invitation', () => {
 
   it('User invited by an organization admin cannot signup if the form is invalid', () => {
     const newUser = userWithJoinOrgInvitation;
-    cy.visit(`auth/identity?code=${orgInvitationCode}&email=${urlFriendlyEmail(newUser.email)}`);
+    cy.visit(`auth/identity?code=${orgInvitationCode}&email=${encodeURIComponent(newUser.email)}`);
     get('cookies').click();
     get('submit').should('be.disabled');
     checkRequiredErrors(['first-name', 'last-name', 'password', 'password-confirm'], true);
@@ -141,7 +141,7 @@ describe('Signup following an invitation', () => {
 
   it('User invited by an organization admin cannot signup with an invalid code', () => {
     const newUser = userWithJoinOrgInvitation;
-    cy.visit(`auth/identity?code=${orgInvitationCode}&email=${urlFriendlyEmail(newUser.email)}`);
+    cy.visit(`auth/identity?code=${orgInvitationCode}&email=${encodeURIComponent(newUser.email)}`);
     get('cookies').click();
     get('submit').should('be.disabled');
     fillCommonInputs(newUser, false);
@@ -153,7 +153,7 @@ describe('Signup following an invitation', () => {
   it('User invited for an event can signup', () => {
     const newUser = userWithEventInvitation;
     const newOrg = userWithEventInvitationOrg;
-    cy.visit(`auth/identity?code=${meetingInvitationCode}&email=${urlFriendlyEmail(newUser.email)}`);
+    cy.visit(`auth/identity?code=${meetingInvitationCode}&email=${encodeURIComponent(newUser.email)}`);
     get('cookies').click();
     get('email').should('be.disabled').invoke('val').should('contain', newUser.email);
     fillCommonInputs(newUser, false);
@@ -179,17 +179,17 @@ describe('Signup following an invitation', () => {
     get('row_0_col_2').should('contain', newUser.lastName);
     get('row_0_col_3').should('contain', newUser.email);
     get('row_0_col_5').should('contain', 'Super Admin');
-    interceptEmailGmail(`to:${gmailSupport}`).then(mail => {
+    interceptEmail(`to:${e2eSupportEmail}`).then(mail => {
       const body = getTextBody(mail);
       expect(body).to.include(newUser.email);
       gmail.deleteEmail(mail.id);
     });
-    interceptEmailGmail(`to:${gmailSupport}`).then(mail => {
+    interceptEmail(`to:${e2eSupportEmail}`).then(mail => {
       const subject = getSubject(mail);
       expect(subject).to.include(`Archipel Market - ${newOrg.name} was created and needs a review`);
       gmail.deleteEmail(mail.id);
     });
-    interceptEmailGmail(`to:${newUser.email}`).then(mail => {
+    interceptEmail(`to:${newUser.email}`).then(mail => {
       const subject = getSubject(mail);
       expect(subject).to.include('Congratulations! Your organization was successfully created on Archipel Market');
       gmail.deleteEmail(mail.id);
@@ -209,9 +209,4 @@ function checkRequiredErrors(selectors: string[], focusAndBlur?: boolean) {
     }
     get(`${selector}-required`).should(focusAndBlur ? 'exist' : 'not.exist');
   }
-}
-
-function urlFriendlyEmail(email: string): string {
-  // when using cy.visit, Cypress transforms the + in a space. %2B ensure the + stays
-  return email.replace('+', '%2B');
 }

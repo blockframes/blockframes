@@ -5,12 +5,12 @@ import {
   get,
   check,
   // cypress tasks
-  interceptEmailGmail,
+  interceptEmail,
   // fixture data
   fakeUserData,
   getTextBody,
 } from '@blockframes/testing/cypress/browser';
-import { gmailSupport } from '@blockframes/utils/constants';
+import { e2eSupportEmail } from '@blockframes/utils/constants';
 
 const user = fakeUserData();
 
@@ -32,7 +32,7 @@ describe('Demo Request Email', () => {
     cy.get('@phoneInputs').last().type(user.phone);
     check('checkbox-newsletters');
     get('submit-demo-request').click();
-    interceptEmailGmail(`to:${gmailSupport}`).then(mail => {
+    interceptEmail(`to:${e2eSupportEmail}`).then(mail => {
       const body = getTextBody(mail);
       expect(body).to.include(user.email);
       gmail.deleteEmail(mail.id);

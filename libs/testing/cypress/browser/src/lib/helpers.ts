@@ -1,11 +1,12 @@
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { gmail_v1 } from 'googleapis';
 import faker from '@faker-js/faker';
+import { testDomain, testUsername } from '@blockframes/utils/constants';
 
 export const fakeUserData = () => {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
-  const email = 'ngermain+' + faker.internet.email(firstName, lastName, `cascade8.com`).toLowerCase();
+  const email = `${testUsername}+` + faker.internet.email(firstName, lastName, testDomain).toLowerCase();
   return {
     firstName,
     lastName,

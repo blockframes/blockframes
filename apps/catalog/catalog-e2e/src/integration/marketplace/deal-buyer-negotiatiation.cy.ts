@@ -9,7 +9,7 @@ import {
   connectUser,
   assertTableRowData,
   snackbarShould,
-  interceptEmailGmail,
+  interceptEmail,
   assertUrl,
   escapeKey,
   acceptCookies,
@@ -27,7 +27,7 @@ import {
   sellerNegotiation,
   bucket,
 } from '../../fixtures/shared/deal-shared-fixture';
-import { gmailSupport } from '@blockframes/utils/constants';
+import { e2eSupportEmail } from '@blockframes/utils/constants';
 import { capitalize } from '@blockframes/utils/helpers';
 import { add, sub } from 'date-fns';
 import { ContractStatus } from '@blockframes/model';
@@ -176,7 +176,7 @@ describe('Deal negotiation', () => {
 
 function checkConfirmationEmails(decision: ContractStatus) {
   for (const user of ['buyer', 'seller', 'admin']) {
-    interceptEmailGmail(`to:${mailData[user].recipient}`).then(mail => {
+    interceptEmail(`to:${mailData[user].recipient}`).then(mail => {
       const subject = getSubject(mail);
       expect(subject).to.eq(mailData[user].subject[decision]);
       return gmail.deleteEmail(mail.id);
@@ -232,7 +232,7 @@ const mailData = {
     },
   },
   admin: {
-    recipient: gmailSupport,
+    recipient: e2eSupportEmail,
     subject: {
       accepted: 'Contract accepted',
       declined: 'Contract declined',

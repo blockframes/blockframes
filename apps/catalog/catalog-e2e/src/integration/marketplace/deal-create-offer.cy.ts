@@ -15,7 +15,7 @@ import {
   connectUser,
   assertTableRowData,
   // cypress tasks
-  interceptEmailGmail,
+  interceptEmail,
   // helpers
   dateToMMDDYYYY,
   assertMultipleTexts,
@@ -24,7 +24,7 @@ import {
   getBodyLinks,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller } from '../../fixtures/marketplace/deal-create-offer';
-import { gmailSupport } from '@blockframes/utils/constants';
+import { e2eSupportEmail } from '@blockframes/utils/constants';
 import { add } from 'date-fns';
 
 const injectedData = {
@@ -389,12 +389,12 @@ function checkOfferEmail(user: 'buyer' | 'seller' | 'admin', docId?: string) {
       redirect: `c/o/dashboard/sales/${docId}`,
     },
     admin: {
-      recipient: gmailSupport,
+      recipient: e2eSupportEmail,
       subject: `${buyer.org.name} created a new Offer.`,
     },
   };
 
-  interceptEmailGmail(`to:${mailData[user].recipient}`).then(mail => {
+  interceptEmail(`to:${mailData[user].recipient}`).then(mail => {
     const subject = getSubject(mail)
     expect(subject).to.eq(mailData[user].subject);
     if (user !== 'admin') {

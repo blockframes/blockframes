@@ -78,7 +78,7 @@ export function assertInputValue(selector: string, expected: string) {
     .then(val => expect(val).to.eq(expected));
 }
 
-export function interceptEmailGmail(_query: string, twoMinutesLimit = true, loop = 0): Cypress.Chainable<gmail_v1.Schema$Message> {
+export function interceptEmail(_query: string, twoMinutesLimit = true, loop = 0): Cypress.Chainable<gmail_v1.Schema$Message> {
   const timeStamp2MinutesAgo = sub(new Date(), { minutes: 2 }).getTime();
   const twoMinutesAgo = Math.floor(timeStamp2MinutesAgo / 1000); //to allow checking multiple emails from a single flow (ex: offers)
   const query = _query + (twoMinutesLimit ? ` after:${twoMinutesAgo}` : '');
@@ -87,7 +87,7 @@ export function interceptEmailGmail(_query: string, twoMinutesLimit = true, loop
       if (loop > 20) throw new Error('No email found for this query, check node console for more data');
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve(interceptEmailGmail(_query, twoMinutesLimit, loop + 1));
+          resolve(interceptEmail(_query, twoMinutesLimit, loop + 1));
         }, 1000);
       });
     }

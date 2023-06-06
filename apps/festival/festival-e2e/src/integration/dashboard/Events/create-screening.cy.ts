@@ -10,7 +10,7 @@ import {
   check,
   // cypress dashboard specific cpmmands
   connectUser,
-  interceptEmailGmail,
+  interceptEmail,
   getByClass,
   //helpers
   getTextBody,
@@ -100,7 +100,7 @@ describe('Screenings', () => {
     get('missing-screener').should('exist');
     get('arrow-back').click();
     getEventSlot(futureSlot).should('contain', noScreenerTitle);
-    interceptEmailGmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
+    interceptEmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
     connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
@@ -115,7 +115,7 @@ describe('Screenings', () => {
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
     fillDashboardCalendarDetails({ movieId: screenerMovie.id, eventTitle, accessibility: 'private' });
-    interceptEmailGmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
+    interceptEmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
     connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
@@ -130,7 +130,7 @@ describe('Screenings', () => {
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
     fillDashboardCalendarDetails({ movieId: screenerMovie.id, eventTitle, accessibility: 'protected' });
-    interceptEmailGmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
+    interceptEmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
     connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
@@ -145,7 +145,7 @@ describe('Screenings', () => {
     selectSlot(futureSlot);
     fillDashboardCalendarPopin({ type: 'screening', title: eventTitle });
     fillDashboardCalendarDetails({ movieId: screenerMovie.id, eventTitle, accessibility: 'public', secret: true });
-    interceptEmailGmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
+    interceptEmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
     connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
@@ -166,7 +166,7 @@ describe('Screenings', () => {
       accessibility: 'private',
       invitee: marketplaceUser.email,
     });
-    interceptEmailGmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
+    interceptEmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
     connectUser(marketplaceUser.email);
     get('invitations-link').click();
     get('invitation').should('have.length', 1).and('contain', `${dashboardOrg.name} invited you to ${eventTitle}`);
@@ -183,7 +183,7 @@ describe('Screenings', () => {
       });
     get('invitation-accept').click();
     get('invitation-status').should('contain', 'Accepted');
-    interceptEmailGmail(`to:${dashboardUser.email}`).then(mail => {
+    interceptEmail(`to:${dashboardUser.email}`).then(mail => {
       const subject = getSubject(mail);
       expect(subject).to.eq(
         `${marketplaceUser.firstName} ${marketplaceUser.lastName} accepted your invitation to ${eventTitle} on Archipel Market`
@@ -202,7 +202,7 @@ describe('Screenings', () => {
     cy.wait(5000); // just to see in the e2e record if the video launched
   });
 
-  it('create today all day screening that unwilling invitee cannot attend', () => {
+  it.only('create today all day screening that unwilling invitee cannot attend', () => {
     const screenerTitle = screenerMovie.title.international;
     const todaySlot: EventSlot = { day: new Date().getDay(), hours: 1, minutes: 0 };
     const eventTitle = `Admin private screening / all day - ${screenerTitle}`;
@@ -215,15 +215,17 @@ describe('Screenings', () => {
       accessibility: 'private',
       invitee: marketplaceUser.email,
     });
-    interceptEmailGmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
+    interceptEmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
     connectUser(marketplaceUser.email);
     get('event-link').click();
     assertUrlIncludes('c/o/marketplace/event');
     verifyScreening({ title: eventTitle, accessibility: 'private', expected: true });
     get('invitation-refuse').click();
     get('invitation-status').should('contain', 'Invitation Declined');
-    /* decline mail takes around 4min to arrive for some reason => not testing it
-    interceptEmailGmail(`to:${dashboardUser.email}`).then(mail => {
+    /* decline mail takes around 4min to arrive for some reason => not testing it / issue #9253
+    asked for support :  https://support.google.com/mail/thread/218582078?hl=en&sjid=3056270844623701063-EU
+
+    interceptEmail(`to:${dashboardUser.email}`).then(mail => {
       const subject = getSubject(mail);
       expect(subject).to.eq(
         `${marketplaceUser.firstName} ${marketplaceUser.lastName} declined your invitation to ${eventTitle} on Archipel Market`
@@ -316,13 +318,11 @@ function fillDashboardCalendarDetails({
 }
 
 function checkInvitationEmail(eventTitle: string, invitee: string) {
-  return interceptEmailGmail(`to: ${invitee}`).then(mail => {
-    console.log(mail);
+  return interceptEmail(`to: ${invitee}`).then(mail => {
     const subject = getSubject(mail);
     expect(subject).to.eq(`You were invited to ${eventTitle} on Archipel Market`);
     const body = getTextBody(mail);
     const links = getBodyLinks(body);
-    //const invitationLink = links.filter(link => link.text === 'Answer Invitation')[0];
     cy.request({ url: links['Invitation'], failOnStatusCode: false }).then(response => {
       expect(response.redirects).to.have.lengthOf(1);
       const redirect = response.redirects[0];
@@ -331,9 +331,7 @@ function checkInvitationEmail(eventTitle: string, invitee: string) {
           .queryData<Invitation>({ collection: 'invitations', field: 'eventId', operator: '==', value: dbEvent.id })
           .then(([invitation]) => {
             expect(redirect).to.include('302');
-            expect(redirect).to.include(dbEvent.id);
-            expect(redirect).to.include(invitee.replace('@', '%40').replace('+', '%2B'));
-            expect(redirect).to.include(invitation.id);
+            expect(redirect).to.include(`/event/${dbEvent.id}/r/i?email=${encodeURIComponent(invitee)}&amp;i=${invitation.id}`);
           });
       });
     });

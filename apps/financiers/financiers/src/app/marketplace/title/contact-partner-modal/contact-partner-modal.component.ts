@@ -8,7 +8,7 @@ import { Campaign, Movie, MovieCurrency, Organization } from '@blockframes/model
 import { OrganizationService } from '@blockframes/organization/service';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { UserService } from '@blockframes/user/service';
-import { gmailSupport } from '@blockframes/utils/constants';
+import { e2eSupportEmail } from '@blockframes/utils/constants';
 import { templateIds } from '@blockframes/utils/emails/ids';
 import { SendgridService } from '@blockframes/utils/emails/sendgrid.service';
 import { ErrorResultResponse, getUserEmailData, OrgEmailData } from '@blockframes/model';
@@ -75,7 +75,7 @@ export class ContactPartnerModalComponent {
           const userEmail = toUser.email;
           // For e2e test purpose
           if (cyCheck) {
-            toUser = { ...toUser, email: gmailSupport };
+            toUser = { ...toUser, email: e2eSupportEmail };
           }
 
           const data = {

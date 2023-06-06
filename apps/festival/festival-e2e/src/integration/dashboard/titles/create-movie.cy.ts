@@ -17,7 +17,7 @@ import {
   saveTitle,
   escapeKey,
   assertMultipleTexts,
-  interceptEmailGmail,
+  interceptEmail,
   //helpers
   getSubject,
 } from '@blockframes/testing/cypress/browser';
@@ -512,7 +512,7 @@ describe('Movie tunnel', () => {
         assertUrlIncludes(`c/o/dashboard/title/${movie.id}/activity`);
       });
     get('titles-header-title').should('contain', movie.title.international);
-    interceptEmailGmail(`to:${user.email}`).then(mail => {
+    interceptEmail(`to:${user.email}`).then(mail => {
       const subject = getSubject(mail);
       expect(subject).to.eq(
         `${movie.title.international} was successfully published on the Archipel Market marketplace`
