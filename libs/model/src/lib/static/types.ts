@@ -49,7 +49,8 @@ import {
   releaseMedias,
   screenerTypes,
   territoriesISOA2,
-  rightholderRoles
+  rightholderRoles,
+  languagesISO3
 } from './static-model';
 
 export type App = typeof app[number];
@@ -98,6 +99,7 @@ export type HostedVideoType = keyof typeof hostedVideoTypes;
 export type InvitationType = keyof typeof invitationType;
 
 export type Language = keyof typeof languages;
+export type LanguageISO3 = keyof typeof languagesISO3;
 
 export type Media = keyof typeof medias;
 

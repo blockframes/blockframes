@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Optional, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { ActivatedRoute } from '@angular/router';
 import { Intercom } from 'ng-intercom';
@@ -13,6 +13,7 @@ import { CallableFunctions } from 'ngfire';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -20,7 +21,7 @@ import { RequestAskingPriceComponent } from '@blockframes/movie/components/reque
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieViewComponent {
+export class MarketplaceMovieViewComponent implements AfterViewInit {
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
@@ -64,6 +65,12 @@ export class MarketplaceMovieViewComponent {
     private cdr: ChangeDetectorRef,
     @Optional() private intercom: Intercom
   ) { }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      scrollIntoView(document.querySelector('#top'));
+    });
+  }
 
   public openIntercom(): void {
     return this.intercom.show();

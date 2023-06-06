@@ -288,7 +288,7 @@ export function wrongValueError<T = unknown>(value: T, name: string): ImportLog<
   const option: SpreadsheetImportError = {
     name: `Wrong ${name}`,
     reason: `${name} should be a value of the given list.`,
-    message: `Please check the corresponding sheet field for mistakes, be sure to select a value form the list.`,
+    message: 'Please check the corresponding sheet field for mistakes, be sure to select a value form the list.',
   };
   return new ImportError(value, option);
 }
@@ -389,9 +389,4 @@ export class ImportWarning<T> extends ImportLog<T> {
 
 export class WrongTemplateError<T> extends ImportLog<T> {
   public readonly type = 'error';
-  /**
-   * When present, should be shown as the only error even
-   * when there are many other errors.
-   */
-  public onlyErrorShown = true;
 }

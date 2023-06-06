@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
+﻿import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 import { RouteDescription } from '@blockframes/model';
 import { pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { ContactPartnerModalComponent, ContactPartnerModalData } from '../contact-partner-modal/contact-partner-modal.component';
+import { scrollIntoView } from '@blockframes/utils/browser/utils';
 
 @Component({
   selector: 'financiers-movie-view',
@@ -18,7 +19,7 @@ import { ContactPartnerModalComponent, ContactPartnerModalData } from '../contac
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieViewComponent {
+export class MarketplaceMovieViewComponent implements AfterViewInit {
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
 
   public movie$ = this.route.params.pipe(
@@ -69,6 +70,12 @@ export class MarketplaceMovieViewComponent {
     private dialog: MatDialog,
     public router: Router
   ) { }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      scrollIntoView(document.querySelector('#top'));
+    });
+  }
 
   openForm(orgs: Organization[], movie: Movie) {
     const form = new UntypedFormGroup({

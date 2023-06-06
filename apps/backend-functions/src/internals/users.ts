@@ -53,20 +53,36 @@ export const getOrInviteUserByMail = async (
 
     //if user exists but has no orgId and no invitation to any org, we still want to send him an invitation email
     const hasOrgOrOrgInvitation = await hasUserAnOrgOrIsAlreadyInvited([email]);
-    if (invitation.type === 'attendEvent' && !hasOrgOrOrgInvitation) {
-      const invitationTemplateId = templateIds.invitation.attendEvent.created;
-      if (invitation.mode === 'invitation' && eventData?.accessibility === 'public') {
-        invitationStatus = 'accepted';
-      }
-      await sendMailFromTemplate({
-        to: email,
-        templateId: invitationTemplateId,
-        data: {
-          event: eventData,
-          org: getOrgEmailData(invitation.fromOrg),
-          isInvitationReminder: true
+    if (!hasOrgOrOrgInvitation) {
+      if (invitation.type === 'attendEvent') {
+        const invitationTemplateId = templateIds.invitation.attendEvent.created;
+        if (invitation.mode === 'invitation' && eventData?.accessibility === 'public') {
+          invitationStatus = 'accepted';
         }
-      }, app)
+        await sendMailFromTemplate({
+          to: email,
+          templateId: invitationTemplateId,
+          data: {
+            event: eventData,
+            org: getOrgEmailData(invitation.fromOrg),
+            isInvitationReminder: true
+          }
+        }, app);
+      } else if (invitation.type === 'joinWaterfall') {
+        const invitationTemplateId = templateIds.invitation.joinWaterfall.created;
+        const urlToUse = applicationUrl[app];
+        const link = `c/o/dashboard/invitations`;
+        await sendMailFromTemplate({
+          to: email,
+          templateId: invitationTemplateId,
+          data: {
+            waterfall: waterfallData,
+            org: getOrgEmailData(invitation.fromOrg),
+            isInvitationReminder: true,
+            pageUrl: `${urlToUse}/${link}`,
+          }
+        }, app);
+      }
     }
 
     return {
