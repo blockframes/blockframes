@@ -5,7 +5,7 @@ import { testDomain, testUsername } from '@blockframes/utils/constants';
 
 export const fakeUserData = () => {
   const firstName = faker.name.firstName();
-  const lastName = faker.name.lastName();
+  const lastName = faker.name.lastName().replace(/[^A-Za-z]/g, ''); // removes any character that is not a letter
   const email = `${testUsername}+` + faker.internet.email(firstName, lastName, testDomain).toLowerCase();
   return {
     firstName,
