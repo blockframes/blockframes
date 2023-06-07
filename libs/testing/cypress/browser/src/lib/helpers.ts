@@ -4,8 +4,8 @@ import faker from '@faker-js/faker';
 import { testDomain, testUsername } from '@blockframes/utils/constants';
 
 export const fakeUserData = () => {
-  const firstName = faker.name.firstName();
-  const lastName = faker.name.lastName().replace(/[^A-Za-z]/g, ''); // removes any character that is not a letter
+  const firstName = toLettersOnly(faker.name.firstName());
+  const lastName = toLettersOnly(faker.name.lastName());
   const email = `${testUsername}+` + faker.internet.email(firstName, lastName, testDomain).toLowerCase();
   return {
     firstName,
@@ -60,6 +60,10 @@ export const titleCase = (str: string) =>
     .split(' ')
     .map(word => word[0].toUpperCase() + word.substring(1).toLowerCase())
     .join(' ');
+
+function toLettersOnly(name: string): string {
+  return name.replace(/[^A-Za-z]/g, '');
+}
 
 //* Extract function for Gmail API results
 
