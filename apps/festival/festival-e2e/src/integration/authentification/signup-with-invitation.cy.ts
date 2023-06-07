@@ -179,14 +179,10 @@ describe('Signup following an invitation', () => {
     get('row_0_col_2').should('contain', newUser.lastName);
     get('row_0_col_3').should('contain', newUser.email);
     get('row_0_col_5').should('contain', 'Super Admin');
+    interceptEmail(`subject:Archipel Market - ${newOrg.name} was created and needs a review`).then(mail => gmail.deleteEmail(mail.id));
     interceptEmail(`to:${e2eSupportEmail}`).then(mail => {
       const body = getTextBody(mail);
       expect(body).to.include(newUser.email);
-      gmail.deleteEmail(mail.id);
-    });
-    interceptEmail(`to:${e2eSupportEmail}`).then(mail => {
-      const subject = getSubject(mail);
-      expect(subject).to.include(`Archipel Market - ${newOrg.name} was created and needs a review`);
       gmail.deleteEmail(mail.id);
     });
     interceptEmail(`to:${newUser.email}`).then(mail => {
