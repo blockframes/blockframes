@@ -5,7 +5,7 @@ import { gsutilTransfer } from './commands';
 import { CI_ANONYMIZED_DATA, latestAnonStorageDir } from './utils';
 
 const isProdBucket = (bucketName: string) => {
-  return ['blockframes.appspot.com', firebaseProd().storageBucket].includes(bucketName);
+  return ['blockframes', firebaseProd().storageBucket].includes(bucketName);
 }
 
 export async function restoreAnonStorageFromCI() {
