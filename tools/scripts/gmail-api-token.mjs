@@ -5,24 +5,8 @@ import { fileURLToPath } from 'url';
 import { authenticate } from '@google-cloud/local-auth';
 
 //* Goal of this script
-/*
-If the email used for E2E changes, this script will retrieve the new token for Gmail-api
-
-Steps :
-1. go to https://console.cloud.google.com/apis (works best on Chrome)
-2. select the project gmail-api-project
-3. in the left side menu, select 'credentials'
-4. download the OAuth 2.0 Client IDs as a JSON
-5. rename the file credentials.json
-6. move this file to this script folder
-7. in a terminal in this script folder, launch : node ./tools/scripts/gmail-api-token.mjs
-8. a browser window opens, sign in with blockframes.dev email and authorize everything
-9. a file token.json will be created in this script folder
-10. copy the values from token.json to .env
-11. delete credentials.json and token.json
-12. update constants file : libs\utils\src\lib\constants.ts
-*/
-
+//If the email used for E2E changes, this script will retrieve the new token for Gmail-api
+//see https://www.notion.so/cascade8/Email-E2E-with-Gmail-API-d9d5d07a2a7b4ded851768655ce7c1b3
 
 // What you can do with the api will depend on the scopes you declare below.
 // see : https://developers.google.com/gmail/api/auth/scopes
