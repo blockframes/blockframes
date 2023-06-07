@@ -36,10 +36,10 @@ export async function getEmail(emailId: string): Promise<gmail_v1.Schema$Message
   return res.data;
 }
 
-export async function deleteEmail(emailId: string): Promise<string> {
+export async function deleteEmail(emailId: string): Promise<boolean> {
   const gmail = getGmail();
   await gmail.users.messages.delete({ userId: 'me', id: emailId });
-  return `email ${emailId} deleted`;
+  return true;
 }
 
 //* MISCELLANEOUS

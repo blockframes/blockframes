@@ -10,7 +10,7 @@ export const gmail = {
     return cy.task('getEmail', emailId);
   },
 
-  deleteEmail(emailId: string): Cypress.Chainable<string> {
+  deleteEmail(emailId: string): Cypress.Chainable<boolean> {
     return cy.task('deleteEmail', emailId);
   },
 };

@@ -118,7 +118,7 @@ function checkEmail(newcomer: Newcomer) {
       expect(redirect).to.include('302');
       // 2 parts check because we cannnot retrieve the invitation code (which is the auth password)
       expect(redirect).to.include('auth/identity?code');
-      expect(redirect).to.include(`email=${encodeURIComponent(user.email)}`);
+      expect(redirect).to.include(`&amp;email=${encodeURIComponent(user.email)}`);
     });
     return gmail.deleteEmail(mail.id);
   });

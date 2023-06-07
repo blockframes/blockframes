@@ -395,11 +395,11 @@ function checkOfferEmail(user: 'buyer' | 'seller' | 'admin', docId?: string) {
   };
 
   interceptEmail(`to:${mailData[user].recipient}`).then(mail => {
-    const subject = getSubject(mail)
+    const subject = getSubject(mail);
     expect(subject).to.eq(mailData[user].subject);
     if (user !== 'admin') {
-      const body = getTextBody(mail)
-      const links = getBodyLinks(body)
+      const body = getTextBody(mail);
+      const links = getBodyLinks(body);
       cy.request({ url: links[mailData[user].linkText], failOnStatusCode: false }).then(response => {
         expect(response.redirects).to.have.lengthOf(1);
         const redirect = response.redirects[0];

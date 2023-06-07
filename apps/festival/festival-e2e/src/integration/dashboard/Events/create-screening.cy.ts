@@ -202,7 +202,7 @@ describe('Screenings', () => {
     cy.wait(5000); // just to see in the e2e record if the video launched
   });
 
-  it.only('create today all day screening that unwilling invitee cannot attend', () => {
+  it('create today all day screening that unwilling invitee cannot attend', () => {
     const screenerTitle = screenerMovie.title.international;
     const todaySlot: EventSlot = { day: new Date().getDay(), hours: 1, minutes: 0 };
     const eventTitle = `Admin private screening / all day - ${screenerTitle}`;
