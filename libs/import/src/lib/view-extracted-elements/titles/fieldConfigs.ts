@@ -107,7 +107,7 @@ export interface FieldsConfig {
   soundFormat: SoundFormat;
   isOriginalVersionAvailable: boolean;
   languages: {
-    language: string;
+    language: Language;
     dubbed: boolean;
     subtitle: boolean;
     caption: boolean;

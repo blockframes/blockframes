@@ -9,7 +9,7 @@ import {
   keywordMovie,
   expectedSavedSearch,
 } from '../../fixtures/marketplace/search-title';
-import { productionStatus, festival, certifications, User } from '@blockframes/model';
+import { productionStatus, certifications, User } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -76,8 +76,9 @@ describe('Movie search in marketplace', () => {
     getByClass('mat-autocomplete-panel').find('mat-option').should('contain', saleOrg.name).click();
     get('save-filter').click();
     selectFilter('Genre');
-    get('genre').find('input').click();
+    get('filter-select').click();
     get(`option_${movie.genres[0]}`).click();
+    escapeKey();
     get('save-filter').click();
     selectFilter('Country of Origin');
     get('origin-countries').click();
@@ -85,8 +86,9 @@ describe('Movie search in marketplace', () => {
     escapeKey();
     get('save-filter').click();
     selectFilter('Language & Version');
-    get('language').find('input').click();
+    get('filter-select').click();
     get(`option_${Object.keys(movie.languages)[0]}`).click();
+    escapeKey();
     check('Dubs');
     get('save-filter').click();
     selectFilter('Production Status');
@@ -98,7 +100,9 @@ describe('Movie search in marketplace', () => {
     get('max-input').type(movie.release.year.toString());
     get('save-filter').click();
     selectFilter('Festival Selection');
-    get(festival[movie.prizes[0].name]).click();
+    get('filter-select').click();
+    get(`option_${movie.prizes[0].name}`).click();
+    escapeKey();
     get('save-filter').click();
     selectFilter('Qualifications');
     get(certifications[movie.certifications[0]]).click();
@@ -161,7 +165,9 @@ describe('Movie search in marketplace', () => {
     get('title-link').eq(0).click();
     get('search-input').type('E2E movie');
     get('titles-count').should('contain', twoTitlesSentence);
-    get('search-input').clear().type(`E2E ${movie.title.international.split(' ')[1]}`);
+    get('search-input')
+      .clear()
+      .type(`E2E ${movie.title.international.split(' ')[1]}`);
     get('titles-count').should('contain', oneTitleSentence);
     get(`movie-card_${movie.id}`).should('exist');
   });

@@ -5,7 +5,7 @@ import { getKeyIfExists } from '../helpers';
 
 type Matrix = any[][]; // @todo find better type
 
-export type FromStatic<S extends Scope> = GetKeys<S>[] | ValueWithError<GetKeys<S>[]>;
+type FromStatic<S extends Scope> = GetKeys<S>[] | ValueWithError<GetKeys<S>[]>;
 export interface SheetTab {
   name: string;
   index: number;
@@ -35,10 +35,9 @@ type DeepValue<T, K> =
 
 type ValueOrError<T, K> = DeepValue<T, K>;
 
-export type ParseFieldFn<T, K> = (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
+type ParseFieldFn<T, K> = (value: string | string[], entity: any, state: any[], rowIndex?: number) =>
   ValueOrError<T, K> |
-  Promise<ValueOrError<T, K>>
-  ;
+  Promise<ValueOrError<T, K>>;
 
 
 export type ExtractConfig<T> = Partial<{
@@ -80,7 +79,7 @@ export function importSpreadsheet(bytes: Uint8Array, range?: string): SheetTab[]
  * @param state all previous entities
  * @param item current entity (Title, Org, Contract, ...)
  */
-export async function parse<T>(
+async function parse<T>(
   state: any[],
   entity: any = {},
   item: any = {},
@@ -112,9 +111,8 @@ export async function parse<T>(
         const validResults = results.filter(r => !isValueWithError(r));
         item[field] = validResults;
 
-        const errorResults = results.filter(r => isValueWithError(r)) as ValueWithError[];
-        errors.push(...errorResults.map(e => e.error));
-        item[field].push(...errorResults.map(e => e.value));
+        const errorResults = results.filter(r => isValueWithError(r));
+        errors.push(...errorResults);
 
       } else {
         // Creating array at this field to which will be pushed the other sub fields
@@ -133,12 +131,7 @@ export async function parse<T>(
       if (last) {
         try {
           const result = await transform((`${value ?? ''}`).trim(), entity, state, rowIndex);
-          if (isValueWithError(result)) {
-            errors.push(result.error);
-            item[segment] = result.value;
-          } else {
-            item[segment] = result;
-          }
+          item[segment] = result;
         } catch (err) {
           if (err instanceof WrongTemplateError)
             throw err; //stops the recursive looping of parse ie, the excelColumnLoop.
@@ -170,7 +163,7 @@ export interface ValueWithErrorSimple<T = unknown> extends SpreadsheetImportErro
   value: T;
 }
 
-function isValueWithError(o: unknown): o is ValueWithError {
+function isValueWithError(o: unknown): boolean {
   return o instanceof ImportLog;
 }
 
