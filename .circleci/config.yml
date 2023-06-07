@@ -271,7 +271,7 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: gsutil -m cp -r "gs://blockframes.appspot.com/*" "gs://blockframes-ci-backups/storage-backup-$(date +%d-%m-%Y)/"
+      - run: gsutil -m cp -r "gs://blockframes/*" "gs://blockframes-ci-backups/storage-backup-$(date +%d-%m-%Y)/"
   backup-prod-db:
     executor: blockframes-ci
     environment:
@@ -321,7 +321,7 @@ jobs:
       - run: npm start upgradeEmulators
       - run:
           command: npx nx affected:e2e --configuration=emulator --exclude=catalog-e2e,crm-e2e,financiers-e2e,cms-e2e
-          no_output_timeout: 30m
+          no_output_timeout: 45m
       - store_test_results:
           path: dist/test-reports/
       - store_artifacts:
