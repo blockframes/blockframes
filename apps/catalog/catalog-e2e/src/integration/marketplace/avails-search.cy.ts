@@ -71,7 +71,6 @@ describe('Marketplace avails search', () => {
 
     it('Buyer can find an avail with the good inputs', () => {
       get('titles-count').then(([count]) => (titlesCount = count.innerText));
-      get('clear-filters').click(); // #8655 Force availsForm observabe to trigger when there is no params in URL
       searchAvailsForMovieTerm1();
       // keep the final search url to use in other tests as landing page, which saves time
       cy.url().then(url => (searchAvailsForTerm1Url = url));
