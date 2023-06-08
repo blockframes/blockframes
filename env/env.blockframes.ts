@@ -95,6 +95,8 @@ export const supportEmails = {
   waterfall: 'support@blockframes.io', // TODO #9257 change this
 }
 
+export const suffixE2ESupportEmail = undefined;
+
 export const mailchimp = {
   server: 'us4',
   listId: 'a537ee1f20'

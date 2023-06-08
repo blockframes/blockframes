@@ -35,7 +35,7 @@ import {
   WaterfallEmailData
 } from '@blockframes/model';
 import { format } from 'date-fns';
-import { supportMailosaur } from '@blockframes/utils/constants';
+import { e2eSupportEmail } from '@blockframes/utils/constants';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/identity';
@@ -48,7 +48,7 @@ const ADMIN_REVIEW_EVENT_PATH = '/c/o/dashboard/crm/event';
  * @param app
  */
 function getSupportEmail(app?: App) {
-  if (e2eMode) return supportMailosaur;
+  if (e2eMode) return e2eSupportEmail;
   if (app && !!supportEmails[app]) {
     return supportEmails[app]
   }

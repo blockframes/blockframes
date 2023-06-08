@@ -1,5 +1,5 @@
 import { auth } from '../testing-cypress';
-import { serverId } from '@blockframes/utils/constants';
+import { testUsername } from '@blockframes/utils/constants';
 import { User } from 'firebase/auth';
 
 export async function createUser(data: { uid: string; email: string; emailVerified: boolean; password: string }) {
@@ -29,7 +29,7 @@ export async function deleteAllTestUsers() {
   const users = list.users;
   const uids: string[] = [];
   for (const user of users) {
-    if (!user.email || user.email.includes(`@${serverId}.mailosaur.net`)) uids.push(user.uid);
+    if (!user.email || user.email.includes(testUsername)) uids.push(user.uid);
   }
   return await auth.deleteUsers(uids);
 }
