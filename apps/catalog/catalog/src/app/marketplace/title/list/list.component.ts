@@ -229,9 +229,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
 
     // Avails Form
-    if (savedSearch.avails) {
-      this.availsForm.hardReset(createAvailsSearch(savedSearch.avails));
-    } else this.availsForm.markAsTouched();
+    if (savedSearch.avails) this.availsForm.hardReset(createAvailsSearch(savedSearch.avails));
 
     this.analyticsService.addTitleFilter({ search: this.searchForm.value, avails: this.availsForm.value }, 'marketplace', 'filteredTitles', true);
   }
