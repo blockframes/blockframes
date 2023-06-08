@@ -56,6 +56,8 @@ export const supportEmails = {
   financiers: 'pldespaigne+financiers@cascade8.com'
 }
 
+export const suffixE2ESupportEmail = 'pl';
+
 export const mailchimp = {
   server: 'us20',
   listId: 'efaccd1d28'

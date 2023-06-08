@@ -3,6 +3,7 @@ import {
   adminAuth,
   browserAuth,
   firestore,
+  gmail,
   maintenance,
   // cypress specific functions
   refreshIfMaintenance,
@@ -10,9 +11,11 @@ import {
   get,
   assertUrlIncludes,
   interceptEmail,
-  deleteEmail,
   snackbarShould,
   ensureInput,
+  // helpers
+  getTextBody,
+  getBodyLinks,
 } from '@blockframes/testing/cypress/browser';
 import { user, org, permissions } from '../../fixtures/authentification/password-change';
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
@@ -53,11 +56,12 @@ describe('Password reset & change test', () => {
     assertUrlIncludes('auth/reset-password');
     ensureInput('email', user.email);
     get('reset').click();
-    interceptEmail({ sentTo: user.email }).then(mail => {
+    interceptEmail(`to:${user.email}`).then(mail => {
+      const body = getTextBody(mail);
+      const links = getBodyLinks(body);
       // because of E2E environement, we can only check if we received a reset link
-      const resetLink = mail.html.links.filter(link => link.text === 'Reset Password');
-      expect(resetLink).to.have.length(1);
-      return deleteEmail(mail.id);
+      expect(links['Password']).not.to.be.undefined;
+      gmail.deleteEmail(mail.id);
     });
   });
 

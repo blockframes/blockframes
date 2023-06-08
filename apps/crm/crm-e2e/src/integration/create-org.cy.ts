@@ -15,14 +15,18 @@ import {
   // plugins
   adminAuth,
   firestore,
+  gmail,
   maintenance,
   // cypress commands
   get,
   connectUser,
   assertUrl,
   interceptEmail,
-  deleteEmail,
   assertInputValue,
+  // helpers
+  getSubject,
+  getTextBody,
+  getBodyLinks,
 } from '@blockframes/testing/cypress/browser';
 import { admin, Newcomer, newcomers } from '../fixtures/create-org';
 
@@ -102,19 +106,21 @@ function createOrg(newcomer: Newcomer) {
 
 function checkEmail(newcomer: Newcomer) {
   const { org, user } = newcomer;
-  return interceptEmail({ sentTo: user.email }).then(mail => {
+  return interceptEmail(`to: ${user.email}`).then(mail => {
     const fromApp = `Archipel ${getOrgAppAccess(org).includes('festival') ? 'Market' : 'Content'}`;
-    expect(mail.subject).to.eq(`You've been invited to join ${org.name} on ${fromApp}`);
-    const activationLink = mail.html.links.filter(link => link.text === 'Activate Account')[0];
-    cy.request({ url: activationLink.href, failOnStatusCode: false }).then(response => {
+    const subject = getSubject(mail);
+    const body = getTextBody(mail);
+    const links = getBodyLinks(body);
+    expect(subject).to.eq(`You've been invited to join ${org.name} on ${fromApp}`);
+    cy.request({ url: links['Account'], failOnStatusCode: false }).then(response => {
       expect(response.redirects).to.have.lengthOf(1);
       const redirect = response.redirects[0];
       expect(redirect).to.include('302');
       // 2 parts check because we cannnot retrieve the invitation code (which is the auth password)
       expect(redirect).to.include('auth/identity?code');
-      expect(redirect).to.include(`&email=${user.email.replace('@', '%40')}`);
+      expect(redirect).to.include(`&amp;email=${encodeURIComponent(user.email)}`);
     });
-    return deleteEmail(mail.id);
+    return gmail.deleteEmail(mail.id);
   });
 }
 

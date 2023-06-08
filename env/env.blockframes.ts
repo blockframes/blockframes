@@ -88,6 +88,8 @@ export const supportEmails = {
   financiers: 'support@mediafinanciers.com'
 }
 
+export const suffixE2ESupportEmail = undefined;
+
 export const mailchimp = {
   server: 'us4',
   listId: 'a537ee1f20'
