@@ -19,6 +19,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { where } from 'firebase/firestore';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
+import { AlgoliaService } from '@blockframes/utils/algolia';
 
 @Component({
   selector: 'auth-identity',
@@ -50,6 +51,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     private router: Router,
     private invitationService: InvitationService,
     private orgService: OrganizationService,
+    private algoliaService: AlgoliaService,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     @Optional() private intercom: Intercom,
@@ -197,7 +199,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       this.isAnonymous = (await this.authService.user).isAnonymous;
 
       // Check if the org name is already existing
-      const orgId = await this.orgService.getOrgIdFromName(name);
+      const orgId = await this.algoliaService.getOrgIdFromName(name);
       if (orgId) {
         this.orgForm.get('name').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
@@ -340,7 +342,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const { name, addresses, activity, appAccess } = this.orgForm.value;
 
       // Check if the org name is already existing
-      const orgId = await this.orgService.getOrgIdFromName(name);
+      const orgId = await this.algoliaService.getOrgIdFromName(name);
       if (orgId) {
         this.orgForm.get('name').setErrors({ notUnique: true });
         this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
