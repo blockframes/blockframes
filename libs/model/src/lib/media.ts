@@ -6,7 +6,7 @@ import { privacies, Privacy } from './static';
  */
 export interface StorageFile {
   privacy: Privacy;
-  collection: 'movies' | 'users' | 'orgs' | 'campaigns' | 'cms/festival/home';
+  collection: 'movies' | 'users' | 'orgs' | 'campaigns' | 'cms/festival/home' | 'waterfall';
   docId: string;
   field: string;
   storagePath: string;
@@ -45,7 +45,7 @@ export interface FileMetaData {
   uid: string;
   fileId?: string; // unique id required for list of videos
   privacy: Privacy;
-  collection: 'users' | 'orgs' | 'movies' | 'campaigns';
+  collection: 'users' | 'orgs' | 'movies' | 'campaigns' | 'waterfall';
   docId: string;
   field: string;
   [K: string]: string; // extra-data

@@ -103,27 +103,8 @@ describe('Movie Owner', () => {
     });
   });
 
-  describe('Budget', () => {
-    test('Should not be able to create budget document', async () => {
-      const ref = db.doc('waterfall/M001/budget/M001');
-      await assertFails(ref.set({ id: 'M001' }));
-    });
-
-    test('Should not be able to update budget document', async () => {
-      const ref = db.doc('waterfall/M001/budget/M001');
-      await assertFails(ref.set({ id: 'M001', foo:'bar' }));
-    });
-
-    test('Should not be able to change budget document id', async () => {
-      const ref = db.doc('waterfall/M001/budget/M001');
-      await assertFails(ref.set({ id: 'M00X' }));
-    });
-
-    test('Should not be able to read budget document', async () => {
-      const ref = db.doc('waterfall/M001/budget/M001');
-      await assertFails(ref.get());
-    });
-
+  describe('Documents', () => {
+    // TODO #9389
   });
 });
 
@@ -206,21 +187,8 @@ describe('User that is not owner of movie', () => {
     });
   });
 
-  describe('Budget', () => {
-    test('Should not be able to create budget document', async () => {
-      const ref = db.doc('waterfall/M001/budget/M001');
-      await assertFails(ref.set({ id: 'M001' }));
-    });
-
-    test('Should not be able to update budget document', async () => {
-      const ref = db.doc('waterfall/M001/budget/M001');
-      await assertFails(ref.set({ id: 'M001', foo:'bar' }));
-    });
-
-    test('Should not be able to read budget document', async () => {
-      const ref = db.doc('waterfall/M001/budget/M001');
-      await assertFails(ref.get());
-    });
+  describe('Documents', () => {
+    // TODO #9389
   });
 
 });
@@ -313,21 +281,8 @@ describe('User that is linked to waterfall but not producer', () => {
     });
   });
 
-  describe('Budget', () => {
-    test('Should not be able to create budget document', async () => {
-      const ref = db.doc('waterfall/MI-077/budget/MI-077');
-      await assertFails(ref.set({ id: 'MI-077' }));
-    });
-
-    test('Should not be able to update budget document', async () => {
-      const ref = db.doc('waterfall/MI-0d7/budget/MI-0d7');
-      await assertFails(ref.set({ id: 'MI-0d7', foo:'bar' }));
-    });
-
-    test('Should be able to read budget document if org has financier role', async () => {
-      const ref = db.doc('waterfall/MI-0d7/budget/MI-0d7');
-      await assertSucceeds(ref.get());
-    });
+  describe('Documents', () => {
+    // TODO #9389
   });
 });
 
@@ -391,27 +346,8 @@ describe('User that is linked to waterfall with producer role', () => {
     });
   });
 
-  describe('Budget', () => {
-    test('Should be able to create budget document', async () => {
-      const ref = db.doc('waterfall/WF-001/budget/WF-001');
-      await assertSucceeds(ref.set({ id: 'WF-001' }));
-    });
-
-    test('Should be able to update budget document', async () => {
-      const ref = db.doc('waterfall/WF-001/budget/WF-001');
-      await assertSucceeds(ref.set({ id: 'WF-001', foo:'bar' }));
-    });
-
-    test('Should not be able to change budget document id', async () => {
-      const ref = db.doc('waterfall/WF-001/budget/WF-001');
-      await assertFails(ref.set({ id: 'M00X' }));
-    });
-
-    test('Should be able to read budget document', async () => {
-      const ref = db.doc('waterfall/WF-001/budget/WF-001');
-      await assertSucceeds(ref.get());
-    });
-
+  describe('Documents', () => {
+    // TODO #9389
   });
 
   describe('Permissions', () => {

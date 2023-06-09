@@ -1,6 +1,6 @@
 import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 import * as admin from 'firebase-admin';
-import { Block, Waterfall } from '@blockframes/model';
+import { Block, Waterfall, WaterfallDocument } from '@blockframes/model';
 import { waterfall } from '@blockframes/waterfall/main';
 import { getDocumentSnap, toDate } from '@blockframes/firebase-utils/firebase-utils';
 import { BlockframesChange } from '@blockframes/firebase-utils';
@@ -41,6 +41,9 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
     throw new Error('waterfall update function got invalid org data');
   }
 
+  // TODO #9389
+  // cleanWaterfallMedias(before, after);
+
   // If org is removed from waterfall document, we also remove permissions
   if (before.orgIds.length > after.orgIds.length) {
     const orgRemovedId = difference(before.orgIds, after.orgIds)[0];
@@ -48,3 +51,22 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
     return permission.ref.delete()
   }
 }
+
+export async function onWaterfallDocumentDelete(change: BlockframesChange<WaterfallDocument>) {
+  const before = change.before.data();
+
+  const waterfallSnap = await getDocumentSnap(`waterfall/${before.waterfallId}`);
+  const waterfall = waterfallSnap.data() as Waterfall;
+
+  const documents = waterfall.documents.filter(d => d.id !== before.id);
+
+  // This will trigger onWaterfallUpdate => cleanWaterfallMedias
+  return waterfallSnap.ref.update({ documents });
+}
+
+
+export const removeWaterfallFile = async (data: any, context: CallableContext) => {
+  //  TODO #9389 check caller's org with context.uid  and check ownerId === org.id;
+  // remove waterfall.document.find(d => d.id === documentId);
+  return;
+};
