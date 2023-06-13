@@ -59,7 +59,7 @@ async function createTerms(contractId: string, negotiation: Negotiation, tx: Fir
 
 async function createIncome(sale: Sale, negotiation: Negotiation, tx: FirebaseFirestore.Transaction) {
   const doc = db.doc(`incomes/${sale.id}`);
-  return tx.set(doc, {
+  return tx.set(doc, { // TODO see income-waterfall-tests
     status: 'pending',
     termsId: sale.parentTermId,
     price: negotiation.price,
