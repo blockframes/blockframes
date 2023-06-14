@@ -8,7 +8,7 @@ import { firstValueFrom } from 'rxjs';
 // Services
 import { MovieService } from '@blockframes/movie/service';
 import { Contract, Income, Movie, Negotiation } from '@blockframes/model';
-import { IncomeService } from '@blockframes/contract/income/service';
+import { IncomeService, incomeQuery } from '@blockframes/contract/income/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { TermService } from '@blockframes/contract/term/service';
 import { OfferService } from '@blockframes/contract/offer/service';
@@ -57,15 +57,15 @@ export class ContractFormComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const [contract, income, offer] = await Promise.all([
+    const [contract, incomes, offer] = await Promise.all([
       firstValueFrom(this.contracts$),
-      this.incomeService.getValue(this.contractId),
+      this.incomeService.getValue(incomeQuery(this.contractId)),
       this.offerService.getValue(this.offerId),
     ]);
     this.title = await this.titleService.getValue(contract.titleId);
     this.contract = contract;
     this.negotiation = contract.negotiation;
-    this.income = income;
+    this.income = incomes[0]; // only 1 income per offer
     this.currency = offer?.currency;
     this.form.hardReset({
       price: contract.negotiation.price,
@@ -75,7 +75,10 @@ export class ContractFormComponent implements OnInit {
   }
 
   async save() {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.snackbar.open('Invalid form. Please try again', 'close', { duration: 5000 });
+      return;
+    };
     const { terms, price } = this.form.value;
     const contractId = this.route.snapshot.params.contractId;
     const write = this.contractService.batch(); // create a batch
@@ -90,9 +93,7 @@ export class ContractFormComponent implements OnInit {
         this.contractService.update(contractId, { termIds }, { write })
       ];
       if (price !== this.income?.price) {
-        promises.push(
-          this.incomeService.update(contractId, { price }, { write })
-        );
+        promises.push(this.incomeService.update(this.income.id, { price }, { write }));
       }
       await Promise.all(promises);
     }

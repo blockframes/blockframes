@@ -12,9 +12,9 @@ import { getSeller } from '@blockframes/contract/contract/utils'
 import { OrganizationService } from '@blockframes/organization/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieService } from '@blockframes/movie/service';
-import { IncomeService } from '@blockframes/contract/income/service';
+import { IncomeService, incomeQuery } from '@blockframes/contract/income/service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { Contract, Term } from '@blockframes/model';
+import { Contract, Term, getTotalIncome } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 
@@ -57,7 +57,7 @@ export class ContractViewComponent {
         licensor: (contract: Contract) => this.orgService.valueChanges(getSeller(contract)),
         licensee: () => of('External'),
         title: (contract: Contract) => this.titleService.valueChanges(contract.titleId).pipe(map(title => title.title.international)),
-        price: (contract: Contract) => this.incomeService.valueChanges(contract.id)
+        totalIncome: (contract: Contract) => this.incomeService.valueChanges(incomeQuery(contract.id)).pipe(map(i => getTotalIncome(i)))
       })
     );
   }

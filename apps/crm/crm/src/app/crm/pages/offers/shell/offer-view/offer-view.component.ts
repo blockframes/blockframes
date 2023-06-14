@@ -73,8 +73,11 @@ export class OfferViewComponent implements OnDestroy, OnInit {
         const config = { write, params: { contractId: contract.id } };
         return this.negotiationService.update(contract.negotiation?.id, sale, config);
       }
-      contracts.map(updateContract);
-      contracts.map(updateNegotiation);
+      await Promise.all([
+        ...contracts.map(updateContract),
+        ...contracts.map(updateNegotiation)
+      ]);
+
       await write.commit();
       this.snackbar.open('Updated', '', { duration: 1000 });
     }
