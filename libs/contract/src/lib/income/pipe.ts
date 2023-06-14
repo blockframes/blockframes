@@ -2,6 +2,7 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { IncomeService, incomeQuery } from '@blockframes/contract/income/service';
 import { where } from 'firebase/firestore';
+import { of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 @Pipe({ name: 'getIncome', pure: true })
@@ -27,7 +28,7 @@ export class GetIncomesFromTitlePipe implements PipeTransform {
       where('type', '==', 'sale')
     ]).pipe(
       map(contracts => contracts.map(contract => contract.id)),
-      switchMap(contractIds => this.incomeService.valueChanges(incomeQuery(contractIds))),
+      switchMap(contractIds => contractIds?.length ? this.incomeService.valueChanges(incomeQuery(contractIds)) : of([])),
       map(incomes => incomes.filter(income => income))
     );
   }
