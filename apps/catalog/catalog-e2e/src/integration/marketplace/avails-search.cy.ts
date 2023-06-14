@@ -145,6 +145,7 @@ describe('Marketplace avails search', () => {
   context('Overlaps : term2 & 3 (medias), then term4 & 5 (territories)', () => {
     beforeEach(() => {
       cy.visit('c/o/marketplace/title');
+      get('clear-filters').click(); // #8655 Force availsForm observabe to trigger when there is no params in URL
       selectFilter('Avails');
     });
 
