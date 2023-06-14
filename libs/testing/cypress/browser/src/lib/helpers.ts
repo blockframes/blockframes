@@ -1,11 +1,12 @@
 import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
-import { serverId } from '@blockframes/utils/constants';
+import { gmail_v1 } from 'googleapis';
 import faker from '@faker-js/faker';
+import { testDomain, testUsername } from '@blockframes/utils/constants';
 
 export const fakeUserData = () => {
-  const firstName = faker.name.firstName();
-  const lastName = faker.name.lastName();
-  const email = faker.internet.email(firstName, lastName, `${serverId}.mailosaur.net`).toLowerCase();
+  const firstName = toLettersOnly(faker.name.firstName());
+  const lastName = toLettersOnly(faker.name.lastName());
+  const email = `${testUsername}+` + faker.internet.email(firstName, lastName, testDomain).toLowerCase();
   return {
     firstName,
     lastName,
@@ -59,3 +60,50 @@ export const titleCase = (str: string) =>
     .split(' ')
     .map(word => word[0].toUpperCase() + word.substring(1).toLowerCase())
     .join(' ');
+
+function toLettersOnly(name: string): string {
+  return name.replace(/[^A-Za-z]/g, '');
+}
+
+//* Extract function for Gmail API results
+
+export function getSubject(mail: gmail_v1.Schema$Message) {
+  const headers = mail.payload.headers;
+  const subjectHeader = headers.find(e => e.name === 'Subject');
+  return subjectHeader.value;
+}
+
+export function getTextBody(mail: gmail_v1.Schema$Message) {
+  const payload = mail.payload;
+  let body64: string;
+  if (payload.body.size) {
+    // email only contains plain text
+    body64 = payload.body.data;
+  } else {
+    if (payload.parts[0].body.size) {
+      // email with text and html
+      body64 = payload.parts[0].body.data;
+    } else {
+      // email with text, html and invitation
+      body64 = payload.parts[0].parts[0].body.data;
+    }
+  }
+  const body = Buffer.from(body64, 'base64').toString();
+  return body;
+}
+
+export function getBodyLinks(body: string): Record<string, string> {
+  // in the body as plain text, links appears between parenthesis
+  const linkRegex = /([^\s]+)\s*\(([^)]+)\)/g;
+  const links = {};
+
+  let match;
+  while ((match = linkRegex.exec(body))) {
+    // last word just before the opening parenthesis
+    const linkText = match[1].trim();
+    // url
+    const linkUrl = match[2].trim();
+    links[linkText] = linkUrl;
+  }
+  return links;
+}

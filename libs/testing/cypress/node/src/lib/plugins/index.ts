@@ -2,6 +2,7 @@ export * from './algolia';
 export * from './auth';
 export * from './firestore';
 export * from './festival';
+export * from './gmail';
 export * from './storage';
 
 export function log(message: any) {

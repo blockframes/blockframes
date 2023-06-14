@@ -5,6 +5,7 @@ import {
   algolia,
   browserAuth,
   firestore,
+  gmail,
   maintenance,
   // cypress commands
   get,
@@ -15,13 +16,15 @@ import {
   assertTableRowData,
   // cypress tasks
   interceptEmail,
-  deleteEmail,
   // helpers
   dateToMMDDYYYY,
   assertMultipleTexts,
+  getSubject,
+  getTextBody,
+  getBodyLinks,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller } from '../../fixtures/marketplace/deal-create-offer';
-import { supportMailosaur } from '@blockframes/utils/constants';
+import { e2eSupportEmail } from '@blockframes/utils/constants';
 import { add } from 'date-fns';
 
 const injectedData = {
@@ -376,32 +379,34 @@ function checkOfferEmail(user: 'buyer' | 'seller' | 'admin', docId?: string) {
     buyer: {
       recipient: buyer.user.email,
       subject: `Your offer ${docId} was successfully submitted`,
-      linkText: 'See Offer',
+      linkText: 'Offer',
       redirect: `c/o/marketplace/offer/${docId}`,
     },
     seller: {
       recipient: seller.user.email,
       subject: `You just received an offer for ${seller.movie.title.international} from ${buyer.org.name}`,
-      linkText: 'Start discussions',
+      linkText: 'discussions',
       redirect: `c/o/dashboard/sales/${docId}`,
     },
     admin: {
-      recipient: supportMailosaur,
+      recipient: e2eSupportEmail,
       subject: `${buyer.org.name} created a new Offer.`,
     },
   };
 
-  interceptEmail({ sentTo: mailData[user].recipient }).then(mail => {
-    expect(mail.subject).to.eq(mailData[user].subject);
+  interceptEmail(`to:${mailData[user].recipient}`).then(mail => {
+    const subject = getSubject(mail);
+    expect(subject).to.eq(mailData[user].subject);
     if (user !== 'admin') {
-      const offerLink = mail.html.links.filter(link => link.text === mailData[user].linkText)[0];
-      cy.request({ url: offerLink.href, failOnStatusCode: false }).then(response => {
+      const body = getTextBody(mail);
+      const links = getBodyLinks(body);
+      cy.request({ url: links[mailData[user].linkText], failOnStatusCode: false }).then(response => {
         expect(response.redirects).to.have.lengthOf(1);
         const redirect = response.redirects[0];
         expect(redirect).to.include('302');
         expect(redirect).to.include(mailData[user].redirect);
       });
     }
-    return deleteEmail(mail.id);
+    return gmail.deleteEmail(mail.id);
   });
 }
