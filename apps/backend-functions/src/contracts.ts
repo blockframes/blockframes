@@ -1,7 +1,7 @@
 import { db } from './internals/firebase';
 import { triggerNotifications } from './notification';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
-import { Organization, Notification, Sale, Contract, Negotiation, createInternalDocumentMeta, createNotification } from '@blockframes/model';
+import { Organization, Notification, Sale, Contract, Negotiation, createInternalDocumentMeta, createNotification, createIncome, Income, createTerm } from '@blockframes/model';
 import { queryDocument, getDocument, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 
 interface ContractNotificationType {
@@ -41,31 +41,30 @@ export async function onContractDelete(contractSnapshot: BlockframesSnapshot<Con
   console.log(`Contract ${contract.id} removed`);
 }
 
-async function deleteCurrentTerms(ref: FirebaseFirestore.Query) {
-  const currentTerms = await ref.get()
-  const deletions = currentTerms.docs.map(term => term.ref.delete());
-  return Promise.all(deletions);
-}
 
 async function createTerms(contractId: string, negotiation: Negotiation, tx: FirebaseFirestore.Transaction) {
   const termsCollection = db.collection('terms');
   const terms = negotiation.terms
-    .map(t => ({ ...t, contractId, id: termsCollection.doc().id }));
+    .map(t => createTerm({ ...t, contractId, id: termsCollection.doc().id }));
 
-  const createTerm = term => tx.create(termsCollection.doc(term.id), term);
-  await Promise.all(terms.map(createTerm));
+  const createTermDoc = term => tx.create(termsCollection.doc(term.id), term);
+  await Promise.all(terms.map(createTermDoc));
   return terms.map(datum => datum.id);
 }
 
-async function createIncome(sale: Sale, negotiation: Negotiation, tx: FirebaseFirestore.Transaction) {
-  const doc = db.doc(`incomes/${sale.id}`);
-  return tx.set(doc, { // TODO see income-waterfall-tests
+function createIncomeDoc(sale: Sale, negotiation: Negotiation, tx: FirebaseFirestore.Transaction) {
+  const incomesCollection = db.collection('incomes');
+  const income = createIncome({
+    id: incomesCollection.doc().id,
+    _meta: createInternalDocumentMeta({ createdFrom: 'catalog' }),
     status: 'pending',
-    termsId: sale.parentTermId,
+    contractId: sale.id,
+    termId: sale.parentTermId,
     price: negotiation.price,
     currency: negotiation.currency,
     offerId: sale.offerId
   });
+  return tx.create(incomesCollection.doc(income.id), income);
 }
 
 async function getContractNotifications(
@@ -131,30 +130,35 @@ export async function onContractUpdate(change: BlockframesChange<Sale>) {
   const statusHasChanged = contractBefore.status !== contractAfter.status // contract status has changed
   const { status, id } = contractAfter;
   const saleRef = change.after.ref;
-  const negotiationRef = saleRef.collection('negotiations').orderBy('_meta.createdAt', 'desc').limit(1);
-  const negotiation = await queryDocument<Negotiation>(negotiationRef)
+  const negotiationRef = saleRef.collection('negotiations').orderBy('_meta.createdAt', 'desc');
+  const negotiation = await queryDocument<Negotiation>(negotiationRef);
 
   if (!negotiation) return;
 
 
   if (isSale && statusHasChanged) {
-    const incomeDoc = db.doc(`incomes/${saleRef.id}`);
-    const termsCollection = db.collection('terms').where('contractId', '==', saleRef.id);
+    // Delete previous incomes and terms
+    const incomesRef = db.collection('incomes').where('contractId', '==', saleRef.id);
+    const incomesSnap = await incomesRef.get();
+
+    const termsRef = db.collection('terms').where('contractId', '==', saleRef.id);
+    const termsSnap = await termsRef.get();
 
     await Promise.all([
-      incomeDoc.delete(),
-      deleteCurrentTerms(termsCollection),
+      ...incomesSnap.docs.map(i => i.ref.delete()),
+      ...termsSnap.docs.map(t => t.ref.delete()),
       saleRef.update({ termIds: [] }),
       sendContractUpdatedNotification(contractBefore, contractAfter, negotiation)
     ]);
 
+    // Re-create income and terms
     if (status === 'accepted') {
       db.runTransaction(async tx => {
 
         const termIds = await createTerms(id, negotiation, tx);
-        await createIncome(contractAfter as Sale, negotiation, tx);
+        await createIncomeDoc(contractAfter as Sale, negotiation, tx);
         await tx.update(saleRef, { termIds });
-      })
+      });
     }
   }
 }

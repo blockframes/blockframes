@@ -6,8 +6,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { OfferService } from '@blockframes/contract/offer/service';
-import { IncomeService } from '@blockframes/contract/income/service';
-import { TermService } from '@blockframes/contract/term/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NegotiationService } from '@blockframes/contract/negotiation/service';
 import { Contract, staticModel } from '@blockframes/model';
@@ -34,8 +32,6 @@ export class OfferViewComponent implements OnDestroy, OnInit {
     private dialog: MatDialog,
     private offerService: OfferService,
     private contractService: ContractService,
-    private incomeService: IncomeService,
-    private termService: TermService,
     private snackbar: MatSnackBar,
     private negotiationService: NegotiationService
   ) { }
@@ -48,18 +44,6 @@ export class OfferViewComponent implements OnDestroy, OnInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-  }
-
-  private async handleDelete(id: string) {
-    this.contractService.runTransaction(async write => {
-      const snap = await write.get(this.contractService.getRef(id));
-      const contract = snap.data() as Contract;
-      return Promise.all([
-        this.termService.remove(contract.termIds, { write }),
-        this.incomeService.remove(id, { write }),
-        this.contractService.remove(id, { write }),
-      ]);
-    });
   }
 
   async update(offerId: string, contracts: Contract[]) {
@@ -112,7 +96,7 @@ export class OfferViewComponent implements OnDestroy, OnInit {
         confirm: 'Delete this right',
         confirmButtonText: 'Delete this right',
         cancel: 'Cancel',
-        onConfirm: () => this.handleDelete(id)
+        onConfirm: () => this.contractService.remove(id)
       }),
       autoFocus: false
     });

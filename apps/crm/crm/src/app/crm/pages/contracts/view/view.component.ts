@@ -17,6 +17,7 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
 import { Contract, Term, getTotalIncome } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { NavigationService } from '@blockframes/ui/navigation.service';
+import { TermService } from '@blockframes/contract/term/service';
 
 @Component({
   selector: 'contract-view',
@@ -39,6 +40,7 @@ export class ContractViewComponent {
     private route: ActivatedRoute,
     private snackbar: MatSnackBar,
     private incomeService: IncomeService,
+    private termService: TermService,
     private contractService: ContractService,
     private orgService: OrganizationService,
     private titleService: MovieService,
@@ -77,7 +79,7 @@ export class ContractViewComponent {
 
   private delete(term: Term) {
     this.contractService.update(term.contractId, (contract, write) => {
-      this.incomeService.remove(term.id, { write });
+      this.termService.remove(term.id, { write });
       return { termIds: contract.termIds.filter(id => id !== term.id) };
     })
   }

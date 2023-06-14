@@ -4,7 +4,7 @@ import { Intercom } from 'ng-intercom';
 import { joinWith } from 'ngfire';
 import { combineLatest, of, map, catchError } from 'rxjs';
 import { MovieService } from '@blockframes/movie/service';
-import { IncomeService } from '@blockframes/contract/income/service';
+import { IncomeService, incomeQuery } from '@blockframes/contract/income/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { getSeller } from '@blockframes/contract/contract/utils'
 import { deletedIdentifier, Sale } from '@blockframes/model';
@@ -69,7 +69,7 @@ export class SaleListComponent implements OnInit {
           return of(deletedIdentifier.title);
         })
       ),
-      price: (sale: Sale) => this.incomeService.valueChanges(sale.id),
+      incomes: (sale: Sale) => this.incomeService.valueChanges(incomeQuery(sale.id)),
     }),
   );
 
