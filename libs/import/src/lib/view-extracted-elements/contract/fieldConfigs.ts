@@ -129,7 +129,7 @@ export function getContractConfig(option: ContractConfig) {
               reason: 'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
               message: 'Please ensure that the Licensor name is not "Archipel Content". Only admin can import internal sales.',
             };
-            throw new ImportError(value, option)
+            throw new ImportError(value, option);
           };
           return centralOrgId.catalog;
         } else {
@@ -160,7 +160,7 @@ export function getContractConfig(option: ContractConfig) {
               reason: 'The Licensee name of a mandate must be "Archipel Content".',
               message: 'Please edit the corresponding sheet field',
             };
-            throw new ImportError(value, option)
+            throw new ImportError(value, option);
           }
           return centralOrgId.catalog;
         }
@@ -245,7 +245,7 @@ export function getContractConfig(option: ContractConfig) {
             return [data.contract.buyerId, ...stakeholders];
           } else { // external sale
             // if the sale is external the seller is not archipel (it's the owner org), and the buyer is unknown by definition
-            return [data.contract.sellerId, ...stakeholders]
+            return [data.contract.sellerId, ...stakeholders];
           }
         }
       },

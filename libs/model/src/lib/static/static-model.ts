@@ -399,7 +399,7 @@ export const languages = {
 
 // from ISO 639-3
 // Please keep languagesISO3' values in an alphabetic order and in sync with languages
-export const languagesISO3 = {
+export const languagesISO3: Record<keyof typeof languages, string> = {
   abkhaz: 'abk',
   afar: 'aar',
   afrikaans: 'afr',
