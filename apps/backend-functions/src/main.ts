@@ -33,7 +33,7 @@ import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
 import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
-import { buildWaterfall as _buildWaterfall, onWaterfallUpdate } from './waterfall';
+import { buildWaterfall as _buildWaterfall, onWaterfallDocumentDelete, onWaterfallUpdate, removeWaterfallFile } from './waterfall';
 import { projectId } from './environments/environment';
 
 console.log('Function instance loaded');
@@ -292,3 +292,13 @@ export const buildWaterfall = functions().https.onCall(skipInMaintenance(_buildW
  * Trigger: when a waterfall is updated
  */
 export const onWaterfallUpdateEvent = onDocumentUpdate('waterfall/{waterfallId}', onWaterfallUpdate);
+
+/**
+ * Trigger: when a waterfallDocument is deleted
+ */
+export const onWaterfallDocumentDeleteEvent = onDocumentCreate('waterfall/{waterfallId}/documents/{document}', onWaterfallDocumentDelete);
+
+/**
+ * When user wants to remove a file without removing waterfallDocument
+ */
+export const deleteWaterfallFile = functions().https.onCall(removeWaterfallFile);

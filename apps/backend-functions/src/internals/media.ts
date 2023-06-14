@@ -13,7 +13,9 @@ import {
   Slate,
   Privacy,
   Movie,
-  User
+  User,
+  WaterfallDocument,
+  WaterfallPermissions
 } from '@blockframes/model';
 import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
 
@@ -25,7 +27,7 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
 
   let userDoc = createPublicUser({ uid, email });
   const user = await getDocument<User>(`users/${uid}`);
-  if (user) { userDoc = createPublicUser(user);}
+  if (user) { userDoc = createPublicUser(user); }
 
   if ((!eventData || eventData?.accessibility === 'private') && !userDoc.orgId) {
     return false;
@@ -74,6 +76,18 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
         if (!movieSnap.exists) { return false; }
         const movie = await getDocument<Movie>(`movies/${file.docId}`);
         canAccess = movie.orgIds.some(id => userDoc.orgId === id);
+        break;
+      }
+    case 'waterfall':
+      {
+        const waterfallDocument = await getDocument<WaterfallDocument>(`waterfall/${file.docId}/documents/${file.id}`);
+        // If user is owner of doc or if shared with user's org
+        canAccess = waterfallDocument.ownerId === userDoc.orgId || waterfallDocument.sharedWith.includes(userDoc.orgId);
+        if(!canAccess) {
+          // If user is producer
+          const permissions = await getDocument<WaterfallPermissions>(`waterfall/${file.docId}/permissions/${userDoc.orgId}`);
+          canAccess = permissions.roles.includes('producer');
+        }
         break;
       }
     default:
