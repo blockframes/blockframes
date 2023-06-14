@@ -1,12 +1,21 @@
 import { privacies, Privacy } from './static';
 
+const collectionHoldingFiles = [
+  'orgs',
+  'users',
+  'movies',
+  'campaigns',
+  'waterfall'
+] as const;
+export type CollectionHoldingFile = typeof collectionHoldingFiles[number];
+
 /**
  * Representation of a storage file in our Firestore db.
  * @note this is not the same as the data needed to upload into the storage: `UploadData`
  */
 export interface StorageFile {
   privacy: Privacy;
-  collection: 'movies' | 'users' | 'orgs' | 'campaigns' | 'cms/festival/home' | 'waterfall';
+  collection: CollectionHoldingFile | 'cms/festival/home';
   docId: string;
   field: string;
   storagePath: string;
@@ -45,7 +54,7 @@ export interface FileMetaData {
   uid: string;
   fileId?: string; // unique id required for list of videos
   privacy: Privacy;
-  collection: 'users' | 'orgs' | 'movies' | 'campaigns' | 'waterfall';
+  collection: CollectionHoldingFile;
   docId: string;
   field: string;
   [K: string]: string; // extra-data

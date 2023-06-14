@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { createStorageFile, StorageFile } from '@blockframes/model';
-import { CollectionHoldingFile, FileLabel, getFileMetadata } from '../utils';
+import { createStorageFile, StorageFile, CollectionHoldingFile } from '@blockframes/model';
+import { FileLabel, getFileMetadata } from '../utils';
 import { getDownloadURL } from 'firebase/storage';
 import { FireStorage } from 'ngfire';
 

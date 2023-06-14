@@ -77,6 +77,7 @@ export interface WaterfallDocument<Meta extends WaterfallDocumentMeta = unknown>
 
 interface WaterfallBudget {
   // TODO #9389 add form data
+  value?: string;
 }
 
 interface WaterfallContract {
@@ -85,4 +86,5 @@ interface WaterfallContract {
 
 interface WaterfallFinancingPlan {
   // TODO #9389 add form data
+  value?: string;
 }
