@@ -1,20 +1,25 @@
+
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
+// Blockframes
+
 // Pages
-import { ContractsComponent } from './contracts.component';
+import { DocumentsComponent } from './documents.component';
 
 @NgModule({
-  declarations: [ContractsComponent],
+  declarations: [DocumentsComponent],
   imports: [
     CommonModule,
+
+    // Blockframes
 
     // Material
 
     // Routing
-    RouterModule.forChild([{ path: '', component: ContractsComponent }]),
+    RouterModule.forChild([{ path: '', component: DocumentsComponent }]),
   ],
 })
-export class ContractsModule { }
+export class DocumentsModule { }

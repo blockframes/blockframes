@@ -24,16 +24,8 @@ export class TitleViewComponent {
       label: 'Statements'
     },
     {
-      path: 'financing-plan',
-      label: 'Financing Plan'
-    },
-    {
-      path: 'budget',
-      label: 'Budget'
-    },
-    {
-      path: 'contracts',
-      label: 'Contracts'
+      path: 'documents',
+      label: 'Documents'
     },
     {
       path: 'waterfall',
