@@ -335,7 +335,7 @@ export function optionalWarning<T = unknown>(name: string, value?: T): ImportLog
   return new ImportWarning(value, option);
 }
 
-export function adminOnlyWarning<T = unknown>(value: T, name: string): ImportLog<T> {
+export function adminOnlyWarning<T = unknown>(value: T): ImportLog<T> {
   const option: SpreadsheetImportError = {
     reason: "This field is reserved for admins, it's value will be omitted.",
     message: 'Remove the corresponding sheet field to silence this warning.',

@@ -5,7 +5,6 @@ import { UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { joinWith } from 'ngfire';
-import { of } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 
 import { getSeller } from '@blockframes/contract/contract/utils'
@@ -14,7 +13,7 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieService } from '@blockframes/movie/service';
 import { IncomeService, incomeQuery } from '@blockframes/contract/income/service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { Contract, Term, getTotalIncome, externalOrgIdentifier } from '@blockframes/model';
+import { Contract, Term, getTotalIncome } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { TermService } from '@blockframes/contract/term/service';
@@ -57,7 +56,6 @@ export class ContractViewComponent {
     return this.contractService.valueChanges(saleId).pipe(
       joinWith({
         licensor: (contract: Contract) => this.orgService.valueChanges(getSeller(contract)),
-        licensee: () => of(externalOrgIdentifier),
         title: (contract: Contract) => this.titleService.valueChanges(contract.titleId).pipe(map(title => title.title.international)),
         totalIncome: (contract: Contract) => this.incomeService.valueChanges(incomeQuery(contract.id)).pipe(map(i => getTotalIncome(i)))
       })

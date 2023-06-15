@@ -2,9 +2,8 @@ import { where } from 'firebase/firestore';
 import { checkParentTerm, ContractsImportState, sheetHeaderLine, } from '@blockframes/import/utils';
 import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/service';
-import { UserService } from '@blockframes/user/service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { Contract, ContractType, Movie, Term } from '@blockframes/model';
+import { App, Contract, ContractType, Movie, Term } from '@blockframes/model';
 import {
   createMandate,
   createSale,
@@ -65,7 +64,7 @@ const getTitleContracts = (type: ContractType, titleId: string) => [
 
 async function getExistingContracts(type: 'sale', titleId: string, contractService: ContractService, termService: TermService): Promise<FullSale[]>;
 async function getExistingContracts(type: 'mandate', titleId: string, contractService: ContractService, termService: TermService): Promise<FullMandate[]>;
-async function getExistingContracts(type: 'sale' | 'mandate', titleId: string, contractService: ContractService, termService: TermService): Promise<(FullSale | FullMandate)[]> {
+async function getExistingContracts(type: ContractType, titleId: string, contractService: ContractService, termService: TermService): Promise<(FullSale | FullMandate)[]> {
   const query = getTitleContracts(type, titleId);
   const contracts = await contractService.getValue(query);
   const promises = contracts.map(contract => termService.getValue(contract.termIds))
@@ -87,7 +86,7 @@ async function verifyOverlappingMandatesAndSales(contract: Partial<Contract>, te
 }
 
 export interface FormatConfig {
-  isSeller: boolean;
+  app: App;
 }
 
 export async function formatContract(
@@ -96,7 +95,6 @@ export async function formatContract(
   titleService: MovieService,
   contractService: ContractService,
   termService: TermService,
-  userService: UserService,
   blockframesAdmin: boolean,
   userOrgId: string,
   config: FormatConfig
@@ -113,7 +111,6 @@ export async function formatContract(
     orgService,
     titleService,
     contractService,
-    userService,
     blockframesAdmin,
     userOrgId,
     caches,
@@ -121,7 +118,7 @@ export async function formatContract(
     separator: ';'
   };
 
-  const fieldsConfig = getContractConfig(option)
+  const fieldsConfig = getContractConfig(option);
 
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig, 11);
   for (const result of results) {
