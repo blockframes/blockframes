@@ -119,7 +119,7 @@ export function getContractConfig(option: ContractConfig) {
         if (!sellerId) {
           const seller = await orgService.getValue(value);
           if (!seller) throw unknownEntityError(value, 'Licensor Organization');
-          return sellerId = value;
+          sellerId = value;
         }
         return sellerId;
       },
@@ -241,7 +241,7 @@ export function getContractConfig(option: ContractConfig) {
           if (!sellerId) {
             const seller = await orgService.getValue(value);
             if (!seller) throw unknownEntityError(value, 'Licensor Organization');
-            return sellerId = value;
+            sellerId = value;
           }
           if (!blockframesAdmin && sellerId !== userOrgId) {
             const option: SpreadsheetImportError = {
