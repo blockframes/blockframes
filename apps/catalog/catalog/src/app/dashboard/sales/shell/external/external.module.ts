@@ -27,7 +27,7 @@ import { MatSelectModule } from '@angular/material/select';
     //Material
     MatDialogModule,
     MatSelectModule,
-    RouterModule.forChild([{ path: '', component: ExternalSaleComponent, }]),
+    RouterModule.forChild([{ path: '', component: ExternalSaleComponent }]),
   ]
 })
 export class ExternalSaleModule { }

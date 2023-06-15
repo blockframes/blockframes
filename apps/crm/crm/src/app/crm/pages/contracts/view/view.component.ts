@@ -5,7 +5,6 @@ import { UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { joinWith } from 'ngfire';
-import { of } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 
 import { getSeller } from '@blockframes/contract/contract/utils'
@@ -57,7 +56,6 @@ export class ContractViewComponent {
     return this.contractService.valueChanges(saleId).pipe(
       joinWith({
         licensor: (contract: Contract) => this.orgService.valueChanges(getSeller(contract)),
-        licensee: () => of('External'),
         title: (contract: Contract) => this.titleService.valueChanges(contract.titleId).pipe(map(title => title.title.international)),
         totalIncome: (contract: Contract) => this.incomeService.valueChanges(incomeQuery(contract.id)).pipe(map(i => getTotalIncome(i)))
       })

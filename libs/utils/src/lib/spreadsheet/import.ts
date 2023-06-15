@@ -101,7 +101,7 @@ async function parse<T>(
       if (last) {
         const promises = value.map(v => {
           try {
-            return transform(v, entity, state, rowIndex)
+            return transform(v, entity, state, rowIndex);
           } catch (err) {
             return Promise.resolve(err);
           }

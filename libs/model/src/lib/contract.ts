@@ -1,7 +1,7 @@
 import { Income, TotalIncome } from './income';
 import { DocumentMeta, createDocumentMeta } from './meta';
 import { Negotiation } from './negociation';
-import type { Media, Territory, ContractStatus } from './static';
+import type { Media, Territory, ContractStatus, ContractType } from './static';
 import { Duration, Term } from './terms';
 
 export interface Holdback {
@@ -13,7 +13,7 @@ export interface Holdback {
 export interface Contract {
   _meta: DocumentMeta;
   id: string;
-  type: 'mandate' | 'sale';
+  type: ContractType;
   status: ContractStatus;
   titleId: string;
   /** Parent term on which this contract is created */
