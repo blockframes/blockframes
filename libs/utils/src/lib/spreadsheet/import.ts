@@ -266,7 +266,7 @@ export function getStatic<S extends Scope>(scope: S, value: string, separator: s
 
 const isValueError = <S extends Scope>(values: FromStatic<S>): values is ValueWithError<GetKeys<S>[]> => {
   return (Array.isArray(values) && values.length === 0)
-    || (values as ValueWithError<GetKeys<S>[]>).value?.length === 0
+    || (values as ValueWithError<GetKeys<S>[]>).value?.length === 0;
 }
 
 export function getStaticList<S extends Scope>(scope: S, value: string, separator: string, name: string, mandatory = true, allKey = 'all'): GetKeys<S>[] {
