@@ -2,7 +2,6 @@ import { MovieService } from '@blockframes/movie/service';
 import { Movie, Organization, User, Mandate, Sale, Term } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
-import { centralOrgId } from '@env';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { UserService } from '@blockframes/user/service';
 import { where } from 'firebase/firestore';
@@ -66,10 +65,11 @@ export const sheetRanges: Record<SpreadsheetImportType, string> = {
 export async function getOrgId(
   name: string,
   orgService: OrganizationService,
-  cache: Record<string, string>
+  cache: Record<string, string>,
+  centralOrg: Organization
 ) {
   if (!name) return '';
-  if (name === 'Archipel Content' || name === centralOrgId.catalog) return centralOrgId.catalog;
+  if (name === centralOrg.name || name === centralOrg.id) return centralOrg.id;
 
   if (cache[name]) return cache[name];
 
@@ -216,7 +216,7 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
   return date;
 }
 
-export function outOfRangeDate(name: string): ImportLog<string> {
+function outOfRangeDate(name: string): ImportLog<string> {
   const option: SpreadsheetImportError = {
     name: `Invalid ${name}`,
     reason: 'The date seems too far away in the past or in the future.',
@@ -257,7 +257,7 @@ export function unknownEntityError<T = unknown>(value: T, name: string): ImportL
   return new ImportError(value, option);
 }
 
-export function noTitleError(name: string): ImportLog<string> {
+function noTitleError(name: string): ImportLog<string> {
   const option: SpreadsheetImportError = {
     name: 'Error on title name or ID',
     reason: `No title found with name/id "${name}".`,
@@ -266,7 +266,7 @@ export function noTitleError(name: string): ImportLog<string> {
   return new ImportError(name, option);
 }
 
-export function sameTitleNameError(name: string): ImportLog<string> {
+function sameTitleNameError(name: string): ImportLog<string> {
   const option: SpreadsheetImportError = {
     name: 'Error on title name or ID',
     reason: `Multiple titles with name "${name}" found.`,
@@ -275,7 +275,7 @@ export function sameTitleNameError(name: string): ImportLog<string> {
   return new ImportError(name, option);
 }
 
-export function orgWithNoTitleError(name: string): ImportLog<string> {
+function orgWithNoTitleError(name: string): ImportLog<string> {
   const option: SpreadsheetImportError = {
     name: 'Error on title name or ID',
     reason: `${name} does not belong to your org`,

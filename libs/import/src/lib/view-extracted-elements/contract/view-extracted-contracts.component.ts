@@ -13,6 +13,7 @@ import { App } from '@blockframes/model';
 import { formatContract } from './utils';
 import { ContractsImportState } from '../../utils';
 import { TermService } from '@blockframes/contract/term/service';
+import { centralOrgId } from '@env';
 
 @Component({
   selector: 'import-view-extracted-contracts[sheetTab]',
@@ -40,6 +41,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
   async ngOnInit() {
     const isBlockframesAdmin = await firstValueFrom(this.authService.isBlockframesAdmin$);
+    const centralOrg = await this.orgService.getValue(centralOrgId.catalog);
     const contractsToCreate = await formatContract(
       this.sheetTab,
       this.orgService,
@@ -48,7 +50,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       this.termsService,
       isBlockframesAdmin,
       this.authService.profile.orgId,
-      { app: this.app }
+      { app: this.app, centralOrg }
     );
     this.contractsToCreate$.next(new MatTableDataSource(contractsToCreate));
   }

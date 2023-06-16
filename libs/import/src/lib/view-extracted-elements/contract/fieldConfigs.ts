@@ -12,7 +12,6 @@ import {
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { centralOrgId } from '@env';
 import { getDate } from '@blockframes/import/utils';
 import { FormatConfig } from './utils';
 
@@ -115,7 +114,7 @@ export function getContractConfig(option: ContractConfig) {
       },
         /* c */ 'contract.sellerId': async (value: string) => {
         if (!value) throw mandatoryError(value, 'Licensor');
-        let sellerId = await getOrgId(value, orgService, orgNameCache);
+        let sellerId = await getOrgId(value, orgService, orgNameCache, config.centralOrg);
         if (!sellerId) {
           const seller = await orgService.getValue(value);
           if (!seller) throw unknownEntityError(value, 'Licensor Organization');
@@ -124,7 +123,7 @@ export function getContractConfig(option: ContractConfig) {
         return sellerId;
       },
         /* d */ 'contract.buyerId': (_, data: FieldsConfig) => {
-        return data.contract.type === 'mandate' ? centralOrgId.catalog : '';
+        return data.contract.type === 'mandate' ? config.centralOrg.id : '';
       },
         /* e */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
         /* f */ 'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
@@ -174,7 +173,7 @@ export function getContractConfig(option: ContractConfig) {
           if (value) throw unusedMandateIdWarning(value);
           return '';
         }
-        const isInternalSale = data.contract.sellerId === centralOrgId.catalog;
+        const isInternalSale = data.contract.sellerId === config.centralOrg.id;
         if (!value && isInternalSale) {
           throw mandatoryError(value, 'Mandate ID/Row');
         }
@@ -189,7 +188,7 @@ export function getContractConfig(option: ContractConfig) {
         const _value = value.split(separator).filter(v => !!v).map(v => v.trim());
 
         const stakeholders = await Promise.all(_value.map(async (orgIdOrName) => {
-          const stakeholderId = await getOrgId(orgIdOrName, orgService, orgNameCache);
+          const stakeholderId = await getOrgId(orgIdOrName, orgService, orgNameCache, config.centralOrg);
           if (stakeholderId) return stakeholderId;
           const stakeholder = await orgService.getValue(orgIdOrName);
           return stakeholder?.id;
@@ -228,16 +227,16 @@ export function getContractConfig(option: ContractConfig) {
           /**This is an admin template being imported in lieu of a seller template. */
           throw wrongTemplateError('admin');
         }
-        const isInternalSale = value === 'Archipel Content' || value === centralOrgId.catalog;
+        const isInternalSale = value === config.centralOrg.name || value === config.centralOrg.id;
         if (isInternalSale) {
           const option: SpreadsheetImportError = {
             name: 'Forbidden Licensor',
             reason: 'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
-            message: 'Please ensure that the Licensor name is not "Archipel Content".',
+            message: `Please ensure that the Licensor name is not "${config.centralOrg.name}".`,
           };
           throw new ImportError(value, option);
         } else {
-          let sellerId = await getOrgId(value, orgService, orgNameCache);
+          let sellerId = await getOrgId(value, orgService, orgNameCache, config.centralOrg);
           if (!sellerId) {
             const seller = await orgService.getValue(value);
             if (!seller) throw unknownEntityError(value, 'Licensor Organization');
@@ -307,7 +306,7 @@ export function getContractConfig(option: ContractConfig) {
         const _value = value.split(separator).filter(v => !!v).map(v => v.trim());
 
         const stakeholders = await Promise.all(_value.map(async (orgIdOrName) => {
-          const stakeholderId = await getOrgId(orgIdOrName, orgService, orgNameCache);
+          const stakeholderId = await getOrgId(orgIdOrName, orgService, orgNameCache, config.centralOrg);
           if (stakeholderId) return stakeholderId;
           const stakeholder = await orgService.getValue(orgIdOrName);
           return stakeholder?.id;
