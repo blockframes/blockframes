@@ -123,9 +123,13 @@ export async function getContract(
 
   if (cache[id]) return cache[id];
 
-  const contract = await contractService.getValue(id);
-  cache[id] = contract;
-  return contract;
+  try {
+    const contract = await contractService.getValue(id);
+    cache[id] = contract;
+    return contract;
+  } catch (err) {/**do nothing*/ }
+
+  return;
 }
 
 export async function checkParentTerm(
