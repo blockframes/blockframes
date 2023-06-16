@@ -1,10 +1,15 @@
 import { where } from 'firebase/firestore';
 import { checkParentTerm, ContractsImportState, sheetHeaderLine, } from '@blockframes/import/utils';
-import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { App, Contract, ContractType, Movie, Term } from '@blockframes/model';
 import {
+  App,
+  Contract,
+  ContractType,
+  isTermOverlappingExistingContracts,
+  Movie,
+  Organization,
+  Term,
   createMandate,
   createSale,
   Mandate,
@@ -13,8 +18,7 @@ import {
   User,
   Language,
   FullMandate,
-  FullSale,
-  territoryAvailabilities
+  FullSale
 } from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
@@ -67,26 +71,25 @@ async function getExistingContracts(type: 'mandate', titleId: string, contractSe
 async function getExistingContracts(type: ContractType, titleId: string, contractService: ContractService, termService: TermService): Promise<(FullSale | FullMandate)[]> {
   const query = getTitleContracts(type, titleId);
   const contracts = await contractService.getValue(query);
-  const promises = contracts.map(contract => termService.getValue(contract.termIds))
+  const promises = contracts.map(contract => termService.getValue(contract.termIds));
   const terms = await Promise.all(promises);
-  return contracts.map((contract, idx) => ({ ...contract, terms: terms[idx] }) as FullSale | FullMandate)
+  return contracts.map((contract, idx) => ({ ...contract, terms: terms[idx] }) as FullSale | FullMandate);
 }
 
 /**Verifies if terms overlap with existing mandate terms in the Db */
 async function verifyOverlappingMandatesAndSales(contract: Partial<Contract>, terms: Term[], contractService: ContractService, termService: TermService) {
-  const mandates = await getExistingContracts('mandate', contract.titleId, contractService, termService);
-  const sales = await getExistingContracts('sale', contract.titleId, contractService, termService);
-  const availabilities = terms.map(term => {
-    const data = { avails: term, mandates: [], sales, bucketContracts: [], existingMandates: mandates };
-    return territoryAvailabilities(data);
-  });
-  const sale = contract.type === 'sale' && availabilities.some(availability => availability.sold.length);
-  const mandate = contract.type === 'mandate' && availabilities.some(availability => availability.available.length);
+  const existingMandates = await getExistingContracts('mandate', contract.titleId, contractService, termService);
+  const existingSales = await getExistingContracts('sale', contract.titleId, contractService, termService);
+  const result = terms.map(term => isTermOverlappingExistingContracts({ term, existingSales, existingMandates }));
+
+  const sale = contract.type === 'sale' && result.some(r => r.sold);
+  const mandate = contract.type === 'mandate' && result.some(r => r.licensed);
   return { sale, mandate };
 }
 
 export interface FormatConfig {
   app: App;
+  centralOrg: Organization;
 }
 
 export async function formatContract(
@@ -144,7 +147,7 @@ export async function formatContract(
     const terms = (data.term ?? []).map(term => toTerm(term, contract.id, contractService.createId()));
 
     // for **internal** sales we should check the parentTerm
-    const isInternalSale = contract.type === 'sale' && contract.sellerId === centralOrgId.catalog;
+    const isInternalSale = contract.type === 'sale' && contract.sellerId === config.centralOrg.id;
     if (isInternalSale) {
       if (typeof data.parentTerm === 'number') {
         const mandate = contracts[data.parentTerm - sheetHeaderLine.contracts - 1]; // first line is the column names
