@@ -66,6 +66,7 @@ export class CreateComponent implements WaterfallFormGuardedComponent {
       ...this.movieForm.value,
       id: this.movieId,
       app: { waterfall },
+      productionStatus: 'released',
     });
 
     this.uploadService.upload();

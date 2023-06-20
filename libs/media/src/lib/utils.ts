@@ -1,12 +1,4 @@
-import { FileMetaData } from '@blockframes/model';
-
-const collectionHoldingFiles = [
-  'orgs',
-  'users',
-  'movies',
-  'campaigns'
-] as const;
-export type CollectionHoldingFile = typeof collectionHoldingFiles[number];
+import { CollectionHoldingFile, FileMetaData } from '@blockframes/model';
 
 const fileLabels = [
   // orgs
@@ -39,6 +31,9 @@ const fileLabels = [
   'budget',
   'financingPlan',
   'waterfall',
+
+  // waterfall
+  'documents'
 ] as const;
 export type FileLabel = typeof fileLabels[number];
 
@@ -70,6 +65,9 @@ const storagePaths: Record<CollectionHoldingFile, Partial<Record<FileLabel, stri
     financingPlan: 'files.financingPlan',
     waterfall: 'files.waterfall',
   },
+  waterfall: {
+    documents: 'documents'
+  }
 };
 
 export function getFileStoragePath(collection: CollectionHoldingFile, label: FileLabel, docId: string) {
@@ -109,6 +107,9 @@ export function getFileMetadata(collection: CollectionHoldingFile, label: FileLa
       financingPlan: { uid: '', privacy: 'public', collection, docId, field: 'files.financingPlan' },
       waterfall: { uid: '', privacy: 'public', collection, docId, field: 'files.waterfall' },
     },
+    waterfall: {
+      documents: { uid: '', privacy: 'protected', collection, docId, field: 'documents' },
+    }
   };
   return metadatas[collection][label];
 }

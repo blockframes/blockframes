@@ -69,6 +69,6 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
   public async removeOrg(waterfallId: string, orgId: string) {
     const waterfall = await this.getValue(waterfallId);
     const orgIds = waterfall.orgIds.filter(id => id !== orgId);
-    return this.update(waterfallId, { orgIds });
+    return this.update(waterfallId, { id: waterfallId, orgIds });
   }
 }

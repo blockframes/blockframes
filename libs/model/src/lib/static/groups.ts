@@ -23,7 +23,7 @@ export const mediaGroup: StaticGroup<'medias'>[] = [{
   label: 'Festivals',
   items: ['festival']
 }, {
-  label: 'Theatrical',
+  label: 'Theatrical Rights',
   items: ['theatrical', 'nonTheatrical']
 }];
 

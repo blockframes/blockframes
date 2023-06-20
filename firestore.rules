@@ -607,22 +607,34 @@ service cloud.firestore {
         allow delete: if false;
       }
 
-      match /budget/{budgetId} {
+      match /documents/{documentId} {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( hasWaterfallRole(waterfallId, 'producer') || hasWaterfallRole(waterfallId, 'financier'));
+          && ( 
+            userOrgId() in existingData().sharedWith ||
+            userOrgId() == existingData().ownerId || 
+            hasWaterfallRole(waterfallId, 'producer')
+          );
         allow create: if userHasValidOrg()
-          && isRequestFieldValueEqualToOrNotSetted(['id'], waterfallId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && hasWaterfallRole(waterfallId, 'producer');
+          && userOrgId() in getWaterfall(waterfallId).orgIds;
         allow update: if userHasValidOrg()
           && isNotUpdatingId('id', existingData().id)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && hasWaterfallRole(waterfallId, 'producer');
-        allow delete: if false;
+          && (
+            hasWaterfallRole(waterfallId, 'producer') ||
+            userOrgId() == existingData().ownerId
+          );
+        allow delete: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && (
+            hasWaterfallRole(waterfallId, 'producer') ||
+            userOrgId() == existingData().ownerId
+          );
       }
     }
 
