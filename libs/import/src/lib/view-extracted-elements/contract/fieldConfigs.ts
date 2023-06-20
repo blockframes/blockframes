@@ -2,12 +2,12 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import {
   adminOnlyWarning, alreadyExistError, checkParentTerm, getContract,
   getOrgId, getTitleId, ImportError, mandatoryError,
-  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError
+  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError, ImportWarning
 } from '@blockframes/import/utils';
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
   ContractStatus, ImportContractStatus, Language, Mandate, Media, Movie,
-  Sale, Territory, User, Duration, ContractType
+  Sale, Territory, User, Duration, ContractType, appName
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -122,7 +122,22 @@ export function getContractConfig(option: ContractConfig) {
         }
         return sellerId;
       },
-        /* d */ 'contract.buyerId': (_, data: FieldsConfig) => {
+        /* d */ 'contract.buyerId': async (value: string, data: FieldsConfig) => {
+        let buyerId = await getOrgId(value, orgService, orgNameCache, config.centralOrg);
+        if (!buyerId && value) {
+          const seller = await orgService.getValue(value);
+          if (!seller) throw unknownEntityError(value, 'Licensee Organization');
+          buyerId = value;
+        }
+        if (buyerId && buyerId !== config.centralOrg.id) {
+          const option: SpreadsheetImportError = {
+            name: `Licensee is not ${config.centralOrg.name}`,
+            reason: `If contract is imported for ${appName.catalog} app, the Licensee should be "${config.centralOrg.name}".`,
+            message: 'Please, verify this field.',
+          };
+          data.contract.buyerId = buyerId;
+          throw new ImportWarning(value, option);
+        };
         return data.contract.type === 'mandate' ? config.centralOrg.id : '';
       },
         /* e */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
