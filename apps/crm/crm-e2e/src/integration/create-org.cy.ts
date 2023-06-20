@@ -75,6 +75,7 @@ function createOrg(newcomer: Newcomer) {
   const { org, user } = newcomer;
   const apps = getOrgAppAccess(org);
   const [fromApp] = apps;
+  cy.visit(''); // Force local storage to reset. See https://docs.cypress.io/api/commands/clearlocalstorage
   get('orgs').click();
   assertUrl('c/o/dashboard/crm/organizations');
   get('create-org').click();
