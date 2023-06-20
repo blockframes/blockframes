@@ -22,7 +22,7 @@ export const mediaGroup: StaticGroup<'medias'>[] = [{
   label: 'Ancillary Rights',
   items: ['boats', 'inflight', 'hotels', 'educational']
 }, {
-  label: 'Video (DVD, BluRay)',
+  label: 'Video (DVD, Blu-Ray)',
   items: ['rental', 'through']
 }, {
   label: 'Festivals',
