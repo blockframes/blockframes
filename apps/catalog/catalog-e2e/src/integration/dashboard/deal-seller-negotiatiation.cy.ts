@@ -2,6 +2,7 @@ import {
   // plugins
   adminAuth,
   firestore,
+  gmail,
   maintenance,
   // cypress commands
   get,
@@ -10,15 +11,15 @@ import {
   snackbarShould,
   interceptEmail,
   assertUrl,
-  deleteEmail,
   escapeKey,
   acceptCookies,
   // helpers
   dateToMMDDYYYY,
+  getSubject,
 } from '@blockframes/testing/cypress/browser';
 //no need for a new fixture
 import { buyer, seller, offer, saleContract, buyerNegotiation, bucket } from '../../fixtures/shared/deal-shared-fixture';
-import { supportMailosaur } from '@blockframes/utils/constants';
+import { e2eSupportEmail } from '@blockframes/utils/constants';
 import { capitalize } from '@blockframes/utils/helpers';
 import { ContractStatus } from '@blockframes/model';
 
@@ -78,8 +79,7 @@ describe('Deal negotiation', () => {
     get('status-tag').should('contain', 'Accepted');
     //sales main page
     checkMainSalePage('accepted');
-    //emails & notifications creation
-    checkConfirmationEmails('accepted');
+    //notifications creation
     checkNotification('seller', 'accepted');
     //buyer's offers main page
     connectUser(buyer.user.email);
@@ -90,6 +90,8 @@ describe('Deal negotiation', () => {
     get('status-tag').should('contain', 'Accepted');
     get('row_0_col_4').should('contain', 'Accepted');
     checkNotification('buyer', 'accepted');
+    //checking emails
+    checkConfirmationEmails('accepted');
   });
 
   it('Seller declines the offer', () => {
@@ -115,8 +117,7 @@ describe('Deal negotiation', () => {
     get('status-tag').should('contain', 'Declined');
     //sales main page
     checkMainSalePage('declined');
-    //emails & notifications creation
-    checkConfirmationEmails('declined');
+    //notifications creation
     checkNotification('seller', 'declined');
     //buyer's offers main page
     connectUser(buyer.user.email);
@@ -127,6 +128,8 @@ describe('Deal negotiation', () => {
     get('status-tag').should('contain', 'Declined');
     get('row_0_col_4').should('contain', 'Declined');
     checkNotification('buyer', 'declined');
+    //checking emails
+    checkConfirmationEmails('declined');
   });
 
   it('Seller negotiates the offer', () => {
@@ -177,8 +180,7 @@ describe('Deal negotiation', () => {
     get('status-tag').should('contain', 'In Negotiation');
     //sales main page
     checkMainSalePage('negotiating');
-    //emails & notifications creation
-    checkConfirmationEmails('negotiating');
+    //notifications creation
     checkNotification('seller', 'negotiating');
     //buyer's offers main page
     connectUser(buyer.user.email);
@@ -200,8 +202,15 @@ describe('Deal negotiation', () => {
       'Yes',
       'French (Dubs, Subs, CC)',
     ]);
+    //checking emails
+    checkConfirmationEmails('negotiating');
     //accept
-    get('accept').click();
+    get('accept').click()
+      .then(() => {
+        // it will be the seller that accepts the counter offer
+        mailData.buyer.subject.accepted = 'You accepted an offer';
+        mailData.seller.subject.accepted = `Your offer for ${seller.movie.title.international} was just accepted!`;
+      });
     get('terms').click();
     get('confirm').click();
     snackbarShould('contain', `You accepted contract for ${seller.movie.title.international}`);
@@ -211,6 +220,8 @@ describe('Deal negotiation', () => {
     cy.visit('c/o/dashboard/sales');
     get('row_0_col_5').should('contain', '€15,000.00');
     get('row_0_col_6').should('contain', 'Accepted');
+    //checking emails
+    checkConfirmationEmails('accepted');
   });
 });
 
@@ -218,9 +229,10 @@ describe('Deal negotiation', () => {
 
 function checkConfirmationEmails(decision: ContractStatus) {
   for (const user of ['buyer', 'seller', 'admin']) {
-    interceptEmail({ sentTo: mailData[user].recipient, subject: mailData[user].subject[decision] }).then(mail => {
-      cy.log(`mail received by ${user} ${mailData[user].recipient}: ${mailData[user].subject[decision]}`);
-      return deleteEmail(mail.id);
+    interceptEmail(`to: ${mailData[user].recipient}`).then(mail => {
+      const subject = getSubject(mail);
+      expect(subject).to.include(mailData[user].subject[decision]);
+      return gmail.deleteEmail(mail.id);
     });
   }
 }
@@ -257,13 +269,13 @@ const mailData = {
   seller: {
     recipient: seller.user.email,
     subject: {
-      accepted: `You accepted an offer`,
+      accepted: 'You accepted an offer',
       declined: 'You declined an offer',
       negotiating: `Counter-offer for ${seller.movie.title.international} was successfully submitted`,
     },
   },
   admin: {
-    recipient: supportMailosaur,
+    recipient: e2eSupportEmail,
     subject: {
       accepted: 'Contract accepted',
       declined: 'Contract declined',
