@@ -399,7 +399,7 @@ export const languages = {
 
 // from ISO 639-3
 // Please keep languagesISO3' values in an alphabetic order and in sync with languages
-export const languagesISO3 = {
+export const languagesISO3: Record<keyof typeof languages, string> = {
   abkhaz: 'abk',
   afar: 'aar',
   afrikaans: 'afr',
@@ -657,7 +657,7 @@ export const languagesISO3 = {
   zulu: 'zul',
 };
 
-export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, BluRay)' | 'Festivals' | 'Theatrical';
+export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, BluRay)' | 'Festivals' | 'Theatrical Rights';
 
 export type TerritoryGroup =
   | 'Africa'
