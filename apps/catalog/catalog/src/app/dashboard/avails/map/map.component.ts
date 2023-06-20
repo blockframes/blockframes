@@ -86,7 +86,7 @@ export class DashboardAvailsMapComponent implements AfterViewInit, OnDestroy {
 
   /** Display the territories information in the tooltip */
   public displayTerritoryTooltip(territory: TerritoryValue, status: string) {
-    this.hoveredTerritory = { name: territory, status }
+    this.hoveredTerritory = { name: territory, status };
   }
 
   /** Clear the territories information */

@@ -47,3 +47,10 @@ export function createTerm(params: Partial<Term> = {}): Term {
 export function createDuration(params: Partial<Duration> = {}): Duration {
   return { from: decodeDate(params?.from), to: decodeDate(params?.to) };
 }
+
+export function getTermDurationStatus(term: Term): 'future' | 'past' | 'ongoing' {
+  const now = new Date().getTime();
+  if (now < term.duration.from.getTime()) return 'future';
+  if (now > term.duration.to.getTime()) return 'past';
+  return 'ongoing';
+}

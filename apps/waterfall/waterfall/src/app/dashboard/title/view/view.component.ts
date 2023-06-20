@@ -44,8 +44,8 @@ export class TitleViewComponent {
       label: 'Charts',
     },
     {
-      path: 'avails',
-      label: 'Avails',
+      path: 'sales',
+      label: 'World Sales',
     },
   ];
 

@@ -357,3 +357,5 @@ export const deletedIdentifier = {
   org: '(Deleted Org)',
   title: '(Deleted Title)'
 }
+
+export const externalOrgIdentifier = 'External';

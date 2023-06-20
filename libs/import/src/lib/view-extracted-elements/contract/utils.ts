@@ -4,7 +4,7 @@ import { centralOrgId } from '@env';
 import { MovieService } from '@blockframes/movie/service';
 import { UserService } from '@blockframes/user/service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { Contract, Movie, Term } from '@blockframes/model';
+import { Contract, ContractType, Movie, Term } from '@blockframes/model';
 import {
   createMandate,
   createSale,
@@ -57,7 +57,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termI
   };
 }
 
-const getTitleContracts = (type: 'mandate' | 'sale', titleId: string) => [
+const getTitleContracts = (type: ContractType, titleId: string) => [
   where('type', '==', type),
   where('titleId', '==', titleId),
   where('status', '==', 'accepted')

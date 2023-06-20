@@ -1,0 +1,101 @@
+@use '@angular/material' as mat;
+
+:host {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+}
+
+world-map {
+  height: 500px;
+  z-index: 0;
+  background-color: #CDD7FD;
+  border-radius: 4px;
+  margin-bottom: 16px;
+
+  .territory-card {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    padding: 12px;
+    background-color: #ffffff;
+    @include mat.elevation(1);
+    ul {
+      margin: 0;
+    }
+  }
+
+  .hovered-territory-card {
+    border-radius: 4px;
+  }
+
+  .clicked-territory-card {
+    width: 30%;
+    section {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      mat-icon {
+        margin-top: 4px;
+        width: 20px;
+        height: 20px;
+      }
+      h3 {
+        width: 100%;
+      }
+      button {
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        mat-icon {
+          width: 14px;
+        }
+      }
+    }
+
+    .territory-infos {
+      max-height: 360px;
+      overflow-y: scroll;
+      a {
+        margin: 24px 0px;
+      }
+
+      ul li:not(:last-child) {
+        margin-bottom: 4px;
+      }
+    }
+
+    mat-divider {
+      margin-bottom: 12px;
+    }
+  }
+
+  .colors-card {
+    position: absolute;
+    bottom: 32px;
+    left: 16px;
+    z-index: 2;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #434773;
+    @include mat.elevation(1);
+
+    mat-list-item {
+      height: 32px;
+    }
+
+    svg {
+      margin-right: 12px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+

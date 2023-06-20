@@ -7,7 +7,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { combineLatest, of, map } from 'rxjs';
 import { getSeller } from '@blockframes/contract/contract/utils'
-import { Income, Mandate, Negotiation, Sale, toLabel } from '@blockframes/model';
+import { Income, Mandate, Negotiation, Sale, externalOrgIdentifier, toLabel } from '@blockframes/model';
 import { orderBy, where } from 'firebase/firestore';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { format } from 'date-fns';
@@ -44,7 +44,7 @@ export class ContractsListComponent {
   private sales$ = this.contractService.valueChanges(saleQuery).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(org => org?.name)),
-      licensee: (sale: Sale) => sale.buyerId ? this.orgService.valueChanges(sale.buyerId).pipe(map(org => org?.name)) : of('External'),
+      licensee: (sale: Sale) => sale.buyerId ? this.orgService.valueChanges(sale.buyerId).pipe(map(org => org?.name)) : of(externalOrgIdentifier),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
       price: (sale: Sale) => this.incomeService.valueChanges(sale.id), // external sales
       negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id) // internal sales

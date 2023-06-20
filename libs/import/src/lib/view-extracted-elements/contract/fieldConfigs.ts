@@ -7,7 +7,7 @@ import {
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
   ContractStatus, ImportContractStatus, Language, Mandate, Media, Movie,
-  Sale, Territory, User, Duration
+  Sale, Territory, User, Duration, ContractType
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -20,7 +20,7 @@ import { FormatConfig } from './utils';
 export interface FieldsConfig {
   contract: {
     titleId: string;
-    type: 'mandate' | 'sale';
+    type: ContractType;
     sellerId: string;
     buyerId: string;
     id?: string;
@@ -118,7 +118,7 @@ export function getContractConfig(option: ContractConfig) {
         };
 
 
-        return lower.toLowerCase() as 'mandate' | 'sale';
+        return lower.toLowerCase() as ContractType;
       },
         /* c */ 'contract.sellerId': async (value: string) => {
         if (!value) throw mandatoryError(value, 'Licensor');
