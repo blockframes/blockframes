@@ -16,7 +16,7 @@ const firebaseConfig = {
   authDomain: 'blockframes.firebaseapp.com',
   databaseURL: 'https://blockframes.firebaseio.com',
   projectId: 'blockframes',
-  storageBucket: 'blockframes.appspot.com',
+  storageBucket: 'blockframes',
   messagingSenderId: '1080507348015'
 };
 
