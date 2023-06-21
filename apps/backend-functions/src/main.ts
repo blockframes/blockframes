@@ -34,7 +34,7 @@ import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
 import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
 import { buildWaterfall as _buildWaterfall, onWaterfallDocumentDelete, onWaterfallUpdate, removeWaterfallFile } from './waterfall';
-import { projectId } from './environments/environment';
+import { projectId, storageBucket } from './environments/environment';
 
 console.log('Function instance loaded');
 
@@ -250,7 +250,7 @@ export const requestFromOrgToAccessApp = functions().https.onCall(skipInMaintena
 
 export const onFileUpload = projectId === 'demo-blockframes' ?
   functions(heavyConfig).storage.bucket('blockframes-ci').object().onFinalize(skipInMaintenance(linkFile)) :
-  functions(heavyConfig).storage.object().onFinalize(skipInMaintenance(linkFile));
+  functions(heavyConfig).storage.bucket(storageBucket).object().onFinalize(skipInMaintenance(linkFile));
 
 /** Trigger: when an user ask for a private media. */
 export const getMediaToken = functions().https.onCall(skipInMaintenance(logErrors(_getMediaToken)));

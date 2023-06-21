@@ -16,7 +16,7 @@ const firebaseConfig = {
   authDomain: 'blockframes-staging.firebaseapp.com',
   databaseURL: 'https://blockframes-staging.firebaseio.com',
   projectId: 'blockframes-staging',
-  storageBucket: 'blockframes-staging.appspot.com',
+  storageBucket: 'blockframes-staging',
   messagingSenderId: '176629403574',
 };
 

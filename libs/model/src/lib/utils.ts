@@ -1,3 +1,4 @@
+import { addYears, subYears } from 'date-fns';
 import { Person } from './identity';
 import { LanguageRecord } from './movie';
 import { App, Scope, staticModel } from './static';
@@ -343,12 +344,18 @@ export function sum<T>(array: T[], getAmount?: (item: T) => number): number {
   return array.reduce((total, item) => total + cb(item as any), 0);
 }
 
+function createDateSetToMidnight() {
+  const date = new Date(); //--/--/--:--:--:--
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());//--/--/--:0:0:0:0
+}
+
 /**
  * Get the date of the decoded url and set it 
  */
 export function decodeDate(date: string | Date): Date {
-  if (!date || date === 'now') return new Date();
-  // Issue #8655: Add more date magic string later ('nextYear', 'lastYear', ...)
+  if (!date || date === 'now') return createDateSetToMidnight();
+  if (date === 'nextYear') return addYears(createDateSetToMidnight(), 1);
+  if (date === 'lastYear') return subYears(createDateSetToMidnight(), 1);
   return new Date(date);
 }
 

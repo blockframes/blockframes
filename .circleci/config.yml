@@ -272,7 +272,7 @@ jobs:
     executor: blockframes-ci
     steps:
       - prepare_environment
-      - run: gsutil -m cp -r "gs://blockframes.appspot.com/*" "gs://blockframes-ci-backups/storage-backup-$(date +%d-%m-%Y)/"
+      - run: gsutil -m cp -r "gs://blockframes/*" "gs://blockframes-ci-backups/storage-backup-$(date +%d-%m-%Y)/"
   backup-prod-db:
     executor: blockframes-ci
     environment:
