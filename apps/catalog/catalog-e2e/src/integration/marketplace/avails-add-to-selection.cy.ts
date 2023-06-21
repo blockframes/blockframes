@@ -66,6 +66,7 @@ describe('Marketplace : add to selection', () => {
       const { movie, term1 } = seller;
       const { from, to } = term1.duration;
       cy.visit('c/o/marketplace/title');
+      get('clear-filters').click(); // #8655 Force availsForm observabe to trigger when there is no params in URL
       get('add-to-bucket').eq(0).click();
       snackbarShould('contain', 'Please fill in your Avail Search Criteria first.');
       snackbarShould('not.exist');

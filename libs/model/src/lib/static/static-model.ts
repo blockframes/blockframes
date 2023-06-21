@@ -655,7 +655,7 @@ export const languagesISO3: Record<keyof typeof languages, string> = {
   zulu: 'zul',
 };
 
-export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, BluRay)' | 'Festivals';
+export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, Blu-Ray)' | 'Festivals';
 
 export type TerritoryGroup =
   | 'Africa'
