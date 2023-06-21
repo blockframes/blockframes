@@ -1,14 +1,15 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Blockframes
-import { ActivatedRoute } from '@angular/router';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
 import { TitleState, History, Waterfall, createIncome, action, Action } from '@blockframes/model';
-import { BehaviorSubject } from 'rxjs';
 import { BlockService } from '@blockframes/waterfall/block.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { TermService } from '@blockframes/contract/term/service';
 import { IncomeService } from '@blockframes/contract/income/service';
