@@ -5,6 +5,7 @@ import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { UserService } from '@blockframes/user/service';
 import { where } from 'firebase/firestore';
+import { TermService } from '@blockframes/contract/term/service';
 
 export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts'] as const;
 
@@ -50,7 +51,7 @@ export interface OrganizationsImportState extends ImportState {
  * It should always match the column names line in the excel files.
  * The org/titles/contract should then be directly under this line.
  */
-export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
+const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
   titles: 14,
   contracts: 10,
   organizations: 10,
@@ -58,7 +59,7 @@ export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
 
 export const sheetRanges: Record<SpreadsheetImportType, string> = {
   titles: `A${sheetHeaderLine.titles}:BZ1000`,
-  contracts: `A${sheetHeaderLine.contracts}:Q300`,
+  contracts: `A${sheetHeaderLine.contracts}:S300`,
   organizations: `A${sheetHeaderLine.organizations}:Z100`,
 };
 
@@ -69,7 +70,7 @@ export async function getOrgId(
   centralOrg: Organization
 ) {
   if (!name) return '';
-  if (name === centralOrg.name || name === centralOrg.id) return centralOrg.id;
+  if (name === centralOrg.name || name === centralOrg.id) return centralOrg.id; //
 
   if (cache[name]) return cache[name];
 
@@ -132,25 +133,22 @@ export async function getContract(
   return;
 }
 
-export async function checkParentTerm(
+export async function getTerm(
   id: string,
-  contractService: ContractService,
-  cache: Record<string, Mandate | Sale>
+  termService: TermService,
+  cache: Record<string, Term>
 ) {
-  if (!id) return undefined;
+  if (!id) return;
 
-  for (const contractId in cache) {
-    const isMandate = cache[contractId].type === 'mandate';
-    const containTerm = cache[contractId].termIds.includes(id);
-    if (isMandate && containTerm) return cache[id] as Mandate;
-  }
+  if (cache[id]) return cache[id];
 
-  const [contract] = await contractService.getValue([
-    where('type', '==', 'mandate'),
-    where('termIds', 'array-contains', id)
-  ]);
-  cache[contract.id] = contract;
-  return contract as Mandate;
+  try {
+    const term = await termService.getValue(id);
+    cache[id] = term;
+    return term;
+  } catch (err) {/**do nothing*/ }
+
+  return;
 }
 
 export async function getUser(
@@ -295,17 +293,6 @@ export function wrongValueError<T = unknown>(value: T, name: string): ImportLog<
     message: 'Please check the corresponding sheet field for mistakes, be sure to select a value form the list.',
   };
   return new ImportError(value, option);
-}
-
-export function unusedMandateIdWarning<T extends string>(value: T): ImportLog<T> {
-  const option: SpreadsheetImportError = {
-    field: 'parentTerm',
-    name: 'Unused Mandate ID/Row',
-    reason:
-      'Mandate ID is used only for sales contracts, here the value will be omitted because the contract is a mandate.',
-    message: 'Remove the corresponding sheet field to silence this warning.',
-  };
-  return new ImportWarning(value, option);
 }
 
 export function alreadyExistError<T = unknown>(value: T, name: string): ImportLog<T> {

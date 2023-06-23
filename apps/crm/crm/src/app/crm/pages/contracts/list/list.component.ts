@@ -44,7 +44,7 @@ export class ContractsListComponent {
   private sales$ = this.contractService.valueChanges(saleQuery).pipe(
     joinWith({
       licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(org => org?.name)),
-      licensee: (sale: Sale) => sale.buyerId ? this.orgService.valueChanges(sale.buyerId).pipe(map(org => org?.name)) : of('External'),
+      licensee: (sale: Sale) => sale.offerId ? this.orgService.valueChanges(sale.buyerId).pipe(map(org => org?.name)) : of('External'),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
       incomes: (sale: Sale) => this.incomeService.valueChanges(incomeQuery(sale.id)), // external sales
       negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id) // internal sales
@@ -54,7 +54,7 @@ export class ContractsListComponent {
   public contracts$ = combineLatest([
     this.mandates$,
     this.sales$
-  ]).pipe(map(([mandates, sales]) => ({ mandates, sales, externalSales: sales.filter(s => !s.buyerId) })));
+  ]).pipe(map(([mandates, sales]) => ({ mandates, sales, externalSales: sales.filter(s => !s.offerId) })));
 
   constructor(
     private contractService: ContractService,
@@ -91,7 +91,7 @@ export class ContractsListComponent {
       });
 
       const getPrice = (sale: DetailedContract) => {
-        if (sale.buyerId) {
+        if (sale.negotiation) {
           return `${sale.negotiation?.price || ''} ${sale.negotiation?.currency || ''}`;
         } else {
           const totalIncome = getTotalIncome(sale.incomes);
@@ -105,13 +105,13 @@ export class ContractsListComponent {
       contracts.sales.forEach(sale => {
         const row = {
           type: 'sale',
-          internal: sale.buyerId ? 'yes' : 'no',
+          internal: sale.offerId ? 'yes' : 'no',
           id: sale.id,
           date: format(sale._meta.createdAt, 'MM/dd/yyyy'),
           licensor: sale.licensor,
           licensee: sale.licensee,
           title: sale.title,
-          status: toLabel(sale.buyerId ? negotiationStatus(sale.negotiation) : sale.status, 'contractStatus'),
+          status: toLabel(sale.negotiation ? negotiationStatus(sale.negotiation) : sale.status, 'contractStatus'),
           price: getPrice(sale)
         };
 

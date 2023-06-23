@@ -14,22 +14,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { supportEmails } from '@env';
 
 function queryConstraints(orgId: string, options: { internal?: boolean }) {
-  if (options.internal) {
-    return [
-      where('buyerId', '!=', ''),
-      where('type', '==', 'sale'),
-      orderBy('buyerId', 'desc'),
-      where('stakeholders', 'array-contains', orgId),
-      orderBy('_meta.createdAt', 'desc')
-    ]
-  }
-
   return [
-    where('buyerId', '==', ''),
+    where('offerId', options.internal ? '!=' : '==', ''),
     where('type', '==', 'sale'),
     where('stakeholders', 'array-contains', orgId),
     orderBy('_meta.createdAt', 'desc')
-  ]
+  ];
 }
 
 const invalidTitleErrorMessage = `Some Offers are linked to invalid titles. Please contact ${supportEmails.catalog}.`;

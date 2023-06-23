@@ -12,7 +12,6 @@ import { QueryConstraint, where } from 'firebase/firestore';
 import { combineLatest, Subscription } from 'rxjs';
 import { map, throttleTime } from 'rxjs/operators';
 
-import { centralOrgId } from '@env';
 import { joinWith } from 'ngfire';
 import { MovieService } from '@blockframes/movie/service';
 import {
@@ -65,7 +64,7 @@ const saleQuery = (title: Movie): QueryConstraint[] => [
 ];
 
 const isCatalogSale = (sale: FullSaleWithIncome): boolean =>
-  sale.sellerId === centralOrgId.catalog && sale.status === 'accepted';
+  sale.offerId && sale.status === 'accepted';
 
 const saleCountAndTotalPrice = (title: JoinSaleTitleType) => {
   if (!title.sales) return title;

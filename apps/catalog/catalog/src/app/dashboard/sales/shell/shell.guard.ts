@@ -3,7 +3,6 @@ import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { map } from 'rxjs/operators';
-import { centralOrgId } from '@env';
 
 @Injectable({ providedIn: 'root' })
 export class CatalogSaleShellGuard implements CanActivate {
@@ -38,7 +37,7 @@ export class CatalogSaleGuard implements CanActivate {
     if (!saleId) this.router.parseUrl('c/o/dashboard/sales');
 
     return this.contractService.valueChanges(saleId).pipe(
-      map(sale => sale.sellerId === centralOrgId.catalog),
+      map(sale => !!sale.offerId),
       map(isInternal => isInternal || this.router.parseUrl(`c/o/dashboard/sales/${saleId}/external`)),
     );
   }

@@ -93,7 +93,6 @@ export class TableExtractedContractsComponent implements AfterViewInit {
   private async add(importState: ContractsImportState, { increment } = { increment: false }) {
     importState.importing = true;
     this.cdr.markForCheck();
-    importState.terms.forEach(t => t.id = this.termService.createId());
     importState.contract.termIds = importState.terms.map(t => t.id);
 
     if (increment) this.processing++;

@@ -1,19 +1,20 @@
 import { ContractService } from '@blockframes/contract/contract/service';
 import {
-  adminOnlyWarning, alreadyExistError, checkParentTerm, getContract,
+  adminOnlyWarning, alreadyExistError, getContract,
   getOrgId, getTitleId, ImportError, mandatoryError,
-  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError
+  unknownEntityError, wrongValueError, SpreadsheetImportError, wrongTemplateError, ImportWarning, getTerm
 } from '@blockframes/import/utils';
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
   ContractStatus, ImportContractStatus, Language, Mandate, Media, Movie,
-  Sale, Territory, User, Duration, ContractType
+  Sale, Territory, User, Duration, ContractType, appName, Term
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { getDate } from '@blockframes/import/utils';
 import { FormatConfig } from './utils';
+import { TermService } from '@blockframes/contract/term/service';
 
 export interface FieldsConfig {
   contract: {
@@ -25,9 +26,6 @@ export interface FieldsConfig {
     stakeholders: string[];
     status: string,
   };
-  income: {
-    price: number;
-  },
   term: {
     territories_included: Territory[];
     territories_excluded: Territory[];
@@ -38,9 +36,8 @@ export interface FieldsConfig {
     dubbed: Language[];
     subtitle: Language[];
     caption: Language[];
+    id?: string;
   }[];
-  parentTerm: string | number;
-  _titleId?: string;
 }
 
 export type FieldsConfigType = ExtractConfig<FieldsConfig>;
@@ -50,12 +47,14 @@ export interface Caches {
   titleCache: Record<string, Movie>,
   userCache: Record<string, User>,
   contractCache: Record<string, Mandate | Sale>,
+  termCache: Record<string, Term>,
 }
 
 interface ContractConfig {
   orgService: OrganizationService,
   titleService: MovieService,
   contractService: ContractService,
+  termService: TermService,
   blockframesAdmin: boolean,
   userOrgId: string,
   caches: Caches,
@@ -68,6 +67,7 @@ export function getContractConfig(option: ContractConfig) {
     orgService,
     titleService,
     contractService,
+    termService,
     blockframesAdmin,
     userOrgId,
     caches,
@@ -78,17 +78,12 @@ export function getContractConfig(option: ContractConfig) {
   const {
     orgNameCache,
     titleCache,
-    contractCache
+    contractCache,
+    termCache
   } = caches;
 
-
   /**
-   * #9408
-   * Used to import mandates (internal) and sales (internal/external) from CRM app.
-   * Licensor (contract.sellerId) : any org. 
-   *  If contract.sellerId == centralOrgId.catalog, will be considered as an internal sale
-   *  and parentTerm will be required.
-   * Licensee (contract.buyerId) : if mandate, can only be centralOrgId.catalog else, left empty
+   * Used to import internal mandates and sales from CRM app.
    */
   function getAdminConfig(): FieldsConfigType {
 
@@ -122,7 +117,22 @@ export function getContractConfig(option: ContractConfig) {
         }
         return sellerId;
       },
-        /* d */ 'contract.buyerId': (_, data: FieldsConfig) => {
+        /* d */ 'contract.buyerId': async (value: string, data: FieldsConfig) => {
+        let buyerId = await getOrgId(value, orgService, orgNameCache, config.centralOrg);
+        if (!buyerId && value) {
+          const seller = await orgService.getValue(value);
+          if (!seller) throw unknownEntityError(value, 'Licensee Organization');
+          buyerId = value;
+        }
+        if (buyerId && buyerId !== config.centralOrg.id) { // TODO #9419
+          const option: SpreadsheetImportError = {
+            name: `Licensee is not ${config.centralOrg.name}`,
+            reason: `If contract is imported for ${appName.catalog} app, the Licensee should be "${config.centralOrg.name}".`,
+            message: 'Please, verify this field.',
+          };
+          data.contract.buyerId = buyerId;
+          throw new ImportWarning(value, option);
+        };
         return data.contract.type === 'mandate' ? config.centralOrg.id : '';
       },
         /* e */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
@@ -168,23 +178,7 @@ export function getContractConfig(option: ContractConfig) {
         if (exist) throw alreadyExistError(value, 'Contract ID');
         return value;
       },
-        /* q */ 'parentTerm': async (value: string, data: FieldsConfig) => {
-        if (data.contract.type === 'mandate') {
-          if (value) throw unusedMandateIdWarning(value);
-          return '';
-        }
-        const isInternalSale = data.contract.sellerId === config.centralOrg.id;
-        if (!value && isInternalSale) {
-          throw mandatoryError(value, 'Mandate ID/Row');
-        }
-        const isId = isNaN(Number(value));
-        if (isId) {
-          const exist = await checkParentTerm(value, contractService, contractCache);
-          if (!exist) throw unknownEntityError(value, 'Mandate ID');
-          return value;
-        } else return Number(value);
-      },
-        /* r */ 'contract.stakeholders': async (value: string, data: FieldsConfig) => {
+        /* q */ 'contract.stakeholders': async (value: string, data: FieldsConfig) => {
         const _value = value.split(separator).filter(v => !!v).map(v => v.trim());
 
         const stakeholders = await Promise.all(_value.map(async (orgIdOrName) => {
@@ -202,11 +196,16 @@ export function getContractConfig(option: ContractConfig) {
           return Array.from(new Set([data.contract.sellerId, ...stakeholders]));
         }
       },
+      /* r */ 'term[].id': async (value: string) => {
+        if (!value) return termService.createId();
+        const exist = await getTerm(value, termService, termCache);
+        if (exist) throw alreadyExistError(value, 'Term ID');
+        return value;
+      },
     };
   }
 
   /**
-   * #9408
    * Used only to import external sales from catalog app.
    * Licensor (contract.sellerId) : if not blockframesAdmin, licensor must be same orgId as current user. 
    * Licensee (contract.buyerId) : is left empty
@@ -227,31 +226,22 @@ export function getContractConfig(option: ContractConfig) {
           /**This is an admin template being imported in lieu of a seller template. */
           throw wrongTemplateError('admin');
         }
-        const isInternalSale = value === config.centralOrg.name || value === config.centralOrg.id;
-        if (isInternalSale) {
+
+        let sellerId = await getOrgId(value, orgService, orgNameCache, config.centralOrg);
+        if (!sellerId) {
+          const seller = await orgService.getValue(value);
+          if (!seller) throw unknownEntityError(value, 'Licensor Organization');
+          sellerId = value;
+        }
+        if (!blockframesAdmin && sellerId !== userOrgId) {
           const option: SpreadsheetImportError = {
             name: 'Forbidden Licensor',
-            reason: 'Internal sales don\'t need to be imported and will appear automatically on your dashboard.',
-            message: `Please ensure that the Licensor name is not "${config.centralOrg.name}".`,
+            reason: 'The Licensor name should be your organization name.',
+            message: 'Please edit the corresponding sheet field',
           };
           throw new ImportError(value, option);
-        } else {
-          let sellerId = await getOrgId(value, orgService, orgNameCache, config.centralOrg);
-          if (!sellerId) {
-            const seller = await orgService.getValue(value);
-            if (!seller) throw unknownEntityError(value, 'Licensor Organization');
-            sellerId = value;
-          }
-          if (!blockframesAdmin && sellerId !== userOrgId) {
-            const option: SpreadsheetImportError = {
-              name: 'Forbidden Licensor',
-              reason: 'The Licensor name should be your organization name.',
-              message: 'Please edit the corresponding sheet field',
-            };
-            throw new ImportError(value, option);
-          };
-          return sellerId;
-        }
+        };
+        return sellerId;
       },
         /* c */ 'contract.buyerId': () => {
         return '';

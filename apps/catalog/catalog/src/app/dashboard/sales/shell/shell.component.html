@@ -2,7 +2,7 @@
   <header fxLayout="column" fxLayoutAlign="start start">
 
     <!-- Internal -->
-    <ng-container *ngIf="sale.sellerId === centralOrgId.catalog; else externalSale">
+    <ng-container *ngIf="sale.offerId; else externalSale">
       <div fxLayout fxlayoutAlign="space-between center">
         <bf-tag *ngIf="sale.negotiation" test-id="status-tag">
           {{ sale.negotiation | negotiationStatus | toLabel: 'contractStatus' }}

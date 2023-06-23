@@ -1,5 +1,5 @@
 import { where } from 'firebase/firestore';
-import { checkParentTerm, ContractsImportState, sheetHeaderLine, } from '@blockframes/import/utils';
+import { ContractsImportState } from '@blockframes/import/utils';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import {
@@ -18,14 +18,15 @@ import {
   User,
   Language,
   FullMandate,
-  FullSale
+  FullSale,
+  createTerm
 } from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getContractConfig } from './fieldConfigs';
 import { TermService } from '@blockframes/contract/term/service';
 
-function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string): Term {
+function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string) {
 
   const { medias, duration, territories_excluded = [], territories_included = [], exclusive, licensedOriginal } = rawTerm;
 
@@ -47,7 +48,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termI
 
   const id = termId;
 
-  return {
+  return createTerm({
     id,
     languages,
     contractId,
@@ -57,7 +58,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termI
     exclusive,
     licensedOriginal,
     criteria: [],
-  };
+  });
 }
 
 const getTitleContracts = (type: ContractType, titleId: string) => [
@@ -107,13 +108,15 @@ export async function formatContract(
   const titleCache: Record<string, Movie> = {};
   const userCache: Record<string, User> = {};
   const contractCache: Record<string, Mandate | Sale> = {};
+  const termCache: Record<string, Term> = {};
   const contracts: ContractsImportState[] = [];
-  const caches = { orgNameCache, titleCache, userCache, contractCache };
+  const caches = { orgNameCache, titleCache, userCache, contractCache, termCache };
 
   const option = {
     orgService,
     titleService,
     contractService,
+    termService,
     blockframesAdmin,
     userOrgId,
     caches,
@@ -144,35 +147,7 @@ export async function formatContract(
       }
     }
 
-    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, contractService.createId()));
-
-    // for **internal** sales we should check the parentTerm
-    const isInternalSale = contract.type === 'sale' && contract.sellerId === config.centralOrg.id;
-    if (isInternalSale) {
-      if (typeof data.parentTerm === 'number') {
-        const mandate = contracts[data.parentTerm - sheetHeaderLine.contracts - 1]; // first line is the column names
-        contract.parentTermId = mandate?.terms[0]?.id;
-        if (!mandate || !contract.parentTermId)
-          errors.push({
-            type: 'error',
-            name: 'Wrong Mandate Row',
-            reason: 'Mandate Row point to a wrong sheet line.',
-            message: 'Please check that the line number is correct and that the line is a mandate.',
-          });
-        if (mandate?.contract)
-          contract.stakeholders.concat(mandate.contract.stakeholders);
-      } else {
-        // here we are sure that the term exist because we already tested it above (~line 210, column o: contract.parentTerm)
-        contract.parentTermId = data.parentTerm;
-        // moreover the corresponding mandate is already in the contractCache so the look up should be efficient
-        const mandate = await checkParentTerm(
-          contract.parentTermId,
-          contractService,
-          contractCache
-        );
-        contract.stakeholders.concat(mandate.stakeholders);
-      }
-    }
+    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, term.id || termService.createId()));
 
     const overlap = await verifyOverlappingMandatesAndSales(contract, terms, contractService, termService);
     if (overlap.mandate) {

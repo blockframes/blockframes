@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { ActivatedRoute } from '@angular/router';
 import { pluck, shareReplay, switchMap } from 'rxjs/operators';
-import { centralOrgId } from '@env';
 import { joinWith } from 'ngfire';
 import { MovieService } from '@blockframes/movie/service';
 import { Intercom } from 'ng-intercom';
@@ -25,9 +24,8 @@ export class SaleShellComponent {
     }),
     shareReplay({ bufferSize:1, refCount:true })
   );
-  centralOrgId = centralOrgId;
-  contractStatus = contractStatus;
 
+  contractStatus = contractStatus;
 
   constructor(
     private contractService: ContractService,
