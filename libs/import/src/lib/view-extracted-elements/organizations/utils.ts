@@ -47,7 +47,7 @@ function formatAccess(value: string, name: string) {
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
-export async function formatOrg(sheetTab: SheetTab, organizationService: OrganizationService, userService: UserService) {
+export async function formatOrg(sheetTab: SheetTab, organizationService: OrganizationService, userService: UserService, centralOrg: Organization) {
 
   const orgs: OrganizationsImportState[] = [];
 
@@ -59,9 +59,9 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
   const fieldsConfig: FieldsConfigType = {
     /* a */ 'org.name': async (value: string) => {
       if (!value) throw mandatoryError(value, 'Organization Name');
-      const exist = await getOrgId(value, organizationService, orgNameCache);
+      const exist = await getOrgId(value, organizationService, orgNameCache, centralOrg);
       if (exist) throw alreadyExistError(value, 'Organization Name');
-      return value
+      return value;
     },
     /* b */ 'org.email': async (value: string) => {
       const lower = value.toLowerCase();

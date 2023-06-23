@@ -3,14 +3,9 @@
     <form [formGroup]="form" fxLayout="column" (ngSubmit)="update(offer.id, contracts)">
       <div fxLayoutAlign="space-between center" fxLayout>
         <div fxLayoutAlign="start center" fxLayout fxLayoutGap="24px">
-          <mat-form-field appearance="outline">
+          <static-select [control]="form.get('status')" required scope="offerStatus">
             <mat-label>General Contract Status</mat-label>
-            <mat-select formControlName="status">
-              <mat-option *ngFor="let status of offerStatus" [value]="status">
-                {{status | toLabel: 'offerStatus'}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          </static-select>
         </div>
         <button mat-flat-button color="primary" type="submit">Update</button>
       </div>

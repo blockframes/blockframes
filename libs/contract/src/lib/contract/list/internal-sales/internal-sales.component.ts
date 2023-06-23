@@ -6,14 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
 import { capitalize } from '@blockframes/utils/helpers';
-import { Contract, ContractStatus, Sale, Negotiation } from '@blockframes/model';
-
-interface InternalSale extends Sale {
-  licensor: string;
-  licensee: string;
-  title: string;
-  negotiation: Negotiation
-}
+import { Contract, ContractStatus, DetailedContract } from '@blockframes/model';
 
 @Component({
   selector: 'internal-sales-list',
@@ -25,7 +18,7 @@ export class InternalSaleListComponent implements OnInit {
 
   private title = 'All Sales';
 
-  private _sales = new BehaviorSubject<InternalSale[]>([]);
+  private _sales = new BehaviorSubject<DetailedContract[]>([]);
 
   filterForm = new UntypedFormControl();
   filter$: Observable<ContractStatus | ''> = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value || ''));
@@ -48,7 +41,7 @@ export class InternalSaleListComponent implements OnInit {
     private route: ActivatedRoute
   ) { }
 
-  @Input() set sales(sale: InternalSale[]) {
+  @Input() set sales(sale: DetailedContract[]) {
     this._sales.next(sale);
   }
 
@@ -72,7 +65,7 @@ export class InternalSaleListComponent implements OnInit {
     this.dynTitle.setPageTitle(`${this.title} (All)`);
   }
 
-  filterBySalesStatus(sale: InternalSale, _: number, status: ContractStatus): boolean {
+  filterBySalesStatus(sale: DetailedContract, _: number, status: ContractStatus): boolean {
     if (!status) return true;
     if (status === 'negotiating') {
       return sale.status === 'pending' && !isInitial(sale.negotiation);
