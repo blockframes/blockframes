@@ -1,9 +1,7 @@
-
 import { Component, ChangeDetectionStrategy, OnInit, Input, Inject } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { AuthService } from '@blockframes/auth/service';
-import { UserService } from '@blockframes/user/service';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -14,6 +12,7 @@ import { App } from '@blockframes/model';
 import { formatContract } from './utils';
 import { ContractsImportState } from '../../utils';
 import { TermService } from '@blockframes/contract/term/service';
+import { centralOrgId } from '@env';
 
 @Component({
   selector: 'import-view-extracted-contracts[sheetTab]',
@@ -26,10 +25,8 @@ export class ViewExtractedContractsComponent implements OnInit {
   @Input() sheetTab: SheetTab;
 
   public contractsToCreate$ = new BehaviorSubject<MatTableDataSource<ContractsImportState>>(null);
-  private isCatalogApp = this.app === 'catalog';
 
   constructor(
-    private userService: UserService,
     private authService: AuthService,
     private titleService: MovieService,
     private termsService: TermService,
@@ -43,16 +40,16 @@ export class ViewExtractedContractsComponent implements OnInit {
 
   async ngOnInit() {
     const isBlockframesAdmin = await firstValueFrom(this.authService.isBlockframesAdmin$);
+    const centralOrg = await this.orgService.getValue(centralOrgId.catalog);
     const contractsToCreate = await formatContract(
       this.sheetTab,
       this.orgService,
       this.titleService,
       this.contractService,
       this.termsService,
-      this.userService,
       isBlockframesAdmin,
       this.authService.profile.orgId,
-      { isSeller: this.isCatalogApp }
+      { app: this.app, centralOrg }
     );
     this.contractsToCreate$.next(new MatTableDataSource(contractsToCreate));
   }

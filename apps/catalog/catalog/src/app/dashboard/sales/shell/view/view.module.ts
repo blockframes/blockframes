@@ -37,7 +37,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     MatDialogModule,
     MatTooltipModule,
-    RouterModule.forChild([{ path: '', component: SaleViewComponent, }]),
+    RouterModule.forChild([{ path: '', component: SaleViewComponent }]),
   ]
 })
 export class CatalogSaleViewModule { }

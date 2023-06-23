@@ -364,8 +364,8 @@ function isMapTermInAvails<T extends BucketTerm | Term>(term: T, avails: MapAvai
 
 function isAvailInTerm<T extends BucketTerm | Term>(avail: MapAvailsFilter, termB: T) {
   const exclusivityCheck = exclusivitySomeOf(avail.exclusive).in(termB.exclusive);
-  const mediaCheck = allOf(avail.medias).in(termB.medias);
-  const durationCheck = allOf(avail.duration).in(termB.duration);
+  const mediaCheck = someOf(avail.medias).in(termB.medias);
+  const durationCheck = someOf(avail.duration).in(termB.duration);
   return exclusivityCheck && mediaCheck && durationCheck;
 }
 
@@ -459,7 +459,6 @@ interface TerritoryAvailabilityOptions {
   mandates: FullMandate[],
   sales: FullSale[],
   bucketContracts?: BucketContract[],
-  existingMandates?: FullMandate[]
 }
 
 export function territoryAvailabilities({
@@ -467,20 +466,17 @@ export function territoryAvailabilities({
   mandates,
   sales,
   bucketContracts,
-  existingMandates = [],
 }: TerritoryAvailabilityOptions): MapAvailabilities {
   // This function compute the availabilities of every territories simply by applying successive layer of "color" on top of each other
   // 0) we start by coloring everything in the `not-licensed` color
   // 1) we then color the available territories on top of the previous layer, overwriting the color of some territories
   // 2) we repeat the process for the sales & bucket territories to color them as `sold`
   // 3) finally we apply the `selected` color
-  // 4) when provided with availableMandates, we are rather searching for an overlap between the avails and the availableMandates.
 
   // Note: The function doesn't perform any check, from its point of view a `sold` territory can become `selected`
   // Note: The checks should be performed by the parent component to prevent a user to select a `sold` territory
-  const isOverlapping = !!existingMandates.length;
 
-  assertValidTitle(isOverlapping ? existingMandates : mandates, sales, bucketContracts);
+  assertValidTitle(mandates, sales, bucketContracts);
 
   // 0) initialize the world as `not-licensed`
   const availabilities = {} as Record<Territory, TerritoryMarker>;
@@ -492,9 +488,7 @@ export function territoryAvailabilities({
   });
 
   // 1) "paint" the `available` layer
-  const availableMandates = isOverlapping
-    ? getOverlappingMapMandates(existingMandates, avails)
-    : getMatchingMapMandates(mandates, avails);
+  const availableMandates = getMatchingMapMandates(mandates, avails);
   for (const mandate of availableMandates) {
     for (const term of mandate.terms) {
       for (const territory of term.territories as Territory[]) {
@@ -575,6 +569,45 @@ export function territoryAvailabilities({
     .filter(a => !inBucket.some(s => a.slug === s.slug)) as AvailableTerritoryMarker[];
 
   return { notLicensed, available, sold, inBucket, selected };
+}
+
+interface OverlappingOptions {
+  term: Term,
+  existingSales: FullSale[],
+  existingMandates?: FullMandate[]
+}
+
+export function isTermOverlappingExistingContracts({ term, existingSales, existingMandates = [] }: OverlappingOptions): { licensed: boolean, sold: boolean } {
+
+  assertValidTitle(existingMandates, existingSales, []);
+
+  const mandates: Territory[] = [];
+  const sales: Territory[] = [];
+
+  // Check if there is not already a mandate overlapping with current term
+  const availableMandates = getOverlappingMapMandates(existingMandates, term);
+  for (const mandate of availableMandates) {
+    for (const term of mandate.terms) {
+      for (const territory of term.territories as Territory[]) {
+        mandates.push(territory);
+      }
+    }
+  }
+
+  // Check if there is not already a sale overlapping with current term
+  const salesToExclude = getMatchingMapSales(existingSales, term);
+  for (const sale of salesToExclude) {
+    for (const term of sale.terms) {
+      for (const territory of term.territories as Territory[]) {
+        sales.push(territory);
+      }
+    }
+  }
+
+  const licensed = !!mandates.filter(a => term.territories.includes(a)).length;
+  const sold = !!sales.filter(a => term.territories.includes(a)).length;
+
+  return { licensed, sold };
 }
 
 type MediaFamily = 'available' | 'all' | 'tv' | 'vod' | 'other';

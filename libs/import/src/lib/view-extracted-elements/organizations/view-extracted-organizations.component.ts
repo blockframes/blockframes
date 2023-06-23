@@ -1,4 +1,3 @@
-
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
@@ -10,7 +9,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 
 import { formatOrg } from './utils';
 import { OrganizationsImportState } from '../../utils';
-
+import { centralOrgId } from '@env';
 
 @Component({
   selector: 'import-view-extracted-organizations[sheetTab]',
@@ -30,7 +29,8 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const orgsToCreate = await formatOrg(this.sheetTab, this.organizationService, this.userService);
+    const centralOrg = await this.organizationService.getValue(centralOrgId.catalog);
+    const orgsToCreate = await formatOrg(this.sheetTab, this.organizationService, this.userService, centralOrg);
     this.orgsToCreate$.next(new MatTableDataSource(orgsToCreate));
   }
 }
