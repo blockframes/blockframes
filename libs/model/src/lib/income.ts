@@ -12,10 +12,11 @@ export interface Income {
   currency: MovieCurrency;
   offerId?: string;
   titleId?: string;
-  status: 'pending' | 'processed'
-  date: Date
+  status: 'pending' | 'processed';
+  date: Date;
 }
 
+// TODO #9422
 export interface TotalIncome {
   EUR: number;
   USD: number;

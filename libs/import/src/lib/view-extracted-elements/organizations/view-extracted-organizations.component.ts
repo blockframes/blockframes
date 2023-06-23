@@ -1,4 +1,3 @@
-
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
@@ -11,7 +10,6 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { formatOrg } from './utils';
 import { OrganizationsImportState } from '../../utils';
 import { centralOrgId } from '@env';
-
 
 @Component({
   selector: 'import-view-extracted-organizations[sheetTab]',

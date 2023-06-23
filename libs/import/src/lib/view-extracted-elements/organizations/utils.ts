@@ -61,7 +61,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
       if (!value) throw mandatoryError(value, 'Organization Name');
       const exist = await getOrgId(value, organizationService, orgNameCache, centralOrg);
       if (exist) throw alreadyExistError(value, 'Organization Name');
-      return value
+      return value;
     },
     /* b */ 'org.email': async (value: string) => {
       const lower = value.toLowerCase();

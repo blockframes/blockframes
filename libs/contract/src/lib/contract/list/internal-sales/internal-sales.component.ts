@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
 import { capitalize } from '@blockframes/utils/helpers';
-import { Contract, ContractStatus,  DetailedContract } from '@blockframes/model';
+import { Contract, ContractStatus, DetailedContract } from '@blockframes/model';
 
 @Component({
   selector: 'internal-sales-list',

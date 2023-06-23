@@ -70,7 +70,7 @@ export async function getOrgId(
   centralOrg: Organization
 ) {
   if (!name) return '';
-  if (name === centralOrg.name || name === centralOrg.id) return centralOrg.id; //
+  if (name === centralOrg.name || name === centralOrg.id) return centralOrg.id;
 
   if (cache[name]) return cache[name];
 

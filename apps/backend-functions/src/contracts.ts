@@ -1,7 +1,17 @@
 import { db } from './internals/firebase';
 import { triggerNotifications } from './notification';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
-import { Organization, Notification, Sale, Contract, Negotiation, createInternalDocumentMeta, createNotification, createIncome, Income, createTerm } from '@blockframes/model';
+import {
+  Organization,
+  Notification,
+  Sale,
+  Contract,
+  Negotiation,
+  createInternalDocumentMeta,
+  createNotification,
+  createIncome,
+  createTerm
+} from '@blockframes/model';
 import { queryDocument, getDocument, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 
 interface ContractNotificationType {
@@ -156,8 +166,8 @@ export async function onContractUpdate(change: BlockframesChange<Sale>) {
       db.runTransaction(async tx => {
 
         const termIds = await createTerms(id, negotiation, tx);
-        await createIncomeDoc(contractAfter as Sale, negotiation, tx);
-        await tx.update(saleRef, { termIds });
+        createIncomeDoc(contractAfter as Sale, negotiation, tx);
+        tx.update(saleRef, { termIds });
       });
     }
   }
