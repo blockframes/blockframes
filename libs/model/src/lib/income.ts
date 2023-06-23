@@ -16,6 +16,7 @@ export interface Income {
   date: Date;
 }
 
+// TODO #9422
 export interface TotalIncome {
   EUR: number;
   USD: number;

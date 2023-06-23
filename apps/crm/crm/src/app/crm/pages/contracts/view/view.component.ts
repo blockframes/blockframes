@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { joinWith } from 'ngfire';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 
-import { getSeller } from '@blockframes/contract/contract/utils'
+import { getSeller } from '@blockframes/contract/contract/utils';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { MovieService } from '@blockframes/movie/service';
@@ -79,7 +79,7 @@ export class ContractViewComponent {
     this.contractService.update(term.contractId, (contract, write) => {
       this.termService.remove(term.id, { write });
       return { termIds: contract.termIds.filter(id => id !== term.id) };
-    })
+    });
   }
 
   public goBack() {
