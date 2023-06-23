@@ -15,7 +15,6 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 })
 export class ExternalSaleComponent {
 
-  centralOrgId = this.shell.centralOrgId;
   sale$ = this.shell.sale$;
   contractStatus = this.shell.contractStatus;
   activeOrgId = this.orgService.org.id;
