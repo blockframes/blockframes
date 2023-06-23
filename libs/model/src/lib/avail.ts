@@ -582,7 +582,7 @@ export function isTermOverlappingExistingContracts({ term, existingSales, existi
   assertValidTitle(existingMandates, existingSales, []);
 
   const mandates: Territory[] = [];
-  const sales: Territory[] = []
+  const sales: Territory[] = [];
 
   // Check if there is not already a mandate overlapping with current term
   const availableMandates = getOverlappingMapMandates(existingMandates, term);

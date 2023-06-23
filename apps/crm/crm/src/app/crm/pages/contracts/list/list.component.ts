@@ -6,7 +6,7 @@ import { IncomeService, incomeQuery } from '@blockframes/contract/income/service
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { combineLatest, of, map } from 'rxjs';
-import { getSeller } from '@blockframes/contract/contract/utils'
+import { getSeller } from '@blockframes/contract/contract/utils';
 import { DetailedContract, Mandate, Sale, getTotalIncome, toLabel, externalOrgIdentifier } from '@blockframes/model';
 import { orderBy, where } from 'firebase/firestore';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';

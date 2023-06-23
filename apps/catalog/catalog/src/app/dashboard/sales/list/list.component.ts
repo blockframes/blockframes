@@ -6,7 +6,7 @@ import { combineLatest, of, map, catchError } from 'rxjs';
 import { MovieService } from '@blockframes/movie/service';
 import { IncomeService, incomeQuery } from '@blockframes/contract/income/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { getSeller } from '@blockframes/contract/contract/utils'
+import { getSeller } from '@blockframes/contract/contract/utils';
 import { deletedIdentifier, externalOrgIdentifier, Sale } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { orderBy, where } from 'firebase/firestore';
