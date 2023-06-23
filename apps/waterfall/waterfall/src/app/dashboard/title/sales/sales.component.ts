@@ -15,14 +15,17 @@ import {
   Territory,
   Organization,
   externalOrgIdentifier,
-  getTermDurationStatus
+  getTermDurationStatus,
+  Income,
+  getTotalIncome
 } from '@blockframes/model';
-import { ContractService } from '@blockframes/contract/contract/service';
+import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { TermService } from '@blockframes/contract/term/service';
-import { where } from 'firebase/firestore';
 import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell/shell.component';
 import { OrganizationService } from '@blockframes/organization/service';
 import { differenceInDays, differenceInMonths, differenceInYears } from 'date-fns';
+import { IncomeService } from '@blockframes/contract/income/service';
+import { where } from 'firebase/firestore';
 
 function getDateDifference(a: Date, b: Date) {
   const yearDiff = differenceInYears(a, b);
@@ -42,12 +45,9 @@ function getDateDifference(a: Date, b: Date) {
 export class SalesComponent {
 
   private contracts$ = this.shell.movie$.pipe(
-    switchMap((movie: Movie) => this.contractService.valueChanges([
-      where('titleId', '==', movie.id),
-      where('status', '==', 'accepted')
-    ]))
+    switchMap((movie: Movie) => this.waterfallDocumentsService.titleContracts(movie.id))
   );
-
+  private waterfallId: string;
   private mandates$ = this.contracts$.pipe(map((contracts) => contracts.filter(isMandate)));
   private mandateTerms$ = this.getTerms(this.mandates$);
   private sales$ = this.contracts$.pipe(map((contracts) => contracts.filter(isSale)));
@@ -80,6 +80,7 @@ export class SalesComponent {
     this.mandateTerms$
   ]).pipe(
     map(([movie, sales, salesTerms, mandates, mandateTerms]) => {
+      this.waterfallId = movie.id;
       const res = filterContractsByTitle(movie.id, mandates, mandateTerms, sales, salesTerms);
       return territoriesSold([...res.mandates, ...res.sales]);
     }),
@@ -87,16 +88,20 @@ export class SalesComponent {
       const allMarkers = Object.values(markers).flat();
       const orgIds = Array.from(new Set(allMarkers.map(t => t.data?.filter(s => s.buyerId).map(s => s.buyerId)).flat().filter(o => !!o)));
       if (orgIds.length) this.orgsCache = await this.orgService.getValue(orgIds);
+
+      this.incomesCache = await this.incomeService.getValue([where('titleId', '==', this.waterfallId)]);
     }),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
 
   private orgsCache: Organization[] = [];
+  private incomesCache : Income[] = [];
 
   constructor(
     private termsService: TermService,
-    private contractService: ContractService,
+    private waterfallDocumentsService: WaterfallDocumentsService,
     private orgService: OrganizationService,
+    private incomeService: IncomeService,
     private shell: DashboardTitleShellComponent,
   ) { }
 
@@ -112,10 +117,10 @@ export class SalesComponent {
 
   /** Display the territories information in the tooltip */
   public displayTerritoryTooltip(territory: TerritorySoldMarker) {
-    const firstContract = (territory.data || []).find(s => s.buyerId);
+    const [firstContract] = (territory.data || []);
     if (firstContract) {
       const org = this.orgsCache.find(o => firstContract.buyerId === o.id);
-      const orgName = org.name || externalOrgIdentifier;
+      const orgName = org?.name || externalOrgIdentifier;
 
       const termsStatus = firstContract.terms.map(t => ({ duration: t.duration, status: getTermDurationStatus(t) }));
 
@@ -155,6 +160,7 @@ export class SalesComponent {
       const infos = [];
       for (const contract of territory.data) {
         for (const term of contract.terms) {
+          const incomes = this.incomesCache.filter(i => i.termId === term.id);
           const termInfos = {
             buyerName: contract.buyerId ? orgs.find(o => o.id === contract.buyerId).name : externalOrgIdentifier,
             type: contract.type,
@@ -163,7 +169,7 @@ export class SalesComponent {
             medias: term.medias,
             territories: term.territories,
             // TODO #9372 declared amount
-            // TODO #9372 amount paid
+            totalIncome: getTotalIncome(incomes)
           }
 
           infos.push(termInfos);

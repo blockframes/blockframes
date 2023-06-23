@@ -8,7 +8,7 @@ import {
   createTransfer,
   createHorizontal,
   createVertical,
-  createContract,
+  createContractState,
   Operation,
   createBonus
 } from './state';
@@ -315,7 +315,7 @@ interface Contract extends BaseAction {
 }
 function contract(state: TitleState, payload: Contract) {
   if (!state.contracts[payload.id]) {
-    state.contracts[payload.id] = createContract(payload);
+    state.contracts[payload.id] = createContractState(payload);
   }
 }
 

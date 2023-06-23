@@ -111,6 +111,11 @@ export function createSale(params: Partial<Sale> = {}): Sale {
   }
 }
 
+export function createContract(params: Contract) {
+  if (isMandate(params)) return createMandate(params);
+  if (isSale(params)) return createSale(params);
+}
+
 export function isMandate(contract: Contract): contract is Mandate {
   return contract.type === 'mandate';
 }

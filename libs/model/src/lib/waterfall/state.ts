@@ -139,7 +139,7 @@ interface ContratState {
   start?: Date;
   end?: Date;
 }
-export function createContract(contract: Partial<ContratState> & { id: string }) {
+export function createContractState(contract: Partial<ContratState> & { id: string }) {
   return {
     amount: 0,
     paid: 0,
