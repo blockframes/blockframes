@@ -57,7 +57,7 @@
             [queryParams]="{termIndex:index}">
             <mat-icon svgIcon="visibility"></mat-icon>
           </a>
-          <button mat-icon-button matTooltip="Delete" (click)="confirm(term)">
+          <button mat-icon-button matTooltip="Delete" (click)="confirm(contract.id, negotiation, index)">
             <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </ng-template>

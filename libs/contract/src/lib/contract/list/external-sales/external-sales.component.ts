@@ -1,13 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Contract, Sale } from '@blockframes/model';
+import { Contract, DetailedContract, getTotalIncome } from '@blockframes/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-
-interface ExternalSale extends Sale {
-  licensor: string;
-  licensee: string;
-  title: string;
-}
 
 @Component({
   selector: 'external-sales-list',
@@ -17,15 +11,15 @@ interface ExternalSale extends Sale {
 })
 export class ExternalSaleListComponent {
 
-  private _sales = new BehaviorSubject<ExternalSale[]>([]);
+  private _sales = new BehaviorSubject<DetailedContract[]>([]);
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
   ) { }
 
-  @Input() set sales(sale: ExternalSale[]) {
-    this._sales.next(sale);
+  @Input() set sales(sales: DetailedContract[]) {
+    this._sales.next(sales.map(s => ({ ...s, totalIncome: getTotalIncome(s.incomes) })));
   }
 
   get sales() {

@@ -2,12 +2,12 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/
 import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractService } from '@blockframes/contract/contract/service';
-import { IncomeService } from '@blockframes/contract/income/service';
+import { IncomeService, incomeQuery } from '@blockframes/contract/income/service';
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { combineLatest, of, map } from 'rxjs';
-import { getSeller } from '@blockframes/contract/contract/utils'
-import { Income, Mandate, Negotiation, Sale, toLabel } from '@blockframes/model';
+import { getSeller } from '@blockframes/contract/contract/utils';
+import { DetailedContract, Mandate, Sale, getTotalIncome, toLabel } from '@blockframes/model';
 import { orderBy, where } from 'firebase/firestore';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { format } from 'date-fns';
@@ -46,7 +46,7 @@ export class ContractsListComponent {
       licensor: (sale: Sale) => this.orgService.valueChanges(getSeller(sale)).pipe(map(org => org?.name)),
       licensee: (sale: Sale) => sale.buyerId ? this.orgService.valueChanges(sale.buyerId).pipe(map(org => org?.name)) : of('External'),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
-      price: (sale: Sale) => this.incomeService.valueChanges(sale.id), // external sales
+      incomes: (sale: Sale) => this.incomeService.valueChanges(incomeQuery(sale.id)), // external sales
       negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id) // internal sales
     })
   );
@@ -67,10 +67,7 @@ export class ContractsListComponent {
     this.dynTitle.setPageTitle('Mandates and external sales.');
   }
 
-  public exportTable(contracts: {
-    mandates: ({ licensor: string, licensee: string, title: string } & Mandate)[],
-    sales: ({ licensor: string, licensee: string, title: string, price?: Income, negotiation?: Negotiation } & Sale)[],
-  }) {
+  public exportTable(contracts: { mandates: DetailedContract[], sales: DetailedContract[] }) {
     try {
       this.exporting = true;
       this.cdr.markForCheck();
@@ -93,6 +90,18 @@ export class ContractsListComponent {
         exportedRows.push(row);
       });
 
+      const getPrice = (sale: DetailedContract) => {
+        if (sale.buyerId) {
+          return `${sale.negotiation?.price || ''} ${sale.negotiation?.currency || ''}`;
+        } else {
+          const totalIncome = getTotalIncome(sale.incomes);
+          const incomes = [];
+          if (totalIncome.EUR) incomes.push(`${totalIncome.EUR} 'EUR'`);
+          if (totalIncome.USD) incomes.push(`${totalIncome.USD} 'USD'`);
+          return incomes.join(' | ');
+        }
+      }
+
       contracts.sales.forEach(sale => {
         const row = {
           type: 'sale',
@@ -103,7 +112,7 @@ export class ContractsListComponent {
           licensee: sale.licensee,
           title: sale.title,
           status: toLabel(sale.buyerId ? negotiationStatus(sale.negotiation) : sale.status, 'contractStatus'),
-          price: sale.buyerId ? `${sale.negotiation?.price || ''} ${sale.negotiation?.currency || ''}` : `${sale.price?.price || ''} ${sale.price?.currency || ''}`
+          price: getPrice(sale)
         };
 
         exportedRows.push(row);

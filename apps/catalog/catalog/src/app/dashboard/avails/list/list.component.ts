@@ -22,24 +22,21 @@ import {
   availableTitle,
   FullSale,
   FullMandate,
-  decodeDate
+  decodeDate,
+  TotalIncome,
+  getTotalIncome
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { AvailsForm } from '@blockframes/contract/avails/form/avails.form';
-import { IncomeService } from '@blockframes/contract/income/service';
+import { incomeQuery, IncomeService } from '@blockframes/contract/income/service';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-interface TotalIncome {
-  EUR: number;
-  USD: number;
-}
-
-type FullSaleWithIncome = FullSale & { income?: Income };
+type FullSaleWithIncome = FullSale & { incomes?: Income[] };
 
 type JoinSaleTitleType = {
   sales?: FullSaleWithIncome[];
@@ -71,14 +68,10 @@ const isCatalogSale = (sale: FullSaleWithIncome): boolean =>
   sale.sellerId === centralOrgId.catalog && sale.status === 'accepted';
 
 const saleCountAndTotalPrice = (title: JoinSaleTitleType) => {
-  const initialTotal: TotalIncome = { EUR: 0, USD: 0 };
   if (!title.sales) return title;
   title.saleCount = title.sales.filter(isCatalogSale).length;
   title.allSaleCount = title.sales.length;
-  title.totalIncome = title.sales.reduce((total, sale) => {
-    if (sale.income) total[sale.income.currency] += sale.income.price;
-    return total;
-  }, initialTotal);
+  title.totalIncome = getTotalIncome(title.sales.map(s => s.incomes).flat());
   return title;
 };
 
@@ -104,7 +97,7 @@ export class CatalogAvailsListComponent implements AfterViewInit, OnDestroy, OnI
           return this.contractService.valueChanges(saleQuery(title)).pipe(
             joinWith(
               {
-                income: (sale) => this.incomeService.valueChanges(sale.id),
+                incomes: (sale) => this.incomeService.valueChanges(incomeQuery(sale.id)),
                 terms: (sale) => this.termsService.valueChanges(sale.termIds),
               },
               { shouldAwait: true }

@@ -39,7 +39,7 @@ export function getValue(item: any, key: string) {
 }
 
 function findCorrespondence(code: string) {
-  return ([key, value]: [string, string]) => key.toLowerCase() === code || value.toLowerCase() === code
+  return ([key, value]: [string, string]) => key.toLowerCase() === code || value.toLowerCase() === code;
 }
 
 /**

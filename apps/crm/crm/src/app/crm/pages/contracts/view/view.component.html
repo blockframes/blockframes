@@ -10,22 +10,9 @@
         <p>{{ seller.email }}</p>
       </div>
     </ng-container>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <mat-form-field appearance="outline">
-        <mat-label>Seller's approval for a title.</mat-label>
-        <mat-select [formControl]="statusForm">
-          <mat-option value="pending">
-            <span>Pending</span>
-          </mat-option>
-          <mat-option value="accepted">
-            <span>Accepted</span>
-          </mat-option>
-          <mat-option value="declined">
-            <span>Declined</span>
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+    <static-select fxLayout="row" fxLayoutGap="16px" [control]="statusForm" [withoutValues]="['negotiating']" required scope="contractStatus">
+      <mat-label>Seller's approval for a title.</mat-label>
+    </static-select>
     <button mat-flat-button color="primary" (click)="update(contract.id)" class="center-button">Update</button>
   </section>
 
@@ -34,9 +21,12 @@
     <p>{{contract.declineReason ?? "Seller hasn't given any reason."}}</p>
   </section>
   <contract-item [contract]="contract">
-    <p price *ngIf="contract.price as price">
-      <ng-container *ngIf="price > 0; else askPrice">
-        <span>{{ price | currency: contract.currency }}</span>
+    <p price *ngIf="contract.totalIncome as totalIncome">
+      <ng-container *ngIf="totalIncome.EUR > 0 || totalIncome.USD > 0; else askPrice">
+        <span *ngIf="totalIncome.USD"> {{ totalIncome.USD | currency:'USD' }} </span>
+        <span *ngIf="totalIncome.USD && totalIncome.EUR"> and</span>
+        <span *ngIf="totalIncome.EUR"> {{ totalIncome.EUR | currency:'EUR' }} </span>
+        <span *ngIf="!totalIncome.USD && !totalIncome.EUR"> - </span>
       </ng-container>
       <ng-template #askPrice>
         <span>Buyer requested Asking Price</span>

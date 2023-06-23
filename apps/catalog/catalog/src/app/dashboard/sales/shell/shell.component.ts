@@ -5,7 +5,6 @@ import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 import { joinWith } from 'ngfire';
 import { MovieService } from '@blockframes/movie/service';
-import { IncomeService } from '@blockframes/contract/income/service';
 import { Intercom } from 'ng-intercom';
 import { Sale, contractStatus } from '@blockframes/model';
 
@@ -34,7 +33,6 @@ export class SaleShellComponent {
     private contractService: ContractService,
     private titleService: MovieService,
     private route: ActivatedRoute,
-    private incomeService: IncomeService,
     @Optional() private intercom: Intercom,
   ) { }
 

@@ -11,8 +11,11 @@ import { FirstUserFromOrgIdModule, MaxLengthModule, ToLabelModule } from '@block
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
-import { MatSelectModule } from '@angular/material/select';
+// Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,8 +23,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
 
 @NgModule({
   declarations: [OfferViewComponent],
@@ -38,9 +39,9 @@ import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
     TagModule,
     ToLabelModule,
     NegotiationPipeModule,
+    StaticSelectModule,
 
     //Material
-    MatSelectModule,
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
