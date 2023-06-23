@@ -1,6 +1,7 @@
 
 <section fxLayout="column" fxLayoutAlign="center center">
   <h1>Import multiple contracts at once</h1>
+  <h2 *ngIf="mode$ | async as mode ">For {{ appName[mode] }}</h2>
 
   <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="8px">
     <a
@@ -26,7 +27,7 @@
     <import-spreadsheet importType="contracts" (importEvent)="imported($event)"></import-spreadsheet>
   </ng-container>
   <ng-template #ready>
-    <import-view-extracted-contracts [sheetTab]="sheetTab"></import-view-extracted-contracts>
+    <import-view-extracted-contracts [sheetTab]="sheetTab" [mode]="mode$ | async"></import-view-extracted-contracts>
     <p>Please make sure everything is correct. Once you submit your contracts they will instantaneously appear on the platform.</p>
     <button test-id="cancel-import" mat-stroked-button color="warn" (click)="cancel()">
       <mat-icon svgIcon="block"></mat-icon>

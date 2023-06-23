@@ -160,7 +160,7 @@ export class SalesComponent {
       const infos = [];
       for (const contract of territory.data) {
         for (const term of contract.terms) {
-          const incomes = this.incomesCache.filter(i => i.termId === term.id);
+          const incomes = this.incomesCache.filter(i => i.termId === term.id); // TODO #9420 use territories & medias to find term
           const termInfos = {
             buyerName: contract.buyerId ? orgs.find(o => o.id === contract.buyerId).name : externalOrgIdentifier,
             type: contract.type,

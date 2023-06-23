@@ -120,11 +120,18 @@ export class WaterfallComponent implements OnInit {
     const actions: Action[] = [
       action('append', { id: 'test', orgId: 'test', previous: [], percent: 1 }),
 
-      action('income', { id: madman_1.id, from: madman_au.id, to: 'test', amount: madman_1.price, date: madman_1.date, territory: madman_au_term.territories, media: madman_au_term.medias }),
-      action('income', { id: telepool_1.id, from: telepool_ger.id, to: 'test', amount: telepool_1.price, date: telepool_1.date, territory: telepool_ger_term.territories, media: telepool_ger_term.medias }),
+      // TODO #9420 contracts amount , date , end & start
+      action('contract', { amount: 0, id: madman_au.id, date: new Date() }),
+      action('contract', { amount: 0, id: telepool_ger.id, date: new Date() }),
+      action('contract', { amount: 0, id: netflix_us.id, date: new Date() }),
 
-      action('income', { id: netflix_us_1.id, from: netflix_us.id, to: 'test', amount: netflix_us_1.price, date: netflix_us_1.date, territory: netflix_us_term.territories, media: netflix_us_term.medias }),
-      action('income', { id: netflix_us_2.id, from: netflix_us.id, to: 'test', amount: netflix_us_2.price, date: netflix_us_2.date, territory: netflix_us_term.territories, media: netflix_us_term.medias }),
+      // TODO #9420 updateContract action (netflix)
+
+      action('income', { id: madman_1.id, contractId: madman_au.id, from: madman_au.id, to: 'test', amount: madman_1.price, date: madman_1.date, territory: madman_au_term.territories, media: madman_au_term.medias }),
+      action('income', { id: telepool_1.id, contractId: telepool_ger.id, from: telepool_ger.id, to: 'test', amount: telepool_1.price, date: telepool_1.date, territory: telepool_ger_term.territories, media: telepool_ger_term.medias }),
+
+      action('income', { id: netflix_us_1.id, contractId: netflix_us.id, from: netflix_us.id, to: 'test', amount: netflix_us_1.price, date: netflix_us_1.date, territory: netflix_us_term.territories, media: netflix_us_term.medias }),
+      action('income', { id: netflix_us_2.id, contractId: netflix_us.id, from: netflix_us.id, to: 'test', amount: netflix_us_2.price, date: netflix_us_2.date, territory: netflix_us_term.territories, media: netflix_us_term.medias }),
     ];
 
     return actions;
