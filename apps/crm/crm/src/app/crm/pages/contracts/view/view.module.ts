@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MatCardModule } from '@angular/material/card';
@@ -19,7 +18,8 @@ import { ContractItemModule } from '@blockframes/contract/contract/components/it
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { GetTitleHoldbacksPipeModule } from '@blockframes/movie/pipes/get-title-holdbacks';
 import { HoldbackFormModule } from '@blockframes/contract/contract/holdback/form/form.module';
-import { CollidingHoldbacksPipeModule } from '@blockframes/contract/contract/holdback/pipes/colliding-holdback.pipe'
+import { CollidingHoldbacksPipeModule } from '@blockframes/contract/contract/holdback/pipes/colliding-holdback.pipe';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ContractViewComponent } from './view.component';
 
 @NgModule({
@@ -27,15 +27,16 @@ import { ContractViewComponent } from './view.component';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ReactiveFormsModule,
 
     OrgChipModule,
     ConfirmInputModule,
     ContractItemModule,
     GetTitleHoldbacksPipeModule,
     GetTitlePipeModule,
+    StaticSelectModule,
     HoldbackFormModule,
     CollidingHoldbacksPipeModule,
+
     MatIconModule,
     MatCardModule,
     MatInputModule,

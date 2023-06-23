@@ -96,8 +96,6 @@ export class TableExtractedContractsComponent implements AfterViewInit {
     importState.terms.forEach(t => t.id = this.termService.createId());
     importState.contract.termIds = importState.terms.map(t => t.id);
 
-
-
     if (increment) this.processing++;
     this.cdr.markForCheck();
 

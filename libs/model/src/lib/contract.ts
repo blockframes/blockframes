@@ -1,5 +1,7 @@
+import { Income, TotalIncome } from './income';
 import { DocumentMeta, createDocumentMeta } from './meta';
-import type { Media, Territory, ContractStatus } from './static';
+import { Negotiation } from './negociation';
+import type { Media, Territory, ContractStatus, ContractType } from './static';
 import { Duration, Term } from './terms';
 
 export interface Holdback {
@@ -11,7 +13,7 @@ export interface Holdback {
 export interface Contract {
   _meta: DocumentMeta;
   id: string;
-  type: 'mandate' | 'sale';
+  type: ContractType;
   status: ContractStatus;
   titleId: string;
   /** Parent term on which this contract is created */
@@ -50,6 +52,17 @@ export interface FullMandate extends Mandate {
 }
 export interface FullSale extends Sale {
   terms: Term[];
+}
+
+export interface DetailedContract extends Contract {
+  licensor: string;
+  licensee: string;
+  title: string;
+  // For internal contracts
+  negotiation?: Negotiation;
+  // For external & internal contracts
+  incomes?: Income[];
+  totalIncome?: TotalIncome;
 }
 
 export function createHoldback(params: Partial<Holdback> = {}): Holdback {

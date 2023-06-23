@@ -6,13 +6,12 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter, map, pluck } from 'rxjs/operators';
 import { combineLatest, Subscription } from 'rxjs';
-import { IncomeService } from '@blockframes/contract/income/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { OfferShellComponent } from '../shell.component';
 import { NegotiationService } from '@blockframes/contract/negotiation/service';
 import { isInitial } from '@blockframes/contract/negotiation/utils';
-import { Holdback, Negotiation, Sale, Term } from '@blockframes/model';
+import { Holdback, Negotiation, Sale } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 
@@ -47,7 +46,6 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private snackbar: MatSnackBar,
     private shell: OfferShellComponent,
-    private incomeService: IncomeService,
     private negotiationService: NegotiationService,
     private contractService: ContractService,
   ) { }
@@ -67,7 +65,7 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   async update(contractId: string, negotiationId: string) {
     const config = { params: { contractId } };
     const { status } = this.form.value;
-    await this.negotiationService.update(negotiationId, { status }, config)
+    await this.negotiationService.update(negotiationId, { status }, config);
     this.snackbar.open('Offer updated!', 'ok', { duration: 1000 });
   }
 
@@ -75,24 +73,23 @@ export class ContractViewComponent implements OnInit, OnDestroy {
     this.contractService.update<Sale>(contractId, { holdbacks });
   }
 
-  confirm(term: Term) {
+  confirm(contractId: string, negotiation: Negotiation, termIndex: number) {
     this.dialog.open(ConfirmInputComponent, {
       data: createModalData({
         title: 'Are you sure ?',
-        subtitle: `You are about to delete permanently this term (#${term.id}). This action will also update the contract #${term.contractId} to remove the reference to the deleted term.`,
+        subtitle: `You are about to delete permanently this term from negotiation ${negotiation.id}.`,
         text: 'Please type "DELETE" to confirm.',
         confirmationWord: 'DELETE',
         confirmButtonText: 'Delete term',
-        onConfirm: this.delete(term)
+        onConfirm: () => this.delete(contractId, negotiation, termIndex)
       })
     });
   }
 
-  delete(term: Term) {
-    this.contractService.update(term.contractId, (contract, write) => {
-      this.incomeService.remove(term.id, { write });
-      return { termIds: contract.termIds.filter(id => id !== term.id) };
-    })
+  delete(contractId: string, negotiation: Negotiation, termIndex: number) {
+    const config = { params: { contractId } };
+    negotiation.terms = negotiation.terms.filter((_, v) => v !== termIndex);
+    return this.negotiationService.update(negotiation.id, { terms: negotiation.terms }, config);
   }
 }
 

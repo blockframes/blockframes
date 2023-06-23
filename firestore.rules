@@ -412,9 +412,9 @@ service cloud.firestore {
     }
 
     match /incomes/{incomeId} {
-      allow read: if userOrgId() in getContract(incomeId).stakeholders
+      allow read: if userOrgId() in getContract(existingData().contractId).stakeholders
         && notInMaintenance();
-      allow create: if (userOrgId() == getContract(incomeId).buyerId)
+      allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId)
         && notInMaintenance();
       allow update: if false;
       allow delete: if false;

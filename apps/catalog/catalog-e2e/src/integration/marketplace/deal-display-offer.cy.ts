@@ -15,8 +15,7 @@ import {
   assertMultipleTexts,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller, offer, saleContract, buyerNegotiation, bucket } from '../../fixtures/shared/deal-shared-fixture';
-import { Organization, displayName, trimString } from '@blockframes/model';
-import { centralOrgId } from '@env';
+import { displayName, trimString } from '@blockframes/model';
 
 const injectedData = {
   //buyer
@@ -122,20 +121,16 @@ describe('Deal negociation', () => {
       get('ongoing').should('not.contain', '(1)');
       get('accepted').should('not.contain', '(1)');
       get('declined').should('not.contain', '(1)');
-      firestore
-        .get(`orgs/${centralOrgId.catalog}`)
-        .then((org: Organization) =>
-          assertTableRowData(0, [
-            dateToMMDDYYYY(new Date()),
-            org.name,
-            buyer.org.name,
-            offer.id,
-            seller.movie.title.international,
-            '€10,000.00',
-            'New',
-            'To be Reviewed',
-          ])
-        );
+      assertTableRowData(0, [
+        dateToMMDDYYYY(new Date()),
+        seller.org.name,
+        buyer.org.name,
+        offer.id,
+        seller.movie.title.international,
+        '€10,000.00',
+        'New',
+        'To be Reviewed',
+      ]);
       //specific sale page
       get('row_0_col_0').click();
       assertUrlIncludes(`/c/o/dashboard/sales/${saleContract.id}/view`);
