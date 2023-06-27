@@ -226,6 +226,7 @@ export function getContractConfig(option: ContractConfig) {
           return Array.from(new Set([data.contract.sellerId, ...stakeholders]));
         }
       },
+      // TODO #9420 update template excel for admins
       /* s */ 'term[].id': async (value: string) => {
         if (!value) return termService.createId();
         const exist = await getTerm(value, termService, termCache);

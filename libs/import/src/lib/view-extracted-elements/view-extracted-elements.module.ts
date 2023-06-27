@@ -14,13 +14,14 @@ import { TableExtractedElementsModule } from '../table-extracted-elements/table-
 import { ViewExtractedTitlesComponent } from './titles/view-extracted-titles.component';
 import { ViewExtractedContractsComponent } from './contract/view-extracted-contracts.component';
 import { ViewExtractedOrganizationsComponent } from './organizations/view-extracted-organizations.component';
-
+import { ViewExtractedIncomesComponent } from './incomes/view-extracted-incomes.component';
 
 @NgModule({
   declarations: [
     ViewExtractedTitlesComponent,
     ViewExtractedContractsComponent,
     ViewExtractedOrganizationsComponent,
+    ViewExtractedIncomesComponent
   ],
   imports: [
     CommonModule,
@@ -35,6 +36,7 @@ import { ViewExtractedOrganizationsComponent } from './organizations/view-extrac
     ViewExtractedTitlesComponent,
     ViewExtractedContractsComponent,
     ViewExtractedOrganizationsComponent,
+    ViewExtractedIncomesComponent
   ],
 })
 export class ViewExtractedElementsModule {}

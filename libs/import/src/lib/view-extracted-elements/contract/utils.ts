@@ -210,9 +210,6 @@ export async function formatContract(
       // TODO #9420
     }
 
-    // remove duplicate from stakeholders
-    contract.stakeholders = Array.from(new Set([...contract.stakeholders]));
-
     contracts.push({ contract, terms, errors, newContract: true, mode: config.mode });
   }
   return contracts;
