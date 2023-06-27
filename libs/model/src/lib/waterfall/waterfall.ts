@@ -75,6 +75,8 @@ export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(para
   const meta = toObject();
   delete (meta as any).id;
   delete (meta as any)._meta;
+  delete (meta as any).rootId;
+  delete (meta as any).signatureDate;
 
   return {
     _meta: (params.meta as any)._meta || createDocumentMeta({ createdAt: new Date() }),
@@ -84,23 +86,34 @@ export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(para
     waterfallId: '',
     ownerId: '',
     sharedWith: [],
+    rootId: (params.meta as any).rootId ?? '',
+    signatureDate: (params.meta as any).signatureDate ?? '',
     ...params,
     meta,
   };
 }
 
-const isContract = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallContract> => document?.type === 'contract';
+export const isContract = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallContract> => document?.type === 'contract';
 const isBudget = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallBudget> => document?.type === 'budget';
 const isFinancingPlan = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallFinancingPlan> => document?.type === 'financingPlan';
 
 export function convertDocumentTo<T>(document: WaterfallDocument): T {
-  return { id: document.id, ...document.meta as T, _meta: document._meta };
+  return {
+    id: document.id,
+    rootId: document.rootId,
+    signatureDate: document.signatureDate,
+    ...document.meta as T,
+    _meta: document._meta
+  };
 }
 
 type WaterfallDocumentMeta = WaterfallBudget | WaterfallContract | WaterfallFinancingPlan;
 export interface WaterfallDocument<Meta extends WaterfallDocumentMeta = unknown> {
   _meta?: DocumentMeta;
   id: string; // TODO #9389 same id as the actual PDF file stored in waterfall/{waterfallId}/documents
+  /** If document is an amendment, provide root document Id */
+  rootId: string;
+  signatureDate?: Date;
   type: 'financingPlan' | 'budget' | 'contract';
   folder: string; // TODO #9389 to create the folder arborescence in UI
   waterfallId: string; // Parent document Id

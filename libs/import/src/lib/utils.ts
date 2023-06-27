@@ -6,6 +6,7 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { UserService } from '@blockframes/user/service';
 import { where } from 'firebase/firestore';
+import { TermService } from '@blockframes/contract/term/service';
 
 export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts'] as const;
 
@@ -60,7 +61,7 @@ export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
 
 export const sheetRanges: Record<SpreadsheetImportType, string> = {
   titles: `A${sheetHeaderLine.titles}:BZ1000`,
-  contracts: `A${sheetHeaderLine.contracts}:Q300`,
+  contracts: `A${sheetHeaderLine.contracts}:Y300`,
   organizations: `A${sheetHeaderLine.organizations}:Z100`,
 };
 
@@ -148,6 +149,24 @@ export async function getWaterfallContract(
     const contract = await waterfallDocumentsService.getContract(id, waterfallId);
     cache[id] = contract;
     return contract;
+  } catch (err) {/**do nothing*/ }
+
+  return;
+}
+
+export async function getTerm(
+  id: string,
+  termService: TermService,
+  cache: Record<string, Term>
+) {
+  if (!id) return;
+
+  if (cache[id]) return cache[id];
+
+  try {
+    const term = await termService.getValue(id);
+    cache[id] = term;
+    return term;
   } catch (err) {/**do nothing*/ }
 
   return;

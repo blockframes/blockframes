@@ -1,7 +1,7 @@
 import { Income, TotalIncome } from './income';
 import { DocumentMeta, createDocumentMeta } from './meta';
 import { Negotiation } from './negociation';
-import type { Media, Territory, ContractStatus, ContractType } from './static';
+import type { Media, Territory, ContractStatus, ContractType, MovieCurrency } from './static';
 import { Duration, Term } from './terms';
 
 export interface Holdback {
@@ -16,20 +16,25 @@ export interface Contract {
   type: ContractType;
   status: ContractStatus;
   titleId: string;
+  signatureDate?: Date;
+  price?: number;
+  currency?: MovieCurrency;
   /** Parent term on which this contract is created */
   parentTermId: string;
   /** List of discontinued terms */
   termIds: string[];
   /** Offer in which the contract is included is any */
-  offerId?: string;
+  offerId: string;
   /** The id of the buyer's org, can be undefined if external sale */
-  buyerId?: string;
+  buyerId: string;
   /** The user id of the buyer, can be undefined if external sale */
-  buyerUserId?: string;
+  buyerUserId: string;
   /** Id of the direct seller. AC in the Archipel Content app */
   sellerId: string;
   /** Org ids that have contract parent of this contract */
   stakeholders: string[];
+  /** If contract is an amendment, provide root contract Id */
+  rootId: string;
 }
 
 export interface Mandate extends Contract {
@@ -80,6 +85,7 @@ export function createMandate(params: Partial<Mandate> = {}): Mandate {
     id: '',
     titleId: '',
     termIds: [],
+    offerId: '',
     parentTermId: '',
     buyerId: '', // For external sales this is undefined
     buyerUserId: '', // For external sales this is undefined
@@ -87,6 +93,7 @@ export function createMandate(params: Partial<Mandate> = {}): Mandate {
     type: 'mandate',
     status: 'pending',
     stakeholders: [],
+    rootId: '',
     ...params
   }
 }
@@ -97,9 +104,10 @@ export function createSale(params: Partial<Sale> = {}): Sale {
     id: '',
     titleId: '',
     termIds: [],
+    offerId: '',
     parentTermId: '',
     ancestors: [],
-    buyerId: null, // For external sales this is undefined
+    buyerId: '', // For external sales this is undefined
     buyerUserId: '', // For external sales this is undefined
     specificity: '',
     sellerId: '', // Archipel content or the Seller
@@ -107,19 +115,20 @@ export function createSale(params: Partial<Sale> = {}): Sale {
     status: 'pending',
     stakeholders: [],
     holdbacks: [],
+    rootId: '',
     ...params
   }
 }
 
-export function createContract(params: Contract) {
+export function createContract(params: Partial<Contract>) {
   if (isMandate(params)) return createMandate(params);
   if (isSale(params)) return createSale(params);
 }
 
-export function isMandate(contract: Contract): contract is Mandate {
+export function isMandate(contract: Partial<Contract>): contract is Mandate {
   return contract.type === 'mandate';
 }
 
-export function isSale(contract: Contract): contract is Sale {
+export function isSale(contract: Partial<Contract>): contract is Sale {
   return contract.type === 'sale';
 }

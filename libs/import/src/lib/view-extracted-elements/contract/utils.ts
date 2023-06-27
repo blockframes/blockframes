@@ -10,8 +10,7 @@ import {
   Movie,
   Organization,
   Term,
-  createMandate,
-  createSale,
+  createContract,
   Mandate,
   MovieLanguageSpecification,
   Sale,
@@ -27,9 +26,18 @@ import { FieldsConfig, getContractConfig } from './fieldConfigs';
 import { TermService } from '@blockframes/contract/term/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 
-function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string): Term {
+function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string) {
 
-  const { medias, duration, territories_excluded = [], territories_included = [], exclusive, licensedOriginal } = rawTerm;
+  const {
+    medias,
+    duration,
+    territories_excluded = [],
+    territories_included = [],
+    exclusive,
+    licensedOriginal,
+    price,
+    currency
+  } = rawTerm;
 
   const languages: Term['languages'] = {};
 
@@ -59,6 +67,8 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termI
     exclusive,
     licensedOriginal,
     criteria: [],
+    price,
+    currency
   });
 }
 
@@ -111,13 +121,15 @@ export async function formatContract(
   const titleCache: Record<string, Movie> = {};
   const userCache: Record<string, User> = {};
   const contractCache: Record<string, Mandate | Sale> = {};
+  const termCache: Record<string, Term> = {};
   const contracts: ContractsImportState[] = [];
-  const caches = { orgNameCache, titleCache, userCache, contractCache };
+  const caches = { orgNameCache, titleCache, userCache, contractCache, termCache };
 
   const option = {
     orgService,
     titleService,
     contractService,
+    termService,
     waterfallDocumentsService,
     blockframesAdmin,
     userOrgId,
@@ -131,10 +143,7 @@ export async function formatContract(
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig, 11);
   for (const result of results) {
     const { data, errors } = result;
-
-    const contract = data.contract.type === 'mandate'
-      ? createMandate(data.contract as Mandate)
-      : createSale(data.contract as Sale);
+    const contract = createContract(data.contract);
 
     const { titleId, sellerId } = contract;
     if (titleId && sellerId) {
@@ -149,7 +158,7 @@ export async function formatContract(
       }
     }
 
-    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, contractService.createId()));
+    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, term.id || termService.createId()));
 
     // for **internal** sales we should check the parentTerm
     const isInternalSale = contract.type === 'sale' && contract.sellerId === config.centralOrg.id;
@@ -179,7 +188,7 @@ export async function formatContract(
       }
     }
 
-    if(config.mode !== 'waterfall') {
+    if (config.mode !== 'waterfall') {
       const overlap = await verifyOverlappingMandatesAndSales(contract, terms, contractService, termService);
       if (overlap.mandate) {
         errors.push({
