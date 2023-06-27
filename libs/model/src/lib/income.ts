@@ -1,5 +1,5 @@
 import { DocumentMeta } from './meta';
-import type { MovieCurrency } from './static/types';
+import type { Media, MovieCurrency, Territory } from './static/types';
 
 export interface Income {
   _meta?: DocumentMeta;
@@ -14,6 +14,8 @@ export interface Income {
   titleId?: string;
   status: 'pending' | 'processed';
   date: Date;
+  medias: Media[];
+  territories: Territory[];
 }
 
 // TODO #9422
@@ -37,6 +39,8 @@ export function createIncome(params: Partial<Income> = {}): Income {
     currency: 'EUR',
     status: 'pending',
     date: new Date(),
+    medias: [],
+    territories: [],
     ...params,
   };
 }

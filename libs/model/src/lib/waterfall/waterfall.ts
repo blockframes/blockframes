@@ -1,5 +1,6 @@
+import { Mandate, Sale, createContract } from '../contract';
 import { StorageFile } from '../media';
-import { DocumentMeta } from '../meta';
+import { DocumentMeta, createDocumentMeta } from '../meta';
 import { RightholderRole } from '../static';
 
 export interface WaterfallPermissions {
@@ -63,6 +64,39 @@ export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
   }
 }
 
+export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(params: Partial<WaterfallDocument<Meta>> = {}): WaterfallDocument<Meta> {
+
+  const toObject = () => {
+    if (isContract(params)) return createContract(params.meta) as Meta;
+    if (isBudget(params)) return params.meta as Meta;
+    if (isFinancingPlan(params)) return params.meta as Meta;
+  };
+
+  const meta = toObject();
+  delete (meta as any).id;
+  delete (meta as any)._meta;
+
+  return {
+    _meta: (params.meta as any)._meta || createDocumentMeta({ createdAt: new Date() }),
+    id: (params.meta as any).id ?? '',
+    type: 'contract',
+    folder: '',
+    waterfallId: '',
+    ownerId: '',
+    sharedWith: [],
+    ...params,
+    meta,
+  };
+}
+
+const isContract = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallContract> => document?.type === 'contract';
+const isBudget = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallBudget> => document?.type === 'budget';
+const isFinancingPlan = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallFinancingPlan> => document?.type === 'financingPlan';
+
+export function convertDocumentTo<T>(document: WaterfallDocument): T {
+  return { id: document.id, ...document.meta as T, _meta: document._meta };
+}
+
 type WaterfallDocumentMeta = WaterfallBudget | WaterfallContract | WaterfallFinancingPlan;
 export interface WaterfallDocument<Meta extends WaterfallDocumentMeta = unknown> {
   _meta?: DocumentMeta;
@@ -80,9 +114,7 @@ interface WaterfallBudget {
   value?: string;
 }
 
-interface WaterfallContract {
-  contractId: string // id of the contract document
-}
+export type WaterfallContract = Mandate | Sale;
 
 interface WaterfallFinancingPlan {
   // TODO #9389 add form data

@@ -65,7 +65,14 @@
             <li><span><b>Territories: </b>{{ infos.territories | toGroupLabel:'territories':'World'| join | maxLength:120 }}</span></li>
             <li><span><b>Medias: </b>{{ infos.medias | toGroupLabel:'medias':'All' | join | maxLength:120 }}</span></li>
             <li><span><b>Declared Amount: </b>--</span></li>
-            <li><span><b>Amount Paid: </b>--</span></li>
+            <li>
+              <span><b>Amount Paid: </b>
+                <ng-container *ngIf="infos.totalIncome.USD"> {{ infos.totalIncome.USD | currency:'USD' }} </ng-container>
+                <ng-container *ngIf="infos.totalIncome.USD && infos.totalIncome.EUR"> and</ng-container>
+                <ng-container *ngIf="infos.totalIncome.EUR"> {{ infos.totalIncome.EUR | currency:'EUR' }} </ng-container>
+                <ng-container *ngIf="!infos.totalIncome.USD && !infos.totalIncome.EUR"> - </ng-container>
+              </span>
+            </li>
           </ul>
           <a mat-button color="primary" class="main-dashboard-cta">
             <mat-icon svgIcon="document_signed"></mat-icon>

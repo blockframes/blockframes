@@ -2,7 +2,7 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import {
   adminOnlyWarning, alreadyExistError, checkParentTerm, getContract,
   getOrgId, getTitleId, ImportError, mandatoryError,
-  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError
+  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError, getWaterfallContract
 } from '@blockframes/import/utils';
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
@@ -14,6 +14,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { getDate } from '@blockframes/import/utils';
 import { FormatConfig } from './utils';
+import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 
 export interface FieldsConfig {
   contract: {
@@ -25,9 +26,6 @@ export interface FieldsConfig {
     stakeholders: string[];
     status: string,
   };
-  income: {
-    price: number;
-  },
   term: {
     territories_included: Territory[];
     territories_excluded: Territory[];
@@ -40,7 +38,6 @@ export interface FieldsConfig {
     caption: Language[];
   }[];
   parentTerm: string | number;
-  _titleId?: string;
 }
 
 export type FieldsConfigType = ExtractConfig<FieldsConfig>;
@@ -56,6 +53,7 @@ interface ContractConfig {
   orgService: OrganizationService,
   titleService: MovieService,
   contractService: ContractService,
+  waterfallDocumentsService: WaterfallDocumentsService,
   blockframesAdmin: boolean,
   userOrgId: string,
   caches: Caches,
@@ -68,6 +66,7 @@ export function getContractConfig(option: ContractConfig) {
     orgService,
     titleService,
     contractService,
+    waterfallDocumentsService,
     blockframesAdmin,
     userOrgId,
     caches,
@@ -162,9 +161,12 @@ export function getContractConfig(option: ContractConfig) {
         /* m */ 'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false),
         /* n */ 'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false),
         /* o */ 'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
-        /* p */ 'contract.id': async (value: string) => {
+        /* p */ 'contract.id': async (value: string, data: FieldsConfig) => {
         if (!value) return contractService.createId();
-        const exist = await getContract(value, contractService, contractCache);
+        const exist = config.mode === 'catalog' ?
+          await getContract(value, contractService, contractCache) :
+          await getWaterfallContract(value, waterfallDocumentsService, contractCache, data.contract.titleId);
+
         if (exist) throw alreadyExistError(value, 'Contract ID');
         return value;
       },
@@ -320,12 +322,5 @@ export function getContractConfig(option: ContractConfig) {
     };
   }
 
-  switch (config.app) {
-    case 'catalog':
-      return getCatalogConfig();
-    default:
-      if (blockframesAdmin) return getAdminConfig();
-      throw wrongTemplateError('admin');
-  }
-
+  return config.app === 'catalog' ? getCatalogConfig() : getAdminConfig();
 }

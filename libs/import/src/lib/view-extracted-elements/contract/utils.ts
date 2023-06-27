@@ -18,12 +18,14 @@ import {
   User,
   Language,
   FullMandate,
-  FullSale
+  FullSale,
+  createTerm
 } from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getContractConfig } from './fieldConfigs';
 import { TermService } from '@blockframes/contract/term/service';
+import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 
 function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string): Term {
 
@@ -47,7 +49,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termI
 
   const id = termId;
 
-  return {
+  return createTerm({
     id,
     languages,
     contractId,
@@ -57,7 +59,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termI
     exclusive,
     licensedOriginal,
     criteria: [],
-  };
+  });
 }
 
 const getTitleContracts = (type: ContractType, titleId: string) => [
@@ -90,6 +92,7 @@ async function verifyOverlappingMandatesAndSales(contract: Partial<Contract>, te
 export interface FormatConfig {
   app: App;
   centralOrg: Organization;
+  mode: App;
 }
 
 export async function formatContract(
@@ -97,6 +100,7 @@ export async function formatContract(
   orgService: OrganizationService,
   titleService: MovieService,
   contractService: ContractService,
+  waterfallDocumentsService: WaterfallDocumentsService,
   termService: TermService,
   blockframesAdmin: boolean,
   userOrgId: string,
@@ -114,6 +118,7 @@ export async function formatContract(
     orgService,
     titleService,
     contractService,
+    waterfallDocumentsService,
     blockframesAdmin,
     userOrgId,
     caches,
@@ -174,27 +179,32 @@ export async function formatContract(
       }
     }
 
-    const overlap = await verifyOverlappingMandatesAndSales(contract, terms, contractService, termService);
-    if (overlap.mandate) {
-      errors.push({
-        type: 'error',
-        name: 'Contract',
-        reason: 'A term overlaps with that of an existing contract.',
-        message: 'A term overlaps with that of an existing contract.'
-      });
+    if(config.mode !== 'waterfall') {
+      const overlap = await verifyOverlappingMandatesAndSales(contract, terms, contractService, termService);
+      if (overlap.mandate) {
+        errors.push({
+          type: 'error',
+          name: 'Contract',
+          reason: 'A term overlaps with that of an existing contract.',
+          message: 'A term overlaps with that of an existing contract.'
+        });
+      }
+      if (overlap.sale) {
+        errors.push({
+          type: 'error',
+          name: 'Contract',
+          reason: 'The terms of the imported sale have already been sold.',
+          message: 'The terms of the imported sale have already been sold.'
+        });
+      }
+    } else {
+      // TODO #9420
     }
-    if (overlap.sale) {
-      errors.push({
-        type: 'error',
-        name: 'Contract',
-        reason: 'The terms of the imported sale have already been sold.',
-        message: 'The terms of the imported sale have already been sold.'
-      });
-    }
+
     // remove duplicate from stakeholders
     contract.stakeholders = Array.from(new Set([...contract.stakeholders]));
 
-    contracts.push({ contract, terms, errors, newContract: true });
+    contracts.push({ contract, terms, errors, newContract: true, mode: config.mode });
   }
   return contracts;
 }

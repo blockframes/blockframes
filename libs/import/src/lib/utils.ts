@@ -1,8 +1,9 @@
 import { MovieService } from '@blockframes/movie/service';
-import { Movie, Organization, User, Mandate, Sale, Term } from '@blockframes/model';
+import { Movie, Organization, User, Mandate, Sale, Term, App } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
 import { ContractService } from '@blockframes/contract/contract/service';
+import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { UserService } from '@blockframes/user/service';
 import { where } from 'firebase/firestore';
 
@@ -37,6 +38,7 @@ export interface ContractsImportState extends ImportState {
   newContract: boolean;
   contract: Sale | Mandate;
   terms: Term[];
+  mode: App;
 }
 
 export interface OrganizationsImportState extends ImportState {
@@ -125,6 +127,25 @@ export async function getContract(
 
   try {
     const contract = await contractService.getValue(id);
+    cache[id] = contract;
+    return contract;
+  } catch (err) {/**do nothing*/ }
+
+  return;
+}
+
+export async function getWaterfallContract(
+  id: string,
+  waterfallDocumentsService: WaterfallDocumentsService,
+  cache: Record<string, Mandate | Sale>,
+  waterfallId: string
+) {
+  if (!id) return;
+
+  if (cache[id]) return cache[id];
+
+  try {
+    const contract = await waterfallDocumentsService.getContract(id, waterfallId);
     cache[id] = contract;
     return contract;
   } catch (err) {/**do nothing*/ }

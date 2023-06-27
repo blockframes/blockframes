@@ -27,7 +27,7 @@ const routes: Routes = [{
       loadChildren: () => import('@blockframes/organization/import/import.module').then(m => m.OrgImportModule),
     },
     {
-      path: 'contracts',
+      path: 'contracts/:mode',
       loadChildren: () => import('@blockframes/contract/import/import.module').then(m => m.ContractImportModule),
     },
     {

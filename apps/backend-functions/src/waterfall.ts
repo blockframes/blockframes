@@ -60,6 +60,9 @@ export async function onWaterfallDocumentDelete(change: BlockframesChange<Waterf
 
   const documents = waterfall.documents.filter(d => d.id !== before.id);
 
+
+  // TODO #9420 delete terms & incomes if type === 'contract' (check "onContractDelete()")
+
   // This will trigger onWaterfallUpdate => cleanWaterfallMedias
   return waterfallSnap.ref.update({ documents });
 }

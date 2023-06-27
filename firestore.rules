@@ -412,21 +412,26 @@ service cloud.firestore {
       }
     }
 
-    match /terms/{termId} {
+    match /terms/{termId} { // TODO #9424 update (terms should have titleId attribute)
       allow read: if isSignedInWithPassword() && notInMaintenance();
       allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId
         || userOrgId() == getContract(incomingData().contractId).sellerId)
         && notInMaintenance();
-      allow update: if (userOrgId() == getContract(existingData().contractId).sellerId
-        || isBlockframesAdmin(userId()))
+      allow update: if userOrgId() == getContract(existingData().contractId).sellerId
         && notInMaintenance();
       allow delete: if false;
     }
 
     match /incomes/{incomeId} {
-      allow read: if userOrgId() in getContract(existingData().contractId).stakeholders
+      allow read: if (
+          userOrgId() in getContract(existingData().contractId).stakeholders || 
+          canReadWaterfallDocument(existingData().titleId, existingData().contractId)
+        )
         && notInMaintenance();
-      allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId)
+      allow create: if (
+          userOrgId() == getContract(incomingData().contractId).buyerId || 
+          canUpdateWaterfallDocument(incomingData().titleId, incomingData().contractId)
+        )
         && notInMaintenance();
       allow update: if false;
       allow delete: if false;
@@ -609,11 +614,7 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( 
-            userOrgId() in existingData().sharedWith ||
-            userOrgId() == existingData().ownerId || 
-            hasWaterfallRole(waterfallId, 'producer')
-          );
+          && canReadWaterfallDocument(waterfallId, documentId);
         allow create: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
@@ -622,17 +623,11 @@ service cloud.firestore {
           && isNotUpdatingId('id', existingData().id)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && (
-            hasWaterfallRole(waterfallId, 'producer') ||
-            userOrgId() == existingData().ownerId
-          );
+          && canUpdateWaterfallDocument(waterfallId, documentId);
         allow delete: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && (
-            hasWaterfallRole(waterfallId, 'producer') ||
-            userOrgId() == existingData().ownerId
-          );
+          && canUpdateWaterfallDocument(waterfallId, documentId);
       }
     }
 
@@ -646,6 +641,20 @@ service cloud.firestore {
 
     function getWaterfall(waterfallId) {
       return get(/databases/$(database)/documents/waterfall/$(waterfallId)).data;
+    }
+
+    function canUpdateWaterfallDocument(waterfallId, documentId) {
+      return getWaterfallDocument(waterfallId, documentId).ownerId == userOrgId() || 
+        hasWaterfallRole(waterfallId, 'producer');
+    }
+
+    function canReadWaterfallDocument(waterfallId, documentId) {
+      return canUpdateWaterfallDocument(waterfallId, documentId) || 
+        userOrgId() in getWaterfallDocument(waterfallId, documentId).sharedWith;
+    }
+
+    function getWaterfallDocument(waterfallId, documentId) {
+      return get(/databases/$(database)/documents/waterfall/$(waterfallId)/documents/$(documentId)).data;
     }
 
     /////////////////////////////////////////////////////////////////////////////////
