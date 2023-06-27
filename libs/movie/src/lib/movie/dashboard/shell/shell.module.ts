@@ -9,9 +9,6 @@ import { MovieCtaDirective, DashboardTitleShellComponent } from './shell.compone
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { MovieFeatureModule } from '../../pipes/movie-feature.pipe';
-import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
-import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 // Material
@@ -28,12 +25,9 @@ import { MatMenuModule } from '@angular/material/menu';
     RouterModule,
     FlexLayoutModule,
     // Blockframes
-    MovieFeatureModule,
     ToLabelModule,
     DisplayNameModule,
     ImageModule,
-    OrgAccessModule,
-    ConfirmInputModule,
     TagModule,
     // Material
     MatTabsModule,

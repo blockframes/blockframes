@@ -6,27 +6,19 @@
     <section fxLayout fxLayout.lt-md="column" fxLayoutGap="16px">
       <ng-container *ngIf="movie$ | async as movie">
         <section fxLayout fxLayoutGap="16px" fxFlex>
-          <div class="poster-container">
-            <img fxHide.xs [ref]="movie.poster" asset="empty_poster.svg" alt="movie poster">
-            <a *ngIf="editRoute" mat-mini-fab color="primary" [routerLink]="editRoute">
-              <mat-icon svgIcon="edit"></mat-icon>
-            </a>
-          </div>
-
+          <img fxHide.xs [ref]="movie.poster" asset="empty_poster.svg" alt="movie poster">
           <article fxLayout="column" fxFlex>
-            <h4>{{ movie | movieFeature }}</h4>
-            <h1 test-id="titles-header-title">{{ movie.title.international }}</h1>
-            <bf-tag>{{ movie.app[app].status }}</bf-tag>
-
+            <h1 test-id="titles-header-title">
+              {{ movie.title.international }}
+              <a *ngIf="editRoute" mat-icon-button [routerLink]="editRoute">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>
+            </h1>
             <h6>{{ movie.directors | displayName }}</h6>
-            <p>
-              <span>{{ movie.originCountries | toLabel: 'territories'}}</span>
-              <span *ngIf="movie.originCountries.length && movie.release.year"> - </span>
-              <span>{{ movie.release.year }}</span>
-            </p>
           </article>
         </section>
         <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" >
+          <bf-tag>{{ movie.app[app].status | toLabel: 'storeStatus' }}</bf-tag>
           <ng-content select="movie-cta"></ng-content>
         </aside>
       </ng-container>
