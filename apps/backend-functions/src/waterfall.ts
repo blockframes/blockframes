@@ -1,10 +1,11 @@
 import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 import * as admin from 'firebase-admin';
-import { Block, Waterfall, WaterfallDocument } from '@blockframes/model';
+import { Block, Waterfall, WaterfallContract, WaterfallDocument, convertDocumentTo, isContract } from '@blockframes/model';
 import { waterfall } from '@blockframes/waterfall/main';
 import { getDocumentSnap, toDate } from '@blockframes/firebase-utils/firebase-utils';
-import { BlockframesChange } from '@blockframes/firebase-utils';
+import { BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 import { difference } from 'lodash';
+import { cleanRelatedContractDocuments } from './contracts';
 
 export async function buildWaterfall(data: { waterfallId: string, versionId: string, scope?: string[] }, context: CallableContext) {
   if (!data.waterfallId) throw new Error('Missing waterfallId in request');
@@ -52,21 +53,25 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
   }
 }
 
-export async function onWaterfallDocumentDelete(change: BlockframesChange<WaterfallDocument>) {
-  const before = change.before.data();
-
-  const waterfallSnap = await getDocumentSnap(`waterfall/${before.waterfallId}`);
+export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot<WaterfallDocument>) {
+  const waterfallDocument = docSnapshot.data();
+  const waterfallSnap = await getDocumentSnap(`waterfall/${waterfallDocument.waterfallId}`);
   const waterfall = waterfallSnap.data() as Waterfall;
 
-  const documents = waterfall.documents.filter(d => d.id !== before.id);
+  const documents = waterfall.documents.filter(d => d.id !== waterfallDocument.id);
 
+  // If document is a contract, clean income, terms etc..
+  if (isContract(waterfallDocument)) await cleanRelatedContractDocuments(convertDocumentTo<WaterfallContract>(waterfallDocument));
 
-  // TODO #9420 delete terms & incomes if type === 'contract' (check "onContractDelete()")
+  // Check for amendments and remove them if any
+  if (!waterfallDocument.rootId) {
+    const amendments = await waterfallSnap.ref.collection('documents').where('rootId', '==', waterfallDocument.id).get();
+    await Promise.all(amendments.docs.map(d => d.ref.delete()));
+  }
 
   // This will trigger onWaterfallUpdate => cleanWaterfallMedias
   return waterfallSnap.ref.update({ documents });
 }
-
 
 export const removeWaterfallFile = async (data: any, context: CallableContext) => {
   //  TODO #9389 check caller's org with context.uid  and check ownerId === org.id;
