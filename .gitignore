@@ -61,6 +61,8 @@ env/__ngcc_entry_points__.json
 env/env.ts
 tools/credentials/*
 tools/fixtures/**
+tools/scripts/credentials.json
+tools/scripts/token.json
 
 # cache
 .cache

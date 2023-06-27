@@ -124,6 +124,7 @@ body {
   }
 }
 
-a.mat-button.main-dashboard-cta {
+a.mat-button.main-dashboard-cta,
+button.mat-button.main-dashboard-cta {
   background-color: var(--dashboard-cta);
 }

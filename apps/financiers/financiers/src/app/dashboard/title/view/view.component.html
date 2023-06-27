@@ -4,14 +4,12 @@
       <mat-icon svgIcon="update" color="primary"></mat-icon>
       Update Funding Status
     </button>
-    <a *ngIf="movie.app.financiers.status === 'draft'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" mat-button color="primary" fragment="submit" class="main-dashboard-cta">
-      <mat-icon svgIcon="cloud_upload"></mat-icon><span>Submit Title</span>
-    </a>
-    <a *ngIf="movie.app.financiers.status === 'submitted'" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]" mat-button color="primary" class="main-dashboard-cta">
-      <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
-    </a>
     <actions-dashboard-shell [movie]="movie" fxFlex #actions="actionsDashboardShell">
       <movie-action-menu>
+        <a *ngIf="movie.app.financiers.status === 'draft'"
+          [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id, 'summary']" mat-menu-item fragment="submit">
+          <mat-icon svgIcon="cloud_upload"></mat-icon><span>Submit Title</span>
+        </a>
         <a *ngIf="movie.app.financiers.status !== 'submitted'" mat-menu-item [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
           <mat-icon svgIcon="edit"></mat-icon><span>Edit Title</span>
         </a>
