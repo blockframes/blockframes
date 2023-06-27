@@ -12,11 +12,19 @@ export async function formatIncome(sheetTab: SheetTab) {
   const option = { separator: ';' };
   const fieldsConfig = getIncomeConfig(option);
 
-  const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig, 11);
+  const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig);
   for (const result of results) {
     const { data, errors } = result;
-    const income = createIncome(data.income);
 
+    const {
+      territories_included,
+      territories_excluded
+    } = data.income;
+    delete data.income.territories_included;
+    delete data.income.territories_excluded;
+
+    const territories = territories_included.filter(territory => !territories_excluded.includes(territory));
+    const income = createIncome({ ...data.income, territories });
     incomes.push({ income, errors });
   }
   return incomes;

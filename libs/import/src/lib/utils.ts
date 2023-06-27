@@ -68,7 +68,7 @@ export const sheetRanges: Record<SpreadsheetImportType, string> = {
   titles: `A${sheetHeaderLine.titles}:BZ1000`,
   contracts: `A${sheetHeaderLine.contracts}:Y300`,
   organizations: `A${sheetHeaderLine.organizations}:Z100`,
-  incomes: `A${sheetHeaderLine.incomes}:H100`,
+  incomes: `A${sheetHeaderLine.incomes}:I100`,
 };
 
 export async function getOrgId(
