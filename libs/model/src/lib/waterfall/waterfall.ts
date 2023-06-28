@@ -42,10 +42,9 @@ export function createVersion(params: Partial<Version> = {}) {
   return version;
 }
 
-interface WaterfallFile extends StorageFile {
+export interface WaterfallFile extends StorageFile {
   id: string; // TODO #9389 will be the id of the subCollection WaterfallDocument that stores data linked to this file
   privacy: 'protected';
-  name?: string; // TODO #9389 file name
 }
 
 export function createWaterfallSource(name: string, territories_included: Territory[], territories_excluded: Territory[], medias: Media[]): WaterfallSource {
@@ -156,7 +155,7 @@ export interface WaterfallDocument<Meta extends WaterfallDocumentMeta = unknown>
   rootId: string;
   signatureDate?: Date;
   type: 'financingPlan' | 'budget' | 'contract';
-  folder: string; // TODO #9389 to create the folder arborescence in UI
+  folder: string; // TODO #9389 we might want to drop that for a sub-type, TO BE CONFIRMED WITH THE TEAM
   waterfallId: string; // Parent document Id
   ownerId: string; // TODO #9389 uploader orgId
   sharedWith: string[]; // TODO #9389 orgIds allowed to see the document
