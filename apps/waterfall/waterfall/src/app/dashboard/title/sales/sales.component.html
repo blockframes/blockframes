@@ -60,11 +60,18 @@
           <h4>{{ infos.buyerName }}</h4>
           <ul>
             <li><span><b>Contract Duration: </b>{{ infos.duration.from | date:'MM/dd/yyyy' }} - {{ infos.duration.to | date:'MM/dd/yyyy' }}</span></li>
-            <li><span><b>Signature Date </b>--</span></li>
+            <li><span><b>Signature Date </b>{{ infos.signatureDate | date:'MM/dd/yyyy' }}</span></li>
             <li><span><b>Rights Type: </b>{{ infos.type | toLabel: 'contractType' }}</span></li>
             <li><span><b>Territories: </b>{{ infos.territories | toGroupLabel:'territories':'World'| join | maxLength:120 }}</span></li>
             <li><span><b>Medias: </b>{{ infos.medias | toGroupLabel:'medias':'All' | join | maxLength:120 }}</span></li>
-            <li><span><b>Declared Amount: </b>--</span></li>
+            <li>
+              <span><b>Declared Amount: </b>
+                <ng-container *ngIf="infos.declaredAmount.USD"> {{ infos.declaredAmount.USD | currency:'USD' }} </ng-container>
+                <ng-container *ngIf="infos.declaredAmount.USD && infos.declaredAmount.EUR"> and</ng-container>
+                <ng-container *ngIf="infos.declaredAmount.EUR"> {{ infos.declaredAmount.EUR | currency:'EUR' }} </ng-container>
+                <ng-container *ngIf="!infos.declaredAmount.USD && !infos.declaredAmount.EUR"> - </ng-container>
+              </span>
+            </li>
             <li>
               <span><b>Amount Paid: </b>
                 <ng-container *ngIf="infos.totalIncome.USD"> {{ infos.totalIncome.USD | currency:'USD' }} </ng-container>
@@ -77,6 +84,10 @@
           <a mat-button color="primary" class="main-dashboard-cta">
             <mat-icon svgIcon="document_signed"></mat-icon>
             <span>See Contract</span>
+          </a>
+          <a *ngFor="let child of infos.childContracts" mat-button color="primary" class="main-dashboard-cta">
+            <mat-icon svgIcon="document_signed"></mat-icon>
+            <span>See Amendment</span>
           </a>
           <mat-divider *ngIf="!isLast"></mat-divider>
         </ng-container>

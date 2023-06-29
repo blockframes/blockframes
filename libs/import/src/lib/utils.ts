@@ -66,7 +66,7 @@ export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
 
 export const sheetRanges: Record<SpreadsheetImportType, string> = {
   titles: `A${sheetHeaderLine.titles}:BZ1000`,
-  contracts: `A${sheetHeaderLine.contracts}:Y300`,
+  contracts: `A${sheetHeaderLine.contracts}:AA300`,
   organizations: `A${sheetHeaderLine.organizations}:Z100`,
   incomes: `A${sheetHeaderLine.incomes}:I100`,
 };

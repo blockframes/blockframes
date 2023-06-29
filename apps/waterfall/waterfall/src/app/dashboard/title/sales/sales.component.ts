@@ -17,7 +17,11 @@ import {
   externalOrgIdentifier,
   getTermDurationStatus,
   Income,
-  getTotalIncome
+  getTotalIncome,
+  getDeclaredAmount,
+  getLatestContract,
+  getCurrentContract,
+  getContractAndAmendments
 } from '@blockframes/model';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { TermService } from '@blockframes/contract/term/service';
@@ -86,7 +90,7 @@ export class SalesComponent {
     }),
     tap(async markers => {
       const allMarkers = Object.values(markers).flat();
-      const orgIds = Array.from(new Set(allMarkers.map(t => t.data?.filter(s => s.buyerId).map(s => s.buyerId)).flat().filter(o => !!o)));
+      const orgIds = Array.from(new Set(allMarkers.map(t => t.contracts?.filter(s => s.buyerId).map(s => s.buyerId)).flat().filter(o => !!o)));
       if (orgIds.length) this.orgsCache = await this.orgService.getValue(orgIds);
 
       this.incomesCache = await this.incomeService.getValue([where('titleId', '==', this.waterfallId)]);
@@ -95,7 +99,7 @@ export class SalesComponent {
   );
 
   private orgsCache: Organization[] = [];
-  private incomesCache : Income[] = [];
+  private incomesCache: Income[] = [];
 
   constructor(
     private termsService: TermService,
@@ -117,12 +121,15 @@ export class SalesComponent {
 
   /** Display the territories information in the tooltip */
   public displayTerritoryTooltip(territory: TerritorySoldMarker) {
-    const [firstContract] = (territory.data || []);
+    const [firstContract] = (territory.contracts || []);
     if (firstContract) {
-      const org = this.orgsCache.find(o => firstContract.buyerId === o.id);
+      const contractAndAmendments = getContractAndAmendments(firstContract.id, territory.contracts);
+      const contract = getCurrentContract(contractAndAmendments);
+
+      const org = this.orgsCache.find(o => contract.buyerId === o.id);
       const orgName = org?.name || externalOrgIdentifier;
 
-      const termsStatus = firstContract.terms.map(t => ({ duration: t.duration, status: getTermDurationStatus(t) }));
+      const termsStatus = contract.terms.map(t => ({ duration: t.duration, status: getTermDurationStatus(t) }));
 
       let termStatus = '';
       const onGoingTerm = termsStatus.find(t => t.status === 'ongoing');
@@ -155,25 +162,32 @@ export class SalesComponent {
   public showDetails(territory: TerritorySoldMarker) {
     if (this.clickedTerritory?.name === territory.label) this.clickedTerritory = null;
     else {
-      const orgIds = Array.from(new Set(territory.data.filter(s => s.buyerId).map(s => s.buyerId)));
+      const orgIds = Array.from(new Set(territory.contracts.filter(s => s.buyerId).map(s => s.buyerId)));
       const orgs = this.orgsCache.filter(o => orgIds.includes(o.id));
       const infos = [];
-      for (const contract of territory.data) {
-        for (const term of contract.terms) {
-          const incomes = this.incomesCache.filter(i => i.termId === term.id); // TODO #9420 use territories & medias to find term
-          const termInfos = {
-            buyerName: contract.buyerId ? orgs.find(o => o.id === contract.buyerId).name : externalOrgIdentifier,
-            type: contract.type,
-            // TODO #9372 signature
-            duration: term.duration,
-            medias: term.medias,
-            territories: term.territories,
-            // TODO #9372 declared amount
-            totalIncome: getTotalIncome(incomes)
-          }
 
-          infos.push(termInfos);
-        }
+      const rootContracts = territory.contracts.filter(c => !c.rootId);
+      for (const rootContract of rootContracts) {
+
+        const contractAndAmendments = getContractAndAmendments(rootContract.id, territory.contracts);
+        const contract = getLatestContract(contractAndAmendments);
+        const childContracts = contractAndAmendments.filter(c => c.rootId);
+        const incomes = this.incomesCache.filter(i => contractAndAmendments.find(c => c.id === i.contractId));
+        
+        const contractInfos = {
+          buyerName: contract.buyerId ? orgs.find(o => o.id === contract.buyerId).name : externalOrgIdentifier,
+          type: contract.type,
+          signatureDate: contract.signatureDate,
+          duration: contract.duration,
+          medias: Array.from(new Set(contract.terms.map(t => t.medias).flat())),
+          territories: Array.from(new Set(contract.terms.map(t => t.territories).flat())),
+          declaredAmount: getDeclaredAmount(contract),
+          totalIncome: getTotalIncome(incomes),
+          rootContract: rootContract.id,
+          childContracts: childContracts.map(c => c.id)
+        };
+
+        infos.push(contractInfos);
       }
       this.clickedTerritory = { name: territory.label, infos };
     }

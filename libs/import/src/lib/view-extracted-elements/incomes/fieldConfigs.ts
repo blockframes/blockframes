@@ -5,7 +5,7 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 export interface FieldsConfig {
   income: {
-    waterfallId: string;
+    titleId: string;
     contractId: string;
     territories_included: Territory[];
     territories_excluded: Territory[];
@@ -29,7 +29,7 @@ export function getIncomeConfig(option: IncomeConfig) {
   function getAdminConfig(): FieldsConfigType {
     // ! The order of the property should be the same as excel columns
     return {
-        /* a */ 'income.waterfallId': async (value: string) => {
+        /* a */ 'income.titleId': async (value: string) => {
         return value;
       },
         /* b */ 'income.contractId': async (value: string) => {

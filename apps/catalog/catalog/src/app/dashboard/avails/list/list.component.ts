@@ -23,7 +23,7 @@ import {
   FullSale,
   FullMandate,
   decodeDate,
-  TotalIncome,
+  PricePerCurrency,
   getTotalIncome
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
@@ -43,7 +43,7 @@ type JoinSaleTitleType = {
   mandates?: FullMandate[];
   id: string;
   saleCount?: number;
-  totalIncome?: TotalIncome;
+  totalIncome?: PricePerCurrency;
   allSaleCount?: number;
 };
 

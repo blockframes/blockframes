@@ -615,7 +615,7 @@ export interface TerritorySoldMarker {
   isoA3: TerritoryISOA3Value,
   label: TerritoryValue,
   type: MediaFamily
-  data?: (FullSale | FullMandate)[]
+  contracts?: (FullSale | FullMandate)[]
 }
 
 export function territoriesSold(contracts: (FullSale | FullMandate)[]) {
@@ -626,18 +626,13 @@ export function territoriesSold(contracts: (FullSale | FullMandate)[]) {
     const termsTerritory = allTerms.filter(t => t.territories.includes(territory));
     if (termsTerritory.length) {
       const territoryContracts = Array.from(termsTerritory.map(t => contracts.find(s => s.id === t.contractId)));
-      const data: (FullSale | FullMandate)[] = territoryContracts.map(c => ({
-        ...c,
-        terms: c.terms.filter(t => t.territories.includes(territory))
-      }));
-
       const family = getMediaFamily(termsTerritory);
       availabilities[territory] = {
         type: family,
         slug: territory,
         isoA3: territoriesISOA3[territory],
         label: territories[territory],
-        data
+        contracts: territoryContracts
       }
     } else {
       availabilities[territory] = {

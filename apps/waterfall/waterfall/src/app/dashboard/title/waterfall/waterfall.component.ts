@@ -8,11 +8,43 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 // Blockframes
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
-import { TitleState, History, Waterfall, createIncome, action, Action } from '@blockframes/model';
+import {
+  TitleState,
+  History,
+  Waterfall,
+  action,
+  Action,
+  getDeclaredAmount,
+  getCurrentContract,
+  getContractAndAmendments,
+  WaterfallSource,
+  createWaterfallSource,
+  territories,
+  Territory,
+  getAssociatedSource
+} from '@blockframes/model';
 import { BlockService } from '@blockframes/waterfall/block.service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
-import { TermService } from '@blockframes/contract/term/service';
 import { IncomeService } from '@blockframes/contract/income/service';
+import { where } from 'firebase/firestore';
+import { TermService } from '@blockframes/contract/term/service';
+
+
+// TODO #9420 temp casablancas sources
+const allTerritories = Object.keys(territories).filter((t: Territory) => t !== 'world') as Territory[];
+
+const sources: WaterfallSource[] = [
+  createWaterfallSource('fr_cine', ['france'], [], ['theatrical']),
+  createWaterfallSource('fr_dvd', ['france'], [], ['rental', 'through']),
+  createWaterfallSource('fr_vod', ['france'], [], ['est', 'nVod', 'aVod', 'fVod', 'sVod', 'tVod']),
+  createWaterfallSource('fr_tv', ['france'], [], ['payTv', 'freeTv', 'payPerView']),
+  createWaterfallSource('fr_svod', ['france'], [], ['sVod']),
+  createWaterfallSource('us_svod', ['united-states-of-america', 'canada'], [], ['sVod']),
+  createWaterfallSource('row_svod', allTerritories, ['united-states-of-america', 'canada', 'france'], ['sVod']),
+  createWaterfallSource('festivals', allTerritories, [], ['festival']),
+  createWaterfallSource('us_all', ['united-states-of-america', 'canada'], [], ['theatrical', 'rental', 'through']),
+  createWaterfallSource('row_all', allTerritories, ['united-states-of-america', 'canada', 'france'], ['theatrical', 'rental', 'through', 'payTv', 'freeTv', 'payPerView', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'tVod']),
+];
 
 @Component({
   selector: 'waterfall-title-waterfall',
@@ -33,15 +65,14 @@ export class WaterfallComponent implements OnInit {
     private waterfallPermissionsService: WaterfallPermissionsService,
     private blockService: BlockService,
     private snackbar: MatSnackBar,
-
-    // TEMP
     private waterfallDocumentsService: WaterfallDocumentsService,
+    private incomeService: IncomeService,
     private termService: TermService,
-    private incomeService: IncomeService
   ) { }
 
   async ngOnInit() {
     const waterfallId: string = this.route.snapshot.params.movieId;
+    await this.waterfallService.addSources(waterfallId, sources);
     this.waterfall = await this.waterfallService.getValue(waterfallId);
     await this.loadWaterfall();
   }
@@ -55,91 +86,69 @@ export class WaterfallComponent implements OnInit {
     this.isLoading$.next(false);
   }
 
-  /**
-   * TODO TMP
-   */
-  private async populateIncomes() {
+  private async getActions() {
 
-    const madman_au = await this.waterfallDocumentsService.getContract('madman_au', this.waterfall.id);
-    const madman_au_term = await this.termService.getValue(madman_au.termIds[0]);
+    const [contracts, incomes] = await Promise.all([
+      this.waterfallDocumentsService.getContracts(this.waterfall.id),
+      this.incomeService.getValue([where('titleId', '==', this.waterfall.id)])
+    ]);
 
-    const madman_1 = createIncome({
-      id: 'madman_1',
-      contractId: madman_au.id,
-      termId: madman_au_term.id,
-      price: 26077.45,
-      currency: 'EUR',
-      status: 'processed',
-      titleId: this.waterfall.id,
-      date: new Date('2017/02/28')
-    });
-    await this.incomeService.add(madman_1);
-
-    const telepool_ger = await this.waterfallDocumentsService.getContract('telepool_ger', this.waterfall.id);
-    const telepool_ger_term = await this.termService.getValue(telepool_ger.termIds[0]);
-
-    const telepool_1 = createIncome({
-      id: 'telepool_1',
-      contractId: telepool_ger.id,
-      termId: telepool_ger_term.id,
-      price: 50000,
-      currency: 'EUR',
-      status: 'processed',
-      titleId: this.waterfall.id,
-      date: new Date('2017/10/31'),
-    });
-    await this.incomeService.add(telepool_1);
-
-    const netflix_us = await this.waterfallDocumentsService.getContract('netflix_us', this.waterfall.id);
-    const netflix_us_term = await this.termService.getValue(netflix_us.termIds[0]);
-
-    const netflix_us_1 = createIncome({
-      id: 'netflix_us_1',
-      contractId: netflix_us.id,
-      termId: netflix_us_term.id,
-      price: 11509.18,
-      currency: 'EUR',
-      status: 'processed',
-      titleId: this.waterfall.id,
-      date: new Date('2017/02/28')
-    });
-    await this.incomeService.add(netflix_us_1);
-
-    const netflix_us_2 = createIncome({
-      id: 'netflix_us_2',
-      contractId: netflix_us.id,
-      termId: netflix_us_term.id,
-      price: 12892.65,
-      currency: 'EUR',
-      status: 'processed',
-      titleId: this.waterfall.id,
-      date: new Date('2017/04/30')
-    });
-    await this.incomeService.add(netflix_us_2);
+    const terms = (await Promise.all(contracts.map(c => this.termService.getValue([where('contractId', '==', c.id)])))).flat();
 
     const actions: Action[] = [
-      action('append', { id: 'test', orgId: 'test', previous: [], percent: 1 }),
-
-      // TODO #9420 contracts amount , date , end & start
-      action('contract', { amount: 0, id: madman_au.id, date: new Date() }),
-      action('contract', { amount: 0, id: telepool_ger.id, date: new Date() }),
-      action('contract', { amount: 0, id: netflix_us.id, date: new Date() }),
-
-      // TODO #9420 updateContract action (netflix)
-
-      action('income', { id: madman_1.id, contractId: madman_au.id, from: madman_au.id, to: 'test', amount: madman_1.price, date: madman_1.date, territory: madman_au_term.territories, media: madman_au_term.medias }),
-      action('income', { id: telepool_1.id, contractId: telepool_ger.id, from: telepool_ger.id, to: 'test', amount: telepool_1.price, date: telepool_1.date, territory: telepool_ger_term.territories, media: telepool_ger_term.medias }),
-
-      action('income', { id: netflix_us_1.id, contractId: netflix_us.id, from: netflix_us.id, to: 'test', amount: netflix_us_1.price, date: netflix_us_1.date, territory: netflix_us_term.territories, media: netflix_us_term.medias }),
-      action('income', { id: netflix_us_2.id, contractId: netflix_us.id, from: netflix_us.id, to: 'test', amount: netflix_us_2.price, date: netflix_us_2.date, territory: netflix_us_term.territories, media: netflix_us_term.medias }),
+      action('append', { id: 'test', orgId: 'test', previous: [], percent: 1 })
     ];
+
+    contracts.forEach(c => {
+      if (c.rootId) {
+        actions.push(
+          action('updateContract', {
+            amount: getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) }).EUR, // TODO #9420 should converted to a single currency
+            id: c.rootId,
+            date: c.signatureDate,
+            start: c.duration.from,
+            end: c.duration.to
+          })
+        );
+      } else {
+        actions.push(
+          action('contract', {
+            amount: getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) }).EUR, // TODO #9420 should converted to a single currency
+            id: c.id,
+            date: c.signatureDate,
+            start: c.duration.from,
+            end: c.duration.to
+          })
+        );
+      }
+    });
+
+    incomes.forEach(i => {
+      const contractAndAmendments = getContractAndAmendments(i.contractId, contracts);
+      const contract = getCurrentContract(contractAndAmendments, i.date);
+      const source = getAssociatedSource(i, this.waterfall.sources);
+      if (!source) {
+        this.snackbar.open(`Could not find source for income ${i.id}`, 'close', { duration: 5000 });
+        return;
+      }
+      actions.push(
+        action('income', {
+          id: i.id,
+          contractId: contract.id,
+          from: source.name,
+          to: 'test',
+          amount: i.price,
+          date: i.date,
+          territory: i.territories,
+          media: i.medias
+        })
+      );
+    });
 
     return actions;
   }
 
   async initWaterfall() {
-    const actions = await this.populateIncomes();
-
     this.isLoading$.next(true);
 
     const isProducer = await this.waterfallPermissionsService.hasRole(this.waterfall.id, 'producer');
@@ -149,6 +158,8 @@ export class WaterfallComponent implements OnInit {
       this.isLoading$.next(false);
       return;
     }
+
+    const actions = await this.getActions();
 
     const [init] = await Promise.all([
       this.blockService.create(this.waterfall.id, 'init', actions),

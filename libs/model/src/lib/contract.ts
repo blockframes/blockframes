@@ -1,8 +1,9 @@
-import { Income, TotalIncome } from './income';
+import { Income } from './income';
 import { DocumentMeta, createDocumentMeta } from './meta';
 import { Negotiation } from './negociation';
 import type { Media, Territory, ContractStatus, ContractType, MovieCurrency } from './static';
 import { Duration, Term } from './terms';
+import { PricePerCurrency } from './utils';
 
 export interface Holdback {
   territories: Territory[];
@@ -19,6 +20,7 @@ export interface Contract {
   signatureDate?: Date;
   price?: number;
   currency?: MovieCurrency;
+  duration?: Duration;
   /** Parent term on which this contract is created */
   parentTermId: string;
   /** List of discontinued terms */
@@ -67,7 +69,7 @@ export interface DetailedContract extends Contract {
   negotiation?: Negotiation;
   // For external & internal contracts
   incomes?: Income[];
-  totalIncome?: TotalIncome;
+  totalIncome?: PricePerCurrency;
 }
 
 export function createHoldback(params: Partial<Holdback> = {}): Holdback {
@@ -131,4 +133,67 @@ export function isMandate(contract: Partial<Contract>): contract is Mandate {
 
 export function isSale(contract: Partial<Contract>): contract is Sale {
   return contract.type === 'sale';
+}
+
+/**
+ * Returns declared amount of a contract.
+ * Amount can be located on contract document or on its terms for more detailed data
+ * @param contract 
+ * @returns 
+ */
+export function getDeclaredAmount(contract: FullMandate | FullSale): PricePerCurrency {
+  if (contract.price && contract.price > 0) return { [contract.currency]: contract.price };
+  const amount: PricePerCurrency = {};
+  contract.terms.forEach(t => {
+    amount[t.currency] ||= 0;
+    amount[t.currency] += t.price;
+  });
+  return amount;
+}
+
+// ----------------------------
+//    AMENDMENTS MANAGEMENT  //
+// ----------------------------
+
+/**
+ * Returns the latest contract of a set
+ * @param contracts 
+ * @returns 
+ */
+export function getLatestContract<T extends Contract>(contracts: T[]) {
+  return sortContracts(contracts)[contracts.length - 1];
+}
+
+/**
+ * Returns all contracts (root and childs), sorted by signature date
+ * @param contractId 
+ * @param contracts 
+ * @returns 
+ */
+export function getContractAndAmendments<T extends Contract>(contractId: string, contracts: T[]) {
+  const contract = contracts.find(c => c.id === contractId);
+  if (contract.rootId) {
+    return sortContracts(contracts.filter(c => c.rootId === contract.rootId || c.id === contract.rootId));
+  } else {
+    return sortContracts(contracts.filter(c => c.rootId === contract.id || c.id === contract.id));
+  }
+}
+
+/**
+ * Returns root or amendment contract that matches date
+ * @param contracts 
+ * @param date 
+ * @returns 
+ */
+export function getCurrentContract<T extends Contract>(contracts: T[], date = new Date()) {
+  return sortContracts(contracts).reverse().find(c => c.signatureDate.getTime() < date.getTime());
+}
+
+/**
+ * Sorts contracts by signature date
+ * @param contracts 
+ * @returns 
+ */
+export function sortContracts<T extends Contract>(contracts: T[]) {
+  return contracts.sort((a, b) => a.signatureDate.getTime() - b.signatureDate.getTime());
 }

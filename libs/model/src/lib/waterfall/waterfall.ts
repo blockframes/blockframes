@@ -1,7 +1,9 @@
 import { Mandate, Sale, createContract } from '../contract';
+import { Income } from '../income';
 import { StorageFile } from '../media';
 import { DocumentMeta, createDocumentMeta } from '../meta';
-import { RightholderRole } from '../static';
+import { Media, RightholderRole, Territory } from '../static';
+import { allOf } from '../avail';
 
 export interface WaterfallPermissions {
   _meta?: DocumentMeta;
@@ -46,12 +48,35 @@ interface WaterfallFile extends StorageFile {
   name?: string; // TODO #9389 file name
 }
 
+export function createWaterfallSource(name: string, territories_included: Territory[], territories_excluded: Territory[], medias: Media[]): WaterfallSource {
+  return {
+    name,
+    territories: territories_included.filter(territory => !territories_excluded.includes(territory)),
+    medias
+  }
+}
+
+export function getAssociatedSource(income: Income, sources: WaterfallSource[]) {
+  return sources.find(source => allOf(income.territories).in(source.territories) && allOf(income.medias).in(source.medias));
+}
+
+/**
+ * Defines sources that an income will be associated to.
+ * row_all, us_svod etc ..
+ */
+export interface WaterfallSource {
+  name: string;
+  territories: Territory[];
+  medias: Media[];
+}
+
 export interface Waterfall {
   _meta?: DocumentMeta;
   id: string;
   versions: Version[]
   orgIds: string[]; // Orgs linked to waterfall, can read document if in it
   documents: WaterfallFile[];
+  sources: WaterfallSource[];
 }
 
 export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
@@ -60,6 +85,7 @@ export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
     versions: [],
     orgIds: [],
     documents: [],
+    sources: [],
     ...params,
   }
 }
@@ -77,6 +103,7 @@ export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(para
   delete (meta as any)._meta;
   delete (meta as any).rootId;
   delete (meta as any).signatureDate;
+  delete (meta as any).titleId;
 
   return {
     _meta: (params.meta as any)._meta || createDocumentMeta({ createdAt: new Date() }),
@@ -98,13 +125,19 @@ const isBudget = (document: Partial<WaterfallDocument>): document is WaterfallDo
 const isFinancingPlan = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallFinancingPlan> => document?.type === 'financingPlan';
 
 export function convertDocumentTo<T>(document: WaterfallDocument): T {
-  return {
-    id: document.id,
-    rootId: document.rootId,
-    signatureDate: document.signatureDate,
-    ...document.meta as T,
-    _meta: document._meta
-  };
+  switch (document.type) {
+    case 'contract':
+      return {
+        id: document.id,
+        rootId: document.rootId,
+        signatureDate: document.signatureDate,
+        titleId: document.waterfallId,
+        ...document.meta as T,
+        _meta: document._meta
+      };
+    default:
+      break;
+  }
 }
 
 type WaterfallDocumentMeta = WaterfallBudget | WaterfallContract | WaterfallFinancingPlan;

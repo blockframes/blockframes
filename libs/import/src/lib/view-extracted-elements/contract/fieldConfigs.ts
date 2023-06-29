@@ -25,11 +25,12 @@ export interface FieldsConfig {
     buyerId: string;
     id?: string;
     stakeholders: string[];
-    status: ContractStatus,
-    rootId: string,
-    signatureDate?: Date,
-    price?: number,
-    currency?: MovieCurrency
+    status: ContractStatus;
+    rootId: string;
+    signatureDate?: Date;
+    price?: number;
+    currency?: MovieCurrency;
+    duration?: Duration
   };
   term: {
     territories_included: Territory[];
@@ -42,8 +43,8 @@ export interface FieldsConfig {
     subtitle: Language[];
     caption: Language[];
     id?: string;
-    price?: number,
-    currency?: MovieCurrency
+    price?: number;
+    currency?: MovieCurrency;
   }[];
   parentTerm: string | number;
 }
@@ -253,6 +254,12 @@ export function getContractConfig(option: ContractConfig) {
       /* y */ 'contract.currency': async (value: string) => {
         const currency = getKeyIfExists('movieCurrencies', value);
         return currency;
+      },
+      /* z */ 'contract.duration.from': (value: string) => {
+        return getDate(value, 'Start of Contract') as Date;
+      },
+      /* aa */ 'contract.duration.to': (value: string) => {
+        return getDate(value, 'End of Contract') as Date;
       },
     };
   }

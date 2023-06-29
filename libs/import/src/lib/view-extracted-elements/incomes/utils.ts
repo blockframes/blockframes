@@ -24,7 +24,7 @@ export async function formatIncome(sheetTab: SheetTab) {
     delete data.income.territories_excluded;
 
     const territories = territories_included.filter(territory => !territories_excluded.includes(territory));
-    const income = createIncome({ ...data.income, territories });
+    const income = createIncome({ ...data.income, territories, status: 'processed' });
     incomes.push({ income, errors });
   }
   return incomes;
