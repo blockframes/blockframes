@@ -62,7 +62,7 @@ describe('Movie search in marketplace', () => {
 
   it('Find with title', () => {
     syncMovieToAlgolia(movie.id);
-    get('title-link').eq(0).click();
+    get('Library').click();
     get('search-input').type(movie.title.international);
     //wait for the count to update before checking our movie
     get('titles-count').should('contain', oneTitleSentence);
@@ -71,7 +71,7 @@ describe('Movie search in marketplace', () => {
 
   it('Find with director', () => {
     syncMovieToAlgolia(movie.id);
-    get('title-link').eq(0).click();
+    get('Library').click();
     get('search-input').type(`${movie.directors[0].firstName} ${movie.directors[0].lastName}`);
     get('titles-count').should('contain', oneTitleSentence);
     get(`movie-card_${movie.id}`).should('exist');
@@ -79,7 +79,7 @@ describe('Movie search in marketplace', () => {
 
   it('Find with keyword', () => {
     syncMovieToAlgolia(movie.id);
-    get('title-link').eq(0).click();
+    get('Library').click();
     get('search-input').type(movie.keywords[0]);
     get('titles-count').should('contain', oneTitleSentence);
     get(`movie-card_${movie.id}`).should('exist');
@@ -87,7 +87,7 @@ describe('Movie search in marketplace', () => {
 
   it('Find with filters, save & load filters', () => {
     syncMovieToAlgolia(movie.id);
-    get('title-link').eq(0).click();
+    get('Library').click();
     get('titles-count');
     selectFilter('Content Type');
     selectToggle('content_', 'Movie');
@@ -139,7 +139,7 @@ describe('Movie search in marketplace', () => {
 
   it('Title is excluded if no match with filters', () => {
     syncMovieToAlgolia(movie.id);
-    get('title-link').eq(0).click();
+    get('Library').click();
     get('titles-count').should('not.contain', oneTitleSentence);
     get('search-input').type(movie.title.international);
     get('titles-count').should('contain', oneTitleSentence);
@@ -219,7 +219,7 @@ describe('Movie search in marketplace', () => {
   it('Absent if not released', () => {
     firestore.update({ docPath: `movies/${movie.id}`, field: 'app.catalog.status', value: 'draft' });
     syncMovieToAlgolia(movie.id);
-    get('title-link').eq(0).click();
+    get('Library').click();
     get('titles-count').then($result => {
       const titlesCount = $result[0].innerText;
       get('search-input').type(movie.title.international);
@@ -232,7 +232,7 @@ describe('Movie search in marketplace', () => {
 
   it('Can only export less than 450 movies', () => {
     syncMovieToAlgolia(movie.id);
-    get('title-link').eq(0).click();
+    get('Library').click();
     //There shouldn't be less than 450 movies
     get('export').click();
     cy.contains(`Sorry, you can't have an export with that many titles.`);
@@ -245,14 +245,14 @@ describe('Movie search in marketplace', () => {
   });
 
   it('Can load more movies', () => {
-    get('title-link').eq(0).click();
+    get('Library').click();
     getAllStartingWith('movie-card_').should('have.length', 50);
     get('load-more').click();
     getAllStartingWith('movie-card_').should('have.length', 100);
   });
 
   it('Group in Country of Origin filter works properly', () => {
-    get('title-link').eq(0).click();
+    get('Library').click();
     selectFilter('Country of Origin');
     get('origin-countries').click();
     get('Europe').click();
