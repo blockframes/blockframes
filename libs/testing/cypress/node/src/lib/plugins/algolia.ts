@@ -12,9 +12,27 @@ export async function storeMovie({ movie, orgs }: { movie: Movie; orgs: Organiza
 }
 
 export async function deleteAlgoliaMovie({ app, objectId }: { app: AlgoliaApp; objectId: string }) {
-  return await indexBuilder(algolia.indexNameMovies[app], process.env['ALGOLIA_API_KEY']).deleteObject(objectId);
+  const builder = getIndexBuilder(app, 'movies');
+  return await builder.deleteObject(objectId);
 }
 
 export async function deleteAlgoliaOrg({ app, objectId }: { app: AlgoliaApp; objectId: string }) {
-  return await indexBuilder(algolia.indexNameOrganizations[app], process.env['ALGOLIA_API_KEY']).deleteObject(objectId);
+  const builder = getIndexBuilder(app, 'orgs');
+  return await builder.deleteObject(objectId);
+}
+
+export async function deleteAlgoliaTestMovies(app: AlgoliaApp) {
+  const builder = getIndexBuilder(app, 'movies');
+  const search = await builder.search('E2E', {
+    attributesToRetrieve: ['title.international'],
+  });
+  if (!search.nbHits) return false;
+  const movies = search.hits;
+  return await builder.deleteObjects(movies.map(m => m.objectID));
+}
+
+function getIndexBuilder(app: AlgoliaApp, index: 'movies' | 'orgs') {
+  const apiKey = process.env['ALGOLIA_API_KEY'];
+  if (index === 'movies') return indexBuilder(algolia.indexNameMovies[app], apiKey);
+  if (index === 'orgs') return indexBuilder(algolia.indexNameOrganizations[app], apiKey);
 }
