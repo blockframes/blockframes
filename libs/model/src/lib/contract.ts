@@ -186,7 +186,7 @@ export function getContractAndAmendments<T extends Contract>(contractId: string,
  * @returns 
  */
 export function getCurrentContract<T extends Contract>(contracts: T[], date = new Date()) {
-  return sortContracts(contracts).reverse().find(c => c.signatureDate.getTime() < date.getTime());
+  return sortContracts(contracts).reverse().find(c => c.signatureDate.getTime() <= date.getTime());
 }
 
 /**

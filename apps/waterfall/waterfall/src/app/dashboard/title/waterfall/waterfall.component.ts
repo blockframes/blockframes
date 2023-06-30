@@ -28,7 +28,7 @@ import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.serv
 import { IncomeService } from '@blockframes/contract/income/service';
 import { where } from 'firebase/firestore';
 import { TermService } from '@blockframes/contract/term/service';
-
+import { ExpenseService } from '@blockframes/contract/expense/service';
 
 // TODO #9420 temp casablancas sources
 const allTerritories = Object.keys(territories).filter((t: Territory) => t !== 'world') as Territory[];
@@ -68,6 +68,7 @@ export class WaterfallComponent implements OnInit {
     private waterfallDocumentsService: WaterfallDocumentsService,
     private incomeService: IncomeService,
     private termService: TermService,
+    private expenseService: ExpenseService,
   ) { }
 
   async ngOnInit() {
@@ -88,9 +89,10 @@ export class WaterfallComponent implements OnInit {
 
   private async getActions() {
 
-    const [contracts, incomes] = await Promise.all([
+    const [contracts, incomes, expenses] = await Promise.all([
       this.waterfallDocumentsService.getContracts(this.waterfall.id),
-      this.incomeService.getValue([where('titleId', '==', this.waterfall.id)])
+      this.incomeService.getValue([where('titleId', '==', this.waterfall.id)]),
+      this.expenseService.getValue([where('titleId', '==', this.waterfall.id)])
     ]);
 
     const terms = (await Promise.all(contracts.map(c => this.termService.getValue([where('contractId', '==', c.id)])))).flat();
@@ -141,6 +143,19 @@ export class WaterfallComponent implements OnInit {
           date: i.date,
           territory: i.territories,
           media: i.medias
+        })
+      );
+    });
+
+    expenses.forEach(e => {
+      const contractAndAmendments = getContractAndAmendments(e.contractId, contracts);
+      const contract = getCurrentContract(contractAndAmendments, e.date);
+      actions.push(
+        action('expense', {
+          orgId: contract.buyerId,
+          amount: e.price,
+          type: e.type,
+          date: e.date
         })
       );
     });
