@@ -41,29 +41,29 @@
     <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="income.id">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Income Id </th>
-    <td mat-cell *matCellDef="let element"> {{ element.income.id ? element.income.id : '--' }} </td>
+  <ng-container matColumnDef="expense.id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Expense Id </th>
+    <td mat-cell *matCellDef="let element"> {{ element.expense.id ? element.expense.id : '--' }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="income.titleId">
+  <ng-container matColumnDef="expense.titleId">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Waterfall Id </th>
-    <td mat-cell *matCellDef="let element"> {{ element.income.titleId ? element.income.titleId : '--' }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.expense.titleId ? element.expense.titleId : '--' }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="income.contractId">
+  <ng-container matColumnDef="expense.contractId">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Contract Id </th>
-    <td mat-cell *matCellDef="let element"> {{ element.income.contractId ? element.income.contractId : '--' }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.expense.contractId ? element.expense.contractId : '--' }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="income.price">
+  <ng-container matColumnDef="expense.price">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
-    <td mat-cell *matCellDef="let element"> {{ element.income.price ? element.income.price : '--' }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.expense.price ? element.expense.price : '--' }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="income.currency">
+  <ng-container matColumnDef="expense.currency">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Currency </th>
-    <td mat-cell *matCellDef="let element"> {{ element.income.currency ? element.income.currency : '--' }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.expense.currency ? element.expense.currency : '--' }} </td>
   </ng-container>
 
   <ng-container matColumnDef="errors">

@@ -7,37 +7,37 @@ import { Component, Input, ViewChild, AfterViewInit, ChangeDetectionStrategy, Ch
 import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { sortingDataAccessor } from '@blockframes/utils/table';
-import { IncomesImportState, SpreadsheetImportError } from '../../utils';
-import { createDocumentMeta, createIncome } from '@blockframes/model';
+import { ExpensesImportState, SpreadsheetImportError } from '../../utils';
+import { createDocumentMeta, createExpense } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { IncomeService } from '@blockframes/contract/income/service';
+import { ExpenseService } from '@blockframes/contract/expense/service';
 
-const hasImportErrors = (importState: IncomesImportState, type: string = 'error'): boolean => {
+const hasImportErrors = (importState: ExpensesImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 
 @Component({
-  selector: 'import-table-extracted-incomes',
-  templateUrl: './incomes.component.html',
-  styleUrls: ['./incomes.component.scss'],
+  selector: 'import-table-extracted-expenses',
+  templateUrl: './expenses.component.html',
+  styleUrls: ['./expenses.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableExtractedIncomesComponent implements AfterViewInit {
+export class TableExtractedExpensesComponent implements AfterViewInit {
 
-  @Input() rows: MatTableDataSource<IncomesImportState>;
+  @Input() rows: MatTableDataSource<ExpensesImportState>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   public processing = 0;
 
-  public selection = new SelectionModel<IncomesImportState>(true, []);
+  public selection = new SelectionModel<ExpensesImportState>(true, []);
   public displayedColumns: string[] = [
     'id',
     'select',
-    'income.id',
-    'income.titleId',
-    'income.contractId',
-    'income.price',
-    'income.currency',
+    'expense.id',
+    'expense.titleId',
+    'expense.contractId',
+    'expense.price',
+    'expense.currency',
     'errors',
     'warnings',
     'actions',
@@ -46,7 +46,7 @@ export class TableExtractedIncomesComponent implements AfterViewInit {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private incomeService: IncomeService,
+    private expenseService: ExpenseService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -57,27 +57,27 @@ export class TableExtractedIncomesComponent implements AfterViewInit {
     this.rows.sort = this.sort;
   }
 
-  async create(importState: IncomesImportState) {
+  async create(importState: ExpensesImportState) {
     await this.add(importState);
-    this.snackBar.open('Income added!', 'close', { duration: 9000 });
+    this.snackBar.open('Expense added!', 'close', { duration: 9000 });
   }
 
   async createSelected() {
     try {
       const creations = this.selection.selected.filter(importState => !hasImportErrors(importState));
-      for (const income of creations) {
-        await this.add(income, { increment: true });
+      for (const expense of creations) {
+        await this.add(expense, { increment: true });
       }
 
       const text = this.processing === creations.length
-        ? `${creations.length}/${creations.length} income(s) created!`
-        : `Could not import all incomes (${this.processing} / ${this.selection.selected.length})`;
+        ? `${creations.length}/${creations.length} expense(s) created!`
+        : `Could not import all expenses (${this.processing} / ${this.selection.selected.length})`;
       this.snackBar.open(text, 'close', { duration: 3000 });
 
       this.processing = 0;
     } catch (err) {
       console.error(err);
-      this.snackBar.open(`Could not import all incomes (${this.processing} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not import all expenses (${this.processing} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.processing = 0;
     }
 
@@ -85,18 +85,18 @@ export class TableExtractedIncomesComponent implements AfterViewInit {
   }
 
   /**
-   * Adds an income to database and prevents multi-insert by refreshing mat-table
+   * Adds an expense to database and prevents multi-insert by refreshing mat-table
    * @param importState
    */
-  private async add(importState: IncomesImportState, { increment } = { increment: false }) {
+  private async add(importState: ExpensesImportState, { increment } = { increment: false }) {
     importState.importing = true;
     this.cdr.markForCheck();
 
     if (increment) this.processing++;
     this.cdr.markForCheck();
 
-    await this.incomeService.add(createIncome({
-      ...importState.income,
+    await this.expenseService.add(createExpense({
+      ...importState.expense,
       _meta: createDocumentMeta({ createdAt: new Date() })
     }));
 
@@ -111,10 +111,10 @@ export class TableExtractedIncomesComponent implements AfterViewInit {
   // POPINS
   ///////////////////
 
-  displayErrors(importState: IncomesImportState) {
+  displayErrors(importState: ExpensesImportState) {
     this.dialog.open(ViewImportErrorsComponent, {
       data: createModalData({
-        title: `Income id ${importState.income.id}`,
+        title: `Expense id ${importState.expense.id}`,
         errors: importState.errors
       })
     });
@@ -145,7 +145,7 @@ export class TableExtractedIncomesComponent implements AfterViewInit {
   /**
    * The label for the checkbox on the passed row
    */
-  checkboxLabel(row?: IncomesImportState): string {
+  checkboxLabel(row?: ExpensesImportState): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
@@ -163,8 +163,8 @@ export class TableExtractedIncomesComponent implements AfterViewInit {
    * Specify the fields in which filter is possible.
    * Even for nested objects.
    */
-  public filterPredicate(data: IncomesImportState, filter: string) {
-    const dataStr = data.income.id;
+  public filterPredicate(data: ExpensesImportState, filter: string) {
+    const dataStr = data.expense.id;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

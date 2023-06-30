@@ -1,5 +1,5 @@
 import { MovieService } from '@blockframes/movie/service';
-import { Movie, Organization, User, Mandate, Sale, Term, App, Income } from '@blockframes/model';
+import { Movie, Organization, User, Mandate, Sale, Term, App, Income, Expense } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
 import { ContractService } from '@blockframes/contract/contract/service';
@@ -8,7 +8,7 @@ import { UserService } from '@blockframes/user/service';
 import { where } from 'firebase/firestore';
 import { TermService } from '@blockframes/contract/term/service';
 
-export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts', 'incomes'] as const;
+export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts', 'incomes', 'expenses'] as const;
 
 export type SpreadsheetImportType = typeof spreadsheetImportTypes[number];
 
@@ -52,6 +52,10 @@ export interface IncomesImportState extends ImportState {
   income: Income;
 }
 
+export interface ExpensesImportState extends ImportState {
+  expense: Expense;
+}
+
 /**
  * This hold the excel line number where the data start.
  * It should always match the column names line in the excel files.
@@ -62,6 +66,7 @@ export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
   contracts: 10,
   organizations: 10,
   incomes: 10,
+  expenses: 10,
 };
 
 export const sheetRanges: Record<SpreadsheetImportType, string> = {
@@ -69,6 +74,7 @@ export const sheetRanges: Record<SpreadsheetImportType, string> = {
   contracts: `A${sheetHeaderLine.contracts}:AA300`,
   organizations: `A${sheetHeaderLine.organizations}:Z100`,
   incomes: `A${sheetHeaderLine.incomes}:I100`,
+  expenses: `A${sheetHeaderLine.incomes}:H100`,
 };
 
 export async function getOrgId(

@@ -38,6 +38,10 @@ const routes: Routes = [{
       path: 'incomes',
       loadChildren: () => import('@blockframes/contract/income/import/import.module').then(m => m.IncomeImportModule),
     },
+    {
+      path: 'expenses',
+      loadChildren: () => import('@blockframes/contract/expense/import/import.module').then(m => m.ExpenseImportModule),
+    },
   ]
 }];
 

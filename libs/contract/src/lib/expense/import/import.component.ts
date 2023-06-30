@@ -4,12 +4,12 @@ import { Intercom } from 'ng-intercom';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 
 @Component({
-  selector: 'income-import',
+  selector: 'expense-import',
   templateUrl: './import.component.html',
   styleUrls: ['./import.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IncomeImportComponent {
+export class ExpenseImportComponent {
 
   sheetTab?: SheetTab;
 
