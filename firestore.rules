@@ -412,7 +412,7 @@ service cloud.firestore {
       }
     }
 
-    match /terms/{termId} { // TODO #9424 update (terms should have titleId attribute)
+    match /terms/{termId} { // TODO #9420 update (terms should have titleId attribute)
       allow read: if isSignedInWithPassword() && notInMaintenance();
       allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId
         || userOrgId() == getContract(incomingData().contractId).sellerId)
@@ -433,10 +433,18 @@ service cloud.firestore {
           canUpdateWaterfallDocument(incomingData().titleId, incomingData().contractId)
         )
         && notInMaintenance();
-      allow update: if false;
-      allow delete: if false;
+      allow update: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId);
+      allow delete: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId);
     }
 
+    match /expenses/{expenseId} {
+      allow read: if canReadWaterfallDocument(existingData().titleId, existingData().contractId)
+        && notInMaintenance();
+      allow create: if canUpdateWaterfallDocument(incomingData().titleId, incomingData().contractId)
+        && notInMaintenance();
+      allow update: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId);
+      allow delete: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId);
+    }
 
     // Get the data of an existing contract
     function getContract(contractId) {
@@ -614,7 +622,11 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && canReadWaterfallDocument(waterfallId, documentId);
+          && (
+            userOrgId() in existingData().sharedWith ||
+            userOrgId() == existingData().ownerId || 
+            hasWaterfallRole(waterfallId, 'producer')
+          )
         allow create: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
