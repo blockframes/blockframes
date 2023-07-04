@@ -10,18 +10,88 @@
   </a>
   <h1>Edit Movie</h1>
 
-  <waterfall-title-form
-    [movieId]="movieId"
-    [movieForm]="movieForm"
-    [waterfallRoleControl]="waterfallRoleControl"
-  ></waterfall-title-form>
-
-  <section>
-    <ng-container *ngIf="updating$ | async; else edit">
-      <logo-spinner></logo-spinner>
-    </ng-container>
-    <ng-template #edit>
-      <button mat-flat-button color="primary" (click)="update()" [disabled]="invalid$ | async">Save Movie</button>
+  <mat-stepper #stepper>
+    <!-- override default stepper icons for the "edit" & "done" steps -->
+    <ng-template matStepperIcon="edit" let-index="index">
+      {{index + 1}}
     </ng-template>
-  </section>
+    <ng-template matStepperIcon="done" let-index="index">
+      {{index + 1}}
+    </ng-template>
+
+    <mat-step>
+      <ng-template matStepLabel>Movie Information</ng-template>
+      <waterfall-title-form
+        [movieId]="movieId"
+        [movieForm]="movieForm"
+        [waterfallRoleControl]="waterfallRoleControl"
+      ></waterfall-title-form>
+
+      <section>
+        <ng-container *ngIf="updating$ | async; else editInfo">
+          <logo-spinner></logo-spinner>
+        </ng-container>
+        <ng-template #editInfo>
+          <button mat-flat-button color="primary" (click)="updateMovie()" [disabled]="invalidMovie$ | async">
+            <span>Edit Movie</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </button>
+        </ng-template>
+      </section>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Right Holders Information</ng-template>
+      <waterfall-right-holder-form
+        [rightholdersForm]="rightholdersForm"
+        (skip)="skip()"
+      ></waterfall-right-holder-form>
+      <section>
+        <ng-container *ngIf="updating$ | async; else editRightHolders">
+          <logo-spinner></logo-spinner>
+        </ng-container>
+        <ng-template #editRightHolders>
+          <button mat-flat-button color="primary" (click)="updateRightholders()" [disabled]="invalidRightholders$ | async">
+            <span>Continue</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </button>
+        </ng-template>
+      </section>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Add Contracts</ng-template>
+      <waterfall-contracts-form></waterfall-contracts-form>
+      <section>
+        <ng-container *ngIf="updating$ | async; else editContracts">
+          <logo-spinner></logo-spinner>
+        </ng-container>
+        <ng-template #editContracts>
+          <button mat-flat-button color="primary">
+            <span>Continue</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </button>
+        </ng-template>
+      </section>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Invite Right Holders</ng-template>
+      <p>4</p>
+      <section>
+        <ng-container *ngIf="updating$ | async; else editInvite">
+          <logo-spinner></logo-spinner>
+        </ng-container>
+        <ng-template #editInvite>
+          <button mat-flat-button color="primary">
+            <span>Continue</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </button>
+        </ng-template>
+      </section>
+    </mat-step>
+    
+    
+  </mat-stepper>
+
+
+  
 </ng-template>

@@ -24,6 +24,7 @@
 @use '../components/mat-icon' as icon;
 @use '../components/mat-toggle-button' as toggle-button;
 @use '../components/mat-sidenav' as sidenav;
+@use '../components/mat-stepper' as stepper;
 @use '../components/mat-dialog' as dialog;
 @use '../components/mat-tabs' as tabs;
 @use '../components/mat-tooltip' as tooltip;
@@ -192,6 +193,7 @@
   @include toolbar.color($theme);
   @include toggle-button.color($theme);
   @include sidenav.color($theme);
+  @include stepper.color($theme);
   @include icon.color($theme);
   @include dialog.color($theme);
   @include datepicker.color($theme);

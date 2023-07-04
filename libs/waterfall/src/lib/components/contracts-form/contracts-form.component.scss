@@ -1,0 +1,26 @@
+
+:host {
+  width: 100%;
+}
+
+section {
+  margin: 32px 0;
+
+  p {
+    margin: 16px 0px 32px 0;
+  }
+
+  article {
+    display: flex;
+    
+    &.header {
+      align-items: center;
+      justify-content: space-between;
+
+      h2, button {
+        margin: 0;
+      }
+    }
+  }
+
+}

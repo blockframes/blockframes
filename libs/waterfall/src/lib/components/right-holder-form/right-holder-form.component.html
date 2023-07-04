@@ -1,0 +1,35 @@
+<section class="surface">
+
+  <article class="header">
+    <h2>Right Holders Information</h2>
+    <button mat-button color="primary" (click)="skip.emit()">
+      <span>Skip and do it later</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+  </article>
+
+  <p>Please add the companies that will be involved into the waterfall.</p>
+
+  <article *ngFor="let item of rightholdersForm.controls; let index = index; let last = last">
+    <mat-form-field appearance="outline">
+      <mat-label>Company Name</mat-label>
+      <mat-icon matPrefix svgIcon="business"></mat-icon>
+      <input matInput type="text" placeholder="Company Name" [formControl]="item.controls.name" />
+    </mat-form-field>
+
+    <static-select [control]="item.controls.roles" scope="rightholderRoles" multiple> 
+      <mat-label>Waterfall Role *</mat-label>
+    </static-select>
+
+    <ng-container *ngIf="!last; else isLast">
+      <button mat-icon-button class="delete" (click)="remove(index)">
+        <mat-icon svgIcon="delete"></mat-icon>
+      </button>
+    </ng-container>
+    <ng-template #isLast>
+      <button mat-mini-fab color="primary" (click)="add()">
+        <mat-icon svgIcon="add"></mat-icon>
+      </button>
+    </ng-template>
+  </article>
+</section>

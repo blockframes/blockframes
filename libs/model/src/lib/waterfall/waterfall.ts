@@ -68,6 +68,11 @@ export interface WaterfallSource {
   territories: Territory[];
   medias: Media[];
 }
+export interface WaterfallRightholder {
+  id: 'fake' | string;
+  name: string;
+  roles: RightholderRole[];
+};
 
 export interface WaterfallRightholder {
   id: string;
