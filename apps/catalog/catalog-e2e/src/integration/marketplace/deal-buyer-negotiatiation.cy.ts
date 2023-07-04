@@ -3,7 +3,6 @@ import {
   adminAuth,
   firestore,
   gmail,
-  maintenance,
   // cypress commands
   get,
   connectUser,
@@ -60,7 +59,7 @@ const injectedData = {
 describe('Deal negotiation', () => {
   beforeEach(() => {
     cy.visit('');
-    maintenance.start();
+    firestore.disableBackendFunctions();
     adminAuth.deleteAllTestUsers();
     adminAuth.createUser({ uid: buyer.user.uid, email: buyer.user.email, emailVerified: true });
     adminAuth.createUser({ uid: seller.user.uid, email: seller.user.email, emailVerified: true });
@@ -70,7 +69,7 @@ describe('Deal negotiation', () => {
     firestore.deleteNotifications([buyer.user.uid, seller.user.uid]);
     firestore.clearTestData();
     firestore.create([injectedData]);
-    maintenance.end();
+    firestore.enableBackendFunctions();
     connectUser(buyer.user.email);
     cy.visit(`/c/o/marketplace/offer/${offer.id}/${saleContract.id}`);
   });

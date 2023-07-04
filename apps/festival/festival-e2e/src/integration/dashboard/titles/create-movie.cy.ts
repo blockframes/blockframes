@@ -5,7 +5,6 @@ import {
   firestore,
   gmail,
   storage,
-  maintenance,
   // cypress commands
   check,
   uncheck,
@@ -62,13 +61,13 @@ const injectedData = {
 describe('Movie tunnel', () => {
   beforeEach(() => {
     cy.visit('');
-    maintenance.start();
+    firestore.disableBackendFunctions();
     firestore.clearTestData();
     firestore.queryDelete({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id });
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
-    maintenance.end();
+    firestore.enableBackendFunctions();
     browserAuth.clearBrowserAuth();
     cy.visit('');
     browserAuth.signinWithEmailAndPassword(user.email);

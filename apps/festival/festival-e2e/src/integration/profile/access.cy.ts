@@ -5,7 +5,6 @@ import {
   browserAuth,
   firestore,
   storage,
-  maintenance,
   // cypress specific functions
   refreshIfMaintenance,
   // cypress commands
@@ -25,12 +24,12 @@ const injectedData = {
 describe('Profile test', () => {
   it('login and set a profile picture', () => {
     cy.visit('');
-    maintenance.start();
+    firestore.disableBackendFunctions();
     adminAuth.deleteAllTestUsers();
     firestore.clearTestData();
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     firestore.create([injectedData]);
-    maintenance.end();
+    firestore.enableBackendFunctions();
     browserAuth.clearBrowserAuth();
     refreshIfMaintenance('festival');
     browserAuth.signinWithEmailAndPassword(user.email);

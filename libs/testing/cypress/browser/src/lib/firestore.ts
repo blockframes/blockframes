@@ -2,6 +2,14 @@ import { Contract, Notification, Organization } from '@blockframes/model';
 import { QueryParameters, UpdateParameters } from '../../../commons';
 
 export const firestore = {
+  disableBackendFunctions() {
+    return cy.request('PUT', 'localhost:4400/functions/disableBackgroundTriggers');
+  },
+
+  enableBackendFunctions() {
+    return cy.request('PUT', 'localhost:4400/functions/enableBackgroundTriggers');
+  },
+
   clearTestData() {
     return cy.task('clearTestData');
   },

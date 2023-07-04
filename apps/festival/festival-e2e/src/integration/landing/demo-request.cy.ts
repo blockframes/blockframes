@@ -1,7 +1,7 @@
 import {
   browserAuth,
+  firestore,
   gmail,
-  maintenance,
   // cypress commands
   get,
   check,
@@ -18,9 +18,9 @@ const user = fakeUserData();
 describe('Demo Request Email', () => {
   beforeEach(() => {
     cy.visit('');
-    maintenance.start();
+    firestore.disableBackendFunctions();
     browserAuth.clearBrowserAuth();
-    maintenance.end();
+    firestore.enableBackendFunctions();
     cy.visit('');
   });
 

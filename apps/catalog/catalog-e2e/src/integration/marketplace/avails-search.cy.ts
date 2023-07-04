@@ -3,7 +3,6 @@ import {
   adminAuth,
   algolia,
   firestore,
-  maintenance,
   // cypress commands
   get,
   connectUser,
@@ -46,7 +45,7 @@ let titlesCount: string;
 describe('Marketplace avails search', () => {
   before(() => {
     cy.visit('');
-    maintenance.start();
+    firestore.disableBackendFunctions();
     algolia.deleteMovie({ app: 'catalog', objectId: seller.movie.id });
     firestore.deleteContractsAndTerms(seller.org.id);
     firestore.queryDelete({ collection: 'contracts', field: 'buyerId', operator: '==', value: buyer.org.id });
@@ -58,7 +57,7 @@ describe('Marketplace avails search', () => {
     syncMovieToAlgolia(seller.movie.id);
     adminAuth.createUser({ uid: buyer.user.uid, email: buyer.user.email, emailVerified: true });
     adminAuth.createUser({ uid: seller.user.uid, email: seller.user.email, emailVerified: true });
-    maintenance.end();
+    firestore.enableBackendFunctions();
     connectUser(buyer.user.email);
     get('skip-preferences').click();
   });

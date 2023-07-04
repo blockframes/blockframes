@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { firestore, maintenance } from '@blockframes/testing/cypress/browser';
+import { firestore } from '@blockframes/testing/cypress/browser';
 import { examples } from '../../fixtures/plugins/firestore';
 
 //* TESTS --------------------------------------*//
@@ -8,9 +8,9 @@ import { examples } from '../../fixtures/plugins/firestore';
 describe('Testing bridge between Cypress and node', () => {
   describe('creation possibilities', () => {
     before(() => {
-      maintenance.start();
+      firestore.disableBackendFunctions();
       firestore.clearTestData();
-      maintenance.end();
+      firestore.enableBackendFunctions();
     });
 
     //* CREATE *//
@@ -42,9 +42,9 @@ describe('Testing bridge between Cypress and node', () => {
 
   describe('create / get / delete', () => {
     before(() => {
-      maintenance.start();
+      firestore.disableBackendFunctions();
       firestore.clearTestData();
-      maintenance.end();
+      firestore.enableBackendFunctions();
     });
 
     //*** docs without subcollections */
@@ -133,9 +133,9 @@ describe('Testing bridge between Cypress and node', () => {
 
   describe('create / update', () => {
     before(() => {
-      maintenance.start();
+      firestore.disableBackendFunctions();
       firestore.clearTestData();
-      maintenance.end();
+      firestore.enableBackendFunctions();
     });
 
     it('a doc', () => {
@@ -185,10 +185,10 @@ describe('Testing bridge between Cypress and node', () => {
 
   describe('query', () => {
     before(() => {
-      maintenance.start();
+      firestore.disableBackendFunctions();
       firestore.clearTestData();
       firestore.create([examples.collectionToQuery]);
-      maintenance.end();
+      firestore.enableBackendFunctions();
     });
 
     it('less than', () => {
