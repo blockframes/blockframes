@@ -2,19 +2,18 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import {
   adminOnlyWarning, alreadyExistError, checkParentTerm, getContract,
   getOrgId, getTitleId, ImportError, mandatoryError,
-  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError, getWaterfallContract
+  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError
 } from '@blockframes/import/utils';
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
   ContractStatus, ImportContractStatus, Language, Mandate, Media, Movie,
-  Sale, Territory, User, Duration, ContractType
+  Sale, Territory, Duration, ContractType
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { getDate } from '@blockframes/import/utils';
 import { FormatConfig } from './utils';
-import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 
 export interface FieldsConfig {
   contract: {
@@ -24,7 +23,7 @@ export interface FieldsConfig {
     buyerId: string;
     id?: string;
     stakeholders: string[];
-    status: string,
+    status: ContractStatus;
   };
   term: {
     territories_included: Territory[];
@@ -45,7 +44,6 @@ export type FieldsConfigType = ExtractConfig<FieldsConfig>;
 export interface Caches {
   orgNameCache: Record<string, string>,
   titleCache: Record<string, Movie>,
-  userCache: Record<string, User>,
   contractCache: Record<string, Mandate | Sale>,
 }
 
@@ -53,7 +51,6 @@ interface ContractConfig {
   orgService: OrganizationService,
   titleService: MovieService,
   contractService: ContractService,
-  waterfallDocumentsService: WaterfallDocumentsService,
   blockframesAdmin: boolean,
   userOrgId: string,
   caches: Caches,
@@ -66,7 +63,6 @@ export function getContractConfig(option: ContractConfig) {
     orgService,
     titleService,
     contractService,
-    waterfallDocumentsService,
     blockframesAdmin,
     userOrgId,
     caches,
@@ -77,7 +73,7 @@ export function getContractConfig(option: ContractConfig) {
   const {
     orgNameCache,
     titleCache,
-    contractCache
+    contractCache,
   } = caches;
 
 
@@ -121,8 +117,8 @@ export function getContractConfig(option: ContractConfig) {
         }
         return sellerId;
       },
-        /* d */ 'contract.buyerId': (_, data: FieldsConfig) => {
-        return data.contract.type === 'mandate' ? config.centralOrg.id : '';
+        /* d */ 'contract.buyerId': async (_, data: FieldsConfig) => {
+          return data.contract.type === 'mandate' ? config.centralOrg.id : '';
       },
         /* e */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
         /* f */ 'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
@@ -161,12 +157,9 @@ export function getContractConfig(option: ContractConfig) {
         /* m */ 'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false),
         /* n */ 'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false),
         /* o */ 'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
-        /* p */ 'contract.id': async (value: string, data: FieldsConfig) => {
+        /* p */ 'contract.id': async (value: string) => {
         if (!value) return contractService.createId();
-        const exist = config.mode === 'catalog' ?
-          await getContract(value, contractService, contractCache) :
-          await getWaterfallContract(value, waterfallDocumentsService, contractCache, data.contract.titleId);
-
+        const exist = await getContract(value, contractService, contractCache);
         if (exist) throw alreadyExistError(value, 'Contract ID');
         return value;
       },

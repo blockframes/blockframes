@@ -1,5 +1,6 @@
 import { DocumentMeta } from './meta';
 import type { Media, MovieCurrency, Territory } from './static/types';
+import { PricePerCurrency } from './utils';
 
 export interface Income {
   _meta?: DocumentMeta;
@@ -18,15 +19,12 @@ export interface Income {
   territories: Territory[];
 }
 
-// TODO #9422
-export interface TotalIncome {
-  EUR: number;
-  USD: number;
-}
-
-export function getTotalIncome(incomes: Income[]) {
-  const initialTotal: TotalIncome = { EUR: 0, USD: 0 };
-  incomes.forEach(i => initialTotal[i.currency] += i.price);
+export function getTotalIncome(incomes: Income[]): PricePerCurrency {
+  const initialTotal: PricePerCurrency = {};
+  incomes.forEach(i => {
+    initialTotal[i.currency] ||= 0;
+    initialTotal[i.currency] += i.price;
+  });
   return initialTotal;
 }
 

@@ -1,0 +1,106 @@
+﻿<p test-id="record-length">Found <strong>{{ rows.data.length }}</strong> row(s).</p>
+
+<p>For selection ({{ selection.selected.length }} items selected) :
+  <button test-id="submit-records" mat-stroked-button color="primary" [disabled]="!selection.selected.length || !!processing"
+    (click)="createSelected()">
+    <ng-container *ngIf="processing === 0 else createinprogress">
+      <span>Create</span>
+      <mat-icon svgIcon="edit"></mat-icon>
+    </ng-container>
+    <ng-template #createinprogress>
+      <span>Creating... {{ processing }} / {{ selection.selected.length}}</span>
+      <mat-spinner [diameter]="20" [strokeWidth]="2"></mat-spinner>
+    </ng-template>
+  </button>
+</p>
+
+<mat-form-field appearance="outline">
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+
+<table mat-table [dataSource]="rows" matSort>
+
+  <!-- Checkbox Column -->
+  <ng-container matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef>
+      <mat-checkbox [disabled]="processing > 0" test-id="select-all" (change)="$event ? masterToggle() : null"
+        [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()"
+        [aria-label]="checkboxLabel()" color="primary">
+      </mat-checkbox>
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <mat-checkbox [disabled]="row | isDisabled: processing : row.imported" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)" color="primary">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
+    <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="income.id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Income Id </th>
+    <td mat-cell *matCellDef="let element"> {{ element.income.id ? element.income.id : '--' }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="income.titleId">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Waterfall Id </th>
+    <td mat-cell *matCellDef="let element"> {{ element.income.titleId ? element.income.titleId : '--' }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="income.contractId">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Contract Id </th>
+    <td mat-cell *matCellDef="let element"> {{ element.income.contractId ? element.income.contractId : '--' }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="income.price">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
+    <td mat-cell *matCellDef="let element"> {{ element.income.price ? element.income.price : '--' }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="income.currency">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Currency </th>
+    <td mat-cell *matCellDef="let element"> {{ element.income.currency ? element.income.currency : '--' }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="errors">
+    <th mat-header-cell *matHeaderCellDef> Errors </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-flat-button color="warn" [disabled]="!(element | errorCount)" (click)="displayErrors(element)">
+        {{ element | errorCount  }}
+      </button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="warnings">
+    <th mat-header-cell *matHeaderCellDef> Warnings </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-flat-button color="accent" [disabled]="!(element | errorCount : 'warning')"
+        (click)="displayErrors(element)">{{ element | errorCount : 'warning' }}</button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Actions </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-flat-button color="primary" [disabled]="element | isDisabled: processing : element.imported" (click)="create(element)">
+        <ng-container *ngIf="element.importing">
+          <span>Creating</span>
+          <mat-spinner [diameter]="20" [strokeWidth]="2"></mat-spinner>
+        </ng-container>
+        <ng-container *ngIf="!element.importing">
+          <span>Create</span>
+          <mat-icon svgIcon="edit"></mat-icon>
+        </ng-container>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" [length]="rows.data.length" [pageSize]="10" #paginator showFirstLastButtons></mat-paginator>

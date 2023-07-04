@@ -1,0 +1,12 @@
+<ng-container *ngIf="incomesToCreate$ | async as incomesToCreate; else isLoading">
+  <ng-container *ngIf="incomesToCreate.data.length">
+    <h3>Incomes to Create</h3>
+    <import-table-extracted-incomes [rows]="incomesToCreate"></import-table-extracted-incomes>
+  </ng-container>
+</ng-container>
+<ng-template #isLoading>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </section>
+</ng-template>
+

@@ -22,7 +22,10 @@ type ContractNotificationValues = ContractNotificationType[keyof ContractNotific
 
 export async function onContractDelete(contractSnapshot: BlockframesSnapshot<Contract>) {
   const contract = contractSnapshot.data();
+  return cleanRelatedContractDocuments(contract);
+}
 
+export async function cleanRelatedContractDocuments(contract: Contract) {
   // Delete terms belonging to contract
   const termsCollectionRef = db.collection('terms').where('contractId', '==', contract.id);
   const termsSnap = await termsCollectionRef.get();
@@ -46,6 +49,13 @@ export async function onContractDelete(contractSnapshot: BlockframesSnapshot<Con
   const incomesSnap = await incomesCollectionRef.get();
   for (const income of incomesSnap.docs) {
     await income.ref.delete();
+  }
+
+  // Delete expenses documents, if any
+  const expensesCollectionRef = db.collection('expenses').where('contractId', '==', contract.id);
+  const expensesSnap = await expensesCollectionRef.get();
+  for (const expense of expensesSnap.docs) {
+    await expense.ref.delete();
   }
 
   console.log(`Contract ${contract.id} removed`);

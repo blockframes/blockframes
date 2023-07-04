@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
-import { WaterfallContract, WaterfallDocument, convertDocumentTo } from '@blockframes/model';
+import { WaterfallContract, WaterfallDocument, convertDocumentTo, sortContracts } from '@blockframes/model';
 import { BlockframesSubCollection } from '@blockframes/utils/abstract-service';
-import { where } from 'firebase/firestore';
+import { QueryConstraint, where } from 'firebase/firestore';
 import { map } from 'rxjs';
+
+const contractQuery = (): QueryConstraint[] => [
+  where('meta.status', '==', 'accepted'),
+  where('type', '==', 'contract'),
+];
 
 @Injectable({ providedIn: 'root' })
 export class WaterfallDocumentsService extends BlockframesSubCollection<WaterfallDocument> {
@@ -22,14 +27,26 @@ export class WaterfallDocumentsService extends BlockframesSubCollection<Waterfal
     return convertDocumentTo<WaterfallContract>(document);
   }
 
+  /**
+   * Fetch all contracts of a waterfall, ordered by signature date
+   * @param titleId 
+   * @returns 
+   */
+  public async getContracts(titleId: string) {
+    const documents = await this.getValue(contractQuery(), { waterfallId: titleId });
+    return sortContracts(documents.map(d => convertDocumentTo<WaterfallContract>(d)));
+  }
+
+  /**
+   * Listen on all contracts of a waterfall, ordered by signature date
+   * @param titleId 
+   * @returns 
+   */
   public titleContracts(titleId: string) {
-    return this.valueChanges([
-      where('meta.titleId', '==', titleId),
-      where('meta.status', '==', 'accepted'),
-      where('type', '==', 'contract')
-    ], { waterfallId: titleId }).pipe(
-      map(docs => docs.map(d => convertDocumentTo<WaterfallContract>(d)))
-    );
+    return this.valueChanges(contractQuery(), { waterfallId: titleId })
+      .pipe(
+        map(docs => sortContracts(docs.map(d => convertDocumentTo<WaterfallContract>(d))))
+      );
   }
 
 }

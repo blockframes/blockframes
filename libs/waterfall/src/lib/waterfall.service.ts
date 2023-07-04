@@ -1,7 +1,16 @@
 import { Injectable } from '@angular/core';
 import { CallableFunctions, WriteOptions } from 'ngfire';
 import { where, DocumentSnapshot } from '@firebase/firestore';
-import { Version, Waterfall, createVersion, createWaterfall, TitleState, History, createDocumentMeta } from '@blockframes/model';
+import {
+  Version,
+  Waterfall,
+  createVersion,
+  createWaterfall,
+  TitleState,
+  History,
+  createDocumentMeta,
+  WaterfallSource
+} from '@blockframes/model';
 import { jsonDateReviver } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/service';
 import { doc } from 'firebase/firestore';
@@ -70,5 +79,13 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     const waterfall = await this.getValue(waterfallId);
     const orgIds = waterfall.orgIds.filter(id => id !== orgId);
     return this.update(waterfallId, { id: waterfallId, orgIds });
+  }
+
+  public async addSources(waterfallId: string, sources: WaterfallSource[]) {
+    const waterfall = await this.getValue(waterfallId);
+    sources.forEach(s => {
+      if (!waterfall.sources.find(source => source.name === s.name)) waterfall.sources.push(s);
+    })
+    return this.update(waterfallId, { id: waterfallId, sources: waterfall.sources });
   }
 }

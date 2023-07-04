@@ -2,9 +2,7 @@ import { Inject, Component, ChangeDetectionStrategy, Optional } from '@angular/c
 import { Intercom } from 'ng-intercom';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { APP } from '@blockframes/utils/routes/utils';
-import { App, appName } from '@blockframes/model';
-import { ActivatedRoute } from '@angular/router';
-import { pluck } from 'rxjs';
+import { App } from '@blockframes/model';
 
 @Component({
   selector: 'contract-import',
@@ -14,9 +12,6 @@ import { pluck } from 'rxjs';
 })
 export class ContractImportComponent {
 
-  public mode$ = this.route.params.pipe(pluck('mode'));
-  public appName = appName;
-
   sheetTab?: SheetTab;
   public templateUrl = this.app === 'catalog'
     ? '/assets/templates/import-contracts-seller-template.xlsm'
@@ -25,7 +20,6 @@ export class ContractImportComponent {
   constructor(
     @Optional() private intercom: Intercom,
     @Inject(APP) private app: App,
-    private route: ActivatedRoute,
   ) { }
 
   openIntercom() {

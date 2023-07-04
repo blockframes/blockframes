@@ -27,12 +27,24 @@ const routes: Routes = [{
       loadChildren: () => import('@blockframes/organization/import/import.module').then(m => m.OrgImportModule),
     },
     {
-      path: 'contracts/:mode',
+      path: 'contracts',
       loadChildren: () => import('@blockframes/contract/import/import.module').then(m => m.ContractImportModule),
+    },
+    {
+      path: 'documents',
+      loadChildren: () => import('@blockframes/waterfall/import/import.module').then(m => m.DocumentImportModule),
     },
     {
       path: 'imdb',
       loadChildren: () => import('./imdb/imdb-import.module').then(m => m.ImdbImportModule),
+    },
+    {
+      path: 'incomes',
+      loadChildren: () => import('@blockframes/contract/income/import/import.module').then(m => m.IncomeImportModule),
+    },
+    {
+      path: 'expenses',
+      loadChildren: () => import('@blockframes/contract/expense/import/import.module').then(m => m.ExpenseImportModule),
     },
   ]
 }];

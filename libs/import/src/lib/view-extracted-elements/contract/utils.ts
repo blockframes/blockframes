@@ -10,8 +10,7 @@ import {
   Movie,
   Organization,
   Term,
-  createMandate,
-  createSale,
+  createContract,
   Mandate,
   MovieLanguageSpecification,
   Sale,
@@ -25,11 +24,17 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getContractConfig } from './fieldConfigs';
 import { TermService } from '@blockframes/contract/term/service';
-import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 
-function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string): Term {
+function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string) {
 
-  const { medias, duration, territories_excluded = [], territories_included = [], exclusive, licensedOriginal } = rawTerm;
+  const {
+    medias,
+    duration,
+    territories_excluded = [],
+    territories_included = [],
+    exclusive,
+    licensedOriginal,
+  } = rawTerm;
 
   const languages: Term['languages'] = {};
 
@@ -92,7 +97,6 @@ async function verifyOverlappingMandatesAndSales(contract: Partial<Contract>, te
 export interface FormatConfig {
   app: App;
   centralOrg: Organization;
-  mode: App;
 }
 
 export async function formatContract(
@@ -100,7 +104,6 @@ export async function formatContract(
   orgService: OrganizationService,
   titleService: MovieService,
   contractService: ContractService,
-  waterfallDocumentsService: WaterfallDocumentsService,
   termService: TermService,
   blockframesAdmin: boolean,
   userOrgId: string,
@@ -109,16 +112,14 @@ export async function formatContract(
   // Cache to avoid  querying db every time
   const orgNameCache: Record<string, string> = {};
   const titleCache: Record<string, Movie> = {};
-  const userCache: Record<string, User> = {};
   const contractCache: Record<string, Mandate | Sale> = {};
   const contracts: ContractsImportState[] = [];
-  const caches = { orgNameCache, titleCache, userCache, contractCache };
+  const caches = { orgNameCache, titleCache, contractCache };
 
   const option = {
     orgService,
     titleService,
     contractService,
-    waterfallDocumentsService,
     blockframesAdmin,
     userOrgId,
     caches,
@@ -131,10 +132,7 @@ export async function formatContract(
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig, 11);
   for (const result of results) {
     const { data, errors } = result;
-
-    const contract = data.contract.type === 'mandate'
-      ? createMandate(data.contract as Mandate)
-      : createSale(data.contract as Sale);
+    const contract = createContract(data.contract);
 
     const { titleId, sellerId } = contract;
     if (titleId && sellerId) {
@@ -149,7 +147,7 @@ export async function formatContract(
       }
     }
 
-    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, contractService.createId()));
+    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, termService.createId()));
 
     // for **internal** sales we should check the parentTerm
     const isInternalSale = contract.type === 'sale' && contract.sellerId === config.centralOrg.id;
@@ -179,32 +177,25 @@ export async function formatContract(
       }
     }
 
-    if(config.mode !== 'waterfall') {
-      const overlap = await verifyOverlappingMandatesAndSales(contract, terms, contractService, termService);
-      if (overlap.mandate) {
-        errors.push({
-          type: 'error',
-          name: 'Contract',
-          reason: 'A term overlaps with that of an existing contract.',
-          message: 'A term overlaps with that of an existing contract.'
-        });
-      }
-      if (overlap.sale) {
-        errors.push({
-          type: 'error',
-          name: 'Contract',
-          reason: 'The terms of the imported sale have already been sold.',
-          message: 'The terms of the imported sale have already been sold.'
-        });
-      }
-    } else {
-      // TODO #9420
+    const overlap = await verifyOverlappingMandatesAndSales(contract, terms, contractService, termService);
+    if (overlap.mandate) {
+      errors.push({
+        type: 'error',
+        name: 'Contract',
+        reason: 'A term overlaps with that of an existing contract.',
+        message: 'A term overlaps with that of an existing contract.'
+      });
+    }
+    if (overlap.sale) {
+      errors.push({
+        type: 'error',
+        name: 'Contract',
+        reason: 'The terms of the imported sale have already been sold.',
+        message: 'The terms of the imported sale have already been sold.'
+      });
     }
 
-    // remove duplicate from stakeholders
-    contract.stakeholders = Array.from(new Set([...contract.stakeholders]));
-
-    contracts.push({ contract, terms, errors, newContract: true, mode: config.mode });
+    contracts.push({ contract, terms, errors, newContract: true });
   }
   return contracts;
 }

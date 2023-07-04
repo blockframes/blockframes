@@ -257,12 +257,12 @@ function invest(state: TitleState, payload: Investment) {
   })
 }
 
-interface Expense extends BaseAction {
+interface ExpenseAction extends BaseAction {
   orgId: OrgState['id'];
   amount: number;
   type: string;
 }
-function expense(state: TitleState, payload: Expense) {
+function expense(state: TitleState, payload: ExpenseAction) {
   const { amount, orgId, type } = payload;
 
   state.expense[type] ||= 0;

@@ -296,7 +296,7 @@ export const onWaterfallUpdateEvent = onDocumentUpdate('waterfall/{waterfallId}'
 /**
  * Trigger: when a waterfallDocument is deleted
  */
-export const onWaterfallDocumentDeleteEvent = onDocumentCreate('waterfall/{waterfallId}/documents/{document}', onWaterfallDocumentDelete);
+export const onWaterfallDocumentDeleteEvent = onDocumentDelete('waterfall/{waterfallId}/documents/{document}', onWaterfallDocumentDelete);
 
 /**
  * When user wants to remove a file without removing waterfallDocument

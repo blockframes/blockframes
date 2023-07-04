@@ -1,7 +1,7 @@
 import { addYears, subYears } from 'date-fns';
 import { Person } from './identity';
 import { LanguageRecord } from './movie';
-import { App, Scope, staticModel } from './static';
+import { App, MovieCurrency, Scope, staticModel } from './static';
 
 export interface ErrorResultResponse {
   error: string;
@@ -366,3 +366,6 @@ export const deletedIdentifier = {
 }
 
 export const externalOrgIdentifier = 'External';
+
+// TODO #9422
+export type PricePerCurrency = Partial<Record<MovieCurrency, number>>;

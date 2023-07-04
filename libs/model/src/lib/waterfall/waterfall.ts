@@ -1,7 +1,9 @@
 import { Mandate, Sale, createContract } from '../contract';
+import { Income } from '../income';
 import { StorageFile } from '../media';
 import { DocumentMeta, createDocumentMeta } from '../meta';
-import { RightholderRole } from '../static';
+import { Media, RightholderRole, Territory } from '../static';
+import { allOf } from '../avail';
 
 export interface WaterfallPermissions {
   _meta?: DocumentMeta;
@@ -46,12 +48,35 @@ interface WaterfallFile extends StorageFile {
   name?: string; // TODO #9389 file name
 }
 
+export function createWaterfallSource(name: string, territories_included: Territory[], territories_excluded: Territory[], medias: Media[]): WaterfallSource {
+  return {
+    name,
+    territories: territories_included.filter(territory => !territories_excluded.includes(territory)),
+    medias
+  }
+}
+
+export function getAssociatedSource(income: Income, sources: WaterfallSource[]) {
+  return sources.find(source => allOf(income.territories).in(source.territories) && allOf(income.medias).in(source.medias));
+}
+
+/**
+ * Defines sources that an income will be associated to.
+ * row_all, us_svod etc ..
+ */
+export interface WaterfallSource {
+  name: string;
+  territories: Territory[];
+  medias: Media[];
+}
+
 export interface Waterfall {
   _meta?: DocumentMeta;
   id: string;
   versions: Version[]
   orgIds: string[]; // Orgs linked to waterfall, can read document if in it
   documents: WaterfallFile[];
+  sources: WaterfallSource[];
 }
 
 export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
@@ -60,6 +85,7 @@ export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
     versions: [],
     orgIds: [],
     documents: [],
+    sources: [],
     ...params,
   }
 }
@@ -67,7 +93,7 @@ export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
 export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(params: Partial<WaterfallDocument<Meta>> = {}): WaterfallDocument<Meta> {
 
   const toObject = () => {
-    if (isContract(params)) return createContract(params.meta) as Meta;
+    if (isContract(params)) return createContract({ ...params.meta, status: 'accepted' }) as Meta;
     if (isBudget(params)) return params.meta as Meta;
     if (isFinancingPlan(params)) return params.meta as Meta;
   };
@@ -75,6 +101,9 @@ export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(para
   const meta = toObject();
   delete (meta as any).id;
   delete (meta as any)._meta;
+  delete (meta as any).rootId;
+  delete (meta as any).signatureDate;
+  delete (meta as any).titleId;
 
   return {
     _meta: (params.meta as any)._meta || createDocumentMeta({ createdAt: new Date() }),
@@ -84,23 +113,40 @@ export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(para
     waterfallId: '',
     ownerId: '',
     sharedWith: [],
+    rootId: (params.meta as any).rootId ?? '',
+    signatureDate: (params.meta as any).signatureDate ?? new Date(),
     ...params,
     meta,
   };
 }
 
-const isContract = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallContract> => document?.type === 'contract';
+export const isContract = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallContract> => document?.type === 'contract';
 const isBudget = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallBudget> => document?.type === 'budget';
 const isFinancingPlan = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallFinancingPlan> => document?.type === 'financingPlan';
 
 export function convertDocumentTo<T>(document: WaterfallDocument): T {
-  return { id: document.id, ...document.meta as T, _meta: document._meta };
+  switch (document.type) {
+    case 'contract':
+      return {
+        id: document.id,
+        rootId: document.rootId,
+        signatureDate: document.signatureDate,
+        titleId: document.waterfallId,
+        ...document.meta as T,
+        _meta: document._meta
+      };
+    default:
+      break;
+  }
 }
 
 type WaterfallDocumentMeta = WaterfallBudget | WaterfallContract | WaterfallFinancingPlan;
 export interface WaterfallDocument<Meta extends WaterfallDocumentMeta = unknown> {
   _meta?: DocumentMeta;
   id: string; // TODO #9389 same id as the actual PDF file stored in waterfall/{waterfallId}/documents
+  /** If document is an amendment, provide root document Id */
+  rootId: string;
+  signatureDate?: Date;
   type: 'financingPlan' | 'budget' | 'contract';
   folder: string; // TODO #9389 to create the folder arborescence in UI
   waterfallId: string; // Parent document Id

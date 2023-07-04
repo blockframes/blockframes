@@ -10,9 +10,8 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { ContractsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/service';
-import { createDocumentMeta, createWaterfallDocument, Mandate, Sale, WaterfallContract, WaterfallDocument } from '@blockframes/model';
+import { createDocumentMeta, Mandate, Sale } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -46,7 +45,6 @@ export class TableExtractedContractsComponent implements AfterViewInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private contractService: ContractService,
-    private waterfallDocumentsService: WaterfallDocumentsService,
     private termService: TermService,
     private cdr: ChangeDetectorRef
   ) { }
@@ -100,28 +98,17 @@ export class TableExtractedContractsComponent implements AfterViewInit {
     if (increment) this.processing++;
     this.cdr.markForCheck();
 
-    if (importState.mode === 'waterfall') {
-      const document = createWaterfallDocument({
-        type: 'contract',
-        waterfallId: importState.contract.titleId,
-        meta: importState.contract,
-        ownerId: importState.contract.sellerId
+    if (importState.contract.type === 'sale') {
+      await this.contractService.add<Sale>({
+        ...importState.contract,
+        _meta: createDocumentMeta({ createdAt: new Date() })
       });
 
-      await this.waterfallDocumentsService.add<WaterfallDocument<WaterfallContract>>(document, { params: { waterfallId: document.waterfallId } });
     } else {
-      if (importState.contract.type === 'sale') {
-        await this.contractService.add<Sale>({
-          ...importState.contract,
-          _meta: createDocumentMeta({ createdAt: new Date() })
-        });
-
-      } else {
-        await this.contractService.add<Mandate>({
-          ...importState.contract,
-          _meta: createDocumentMeta({ createdAt: new Date() })
-        });
-      }
+      await this.contractService.add<Mandate>({
+        ...importState.contract,
+        _meta: createDocumentMeta({ createdAt: new Date() })
+      });
     }
 
     // @dev: Create terms after contract because rules require contract to be created first
