@@ -3,6 +3,7 @@ import {
   adminAuth,
   browserAuth,
   firestore,
+  maintenance,
   // cypress commands
   get,
   findIn,
@@ -36,14 +37,14 @@ const injectedData = {
 describe('Create avails', () => {
   beforeEach(() => {
     cy.visit('');
-    firestore.disableBackendFunctions();
+    maintenance.start();
     firestore.clearTestData();
     firestore.deleteContractsAndTerms(org.id);
     firestore.queryDelete({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id });
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
-    firestore.enableBackendFunctions();
+    maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
     browserAuth.signinWithEmailAndPassword(user.email);

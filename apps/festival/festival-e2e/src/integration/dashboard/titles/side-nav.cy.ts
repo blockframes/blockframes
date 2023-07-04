@@ -3,6 +3,7 @@ import {
   adminAuth,
   browserAuth,
   firestore,
+  maintenance,
   // cypress commands
   get,
   checkMovieTunnelSideNav,
@@ -18,13 +19,13 @@ const injectedData = {
 describe('Movie tunnel', () => {
   beforeEach(() => {
     cy.visit('');
-    firestore.disableBackendFunctions();
+    maintenance.start();
     firestore.clearTestData();
     firestore.queryDelete({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id });
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
-    firestore.enableBackendFunctions();
+    maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
     browserAuth.signinWithEmailAndPassword(user.email);

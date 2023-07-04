@@ -3,6 +3,7 @@ import {
   adminAuth,
   browserAuth,
   firestore,
+  maintenance,
   // cypress commands
   get,
   check,
@@ -17,19 +18,19 @@ import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 describe('Signup', () => {
   beforeEach(() => {
     cy.visit('');
-    firestore.disableBackendFunctions();
+    maintenance.start();
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
-    firestore.enableBackendFunctions();
+    maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('auth/identity');
   });
 
   it('User cannot signup with an existing email', () => {
-    firestore.disableBackendFunctions();
+    maintenance.start();
     adminAuth.createUser({ uid: newUser.uid, email: newUser.email, emailVerified: true });
     firestore.create([{ [`users/${newUser.uid}`]: newUser }]);
-    firestore.enableBackendFunctions();
+    maintenance.end();
     cy.visit('auth/identity');
     get('cookies').click();
     fillCommonInputs(newUser);

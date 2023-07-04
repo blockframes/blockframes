@@ -4,6 +4,7 @@ import {
   browserAuth,
   firestore,
   gmail,
+  maintenance,
   // cypress commands
   check,
   get,
@@ -53,7 +54,7 @@ const injectedData = {
 describe('Signup following an invitation', () => {
   beforeEach(() => {
     cy.visit('');
-    firestore.disableBackendFunctions();
+    maintenance.start();
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
     browserAuth.clearBrowserAuth();
@@ -71,7 +72,7 @@ describe('Signup following an invitation', () => {
       password: meetingInvitationCode,
     });
     firestore.create([injectedData]);
-    firestore.enableBackendFunctions();
+    maintenance.end();
   });
 
   it('User invited by an organization admin can signup', () => {

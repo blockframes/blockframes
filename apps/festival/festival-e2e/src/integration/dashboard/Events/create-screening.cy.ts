@@ -3,6 +3,7 @@ import {
   adminAuth,
   firestore,
   gmail,
+  maintenance,
   // cypress commands
   assertUrlIncludes,
   get,
@@ -59,7 +60,7 @@ const injectedData = {
 describe('Screenings', () => {
   beforeEach(() => {
     cy.visit('');
-    firestore.disableBackendFunctions();
+    maintenance.start();
     firestore.clearTestData();
     firestore.queryDelete({ collection: 'events', field: 'ownerOrgId', operator: '==', value: dashboardOrg.id });
     firestore.queryDelete({ collection: 'invitations', field: 'toUser.uid', operator: '==', value: marketplaceUser.uid });
@@ -73,7 +74,7 @@ describe('Screenings', () => {
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: dashboardUser.uid, email: dashboardUser.email, emailVerified: true });
     adminAuth.createUser({ uid: marketplaceUser.uid, email: marketplaceUser.email, emailVerified: true });
-    firestore.enableBackendFunctions();
+    maintenance.end();
     connectUser(dashboardUser.email);
     get('calendar').click();
     get('cookies').click();

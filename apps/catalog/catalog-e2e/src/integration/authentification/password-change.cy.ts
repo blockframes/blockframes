@@ -4,6 +4,7 @@ import {
   browserAuth,
   firestore,
   gmail,
+  maintenance,
   // cypress specific functions
   refreshIfMaintenance,
   // cypress commands
@@ -30,12 +31,12 @@ const newPassword = 'NewPassword';
 describe('Password reset & change test', () => {
   beforeEach(() => {
     cy.visit('');
-    firestore.disableBackendFunctions();
+    maintenance.start();
     adminAuth.deleteAllTestUsers();
     firestore.clearTestData();
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     firestore.create([injectedData]);
-    firestore.enableBackendFunctions();
+    maintenance.end();
     browserAuth.clearBrowserAuth();
     refreshIfMaintenance('catalog');
     get('login').click();

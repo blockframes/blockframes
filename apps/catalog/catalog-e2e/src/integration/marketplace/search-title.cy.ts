@@ -15,6 +15,7 @@ import {
   algolia,
   browserAuth,
   firestore,
+  maintenance,
   // cypress commands
   assertUrlIncludes,
   check,
@@ -42,14 +43,14 @@ const oneTitleSentence = 'There is 1 title available.';
 describe('Movie search in marketplace', () => {
   beforeEach(() => {
     cy.visit('');
-    firestore.disableBackendFunctions();
+    maintenance.start();
     firestore.clearTestData();
     firestore.queryDelete({ collection: 'movies', field: 'orgIds', operator: 'array-contains', value: org.id });
     algolia.deleteMovie({ app: 'catalog', objectId: movie.id });
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
-    firestore.enableBackendFunctions();
+    maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
     browserAuth.signinWithEmailAndPassword(user.email);

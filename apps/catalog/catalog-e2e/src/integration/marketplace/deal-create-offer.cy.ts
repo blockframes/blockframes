@@ -6,6 +6,7 @@ import {
   browserAuth,
   firestore,
   gmail,
+  maintenance,
   // cypress commands
   get,
   assertUrlIncludes,
@@ -44,7 +45,7 @@ const injectedData = {
 describe('Deal negociation', () => {
   before(() => {
     cy.visit('');
-    firestore.disableBackendFunctions();
+    maintenance.start();
     algolia.deleteMovie({ app: 'catalog', objectId: seller.movie.id });
     firestore.deleteContractsAndTerms(seller.org.id);
     firestore.queryDelete({ collection: 'offers', field: 'buyerId', operator: '==', value: buyer.org.id });
@@ -54,7 +55,7 @@ describe('Deal negociation', () => {
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: buyer.user.uid, email: buyer.user.email, emailVerified: true });
     adminAuth.createUser({ uid: seller.user.uid, email: seller.user.email, emailVerified: true });
-    firestore.enableBackendFunctions();
+    maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
     browserAuth.signinWithEmailAndPassword(buyer.user.email);

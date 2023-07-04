@@ -16,6 +16,7 @@ import {
   adminAuth,
   firestore,
   gmail,
+  maintenance,
   // cypress commands
   get,
   connectUser,
@@ -39,12 +40,12 @@ const injectedData = {
 describe('Create organization', () => {
   before(() => {
     cy.visit('');
-    firestore.disableBackendFunctions();
+    maintenance.start();
     firestore.clearTestData();
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: admin.user.uid, email: admin.user.email, emailVerified: true });
-    firestore.enableBackendFunctions();
+    maintenance.end();
     cy.visit('');
     connectUser(admin.user.email);
   });

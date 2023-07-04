@@ -15,6 +15,7 @@ import {
   algolia,
   browserAuth,
   firestore,
+  maintenance,
   // cypress commands
   assertUrlIncludes,
   get,
@@ -36,7 +37,7 @@ const injectedData = {
 describe('Search sale organization in marketplace', () => {
   beforeEach(() => {
     cy.visit('');
-    firestore.disableBackendFunctions();
+    maintenance.start();
     firestore.clearTestData();
     algolia.deleteOrg({ app: 'festival', objectId: acceptedSaleOrg.id });
     algolia.deleteOrg({ app: 'festival', objectId: pendingSaleOrg.id });
@@ -44,7 +45,7 @@ describe('Search sale organization in marketplace', () => {
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
-    firestore.enableBackendFunctions();
+    maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
     browserAuth.signinWithEmailAndPassword(user.email);

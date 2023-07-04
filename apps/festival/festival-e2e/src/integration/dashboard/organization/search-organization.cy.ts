@@ -14,6 +14,7 @@ import {
   algolia,
   browserAuth,
   firestore,
+  maintenance,
   // cypress commands
   assertUrlIncludes,
   get,
@@ -34,7 +35,7 @@ const injectedData = {
 describe('Search buyer organizations in dashboard', () => {
   beforeEach(() => {
     cy.visit('');
-    firestore.disableBackendFunctions();
+    maintenance.start();
     firestore.clearTestData();
     algolia.deleteOrg({ app: 'festival', objectId: acceptedBuyerOrg.id });
     algolia.deleteOrg({ app: 'festival', objectId: dashboardBuyerOrg.id });
@@ -43,7 +44,7 @@ describe('Search buyer organizations in dashboard', () => {
     adminAuth.deleteAllTestUsers();
     firestore.create([injectedData]);
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
-    firestore.enableBackendFunctions();
+    maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
     browserAuth.signinWithEmailAndPassword(user.email);

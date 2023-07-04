@@ -16,6 +16,7 @@ import {
   algolia,
   browserAuth,
   firestore,
+  maintenance,
   // cypress commands
   assertUrlIncludes,
   check,
@@ -50,7 +51,7 @@ describe('Movie search in marketplace', () => {
 
   beforeEach(() => {
     cy.visit('');
-    firestore.disableBackendFunctions();
+    maintenance.start();
     firestore.clearTestData();
     algolia.deleteMovie({ app: 'festival', objectId: movie.id });
     algolia.deleteMovie({ app: 'festival', objectId: keywordMovie.id });
@@ -62,7 +63,7 @@ describe('Movie search in marketplace', () => {
     adminAuth.createUser({ uid: user.uid, email: user.email, emailVerified: true });
     syncMovieToAlgolia(movie.id);
     syncMovieToAlgolia(keywordMovie.id);
-    firestore.enableBackendFunctions();
+    maintenance.end();
     browserAuth.clearBrowserAuth();
     cy.visit('');
     browserAuth.signinWithEmailAndPassword(user.email);

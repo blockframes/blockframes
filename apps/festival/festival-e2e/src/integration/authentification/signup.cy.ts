@@ -5,6 +5,7 @@ import {
   browserAuth,
   firestore,
   gmail,
+  maintenance,
   // cypress commands
   get,
   assertUrl,
@@ -47,11 +48,11 @@ const dashboardInjectedData = {
 describe('Signup', () => {
   beforeEach(() => {
     cy.visit('');
-    firestore.disableBackendFunctions();
+    maintenance.start();
     firestore.clearTestData();
     algolia.deleteOrg({ app: 'festival', objectId: org.id });
     adminAuth.deleteAllTestUsers();
-    firestore.enableBackendFunctions();
+    maintenance.end();
     browserAuth.clearBrowserAuth();
   });
 
@@ -101,10 +102,10 @@ describe('Signup', () => {
     deleteUser(newUser.email);
     deleteInvitation(newUser.email);
     algolia.storeOrganization(org);
-    firestore.disableBackendFunctions();
+    maintenance.start();
     adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email, emailVerified: true });
     firestore.create([marketplaceInjectedData]);
-    firestore.enableBackendFunctions();
+    maintenance.end();
     cy.visit('auth/identity');
     get('cookies').click();
     fillCommonInputs(newUser);
@@ -152,10 +153,10 @@ describe('Signup', () => {
     deleteUser(newUser.email);
     deleteInvitation(newUser.email);
     algolia.storeOrganization(org);
-    firestore.disableBackendFunctions();
+    maintenance.start();
     adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email, emailVerified: true });
     firestore.create([dashboardInjectedData]);
-    firestore.enableBackendFunctions();
+    maintenance.end();
     cy.visit('auth/identity');
     get('cookies').click();
     fillCommonInputs(newUser);
