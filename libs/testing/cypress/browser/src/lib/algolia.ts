@@ -16,4 +16,8 @@ export const algolia = {
   deleteOrg(data: { app: AlgoliaApp; objectId: string }) {
     return cy.task('deleteAlgoliaOrg', data);
   },
+
+  deleteAlgoliaTestMovies(app: AlgoliaApp) {
+    return cy.task('deleteAlgoliaTestMovies', app);
+  },
 };

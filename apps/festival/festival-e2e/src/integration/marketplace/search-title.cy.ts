@@ -45,6 +45,10 @@ const oneTitleSentence = 'There is 1 title available.';
 const twoTitlesSentence = 'There are 2 titles available.';
 
 describe('Movie search in marketplace', () => {
+  // Delete any movie with E2E in title.
+  // Executed only once to minimize the impact on parallel CI runs.
+  before(() => algolia.deleteAlgoliaTestMovies('festival'));
+
   beforeEach(() => {
     cy.visit('');
     maintenance.start();

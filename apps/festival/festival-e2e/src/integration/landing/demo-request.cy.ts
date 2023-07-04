@@ -1,6 +1,7 @@
 import {
   browserAuth,
   gmail,
+  maintenance,
   // cypress commands
   get,
   check,
@@ -17,7 +18,10 @@ const user = fakeUserData();
 describe('Demo Request Email', () => {
   beforeEach(() => {
     cy.visit('');
+    maintenance.start();
     browserAuth.clearBrowserAuth();
+    maintenance.end();
+    cy.visit('');
   });
 
   it('Request demo email', () => {
