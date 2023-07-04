@@ -93,7 +93,7 @@ export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
 export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(params: Partial<WaterfallDocument<Meta>> = {}): WaterfallDocument<Meta> {
 
   const toObject = () => {
-    if (isContract(params)) return createContract(params.meta) as Meta;
+    if (isContract(params)) return createContract({ ...params.meta, status: 'accepted' }) as Meta;
     if (isBudget(params)) return params.meta as Meta;
     if (isFinancingPlan(params)) return params.meta as Meta;
   };
@@ -114,7 +114,7 @@ export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(para
     ownerId: '',
     sharedWith: [],
     rootId: (params.meta as any).rootId ?? '',
-    signatureDate: (params.meta as any).signatureDate ?? '',
+    signatureDate: (params.meta as any).signatureDate ?? new Date(),
     ...params,
     meta,
   };

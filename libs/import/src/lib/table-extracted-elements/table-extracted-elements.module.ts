@@ -33,6 +33,7 @@ import { TableExtractedMoviesComponent } from './movies/movies.component';
 import { TableExtractedIncomesComponent } from './incomes/incomes.component';
 import { TableExtractedOrganizationsComponent } from './organizations/organizations.component';
 import { TableExtractedExpensesComponent } from './expenses/expenses.component';
+import { TableExtractedDocumentsComponent } from './documents/documents.component';
 import { ViewImportErrorsComponent } from './view-import-errors/view-import-errors.component';
 
 @NgModule({
@@ -42,6 +43,7 @@ import { ViewImportErrorsComponent } from './view-import-errors/view-import-erro
     TableExtractedOrganizationsComponent,
     TableExtractedIncomesComponent,
     TableExtractedExpensesComponent,
+    TableExtractedDocumentsComponent,
     ViewImportErrorsComponent,
   ],
   imports: [
@@ -78,7 +80,8 @@ import { ViewImportErrorsComponent } from './view-import-errors/view-import-erro
     TableExtractedContractsComponent,
     TableExtractedOrganizationsComponent,
     TableExtractedIncomesComponent,
-    TableExtractedExpensesComponent
+    TableExtractedExpensesComponent,
+    TableExtractedDocumentsComponent
   ],
 })
 export class TableExtractedElementsModule {}

@@ -1,5 +1,5 @@
 import { MovieService } from '@blockframes/movie/service';
-import { Movie, Organization, User, Mandate, Sale, Term, App, Income, Expense } from '@blockframes/model';
+import { Movie, Organization, User, Mandate, Sale, Term, App, Income, Expense, WaterfallDocument } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
 import { ContractService } from '@blockframes/contract/contract/service';
@@ -8,7 +8,7 @@ import { UserService } from '@blockframes/user/service';
 import { where } from 'firebase/firestore';
 import { TermService } from '@blockframes/contract/term/service';
 
-export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts', 'incomes', 'expenses'] as const;
+export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts', 'documents', 'incomes', 'expenses'] as const;
 
 export type SpreadsheetImportType = typeof spreadsheetImportTypes[number];
 
@@ -39,7 +39,11 @@ export interface ContractsImportState extends ImportState {
   newContract: boolean;
   contract: Sale | Mandate;
   terms: Term[];
-  mode: App;
+}
+
+export interface DocumentsImportState extends ImportState {
+  document: WaterfallDocument;
+  terms: Term[];
 }
 
 export interface OrganizationsImportState extends ImportState {
@@ -67,11 +71,13 @@ export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
   organizations: 10,
   incomes: 10,
   expenses: 10,
+  documents: 10,
 };
 
 export const sheetRanges: Record<SpreadsheetImportType, string> = {
   titles: `A${sheetHeaderLine.titles}:BZ1000`,
-  contracts: `A${sheetHeaderLine.contracts}:AA300`,
+  contracts: `A${sheetHeaderLine.contracts}:Q300`,
+  documents: `A${sheetHeaderLine.contracts}:U300`,
   organizations: `A${sheetHeaderLine.organizations}:Z100`,
   incomes: `A${sheetHeaderLine.incomes}:I100`,
   expenses: `A${sheetHeaderLine.incomes}:H100`,
@@ -81,10 +87,10 @@ export async function getOrgId(
   name: string,
   orgService: OrganizationService,
   cache: Record<string, string>,
-  centralOrg: Organization
+  centralOrg?: Organization
 ) {
   if (!name) return '';
-  if (name === centralOrg.name || name === centralOrg.id) return centralOrg.id;
+  if (centralOrg && (name === centralOrg.name || name === centralOrg.id)) return centralOrg.id;
 
   if (cache[name]) return cache[name];
 
@@ -147,10 +153,10 @@ export async function getContract(
   return;
 }
 
-export async function getWaterfallContract(
+export async function getWaterfallDocument(
   id: string,
   waterfallDocumentsService: WaterfallDocumentsService,
-  cache: Record<string, Mandate | Sale>,
+  cache: Record<string, WaterfallDocument>,
   waterfallId: string
 ) {
   if (!id) return;
@@ -158,7 +164,7 @@ export async function getWaterfallContract(
   if (cache[id]) return cache[id];
 
   try {
-    const contract = await waterfallDocumentsService.getContract(id, waterfallId);
+    const contract = await waterfallDocumentsService.getValue(id, { waterfallId });
     cache[id] = contract;
     return contract;
   } catch (err) {/**do nothing*/ }

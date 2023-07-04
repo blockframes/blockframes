@@ -1,25 +1,19 @@
-import { Inject, Component, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Intercom } from 'ng-intercom';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
-import { APP } from '@blockframes/utils/routes/utils';
-import { App } from '@blockframes/model';
 
 @Component({
-  selector: 'contract-import',
+  selector: 'waterfall-import',
   templateUrl: './import.component.html',
   styleUrls: ['./import.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractImportComponent {
+export class DocumentImportComponent {
 
   sheetTab?: SheetTab;
-  public templateUrl = this.app === 'catalog'
-    ? '/assets/templates/import-contracts-seller-template.xlsm'
-    : '/assets/templates/import-contracts-admin-template.xlsm';
 
   constructor(
     @Optional() private intercom: Intercom,
-    @Inject(APP) private app: App,
   ) { }
 
   openIntercom() {

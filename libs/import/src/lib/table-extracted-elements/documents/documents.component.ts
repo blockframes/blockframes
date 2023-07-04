@@ -6,36 +6,36 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
-import { ContractService } from '@blockframes/contract/contract/service';
 import { sortingDataAccessor } from '@blockframes/utils/table';
-import { ContractsImportState, SpreadsheetImportError } from '../../utils';
+import { DocumentsImportState, SpreadsheetImportError } from '../../utils';
 import { TermService } from '@blockframes/contract/term/service';
-import { createDocumentMeta, Mandate, Sale } from '@blockframes/model';
+import { isContract, WaterfallDocument } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 
-const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
+const hasImportErrors = (importState: DocumentsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 
 @Component({
-  selector: 'import-table-extracted-contracts',
-  templateUrl: './contracts.component.html',
-  styleUrls: ['./contracts.component.scss'],
+  selector: 'import-table-extracted-documents',
+  templateUrl: './documents.component.html',
+  styleUrls: ['./documents.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableExtractedContractsComponent implements AfterViewInit {
+export class TableExtractedDocumentsComponent implements AfterViewInit {
 
-  @Input() rows: MatTableDataSource<ContractsImportState>;
+  @Input() rows: MatTableDataSource<DocumentsImportState>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   public processing = 0;
 
-  public selection = new SelectionModel<ContractsImportState>(true, []);
+  public selection = new SelectionModel<DocumentsImportState>(true, []);
   public displayedColumns: string[] = [
     'id',
     'select',
-    'contract.id',
-    'contract.type',
+    'document.id',
+    'document.type',
     'errors',
     'warnings',
     'actions',
@@ -44,7 +44,7 @@ export class TableExtractedContractsComponent implements AfterViewInit {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private contractService: ContractService,
+    private waterfallDocumentsService: WaterfallDocumentsService,
     private termService: TermService,
     private cdr: ChangeDetectorRef
   ) { }
@@ -56,30 +56,27 @@ export class TableExtractedContractsComponent implements AfterViewInit {
     this.rows.sort = this.sort;
   }
 
-  async create(importState: ContractsImportState) {
-    const success = await this.add(importState);
-    const message = success
-      ? 'Contract added!'
-      : 'Contract terms overlaps with existing mandate terms. Please update your template file and try again.';
-    this.snackBar.open(message, 'close', { duration: 9000 });
+  async create(importState: DocumentsImportState) {
+    await this.add(importState);
+    this.snackBar.open('Document added!', 'close', { duration: 9000 });
   }
 
   async createSelected() {
     try {
-      const creations = this.selection.selected.filter(importState => importState.newContract && !hasImportErrors(importState));
-      for (const contract of creations) {
-        await this.add(contract, { increment: true });
+      const creations = this.selection.selected.filter(importState => !hasImportErrors(importState));
+      for (const document of creations) {
+        await this.add(document, { increment: true });
       }
 
       const text = this.processing === creations.length
-        ? `${creations.length}/${creations.length} contract(s) created!`
-        : `Could not import all contracts (${this.processing} / ${this.selection.selected.length})`;
+        ? `${creations.length}/${creations.length} document(s) created!`
+        : `Could not import all documents (${this.processing} / ${this.selection.selected.length})`;
       this.snackBar.open(text, 'close', { duration: 3000 });
 
       this.processing = 0;
     } catch (err) {
       console.error(err);
-      this.snackBar.open(`Could not import all contracts (${this.processing} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not import all documents (${this.processing} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.processing = 0;
     }
 
@@ -87,31 +84,21 @@ export class TableExtractedContractsComponent implements AfterViewInit {
   }
 
   /**
-   * Adds a contract to database and prevents multi-insert by refreshing mat-table
+   * Adds a document to database and prevents multi-insert by refreshing mat-table
    * @param importState
    */
-  private async add(importState: ContractsImportState, { increment } = { increment: false }) {
+  private async add(importState: DocumentsImportState, { increment } = { increment: false }) {
     importState.importing = true;
     this.cdr.markForCheck();
-    importState.contract.termIds = importState.terms.map(t => t.id);
+
+    if (isContract(importState.document)) importState.document.meta.termIds = importState.terms.map(t => t.id);
 
     if (increment) this.processing++;
     this.cdr.markForCheck();
 
-    if (importState.contract.type === 'sale') {
-      await this.contractService.add<Sale>({
-        ...importState.contract,
-        _meta: createDocumentMeta({ createdAt: new Date() })
-      });
+    await this.waterfallDocumentsService.add<WaterfallDocument>(importState.document, { params: { waterfallId: importState.document.waterfallId } });
 
-    } else {
-      await this.contractService.add<Mandate>({
-        ...importState.contract,
-        _meta: createDocumentMeta({ createdAt: new Date() })
-      });
-    }
-
-    // @dev: Create terms after contract because rules require contract to be created first
+    // @dev: Create terms after document because rules require document to be created first
     await this.termService.add(importState.terms);
 
     importState.imported = true;
@@ -125,10 +112,10 @@ export class TableExtractedContractsComponent implements AfterViewInit {
   // POPINS
   ///////////////////
 
-  displayErrors(importState: ContractsImportState) {
+  displayErrors(importState: DocumentsImportState) {
     this.dialog.open(ViewImportErrorsComponent, {
       data: createModalData({
-        title: `Contract id ${importState.contract.id}`,
+        title: `Document id ${importState.document.id}`,
         errors: importState.errors
       })
     });
@@ -159,7 +146,7 @@ export class TableExtractedContractsComponent implements AfterViewInit {
   /**
    * The label for the checkbox on the passed row
    */
-  checkboxLabel(row?: ContractsImportState): string {
+  checkboxLabel(row?: DocumentsImportState): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
@@ -177,8 +164,8 @@ export class TableExtractedContractsComponent implements AfterViewInit {
    * Specify the fields in which filter is possible.
    * Even for nested objects.
    */
-  public filterPredicate(data: ContractsImportState, filter: string) {
-    const dataStr = data.contract.id;
+  public filterPredicate(data: DocumentsImportState, filter: string) {
+    const dataStr = data.document.id;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

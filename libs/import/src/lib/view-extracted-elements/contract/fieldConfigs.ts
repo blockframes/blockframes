@@ -2,20 +2,18 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import {
   adminOnlyWarning, alreadyExistError, checkParentTerm, getContract,
   getOrgId, getTitleId, ImportError, mandatoryError,
-  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError, getWaterfallContract, getTerm
+  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError
 } from '@blockframes/import/utils';
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
   ContractStatus, ImportContractStatus, Language, Mandate, Media, Movie,
-  Sale, Territory, User, Duration, ContractType, Term, MovieCurrency
+  Sale, Territory, Duration, ContractType
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { getDate } from '@blockframes/import/utils';
 import { FormatConfig } from './utils';
-import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
-import { TermService } from '@blockframes/contract/term/service';
 
 export interface FieldsConfig {
   contract: {
@@ -26,11 +24,6 @@ export interface FieldsConfig {
     id?: string;
     stakeholders: string[];
     status: ContractStatus;
-    rootId: string;
-    signatureDate?: Date;
-    price?: number;
-    currency?: MovieCurrency;
-    duration?: Duration
   };
   term: {
     territories_included: Territory[];
@@ -42,9 +35,6 @@ export interface FieldsConfig {
     dubbed: Language[];
     subtitle: Language[];
     caption: Language[];
-    id?: string;
-    price?: number;
-    currency?: MovieCurrency;
   }[];
   parentTerm: string | number;
 }
@@ -54,17 +44,13 @@ export type FieldsConfigType = ExtractConfig<FieldsConfig>;
 export interface Caches {
   orgNameCache: Record<string, string>,
   titleCache: Record<string, Movie>,
-  userCache: Record<string, User>,
   contractCache: Record<string, Mandate | Sale>,
-  termCache: Record<string, Term>,
 }
 
 interface ContractConfig {
   orgService: OrganizationService,
   titleService: MovieService,
   contractService: ContractService,
-  termService: TermService,
-  waterfallDocumentsService: WaterfallDocumentsService,
   blockframesAdmin: boolean,
   userOrgId: string,
   caches: Caches,
@@ -77,8 +63,6 @@ export function getContractConfig(option: ContractConfig) {
     orgService,
     titleService,
     contractService,
-    termService,
-    waterfallDocumentsService,
     blockframesAdmin,
     userOrgId,
     caches,
@@ -90,7 +74,6 @@ export function getContractConfig(option: ContractConfig) {
     orgNameCache,
     titleCache,
     contractCache,
-    termCache
   } = caches;
 
 
@@ -134,18 +117,8 @@ export function getContractConfig(option: ContractConfig) {
         }
         return sellerId;
       },
-        /* d */ 'contract.buyerId': async (value: string, data: FieldsConfig) => {
-        if (config.mode === 'waterfall') {
-          let buyerId = await getOrgId(value, orgService, orgNameCache, config.centralOrg);
-          if (!buyerId && value) {
-            const seller = await orgService.getValue(value);
-            if (!seller) throw unknownEntityError(value, 'Licensee Organization');
-            buyerId = value;
-          }
-          return buyerId;
-        } else {
+        /* d */ 'contract.buyerId': async (_, data: FieldsConfig) => {
           return data.contract.type === 'mandate' ? config.centralOrg.id : '';
-        }
       },
         /* e */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
         /* f */ 'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
@@ -184,12 +157,9 @@ export function getContractConfig(option: ContractConfig) {
         /* m */ 'term[].dubbed': (value: string) => getStaticList('languages', value, separator, 'Dubbed', false),
         /* n */ 'term[].subtitle': (value: string) => getStaticList('languages', value, separator, 'Subtitle', false),
         /* o */ 'term[].caption': (value: string) => getStaticList('languages', value, separator, 'CC', false),
-        /* p */ 'contract.id': async (value: string, data: FieldsConfig) => {
+        /* p */ 'contract.id': async (value: string) => {
         if (!value) return contractService.createId();
-        const exist = config.mode === 'catalog' ?
-          await getContract(value, contractService, contractCache) :
-          await getWaterfallContract(value, waterfallDocumentsService, contractCache, data.contract.titleId);
-
+        const exist = await getContract(value, contractService, contractCache);
         if (exist) throw alreadyExistError(value, 'Contract ID');
         return value;
       },
@@ -226,40 +196,6 @@ export function getContractConfig(option: ContractConfig) {
         } else { // external sale, no buyerId
           return Array.from(new Set([data.contract.sellerId, ...stakeholders]));
         }
-      },
-      // TODO #9420 update template excel for admins
-      /* s */ 'term[].id': async (value: string) => {
-        if (!value) return termService.createId();
-        const exist = await getTerm(value, termService, termCache);
-        if (exist) throw alreadyExistError(value, 'Term ID');
-        return value;
-      },
-      /* t */ 'term[].price': async (value: string) => {
-        return Number(value);
-      },
-      /* u */ 'term[].currency': async (value: string) => {
-        const currency = getKeyIfExists('movieCurrencies', value);
-        return currency;
-      },
-      /* v */ 'contract.rootId': async (value: string) => {
-        return value;
-      },
-      /* w */ 'contract.signatureDate': async (value: string) => {
-        if (!value) throw mandatoryError(value, 'Signature Date');
-        return getDate(value, 'Signature Date') as Date;
-      },
-      /* x */ 'contract.price': async (value: string) => {
-        return Number(value);
-      },
-      /* y */ 'contract.currency': async (value: string) => {
-        const currency = getKeyIfExists('movieCurrencies', value);
-        return currency;
-      },
-      /* z */ 'contract.duration.from': (value: string) => {
-        return getDate(value, 'Start of Contract') as Date;
-      },
-      /* aa */ 'contract.duration.to': (value: string) => {
-        return getDate(value, 'End of Contract') as Date;
       },
     };
   }

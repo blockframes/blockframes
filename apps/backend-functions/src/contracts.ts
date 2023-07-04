@@ -51,6 +51,13 @@ export async function cleanRelatedContractDocuments(contract: Contract) {
     await income.ref.delete();
   }
 
+  // Delete expenses documents, if any
+  const expensesCollectionRef = db.collection('expenses').where('contractId', '==', contract.id);
+  const expensesSnap = await expensesCollectionRef.get();
+  for (const expense of expensesSnap.docs) {
+    await expense.ref.delete();
+  }
+
   console.log(`Contract ${contract.id} removed`);
 }
 
