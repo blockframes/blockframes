@@ -84,7 +84,7 @@ export function interceptEmail(_query: string, twoMinutesLimit = true, loop = 0)
   const query = _query + (twoMinutesLimit ? ` after:${twoMinutesAgo}` : '');
   return gmail.queryEmails(query).then(emailsList => {
     if (!emailsList.length) {
-      if (loop > 20) throw new Error('No email found for this query, check node console for more data');
+      if (loop > 20) throw new Error(`No email found for the following query: ${_query} / time: ${new Date()}`);
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve(interceptEmail(_query, twoMinutesLimit, loop + 1));

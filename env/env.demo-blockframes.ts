@@ -56,7 +56,7 @@ export const supportEmails = {
   financiers: 'dev+ci_financiers@blockframes.io'
 }
 
-export const suffixE2ESupportEmail = undefined;
+export const suffixE2ESupportEmail = 'demo';
 
 export const mailchimp = {
   server: 'us20',
