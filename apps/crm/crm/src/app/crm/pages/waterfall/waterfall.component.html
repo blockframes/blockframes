@@ -133,5 +133,52 @@
         </ng-template>
       </bf-table>
     </mat-tab>
+    <!-- VERSIONS -->
+    <mat-tab label="Versions & Actions">
+      <h3>Versions</h3>
+      <bf-table [source]="versions" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort defaultSort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="name" label="Name" let-name sort>
+          {{ name }}
+        </ng-template>
+        <ng-template colRef="description" label="Description" let-description sort>
+          {{ description }}
+        </ng-template>
+        <ng-template colRef="blockIds" label="Blocks" let-blockIds sort>
+          {{ blockIds.length }} block(s)
+        </ng-template>
+        <ng-template colRef="id" label="Actions" let-versionId sticky>
+          <button mat-icon-button (click)="removeVersion(versionId)">
+            <mat-icon svgIcon="delete" matTooltip="Deleted version"></mat-icon>
+          </button>
+          <button mat-icon-button (click)="duplicateVersion(versionId)">
+            <mat-icon svgIcon="file_copy" matTooltip="Duplicate version"></mat-icon>
+          </button>
+          <button mat-icon-button (click)="displayActions(versionId)">
+            <mat-icon svgIcon="search" matTooltip="Show actions"></mat-icon>
+          </button>
+        </ng-template>
+      </bf-table>
+
+      <ng-container *ngIf="actions.length">
+        <h3>Actions</h3>
+        <bf-table [source]="actions" clickable useFilter pagination="50">
+          <ng-template colRef="actionId" label="Id" let-actionId>
+            {{ actionId }}
+          </ng-template>
+          <ng-template colRef="payload.date" label="Date" let-date sort>
+            {{ date | date: 'MM/dd/yyyy' }}
+          </ng-template>
+          <ng-template colRef="blockId" label="Block" let-blockId sort>
+            {{ blockId }}
+          </ng-template>
+          <ng-template colRef="name" label="Name" let-name sort>
+            {{ name }}
+          </ng-template>
+        </bf-table>
+      </ng-container>
+    </mat-tab>
   </mat-tab-group>
 </ng-container>

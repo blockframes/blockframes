@@ -15,6 +15,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [WaterfallComponent],
@@ -32,6 +34,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatButtonModule,
     MatDialogModule,
     MatTabsModule,
+    MatSnackBarModule,
+    MatTooltipModule,
     RouterModule.forChild([{ path: '', component: WaterfallComponent }])
   ]
 })
