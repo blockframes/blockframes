@@ -1,0 +1,137 @@
+<ng-container *ngIf="waterfall && movie">
+  <article>
+    <movie-header [movie]="movie"></movie-header>
+  </article>
+
+  <!-- orgs -->
+  <!-- fake orgs -->
+
+  <mat-tab-group>
+    <!-- DOCUMENTS -->
+    <mat-tab label="All Documents">
+      <bf-table [source]="documents" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
+        <ng-template colRef="id" label="Id" let-id sort defaultSort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort>
+          {{ signatureDate | date: 'MM/dd/yyyy' }}
+        </ng-template>
+        <ng-template colRef="rootId" label="Parent" let-rootId sort>
+          {{ rootId ? rootId : '--' }}
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type }}
+        </ng-template>
+        <ng-template colRef="id" label="Action" let-documentId sticky>
+          <a target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', documentId]" (click)="$event.stopPropagation()">
+            <mat-icon svgIcon="launch"></mat-icon>
+          </a>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+    <!-- SOURCES -->
+    <mat-tab label="Sources">
+      <bf-table [source]="sources" clickable useFilter pagination="50">
+        <ng-template colRef="name" label="Name" let-id sort defaultSort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="medias" label="Medias" let-medias sort>
+          <mat-chip-list aria-label="Medias">
+            <mat-chip disableRipple *ngFor="let media of medias  | toGroupLabel:'medias':'All'">
+              {{ media }}
+            </mat-chip>
+          </mat-chip-list>
+        </ng-template>
+        <ng-template colRef="territories" label="Territories" let-territories sort>
+          <span class="group-label" (click)="openTerritoryModal(territories)">
+            {{ territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
+          </span>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+    <!-- CONTRACTS -->
+    <mat-tab label="Contracts">
+      <bf-table [source]="contracts" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
+        <ng-template colRef="id" label="Id" let-id sort defaultSort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort>
+          {{ signatureDate | date: 'MM/dd/yyyy' }}
+        </ng-template>
+        <ng-template colRef="rootId" label="Parent" let-rootId sort>
+          {{ rootId ? rootId : '--' }}
+        </ng-template>
+        <ng-template colRef="sellerId" label="Licensor" let-sellerId sort>
+          <ng-container *ngIf="sellerId | getOrg | async as org">
+            {{ org.name }}
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="buyerId" label="Licensee" let-buyerId sort>
+          <ng-container *ngIf="buyerId | getOrg | async as org">
+            {{ org.name }}
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="getDeclaredAmount(item) as amount">
+            <price-per-currency [price]="amount"></price-per-currency>
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type }}
+        </ng-template>
+        <ng-template colRef="id" label="Action" let-documentId sticky>
+          <a target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', documentId]" (click)="$event.stopPropagation()">
+            <mat-icon svgIcon="launch"></mat-icon>
+          </a>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+    <!-- INCOMES -->
+    <mat-tab label="Incomes">
+      <bf-table [source]="incomes" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort defaultSort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="" label="Contract Id" let-item sort>
+          {{ getCurrentContract(item) }}
+        </ng-template>
+        <ng-template colRef="date" label="Date" let-date sort>
+          {{ date | date: 'MM/dd/yyyy' }}
+        </ng-template>
+        <ng-template colRef="" label="Source" let-item sort>
+          {{ getAssociatedSource(item) }}
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="getPrice(item) as amount">
+            <price-per-currency [price]="amount"></price-per-currency>
+          </ng-container>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+    <!-- EXPENSES -->
+    <mat-tab label="Expenses">
+      <bf-table [source]="expenses" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort defaultSort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="" label="Contract Id" let-item sort>
+          {{ getCurrentContract(item) }}
+        </ng-template>
+        <ng-template colRef="date" label="Date" let-date sort>
+          {{ date | date: 'MM/dd/yyyy' }}
+        </ng-template>
+        <ng-template colRef="category" label="Category" let-category sort>
+          {{ category }}
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type }}
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="getPrice(item) as amount">
+            <price-per-currency [price]="amount"></price-per-currency>
+          </ng-container>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>

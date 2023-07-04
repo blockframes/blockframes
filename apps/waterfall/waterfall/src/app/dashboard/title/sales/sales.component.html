@@ -66,18 +66,12 @@
             <li><span><b>Medias: </b>{{ infos.medias | toGroupLabel:'medias':'All' | join | maxLength:120 }}</span></li>
             <li>
               <span><b>Declared Amount: </b>
-                <ng-container *ngIf="infos.declaredAmount.USD"> {{ infos.declaredAmount.USD | currency:'USD' }} </ng-container>
-                <ng-container *ngIf="infos.declaredAmount.USD && infos.declaredAmount.EUR"> and</ng-container>
-                <ng-container *ngIf="infos.declaredAmount.EUR"> {{ infos.declaredAmount.EUR | currency:'EUR' }} </ng-container>
-                <ng-container *ngIf="!infos.declaredAmount.USD && !infos.declaredAmount.EUR"> - </ng-container>
+                <price-per-currency [price]="infos.declaredAmount"></price-per-currency>
               </span>
             </li>
             <li>
               <span><b>Amount Paid: </b>
-                <ng-container *ngIf="infos.totalIncome.USD"> {{ infos.totalIncome.USD | currency:'USD' }} </ng-container>
-                <ng-container *ngIf="infos.totalIncome.USD && infos.totalIncome.EUR"> and</ng-container>
-                <ng-container *ngIf="infos.totalIncome.EUR"> {{ infos.totalIncome.EUR | currency:'EUR' }} </ng-container>
-                <ng-container *ngIf="!infos.totalIncome.USD && !infos.totalIncome.EUR"> - </ng-container>
+                <price-per-currency [price]="infos.totalIncome"></price-per-currency>
               </span>
             </li>
           </ul>

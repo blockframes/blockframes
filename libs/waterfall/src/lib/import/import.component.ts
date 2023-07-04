@@ -1,5 +1,4 @@
-import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { Intercom } from 'ng-intercom';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 
 @Component({
@@ -11,14 +10,6 @@ import { SheetTab } from '@blockframes/utils/spreadsheet';
 export class DocumentImportComponent {
 
   sheetTab?: SheetTab;
-
-  constructor(
-    @Optional() private intercom: Intercom,
-  ) { }
-
-  openIntercom() {
-    return this.intercom.show();
-  }
 
   imported(sheetTab: SheetTab) {
     this.sheetTab = sheetTab;

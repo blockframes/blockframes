@@ -51,6 +51,13 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
     const permission = await getDocumentSnap(`waterfall/${after.id}/permissions/${orgRemovedId}`);
     return permission.ref.delete()
   }
+
+  // Deletes removed blocks from versions
+  const blocksBefore = before.versions ? Array.from(new Set(before.versions.map(v => v.blockIds).flat())) : [];
+  const blocksAfter = after.versions ? Array.from(new Set(after.versions.map(v => v.blockIds).flat())) : [];
+  const removedBlocks = blocksBefore.filter(b => !blocksAfter.includes(b));
+  return Promise.all(removedBlocks.map(blockId => getDocumentSnap(`waterfall/${after.id}/blocks/${blockId}`).then(b => b.ref.delete())))
+
 }
 
 export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot<WaterfallDocument>) {

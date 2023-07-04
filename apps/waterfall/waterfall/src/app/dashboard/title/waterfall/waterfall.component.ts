@@ -21,7 +21,9 @@ import {
   createWaterfallSource,
   territories,
   Territory,
-  getAssociatedSource
+  getAssociatedSource,
+  convertCurrenciesTo,
+  MovieCurrency
 } from '@blockframes/model';
 import { BlockService } from '@blockframes/waterfall/block.service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
@@ -58,6 +60,7 @@ export class WaterfallComponent implements OnInit {
   public tree: { state: TitleState; history: History[] };
 
   private waterfall: Waterfall;
+  private mainCurrency: MovieCurrency = 'USD';
 
   constructor(
     private route: ActivatedRoute,
@@ -102,27 +105,18 @@ export class WaterfallComponent implements OnInit {
     ];
 
     contracts.forEach(c => {
-      if (c.rootId) {
-        actions.push(
-          action('updateContract', {
-            amount: getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) }).EUR, // TODO #9420 should converted to a single currency
-            id: c.rootId,
-            date: c.signatureDate,
-            start: c.duration.from,
-            end: c.duration.to
-          })
-        );
-      } else {
-        actions.push(
-          action('contract', {
-            amount: getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) }).EUR, // TODO #9420 should converted to a single currency
-            id: c.id,
-            date: c.signatureDate,
-            start: c.duration.from,
-            end: c.duration.to
-          })
-        );
-      }
+      const declaredAmount = getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) });
+      const { [this.mainCurrency]: amount } = convertCurrenciesTo(declaredAmount, this.mainCurrency);
+      const payload = {
+        amount,
+        id: c.rootId || c.id,
+        date: c.signatureDate,
+        start: c.duration.from,
+        end: c.duration.to
+      };
+
+      actions.push(c.rootId ? action('updateContract', payload) : action('contract', payload));
+
     });
 
     incomes.forEach(i => {
@@ -133,13 +127,15 @@ export class WaterfallComponent implements OnInit {
         this.snackbar.open(`Could not find source for income ${i.id}`, 'close', { duration: 5000 });
         return;
       }
+
+      const { [this.mainCurrency]: amount } = convertCurrenciesTo({ [i.currency]: i.price }, this.mainCurrency);
       actions.push(
         action('income', {
           id: i.id,
           contractId: contract.id,
           from: source.name,
           to: 'test',
-          amount: i.price,
+          amount,
           date: i.date,
           territory: i.territories,
           media: i.medias
@@ -150,10 +146,11 @@ export class WaterfallComponent implements OnInit {
     expenses.forEach(e => {
       const contractAndAmendments = getContractAndAmendments(e.contractId, contracts);
       const contract = getCurrentContract(contractAndAmendments, e.date);
+      const { [this.mainCurrency]: amount } = convertCurrenciesTo({ [e.currency]: e.price }, this.mainCurrency);
       actions.push(
         action('expense', {
           orgId: contract.buyerId,
-          amount: e.price,
+          amount,
           type: e.type,
           date: e.date
         })

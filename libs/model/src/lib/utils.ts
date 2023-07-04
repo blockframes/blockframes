@@ -369,3 +369,16 @@ export const externalOrgIdentifier = 'External';
 
 // TODO #9422
 export type PricePerCurrency = Partial<Record<MovieCurrency, number>>;
+
+// TODO #9422
+const pairs = {
+  'EUR-USD': 1.09,
+  'USD-EUR': 0.92,
+  'EUR-EUR': 1,
+  'USD-USD': 1,
+}
+export function convertCurrenciesTo(price: PricePerCurrency, to: MovieCurrency = 'USD'): PricePerCurrency {
+  const prices = Object.entries(price).map(([currency, price]) => price * pairs[`${currency}-${to}`]);
+  const value = prices.reduce((a, b) => a + b, 0);
+  return { [to]: value || 0 };
+}

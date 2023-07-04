@@ -1,0 +1,11 @@
+<ng-container *ngIf="convertedCurrencies() as price else default">
+  {{ price | currency:convertTo }}
+</ng-container>
+<ng-template #default>
+  <ng-container *ngIf="price.USD"> {{ price.USD | currency:'USD' }} </ng-container>
+  <ng-container *ngIf="price.USD && price.EUR"> and</ng-container>
+  <ng-container *ngIf="price.EUR"> {{ price.EUR | currency:'EUR' }} </ng-container>
+  <ng-container *ngIf="!price.USD && !price.EUR"> - </ng-container>
+  <!-- TODO #9422 improve for all currencies -->
+</ng-template>
+
