@@ -18,7 +18,7 @@
           </article>
         </section>
         <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" >
-          <bf-tag>{{ movie.app[app].status | toLabel: 'storeStatus' }}</bf-tag>
+          <bf-tag *ngIf="app !== 'waterfall'">{{ movie.app[app].status | toLabel: 'storeStatus' }}</bf-tag>
           <ng-content select="movie-cta"></ng-content>
         </aside>
       </ng-container>
