@@ -1,31 +1,43 @@
 
 :host {
   display: block;
-  margin: 0 24px;
+  margin: 24px;
 
-  section {
-    margin-bottom: 32px;
-
-    ul {
-      li {
-        display: flex;
-        gap: 6px;
-      }
-    }
-
-    mat-divider {
-      margin: 24px 16px 48px 16px;
-    }
-
+  article {
+    display: flex;
+    
     div {
-      gap: 16px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: start;
-
-      mat-form-field {
-        width: 40%;
-      }
+      width: 50%;
+    }
+    bf-card-modal {
+      width: 50%;
+      box-shadow: -5px 0px 18px 0px rgba(0, 0, 0, 0.35);
     }
   }
+
+  // section {
+  //   margin-bottom: 32px;
+
+  //   ul {
+  //     li {
+  //       display: flex;
+  //       gap: 6px;
+  //     }
+  //   }
+
+  //   mat-divider {
+  //     margin: 24px 16px 48px 16px;
+  //   }
+
+  //   div {
+  //     gap: 16px;
+  //     display: flex;
+  //     flex-wrap: wrap;
+  //     align-items: start;
+
+  //     mat-form-field {
+  //       width: 40%;
+  //     }
+  //   }
+  // }
 }

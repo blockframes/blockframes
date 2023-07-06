@@ -1,5 +1,16 @@
 
 <p>Documents</p>
+
+<article>
+  <div>
+    <p>Content</p>
+  </div>
+  <bf-card-modal>
+    <p>Hello</p>
+    <button mat-button (click)="cardModal?.toggle()">{{cardModal?.isOpened ? 'Close' : 'Open'}}</button>
+  </bf-card-modal>
+</article>
+
 <!-- TODO THIS IS EXPRIMENTAL CODE THAT COULD BE USEFUL FOR IMPLEMENTING THE DOCUMENT SYSTEM -->
 <!-- TODO DELETE THAT LATER issue #9389 -->
 <!-- 

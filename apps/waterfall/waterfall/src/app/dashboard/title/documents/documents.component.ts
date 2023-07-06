@@ -3,7 +3,8 @@
 // import { FormControl } from '@angular/forms';
 // import { arrayUnion } from 'firebase/firestore';
 // import { ActivatedRoute } from '@angular/router';
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
 // import { BehaviorSubject, Observable, Subscription, combineLatest, map, switchMap, tap } from 'rxjs';
 
 
@@ -23,6 +24,8 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentsComponent implements OnInit, OnDestroy {
+
+  @ViewChild(CardModalComponent) cardModal: CardModalComponent;
 
   // TODO THIS IS EXPRIMENTAL CODE THAT COULD BE USEFUL FOR IMPLEMENTING THE DOCUMENT SYSTEM
   // TODO DELETE THAT LATER issue #9389
@@ -187,4 +190,6 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
   //   this.creating$.next(false);
   // }
+
+
 }

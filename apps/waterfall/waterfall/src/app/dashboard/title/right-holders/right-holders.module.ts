@@ -1,3 +1,4 @@
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -10,6 +11,9 @@ import { RightHoldersComponent } from './right-holders.component';
 import { RightHolderFormModule } from '@blockframes/waterfall/components/right-holder-form/right-holder-form.module';
 
 // Material
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
 
 @NgModule({
   declarations: [
@@ -21,6 +25,8 @@ import { RightHolderFormModule } from '@blockframes/waterfall/components/right-h
     RightHolderFormModule,
     
     // Material
+    MatIconModule,
+    MatButtonModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: RightHoldersComponent }]),
