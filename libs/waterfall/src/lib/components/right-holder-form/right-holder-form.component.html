@@ -2,7 +2,7 @@
 
   <article class="header">
     <h2>Right Holders Information</h2>
-    <button mat-button color="primary" (click)="skip.emit()">
+    <button *ngIf="skippable" mat-button color="primary" (click)="skip.emit()">
       <span>Skip and do it later</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>

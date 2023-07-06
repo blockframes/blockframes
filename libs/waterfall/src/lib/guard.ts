@@ -1,9 +1,9 @@
 // Angular
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { CanDeactivate } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { RightholderRole } from '@blockframes/model';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 // Blockframes
 import { MovieForm } from '@blockframes/movie/form/movie.form';
@@ -14,6 +14,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 export interface WaterfallFormGuardedComponent {
   movieForm: MovieForm;
   waterfallRoleControl: FormControl<RightholderRole[]>;
+  rightholdersForm: FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>
 };
 
 @Injectable({ providedIn: 'root' })
@@ -24,7 +25,11 @@ export class WaterfallFormGuard<T extends WaterfallFormGuardedComponent> impleme
   ) { }
 
   canDeactivate(component: T) {
-    if (component.movieForm.pristine && component.waterfallRoleControl.pristine) return true;
+    if (
+      component.movieForm.pristine &&
+      component.waterfallRoleControl.pristine &&
+      component.rightholdersForm.pristine
+    ) return true;
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: createModalData({
         title: 'You are about to leave the form',

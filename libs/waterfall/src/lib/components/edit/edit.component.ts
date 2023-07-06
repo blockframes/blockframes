@@ -1,3 +1,4 @@
+
 // Angular
 import { ActivatedRoute } from '@angular/router';
 import { MatStepper } from '@angular/material/stepper';
@@ -19,19 +20,21 @@ import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.
 
 
 @Component({
-  selector: 'waterfall-title-edit',
+  selector: 'waterfall-title-edit-form',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: STEPPER_GLOBAL_OPTIONS, useValue: { displayDefaultIndicatorType: false } }],
 })
-export class EditComponent implements OnInit, WaterfallFormGuardedComponent {
+export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedComponent {
+
+  createMode = true;
 
   movieForm = new MovieForm({ directors: [{ firstName: '', lastName: '' }] });
   waterfallRoleControl = new FormControl<RightholderRole[]>(undefined, [Validators.required]);
 
   rightholdersForm = new FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>([
-    new FormGroup({ id: new FormControl('fake'), name: new FormControl(''), roles: new FormControl([]) }),
+    new FormGroup({ id: new FormControl(this.waterfallService.createId()), name: new FormControl(''), roles: new FormControl([]) }),
   ]);
 
   movieId = '';
@@ -80,18 +83,24 @@ export class EditComponent implements OnInit, WaterfallFormGuardedComponent {
   ) { }
 
   async ngOnInit() {
-    this.movieId = this.route.snapshot.params.movieId;
+    this.createMode = this.route.snapshot.data.createMode ?? true;
+
+    this.movieId = this.createMode ?
+      this.movieService.createId() :
+      this.route.snapshot.params.movieId
+    ;
     
-    const [ movie, waterfall, permissions ] = await Promise.all([
-      this.movieService.getValue(this.movieId),
-      this.waterfallService.getValue(this.movieId),
-      this.permissionsService.getValue(this.orgService.org.id, { waterfallId: this.movieId }),
-    ]);
+    if (!this.createMode) {
+      const [ movie, waterfall, permissions ] = await Promise.all([
+        this.movieService.getValue(this.movieId),
+        this.waterfallService.getValue(this.movieId),
+        this.permissionsService.getValue(this.orgService.org.id, { waterfallId: this.movieId }),
+      ]);
 
-    this.movieForm.patchValue(movie);
-    this.waterfallRoleControl.patchValue(permissions.roles);
-    this.rightholdersForm.patchValue(waterfall.rightholders);
-
+      this.movieForm.patchValue(movie);
+      this.waterfallRoleControl.patchValue(permissions.roles);
+      this.rightholdersForm.patchValue(waterfall.rightholders);
+    }
     this.loading$.next(false);    
   }
 
@@ -100,18 +109,24 @@ export class EditComponent implements OnInit, WaterfallFormGuardedComponent {
   }
 
   // update a new movie along with its waterfall permissions
-  async updateMovie() {
+  async update() {
     if (!this.movieForm.pristine || !this.waterfallRoleControl.pristine) {
-      this.updating$.next(true);
-      await this.movieService.update({
-        ...this.movieForm.value,
-        id: this.movieId,
-      });
-
-      this.uploadService.upload();
+      this.updating$.next(true);      
 
       const orgId = this.orgService.org.id;
-      await this.permissionsService.update(orgId, { roles: this.waterfallRoleControl.value }, { params: { waterfallId: this.movieId }  });
+      if (this.createMode) {
+        const movie = await this.movieService.create({ ...this.movieForm.value, id: this.movieId })
+        this.uploadService.upload();
+
+        await this.waterfallService.create(this.movieId, movie.orgIds);
+        await this.permissionsService.create(this.movieId, { id: movie.orgIds[0], roles: this.waterfallRoleControl.value });
+
+      } else {
+        await this.movieService.update({ ...this.movieForm.value, id: this.movieId });
+        this.uploadService.upload();
+
+        await this.permissionsService.update(orgId, { roles: this.waterfallRoleControl.value }, { params: { waterfallId: this.movieId }  });
+      }
 
       this.movieForm.markAsPristine();
       this.waterfallRoleControl.markAsPristine();
@@ -119,19 +134,14 @@ export class EditComponent implements OnInit, WaterfallFormGuardedComponent {
       this.updating$.next(false);
       this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
     }
-    this.stepper?.next();
-  }
 
-  async updateRightholders() {
     if (!this.rightholdersForm.pristine) {
       this.updating$.next(true);
 
-      console.log(this.rightholdersForm.value);
       // Remove form value with no names and no roles and format the good values
       const rightholders: WaterfallRightholder[] = this.rightholdersForm.value.filter(rightholder => rightholder.name || rightholder.roles.length)
-        .map(rightholder => ({ id: 'fake', name: rightholder.name ?? '', roles: rightholder.roles ?? [] }))
+        .map(rightholder => ({ id: rightholder.id ?? this.waterfallService.createId(), name: rightholder.name ?? '', roles: rightholder.roles ?? [] }))
       ;
-      console.log(rightholders);
 
       // ! `id` needs to be in the update object, because of a bug in ng-fire
       await this.waterfallService.update({ id: this.movieId, rightholders });

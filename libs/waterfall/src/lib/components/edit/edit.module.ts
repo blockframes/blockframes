@@ -16,11 +16,11 @@ import { ContractsFormModule } from '@blockframes/waterfall/components/contracts
 import { RightHolderFormModule } from '@blockframes/waterfall/components/right-holder-form/right-holder-form.module';
 
 // Pages
-import { EditComponent } from './edit.component';
+import { WaterfallEditFormComponent } from './edit.component';
 
 
 @NgModule({
-  declarations: [EditComponent],
+  declarations: [WaterfallEditFormComponent],
   imports: [
     CommonModule,
     FormModule,
@@ -36,9 +36,9 @@ import { EditComponent } from './edit.component';
     // Routing
     RouterModule.forChild([{
       path: '', 
-      component: EditComponent,
+      component: WaterfallEditFormComponent,
       canDeactivate: [WaterfallFormGuard],
     }]),
   ],
 })
-export class EditModule { }
+export class WaterfallEditFormModule { }
