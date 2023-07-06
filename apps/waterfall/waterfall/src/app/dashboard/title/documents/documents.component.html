@@ -1,0 +1,116 @@
+
+<p>Documents</p>
+<!-- TODO THIS IS EXPRIMENTAL CODE THAT COULD BE USEFUL FOR IMPLEMENTING THE DOCUMENT SYSTEM -->
+<!-- TODO DELETE THAT LATER issue #9389 -->
+<!-- 
+
+<ng-container *rxIf="waterfall$ as waterfall; else loading">
+
+  <section class="surface">
+    <h2>Orgs:</h2>
+
+    <ul>
+      <li *ngFor="let orgId of waterfall.orgIds">
+        <mat-icon svgIcon="home"></mat-icon>
+        <p>{{ (orgId | getOrg | async).name }}</p>
+      </li>
+      <li *ngFor="let org of waterfall.fakeOrgs">
+        <mat-icon svgIcon="pending"></mat-icon>
+        <p>{{org}}</p>
+      </li>
+    </ul>
+
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Org Name</mat-label>
+        <input matInput type="text" placeholder="Org Name" [formControl]="fakeOrgName" />
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="createFakeOrg()">Add</button>
+    </div>
+  </section>
+
+  <section class="surface">
+    <h2>Documents:</h2>
+
+    <ul>
+      <li *ngFor="let document of documents$ | async">
+        <mat-icon svgIcon="document"></mat-icon>
+        <img [asset]="document.storagePath | fileName | fileTypeImage" alt="file image" class="file-uploaded">
+        <p style="text-transform: capitalize;">{{document.type}}:</p>
+        <p>[{{document.licensor.name}} - {{document.licensee.name}}]</p>
+        <p>{{document.folder}}/{{document.storagePath | fileName }}</p>
+      </li>
+    </ul>
+
+    <mat-divider></mat-divider>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Type</mat-label>
+      <mat-select [formControl]="documentType">
+        <mat-option value="contract">Contract</mat-option>
+        <mat-option value="amendment">Amendment</mat-option>
+        <mat-option value="budget">Budget</mat-option>
+        <mat-option value="financingPlan">Financing Plan</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <ng-container [ngSwitch]="(documentType.valueChanges | async)">
+
+      <div *ngSwitchCase="'amendment'">
+        <mat-form-field appearance="outline">
+          <mat-label>Parent Document</mat-label>
+          <mat-select [formControl]="parentDocument">
+            <mat-option *rxFor="let document of documents$" [value]="document">{{document.type}}: [{{document.licensor.name}} - {{document.licensee.name}}] {{document.folder}}/{{document.storagePath | fileName }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <ng-container *ngIf="parentDocument.valueChanges | async">
+          <mat-form-field appearance="outline">
+            <mat-label>Dummy Value</mat-label>
+            <input matInput type="text" placeholder="Dummy Value" [formControl]="dummyValue" />
+          </mat-form-field>
+          <file-uploader [form]="fileForm" [meta]="['waterfall', 'documents', waterfall.id]" accept="pdf"></file-uploader>
+        </ng-container>
+      </div>
+
+      <div *ngSwitchDefault>
+        <mat-form-field appearance="outline">
+          <mat-label>Licensor Org</mat-label>
+          <mat-select [formControl]="licensor" [compareWith]="compareOrgWith">
+            <mat-option *rxFor="let member of members$" [value]="member">{{member.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Licensee Org</mat-label>
+          <mat-select [formControl]="licensee" [compareWith]="compareOrgWith">
+            <mat-option *rxFor="let member of members$" [value]="member">{{member.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Folder</mat-label>
+          <input matInput type="text" placeholder="Folder" [formControl]="folder" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Dummy Value</mat-label>
+          <input matInput type="text" placeholder="Dummy Value" [formControl]="dummyValue" />
+        </mat-form-field>
+        <file-uploader [form]="fileForm" [meta]="['waterfall', 'documents', waterfall.id]" accept="pdf"></file-uploader>
+      </div>
+
+      <ng-container *ngIf="creating$ | async; else ready">
+        <mat-spinner></mat-spinner>
+      </ng-container>
+      <ng-template #ready>
+        <button mat-raised-button color="primary" (click)="createDocument()">Add</button>
+      </ng-template>
+
+    </ng-container>
+  </section>
+</ng-container>
+
+<ng-template #loading>
+  <article>
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-template> -->
