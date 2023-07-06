@@ -151,6 +151,13 @@ export function getDeclaredAmount(contract: FullMandate | FullSale): PricePerCur
   return amount;
 }
 
+export function getContractDurationStatus(contract: Contract): 'future' | 'past' | 'ongoing' {
+  const now = new Date().getTime();
+  if (now < contract.duration.from.getTime()) return 'future';
+  if (now > contract.duration.to.getTime()) return 'past';
+  return 'ongoing';
+}
+
 // ----------------------------
 //    AMENDMENTS MANAGEMENT  //
 // ----------------------------

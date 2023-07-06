@@ -10,11 +10,15 @@ import {
   PricePerCurrency,
   Term,
   Territory,
+  TitleState,
+  History,
   Version,
   Waterfall,
   WaterfallContract,
   WaterfallDocument,
+  WaterfallRightholder,
   WaterfallSource,
+  buildActions,
   convertDocumentTo,
   createVersion,
   getAssociatedSource,
@@ -50,6 +54,8 @@ export class WaterfallComponent implements OnInit {
   public contracts: WaterfallContract[] = [];
   public versions: Version[] = [];
   public actions: (Action & { blockId: string })[] = [];
+  public rightholders: WaterfallRightholder[] = [];
+  public tree: { state: TitleState; history: History[] };
   private terms: Term[] = [];
 
   constructor(
@@ -73,6 +79,7 @@ export class WaterfallComponent implements OnInit {
     this.waterfall = await this.waterfallService.getValue(waterfallId);
     this.sources = this.waterfall.sources;
     this.versions = this.waterfall.versions;
+    this.rightholders = this.waterfall.rightholders;
     this.documents = await this.waterfalllDocumentService.getValue({ waterfallId });
 
     this.contracts = this.documents.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c));
@@ -86,6 +93,10 @@ export class WaterfallComponent implements OnInit {
 
   public goToDocument(id: string) {
     // TODO #9420 this.router.navigate([id, 'map'], { relativeTo: this.route });
+  }
+
+  public getRightholderName(id: string) {
+    return this.waterfall.rightholders.find(r => r.id === id).name;
   }
 
   public getAssociatedSource(income: Income) {
@@ -113,11 +124,21 @@ export class WaterfallComponent implements OnInit {
     return { [item.currency]: item.price };
   }
 
+  public async removeDocument(id: string) {
+    await this.waterfalllDocumentService.remove(id, { params: { waterfallId: this.waterfall.id } });
+    this.documents = await this.waterfalllDocumentService.getValue({ waterfallId: this.waterfall.id });
+    this.contracts = this.documents.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c));
+    this.snackBar.open(`Document "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
+    this.cdRef.markForCheck();
+  }
+
   public async removeVersion(id: string) {
     this.waterfall.versions = this.waterfall.versions.filter(v => v.id !== id);
     await this.waterfallService.update(this.waterfall);
     this.waterfall = await this.waterfallService.getValue(this.waterfall.id);
     this.versions = this.waterfall.versions;
+    this.actions = [];
+    this.tree = undefined;
     this.snackBar.open(`Version "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
     this.cdRef.markForCheck();
   }
@@ -126,9 +147,9 @@ export class WaterfallComponent implements OnInit {
     const version = this.waterfall.versions.find(v => v.id === id);
     const blocks = await this.blockService.getValue(version.blockIds, { waterfallId: this.waterfall.id });
 
-    const newVersion = createVersion({ 
-      ...version, 
-      id: `${version.id}-copy`, 
+    const newVersion = createVersion({
+      ...version,
+      id: `${version.id}-copy`,
       name: `${version.name} (copy)`,
       blockIds: [],
       description: `Copied from ${version.id}`
@@ -152,8 +173,35 @@ export class WaterfallComponent implements OnInit {
     const blocks = await this.blockService.getValue(version.blockIds, { waterfallId: this.waterfall.id });
 
     this.actions = blocks.map(b => Object.values(b.actions).map(a => ({ ...a, blockId: b.id }))).flat();
+    this.tree = undefined;
     this.snackBar.open('Actions Loaded', 'close', { duration: 2000 });
     this.cdRef.markForCheck();
+  }
+
+  public async initWaterfall() {
+    const versionId = 'version_1';
+    const actions = buildActions(this.contracts, this.incomes, this.expenses, this.terms, this.sources);
+
+    const [init] = await Promise.all([
+      this.blockService.create(this.waterfall.id, 'init', actions),
+      this.waterfallService.addVersion(this.waterfall, { id: versionId, description: 'First Version' })
+    ]);
+
+    this.waterfall = await this.waterfallService.addBlocksToVersion(this.waterfall, versionId, [init]);
+
+    this.waterfall = await this.waterfallService.getValue(this.waterfall.id);
+    this.versions = this.waterfall.versions;
+    this.snackBar.open(`Version "${versionId}" initialized !`, 'close', { duration: 5000 });
+    this.cdRef.markForCheck();
+  }
+
+  public async displayWaterfall(versionId: string) {
+    this.snackBar.open('Waterfall is loading. Please wait', 'close', { duration: 5000 });
+    const data = await this.waterfallService.buildWaterfall({ waterfallId: this.waterfall.id, versionId});
+    this.tree = data.waterfall;
+    this.actions = [];
+    this.cdRef.markForCheck();
+    this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
   }
 
 }

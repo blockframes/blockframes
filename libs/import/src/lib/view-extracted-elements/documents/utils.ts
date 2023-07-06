@@ -6,18 +6,19 @@ import {
   Term,
   createTerm,
   createWaterfallDocument,
-  WaterfallDocument
+  WaterfallDocument,
+  WaterfallRightholder
 } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getDocumentConfig } from './fieldConfigs';
 import { TermService } from '@blockframes/contract/term/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string) {
 
   const {
     medias,
-    duration,
     territories_excluded = [],
     territories_included = [],
     price,
@@ -28,22 +29,26 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termI
 
   const id = termId;
 
-  return createTerm({
+  const term = createTerm({
     id,
     contractId,
     medias,
-    duration,
     territories,
     criteria: [],
     price,
     currency
   });
+
+  term.duration = { from: null, to: null };
+
+  return term;
 }
 
 export async function formatDocument(
   sheetTab: SheetTab,
   orgService: OrganizationService,
   titleService: MovieService,
+  waterfallService: WaterfallService,
   waterfallDocumentsService: WaterfallDocumentsService,
   termService: TermService,
   userOrgId: string,
@@ -51,14 +56,16 @@ export async function formatDocument(
   // Cache to avoid  querying db every time
   const orgNameCache: Record<string, string> = {};
   const titleCache: Record<string, Movie> = {};
+  const rightholderCache: Record<string, WaterfallRightholder[]> = {};
   const documentCache: Record<string, WaterfallDocument> = {};
   const termCache: Record<string, Term> = {};
   const documents: DocumentsImportState[] = [];
-  const caches = { orgNameCache, titleCache, documentCache, termCache };
+  const caches = { orgNameCache, titleCache, documentCache, termCache, rightholderCache };
 
   const option = {
     orgService,
     titleService,
+    waterfallService,
     termService,
     waterfallDocumentsService,
     userOrgId,
@@ -75,7 +82,7 @@ export async function formatDocument(
 
     const terms = (data.term ?? []).map(term => toTerm(term, document.id, term.id || termService.createId()));
 
-    documents.push({ document, terms, errors });
+    documents.push({ document, terms, errors, rightholders: rightholderCache });
   }
   return documents;
 }

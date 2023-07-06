@@ -5,9 +5,12 @@ import { RouterModule } from '@angular/router';
 import { WaterfallComponent } from './waterfall.component';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule } from '@blockframes/utils/pipes';
-import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
+import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { GraphModule } from '@blockframes/waterfall/components/g6/graph/graph.module';
+import { SalesMapModule } from '@blockframes/waterfall/components/sales-map/sales-map.module';
+import { TreeModule } from '@blockframes/waterfall/components/g6/tree/tree.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -22,13 +25,19 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   declarations: [WaterfallComponent],
   imports: [
     CommonModule,
+
     MovieHeaderModule,
     TableModule,
     ToGroupLabelPipeModule,
+    ToLabelModule,
+    ImageModule,
     MaxLengthModule,
     JoinPipeModule,
-    GetOrgPipeModule,
     PricePerCurrencyModule,
+    GraphModule,
+    TreeModule,
+    SalesMapModule,
+
     MatIconModule,
     MatChipsModule,
     MatButtonModule,

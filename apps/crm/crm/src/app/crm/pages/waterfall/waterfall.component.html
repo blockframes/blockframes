@@ -3,10 +3,21 @@
     <movie-header [movie]="movie"></movie-header>
   </article>
 
-  <!-- TODO #9420 orgs -->
-  <!-- TODO #9420 fake orgs -->
-
   <mat-tab-group>
+    <!-- RIGHTHOLDERS -->
+    <mat-tab label="Right Holders">
+      <bf-table [source]="rightholders" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort defaultSort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="name" label="Name" let-name sort>
+          {{ name }}
+        </ng-template>
+        <ng-template colRef="roles" label="Roles" let-roles sort>
+          {{ roles | toLabel: 'rightholderRoles' }}
+        </ng-template>
+      </bf-table>
+    </mat-tab>
     <!-- DOCUMENTS -->
     <mat-tab label="All Documents">
       <bf-table [source]="documents" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
@@ -23,9 +34,12 @@
           {{ type }}
         </ng-template>
         <ng-template colRef="id" label="Action" let-documentId sticky>
-          <a target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', documentId]" (click)="$event.stopPropagation()">
+          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', documentId]" (click)="$event.stopPropagation()">
             <mat-icon svgIcon="launch"></mat-icon>
           </a>
+          <button mat-icon-button (click)="removeDocument(documentId)">
+            <mat-icon svgIcon="delete" matTooltip="Delete document"></mat-icon>
+          </button>
         </ng-template>
       </bf-table>
     </mat-tab>
@@ -62,13 +76,13 @@
           {{ rootId ? rootId : '--' }}
         </ng-template>
         <ng-template colRef="sellerId" label="Licensor" let-sellerId sort>
-          <ng-container *ngIf="sellerId | getOrg | async as org">
-            {{ org.name }}
+          <ng-container *ngIf="sellerId as org">
+            {{ getRightholderName(sellerId) }}
           </ng-container>
         </ng-template>
         <ng-template colRef="buyerId" label="Licensee" let-buyerId sort>
-          <ng-container *ngIf="buyerId | getOrg | async as org">
-            {{ org.name }}
+          <ng-container *ngIf="buyerId async as org">
+            {{ getRightholderName(buyerId) }}
           </ng-container>
         </ng-template>
         <ng-template colRef="" label="Price" let-item sort>
@@ -80,9 +94,12 @@
           {{ type }}
         </ng-template>
         <ng-template colRef="id" label="Action" let-documentId sticky>
-          <a target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', documentId]" (click)="$event.stopPropagation()">
+          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', documentId]" (click)="$event.stopPropagation()">
             <mat-icon svgIcon="launch"></mat-icon>
           </a>
+          <button mat-icon-button (click)="removeDocument(documentId)">
+            <mat-icon svgIcon="delete" matTooltip="Delete document"></mat-icon>
+          </button>
         </ng-template>
       </bf-table>
     </mat-tab>
@@ -134,33 +151,56 @@
       </bf-table>
     </mat-tab>
     <!-- VERSIONS -->
-    <mat-tab label="Versions & Actions">
-      <h3>Versions</h3>
-      <bf-table [source]="versions" clickable useFilter pagination="50">
-        <ng-template colRef="id" label="Id" let-id sort defaultSort>
-          {{ id }}
-        </ng-template>
-        <ng-template colRef="name" label="Name" let-name sort>
-          {{ name }}
-        </ng-template>
-        <ng-template colRef="description" label="Description" let-description sort>
-          {{ description }}
-        </ng-template>
-        <ng-template colRef="blockIds" label="Blocks" let-blockIds sort>
-          {{ blockIds.length }} block(s)
-        </ng-template>
-        <ng-template colRef="id" label="Actions" let-versionId sticky>
-          <button mat-icon-button (click)="removeVersion(versionId)">
-            <mat-icon svgIcon="delete" matTooltip="Deleted version"></mat-icon>
-          </button>
-          <button mat-icon-button (click)="duplicateVersion(versionId)">
-            <mat-icon svgIcon="file_copy" matTooltip="Duplicate version"></mat-icon>
-          </button>
-          <button mat-icon-button (click)="displayActions(versionId)">
-            <mat-icon svgIcon="search" matTooltip="Show actions"></mat-icon>
-          </button>
-        </ng-template>
-      </bf-table>
+    <mat-tab label="Versions & Actions" #versionsAndActions>
+      <ng-container *ngIf="versions.length else noWaterfall">
+        <h3>Versions</h3>
+        <bf-table [source]="versions" clickable useFilter pagination="50">
+          <ng-template colRef="id" label="Id" let-id sort defaultSort>
+            {{ id }}
+          </ng-template>
+          <ng-template colRef="name" label="Name" let-name sort>
+            {{ name }}
+          </ng-template>
+          <ng-template colRef="description" label="Description" let-description sort>
+            {{ description }}
+          </ng-template>
+          <ng-template colRef="blockIds" label="Blocks" let-blockIds sort>
+            {{ blockIds.length }} block(s)
+          </ng-template>
+          <ng-template colRef="id" label="Actions" let-versionId sticky>
+            <button mat-icon-button (click)="removeVersion(versionId)">
+              <mat-icon svgIcon="delete" matTooltip="Delete version"></mat-icon>
+            </button>
+            <button mat-icon-button (click)="duplicateVersion(versionId)">
+              <mat-icon svgIcon="file_copy" matTooltip="Duplicate version"></mat-icon>
+            </button>
+            <button mat-icon-button (click)="displayActions(versionId)">
+              <mat-icon svgIcon="search" matTooltip="Show actions"></mat-icon>
+            </button>
+            <button mat-icon-button (click)="displayWaterfall(versionId)">
+              <mat-icon svgIcon="star" matTooltip="Show waterfall"></mat-icon>
+            </button>
+          </ng-template>
+        </bf-table>
+
+        <h3>Tree</h3>
+        <article class="surface">
+          <waterfall-g6-tree *ngIf="versionsAndActions.isActive" [waterfall]="waterfall"></waterfall-g6-tree>
+        </article>
+      </ng-container>
+      
+      <ng-template #noWaterfall>
+        <section>
+          <h1>Waterfall not initialized.</h1>
+          <p class="mat-body-1">
+            Please initalize a first version that you're going to work with.
+          </p>
+          <a (click)="initWaterfall()" class="surface">
+            <img asset="add_draft.svg" alt="Add waterfall image">
+            <button mat-button color="primary">Initialize Waterfall</button>
+          </a>
+        </section>
+      </ng-template>
 
       <ng-container *ngIf="actions.length">
         <h3>Actions</h3>
@@ -179,6 +219,12 @@
           </ng-template>
         </bf-table>
       </ng-container>
+      <waterfall-g6-graph *ngIf="tree" [tree]="tree"></waterfall-g6-graph>
+    </mat-tab>
+
+    <!-- WORLD MAP -->
+    <mat-tab label="World Sales" #worldSales>
+      <waterfall-sales-map *ngIf="worldSales.isActive" [waterfallId]="waterfall.id"></waterfall-sales-map>
     </mat-tab>
   </mat-tab-group>
 </ng-container>

@@ -1,5 +1,5 @@
 import { MovieService } from '@blockframes/movie/service';
-import { Movie, Organization, User, Mandate, Sale, Term, App, Income, Expense, WaterfallDocument } from '@blockframes/model';
+import { Movie, Organization, User, Mandate, Sale, Term, App, Income, Expense, WaterfallDocument, WaterfallRightholder } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
 import { ContractService } from '@blockframes/contract/contract/service';
@@ -7,6 +7,7 @@ import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.serv
 import { UserService } from '@blockframes/user/service';
 import { where } from 'firebase/firestore';
 import { TermService } from '@blockframes/contract/term/service';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts', 'documents', 'incomes', 'expenses'] as const;
 
@@ -44,6 +45,7 @@ export interface ContractsImportState extends ImportState {
 export interface DocumentsImportState extends ImportState {
   document: WaterfallDocument;
   terms: Term[];
+  rightholders: Record<string, WaterfallRightholder[]>;
 }
 
 export interface OrganizationsImportState extends ImportState {
@@ -98,6 +100,25 @@ export async function getOrgId(
   const result = orgs.length === 1 ? orgs[0].id : '';
   cache[name] = result;
   return result;
+}
+
+export async function getRightholderId(
+  value: string,
+  waterfallId: string,
+  waterfallService: WaterfallService,
+  cache: Record<string, WaterfallRightholder[]>
+) {
+
+  if (!cache[waterfallId]) {
+    const { rightholders } = await waterfallService.getValue(waterfallId);
+    cache[waterfallId] = rightholders;
+  }
+
+  const rightholder = cache[waterfallId].find(r => r.name === value || r.id === value);
+  if (rightholder) return rightholder.id;
+
+  cache[waterfallId].push({ id: waterfallService.createId(), name: value, roles: [] });
+  return cache[waterfallId].find(r => r.name === value || r.id === value).id;
 }
 
 export async function getTitleId(
