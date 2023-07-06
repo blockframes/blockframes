@@ -10,6 +10,7 @@ import { formatDocument } from './utils';
 import { DocumentsImportState } from '../../utils';
 import { TermService } from '@blockframes/contract/term/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 @Component({
   selector: 'import-view-extracted-documents[sheetTab]',
@@ -26,6 +27,7 @@ export class ViewExtractedDocumentsComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private titleService: MovieService,
+    private waterfallService: WaterfallService,
     private termsService: TermService,
     private dynTitle: DynamicTitleService,
     private orgService: OrganizationService,
@@ -39,6 +41,7 @@ export class ViewExtractedDocumentsComponent implements OnInit {
       this.sheetTab,
       this.orgService,
       this.titleService,
+      this.waterfallService,
       this.waterfallDocumentsService,
       this.termsService,
       this.authService.profile.orgId,

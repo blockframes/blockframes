@@ -12,6 +12,7 @@ import { TermService } from '@blockframes/contract/term/service';
 import { isContract, WaterfallDocument } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 const hasImportErrors = (importState: DocumentsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -45,6 +46,7 @@ export class TableExtractedDocumentsComponent implements AfterViewInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private waterfallDocumentsService: WaterfallDocumentsService,
+    private waterfallService: WaterfallService,
     private termService: TermService,
     private cdr: ChangeDetectorRef
   ) { }
@@ -91,7 +93,29 @@ export class TableExtractedDocumentsComponent implements AfterViewInit {
     importState.importing = true;
     this.cdr.markForCheck();
 
-    if (isContract(importState.document)) importState.document.meta.termIds = importState.terms.map(t => t.id);
+    if (isContract(importState.document)) {
+
+      const contract = importState.document.meta;
+      contract.termIds = importState.terms.map(t => t.id);
+
+      if (importState.rightholders) {
+        for (const [waterfallId, rightholders] of Object.entries(importState.rightholders)) {
+          const waterfall = await this.waterfallService.getValue(waterfallId);
+
+          if (!waterfall.rightholders.find(r => r.id === contract.buyerId)) {
+            waterfall.rightholders.push(rightholders.find(r => r.id === contract.buyerId));
+          }
+
+          if (!waterfall.rightholders.find(r => r.id === contract.sellerId)) {
+            waterfall.rightholders.push(rightholders.find(r => r.id === contract.sellerId));
+          }
+
+          await this.waterfallService.update(waterfallId, { id: waterfallId, rightholders: waterfall.rightholders });
+        }
+      }
+    };
+
+
 
     if (increment) this.processing++;
     this.cdr.markForCheck();

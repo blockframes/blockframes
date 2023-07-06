@@ -16,6 +16,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
+import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 
 // Pages
 import { CatalogAvailsListComponent } from './list.component';
@@ -33,6 +34,7 @@ import { CatalogAvailsListComponent } from './list.component';
     ImageModule,
     AvailsFilterModule,
     LogoSpinnerModule,
+    PricePerCurrencyModule,
     //Material
     MatButtonModule,
     MatIconModule,

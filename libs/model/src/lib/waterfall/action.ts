@@ -14,6 +14,13 @@ import {
 } from './state';
 import { getMinThreshold } from './threshold';
 import { assertNode, getNode, updateNode } from './node';
+import { WaterfallContract, WaterfallSource, getAssociatedSource } from './waterfall';
+import { Income } from '../income';
+import { Expense } from '../expense';
+import { Term } from '../terms';
+import { getContractAndAmendments, getCurrentContract, getDeclaredAmount } from '../contract';
+import { convertCurrenciesTo } from '../utils';
+import { MovieCurrency } from '../static';
 
 const actions = {
   /**
@@ -93,6 +100,70 @@ export function runAction<N extends ActionName>(
 ): ReturnType<(typeof actions)[N]> {
   if (payload.date) state.date = payload.date;
   return actions[name](state, payload as any) as any;
+}
+
+const mainCurrency: MovieCurrency = 'USD';
+export function buildActions(contracts: WaterfallContract[], incomes: Income[], expenses: Expense[], terms: Term[], sources: WaterfallSource[]){
+
+    const actions: Action[] = [
+      action('append', { id: 'test', orgId: 'test', previous: [], percent: 1 })
+    ];
+
+    contracts.forEach(c => {
+      const declaredAmount = getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) });
+      const { [mainCurrency]: amount } = convertCurrenciesTo(declaredAmount, mainCurrency);
+      const payload = {
+        amount,
+        id: c.rootId || c.id,
+        date: c.signatureDate,
+        start: c.duration.from,
+        end: c.duration.to
+      };
+
+      actions.push(c.rootId ? action('updateContract', payload) : action('contract', payload));
+
+    });
+
+    incomes.forEach(i => {
+      const contractAndAmendments = getContractAndAmendments(i.contractId, contracts);
+      const contract = getCurrentContract(contractAndAmendments, i.date);
+      const source = getAssociatedSource(i, sources);
+      if (!source) {
+        this.snackbar.open(`Could not find source for income ${i.id}`, 'close', { duration: 5000 });
+        return;
+      }
+
+      const { [mainCurrency]: amount } = convertCurrenciesTo({ [i.currency]: i.price }, mainCurrency);
+      actions.push(
+        action('income', {
+          id: i.id,
+          contractId: contract.id,
+          from: source.name,
+          to: 'test',
+          amount,
+          date: i.date,
+          territory: i.territories,
+          media: i.medias
+        })
+      );
+    });
+
+    expenses.forEach(e => {
+      const contractAndAmendments = getContractAndAmendments(e.contractId, contracts);
+      const contract = getCurrentContract(contractAndAmendments, e.date);
+      const { [mainCurrency]: amount } = convertCurrenciesTo({ [e.currency]: e.price }, mainCurrency);
+      actions.push(
+        action('expense', {
+          orgId: contract.buyerId,
+          amount,
+          type: e.type,
+          date: e.date
+        })
+      );
+    });
+
+    return actions;
+ 
 }
 
 /////////////

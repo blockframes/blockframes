@@ -12,16 +12,11 @@ import {
   TitleState,
   History,
   Waterfall,
-  action,
-  Action,
-  getDeclaredAmount,
-  getCurrentContract,
-  getContractAndAmendments,
   WaterfallSource,
   createWaterfallSource,
   territories,
   Territory,
-  getAssociatedSource
+  buildActions
 } from '@blockframes/model';
 import { BlockService } from '@blockframes/waterfall/block.service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
@@ -59,6 +54,7 @@ export class WaterfallComponent implements OnInit {
 
   private waterfall: Waterfall;
 
+
   constructor(
     private route: ActivatedRoute,
     private waterfallService: WaterfallService,
@@ -87,82 +83,6 @@ export class WaterfallComponent implements OnInit {
     this.isLoading$.next(false);
   }
 
-  private async getActions() {
-
-    const [contracts, incomes, expenses] = await Promise.all([
-      this.waterfallDocumentsService.getContracts(this.waterfall.id),
-      this.incomeService.getValue([where('titleId', '==', this.waterfall.id)]),
-      this.expenseService.getValue([where('titleId', '==', this.waterfall.id)])
-    ]);
-
-    const terms = (await Promise.all(contracts.map(c => this.termService.getValue([where('contractId', '==', c.id)])))).flat();
-
-    const actions: Action[] = [
-      action('append', { id: 'test', orgId: 'test', previous: [], percent: 1 })
-    ];
-
-    contracts.forEach(c => {
-      if (c.rootId) {
-        actions.push(
-          action('updateContract', {
-            amount: getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) }).EUR, // TODO #9420 should converted to a single currency
-            id: c.rootId,
-            date: c.signatureDate,
-            start: c.duration.from,
-            end: c.duration.to
-          })
-        );
-      } else {
-        actions.push(
-          action('contract', {
-            amount: getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) }).EUR, // TODO #9420 should converted to a single currency
-            id: c.id,
-            date: c.signatureDate,
-            start: c.duration.from,
-            end: c.duration.to
-          })
-        );
-      }
-    });
-
-    incomes.forEach(i => {
-      const contractAndAmendments = getContractAndAmendments(i.contractId, contracts);
-      const contract = getCurrentContract(contractAndAmendments, i.date);
-      const source = getAssociatedSource(i, this.waterfall.sources);
-      if (!source) {
-        this.snackbar.open(`Could not find source for income ${i.id}`, 'close', { duration: 5000 });
-        return;
-      }
-      actions.push(
-        action('income', {
-          id: i.id,
-          contractId: contract.id,
-          from: source.name,
-          to: 'test',
-          amount: i.price,
-          date: i.date,
-          territory: i.territories,
-          media: i.medias
-        })
-      );
-    });
-
-    expenses.forEach(e => {
-      const contractAndAmendments = getContractAndAmendments(e.contractId, contracts);
-      const contract = getCurrentContract(contractAndAmendments, e.date);
-      actions.push(
-        action('expense', {
-          orgId: contract.buyerId,
-          amount: e.price,
-          type: e.type,
-          date: e.date
-        })
-      );
-    });
-
-    return actions;
-  }
-
   async initWaterfall() {
     this.isLoading$.next(true);
 
@@ -174,7 +94,15 @@ export class WaterfallComponent implements OnInit {
       return;
     }
 
-    const actions = await this.getActions();
+    const [contracts, incomes, expenses] = await Promise.all([
+      this.waterfallDocumentsService.getContracts(this.waterfall.id),
+      this.incomeService.getValue([where('titleId', '==', this.waterfall.id)]),
+      this.expenseService.getValue([where('titleId', '==', this.waterfall.id)])
+    ]);
+
+    const terms = (await Promise.all(contracts.map(c => this.termService.getValue([where('contractId', '==', c.id)])))).flat();
+
+    const actions = buildActions(contracts, incomes, expenses, terms, this.waterfall.sources);
 
     const [init] = await Promise.all([
       this.blockService.create(this.waterfall.id, 'init', actions),

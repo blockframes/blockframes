@@ -1,0 +1,29 @@
+<main fxLayout="column">
+  <ng-container *ngIf="waterfalls$ | async as waterfalls; else loading">
+    <header fxLayout="row" fxLayoutAlign="space-between center">
+      <h1>Waterfalls</h1>
+    </header>
+    <bf-table [source]="waterfalls" clickable useFilter pagination="50" (rowClick)="goToEdit($event)">
+      <ng-template colRef="movie.poster" label="Poster" let-poster>
+        <img class="poster" [ref]="poster" asset="empty_poster.svg">
+      </ng-template>
+      <ng-template colRef="id" let-id>
+        <span>{{ id }}</span>
+        <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+          <mat-icon svgIcon="file_copy"></mat-icon>
+        </button>
+      </ng-template>
+      <ng-template colRef="movie.title.international" label="International title" sort let-title>
+        {{ title }}
+      </ng-template>
+      <ng-template colRef="id" label="Action" let-waterfallId sticky>
+        <a target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfallId]" (click)="$event.stopPropagation()">
+          <mat-icon svgIcon="launch"></mat-icon>
+        </a>
+      </ng-template>
+    </bf-table>
+  </ng-container>
+  <ng-template #loading>
+    ...loading waterfalls
+  </ng-template>
+</main>

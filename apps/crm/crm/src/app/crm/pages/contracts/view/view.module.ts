@@ -21,6 +21,7 @@ import { HoldbackFormModule } from '@blockframes/contract/contract/holdback/form
 import { CollidingHoldbacksPipeModule } from '@blockframes/contract/contract/holdback/pipes/colliding-holdback.pipe';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ContractViewComponent } from './view.component';
+import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 
 @NgModule({
   declarations: [ContractViewComponent],
@@ -36,6 +37,7 @@ import { ContractViewComponent } from './view.component';
     StaticSelectModule,
     HoldbackFormModule,
     CollidingHoldbacksPipeModule,
+    PricePerCurrencyModule,
 
     MatIconModule,
     MatCardModule,

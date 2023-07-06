@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 // Modules
-import { GraphModule } from '../../../waterfall/components/g6/graph/graph.module';
+import { GraphModule } from '@blockframes/waterfall/components/g6/graph/graph.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 

@@ -70,6 +70,12 @@ export interface WaterfallSource {
   medias: Media[];
 }
 
+export interface WaterfallRightholder {
+  id: string;
+  name: string;
+  roles: RightholderRole[];
+};
+
 export interface Waterfall {
   _meta?: DocumentMeta;
   id: string;
@@ -77,6 +83,7 @@ export interface Waterfall {
   orgIds: string[]; // Orgs linked to waterfall, can read document if in it
   documents: WaterfallFile[];
   sources: WaterfallSource[];
+  rightholders: WaterfallRightholder[];
 }
 
 export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
@@ -86,6 +93,7 @@ export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
     orgIds: [],
     documents: [],
     sources: [],
+    rightholders: [],
     ...params,
   }
 }

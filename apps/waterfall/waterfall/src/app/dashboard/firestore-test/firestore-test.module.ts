@@ -5,8 +5,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ForModule } from '@rx-angular/template/for';
 import { IfModule } from '@rx-angular/template/if';
 
-import { GraphModule } from '../../waterfall/components/g6/graph/graph.module';
-import { TreeModule } from '../../waterfall/components/g6/tree/tree.module';
+import { GraphModule } from '@blockframes/waterfall/components/g6/graph/graph.module';
+import { TreeModule } from '@blockframes/waterfall/components/g6/tree/tree.module';
 
 // Component
 import { FirestoreTestComponent } from './firestore-test.component';
