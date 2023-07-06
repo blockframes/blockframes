@@ -16,6 +16,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Blockframes
 import { FileNameModule } from '@blockframes/utils/pipes';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { CardModalModule } from '@blockframes/ui/card-modal/card-modal.module';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
@@ -30,13 +31,14 @@ import { DocumentsComponent } from './documents.component';
     ForModule,
     CommonModule,
     ReactiveFormsModule,
-
+    
     // Blockframes
-    LogoSpinnerModule,
-    GetOrgPipeModule,
-    FileUploaderModule,
-    FileNameModule,
     ImageModule,
+    FileNameModule,
+    CardModalModule,
+    GetOrgPipeModule,
+    LogoSpinnerModule,
+    FileUploaderModule,
 
     // Material
     MatIconModule,
