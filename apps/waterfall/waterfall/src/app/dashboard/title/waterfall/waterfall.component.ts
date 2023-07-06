@@ -29,16 +29,16 @@ import { ExpenseService } from '@blockframes/contract/expense/service';
 const allTerritories = Object.keys(territories).filter((t: Territory) => t !== 'world') as Territory[];
 
 const sources: WaterfallSource[] = [
-  createWaterfallSource('fr_cine', ['france'], [], ['theatrical']),
-  createWaterfallSource('fr_dvd', ['france'], [], ['rental', 'through']),
-  createWaterfallSource('fr_vod', ['france'], [], ['est', 'nVod', 'aVod', 'fVod', 'sVod', 'tVod']),
-  createWaterfallSource('fr_tv', ['france'], [], ['payTv', 'freeTv', 'payPerView']),
-  createWaterfallSource('fr_svod', ['france'], [], ['sVod']),
-  createWaterfallSource('us_svod', ['united-states-of-america', 'canada'], [], ['sVod']),
-  createWaterfallSource('row_svod', allTerritories, ['united-states-of-america', 'canada', 'france'], ['sVod']),
-  createWaterfallSource('festivals', allTerritories, [], ['festival']),
-  createWaterfallSource('us_all', ['united-states-of-america', 'canada'], [], ['theatrical', 'rental', 'through']),
-  createWaterfallSource('row_all', allTerritories, ['united-states-of-america', 'canada', 'france'], ['theatrical', 'rental', 'through', 'payTv', 'freeTv', 'payPerView', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'tVod']),
+  createWaterfallSource('fr_cine', 'fr_cine', ['france'], [], ['theatrical']),
+  createWaterfallSource('fr_dvd', 'fr_dvd',['france'], [], ['rental', 'through']),
+  createWaterfallSource('fr_vod', 'fr_vod',['france'], [], ['est', 'nVod', 'aVod', 'fVod', 'sVod', 'tVod']),
+  createWaterfallSource('fr_tv', 'fr_tv',['france'], [], ['payTv', 'freeTv', 'payPerView']),
+  createWaterfallSource('fr_svod', 'fr_svod',['france'], [], ['sVod']),
+  createWaterfallSource('us_svod', 'us_svod',['united-states-of-america', 'canada'], [], ['sVod']),
+  createWaterfallSource('row_svod', 'row_svod',allTerritories, ['united-states-of-america', 'canada', 'france'], ['sVod']),
+  createWaterfallSource('festivals', 'festivals',allTerritories, [], ['festival']),
+  createWaterfallSource('us_all','us_all', ['united-states-of-america', 'canada'], [], ['theatrical', 'rental', 'through']),
+  createWaterfallSource('row_all','row_all', allTerritories, ['united-states-of-america', 'canada', 'france'], ['theatrical', 'rental', 'through', 'payTv', 'freeTv', 'payPerView', 'est', 'nVod', 'aVod', 'fVod', 'sVod', 'tVod']),
 ];
 
 @Component({

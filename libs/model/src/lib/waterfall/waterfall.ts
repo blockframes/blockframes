@@ -48,8 +48,15 @@ interface WaterfallFile extends StorageFile {
   name?: string; // TODO #9389 file name
 }
 
-export function createWaterfallSource(name: string, territories_included: Territory[], territories_excluded: Territory[], medias: Media[]): WaterfallSource {
+export function createWaterfallSource(
+  id: string,
+  name: string,
+  territories_included: Territory[],
+  territories_excluded: Territory[],
+  medias: Media[]
+): WaterfallSource {
   return {
+    id,
     name,
     territories: territories_included.filter(territory => !territories_excluded.includes(territory)),
     medias
@@ -65,6 +72,7 @@ export function getAssociatedSource(income: Income, sources: WaterfallSource[]) 
  * row_all, us_svod etc ..
  */
 export interface WaterfallSource {
+  id: string;
   name: string;
   territories: Territory[];
   medias: Media[];

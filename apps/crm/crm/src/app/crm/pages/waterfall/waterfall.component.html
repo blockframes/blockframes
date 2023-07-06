@@ -46,8 +46,11 @@
     <!-- SOURCES -->
     <mat-tab label="Sources">
       <bf-table [source]="sources" clickable useFilter pagination="50">
-        <ng-template colRef="name" label="Name" let-id sort defaultSort>
+        <ng-template colRef="id" label="Id" let-id sort defaultSort>
           {{ id }}
+        </ng-template>
+        <ng-template colRef="name" label="Name" let-name sort defaultSort>
+          {{ name }}
         </ng-template>
         <ng-template colRef="medias" label="Medias" let-medias sort>
           <mat-chip-list aria-label="Medias">
