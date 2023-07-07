@@ -102,7 +102,7 @@ export function runAction<N extends ActionName>(
   return actions[name](state, payload as any) as any;
 }
 
-const mainCurrency: MovieCurrency = 'USD';
+export const mainCurrency: MovieCurrency = 'EUR';
 export function buildActions(contracts: WaterfallContract[], incomes: Income[], expenses: Expense[], terms: Term[], sources: WaterfallSource[]) {
 
   const actions: Action[] = [];
