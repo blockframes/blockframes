@@ -30,29 +30,19 @@ const routes: Routes = [{
       data: { animation: 0 }
     },
     {
-      path: 'financing-plan',
-      loadChildren: () => import('../financing-plan/financing-plan.module').then(m => m.FinancingPlanModule),
+      path: 'documents',
+      loadChildren: () => import('../documents/documents.module').then(m => m.DocumentsModule),
       data: { animation: 1 }
-    },
-    {
-      path: 'budget',
-      loadChildren: () => import('../budget/budget.module').then(m => m.BudgetModule),
-      data: { animation: 2 }
-    },
-    {
-      path: 'contracts',
-      loadChildren: () => import('../contracts/contracts.module').then(m => m.ContractsModule),
-      data: { animation: 3 }
     },
     {
       path: 'waterfall',
       loadChildren: () => import('../waterfall/waterfall.module').then(m => m.WaterfallModule),
-      data: { animation: 4 }
+      data: { animation: 2 }
     },
     {
       path: 'charts',
       loadChildren: () => import('../charts/charts.module').then(m => m.ChartsModule),
-      data: { animation: 5 }
+      data: { animation: 3 }
     },
     {
       path: 'sales',

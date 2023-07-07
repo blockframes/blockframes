@@ -1,0 +1,10 @@
+
+
+<ng-container *ngIf="isOpened">
+  <div class="overlay" (click)="close()"></div>
+</ng-container>
+
+<section class="surface" [ngClass]="{'open': isOpened}" #container>
+  <ng-content></ng-content>
+</section>
+

@@ -1,0 +1,58 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+
+@mixin color($theme) {
+  $config: mat.get-color-config($theme);
+  $primary: map.get($config, 'primary');
+  $foreground: map.get($config, 'foreground');
+  $background: map.get($config, 'background');
+
+  mat-stepper.mat-stepper-horizontal {
+    background-color: transparent;
+  }
+
+  mat-stepper {
+    .mat-horizontal-stepper-wrapper {
+      .mat-horizontal-stepper-header-container {
+        margin: 0 64px;
+        gap: 10px;
+
+        mat-step-header {
+          font-size: 16px;
+          height: unset;
+          padding: 14px 24px;
+          border-radius: 2px;
+          background-color: rgba(mat.get-color-from-palette($background, 'disabled-button'), 0.4);
+          
+          &:hover,
+          &[aria-selected="true"] {
+            background-color: rgba(mat.get-color-from-palette($primary, 500), 0.2);
+            .mat-step-icon {
+              color: mat.get-color-from-palette($primary, 500);
+              border: solid 2.5px mat.get-color-from-palette($primary, 500);
+            }
+            .mat-step-label {
+              color: mat.get-color-from-palette($primary, 500);
+            }
+          }
+
+          .mat-step-icon {
+            background-color: transparent;
+            border: solid 2.5px mat.get-color-from-palette($foreground, 'text');
+            color: mat.get-color-from-palette($foreground, 'text');
+            font-weight: 600;
+          }
+          .mat-step-label {
+            font-weight: 600;
+          }
+        }
+
+        .mat-stepper-horizontal-line {
+          margin: 0;
+        }
+      }
+    }
+    
+  }
+}
