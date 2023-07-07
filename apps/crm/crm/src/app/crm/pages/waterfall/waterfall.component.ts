@@ -100,7 +100,15 @@ export class WaterfallComponent implements OnInit {
   }
 
   public getAssociatedSource(income: Income) {
-    return getAssociatedSource(income, this.waterfall.sources).name;
+    return getAssociatedSource(income, this.waterfall.sources)?.name || '--';
+  }
+
+  public async removeSource(id: string) {
+    await this.waterfallService.removeSource(this.waterfall.id, id);
+    this.waterfall = await this.waterfallService.getValue(this.waterfall.id);
+    this.sources = this.waterfall.sources;
+    this.snackBar.open(`Source "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
+    this.cdRef.markForCheck();
   }
 
   public getCurrentContract(item: Income | Expense) {

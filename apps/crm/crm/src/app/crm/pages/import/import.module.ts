@@ -32,7 +32,7 @@ const routes: Routes = [{
     },
     {
       path: 'documents',
-      loadChildren: () => import('@blockframes/waterfall/import/import.module').then(m => m.DocumentImportModule),
+      loadChildren: () => import('@blockframes/waterfall/import/documents/import.module').then(m => m.DocumentImportModule),
     },
     {
       path: 'imdb',
@@ -45,6 +45,10 @@ const routes: Routes = [{
     {
       path: 'expenses',
       loadChildren: () => import('@blockframes/contract/expense/import/import.module').then(m => m.ExpenseImportModule),
+    },
+    {
+      path: 'sources',
+      loadChildren: () => import('@blockframes/waterfall/import/sources/import.module').then(m => m.SourceImportModule),
     },
   ]
 }];

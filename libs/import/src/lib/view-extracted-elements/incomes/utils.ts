@@ -16,14 +16,14 @@ export async function formatIncome(sheetTab: SheetTab) {
   for (const result of results) {
     const { data, errors } = result;
 
-    const {
-      territories_included,
-      territories_excluded
-    } = data.income;
+    const { territories_included, territories_excluded } = data.income;
     delete data.income.territories_included;
     delete data.income.territories_excluded;
 
-    const territories = territories_included.filter(territory => !territories_excluded.includes(territory));
+    const territories = territories_included ?
+      territories_included.filter(territory => !territories_excluded.includes(territory)) :
+      [];
+
     const income = createIncome({ ...data.income, territories, status: 'processed' });
     incomes.push({ income, errors });
   }

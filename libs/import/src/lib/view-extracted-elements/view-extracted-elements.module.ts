@@ -17,6 +17,7 @@ import { ViewExtractedOrganizationsComponent } from './organizations/view-extrac
 import { ViewExtractedIncomesComponent } from './incomes/view-extracted-incomes.component';
 import { ViewExtractedExpensesComponent } from './expenses/view-extracted-expenses.component';
 import { ViewExtractedDocumentsComponent } from './documents/view-extracted-documents.component';
+import { ViewExtractedSourcesComponent } from './sources/view-extracted-sources.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { ViewExtractedDocumentsComponent } from './documents/view-extracted-docu
     ViewExtractedOrganizationsComponent,
     ViewExtractedIncomesComponent,
     ViewExtractedExpensesComponent,
-    ViewExtractedDocumentsComponent
+    ViewExtractedDocumentsComponent,
+    ViewExtractedSourcesComponent
   ],
   imports: [
     CommonModule,
@@ -42,7 +44,8 @@ import { ViewExtractedDocumentsComponent } from './documents/view-extracted-docu
     ViewExtractedOrganizationsComponent,
     ViewExtractedIncomesComponent,
     ViewExtractedExpensesComponent,
-    ViewExtractedDocumentsComponent
+    ViewExtractedDocumentsComponent,
+    ViewExtractedSourcesComponent
   ],
 })
 export class ViewExtractedElementsModule {}

@@ -49,20 +49,30 @@
         <ng-template colRef="id" label="Id" let-id sort defaultSort>
           {{ id }}
         </ng-template>
-        <ng-template colRef="name" label="Name" let-name sort defaultSort>
+        <ng-template colRef="name" label="Name" let-name sort>
           {{ name }}
         </ng-template>
         <ng-template colRef="medias" label="Medias" let-medias sort>
-          <mat-chip-list aria-label="Medias">
+          <mat-chip-list *ngIf="medias.length else noMedias" aria-label="Medias">
             <mat-chip disableRipple *ngFor="let media of medias  | toGroupLabel:'medias':'All'">
               {{ media }}
             </mat-chip>
           </mat-chip-list>
+          <ng-template #noMedias>--</ng-template>
         </ng-template>
         <ng-template colRef="territories" label="Territories" let-territories sort>
-          <span class="group-label" (click)="openTerritoryModal(territories)">
+          <span *ngIf="territories.length else noTerritories" class="group-label" (click)="openTerritoryModal(territories)">
             {{ territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
           </span>
+          <ng-template #noTerritories>--</ng-template>
+        </ng-template>
+        <ng-template colRef="destinationId" label="Destination Right" let-destinationId sort>
+          {{ destinationId }}
+        </ng-template>
+        <ng-template colRef="id" label="Action" let-sourceId sticky>
+          <button mat-icon-button (click)="removeSource(sourceId)">
+            <mat-icon svgIcon="delete" matTooltip="Delete source"></mat-icon>
+          </button>
         </ng-template>
       </bf-table>
     </mat-tab>
@@ -185,11 +195,6 @@
             </button>
           </ng-template>
         </bf-table>
-
-        <h3>Tree</h3>
-        <article class="surface">
-          <waterfall-g6-tree *ngIf="versionsAndActions.isActive" [waterfall]="waterfall"></waterfall-g6-tree>
-        </article>
       </ng-container>
       
       <ng-template #noWaterfall>
@@ -222,7 +227,19 @@
           </ng-template>
         </bf-table>
       </ng-container>
-      <waterfall-g6-graph *ngIf="tree" [tree]="tree"></waterfall-g6-graph>
+
+      <ng-container *ngIf="tree">
+        <h3>Waterfall</h3>
+        <waterfall-g6-graph [tree]="tree"></waterfall-g6-graph>
+      </ng-container>
+      
+
+      <ng-container *ngIf="versions.length else noWaterfall">
+        <h3>Tree</h3>
+        <article class="surface">
+          <waterfall-g6-tree *ngIf="versionsAndActions.isActive" [waterfall]="waterfall"></waterfall-g6-tree>
+        </article>
+      </ng-container>
     </mat-tab>
 
     <!-- WORLD MAP -->

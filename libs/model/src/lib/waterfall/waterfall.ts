@@ -48,22 +48,19 @@ interface WaterfallFile extends StorageFile {
   name?: string; // TODO #9389 file name
 }
 
-export function createWaterfallSource(
-  id: string,
-  name: string,
-  territories_included: Territory[],
-  territories_excluded: Territory[],
-  medias: Media[]
-): WaterfallSource {
+export function createWaterfallSource(params: Partial<WaterfallSource>): WaterfallSource {
   return {
-    id,
-    name,
-    territories: territories_included.filter(territory => !territories_excluded.includes(territory)),
-    medias
+    id: '',
+    name: '',
+    territories: [],
+    medias: [],
+    destinationId: '',
+    ...params
   }
 }
 
-export function getAssociatedSource(income: Income, sources: WaterfallSource[]) {
+export function getAssociatedSource(income: Income, sources: WaterfallSource[] = []) {
+  if (income.sourceId) return sources.find(s => s.id === income.sourceId);
   return sources.find(source => allOf(income.territories).in(source.territories) && allOf(income.medias).in(source.medias));
 }
 
@@ -76,6 +73,7 @@ export interface WaterfallSource {
   name: string;
   territories: Territory[];
   medias: Media[];
+  destinationId: string; // The rightId this income will go to
 }
 
 export interface WaterfallRightholder {

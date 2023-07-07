@@ -81,11 +81,14 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     return this.update(waterfallId, { id: waterfallId, orgIds });
   }
 
-  public async addSources(waterfallId: string, sources: WaterfallSource[]) {
+  public async addSource(waterfallId: string, source: WaterfallSource) {
     const waterfall = await this.getValue(waterfallId);
-    sources.forEach(s => {
-      if (!waterfall.sources.find(source => source.name === s.name)) waterfall.sources.push(s);
-    })
+    if (!waterfall.sources.find(s => s.name === source.name)) waterfall.sources.push(source);
     return this.update(waterfallId, { id: waterfallId, sources: waterfall.sources });
+  }
+
+  public async removeSource(waterfallId: string, sourceId: string) {
+    const waterfall = await this.getValue(waterfallId);
+    return this.update(waterfallId, { id: waterfallId, sources: waterfall.sources.filter(s => s.id !== sourceId) });
   }
 }

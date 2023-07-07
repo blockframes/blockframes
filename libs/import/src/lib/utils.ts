@@ -1,5 +1,5 @@
 import { MovieService } from '@blockframes/movie/service';
-import { Movie, Organization, User, Mandate, Sale, Term, App, Income, Expense, WaterfallDocument, WaterfallRightholder } from '@blockframes/model';
+import { Movie, Organization, User, Mandate, Sale, Term, App, Income, Expense, WaterfallDocument, WaterfallRightholder, WaterfallSource } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
 import { ContractService } from '@blockframes/contract/contract/service';
@@ -9,7 +9,7 @@ import { where } from 'firebase/firestore';
 import { TermService } from '@blockframes/contract/term/service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
-export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts', 'documents', 'incomes', 'expenses'] as const;
+export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts', 'documents', 'incomes', 'expenses', 'sources'] as const;
 
 export type SpreadsheetImportType = typeof spreadsheetImportTypes[number];
 
@@ -62,6 +62,11 @@ export interface ExpensesImportState extends ImportState {
   expense: Expense;
 }
 
+export interface SourcesImportState extends ImportState {
+  source: WaterfallSource;
+  waterfallId: string;
+}
+
 /**
  * This hold the excel line number where the data start.
  * It should always match the column names line in the excel files.
@@ -74,15 +79,17 @@ export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
   incomes: 10,
   expenses: 10,
   documents: 10,
+  sources: 10,
 };
 
 export const sheetRanges: Record<SpreadsheetImportType, string> = {
   titles: `A${sheetHeaderLine.titles}:BZ1000`,
   contracts: `A${sheetHeaderLine.contracts}:Q300`,
-  documents: `A${sheetHeaderLine.contracts}:U300`,
+  documents: `A${sheetHeaderLine.documents}:U300`,
   organizations: `A${sheetHeaderLine.organizations}:Z100`,
-  incomes: `A${sheetHeaderLine.incomes}:I100`,
-  expenses: `A${sheetHeaderLine.incomes}:H100`,
+  incomes: `A${sheetHeaderLine.incomes}:J100`,
+  expenses: `A${sheetHeaderLine.expenses}:H100`,
+  sources: `A${sheetHeaderLine.sources}:G100`,
 };
 
 export async function getOrgId(
