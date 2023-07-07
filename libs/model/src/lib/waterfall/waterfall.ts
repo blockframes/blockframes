@@ -60,7 +60,10 @@ export function createWaterfallSource(params: Partial<WaterfallSource>): Waterfa
 
 export function getAssociatedSource(income: Income, sources: WaterfallSource[] = []) {
   if (income.sourceId) return sources.find(s => s.id === income.sourceId);
-  return sources.find(source => allOf(income.territories).in(source.territories) && allOf(income.medias).in(source.medias));
+  const candidates = sources.filter(source => allOf(income.territories).in(source.territories) && allOf(income.medias).in(source.medias));
+  if (candidates.length === 0) throw new Error(`Could not find source for income "${income.id}"`);
+  if (candidates.length > 1) throw new Error(`Too many sources matching income "${income.id}" : ${candidates.map(c => c.id).join(',')}`);
+  return candidates[0];
 }
 
 /**

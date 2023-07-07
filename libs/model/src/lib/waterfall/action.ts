@@ -131,9 +131,12 @@ export function buildActions(contracts: WaterfallContract[], incomes: Income[], 
   incomes.forEach(i => {
     const contractAndAmendments = getContractAndAmendments(i.contractId, contracts);
     const contract = getCurrentContract(contractAndAmendments, i.date);
-    const source = getAssociatedSource(i, sources);
-    if (!source) {
-      this.snackbar.open(`Could not find source for income ${i.id}`, 'close', { duration: 5000 });
+
+    let source: WaterfallSource;
+    try {
+      source = getAssociatedSource(i, sources);
+    } catch (error) {
+      this.snackbar.open(error, 'close', { duration: 5000 });
       return;
     }
 

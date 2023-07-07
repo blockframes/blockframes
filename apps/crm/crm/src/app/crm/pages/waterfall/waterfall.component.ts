@@ -100,7 +100,11 @@ export class WaterfallComponent implements OnInit {
   }
 
   public getAssociatedSource(income: Income) {
-    return getAssociatedSource(income, this.waterfall.sources)?.name || '--';
+    try {
+      return getAssociatedSource(income, this.waterfall.sources)?.name || '--';
+    } catch (error) {
+      this.snackBar.open(error, 'close', { duration: 5000 });
+    }
   }
 
   public async removeSource(id: string) {
@@ -114,6 +118,7 @@ export class WaterfallComponent implements OnInit {
   public getCurrentContract(item: Income | Expense) {
     const contracts = getContractAndAmendments(item.contractId, this.contracts);
     const current = getCurrentContract(contracts, item.date);
+    if (!current) return '--';
     return current.rootId ? `${current.id} (${current.rootId})` : current.id;
   }
 
@@ -205,7 +210,7 @@ export class WaterfallComponent implements OnInit {
 
   public async displayWaterfall(versionId: string) {
     this.snackBar.open('Waterfall is loading. Please wait', 'close', { duration: 5000 });
-    const data = await this.waterfallService.buildWaterfall({ waterfallId: this.waterfall.id, versionId});
+    const data = await this.waterfallService.buildWaterfall({ waterfallId: this.waterfall.id, versionId });
     this.tree = data.waterfall;
     this.actions = [];
     this.cdRef.markForCheck();

@@ -1,6 +1,6 @@
 import { Media, MovieCurrency, Territory } from '@blockframes/model';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
-import { getDate } from '@blockframes/import/utils';
+import { getDate, mandatoryError } from '@blockframes/import/utils';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 export interface FieldsConfig {
@@ -31,29 +31,34 @@ export function getIncomeConfig(option: IncomeConfig) {
     // ! The order of the property should be the same as excel columns
     return {
         /* a */ 'income.titleId': async (value: string) => {
+        if (!value) throw mandatoryError(value, 'Waterfall Id');
         return value;
       },
         /* b */ 'income.contractId': async (value: string) => {
+        if (!value) throw mandatoryError(value, 'Contract Id');
         return value;
       },
         /* c */ 'income.sourceId': async (value: string) => {
         return value;
       },
-        /* d */ 'income.territories_included': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
+        /* d */ 'income.territories_included': (value: string, data: FieldsConfig) => getGroupedList(value, 'territories', separator, { required: !data.income.sourceId }),
         /* e */ 'income.territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
-        /* f */ 'income.medias': (value: string) => getGroupedList(value, 'medias', separator, { required: false }),
+        /* f */ 'income.medias': (value: string, data: FieldsConfig) => getGroupedList(value, 'medias', separator, { required: !data.income.sourceId }),
 
         /* g */ 'income.id': async (value: string) => {
         return value;
       },
         /* h */ 'income.date': async (value: string) => {
+        if (!value) throw mandatoryError(value, 'Date');
         return getDate(value, 'Income Date') as Date;
       },
         /* i */ 'income.price': async (value: string) => {
+        if (!value) return 0;
         return Number(value);
       },
         /* j */ 'income.currency': async (value: string) => {
         const currency = getKeyIfExists('movieCurrencies', value);
+        if (!currency) throw mandatoryError(value, 'Currency');
         return currency;
       },
     };

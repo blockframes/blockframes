@@ -21,10 +21,17 @@ export async function formatIncome(sheetTab: SheetTab) {
     delete data.income.territories_excluded;
 
     const territories = territories_included ?
-      territories_included.filter(territory => !territories_excluded.includes(territory)) :
+      territories_included.filter(territory => !territories_excluded?.includes(territory)) :
       [];
 
     const income = createIncome({ ...data.income, territories, status: 'processed' });
+
+    // If sourceId is defined, income does not need territories & medias
+    if(income.sourceId) {
+      income.territories = [];
+      income.medias = [];
+    }
+    
     incomes.push({ income, errors });
   }
   return incomes;

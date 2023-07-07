@@ -21,7 +21,7 @@ export async function formatSource(sheetTab: SheetTab) {
     delete data.source.territories_excluded;
 
     const territories = territories_included ?
-      territories_included.filter(territory => !territories_excluded.includes(territory)) :
+      territories_included.filter(territory => !territories_excluded?.includes(territory)) :
       [];
 
     const source = createWaterfallSource({ ...data.source, territories });
