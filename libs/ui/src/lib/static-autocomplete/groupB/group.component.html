@@ -2,6 +2,7 @@
   <mat-label>{{ label }}</mat-label>
   <mat-icon matPrefix [svgIcon]="selectIcon"></mat-icon>
   <mat-select multiple [formControl]="control" (openedChange)="resetSearch()" test-id="filter-select">
+    <mat-select-trigger>{{ control.value | toGroupLabel: scope }}</mat-select-trigger>
     <header>
       <mat-checkbox
         color="primary"

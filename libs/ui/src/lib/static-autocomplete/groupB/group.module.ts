@@ -2,16 +2,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GroupMultiselectComponent } from './group.component';
-import { ToLabelModule } from '@blockframes/utils/pipes';
+import { ToGroupLabelPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSelectModule } from "@angular/material/select";
+import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDividerModule } from "@angular/material/divider";
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
@@ -24,7 +24,8 @@ import { MatDividerModule } from "@angular/material/divider";
     MatSelectModule,
     MatButtonModule,
     MatTooltipModule,
-    MatDividerModule
+    MatDividerModule,
+    ToGroupLabelPipeModule,
   ],
   declarations: [GroupMultiselectComponent],
   exports: [GroupMultiselectComponent],
