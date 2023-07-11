@@ -42,12 +42,24 @@ export class GroupMultiselectComponent implements OnInit {
       this.selectable = this.getSelectable(this.groups, filter);
       this.indeterminate = this.getIndeterminate(this.control.value, this.selectable);
       this.checked = this.getChecked(this.control.value, this.selectable);
+      for (const group of this.groups) {
+        if (
+          Object.keys(this.selectable).some(item => group.items.includes(item)) &&
+          this.visible[group.label] &&
+          filter.length > 2
+        )
+          this.toggleVisibility(group.label);
+      }
     });
 
     this.control.valueChanges.subscribe(value => {
       this.indeterminate = this.getIndeterminate(value, this.selectable);
       this.checked = this.getChecked(value, this.selectable);
     });
+  }
+
+  getAllItems(groups: StaticGroup[]): string[] {
+    return groups.reduce((items, group) => [...items, ...group.items], []);
   }
 
   getSelectable(groups: StaticGroup[], filter?: string): Record<string, boolean> {
@@ -69,17 +81,11 @@ export class GroupMultiselectComponent implements OnInit {
     return selectable;
   }
 
-  getAllItems(groups: StaticGroup[]): string[] {
-    return groups.reduce((items, group) => [...items, ...group.items], []);
-  }
-
   getIndeterminate(controlValue: string[], selectableItems: Record<string, boolean>): Record<string, boolean> {
     const allVisibleItems = selectableItems
       ? Object.keys(selectableItems).filter(item => item[0] === item[0].toLowerCase())
       : this.items;
     const indeterminate = { all: controlValue.length > 0 && controlValue.length < allVisibleItems.length };
-    console.log(indeterminate);
-    console.log(selectableItems);
     for (const { label, items } of this.groups) {
       const groupVisibleItems = items.filter(item => selectableItems[item]);
       const groupVisibleSelectedItems = groupVisibleItems.filter(item => controlValue.includes(item));
