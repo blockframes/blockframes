@@ -7,10 +7,10 @@
     <!-- RIGHTHOLDERS -->
     <mat-tab label="Right Holders">
       <bf-table [source]="rightholders" clickable useFilter pagination="50">
-        <ng-template colRef="id" label="Id" let-id sort defaultSort>
+        <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>
-        <ng-template colRef="name" label="Name" let-name sort>
+        <ng-template colRef="name" label="Name" let-name sort defaultSort>
           {{ name }}
         </ng-template>
         <ng-template colRef="roles" label="Roles" let-roles sort>
@@ -21,10 +21,10 @@
     <!-- DOCUMENTS -->
     <mat-tab label="All Documents">
       <bf-table [source]="documents" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
-        <ng-template colRef="id" label="Id" let-id sort defaultSort>
+        <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>
-        <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort>
+        <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
           {{ signatureDate | date: 'MM/dd/yyyy' }}
         </ng-template>
         <ng-template colRef="rootId" label="Parent" let-rootId sort>
@@ -46,30 +46,43 @@
     <!-- SOURCES -->
     <mat-tab label="Sources">
       <bf-table [source]="sources" clickable useFilter pagination="50">
-        <ng-template colRef="name" label="Name" let-id sort defaultSort>
+        <ng-template colRef="id" label="Id" let-id sort defaultSort>
           {{ id }}
         </ng-template>
+        <ng-template colRef="name" label="Name" let-name sort>
+          {{ name }}
+        </ng-template>
         <ng-template colRef="medias" label="Medias" let-medias sort>
-          <mat-chip-list aria-label="Medias">
+          <mat-chip-list *ngIf="medias.length else noMedias" aria-label="Medias">
             <mat-chip disableRipple *ngFor="let media of medias  | toGroupLabel:'medias':'All'">
               {{ media }}
             </mat-chip>
           </mat-chip-list>
+          <ng-template #noMedias>--</ng-template>
         </ng-template>
         <ng-template colRef="territories" label="Territories" let-territories sort>
-          <span class="group-label" (click)="openTerritoryModal(territories)">
+          <span *ngIf="territories.length else noTerritories" class="group-label" (click)="openTerritoryModal(territories)">
             {{ territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
           </span>
+          <ng-template #noTerritories>--</ng-template>
+        </ng-template>
+        <ng-template colRef="destinationId" label="Destination Right" let-destinationId sort>
+          {{ destinationId }}
+        </ng-template>
+        <ng-template colRef="id" label="Action" let-sourceId sticky>
+          <button mat-icon-button (click)="removeSource(sourceId)">
+            <mat-icon svgIcon="delete" matTooltip="Delete source"></mat-icon>
+          </button>
         </ng-template>
       </bf-table>
     </mat-tab>
     <!-- CONTRACTS -->
     <mat-tab label="Contracts">
       <bf-table [source]="contracts" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
-        <ng-template colRef="id" label="Id" let-id sort defaultSort>
+        <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>
-        <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort>
+        <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
           {{ signatureDate | date: 'MM/dd/yyyy' }}
         </ng-template>
         <ng-template colRef="rootId" label="Parent" let-rootId sort>
@@ -106,20 +119,20 @@
     <!-- INCOMES -->
     <mat-tab label="Incomes">
       <bf-table [source]="incomes" clickable useFilter pagination="50">
-        <ng-template colRef="id" label="Id" let-id sort defaultSort>
+        <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>
         <ng-template colRef="" label="Contract Id" let-item sort>
           {{ getCurrentContract(item) }}
         </ng-template>
-        <ng-template colRef="date" label="Date" let-date sort>
+        <ng-template colRef="date" label="Date" let-date sort defaultSort>
           {{ date | date: 'MM/dd/yyyy' }}
         </ng-template>
         <ng-template colRef="" label="Source" let-item sort>
           {{ getAssociatedSource(item) }}
         </ng-template>
         <ng-template colRef="" label="Price" let-item sort>
-          <ng-container *ngIf="getPrice(item) as amount">
+          <ng-container *ngIf="toPricePerCurrency(item) as amount">
             <price-per-currency [price]="amount"></price-per-currency>
           </ng-container>
         </ng-template>
@@ -128,13 +141,13 @@
     <!-- EXPENSES -->
     <mat-tab label="Expenses">
       <bf-table [source]="expenses" clickable useFilter pagination="50">
-        <ng-template colRef="id" label="Id" let-id sort defaultSort>
+        <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>
         <ng-template colRef="" label="Contract Id" let-item sort>
           {{ getCurrentContract(item) }}
         </ng-template>
-        <ng-template colRef="date" label="Date" let-date sort>
+        <ng-template colRef="date" label="Date" let-date sort defaultSort>
           {{ date | date: 'MM/dd/yyyy' }}
         </ng-template>
         <ng-template colRef="category" label="Category" let-category sort>
@@ -144,7 +157,7 @@
           {{ type }}
         </ng-template>
         <ng-template colRef="" label="Price" let-item sort>
-          <ng-container *ngIf="getPrice(item) as amount">
+          <ng-container *ngIf="toPricePerCurrency(item) as amount">
             <price-per-currency [price]="amount"></price-per-currency>
           </ng-container>
         </ng-template>
@@ -182,11 +195,6 @@
             </button>
           </ng-template>
         </bf-table>
-
-        <h3>Tree</h3>
-        <article class="surface">
-          <waterfall-g6-tree *ngIf="versionsAndActions.isActive" [waterfall]="waterfall"></waterfall-g6-tree>
-        </article>
       </ng-container>
       
       <ng-template #noWaterfall>
@@ -205,21 +213,53 @@
       <ng-container *ngIf="actions.length">
         <h3>Actions</h3>
         <bf-table [source]="actions" clickable useFilter pagination="50">
-          <ng-template colRef="actionId" label="Id" let-actionId>
+          <ng-template colRef="actionId" label="#" let-actionId>
             {{ actionId }}
           </ng-template>
           <ng-template colRef="payload.date" label="Date" let-date sort>
             {{ date | date: 'MM/dd/yyyy' }}
           </ng-template>
           <ng-template colRef="blockId" label="Block" let-blockId sort>
-            {{ blockId }}
+            {{ getBlockName(blockId) }}
           </ng-template>
-          <ng-template colRef="name" label="Name" let-name sort>
+          <ng-template colRef="name" label="Type" let-name sort>
             {{ name }}
+          </ng-template>
+          <ng-template colRef="payload.id" label="Id" let-id>
+            {{ id ? id : '--' }}
+          </ng-template>
+          <ng-template colRef="payload.orgId" label="Rightholder" let-orgId>
+            {{ orgId ? getRightholderName(orgId) : '--' }}
+          </ng-template>
+          <ng-template colRef="payload.amount" label="Amount" let-amount sort>
+            <ng-container *ngIf="amount else noPrice">
+              <price-per-currency [price]="getPrice(amount)"></price-per-currency>
+            </ng-container>
+            <ng-template #noPrice>--</ng-template>
+          </ng-template>
+          <ng-template colRef="payload.from" label="From" let-from sort>
+            {{ from ? from : '--' }}
+          </ng-template>
+          <ng-template colRef="payload.to" label="To" let-to sort>
+            {{ to ? to : '--' }}
+          </ng-template>
+          <ng-template colRef="payload.percent" label="%" let-percent>
+            {{ percent ? percent * 100  : '--' }}
           </ng-template>
         </bf-table>
       </ng-container>
-      <waterfall-g6-graph *ngIf="tree" [tree]="tree"></waterfall-g6-graph>
+
+      <ng-container *ngIf="tree">
+        <h3>Waterfall</h3>
+        <waterfall-g6-graph [tree]="tree"></waterfall-g6-graph>
+      </ng-container>
+      
+      <ng-container *ngIf="versions.length">
+        <h3>Tree</h3>
+        <article class="surface">
+          <waterfall-g6-tree *ngIf="versionsAndActions.isActive" [waterfall]="waterfall"></waterfall-g6-tree>
+        </article>
+      </ng-container>
     </mat-tab>
 
     <!-- WORLD MAP -->

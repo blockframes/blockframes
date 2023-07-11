@@ -15,8 +15,10 @@ export interface Income {
   titleId?: string;
   status: 'pending' | 'processed';
   date: Date;
+  /** For waterfall purposes, either medias/territories or sourceId should be defined */
   medias: Media[];
   territories: Territory[];
+  sourceId: string;
 }
 
 export function getTotalIncome(incomes: Income[]): PricePerCurrency {
@@ -39,6 +41,7 @@ export function createIncome(params: Partial<Income> = {}): Income {
     date: new Date(),
     medias: [],
     territories: [],
+    sourceId: '',
     ...params,
   };
 }

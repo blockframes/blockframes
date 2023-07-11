@@ -47,16 +47,23 @@ export interface WaterfallFile extends StorageFile {
   privacy: 'protected';
 }
 
-export function createWaterfallSource(name: string, territories_included: Territory[], territories_excluded: Territory[], medias: Media[]): WaterfallSource {
+export function createWaterfallSource(params: Partial<WaterfallSource>): WaterfallSource {
   return {
-    name,
-    territories: territories_included.filter(territory => !territories_excluded.includes(territory)),
-    medias
+    id: '',
+    name: '',
+    territories: [],
+    medias: [],
+    destinationId: '',
+    ...params
   }
 }
 
-export function getAssociatedSource(income: Income, sources: WaterfallSource[]) {
-  return sources.find(source => allOf(income.territories).in(source.territories) && allOf(income.medias).in(source.medias));
+export function getAssociatedSource(income: Income, sources: WaterfallSource[] = []) {
+  if (income.sourceId) return sources.find(s => s.id === income.sourceId);
+  const candidates = sources.filter(source => allOf(income.territories).in(source.territories) && allOf(income.medias).in(source.medias));
+  if (candidates.length === 0) throw new Error(`Could not find source for income "${income.id}"`);
+  if (candidates.length > 1) throw new Error(`Too many sources matching income "${income.id}" : ${candidates.map(c => c.id).join(',')}`);
+  return candidates[0];
 }
 
 /**
@@ -64,9 +71,11 @@ export function getAssociatedSource(income: Income, sources: WaterfallSource[]) 
  * row_all, us_svod etc ..
  */
 export interface WaterfallSource {
+  id: string;
   name: string;
   territories: Territory[];
   medias: Media[];
+  destinationId: string; // The rightId this income will go to
 }
 export interface WaterfallRightholder {
   id: 'fake' | string;

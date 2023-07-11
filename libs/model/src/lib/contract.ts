@@ -179,6 +179,7 @@ export function getLatestContract<T extends Contract>(contracts: T[]) {
  */
 export function getContractAndAmendments<T extends Contract>(contractId: string, contracts: T[]) {
   const contract = contracts.find(c => c.id === contractId);
+  if(!contract) return [];
   if (contract.rootId) {
     return sortContracts(contracts.filter(c => c.rootId === contract.rootId || c.id === contract.rootId));
   } else {

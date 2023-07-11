@@ -25,7 +25,9 @@ import {
   getContractAndAmendments,
   getCurrentContract,
   getDeclaredAmount,
-  isContract
+  isContract,
+  mainCurrency,
+  Block
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
@@ -56,6 +58,7 @@ export class WaterfallComponent implements OnInit {
   public actions: (Action & { blockId: string })[] = [];
   public rightholders: WaterfallRightholder[] = [];
   public tree: { state: TitleState; history: History[] };
+  private blocks : Block[] = [];
   private terms: Term[] = [];
 
   constructor(
@@ -81,6 +84,7 @@ export class WaterfallComponent implements OnInit {
     this.versions = this.waterfall.versions;
     this.rightholders = this.waterfall.rightholders;
     this.documents = await this.waterfalllDocumentService.getValue({ waterfallId });
+    this.blocks = await this.blockService.getValue({ waterfallId });
 
     this.contracts = this.documents.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c));
     this.terms = (await Promise.all(this.contracts.map(c => this.termService.getValue([where('contractId', '==', c.id)])))).flat();
@@ -96,16 +100,33 @@ export class WaterfallComponent implements OnInit {
   }
 
   public getRightholderName(id: string) {
-    return this.waterfall.rightholders.find(r => r.id === id).name;
+    return this.waterfall.rightholders.find(r => r.id === id)?.name || '--';
+  }
+
+  public getBlockName(id: string) {
+    return this.blocks.find(b => b.id === id).name;
   }
 
   public getAssociatedSource(income: Income) {
-    return getAssociatedSource(income, this.waterfall.sources).name;
+    try {
+      return getAssociatedSource(income, this.waterfall.sources)?.name || '--';
+    } catch (error) {
+      this.snackBar.open(error, 'close', { duration: 5000 });
+    }
+  }
+
+  public async removeSource(id: string) {
+    await this.waterfallService.removeSource(this.waterfall.id, id);
+    this.waterfall = await this.waterfallService.getValue(this.waterfall.id);
+    this.sources = this.waterfall.sources;
+    this.snackBar.open(`Source "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
+    this.cdRef.markForCheck();
   }
 
   public getCurrentContract(item: Income | Expense) {
     const contracts = getContractAndAmendments(item.contractId, this.contracts);
     const current = getCurrentContract(contracts, item.date);
+    if (!current) return '--';
     return current.rootId ? `${current.id} (${current.rootId})` : current.id;
   }
 
@@ -120,8 +141,12 @@ export class WaterfallComponent implements OnInit {
     return getDeclaredAmount({ ...contract, terms: this.terms.filter(t => t.contractId === contract.id) });
   }
 
-  public getPrice(item: Income | Expense): PricePerCurrency {
+  public toPricePerCurrency(item: Income | Expense): PricePerCurrency {
     return { [item.currency]: item.price };
+  }
+
+  public getPrice(amount: number): PricePerCurrency {
+    return { [mainCurrency]: amount };
   }
 
   public async removeDocument(id: string) {
@@ -197,7 +222,7 @@ export class WaterfallComponent implements OnInit {
 
   public async displayWaterfall(versionId: string) {
     this.snackBar.open('Waterfall is loading. Please wait', 'close', { duration: 5000 });
-    const data = await this.waterfallService.buildWaterfall({ waterfallId: this.waterfall.id, versionId});
+    const data = await this.waterfallService.buildWaterfall({ waterfallId: this.waterfall.id, versionId });
     this.tree = data.waterfall;
     this.actions = [];
     this.cdRef.markForCheck();

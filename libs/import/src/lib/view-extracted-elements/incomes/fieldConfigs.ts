@@ -1,12 +1,13 @@
 import { Media, MovieCurrency, Territory } from '@blockframes/model';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
-import { getDate } from '@blockframes/import/utils';
+import { getDate, mandatoryError } from '@blockframes/import/utils';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 export interface FieldsConfig {
   income: {
     titleId: string;
     contractId: string;
+    sourceId: string;
     territories_included: Territory[];
     territories_excluded: Territory[];
     medias: Media[];
@@ -30,26 +31,34 @@ export function getIncomeConfig(option: IncomeConfig) {
     // ! The order of the property should be the same as excel columns
     return {
         /* a */ 'income.titleId': async (value: string) => {
+        if (!value) throw mandatoryError(value, 'Waterfall Id');
         return value;
       },
         /* b */ 'income.contractId': async (value: string) => {
+        if (!value) throw mandatoryError(value, 'Contract Id');
         return value;
       },
-        /* c */ 'income.territories_included': (value: string) => getGroupedList(value, 'territories', separator),
-        /* d */ 'income.territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
-        /* e */ 'income.medias': (value: string) => getGroupedList(value, 'medias', separator),
+        /* c */ 'income.sourceId': async (value: string) => {
+        return value;
+      },
+        /* d */ 'income.territories_included': (value: string, data: FieldsConfig) => getGroupedList(value, 'territories', separator, { required: !data.income.sourceId }),
+        /* e */ 'income.territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
+        /* f */ 'income.medias': (value: string, data: FieldsConfig) => getGroupedList(value, 'medias', separator, { required: !data.income.sourceId }),
 
-        /* f */ 'income.id': async (value: string) => {
+        /* g */ 'income.id': async (value: string) => {
         return value;
       },
-        /* g */ 'income.date': async (value: string) => {
+        /* h */ 'income.date': async (value: string) => {
+        if (!value) throw mandatoryError(value, 'Date');
         return getDate(value, 'Income Date') as Date;
       },
-        /* h */ 'income.price': async (value: string) => {
+        /* i */ 'income.price': async (value: string) => {
+        if (!value) return 0;
         return Number(value);
       },
-        /* i */ 'income.currency': async (value: string) => {
+        /* j */ 'income.currency': async (value: string) => {
         const currency = getKeyIfExists('movieCurrencies', value);
+        if (!currency) throw mandatoryError(value, 'Currency');
         return currency;
       },
     };
