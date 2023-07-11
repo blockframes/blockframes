@@ -1,0 +1,50 @@
+<mat-form-field appearance="outline">
+  <mat-label>{{ label }}</mat-label>
+  <mat-icon matPrefix [svgIcon]="selectIcon"></mat-icon>
+  <mat-select multiple [formControl]="control" (openedChange)="resetSearch()" test-id="filter-select">
+    <header>
+      <mat-checkbox
+        color="primary"
+        [indeterminate]="indeterminate.all"
+        [checked]="checked.all"
+        (change)="checkAll($event.checked)"
+        test-id="checked-all"
+      ></mat-checkbox>
+      <input
+        [placeholder]="filterPlaceholder"
+        [formControl]="search"
+        (keydown)="$event.stopPropagation()"
+        test-id="search-input-control"
+      />
+      <mat-icon *ngIf="!search.value" svgIcon="search"></mat-icon>
+      <button *ngIf="!!search.value" mat-icon-button type="button" (click)="resetSearch()" matTooltip="Clear text">
+        <mat-icon svgIcon="refresh"></mat-icon>
+      </button>
+    </header>
+    <ng-container *ngFor="let group of groups">
+      <div [ngClass]="{ hidden: !selectable[group.label] }">
+        <mat-checkbox
+          color="primary"
+          [indeterminate]="indeterminate[group.label]"
+          [checked]="checked[group.label]"
+          (change)="checkGroup(group.label, selectable, $event.checked)"
+          [attr.test-id]="group.label"
+          >{{ group.label }}
+        </mat-checkbox>
+        <button mat-icon-button color="primary" (click)="toggleVisibility(group.label)">
+          <mat-icon [svgIcon]="visible[group.label] ? 'expand_more' : 'expand_less'"></mat-icon>
+        </button>
+      </div>
+      <mat-divider></mat-divider>
+      <ng-container *ngFor="let item of group.items">
+        <mat-option
+          [value]="item"
+          [ngClass]="{ hidden: !selectable[item] || visible[group.label] }"
+          [attr.test-id]="item"
+        >
+          {{ item | toLabel: scope }}
+        </mat-option>
+      </ng-container>
+    </ng-container>
+  </mat-select>
+</mat-form-field>
