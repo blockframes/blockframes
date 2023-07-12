@@ -33,7 +33,7 @@ export async function formatRight(
 
     const right = createRight({ ...data.right, actionName });
 
-    rights.push({ waterfallId: data.waterfallId, right, errors });
+    rights.push({ waterfallId: data.waterfallId, right, errors, rightholders: rightholderCache });
   }
   return rights;
 }

@@ -84,6 +84,7 @@ export interface SourcesImportState extends ImportState {
 export interface RightsImportState extends ImportState {
   waterfallId: string;
   right: Right;
+  rightholders: Record<string, WaterfallRightholder[]>;
 }
 
 /**

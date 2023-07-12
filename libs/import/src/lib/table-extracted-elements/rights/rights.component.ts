@@ -10,6 +10,7 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { RightsImportState, SpreadsheetImportError } from '../../utils';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { RightService } from '@blockframes/waterfall/right.service';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 const hasImportErrors = (importState: RightsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -43,6 +44,7 @@ export class TableExtractedRightsComponent implements AfterViewInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private rightService: RightService,
+    private waterfallService: WaterfallService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -87,6 +89,18 @@ export class TableExtractedRightsComponent implements AfterViewInit {
   private async add(importState: RightsImportState, { increment } = { increment: false }) {
     importState.importing = true;
     this.cdr.markForCheck();
+
+    if (importState.rightholders) {
+      for (const [waterfallId, rightholders] of Object.entries(importState.rightholders)) {
+        const waterfall = await this.waterfallService.getValue(waterfallId);
+
+        if (!waterfall.rightholders.find(r => r.id === importState.right.rightholderId)) {
+          waterfall.rightholders.push(rightholders.find(r => r.id === importState.right.rightholderId));
+        }
+
+        await this.waterfallService.update(waterfallId, { id: waterfallId, rightholders: waterfall.rightholders });
+      }
+    }
 
     if (increment) this.processing++;
     this.cdr.markForCheck();

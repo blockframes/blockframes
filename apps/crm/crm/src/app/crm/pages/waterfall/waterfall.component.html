@@ -272,6 +272,9 @@
         <ng-template colRef="actionName" label="Action Name" let-actionName sort>
           {{ actionName }}
         </ng-template>
+        <ng-template colRef="percent" label="%" let-percent>
+          {{ percent ? percent  : '--' }}
+        </ng-template>
         <ng-template colRef="id" label="Actions" let-rightId sticky>
           <button mat-icon-button (click)="removeRight(rightId)">
             <mat-icon svgIcon="delete" matTooltip="Delete right"></mat-icon>
