@@ -6,3 +6,4 @@ export * from './state';
 export * from './threshold';
 export * from './waterfall';
 export * from './block';
+export * from './right';

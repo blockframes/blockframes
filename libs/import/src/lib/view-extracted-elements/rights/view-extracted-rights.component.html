@@ -1,0 +1,12 @@
+<ng-container *ngIf="rightsToCreate$ | async as rightsToCreate; else isLoading">
+  <ng-container *ngIf="rightsToCreate.data.length">
+    <h3>Rights to Create</h3>
+    <import-table-extracted-rights [rows]="rightsToCreate"></import-table-extracted-rights>
+  </ng-container>
+</ng-container>
+<ng-template #isLoading>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </section>
+</ng-template>
+

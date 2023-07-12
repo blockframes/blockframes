@@ -77,11 +77,6 @@ export interface WaterfallSource {
   medias: Media[];
   destinationId: string; // The rightId this income will go to
 }
-export interface WaterfallRightholder {
-  id: 'fake' | string;
-  name: string;
-  roles: RightholderRole[];
-};
 
 export interface WaterfallRightholder {
   id: string;
@@ -107,6 +102,15 @@ export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
     documents: [],
     sources: [],
     rightholders: [],
+    ...params,
+  }
+}
+
+export function createWaterfallRightholder(params: Partial<WaterfallRightholder> = {}): WaterfallRightholder {
+  return {
+    id: '',
+    name: '',
+    roles: [],
     ...params,
   }
 }

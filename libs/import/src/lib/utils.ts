@@ -1,5 +1,19 @@
 import { MovieService } from '@blockframes/movie/service';
-import { Movie, Organization, User, Mandate, Sale, Term, App, Income, Expense, WaterfallDocument, WaterfallRightholder, WaterfallSource } from '@blockframes/model';
+import {
+  Movie,
+  Organization,
+  User,
+  Mandate,
+  Sale,
+  Term,
+  Income,
+  Expense,
+  WaterfallDocument,
+  WaterfallRightholder,
+  WaterfallSource,
+  Right,
+  createWaterfallRightholder,
+} from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
 import { ContractService } from '@blockframes/contract/contract/service';
@@ -9,7 +23,7 @@ import { where } from 'firebase/firestore';
 import { TermService } from '@blockframes/contract/term/service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
-export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts', 'documents', 'incomes', 'expenses', 'sources'] as const;
+export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts', 'documents', 'incomes', 'expenses', 'sources', 'rights'] as const;
 
 export type SpreadsheetImportType = typeof spreadsheetImportTypes[number];
 
@@ -67,6 +81,11 @@ export interface SourcesImportState extends ImportState {
   waterfallId: string;
 }
 
+export interface RightsImportState extends ImportState {
+  waterfallId: string;
+  right: Right;
+}
+
 /**
  * This hold the excel line number where the data start.
  * It should always match the column names line in the excel files.
@@ -80,6 +99,7 @@ export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
   expenses: 10,
   documents: 10,
   sources: 10,
+  rights: 10,
 };
 
 export const sheetRanges: Record<SpreadsheetImportType, string> = {
@@ -90,6 +110,7 @@ export const sheetRanges: Record<SpreadsheetImportType, string> = {
   incomes: `A${sheetHeaderLine.incomes}:J100`,
   expenses: `A${sheetHeaderLine.expenses}:H100`,
   sources: `A${sheetHeaderLine.sources}:G100`,
+  rights: `A${sheetHeaderLine.rights}:Z100`,
 };
 
 export async function getOrgId(
@@ -124,7 +145,7 @@ export async function getRightholderId(
   const rightholder = cache[waterfallId].find(r => r.name === value || r.id === value);
   if (rightholder) return rightholder.id;
 
-  cache[waterfallId].push({ id: waterfallService.createId(), name: value, roles: [] });
+  cache[waterfallId].push(createWaterfallRightholder({ id: waterfallService.createId(), name: value, roles: [] }));
   return cache[waterfallId].find(r => r.name === value || r.id === value).id;
 }
 

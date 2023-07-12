@@ -597,6 +597,24 @@ service cloud.firestore {
         allow delete: if false;
       }
 
+      match /rights/{rightId} {
+        allow read: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && hasWaterfallRole(waterfallId, 'producer');
+        allow create: if userHasValidOrg()
+          && isRequestFieldValueEqualToOrNotSetted(['id'], rightId)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && hasWaterfallRole(waterfallId, 'producer');
+        allow update: if userHasValidOrg()
+          && isNotUpdatingId('id', existingData().id)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && hasWaterfallRole(waterfallId, 'producer');
+        allow delete: if false;
+      }
+
       match /permissions/{orgId} {
         allow read: if userHasValidOrg()
           && notInMaintenance()

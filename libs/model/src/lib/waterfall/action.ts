@@ -1,7 +1,7 @@
 import { ConditionGroup } from './conditions';
 import {
   createOrg,
-  createRight,
+  createRightState,
   RightState,
   TitleState,
   OrgState,
@@ -21,6 +21,7 @@ import { Term } from '../terms';
 import { getContractAndAmendments, getCurrentContract, getDeclaredAmount } from '../contract';
 import { convertCurrenciesTo } from '../utils';
 import { MovieCurrency } from '../static';
+import { Right } from './right';
 
 const actions = {
   /**
@@ -80,6 +81,7 @@ export type ActionList = {
 };
 export type Action = ActionList[keyof ActionList] & { actionId: string };
 
+// TODO #9420 duplicate with createAction ?
 export const action = <N extends ActionName>(name: N, payload: ActionList[N]['payload']) => {
   return { name, payload, actionId: Math.round(Math.random() * 1000000).toString() };
 }
@@ -103,15 +105,9 @@ export function runAction<N extends ActionName>(
 }
 
 export const mainCurrency: MovieCurrency = 'EUR';
-export function buildActions(contracts: WaterfallContract[], incomes: Income[], expenses: Expense[], terms: Term[], sources: WaterfallSource[]) {
 
+export function contractsToActions(contracts: WaterfallContract[], terms: Term[]) {
   const actions: Action[] = [];
-
-  // TODO #9420 TEMP create first rights before excel import is ok
-  sources.forEach(s => {
-    const right = action('prepend', { id: s.destinationId, orgId: 'test', next: [], percent: 0.5, date: new Date() });
-    actions.push(right);
-  })
 
   contracts.forEach(c => {
     const declaredAmount = getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) });
@@ -128,17 +124,46 @@ export function buildActions(contracts: WaterfallContract[], incomes: Income[], 
 
   });
 
+  return actions;
+}
+
+export function rightsToActions(rights: Right[]) {
+  const actions: Action[] = [];
+
+  rights.forEach(right => {
+    const a = action(right.actionName, formatPayload(right)) as Action;
+    actions.push(a);
+  });
+
+  return actions;
+}
+
+function formatPayload(right: Right) {
+  switch (right.actionName) {
+    case 'append': {
+      const payload: ActionList['append']['payload'] = {
+        id: right.id,
+        orgId: right.rightholderId,
+        percent: right.percent / 100,
+        previous: right.previousId ? [right.previousId] : [],
+        date: new Date(),
+      }
+      return payload;
+    }
+    default:
+      break;
+  }
+
+}
+
+export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[]) {
+  const actions: Action[] = [];
+
   incomes.forEach(i => {
     const contractAndAmendments = getContractAndAmendments(i.contractId, contracts);
     const contract = getCurrentContract(contractAndAmendments, i.date);
 
-    let source: WaterfallSource;
-    try {
-      source = getAssociatedSource(i, sources);
-    } catch (error) {
-      this.snackbar.open(error, 'close', { duration: 5000 });
-      return;
-    }
+    const source: WaterfallSource = getAssociatedSource(i, sources);
 
     const { [mainCurrency]: amount } = convertCurrenciesTo({ [i.currency]: i.price }, mainCurrency);
     actions.push(
@@ -155,6 +180,12 @@ export function buildActions(contracts: WaterfallContract[], incomes: Income[], 
     );
   });
 
+  return actions;
+}
+
+export function expensesToActions(contracts: WaterfallContract[], expenses: Expense[]) {
+  const actions: Action[] = [];
+
   expenses.forEach(e => {
     const contractAndAmendments = getContractAndAmendments(e.contractId, contracts);
     const contract = getCurrentContract(contractAndAmendments, e.date);
@@ -170,7 +201,6 @@ export function buildActions(contracts: WaterfallContract[], incomes: Income[], 
   });
 
   return actions;
-
 }
 
 /////////////
@@ -194,7 +224,7 @@ interface AppendRight extends RightAction {
 }
 function append(state: TitleState, payload: AppendRight) {
   const { previous, ...baseRight } = payload;
-  const right = createRight({ previous: toArray(previous), ...baseRight });
+  const right = createRightState({ previous: toArray(previous), ...baseRight });
   state.rights[right.id] = right;
   state.orgs[right.orgId] ||= createOrg({ id: right.orgId });
   for (const pool of right.pools) {
@@ -208,7 +238,7 @@ interface PrependRight extends RightAction {
 }
 function prepend(state: TitleState, payload: PrependRight) {
   const { next, ...baseRight } = payload;
-  const right = createRight(baseRight);
+  const right = createRightState(baseRight);
   prependNode(state, toArray(next), payload.id);
   state.rights[right.id] = right;
   state.orgs[right.orgId] ||= createOrg({ id: right.orgId });
@@ -413,7 +443,7 @@ function toArray<T>(item: T | T[]): T[] {
 function createGroupChildren(state: TitleState, children: GroupChild[]) {
   for (const child of children) {
     if (child.type === 'right') {
-      state.rights[child.id] = createRight(child);
+      state.rights[child.id] = createRightState(child);
       state.orgs[child.orgId] ||= createOrg({ id: child.orgId });
       for (const pool of child.pools || []) {
         state.pools[pool] ||= { revenu: 0, turnover: 0, shadowRevenu: 0 };
@@ -450,8 +480,8 @@ export interface IncomeAction extends BaseAction {
   to: string;
   from?: string;
   contractId?: string;
-  territory: string[];
-  media: string[];
+  territory: string[]; // TODO should be same typing as Income or WaterfallSource interface 
+  media: string[]; // TODO should be same typing as Income or WaterfallSource interface
   isCompensation?: boolean;
 }
 
@@ -460,7 +490,7 @@ function income(state: TitleState, payload: IncomeAction) {
   // The initial right from of the income is usually a right that doesn't exist
   // If this is the case we create it
   if (payload.from) {
-    state.rights[payload.from] ||= createRight({ id: payload.from, orgId: payload.from, percent: 0 });
+    state.rights[payload.from] ||= createRightState({ id: payload.from, orgId: payload.from, percent: 0 });
   }
   state.incomes[payload.id] = payload;
   const incomeId = payload.id;
