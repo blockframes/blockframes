@@ -2,7 +2,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GroupMultiselectComponent } from './group.component';
-import { ToGroupLabelPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { JoinPipeModule, ToGroupLabelPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,6 +26,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatTooltipModule,
     MatDividerModule,
     ToGroupLabelPipeModule,
+    JoinPipeModule,
   ],
   declarations: [GroupMultiselectComponent],
   exports: [GroupMultiselectComponent],

@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { GroupScope, Scope, StaticGroup, staticGroups } from '@blockframes/model';
 import { FormStaticValueArray } from '@blockframes/utils/form';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'group-multiselect',
@@ -9,12 +10,13 @@ import { FormStaticValueArray } from '@blockframes/utils/form';
   styleUrls: ['./group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GroupMultiselectComponent implements OnInit {
+export class GroupMultiselectComponent implements OnInit, OnDestroy {
   @Input() control: FormStaticValueArray<Scope>;
   @Input() scope: GroupScope;
   @Input() label: string;
   @Input() selectIcon = 'world';
   @Input() filterPlaceholder: string;
+  @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
 
   search = new FormControl('');
 
@@ -28,6 +30,8 @@ export class GroupMultiselectComponent implements OnInit {
   selectable: Record<string, boolean>; //will depend on the search value
   visible: Record<string, boolean>; //will depend on the expand buttons of each group
 
+  private subs: Subscription[] = [];
+
   ngOnInit() {
     this.groups = staticGroups[this.scope];
     this.items = this.getAllItems(this.groups);
@@ -38,24 +42,27 @@ export class GroupMultiselectComponent implements OnInit {
     this.indeterminate = this.getIndeterminate(this.control.value, this.selectable);
     this.checked = this.getChecked(this.control.value, this.selectable);
 
-    this.search.valueChanges.subscribe(filter => {
+    const filterSub = this.search.valueChanges.subscribe(filter => {
       this.selectable = this.getSelectable(this.groups, filter);
       this.indeterminate = this.getIndeterminate(this.control.value, this.selectable);
       this.checked = this.getChecked(this.control.value, this.selectable);
       for (const group of this.groups) {
-        if (
-          Object.keys(this.selectable).some(item => group.items.includes(item)) &&
-          this.visible[group.label] &&
-          filter.length > 2
-        )
-          this.toggleVisibility(group.label);
+        const groupHasSelectableItems = Object.keys(this.selectable).some(item => group.items.includes(item));
+        const isGroupVisible = this.visible[group.label];
+        if (groupHasSelectableItems && isGroupVisible && filter.length > 2) this.toggleVisibility(group.label);
       }
     });
 
-    this.control.valueChanges.subscribe(value => {
+    const formSub = this.control.valueChanges.subscribe(value => {
       this.indeterminate = this.getIndeterminate(value, this.selectable);
       this.checked = this.getChecked(value, this.selectable);
     });
+
+    this.subs.push(filterSub, formSub);
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(s => s?.unsubscribe());
   }
 
   getAllItems(groups: StaticGroup[]): string[] {
@@ -68,11 +75,13 @@ export class GroupMultiselectComponent implements OnInit {
 
     for (const { label, items } of groups) {
       const lowerCaseLabel = label.toLowerCase();
-      const filteredItems = items.filter(item => item.toLowerCase().includes(lowerCaseFilter));
+      const selectableItems = lowerCaseLabel.includes(lowerCaseFilter)
+        ? items
+        : items.map(i => i.toLowerCase()).filter(item => item.includes(lowerCaseFilter));
 
-      if (lowerCaseLabel.includes(lowerCaseFilter) || filteredItems.length > 0) {
+      if (lowerCaseLabel.includes(lowerCaseFilter) || selectableItems.length > 0) {
         selectable[label] = true;
-        filteredItems.forEach(item => {
+        selectableItems.forEach(item => {
           selectable[item] = true;
         });
       }
@@ -82,9 +91,7 @@ export class GroupMultiselectComponent implements OnInit {
   }
 
   getIndeterminate(controlValue: string[], selectableItems: Record<string, boolean>): Record<string, boolean> {
-    const allVisibleItems = selectableItems
-      ? Object.keys(selectableItems).filter(item => item[0] === item[0].toLowerCase())
-      : this.items;
+    const allVisibleItems = this.getAllVisibleItems(selectableItems);
     const indeterminate = { all: controlValue.length > 0 && controlValue.length < allVisibleItems.length };
     for (const { label, items } of this.groups) {
       const groupVisibleItems = items.filter(item => selectableItems[item]);
@@ -95,10 +102,8 @@ export class GroupMultiselectComponent implements OnInit {
   }
 
   getChecked(controlValue: string[], selectableItems?: Record<string, boolean>): Record<string, boolean> {
-    const allVisibleItems = selectableItems
-      ? Object.keys(selectableItems).filter(item => item[0] === item[0].toLowerCase())
-      : this.items;
-    const checked = { all: controlValue.length === allVisibleItems.length };
+    const allVisibleItems = this.getAllVisibleItems(selectableItems);
+    const checked = { all: !!controlValue.length && controlValue.length === allVisibleItems.length };
 
     for (const { label, items } of this.groups) {
       const groupVisibleItems = items.filter(item => selectableItems[item]);
@@ -125,6 +130,15 @@ export class GroupMultiselectComponent implements OnInit {
     this.visible[groupLabel] = !this.visible[groupLabel];
     this.indeterminate = this.getIndeterminate(this.control.value, this.selectable);
     this.checked = this.getChecked(this.control.value, this.selectable);
+  }
+
+  getAllVisibleItems(selectableItems?: Record<string, boolean>) {
+    return selectableItems ? Object.keys(selectableItems).filter(item => item[0] === item[0].toLowerCase()) : this.items;
+  }
+
+  onOpen() {
+    this.resetSearch();
+    this.searchInput.nativeElement.focus();
   }
 
   resetSearch() {
