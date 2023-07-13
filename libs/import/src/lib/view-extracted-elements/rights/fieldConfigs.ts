@@ -1,12 +1,22 @@
-import { getRightholderId, mandatoryError } from '@blockframes/import/utils';
-import { Right, WaterfallRightholder } from '@blockframes/model';
+import { getDate, getRightholderId, mandatoryError } from '@blockframes/import/utils';
+import { ConditionName, NumberOperator, Right, WaterfallRightholder } from '@blockframes/model';
 import { ExtractConfig } from '@blockframes/utils/spreadsheet';
-import { BlockService } from '@blockframes/waterfall/block.service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+
+const isNumber = (v: string) => !isNaN(parseFloat(v));
+export interface ImportedCondition {
+  conditionName: ConditionName,
+  left: string,
+  operator: NumberOperator,
+  target: string | number
+}
 
 export interface FieldsConfig {
   waterfallId: string;
-  right: Right;
+  right: Omit<Right, 'conditions'>;
+  conditionA?: ImportedCondition;
+  conditionB?: ImportedCondition;
+  conditionC?: ImportedCondition;
 }
 
 export type FieldsConfigType = ExtractConfig<FieldsConfig>;
@@ -18,12 +28,14 @@ interface Caches {
 interface RightConfig {
   waterfallService: WaterfallService,
   caches: Caches,
+  separator: string,
 }
 
 export function getRightConfig(option: RightConfig) {
   const {
     waterfallService,
     caches,
+    separator
   } = option;
 
   const { rightholderCache } = caches;
@@ -35,28 +47,46 @@ export function getRightConfig(option: RightConfig) {
         if (!value) throw mandatoryError(value, 'Waterfall Id');
         return value;
       },
-        /* b */ 'right.groupId': async (value: string) => {
+        /* b */ 'right.date': async (value: string) => {
+        if (!value) throw mandatoryError(value, 'Right Date');
+        return getDate(value, 'Right Date') as Date;
+      },
+        /* c */ 'right.groupId': async (value: string) => {
         return value;
       },
-        /* c */ 'right.groupPercent': async (value: string) => {
+        /* d */ 'right.groupPercent': async (value: string) => {
         return Number(value);
       },
-        /* d */ 'right.id': async (value: string) => {
+        /* e */ 'right.id': async (value: string) => {
         if (!value) throw mandatoryError(value, 'Right Id');
         return value;
       },
-        /* e */ 'right.previousId': async (value: string) => {
+        /* f */ 'right.name': async (value: string) => {
         return value;
       },
-        /* f */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
+        /* g */ 'right.previousIds': async (value: string) => {
+        return value.split(separator).filter(v => !!v).map(v => v.trim());
+      },
+        /* h */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
         if (!value) throw mandatoryError(value, 'Licensor');
         const rightholderId = await getRightholderId(value, data.waterfallId, waterfallService, rightholderCache);
         return rightholderId;
       },
-        /* g */ 'right.percent': async (value: string) => {
+        /* i */ 'right.percent': async (value: string) => {
         return Number(value);
       },
-
+        /* j */ 'conditionA.conditionName': async (value: string) => {
+        return value as ConditionName;
+      },
+        /* k */ 'conditionA.left': async (value: string) => {
+        return value;
+      },
+        /* l */ 'conditionA.operator': async (value: string) => {
+        return value as NumberOperator;
+      },
+        /* m */ 'conditionA.target': async (value: string) => {
+        return isNumber(value) ? Number(value) : value;
+      },
     };
   }
 

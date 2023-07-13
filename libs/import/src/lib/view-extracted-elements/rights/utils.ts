@@ -1,7 +1,7 @@
 import { RightsImportState } from '@blockframes/import/utils';
-import { ActionList, ActionName, App, Block, WaterfallRightholder, createRight } from '@blockframes/model';
+import { ActionName, App, Condition, TargetIn, TargetValue, WaterfallRightholder, createRight } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
-import { FieldsConfig, getRightConfig } from './fieldConfigs';
+import { FieldsConfig, ImportedCondition, getRightConfig } from './fieldConfigs';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 export interface FormatConfig {
@@ -19,6 +19,7 @@ export async function formatRight(
   const option = {
     waterfallService,
     caches,
+    separator: ';'
   };
 
   const rights: RightsImportState[] = [];
@@ -30,10 +31,42 @@ export async function formatRight(
     const { data, errors } = result;
 
     const actionName: ActionName = data.right.groupId ? 'appendHorizontal' : 'append';
-
     const right = createRight({ ...data.right, actionName });
+
+    if (data.conditionA.conditionName) {
+      right.conditions = {
+        operator: 'AND',
+        conditions: [formatCondition(data.conditionA)]
+      }
+    }
 
     rights.push({ waterfallId: data.waterfallId, right, errors, rightholders: rightholderCache });
   }
   return rights;
+}
+
+function formatCondition(cond: ImportedCondition): Condition {
+  switch (cond.conditionName) {
+    case 'rightRevenu':
+      return {
+        name: 'rightRevenu',
+        payload: {
+          rightId: cond.left,
+          operator: cond.operator,
+          target: formatTarget(cond.target)
+        }
+      }
+    default:
+      break;
+  }
+}
+
+function formatTarget(target: string | number): TargetValue {
+  if (!isNaN(target as number)) return target as number;
+  const [tar, id, percent] = (target as string).split(':');
+  return {
+    in: tar as TargetIn,
+    id,
+    percent: parseFloat(percent) || 1
+  }
 }

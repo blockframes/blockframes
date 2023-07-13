@@ -34,6 +34,7 @@ export class TableExtractedRightsComponent implements AfterViewInit {
     'id',
     'select',
     'waterfallId',
+    'right.id',
     'right.actionName',
     'errors',
     'warnings',

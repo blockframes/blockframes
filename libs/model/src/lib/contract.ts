@@ -3,7 +3,7 @@ import { DocumentMeta, createDocumentMeta } from './meta';
 import { Negotiation } from './negociation';
 import type { Media, Territory, ContractStatus, ContractType, MovieCurrency } from './static';
 import { Duration, Term } from './terms';
-import { PricePerCurrency } from './utils';
+import { PricePerCurrency, sortByDate } from './utils';
 
 export interface Holdback {
   territories: Territory[];
@@ -179,7 +179,7 @@ export function getLatestContract<T extends Contract>(contracts: T[]) {
  */
 export function getContractAndAmendments<T extends Contract>(contractId: string, contracts: T[]) {
   const contract = contracts.find(c => c.id === contractId);
-  if(!contract) return [];
+  if (!contract) return [];
   if (contract.rootId) {
     return sortContracts(contracts.filter(c => c.rootId === contract.rootId || c.id === contract.rootId));
   } else {
@@ -203,5 +203,5 @@ export function getCurrentContract<T extends Contract>(contracts: T[], date = ne
  * @returns 
  */
 export function sortContracts<T extends Contract>(contracts: T[]) {
-  return contracts.sort((a, b) => a.signatureDate.getTime() - b.signatureDate.getTime());
+  return sortByDate<T>(contracts, 'signatureDate');
 }

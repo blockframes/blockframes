@@ -31,7 +31,8 @@ import {
   contractsToActions,
   rightsToActions,
   incomesToActions,
-  expensesToActions
+  expensesToActions,
+  groupByDate
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
@@ -211,7 +212,7 @@ export class WaterfallComponent implements OnInit {
   }
 
   public hasMinimalRights() {
-    if(!this.sources.length) return false;
+    if (!this.sources.length) return false;
     const destinationRightIds = Array.from(new Set(this.sources.map(s => s.destinationId)));
     return destinationRightIds.every(id => this.rights.map(r => r.id).includes(id));
   }
@@ -224,7 +225,7 @@ export class WaterfallComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  public rightExists(id: string){
+  public rightExists(id: string) {
     return this.rights.find(r => r.id === id);
   }
 
@@ -246,15 +247,21 @@ export class WaterfallComponent implements OnInit {
     const incomeActions = incomesToActions(this.contracts, this.incomes, this.sources);
     const expenseActions = expensesToActions(this.contracts, this.expenses);
 
-    const [contracts, rights, incomes, expenses] = await Promise.all([
-      this.blockService.create(this.waterfall.id, 'contracts', contractActions),
-      this.blockService.create(this.waterfall.id, 'rights', rightActions),
-      this.blockService.create(this.waterfall.id, 'incomes', incomeActions),
-      this.blockService.create(this.waterfall.id, 'expenses', expenseActions),
-      this.waterfallService.addVersion(this.waterfall, { id: versionId, description: 'First Version' })
+    const groupedActions = groupByDate([
+      ...contractActions,
+      ...rightActions,
+      ...expenseActions, // Expenses should be added before actions
+      ...incomeActions
     ]);
 
-    this.waterfall = await this.waterfallService.addBlocksToVersion(this.waterfall, versionId, [contracts, rights, incomes, expenses]);
+    const blocks = await Promise.all(groupedActions.map(group => {
+      const blockName = getBlockName(group.date, group.actions);
+      return this.blockService.create(this.waterfall.id, blockName, group.actions);
+    }));
+
+    await this.waterfallService.addVersion(this.waterfall, { id: versionId, description: 'First Version' });
+
+    this.waterfall = await this.waterfallService.addBlocksToVersion(this.waterfall, versionId, blocks);
 
     this.waterfall = await this.waterfallService.getValue(this.waterfall.id);
     this.versions = this.waterfall.versions;
@@ -271,4 +278,14 @@ export class WaterfallComponent implements OnInit {
     this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
   }
 
+}
+
+function getBlockName(date: Date, actions: Action[]) {
+  const dateStr = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  const actionsNames = Array.from(new Set(actions.map(a => a.name)));
+
+  if (actionsNames.includes('expense') || actionsNames.includes('income')) return `statement-${dateStr}`;
+  if (actionsNames.includes('contract') || actionsNames.includes('updateContract')) return `contracts-${dateStr}`;
+  if (actionsNames.includes('append')) return `rights-${dateStr}`;
+  return `mixed-${dateStr}`;
 }

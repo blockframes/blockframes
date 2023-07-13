@@ -269,11 +269,20 @@
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>
+        <ng-template colRef="name" label="Name" let-name sort>
+          {{ name }}
+        </ng-template>
+        <ng-template colRef="date" label="Date" let-date sort defaultSort>
+          {{ date | date: 'MM/dd/yyyy' }}
+        </ng-template>
         <ng-template colRef="actionName" label="Action Name" let-actionName sort>
           {{ actionName }}
         </ng-template>
         <ng-template colRef="percent" label="%" let-percent>
           {{ percent ? percent  : '--' }}
+        </ng-template>
+        <ng-template colRef="conditions" label="Conditions" let-conditions>
+          {{ conditions?.conditions?.length ? conditions.conditions.length  : '--' }}
         </ng-template>
         <ng-template colRef="id" label="Actions" let-rightId sticky>
           <button mat-icon-button (click)="removeRight(rightId)">

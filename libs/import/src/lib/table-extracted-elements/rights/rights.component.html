@@ -46,6 +46,11 @@
     <td mat-cell *matCellDef="let element"> {{ element.waterfallId }} </td>
   </ng-container>
 
+  <ng-container matColumnDef="right.id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+    <td mat-cell *matCellDef="let element"> {{ element.right.id }} </td>
+  </ng-container>
+
   <ng-container matColumnDef="right.actionName">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Action Name </th>
     <td mat-cell *matCellDef="let element"> {{ element.right.actionName }} </td>

@@ -382,3 +382,12 @@ export function convertCurrenciesTo(price: PricePerCurrency, to: MovieCurrency =
   const value = prices.reduce((a, b) => a + b, 0);
   return { [to]: value || 0 };
 }
+
+/**
+ * Sorts array of objects 
+ * @param objects 
+ * @returns 
+ */
+export function sortByDate<T>(objects: T[], field: string) {
+  return objects.sort((a, b) => a[field].getTime() - b[field].getTime());
+}

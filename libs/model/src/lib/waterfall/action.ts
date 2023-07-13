@@ -19,7 +19,7 @@ import { Income } from '../income';
 import { Expense } from '../expense';
 import { Term } from '../terms';
 import { getContractAndAmendments, getCurrentContract, getDeclaredAmount } from '../contract';
-import { convertCurrenciesTo } from '../utils';
+import { convertCurrenciesTo, sortByDate } from '../utils';
 import { MovieCurrency } from '../static';
 import { Right } from './right';
 
@@ -145,15 +145,41 @@ function formatPayload(right: Right) {
         id: right.id,
         orgId: right.rightholderId,
         percent: right.percent / 100,
-        previous: right.previousId ? [right.previousId] : [],
-        date: new Date(),
+        previous: right.previousIds || [],
+        date: right.date,
       }
+
+      if (right.conditions) {
+        payload.conditions = right.conditions;
+      }
+
       return payload;
     }
     default:
       break;
   }
 
+}
+
+/**
+ * Group array of actions by date
+ * @param objects 
+ * @param field 
+ * @returns 
+ */
+export function groupByDate(actions: Action[]) {
+  const group: { date: Date, actions: Action[] }[] = [];
+
+  for (const obj of actions) {
+    const date = obj.payload.date;
+    const key = new Date(date.getFullYear(), date.getMonth(), date.getDate()); // Remove hours, min, sec if any
+
+    const subGroup = group.find(g => g.date.getTime() === date.getTime());
+    if (!subGroup) group.push({ date: key, actions: [obj] })
+    else subGroup.actions.push(obj);
+  }
+
+  return sortByDate(group, 'date');
 }
 
 export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[]) {

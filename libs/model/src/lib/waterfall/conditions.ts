@@ -134,7 +134,7 @@ export function splitConditions(group: ConditionGroup) {
 }
 
 // Utils
-type NumberOperator = '==' | '!=' | '<' | '>=';
+export type NumberOperator = '==' | '!=' | '<' | '>=';
 type ArrayOperator = 'in' | 'not-in';
 /** Blocking operation will always return either the total amount or nothing */
 function numericOperator(operator: NumberOperator, current: number, target: number) {
@@ -207,8 +207,8 @@ export function or(conditions: (Condition | ConditionGroup)[]): ConditionGroup {
 
 const isNumber = (v: unknown): v is number => typeof v === 'number';
 
-type TargetIn = 'orgs.revenu' | 'orgs.turnover' | 'orgs.expense' | 'rights.revenu' | 'rights.turnover' | 'pools.revenu' | 'pools.turnover' | 'investment' | 'expense';
-type TargetValue = {
+export type TargetIn = 'orgs.revenu' | 'orgs.turnover' | 'orgs.expense' | 'rights.revenu' | 'rights.turnover' | 'pools.revenu' | 'pools.turnover' | 'investment' | 'expense';
+export type TargetValue = {
   id: string;
   percent: number;
   in: TargetIn
