@@ -16,6 +16,7 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
   @Input() label: string;
   @Input() selectIcon = 'world';
   @Input() filterPlaceholder: string;
+  @Input() displayAll: string;
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
 
   search = new FormControl('');
