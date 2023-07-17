@@ -84,6 +84,11 @@ export class MovieComponent implements OnInit {
   async ngOnInit() {
     this.movieId = this.route.snapshot.paramMap.get('movieId');
     this.movie = await this.movieService.getValue(this.movieId);
+    if (!this.movie) {
+      this.snackBar.open('This movie does not exists', 'close', { duration: 5000 });
+      this.router.navigate(['c/o/dashboard/crm/movies']);
+      return;
+    }
     this.orgs = await this.organizationService.getValue(this.movie.orgIds);
     this.createdBy = this.movie._meta.createdBy ? await this.userService.getValue(this.movie._meta.createdBy) : undefined;
 
