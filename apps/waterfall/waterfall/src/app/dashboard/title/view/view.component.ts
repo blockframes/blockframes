@@ -45,7 +45,7 @@ export class TitleViewComponent {
     },
     {
       path: 'avails',
-      label: 'Avails',
+      label: 'World Sales',
     },
   ];
 
