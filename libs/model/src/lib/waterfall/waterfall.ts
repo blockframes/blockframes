@@ -77,11 +77,6 @@ export interface WaterfallSource {
   medias: Media[];
   destinationId: string; // The rightId this income will go to
 }
-export interface WaterfallRightholder {
-  id: 'fake' | string;
-  name: string;
-  roles: RightholderRole[];
-};
 
 export interface WaterfallRightholder {
   id: string;

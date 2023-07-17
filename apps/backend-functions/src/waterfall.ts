@@ -3,9 +3,10 @@ import * as admin from 'firebase-admin';
 import { Block, Waterfall, WaterfallContract, WaterfallDocument, convertDocumentTo, isContract } from '@blockframes/model';
 import { waterfall } from '@blockframes/waterfall/main';
 import { getDocumentSnap, toDate } from '@blockframes/firebase-utils/firebase-utils';
-import { BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
+import { BlockframesChange, BlockframesSnapshot, removeAllSubcollections } from '@blockframes/firebase-utils';
 import { difference } from 'lodash';
 import { cleanRelatedContractDocuments } from './contracts';
+import { db } from './internals/firebase';
 
 export async function buildWaterfall(data: { waterfallId: string, versionId: string, scope?: string[] }, context: CallableContext) {
   if (!data.waterfallId) throw new Error('Missing waterfallId in request');
@@ -58,6 +59,15 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
   const removedBlocks = blocksBefore.filter(b => !blocksAfter.includes(b));
   return Promise.all(removedBlocks.map(blockId => getDocumentSnap(`waterfall/${after.id}/blocks/${blockId}`).then(b => b.ref.delete())))
 
+}
+
+export async function onWaterfallDelete(snap: BlockframesSnapshot) {
+  const batch = db.batch();
+
+  // Delete sub-collections
+  await removeAllSubcollections(snap, batch);
+
+  return batch.commit();
 }
 
 export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot<WaterfallDocument>) {
