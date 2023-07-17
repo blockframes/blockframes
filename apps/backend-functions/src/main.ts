@@ -33,7 +33,7 @@ import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
 import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
-import { buildWaterfall as _buildWaterfall, onWaterfallDocumentDelete, onWaterfallUpdate, removeWaterfallFile } from './waterfall';
+import { buildWaterfall as _buildWaterfall, onWaterfallDelete, onWaterfallDocumentDelete, onWaterfallUpdate, removeWaterfallFile } from './waterfall';
 import { projectId, storageBucket } from './environments/environment';
 
 console.log('Function instance loaded');
@@ -292,6 +292,11 @@ export const buildWaterfall = functions().https.onCall(skipInMaintenance(_buildW
  * Trigger: when a waterfall is updated
  */
 export const onWaterfallUpdateEvent = onDocumentUpdate('waterfall/{waterfallId}', onWaterfallUpdate);
+
+/**
+ * Trigger: when a waterfall is deleted
+ */
+export const onWaterfallDeleteEvent = onDocumentDelete('waterfall/{waterfallId}', onWaterfallDelete);
 
 /**
  * Trigger: when a waterfallDocument is deleted
