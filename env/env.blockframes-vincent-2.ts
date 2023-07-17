@@ -57,6 +57,8 @@ export const supportEmails = {
   waterfall: 'vchoukroun+waterfall@cascade8.com'
 }
 
+export const suffixE2ESupportEmail = 'vincent';
+
 export const mailchimp = {
   server: 'us20',
   listId: 'efaccd1d28'
