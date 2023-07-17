@@ -30,6 +30,7 @@ import {
 } from '@blockframes/model';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { BlockframesChange, BlockframesSnapshot, getDocument, queryDocuments } from '@blockframes/firebase-utils';
+import { triggerError } from './internals/sentry';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: Organization, user: PublicUser) {
@@ -82,12 +83,19 @@ async function notifyOnOrgMemberChanges(before: Organization, after: Organizatio
   } else if (before.userIds.length > after.userIds.length) {
     const userRemovedId = difference(before.userIds, after.userIds)[0];
     const userSnapshot = await db.doc(`users/${userRemovedId}`).get();
-    const userRemoved = userSnapshot.data() as PublicUser;
 
-    await removeMemberPermissionsAndOrgId(userRemoved);
+    if (userSnapshot.exists) {
+      const userRemoved = userSnapshot.data() as PublicUser;
+      await removeMemberPermissionsAndOrgId(userRemoved);
 
-    const notifications = after.userIds.map(userId => notifyUser(userId, 'orgMemberUpdated', after, userRemoved));
-    return triggerNotifications(notifications);
+      const notifications = after.userIds.map(userId => notifyUser(userId, 'orgMemberUpdated', after, userRemoved));
+      return triggerNotifications(notifications);
+    } else {
+      const message = `Tried to remove user "${userRemovedId}" from org "${after.id}" but this user does not exists in DB`;
+      await triggerError({ message, bugType: 'firebase-error' });
+      console.log(message);
+    }
+
   }
 }
 

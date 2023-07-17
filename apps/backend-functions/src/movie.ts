@@ -83,6 +83,9 @@ export async function onMovieDelete(snap: BlockframesSnapshot<Movie>, context: E
     // Read contracts
     const contractsCollectionRef = await tx.get(db.collection('contracts').where('titleId', '==', movie.id));
 
+    // Read waterfall
+    const waterfallsCollectionRef = await tx.get(db.doc(`waterfall/${movie.id}`));
+
     // Read buckets
     const bucketsCollectionRef = await tx.get(db.collection('buckets'));
 
@@ -100,6 +103,11 @@ export async function onMovieDelete(snap: BlockframesSnapshot<Movie>, context: E
     // Delete contracts
     for (const doc of contractsCollectionRef.docs) {
       tx.delete(doc.ref);
+    }
+
+    // Delete waterfall
+    if (waterfallsCollectionRef.exists) {
+      tx.delete(waterfallsCollectionRef.ref);
     }
 
     // Update Buckets
