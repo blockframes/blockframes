@@ -4,167 +4,8 @@
   </article>
 
   <mat-tab-group>
-    <!-- RIGHTHOLDERS -->
-    <mat-tab label="Right Holders">
-      <bf-table [source]="rightholders" clickable useFilter pagination="50">
-        <ng-template colRef="id" label="Id" let-id sort>
-          {{ id }}
-        </ng-template>
-        <ng-template colRef="name" label="Name" let-name sort defaultSort>
-          {{ name }}
-        </ng-template>
-        <ng-template colRef="roles" label="Roles" let-roles sort>
-          {{ roles | toLabel: 'rightholderRoles' }}
-        </ng-template>
-      </bf-table>
-    </mat-tab>
-    <!-- DOCUMENTS -->
-    <mat-tab label="All Documents">
-      <bf-table [source]="documents" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
-        <ng-template colRef="id" label="Id" let-id sort>
-          {{ id }}
-        </ng-template>
-        <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
-          {{ signatureDate | date: 'MM/dd/yyyy' }}
-        </ng-template>
-        <ng-template colRef="rootId" label="Parent" let-rootId sort>
-          {{ rootId ? rootId : '--' }}
-        </ng-template>
-        <ng-template colRef="type" label="Type" let-type sort>
-          {{ type }}
-        </ng-template>
-        <ng-template colRef="id" label="Action" let-documentId sticky>
-          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', documentId]" (click)="$event.stopPropagation()">
-            <mat-icon svgIcon="launch"></mat-icon>
-          </a>
-          <button mat-icon-button (click)="removeDocument(documentId)">
-            <mat-icon svgIcon="delete" matTooltip="Delete document"></mat-icon>
-          </button>
-        </ng-template>
-      </bf-table>
-    </mat-tab>
-    <!-- SOURCES -->
-    <mat-tab label="Sources">
-      <bf-table [source]="sources" clickable useFilter pagination="50">
-        <ng-template colRef="id" label="Id" let-id sort defaultSort>
-          {{ id }}
-        </ng-template>
-        <ng-template colRef="name" label="Name" let-name sort>
-          {{ name }}
-        </ng-template>
-        <ng-template colRef="medias" label="Medias" let-medias sort>
-          <mat-chip-list *ngIf="medias.length else noMedias" aria-label="Medias">
-            <mat-chip disableRipple *ngFor="let media of medias  | toGroupLabel:'medias':'All'">
-              {{ media }}
-            </mat-chip>
-          </mat-chip-list>
-          <ng-template #noMedias>--</ng-template>
-        </ng-template>
-        <ng-template colRef="territories" label="Territories" let-territories sort>
-          <span *ngIf="territories.length else noTerritories" class="group-label" (click)="openTerritoryModal(territories)">
-            {{ territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
-          </span>
-          <ng-template #noTerritories>--</ng-template>
-        </ng-template>
-        <ng-template colRef="destinationId" label="Destination Right" let-destinationId sort>
-          {{ destinationId }}
-        </ng-template>
-        <ng-template colRef="id" label="Action" let-sourceId sticky>
-          <button mat-icon-button (click)="removeSource(sourceId)">
-            <mat-icon svgIcon="delete" matTooltip="Delete source"></mat-icon>
-          </button>
-        </ng-template>
-      </bf-table>
-    </mat-tab>
-    <!-- CONTRACTS -->
-    <mat-tab label="Contracts">
-      <bf-table [source]="contracts" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
-        <ng-template colRef="id" label="Id" let-id sort>
-          {{ id }}
-        </ng-template>
-        <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
-          {{ signatureDate | date: 'MM/dd/yyyy' }}
-        </ng-template>
-        <ng-template colRef="rootId" label="Parent" let-rootId sort>
-          {{ rootId ? rootId : '--' }}
-        </ng-template>
-        <ng-template colRef="sellerId" label="Licensor" let-sellerId sort>
-          <ng-container *ngIf="sellerId as org">
-            {{ getRightholderName(sellerId) }}
-          </ng-container>
-        </ng-template>
-        <ng-template colRef="buyerId" label="Licensee" let-buyerId sort>
-          <ng-container *ngIf="buyerId async as org">
-            {{ getRightholderName(buyerId) }}
-          </ng-container>
-        </ng-template>
-        <ng-template colRef="" label="Price" let-item sort>
-          <ng-container *ngIf="getDeclaredAmount(item) as amount">
-            <price-per-currency [price]="amount"></price-per-currency>
-          </ng-container>
-        </ng-template>
-        <ng-template colRef="type" label="Type" let-type sort>
-          {{ type }}
-        </ng-template>
-        <ng-template colRef="id" label="Action" let-documentId sticky>
-          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', documentId]" (click)="$event.stopPropagation()">
-            <mat-icon svgIcon="launch"></mat-icon>
-          </a>
-          <button mat-icon-button (click)="removeDocument(documentId)">
-            <mat-icon svgIcon="delete" matTooltip="Delete document"></mat-icon>
-          </button>
-        </ng-template>
-      </bf-table>
-    </mat-tab>
-    <!-- INCOMES -->
-    <mat-tab label="Incomes">
-      <bf-table [source]="incomes" clickable useFilter pagination="50">
-        <ng-template colRef="id" label="Id" let-id sort>
-          {{ id }}
-        </ng-template>
-        <ng-template colRef="" label="Contract Id" let-item sort>
-          {{ getCurrentContract(item) }}
-        </ng-template>
-        <ng-template colRef="date" label="Date" let-date sort defaultSort>
-          {{ date | date: 'MM/dd/yyyy' }}
-        </ng-template>
-        <ng-template colRef="" label="Source" let-item sort>
-          {{ getAssociatedSource(item) }}
-        </ng-template>
-        <ng-template colRef="" label="Price" let-item sort>
-          <ng-container *ngIf="toPricePerCurrency(item) as amount">
-            <price-per-currency [price]="amount"></price-per-currency>
-          </ng-container>
-        </ng-template>
-      </bf-table>
-    </mat-tab>
-    <!-- EXPENSES -->
-    <mat-tab label="Expenses">
-      <bf-table [source]="expenses" clickable useFilter pagination="50">
-        <ng-template colRef="id" label="Id" let-id sort>
-          {{ id }}
-        </ng-template>
-        <ng-template colRef="" label="Contract Id" let-item sort>
-          {{ getCurrentContract(item) }}
-        </ng-template>
-        <ng-template colRef="date" label="Date" let-date sort defaultSort>
-          {{ date | date: 'MM/dd/yyyy' }}
-        </ng-template>
-        <ng-template colRef="category" label="Category" let-category sort>
-          {{ category }}
-        </ng-template>
-        <ng-template colRef="type" label="Type" let-type sort>
-          {{ type }}
-        </ng-template>
-        <ng-template colRef="" label="Price" let-item sort>
-          <ng-container *ngIf="toPricePerCurrency(item) as amount">
-            <price-per-currency [price]="amount"></price-per-currency>
-          </ng-container>
-        </ng-template>
-      </bf-table>
-    </mat-tab>
-    <!-- VERSIONS -->
-    <mat-tab label="Versions & Actions" #versionsAndActions>
+    <!-- Waterfall -->
+    <mat-tab label="Waterfall" #versionsAndActions>
       <ng-container *ngIf="versions.length else noWaterfall">
         <h3>Versions</h3>
         <bf-table [source]="versions" clickable useFilter pagination="50">
@@ -201,13 +42,51 @@
         <section>
           <h1>Waterfall not initialized.</h1>
           <p class="mat-body-1">
-            Please initalize a first version that you're going to work with.
+            Please initalize a first version that you're going to work with by importing the required elements:
           </p>
-          <a (click)="initWaterfall()" class="surface">
+          <ul>
+            <li>              
+              <a mat-button routerLink="/c/o/dashboard/crm/import/documents">
+                <mat-icon svgIcon="document_signed"></mat-icon><span matLine>1 Documents (contracts)</span>
+              </a>
+              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="contracts.length else notImported"></mat-icon>
+            </li>
+            <li>
+              <a mat-button routerLink="/c/o/dashboard/crm/import/sources">
+                <mat-icon svgIcon="world"></mat-icon><span matLine>2 Sources</span>
+              </a>
+              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="sources.length else notImported"></mat-icon>
+            </li>
+            <li>
+              <a mat-button routerLink="/c/o/dashboard/crm/import/rights">
+                <mat-icon svgIcon="local_offer"></mat-icon><span matLine>3 Rights</span>
+              </a>
+              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="hasMinimalRights() else noMinimalRights"></mat-icon>
+              <ng-template #noMinimalRights>
+                <mat-icon svgIcon="cancel" class="icon-nok" matTooltip="All sources does not have an associated Right"></mat-icon>
+              </ng-template>
+            </li>
+            <li>
+              <a mat-button routerLink="/c/o/dashboard/crm/import/incomes">
+                <mat-icon svgIcon="monetization"></mat-icon><span matLine>4 Incomes</span>
+              </a>
+              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="incomes.length else notImported"></mat-icon>
+            </li>
+            <li>
+              <a mat-button routerLink="/c/o/dashboard/crm/import/expenses">
+                <mat-icon svgIcon="monetization"></mat-icon><span matLine>5 Expenses</span>
+              </a>
+              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="expenses.length else notImported"></mat-icon>
+            </li>
+          </ul>
+          <a *ngIf="canInitWaterfall()" (click)="initWaterfall()" class="surface">
             <img asset="add_draft.svg" alt="Add waterfall image">
             <button mat-button color="primary">Initialize Waterfall</button>
           </a>
         </section>
+        <ng-template #notImported>
+          <mat-icon svgIcon="cancel" class="icon-nok"></mat-icon>
+        </ng-template>
       </ng-template>
 
       <ng-container *ngIf="actions.length">
@@ -260,6 +139,206 @@
           <waterfall-g6-tree *ngIf="versionsAndActions.isActive" [waterfall]="waterfall"></waterfall-g6-tree>
         </article>
       </ng-container>
+    </mat-tab>
+
+    <!-- RIGHTHOLDERS -->
+    <mat-tab label="Right Holders">
+      <bf-table [source]="rightholders" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="name" label="Name" let-name sort defaultSort>
+          {{ name }}
+        </ng-template>
+        <ng-template colRef="roles" label="Roles" let-roles sort>
+          {{ roles | toLabel: 'rightholderRoles' }}
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+
+    <!-- DOCUMENTS -->
+    <mat-tab label="All Documents">
+      <bf-table [source]="documents" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
+          {{ signatureDate | date: 'MM/dd/yyyy' }}
+        </ng-template>
+        <ng-template colRef="rootId" label="Parent" let-rootId sort>
+          {{ rootId ? rootId : '--' }}
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type }}
+        </ng-template>
+        <ng-template colRef="id" label="Action" let-documentId sticky>
+          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', documentId]" (click)="$event.stopPropagation()">
+            <mat-icon svgIcon="launch"></mat-icon>
+          </a>
+          <button mat-icon-button (click)="removeDocument(documentId)">
+            <mat-icon svgIcon="delete" matTooltip="Delete document"></mat-icon>
+          </button>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+    
+    <!-- CONTRACTS -->
+    <mat-tab label="1 - Contracts">
+      <bf-table [source]="contracts" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
+          {{ signatureDate | date: 'MM/dd/yyyy' }}
+        </ng-template>
+        <ng-template colRef="rootId" label="Parent" let-rootId sort>
+          {{ rootId ? rootId : '--' }}
+        </ng-template>
+        <ng-template colRef="sellerId" label="Licensor" let-sellerId sort>
+          <ng-container *ngIf="sellerId as org">
+            {{ getRightholderName(sellerId) }}
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="buyerId" label="Licensee" let-buyerId sort>
+          <ng-container *ngIf="buyerId async as org">
+            {{ getRightholderName(buyerId) }}
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="getDeclaredAmount(item) as amount">
+            <price-per-currency [price]="amount"></price-per-currency>
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type }}
+        </ng-template>
+        <ng-template colRef="id" label="Action" let-documentId sticky>
+          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', documentId]" (click)="$event.stopPropagation()">
+            <mat-icon svgIcon="launch"></mat-icon>
+          </a>
+          <button mat-icon-button (click)="removeDocument(documentId)">
+            <mat-icon svgIcon="delete" matTooltip="Delete document"></mat-icon>
+          </button>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+
+    <!-- SOURCES -->
+    <mat-tab label="2 - Sources">
+      <bf-table [source]="sources" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort defaultSort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="name" label="Name" let-name sort>
+          {{ name }}
+        </ng-template>
+        <ng-template colRef="medias" label="Medias" let-medias sort>
+          <mat-chip-list *ngIf="medias.length else noMedias" aria-label="Medias">
+            <mat-chip disableRipple *ngFor="let media of medias  | toGroupLabel:'medias':'All'">
+              {{ media }}
+            </mat-chip>
+          </mat-chip-list>
+          <ng-template #noMedias>--</ng-template>
+        </ng-template>
+        <ng-template colRef="territories" label="Territories" let-territories sort>
+          <span *ngIf="territories.length else noTerritories" class="group-label" (click)="openTerritoryModal(territories)">
+            {{ territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
+          </span>
+          <ng-template #noTerritories>--</ng-template>
+        </ng-template>
+        <ng-template colRef="destinationId" label="Destination Right" let-destinationId sort>
+          {{ destinationId }}
+        </ng-template>
+        <ng-template colRef="destinationId" label="Valid" let-destinationId sort>
+          <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="rightExists(destinationId) else noMatchingRight"></mat-icon>
+          <ng-template #noMatchingRight>
+            <mat-icon svgIcon="cancel" class="icon-nok" matTooltip="Import required right"></mat-icon>
+          </ng-template>
+        </ng-template>
+        <ng-template colRef="id" label="Action" let-sourceId sticky>
+          <button mat-icon-button (click)="removeSource(sourceId)">
+            <mat-icon svgIcon="delete" matTooltip="Delete source"></mat-icon>
+          </button>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+
+    <!-- RIGHTS -->
+    <mat-tab label="3 - Rights">
+      <bf-table [source]="rights" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="name" label="Name" let-name sort>
+          {{ name }}
+        </ng-template>
+        <ng-template colRef="date" label="Date" let-date sort defaultSort>
+          {{ date | date: 'MM/dd/yyyy' }}
+        </ng-template>
+        <ng-template colRef="actionName" label="Action Name" let-actionName sort>
+          {{ actionName }}
+        </ng-template>
+        <ng-template colRef="percent" label="%" let-percent>
+          {{ percent ? percent  : '--' }}
+        </ng-template>
+        <ng-template colRef="conditions" label="Conditions" let-conditions>
+          {{ conditions?.conditions?.length ? conditions.conditions.length  : '--' }}
+        </ng-template>
+        <ng-template colRef="id" label="Actions" let-rightId sticky>
+          <button mat-icon-button (click)="removeRight(rightId)">
+            <mat-icon svgIcon="delete" matTooltip="Delete right"></mat-icon>
+          </button>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+
+    <!-- INCOMES -->
+    <mat-tab label="4 - Incomes">
+      <bf-table [source]="incomes" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="" label="Contract Id" let-item sort>
+          {{ getCurrentContract(item) }}
+        </ng-template>
+        <ng-template colRef="date" label="Date" let-date sort defaultSort>
+          {{ date | date: 'MM/dd/yyyy' }}
+        </ng-template>
+        <ng-template colRef="" label="Source" let-item sort>
+          {{ getAssociatedSource(item) }}
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="toPricePerCurrency(item) as amount">
+            <price-per-currency [price]="amount"></price-per-currency>
+          </ng-container>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+
+    <!-- EXPENSES -->
+    <mat-tab label="5 - Expenses">
+      <bf-table [source]="expenses" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="" label="Contract Id" let-item sort>
+          {{ getCurrentContract(item) }}
+        </ng-template>
+        <ng-template colRef="date" label="Date" let-date sort defaultSort>
+          {{ date | date: 'MM/dd/yyyy' }}
+        </ng-template>
+        <ng-template colRef="category" label="Category" let-category sort>
+          {{ category }}
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type }}
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="toPricePerCurrency(item) as amount">
+            <price-per-currency [price]="amount"></price-per-currency>
+          </ng-container>
+        </ng-template>
+      </bf-table>
     </mat-tab>
 
     <!-- WORLD MAP -->

@@ -73,7 +73,7 @@ export function getContractConfig(option: ContractConfig) {
   const {
     orgNameCache,
     titleCache,
-    contractCache,
+    contractCache
   } = caches;
 
 
@@ -117,8 +117,8 @@ export function getContractConfig(option: ContractConfig) {
         }
         return sellerId;
       },
-        /* d */ 'contract.buyerId': async (_, data: FieldsConfig) => {
-          return data.contract.type === 'mandate' ? config.centralOrg.id : '';
+        /* d */ 'contract.buyerId': (_, data: FieldsConfig) => {
+        return data.contract.type === 'mandate' ? config.centralOrg.id : '';
       },
         /* e */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
         /* f */ 'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),

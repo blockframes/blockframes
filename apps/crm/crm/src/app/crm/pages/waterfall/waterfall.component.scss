@@ -37,4 +37,23 @@ section {
       align-self: center;
     }
   }
+
+  ul {
+    li {
+      display: flex;
+      align-items: center;
+      a { 
+        width: 300px;
+        text-align: left;
+      }
+    }
+  }
+}
+
+mat-icon.icon-ok {
+  color: green;
+}
+
+mat-icon.icon-nok {
+  color: red;
 }

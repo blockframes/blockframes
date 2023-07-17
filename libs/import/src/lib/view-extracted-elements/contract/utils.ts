@@ -14,7 +14,6 @@ import {
   Mandate,
   MovieLanguageSpecification,
   Sale,
-  User,
   Language,
   FullMandate,
   FullSale,

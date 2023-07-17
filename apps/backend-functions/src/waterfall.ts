@@ -67,15 +67,21 @@ export async function onWaterfallDelete(snap: BlockframesSnapshot) {
   // Delete sub-collections
   await removeAllSubcollections(snap, batch);
 
+  // TODO #9389
+  // cleanWaterfallMedias(before, after);
+
   return batch.commit();
 }
 
 export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot<WaterfallDocument>) {
   const waterfallDocument = docSnapshot.data();
   const waterfallSnap = await getDocumentSnap(`waterfall/${waterfallDocument.waterfallId}`);
-  const waterfall = waterfallSnap.data() as Waterfall;
-
-  const documents = waterfall.documents.filter(d => d.id !== waterfallDocument.id);
+  if (waterfallSnap.exists) {
+    const waterfall = waterfallSnap.data() as Waterfall;
+    const documents = waterfall.documents.filter(d => d.id !== waterfallDocument.id);
+    // This will trigger onWaterfallUpdate => cleanWaterfallMedias
+    waterfallSnap.ref.update({ documents });
+  }
 
   // If document is a contract, clean income, terms etc..
   if (isContract(waterfallDocument)) await cleanRelatedContractDocuments(convertDocumentTo<WaterfallContract>(waterfallDocument));
@@ -86,8 +92,7 @@ export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot
     await Promise.all(amendments.docs.map(d => d.ref.delete()));
   }
 
-  // This will trigger onWaterfallUpdate => cleanWaterfallMedias
-  return waterfallSnap.ref.update({ documents });
+  return true;
 }
 
 export const removeWaterfallFile = async (data: any, context: CallableContext) => {

@@ -265,6 +265,11 @@ export class MovieComponent implements OnInit {
      */
     output.push('Some buckets may be updated.');
 
+    const hasWaterfall = await this.waterfallService.getValue(this.movie.id);
+    if (hasWaterfall) {
+      output.push('Associated waterfall will be deleted.');
+    }
+
     return output;
   }
 }

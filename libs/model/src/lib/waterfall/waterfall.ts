@@ -106,6 +106,15 @@ export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
   }
 }
 
+export function createWaterfallRightholder(params: Partial<WaterfallRightholder> = {}): WaterfallRightholder {
+  return {
+    id: '',
+    name: '',
+    roles: [],
+    ...params,
+  }
+}
+
 export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(params: Partial<WaterfallDocument<Meta>> = {}): WaterfallDocument<Meta> {
 
   const toObject = () => {

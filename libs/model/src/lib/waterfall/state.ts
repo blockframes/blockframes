@@ -35,7 +35,7 @@ interface CreateRight {
   pools?: string[];
 }
 
-export function createRight(right: CreateRight): RightState {
+export function createRightState(right: CreateRight): RightState {
   const id = right.id ?? `right_${Math.round(Math.random() * 10000)}`;
   return {
     revenu: 0,
