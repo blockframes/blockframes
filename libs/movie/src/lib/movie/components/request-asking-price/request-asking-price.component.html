@@ -4,33 +4,23 @@
   </header>
 
   <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
-    <mat-form-field appearance="outline">
-      <mat-label>Select Territories</mat-label>
-      <mat-icon matPrefix svgIcon="world"></mat-icon>
-      <static-group
-        [formControl]="form.get('territories')"
-        scope="territories"
-        displayAll="World"
-        placeholder="Select Territories"
-        required>
-      </static-group>
-      <mat-hint>Select the territories you are interested in.</mat-hint>
-      <mat-error *ngIf="form.get('territories').hasError('required')">Select at least one territory</mat-error>
-    </mat-form-field>
 
-    <mat-form-field appearance="outline" *ngIf="hasControl('medias')">
-      <mat-label>Select Rights</mat-label>
-      <mat-icon matPrefix svgIcon="play_arrow"></mat-icon>
-      <static-group
-        [formControl]="form.get('medias')"
-        scope="medias"
-        displayAll="All Rights"
-        required
-        placeholder="Select rights">
-      </static-group>
-      <mat-hint>Select the rights you are interested in.</mat-hint>
-      <mat-error *ngIf="form.get('medias').hasError('required')">Select at least one Right</mat-error>
-    </mat-form-field>
+    <group-multiselect
+      scope="territories"
+      label="Select Territories"
+      displayAll="World"
+      filterPlaceholder="Specify territories to filter"
+      [control]="form.get('territories')">
+    </group-multiselect>
+
+    <group-multiselect
+      scope="medias"
+      label="Select Rights"
+      displayAll="All Rights"
+      filterPlaceholder="Specify right(s) to filter"
+      selectIcon="play_arrow"
+      [control]="form.get('medias')">
+    </group-multiselect>
 
     <mat-form-field appearance="outline" *ngIf="hasControl('exclusive')">
       <mat-label>Select exclusivity</mat-label>

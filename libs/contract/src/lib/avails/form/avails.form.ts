@@ -46,7 +46,7 @@ function createTerritoriesControl(territories: Territory[] = []) {
 
 function createBaseAvailControl(avail: Partial<BaseAvailsFilter> = {}) {
   return {
-    medias: new FormStaticValueArray<'medias'>(avail.medias, 'medias', [Validators.required, Validators.minLength(0)]),
+    medias: new FormStaticValueArray<'medias'>(avail.medias || [], 'medias', [Validators.required, Validators.minLength(0)]),
     exclusive: new UntypedFormControl(avail.exclusive ?? true, Validators.required),
   };
 }

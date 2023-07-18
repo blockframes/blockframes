@@ -29,10 +29,9 @@ import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/chec
 import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
 import { FormContentTypeModule } from '@blockframes/ui/form/content-type/content-type.module';
 import { MinMaxFilterModule } from '@blockframes/movie/form/filters/min-max/min-max.module';
-import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ScopeMultiselectModule } from '@blockframes/ui/static-autocomplete/scope/scope-multiselect.module';
-import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/groupB/group.module';
+import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -50,7 +49,6 @@ import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/grou
     AvailsFilterModule,
     FormContentTypeModule,
     MinMaxFilterModule,
-    StaticGroupModule,
     StaticSelectModule,
     ScopeMultiselectModule,
     GroupMultiselectModule,

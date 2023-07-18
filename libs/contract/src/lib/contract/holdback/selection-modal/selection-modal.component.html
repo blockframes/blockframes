@@ -32,24 +32,30 @@
     <!-- Control -->
     <ng-template formView let-control>
       <h3>Holdback Territories*</h3>
-      <mat-form-field appearance="outline">
-        <mat-label>Select Territories</mat-label>
-        <static-group [formControl]="control.get('territories')" scope="territories" displayAll="World"
-          placeholder="Specify territory to filter" required test-id="territories">
-        </static-group>
-        <mat-error groupError *ngIf="control.get('territories').hasError('required')">This field is required</mat-error>
-      </mat-form-field>
+      <group-multiselect
+        scope="territories"
+        label="Select Territories"
+        displayAll="World"
+        filterPlaceholder="Specify territories to filter"
+        required
+        [control]="control.get('territories')"
+        test-id="territories">
+      </group-multiselect>
 
       <mat-divider></mat-divider>
 
       <h3>Holdback Rights*</h3>
-      <mat-form-field appearance="outline">
-        <mat-label>Select Rights</mat-label>
-        <static-group [formControl]="control.get('medias')" scope="medias" displayAll="All Rights" required
-          placeholder="Specify right(s) to filter" test-id="medias">
-        </static-group>
-        <mat-error groupError *ngIf="control.get('medias').hasError('required')">This field is required</mat-error>
-      </mat-form-field>
+      <group-multiselect
+        scope="medias"
+        label="Select Rights"
+        displayAll="All Rights"
+        filterPlaceholder="Specify right(s) to filter"
+        selectIcon="play_arrow"
+        required
+        [control]="control.get('medias')"
+        test-id="medias">
+      </group-multiselect>
+
 
       <mat-divider></mat-divider>
 
