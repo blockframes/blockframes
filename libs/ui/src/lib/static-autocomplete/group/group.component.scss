@@ -24,6 +24,7 @@ input {
 
 .group {
   display: flex;
+  font-weight: bold;
   mat-checkbox {
     flex: 1;
   }
@@ -37,7 +38,7 @@ input {
   display: none;
 }
 
-// prevents the expand icons from not being centered
-.mat-option .mat-icon {
-  margin: 0;
+// hack to overwrite material style which prevented centered icon
+#centered {
+  margin-right: 0;
 }
