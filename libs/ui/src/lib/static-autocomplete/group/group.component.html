@@ -16,6 +16,7 @@
       <input
         [placeholder]="filterPlaceholder"
         [formControl]="search"
+        (paste)="onSearchPaste($event)"
         (keydown)="$event.stopPropagation()"
         #searchInput
         test-id="search-input-control"

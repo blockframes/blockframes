@@ -163,6 +163,22 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
     this.searchInput.nativeElement.focus();
   }
 
+  onSearchPaste(event: ClipboardEvent) {
+    const clipboardData = event.clipboardData;
+    const pastedText = clipboardData.getData('text');
+    const pastedValues = pastedText.split(',').map(item => item.trim());
+    const pastedItems = new Set(pastedValues
+      .map(item => {
+        for (const group of this.groups) {
+          if (group.label.toLowerCase() === item.toLowerCase()) return group.items;
+          if (group.items.includes(item.toLowerCase())) return item.toLowerCase();
+        }
+      })
+      .flat().filter(item => !!item));
+    this.control.setValue(Array.from(pastedItems));
+    this.mySelect.close();
+  }
+
   resetSearch() {
     this.search.setValue('');
   }
