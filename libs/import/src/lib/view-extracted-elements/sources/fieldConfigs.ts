@@ -8,7 +8,7 @@ export interface FieldsConfig {
     territories_included: Territory[];
     territories_excluded: Territory[];
     medias: Media[];
-    destinationId: string;
+    destinationIds: string[];
   };
   waterfallId: string;
 }
@@ -37,9 +37,8 @@ export function getSourceConfig(option: SourceConfig) {
         /* d */ 'source.territories_included': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
         /* e */ 'source.territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
         /* f */ 'source.medias': (value: string) => getGroupedList(value, 'medias', separator, { required: false }),
-
-        /* g */ 'source.destinationId': async (value: string) => {
-        return value;
+        /* g */ 'source.destinationIds': async (value: string) => {
+        return value.split(separator).filter(v => !!v).map(v => v.trim());
       },
     };
   }

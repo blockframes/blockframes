@@ -272,6 +272,9 @@
         <ng-template colRef="name" label="Name" let-name sort>
           {{ name }}
         </ng-template>
+        <ng-template colRef="groupId" label="Group" let-groupId sort>
+          {{ groupId ? groupId : '--' }}
+        </ng-template>
         <ng-template colRef="date" label="Date" let-date sort defaultSort>
           {{ date | date: 'MM/dd/yyyy' }}
         </ng-template>

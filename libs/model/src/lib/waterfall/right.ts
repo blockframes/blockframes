@@ -23,10 +23,10 @@ export function createRight(params: Partial<Right> = {}) {
     date: new Date(),
     actionName: 'append',
     groupId: '',
-    groupPercent: 1,
+    groupPercent: 100,
     previousIds: [],
     rightholderId: '',
-    percent: 1,
+    percent: 100,
     ...params
   }
 

@@ -79,6 +79,10 @@ export interface ExpensesImportState extends ImportState {
 export interface SourcesImportState extends ImportState {
   source: WaterfallSource;
   waterfallId: string;
+  group?: {
+    right: Right,
+    childs: Right[]
+  }
 }
 
 export interface RightsImportState extends ImportState {

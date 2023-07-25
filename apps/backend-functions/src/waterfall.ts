@@ -1,12 +1,13 @@
 import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 import * as admin from 'firebase-admin';
-import { Block, Waterfall, WaterfallContract, WaterfallDocument, convertDocumentTo, isContract } from '@blockframes/model';
+import { Block, Right, Waterfall, WaterfallContract, WaterfallDocument, convertDocumentTo, isContract } from '@blockframes/model';
 import { waterfall } from '@blockframes/waterfall/main';
 import { getDocumentSnap, toDate } from '@blockframes/firebase-utils/firebase-utils';
 import { BlockframesChange, BlockframesSnapshot, removeAllSubcollections } from '@blockframes/firebase-utils';
 import { difference } from 'lodash';
 import { cleanRelatedContractDocuments } from './contracts';
 import { db } from './internals/firebase';
+import { EventContext } from 'firebase-functions';
 
 export async function buildWaterfall(data: { waterfallId: string, versionId: string, scope?: string[] }, context: CallableContext) {
   if (!data.waterfallId) throw new Error('Missing waterfallId in request');
@@ -73,9 +74,11 @@ export async function onWaterfallDelete(snap: BlockframesSnapshot) {
   return batch.commit();
 }
 
-export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot<WaterfallDocument>) {
+export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot<WaterfallDocument>, context: EventContext) {
+  const { waterfallID } = context.params;
+
   const waterfallDocument = docSnapshot.data();
-  const waterfallSnap = await getDocumentSnap(`waterfall/${waterfallDocument.waterfallId}`);
+  const waterfallSnap = await getDocumentSnap(`waterfall/${waterfallID}`);
   if (waterfallSnap.exists) {
     const waterfall = waterfallSnap.data() as Waterfall;
     const documents = waterfall.documents.filter(d => d.id !== waterfallDocument.id);
@@ -91,6 +94,20 @@ export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot
     const amendments = await waterfallSnap.ref.collection('documents').where('rootId', '==', waterfallDocument.id).get();
     await Promise.all(amendments.docs.map(d => d.ref.delete()));
   }
+
+  return true;
+}
+
+export async function onWaterfallRightDelete(docSnapshot: BlockframesSnapshot<Right>, context: EventContext) {
+  const { waterfallID } = context.params;
+
+  const right = docSnapshot.data();
+
+  const waterfallSnap = await getDocumentSnap(`waterfall/${waterfallID}`);
+
+  // Remove childs if current right is a group
+  const childs = await waterfallSnap.ref.collection('rights').where('groupId', '==', right.id).get();
+  await Promise.all(childs.docs.map(d => d.ref.delete()));
 
   return true;
 }
