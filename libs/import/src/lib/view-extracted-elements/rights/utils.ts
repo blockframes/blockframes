@@ -30,8 +30,7 @@ export async function formatRight(
   for (const result of results) {
     const { data, errors } = result;
 
-    const actionName: ActionName = data.right.groupId ? 'appendHorizontal' : 'append';
-    const right = createRight({ ...data.right, actionName });
+    const right = createRight(data.right);
 
     if (data.conditionA.conditionName) {
       right.conditions = {
