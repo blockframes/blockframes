@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
+import { DetailedGroupModule } from './detailed/detailed.module';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { MatDividerModule } from '@angular/material/divider';
     ToLabelModule,
     ToGroupLabelPipeModule,
     JoinPipeModule,
+    DetailedGroupModule
   ],
   declarations: [GroupMultiselectComponent],
   exports: [GroupMultiselectComponent],

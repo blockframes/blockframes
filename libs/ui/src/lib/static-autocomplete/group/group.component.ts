@@ -4,6 +4,9 @@ import { FormStaticValueArray } from '@blockframes/utils/form';
 import { MatSelect } from '@angular/material/select';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { DetailedGroupComponent } from './detailed/detailed.component';
 
 @Component({
   selector: 'group-multiselect',
@@ -38,6 +41,8 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
   visible: Record<string, boolean>; //will depend on the expand buttons of each group
 
   private subs: Subscription[] = [];
+
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit() {
     this.groups = staticGroups[this.scope];
@@ -167,19 +172,29 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
     const clipboardData = event.clipboardData;
     const pastedText = clipboardData.getData('text');
     const pastedValues = pastedText.split(',').map(item => item.trim());
-    const pastedItems = new Set(pastedValues
-      .map(item => {
-        for (const group of this.groups) {
-          if (group.label.toLowerCase() === item.toLowerCase()) return group.items;
-          if (group.items.includes(item.toLowerCase())) return item.toLowerCase();
-        }
-      })
-      .flat().filter(item => !!item));
+    const pastedItems = new Set(
+      pastedValues
+        .map(item => {
+          for (const group of this.groups) {
+            if (group.label.toLowerCase() === item.toLowerCase()) return group.items;
+            if (group.items.includes(item.toLowerCase())) return item.toLowerCase();
+          }
+        })
+        .flat()
+        .filter(item => !!item)
+    );
     this.control.setValue(Array.from(pastedItems));
     this.mySelect.close();
   }
 
   resetSearch() {
     this.search.setValue('');
+  }
+
+  openGroupModal() {
+    this.dialog.open(DetailedGroupComponent, {
+      data: createModalData({ items: this.control.value, scope: this.scope }),
+      autoFocus: false,
+    });
   }
 }
