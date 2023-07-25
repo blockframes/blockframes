@@ -102,7 +102,7 @@ export function getDocumentConfig(option: DocumentConfig) {
     return {
         /* a */ 'document.waterfallId': async (value: string) => {
         if (!value) {
-          throw mandatoryError(value, 'Waterfall Id');
+          throw mandatoryError(value, 'Waterfall ID');
         }
         const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, true);
         if (titleId) return titleId;
