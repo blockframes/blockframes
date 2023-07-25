@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { GroupScope, Scope, StaticGroup, staticGroups } from '@blockframes/model';
 import { FormStaticValueArray } from '@blockframes/utils/form';
+import { MatSelect } from '@angular/material/select';
+import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -19,6 +20,10 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
   @Input() displayAll: string;
   @Input() required = false;
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
+
+  // mySelect and scrollTopBeforeSelection are used to prevent jumps when selecting an option
+  @ViewChild('mySelect', { static: true }) mySelect: MatSelect;
+  private scrollTopBeforeSelection: number;
 
   search = new FormControl('');
 
@@ -60,7 +65,22 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
       this.checked = this.getChecked(value, this.selectable);
     });
 
-    this.subs.push(filterSub, formSub);
+    // store the scroll value of the selected option
+    const selectOpeningSub = this.mySelect.openedChange.subscribe(open => {
+      if (open) {
+        this.mySelect.panel.nativeElement.addEventListener(
+          'scroll',
+          event => (this.scrollTopBeforeSelection = event.target.scrollTop)
+        );
+      }
+    });
+
+    // restore the scroll after each option selected
+    const antiScrollSub = this.mySelect.optionSelectionChanges.subscribe(() => {
+      if (this.mySelect.panel) this.mySelect.panel.nativeElement.scrollTop = this.scrollTopBeforeSelection;
+    });
+
+    this.subs.push(filterSub, formSub, selectOpeningSub, antiScrollSub);
   }
 
   ngOnDestroy() {

@@ -1,7 +1,7 @@
 <mat-form-field appearance="outline" [attr.test-id]="scope">
   <mat-label>{{ label }}</mat-label>
   <mat-icon *ngIf="selectIcon !== 'none'" matPrefix [svgIcon]="selectIcon"></mat-icon>
-  <mat-select multiple [formControl]="control" (openedChange)="onOpen()" [required]="required" test-id="filter-select">
+  <mat-select #mySelect multiple [formControl]="control" (openedChange)="onOpen()" [required]="required" test-id="filter-select">
     <mat-select-trigger>{{
       control.value.length === items.length ? displayAll : (control.value | toGroupLabel: scope | join)
     }}</mat-select-trigger>
