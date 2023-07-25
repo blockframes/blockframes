@@ -39,9 +39,9 @@ export interface FieldsConfig {
   parentTerm: string | number;
 }
 
-export type FieldsConfigType = ExtractConfig<FieldsConfig>;
+type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
-export interface Caches {
+interface Caches {
   orgNameCache: Record<string, string>,
   titleCache: Record<string, Movie>,
   contractCache: Record<string, Mandate | Sale>,

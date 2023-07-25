@@ -55,9 +55,9 @@ export interface FieldsConfig {
   }[];
 }
 
-export type FieldsConfigType = ExtractConfig<FieldsConfig>;
+type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
-export interface Caches {
+interface Caches {
   orgNameCache: Record<string, string>,
   titleCache: Record<string, Movie>,
   rightholderCache: Record<string, WaterfallRightholder[]>,
@@ -95,7 +95,6 @@ export function getDocumentConfig(option: DocumentConfig) {
     termCache,
     rightholderCache
   } = caches;
-
 
   function getAdminConfig(): FieldsConfigType {
 
