@@ -322,6 +322,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         }
       case 'contractCreated': {
         const contract = await this.contractService.load(notification.docId);
+        if (!contract) return this.contractFailback(notification);
         const movie = await this.loadMovie(contract.titleId);
         const org = await this.orgService.load(contract.buyerId);
         const message = `${org.name} sent an offer for ${movie.title.international}.`;
@@ -339,6 +340,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         const contract = await this.contractService.load(notification.docId);
+        if (!contract) return this.contractFailback(notification);
         const negotiation = await this.negotiationService.load(notification.docPath);
         const { name } = await this.orgService.load(getReviewer(negotiation));
         const movie = await this.loadMovie(contract.titleId);
@@ -357,6 +359,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         const contract = await this.contractService.load(notification.docId);
+        if (!contract) return this.contractFailback(notification);
         const movie = await this.loadMovie(contract.titleId);
         const negotiation = await this.negotiationService.load(notification.docPath);
         const { name } = await this.orgService.load(negotiation.createdByOrg);
@@ -375,7 +378,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         const contract = await this.contractService.load(notification.docId);
-
+        if (!contract) return this.contractFailback(notification);
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
@@ -424,6 +427,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         const contract = await this.contractService.load(notification.docId);
+        if (!contract) return this.contractFailback(notification);
         const movie = await this.loadMovie(contract.titleId);
 
         return {
@@ -439,6 +443,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
         const contract = await this.contractService.load(notification.docId);
+        if (!contract) return this.contractFailback(notification);
         const movie = await this.loadMovie(contract.titleId);
 
         return {
@@ -516,6 +521,15 @@ export class NotificationService extends BlockframesCollection<Notification> {
       this.sentryService.triggerError({ message: `Failed to load movie ${id}`, bugType: 'firebase-error', location: 'notification-service' });
       return createMovie({ id, title: createTitle({ international: 'missing title' }) });
     });
+  }
+
+  private contractFailback(notification: Notification) {
+    this.sentryService.triggerError({ message: `Failed to load contract for ${notification.docId} (${notification.type})`, bugType: 'firebase-error', location: 'notification-service' });
+    return {
+      ...notification,
+      message: 'Error while displaying notification.',
+      placeholderUrl: 'list_offer.svg',
+    };
   }
 
 }

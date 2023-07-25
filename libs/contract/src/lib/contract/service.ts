@@ -29,6 +29,7 @@ export class ContractService extends BlockframesCollection<Sale | Mandate> {
    * @param contract
    */
   protected fromFirestore(document: DocumentSnapshot<Sale | Mandate>): Sale | Mandate {
+    if (!document.exists()) return;
     const contract = super.fromFirestore(document);
     return contract.type === 'mandate' ? createMandate(contract) : createSale(contract);
   }
