@@ -1,5 +1,6 @@
-import { getDate, getRightholderId, mandatoryError, wrongValueError } from '@blockframes/import/utils';
-import { ConditionName, NumberOperator, Right, WaterfallRightholder } from '@blockframes/model';
+import { getDate, getRightholderId, getTitleId, mandatoryError, unknownEntityError } from '@blockframes/import/utils';
+import { ConditionName, NumberOperator, Right, WaterfallRightholder, Movie } from '@blockframes/model';
+import { MovieService } from '@blockframes/movie/service';
 import { ExtractConfig } from '@blockframes/utils/spreadsheet';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
@@ -23,10 +24,13 @@ export type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
 interface Caches {
   rightholderCache: Record<string, WaterfallRightholder[]>,
+  titleCache: Record<string, Movie>,
 }
 
 interface RightConfig {
   waterfallService: WaterfallService,
+  titleService: MovieService,
+  userOrgId: string,
   caches: Caches,
   separator: string,
 }
@@ -34,18 +38,24 @@ interface RightConfig {
 export function getRightConfig(option: RightConfig) {
   const {
     waterfallService,
+    titleService,
+    userOrgId,
     caches,
     separator
   } = option;
 
-  const { rightholderCache } = caches;
+  const { rightholderCache, titleCache } = caches;
 
   function getAdminConfig(): FieldsConfigType {
     // ! The order of the property should be the same as excel columns
     return {
-        /* a */ 'waterfallId': (value: string) => {
-        if (!value) throw mandatoryError(value, 'Waterfall Id');
-        return value;
+        /* a */ 'waterfallId': async (value: string) => {
+        if (!value) {
+          throw mandatoryError(value, 'Waterfall ID');
+        }
+        const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, true);
+        if (titleId) return titleId;
+        throw unknownEntityError<string>(value, 'Waterfall name or ID');
       },
         /* b */ 'right.date': (value: string) => {
         if (!value) throw mandatoryError(value, 'Right Date');

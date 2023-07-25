@@ -1,15 +1,30 @@
 import { SourcesImportState } from '@blockframes/import/utils';
-import { App, createRight, createWaterfallSource } from '@blockframes/model';
+import { App, Movie, createRight, createWaterfallSource } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getSourceConfig } from './fieldConfigs';
+import { MovieService } from '@blockframes/movie/service';
 
 export interface FormatConfig {
   app: App;
 }
 
-export async function formatSource(sheetTab: SheetTab) {
+export async function formatSource(
+  sheetTab: SheetTab,
+  titleService: MovieService,
+  userOrgId: string,
+) {
+
+  // Cache to avoid  querying db every time
+  const titleCache: Record<string, Movie> = {};
+  const caches = { titleCache };
+
   const sources: SourcesImportState[] = [];
-  const option = { separator: ';' };
+  const option = {
+    titleService,
+    userOrgId,
+    caches,
+    separator: ';'
+  };
   const fieldsConfig = getSourceConfig(option);
 
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig);

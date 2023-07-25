@@ -1,7 +1,8 @@
-import { MovieCurrency } from '@blockframes/model';
-import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
-import { getDate } from '@blockframes/import/utils';
+import { MovieCurrency, Movie } from '@blockframes/model';
+import { ExtractConfig } from '@blockframes/utils/spreadsheet';
+import { getDate, getTitleId, mandatoryError, unknownEntityError } from '@blockframes/import/utils';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
+import { MovieService } from '@blockframes/movie/service';
 
 export interface FieldsConfig {
   expense: {
@@ -16,15 +17,37 @@ export interface FieldsConfig {
   };
 }
 
-export type FieldsConfigType = ExtractConfig<FieldsConfig>;
+type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
-export function getExpenseConfig() {
+interface Caches {
+  titleCache: Record<string, Movie>,
+}
+
+interface ExpenseConfig {
+  titleService: MovieService,
+  userOrgId: string,
+  caches: Caches,
+}
+
+export function getExpenseConfig(option: ExpenseConfig) {
+  const {
+    titleService,
+    userOrgId,
+    caches,
+  } = option;
+
+  const { titleCache } = caches;
 
   function getAdminConfig(): FieldsConfigType {
     // ! The order of the property should be the same as excel columns
     return {
-        /* a */ 'expense.titleId': (value: string) => {
-        return value;
+        /* a */ 'expense.titleId': async (value: string) => {
+        if (!value) {
+          throw mandatoryError(value, 'Waterfall ID');
+        }
+        const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, true);
+        if (titleId) return titleId;
+        throw unknownEntityError<string>(value, 'Waterfall name or ID');
       },
         /* b */ 'expense.contractId': (value: string) => {
         return value;

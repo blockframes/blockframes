@@ -5,6 +5,8 @@ import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { SourcesImportState } from '../../utils';
 import { formatSource } from './utils';
+import { AuthService } from '@blockframes/auth/service';
+import { MovieService } from '@blockframes/movie/service';
 
 @Component({
   selector: 'import-view-extracted-sources[sheetTab]',
@@ -18,12 +20,20 @@ export class ViewExtractedSourcesComponent implements OnInit {
 
   public sourcesToCreate$ = new BehaviorSubject<MatTableDataSource<SourcesImportState>>(null);
 
-  constructor(private dynTitle: DynamicTitleService) {
+  constructor(
+    private dynTitle: DynamicTitleService,
+    private movieService: MovieService,
+    private authService: AuthService,
+  ) {
     this.dynTitle.setPageTitle('Submit your sources');
   }
 
   async ngOnInit() {
-    const sourcesToCreate = await formatSource(this.sheetTab);
+    const sourcesToCreate = await formatSource(
+      this.sheetTab,
+      this.movieService,
+      this.authService.profile.orgId,
+    );
     this.sourcesToCreate$.next(new MatTableDataSource(sourcesToCreate));
   }
 }

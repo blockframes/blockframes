@@ -1,4 +1,6 @@
-import { Media, Territory } from '@blockframes/model';
+import { getTitleId, mandatoryError, unknownEntityError } from '@blockframes/import/utils';
+import { Media, Territory, Movie } from '@blockframes/model';
+import { MovieService } from '@blockframes/movie/service';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
 
 export interface FieldsConfig {
@@ -13,20 +15,39 @@ export interface FieldsConfig {
   waterfallId: string;
 }
 
-export type FieldsConfigType = ExtractConfig<FieldsConfig>;
+type FieldsConfigType = ExtractConfig<FieldsConfig>;
+
+interface Caches {
+  titleCache: Record<string, Movie>,
+}
 
 interface SourceConfig {
+  titleService: MovieService,
+  userOrgId: string,
+  caches: Caches,
   separator: string,
 }
 
 export function getSourceConfig(option: SourceConfig) {
-  const { separator } = option;
+  const {
+    titleService,
+    userOrgId,
+    caches,
+    separator
+  } = option;
+
+  const { titleCache } = caches;
 
   function getAdminConfig(): FieldsConfigType {
     // ! The order of the property should be the same as excel columns
     return {
-        /* a */ 'waterfallId': (value: string) => {
-        return value;
+        /* a */ 'waterfallId': async (value: string) => {
+        if (!value) {
+          throw mandatoryError(value, 'Waterfall ID');
+        }
+        const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, true);
+        if (titleId) return titleId;
+        throw unknownEntityError<string>(value, 'Waterfall name or ID');
       },
         /* b */ 'source.id': (value: string) => {
         return value;
