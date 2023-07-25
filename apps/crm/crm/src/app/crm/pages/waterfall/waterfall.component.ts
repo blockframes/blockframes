@@ -119,7 +119,7 @@ export class WaterfallComponent implements OnInit {
     try {
       return getAssociatedSource(income, this.waterfall.sources)?.name || '--';
     } catch (error) {
-      this.snackBar.open(error, 'close', { duration: 5000 });
+      if (this.snackBar._openedSnackBarRef === null) this.snackBar.open(error, 'close', { duration: 5000 });
     }
   }
 
