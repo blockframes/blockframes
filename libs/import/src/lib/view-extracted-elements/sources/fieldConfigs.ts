@@ -25,19 +25,19 @@ export function getSourceConfig(option: SourceConfig) {
   function getAdminConfig(): FieldsConfigType {
     // ! The order of the property should be the same as excel columns
     return {
-        /* a */ 'waterfallId': async (value: string) => {
+        /* a */ 'waterfallId': (value: string) => {
         return value;
       },
-        /* b */ 'source.id': async (value: string) => {
+        /* b */ 'source.id': (value: string) => {
         return value;
       },
-        /* c */ 'source.name': async (value: string) => {
+        /* c */ 'source.name': (value: string) => {
         return value;
       },
         /* d */ 'source.territories_included': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
         /* e */ 'source.territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
         /* f */ 'source.medias': (value: string) => getGroupedList(value, 'medias', separator, { required: false }),
-        /* g */ 'source.destinationIds': async (value: string) => {
+        /* g */ 'source.destinationIds': (value: string) => {
         return value.split(separator).filter(v => !!v).map(v => v.trim());
       },
     };

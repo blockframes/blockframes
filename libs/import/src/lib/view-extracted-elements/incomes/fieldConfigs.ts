@@ -30,33 +30,33 @@ export function getIncomeConfig(option: IncomeConfig) {
   function getAdminConfig(): FieldsConfigType {
     // ! The order of the property should be the same as excel columns
     return {
-        /* a */ 'income.titleId': async (value: string) => {
+        /* a */ 'income.titleId': (value: string) => {
         if (!value) throw mandatoryError(value, 'Waterfall Id');
         return value;
       },
-        /* b */ 'income.contractId': async (value: string) => {
+        /* b */ 'income.contractId': (value: string) => {
         if (!value) throw mandatoryError(value, 'Contract Id');
         return value;
       },
-        /* c */ 'income.sourceId': async (value: string) => {
+        /* c */ 'income.sourceId': (value: string) => {
         return value;
       },
         /* d */ 'income.territories_included': (value: string, data: FieldsConfig) => getGroupedList(value, 'territories', separator, { required: !data.income.sourceId }),
         /* e */ 'income.territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
         /* f */ 'income.medias': (value: string, data: FieldsConfig) => getGroupedList(value, 'medias', separator, { required: !data.income.sourceId }),
 
-        /* g */ 'income.id': async (value: string) => {
+        /* g */ 'income.id': (value: string) => {
         return value;
       },
-        /* h */ 'income.date': async (value: string) => {
+        /* h */ 'income.date': (value: string) => {
         if (!value) throw mandatoryError(value, 'Date');
         return getDate(value, 'Income Date') as Date;
       },
-        /* i */ 'income.price': async (value: string) => {
+        /* i */ 'income.price': (value: string) => {
         if (!value) return 0;
         return Number(value);
       },
-        /* j */ 'income.currency': async (value: string) => {
+        /* j */ 'income.currency': (value: string) => {
         const currency = getKeyIfExists('movieCurrencies', value);
         if (!currency) throw mandatoryError(value, 'Currency');
         return currency;

@@ -37,6 +37,7 @@ export async function formatSource(sheetTab: SheetTab) {
 function createGroup(destinationIds: string[]) {
   if (destinationIds.length === 1) return;
 
+  // TODO #9420 carefull not to generate duplicate group Ids
   const groupId = `grp-${destinationIds.map(id => id.replace('_', '').substring(0, 3)).join('-')}`;
   return {
     right: createRight({ id: groupId, actionName: 'appendHorizontal' }),

@@ -23,29 +23,29 @@ export function getExpenseConfig() {
   function getAdminConfig(): FieldsConfigType {
     // ! The order of the property should be the same as excel columns
     return {
-        /* a */ 'expense.titleId': async (value: string) => {
+        /* a */ 'expense.titleId': (value: string) => {
         return value;
       },
-        /* b */ 'expense.contractId': async (value: string) => {
+        /* b */ 'expense.contractId': (value: string) => {
         return value;
       },
-        /* c */ 'expense.id': async (value: string) => {
+        /* c */ 'expense.id': (value: string) => {
         return value;
       },
-        /* d */ 'expense.date': async (value: string) => {
+        /* d */ 'expense.date': (value: string) => {
         return getDate(value, 'Income Date') as Date;
       },
-        /* e */ 'expense.price': async (value: string) => {
+        /* e */ 'expense.price': (value: string) => {
         return Number(value);
       },
-        /* f */ 'expense.currency': async (value: string) => {
+        /* f */ 'expense.currency': (value: string) => {
         const currency = getKeyIfExists('movieCurrencies', value);
         return currency;
       },
-        /* g */ 'expense.type': async (value: string) => {
+        /* g */ 'expense.type': (value: string) => {
         return value;
       },
-        /* h */ 'expense.category': async (value: string) => {
+        /* h */ 'expense.category': (value: string) => {
         return value;
       },
     };
