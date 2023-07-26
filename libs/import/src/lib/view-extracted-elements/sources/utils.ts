@@ -52,10 +52,14 @@ export async function formatSource(
 function createGroup(destinationIds: string[]) {
   if (destinationIds.length === 1) return;
 
-  // TODO #9420 carefull not to generate duplicate group Ids
-  const groupId = `grp-${destinationIds.map(id => id.replace('_', '').substring(0, 3)).join('-')}`;
+  const random = Math.random().toString(36).slice(2, 5);
+  const groupId = `grp-${random}-${destinationIds.map(id => id.replace('_', '').substring(0, 3)).join('-')}`;
   return {
-    right: createRight({ id: groupId, actionName: 'appendHorizontal' }),
+    right: createRight({
+      id: groupId,
+      actionName: 'appendHorizontal',
+      date: new Date(0) // 1970, can be updated by rights imports
+    }),
     childs: destinationIds.map(id => createRight({ id, groupId }))
   }
 }
