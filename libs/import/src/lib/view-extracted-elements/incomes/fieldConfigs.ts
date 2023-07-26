@@ -54,7 +54,7 @@ export function getIncomeConfig(option: IncomeConfig) {
         throw unknownEntityError<string>(value, 'Waterfall name or ID');
       },
         /* b */ 'income.contractId': (value: string) => {
-        if (!value) throw optionalWarning('Contract Id');
+        if (!value) throw optionalWarning('Contract ID');
         return value;
       },
         /* c */ 'income.sourceId': (value: string) => {

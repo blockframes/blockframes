@@ -50,6 +50,7 @@ export function getExpenseConfig(option: ExpenseConfig) {
         throw unknownEntityError<string>(value, 'Waterfall name or ID');
       },
         /* b */ 'expense.contractId': (value: string) => {
+        if (!value) throw mandatoryError(value, 'Contract ID');
         return value;
       },
         /* c */ 'expense.id': (value: string) => {
