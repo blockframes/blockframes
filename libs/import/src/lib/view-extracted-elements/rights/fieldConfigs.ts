@@ -1,5 +1,6 @@
-import { getDate, getRightholderId, mandatoryError } from '@blockframes/import/utils';
-import { ConditionName, NumberOperator, Right, WaterfallRightholder } from '@blockframes/model';
+import { getDate, getRightholderId, getTitleId, mandatoryError, unknownEntityError } from '@blockframes/import/utils';
+import { ConditionName, NumberOperator, Right, WaterfallRightholder, Movie } from '@blockframes/model';
+import { MovieService } from '@blockframes/movie/service';
 import { ExtractConfig } from '@blockframes/utils/spreadsheet';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
@@ -23,10 +24,13 @@ export type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
 interface Caches {
   rightholderCache: Record<string, WaterfallRightholder[]>,
+  titleCache: Record<string, Movie>,
 }
 
 interface RightConfig {
   waterfallService: WaterfallService,
+  titleService: MovieService,
+  userOrgId: string,
   caches: Caches,
   separator: string,
 }
@@ -34,57 +38,73 @@ interface RightConfig {
 export function getRightConfig(option: RightConfig) {
   const {
     waterfallService,
+    titleService,
+    userOrgId,
     caches,
     separator
   } = option;
 
-  const { rightholderCache } = caches;
+  const { rightholderCache, titleCache } = caches;
 
   function getAdminConfig(): FieldsConfigType {
     // ! The order of the property should be the same as excel columns
     return {
         /* a */ 'waterfallId': async (value: string) => {
-        if (!value) throw mandatoryError(value, 'Waterfall Id');
-        return value;
+        if (!value) {
+          throw mandatoryError(value, 'Waterfall ID');
+        }
+        const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, true);
+        if (titleId) return titleId;
+        throw unknownEntityError<string>(value, 'Waterfall name or ID');
       },
-        /* b */ 'right.date': async (value: string) => {
+        /* b */ 'right.date': (value: string) => {
         if (!value) throw mandatoryError(value, 'Right Date');
         return getDate(value, 'Right Date') as Date;
       },
-        /* c */ 'right.groupId': async (value: string) => {
-        return value;
-      },
-        /* d */ 'right.groupPercent': async (value: string) => {
-        return Number(value);
-      },
-        /* e */ 'right.id': async (value: string) => {
+        /* c */ 'right.id': (value: string) => {
         if (!value) throw mandatoryError(value, 'Right Id');
         return value;
       },
-        /* f */ 'right.name': async (value: string) => {
+        /* d */ 'right.actionName': (value: string) => {
+        const lower = value.toLowerCase().trim();
+        switch (lower) {
+          case 'horizontal':
+            return 'appendHorizontal';
+          case 'vertical':
+            return 'appendVertical';
+          default:
+            return 'append';
+        }
+      },
+        /* e */ 'right.name': (value: string) => {
         return value;
       },
-        /* g */ 'right.previousIds': async (value: string) => {
+        /* f */ 'right.previousIds': (value: string) => {
         return value.split(separator).filter(v => !!v).map(v => v.trim());
       },
-        /* h */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
-        if (!value) throw mandatoryError(value, 'Licensor');
+        /* g */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
+        if (!value) throw mandatoryError(value, 'Rightholder Id or Blame Id');
         const rightholderId = await getRightholderId(value, data.waterfallId, waterfallService, rightholderCache);
-        return rightholderId;
+        if(data.right.actionName !== 'append') { 
+          data.right.blameId = rightholderId;
+          return '';
+        } else {
+          return rightholderId;
+        }
       },
-        /* i */ 'right.percent': async (value: string) => {
+        /* h */ 'right.percent': (value: string) => {
         return Number(value);
       },
-        /* j */ 'conditionA.conditionName': async (value: string) => {
+        /* i */ 'conditionA.conditionName': (value: string) => {
         return value as ConditionName;
       },
-        /* k */ 'conditionA.left': async (value: string) => {
+        /* j */ 'conditionA.left': (value: string) => {
         return value;
       },
-        /* l */ 'conditionA.operator': async (value: string) => {
+        /* k */ 'conditionA.operator': (value: string) => {
         return value as NumberOperator;
       },
-        /* m */ 'conditionA.target': async (value: string) => {
+        /* l */ 'conditionA.target': (value: string) => {
         return isNumber(value) ? Number(value) : value;
       },
     };

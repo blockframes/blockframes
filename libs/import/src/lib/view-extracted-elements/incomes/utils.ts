@@ -1,15 +1,30 @@
 import { IncomesImportState } from '@blockframes/import/utils';
-import { App, createIncome } from '@blockframes/model';
+import { App, Movie, createIncome } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getIncomeConfig } from './fieldConfigs';
+import { MovieService } from '@blockframes/movie/service';
 
 export interface FormatConfig {
   app: App;
 }
 
-export async function formatIncome(sheetTab: SheetTab) {
+export async function formatIncome(
+  sheetTab: SheetTab,
+  titleService: MovieService,
+  userOrgId: string,
+) {
   const incomes: IncomesImportState[] = [];
-  const option = { separator: ';' };
+
+  // Cache to avoid  querying db every time
+  const titleCache: Record<string, Movie> = {};
+  const caches = { titleCache };
+
+  const option = { 
+    titleService,
+    userOrgId,
+    caches,
+    separator: ';'
+  };
   const fieldsConfig = getIncomeConfig(option);
 
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig);

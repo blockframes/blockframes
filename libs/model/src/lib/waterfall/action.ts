@@ -130,15 +130,19 @@ export function contractsToActions(contracts: WaterfallContract[], terms: Term[]
 export function rightsToActions(rights: Right[]) {
   const actions: Action[] = [];
 
-  rights.forEach(right => {
-    const a = action(right.actionName, formatPayload(right)) as Action;
+  const singleRights = rights.filter(r => !r.groupId);
+  const childRights = rights.filter(r => !!r.groupId);
+
+  singleRights.forEach(right => {
+    const currentChilds = childRights.filter(r => r.groupId === right.id);
+    const a = action(right.actionName, formatPayload(right, currentChilds)) as Action;
     actions.push(a);
   });
 
   return actions;
 }
 
-function formatPayload(right: Right) {
+function formatPayload(right: Right, childs: Right[] = []) {
   switch (right.actionName) {
     case 'append': {
       const payload: ActionList['append']['payload'] = {
@@ -151,6 +155,31 @@ function formatPayload(right: Right) {
 
       if (right.conditions) {
         payload.conditions = right.conditions;
+      }
+
+      return payload;
+    }
+    case 'appendHorizontal': {
+      const payload: ActionList['appendHorizontal']['payload'] = {
+        id: right.id,
+        blameId: '', // TODO #9420
+        percent: right.percent / 100,
+        previous: right.previousIds || [],
+        children: [],
+        date: right.date,
+      }
+
+      for (const child of childs) {
+        const childRight: GroupChildRight = {
+          type: 'right',
+          id: child.id,
+          percent: child.percent / 100,
+          orgId: child.rightholderId,
+          conditions: right.conditions,
+          pools: [] // TODO #9420
+        }
+
+        payload.children.push(childRight);
       }
 
       return payload;
@@ -195,7 +224,7 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
     actions.push(
       action('income', {
         id: i.id,
-        contractId: contract.id,
+        contractId: contract?.id || '',
         from: source.name,
         to: source.destinationId,
         amount,

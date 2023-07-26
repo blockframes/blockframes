@@ -6,6 +6,8 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { RightsImportState } from '../../utils';
 import { formatRight } from './utils';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { MovieService } from '@blockframes/movie/service';
+import { AuthService } from '@blockframes/auth/service';
 
 @Component({
   selector: 'import-view-extracted-rights[sheetTab]',
@@ -22,12 +24,19 @@ export class ViewExtractedRightsComponent implements OnInit {
   constructor(
     private dynTitle: DynamicTitleService,
     private waterfallService: WaterfallService,
+    private movieService: MovieService,
+    private authService: AuthService,
   ) {
     this.dynTitle.setPageTitle('Submit your rights');
   }
 
   async ngOnInit() {
-    const rightsToCreate = await formatRight(this.sheetTab, this.waterfallService);
+    const rightsToCreate = await formatRight(
+      this.sheetTab,
+      this.waterfallService,
+      this.movieService,
+      this.authService.profile.orgId,
+    );
     this.rightsToCreate$.next(new MatTableDataSource(rightsToCreate));
   }
 }

@@ -55,12 +55,12 @@ export interface FieldsConfig {
   }[];
 }
 
-export type FieldsConfigType = ExtractConfig<FieldsConfig>;
+type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
-export interface Caches {
+interface Caches {
   orgNameCache: Record<string, string>,
   titleCache: Record<string, Movie>,
-  rightholderCache: Record<string, WaterfallRightholder[]>, 
+  rightholderCache: Record<string, WaterfallRightholder[]>,
   documentCache: Record<string, WaterfallDocument>,
   termCache: Record<string, Term>,
 }
@@ -96,14 +96,13 @@ export function getDocumentConfig(option: DocumentConfig) {
     rightholderCache
   } = caches;
 
-
   function getAdminConfig(): FieldsConfigType {
 
     // ! The order of the property should be the same as excel columns
     return {
         /* a */ 'document.waterfallId': async (value: string) => {
         if (!value) {
-          throw mandatoryError(value, 'Waterfall Id');
+          throw mandatoryError(value, 'Waterfall ID');
         }
         const titleId = await getTitleId(value.trim(), titleService, titleCache, userOrgId, true);
         if (titleId) return titleId;
@@ -125,10 +124,10 @@ export function getDocumentConfig(option: DocumentConfig) {
         const orgId = await getOrgId(value, orgService, orgNameCache);
         return orgId || value;
       },
-        /* e */ 'document.rootId': async (value: string) => {
+        /* e */ 'document.rootId': (value: string) => {
         return value;
       },
-        /* f */ 'document.signatureDate': async (value: string) => {
+        /* f */ 'document.signatureDate': (value: string) => {
         if (!value) throw mandatoryError(value, 'Signature Date');
         return getDate(value, 'Signature Date') as Date;
       },
@@ -147,10 +146,14 @@ export function getDocumentConfig(option: DocumentConfig) {
         const rightholderID = await getRightholderId(value, data.document.waterfallId, waterfallService, rightholderCache);
         return rightholderID;
       },
-        /* j */ 'meta.price': async (value: string) => {
+        /* j */ 'meta.price': (value: string) => {
         return Number(value);
       },
-        /* k */ 'meta.currency': async (value: string) => {
+        /* k */ 'meta.currency': (value: string): MovieCurrency => {
+        if (value?.trim() === '€') return 'EUR';
+        if (value?.trim() === '$') return 'USD';
+        if (value?.trim() === '£') return 'GBP';
+
         const currency = getKeyIfExists('movieCurrencies', value);
         return currency;
       },
@@ -169,10 +172,10 @@ export function getDocumentConfig(option: DocumentConfig) {
         if (exist) throw alreadyExistError(value, 'Term ID');
         return value;
       },
-        /* r */ 'term[].price': async (value: string) => {
+        /* r */ 'term[].price': (value: string) => {
         return Number(value);
       },
-        /* s */ 'term[].currency': async (value: string) => {
+        /* s */ 'term[].currency': (value: string) => {
         const currency = getKeyIfExists('movieCurrencies', value);
         return currency;
       },

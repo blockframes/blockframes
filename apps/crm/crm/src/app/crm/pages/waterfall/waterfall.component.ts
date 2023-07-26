@@ -119,7 +119,7 @@ export class WaterfallComponent implements OnInit {
     try {
       return getAssociatedSource(income, this.waterfall.sources)?.name || '--';
     } catch (error) {
-      this.snackBar.open(error, 'close', { duration: 5000 });
+      if (this.snackBar._openedSnackBarRef === null) this.snackBar.open(error, 'close', { duration: 5000 });
     }
   }
 
@@ -222,6 +222,13 @@ export class WaterfallComponent implements OnInit {
     await this.rightService.remove(id, { params: { waterfallId: this.waterfall.id } });
     this.rights = await this.rightService.getValue({ waterfallId: this.waterfall.id });
     this.snackBar.open(`Right "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
+    this.cdRef.markForCheck();
+  }
+
+  public async removeIncome(id: string) {
+    await this.incomeService.remove(id);
+    this.incomes = await this.incomeService.getValue([where('titleId', '==', this.waterfall.id)]);
+    this.snackBar.open(`Income "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
     this.cdRef.markForCheck();
   }
 

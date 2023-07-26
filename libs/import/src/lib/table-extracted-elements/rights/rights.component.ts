@@ -95,8 +95,9 @@ export class TableExtractedRightsComponent implements AfterViewInit {
       for (const [waterfallId, rightholders] of Object.entries(importState.rightholders)) {
         const waterfall = await this.waterfallService.getValue(waterfallId);
 
-        if (!waterfall.rightholders.find(r => r.id === importState.right.rightholderId)) {
-          waterfall.rightholders.push(rightholders.find(r => r.id === importState.right.rightholderId));
+        const rightholder = importState.right.rightholderId || importState.right.blameId;
+        if (rightholder && !waterfall.rightholders.find(r => r.id === rightholder)) {
+          waterfall.rightholders.push(rightholders.find(r => r.id === rightholder));
         }
 
         await this.waterfallService.update(waterfallId, { id: waterfallId, rightholders: waterfall.rightholders });
@@ -105,8 +106,16 @@ export class TableExtractedRightsComponent implements AfterViewInit {
 
     if (increment) this.processing++;
     this.cdr.markForCheck();
+    const existingRight = await this.rightService.getValue(importState.right.id, { waterfallId: importState.waterfallId });
 
-    this.rightService.add(importState.right, { params: { waterfallId: importState.waterfallId } });
+    const right = importState.right;
+    if (existingRight) {
+      right.groupId = existingRight.groupId;
+      await this.rightService.update(right, { params: { waterfallId: importState.waterfallId } });
+    } else {
+      await this.rightService.add(right, { params: { waterfallId: importState.waterfallId } });
+    }
+
 
     importState.imported = true;
 

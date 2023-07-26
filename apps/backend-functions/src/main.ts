@@ -33,7 +33,14 @@ import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
 import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
-import { buildWaterfall as _buildWaterfall, onWaterfallDelete, onWaterfallDocumentDelete, onWaterfallUpdate, removeWaterfallFile } from './waterfall';
+import {
+  buildWaterfall as _buildWaterfall,
+  onWaterfallDelete,
+  onWaterfallDocumentDelete,
+  onWaterfallRightDelete,
+  onWaterfallUpdate,
+  removeWaterfallFile
+} from './waterfall';
 import { projectId, storageBucket } from './environments/environment';
 
 console.log('Function instance loaded');
@@ -301,7 +308,12 @@ export const onWaterfallDeleteEvent = onDocumentDelete('waterfall/{waterfallId}'
 /**
  * Trigger: when a waterfallDocument is deleted
  */
-export const onWaterfallDocumentDeleteEvent = onDocumentDelete('waterfall/{waterfallId}/documents/{document}', onWaterfallDocumentDelete);
+export const onWaterfallDocumentDeleteEvent = onDocumentDelete('waterfall/{waterfallID}/documents/{documentID}', onWaterfallDocumentDelete);
+
+/**
+ * Trigger: when a waterfallRight is deleted
+ */
+export const onWaterfallRightDeleteEvent = onDocumentDelete('waterfall/{waterfallID}/rights/{rightID}', onWaterfallRightDelete);
 
 /**
  * When user wants to remove a file without removing waterfallDocument
