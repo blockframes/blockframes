@@ -1,6 +1,6 @@
 import { MovieCurrency, Movie } from '@blockframes/model';
 import { ExtractConfig } from '@blockframes/utils/spreadsheet';
-import { getDate, getTitleId, mandatoryError, unknownEntityError } from '@blockframes/import/utils';
+import { getDate, getTitleId, mandatoryError, unknownEntityError } from '../../utils';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { MovieService } from '@blockframes/movie/service';
 
@@ -57,7 +57,7 @@ export function getExpenseConfig(option: ExpenseConfig) {
         return value;
       },
         /* d */ 'expense.date': (value: string) => {
-        return getDate(value, 'Income Date') as Date;
+        return getDate(value, 'Income Date');
       },
         /* e */ 'expense.price': (value: string) => {
         return Number(value);

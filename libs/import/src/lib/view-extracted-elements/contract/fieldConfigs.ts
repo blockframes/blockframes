@@ -2,8 +2,9 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import {
   adminOnlyWarning, alreadyExistError, checkParentTerm, getContract,
   getOrgId, getTitleId, ImportError, mandatoryError,
-  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError
-} from '@blockframes/import/utils';
+  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError,
+  getDate
+} from '../../utils';
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
   ContractStatus, ImportContractStatus, Language, Mandate, Media, Movie,
@@ -12,7 +13,6 @@ import {
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { getDate } from '@blockframes/import/utils';
 import { FormatConfig } from './utils';
 
 export interface FieldsConfig {
@@ -131,11 +131,11 @@ export function getContractConfig(option: ContractConfig) {
       },
         /* i */ 'term[].duration.from': (value: string) => {
         if (!value) throw mandatoryError(value, 'Duration From');
-        return getDate(value, 'Start of Contract') as Date;
+        return getDate(value, 'Start of Contract');
       },
         /* j */ 'term[].duration.to': (value: string) => {
         if (!value) throw mandatoryError(value, 'Duration To');
-        return getDate(value, 'End of Contract') as Date;
+        return getDate(value, 'End of Contract');
       },
         /* k */ 'term[].licensedOriginal': (value: string) => {
         const lower = value.toLowerCase();
@@ -262,11 +262,11 @@ export function getContractConfig(option: ContractConfig) {
       },
         /* h */ 'term[].duration.from': (value: string) => {
         if (!value) throw mandatoryError(value, 'Duration From');
-        return getDate(value, 'Start of Contract') as Date;
+        return getDate(value, 'Start of Contract');
       },
         /* i */ 'term[].duration.to': (value: string) => {
         if (!value) throw mandatoryError(value, 'Duration To');
-        return getDate(value, 'End of Contract') as Date;
+        return getDate(value, 'End of Contract');
       },
 
         /* j */ 'term[].licensedOriginal': (value: string) => {

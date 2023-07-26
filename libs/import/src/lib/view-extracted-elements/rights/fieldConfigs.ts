@@ -1,4 +1,4 @@
-import { getDate, getRightholderId, getTitleId, mandatoryError, unknownEntityError } from '@blockframes/import/utils';
+import { getDate, getRightholderId, getTitleId, mandatoryError, optionalWarning, unknownEntityError } from '../../utils';
 import { ConditionName, NumberOperator, Right, WaterfallRightholder, Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { ExtractConfig } from '@blockframes/utils/spreadsheet';
@@ -59,7 +59,7 @@ export function getRightConfig(option: RightConfig) {
       },
         /* b */ 'right.date': (value: string) => {
         if (!value) throw mandatoryError(value, 'Right Date');
-        return getDate(value, 'Right Date') as Date;
+        return getDate(value, 'Right Date');
       },
         /* c */ 'right.id': (value: string) => {
         if (!value) throw mandatoryError(value, 'Right Id');
@@ -83,9 +83,13 @@ export function getRightConfig(option: RightConfig) {
         return value.split(separator).filter(v => !!v).map(v => v.trim());
       },
         /* g */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
+        if (data.right.actionName === 'appendVertical') {
+          if (value) throw optionalWarning('Rightholder Id or Blame Id should be left empty for vertical groups');
+          return '';
+        }
         if (!value) throw mandatoryError(value, 'Rightholder Id or Blame Id');
         const rightholderId = await getRightholderId(value, data.waterfallId, waterfallService, rightholderCache);
-        if(data.right.actionName !== 'append') { 
+        if (data.right.actionName === 'appendHorizontal') {
           data.right.blameId = rightholderId;
           return '';
         } else {

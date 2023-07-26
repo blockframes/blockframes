@@ -175,7 +175,7 @@ function formatPayload(right: Right, childs: Right[] = []) {
           id: child.id,
           percent: child.percent / 100,
           orgId: child.rightholderId,
-          conditions: right.conditions,
+          conditions: child.conditions,
           pools: [] // TODO #9420
         }
 

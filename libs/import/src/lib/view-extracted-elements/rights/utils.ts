@@ -1,4 +1,4 @@
-import { RightsImportState } from '@blockframes/import/utils';
+import { RightsImportState, getDate } from '../../utils';
 import { App, Condition, Movie, TargetIn, TargetValue, WaterfallRightholder, createRight } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, ImportedCondition, getRightConfig } from './fieldConfigs';
@@ -52,7 +52,7 @@ export async function formatRight(
 
 function formatCondition(cond: ImportedCondition): Condition {
   switch (cond.conditionName) {
-    case 'rightRevenu':
+    case 'rightRevenu': {
       return {
         name: 'rightRevenu',
         payload: {
@@ -61,6 +61,16 @@ function formatCondition(cond: ImportedCondition): Condition {
           target: formatTarget(cond.target)
         }
       }
+    }
+    case 'incomeDate': {
+      const operator = cond.operator === '<' ? 'to' : 'from';
+      return {
+        name: 'incomeDate',
+        payload: {
+          [operator]: getDate(cond.target as string)
+        }
+      }
+    }
     default:
       break;
   }

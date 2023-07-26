@@ -1,4 +1,4 @@
-import { ExpensesImportState } from '@blockframes/import/utils';
+import { ExpensesImportState } from '../../utils';
 import { App, Movie, createExpense } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getExpenseConfig } from './fieldConfigs';

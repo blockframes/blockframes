@@ -1,5 +1,5 @@
 import { where } from 'firebase/firestore';
-import { checkParentTerm, ContractsImportState, sheetHeaderLine, } from '@blockframes/import/utils';
+import { checkParentTerm, ContractsImportState, sheetHeaderLine } from '../../utils';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import {
