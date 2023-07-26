@@ -71,6 +71,8 @@ export async function onWaterfallDelete(snap: BlockframesSnapshot) {
   // TODO #9389
   // cleanWaterfallMedias(before, after);
 
+  // TODO #9420 remove standalone incomes and expenses (not linked to contracts)
+
   return batch.commit();
 }
 
