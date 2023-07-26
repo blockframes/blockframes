@@ -150,9 +150,9 @@ export function getDocumentConfig(option: DocumentConfig) {
         return Number(value);
       },
         /* k */ 'meta.currency': (value: string): MovieCurrency => {
-        if (value.trim() === '€') return 'EUR';
-        if (value.trim() === '$') return 'USD';
-        if (value.trim() === '£') return 'GBP';
+        if (value?.trim() === '€') return 'EUR';
+        if (value?.trim() === '$') return 'USD';
+        if (value?.trim() === '£') return 'GBP';
 
         const currency = getKeyIfExists('movieCurrencies', value);
         return currency;

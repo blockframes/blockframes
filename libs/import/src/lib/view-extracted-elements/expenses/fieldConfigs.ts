@@ -61,7 +61,10 @@ export function getExpenseConfig(option: ExpenseConfig) {
         /* e */ 'expense.price': (value: string) => {
         return Number(value);
       },
-        /* f */ 'expense.currency': (value: string) => {
+        /* f */ 'expense.currency': (value: string): MovieCurrency => {
+        if (value?.trim() === '€') return 'EUR';
+        if (value?.trim() === '$') return 'USD';
+        if (value?.trim() === '£') return 'GBP';
         const currency = getKeyIfExists('movieCurrencies', value);
         return currency;
       },

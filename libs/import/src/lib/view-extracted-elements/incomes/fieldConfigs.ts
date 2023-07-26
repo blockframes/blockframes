@@ -1,6 +1,6 @@
 import { Media, MovieCurrency, Territory, Movie } from '@blockframes/model';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
-import { getDate, getTitleId, mandatoryError, unknownEntityError } from '@blockframes/import/utils';
+import { getDate, getTitleId, mandatoryError, optionalWarning, unknownEntityError } from '@blockframes/import/utils';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { MovieService } from '@blockframes/movie/service';
 
@@ -54,7 +54,7 @@ export function getIncomeConfig(option: IncomeConfig) {
         throw unknownEntityError<string>(value, 'Waterfall name or ID');
       },
         /* b */ 'income.contractId': (value: string) => {
-        if (!value) throw mandatoryError(value, 'Contract Id');
+        if (!value) throw optionalWarning('Contract Id');
         return value;
       },
         /* c */ 'income.sourceId': (value: string) => {
@@ -75,7 +75,10 @@ export function getIncomeConfig(option: IncomeConfig) {
         if (!value) return 0;
         return Number(value);
       },
-        /* j */ 'income.currency': (value: string) => {
+        /* j */ 'income.currency': (value: string): MovieCurrency => {
+        if (value?.trim() === '€') return 'EUR';
+        if (value?.trim() === '$') return 'USD';
+        if (value?.trim() === '£') return 'GBP';
         const currency = getKeyIfExists('movieCurrencies', value);
         if (!currency) throw mandatoryError(value, 'Currency');
         return currency;

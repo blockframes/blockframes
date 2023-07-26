@@ -225,6 +225,13 @@ export class WaterfallComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
+  public async removeIncome(id: string) {
+    await this.incomeService.remove(id);
+    this.incomes = await this.incomeService.getValue([where('titleId', '==', this.waterfall.id)]);
+    this.snackBar.open(`Income "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
+    this.cdRef.markForCheck();
+  }
+
   public rightExists(id: string) {
     return this.rights.find(r => r.id === id);
   }

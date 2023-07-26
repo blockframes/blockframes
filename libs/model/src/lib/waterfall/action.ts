@@ -224,7 +224,7 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
     actions.push(
       action('income', {
         id: i.id,
-        contractId: contract.id,
+        contractId: contract?.id || '',
         from: source.name,
         to: source.destinationId,
         amount,
