@@ -13,8 +13,13 @@ export class ErrorLoggerHandler implements ErrorHandler {
 
   handleError(error: Error | string) {
     if (this.snackBar._openedSnackBarRef === null) {
-      console.error(error);
-      this.snackBar.open(`${error}`.substring(0, 100), 'close');
+      if (error instanceof Error && error.message === 'LinearAnimationInstance instance already deleted') {
+        // #9450 https://github.com/dappsnation/ng-rive/issues/46
+        console.warn(`ng-rive : ${error.message}`);
+      } else {
+        console.error(error);
+        this.snackBar.open(`${error}`.substring(0, 100), 'close');
+      }
     }
   }
 }
