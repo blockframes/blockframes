@@ -38,11 +38,19 @@ export async function formatRight(
 
     const right = createRight(data.right);
 
-    if (data.conditionA.conditionName) {
+    if (data.conditionA?.conditionName) {
       right.conditions = {
         operator: 'AND',
         conditions: [formatCondition(data.conditionA)]
       }
+    }
+
+    if (data.conditionB?.conditionName) {
+      right.conditions.conditions.push(formatCondition(data.conditionB));
+    }
+
+    if (data.conditionC?.conditionName) {
+      right.conditions.conditions.push(formatCondition(data.conditionC));
     }
 
     rights.push({ waterfallId: data.waterfallId, right, errors, rightholders: rightholderCache });
@@ -62,12 +70,22 @@ function formatCondition(cond: ImportedCondition): Condition {
         }
       }
     }
-    case 'incomeDate': {
+    case 'incomeDate':
+    case 'contractDate': {
       const operator = cond.operator === '<' ? 'to' : 'from';
       return {
-        name: 'incomeDate',
+        name: cond.conditionName,
         payload: {
           [operator]: getDate(cond.target as string)
+        }
+      }
+    }
+    case 'contractAmount': {
+      return {
+        name: 'contractAmount',
+        payload: {
+          operator: cond.operator,
+          target: formatTarget(cond.target)
         }
       }
     }
@@ -76,12 +94,12 @@ function formatCondition(cond: ImportedCondition): Condition {
   }
 }
 
-function formatTarget(target: string | number): TargetValue {
-  if (!isNaN(target as number)) return target as number;
+function formatTarget<T extends TargetValue | number>(target: string | number): T {
+  if (!isNaN(target as number)) return target as T;
   const [tar, id, percent] = (target as string).split(':');
   return {
     in: tar as TargetIn,
     id,
     percent: parseFloat(percent) || 1
-  }
+  } as T;
 }

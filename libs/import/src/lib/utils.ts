@@ -341,10 +341,10 @@ function outOfRangeDate(name: string): ImportLog<string> {
   return new ImportError(name, option);
 }
 
-export function mandatoryError<T = unknown>(value: T, name: string): ImportLog<T> {
+export function mandatoryError<T = unknown>(value: T, name: string, reason?: string): ImportLog<T> {
   const option: SpreadsheetImportError = {
     name: `Missing ${name}`,
-    reason: 'Mandatory field is missing.',
+    reason: reason || 'Mandatory field is missing.',
     message: 'Please fill in the corresponding sheet field.',
   };
   return new ImportError(value, option);

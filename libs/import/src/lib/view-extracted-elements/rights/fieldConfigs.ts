@@ -1,5 +1,5 @@
 import { getDate, getRightholderId, getTitleId, mandatoryError, optionalWarning, unknownEntityError } from '../../utils';
-import { ConditionName, NumberOperator, Right, WaterfallRightholder, Movie } from '@blockframes/model';
+import { ConditionName, NumberOperator, Right, WaterfallRightholder, Movie, numberOperator } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { ExtractConfig } from '@blockframes/utils/spreadsheet';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
@@ -106,9 +106,25 @@ export function getRightConfig(option: RightConfig) {
         return value;
       },
         /* k */ 'conditionA.operator': (value: string) => {
+        if (value === '≥') value = '>=';
+        if (value && !numberOperator.includes(value as NumberOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${numberOperator.map(o => `"${o}"`).join(' ')}`);
         return value as NumberOperator;
       },
         /* l */ 'conditionA.target': (value: string) => {
+        return isNumber(value) ? Number(value) : value;
+      },
+        /* m */ 'conditionB.conditionName': (value: string) => {
+        return value as ConditionName;
+      },
+        /* n */ 'conditionB.left': (value: string) => {
+        return value;
+      },
+        /* o */ 'conditionB.operator': (value: string) => {
+        if (value === '≥') value = '>=';
+        if (value && !numberOperator.includes(value as NumberOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${numberOperator.map(o => `"${o}"`).join(' ')}`);
+        return value as NumberOperator;
+      },
+        /* p */ 'conditionB.target': (value: string) => {
         return isNumber(value) ? Number(value) : value;
       },
     };
