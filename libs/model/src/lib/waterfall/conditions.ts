@@ -414,7 +414,7 @@ function contractDate(ctx: ConditionContext, payload: ConditionDuration) {
   const { from, to } = payload;
   const contractId = income.contractId;
   if (!contractId) throw new Error(`Right "${right.id}" as condition on contract Date, but income "${income.id}" do not provide a contractId`);
-  if (!ctx.state.contracts[contractId]) throw new Error(`Contract "${contractId} not found in state`);
+  if (!ctx.state.contracts[contractId]) throw new Error(`Contract "${contractId}" not found in state`);
 
   const { start, end } = ctx.state.contracts[contractId];
   if (!start || !end) throw new Error(`Contract "${contractId}" does not specify valid start and end dates`);

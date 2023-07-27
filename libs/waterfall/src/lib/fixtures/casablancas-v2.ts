@@ -526,7 +526,7 @@ const expensesAndIncomes: Action[] = [
   // 31/10/19	netflix_us	netflix_us_8	us_svod	24_465 €
   action('income', { id: 'netflix_us_8', contractId: 'netflix_us', date: new Date('2019/10/31'), from: 'us_svod', to: 'us_svod_com', territory: ['us', 'can'], media: ['svod'], amount: 24_465 }),
   // 31/10/19	netflix_row	netflix_row_8	row_svod	20_017 €
-  action('income', { id: 'netflix_row_8', contractId: 'netflix_row', date: new Date('2019/10/31'), from: 'row_svod', to: 'row_svod_com', territory: ['row'], media: ['svod'], amount: 208017 }),
+  action('income', { id: 'netflix_row_8', contractId: 'netflix_row', date: new Date('2019/10/31'), from: 'row_svod', to: 'row_svod_com', territory: ['row'], media: ['svod'], amount: 20_017 }),
 
 ];
 
