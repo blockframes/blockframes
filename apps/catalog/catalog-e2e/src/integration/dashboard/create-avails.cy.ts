@@ -60,14 +60,14 @@ describe('Create avails', () => {
     get('next').click();
     assertUrlIncludes(`c/o/dashboard/avails/select/${movie.id}/manage`);
     get('territories').click();
-    get('Europe').click();
-    get('Latin America').click();
+    get('Europe').click('left');
+    get('Latin America').click('left');
     get('nepal').click();
     escapeKey();
     assertMultipleTexts('territories', ['Europe', 'Latin America', 'Nepal']);
     get('medias').click();
-    get('TV').click();
-    get('Festivals').click();
+    get('TV').click('left');
+    get('Festivals').click('left');
     get('rental').click();
     escapeKey();
     assertMultipleTexts('medias', ['TV', 'Festivals', 'Rental']);

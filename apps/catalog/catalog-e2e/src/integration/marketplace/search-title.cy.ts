@@ -255,7 +255,7 @@ describe('Movie search in marketplace', () => {
     get('Library').click();
     selectFilter('Country of Origin');
     get('origin-countries').click();
-    get('Europe').click();
+    get('Europe').click('left');
     escapeKey();
     get('origin-countries').should('contain', 'Europe');
     get('save-filter').click();
