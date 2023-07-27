@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { PreferencesForm } from "./preferences.form";
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { PreferencesForm } from './preferences.form';
+import { waterfallMediaGroups } from '@blockframes/model';
 
 @Component({
   selector: 'auth-preferences-form',
@@ -9,4 +10,6 @@ import { PreferencesForm } from "./preferences.form";
 })
 export class PreferencesFormComponent {
   @Input() form: PreferencesForm;
+
+  public waterfallMediaGroups = waterfallMediaGroups;
 }

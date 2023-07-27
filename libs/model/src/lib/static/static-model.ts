@@ -657,7 +657,8 @@ export const languagesISO3: Record<keyof typeof languages, string> = {
   zulu: 'zul',
 };
 
-export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, Blu-Ray)' | 'Festivals' | 'Theatrical Rights';
+export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, Blu-Ray)' | 'Festivals' | 'Theatrical Rights' | 'Derivative Rights';
+export const waterfallMediaGroups: MediaGroup[] = ['Theatrical Rights', 'Derivative Rights'];
 
 export type TerritoryGroup =
   | 'Africa'
@@ -689,6 +690,12 @@ export const medias = {
   theatrical: 'Theatrical',
   nonTheatrical: 'Non theatrical',
   through: 'Sell Through',
+  merchandising: 'Merchandising',
+  music: 'Music',
+  remake: 'Remake, Prequel, Sequel',
+  multimedia: 'Multimedia',
+  multimediaExtract: 'Multimedia Extract',
+  tvExtract: 'TV Extract',
 } as const
 
 export const releaseMedias = {
