@@ -59,9 +59,16 @@
         </mat-option>
       </mat-optgroup>
     </mat-select>
-    <mat-error *ngIf="control.hasError('required')"> This field is mandatory </mat-error>
+    <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
+    <mat-error *ngIf="control.hasError('required')">{{ requiredMsg }}</mat-error>
   </mat-form-field>
-  <button *ngIf="control.value.length" mat-icon-button type="button" matTooltip="See list" (click)="openGroupModal()">
+  <button
+    *ngIf="control.value.length && control.value.length !== items.length"
+    mat-icon-button
+    type="button"
+    matTooltip="See list"
+    (click)="openGroupModal()"
+  >
     <mat-icon svgIcon="document"></mat-icon>
   </button>
 </section>

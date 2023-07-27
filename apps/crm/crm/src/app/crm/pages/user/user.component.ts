@@ -6,7 +6,7 @@ import { UserService } from '@blockframes/user/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
+import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { PermissionsService } from '@blockframes/permissions/service';
 import { EventService } from '@blockframes/event/service';
 import { InvitationService } from '@blockframes/invitation/service';
@@ -279,8 +279,8 @@ export class UserComponent implements OnInit, OnDestroy {
     return output;
   }
 
-  openDetails(terms: string[], scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
+  openDetails(items: string[], scope: Scope) {
+    this.dialog.open(DetailedGroupComponent, { data: createModalData({ items, scope }), autoFocus: false });
   }
 
   getLink(invitation: Invitation) {

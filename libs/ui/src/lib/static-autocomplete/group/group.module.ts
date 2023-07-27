@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { JoinPipeModule, ToGroupLabelPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { GroupMultiselectComponent } from './group.component';
+import { DetailedGroupModule } from '../../detail-modal/detailed.module';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,7 +13,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
-import { DetailedGroupModule } from './detailed/detailed.module';
 
 @NgModule({
   imports: [

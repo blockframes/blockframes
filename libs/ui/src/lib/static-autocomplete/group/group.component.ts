@@ -6,7 +6,8 @@ import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { DetailedGroupComponent } from './detailed/detailed.component';
+import { DetailedGroupComponent } from '../../detail-modal/detailed.component';
+import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'group-multiselect',
@@ -22,6 +23,8 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
   @Input() filterPlaceholder: string;
   @Input() displayAll: string;
   @Input() required = false;
+  @Input() requiredMsg = ' This field is mandatory ';
+  @Input() hint = null;
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
 
   // mySelect and scrollTopBeforeSelection are used to prevent jumps when selecting an option
@@ -174,10 +177,12 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
     const pastedValues = pastedText.split(',').map(item => item.trim());
     const pastedItems = new Set(
       pastedValues
+        .map(item => item.toLowerCase())
         .map(item => {
           for (const group of this.groups) {
-            if (group.label.toLowerCase() === item.toLowerCase()) return group.items;
-            if (group.items.includes(item.toLowerCase())) return item.toLowerCase();
+            if (group.label.toLowerCase() === item) return group.items;
+            const key = getKeyIfExists(this.scope, item);
+            if (key) return key;
           }
         })
         .flat()

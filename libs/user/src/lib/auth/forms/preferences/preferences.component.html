@@ -1,11 +1,10 @@
 <ng-container *ngIf="form">
   <form [formGroup]="form">
-
     <group-multiselect
       scope="medias"
       label="Select Rights"
       displayAll="All Rights"
-      filterPlaceholder="Specify right(s) to filter"
+      filterPlaceholder="Select right(s)"
       selectIcon="none"
       [control]="form.get('medias')">
     </group-multiselect>
@@ -14,7 +13,7 @@
       scope="territories"
       label="Select Territories"
       displayAll="World"
-      filterPlaceholder="Specify territories to filter"
+      filterPlaceholder="Select Territories"
       selectIcon="none"
       [control]="form.get('territories')">
     </group-multiselect>

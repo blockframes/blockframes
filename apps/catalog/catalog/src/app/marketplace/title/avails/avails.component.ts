@@ -14,13 +14,13 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { Holdback, isMandate, isSale, Mandate, Sale, BucketTerm, Term, Territory, territories } from '@blockframes/model';
-import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { ExplanationComponent } from './explanation/explanation.component';
 import { HoldbackModalComponent } from '@blockframes/contract/contract/holdback/modal/holdback-modal.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { where } from 'firebase/firestore';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -180,8 +180,8 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
 
   /** Open a modal to display the entire list of territories when this one is too long */
   public openTerritoryModal(term: BucketTerm) {
-    this.dialog.open(DetailedTermsComponent, {
-      data: createModalData({ terms: term.territories, scope: 'territories' }),
+    this.dialog.open(DetailedGroupComponent, {
+      data: createModalData({ items: term.territories, scope: 'territories' }),
       autoFocus: false
     });
   }

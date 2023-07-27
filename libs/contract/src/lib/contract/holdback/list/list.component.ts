@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { Scope, Holdback } from '@blockframes/model';
+import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
@@ -15,7 +15,7 @@ export class ListComponent {
 
   constructor(private dialog: MatDialog) { }
 
-  openDetails(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
+  openDetails(items: string, scope: Scope) {
+    this.dialog.open(DetailedGroupComponent, { data: createModalData({ items, scope }), autoFocus: false });
   }
 }

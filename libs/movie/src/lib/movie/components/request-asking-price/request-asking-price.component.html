@@ -10,16 +10,22 @@
       label="Select Territories"
       displayAll="World"
       filterPlaceholder="Specify territories to filter"
+      required
+      requiredMsg=" Select at least one Territory "
+      hint="Select the territories you are interested in."
       [control]="form.get('territories')">
     </group-multiselect>
 
     <group-multiselect
-      scope="medias"
-      label="Select Rights"
-      displayAll="All Rights"
-      filterPlaceholder="Specify right(s) to filter"
-      selectIcon="play_arrow"
-      [control]="form.get('medias')">
+    scope="medias"
+    label="Select Rights"
+    displayAll="All Rights"
+    filterPlaceholder="Specify right(s) to filter"
+    selectIcon="play_arrow"
+    required
+    requiredMsg=" Select at least one Right "
+    hint="Select the rights you are interested in."
+    [control]="form.get('medias')">
     </group-multiselect>
 
     <mat-form-field appearance="outline" *ngIf="hasControl('exclusive')">
