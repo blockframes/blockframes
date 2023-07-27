@@ -65,7 +65,7 @@ describe('Deal negotiation', () => {
     get('accept').click();
     //close button
     get('confirm').should('exist');
-    get('close').click();
+    get('close').eq(1).click();
     get('confirm').should('not.exist');
     //confirm button behaviour
     get('accept').click();
