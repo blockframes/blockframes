@@ -6,8 +6,9 @@ import {
   getWaterfallDocument,
   getTerm,
   getOrgId,
-  getRightholderId
-} from '@blockframes/import/utils';
+  getRightholderId,
+  getDate
+} from '../../utils';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
   Media,
@@ -23,7 +24,6 @@ import {
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { getDate } from '@blockframes/import/utils';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { TermService } from '@blockframes/contract/term/service';
@@ -129,7 +129,7 @@ export function getDocumentConfig(option: DocumentConfig) {
       },
         /* f */ 'document.signatureDate': (value: string) => {
         if (!value) throw mandatoryError(value, 'Signature Date');
-        return getDate(value, 'Signature Date') as Date;
+        return getDate(value, 'Signature Date');
       },
         /* g */ 'meta.type': (value: string) => {
         if (!value) throw mandatoryError(value, 'Type');
@@ -158,10 +158,10 @@ export function getDocumentConfig(option: DocumentConfig) {
         return currency;
       },
         /* l */ 'meta.duration.from': (value: string) => {
-        return getDate(value, 'Start of Contract') as Date;
+        return getDate(value, 'Start of Contract');
       },
         /* m */ 'meta.duration.to': (value: string) => {
-        return getDate(value, 'End of Contract') as Date;
+        return getDate(value, 'End of Contract');
       },
         /* n */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
         /* o */ 'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),

@@ -7,7 +7,7 @@ import {
   getUser,
   unknownEntityError,
   wrongTemplateError,
-} from '@blockframes/import/utils';
+} from '../../utils';
 import { ExtractConfig } from '@blockframes/utils/spreadsheet';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import {
@@ -234,7 +234,7 @@ export function getFieldConfigs(
     },
       /* s */ 'originalRelease[].date': (value: string) => {
       if (!value) throw optionalWarning('Original release Date');
-      return getDate(value, 'Original release Date') as Date;
+      return getDate(value, 'Original release Date');
     },
       /* t */ 'originalLanguages[]': (value: string) => {
       // ! required
@@ -644,7 +644,7 @@ export function getFieldConfigs(
     },
       /* s */ 'originalRelease[].date': (value: string) => {
       if (!value) throw optionalWarning('Original release Date');
-      return getDate(value, 'Original release Date') as Date;
+      return getDate(value, 'Original release Date');
     },
       /* t */ 'originalLanguages[]': (value: string) => {
       // ! required

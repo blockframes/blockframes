@@ -134,7 +134,8 @@ export function splitConditions(group: ConditionGroup) {
 }
 
 // Utils
-export type NumberOperator = '==' | '!=' | '<' | '>=';
+export const numberOperator = ['==', '!=', '<', '>='] as const;
+export type NumberOperator = typeof numberOperator[number];
 type ArrayOperator = 'in' | 'not-in';
 /** Blocking operation will always return either the total amount or nothing */
 function numericOperator(operator: NumberOperator, current: number, target: number) {

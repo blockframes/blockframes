@@ -1,4 +1,4 @@
-import { IncomesImportState } from '@blockframes/import/utils';
+import { IncomesImportState } from '../../utils';
 import { App, Movie, createIncome } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getIncomeConfig } from './fieldConfigs';

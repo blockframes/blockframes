@@ -15,7 +15,7 @@ import {
   createWaterfallRightholder,
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
-import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
+import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { UserService } from '@blockframes/user/service';
@@ -302,7 +302,7 @@ export async function getUser(
   return user;
 }
 
-export function getDate(value: string, name: string): Date | ValueWithError<Date> {
+export function getDate(value: string, name: string = 'Date') {
   let date = new Date(value);
 
   // some time excel might store the date as a the number of DAYS since 1900/1/1
@@ -326,7 +326,7 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
 
   // if date seems strange we throw an Error
   const year = date.getFullYear();
-  if (year < 1895 || year > 2200) throw outOfRangeDate(value)
+  if (year < 1895 || year > 2200) throw outOfRangeDate(value);
   // important dates be set to midnight for avails research
   date.setHours(0, 0, 0, 0);
   return date;
@@ -341,10 +341,10 @@ function outOfRangeDate(name: string): ImportLog<string> {
   return new ImportError(name, option);
 }
 
-export function mandatoryError<T = unknown>(value: T, name: string): ImportLog<T> {
+export function mandatoryError<T = unknown>(value: T, name: string, reason?: string): ImportLog<T> {
   const option: SpreadsheetImportError = {
     name: `Missing ${name}`,
-    reason: 'Mandatory field is missing.',
+    reason: reason || 'Mandatory field is missing.',
     message: 'Please fill in the corresponding sheet field.',
   };
   return new ImportError(value, option);
