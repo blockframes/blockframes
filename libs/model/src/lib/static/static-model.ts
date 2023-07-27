@@ -658,7 +658,7 @@ export const languagesISO3: Record<keyof typeof languages, string> = {
 };
 
 export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, Blu-Ray)' | 'Festivals' | 'Theatrical Rights' | 'Derivative Rights';
-export const waterfallMediaGroups = ['Theatrical Rights', 'Derivative Rights'];
+export const waterfallMediaGroups: MediaGroup[] = ['Theatrical Rights', 'Derivative Rights'];
 
 export type TerritoryGroup =
   | 'Africa'
