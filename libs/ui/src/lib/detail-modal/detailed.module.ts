@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { DetailedGroupComponent } from './detailed.component';
 import { ToLabelModule } from '@blockframes/utils/pipes';
@@ -16,7 +15,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   imports: [
     CommonModule,
     ToLabelModule,
-    FlexLayoutModule,
     GlobalModalModule,
     MatButtonModule,
     MatIconModule,
