@@ -37,6 +37,8 @@ const injectedData = {
   [`buckets/${bucket.id}`]: bucket,
 };
 
+let preferencesSkipped = false;
+
 describe('Deal negociation', () => {
   before(() => {
     cy.visit('');
@@ -58,7 +60,10 @@ describe('Deal negociation', () => {
   it('Buyer and Seller can acces the offer / sale page', () => {
     browserAuth.signinWithEmailAndPassword(buyer.user.email);
     cy.visit('');
-    get('skip-preferences').click();
+    if (!preferencesSkipped)
+      get('skip-preferences')
+        .click()
+        .then(() => (preferencesSkipped = true));
     get('menu').click();
     get('offers').click();
     assertUrlIncludes('/c/o/marketplace/offer');
