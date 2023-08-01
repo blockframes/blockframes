@@ -3,9 +3,10 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dial
 import { Holdback, Movie, Scope } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
 import { HoldbackForm } from '../form';
-import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { FormTableComponent } from '@blockframes/ui/form/table/form-table.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { Validators } from '@angular/forms';
+import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 
 @Component({
   selector: 'holdback-selection',
@@ -35,15 +36,15 @@ export class SelectionModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.form = FormList.factory(this.data.holdbacks, (holdback) => new HoldbackForm(holdback), []);
+    this.form = FormList.factory(this.data.holdbacks, (holdback) => new HoldbackForm(holdback), Validators.required);
   }
 
   close() {
     this.dialogRef.close();
   }
 
-  openDetails(terms: string, scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
+  openDetails(items: string, scope: Scope) {
+    this.dialog.open(DetailedGroupComponent, { data: createModalData({ items, scope }), autoFocus: false });
   }
 
   saveAndClose() {

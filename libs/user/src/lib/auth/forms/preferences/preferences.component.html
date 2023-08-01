@@ -1,25 +1,22 @@
 <ng-container *ngIf="form">
   <form [formGroup]="form">
+    <group-multiselect
+      scope="medias"
+      label="Select Rights"
+      displayAll="All Rights"
+      filterPlaceholder="Select right(s)"
+      selectIcon="none"
+      [control]="form.get('medias')">
+    </group-multiselect>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Select Rights</mat-label>
-      <static-group
-        [formControl]="form.get('medias')"
-        scope="medias"
-        displayAll="All Rights"
-        placeholder="Select right(s)">
-      </static-group>
-    </mat-form-field>
-    
-    <mat-form-field appearance="outline">
-      <mat-label>Select Territories</mat-label>
-      <static-group
-        [formControl]="form.get('territories')"
-        scope="territories"
-        displayAll="World"
-        placeholder="Select Territories">
-      </static-group>
-    </mat-form-field>
+    <group-multiselect
+      scope="territories"
+      label="Select Territories"
+      displayAll="World"
+      filterPlaceholder="Select Territories"
+      selectIcon="none"
+      [control]="form.get('territories')">
+    </group-multiselect>
 
     <chips-autocomplete [form]="form.get('languages')" scope="languages" withoutValues="all">
       <mat-label>Languages</mat-label>

@@ -1,34 +1,52 @@
+section {
+  display: flex;
+  align-items: baseline;
+  button {
+    margin-left: 8px;
+  }
+}
+
 mat-form-field {
   width: 100%;
 }
+
 header {
   display: flex;
   align-items: center;
   padding: 8px;
-  border-bottom: solid 1px var(--foreground-divider);
-  position: sticky;
-  top: 0;
-  background-color: var(--background-card);
-  z-index: 1;
-  
   mat-checkbox {
     padding: 8px;
   }
-  input {
-    margin: 0 8px;
+}
+
+input {
+  flex: 1;
+  margin: 0 8px;
+  background-color: transparent;
+  border: none;
+  font: inherit;
+  &:focus {
+    outline: none;
+  }
+}
+
+.group {
+  display: flex;
+  font-weight: bold;
+  mat-checkbox {
     flex: 1;
   }
 }
 
-.mat-option.hidden {
-  display: none;
-}
-
-.mat-option.item {
+.item {
   padding: 0 24px;
 }
 
-/* Override material style on icon on option */
-.subheader.mat-option mat-icon {
+.hidden {
+  display: none;
+}
+
+// hack to overwrite material style which prevented centered icon
+#centered {
   margin-right: 0;
 }

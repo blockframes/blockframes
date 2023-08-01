@@ -17,7 +17,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { NegotiationForm } from '@blockframes/contract/negotiation';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { TermService } from '@blockframes/contract/term/service';
-import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
+import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { createMandate, createTerm, Mandate, Scope, Term } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { NavigationService } from '@blockframes/ui/navigation.service';
@@ -121,9 +121,9 @@ export class TermFormComponent implements OnInit {
     else if (terms.length) this.activeTerm = 0;
   }
 
-  openDetails(terms: string[], scope: Scope) {
-    const data = { data: createModalData({ terms, scope }), autoFocus: false };
-    this.dialog.open(DetailedTermsComponent, data);
+  openDetails(items: string[], scope: Scope) {
+    const data = { data: createModalData({ items, scope }), autoFocus: false };
+    this.dialog.open(DetailedGroupComponent, data);
   }
 
   getMandateFromTitleAndOrg() {

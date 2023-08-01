@@ -81,27 +81,27 @@ describe('Dashboard avails search', () => {
     });
 
     it('Can find second movie only', () => {
+      selectDates(terms[1].duration.from, terms[1].duration.to);
       selectTerritories('Europe');
       selectMedias('Festivals');
-      selectDates(terms[1].duration.from, terms[1].duration.to);
       selectNonExclusive();
       get('row_0_col_0').should('contain', movies[1].title.international);
       get('row_1_col_0').should('not.exist');
     });
 
     it('Can find third movie only', () => {
+      selectDates(terms[2].duration.from, terms[2].duration.to);
       selectTerritories('North America');
       selectMedias('TV');
-      selectDates(terms[2].duration.from, terms[2].duration.to);
       selectExclusive();
       get('row_0_col_0').should('contain', movies[2].title.international);
       get('row_1_col_0').should('not.exist');
     });
 
     it('Can find first and second movies with festival and common dates', () => {
+      selectDates(terms[1].duration.from, terms[0].duration.to);
       selectTerritories('Europe');
       selectMedias('Festivals');
-      selectDates(terms[1].duration.from, terms[0].duration.to);
       selectNonExclusive();
       get('row_0_col_0').should('contain', movies[0].title.international);
       get('row_1_col_0').should('contain', movies[1].title.international);
@@ -231,9 +231,9 @@ describe('Dashboard avails search', () => {
 const toFirebaseTimestamp = (date: Date) => ({ _nanoseconds: 0, _seconds: date.getTime() / 1000 });
 
 function firstMovieFilters() {
+  selectDates(terms[0].duration.from, terms[0].duration.to);
   selectTerritories('Europe');
   selectMedias('TV');
-  selectDates(terms[0].duration.from, terms[0].duration.to);
   selectNonExclusive();
   get('row_0_col_0').should('contain', movies[0].title.international);
   get('row_1_col_0').should('not.exist');

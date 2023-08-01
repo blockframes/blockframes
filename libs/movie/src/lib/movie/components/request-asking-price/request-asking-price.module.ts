@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RequestAskingPriceComponent } from './request-asking-price.component';
 
 // Blockframes
-import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { GlobalModalModule } from "@blockframes/ui/global-modal/global-modal.module";
 
 // Material
@@ -25,7 +25,7 @@ import { MatSelectModule } from '@angular/material/select';
     FlexLayoutModule,
     ReactiveFormsModule,
     // Blockframes
-    StaticGroupModule,
+    GroupMultiselectModule,
     GlobalModalModule,
     // Material
     MatProgressSpinnerModule,

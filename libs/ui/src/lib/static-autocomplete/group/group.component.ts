@@ -1,290 +1,205 @@
-import {
-  ChangeDetectionStrategy, Component, Input, forwardRef,
-  Pipe, PipeTransform, ElementRef, ViewChild, OnInit,
-  OnDestroy, Optional, Self, HostBinding
-} from "@angular/core";
-import {
-  UntypedFormControl, ControlValueAccessor,
-  Validators, NgControl,
-} from "@angular/forms";
-import { BehaviorSubject, combineLatest, Observable, Subscription, defer, Subject } from "rxjs";
-import { map, startWith, shareReplay, pairwise } from "rxjs/operators";
-import { GroupScope, Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/model';
-import { MatFormFieldControl } from "@angular/material/form-field";
-import { coerceBooleanProperty } from "@angular/cdk/coercion";
-
-type GroupMode = 'indeterminate' | 'checked' | 'unchecked';
-
-function filter([groups, text]: [StaticGroup[], string], scope: Scope) {
-  if (!text) return groups;
-  const search = text.toLowerCase();
-  const result: StaticGroup[] = [];
-  for (const group of groups) {
-    if (group.label.toLowerCase().includes(search)) {
-      result.push(group);
-    } else {
-      const items = group.items.filter(item => {
-        return staticModel[scope][item].toLowerCase().includes(search);
-      });
-      if (items.length) {
-        result.push({ ...group, items });
-      }
-    }
-  }
-  return result;
-}
-
-function getMode(group: StaticGroup, value: string[]): GroupMode {
-  const items = group.items.filter(item => value.includes(item));
-  if (!items.length) return 'unchecked';
-  if (items.length === group.items.length) return 'checked';
-  return 'indeterminate';
-}
-function getRootMode(groups: StaticGroup[], value: string[]): GroupMode {
-  if (!value.length) return 'unchecked';
-  if (groups.every(group => getMode(group, value) === 'checked')) return 'checked';
-  return 'indeterminate';
-}
-
-function getItems(groups: StaticGroup[]): string[] {
-  return groups.reduce((items, group) => items.concat(group.items), []);
-}
-
+import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { GroupScope, Scope, StaticGroup, staticGroups } from '@blockframes/model';
+import { FormStaticValueArray } from '@blockframes/utils/form';
+import { MatSelect } from '@angular/material/select';
+import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { DetailedGroupComponent } from '../../detail-modal/detailed.component';
+import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 @Component({
-  selector: 'static-group',
+  selector: 'group-multiselect',
   templateUrl: './group.component.html',
   styleUrls: ['./group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    { provide: MatFormFieldControl, useExisting: forwardRef(() => StaticGroupComponent) },
-  ]
 })
-export class StaticGroupComponent implements ControlValueAccessor, OnInit, OnDestroy, MatFormFieldControl<string[]> {
-  private itemsSub?: Subscription;
-  private changeSub?: Subscription;
-  private onTouch: () => void;
-  modes: Record<string, Observable<GroupMode>> = {};
-  filteredGroups$: Observable<StaticGroup[]>;
-  groups$ = new BehaviorSubject<StaticGroup[]>([]);
-  private _placeholder = 'Tap to filter';
-  focused = false;
-  touched = false;
-  private _required: boolean;
-  private _disabled = false;
-  private opened = false;
-  hidden: Record<string, boolean> = {}
-  stateChanges = new Subject<void>();
-
-  // all items includes the values of checked items which are not in the filter
-  allItems: string[] = [];
-
-  @HostBinding() id = `static-group-${Math.random()}`;
-  @HostBinding('attr.aria-describedby') _ariaDescribedBy = '';
-  @HostBinding('class.floating') get shouldLabelFloat() { return this.focused || !this.empty || this.opened; }
-
-
-  @ViewChild('inputEl') input: ElementRef<HTMLInputElement>;
-  @Input() displayAll = '';
-  @Input() withoutValues: string[] = [];
+export class GroupMultiselectComponent implements OnInit, OnDestroy {
+  @Input() control: FormStaticValueArray<Scope>;
   @Input() scope: GroupScope;
-  @Input()
-  get placeholder() { return this._placeholder; }
-  set placeholder(placeholder: string) {
-    this._placeholder = placeholder;
-    this.stateChanges.next();
-  };
+  @Input() label: string;
+  @Input() selectIcon = 'world';
+  @Input() filterPlaceholder: string;
+  @Input() displayAll: string;
+  @Input() required = false;
+  @Input() requiredMsg = 'This field is mandatory';
+  @Input() hint = null;
+  @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
 
-  form = new UntypedFormControl([], []);
+  // mySelect and scrollTopBeforeSelection are used to prevent jumps when selecting an option
+  @ViewChild('mySelect', { static: true }) mySelect: MatSelect;
+  private scrollTopBeforeSelection: number;
 
-  @Input() get required() { return this._required; };
-  set required(req) {
-    this._required = coerceBooleanProperty(req);
-    const validators = this._required ? [Validators.required] : []
-    this.form.setValidators(validators)
-    this.stateChanges.next();
-  }
+  search = new FormControl('');
 
-  @Input() get disabled() { return this._disabled; };
-  set disabled(value: boolean) {
-    this._disabled = coerceBooleanProperty(value);
-    this._disabled ? this.form.disable() : this.form.enable();
-    this.stateChanges.next();
-  }
+  // groups status
+  groups: StaticGroup[];
+  indeterminate: Record<string, boolean>;
+  checked: Record<string, boolean>;
 
-  // defer the startWith value with subscription happens to get first value
-  value$ = defer(() => this.form.valueChanges.pipe(
-    startWith(this.form.value || []),
-    shareReplay({ refCount: true, bufferSize: 1 }),
-  ));
+  //items status
+  items: string[];
+  selectable: Record<string, boolean>; //will depend on the search value
+  visible: Record<string, boolean>; //will depend on the expand buttons of each group
 
-  get groups() {
-    return this.groups$.getValue();
-  }
+  private subs: Subscription[] = [];
 
-  set value(values: string[] | null) {
-    this.form.setValue(values)
-    this.touched = true;
-    this.stateChanges.next();
-  }
-
-  get empty() {
-    return !this.form.value?.length;
-  }
-
-  search = new UntypedFormControl();
-  trackByLabel = (i: number, group: StaticGroup) => group.label;
-
-  constructor(
-    @Optional() @Self() public ngControl: NgControl,
-    private _elementRef: ElementRef<HTMLElement>,
-  ) {
-    if (this.ngControl != null) {
-      this.ngControl.valueAccessor = this;
-    }
-
-    this.filteredGroups$ = combineLatest([
-      this.groups$.asObservable(),
-      this.search.valueChanges.pipe(startWith(this.search.value))
-    ]).pipe(map(result => filter(result, this.scope)));
-
-    this.itemsSub = combineLatest([
-      this.filteredGroups$.pipe(map(getItems)),
-      this.form.valueChanges.pipe(pairwise())
-    ]).subscribe(([filteredItems, [prev, next]]) => {
-      if (prev) {
-        // checked but filtered out values
-        const hiddenValues = prev.filter(value => !filteredItems.includes(value));
-        if (hiddenValues.length && !next.includes(hiddenValues[0])) {
-          // add back the values
-          this.form.setValue(next.concat(hiddenValues),{emitEvent:false});
-        }
-      }
-      this.allItems = this.form.value;
-    })
-  }
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit() {
-    const groups = staticGroups[this.scope];
-    if (this.withoutValues.length) {
-      for (const group of groups) {
-        /* eslint-disable */
-        group.items = (group.items as any[]).filter((item: string) => !this.withoutValues.includes(item));
+    this.groups = staticGroups[this.scope];
+    this.items = this.getAllItems(this.groups);
+
+    this.selectable = this.items.reduce((aggr, item) => ({ ...aggr, [item]: true }), {});
+    this.visible = this.items.reduce((aggr, item) => ({ ...aggr, [item]: true }), {});
+
+    this.indeterminate = this.getIndeterminate(this.control.value, this.selectable);
+    this.checked = this.getChecked(this.control.value, this.selectable);
+
+    const filterSub = this.search.valueChanges.subscribe(filter => {
+      this.selectable = this.getSelectable(this.groups, filter);
+      this.indeterminate = this.getIndeterminate(this.control.value, this.selectable);
+      this.checked = this.getChecked(this.control.value, this.selectable);
+      for (const group of this.groups) {
+        const groupHasSelectableItems = Object.keys(this.selectable).some(item => group.items.includes(item));
+        const isGroupVisible = this.visible[group.label];
+        if (groupHasSelectableItems && isGroupVisible && filter.length > 2) this.toggleVisibility(group.label);
       }
-    }
-    this.groups$.next(groups);
-  }
+    });
 
-  onOpen(opened: boolean) {
-    if (opened) {
-      this.input.nativeElement.focus();
-      this.touched = true;
-      this.opened = true;
-    } else {
-      this.form.setValue(this.allItems);
-      this.search.setValue('');
-      this.opened = false;
-    }
-  }
+    const formSub = this.control.valueChanges.subscribe(value => {
+      this.indeterminate = this.getIndeterminate(value, this.selectable);
+      this.checked = this.getChecked(value, this.selectable);
+    });
 
-  // Control value accessor
+    // store the scroll value of the selected option
+    const selectOpeningSub = this.mySelect.openedChange.subscribe(open => {
+      if (open) {
+        this.mySelect.panel.nativeElement.addEventListener(
+          'scroll',
+          event => (this.scrollTopBeforeSelection = event.target.scrollTop)
+        );
+      }
+    });
 
-  writeValue(value: string[]): void {
-    this.form.reset(value);
-  }
+    // restore the scroll after each option selected
+    const antiScrollSub = this.mySelect.optionSelectionChanges.subscribe(() => {
+      if (this.mySelect.panel) this.mySelect.panel.nativeElement.scrollTop = this.scrollTopBeforeSelection;
+    });
 
-  registerOnChange(fn: () => void): void {
-    this.changeSub?.unsubscribe();  // Unsubscribe registry on change
-    this.changeSub = this.form.valueChanges.subscribe(fn);
-  }
-
-  registerOnTouched(fn: () => void) {
-    this.onTouch = fn;
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
-
-  get errorState(): boolean {
-    return this.form.errors && Object.keys(this.form.errors).length && this.touched;
-  }
-
-
-  onFocusIn() {
-    if (!this.focused) {
-      this.focused = true;
-      this.stateChanges.next();
-    }
-  }
-
-  onFocusOut(event: FocusEvent) {
-    if (!this._elementRef.nativeElement.contains(event.relatedTarget as Element)) {
-      this.focused = false;
-      this.touched = true;
-      this.stateChanges.next();
-    }
-  }
-
-  setDescribedByIds(ids: string[]) {
-    this._ariaDescribedBy = ids.join(' ')
-  }
-
-  onContainerClick(event: MouseEvent) {
-    if ((event.target as Element).tagName.toLowerCase() != 'mat-select') {
-      (this._elementRef.nativeElement.querySelector('mat-select') as HTMLElement).focus();
-    }
+    this.subs.push(filterSub, formSub, selectOpeningSub, antiScrollSub);
   }
 
   ngOnDestroy() {
-    this.changeSub?.unsubscribe();
-    this.itemsSub?.unsubscribe();
-    this.stateChanges.complete();
+    this.subs.forEach(s => s?.unsubscribe());
   }
 
-  // all check
+  getAllItems(groups: StaticGroup[]): string[] {
+    return groups.reduce((items, group) => [...items, ...group.items], []);
+  }
+
+  getSelectable(groups: StaticGroup[], filter?: string): Record<string, boolean> {
+    const selectable: Record<string, boolean> = {};
+    const lowerCaseFilter = filter.toLowerCase();
+
+    for (const { label, items } of groups) {
+      const lowerCaseLabel = label.toLowerCase();
+      const selectableItems = lowerCaseLabel.includes(lowerCaseFilter)
+        ? items
+        : items.map(i => i.toLowerCase()).filter(item => item.includes(lowerCaseFilter));
+
+      if (lowerCaseLabel.includes(lowerCaseFilter) || selectableItems.length > 0) {
+        selectable[label] = true;
+        selectableItems.forEach(item => {
+          selectable[item] = true;
+        });
+      }
+    }
+
+    return selectable;
+  }
+
+  getIndeterminate(controlValue: string[], selectableItems: Record<string, boolean>): Record<string, boolean> {
+    const allVisibleItems = this.getAllVisibleItems(selectableItems);
+    const indeterminate = { all: controlValue.length > 0 && controlValue.length < allVisibleItems.length };
+    for (const { label, items } of this.groups) {
+      const groupVisibleItems = items.filter(item => selectableItems[item]);
+      const groupVisibleSelectedItems = groupVisibleItems.filter(item => controlValue.includes(item));
+      indeterminate[label] = groupVisibleSelectedItems.length > 0 && groupVisibleSelectedItems.length < groupVisibleItems.length;
+    }
+    return indeterminate;
+  }
+
+  getChecked(controlValue: string[], selectableItems?: Record<string, boolean>): Record<string, boolean> {
+    const allVisibleItems = this.getAllVisibleItems(selectableItems);
+    const checked = { all: !!controlValue.length && controlValue.length === allVisibleItems.length };
+
+    for (const { label, items } of this.groups) {
+      const groupVisibleItems = items.filter(item => selectableItems[item]);
+      const groupVisibleSelectedItems = groupVisibleItems.filter(item => controlValue.includes(item));
+      checked[label] = groupVisibleSelectedItems.length === groupVisibleItems.length;
+    }
+    return checked;
+  }
+
+  checkGroup(groupLabel: string, selectable: Record<string, boolean>, checked: boolean) {
+    const previous = this.control.value;
+    const groupItems = this.groups.filter(group => group.label === groupLabel && group.items).flatMap(group => group.items);
+    const selectableItems = groupItems.filter(item => selectable[item]);
+    this.control.setValue(
+      checked ? [...new Set([...previous, ...selectableItems])] : previous.filter(item => !selectableItems.includes(item))
+    );
+  }
 
   checkAll(checked: boolean) {
-    if (!checked) {
-      this.form.reset([]);
-    } else {
-      const value = getItems(this.groups);
-      this.form.reset(value);
-    }
+    this.control.setValue(checked ? this.items : []);
   }
 
-
-  // Per group
-  checkGroup(group: StaticGroup, checked: boolean, event?: MouseEvent) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    const value = this.form.value || [];
-    const items = group.items || [];
-    if (checked) {
-      this.form.setValue(Array.from(new Set([...value, ...items])));
-    } else {
-      this.form.setValue(value.filter(item => !items.includes(item)));
-    }
-  }
-  hideGroup(group: StaticGroup, event: MouseEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.hidden[group.label] = !this.hidden[group.label];
+  toggleVisibility(groupLabel: string) {
+    this.visible[groupLabel] = !this.visible[groupLabel];
+    this.indeterminate = this.getIndeterminate(this.control.value, this.selectable);
+    this.checked = this.getChecked(this.control.value, this.selectable);
   }
 
-  cancelSpace(event: KeyboardEvent) {
-    if (event.key === ' ') event.stopPropagation();
+  getAllVisibleItems(selectableItems?: Record<string, boolean>) {
+    return selectableItems ? Object.keys(selectableItems).filter(item => item[0] === item[0].toLowerCase()) : this.items;
   }
 
-}
+  onOpen() {
+    this.resetSearch();
+    this.searchInput.nativeElement.focus();
+  }
 
+  onSearchPaste(event: ClipboardEvent) {
+    const clipboardData = event.clipboardData;
+    const pastedText = clipboardData.getData('text');
+    const pastedValues = pastedText.split(',').map(item => item.trim());
+    const pastedItems = new Set(
+      pastedValues
+        .map(item => item.toLowerCase())
+        .map(item => {
+          for (const group of this.groups) {
+            if (group.label.toLowerCase() === item) return group.items;
+            const key = getKeyIfExists(this.scope, item);
+            if (key) return key;
+          }
+        })
+        .flat()
+        .filter(item => !!item)
+    );
+    this.control.setValue(Array.from(pastedItems));
+    this.mySelect.close();
+  }
 
-@Pipe({ name: 'getMode' })
-export class GetModePipe implements PipeTransform {
-  transform(value: string[], group: StaticGroup | StaticGroup[]) {
-    if (Array.isArray(group)) return getRootMode(group, value);
-    return getMode(group, value);
+  resetSearch() {
+    this.search.setValue('');
+  }
+
+  openGroupModal() {
+    this.dialog.open(DetailedGroupComponent, {
+      data: createModalData({ items: this.control.value, scope: this.scope }),
+      autoFocus: false,
+    });
   }
 }

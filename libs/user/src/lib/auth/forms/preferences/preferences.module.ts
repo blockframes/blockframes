@@ -6,7 +6,7 @@ import { PreferencesFormComponent } from './preferences.component';
 
 // Blockframes
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
-import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,7 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ReactiveFormsModule,
 
     ChipsAutocompleteModule,
-    StaticGroupModule,
+    GroupMultiselectModule,
 
     MatFormFieldModule
   ],

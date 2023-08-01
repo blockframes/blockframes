@@ -1,36 +1,23 @@
-<mat-form-field appearance="outline" *ngIf="getControl('territories') as territories" >
-  <mat-label>Select Territories</mat-label>
-  <mat-icon matPrefix svgIcon="world"></mat-icon>
-  <static-group
-    [disabled]="disabled"
-    [formControl]="territories"
+  <group-multiselect
+    *ngIf="getControl('territories') as territories"
     scope="territories"
+    label="Select Territoties"
     displayAll="World"
-    placeholder="Specify territory to filter"
+    filterPlaceholder="Specify territories to filter"
     required
-    test-id="territories">
-  </static-group>
-  <mat-error *ngIf="form.hasError('required', 'territories')">
-    This field is mandatory
-  </mat-error>
-</mat-form-field>
+    [control]="territories">
+  </group-multiselect>
 
-<mat-form-field appearance="outline" *ngIf="getControl('medias') as medias">
-  <mat-label>Select Rights</mat-label>
-  <mat-icon matPrefix svgIcon="play_arrow"></mat-icon>
-  <static-group
-    [formControl]="medias"
-    [disabled]="disabled"
+  <group-multiselect
+    *ngIf="getControl('medias') as medias"
     scope="medias"
+    label="Select Rights"
     displayAll="All Rights"
+    filterPlaceholder="Specify right(s) to filter"
+    selectIcon="play_arrow"
     required
-    placeholder="Specify right(s) to filter"
-    test-id="medias">
-  </static-group>
-  <mat-error *ngIf="form.hasError('required', 'medias')">
-    This field is mandatory
-  </mat-error>
-</mat-form-field>
+    [control]="medias">
+  </group-multiselect>
 
 <div class="duration" *ngIf="getControl('duration') as duration" [formGroup]="duration" >
   <mat-form-field appearance="outline">

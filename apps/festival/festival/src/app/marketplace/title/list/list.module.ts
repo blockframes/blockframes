@@ -30,7 +30,7 @@ import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/chec
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { RequestScreeningModule } from '@blockframes/event/components/request-screening/request-screening.module';
 import { MinMaxFilterModule } from '@blockframes/movie/form/filters/min-max/min-max.module';
-import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ScopeMultiselectModule } from '@blockframes/ui/static-autocomplete/scope/scope-multiselect.module';
 
@@ -51,7 +51,7 @@ import { ScopeMultiselectModule } from '@blockframes/ui/static-autocomplete/scop
     ImageModule,
     RequestScreeningModule,
     MinMaxFilterModule,
-    StaticGroupModule,
+    GroupMultiselectModule,
     StaticSelectModule,
     ScopeMultiselectModule,
 

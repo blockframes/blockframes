@@ -133,19 +133,19 @@ describe('Deal negotiation', () => {
   it('Buyer makes a counter-counter-offer', () => {
     get('negotiate').click();
     get('price').clear().type('20000');
-    get('territories').click();
-    get('CIS').click();
-    escapeKey();
-    get('medias').should('contain', 'TV');
-    get('medias').click();
-    get('VOD').click();
-    escapeKey();
     get('dateFrom')
       .clear()
       .type(dateToMMDDYYYY(add(seller.term.duration.from, { days: 15 })));
     get('dateTo')
       .clear()
       .type(dateToMMDDYYYY(sub(seller.term.duration.to, { days: 15 })));
+    get('territories').click();
+    get('CIS').click('left');
+    escapeKey();
+    get('medias').should('contain', 'TV');
+    get('medias').click();
+    get('VOD').click('left');
+    escapeKey();
     get('exclusivity').click();
     get('non-exclusive').click();
     get('caption').click(); //cunchecking this option

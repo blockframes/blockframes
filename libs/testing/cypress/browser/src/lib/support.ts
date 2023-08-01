@@ -85,7 +85,7 @@ export function interceptEmail(_query: string, twoMinutesLimit = true, loop = 0)
   return gmail.queryEmails(query).then(emailsList => {
     if (!emailsList.length) {
       if (loop > 20) throw new Error(`No email found for the following query: ${_query} / time: ${new Date()}`);
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         setTimeout(() => {
           resolve(interceptEmail(_query, twoMinutesLimit, loop + 1));
         }, 1000);
@@ -185,17 +185,19 @@ export function refreshIfMaintenance(app: App) {
 
 export function selectTerritories(territory: Territory | TerritoryGroup) {
   get('territories').click();
-  get(territory).click();
+  get(territory).click('left');
   escapeKey();
 }
 
 export function selectMedias(mediaGroup: MediaGroup) {
   get('medias').click();
-  get(mediaGroup).click();
+  get(mediaGroup).click('left');
   escapeKey();
 }
 
 export function selectDates(from: Date, to: Date) {
+  get('dateFrom').should('be.enabled');
+  get('dateTo').should('be.enabled');
   get('dateFrom').clear().type(dateToMMDDYYYY(from));
   get('dateTo').clear().type(dateToMMDDYYYY(to));
 }
