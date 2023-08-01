@@ -16,5 +16,5 @@ export const actions: Action[] = [
     ]
   }),
   action('append', { id: 'end', orgId: 'evil-production', percent: 0.5, previous: [] }),
-  action('income', { id: 'income-1', amount: 100_000, from: 'row_all', to: 'first-parent', territory: [], media: [] }),
+  action('income', { id: 'income-1', amount: 100_000, from: 'row_all', to: 'first-parent', territories: [], medias: [] }),
 ]

@@ -266,13 +266,13 @@ export const actions: Action[] = [
 
   // TODO: add contract
 
-  action('income', { id: 'cine_fr', from: 'cine_fr', to: 'diaphana_cine_fr', amount: 190_116.97, media: ['cine'], territory: ['france'] }),
-  action('income', { id: 'support_canal', from: 'support_canal', to: 'diaphana_canal', amount: 42_700, media: [], territory: ['france'] }),
-  action('income', { id: 'dvd_sell_fr', from: 'dvd_sell_fr', to: 'diaphana_dvd_sell_fr', amount: 31_987, media: ['dvd_sell'], territory: ['france'] }),
-  action('income', { id: 'dvd_op_fr', from: 'dvd_op_fr', to: 'diaphana_dvd_op_fr', amount: 12_487, media: ['dvd_op'], territory: ['france'] }),
-  action('income', { id: 'vod_fr', from: 'vod_fr', to: 'diaphana_vod_fr', amount: 13_751, media: ['dvd_op'], territory: ['france'] }),
-  action('income', { id: 'usa', from: 'usa', to: 'com_us', amount: 2_431, media: [], territory: ['usa'] }),
-  action('income', { id: 'row', from: 'row', to: 'com_row', amount: 64_275, media: [], territory: ['row'] }),
-  action('income', { id: 'row_festival', from: 'row_festival', to: 'com_row_festival', amount: 15_650, media: ['festival'], territory: ['row'] }),
-  action('income', { id: 'cnc_support', from: 'cnc_support', to: 'indie_expense_row', amount: 4_646.5, media: ['festival'], territory: ['row'] }),
+  action('income', { id: 'cine_fr', from: 'cine_fr', to: 'diaphana_cine_fr', amount: 190_116.97, medias: ['cine'], territories: ['france'] }),
+  action('income', { id: 'support_canal', from: 'support_canal', to: 'diaphana_canal', amount: 42_700, medias: [], territories: ['france'] }),
+  action('income', { id: 'dvd_sell_fr', from: 'dvd_sell_fr', to: 'diaphana_dvd_sell_fr', amount: 31_987, medias: ['dvd_sell'], territories: ['france'] }),
+  action('income', { id: 'dvd_op_fr', from: 'dvd_op_fr', to: 'diaphana_dvd_op_fr', amount: 12_487, medias: ['dvd_op'], territories: ['france'] }),
+  action('income', { id: 'vod_fr', from: 'vod_fr', to: 'diaphana_vod_fr', amount: 13_751, medias: ['dvd_op'], territories: ['france'] }),
+  action('income', { id: 'usa', from: 'usa', to: 'com_us', amount: 2_431, medias: [], territories: ['usa'] }),
+  action('income', { id: 'row', from: 'row', to: 'com_row', amount: 64_275, medias: [], territories: ['row'] }),
+  action('income', { id: 'row_festival', from: 'row_festival', to: 'com_row_festival', amount: 15_650, medias: ['festival'], territories: ['row'] }),
+  action('income', { id: 'cnc_support', from: 'cnc_support', to: 'indie_expense_row', amount: 4_646.5, medias: ['festival'], territories: ['row'] }),
 ];

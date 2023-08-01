@@ -70,14 +70,14 @@ const sellers: Action[] = [
       {
         type: 'right', id: 'row_all_except_tv_author', orgId: 'author', percent: 0.05, conditions: and([
           condition('orgTurnover', { orgId: 'author', operator: '>=', target: 11_000 }),
-          condition('terms', { type: 'media', operator: 'not-in', list: ['tv'] }),
+          condition('terms', { type: 'medias', operator: 'not-in', list: ['tv'] }),
         ])
       },
       {
         type: 'right', id: 'row_tv_author', orgId: 'author', percent: 0.01, conditions: and([
           condition('orgTurnover', { orgId: 'author', operator: '>=', target: 11_000 }),
-          condition('terms', { type: 'media', operator: 'in', list: ['tv'] }),
-          condition('terms', { type: 'territory', operator: 'not-in', list: ['france', 'germany'] }),
+          condition('terms', { type: 'medias', operator: 'in', list: ['tv'] }),
+          condition('terms', { type: 'territories', operator: 'not-in', list: ['france', 'germany'] }),
         ])
       }
     ]
@@ -159,8 +159,8 @@ const rnpp: Action[] = [
     id: 'rnpp', blameId: 'realistism', previous: [], children: [
       {
         type: 'right', id: 'extract_author', orgId: 'author', percent: 0.01, conditions: and([
-          condition('terms', { type: 'media', operator: 'in', list: ['extract'] }),
-          condition('terms', { type: 'territory', operator: 'in', list: ['france'] }),
+          condition('terms', { type: 'medias', operator: 'in', list: ['extract'] }),
+          condition('terms', { type: 'territories', operator: 'in', list: ['france'] }),
         ])
       },
       {
@@ -238,22 +238,22 @@ const others: Action[] = [
 ];
 
 const incomes: Action[] = [
-  action('income', { id: 'cine_cnc', amount: 0, from: 'cine_cnc', to: 'cine_cnc', territory: [], media: [] }),
-  action('income', { id: 'cine_theater', amount: 115_969, from: 'cine_theater', to: 'com_cine_commercial_ufo', territory: ['france'], media: ['salle'] }),
-  action('income', { id: 'fr_tv', amount: 10_000, from: 'fr_tv', to: 'ufo_com', territory: ['france'], media: ['tv'] }),
-  action('income', { id: 'extract_tv', amount: 250, from: 'extract_tv', to: 'rnpp', territory: ['france'], media: ['tv'] }),
-  action('income', { id: 'fr_rent', amount: 5_290, from: 'fr_rent', to: 'rent_rd', territory: ['france'], media: ['dvd'] }),
-  action('income', { id: 'fr_collector', amount: 24_125, from: 'fr_collector', to: 'collector_rd', territory: ['france'], media: ['dvd'] }),
-  action('income', { id: 'fr_sell_a', amount: 6_650, from: 'fr_sell', to: 'sell_rd', territory: ['france'], media: ['dvd'] }),
+  action('income', { id: 'cine_cnc', amount: 0, from: 'cine_cnc', to: 'cine_cnc', territories: [], medias: [] }),
+  action('income', { id: 'cine_theater', amount: 115_969, from: 'cine_theater', to: 'com_cine_commercial_ufo', territories: ['france'], medias: ['salle'] }),
+  action('income', { id: 'fr_tv', amount: 10_000, from: 'fr_tv', to: 'ufo_com', territories: ['france'], medias: ['tv'] }),
+  action('income', { id: 'extract_tv', amount: 250, from: 'extract_tv', to: 'rnpp', territories: ['france'], medias: ['tv'] }),
+  action('income', { id: 'fr_rent', amount: 5_290, from: 'fr_rent', to: 'rent_rd', territories: ['france'], medias: ['dvd'] }),
+  action('income', { id: 'fr_collector', amount: 24_125, from: 'fr_collector', to: 'collector_rd', territories: ['france'], medias: ['dvd'] }),
+  action('income', { id: 'fr_sell_a', amount: 6_650, from: 'fr_sell', to: 'sell_rd', territories: ['france'], medias: ['dvd'] }),
   action('emitEvent', { eventId: 'fr_dvd_sold', value: 4_344 }),
-  action('income', { id: 'fr_sell_b', amount: 22_433, from: 'fr_sell', to: 'sell_rd', territory: ['france'], media: ['dvd'] }),
-  action('income', { id: 'fr_vod', amount: 3_948, from: 'fr_vod', to: 'vod_rd', territory: ['france'], media: ['vod'] }),
-  action('income', { id: 'fr_svod', amount: 2_000, from: 'fr_svod', to: 'svod_rd', territory: ['france'], media: ['svod'] }),
-  action('income', { id: 'row_all', amount: 380_739, from: 'row_all', to: 'com_elledriver', territory: ['world'], media: ['vod', 'tv', 'salle', 'svod', 'dvd'] }),
-  action('income', { id: 'music', amount: 0, from: 'music', to: 'com_music', territory: ['world'], media: ['cd'] }),
-  action('income', { id: 'cnc', amount: 31_992, from: 'cnc', to: 'cnc_support', territory: ['france'], media: [] }),
-  action('income', { id: 'world_festival', amount: 0, from: 'world_festival', to: 'festival_elledriver', territory: ['world'], media: ['festival'] }),
-  action('income', { id: 'cine_theater_non_com', amount: 0, from: 'cine_theater_non_com', to: 'com_cine_non_commercial_ufo', territory: ['france'], media: ['salle-non-com'] }),
+  action('income', { id: 'fr_sell_b', amount: 22_433, from: 'fr_sell', to: 'sell_rd', territories: ['france'], medias: ['dvd'] }),
+  action('income', { id: 'fr_vod', amount: 3_948, from: 'fr_vod', to: 'vod_rd', territories: ['france'], medias: ['vod'] }),
+  action('income', { id: 'fr_svod', amount: 2_000, from: 'fr_svod', to: 'svod_rd', territories: ['france'], medias: ['svod'] }),
+  action('income', { id: 'row_all', amount: 380_739, from: 'row_all', to: 'com_elledriver', territories: ['world'], medias: ['vod', 'tv', 'salle', 'svod', 'dvd'] }),
+  action('income', { id: 'music', amount: 0, from: 'music', to: 'com_music', territories: ['world'], medias: ['cd'] }),
+  action('income', { id: 'cnc', amount: 31_992, from: 'cnc', to: 'cnc_support', territories: ['france'], medias: [] }),
+  action('income', { id: 'world_festival', amount: 0, from: 'world_festival', to: 'festival_elledriver', territories: ['world'], medias: ['festival'] }),
+  action('income', { id: 'cine_theater_non_com', amount: 0, from: 'cine_theater_non_com', to: 'com_cine_non_commercial_ufo', territories: ['france'], medias: ['salle-non-com'] }),
 ];
 
 export const actions = [...investments, ...sellers, ...rnpp, ...others, ...rest, ...incomes];
