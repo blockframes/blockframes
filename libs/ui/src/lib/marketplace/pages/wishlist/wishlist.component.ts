@@ -84,6 +84,14 @@ export class WishlistComponent implements OnInit, OnDestroy {
     });
   }
 
+  public clear(event: Event) {
+    event.stopPropagation();
+    this.service.clearWishlist(this.dataSource.filteredData);
+    this.snackbar.open('All titles have been removed from your selection.', 'close', {
+      duration: 2000,
+    });
+  }
+
   async export() {
     const downloadSettings: DownloadSettings = { titleIds: this.movieIds };
     const canDownload = this.pdfService.canDownload(downloadSettings);

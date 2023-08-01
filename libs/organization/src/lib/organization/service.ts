@@ -185,6 +185,13 @@ export class OrganizationService extends BlockframesCollection<Organization> {
     this.update(orgState.id, { wishlist });
   }
 
+  public async clearWishlist(movies: Movie[]) {
+    const orgState = this.org;
+    const wishlist = [];
+    for(const movie of movies) this.analytics.addTitle('removedFromWishlist', movie);
+    this.update(orgState.id, { wishlist });
+  }
+
   public isInWishlist(movieId: string): Observable<boolean> {
     return this.currentOrg$.pipe(map((org) => org.wishlist.includes(movieId)));
   }
