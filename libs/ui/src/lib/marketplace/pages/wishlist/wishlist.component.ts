@@ -88,7 +88,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.service.clearWishlist(this.dataSource.filteredData);
     this.snackbar.open('All titles have been removed from your selection.', 'close', {
-      duration: 2000,
+      duration: 3000,
     });
   }
 
