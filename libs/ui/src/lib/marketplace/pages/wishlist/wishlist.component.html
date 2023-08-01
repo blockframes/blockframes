@@ -2,16 +2,16 @@
   <ng-container *ngIf="hasWishlist; else noWishlist">
     <div fxLayout="row" fxLayoutAlign="space-between end">
       <h1>Company's Wishlist</h1>
-      <section>
+      <aside>
         <button [disabled]="exporting" mat-button (click)="export()" matTooltip="Export to PDF" test-id="export">
           <mat-icon svgIcon="pdf"></mat-icon>
           <span>Export {movieIds.length, plural, =1 {title} other {titles}}</span>
         </button>
-        <button *ngIf="movieIds.length > 1" mat-button (click)="clear($event)" matTooltip="Clear Wishlist">
+        <button *ngIf="movieIds.length > 1" mat-button (click)="clear()" matTooltip="Clear Wishlist">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Delete all titles</span>
         </button>
-      </section>
+      </aside>
     </div>
     <table mat-table [dataSource]="dataSource">
       <!-- Movie -->
