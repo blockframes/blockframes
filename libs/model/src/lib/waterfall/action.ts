@@ -151,6 +151,7 @@ function formatPayload(right: Right, childs: Right[] = []) {
         percent: right.percent / 100,
         previous: right.previousIds || [],
         date: right.date,
+        pools: right.pools,
       };
 
       if (right.conditions) {
@@ -166,6 +167,7 @@ function formatPayload(right: Right, childs: Right[] = []) {
         percent: right.percent / 100,
         next: right.nextIds || [],
         date: right.date,
+        pools: right.pools,
       };
 
       if (right.conditions) {
@@ -216,7 +218,7 @@ function formatChild(childs: Right[]) {
       percent: child.percent / 100,
       orgId: child.rightholderId,
       conditions: child.conditions,
-      pools: [] // TODO #9420
+      pools: child.pools,
     };
 
     return childRight;
@@ -263,8 +265,8 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
         to: source.destinationId,
         amount,
         date: i.date,
-        territory: i.territories,
-        media: i.medias
+        territories: i.territories,
+        medias: i.medias
       })
     );
   });
@@ -569,8 +571,8 @@ export interface IncomeAction extends BaseAction {
   to: string;
   from?: string;
   contractId?: string;
-  territory: string[]; // TODO should be same typing as Income or WaterfallSource interface 
-  media: string[]; // TODO should be same typing as Income or WaterfallSource interface
+  territories: string[]; // TODO #9420 should be Territory[]
+  medias: string[]; // TODO #9420 should be Media[]
   isCompensation?: boolean;
 }
 

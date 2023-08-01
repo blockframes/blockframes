@@ -125,8 +125,8 @@ interface IncomeState {
   from?: string;
   to: string;
   amount: number;
-  territory: string[];
-  media: string[];
+  territories: string[]; // TODO #9420 should be Territory[]
+  medias: string[]; // TODO #9420 should be Media[]
   isCompensation?: boolean;
   contractId?: string;
 }

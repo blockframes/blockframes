@@ -1,15 +1,15 @@
 import { getDate, getRightholderId, getTitleId, mandatoryError, optionalWarning, unknownEntityError } from '../../utils';
-import { ConditionName, NumberOperator, Right, WaterfallRightholder, Movie, numberOperator } from '@blockframes/model';
+import { ConditionName, NumberOperator, Right, WaterfallRightholder, Movie, numberOperator, staticGroups, GroupScope, arrayOperator, ArrayOperator } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
-import { ExtractConfig } from '@blockframes/utils/spreadsheet';
+import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 const isNumber = (v: string) => !isNaN(parseFloat(v));
 export interface ImportedCondition {
   conditionName: ConditionName,
   left: string,
-  operator: NumberOperator,
-  target: string | number
+  operator: NumberOperator | ArrayOperator,
+  target: string | string[] | number
 }
 
 export interface FieldsConfig {
@@ -104,35 +104,68 @@ export function getRightConfig(option: RightConfig) {
         /* i */ 'right.percent': (value: string) => {
         return Number(value);
       },
-        /* j */ 'conditionA.conditionName': (value: string) => {
+        /* j */ 'right.pools': (value: string) => {
+        return value.split(separator).map(v => v.trim()).filter(v => !!v);
+      },
+        /* k */ 'conditionA.conditionName': (value: string) => {
         return value as ConditionName;
       },
-        /* k */ 'conditionA.left': (value: string) => {
+        /* l */ 'conditionA.left': (value: string) => {
         return value;
       },
-        /* l */ 'conditionA.operator': (value: string) => {
-        if (value === '≥') value = '>=';
-        if (value && !numberOperator.includes(value as NumberOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${numberOperator.map(o => `"${o}"`).join(' ')}`);
-        return value as NumberOperator;
+        /* m */ 'conditionA.operator': (value: string, data: FieldsConfig) => {
+        return extractConditionOperator(value, data.conditionA);
       },
-        /* m */ 'conditionA.target': (value: string) => {
-        return isNumber(value) ? Number(value) : value;
+        /* n */ 'conditionA.target': (value: string, data: FieldsConfig) => {
+        return extractConditionTarget(value, data.conditionA);
       },
-        /* n */ 'conditionB.conditionName': (value: string) => {
+        /* o */ 'conditionB.conditionName': (value: string) => {
         return value as ConditionName;
       },
-        /* o */ 'conditionB.left': (value: string) => {
+        /* p */ 'conditionB.left': (value: string) => {
         return value;
       },
-        /* p */ 'conditionB.operator': (value: string) => {
-        if (value === '≥') value = '>=';
-        if (value && !numberOperator.includes(value as NumberOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${numberOperator.map(o => `"${o}"`).join(' ')}`);
-        return value as NumberOperator;
+        /* q */ 'conditionB.operator': (value: string, data: FieldsConfig) => {
+        return extractConditionOperator(value, data.conditionB);
       },
-        /* q */ 'conditionB.target': (value: string) => {
-        return isNumber(value) ? Number(value) : value;
+        /* r */ 'conditionB.target': (value: string, data: FieldsConfig) => {
+        return extractConditionTarget(value, data.conditionB);
+      },
+        /* s */ 'conditionC.conditionName': (value: string) => {
+        return value as ConditionName;
+      },
+        /* t */ 'conditionC.left': (value: string) => {
+        return value;
+      },
+        /* u */ 'conditionC.operator': (value: string, data: FieldsConfig) => {
+        return extractConditionOperator(value, data.conditionC);
+      },
+        /* v */ 'conditionC.target': (value: string, data: FieldsConfig) => {
+        return extractConditionTarget(value, data.conditionC);
       },
     };
+  }
+
+  function extractConditionOperator(value: string, cond: ImportedCondition) {
+    if (cond.conditionName === 'terms') {
+      if (value && !arrayOperator.includes(value as ArrayOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${arrayOperator.map(o => `"${o}"`).join(' ')}`);
+      return value as ArrayOperator;
+    } else {
+      if (value === '≥') value = '>=';
+      if (value && !numberOperator.includes(value as NumberOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${numberOperator.map(o => `"${o}"`).join(' ')}`);
+      return value as NumberOperator;
+    }
+  }
+
+  function extractConditionTarget(value: string, cond: ImportedCondition) {
+    if (cond.conditionName === 'terms') {
+      const groups = Object.keys(staticGroups) as GroupScope[];
+      const leftOperand = cond.left as any;
+      if (!groups.includes(leftOperand)) throw mandatoryError(value, 'Operator', `For "terms" condition, expected value for left operand are : ${groups.map(g => `"${g}"`).join(' ')}`);
+      return getGroupedList(value, leftOperand, separator);
+    } else {
+      return isNumber(value) ? Number(value) : value;
+    }
   }
 
   return getAdminConfig();
