@@ -10,6 +10,7 @@ export interface Right {
   actionName: ActionName;
   groupId: string;
   previousIds: string[];
+  nextIds: string[];
   rightholderId: string;
   percent: number;
   conditions?: ConditionGroup;
@@ -24,6 +25,7 @@ export function createRight(params: Partial<Right> = {}) {
     actionName: 'append',
     groupId: '',
     previousIds: [],
+    nextIds: [],
     rightholderId: '',
     percent: 100,
     ...params

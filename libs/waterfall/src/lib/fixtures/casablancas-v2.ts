@@ -2,9 +2,7 @@ import { and, condition, Action, action } from '@blockframes/model';
 
 const contracts: Action[] = [
   // --------- BLOCK 09/03/16 --------- 
-  action('contract', { id: 'fr_cine', amount: 0, date: new Date('2016/03/09') }),
-  action('contract', { id: 'fr_dvd', amount: 0, date: new Date('2016/03/09') }),
-  action('contract', { id: 'fr_vod', amount: 0, date: new Date('2016/03/09') }),
+  action('contract', { id: 'ufo_fr', amount: 0, date: new Date('2016/03/09') }),
 
   // --------- BLOCK 30/06/16 --------- 
   //madman_au	Creation	Playtime	Madman	30/06/16	30/06/16	30/06/26	Mandate	Australia	All	30_000	$
@@ -408,11 +406,11 @@ const expensesAndIncomes: Action[] = [
   // 09/03/16	UFO	88_500 €	expense_fr	cine
   action('expense', { orgId: 'ufo', type: 'expense_fr', amount: 88_500, date: new Date('2016/03/09') }),
   // 09/03/16	fr_cine	fr_cine_1	fr_cine	6_919 €
-  action('income', { id: 'fr_cine_1', contractId: 'fr_cine', date: new Date('2016/03/09'), from: 'fr_cine', to: 'ufo_fr_com_cine', territory: ['fr'], media: ['salle'], amount: 6_919 }),
+  action('income', { id: 'fr_cine_1', contractId: 'ufo_fr', date: new Date('2016/03/09'), from: 'fr_cine', to: 'ufo_fr_com_cine', territory: ['fr'], media: ['salle'], amount: 6_919 }),
   // 09/03/16	fr_dvd	fr_dvd_1	fr_dvd	0 €
-  action('income', { id: 'fr_dvd_1', contractId: 'fr_dvd', date: new Date('2016/03/09'), from: 'fr_dvd', to: 'ufo_fr_com_dvd', territory: ['fr'], media: ['dvd'], amount: 0 }),
+  action('income', { id: 'fr_dvd_1', contractId: 'ufo_fr', date: new Date('2016/03/09'), from: 'fr_dvd', to: 'ufo_fr_com_dvd', territory: ['fr'], media: ['dvd'], amount: 0 }),
   // 09/03/16	fr_vod	fr_vod_1	fr_vod	0 €
-  action('income', { id: 'fr_vod_1', contractId: 'fr_vod', date: new Date('2016/03/09'), from: 'fr_vod', to: 'ufo_fr_com_vod', territory: ['fr'], media: ['vod'], amount: 0 }),
+  action('income', { id: 'fr_vod_1', contractId: 'ufo_fr', date: new Date('2016/03/09'), from: 'fr_vod', to: 'ufo_fr_com_vod', territory: ['fr'], media: ['vod'], amount: 0 }),
 
   // --------- BLOCK 30/06/16 --------- 
   // 30/06/16	Playtime	10_828 €	expense_row	distrib
@@ -444,7 +442,7 @@ const expensesAndIncomes: Action[] = [
 
   // --------- BLOCK 30/04/17 --------- 
   // 30/04/17	Playtime	-4_314 €	expense_row	distrib
-  action('expense', { orgId: 'playtime', type: 'expense_row', amount: -4_314, date: new Date('2017/04/30') }),
+  action('expense', { orgId: 'playtime', type: 'expense_row', amount: -4_703, date: new Date('2017/04/30') }),
   // 30/04/17	Playtime	6_065 €	expense_fr_tv	
   action('expense', { orgId: 'playtime', type: 'expense_fr_tv', amount: 6_065, date: new Date('2017/04/30') }),
   // 30/04/17	Playtime	7_500 €	expense_us	
@@ -456,11 +454,11 @@ const expensesAndIncomes: Action[] = [
 
   // --------- BLOCK 15/06/17 --------- 
   // 15/06/17	fr_cine	fr_cine_2	fr_cine	249 €
-  action('income', { id: 'fr_cine_2', contractId: 'fr_cine', date: new Date('2017/06/15'), from: 'fr_cine', to: 'ufo_fr_com_cine', territory: ['fr'], media: ['salle'], amount: 249 }),
+  action('income', { id: 'fr_cine_2', contractId: 'ufo_fr', date: new Date('2017/06/15'), from: 'fr_cine', to: 'ufo_fr_com_cine', territory: ['fr'], media: ['salle'], amount: 249 }),
   // 15/06/17	fr_dvd	fr_dvd_2	fr_dvd	1_030 €
-  action('income', { id: 'fr_dvd_2', contractId: 'fr_dvd', date: new Date('2017/06/15'), from: 'fr_dvd', to: 'ufo_fr_com_dvd', territory: ['fr'], media: ['dvd'], amount: 1_030 }),
+  action('income', { id: 'fr_dvd_2', contractId: 'ufo_fr', date: new Date('2017/06/15'), from: 'fr_dvd', to: 'ufo_fr_com_dvd', territory: ['fr'], media: ['dvd'], amount: 1_030 }),
   // 15/06/17	fr_vod	fr_vod_2	fr_vod	3_117 €
-  action('income', { id: 'fr_vod_2', contractId: 'fr_vod', date: new Date('2017/06/15'), from: 'fr_vod', to: 'ufo_fr_com_vod', territory: ['fr'], media: ['vod'], amount: 3_117 }),
+  action('income', { id: 'fr_vod_2', contractId: 'ufo_fr', date: new Date('2017/06/15'), from: 'fr_vod', to: 'ufo_fr_com_vod', territory: ['fr'], media: ['vod'], amount: 3_117 }),
 
   // --------- BLOCK 31/10/17 --------- 
   // 31/10/17	Playtime	404 €	expense_row	cnc

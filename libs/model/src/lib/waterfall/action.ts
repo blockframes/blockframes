@@ -151,7 +151,22 @@ function formatPayload(right: Right, childs: Right[] = []) {
         percent: right.percent / 100,
         previous: right.previousIds || [],
         date: right.date,
+      };
+
+      if (right.conditions) {
+        payload.conditions = right.conditions;
       }
+
+      return payload;
+    }
+    case 'prepend': {
+      const payload: ActionList['prepend']['payload'] = {
+        id: right.id,
+        orgId: right.rightholderId,
+        percent: right.percent / 100,
+        next: right.nextIds || [],
+        date: right.date,
+      };
 
       if (right.conditions) {
         payload.conditions = right.conditions;
@@ -167,20 +182,23 @@ function formatPayload(right: Right, childs: Right[] = []) {
         previous: right.previousIds || [],
         children: [],
         date: right.date,
-      }
+      };
 
-      for (const child of childs) {
-        const childRight: GroupChildRight = {
-          type: 'right',
-          id: child.id,
-          percent: child.percent / 100,
-          orgId: child.rightholderId,
-          conditions: child.conditions,
-          pools: [] // TODO #9420
-        }
+      payload.children = formatChild(childs);
 
-        payload.children.push(childRight);
-      }
+      return payload;
+    }
+    case 'prependHorizontal': {
+      const payload: ActionList['prependHorizontal']['payload'] = {
+        id: right.id,
+        blameId: '', // TODO #9420
+        percent: right.percent / 100,
+        next: right.nextIds || [],
+        children: [],
+        date: right.date,
+      };
+
+      payload.children = formatChild(childs);
 
       return payload;
     }
@@ -188,6 +206,21 @@ function formatPayload(right: Right, childs: Right[] = []) {
       break;
   }
 
+}
+
+function formatChild(childs: Right[]) {
+  return childs.map(child => {
+    const childRight: GroupChildRight = {
+      type: 'right',
+      id: child.id,
+      percent: child.percent / 100,
+      orgId: child.rightholderId,
+      conditions: child.conditions,
+      pools: [] // TODO #9420
+    };
+
+    return childRight;
+  })
 }
 
 /**
@@ -216,7 +249,8 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
 
   incomes.forEach(i => {
     const contractAndAmendments = getContractAndAmendments(i.contractId, contracts);
-    const contract = getCurrentContract(contractAndAmendments, i.date);
+    // On waterfall side, the root contract is updated (updateContract), so we need to specify this one.
+    const rootContract = contractAndAmendments.find(c => !c.rootId);
 
     const source: WaterfallSource = getAssociatedSource(i, sources);
 
@@ -224,7 +258,7 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
     actions.push(
       action('income', {
         id: i.id,
-        contractId: contract?.id || '',
+        contractId: rootContract?.id || '',
         from: source.name,
         to: source.destinationId,
         amount,

@@ -65,66 +65,71 @@ export function getRightConfig(option: RightConfig) {
         if (!value) throw mandatoryError(value, 'Right Id');
         return value;
       },
-        /* d */ 'right.actionName': (value: string) => {
+        /* d */ 'right.nextIds': (value: string) => {
+        // ! Column on Excel file is called Previous (from waterfall top to bottom POV)
+        return value.split(separator).map(v => v.trim()).filter(v => !!v);
+      },
+        /* e */ 'right.previousIds': (value: string) => {
+        // ! Column on Excel file is called Next (from waterfall top to bottom POV)
+        return value.split(separator).map(v => v.trim()).filter(v => !!v);
+      },
+        /* f */ 'right.actionName': (value: string, data: FieldsConfig) => {
         const lower = value.toLowerCase().trim();
         switch (lower) {
           case 'horizontal':
-            return 'appendHorizontal';
+            return data.right.nextIds.length ? 'prependHorizontal' : 'appendHorizontal';
           case 'vertical':
-            return 'appendVertical';
+            return data.right.nextIds.length ? 'prependVertical' : 'appendVertical';
           default:
-            return 'append';
+            return data.right.nextIds.length ? 'prepend' : 'append';
         }
       },
-        /* e */ 'right.name': (value: string) => {
+        /* g */ 'right.name': (value: string) => {
         return value;
       },
-        /* f */ 'right.previousIds': (value: string) => {
-        return value.split(separator).filter(v => !!v).map(v => v.trim());
-      },
-        /* g */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
-        if (data.right.actionName === 'appendVertical') {
+        /* h */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
+        if (['appendVertical', 'prependVertical'].includes(data.right.actionName)) {
           if (value) throw optionalWarning('Rightholder Id or Blame Id should be left empty for vertical groups');
           return '';
         }
         if (!value) throw mandatoryError(value, 'Rightholder Id or Blame Id');
         const rightholderId = await getRightholderId(value, data.waterfallId, waterfallService, rightholderCache);
-        if (data.right.actionName === 'appendHorizontal') {
+        if (['appendHorizontal', 'prependHorizontal'].includes(data.right.actionName)) {
           data.right.blameId = rightholderId;
           return '';
         } else {
           return rightholderId;
         }
       },
-        /* h */ 'right.percent': (value: string) => {
+        /* i */ 'right.percent': (value: string) => {
         return Number(value);
       },
-        /* i */ 'conditionA.conditionName': (value: string) => {
+        /* j */ 'conditionA.conditionName': (value: string) => {
         return value as ConditionName;
       },
-        /* j */ 'conditionA.left': (value: string) => {
+        /* k */ 'conditionA.left': (value: string) => {
         return value;
       },
-        /* k */ 'conditionA.operator': (value: string) => {
+        /* l */ 'conditionA.operator': (value: string) => {
         if (value === '≥') value = '>=';
         if (value && !numberOperator.includes(value as NumberOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${numberOperator.map(o => `"${o}"`).join(' ')}`);
         return value as NumberOperator;
       },
-        /* l */ 'conditionA.target': (value: string) => {
+        /* m */ 'conditionA.target': (value: string) => {
         return isNumber(value) ? Number(value) : value;
       },
-        /* m */ 'conditionB.conditionName': (value: string) => {
+        /* n */ 'conditionB.conditionName': (value: string) => {
         return value as ConditionName;
       },
-        /* n */ 'conditionB.left': (value: string) => {
+        /* o */ 'conditionB.left': (value: string) => {
         return value;
       },
-        /* o */ 'conditionB.operator': (value: string) => {
+        /* p */ 'conditionB.operator': (value: string) => {
         if (value === '≥') value = '>=';
         if (value && !numberOperator.includes(value as NumberOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${numberOperator.map(o => `"${o}"`).join(' ')}`);
         return value as NumberOperator;
       },
-        /* p */ 'conditionB.target': (value: string) => {
+        /* q */ 'conditionB.target': (value: string) => {
         return isNumber(value) ? Number(value) : value;
       },
     };

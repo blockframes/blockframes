@@ -257,7 +257,7 @@ export class WaterfallComponent implements OnInit {
     const groupedActions = groupByDate([
       ...contractActions,
       ...rightActions,
-      ...expenseActions, // Expenses should be added before actions
+      ...expenseActions, // Expenses should be added before incomes
       ...incomeActions
     ]);
 
