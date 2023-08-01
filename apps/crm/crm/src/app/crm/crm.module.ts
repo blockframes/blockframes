@@ -37,7 +37,6 @@ import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.
 import { StaticSelectModule } from "@blockframes/ui/static-autocomplete/select/static-select.module";
 import { BreadCrumbModule } from './components/bread-crumb/bread-crumb.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { DetailedTermsModule } from '@blockframes/contract/term/components/detailed/detailed.module';
 import { BuyingPreferencesModalModule } from './components/buying-preferences-modal/buying-preferences-modal.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 
@@ -119,7 +118,6 @@ export const panelRoutes: Routes = [
     FormListModule,
     GetEventPipeModule,
     ClipboardModule,
-    DetailedTermsModule,
     UploadWidgetModule,
     DisplayNameModule,
     BuyingPreferencesModalModule,

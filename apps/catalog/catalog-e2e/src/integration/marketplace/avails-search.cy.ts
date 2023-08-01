@@ -79,7 +79,7 @@ describe('Marketplace avails search', () => {
     context('Failing territories', () => {
       it('Buyer cannot find an avail with wrong territories', () => {
         resetEurope();
-        get('CIS').click();
+        get('CIS').click('left');
         escapeKey();
         get('save-filter').click();
         get('empty').should('exist');
@@ -87,8 +87,8 @@ describe('Marketplace avails search', () => {
 
       it('Buyer cannot find an avail with both good and wrong territories', () => {
         resetEurope();
-        get('CIS').click();
-        get('Europe').click();
+        get('CIS').click('left');
+        get('Europe').click('left');
         escapeKey();
         get('save-filter').click();
         get('empty').should('exist');
@@ -98,7 +98,7 @@ describe('Marketplace avails search', () => {
     context('Failing medias', () => {
       it('Buyer cannot find an avail with wrong media group', () => {
         resetTv();
-        get('VOD').click();
+        get('VOD').click('left');
         escapeKey();
         get('save-filter').click();
         get('empty').should('exist');
@@ -106,8 +106,8 @@ describe('Marketplace avails search', () => {
 
       it('Buyer cannot find an avail with both good and wrong media groups', () => {
         resetTv();
-        get('VOD').click();
-        get('TV').click();
+        get('VOD').click('left');
+        get('TV').click('left');
         escapeKey();
         get('save-filter').click();
         get('empty').should('exist');
@@ -262,13 +262,13 @@ function saveAndAssertMovieCardExists() {
 
 function resetEurope() {
   get('territories').click();
-  get('Europe').click();
+  get('Europe').click('left');
   waitForUpdate();
 }
 
 function resetTv() {
   get('medias').click();
-  get('TV').click();
+  get('TV').click('left');
   waitForUpdate();
 }
 
