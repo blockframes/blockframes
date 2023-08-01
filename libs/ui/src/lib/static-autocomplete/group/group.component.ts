@@ -23,7 +23,7 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
   @Input() filterPlaceholder: string;
   @Input() displayAll: string;
   @Input() required = false;
-  @Input() requiredMsg = ' This field is mandatory ';
+  @Input() requiredMsg = 'This field is mandatory';
   @Input() hint = null;
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
 

@@ -58,7 +58,7 @@ describe('Deal negociation', () => {
   it('Buyer and Seller can acces the offer / sale page', () => {
     browserAuth.signinWithEmailAndPassword(buyer.user.email);
     cy.visit('');
-    firestore.get('users/0-e2e-buyerOrgAdminUid').then((user: User) => {
+    firestore.get(`users/${buyer.user.uid}`).then((user: User) => {
       if (!user.preferences) get('skip-preferences').click();
     });
     get('menu').click();
