@@ -38,7 +38,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { where } from 'firebase/firestore';
-import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
+import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { TermService } from '@blockframes/contract/term/service';
@@ -139,8 +139,8 @@ export class WaterfallComponent implements OnInit {
   }
 
   public openTerritoryModal(territories: Territory[]) {
-    this.dialog.open(DetailedTermsComponent, {
-      data: createModalData({ terms: territories, scope: 'territories' }),
+    this.dialog.open(DetailedGroupComponent, {
+      data: createModalData({ items: territories, scope: 'territories' }),
       autoFocus: false
     });
   }
