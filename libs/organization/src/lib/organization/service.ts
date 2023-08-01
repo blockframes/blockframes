@@ -171,7 +171,7 @@ export class OrganizationService extends BlockframesCollection<Organization> {
    *
    * @param movie
    */
-  public async updateWishlist(movie: Movie) {
+  public updateWishlist(movie: Movie) {
     const orgState = this.org;
     let wishlist = Array.from(new Set([...orgState.wishlist])) || [];
     if (wishlist.includes(movie.id)) {
@@ -182,6 +182,13 @@ export class OrganizationService extends BlockframesCollection<Organization> {
       this.analytics.addTitle('addedToWishlist', movie);
     }
 
+    this.update(orgState.id, { wishlist });
+  }
+
+  public clearWishlist(movies: Movie[]) {
+    const orgState = this.org;
+    const wishlist = [];
+    for(const movie of movies) this.analytics.addTitle('removedFromWishlist', movie);
     this.update(orgState.id, { wishlist });
   }
 
