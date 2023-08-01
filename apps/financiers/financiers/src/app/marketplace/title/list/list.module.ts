@@ -29,7 +29,7 @@ import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/
 import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
 import { CampaignPipeModule } from '@blockframes/campaign/pipes';
-import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { ScopeMultiselectModule } from '@blockframes/ui/static-autocomplete/scope/scope-multiselect.module';
 
 @NgModule({
@@ -47,7 +47,7 @@ import { ScopeMultiselectModule } from '@blockframes/ui/static-autocomplete/scop
     BudgetFilterModule,
     StaticCheckBoxesModule,
     CampaignPipeModule,
-    StaticGroupModule,
+    GroupMultiselectModule,
     ScopeMultiselectModule,
 
     // Material

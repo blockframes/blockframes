@@ -65,7 +65,7 @@ describe('Deal negotiation', () => {
     get('accept').click();
     //close button
     get('confirm').should('exist');
-    get('close').click();
+    get('close').eq(1).click();
     get('confirm').should('not.exist');
     //confirm button behaviour
     get('accept').click();
@@ -138,19 +138,19 @@ describe('Deal negotiation', () => {
     assertUrl(`c/o/dashboard/sales/${saleContract.id}/negotiation`);
     //modifying price
     get('price').clear().type('15000');
+    //adding one month before and after
+    get('dateFrom').clear().type(dateToMMDDYYYY(seller.term.duration.from));
+    get('dateTo').clear().type(dateToMMDDYYYY(seller.term.duration.to));
     //adding Latin America
     get('territories').should('contain', 'Europe');
     get('territories').click();
-    get('Latin America').click();
+    get('Latin America').click('left');
     escapeKey();
     //taking off free TV
     get('medias').should('contain', 'TV');
     get('medias').click();
     get('freeTv').click();
     escapeKey();
-    //adding one month before and after
-    get('dateFrom').clear().type(dateToMMDDYYYY(seller.term.duration.from));
-    get('dateTo').clear().type(dateToMMDDYYYY(seller.term.duration.to));
     //changing to exclusive
     get('exclusivity').click();
     get('exclusive').click();
@@ -205,7 +205,8 @@ describe('Deal negotiation', () => {
     //checking emails
     checkConfirmationEmails('negotiating');
     //accept
-    get('accept').click()
+    get('accept')
+      .click()
       .then(() => {
         // it will be the seller that accepts the counter offer
         mailData.buyer.subject.accepted = 'You accepted an offer';

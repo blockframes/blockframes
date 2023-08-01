@@ -126,12 +126,12 @@ describe('Deal negociation', () => {
 
       //with wrong rights (VOD)
       get('medias').click();
-      get('TV').click();
-      get('VOD').click();
+      get('TV').click('left');
+      get('VOD').click('left');
       assertAvailableCountries(0);
 
-      get('TV').click(); // back to 69 available
-      get('VOD').click();
+      get('TV').click('left'); // back to 69 available
+      get('VOD').click('left');
       escapeKey();
       assertAvailableCountries(69);
 
@@ -171,27 +171,27 @@ describe('Deal negociation', () => {
 
       //with wrong countries
       get('territories').click();
-      get('Europe').click();
-      get('CIS').click();
+      get('Europe').click('left');
+      get('CIS').click('left');
       escapeKey();
       get('calendar').find('.available').should('not.exist');
 
       get('territories').click(); //back to 6 available
-      get('CIS').click();
-      get('Europe').click();
+      get('CIS').click('left');
+      get('Europe').click('left');
       escapeKey();
       get('calendar').find('.available').should('have.length', 6);
 
       //with wrong media
       get('medias').click();
-      get('TV').click();
-      get('VOD').click();
+      get('TV').click('left');
+      get('VOD').click('left');
       escapeKey();
       get('calendar').find('.available').should('not.exist');
 
       get('medias').click(); //back to 6 available
-      get('TV').click();
-      get('VOD').click();
+      get('TV').click('left');
+      get('VOD').click('left');
       escapeKey();
       get('calendar').find('.available').should('have.length', 6);
 
@@ -262,18 +262,18 @@ function fillInputs({
   dateTo?: Date;
   exclusive: boolean;
 }) {
+  if (dateFrom) get('dateFrom').clear().type(dateToMMDDYYYY(dateFrom));
+  if (dateTo) get('dateTo').clear().type(dateToMMDDYYYY(dateTo));
   if (territory) {
     get('territories').click();
     for (const option of territory) {
-      get(option).click();
+      get(option).click('left');
     }
     escapeKey();
   }
   get('medias').click();
-  for (const right of rights) get(right).click();
+  for (const right of rights) get(right).click('left');
   escapeKey();
-  if (dateFrom) get('dateFrom').clear().type(dateToMMDDYYYY(dateFrom));
-  if (dateTo) get('dateTo').clear().type(dateToMMDDYYYY(dateTo));
   get('exclusivity').click();
   get(exclusive ? 'exclusive' : 'non-exclusive').click();
 }
@@ -292,7 +292,7 @@ function assertModalTerritories() {
     if (territory !== 'holy-see') modal.should('contain', `${territories[territory]}`);
   }
   modal.should('contain', 'Europe').and('contain', 'Latin America').and('contain', 'Asia');
-  modal.find('button').click(); //the only existing button is to close the modal
+  get('close').click();
 }
 
 function assertAvailableCountries(number: number) {

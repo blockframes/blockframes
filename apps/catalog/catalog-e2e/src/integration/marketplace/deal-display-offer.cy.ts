@@ -15,7 +15,7 @@ import {
   assertMultipleTexts,
 } from '@blockframes/testing/cypress/browser';
 import { buyer, seller, offer, saleContract, buyerNegotiation, bucket } from '../../fixtures/shared/deal-shared-fixture';
-import { displayName, trimString } from '@blockframes/model';
+import { User, displayName, trimString } from '@blockframes/model';
 
 const injectedData = {
   //buyer
@@ -58,7 +58,9 @@ describe('Deal negociation', () => {
   it('Buyer and Seller can acces the offer / sale page', () => {
     browserAuth.signinWithEmailAndPassword(buyer.user.email);
     cy.visit('');
-    get('skip-preferences').click();
+    firestore.get(`users/${buyer.user.uid}`).then((user: User) => {
+      if (!user.preferences) get('skip-preferences').click();
+    });
     get('menu').click();
     get('offers').click();
     assertUrlIncludes('/c/o/marketplace/offer');

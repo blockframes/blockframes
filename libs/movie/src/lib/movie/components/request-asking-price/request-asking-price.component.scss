@@ -11,7 +11,7 @@ h2 {
 form {
   padding: 24px 40px 40px 40px;
 
-  mat-form-field {
+  mat-form-field, group-multiselect {
     width: 100%;
   }
 }

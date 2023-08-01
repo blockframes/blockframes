@@ -17,7 +17,7 @@ import { SelectionModalComponent } from './selection-modal.component';
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule, ToLabelModule, VersionPipeModule } from '@blockframes/utils/pipes';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
-import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 
 @NgModule({
   imports: [
@@ -39,7 +39,7 @@ import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/gro
     ToGroupLabelPipeModule,
     ToLabelModule,
     VersionPipeModule,
-    StaticGroupModule
+    GroupMultiselectModule,
   ],
   exports: [SelectionModalComponent],
   declarations: [SelectionModalComponent]

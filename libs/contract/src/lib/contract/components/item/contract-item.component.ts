@@ -2,11 +2,11 @@ import {
   Component, Input, TemplateRef, ContentChild, ChangeDetectionStrategy
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DetailedTermsComponent } from '@blockframes/contract/term/components/detailed/detailed.component';
 import { HoldbackModalComponent } from '../../holdback/modal/holdback-modal.component';
 import { OrganizationService } from '@blockframes/organization/service';
 import { BucketContract, Holdback, Sale, Scope, mediaGroup, territoriesGroup } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 
 @Component({
   selector: 'contract-item',
@@ -33,8 +33,8 @@ export class ContractItemComponent {
     private orgService: OrganizationService,
   ) { }
 
-  openDetails(terms: string[], scope: Scope) {
-    this.dialog.open(DetailedTermsComponent, { data: createModalData({ terms, scope }), autoFocus: false });
+  openDetails(items: string[], scope: Scope) {
+    this.dialog.open(DetailedGroupComponent, { data: createModalData({ items, scope }), autoFocus: false });
   }
 
   openHoldbackModal(holdbacks: Holdback[]) {

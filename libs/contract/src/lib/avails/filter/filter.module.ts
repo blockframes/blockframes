@@ -12,7 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 
 @NgModule({
   imports: [
@@ -27,7 +27,7 @@ import { StaticGroupModule } from '@blockframes/ui/static-autocomplete/group/gro
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    StaticGroupModule,
+    GroupMultiselectModule,
   ],
   exports: [AvailsFilterComponent],
   declarations: [AvailsFilterComponent],
