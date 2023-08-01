@@ -25,7 +25,7 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       return require('./src/plugins/index.ts').default(on, config)
     },
-    specPattern: './src/integration/**/deal-display-offer.cy.ts',
+    specPattern: './src/integration/**/*.cy.{js,jsx,ts,tsx}',
     supportFile: './src/support/index.ts',
   },
 })
