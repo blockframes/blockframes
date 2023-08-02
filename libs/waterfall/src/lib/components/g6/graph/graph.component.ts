@@ -3,7 +3,8 @@ import { FormControl } from '@angular/forms';
 import { map, Observable } from 'rxjs';
 import { ComboConfig, EdgeConfig, GraphData, IG6GraphEvent, NodeConfig } from '@antv/g6';
 import { toG6 } from '../../g6/utils';
-import { OrgState, RightState, TransferState, TitleState, History } from '@blockframes/model';
+import { OrgState, RightState, TransferState, TitleState, History, WaterfallRightholder } from '@blockframes/model';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 @Component({
   selector: 'waterfall-g6-graph',
@@ -19,11 +20,13 @@ export class GraphComponent implements OnInit, AfterViewInit {
   transfer?: TransferState;
   right?: RightState;
   org?: OrgState;
+  rightholders: WaterfallRightholder[] = [];
 
   @Input() tree?: { state: TitleState, history: History[] };
   @Input() hideDetails = false;
+  @Input() waterfallId : string;
 
-  constructor() {
+  constructor(private waterfallService: WaterfallService) {
     this.control = new FormControl(0, { nonNullable: true });
   }
 
@@ -31,12 +34,18 @@ export class GraphComponent implements OnInit, AfterViewInit {
     return this.history[this.control.value];
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     if (this.tree) this.history = this.tree.history;
 
     this.graphs = this.history.map(h => toG6(h));
 
     this.data$ = this.control.valueChanges.pipe(map(index => this.graphs[index]));
+
+    if(this.waterfallId){
+      const waterfall = await this.waterfallService.getValue(this.waterfallId);
+      this.rightholders = waterfall.rightholders;
+    }
+
   }
 
   ngAfterViewInit() {
@@ -64,10 +73,20 @@ export class GraphComponent implements OnInit, AfterViewInit {
     }
   }
 
+  orgDetails(orgId: string){
+    this.unselect();
+    this.org = this.state.orgs[orgId];
+  }
+
+  getRightholderName(id: string) {
+    if (!id) return '--';
+    return this.rightholders .find(r => r.id === id)?.name || id;
+  }
+
   unselect() {
-    delete this.transfer;
-    delete this.right;
-    delete this.org;
+    this.transfer = undefined;
+    this.right = undefined;;
+    this.org = undefined;;
   }
 
   trackBy(_: number, item: NodeConfig | EdgeConfig | ComboConfig) {

@@ -130,7 +130,7 @@
 
       <ng-container *ngIf="tree">
         <h3>Waterfall</h3>
-        <waterfall-g6-graph [tree]="tree"></waterfall-g6-graph>
+        <waterfall-g6-graph [tree]="tree" [waterfallId]="waterfall.id"></waterfall-g6-graph>
       </ng-container>
       
       <ng-container *ngIf="versions.length">
@@ -195,14 +195,10 @@
           {{ rootId ? rootId : '--' }}
         </ng-template>
         <ng-template colRef="sellerId" label="Licensor" let-sellerId sort>
-          <ng-container *ngIf="sellerId as org">
-            {{ getRightholderName(sellerId) }}
-          </ng-container>
+          {{ getRightholderName(sellerId) }}
         </ng-template>
         <ng-template colRef="buyerId" label="Licensee" let-buyerId sort>
-          <ng-container *ngIf="buyerId async as org">
-            {{ getRightholderName(buyerId) }}
-          </ng-container>
+          {{ getRightholderName(buyerId) }}
         </ng-template>
         <ng-template colRef="" label="Price" let-item sort>
           <ng-container *ngIf="getDeclaredAmount(item) as amount">
@@ -271,6 +267,9 @@
         </ng-template>
         <ng-template colRef="name" label="Name" let-name sort>
           {{ name }}
+        </ng-template>
+        <ng-template colRef="rightholderId" label="Org" let-rightholderId sort>
+          {{ getRightholderName(rightholderId) }}
         </ng-template>
         <ng-template colRef="groupId" label="Group" let-groupId sort>
           {{ groupId ? groupId : '--' }}

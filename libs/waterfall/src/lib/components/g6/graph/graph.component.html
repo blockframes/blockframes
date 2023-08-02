@@ -11,28 +11,35 @@
     </ng-container>
   </g6-graph>
   <aside *ngIf="!hideDetails">
-    <ng-container *rxIf="right">
-      <h4>{{ right.id }}</h4>
+    <ng-container *ngIf="right">
+      <h4>
+        <span>{{ getRightholderName(right.orgId) }}</span>
+        <button mat-icon-button (click)="orgDetails(right.orgId)">
+          <mat-icon svgIcon="search"></mat-icon>
+        </button>
+      </h4>
       <p>
-        Org: {{ right.orgId }}<br>
-        Revenu: {{ right.revenu| currency }}<br>
-        Percent: {{ right.percent | percent: '1.0-2' }}<br>
+        <strong>Right Id:</strong> {{ right.id }}<br>
+        <strong>Right Revenu:</strong> {{ right.revenu | currency }}<br>
+        <strong>Right Turnover:</strong> {{ right.turnover | currency }}<br>
+        <strong>Right Percent:</strong> {{ right.percent | percent: '1.0-2' }}<br>
       </p>
     </ng-container>
-    <ng-container *rxIf="transfer">
+    <ng-container *ngIf="transfer">
       <h4>{{ transfer.from }} -> {{ transfer.to }}</h4>
       <p>Total: {{ transfer.amount | currency }}</p>
       <ul>
         <li *rxFor="let value of transfer.history">{{ value.amount| currency }}</li>
       </ul>
     </ng-container>
-    <ng-container *rxIf="org">
-      <h4>{{ org.id }}</h4>
+    <ng-container *ngIf="org">
+      <h4>{{ getRightholderName(org.id) }}</h4>
       <p>
-        Revenu: {{ org.revenu| currency }}<br>
-        Investment: {{ org.investment| currency }}<br>
-        Expense: {{ org.expense| currency }}<br>
-        Bonus: {{ org.bonus| currency }}
+        <strong>Org Revenu:</strong> {{ org.revenu | currency }}<br>
+        <strong>Org Turnover:</strong> {{ org.turnover | currency }}<br>
+        <strong>Org Investment:</strong> {{ org.investment | currency }}<br>
+        <strong>Org Expense:</strong> {{ org.expense | currency }}<br>
+        <strong>Org Bonus:</strong> {{ org.bonus | currency }}
       </p>
     </ng-container>
   </aside>

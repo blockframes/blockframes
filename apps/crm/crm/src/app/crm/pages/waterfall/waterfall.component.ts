@@ -108,6 +108,7 @@ export class WaterfallComponent implements OnInit {
   }
 
   public getRightholderName(id: string) {
+    if (!id) return '--';
     return this.waterfall.rightholders.find(r => r.id === id)?.name || '--';
   }
 
