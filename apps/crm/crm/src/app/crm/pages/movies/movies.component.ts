@@ -171,6 +171,8 @@ export class MoviesComponent implements OnInit {
         'has public screener': m.promotional?.videos?.publicScreener?.jwPlayerId ? 'yes' : 'no',
         'has salesPitch': m.promotional?.videos?.salesPitch?.jwPlayerId ? 'yes' : 'no',
         'has otherVideo': m.promotional?.videos?.otherVideo?.jwPlayerId ? 'yes' : 'no',
+        
+        'has avails': m.mandate?.id ? 'yes' : 'no',
       }));
 
       downloadCsvFromJson(exportedRows, 'movies-list');
