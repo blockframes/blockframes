@@ -98,23 +98,6 @@ export class TableExtractedSourcesComponent implements AfterViewInit {
 
     await this.waterfallService.addSource(importState.waterfallId, createWaterfallSource(importState.source));
 
-    if (importState.group) {
-      const promises = [];
-      const existingGroup = await this.rightService.getValue(importState.group.right.id, { waterfallId: importState.waterfallId });
-      if (!existingGroup) promises.push(this.rightService.add(importState.group.right, { params: { waterfallId: importState.waterfallId } }));
-
-      for (const right of importState.group.childs) {
-        const existingChild = await this.rightService.getValue(right.id, { waterfallId: importState.waterfallId });
-        if (!existingChild) {
-          promises.push(this.rightService.add(right, { params: { waterfallId: importState.waterfallId } }));
-        } else {
-          existingChild.groupId = importState.group.right.id;
-          promises.push(this.rightService.update(existingChild.id, { groupId: existingChild.groupId }, { params: { waterfallId: importState.waterfallId } }));
-        }
-      }
-      await Promise.all(promises);
-    }
-
     importState.imported = true;
 
     importState.importing = false;
