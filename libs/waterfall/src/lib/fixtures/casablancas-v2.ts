@@ -117,6 +117,7 @@ const sellers: Action[] = [
   action('append', {
     id: 'playtime_fr_expense', orgId: 'playtime', previous: 'playtime_row_1_expense', percent: 1, conditions: and([
       condition('rightRevenu', { rightId: 'playtime_fr_expense', operator: '<', target: { id: 'expense_fr_tv', 'in': 'expense', 'percent': 1 } }),
+      condition('contractDate', { from: new Date('2018/01/01') })
     ])
   }),
 
@@ -161,13 +162,13 @@ const sellers: Action[] = [
   }),
 
   action('append', {
-    id: 'playtime_compensation_corridor_us_svod', orgId: 'playtime', previous: 'playtime_compensation_corridor_row_svod', percent: 100, conditions: and([
+    id: 'playtime_compensation_corridor_us_svod', orgId: 'playtime', previous: 'playtime_compensation_corridor_row_svod', percent: 1, conditions: and([
       condition('rightRevenu', { rightId: 'playtime_compensation_corridor_us_svod', operator: '<', target: { id: 'us_svod_com', in: 'rights.turnover', percent: 0.15 } }),
       condition('contract', { operator: 'not-in', contractIds: ['netflix_us', 'netflix_row'] }),
     ])
   }),
   action('append', {
-    id: 'playtime_compensation_corridor_row_svod', orgId: 'playtime', previous: [], percent: 100, conditions: and([
+    id: 'playtime_compensation_corridor_row_svod', orgId: 'playtime', previous: [], percent: 1, conditions: and([
       condition('rightRevenu', { rightId: 'playtime_compensation_corridor_row_svod', operator: '<', target: { id: 'row_svod_com', in: 'rights.turnover', percent: 0.1 } }),
       condition('contract', { operator: 'not-in', contractIds: ['netflix_us', 'netflix_row'] }),
     ])
