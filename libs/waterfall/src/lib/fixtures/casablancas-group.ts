@@ -131,17 +131,17 @@ export const actions: Action[] = [
     children: [
       { type: 'right', id: 'soficinema_rnpp_cine_fr_1', orgId: 'soficinema', percent: 0.3, conditions: and([
         condition('orgRevenu', { orgId: 'soficinema', operator: '<', target: 115_000 }),
-        condition('terms', { type: 'territory', operator: 'in', list: ['france'] }),
-        condition('terms', { type: 'media', operator: 'in', list: ['cine'] }),
+        condition('terms', { type: 'territories', operator: 'in', list: ['france'] }),
+        condition('terms', { type: 'medias', operator: 'in', list: ['cine'] }),
       ]) },
       { type: 'right', id: 'soficinema_rnpp_cine_fr_2', orgId: 'soficinema', percent: 0.1, conditions: and([
         condition('orgRevenu', { orgId: 'soficinema', operator: '<', target: 165_000 }),
-        condition('terms', { type: 'territory', operator: 'in', list: ['france'] }),
-        condition('terms', { type: 'media', operator: 'in', list: ['cine'] }),
+        condition('terms', { type: 'territories', operator: 'in', list: ['france'] }),
+        condition('terms', { type: 'medias', operator: 'in', list: ['cine'] }),
       ]) },
       { type: 'right', id: 'soficinema_rnpp_cine_fr_3', orgId: 'soficinema', percent: 0.04, conditions: and([
-        condition('terms', { type: 'territory', operator: 'in', list: ['france'] }),
-        condition('terms', { type: 'media', operator: 'in', list: ['cine'] }),
+        condition('terms', { type: 'territories', operator: 'in', list: ['france'] }),
+        condition('terms', { type: 'medias', operator: 'in', list: ['cine'] }),
       ]) }
     ]
   }),

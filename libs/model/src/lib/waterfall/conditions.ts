@@ -2,6 +2,7 @@ import { IncomeAction as Income } from './action';
 import { investmentWithInterest } from './interest';
 import { RightState, TitleState } from './state';
 import { assertNode, getNode } from './node';
+import { GroupScope } from '../static';
 
 
 export const thresholdConditions = {
@@ -136,7 +137,8 @@ export function splitConditions(group: ConditionGroup) {
 // Utils
 export const numberOperator = ['==', '!=', '<', '>='] as const;
 export type NumberOperator = typeof numberOperator[number];
-type ArrayOperator = 'in' | 'not-in';
+export const arrayOperator = ['in', 'not-in'] as const;
+export type ArrayOperator = typeof arrayOperator[number];
 /** Blocking operation will always return either the total amount or nothing */
 function numericOperator(operator: NumberOperator, current: number, target: number) {
   switch (operator) {
@@ -414,7 +416,7 @@ function contractDate(ctx: ConditionContext, payload: ConditionDuration) {
   const { from, to } = payload;
   const contractId = income.contractId;
   if (!contractId) throw new Error(`Right "${right.id}" as condition on contract Date, but income "${income.id}" do not provide a contractId`);
-  if (!ctx.state.contracts[contractId]) throw new Error(`Contract "${contractId} not found in state`);
+  if (!ctx.state.contracts[contractId]) throw new Error(`Contract "${contractId}" not found in state`);
 
   const { start, end } = ctx.state.contracts[contractId];
   if (!start || !end) throw new Error(`Contract "${contractId}" does not specify valid start and end dates`);
@@ -443,7 +445,7 @@ function amount(ctx: ConditionContext, payload: ConditionAmount) {
 
 interface ConditionTerms {
   operator: ArrayOperator;
-  type: 'territory' | 'media';
+  type: GroupScope;
   list: string[];
 }
 function terms(ctx: ConditionContext, payload: ConditionTerms) {
@@ -458,7 +460,7 @@ function terms(ctx: ConditionContext, payload: ConditionTerms) {
 
 interface ConditionTermsLength {
   operator: NumberOperator;
-  type: 'territory' | 'media';
+  type: GroupScope;
   target: number;
 }
 function termsLength(ctx: ConditionContext, payload: ConditionTermsLength) {

@@ -1,5 +1,16 @@
 import { RightsImportState, getDate } from '../../utils';
-import { App, Condition, Movie, TargetIn, TargetValue, WaterfallRightholder, createRight } from '@blockframes/model';
+import {
+  App,
+  ArrayOperator,
+  Condition,
+  GroupScope,
+  Movie,
+  NumberOperator,
+  TargetIn,
+  TargetValue,
+  WaterfallRightholder,
+  createRight
+} from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, ImportedCondition, getRightConfig } from './fieldConfigs';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
@@ -65,7 +76,17 @@ function formatCondition(cond: ImportedCondition): Condition {
         name: 'rightRevenu',
         payload: {
           rightId: cond.left,
-          operator: cond.operator,
+          operator: cond.operator as NumberOperator,
+          target: formatTarget(cond.target)
+        }
+      }
+    }
+    case 'poolRevenu': {
+      return {
+        name: 'poolRevenu',
+        payload: {
+          pool: cond.left,
+          operator: cond.operator as NumberOperator,
           target: formatTarget(cond.target)
         }
       }
@@ -84,8 +105,18 @@ function formatCondition(cond: ImportedCondition): Condition {
       return {
         name: 'contractAmount',
         payload: {
-          operator: cond.operator,
+          operator: cond.operator as NumberOperator,
           target: formatTarget(cond.target)
+        }
+      }
+    }
+    case 'terms': {
+      return {
+        name: 'terms',
+        payload: {
+          operator: cond.operator as ArrayOperator,
+          type: cond.left as GroupScope,
+          list: formatTarget(cond.target)
         }
       }
     }
@@ -94,8 +125,8 @@ function formatCondition(cond: ImportedCondition): Condition {
   }
 }
 
-function formatTarget<T extends TargetValue | number>(target: string | number): T {
-  if (!isNaN(target as number)) return target as T;
+function formatTarget<T extends TargetValue | number | string[]>(target: string | string[] | number = ''): T {
+  if (!isNaN(target as number) || Array.isArray(target)) return target as T;
   const [tar, id, percent] = (target as string).split(':');
   return {
     in: tar as TargetIn,

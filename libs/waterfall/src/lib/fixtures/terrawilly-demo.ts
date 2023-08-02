@@ -97,26 +97,26 @@ export const actions: Action[] = [
   action('prepend', { id: 'Recettes résiduelles - TAT', orgId: 'TAT', percent: 1, next: ['RNPP'] }),
 
   // Incomes
-  action('income', { id: '$fr_cine', from: 'Salles France', to: 'Commission Salles FR', amount: 3_003_770, territory: [], media: [] }),
-  action('income', { id: '$fr_video', from: 'Vidéo France', to: 'Commission Vidéo FR', amount: 350_000, territory: [], media: [] }),
+  action('income', { id: '$fr_cine', from: 'Salles France', to: 'Commission Salles FR', amount: 3_003_770, territories: [], medias: [] }),
+  action('income', { id: '$fr_video', from: 'Vidéo France', to: 'Commission Vidéo FR', amount: 350_000, territories: [], medias: [] }),
   action('income', {
     id: '$fr_ancillary',
     from: 'Droits Ancillaires FR',
     to: 'Commission Ancillaires FR',
     amount: 100_000,
-    territory: [],
-    media: [],
+    territories: [],
+    medias: [],
   }),
 
-  action('income', { id: '$row_all', from: 'Recettes Inter', to: 'Commission Inter', amount: 2_470_000, territory: [], media: [] }),
+  action('income', { id: '$row_all', from: 'Recettes Inter', to: 'Commission Inter', amount: 2_470_000, territories: [], medias: [] }),
   action('income', {
     id: '$row_festival',
     from: 'Recettes Festivals',
     to: 'Commission Festivals',
     amount: 50_370,
-    territory: [],
-    media: [],
+    territories: [],
+    medias: [],
   }),
 
-  action('income', { id: '$tat_music', from: 'Droits musicaux', to: 'RNPP', amount: 110_000, territory: [], media: [] }),
+  action('income', { id: '$tat_music', from: 'Droits musicaux', to: 'RNPP', amount: 110_000, territories: [], medias: [] }),
 ];

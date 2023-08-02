@@ -111,13 +111,13 @@ export const actions: Action[] = [
   ] }),
 
   // Incomes
-  action('income', { id: '$cnc_support', from: 'cnc_support', to: 'tat_cnc_support', amount: 218_642, territory: [], media: [] }),
-  action('income', { id: '$fr_cine', from: 'fr_cine', to: 'bac_fr_com_cine', amount: 303_770, territory: [], media: [] }),
-  action('income', { id: '$fr_video', from: 'fr_video', to: 'bac_fr_com_video', amount: 35_000, territory: [], media: [] }),
-  action('income', { id: '$fr_ancillary', from: 'fr_ancillary', to: 'bac_fr_com_ancillary', amount: 10_000, territory: [], media: [] }),
+  action('income', { id: '$cnc_support', from: 'cnc_support', to: 'tat_cnc_support', amount: 218_642, territories: [], medias: [] }),
+  action('income', { id: '$fr_cine', from: 'fr_cine', to: 'bac_fr_com_cine', amount: 303_770, territories: [], medias: [] }),
+  action('income', { id: '$fr_video', from: 'fr_video', to: 'bac_fr_com_video', amount: 35_000, territories: [], medias: [] }),
+  action('income', { id: '$fr_ancillary', from: 'fr_ancillary', to: 'bac_fr_com_ancillary', amount: 10_000, territories: [], medias: [] }),
   
-  action('income', { id: '$row_all', from: 'row_all', to: 'bac_row_com', amount: 1_470_307.16, territory: [], media: [] }),
-  action('income', { id: '$row_festival', from: 'row_festival', to: 'bac_row_com_festival', amount: 5_370, territory: [], media: [] }),
+  action('income', { id: '$row_all', from: 'row_all', to: 'bac_row_com', amount: 1_470_307.16, territories: [], medias: [] }),
+  action('income', { id: '$row_festival', from: 'row_festival', to: 'bac_row_com_festival', amount: 5_370, territories: [], medias: [] }),
 
-  action('income', { id: '$tat_music', from: 'music', to: 'rnpp', amount: 11_004.99, territory: [], media: [] })
+  action('income', { id: '$tat_music', from: 'music', to: 'rnpp', amount: 11_004.99, territories: [], medias: [] })
 ];

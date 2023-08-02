@@ -32,11 +32,11 @@ export const rnpp: Action[] = [
 
 // Incomes
 export const firstIncome: Action[] = [
-  action('income', { id: 'income-1', amount: 70_000, from: 'row_all', to: 'mg_seller_1', territory: [], media: [] }),
+  action('income', { id: 'income-1', amount: 70_000, from: 'row_all', to: 'mg_seller_1', territories: [], medias: [] }),
 ];
 
 export const secondIncome: Action[] = [
-  action('income', { id: 'income-2', amount: 100_000, from: 'row_all', to: 'mg_seller_1', territory: [], media: [] }),
+  action('income', { id: 'income-2', amount: 100_000, from: 'row_all', to: 'mg_seller_1', territories: [], medias: [] }),
 ];
 
 const history_1: Action[] = [
@@ -60,15 +60,15 @@ const history_2: Action[] = [
 export const compensation1: Action[] = [
   // Fork of history 1 with compensations
   // Corrections
-  action('income', { id: 'income_correction_1', amount: -20_000, from: 'rnpp', to: 'rnpp_investor_1', territory: [], media: [], isCompensation: true }),
-  action('income', { id: 'income_correction_2', amount: 16_000, from: 'rnpp', to: 'rnpp_investor_3', territory: [], media: [], isCompensation: true }),
+  action('income', { id: 'income_correction_1', amount: -20_000, from: 'rnpp', to: 'rnpp_investor_1', territories: [], medias: [], isCompensation: true }),
+  action('income', { id: 'income_correction_2', amount: 16_000, from: 'rnpp', to: 'rnpp_investor_3', territories: [], medias: [], isCompensation: true }),
 ];
 
 export const compensation2: Action[] = [
   // Fork of history 1 with compensations
   // Corrections
-  action('income', { id: 'income_correction_3', amount: -15_000, from: 'rnpp', to: 'rnpp_investor_1', territory: [], media: [], isCompensation: true }),
-  action('income', { id: 'income_correction_4', amount: 15_500, from: 'rnpp', to: 'rnpp_investor_3', territory: [], media: [], isCompensation: true }),
+  action('income', { id: 'income_correction_3', amount: -15_000, from: 'rnpp', to: 'rnpp_investor_1', territories: [], medias: [], isCompensation: true }),
+  action('income', { id: 'income_correction_4', amount: 15_500, from: 'rnpp', to: 'rnpp_investor_3', territories: [], medias: [], isCompensation: true }),
 ];
 
 export const stories = [history_1, history_2];
