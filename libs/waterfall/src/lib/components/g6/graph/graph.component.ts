@@ -16,6 +16,7 @@ export class GraphComponent implements OnInit, AfterViewInit {
   control: FormControl;
   history: History[] = [];
   data$?: Observable<GraphData>;
+  state$?: Observable<History>;
   graphs: GraphData[] = [];
   transfer?: TransferState;
   right?: RightState;
@@ -42,6 +43,7 @@ export class GraphComponent implements OnInit, AfterViewInit {
     this.graphs = this.history.map(h => toG6(h));
 
     this.data$ = this.control.valueChanges.pipe(map(index => this.graphs[index]));
+    this.state$ = this.control.valueChanges.pipe(map(index => this.history[index]));
 
     if(this.waterfallId){
       const waterfall = await this.waterfallService.getValue(this.waterfallId);

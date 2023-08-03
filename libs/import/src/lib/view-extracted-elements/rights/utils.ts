@@ -71,9 +71,10 @@ export async function formatRight(
 
 function formatCondition(cond: ImportedCondition, rightholders: WaterfallRightholder[]): Condition {
   switch (cond.conditionName) {
-    case 'orgRevenu': {
+    case 'orgRevenu':
+    case 'orgTurnover': {
       return {
-        name: 'orgRevenu',
+        name: cond.conditionName,
         payload: {
           orgId: rightholders.find(r => r.name.toLowerCase() === cond.left.toLowerCase()).id,
           operator: cond.operator as NumberOperator,
@@ -81,9 +82,10 @@ function formatCondition(cond: ImportedCondition, rightholders: WaterfallRightho
         }
       }
     }
-    case 'rightRevenu': {
+    case 'rightRevenu':
+    case 'rightTurnover': {
       return {
-        name: 'rightRevenu',
+        name: cond.conditionName,
         payload: {
           rightId: cond.left,
           operator: cond.operator as NumberOperator,
@@ -91,9 +93,10 @@ function formatCondition(cond: ImportedCondition, rightholders: WaterfallRightho
         }
       }
     }
-    case 'poolRevenu': {
+    case 'poolRevenu':
+    case 'poolTurnover': {
       return {
-        name: 'poolRevenu',
+        name: cond.conditionName,
         payload: {
           pool: cond.left,
           operator: cond.operator as NumberOperator,

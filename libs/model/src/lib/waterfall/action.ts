@@ -179,7 +179,7 @@ function formatPayload(right: Right, childs: Right[] = []) {
     case 'appendHorizontal': {
       const payload: ActionList['appendHorizontal']['payload'] = {
         id: right.id,
-        blameId: '', // TODO #9420
+        blameId: right.blameId,
         percent: right.percent / 100,
         previous: right.previousIds || [],
         children: [],
@@ -193,7 +193,7 @@ function formatPayload(right: Right, childs: Right[] = []) {
     case 'prependHorizontal': {
       const payload: ActionList['prependHorizontal']['payload'] = {
         id: right.id,
-        blameId: '', // TODO #9420
+        blameId: right.blameId,
         percent: right.percent / 100,
         next: right.nextIds || [],
         children: [],

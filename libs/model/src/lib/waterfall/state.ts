@@ -113,7 +113,7 @@ export const createOrg = (org: Partial<OrgState>): OrgState => ({
   ...org
 })
 
-interface PoolState {
+export interface PoolState {
   revenu: number;
   turnover: number;
   shadowRevenu: number;

@@ -1,15 +1,18 @@
 <main>
-  <g6-graph autoFit *rxIf="data$; let data" (click)="unselect()">
-    <ng-container *rxFor="let node of data.nodes; trackBy: trackBy">
-      <g6-node [config]="node" (click)="select($event)"></g6-node>
-    </ng-container>
-    <ng-container *rxFor="let edge of data.edges; trackBy: trackBy">
-      <g6-edge [config]="edge" (click)="select($event)"></g6-edge>
-    </ng-container>
-    <ng-container *rxFor="let combo of data.combos; trackBy: trackBy">
-      <g6-combo [config]="combo" (click)="select($event)"></g6-combo>
-    </ng-container>
-  </g6-graph>
+  <section>
+    <waterfall-state-reader *rxIf="state$; let state" [state]="state"></waterfall-state-reader>
+    <g6-graph autoFit *rxIf="data$; let data" (click)="unselect()">
+      <ng-container *rxFor="let node of data.nodes; trackBy: trackBy">
+        <g6-node [config]="node" (click)="select($event)"></g6-node>
+      </ng-container>
+      <ng-container *rxFor="let edge of data.edges; trackBy: trackBy">
+        <g6-edge [config]="edge" (click)="select($event)"></g6-edge>
+      </ng-container>
+      <ng-container *rxFor="let combo of data.combos; trackBy: trackBy">
+        <g6-combo [config]="combo" (click)="select($event)"></g6-combo>
+      </ng-container>
+    </g6-graph>
+  </section>
   <aside *ngIf="!hideDetails">
     <ng-container *ngIf="right">
       <h4>
