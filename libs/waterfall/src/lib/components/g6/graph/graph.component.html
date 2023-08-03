@@ -42,6 +42,24 @@
         <strong>Org Bonus:</strong> {{ org.bonus | currency }}
       </p>
     </ng-container>
+    <ng-container *ngIf="verticalGroup">
+      <h4>{{ verticalGroup.id }}</h4>
+      <p>
+        <strong>Right Id:</strong> {{ verticalGroup.id }}<br>
+        <strong>Right Revenu:</strong> {{ verticalGroup.revenu | currency }}<br>
+        <strong>Right Turnover:</strong> {{ verticalGroup.turnover | currency }}<br>
+        <strong>Right Percent:</strong> {{ verticalGroup.percent | percent: '1.0-2' }}<br>
+      </p>
+    </ng-container>
+    <ng-container *ngIf="horizontalGroup">
+      <h4>{{ horizontalGroup.id }}</h4>
+      <p>
+        <strong>Right Id:</strong> {{ horizontalGroup.id }}<br>
+        <strong>Right Revenu:</strong> {{ horizontalGroup.revenu | currency }}<br>
+        <strong>Right Turnover:</strong> {{ horizontalGroup.turnover | currency }}<br>
+        <strong>Right Percent:</strong> {{ horizontalGroup.percent | percent: '1.0-2' }}<br>
+      </p>
+    </ng-container>
   </aside>
 </main>
 <footer>

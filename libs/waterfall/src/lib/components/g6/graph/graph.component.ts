@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { map, Observable } from 'rxjs';
 import { ComboConfig, EdgeConfig, GraphData, IG6GraphEvent, NodeConfig } from '@antv/g6';
 import { toG6 } from '../../g6/utils';
-import { OrgState, RightState, TransferState, TitleState, History, WaterfallRightholder } from '@blockframes/model';
+import { OrgState, RightState, TransferState, TitleState, History, WaterfallRightholder, VerticalState, HorizontalState } from '@blockframes/model';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 @Component({
@@ -19,6 +19,8 @@ export class GraphComponent implements OnInit, AfterViewInit {
   graphs: GraphData[] = [];
   transfer?: TransferState;
   right?: RightState;
+  verticalGroup?: VerticalState;
+  horizontalGroup?: HorizontalState;
   org?: OrgState;
   rightholders: WaterfallRightholder[] = [];
 
@@ -67,7 +69,8 @@ export class GraphComponent implements OnInit, AfterViewInit {
         break;
       };
       case 'combo': {
-        this.org = this.state.orgs[id];
+        this.verticalGroup = this.state.verticals[id];
+        this.horizontalGroup = this.state.horizontals[id];
         break;
       }
     }
@@ -85,8 +88,10 @@ export class GraphComponent implements OnInit, AfterViewInit {
 
   unselect() {
     this.transfer = undefined;
-    this.right = undefined;;
-    this.org = undefined;;
+    this.right = undefined;
+    this.org = undefined;
+    this.verticalGroup = undefined;
+    this.horizontalGroup = undefined;
   }
 
   trackBy(_: number, item: NodeConfig | EdgeConfig | ComboConfig) {

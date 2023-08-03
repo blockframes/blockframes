@@ -84,6 +84,10 @@ export class WaterfallComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    await this.loadAll();
+  }
+
+  private async loadAll() {
     const waterfallId = this.route.snapshot.paramMap.get('waterfallId');
     this.movie = await this.movieService.getValue(waterfallId);
     this.waterfall = await this.waterfallService.getValue(waterfallId);
@@ -219,17 +223,19 @@ export class WaterfallComponent implements OnInit {
   }
 
 
-  public async removeRight(id: string) {
-    await this.rightService.remove(id, { params: { waterfallId: this.waterfall.id } });
+  public async removeRights(rights: Right[]) {
+    const promises = rights.map(right => this.rightService.remove(right.id, { params: { waterfallId: this.waterfall.id } }));
+    await Promise.all(promises);
     this.rights = await this.rightService.getValue({ waterfallId: this.waterfall.id });
-    this.snackBar.open(`Right "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
+    this.snackBar.open(`Right${rights.length > 1 ? 's' : ''} ${rights.length === 1 ? rights[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
     this.cdRef.markForCheck();
   }
 
-  public async removeIncome(id: string) {
-    await this.incomeService.remove(id);
+  public async removeIncomes(incomes: Income[]) {
+    const promises = incomes.map(income => this.incomeService.remove(income.id));
+    await Promise.all(promises);
     this.incomes = await this.incomeService.getValue([where('titleId', '==', this.waterfall.id)]);
-    this.snackBar.open(`Income "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
+    this.snackBar.open(`Income${incomes.length > 1 ? 's' : ''} ${incomes.length === 1 ? incomes[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
     this.cdRef.markForCheck();
   }
 
@@ -237,7 +243,8 @@ export class WaterfallComponent implements OnInit {
     return this.rights.find(r => r.id === id);
   }
 
-  public canInitWaterfall() {
+  public async canInitWaterfall() {
+    await this.loadAll();
     if (!this.contracts.length) return false;
     if (!this.sources.length) return false;
     if (!this.rights.length) return false;
@@ -271,8 +278,8 @@ export class WaterfallComponent implements OnInit {
 
     this.waterfall = await this.waterfallService.addBlocksToVersion(this.waterfall, versionId, blocks);
 
-    this.waterfall = await this.waterfallService.getValue(this.waterfall.id);
-    this.versions = this.waterfall.versions;
+    await this.loadAll();
+
     this.snackBar.open(`Version "${versionId}" initialized !`, 'close', { duration: 5000 });
     this.cdRef.markForCheck();
   }
