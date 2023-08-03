@@ -10,4 +10,93 @@
 
   <p>Please provide us with all the contracts, so that we can create a waterfall.</p>
 
+  <article>
+    <ul>
+      <li *ngFor="let item of contracts$ | async | keyvalue" (click)="select(item.key)" [ngClass]="{'selected': item.key === selected}">
+        <p>{{item.key | toLabel: 'rightholderRoles'}}</p>
+        <button mat-button>
+          <ng-container *ngIf="item.key !== selected; else isSelected">
+            <ng-container *ngIf="item.value.length > 0; else noContracts">
+              <span>{{item.value.length}} contract{{item.value.length > 1 ? 's' : ''}}</span>
+            </ng-container>
+            <ng-template #noContracts>
+              <mat-icon svgIcon="add"></mat-icon>
+              <span>Add Contract</span>
+            </ng-template>
+            
+          </ng-container>
+          <ng-template #isSelected>
+            <span>Adding contract...</span>
+          </ng-template>
+        </button>
+      </li>
+      <!-- TODO -->
+      <!-- <li (click)="select('other')" [ngClass]="{'selected': 'other' === selected}">
+        <p>Other</p>
+        <button mat-button>
+          <ng-container *ngIf="'other' !== selected; else isSelected">
+            <mat-icon svgIcon="add"></mat-icon>
+            <span>Add Contract</span>
+          </ng-container>
+          <ng-template #isSelected>
+            <span>Adding contract...</span>
+          </ng-template>
+        </button>
+      </li> -->
+    </ul>
+    <bf-card-modal>
+
+      <ng-container *ngIf="selected; else notSelected">
+        <header>
+          <mat-icon svgIcon="document"></mat-icon>
+          <h2>{{selected | toLabel: 'rightholderRoles'}} Contract</h2>
+          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Enlarge' : 'Shrink'">
+            <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Save changes" (click)="save()">
+            <mat-icon svgIcon="save"></mat-icon>
+          </button>
+        </header>
+
+        <ng-container *ngIf="(contracts$ | async)[selected].length > 0 && !creating; else creatingContracts">
+          <div *ngFor="let contract of (contracts$ | async)[selected]" class="contract-list">
+            <p>{{contract.buyerId | rightholderName: waterfall}} & {{contract.sellerId | rightholderName: waterfall}}</p>
+            
+            <!-- TODO -->
+            <!-- <p class="amendment">1 amendment - 30/06/2023</p> -->
+            
+            <button mat-icon-button matTooltip="Edit contract" (click)="edit(contract)">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Download documents">
+              <mat-icon svgIcon="cloud_download"></mat-icon>
+            </button>
+            <button mat-icon-button class="circle" matTooltip="Create amendment">
+              <mat-icon svgIcon="add"></mat-icon>
+            </button>
+          </div>
+          <div>
+            <button mat-button color="primary" class="main-dashboard-cta" (click)="create()">
+              <mat-icon svgIcon="add"></mat-icon>
+              <span>Add Contract</span>
+            </button>
+          </div>
+        </ng-container>
+        <ng-template #creatingContracts>
+          <waterfall-contract-form [waterfall]="waterfall" [form]="contractForm"></waterfall-contract-form>
+        </ng-template>
+      </ng-container>
+      <ng-template #notSelected>
+        <header>
+          <mat-icon svgIcon="document"></mat-icon>
+          <h2>Contract Details</h2>
+        </header>
+        <div>
+          <img src="/assets/images/empty-contracts.png" />
+        </div>
+      </ng-template>
+
+    </bf-card-modal>
+  </article>
+
 </section>

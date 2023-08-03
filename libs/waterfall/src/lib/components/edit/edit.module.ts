@@ -10,8 +10,8 @@ import { MatStepperModule } from '@angular/material/stepper';
 
 // Blockframes
 import { WaterfallFormGuard } from '@blockframes/waterfall/guard';
-import { FormModule } from '@blockframes/waterfall/components/form/form.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { FormModule } from '@blockframes/waterfall/components/forms/title-form/form.module';
 import { ContractsFormModule } from '@blockframes/waterfall/components/contracts-form/contracts-form.module';
 import { RightHolderFormModule } from '@blockframes/waterfall/components/right-holder-form/right-holder-form.module';
 

@@ -84,6 +84,7 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
 
   async ngOnInit() {
     this.createMode = this.route.snapshot.data.createMode ?? true;
+    console.log(this.createMode)
 
     this.movieId = this.createMode ?
       this.movieService.createId() :
@@ -98,7 +99,15 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
 
       this.movieForm.patchValue(movie);
       this.waterfallRoleControl.patchValue(permissions.roles);
-      this.rightholdersForm.patchValue(waterfall.rightholders);
+      this.rightholdersForm.clear({ emitEvent: false });
+      waterfall.rightholders.forEach(r => {
+        this.rightholdersForm.push(new FormGroup({
+          id: new FormControl(r.id),
+          name: new FormControl(r.name),
+          roles: new FormControl(r.roles),
+        }));
+      });
+      console.log(this.rightholdersForm.value)
     }
     this.loading$.next(false);
   }
