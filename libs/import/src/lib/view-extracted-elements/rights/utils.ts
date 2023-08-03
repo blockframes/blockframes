@@ -110,6 +110,15 @@ function formatCondition(cond: ImportedCondition): Condition {
         }
       }
     }
+    case 'contract': {
+      return {
+        name: 'contract',
+        payload: {
+          operator: cond.operator as ArrayOperator,
+          contractIds: formatTarget(cond.target)
+        }
+      }
+    }
     case 'terms': {
       return {
         name: 'terms',
@@ -131,6 +140,6 @@ function formatTarget<T extends TargetValue | number | string[]>(target: string 
   return {
     in: tar as TargetIn,
     id,
-    percent: parseFloat(percent) || 1
+    percent: parseFloat(percent) / 100 || 1
   } as T;
 }

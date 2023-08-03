@@ -131,7 +131,7 @@ export function rightsToActions(rights: Right[]) {
   const actions: Action[] = [];
 
   const singleRights = rights.filter(r => !r.groupId);
-  const childRights = rights.filter(r => !!r.groupId);
+  const childRights = rights.filter(r => !!r.groupId).sort((a, b) => a.order - b.order);
 
   singleRights.forEach(right => {
     const currentChilds = childRights.filter(r => r.groupId === right.id);
@@ -194,6 +194,32 @@ function formatPayload(right: Right, childs: Right[] = []) {
       const payload: ActionList['prependHorizontal']['payload'] = {
         id: right.id,
         blameId: '', // TODO #9420
+        percent: right.percent / 100,
+        next: right.nextIds || [],
+        children: [],
+        date: right.date,
+      };
+
+      payload.children = formatChild(childs);
+
+      return payload;
+    }
+    case 'appendVertical': {
+      const payload: ActionList['appendVertical']['payload'] = {
+        id: right.id,
+        percent: right.percent / 100,
+        previous: right.previousIds || [],
+        children: [],
+        date: right.date,
+      };
+
+      payload.children = formatChild(childs);
+
+      return payload;
+    }
+    case 'prependVertical': {
+      const payload: ActionList['prependVertical']['payload'] = {
+        id: right.id,
         percent: right.percent / 100,
         next: right.nextIds || [],
         children: [],
