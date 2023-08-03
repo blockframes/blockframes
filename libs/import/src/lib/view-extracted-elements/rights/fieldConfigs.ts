@@ -118,7 +118,7 @@ export function getRightConfig(option: RightConfig) {
         return value as ConditionName;
       },
         /* n */ 'conditionA.left': (value: string) => {
-        return value;
+        return value.trim();
       },
         /* o */ 'conditionA.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionA);
@@ -130,7 +130,7 @@ export function getRightConfig(option: RightConfig) {
         return value as ConditionName;
       },
         /* r */ 'conditionB.left': (value: string) => {
-        return value;
+        return value.trim();
       },
         /* s */ 'conditionB.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionB);
@@ -142,7 +142,7 @@ export function getRightConfig(option: RightConfig) {
         return value as ConditionName;
       },
         /* v */ 'conditionC.left': (value: string) => {
-        return value;
+        return value.trim();
       },
         /* w */ 'conditionC.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionC);

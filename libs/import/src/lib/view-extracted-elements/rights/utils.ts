@@ -52,16 +52,16 @@ export async function formatRight(
     if (data.conditionA?.conditionName) {
       right.conditions = {
         operator: 'AND',
-        conditions: [formatCondition(data.conditionA)]
+        conditions: [formatCondition(data.conditionA, rightholderCache[data.waterfallId])]
       }
     }
 
     if (data.conditionB?.conditionName) {
-      right.conditions.conditions.push(formatCondition(data.conditionB));
+      right.conditions.conditions.push(formatCondition(data.conditionB, rightholderCache[data.waterfallId]));
     }
 
     if (data.conditionC?.conditionName) {
-      right.conditions.conditions.push(formatCondition(data.conditionC));
+      right.conditions.conditions.push(formatCondition(data.conditionC, rightholderCache[data.waterfallId]));
     }
 
     rights.push({ waterfallId: data.waterfallId, right, errors, rightholders: rightholderCache });
@@ -69,8 +69,18 @@ export async function formatRight(
   return rights;
 }
 
-function formatCondition(cond: ImportedCondition): Condition {
+function formatCondition(cond: ImportedCondition, rightholders: WaterfallRightholder[]): Condition {
   switch (cond.conditionName) {
+    case 'orgRevenu': {
+      return {
+        name: 'orgRevenu',
+        payload: {
+          orgId: rightholders.find(r => r.name.toLowerCase() === cond.left.toLowerCase()).id,
+          operator: cond.operator as NumberOperator,
+          target: formatTarget(cond.target)
+        }
+      }
+    }
     case 'rightRevenu': {
       return {
         name: 'rightRevenu',
