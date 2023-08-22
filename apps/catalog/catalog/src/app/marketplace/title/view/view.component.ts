@@ -55,7 +55,7 @@ export class MarketplaceMovieViewComponent implements AfterViewInit {
   public requestSent = false;
 
   constructor(
-    private route: ActivatedRoute,
+    public route: ActivatedRoute,
     private movieService: MovieService,
     private functions: CallableFunctions,
     private analytics: AnalyticsService,
@@ -64,13 +64,13 @@ export class MarketplaceMovieViewComponent implements AfterViewInit {
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     @Optional() private intercom: Intercom
-  ) { }
+    ) { }
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      scrollIntoView(document.querySelector('#top'));
-    });
-  }
+    ngAfterViewInit() {
+      setTimeout(() => {
+        scrollIntoView(document.querySelector('#top'));
+      });
+    }
 
   public openIntercom(): void {
     return this.intercom.show();
