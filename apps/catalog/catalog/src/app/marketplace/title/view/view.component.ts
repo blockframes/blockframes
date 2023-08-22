@@ -64,7 +64,7 @@ export class MarketplaceMovieViewComponent implements AfterViewInit {
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     @Optional() private intercom: Intercom
-    ) { }
+  ) { }
 
   ngAfterViewInit() {
     setTimeout(() => {
