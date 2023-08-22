@@ -135,14 +135,15 @@ export function rightsToActions(rights: Right[]) {
 
   singleRights.forEach(right => {
     const currentChilds = childRights.filter(r => r.groupId === right.id);
-    const a = action(right.actionName, formatPayload(right, currentChilds)) as Action;
+    const subChilds = currentChilds.map(c => childRights.filter(r => r.groupId === c.id)).flat();
+    const a = action(right.actionName, formatPayload(right, currentChilds, subChilds)) as Action;
     actions.push(a);
   });
 
   return actions;
 }
 
-function formatPayload(right: Right, childs: Right[] = []) {
+function formatPayload(right: Right, childs: Right[] = [], subChilds: Right[] = []) {
   switch (right.actionName) {
     case 'append': {
       const payload: ActionList['append']['payload'] = {
@@ -186,7 +187,7 @@ function formatPayload(right: Right, childs: Right[] = []) {
         date: right.date,
       };
 
-      payload.children = formatChild(childs);
+      payload.children = formatChilds(childs, subChilds);
 
       return payload;
     }
@@ -200,7 +201,7 @@ function formatPayload(right: Right, childs: Right[] = []) {
         date: right.date,
       };
 
-      payload.children = formatChild(childs);
+      payload.children = formatChilds(childs, subChilds);
 
       return payload;
     }
@@ -213,7 +214,7 @@ function formatPayload(right: Right, childs: Right[] = []) {
         date: right.date,
       };
 
-      payload.children = formatChild(childs);
+      payload.children = formatChilds(childs);
 
       return payload;
     }
@@ -226,7 +227,7 @@ function formatPayload(right: Right, childs: Right[] = []) {
         date: right.date,
       };
 
-      payload.children = formatChild(childs);
+      payload.children = formatChilds(childs);
 
       return payload;
     }
@@ -236,19 +237,33 @@ function formatPayload(right: Right, childs: Right[] = []) {
 
 }
 
-function formatChild(childs: Right[]) {
+function formatChilds(childs: Right[], subChilds: Right[] = []) {
   return childs.map(child => {
-    const childRight: GroupChildRight = {
-      type: 'right',
-      id: child.id,
-      percent: child.percent / 100,
-      orgId: child.rightholderId,
-      conditions: child.conditions,
-      pools: child.pools,
-    };
+    const currentSubChilds = subChilds.filter(r => r.groupId === child.id);
+    if (currentSubChilds.length) {
+      const childRight: GroupChildVertical = {
+        type: 'vertical',
+        id: child.id,
+        percent: child.percent / 100,
+        pools: child.pools,
+        children: formatChilds(currentSubChilds)
+      };
 
-    return childRight;
-  })
+      return childRight;
+    } else {
+      const childRight: GroupChildRight = {
+        type: 'right',
+        id: child.id,
+        percent: child.percent / 100,
+        orgId: child.rightholderId,
+        conditions: child.conditions,
+        pools: child.pools,
+      };
+
+      return childRight;
+    }
+
+  });
 }
 
 /**
