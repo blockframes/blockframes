@@ -1,14 +1,23 @@
 
 import { BehaviorSubject } from 'rxjs';
-import { Component, ChangeDetectionStrategy, ViewChild, Input, OnInit, Pipe, PipeTransform} from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, Input, OnInit, Pipe, PipeTransform } from '@angular/core';
 
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { WaterfallContractForm } from '@blockframes/waterfall/form/document.form';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
-import { RightholderRole, Waterfall, WaterfallContract, WaterfallDocument, rightholderRoles } from '@blockframes/model';
-
+import {
+  RightholderRole,
+  Waterfall,
+  WaterfallContract,
+  WaterfallDocument,
+  createContract,
+  createWaterfallDocument,
+  rightholderRoles,
+  createTerm
+} from '@blockframes/model';
+import { TermService } from '@blockframes/contract/term/service';
 
 @Component({
   selector: '[movieId] waterfall-contracts-form',
@@ -18,7 +27,7 @@ import { RightholderRole, Waterfall, WaterfallContract, WaterfallDocument, right
 })
 export class ContractsFormComponent implements OnInit {
 
-  contracts$ = new BehaviorSubject<Record<string, WaterfallContract[]>>({});
+  contracts$ = new BehaviorSubject<Partial<Record<RightholderRole, WaterfallContract[]>>>({});
 
   @ViewChild(CardModalComponent) cardModal: CardModalComponent;
 
@@ -32,15 +41,16 @@ export class ContractsFormComponent implements OnInit {
   @Input() movieId: string;
 
   constructor(
-  private waterfallService: WaterfallService,
-  private uploaderService: FileUploaderService,
-  private documentService: WaterfallDocumentsService,
+    private waterfallService: WaterfallService,
+    private uploaderService: FileUploaderService,
+    private documentService: WaterfallDocumentsService,
+    private termsService: TermService,
   ) {
-    const newContracts: Record<string, WaterfallContract[]> = {};
+    const newContracts: Partial<Record<RightholderRole, WaterfallContract[]>> = {};
     Object.keys(rightholderRoles).forEach(r => newContracts[r] = []);
     this.contracts$.next(newContracts);
   }
-  
+
   async ngOnInit() {
     this.waterfall = await this.waterfallService.getValue(this.movieId);
     const rawContracts = await this.documentService.getContracts(this.waterfall.id);
@@ -53,7 +63,6 @@ export class ContractsFormComponent implements OnInit {
         newContracts[role].push(contract);
       });
     });
-    console.log(newContracts);
     this.contracts$.next(newContracts);
 
     this.contractForm = new WaterfallContractForm({ id: this.documentService.createId() });
@@ -68,9 +77,9 @@ export class ContractsFormComponent implements OnInit {
     this.creating = true;
     this.contractForm = new WaterfallContractForm({ id: this.documentService.createId() });
   }
-  
-  edit(contract: WaterfallContract) {
-    console.log(contract);
+
+  async edit(contract: WaterfallContract) {
+    const terms = await this.termsService.getValue(contract.termIds);
     const licensee = this.waterfall.rightholders.find(r => r.id === contract.buyerId);
     const licensor = this.waterfall.rightholders.find(r => r.id === contract.sellerId);
     const file = this.waterfall.documents.find(f => f.docId === contract.id);
@@ -84,17 +93,14 @@ export class ContractsFormComponent implements OnInit {
       startDate: contract.duration?.from,
       endDate: contract.duration?.to,
       price: contract.price,
-      hasRights: (contract as any).terms.length > 1,
-      terms: (contract as any).terms,
+      hasRights: terms.length > 1,
+      terms,
       file: file,
     });
     this.creating = true;
   }
 
   async save() {
-    console.log(this.contractForm.value);
-    console.log(this.uploaderService);
-
     // TODO check form validity
 
     // Seller create/update
@@ -112,7 +118,7 @@ export class ContractsFormComponent implements OnInit {
         roles: this.contractForm.controls.licensorRole.value,
       });
     }
-    
+
     // Buyer create/update
     let buyerId: string;
     const existingBuyer = rightholders.find(r => r.name === this.contractForm.controls.licenseeName.value);
@@ -130,12 +136,13 @@ export class ContractsFormComponent implements OnInit {
 
     await this.waterfallService.update({ id: this.movieId, rightholders });
 
-    this.documentService.upsert<WaterfallDocument>({
+    const document = createWaterfallDocument<WaterfallContract>({
       id: this.contractForm.controls.file.controls.id.value,
       type: 'contract',
       waterfallId: this.movieId,
       signatureDate: this.contractForm.controls.signatureDate.value,
-      meta: {
+      meta: createContract({
+        type: 'mandate',
         status: 'accepted',
         buyerId, // licensee
         sellerId, // licensor
@@ -144,9 +151,21 @@ export class ContractsFormComponent implements OnInit {
           to: this.contractForm.controls.endDate.value,
         },
         price: this.contractForm.controls.price.value,
-        terms: this.contractForm.controls.terms.value,
-      },
-    }, { params: { waterfallId: this.movieId } });
+      }),
+    });
+
+    const terms = (this.contractForm.controls.terms.value ?? []).map(term => createTerm({
+      ...term,
+      id: term.id || this.termsService.createId(),
+      contractId: document.id,
+      titleId: this.waterfall.id
+    }));
+    document.meta.termIds = terms.map(t => t.id);
+
+    await Promise.all([
+      this.documentService.upsert<WaterfallDocument>(document, { params: { waterfallId: this.movieId } }),
+      this.termsService.upsert(terms)
+    ]);
 
     this.uploaderService.upload();
   }
