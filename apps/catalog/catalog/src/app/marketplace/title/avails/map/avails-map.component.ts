@@ -149,7 +149,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
 
   async ngAfterViewInit() {
     const decodedData = decodeUrl<MapAvailsFilter>(this.route);
-    if (decodedData) this.load(decodedData);
+    this.load(decodedData);
 
     const movie = await this.movieService.getValue(this.titleId);
     this.sub = this.availsForm.valueChanges

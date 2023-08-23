@@ -112,7 +112,7 @@
 
   <!-- TITLE CARD -->
   <ng-template listPageCard let-title>
-    <movie-card [movie]="title" [link]="title.objectID" [queryParams]="availsForm.valid ? availsForm.value : null" size="poster" [attr.test-id]="'movie-card_' + title.objectID">
+    <movie-card [movie]="title" [link]="['/c/o/marketplace/title', title.objectID]" [queryParams]="availsForm.valid ? availsForm.value : null" size="poster" [attr.test-id]="'movie-card_' + title.objectID">
       <button mat-icon-button (click)="addAvail(title)" test-id="add-to-bucket" [matTooltip]= "availsForm.invalid ? 'Filter avails first' : 'Add to Selection' ">
         <mat-icon svgIcon="shopping_basket"></mat-icon>
       </button>
