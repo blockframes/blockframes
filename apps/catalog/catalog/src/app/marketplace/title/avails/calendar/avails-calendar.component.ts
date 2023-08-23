@@ -102,7 +102,7 @@ export class MarketplaceMovieAvailsCalendarComponent implements AfterViewInit, O
 
   async ngAfterViewInit() {
     const decodedData = decodeUrl<CalendarAvailsFilter>(this.route);
-    if (decodedData) this.load(decodedData);
+    this.load(decodedData);
 
     const movie = await this.movieService.getValue(this.titleId);
     this.sub = this.availsForm.valueChanges
