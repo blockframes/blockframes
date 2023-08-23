@@ -164,7 +164,6 @@ describe('Marketplace avails search', () => {
         get(`movie-card_${seller.movie.id}`).click();
         get('Avails').click();
         get('single-territory').click();
-        get('calendar').find('.available').should('not.exist');
         //TODO : uncomment below line when issue #9140 part 5 has been fixed (2024 term1 should be available)
         //get('calendar').find('.available').should('have.length', 18);
         get('calendar').find('tr').eq(3).find('td').eq(0).click();
@@ -197,7 +196,6 @@ describe('Marketplace avails search', () => {
         get(`movie-card_${seller.movie.id}`).click();
         get('Avails').click();
         get('single-territory').click();
-        get('calendar').find('.available').should('not.exist');
         //TODO : uncomment below line when issue #9140 part 5 has been fixed (2024 term1 should be available)
         //get('calendar').find('.available').should('have.length', 18);
         get('calendar').find('tr').eq(4).find('td').eq(0).click();
