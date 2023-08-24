@@ -19,7 +19,7 @@
               <span>Request Asking Price</span>
             </button>
           </ng-container>
-          <a mat-button class="translucent" routerLink="avails" fragment="avails">
+          <a mat-button class="translucent" routerLink="avails" fragment="avails" [queryParams]="route.snapshot.queryParams">
             <span>Search & Buy Terms</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>

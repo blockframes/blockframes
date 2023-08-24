@@ -86,10 +86,7 @@ describe('Movie display in marketplace', () => {
     get('Library').click();
     get('search-input').type(movie.title.international);
     get(`movie-card_${movie.id}`).trigger('mouseenter');
-    cy.wait(100);
-    get(`movie-card_${movie.id}`).find('a').should('have.attr', 'href', titlePage);
-    cy.wait(100);
-    get(`movie-card_${movie.id}`).find('a').click();
+    get(`view-more`).click();
     assertUrlIncludes(titlePage + '/main');
   });
 

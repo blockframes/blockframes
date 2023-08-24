@@ -151,28 +151,20 @@ describe('Marketplace avails search', () => {
 
     context('Avails with media overlapping leads to 2 differents terms', () => {
       it('in multiple territories', () => {
-        const { from, to } = seller.term2.duration;
         searchAvailsMediaOverlap();
         get(`movie-card_${seller.movie.id}`).click();
         get('Avails').click();
-        cy.get('[color="#7795ff"]').should('not.exist');
-        selectMedias('TV');
-        selectDates(from, to);
-        selectNonExclusive();
         cy.get('[color="#7795ff"]').should('have.length', seller.term2.territories.length * 2); // x2 because 2 terms per territory
         get('select-all').click();
         assertMediaOverlapTerms();
       });
-
+      
       it('in single territory', () => {
         searchAvailsMediaOverlap();
         get(`movie-card_${seller.movie.id}`).click();
         get('Avails').click();
+        cy.wait(1000); // to handle debounce time
         get('single-territory').click();
-        get('calendar').find('.available').should('not.exist');
-        selectTerritories('Europe');
-        selectMedias('TV');
-        selectNonExclusive();
         //TODO : uncomment below line when issue #9140 part 5 has been fixed (2024 term1 should be available)
         //get('calendar').find('.available').should('have.length', 18);
         get('calendar').find('tr').eq(3).find('td').eq(0).click();
@@ -192,14 +184,9 @@ describe('Marketplace avails search', () => {
       });
 
       it('in multiple territories', () => {
-        const { from, to } = seller.term4.duration;
         searchAvailsTerritoryOverlap();
         get(`movie-card_${seller.movie.id}`).click();
         get('Avails').click();
-        cy.get('[color="#7795ff"]').should('not.exist');
-        selectMedias('TV');
-        selectDates(from, to);
-        selectNonExclusive();
         cy.get('[color="#7795ff"]').should('have.length', seller.term2.territories.length);
         get('select-all').click();
         assertTerritoryOverlapTerms();
@@ -209,11 +196,8 @@ describe('Marketplace avails search', () => {
         searchAvailsTerritoryOverlap();
         get(`movie-card_${seller.movie.id}`).click();
         get('Avails').click();
+        cy.wait(1000); // to handle debounce time
         get('single-territory').click();
-        get('calendar').find('.available').should('not.exist');
-        selectTerritories('Europe');
-        selectMedias('TV');
-        selectNonExclusive();
         //TODO : uncomment below line when issue #9140 part 5 has been fixed (2024 term1 should be available)
         //get('calendar').find('.available').should('have.length', 18);
         get('calendar').find('tr').eq(4).find('td').eq(0).click();

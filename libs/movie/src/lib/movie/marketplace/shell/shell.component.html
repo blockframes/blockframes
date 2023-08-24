@@ -7,7 +7,7 @@
         <ng-container *ngFor="let link of routes">
           <ng-container *ngIf="movie | hasKeys : (link.requireKeys || [])">
             <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive
-              #rla="routerLinkActive">
+            [queryParams]="route.snapshot.queryParams" #rla="routerLinkActive">
               {{link.label}}
             </a>
           </ng-container>
@@ -24,7 +24,7 @@
     <nav id="nav" mat-tab-nav-bar>
       <ng-container *ngFor="let link of routes">
         <ng-container *ngIf="movie | hasKeys : (link.requireKeys || [])">
-          <a mat-tab-link [routerLink]="link.path" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive"
+          <a mat-tab-link [routerLink]="link.path" [queryParams]="route.snapshot.queryParams" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive"
             (click)="navClicked = true" [attr.test-id]="link.label">
             {{link.label}}
           </a>
