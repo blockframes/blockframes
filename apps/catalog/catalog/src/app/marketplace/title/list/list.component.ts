@@ -84,6 +84,9 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
   private cachedDatabaseData: { mandates: Mandate[], sales: Sale[], mandateTerms: Term[], saleTerms: Term[] };
   private cachedAlgoliaResults: AlgoliaResult<AlgoliaMovie>;
 
+  // Will take 'true' if past dates come from load()
+  public AvailsFilterAutoOpen = false;
+
   private search$ = combineLatest([
     this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
     this.availsForm.value$,
@@ -152,6 +155,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
       this.availsForm.value$
     ]).pipe(debounceTime(1000))
       .subscribe(([search, avails]) => {
+        this.AvailsFilterAutoOpen = false;
         this.analyticsService.addTitleFilter({ search, avails }, 'marketplace', 'filteredTitles');
         return encodeAvailsSearchUrl(this.router, this.route, { search, avails });
       });
@@ -230,7 +234,17 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     this.searchForm.hardReset(createMovieSearch({ ...savedSearch.search, storeStatus: [this.storeStatus] }));
 
     // Avails Form
-    if (savedSearch.avails) this.availsForm.hardReset(createAvailsSearch(savedSearch.avails));
+    if (savedSearch.avails) {
+      this.availsForm.hardReset(createAvailsSearch(savedSearch.avails));
+      const { from, to } = this.availsForm.value.duration;
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      if (from < now || to < now) {
+        this.availsForm.markAllAsTouched();
+        this.snackbar.open('Please select future dates in avails filter.', 'close', { duration: 8000 });
+        this.AvailsFilterAutoOpen = true;
+      }
+    }
 
     this.analyticsService.addTitleFilter({ search: this.searchForm.value, avails: this.availsForm.value }, 'marketplace', 'filteredTitles', true);
   }
