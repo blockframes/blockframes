@@ -85,7 +85,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
   private cachedAlgoliaResults: AlgoliaResult<AlgoliaMovie>;
 
   // Will take 'true' if past dates come from load()
-  public AvailsFilterAutoOpen = false;
+  public availsFilterAutoOpen = false;
 
   private search$ = combineLatest([
     this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)),
@@ -155,7 +155,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
       this.availsForm.value$
     ]).pipe(debounceTime(1000))
       .subscribe(([search, avails]) => {
-        this.AvailsFilterAutoOpen = false;
+        this.availsFilterAutoOpen = false;
         this.analyticsService.addTitleFilter({ search, avails }, 'marketplace', 'filteredTitles');
         return encodeAvailsSearchUrl(this.router, this.route, { search, avails });
       });
@@ -242,7 +242,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
       if (from < now || to < now) {
         this.availsForm.markAllAsTouched();
         this.snackbar.open('Please select future dates in avails filter.', 'close', { duration: 8000 });
-        this.AvailsFilterAutoOpen = true;
+        this.availsFilterAutoOpen = true;
       }
     }
 
