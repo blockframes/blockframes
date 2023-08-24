@@ -161,6 +161,12 @@
 
     <!-- RIGHTHOLDERS -->
     <mat-tab label="Right Holders">
+      <section class="actions">
+        <button mat-stroked-button color="primary" [disabled]="!rightholders.length" (click)="removeRightholders(rightholders)">
+          <mat-icon svgIcon="delete"></mat-icon>
+          <span>Remove all rightholders</span>
+        </button>
+      </section>
       <bf-table [source]="rightholders" clickable useFilter pagination="50">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
@@ -171,11 +177,22 @@
         <ng-template colRef="roles" label="Roles" let-roles sort>
           {{ roles | toLabel: 'rightholderRoles' }}
         </ng-template>
+        <ng-template colRef="" label="Action" let-rightholder sticky>
+          <button mat-icon-button (click)="removeRightholders([rightholder])">
+            <mat-icon svgIcon="delete" matTooltip="Delete rightholder"></mat-icon>
+          </button>
+        </ng-template>
       </bf-table>
     </mat-tab>
 
     <!-- DOCUMENTS -->
     <mat-tab label="All Documents">
+      <section class="actions">
+        <button mat-stroked-button color="primary" [disabled]="!documents.length" (click)="removeDocuments(documents)">
+          <mat-icon svgIcon="delete"></mat-icon>
+          <span>Remove all documents</span>
+        </button>
+      </section>
       <bf-table [source]="documents" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
@@ -189,11 +206,11 @@
         <ng-template colRef="type" label="Type" let-type sort>
           {{ type }}
         </ng-template>
-        <ng-template colRef="id" label="Action" let-documentId sticky>
-          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', documentId]" (click)="$event.stopPropagation()">
+        <ng-template colRef="" label="Action" let-document sticky>
+          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', document.id]" (click)="$event.stopPropagation()">
             <mat-icon svgIcon="launch"></mat-icon>
           </a>
-          <button mat-icon-button (click)="removeDocument(documentId)">
+          <button mat-icon-button (click)="removeDocuments([document])">
             <mat-icon svgIcon="delete" matTooltip="Delete document"></mat-icon>
           </button>
         </ng-template>
@@ -202,6 +219,12 @@
     
     <!-- CONTRACTS -->
     <mat-tab label="1 - Contracts">
+      <section class="actions">
+        <button mat-stroked-button color="primary" [disabled]="!contracts.length" (click)="removeDocuments(contracts)">
+          <mat-icon svgIcon="delete"></mat-icon>
+          <span>Remove all contracts</span>
+        </button>
+      </section>
       <bf-table [source]="contracts" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
@@ -226,12 +249,12 @@
         <ng-template colRef="type" label="Type" let-type sort>
           {{ type }}
         </ng-template>
-        <ng-template colRef="id" label="Action" let-documentId sticky>
-          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', documentId]" (click)="$event.stopPropagation()">
+        <ng-template colRef="" label="Action" let-contract sticky>
+          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', contract.id]" (click)="$event.stopPropagation()">
             <mat-icon svgIcon="launch"></mat-icon>
           </a>
-          <button mat-icon-button (click)="removeDocument(documentId)">
-            <mat-icon svgIcon="delete" matTooltip="Delete document"></mat-icon>
+          <button mat-icon-button (click)="removeDocuments([contract])">
+            <mat-icon svgIcon="delete" matTooltip="Delete contract"></mat-icon>
           </button>
         </ng-template>
       </bf-table>
@@ -239,6 +262,12 @@
 
     <!-- SOURCES -->
     <mat-tab label="2 - Sources">
+      <section class="actions">
+        <button mat-stroked-button color="primary" [disabled]="!sources.length" (click)="removeSources(sources)">
+          <mat-icon svgIcon="delete"></mat-icon>
+          <span>Remove all sources</span>
+        </button>
+      </section>
       <bf-table [source]="sources" clickable useFilter pagination="50">
         <ng-template colRef="id" label="Id" let-id sort defaultSort>
           {{ id }}
@@ -269,8 +298,8 @@
             <mat-icon svgIcon="cancel" class="icon-nok" matTooltip="Import required right"></mat-icon>
           </ng-template>
         </ng-template>
-        <ng-template colRef="id" label="Action" let-sourceId sticky>
-          <button mat-icon-button (click)="removeSource(sourceId)">
+        <ng-template colRef="" label="Action" let-source sticky>
+          <button mat-icon-button (click)="removeSources([source])">
             <mat-icon svgIcon="delete" matTooltip="Delete source"></mat-icon>
           </button>
         </ng-template>
@@ -280,7 +309,7 @@
     <!-- RIGHTS -->
     <mat-tab label="3 - Rights">
       <section class="actions">
-        <button mat-stroked-button color="primary" (click)="removeRights(rights)">
+        <button mat-stroked-button color="primary" [disabled]="!rights.length" (click)="removeRights(rights)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all rights</span>
         </button>
@@ -324,7 +353,7 @@
     <!-- INCOMES -->
     <mat-tab label="4 - Incomes">
       <section class="actions">
-        <button mat-stroked-button color="primary" (click)="removeIncomes(incomes)">
+        <button mat-stroked-button color="primary" [disabled]="!incomes.length" (click)="removeIncomes(incomes)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all incomes</span>
         </button>
@@ -357,6 +386,12 @@
 
     <!-- EXPENSES -->
     <mat-tab label="5 - Expenses">
+      <section class="actions">
+        <button mat-stroked-button color="primary" [disabled]="!expenses.length" (click)="removeExpenses(expenses)">
+          <mat-icon svgIcon="delete"></mat-icon>
+          <span>Remove all expenses</span>
+        </button>
+      </section>
       <bf-table [source]="expenses" clickable useFilter pagination="50">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
@@ -377,6 +412,11 @@
           <ng-container *ngIf="toPricePerCurrency(item) as amount">
             <price-per-currency [price]="amount"></price-per-currency>
           </ng-container>
+        </ng-template>
+        <ng-template colRef="" label="Action" let-expense sticky>
+          <button mat-icon-button (click)="removeExpenses([expense])">
+            <mat-icon svgIcon="delete" matTooltip="Delete expense"></mat-icon>
+          </button>
         </ng-template>
       </bf-table>
     </mat-tab>

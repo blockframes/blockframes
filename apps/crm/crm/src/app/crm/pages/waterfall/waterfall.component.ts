@@ -132,14 +132,6 @@ export class WaterfallComponent implements OnInit {
     }
   }
 
-  public async removeSource(id: string) {
-    await this.waterfallService.removeSource(this.waterfall.id, id);
-    this.waterfall = await this.waterfallService.getValue(this.waterfall.id);
-    this.sources = this.waterfall.sources;
-    this.snackBar.open(`Source "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
-    this.cdRef.markForCheck();
-  }
-
   public getCurrentContract(item: Income | Expense) {
     const contracts = getContractAndAmendments(item.contractId, this.contracts);
     const current = getCurrentContract(contracts, item.date);
@@ -164,14 +156,6 @@ export class WaterfallComponent implements OnInit {
 
   public getPrice(amount: number): PricePerCurrency {
     return { [mainCurrency]: amount };
-  }
-
-  public async removeDocument(id: string) {
-    await this.waterfalllDocumentService.remove(id, { params: { waterfallId: this.waterfall.id } });
-    this.documents = await this.waterfalllDocumentService.getValue({ waterfallId: this.waterfall.id });
-    this.contracts = this.documents.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c));
-    this.snackBar.open(`Document "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
-    this.cdRef.markForCheck();
   }
 
   public async removeVersion(id: string) {
@@ -229,6 +213,14 @@ export class WaterfallComponent implements OnInit {
     return destinationRightIds.every(id => this.rights.map(r => r.id).includes(id));
   }
 
+  public async removeDocuments(documents: (WaterfallDocument | WaterfallContract)[]) {
+    const promises = documents.map(document => this.waterfalllDocumentService.remove(document.id, { params: { waterfallId: this.waterfall.id } }));
+    await Promise.all(promises);
+    this.documents = await this.waterfalllDocumentService.getValue({ waterfallId: this.waterfall.id });
+    this.contracts = this.documents.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c));
+    this.snackBar.open(`Document${documents.length > 1 ? 's' : ''} ${documents.length === 1 ? documents[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
+    this.cdRef.markForCheck();
+  }
 
   public async removeRights(rights: Right[]) {
     const promises = rights.map(right => this.rightService.remove(right.id, { params: { waterfallId: this.waterfall.id } }));
@@ -238,11 +230,35 @@ export class WaterfallComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
+  public async removeSources(sources: WaterfallSource[]) {
+    await this.waterfallService.removeSources(this.waterfall.id, sources.map(s => s.id));
+    this.waterfall = await this.waterfallService.getValue(this.waterfall.id);
+    this.sources = this.waterfall.sources;
+    this.snackBar.open(`Source${sources.length > 1 ? 's' : ''} ${sources.length === 1 ? sources[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
+    this.cdRef.markForCheck();
+  }
+
+  public async removeRightholders(rightholders: WaterfallRightholder[]) {
+    await this.waterfallService.removeRightholders(this.waterfall.id, rightholders.map(s => s.id));
+    this.waterfall = await this.waterfallService.getValue(this.waterfall.id);
+    this.rightholders = this.waterfall.rightholders;
+    this.snackBar.open(`Rightholder${rightholders.length > 1 ? 's' : ''} ${rightholders.length === 1 ? rightholders[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
+    this.cdRef.markForCheck();
+  }
+
   public async removeIncomes(incomes: Income[]) {
     const promises = incomes.map(income => this.incomeService.remove(income.id));
     await Promise.all(promises);
     this.incomes = await this.incomeService.getValue([where('titleId', '==', this.waterfall.id)]);
     this.snackBar.open(`Income${incomes.length > 1 ? 's' : ''} ${incomes.length === 1 ? incomes[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
+    this.cdRef.markForCheck();
+  }
+
+  public async removeExpenses(expenses: Expense[]) {
+    const promises = expenses.map(expense => this.expenseService.remove(expense.id));
+    await Promise.all(promises);
+    this.expenses = await this.expenseService.getValue([where('titleId', '==', this.waterfall.id)]);
+    this.snackBar.open(`Expense${expenses.length > 1 ? 's' : ''} ${expenses.length === 1 ? expenses[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
     this.cdRef.markForCheck();
   }
 
