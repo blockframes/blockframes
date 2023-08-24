@@ -7,6 +7,7 @@ import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.serv
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'crm-waterfall-document',
@@ -19,7 +20,9 @@ export class WaterfallDocumentComponent implements OnInit {
   public waterfall: Waterfall;
   public document: WaterfallDocument;
   public contract: WaterfallContract;
-
+  public rootContract: WaterfallContract;
+  public childContracts: WaterfallContract[];
+  
   constructor(
     private movieService: MovieService,
     private waterfallService: WaterfallService,
@@ -40,14 +43,25 @@ export class WaterfallDocumentComponent implements OnInit {
     this.movie = movie;
     this.waterfall = waterfall;
     this.document = document;
-    if (isContract(this.document)) this.contract = convertDocumentTo<WaterfallContract>(this.document);
+    if (isContract(this.document)) {
+      this.contract = convertDocumentTo<WaterfallContract>(this.document);
+      if (this.contract.rootId) {
+        this.rootContract = await this.waterfalllDocumentService.getContract(this.contract.rootId, waterfallId);
+      } else {
+        const childDocuments = await this.waterfalllDocumentService.getValue([where('rootId', '==', this.contract.id)], { waterfallId });
+        this.childContracts = childDocuments.map(d => convertDocumentTo<WaterfallContract>(d));
+      }
+    }
     this.cdRef.markForCheck();
   }
 
-  openDetails(items: string[], scope: Scope) {
+  public openDetails(items: string[], scope: Scope) {
     this.dialog.open(DetailedGroupComponent, { data: createModalData({ items, scope }), autoFocus: false });
   }
 
-
+  public getRightholderName(id: string) {
+    if (!id) return '--';
+    return this.waterfall.rightholders.find(r => r.id === id)?.name || '--';
+  }
 
 }

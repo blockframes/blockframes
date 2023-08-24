@@ -7,11 +7,16 @@
     <movie-header [movie]="movie" [showBackArrow]="false"></movie-header>
   </article>
   <ng-container *ngIf="contract">
-    <h3>Contract</h3>
+    <h3>Contract from {{  contract.duration.from | date: 'MM/dd/yyyy' }} to {{  contract.duration.to | date: 'MM/dd/yyyy' }}</h3>
+    <h4 *ngIf="rootContract">Child contract of {{ rootContract.id }}</h4>
+    <h4 *ngIf="childContracts">Parent of {{ childContracts.length }} contracts</h4>
+
     <section>
-      TODO #9420 from 
-      TODO #9420 to
-      TODO #9420 licensee licensor
+      <ul>
+        <li><strong>Licensor :</strong> {{ getRightholderName(contract.sellerId) }}</li>
+        <li><strong>Licensee :</strong> {{ getRightholderName(contract.buyerId) }}</li>
+        <li><strong>Signature date :</strong> {{  contract.signatureDate | date: 'MM/dd/yyyy' }}</li>
+      </ul>
     </section>
 
     <ng-container *ngIf="contract | getTermsFromContract | async as terms">
