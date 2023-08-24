@@ -79,10 +79,6 @@ export interface ExpensesImportState extends ImportState {
 export interface SourcesImportState extends ImportState {
   source: WaterfallSource;
   waterfallId: string;
-  group?: {
-    right: Right,
-    childs: Right[]
-  }
 }
 
 export interface RightsImportState extends ImportState {
@@ -136,22 +132,23 @@ export async function getOrgId(
 }
 
 export async function getRightholderId(
-  value: string,
+  valueOrId: string,
   waterfallId: string,
   waterfallService: WaterfallService,
   cache: Record<string, WaterfallRightholder[]>
 ) {
 
+  const value = valueOrId.trim().toLowerCase();
   if (!cache[waterfallId]) {
     const { rightholders } = await waterfallService.getValue(waterfallId);
-    cache[waterfallId] = rightholders;
+    cache[waterfallId] = rightholders.map(r => ({ ...r, name: r.name.trim().toLowerCase() }));
   }
 
-  const rightholder = cache[waterfallId].find(r => r.name === value || r.id === value);
+  const rightholder = cache[waterfallId].find(r => r.name === value || r.id === valueOrId);
   if (rightholder) return rightholder.id;
 
   cache[waterfallId].push(createWaterfallRightholder({ id: waterfallService.createId(), name: value, roles: [] }));
-  return cache[waterfallId].find(r => r.name === value || r.id === value).id;
+  return cache[waterfallId].find(r => r.name === value || r.id === valueOrId).id;
 }
 
 export async function getTitleId(

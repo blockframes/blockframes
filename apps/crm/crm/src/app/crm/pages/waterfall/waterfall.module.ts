@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { WaterfallComponent } from './waterfall.component';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
@@ -37,6 +38,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     GraphModule,
     TreeModule,
     SalesMapModule,
+    ClipboardModule,
 
     MatIconModule,
     MatChipsModule,

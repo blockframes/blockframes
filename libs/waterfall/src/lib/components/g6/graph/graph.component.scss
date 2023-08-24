@@ -4,6 +4,10 @@
   height: calc(100vh - 5px); // quick fix on the height of the canvas
 }
 
+waterfall-state-reader {
+  height: 80px;
+}
+
 main {
   flex: 1;
   display: flex;
@@ -16,7 +20,12 @@ main {
     overflow: hidden;
   }
   aside {
-    width: 250px;
+    width: 300px;
+  }
+  section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 }
 

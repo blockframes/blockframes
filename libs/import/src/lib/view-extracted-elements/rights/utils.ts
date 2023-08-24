@@ -52,16 +52,16 @@ export async function formatRight(
     if (data.conditionA?.conditionName) {
       right.conditions = {
         operator: 'AND',
-        conditions: [formatCondition(data.conditionA)]
+        conditions: [formatCondition(data.conditionA, rightholderCache[data.waterfallId])]
       }
     }
 
     if (data.conditionB?.conditionName) {
-      right.conditions.conditions.push(formatCondition(data.conditionB));
+      right.conditions.conditions.push(formatCondition(data.conditionB, rightholderCache[data.waterfallId]));
     }
 
     if (data.conditionC?.conditionName) {
-      right.conditions.conditions.push(formatCondition(data.conditionC));
+      right.conditions.conditions.push(formatCondition(data.conditionC, rightholderCache[data.waterfallId]));
     }
 
     rights.push({ waterfallId: data.waterfallId, right, errors, rightholders: rightholderCache });
@@ -69,11 +69,23 @@ export async function formatRight(
   return rights;
 }
 
-function formatCondition(cond: ImportedCondition): Condition {
+function formatCondition(cond: ImportedCondition, rightholders: WaterfallRightholder[]): Condition {
   switch (cond.conditionName) {
-    case 'rightRevenu': {
+    case 'orgRevenu':
+    case 'orgTurnover': {
       return {
-        name: 'rightRevenu',
+        name: cond.conditionName,
+        payload: {
+          orgId: rightholders.find(r => r.name.toLowerCase() === cond.left.toLowerCase()).id,
+          operator: cond.operator as NumberOperator,
+          target: formatTarget(cond.target)
+        }
+      }
+    }
+    case 'rightRevenu':
+    case 'rightTurnover': {
+      return {
+        name: cond.conditionName,
         payload: {
           rightId: cond.left,
           operator: cond.operator as NumberOperator,
@@ -81,9 +93,10 @@ function formatCondition(cond: ImportedCondition): Condition {
         }
       }
     }
-    case 'poolRevenu': {
+    case 'poolRevenu':
+    case 'poolTurnover': {
       return {
-        name: 'poolRevenu',
+        name: cond.conditionName,
         payload: {
           pool: cond.left,
           operator: cond.operator as NumberOperator,
@@ -110,6 +123,15 @@ function formatCondition(cond: ImportedCondition): Condition {
         }
       }
     }
+    case 'contract': {
+      return {
+        name: 'contract',
+        payload: {
+          operator: cond.operator as ArrayOperator,
+          contractIds: formatTarget(cond.target)
+        }
+      }
+    }
     case 'terms': {
       return {
         name: 'terms',
@@ -131,6 +153,6 @@ function formatTarget<T extends TargetValue | number | string[]>(target: string 
   return {
     in: tar as TargetIn,
     id,
-    percent: parseFloat(percent) || 1
+    percent: parseFloat(percent) / 100 || 1
   } as T;
 }

@@ -1,0 +1,40 @@
+<global-modal>
+  <h1 mat-dialog-title>{{ data.title }}</h1>
+  <div mat-dialog-content>
+    <ul>
+      <li *rxFor="let item of data.state | keyvalue">
+        <ng-container [ngSwitch]="item.key">
+          <ng-container *ngSwitchCase="'amount'">
+            <strong>{{ item.key }}:</strong> {{ item.value | currency }}
+          </ng-container>
+          <ng-container *ngSwitchCase="'revenu'">
+            <strong>{{ item.key }}:</strong> {{ item.value | currency }}
+          </ng-container>
+          <ng-container *ngSwitchCase="'shadowRevenu'">
+            <strong>{{ item.key }}:</strong> {{ item.value | currency }}
+          </ng-container>
+          <ng-container *ngSwitchCase="'turnover'">
+            <strong>{{ item.key }}:</strong> {{ item.value | currency }}
+          </ng-container>
+          <ng-container *ngSwitchCase="'date'">
+            <strong>{{ item.key }}:</strong> {{ item.value | date: 'MM/dd/yyyy' }}
+          </ng-container>
+          <ng-container *ngSwitchCase="'percent'">
+            <strong>{{ item.key }}:</strong> {{ item.value*100 }}%
+          </ng-container>
+          <ng-container *ngSwitchCase="'conditions'">
+            <strong>{{ item.key }}:</strong> <br>
+            <ul>
+              <li *rxFor="let cond of item.value.conditions">
+                <strong>{{ cond.name }}:</strong> <pre>{{ cond.payload | json}}</pre>
+              </li>
+            </ul>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <strong>{{ item.key }}:</strong> {{ item.value  }}
+          </ng-container>
+        </ng-container>
+      </li>
+    </ul>
+  </div>
+</global-modal>

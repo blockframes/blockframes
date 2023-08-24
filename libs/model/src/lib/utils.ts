@@ -384,10 +384,12 @@ export function convertCurrenciesTo(price: PricePerCurrency, to: MovieCurrency =
 }
 
 /**
- * Sorts array of objects 
+ * Sorts array of objects
+ * Field can be "foo.date" to access deep attributes
  * @param objects 
  * @returns 
  */
 export function sortByDate<T>(objects: T[], field: string) {
-  return objects.sort((a, b) => a[field].getTime() - b[field].getTime());
+  const resolve = (path: string, obj: T) => path.split('.').reduce((prev, curr) => prev?.[curr], obj);
+  return objects.sort((a, b) => resolve(field, a).getTime() - resolve(field, b).getTime());
 }

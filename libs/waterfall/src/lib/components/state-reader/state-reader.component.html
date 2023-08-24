@@ -1,0 +1,28 @@
+<mat-toolbar *rxIf="state">
+  <button mat-button color="primary">{{ state.date | date: 'MM/dd/yyyy' }}</button>
+
+  <button mat-button color="primary" [matMenuTriggerFor]="actions">Actions</button>
+  <mat-menu #actions="matMenu">
+    <button *rxFor="let action of state.actions" mat-menu-item (click)="details('Action', action.name, action.payload)" >{{ action.actionId }} - {{ action.name }}</button>
+  </mat-menu>
+
+  <button mat-button color="primary" [matMenuTriggerFor]="rights">Rights</button>
+  <mat-menu #rights="matMenu">
+    <button *rxFor="let right of state.rights | keyvalue" mat-menu-item (click)="details('Right', right.key, right.value)" >{{ right.key }}</button>
+  </mat-menu>
+
+  <button mat-button color="primary" [matMenuTriggerFor]="horizontals">Horizontal groups</button>
+  <mat-menu #horizontals="matMenu">
+    <button *rxFor="let horizontal of state.horizontals | keyvalue" mat-menu-item (click)="details('Horizontal group', horizontal.key, horizontal.value)" >{{ horizontal.key }}</button>
+  </mat-menu>
+
+  <button mat-button color="primary" [matMenuTriggerFor]="verticals">Vertical groups</button>
+  <mat-menu #verticals="matMenu">
+    <button *rxFor="let vertical of state.verticals | keyvalue" mat-menu-item (click)="details('Vertical group', vertical.key, vertical.value)" >{{ vertical.key }}</button>
+  </mat-menu>
+
+  <button mat-button color="primary" [matMenuTriggerFor]="pools">Pools</button>
+  <mat-menu #pools="matMenu">
+    <button *rxFor="let pool of state.pools | keyvalue" mat-menu-item (click)="details('Pool', pool.key, pool.value)" >{{ pool.key }}</button>
+  </mat-menu>
+</mat-toolbar>

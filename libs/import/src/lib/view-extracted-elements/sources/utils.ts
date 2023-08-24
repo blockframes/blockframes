@@ -35,31 +35,12 @@ export async function formatSource(
     delete data.source.territories_included;
     delete data.source.territories_excluded;
 
-    const group = createGroup(data.source.destinationIds);
-    const destinationId = group ? group.right.id : data.source.destinationIds[0];
-    delete data.source.destinationIds;
-
     const territories = territories_included ?
       territories_included.filter(territory => !territories_excluded?.includes(territory)) :
       [];
 
-    const source = createWaterfallSource({ ...data.source, territories, destinationId });
-    sources.push({ source, waterfallId: data.waterfallId, group, errors });
+    const source = createWaterfallSource({ ...data.source, territories });
+    sources.push({ source, waterfallId: data.waterfallId, errors });
   }
   return sources;
-}
-
-function createGroup(destinationIds: string[]) {
-  if (destinationIds.length === 1) return;
-
-  const random = Math.random().toString(36).slice(2, 5);
-  const groupId = `grp-${random}-${destinationIds.map(id => id.replace('_', '').substring(0, 3)).join('-')}`;
-  return {
-    right: createRight({
-      id: groupId,
-      actionName: 'appendHorizontal',
-      date: new Date(0) // 1970, can be updated by rights imports
-    }),
-    childs: destinationIds.map(id => createRight({ id, groupId }))
-  }
 }

@@ -131,18 +131,19 @@ export function rightsToActions(rights: Right[]) {
   const actions: Action[] = [];
 
   const singleRights = rights.filter(r => !r.groupId);
-  const childRights = rights.filter(r => !!r.groupId);
+  const childRights = rights.filter(r => !!r.groupId).sort((a, b) => a.date.getTime() - b.date.getTime());
 
   singleRights.forEach(right => {
     const currentChilds = childRights.filter(r => r.groupId === right.id);
-    const a = action(right.actionName, formatPayload(right, currentChilds)) as Action;
+    const subChilds = currentChilds.map(c => childRights.filter(r => r.groupId === c.id)).flat();
+    const a = action(right.actionName, formatPayload(right, currentChilds, subChilds)) as Action;
     actions.push(a);
   });
 
   return actions;
 }
 
-function formatPayload(right: Right, childs: Right[] = []) {
+function formatPayload(right: Right, childs: Right[] = [], subChilds: Right[] = []) {
   switch (right.actionName) {
     case 'append': {
       const payload: ActionList['append']['payload'] = {
@@ -179,28 +180,54 @@ function formatPayload(right: Right, childs: Right[] = []) {
     case 'appendHorizontal': {
       const payload: ActionList['appendHorizontal']['payload'] = {
         id: right.id,
-        blameId: '', // TODO #9420
+        blameId: right.blameId,
         percent: right.percent / 100,
         previous: right.previousIds || [],
         children: [],
         date: right.date,
       };
 
-      payload.children = formatChild(childs);
+      payload.children = formatChilds(childs, subChilds);
 
       return payload;
     }
     case 'prependHorizontal': {
       const payload: ActionList['prependHorizontal']['payload'] = {
         id: right.id,
-        blameId: '', // TODO #9420
+        blameId: right.blameId,
         percent: right.percent / 100,
         next: right.nextIds || [],
         children: [],
         date: right.date,
       };
 
-      payload.children = formatChild(childs);
+      payload.children = formatChilds(childs, subChilds);
+
+      return payload;
+    }
+    case 'appendVertical': {
+      const payload: ActionList['appendVertical']['payload'] = {
+        id: right.id,
+        percent: right.percent / 100,
+        previous: right.previousIds || [],
+        children: [],
+        date: right.date,
+      };
+
+      payload.children = formatChilds(childs);
+
+      return payload;
+    }
+    case 'prependVertical': {
+      const payload: ActionList['prependVertical']['payload'] = {
+        id: right.id,
+        percent: right.percent / 100,
+        next: right.nextIds || [],
+        children: [],
+        date: right.date,
+      };
+
+      payload.children = formatChilds(childs);
 
       return payload;
     }
@@ -210,19 +237,33 @@ function formatPayload(right: Right, childs: Right[] = []) {
 
 }
 
-function formatChild(childs: Right[]) {
+function formatChilds(childs: Right[], subChilds: Right[] = []) {
   return childs.map(child => {
-    const childRight: GroupChildRight = {
-      type: 'right',
-      id: child.id,
-      percent: child.percent / 100,
-      orgId: child.rightholderId,
-      conditions: child.conditions,
-      pools: child.pools,
-    };
+    const currentSubChilds = subChilds.filter(r => r.groupId === child.id);
+    if (currentSubChilds.length) {
+      const childRight: GroupChildVertical = {
+        type: 'vertical',
+        id: child.id,
+        percent: child.percent / 100,
+        pools: child.pools,
+        children: formatChilds(currentSubChilds)
+      };
 
-    return childRight;
-  })
+      return childRight;
+    } else {
+      const childRight: GroupChildRight = {
+        type: 'right',
+        id: child.id,
+        percent: child.percent / 100,
+        orgId: child.rightholderId,
+        conditions: child.conditions,
+        pools: child.pools,
+      };
+
+      return childRight;
+    }
+
+  });
 }
 
 /**
@@ -238,11 +279,14 @@ export function groupByDate(actions: Action[]) {
     const date = obj.payload.date;
     const key = new Date(date.getFullYear(), date.getMonth(), date.getDate()); // Remove hours, min, sec if any
 
-    const subGroup = group.find(g => g.date.getTime() === date.getTime());
+    const subGroup = group.find(g => g.date.getTime() === key.getTime());
     if (!subGroup) group.push({ date: key, actions: [obj] })
     else subGroup.actions.push(obj);
   }
 
+  for (const grp of group) {
+    grp.actions = sortByDate(grp.actions, 'payload.date');
+  }
   return sortByDate(group, 'date');
 }
 

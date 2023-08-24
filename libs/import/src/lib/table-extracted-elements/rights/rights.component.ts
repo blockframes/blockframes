@@ -110,12 +110,10 @@ export class TableExtractedRightsComponent implements AfterViewInit {
 
     const right = importState.right;
     if (existingRight) {
-      right.groupId = existingRight.groupId;
       await this.rightService.update(right, { params: { waterfallId: importState.waterfallId } });
     } else {
       await this.rightService.add(right, { params: { waterfallId: importState.waterfallId } });
     }
-
 
     importState.imported = true;
 

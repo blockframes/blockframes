@@ -7,7 +7,13 @@
     <!-- Waterfall -->
     <mat-tab label="Waterfall" #versionsAndActions>
       <ng-container *ngIf="versions.length else noWaterfall">
-        <h3>Versions</h3>
+        <div>
+          <h3>Versions</h3>
+          <button mat-button [disabled]="(canInitWaterfall$ | async) === false" (click)="initWaterfall()" color="primary" [matTooltip]="(canInitWaterfall$ | async) ? 'Initialize a new version' : 'Missing data'">
+            <mat-icon svgIcon="add"></mat-icon>
+            <span>Initialize a new version</span>
+          </button>
+        </div>
         <bf-table [source]="versions" clickable useFilter pagination="50">
           <ng-template colRef="id" label="Id" let-id sort defaultSort>
             {{ id }}
@@ -79,10 +85,16 @@
               <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="expenses.length else notImported"></mat-icon>
             </li>
           </ul>
-          <a *ngIf="canInitWaterfall()" (click)="initWaterfall()" class="surface">
+          <a *ngIf="(canInitWaterfall$ | async) else refresh" (click)="initWaterfall()" class="surface">
             <img asset="add_draft.svg" alt="Add waterfall image">
-            <button mat-button color="primary">Initialize Waterfall</button>
+            <button mat-button color="primary" matTooltip="Initialize Waterfall">Initialize Waterfall</button>
           </a>
+          <ng-template #refresh>
+            <button mat-button (click)="loadAll()" color="primary" matTooltip="Refresh data">
+              <mat-icon svgIcon="refresh_filters"></mat-icon>
+              <span>Refresh data</span>
+            </button>
+          </ng-template>
         </section>
         <ng-template #notImported>
           <mat-icon svgIcon="cancel" class="icon-nok"></mat-icon>
@@ -100,12 +112,18 @@
           </ng-template>
           <ng-template colRef="blockId" label="Block" let-blockId sort>
             {{ getBlockName(blockId) }}
+            <button mat-icon-button [cdkCopyToClipboard]="blockId" (click)="$event.stopPropagation()">
+              <mat-icon svgIcon="file_copy"></mat-icon>
+            </button>
           </ng-template>
           <ng-template colRef="name" label="Type" let-name sort>
             {{ name }}
           </ng-template>
           <ng-template colRef="payload.id" label="Id" let-id>
             {{ id ? id : '--' }}
+            <button *ngIf="id" mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+              <mat-icon svgIcon="file_copy"></mat-icon>
+            </button>
           </ng-template>
           <ng-template colRef="payload.orgId" label="Rightholder" let-orgId>
             {{ orgId ? getRightholderName(orgId) : '--' }}
@@ -130,7 +148,7 @@
 
       <ng-container *ngIf="tree">
         <h3>Waterfall</h3>
-        <waterfall-g6-graph [tree]="tree"></waterfall-g6-graph>
+        <waterfall-g6-graph [tree]="tree" [waterfallId]="waterfall.id"></waterfall-g6-graph>
       </ng-container>
       
       <ng-container *ngIf="versions.length">
@@ -195,14 +213,10 @@
           {{ rootId ? rootId : '--' }}
         </ng-template>
         <ng-template colRef="sellerId" label="Licensor" let-sellerId sort>
-          <ng-container *ngIf="sellerId as org">
-            {{ getRightholderName(sellerId) }}
-          </ng-container>
+          {{ getRightholderName(sellerId) }}
         </ng-template>
         <ng-template colRef="buyerId" label="Licensee" let-buyerId sort>
-          <ng-container *ngIf="buyerId async as org">
-            {{ getRightholderName(buyerId) }}
-          </ng-container>
+          {{ getRightholderName(buyerId) }}
         </ng-template>
         <ng-template colRef="" label="Price" let-item sort>
           <ng-container *ngIf="getDeclaredAmount(item) as amount">
@@ -265,12 +279,24 @@
 
     <!-- RIGHTS -->
     <mat-tab label="3 - Rights">
+      <section class="actions">
+        <button mat-stroked-button color="primary" (click)="removeRights(rights)">
+          <mat-icon svgIcon="delete"></mat-icon>
+          <span>Remove all rights</span>
+        </button>
+      </section>
       <bf-table [source]="rights" clickable useFilter pagination="50">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
+          <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+            <mat-icon svgIcon="file_copy"></mat-icon>
+          </button>
         </ng-template>
         <ng-template colRef="name" label="Name" let-name sort>
           {{ name }}
+        </ng-template>
+        <ng-template colRef="rightholderId" label="Org" let-rightholderId sort>
+          {{ getRightholderName(rightholderId) }}
         </ng-template>
         <ng-template colRef="groupId" label="Group" let-groupId sort>
           {{ groupId ? groupId : '--' }}
@@ -287,8 +313,8 @@
         <ng-template colRef="conditions" label="Conditions" let-conditions>
           {{ conditions?.conditions?.length ? conditions.conditions.length  : '--' }}
         </ng-template>
-        <ng-template colRef="id" label="Actions" let-rightId sticky>
-          <button mat-icon-button (click)="removeRight(rightId)">
+        <ng-template colRef="" label="Actions" let-right sticky>
+          <button mat-icon-button (click)="removeRights([right])">
             <mat-icon svgIcon="delete" matTooltip="Delete right"></mat-icon>
           </button>
         </ng-template>
@@ -297,6 +323,12 @@
 
     <!-- INCOMES -->
     <mat-tab label="4 - Incomes">
+      <section class="actions">
+        <button mat-stroked-button color="primary" (click)="removeIncomes(incomes)">
+          <mat-icon svgIcon="delete"></mat-icon>
+          <span>Remove all incomes</span>
+        </button>
+      </section>
       <bf-table [source]="incomes" clickable useFilter pagination="50">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
@@ -315,8 +347,8 @@
             <price-per-currency [price]="amount"></price-per-currency>
           </ng-container>
         </ng-template>
-        <ng-template colRef="id" label="Action" let-incomeId sticky>
-          <button mat-icon-button (click)="removeIncome(incomeId)">
+        <ng-template colRef="" label="Action" let-income sticky>
+          <button mat-icon-button (click)="removeIncomes([income])">
             <mat-icon svgIcon="delete" matTooltip="Delete income"></mat-icon>
           </button>
         </ng-template>

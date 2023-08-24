@@ -57,23 +57,26 @@ export function getRightConfig(option: RightConfig) {
         if (titleId) return titleId;
         throw unknownEntityError<string>(value, 'Waterfall name or ID');
       },
-        /* b */ 'right.date': (value: string) => {
-        if (!value) throw mandatoryError(value, 'Right Date');
+        /* b */ 'right.date': (value: string, _, __, rowIndex) => {
+        if (!value) return new Date(1 + (rowIndex * 1000)); // 01/01/1970 + "rowIndex" seconds 
         return getDate(value, 'Right Date');
       },
         /* c */ 'right.id': (value: string) => {
         if (!value) throw mandatoryError(value, 'Right Id');
         return value;
       },
-        /* d */ 'right.nextIds': (value: string) => {
+        /* d */ 'right.groupId': (value: string) => {
+        return value;
+      },
+        /* e */ 'right.nextIds': (value: string) => {
         // ! Column on Excel file is called Previous (from waterfall top to bottom POV)
         return value.split(separator).map(v => v.trim()).filter(v => !!v);
       },
-        /* e */ 'right.previousIds': (value: string) => {
+        /* f */ 'right.previousIds': (value: string) => {
         // ! Column on Excel file is called Next (from waterfall top to bottom POV)
         return value.split(separator).map(v => v.trim()).filter(v => !!v);
       },
-        /* f */ 'right.actionName': (value: string, data: FieldsConfig) => {
+        /* g */ 'right.actionName': (value: string, data: FieldsConfig) => {
         const lower = value.toLowerCase().trim();
         switch (lower) {
           case 'horizontal':
@@ -84,10 +87,10 @@ export function getRightConfig(option: RightConfig) {
             return data.right.nextIds.length ? 'prepend' : 'append';
         }
       },
-        /* g */ 'right.name': (value: string) => {
+        /* h */ 'right.name': (value: string) => {
         return value;
       },
-        /* h */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
+        /* i */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
         if (['appendVertical', 'prependVertical'].includes(data.right.actionName)) {
           if (value) throw optionalWarning('Rightholder Id or Blame Id should be left empty for vertical groups');
           return '';
@@ -101,53 +104,53 @@ export function getRightConfig(option: RightConfig) {
           return rightholderId;
         }
       },
-        /* i */ 'right.percent': (value: string) => {
+        /* j */ 'right.percent': (value: string) => {
         return Number(value);
       },
-        /* j */ 'right.pools': (value: string) => {
+        /* k */ 'right.pools': (value: string) => {
         return value.split(separator).map(v => v.trim()).filter(v => !!v);
       },
-        /* k */ 'conditionA.conditionName': (value: string) => {
+        /* l */ 'conditionA.conditionName': (value: string) => {
         return value as ConditionName;
       },
-        /* l */ 'conditionA.left': (value: string) => {
-        return value;
+        /* m */ 'conditionA.left': (value: string) => {
+        return value.trim();
       },
-        /* m */ 'conditionA.operator': (value: string, data: FieldsConfig) => {
+        /* n */ 'conditionA.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionA);
       },
-        /* n */ 'conditionA.target': (value: string, data: FieldsConfig) => {
+        /* o */ 'conditionA.target': (value: string, data: FieldsConfig) => {
         return extractConditionTarget(value, data.conditionA);
       },
-        /* o */ 'conditionB.conditionName': (value: string) => {
+        /* p */ 'conditionB.conditionName': (value: string) => {
         return value as ConditionName;
       },
-        /* p */ 'conditionB.left': (value: string) => {
-        return value;
+        /* q */ 'conditionB.left': (value: string) => {
+        return value.trim();
       },
-        /* q */ 'conditionB.operator': (value: string, data: FieldsConfig) => {
+        /* r */ 'conditionB.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionB);
       },
-        /* r */ 'conditionB.target': (value: string, data: FieldsConfig) => {
+        /* s */ 'conditionB.target': (value: string, data: FieldsConfig) => {
         return extractConditionTarget(value, data.conditionB);
       },
-        /* s */ 'conditionC.conditionName': (value: string) => {
+        /* t */ 'conditionC.conditionName': (value: string) => {
         return value as ConditionName;
       },
-        /* t */ 'conditionC.left': (value: string) => {
-        return value;
+        /* u */ 'conditionC.left': (value: string) => {
+        return value.trim();
       },
-        /* u */ 'conditionC.operator': (value: string, data: FieldsConfig) => {
+        /* v */ 'conditionC.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionC);
       },
-        /* v */ 'conditionC.target': (value: string, data: FieldsConfig) => {
+        /* w */ 'conditionC.target': (value: string, data: FieldsConfig) => {
         return extractConditionTarget(value, data.conditionC);
       },
     };
   }
 
   function extractConditionOperator(value: string, cond: ImportedCondition) {
-    if (cond.conditionName === 'terms') {
+    if (['terms', 'contract'].includes(cond.conditionName)) {
       if (value && !arrayOperator.includes(value as ArrayOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${arrayOperator.map(o => `"${o}"`).join(' ')}`);
       return value as ArrayOperator;
     } else {
@@ -163,6 +166,8 @@ export function getRightConfig(option: RightConfig) {
       const leftOperand = cond.left as any;
       if (!groups.includes(leftOperand)) throw mandatoryError(value, 'Operator', `For "terms" condition, expected value for left operand are : ${groups.map(g => `"${g}"`).join(' ')}`);
       return getGroupedList(value, leftOperand, separator);
+    } else if (cond.conditionName === 'contract') {
+      return value.split(separator).map(v => v.trim()).filter(v => !!v);
     } else {
       return isNumber(value) ? Number(value) : value;
     }

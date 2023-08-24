@@ -1,38 +1,66 @@
 <main>
-  <g6-graph autoFit *rxIf="data$; let data" (click)="unselect()">
-    <ng-container *rxFor="let node of data.nodes; trackBy: trackBy">
-      <g6-node [config]="node" (click)="select($event)"></g6-node>
-    </ng-container>
-    <ng-container *rxFor="let edge of data.edges; trackBy: trackBy">
-      <g6-edge [config]="edge" (click)="select($event)"></g6-edge>
-    </ng-container>
-    <ng-container *rxFor="let combo of data.combos; trackBy: trackBy">
-      <g6-combo [config]="combo" (click)="select($event)"></g6-combo>
-    </ng-container>
-  </g6-graph>
+  <section>
+    <waterfall-state-reader *rxIf="state$; let state" [state]="state"></waterfall-state-reader>
+    <g6-graph autoFit *rxIf="data$; let data" (click)="unselect()">
+      <ng-container *rxFor="let node of data.nodes; trackBy: trackBy">
+        <g6-node [config]="node" (click)="select($event)"></g6-node>
+      </ng-container>
+      <ng-container *rxFor="let edge of data.edges; trackBy: trackBy">
+        <g6-edge [config]="edge" (click)="select($event)"></g6-edge>
+      </ng-container>
+      <ng-container *rxFor="let combo of data.combos; trackBy: trackBy">
+        <g6-combo [config]="combo" (click)="select($event)"></g6-combo>
+      </ng-container>
+    </g6-graph>
+  </section>
   <aside *ngIf="!hideDetails">
-    <ng-container *rxIf="right">
-      <h4>{{ right.id }}</h4>
+    <ng-container *ngIf="right">
+      <h4>
+        <span>{{ getRightholderName(right.orgId) }}</span>
+        <button mat-icon-button (click)="orgDetails(right.orgId)">
+          <mat-icon svgIcon="search"></mat-icon>
+        </button>
+      </h4>
       <p>
-        Org: {{ right.orgId }}<br>
-        Revenu: {{ right.revenu| currency }}<br>
-        Percent: {{ right.percent | percent: '1.0-2' }}<br>
+        <strong>Right Id:</strong> {{ right.id }}<br>
+        <strong>Right Revenu:</strong> {{ right.revenu | currency }}<br>
+        <strong>Right Turnover:</strong> {{ right.turnover | currency }}<br>
+        <strong>Right Percent:</strong> {{ right.percent | percent: '1.0-2' }}<br>
       </p>
     </ng-container>
-    <ng-container *rxIf="transfer">
+    <ng-container *ngIf="transfer">
       <h4>{{ transfer.from }} -> {{ transfer.to }}</h4>
       <p>Total: {{ transfer.amount | currency }}</p>
       <ul>
         <li *rxFor="let value of transfer.history">{{ value.amount| currency }}</li>
       </ul>
     </ng-container>
-    <ng-container *rxIf="org">
-      <h4>{{ org.id }}</h4>
+    <ng-container *ngIf="org">
+      <h4>{{ getRightholderName(org.id) }}</h4>
       <p>
-        Revenu: {{ org.revenu| currency }}<br>
-        Investment: {{ org.investment| currency }}<br>
-        Expense: {{ org.expense| currency }}<br>
-        Bonus: {{ org.bonus| currency }}
+        <strong>Org Revenu:</strong> {{ org.revenu | currency }}<br>
+        <strong>Org Turnover:</strong> {{ org.turnover | currency }}<br>
+        <strong>Org Investment:</strong> {{ org.investment | currency }}<br>
+        <strong>Org Expense:</strong> {{ org.expense | currency }}<br>
+        <strong>Org Bonus:</strong> {{ org.bonus | currency }}
+      </p>
+    </ng-container>
+    <ng-container *ngIf="verticalGroup">
+      <h4>{{ verticalGroup.id }}</h4>
+      <p>
+        <strong>Right Id:</strong> {{ verticalGroup.id }}<br>
+        <strong>Right Revenu:</strong> {{ verticalGroup.revenu | currency }}<br>
+        <strong>Right Turnover:</strong> {{ verticalGroup.turnover | currency }}<br>
+        <strong>Right Percent:</strong> {{ verticalGroup.percent | percent: '1.0-2' }}<br>
+      </p>
+    </ng-container>
+    <ng-container *ngIf="horizontalGroup">
+      <h4>{{ horizontalGroup.id }}</h4>
+      <p>
+        <strong>Right Id:</strong> {{ horizontalGroup.id }}<br>
+        <strong>Right Revenu:</strong> {{ horizontalGroup.revenu | currency }}<br>
+        <strong>Right Turnover:</strong> {{ horizontalGroup.turnover | currency }}<br>
+        <strong>Right Percent:</strong> {{ horizontalGroup.percent | percent: '1.0-2' }}<br>
       </p>
     </ng-container>
   </aside>

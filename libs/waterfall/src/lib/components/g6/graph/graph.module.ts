@@ -11,6 +11,13 @@ import { graphOptions } from './../utils';
 // Component
 import { GraphComponent } from './graph.component';
 
+// Material
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
+// Blockframes
+import { StateReaderModule } from '../../state-reader/state-reader.module';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -18,6 +25,9 @@ import { GraphComponent } from './graph.component';
     ForModule,
     IfModule,
     G6GraphModule,
+    MatButtonModule,
+    MatIconModule,
+    StateReaderModule
   ],
   declarations: [GraphComponent],
   exports: [GraphComponent],
