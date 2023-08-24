@@ -615,8 +615,8 @@ export interface IncomeAction extends BaseAction {
   to: string;
   from?: string;
   contractId?: string;
-  territories: string[]; // TODO #9420 should be Territory[]
-  medias: string[]; // TODO #9420 should be Media[]
+  territories: string[]; // TODO #9471 should be Territory[]
+  medias: string[]; // TODO #9471 should be Media[]
   isCompensation?: boolean;
 }
 
