@@ -1,0 +1,49 @@
+<ng-container *ngIf="document">
+  <button class="go-back" mat-icon-button routerLink="../..">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+    <span>BACK TO WATERFALL</span>
+  </button>
+  <article>
+    <movie-header [movie]="movie" [showBackArrow]="false"></movie-header>
+  </article>
+  <ng-container *ngIf="contract">
+    <h3>Contract</h3>
+    <section>
+      TODO #9420 from 
+      TODO #9420 to
+      TODO #9420 licensee licensor
+    </section>
+
+    <ng-container *ngIf="contract | getTermsFromContract | async as terms">
+      <h3>Terms</h3>
+      <bf-table [source]="terms" useFilter pagination="50">
+        <ng-template colRef="territories" label="Territories" let-territories>
+          <span class="group-label" (click)="openDetails(territories, 'territories')">
+            <p class="ellipsis">
+              {{ territories | toGroupLabel:'territories':'World' | join }}
+            </p>
+          </span>
+        </ng-template>
+        <ng-template colRef="medias" label="Rights" let-medias>
+          <span class="group-label" (click)="openDetails(medias, 'medias')">
+            {{ medias | toGroupLabel:'medias':'All'| join }}
+          </span>
+        </ng-template>
+        <ng-template colRef="duration.from" label="Terms Start Date" let-from>
+          <ng-container *ngIf="from else noDuration">
+            {{ from | date:'MM/dd/yyyy' }}
+          </ng-container>
+          
+        </ng-template>
+        <ng-template colRef="duration.to" label="Terms End Date" let-to>
+          <ng-container *ngIf="to else noDuration">
+            {{ to | date:'MM/dd/yyyy' }}
+          </ng-container>
+        </ng-template>
+      </bf-table>
+      <ng-template #noDuration>
+        Same as contract
+      </ng-template>
+    </ng-container>
+  </ng-container>
+</ng-container>

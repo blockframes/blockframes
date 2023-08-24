@@ -1,7 +1,6 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { Contract } from '@blockframes/model';
+import { Contract, WaterfallContract, BucketContract } from '@blockframes/model';
 import { of } from 'rxjs';
-import { BucketContract } from '@blockframes/model';
 import { TermService } from './service';
 
 const isBucketContract = (contract: Contract | BucketContract): contract is BucketContract => {
@@ -12,7 +11,7 @@ const isBucketContract = (contract: Contract | BucketContract): contract is Buck
 export class GetTermsFromContract implements PipeTransform {
 
   constructor(private service: TermService) { }
-  transform(contract?: Contract | BucketContract | null) {
+  transform(contract?: Contract | BucketContract | WaterfallContract | null) {
     if (!contract) return of([]);
     if (isBucketContract(contract)) return of(contract.terms);
     return this.service.valueChanges(contract.termIds);
