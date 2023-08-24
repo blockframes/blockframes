@@ -52,7 +52,7 @@
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Number of Episodes</mat-label>
             <input test-id="episode-count" matInput type="number" name="episodeCount"
-              [formControl]="form.runningTime.get('episodeCount')" min="0" max="1000" />
+              [formControl]="form.runningTime.get('episodeCount')" min="0" max="10000" />
             <mat-hint>Please specify the number of episodes in this season.</mat-hint>
             <mat-error>Please fill in a valid number of episodes.</mat-error>
           </mat-form-field>

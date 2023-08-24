@@ -55,7 +55,7 @@ export class MarketplaceMovieViewComponent implements AfterViewInit {
   public requestSent = false;
 
   constructor(
-    private route: ActivatedRoute,
+    public route: ActivatedRoute,
     private movieService: MovieService,
     private functions: CallableFunctions,
     private analytics: AnalyticsService,

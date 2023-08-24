@@ -86,7 +86,7 @@ export class MarketplaceMovieAvailsComponent implements AfterViewInit, OnDestroy
   constructor(
     private router: Router,
     private dialog: MatDialog,
-    private route: ActivatedRoute,
+    public route: ActivatedRoute,
     private movieService: MovieService,
     private termService: TermService,
     private bucketService: BucketService,

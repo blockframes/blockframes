@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
-import { StorageFile, Movie, App } from '@blockframes/model';
+import { Movie, App } from '@blockframes/model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { RouteDescription } from '@blockframes/model';
 import { FileListPreviewComponent } from '@blockframes/media/file/preview-list/preview-list.component';
@@ -42,7 +42,7 @@ export class TitleMarketplaceShellComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private movie: MovieService,
-    private route: ActivatedRoute,
+    public route: ActivatedRoute,
     public router: Router,
     private analytics: AnalyticsService,
     private breakpoint: BreakpointsService,

@@ -6,8 +6,8 @@
   </button>
 </header>
 <nav fxLayout fxLayoutAlign="center center" fxLayoutGap="16px">
-  <a mat-flat-button routerLink="map" routerLinkActive="mat-primary" test-id="multiple-territory">Multiple Territory</a>
-  <a mat-flat-button routerLink="calendar" routerLinkActive="mat-primary" test-id="single-territory">Single Territory</a>
+  <a mat-flat-button routerLink="map"  [queryParams]="route.snapshot.queryParams" routerLinkActive="mat-primary" test-id="multiple-territory">Multiple Territory</a>
+  <a mat-flat-button routerLink="calendar" [queryParams]="route.snapshot.queryParams" routerLinkActive="mat-primary" test-id="single-territory">Single Territory</a>
 </nav>
 
 <router-outlet></router-outlet>
