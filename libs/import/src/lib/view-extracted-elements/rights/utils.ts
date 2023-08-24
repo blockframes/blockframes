@@ -94,11 +94,23 @@ function formatCondition(cond: ImportedCondition, rightholders: WaterfallRightho
       }
     }
     case 'poolRevenu':
-    case 'poolTurnover': {
+    case 'poolTurnover':
+    case 'poolShadowRevenu': {
       return {
         name: cond.conditionName,
         payload: {
           pool: cond.left,
+          operator: cond.operator as NumberOperator,
+          target: formatTarget(cond.target)
+        }
+      }
+    }
+    case 'groupRevenu':
+    case 'groupTurnover': {
+      return {
+        name: cond.conditionName,
+        payload: {
+          groupId: cond.left,
           operator: cond.operator as NumberOperator,
           target: formatTarget(cond.target)
         }
@@ -139,6 +151,25 @@ function formatCondition(cond: ImportedCondition, rightholders: WaterfallRightho
           operator: cond.operator as ArrayOperator,
           type: cond.left as GroupScope,
           list: formatTarget(cond.target)
+        }
+      }
+    }
+    case 'interest': {
+      return {
+        name: 'interest',
+        payload: {
+          orgId: cond.left,
+          rate: formatTarget(cond.target)
+        }
+      }
+    }
+    case 'event': {
+      return {
+        name: 'event',
+        payload: {
+          eventId: cond.left,
+          operator: cond.operator,
+          value: formatTarget(cond.target)
         }
       }
     }

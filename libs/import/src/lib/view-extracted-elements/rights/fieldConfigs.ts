@@ -153,6 +153,16 @@ export function getRightConfig(option: RightConfig) {
     if (['terms', 'contract'].includes(cond.conditionName)) {
       if (value && !arrayOperator.includes(value as ArrayOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${arrayOperator.map(o => `"${o}"`).join(' ')}`);
       return value as ArrayOperator;
+    } else if (cond.conditionName === 'interest') {
+      if (value) throw optionalWarning('Operator should be left empty for "interest" conditions');
+      return;
+    } else if (cond.conditionName === 'event') {
+      if (value === '≥') value = '>=';
+      if (value && (numberOperator.includes(value as NumberOperator) || arrayOperator.includes(value as ArrayOperator))) {
+        return numberOperator.includes(value as NumberOperator) ? value as NumberOperator : value as ArrayOperator;
+      } else {
+        throw mandatoryError(value, 'Operator', `Allowed values are : ${[...numberOperator, ...arrayOperator].map(o => `"${o}"`).join(' ')}`);
+      }
     } else {
       if (value === '≥') value = '>=';
       if (value && !numberOperator.includes(value as NumberOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${numberOperator.map(o => `"${o}"`).join(' ')}`);
