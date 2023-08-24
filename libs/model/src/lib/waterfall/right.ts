@@ -16,7 +16,6 @@ export interface Right {
   conditions?: ConditionGroup;
   blameId?: string;
   pools: string[];
-  order: number;
 }
 
 export function createRight(params: Partial<Right> = {}) {
@@ -31,7 +30,6 @@ export function createRight(params: Partial<Right> = {}) {
     rightholderId: '',
     percent: 100,
     pools: [],
-    order: 0,
     ...params
   }
 

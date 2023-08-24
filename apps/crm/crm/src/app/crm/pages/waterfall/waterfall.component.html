@@ -7,7 +7,13 @@
     <!-- Waterfall -->
     <mat-tab label="Waterfall" #versionsAndActions>
       <ng-container *ngIf="versions.length else noWaterfall">
-        <h3>Versions</h3>
+        <div>
+          <h3>Versions</h3>
+          <button mat-button [disabled]="(canInitWaterfall$ | async) === false" (click)="initWaterfall()" color="primary" [matTooltip]="(canInitWaterfall$ | async) ? 'Initialize a new version' : 'Missing data'">
+            <mat-icon svgIcon="add"></mat-icon>
+            <span>Initialize a new version</span>
+          </button>
+        </div>
         <bf-table [source]="versions" clickable useFilter pagination="50">
           <ng-template colRef="id" label="Id" let-id sort defaultSort>
             {{ id }}
@@ -79,10 +85,16 @@
               <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="expenses.length else notImported"></mat-icon>
             </li>
           </ul>
-          <a *ngIf="canInitWaterfall()" (click)="initWaterfall()" class="surface">
+          <a *ngIf="(canInitWaterfall$ | async) else refresh" (click)="initWaterfall()" class="surface">
             <img asset="add_draft.svg" alt="Add waterfall image">
-            <button mat-button color="primary">Initialize Waterfall</button>
+            <button mat-button color="primary" matTooltip="Initialize Waterfall">Initialize Waterfall</button>
           </a>
+          <ng-template #refresh>
+            <button mat-button (click)="loadAll()" color="primary" matTooltip="Refresh data">
+              <mat-icon svgIcon="refresh_filters"></mat-icon>
+              <span>Refresh data</span>
+            </button>
+          </ng-template>
         </section>
         <ng-template #notImported>
           <mat-icon svgIcon="cancel" class="icon-nok"></mat-icon>

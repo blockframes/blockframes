@@ -4,6 +4,10 @@
   height: calc(100vh - 5px); // quick fix on the height of the canvas
 }
 
+waterfall-state-reader {
+  height: 80px;
+}
+
 main {
   flex: 1;
   display: flex;

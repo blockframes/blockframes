@@ -131,7 +131,7 @@ export function rightsToActions(rights: Right[]) {
   const actions: Action[] = [];
 
   const singleRights = rights.filter(r => !r.groupId);
-  const childRights = rights.filter(r => !!r.groupId).sort((a, b) => a.order - b.order);
+  const childRights = rights.filter(r => !!r.groupId).sort((a, b) => a.date.getTime() - b.date.getTime());
 
   singleRights.forEach(right => {
     const currentChilds = childRights.filter(r => r.groupId === right.id);
@@ -279,11 +279,14 @@ export function groupByDate(actions: Action[]) {
     const date = obj.payload.date;
     const key = new Date(date.getFullYear(), date.getMonth(), date.getDate()); // Remove hours, min, sec if any
 
-    const subGroup = group.find(g => g.date.getTime() === date.getTime());
+    const subGroup = group.find(g => g.date.getTime() === key.getTime());
     if (!subGroup) group.push({ date: key, actions: [obj] })
     else subGroup.actions.push(obj);
   }
 
+  for (const grp of group) {
+    grp.actions = sortByDate(grp.actions, 'payload.date');
+  }
   return sortByDate(group, 'date');
 }
 

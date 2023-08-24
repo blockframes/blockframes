@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { map, Observable } from 'rxjs';
 import { ComboConfig, EdgeConfig, GraphData, IG6GraphEvent, NodeConfig } from '@antv/g6';
@@ -12,7 +12,7 @@ import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
   styleUrls: ['./graph.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GraphComponent implements OnInit, AfterViewInit {
+export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
   control: FormControl;
   history: History[] = [];
   data$?: Observable<GraphData>;
@@ -27,7 +27,7 @@ export class GraphComponent implements OnInit, AfterViewInit {
 
   @Input() tree?: { state: TitleState, history: History[] };
   @Input() hideDetails = false;
-  @Input() waterfallId : string;
+  @Input() waterfallId: string;
 
   constructor(private waterfallService: WaterfallService) {
     this.control = new FormControl(0, { nonNullable: true });
@@ -45,11 +45,22 @@ export class GraphComponent implements OnInit, AfterViewInit {
     this.data$ = this.control.valueChanges.pipe(map(index => this.graphs[index]));
     this.state$ = this.control.valueChanges.pipe(map(index => this.history[index]));
 
-    if(this.waterfallId){
-      const waterfall = await this.waterfallService.getValue(this.waterfallId);
-      this.rightholders = waterfall.rightholders;
-    }
+    if (this.waterfallId) await this.loadRightholders();
+  }
 
+  async ngOnChanges() {
+    if (this.tree) this.history = this.tree.history;
+
+    this.graphs = this.history.map(h => toG6(h));
+
+    this.control.setValue(this.history.length - 1);
+
+    if (this.waterfallId) await this.loadRightholders();
+  }
+
+  private async loadRightholders() {
+    const waterfall = await this.waterfallService.getValue(this.waterfallId);
+    this.rightholders = waterfall.rightholders;
   }
 
   ngAfterViewInit() {
@@ -78,14 +89,14 @@ export class GraphComponent implements OnInit, AfterViewInit {
     }
   }
 
-  orgDetails(orgId: string){
+  orgDetails(orgId: string) {
     this.unselect();
     this.org = this.state.orgs[orgId];
   }
 
   getRightholderName(id: string) {
     if (!id) return '--';
-    return this.rightholders .find(r => r.id === id)?.name || id;
+    return this.rightholders.find(r => r.id === id)?.name || id;
   }
 
   unselect() {
