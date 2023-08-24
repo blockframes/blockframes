@@ -158,11 +158,12 @@ describe('Marketplace avails search', () => {
         get('select-all').click();
         assertMediaOverlapTerms();
       });
-
+      
       it('in single territory', () => {
         searchAvailsMediaOverlap();
         get(`movie-card_${seller.movie.id}`).click();
         get('Avails').click();
+        cy.wait(1000); // to handle debounce time
         get('single-territory').click();
         //TODO : uncomment below line when issue #9140 part 5 has been fixed (2024 term1 should be available)
         //get('calendar').find('.available').should('have.length', 18);
@@ -195,6 +196,7 @@ describe('Marketplace avails search', () => {
         searchAvailsTerritoryOverlap();
         get(`movie-card_${seller.movie.id}`).click();
         get('Avails').click();
+        cy.wait(1000); // to handle debounce time
         get('single-territory').click();
         //TODO : uncomment below line when issue #9140 part 5 has been fixed (2024 term1 should be available)
         //get('calendar').find('.available').should('have.length', 18);
