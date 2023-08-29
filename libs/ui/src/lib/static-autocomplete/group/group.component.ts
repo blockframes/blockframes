@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { GroupScope, Scope, StaticGroup, staticGroups, territories, medias } from '@blockframes/model';
+import { GroupScope, Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/model';
 import { FormStaticValueArray } from '@blockframes/utils/form';
 import { MatSelect } from '@angular/material/select';
 import { FormControl } from '@angular/forms';
@@ -100,7 +100,7 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
   }
 
   getSelectable(groups: StaticGroup[], filter?: string): Record<string, boolean> {
-    const scope = this.scope === 'territories' ? territories : medias;
+    const scope = staticModel[this.scope];
     const selectable: Record<string, boolean> = {};
     const lowerCaseFilter = filter.toLowerCase();
 
@@ -109,9 +109,9 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
       const selectableItems = lowerCaseLabel.includes(lowerCaseFilter)
         ? items
         : items
-            .map(i => scope[i].toLowerCase()) // getthe displayed value
-            .filter(item => item.includes(lowerCaseFilter)) // compare above value with filter
-            .map(itemValue => getKeyIfExists(this.scope, itemValue)); // retrieve item key
+          .map(i => scope[i].toLowerCase()) // get the displayed value
+          .filter(item => item.includes(lowerCaseFilter)) // compare above value with filter
+          .map(itemValue => getKeyIfExists(this.scope, itemValue)); // retrieve item key
 
       if (lowerCaseLabel.includes(lowerCaseFilter) || selectableItems.length > 0) {
         selectable[label] = true;
