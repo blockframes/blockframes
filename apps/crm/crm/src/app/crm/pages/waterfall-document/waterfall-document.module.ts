@@ -10,6 +10,7 @@ import { TermPipeModule } from '@blockframes/contract/term/pipes';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { DetailedGroupModule } from '@blockframes/ui/detail-modal/detailed.module';
 import { ToGroupLabelPipeModule, JoinPipeModule } from '@blockframes/utils/pipes';
+import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -26,6 +27,7 @@ import { MatButtonModule } from '@angular/material/button';
     DetailedGroupModule,
     ToGroupLabelPipeModule,
     JoinPipeModule,
+    PricePerCurrencyModule,
 
     MatIconModule,
     MatButtonModule,

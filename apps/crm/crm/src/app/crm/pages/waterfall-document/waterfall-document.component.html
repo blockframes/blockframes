@@ -8,20 +8,55 @@
   </article>
   <ng-container *ngIf="contract">
     <h3>Contract from {{  contract.duration.from | date: 'MM/dd/yyyy' }} to {{  contract.duration.to | date: 'MM/dd/yyyy' }}</h3>
-    <h4 *ngIf="rootContract">Child contract of {{ rootContract.id }}</h4>
-    <h4 *ngIf="childContracts">Parent of {{ childContracts.length }} contracts</h4>
+    <h4 *ngIf="rootContract">Amendment of <a [routerLink]="['../',rootContract.id]" target="_blank">{{ rootContract.id }}</a></h4>
+    <h4 *ngIf="childContracts?.length">{{ childContracts.length }} amendment(s)</h4>
 
     <section>
       <ul>
         <li><strong>Licensor :</strong> {{ getRightholderName(contract.sellerId) }}</li>
         <li><strong>Licensee :</strong> {{ getRightholderName(contract.buyerId) }}</li>
         <li><strong>Signature date :</strong> {{  contract.signatureDate | date: 'MM/dd/yyyy' }}</li>
+        <li><strong>Price:</strong><price-per-currency [price]="getDeclaredAmount(contract)"></price-per-currency> </li>
       </ul>
     </section>
+
+    <ng-container *ngIf="childContracts?.length">
+      <h3>Amendments</h3>
+      <bf-table [source]="childContracts" useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
+          {{ signatureDate | date: 'MM/dd/yyyy' }}
+        </ng-template>
+        <ng-template colRef="sellerId" label="Licensor" let-sellerId sort>
+          {{ getRightholderName(sellerId) }}
+        </ng-template>
+        <ng-template colRef="buyerId" label="Licensee" let-buyerId sort>
+          {{ getRightholderName(buyerId) }}
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="getDeclaredAmount(item) as amount">
+            <price-per-currency [price]="amount"></price-per-currency>
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type }}
+        </ng-template>
+        <ng-template colRef="" label="Action" let-contract sticky>
+          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', contract.id]" (click)="$event.stopPropagation()">
+            <mat-icon svgIcon="launch"></mat-icon>
+          </a>
+        </ng-template>
+      </bf-table>
+    </ng-container>
 
     <ng-container *ngIf="contract | getTermsFromContract | async as terms">
       <h3>Terms</h3>
       <bf-table [source]="terms" useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
         <ng-template colRef="territories" label="Territories" let-territories>
           <span class="group-label" (click)="openDetails(territories, 'territories')">
             <p class="ellipsis">
@@ -38,12 +73,17 @@
           <ng-container *ngIf="from else noDuration">
             {{ from | date:'MM/dd/yyyy' }}
           </ng-container>
-          
         </ng-template>
         <ng-template colRef="duration.to" label="Terms End Date" let-to>
           <ng-container *ngIf="to else noDuration">
             {{ to | date:'MM/dd/yyyy' }}
           </ng-container>
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="item.price else noPrice">
+            <price-per-currency [price]="getTermAmount(item)"></price-per-currency>
+          </ng-container>
+          <ng-template #noPrice>--</ng-template>
         </ng-template>
       </bf-table>
       <ng-template #noDuration>
