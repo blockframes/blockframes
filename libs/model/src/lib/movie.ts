@@ -548,7 +548,7 @@ export function hasAppStatus(app: App, status: StoreStatus[]) {
 
 /** Return an array of the app access of the movie */
 export function getMovieAppAccess(movie: Movie): App[] {
-  return app.filter((a) => !['crm'].includes(a) && movie.app[a].access);
+  return app.filter((a) => !['crm'].includes(a) && movie.app[a]?.access);
 }
 
 /** Return true if the movie has the status passed in parameter for at least one application */
