@@ -31,7 +31,8 @@ import {
   recursiveSearch,
   Term,
   AlgoliaResult,
-  MovieAvailsSearch
+  MovieAvailsSearch,
+  isInPast
 } from '@blockframes/model';
 import { AvailsForm, createAvailsSearch } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
@@ -43,7 +44,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import algoliasearch from 'algoliasearch';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { getSearchKey } from '@blockframes/utils/algolia/helper.utils';
-import { isPast } from '@blockframes/utils/helpers';
 
 const mandatesQuery = [
   where('type', '==', 'mandate'),
@@ -237,8 +237,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     // Avails Form
     if (savedSearch.avails) {
       this.availsForm.hardReset(createAvailsSearch(savedSearch.avails));
-      const { from, to } = this.availsForm.value.duration;
-      if (isPast(from) || isPast(to)) {
+      if (isInPast(this.availsForm.value.duration)) {
         this.availsForm.markAllAsTouched();
         this.snackbar.open('Please select future dates in avails filter.', 'close', { duration: 8000 });
         this.availsFilterAutoOpen = true;

@@ -47,3 +47,9 @@ export function createTerm(params: Partial<Term> = {}): Term {
 export function createDuration(params: Partial<Duration> = {}): Duration {
   return { from: decodeDate(params?.from), to: decodeDate(params?.to) };
 }
+
+export function isInPast(duration: Duration) {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return duration.from < now || duration.to < now;
+}

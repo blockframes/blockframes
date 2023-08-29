@@ -164,10 +164,3 @@ export function convertToTimeString(time: number) {
 
   return `${dayStr}${hourStr}${minuteStr}${secondStr}` || '0s';
 }
-
-// do not replace with isPast() from date-fns
-export function isPast(date: Date) {
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  return date < now;
-}
