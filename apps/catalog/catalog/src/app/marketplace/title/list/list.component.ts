@@ -31,7 +31,8 @@ import {
   recursiveSearch,
   Term,
   AlgoliaResult,
-  MovieAvailsSearch
+  MovieAvailsSearch,
+  isInPast
 } from '@blockframes/model';
 import { AvailsForm, createAvailsSearch } from '@blockframes/contract/avails/form/avails.form';
 import { BucketService } from '@blockframes/contract/bucket/service';
@@ -236,10 +237,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     // Avails Form
     if (savedSearch.avails) {
       this.availsForm.hardReset(createAvailsSearch(savedSearch.avails));
-      const { from, to } = this.availsForm.value.duration;
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
-      if (from < now || to < now) {
+      if (isInPast(this.availsForm.value.duration)) {
         this.availsForm.markAllAsTouched();
         this.snackbar.open('Please select future dates in avails filter.', 'close', { duration: 8000 });
         this.availsFilterAutoOpen = true;

@@ -16,6 +16,7 @@ import {
   territoryAvailabilities,
   decodeDate,
   appName,
+  isInPast
 } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
@@ -150,6 +151,11 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
   async ngAfterViewInit() {
     const decodedData = decodeUrl<MapAvailsFilter>(this.route);
     this.load(decodedData);
+
+    if (decodedData.duration && isInPast(decodedData.duration)) {
+      this.availsForm.markAllAsTouched();
+      this.snackbar.open('Please select future dates in avails filter.', 'close', { duration: 8000 });
+    }
 
     const movie = await this.movieService.getValue(this.titleId);
     this.sub = this.availsForm.valueChanges
