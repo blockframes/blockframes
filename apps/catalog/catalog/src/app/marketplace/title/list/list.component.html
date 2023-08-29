@@ -29,7 +29,7 @@
   <!-- FILTERS (ng-content) -->
   <list-filter test-id="filters">
 
-    <ng-template filter label="Avails" [form]="availsForm">
+    <ng-template filter label="Avails" [form]="availsForm" [autoOpen]="availsFilterAutoOpen">
       <form [availsFilter]="availsForm" vertical></form>
     </ng-template>
 
