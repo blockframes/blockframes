@@ -152,7 +152,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
     const decodedData = decodeUrl<MapAvailsFilter>(this.route);
     this.load(decodedData);
 
-    if(isPast(decodedData.duration?.from) || isPast(decodedData.duration?.to)) {
+    if (isPast(decodedData.duration?.from) || isPast(decodedData.duration?.to)) {
       this.availsForm.markAllAsTouched();
       this.snackbar.open('Please select future dates in avails filter.', 'close', { duration: 8000 });
     }
