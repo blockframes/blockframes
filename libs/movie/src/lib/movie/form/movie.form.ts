@@ -559,7 +559,7 @@ function createRunningTimeFormControl(runningTime?: Partial<Movie['runningTime']
   return {
     time: new UntypedFormControl(time, [Validators.min(1)]),
     status: new UntypedFormControl(status),
-    episodeCount: new UntypedFormControl(episodeCount, [Validators.max(1000)]),
+    episodeCount: new UntypedFormControl(episodeCount, [Validators.max(10000)]),
   };
 }
 

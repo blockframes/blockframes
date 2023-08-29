@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -23,6 +24,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 // Pipes
 import { ErrorCountPipeModule } from '../pipes/error-count.pipe';
 import { IsDisabledPipeModule } from '../pipes/is-disabled.pipe';
+import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 
 // Components
 import { TableExtractedContractsComponent } from './contracts/contracts.component';
@@ -47,6 +49,7 @@ import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.mod
     ReactiveFormsModule,
     RouterModule,
     GlobalModalModule,
+    ClipboardModule,
 
     // Material
     MatIconModule,
@@ -66,7 +69,7 @@ import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.mod
     ToLabelModule,
     ErrorCountPipeModule,
     IsDisabledPipeModule,
-    IsDisabledPipeModule,
+    GetTitlePipeModule
 
   ],
   exports: [
