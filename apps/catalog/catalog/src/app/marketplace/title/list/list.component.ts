@@ -43,6 +43,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import algoliasearch from 'algoliasearch';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { getSearchKey } from '@blockframes/utils/algolia/helper.utils';
+import { isPast } from '@blockframes/utils/helpers';
 
 const mandatesQuery = [
   where('type', '==', 'mandate'),
@@ -237,9 +238,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     if (savedSearch.avails) {
       this.availsForm.hardReset(createAvailsSearch(savedSearch.avails));
       const { from, to } = this.availsForm.value.duration;
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
-      if (from < now || to < now) {
+      if (isPast(from) || isPast(to)) {
         this.availsForm.markAllAsTouched();
         this.snackbar.open('Please select future dates in avails filter.', 'close', { duration: 8000 });
         this.availsFilterAutoOpen = true;

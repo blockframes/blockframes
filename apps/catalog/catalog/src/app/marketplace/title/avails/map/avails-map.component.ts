@@ -20,6 +20,7 @@ import {
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
 import { Intercom } from 'ng-intercom';
+import { isPast } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'catalog-movie-avails-map',
@@ -150,6 +151,11 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
   async ngAfterViewInit() {
     const decodedData = decodeUrl<MapAvailsFilter>(this.route);
     this.load(decodedData);
+
+    if(isPast(decodedData.duration?.from) || isPast(decodedData.duration?.to)) {
+      this.availsForm.markAllAsTouched();
+      this.snackbar.open('Please select future dates in avails filter.', 'close', { duration: 8000 });
+    }
 
     const movie = await this.movieService.getValue(this.titleId);
     this.sub = this.availsForm.valueChanges
