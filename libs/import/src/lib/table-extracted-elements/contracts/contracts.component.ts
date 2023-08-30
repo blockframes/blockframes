@@ -34,6 +34,7 @@ export class TableExtractedContractsComponent implements AfterViewInit {
   public displayedColumns: string[] = [
     'id',
     'select',
+    'contract.titleId',
     'contract.id',
     'contract.type',
     'errors',

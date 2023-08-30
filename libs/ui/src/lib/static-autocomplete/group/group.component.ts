@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { GroupScope, Scope, StaticGroup, staticGroups } from '@blockframes/model';
+import { GroupScope, Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/model';
 import { FormStaticValueArray } from '@blockframes/utils/form';
 import { MatSelect } from '@angular/material/select';
 import { FormControl } from '@angular/forms';
@@ -60,7 +60,7 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
     this.items = this.getAllItems(this.groups);
 
     this.selectable = this.items.reduce((aggr, item) => ({ ...aggr, [item]: true }), {});
-    this.visible = this.items.reduce((aggr, item) => ({ ...aggr, [item]: true }), {});
+    this.visible = this.groups.reduce((aggr, group) => ({ ...aggr, [group.label]: true }), {});
 
     this.indeterminate = this.getIndeterminate(this.control.value, this.selectable);
     this.checked = this.getChecked(this.control.value, this.selectable);
@@ -72,7 +72,7 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
       for (const group of this.groups) {
         const groupHasSelectableItems = Object.keys(this.selectable).some(item => group.items.includes(item));
         const isGroupVisible = this.visible[group.label];
-        if (groupHasSelectableItems && isGroupVisible && filter.length > 2) this.toggleVisibility(group.label);
+        if (groupHasSelectableItems && !isGroupVisible && filter.length > 2) this.toggleVisibility(group.label);
       }
     });
 
@@ -108,6 +108,7 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
   }
 
   getSelectable(groups: StaticGroup[], filter?: string): Record<string, boolean> {
+    const scope = staticModel[this.scope];
     const selectable: Record<string, boolean> = {};
     const lowerCaseFilter = filter.toLowerCase();
 
@@ -115,7 +116,10 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
       const lowerCaseLabel = label.toLowerCase();
       const selectableItems = lowerCaseLabel.includes(lowerCaseFilter)
         ? items
-        : items.map(i => i.toLowerCase()).filter(item => item.includes(lowerCaseFilter));
+        : items
+          .map(i => scope[i].toLowerCase()) // get the displayed value
+          .filter(item => item.includes(lowerCaseFilter)) // compare above value with filter
+          .map(itemValue => getKeyIfExists(this.scope, itemValue)); // retrieve item key
 
       if (lowerCaseLabel.includes(lowerCaseFilter) || selectableItems.length > 0) {
         selectable[label] = true;

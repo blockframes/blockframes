@@ -45,14 +45,14 @@
             >{{ group.label }}
           </mat-checkbox>
           <button mat-icon-button color="primary" (click)="toggleVisibility(group.label)">
-            <mat-icon [svgIcon]="visible[group.label] ? 'expand_more' : 'expand_less'" id="centered"></mat-icon>
+            <mat-icon [svgIcon]="visible[group.label] ? 'expand_less' : 'expand_more'" id="centered"></mat-icon>
           </button>
         </div>
         <mat-option
           *ngFor="let item of group.items"
           [value]="item"
           class="item"
-          [ngClass]="{ hidden: !selectable[item] || visible[group.label] }"
+          [ngClass]="{ hidden: !selectable[item] || !visible[group.label] }"
           [attr.test-id]="item"
         >
           {{ item | toLabel: scope }}
@@ -66,7 +66,7 @@
     *ngIf="control.value.length && control.value.length !== items.length"
     mat-icon-button
     type="button"
-    matTooltip="See list"
+    matTooltip="See details"
     (click)="openGroupModal()"
   >
     <mat-icon svgIcon="document"></mat-icon>
