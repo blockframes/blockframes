@@ -210,7 +210,8 @@ export function or(conditions: (Condition | ConditionGroup)[]): ConditionGroup {
 
 const isNumber = (v: unknown): v is number => typeof v === 'number';
 
-export type TargetIn = 'orgs.revenu' | 'orgs.turnover' | 'orgs.expense' | 'rights.revenu' | 'rights.turnover' | 'pools.revenu' | 'pools.turnover' | 'investment' | 'expense';
+export const targetIn = ['orgs.revenu', 'orgs.turnover', 'orgs.expense', 'rights.revenu', 'rights.turnover', 'pools.revenu', 'pools.turnover', 'investment', 'expense'] as const;
+export type TargetIn = typeof targetIn[number];
 export type TargetValue = {
   id: string;
   percent: number;

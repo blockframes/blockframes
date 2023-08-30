@@ -6,13 +6,12 @@ import {
   GroupScope,
   Movie,
   NumberOperator,
-  TargetIn,
   TargetValue,
   WaterfallRightholder,
   createRight
 } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
-import { FieldsConfig, ImportedCondition, getRightConfig } from './fieldConfigs';
+import { FieldsConfig, ImportedCondition, ImportedTarget, getRightConfig } from './fieldConfigs';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { MovieService } from '@blockframes/movie/service';
 
@@ -122,7 +121,7 @@ function formatCondition(cond: ImportedCondition, rightholders: WaterfallRightho
       return {
         name: cond.conditionName,
         payload: {
-          [operator]: getDate(cond.target as string)
+          [operator]: getDate(cond.target.in as string)
         }
       }
     }
@@ -178,12 +177,7 @@ function formatCondition(cond: ImportedCondition, rightholders: WaterfallRightho
   }
 }
 
-function formatTarget<T extends TargetValue | number | string[]>(target: string | string[] | number = ''): T {
-  if (!isNaN(target as number) || Array.isArray(target)) return target as T;
-  const [tar, id, percent] = (target as string).split(':');
-  return {
-    in: tar as TargetIn,
-    id,
-    percent: parseFloat(percent) / 100 || 1
-  } as T;
+function formatTarget<T extends TargetValue | number | string[]>(target: ImportedTarget): T {
+  if (!isNaN(target.in as number) || Array.isArray(target.in)) return target.in as T;
+  return target as T;
 }
