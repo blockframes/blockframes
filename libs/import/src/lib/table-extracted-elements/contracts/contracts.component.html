@@ -41,6 +41,20 @@
     <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
   </ng-container>
 
+  <ng-container matColumnDef="contract.titleId">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
+    <td mat-cell *matCellDef="let element">
+      <ng-container *ngIf="element.contract?.titleId | getTitle | async as title">
+        {{ title?.title?.international }}
+        <button mat-icon-button [cdkCopyToClipboard]="title?.id" (click)="$event.stopPropagation()">
+          <mat-icon svgIcon="file_copy"></mat-icon>
+        </button>
+      </ng-container>
+      <ng-container *ngIf="!element.contract?.titleId">
+        --
+      </ng-container>
+  </ng-container>
+
   <ng-container matColumnDef="contract.id">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Contract Id </th>
     <td mat-cell *matCellDef="let element"> {{ element.contract?.id ? element.contract.id : '--' }} </td>

@@ -81,7 +81,7 @@ export class MovieComponent implements OnInit {
     this.movieId = this.route.snapshot.paramMap.get('movieId');
     this.movie = await this.movieService.getValue(this.movieId);
     if (!this.movie) {
-      this.snackBar.open('This movie does not exists', 'close', { duration: 5000 });
+      this.snackBar.open('This movie does not exist', 'close', { duration: 5000 });
       this.router.navigate(['c/o/dashboard/crm/movies']);
       return;
     }
