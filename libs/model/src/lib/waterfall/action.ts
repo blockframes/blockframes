@@ -81,7 +81,6 @@ export type ActionList = {
 };
 export type Action = ActionList[keyof ActionList] & { actionId: string };
 
-// TODO #9420 duplicate with createAction ?
 export const action = <N extends ActionName>(name: N, payload: ActionList[N]['payload']) => {
   return { name, payload, actionId: Math.round(Math.random() * 1000000).toString() };
 }
@@ -615,8 +614,8 @@ export interface IncomeAction extends BaseAction {
   to: string;
   from?: string;
   contractId?: string;
-  territories: string[]; // TODO #9420 should be Territory[]
-  medias: string[]; // TODO #9420 should be Media[]
+  territories: string[]; // TODO #9471 should be Territory[]
+  medias: string[]; // TODO #9471 should be Media[]
   isCompensation?: boolean;
 }
 

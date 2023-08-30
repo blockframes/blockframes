@@ -9,7 +9,7 @@ import { cleanRelatedContractDocuments } from './contracts';
 import { db } from './internals/firebase';
 import { EventContext } from 'firebase-functions';
 
-export async function buildWaterfall(data: { waterfallId: string, versionId: string, scope?: string[] }, context: CallableContext) {
+export async function buildWaterfall(data: { waterfallId: string, versionId: string, scope?: string[] }) {
   if (!data.waterfallId) throw new Error('Missing waterfallId in request');
 
   const db = admin.firestore();
@@ -62,7 +62,8 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
 
 }
 
-export async function onWaterfallDelete(snap: BlockframesSnapshot) {
+export async function onWaterfallDelete(snap: BlockframesSnapshot<Waterfall>, context: EventContext) {
+  const { waterfallID } = context.params;
   const batch = db.batch();
 
   // Delete sub-collections
@@ -71,7 +72,13 @@ export async function onWaterfallDelete(snap: BlockframesSnapshot) {
   // TODO #9389
   // cleanWaterfallMedias(before, after);
 
-  // TODO #9420 remove standalone incomes and expenses (not linked to contracts)
+  // Remove remaining standalone incomes and expenses (not linked to contracts)
+  const [incomes, expenses] = await Promise.all([
+    db.collection('incomes').where('titleId', '==', waterfallID).get(),
+    db.collection('expenses').where('titleId', '==', waterfallID).get()
+  ]);
+  incomes.forEach(doc => batch.delete(doc.ref));
+  expenses.forEach(doc => batch.delete(doc.ref));
 
   return batch.commit();
 }

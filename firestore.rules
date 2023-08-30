@@ -412,12 +412,18 @@ service cloud.firestore {
       }
     }
 
-    match /terms/{termId} { // TODO #9420 update (terms should have titleId attribute)
+    match /terms/{termId} {
       allow read: if isSignedInWithPassword() && notInMaintenance();
-      allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId
-        || userOrgId() == getContract(incomingData().contractId).sellerId)
+      allow create: if (
+          userOrgId() == getContract(incomingData().contractId).buyerId || 
+          userOrgId() == getContract(incomingData().contractId).sellerId || 
+          hasWaterfallRole(incomingData().titleId, 'producer')
+        )
         && notInMaintenance();
-      allow update: if userOrgId() == getContract(existingData().contractId).sellerId
+      allow update: if (
+          userOrgId() == getContract(existingData().contractId).sellerId ||
+          hasWaterfallRole(existingData().titleId, 'producer')
+        )
         && notInMaintenance();
       allow delete: if false;
     }

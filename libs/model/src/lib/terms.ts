@@ -25,6 +25,7 @@ export interface BucketTerm {
 export interface Term extends BucketTerm {
   id: string;
   contractId: string;
+  titleId?: string;
   criteria: unknown[];
   licensedOriginal: boolean;
   price?: number;

@@ -298,12 +298,12 @@ export const buildWaterfall = functions().https.onCall(skipInMaintenance(_buildW
 /**
  * Trigger: when a waterfall is updated
  */
-export const onWaterfallUpdateEvent = onDocumentUpdate('waterfall/{waterfallId}', onWaterfallUpdate);
+export const onWaterfallUpdateEvent = onDocumentUpdate('waterfall/{waterfallID}', onWaterfallUpdate);
 
 /**
  * Trigger: when a waterfall is deleted
  */
-export const onWaterfallDeleteEvent = onDocumentDelete('waterfall/{waterfallId}', onWaterfallDelete);
+export const onWaterfallDeleteEvent = onDocumentDelete('waterfall/{waterfallID}', onWaterfallDelete);
 
 /**
  * Trigger: when a waterfallDocument is deleted
