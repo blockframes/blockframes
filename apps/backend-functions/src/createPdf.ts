@@ -141,10 +141,10 @@ const getPublicScreenerLink = (m: Movie, app: App, urlBase: string) => {
   return `${urlBase}${m.id}/main#trailer`;
 }
 
-const getAvailsLink = (m: Movie, app: App, urlBase: string) => {
+const getAvailsLink = (m: Movie, app: App, urlBase: string, formValue: string) => {
   if (app !== 'catalog') return '';
-  return `${urlBase}${m.id}/avails/map`;
-}
+  return `${urlBase}${m.id}/avails/map${!formValue ? '' : `?formValue=${formValue}`}`;
+};
 
 export const createPdf = async (req: PdfRequest, res: Response) => {
   res.set('Access-Control-Allow-Origin', '*');
@@ -204,7 +204,7 @@ export const createPdf = async (req: PdfRequest, res: Response) => {
         title: getTitleLink(m, urlBase),
         trailer: getTrailerLink(m, urlBase),
         publicScreener: getPublicScreenerLink(m, app, urlBase),
-        avails: getAvailsLink(m, app, urlBase),
+        avails: getAvailsLink(m, app, urlBase, filters?.availsFormValue),
       },
       prizes: getPrizes(m),
       certifications: []
