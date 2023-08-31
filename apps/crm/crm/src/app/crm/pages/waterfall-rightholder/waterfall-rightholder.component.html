@@ -1,0 +1,49 @@
+<ng-container *ngIf="rightholder">
+  <button class="go-back" mat-icon-button routerLink="../..">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+    <span>BACK TO WATERFALL</span>
+  </button>
+  <article>
+    <movie-header [movie]="movie" [showBackArrow]="false"></movie-header>
+  </article>
+  <h3>{{ rightholder.name }}</h3>
+
+  <section>
+    <static-select [control]="waterfallRoleControl" multiple scope="rightholderRoles">
+      <mat-label>Waterfall Role</mat-label>
+      <mat-error>This field is mandatory</mat-error>
+    </static-select>
+    <button mat-button color="primary" [disabled]=!waterfallRoleControl.valid (click)="save()">
+      <mat-icon svgIcon="edit"></mat-icon>
+      <span>Update</span>
+    </button>
+  </section>
+
+  <h3>Rightholder Rights</h3>
+  <bf-table [source]="rights" clickable useFilter pagination="50">
+    <ng-template colRef="id" label="Id" let-id sort>
+      {{ id }}
+      <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </button>
+    </ng-template>
+    <ng-template colRef="name" label="Name" let-name sort>
+      {{ name }}
+    </ng-template>
+    <ng-template colRef="groupId" label="Group" let-groupId sort>
+      {{ groupId ? groupId : '--' }}
+    </ng-template>
+    <ng-template colRef="date" label="Date" let-date sort defaultSort>
+      {{ date | date: 'MM/dd/yyyy' }}
+    </ng-template>
+    <ng-template colRef="actionName" label="Action Name" let-actionName sort>
+      {{ actionName }}
+    </ng-template>
+    <ng-template colRef="percent" label="%" let-percent>
+      {{ percent ? percent  : '--' }}
+    </ng-template>
+    <ng-template colRef="conditions" label="Conditions" let-conditions>
+      {{ conditions?.conditions?.length ? conditions.conditions.length  : '--' }}
+    </ng-template>
+  </bf-table>
+</ng-container>
