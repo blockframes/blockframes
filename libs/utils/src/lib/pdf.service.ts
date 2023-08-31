@@ -129,6 +129,16 @@ export class PdfService {
         if (availForm.duration.from && availForm.duration.to) {
           filters.avails = `${filters.avails} for ${format(availForm.duration.from, 'MM/dd/yyyy')} - ${format(availForm.duration.to, 'MM/dd/yyyy')}`;
         }
+
+        if (
+          availForm.territories?.length &&
+          availForm.medias?.length &&
+          availForm.exclusive !== undefined &&
+          availForm.duration.from &&
+          availForm.duration.to
+        ) {
+          filters.availsFormValue = encodeURIComponent(JSON.stringify(availForm));
+        }
       }
 
     }

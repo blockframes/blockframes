@@ -4,6 +4,7 @@ export const pdfExportLimit = 450;
 
 export interface PdfParamsFilters {
   avails?: string,
+  availsFormValue?: string,
   contentType?: string,
   genres?: string,
   originCountries?: string,
