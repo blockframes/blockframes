@@ -2,7 +2,7 @@ import { IncomeAction as Income } from './action';
 import { investmentWithInterest } from './interest';
 import { RightState, TitleState } from './state';
 import { assertNode, getNode } from './node';
-import { GroupScope } from '../static';
+import { GroupScope, Media, Territory } from '../static';
 
 
 export const thresholdConditions = {
@@ -447,12 +447,12 @@ function amount(ctx: ConditionContext, payload: ConditionAmount) {
 interface ConditionTerms {
   operator: ArrayOperator;
   type: GroupScope;
-  list: string[];
+  list: string[]; // TODO #9471 should be Media[] | Territory[]
 }
 function terms(ctx: ConditionContext, payload: ConditionTerms) {
   const { income } = ctx;
   const { operator, type, list } = payload;
-  const hasItem = income[type]?.some((item) => list.includes(item));
+  const hasItem = income[type]?.some((item: (Media | Territory)) => (list as (Media | Territory)[]).includes(item));
   if (operator === 'in') return hasItem;
   if (operator === 'not-in') return !hasItem;
   throw new Error('Terms condition should have at least the operators "in" or "not-in"');

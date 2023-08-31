@@ -29,8 +29,8 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     super();
   }
 
-  public async buildWaterfall(data: { waterfallId: string, versionId: string, scope?: string[] }) {
-    const waterfall = await this.functions.call<{ waterfallId: string, versionId: string, scope?: string[] }, string>('buildWaterfall', data);
+  public async buildWaterfall(data: { waterfallId: string, versionId: string }) {
+    const waterfall = await this.functions.call<{ waterfallId: string, versionId: string }, string>('buildWaterfall', data);
     return JSON.parse(waterfall, jsonDateReviver) as { waterfall: { state: TitleState; history: History[] }, version: Version }; // Cloud functions cannot return Dates
   }
 

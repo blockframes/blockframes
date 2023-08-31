@@ -9,14 +9,14 @@ import { cleanRelatedContractDocuments } from './contracts';
 import { db } from './internals/firebase';
 import { EventContext } from 'firebase-functions';
 
-export async function buildWaterfall(data: { waterfallId: string, versionId: string, scope?: string[] }) {
+export async function buildWaterfall(data: { waterfallId: string, versionId: string }) {
   if (!data.waterfallId) throw new Error('Missing waterfallId in request');
 
   const db = admin.firestore();
 
   const waterfallSnap = await db.collection('waterfall').doc(data.waterfallId).get();
   if (!waterfallSnap.exists) throw new Error(`Invalid waterfallId ${data.waterfallId}`);
-  const waterfallDoc = toDate<Waterfall>(waterfallSnap.data()!);
+  const waterfallDoc = toDate<Waterfall>(waterfallSnap.data());
 
   const blocksSnap = await db.collection('waterfall').doc(data.waterfallId).collection('blocks').get();
   const blocks = blocksSnap.docs.map(d => toDate<Block>(d.data()));
@@ -32,7 +32,7 @@ export async function buildWaterfall(data: { waterfallId: string, versionId: str
 
   const actions = versionBlocks.map(block => Object.values(block.actions));
 
-  return JSON.stringify({ waterfall: waterfall(data.waterfallId, actions, data.scope), version });
+  return JSON.stringify({ waterfall: waterfall(data.waterfallId, actions), version });
 }
 
 export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
