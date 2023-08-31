@@ -46,9 +46,6 @@ export class SentryErrorHandler implements ErrorHandler {
 
     if (error?.message.includes('ChunkLoadError')) {
       this.sentryService.triggerError({ message: 'ChunkLoadError', bugType: 'network', location: 'global' });
-    } else if (error?.message === 'LinearAnimationInstance instance already deleted') {
-      // #9450 https://github.com/dappsnation/ng-rive/issues/46
-      this.sentryService.triggerWarning({ message: `ng-rive ${error.message}`, bugType: 'animations', location: 'global' });
     } else {
       Sentry.captureException(error.originalError || error);
     }
