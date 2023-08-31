@@ -128,6 +128,7 @@ export class PdfService {
 
         if (availForm.duration.from && availForm.duration.to) {
           filters.avails = `${filters.avails} for ${format(availForm.duration.from, 'MM/dd/yyyy')} - ${format(availForm.duration.to, 'MM/dd/yyyy')}`;
+          if (availForm.exclusive !== undefined) filters.availsFormValue = encodeURIComponent(JSON.stringify(availForm)); // if avails form complete
         }
       }
 
