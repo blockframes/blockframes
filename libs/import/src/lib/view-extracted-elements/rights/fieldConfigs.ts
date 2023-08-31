@@ -1,15 +1,34 @@
 import { getDate, getRightholderId, getTitleId, mandatoryError, optionalWarning, unknownEntityError } from '../../utils';
-import { ConditionName, NumberOperator, Right, WaterfallRightholder, Movie, numberOperator, staticGroups, GroupScope, arrayOperator, ArrayOperator } from '@blockframes/model';
+import {
+  ConditionName,
+  NumberOperator,
+  Right,
+  WaterfallRightholder,
+  Movie,
+  numberOperator,
+  staticGroups,
+  GroupScope,
+  arrayOperator,
+  ArrayOperator,
+  TargetIn,
+  targetIn
+} from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 const isNumber = (v: string) => !isNaN(parseFloat(v));
+export type ImportedTarget = {
+  in: TargetIn | string | string[] | number
+  id?: string;
+  percent?: number;
+};
+
 export interface ImportedCondition {
   conditionName: ConditionName,
   left: string,
   operator: NumberOperator | ArrayOperator,
-  target: string | string[] | number
+  target: ImportedTarget
 }
 
 export interface FieldsConfig {
@@ -119,32 +138,53 @@ export function getRightConfig(option: RightConfig) {
         /* n */ 'conditionA.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionA);
       },
-        /* o */ 'conditionA.target': (value: string, data: FieldsConfig) => {
+        /* o */ 'conditionA.target.in': (value: string, data: FieldsConfig) => {
         return extractConditionTarget(value, data.conditionA);
       },
-        /* p */ 'conditionB.conditionName': (value: string) => {
-        return value as ConditionName;
-      },
-        /* q */ 'conditionB.left': (value: string) => {
+        /* p */ 'conditionA.target.id': (value: string, data: FieldsConfig) => {
+        if (!value && targetIn.includes(data.conditionA.target.in as TargetIn)) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${data.conditionA.target.in}"`);
         return value.trim();
       },
-        /* r */ 'conditionB.operator': (value: string, data: FieldsConfig) => {
+        /* q */ 'conditionA.target.percent': (value: string) => {
+        return Number(value) / 100 || 1;
+      },
+        /* r */ 'conditionB.conditionName': (value: string) => {
+        return value as ConditionName;
+      },
+        /* s */ 'conditionB.left': (value: string) => {
+        return value.trim();
+      },
+        /* t */ 'conditionB.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionB);
       },
-        /* s */ 'conditionB.target': (value: string, data: FieldsConfig) => {
+        /* u */ 'conditionB.target.in': (value: string, data: FieldsConfig) => {
         return extractConditionTarget(value, data.conditionB);
       },
-        /* t */ 'conditionC.conditionName': (value: string) => {
-        return value as ConditionName;
-      },
-        /* u */ 'conditionC.left': (value: string) => {
+        /* v */ 'conditionB.target.id': (value: string, data: FieldsConfig) => {
+        if (!value && targetIn.includes(data.conditionB.target.in as TargetIn)) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${data.conditionB.target.in}"`);
         return value.trim();
       },
-        /* v */ 'conditionC.operator': (value: string, data: FieldsConfig) => {
+        /* w */ 'conditionB.target.percent': (value: string) => {
+        return Number(value) / 100 || 1;
+      },
+        /* x */ 'conditionC.conditionName': (value: string) => {
+        return value as ConditionName;
+      },
+        /* y */ 'conditionC.left': (value: string) => {
+        return value.trim();
+      },
+        /* z */ 'conditionC.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionC);
       },
-        /* w */ 'conditionC.target': (value: string, data: FieldsConfig) => {
+        /* aa */ 'conditionC.target.in': (value: string, data: FieldsConfig) => {
         return extractConditionTarget(value, data.conditionC);
+      },
+        /* ab */ 'conditionC.target.id': (value: string, data: FieldsConfig) => {
+        if (!value && targetIn.includes(data.conditionC.target.in as TargetIn)) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${data.conditionC.target.in}"`);
+        return value.trim();
+      },
+        /* ac */ 'conditionC.target.percent': (value: string) => {
+        return Number(value) / 100 || 1;
       },
     };
   }

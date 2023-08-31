@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { RouterModule } from '@angular/router';
 
 // Pages
 import { SalesMapComponent } from './sales-map.component';
@@ -22,6 +23,7 @@ import { MatDividerModule } from '@angular/material/divider';
   declarations: [SalesMapComponent],
   imports: [
     CommonModule,
+    RouterModule,
     LogoSpinnerModule,
     FlexLayoutModule,
     MapModule,
