@@ -178,6 +178,9 @@
           {{ roles | toLabel: 'rightholderRoles' }}
         </ng-template>
         <ng-template colRef="" label="Action" let-rightholder sticky>
+          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'rightholder', rightholder.id]" (click)="$event.stopPropagation()">
+            <mat-icon svgIcon="launch"></mat-icon>
+          </a>
           <button mat-icon-button (click)="removeRightholders([rightholder])">
             <mat-icon svgIcon="delete" matTooltip="Delete rightholder"></mat-icon>
           </button>
