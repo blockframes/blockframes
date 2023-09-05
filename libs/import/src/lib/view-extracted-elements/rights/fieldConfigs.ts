@@ -1,4 +1,4 @@
-import { getDate, getRightholderId, getTitleId, mandatoryError, optionalWarning, unknownEntityError } from '../../utils';
+import { getDate, getRightholderId, getTitleId, getWaterfallDocument, mandatoryError, optionalWarning, unknownEntityError } from '../../utils';
 import {
   ConditionName,
   NumberOperator,
@@ -11,10 +11,12 @@ import {
   arrayOperator,
   ArrayOperator,
   TargetIn,
-  targetIn
+  targetIn,
+  WaterfallDocument
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
+import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 const isNumber = (v: string) => !isNaN(parseFloat(v));
@@ -44,11 +46,13 @@ export type FieldsConfigType = ExtractConfig<FieldsConfig>;
 interface Caches {
   rightholderCache: Record<string, WaterfallRightholder[]>,
   titleCache: Record<string, Movie>,
+  documentCache: Record<string, WaterfallDocument>,
 }
 
 interface RightConfig {
   waterfallService: WaterfallService,
   titleService: MovieService,
+  waterfallDocumentsService: WaterfallDocumentsService,
   userOrgId: string,
   caches: Caches,
   separator: string,
@@ -58,12 +62,13 @@ export function getRightConfig(option: RightConfig) {
   const {
     waterfallService,
     titleService,
+    waterfallDocumentsService,
     userOrgId,
     caches,
     separator
   } = option;
 
-  const { rightholderCache, titleCache } = caches;
+  const { rightholderCache, titleCache, documentCache } = caches;
 
   function getAdminConfig(): FieldsConfigType {
     // ! The order of the property should be the same as excel columns
@@ -76,8 +81,17 @@ export function getRightConfig(option: RightConfig) {
         if (titleId) return titleId;
         throw unknownEntityError<string>(value, 'Waterfall name or ID');
       },
-        /* b */ 'right.date': (value: string, _, __, rowIndex) => {
-        if (!value) return new Date(1 + (rowIndex * 1000)); // 01/01/1970 + "rowIndex" seconds 
+        /* b */ 'right.date': async (value: string, data: FieldsConfig, __, rowIndex) => {
+        if (!value.trim()) return new Date(1 + (rowIndex * 1000)); // 01/01/1970 + "rowIndex" seconds 
+
+        // If contract ID is specified instead of a date, we use signature date as right date.
+        const contract = await getWaterfallDocument(value.trim(), waterfallDocumentsService, documentCache, data.waterfallId);
+        if (contract) {
+          data.right.contractId = contract.id;
+          if (!contract.signatureDate) throw mandatoryError(value, 'Signature contract date', `Contract id "${contract.id}" is missing signature date.`);
+          return contract.signatureDate;
+        }
+
         return getDate(value, 'Right Date');
       },
         /* c */ 'right.id': (value: string) => {
