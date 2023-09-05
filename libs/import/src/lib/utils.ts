@@ -100,7 +100,7 @@ export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
   expenses: 10,
   documents: 10,
   sources: 10,
-  rights: 10,
+  rights: 2,
 };
 
 export const sheetRanges: Record<SpreadsheetImportType, string> = {
