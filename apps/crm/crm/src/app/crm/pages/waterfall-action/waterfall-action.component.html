@@ -1,0 +1,27 @@
+<ng-container *ngIf="action && block">
+  <button class="go-back" mat-icon-button routerLink="../../../..">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+    <span>BACK TO WATERFALL</span>
+  </button>
+  <article>
+    <movie-header [movie]="movie" [showBackArrow]="false"></movie-header>
+  </article>
+  <h3>{{ block.name }} - "{{ action.name }}" (id : {{ action.actionId }}) </h3>
+
+  <section>
+    <mat-chip-list *ngIf="payload(action).next?.length">
+      <mat-chip disableRipple *ngFor="let next of payload(action).next">
+        {{ next }}
+      </mat-chip>
+    </mat-chip-list>
+
+    <mat-chip-list *ngIf="payload(action).previous?.length">
+      <mat-chip disableRipple *ngFor="let previous of payload(action).previous">
+        {{ previous }}
+      </mat-chip>
+    </mat-chip-list>
+
+    <pre>{{ payload(action) | json }}</pre>
+  </section>
+
+</ng-container>

@@ -76,6 +76,7 @@ export const panelRoutes: Routes = [
   { path: 'waterfall/:waterfallId', loadChildren: () => import('./pages/waterfall/waterfall.module').then(m => m.WaterfallModule) },
   { path: 'waterfall/:waterfallId/document/:documentId', loadChildren: () => import('./pages/waterfall-document/waterfall-document.module').then(m => m.WaterfallDocumentModule) },
   { path: 'waterfall/:waterfallId/rightholder/:rightholderId', loadChildren: () => import('./pages/waterfall-rightholder/waterfall-rightholder.module').then(m => m.WaterfallRightholderModule) },
+  { path: 'waterfall/:waterfallId/block/:blockId/action/:actionId', loadChildren: () => import('./pages/waterfall-action/waterfall-action.module').then(m => m.WaterfallActionModule) },
 ];
 
 @NgModule({

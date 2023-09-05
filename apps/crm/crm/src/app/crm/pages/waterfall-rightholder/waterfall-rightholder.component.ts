@@ -37,7 +37,8 @@ export class WaterfallRightholderComponent implements OnInit {
       this.movieService.getValue(waterfallId),
       this.waterfallService.getValue(waterfallId),
       this.rightService.getValue([where('rightholderId', '==', rightholderId)], { waterfallId }),
-    ])
+    ]);
+
     this.movie = movie;
     this.waterfall = waterfall;
     this.rights = rights;
