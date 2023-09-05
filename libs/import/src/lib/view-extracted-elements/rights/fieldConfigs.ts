@@ -94,22 +94,18 @@ export function getRightConfig(option: RightConfig) {
 
         return getDate(value, 'Right Date');
       },
-        /* c */ 'right.id': (value: string) => {
-        if (!value) throw mandatoryError(value, 'Right Id');
+        /* c */ 'right.groupId': (value: string) => {
         return value;
       },
-        /* d */ 'right.groupId': (value: string) => {
-        return value;
-      },
-        /* e */ 'right.nextIds': (value: string) => {
+        /* d */ 'right.nextIds': (value: string) => {
         // ! Column on Excel file is called Previous (from waterfall top to bottom POV)
         return value.split(separator).map(v => v.trim()).filter(v => !!v);
       },
-        /* f */ 'right.previousIds': (value: string) => {
+        /* e */ 'right.previousIds': (value: string) => {
         // ! Column on Excel file is called Next (from waterfall top to bottom POV)
         return value.split(separator).map(v => v.trim()).filter(v => !!v);
       },
-        /* g */ 'right.actionName': (value: string, data: FieldsConfig) => {
+        /* f */ 'right.actionName': (value: string, data: FieldsConfig) => {
         const lower = value.toLowerCase().trim();
         switch (lower) {
           case 'horizontal':
@@ -120,10 +116,14 @@ export function getRightConfig(option: RightConfig) {
             return data.right.nextIds.length ? 'prepend' : 'append';
         }
       },
-        /* h */ 'right.name': (value: string) => {
+        /* g */ 'right.name': (value: string, data: FieldsConfig) => {
+        if (!value) throw mandatoryError(value, 'Right name');
+
+        // Create right ID from name
+        data.right.id = value.trim().toLowerCase().split(' ').join('_');
         return value;
       },
-        /* i */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
+        /* h */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
         if (['appendVertical', 'prependVertical'].includes(data.right.actionName)) {
           if (value) throw optionalWarning('Rightholder Id or Blame Id should be left empty for vertical groups');
           return '';
@@ -137,67 +137,67 @@ export function getRightConfig(option: RightConfig) {
           return rightholderId;
         }
       },
-        /* j */ 'right.percent': (value: string) => {
+        /* i */ 'right.percent': (value: string) => {
         return Number(value);
       },
-        /* k */ 'right.pools': (value: string) => {
+        /* j */ 'right.pools': (value: string) => {
         return value.split(separator).map(v => v.trim()).filter(v => !!v);
       },
-        /* l */ 'conditionA.conditionName': (value: string) => {
+        /* k */ 'conditionA.conditionName': (value: string) => {
         return value as ConditionName;
       },
-        /* m */ 'conditionA.left': (value: string) => {
+        /* l */ 'conditionA.left': (value: string) => {
         return value.trim();
       },
-        /* n */ 'conditionA.operator': (value: string, data: FieldsConfig) => {
+        /* m */ 'conditionA.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionA);
       },
-        /* o */ 'conditionA.target.in': (value: string, data: FieldsConfig) => {
+        /* n */ 'conditionA.target.in': (value: string, data: FieldsConfig) => {
         return extractConditionTarget(value, data.conditionA);
       },
-        /* p */ 'conditionA.target.id': (value: string, data: FieldsConfig) => {
+        /* o */ 'conditionA.target.id': (value: string, data: FieldsConfig) => {
         if (!value && targetIn.includes(data.conditionA.target.in as TargetIn)) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${data.conditionA.target.in}"`);
         return value.trim();
       },
-        /* q */ 'conditionA.target.percent': (value: string) => {
+        /* p */ 'conditionA.target.percent': (value: string) => {
         return Number(value) / 100 || 1;
       },
-        /* r */ 'conditionB.conditionName': (value: string) => {
+        /* q */ 'conditionB.conditionName': (value: string) => {
         return value as ConditionName;
       },
-        /* s */ 'conditionB.left': (value: string) => {
+        /* r */ 'conditionB.left': (value: string) => {
         return value.trim();
       },
-        /* t */ 'conditionB.operator': (value: string, data: FieldsConfig) => {
+        /* s */ 'conditionB.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionB);
       },
-        /* u */ 'conditionB.target.in': (value: string, data: FieldsConfig) => {
+        /* t */ 'conditionB.target.in': (value: string, data: FieldsConfig) => {
         return extractConditionTarget(value, data.conditionB);
       },
-        /* v */ 'conditionB.target.id': (value: string, data: FieldsConfig) => {
+        /* u */ 'conditionB.target.id': (value: string, data: FieldsConfig) => {
         if (!value && targetIn.includes(data.conditionB.target.in as TargetIn)) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${data.conditionB.target.in}"`);
         return value.trim();
       },
-        /* w */ 'conditionB.target.percent': (value: string) => {
+        /* v */ 'conditionB.target.percent': (value: string) => {
         return Number(value) / 100 || 1;
       },
-        /* x */ 'conditionC.conditionName': (value: string) => {
+        /* w */ 'conditionC.conditionName': (value: string) => {
         return value as ConditionName;
       },
-        /* y */ 'conditionC.left': (value: string) => {
+        /* x */ 'conditionC.left': (value: string) => {
         return value.trim();
       },
-        /* z */ 'conditionC.operator': (value: string, data: FieldsConfig) => {
+        /* y */ 'conditionC.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionC);
       },
-        /* aa */ 'conditionC.target.in': (value: string, data: FieldsConfig) => {
+        /* z */ 'conditionC.target.in': (value: string, data: FieldsConfig) => {
         return extractConditionTarget(value, data.conditionC);
       },
-        /* ab */ 'conditionC.target.id': (value: string, data: FieldsConfig) => {
+        /* aa */ 'conditionC.target.id': (value: string, data: FieldsConfig) => {
         if (!value && targetIn.includes(data.conditionC.target.in as TargetIn)) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${data.conditionC.target.in}"`);
         return value.trim();
       },
-        /* ac */ 'conditionC.target.percent': (value: string) => {
+        /* ab */ 'conditionC.target.percent': (value: string) => {
         return Number(value) / 100 || 1;
       },
     };
