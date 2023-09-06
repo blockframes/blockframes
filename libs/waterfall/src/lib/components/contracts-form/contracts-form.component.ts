@@ -82,7 +82,7 @@ export class ContractsFormComponent implements OnInit {
     const terms = await this.termsService.getValue(contract.termIds);
     const licensee = this.waterfall.rightholders.find(r => r.id === contract.buyerId);
     const licensor = this.waterfall.rightholders.find(r => r.id === contract.sellerId);
-    const file = this.waterfall.documents.find(f => f.docId === contract.id);
+    const file = this.waterfall.documents.find(f => f.id === contract.id);
     this.contractForm = new WaterfallContractForm({
       id: contract.id,
       licenseeName: licensee?.name,
