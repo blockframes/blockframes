@@ -22,7 +22,8 @@ import {
   TargetIn,
   targetIn,
   WaterfallDocument,
-  ActionName
+  ActionName,
+  conditionNames
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
@@ -125,7 +126,7 @@ export function getRightConfig(option: RightConfig) {
         return value.split(separator).map(valueToId).filter(v => !!v);
       },
         /* i */ 'conditionA.conditionName': (value: string) => {
-        return value as ConditionName;
+        return getConditionName(value);
       },
         /* j */ 'conditionA.left': (value: string) => {
         return valueToId(value);
@@ -133,18 +134,17 @@ export function getRightConfig(option: RightConfig) {
         /* k */ 'conditionA.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionA);
       },
-        /* l */ 'conditionA.target.in': (value: string, data: FieldsConfig) => {
-        return extractConditionTarget(value, data.conditionA);
+        /* l */ 'conditionA.target.in': (value: string) => {
+        return extractConditionTargetIn(value);
       },
         /* m */ 'conditionA.target.id': (value: string, data: FieldsConfig) => {
-        if (!value && targetIn.includes(data.conditionA.target.in as TargetIn)) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${data.conditionA.target.in}"`);
-        return valueToId(value);
+        return extractConditionTargetId(value, data.conditionA);
       },
         /* n */ 'conditionA.target.percent': (value: string) => {
         return Number(value) / 100 || 1;
       },
         /* o */ 'conditionB.conditionName': (value: string) => {
-        return value as ConditionName;
+        return getConditionName(value);
       },
         /* p */ 'conditionB.left': (value: string) => {
         return valueToId(value);
@@ -152,18 +152,17 @@ export function getRightConfig(option: RightConfig) {
         /* q */ 'conditionB.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionB);
       },
-        /* r */ 'conditionB.target.in': (value: string, data: FieldsConfig) => {
-        return extractConditionTarget(value, data.conditionB);
+        /* r */ 'conditionB.target.in': (value: string) => {
+        return extractConditionTargetIn(value);
       },
         /* s */ 'conditionB.target.id': (value: string, data: FieldsConfig) => {
-        if (!value && targetIn.includes(data.conditionB.target.in as TargetIn)) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${data.conditionB.target.in}"`);
-        return valueToId(value);
+        return extractConditionTargetId(value, data.conditionB);
       },
         /* t */ 'conditionB.target.percent': (value: string) => {
         return Number(value) / 100 || 1;
       },
         /* u */ 'conditionC.conditionName': (value: string) => {
-        return value as ConditionName;
+        return getConditionName(value);
       },
         /* v */ 'conditionC.left': (value: string) => {
         return valueToId(value);
@@ -171,12 +170,11 @@ export function getRightConfig(option: RightConfig) {
         /* w */ 'conditionC.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionC);
       },
-        /* x */ 'conditionC.target.in': (value: string, data: FieldsConfig) => {
-        return extractConditionTarget(value, data.conditionC);
+        /* x */ 'conditionC.target.in': (value: string) => {
+        return extractConditionTargetIn(value);
       },
         /* y */ 'conditionC.target.id': (value: string, data: FieldsConfig) => {
-        if (!value && targetIn.includes(data.conditionC.target.in as TargetIn)) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${data.conditionC.target.in}"`);
-        return valueToId(value);
+        return extractConditionTargetId(value, data.conditionC);
       },
         /* z */ 'conditionC.target.percent': (value: string) => {
         return Number(value) / 100 || 1;
@@ -218,16 +216,54 @@ export function getRightConfig(option: RightConfig) {
     }
   }
 
-  function extractConditionTarget(value: string, cond: ImportedCondition) {
+  function extractConditionTargetIn(value: string): TargetIn {
+    if (!['date', 'number', 'territories', 'medias', 'contract'].includes(value.trim().toLowerCase())) {
+
+      /**
+       * Mapping
+       * @see https://docs.google.com/spreadsheets/d/19cKIMr-988727kfRnWor5FNAjBDgg2ZSRwbjj4s5iM0/edit#gid=1880420768
+       */
+      if (!targetIn.includes(value as TargetIn)) {
+        if (!value.trim()) return;
+
+        switch (value.trim().toLowerCase()) {
+          case 'expenses':
+            return 'expense';
+          case 'amount':
+          case 'investment':
+          case 'film cost':
+          case 'list':
+          default:
+            throw mandatoryError(value, 'Invalid Target Type');
+        }
+      }
+
+      return value as TargetIn;
+    }
+  }
+
+  function extractConditionTargetId(value: string, cond: ImportedCondition) {
+    if (targetIn.includes(cond.target.in as TargetIn)) {
+      if (!value) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${cond.target.in}"`);
+      return valueToId(value);
+    }
+
     if (cond.conditionName === 'terms') {
       const groups = Object.keys(staticGroups) as GroupScope[];
       const leftOperand = cond.left as any;
       if (!groups.includes(leftOperand)) throw mandatoryError(value, 'Operator', `For "terms" condition, expected value for left operand are : ${groups.map(g => `"${g}"`).join(' ')}`);
-      return getGroupedList(value, leftOperand, separator);
-    } else if (cond.conditionName === 'contract') {
-      return value.split(separator).map(v => v.trim()).filter(v => !!v);
-    } else {
-      return isNumber(value) ? Number(value) : value;
+      cond.target.in = getGroupedList(value, leftOperand, separator);
+      return;
+    }
+
+    if (cond.conditionName === 'contract') {
+      cond.target.in = value.split(separator).map(v => v.trim()).filter(v => !!v);
+      return;
+    }
+
+    if (value && !targetIn.includes(cond.target.in as TargetIn)) {
+      cond.target.in = isNumber(value) ? Number(value) : value;
+      return;
     }
   }
 
@@ -242,6 +278,36 @@ export function getRightConfig(option: RightConfig) {
       default:
         return 'prepend';
     }
+  }
+
+  function getConditionName(value: string): ConditionName {
+    /**
+     * Mapping
+     * @see https://docs.google.com/spreadsheets/d/19cKIMr-988727kfRnWor5FNAjBDgg2ZSRwbjj4s5iM0/edit#gid=1880420768
+     */
+    if (!conditionNames.includes(value)) {
+      if (!value.trim()) return;
+
+      switch (value.trim().toLowerCase()) {
+        case 'revenue share':
+          return 'rightRevenu';
+        case 'total right holder revenue':
+          return 'orgRevenu';
+        case 'total right holder calculated revenue':
+          return 'poolShadowRevenu';
+        case 'source total revenue':
+        case 'producer\'s net participation':
+        case 'distributor\'s gross receipts':
+        case 'end of contract':
+        case 'revenue territory':
+        case 'revenue media':
+        case 'quantity sold':
+        default:
+          throw mandatoryError(value, 'Invalid Evaluated Value Type (condition name)');
+      }
+    }
+
+    return value as ConditionName;
   }
 
   return getAdminConfig();
