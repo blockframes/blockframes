@@ -12,7 +12,7 @@ export class AvailsComponent {
 
   switch() {
     if(this.path === '/assets/images/demo-cannes/world sales.svg') {
-      this.path = '/assets/images/demo-cannes/avails.png';
+      this.path = '/assets/images/demo-cannes/World_Sales_2.svg';
     } else {
       this.path = '/assets/images/demo-cannes/world sales.svg';
     }
