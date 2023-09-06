@@ -1,10 +1,12 @@
 
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 
 import { WaterfallFileForm } from './file.form';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { Media, RightholderRole, Term, Territory, WaterfallFile } from '@blockframes/model';
-
+import { RightholderRole, Term, WaterfallFile } from '@blockframes/model';
+import { BucketTermForm } from '@blockframes/contract/bucket/form';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
+import { creatTermControl } from '@blockframes/contract/negotiation';
 
 export interface WaterfallContractFormValue {
   id: string;
@@ -26,13 +28,7 @@ export interface WaterfallContractFormValue {
   file: WaterfallFile;
 }
 
-
 function createWaterfallContractFormControl(contract: (Partial<WaterfallContractFormValue> & { id: string })) {
-  const terms = contract.terms?.map(term => new FormGroup({
-    medias: new FormControl<Media[]>(term.medias ?? []),
-    territories: new FormControl<Territory[]>(term.territories ?? []),
-    exclusive: new FormControl(term.exclusive ?? false),
-  })) ?? [];
   return {
     licenseeName: new FormControl(contract.licenseeName ?? ''),
     licenseeRole: new FormControl<RightholderRole[]>(contract.licenseeRole ?? []),
@@ -47,7 +43,7 @@ function createWaterfallContractFormControl(contract: (Partial<WaterfallContract
     price: new FormControl(contract.price ?? 0),
 
     hasRights: new FormControl(contract.hasRights ?? true),
-    terms: new FormArray(terms),
+    terms: FormList.factory(contract.terms, term => BucketTermForm.factory(term, creatTermControl)),
 
     file: new WaterfallFileForm({ ...contract.file, id: contract.id }),
   };

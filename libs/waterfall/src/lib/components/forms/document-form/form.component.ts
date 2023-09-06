@@ -1,15 +1,15 @@
 
 // Angular
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { add, Duration } from 'date-fns';
 import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy } from '@angular/core';
 
 // Blockframes
-import { Media, Territory, Waterfall } from '@blockframes/model';
+import { Waterfall } from '@blockframes/model';
 import { WaterfallContractForm, WaterfallContractFormValue } from '@blockframes/waterfall/form/document.form';
-
+import { BucketTermForm, createBucketTermControl } from '@blockframes/contract/bucket/form';
 
 @Component({
   selector: '[waterfall][form] waterfall-contract-form',
@@ -28,7 +28,7 @@ export class FormComponent implements OnInit, OnDestroy {
   toggleTermsControl = new FormControl(true);
   durationControl = new FormControl<number | undefined>(undefined);
 
-  periods: (keyof Duration)[] = [ 'days', 'weeks', 'months', 'years' ];
+  periods: (keyof Duration)[] = ['days', 'weeks', 'months', 'years'];
   periodControl = new FormControl<keyof Duration | undefined>(undefined);
 
   licensee = new BehaviorSubject<string[]>([]); // buyer
@@ -62,7 +62,7 @@ export class FormComponent implements OnInit, OnDestroy {
       combineLatest([
         this.durationControl.valueChanges,
         this.periodControl.valueChanges,
-      ]).subscribe(([ duration, period ]) => {
+      ]).subscribe(([duration, period]) => {
         const newEndDate = add(this.form.controls.endDate.value, { [period]: duration });
         this.form.controls.endDate.setValue(newEndDate, { emitEvent: false });
       }),
@@ -83,11 +83,7 @@ export class FormComponent implements OnInit, OnDestroy {
   // }
 
   addTerm() {
-    this.form.controls.terms.push(new FormGroup({
-      medias: new FormControl<Media[]>([]),
-      territories: new FormControl<Territory[]>([]),
-      exclusive: new FormControl<boolean>(false),
-    }));
+    this.form.controls.terms.push(BucketTermForm.factory({}, createBucketTermControl));
   }
 
 

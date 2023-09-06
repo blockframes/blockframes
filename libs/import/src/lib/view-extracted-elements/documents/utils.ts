@@ -15,7 +15,7 @@ import { TermService } from '@blockframes/contract/term/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
-function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string) {
+function toTerm(rawTerm: FieldsConfig['term'][number], waterfallId: string, contractId: string, termId: string) {
 
   const {
     medias,
@@ -32,6 +32,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termI
   const term = createTerm({
     id,
     contractId,
+    titleId: waterfallId,
     medias,
     territories,
     criteria: [],
@@ -80,7 +81,7 @@ export async function formatDocument(
     const { data, errors } = result;
     const document = createWaterfallDocument({ ...data.document, meta: data.meta as any });
 
-    const terms = (data.term ?? []).map(term => toTerm(term, document.id, term.id || termService.createId()));
+    const terms = (data.term ?? []).map(term => toTerm(term, document.waterfallId, document.id, term.id || termService.createId()));
 
     documents.push({ document, terms, errors, rightholders: rightholderCache });
   }
