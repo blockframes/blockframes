@@ -5,10 +5,10 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 
 @Component({
-  selector: 'waterfall-title-budget',
-  templateUrl: './budget.component.html',
-  styleUrls: ['./budget.component.scss'],
+  selector: 'waterfall-title-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BudgetComponent {
+export class DashboardComponent {
 }

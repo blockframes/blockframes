@@ -1,43 +1,6 @@
-:host {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
 
-header {
-  margin-top: 64px;
-  margin-bottom: 24px;
+img {
   width: 100%;
-}
-
-h1 {
-  margin: 0;
-}
-
-section {
-  mat-icon {
-    vertical-align: text-bottom;
-  }
-}
-
-article {
-  display: flex;
-  width: 100%;
-  padding: 24px 0;
-  mat-icon {
-    margin-right: 12px;
-  }
-}
-
-bf-table {
-  width: 100%;
-
-  div {
-    display: flex;
-    align-items: flex-start;
-    align-items: center;
-    gap: 8px;
-  }
+  padding: 32px;
+  cursor: pointer;
 }
