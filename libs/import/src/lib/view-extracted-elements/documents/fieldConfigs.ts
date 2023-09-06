@@ -121,8 +121,13 @@ export function getDocumentConfig(option: DocumentConfig) {
       },
         /* d */ 'document.ownerId': async (value: string) => {
         if (!value) throw mandatoryError(value, 'Owner');
-        const orgId = await getOrgId(value, orgService, orgNameCache);
-        return orgId || value;
+        let orgId = await getOrgId(value, orgService, orgNameCache);
+        if (!orgId) {
+          const seller = await orgService.getValue(value);
+          if (!seller) throw unknownEntityError(value, 'Document owner');
+          orgId = value;
+        }
+        return orgId;
       },
         /* e */ 'document.rootId': (value: string) => {
         return value;

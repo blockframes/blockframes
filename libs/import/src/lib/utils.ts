@@ -466,6 +466,16 @@ export function wrongValueWarning<T = unknown>(value: T, name: string, wrongData
   return new ImportWarning(value, option);
 }
 
+export function valueToId(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .split(' ')
+    .join('_');
+}
+
 export abstract class ImportLog<T> extends Error {
   reason: string;
   field?: string;
