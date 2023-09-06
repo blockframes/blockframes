@@ -5,6 +5,8 @@ import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core
 // RxJs
 import { Observable, combineLatest } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+
+// Blockframes
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 
@@ -15,7 +17,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AutocompleteComponent implements OnInit {
-  @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
+  @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
 
   @Input() label: string;
   @Input() placeholder: string;

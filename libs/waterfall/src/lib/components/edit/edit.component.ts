@@ -1,6 +1,6 @@
 
 // Angular
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatStepper } from '@angular/material/stepper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
@@ -73,6 +73,7 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
   updating$ = new BehaviorSubject(false);
 
   constructor(
+    private router: Router,
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private movieService: MovieService,
@@ -84,7 +85,6 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
 
   async ngOnInit() {
     this.createMode = this.route.snapshot.data.createMode ?? true;
-    console.log(this.createMode)
 
     this.movieId = this.createMode ?
       this.movieService.createId() :
@@ -107,13 +107,14 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
           roles: new FormControl(r.roles),
         }));
       });
-      console.log(this.rightholdersForm.value)
     }
     this.loading$.next(false);
   }
 
   skip() {
-    this.stepper?.next();
+    const end = this.stepper.selectedIndex === this.stepper.steps.length - 1;
+    if (end) this.router.navigate(['..'], { relativeTo: this.route });
+    else this.stepper?.next();
   }
 
   // update a new movie along with its waterfall permissions

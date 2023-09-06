@@ -2,7 +2,7 @@
   <bf-autocomplete
     required
     label="Licensor"
-    [options]="licensor"
+    [options]="licensor$"
     placeholder="Company Name"
     [form]="form.get('licensorName')"
   ></bf-autocomplete>
@@ -15,7 +15,7 @@
 <bf-autocomplete
   required
   label="Licensee"
-  [options]="licensee"
+  [options]="licensee$"
   placeholder="Company Name"
   [form]="form.get('licenseeName')"
 ></bf-autocomplete>
@@ -26,7 +26,7 @@
     <mat-label>Signature Date</mat-label>
     <time-picker [formControl]="form.get('signatureDate')" allDay></time-picker>
   </mat-form-field>
-  <mat-slide-toggle color="primary" (change)="toggleStartDate($event)">Start Date is the same as Signature Date</mat-slide-toggle>
+  <mat-slide-toggle color="primary" (change)="toggleStartDate($event)">Start Date is not the same as Signature Date</mat-slide-toggle>
   <ng-container *ngIf="showStartDate$ | async">
     <mat-form-field fxFlex appearance="outline">
       <mat-label>Start Date</mat-label>

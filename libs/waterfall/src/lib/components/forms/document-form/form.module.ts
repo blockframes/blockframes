@@ -8,32 +8,28 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
+import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 // Blockframes
+import { AutocompleteModule } from '@blockframes/ui/autocomplete/autocomplete.module';
 import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
-import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
-import { AutocompleteModule } from '@blockframes/ui/autocomplete/autocomplete.module';
 
 // Pages
-import { FormComponent } from './form.component';
-import { MatSelectModule } from '@angular/material/select';
+import { DocumentFormComponent } from './form.component';
 
 
 @NgModule({
-  declarations: [FormComponent],
-  exports: [FormComponent],
+  declarations: [DocumentFormComponent],
+  exports: [DocumentFormComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ImageUploaderModule,
     AutocompleteModule,
     StaticSelectModule,
     FileUploaderModule,
@@ -44,12 +40,10 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
-    MatDividerModule,
     MatCheckboxModule,
     MatFormFieldModule,
     MatSlideToggleModule,
-    MatAutocompleteModule,
     MatButtonToggleModule,
   ],
 })
-export class FormModule { }
+export class DocumentFormModule { }

@@ -15,12 +15,12 @@ import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Pages
-import { FormComponent } from './form.component';
+import { TitleFormComponent } from './form.component';
 
 
 @NgModule({
-  declarations: [FormComponent],
-  exports: [FormComponent],
+  declarations: [TitleFormComponent],
+  exports: [TitleFormComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -35,4 +35,4 @@ import { FormComponent } from './form.component';
     MatFormFieldModule,
   ],
 })
-export class FormModule { }
+export class TitleFormModule { }

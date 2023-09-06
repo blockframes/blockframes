@@ -165,7 +165,7 @@ export function convertDocumentTo<T>(document: WaterfallDocument): T {
   }
 }
 
-export type WaterfallDocumentMeta = WaterfallBudget | WaterfallContract | WaterfallFinancingPlan;
+type WaterfallDocumentMeta = WaterfallBudget | WaterfallContract | WaterfallFinancingPlan;
 
 export interface WaterfallDocument<Meta extends WaterfallDocumentMeta = unknown> {
   _meta?: DocumentMeta;

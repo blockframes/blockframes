@@ -8,22 +8,22 @@ import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy } from '@a
 
 // Blockframes
 import { Waterfall } from '@blockframes/model';
-import { WaterfallContractForm, WaterfallContractFormValue } from '@blockframes/waterfall/form/document.form';
 import { BucketTermForm, createBucketTermControl } from '@blockframes/contract/bucket/form';
+import { WaterfallDocumentForm, WaterfallDocumentFormValue } from '@blockframes/waterfall/form/document.form';
+
 
 @Component({
-  selector: '[waterfall][form] waterfall-contract-form',
+  selector: '[waterfall][form] waterfall-document-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormComponent implements OnInit, OnDestroy {
+export class DocumentFormComponent implements OnInit, OnDestroy {
 
   @Input() waterfall: Waterfall;
-  @Input() form: WaterfallContractForm;
+  @Input() form: WaterfallDocumentForm;
 
   showStartDate$ = new BehaviorSubject(false);
-  showTerms$ = new BehaviorSubject(true);
 
   toggleTermsControl = new FormControl(true);
   durationControl = new FormControl<number | undefined>(undefined);
@@ -31,8 +31,8 @@ export class FormComponent implements OnInit, OnDestroy {
   periods: (keyof Duration)[] = ['days', 'weeks', 'months', 'years'];
   periodControl = new FormControl<keyof Duration | undefined>(undefined);
 
-  licensee = new BehaviorSubject<string[]>([]); // buyer
-  licensor = new BehaviorSubject<string[]>([]); // seller
+  licensee$ = new BehaviorSubject<string[]>([]); // buyer
+  licensor$ = new BehaviorSubject<string[]>([]); // seller
 
   subscription: Subscription[] = [];
 
@@ -41,13 +41,13 @@ export class FormComponent implements OnInit, OnDestroy {
       this.addTerm();
     }
     const names = this.waterfall.rightholders.map(r => r.name);
-    this.licensee.next(names);
-    this.licensor.next(names);
+    this.licensee$.next(names);
+    this.licensor$.next(names);
     this.subscription.push(
-      this.form.valueChanges.subscribe((value: WaterfallContractFormValue) => {
+      this.form.valueChanges.subscribe((value: WaterfallDocumentFormValue) => {
         const filtered = names.filter(n => n !== value.licenseeName && n !== value.licensorName);
-        this.licensor.next(filtered);
-        this.licensee.next(filtered);
+        this.licensor$.next(filtered);
+        this.licensee$.next(filtered);
         // TODO only display selected role for the licensee
 
         if (value.licensorName && value.licensorRole.length === 0) {

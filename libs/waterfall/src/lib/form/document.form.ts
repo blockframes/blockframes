@@ -2,13 +2,15 @@
 import { FormControl } from '@angular/forms';
 
 import { WaterfallFileForm } from './file.form';
+
+import { FormList } from '@blockframes/utils/form/forms/list.form';
+import { BucketTermForm } from '@blockframes/contract/bucket/form';
+import { creatTermControl } from '@blockframes/contract/negotiation';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { RightholderRole, Term, WaterfallFile } from '@blockframes/model';
-import { BucketTermForm } from '@blockframes/contract/bucket/form';
-import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { creatTermControl } from '@blockframes/contract/negotiation';
 
-export interface WaterfallContractFormValue {
+
+export interface WaterfallDocumentFormValue {
   id: string;
   licenseeName: string;
   licenseeRole: RightholderRole[];
@@ -22,13 +24,12 @@ export interface WaterfallContractFormValue {
 
   price: number;
 
-  hasRights: boolean;
   terms: Term[];
 
   file: WaterfallFile;
 }
 
-function createWaterfallContractFormControl(contract: (Partial<WaterfallContractFormValue> & { id: string })) {
+function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocumentFormValue> & { id: string })) {
   return {
     licenseeName: new FormControl(contract.licenseeName ?? ''),
     licenseeRole: new FormControl<RightholderRole[]>(contract.licenseeRole ?? []),
@@ -42,18 +43,17 @@ function createWaterfallContractFormControl(contract: (Partial<WaterfallContract
 
     price: new FormControl(contract.price ?? 0),
 
-    hasRights: new FormControl(contract.hasRights ?? true),
     terms: FormList.factory(contract.terms, term => BucketTermForm.factory(term, creatTermControl)),
 
     file: new WaterfallFileForm({ ...contract.file, id: contract.id }),
   };
 }
 
-type WaterfallContractFormControl = ReturnType<typeof createWaterfallContractFormControl>;
+type WaterfallDocumentFormControl = ReturnType<typeof createWaterfallDocumentFormControl>;
 
-export class WaterfallContractForm extends FormEntity<WaterfallContractFormControl> {
-  constructor(contract: (Partial<WaterfallContractFormValue> & { id: string })) {
-    const control = createWaterfallContractFormControl(contract);
+export class WaterfallDocumentForm extends FormEntity<WaterfallDocumentFormControl> {
+  constructor(contract: (Partial<WaterfallDocumentFormValue> & { id: string })) {
+    const control = createWaterfallDocumentFormControl(contract);
     super(control);
   }
 }

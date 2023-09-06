@@ -13,7 +13,7 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
   styleUrls: ['./form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormComponent {
+export class TitleFormComponent {
 
   @Input() movieForm: MovieForm;
   @Input() waterfallRoleControl: FormControl<RightholderRole[]>;

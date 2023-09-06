@@ -1,10 +1,10 @@
 
 import { BehaviorSubject } from 'rxjs';
-import { Component, ChangeDetectionStrategy, ViewChild, Input, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, Input, OnInit, Pipe, PipeTransform, Output, EventEmitter } from '@angular/core';
 
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
-import { WaterfallContractForm } from '@blockframes/waterfall/form/document.form';
+import { WaterfallDocumentForm } from '@blockframes/waterfall/form/document.form';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import {
@@ -36,9 +36,10 @@ export class ContractsFormComponent implements OnInit {
   creating = false;
 
   waterfall: Waterfall;
-  contractForm: WaterfallContractForm; // this is set in ngOnInit
+  contractForm: WaterfallDocumentForm; // this is set in ngOnInit
 
   @Input() movieId: string;
+  @Output() skip = new EventEmitter(); 
 
   constructor(
     private waterfallService: WaterfallService,
@@ -65,7 +66,7 @@ export class ContractsFormComponent implements OnInit {
     });
     this.contracts$.next(newContracts);
 
-    this.contractForm = new WaterfallContractForm({ id: this.documentService.createId() });
+    this.contractForm = new WaterfallDocumentForm({ id: this.documentService.createId() });
   }
 
   select(role: RightholderRole) {
@@ -75,7 +76,7 @@ export class ContractsFormComponent implements OnInit {
 
   create() {
     this.creating = true;
-    this.contractForm = new WaterfallContractForm({ id: this.documentService.createId() });
+    this.contractForm = new WaterfallDocumentForm({ id: this.documentService.createId() });
   }
 
   async edit(contract: WaterfallContract) {
@@ -83,7 +84,7 @@ export class ContractsFormComponent implements OnInit {
     const licensee = this.waterfall.rightholders.find(r => r.id === contract.buyerId);
     const licensor = this.waterfall.rightholders.find(r => r.id === contract.sellerId);
     const file = this.waterfall.documents.find(f => f.id === contract.id);
-    this.contractForm = new WaterfallContractForm({
+    this.contractForm = new WaterfallDocumentForm({
       id: contract.id,
       licenseeName: licensee?.name,
       licenseeRole: licensee?.roles,
@@ -93,7 +94,6 @@ export class ContractsFormComponent implements OnInit {
       startDate: contract.duration?.from,
       endDate: contract.duration?.to,
       price: contract.price,
-      hasRights: terms.length > 1,
       terms,
       file: file,
     });

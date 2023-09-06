@@ -2,7 +2,7 @@
 
   <article class="header">
     <h2>Contracts</h2>
-    <button mat-button color="primary">
+    <button mat-button color="primary" (click)="skip.emit()">
       <span>Skip and do it later</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
@@ -83,7 +83,7 @@
           </div>
         </ng-container>
         <ng-template #creatingContracts>
-          <waterfall-contract-form [waterfall]="waterfall" [form]="contractForm"></waterfall-contract-form>
+          <waterfall-document-form [waterfall]="waterfall" [form]="contractForm"></waterfall-document-form>
         </ng-template>
       </ng-container>
       <ng-template #notSelected>
@@ -92,7 +92,7 @@
           <h2>Contract Details</h2>
         </header>
         <div>
-          <img src="/assets/images/empty-contracts.png" />
+          <img asset="empty-contracts.svg" alt="No contracts" />
         </div>
       </ng-template>
 
