@@ -2,9 +2,10 @@
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 
-import { RightholderRole } from '@blockframes/model';
+import { FormList } from '@blockframes/utils/form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '@blockframes/waterfall/form/right-holder.form';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 export class RightHolderFormComponent {
 
   @Input() @boolean skippable = false;
-  @Input() rightholdersForm: FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>;
+  @Input() rightholdersForm: FormList<WaterfallRightholderFormValue, WaterfallRightholderForm>;
 
   @Output() skip = new EventEmitter<void>();
 
@@ -25,7 +26,7 @@ export class RightHolderFormComponent {
   ) { }
 
   add() {
-    this.rightholdersForm.push(new FormGroup({ id: new FormControl(this.waterfallService.createId()), name: new FormControl(''), roles: new FormControl([]) }),);
+    this.rightholdersForm.push(new WaterfallRightholderForm({ id: this.waterfallService.createId(), name: '', roles: [] }));
   }
   
   remove(index: number) {

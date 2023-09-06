@@ -18,6 +18,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AutocompleteModule } from '@blockframes/ui/autocomplete/autocomplete.module';
 import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
+import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Pages
@@ -30,6 +31,7 @@ import { DocumentFormComponent } from './form.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    GroupMultiselectModule,
     AutocompleteModule,
     StaticSelectModule,
     FileUploaderModule,

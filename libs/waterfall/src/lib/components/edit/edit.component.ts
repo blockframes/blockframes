@@ -17,6 +17,8 @@ import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { WaterfallFormGuardedComponent } from '@blockframes/waterfall/guard';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
+import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '@blockframes/waterfall/form/right-holder.form';
+import { FormList } from '@blockframes/utils/form';
 
 
 @Component({
@@ -33,9 +35,11 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
   movieForm = new MovieForm({ directors: [{ firstName: '', lastName: '' }] });
   waterfallRoleControl = new FormControl<RightholderRole[]>(undefined, [Validators.required]);
 
-  rightholdersForm = new FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>([
-    new FormGroup({ id: new FormControl(this.waterfallService.createId()), name: new FormControl(''), roles: new FormControl([]) }),
-  ]);
+  // rightholdersForm = new FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>([
+  //   new FormGroup({ id: new FormControl(this.waterfallService.createId()), name: new FormControl(''), roles: new FormControl([]) }),
+  // ]);
+
+  rightholdersForm = FormList.factory<WaterfallRightholderFormValue, WaterfallRightholderForm>([], rightholder => new WaterfallRightholderForm(rightholder));
 
   movieId = '';
 
@@ -100,12 +104,8 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
       this.movieForm.patchValue(movie);
       this.waterfallRoleControl.patchValue(permissions.roles);
       this.rightholdersForm.clear({ emitEvent: false });
-      waterfall.rightholders.forEach(r => {
-        this.rightholdersForm.push(new FormGroup({
-          id: new FormControl(r.id),
-          name: new FormControl(r.name),
-          roles: new FormControl(r.roles),
-        }));
+      waterfall.rightholders.forEach(({ id, name, roles }) => {
+        this.rightholdersForm.push(new WaterfallRightholderForm({ id, name, roles }));
       });
     }
     this.loading$.next(false);
