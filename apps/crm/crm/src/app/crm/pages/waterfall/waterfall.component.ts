@@ -334,7 +334,7 @@ export class WaterfallComponent implements OnInit {
 }
 
 function getBlockName(date: Date, actions: Action[]) {
-  const dateStr = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  const dateStr = `${date.toLocaleDateString()}`;
   const actionsNames = Array.from(new Set(actions.map(a => a.name)));
 
   const statementsActions: ActionName[] = ['expense', 'income'];

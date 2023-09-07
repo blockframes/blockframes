@@ -119,7 +119,7 @@ export interface PoolState {
   shadowRevenu: number;
 }
 
-interface IncomeState {
+export interface IncomeState {
   id: string;
   date?: Date;
   from?: string;

@@ -40,6 +40,9 @@
             <button mat-icon-button (click)="displayWaterfall(versionId)">
               <mat-icon svgIcon="star" matTooltip="Show waterfall"></mat-icon>
             </button>
+            <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'dashboard', versionId]" (click)="$event.stopPropagation()">
+              <mat-icon svgIcon="launch" matTooltip="Go to dashboard"></mat-icon>
+            </a>
           </ng-template>
         </bf-table>
       </ng-container>

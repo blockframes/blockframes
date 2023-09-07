@@ -98,7 +98,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
     incomeGroup.turnoverRate += groupRate;
     for (const child of state.horizontals[to].children) {
       // Get rid of "from" for a better outcome on the graph with the transfers
-      const income = { ...payload, to: child, from: undefined as any }
+      const income = { ...payload, to: child, from: undefined };
       taken += runThreshold(state, income, incomeState, groupRate);
     }
     incomeGroup.revenuRate += taken;
@@ -115,7 +115,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
     incomeGroup.turnoverRate += groupRate;
     for (const child of state.verticals[to].children) {
       // Get rid of "from" for a better outcome on the graph with the transfers
-      const income = { ...payload, to: child, from: undefined as any }
+      const income = { ...payload, to: child, from: undefined };
       const groupTakes = runThreshold(state, income, incomeState, basePercent * group.percent);
       if (groupTakes) {
         taken += groupTakes;
@@ -129,7 +129,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
   if (rest > 0) {
     const node = getNode(state, to);
     for (const id of node.previous) {
-      const income = { ...payload, to: id, from: to }
+      const income = { ...payload, to: id, from: to };
       runThreshold(state, income, incomeState, rest);
     }
   }

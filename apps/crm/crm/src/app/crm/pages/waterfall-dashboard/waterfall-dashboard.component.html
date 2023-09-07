@@ -1,0 +1,38 @@
+<ng-container *ngIf="movie">
+  <button class="go-back" mat-icon-button routerLink="../..">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+    <span>BACK TO WATERFALL</span>
+  </button>
+  <article>
+    <movie-header [movie]="movie" [showBackArrow]="false"></movie-header>
+  </article>
+  <h3>Dashboard - {{ version.name }}</h3>
+
+  <section>
+    <mat-form-field appearance="fill">
+      <mat-label>Blocks</mat-label>
+      <mat-select (selectionChange)="selectBlock($event.value)">
+        <mat-option *ngFor="let block of blocks" [value]="block.id">
+          {{ block.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <h3 *ngIf="currentState">
+      Total film revenue : <price-per-currency [price]="getTotalIncomes(currentState.incomes)"></price-per-currency>
+    </h3>
+  </section>
+
+  <bf-table *ngIf="currentState" [source]="currentState.orgs | keyvalue" clickable useFilter pagination="50">
+    <ng-template colRef="value.id" label="Right Holder" let-id sort>
+      {{ getRightholderName(id) }}
+    </ng-template>
+    <ng-template colRef="value.revenu" label="Revenue" let-revenu sort>
+      <price-per-currency [price]="getPrice(revenu)"></price-per-currency>
+    </ng-template>
+    <ng-template colRef="value.turnover" label="Turnover" let-turnover sort>
+      <price-per-currency [price]="getPrice(turnover)"></price-per-currency>
+    </ng-template>
+  </bf-table>
+
+</ng-container>
