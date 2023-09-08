@@ -1,4 +1,4 @@
-import { getTitleId, mandatoryError, unknownEntityError } from '../../utils';
+import { getTitleId, mandatoryError, unknownEntityError, valueToId } from '../../utils';
 import { Media, Territory, Movie } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
@@ -49,17 +49,19 @@ export function getSourceConfig(option: SourceConfig) {
         if (titleId) return titleId;
         throw unknownEntityError<string>(value, 'Waterfall name or ID');
       },
-        /* b */ 'source.id': (value: string) => {
+        /* b */ 'source.name': (value: string, data: FieldsConfig) => {
+        // Create source ID from name
+        data.source.id = valueToId(value);
         return value;
       },
-        /* c */ 'source.name': (value: string) => {
-        return value;
-      },
-        /* d */ 'source.territories_included': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
-        /* e */ 'source.territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
-        /* f */ 'source.medias': (value: string) => getGroupedList(value, 'medias', separator, { required: false }),
-        /* g */ 'source.destinationId': (value: string) => {
-        return value.trim();
+        /* c */ 'source.territories_included': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
+        /* d */ 'source.territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
+        /* e */ 'source.medias': (value: string) => getGroupedList(value, 'medias', separator, { required: false }),
+        /* f */ 'source.destinationId': (value: string) => {
+        if (!value) {
+          throw mandatoryError(value, 'Source should have a destination');
+        }
+        return valueToId(value);
       },
     };
   }

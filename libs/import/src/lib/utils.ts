@@ -100,7 +100,7 @@ export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
   expenses: 10,
   documents: 10,
   sources: 10,
-  rights: 10,
+  rights: 2,
 };
 
 export const sheetRanges: Record<SpreadsheetImportType, string> = {
@@ -464,6 +464,16 @@ export function wrongValueWarning<T = unknown>(value: T, name: string, wrongData
     message: `${wrongData.slice(0, 3).join(', ')}...`
   };
   return new ImportWarning(value, option);
+}
+
+export function valueToId(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .split(' ')
+    .join('_');
 }
 
 export abstract class ImportLog<T> extends Error {

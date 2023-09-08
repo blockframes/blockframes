@@ -54,7 +54,7 @@ export function getExpenseConfig(option: ExpenseConfig) {
         return value;
       },
         /* c */ 'expense.id': (value: string) => {
-        return value;
+        return value.trim();
       },
         /* d */ 'expense.date': (value: string) => {
         return getDate(value, 'Income Date');
@@ -70,10 +70,10 @@ export function getExpenseConfig(option: ExpenseConfig) {
         return currency;
       },
         /* g */ 'expense.type': (value: string) => {
-        return value;
+        return value.trim();
       },
         /* h */ 'expense.category': (value: string) => {
-        return value;
+        return value.trim();
       },
     };
   }

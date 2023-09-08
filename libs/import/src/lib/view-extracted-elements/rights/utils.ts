@@ -7,6 +7,7 @@ import {
   Movie,
   NumberOperator,
   TargetValue,
+  WaterfallDocument,
   WaterfallRightholder,
   createRight
 } from '@blockframes/model';
@@ -14,6 +15,7 @@ import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, ImportedCondition, ImportedTarget, getRightConfig } from './fieldConfigs';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { MovieService } from '@blockframes/movie/service';
+import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 
 export interface FormatConfig {
   app: App;
@@ -23,16 +25,19 @@ export async function formatRight(
   sheetTab: SheetTab,
   waterfallService: WaterfallService,
   titleService: MovieService,
+  waterfallDocumentsService: WaterfallDocumentsService,
   userOrgId: string,
 ) {
   // Cache to avoid  querying db every time
   const rightholderCache: Record<string, WaterfallRightholder[]> = {};
   const titleCache: Record<string, Movie> = {};
-  const caches = { rightholderCache, titleCache };
+  const documentCache: Record<string, WaterfallDocument> = {};
+  const caches = { rightholderCache, titleCache, documentCache };
 
   const option = {
     waterfallService,
     titleService,
+    waterfallDocumentsService,
     userOrgId,
     caches,
     separator: ';'
