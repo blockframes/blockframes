@@ -15,6 +15,8 @@ import { jsonDateReviver } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/service';
 import { doc } from 'firebase/firestore';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
+import { waterfall as _waterfall } from './main';
+import { BlockService } from './block.service';
 
 export const fromOrg = (orgId: string) => [where('orgIds', 'array-contains', orgId)];
 
@@ -25,13 +27,33 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
   constructor(
     private functions: CallableFunctions,
     private authService: AuthService,
+    private blockService: BlockService,
   ) {
     super();
   }
 
   public async buildWaterfall(data: { waterfallId: string, versionId: string }) {
+    if (this.app === 'crm') return this.buildWaterfallAdmin(data); // Current user is admin, no need to use backend function.
     const waterfall = await this.functions.call<{ waterfallId: string, versionId: string }, string>('buildWaterfall', data);
     return JSON.parse(waterfall, jsonDateReviver) as { waterfall: { state: TitleState; history: History[] }, version: Version }; // Cloud functions cannot return Dates
+  }
+
+  /**
+   * Used only by BlockframesAdmin users that can bypass database rules
+   * @param data 
+   */
+  private async buildWaterfallAdmin(data: { waterfallId: string, versionId: string }) {
+    const waterfall = await this.getValue(data.waterfallId);
+    const blocks = await this.blockService.getValue({ waterfallId: data.waterfallId });
+
+    const version = waterfall.versions.find(v => v.id === data.versionId);
+    const versionBlocks = version.blockIds.map(blockId => {
+      const block = blocks.find(b => b.id === blockId);
+      return block;
+    });
+
+    const actions = versionBlocks.map(block => Object.values(block.actions));
+    return { waterfall: _waterfall(data.waterfallId, actions), version };
   }
 
   protected override fromFirestore(snapshot: DocumentSnapshot<Waterfall>) {
