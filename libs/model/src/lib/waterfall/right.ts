@@ -7,6 +7,7 @@ export interface Right {
   id: string;
   name: string;
   date: Date;
+  contractId?: string;
   actionName: ActionName;
   groupId: string;
   previousIds: string[];

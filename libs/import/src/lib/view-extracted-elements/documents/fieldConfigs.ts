@@ -120,9 +120,14 @@ export function getDocumentConfig(option: DocumentConfig) {
         return value;
       },
         /* d */ 'document.ownerId': async (value: string) => {
-        if (!value) throw mandatoryError(value, 'Owner');
-        const orgId = await getOrgId(value, orgService, orgNameCache);
-        return orgId || value;
+        if (!value) throw mandatoryError(value, 'Document owner');
+        let orgId = await getOrgId(value, orgService, orgNameCache);
+        if (!orgId) {
+          const owner = await orgService.getValue(value);
+          if (!owner) throw unknownEntityError(value, 'Document owner');
+          orgId = value;
+        }
+        return orgId;
       },
         /* e */ 'document.rootId': (value: string) => {
         return value;

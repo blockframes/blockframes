@@ -1,4 +1,13 @@
-import { getDate, getRightholderId, getTitleId, mandatoryError, optionalWarning, unknownEntityError } from '../../utils';
+import {
+  getDate,
+  getRightholderId,
+  getTitleId,
+  getWaterfallDocument,
+  mandatoryError,
+  optionalWarning,
+  unknownEntityError,
+  valueToId
+} from '../../utils';
 import {
   ConditionName,
   NumberOperator,
@@ -11,10 +20,14 @@ import {
   arrayOperator,
   ArrayOperator,
   TargetIn,
-  targetIn
+  targetIn,
+  WaterfallDocument,
+  ActionName,
+  conditionNames
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
+import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 const isNumber = (v: string) => !isNaN(parseFloat(v));
@@ -44,11 +57,13 @@ export type FieldsConfigType = ExtractConfig<FieldsConfig>;
 interface Caches {
   rightholderCache: Record<string, WaterfallRightholder[]>,
   titleCache: Record<string, Movie>,
+  documentCache: Record<string, WaterfallDocument>,
 }
 
 interface RightConfig {
   waterfallService: WaterfallService,
   titleService: MovieService,
+  waterfallDocumentsService: WaterfallDocumentsService,
   userOrgId: string,
   caches: Caches,
   separator: string,
@@ -58,12 +73,13 @@ export function getRightConfig(option: RightConfig) {
   const {
     waterfallService,
     titleService,
+    waterfallDocumentsService,
     userOrgId,
     caches,
     separator
   } = option;
 
-  const { rightholderCache, titleCache } = caches;
+  const { rightholderCache, titleCache, documentCache } = caches;
 
   function getAdminConfig(): FieldsConfigType {
     // ! The order of the property should be the same as excel columns
@@ -76,115 +92,105 @@ export function getRightConfig(option: RightConfig) {
         if (titleId) return titleId;
         throw unknownEntityError<string>(value, 'Waterfall name or ID');
       },
-        /* b */ 'right.date': (value: string, _, __, rowIndex) => {
-        if (!value) return new Date(1 + (rowIndex * 1000)); // 01/01/1970 + "rowIndex" seconds 
-        return getDate(value, 'Right Date');
-      },
-        /* c */ 'right.id': (value: string) => {
-        if (!value) throw mandatoryError(value, 'Right Id');
+        /* b */ 'right.name': (value: string, data: FieldsConfig) => {
+        if (!value) throw mandatoryError(value, 'Right name');
+
+        // Create right ID from name
+        data.right.id = valueToId(value);
         return value;
       },
-        /* d */ 'right.groupId': (value: string) => {
-        return value;
-      },
-        /* e */ 'right.nextIds': (value: string) => {
-        // ! Column on Excel file is called Previous (from waterfall top to bottom POV)
-        return value.split(separator).map(v => v.trim()).filter(v => !!v);
-      },
-        /* f */ 'right.previousIds': (value: string) => {
-        // ! Column on Excel file is called Next (from waterfall top to bottom POV)
-        return value.split(separator).map(v => v.trim()).filter(v => !!v);
-      },
-        /* g */ 'right.actionName': (value: string, data: FieldsConfig) => {
-        const lower = value.toLowerCase().trim();
-        switch (lower) {
-          case 'horizontal':
-            return data.right.nextIds.length ? 'prependHorizontal' : 'appendHorizontal';
-          case 'vertical':
-            return data.right.nextIds.length ? 'prependVertical' : 'appendVertical';
-          default:
-            return data.right.nextIds.length ? 'prepend' : 'append';
-        }
-      },
-        /* h */ 'right.name': (value: string) => {
-        return value;
-      },
-        /* i */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
-        if (['appendVertical', 'prependVertical'].includes(data.right.actionName)) {
-          if (value) throw optionalWarning('Rightholder Id or Blame Id should be left empty for vertical groups');
-          return '';
-        }
-        if (!value) throw mandatoryError(value, 'Rightholder Id or Blame Id');
-        const rightholderId = await getRightholderId(value, data.waterfallId, waterfallService, rightholderCache);
-        if (['appendHorizontal', 'prependHorizontal'].includes(data.right.actionName)) {
-          data.right.blameId = rightholderId;
-          return '';
-        } else {
-          return rightholderId;
-        }
-      },
-        /* j */ 'right.percent': (value: string) => {
+        /* c */ 'right.percent': (value: string) => {
+        if (!value.trim()) return 100;
         return Number(value);
       },
-        /* k */ 'right.pools': (value: string) => {
-        return value.split(separator).map(v => v.trim()).filter(v => !!v);
+        /* d */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
+        if (!value) return '';
+        const rightholderId = await getRightholderId(value, data.waterfallId, waterfallService, rightholderCache);
+        return rightholderId;
       },
-        /* l */ 'conditionA.conditionName': (value: string) => {
-        return value as ConditionName;
+        /* e */ 'right.actionName': (value: string, data: FieldsConfig) => {
+        const actionName = getActionName(value);
+        if (!data.right.rightholderId && actionName !== 'prependVertical') throw mandatoryError(data.right.rightholderId, 'Rightholder Name');
+        if (actionName === 'prependHorizontal') data.right.blameId = data.right.rightholderId;
+        if (['prependVertical', 'prependHorizontal'].includes(actionName)) delete data.right.rightholderId;
+        return actionName;
       },
-        /* m */ 'conditionA.left': (value: string) => {
-        return value.trim();
+        /* f */ 'right.nextIds': (value: string) => {
+        // ! Column on Excel file is called "Parent Names" (from waterfall top to bottom POV)
+        return value.split(separator).map(valueToId).filter(v => !!v);
       },
-        /* n */ 'conditionA.operator': (value: string, data: FieldsConfig) => {
+        /* g */ 'right.groupId': (value: string) => {
+        return valueToId(value);
+      },
+        /* h */ 'right.pools': (value: string) => {
+        return value.split(separator).map(valueToId).filter(v => !!v);
+      },
+        /* i */ 'conditionA.conditionName': (value: string) => {
+        return getConditionName(value);
+      },
+        /* j */ 'conditionA.left': (value: string) => {
+        return valueToId(value);
+      },
+        /* k */ 'conditionA.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionA);
       },
-        /* o */ 'conditionA.target.in': (value: string, data: FieldsConfig) => {
-        return extractConditionTarget(value, data.conditionA);
+        /* l */ 'conditionA.target.in': (value: string) => {
+        return extractConditionTargetIn(value);
       },
-        /* p */ 'conditionA.target.id': (value: string, data: FieldsConfig) => {
-        if (!value && targetIn.includes(data.conditionA.target.in as TargetIn)) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${data.conditionA.target.in}"`);
-        return value.trim();
+        /* m */ 'conditionA.target.id': (value: string, data: FieldsConfig) => {
+        return extractConditionTargetId(value, data.conditionA);
       },
-        /* q */ 'conditionA.target.percent': (value: string) => {
+        /* n */ 'conditionA.target.percent': (value: string) => {
         return Number(value) / 100 || 1;
       },
-        /* r */ 'conditionB.conditionName': (value: string) => {
-        return value as ConditionName;
+        /* o */ 'conditionB.conditionName': (value: string) => {
+        return getConditionName(value);
       },
-        /* s */ 'conditionB.left': (value: string) => {
-        return value.trim();
+        /* p */ 'conditionB.left': (value: string) => {
+        return valueToId(value);
       },
-        /* t */ 'conditionB.operator': (value: string, data: FieldsConfig) => {
+        /* q */ 'conditionB.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionB);
       },
-        /* u */ 'conditionB.target.in': (value: string, data: FieldsConfig) => {
-        return extractConditionTarget(value, data.conditionB);
+        /* r */ 'conditionB.target.in': (value: string) => {
+        return extractConditionTargetIn(value);
       },
-        /* v */ 'conditionB.target.id': (value: string, data: FieldsConfig) => {
-        if (!value && targetIn.includes(data.conditionB.target.in as TargetIn)) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${data.conditionB.target.in}"`);
-        return value.trim();
+        /* s */ 'conditionB.target.id': (value: string, data: FieldsConfig) => {
+        return extractConditionTargetId(value, data.conditionB);
       },
-        /* w */ 'conditionB.target.percent': (value: string) => {
+        /* t */ 'conditionB.target.percent': (value: string) => {
         return Number(value) / 100 || 1;
       },
-        /* x */ 'conditionC.conditionName': (value: string) => {
-        return value as ConditionName;
+        /* u */ 'conditionC.conditionName': (value: string) => {
+        return getConditionName(value);
       },
-        /* y */ 'conditionC.left': (value: string) => {
-        return value.trim();
+        /* v */ 'conditionC.left': (value: string) => {
+        return valueToId(value);
       },
-        /* z */ 'conditionC.operator': (value: string, data: FieldsConfig) => {
+        /* w */ 'conditionC.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionC);
       },
-        /* aa */ 'conditionC.target.in': (value: string, data: FieldsConfig) => {
-        return extractConditionTarget(value, data.conditionC);
+        /* x */ 'conditionC.target.in': (value: string) => {
+        return extractConditionTargetIn(value);
       },
-        /* ab */ 'conditionC.target.id': (value: string, data: FieldsConfig) => {
-        if (!value && targetIn.includes(data.conditionC.target.in as TargetIn)) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${data.conditionC.target.in}"`);
-        return value.trim();
+        /* y */ 'conditionC.target.id': (value: string, data: FieldsConfig) => {
+        return extractConditionTargetId(value, data.conditionC);
       },
-        /* ac */ 'conditionC.target.percent': (value: string) => {
+        /* z */ 'conditionC.target.percent': (value: string) => {
         return Number(value) / 100 || 1;
+      },
+        /* aa */ 'right.date': async (value: string, data: FieldsConfig, __, rowIndex) => {
+        if (!value.trim()) return new Date(1 + (rowIndex * 1000)); // 01/01/1970 + "rowIndex" seconds 
+
+        // If contract ID is specified instead of a date, we use signature date as right date.
+        const contract = await getWaterfallDocument(value.trim(), waterfallDocumentsService, documentCache, data.waterfallId);
+        if (contract) {
+          data.right.contractId = contract.id;
+          if (!contract.signatureDate) throw mandatoryError(value, 'Signature contract date', `Contract id "${contract.id}" is missing signature date.`);
+          return contract.signatureDate;
+        }
+
+        return getDate(value, 'Right Date');
       },
     };
   }
@@ -210,17 +216,98 @@ export function getRightConfig(option: RightConfig) {
     }
   }
 
-  function extractConditionTarget(value: string, cond: ImportedCondition) {
+  function extractConditionTargetIn(value: string): TargetIn {
+    if (!['date', 'number', 'territories', 'medias', 'contract'].includes(value.trim().toLowerCase())) {
+
+      /**
+       * Mapping
+       * @see https://docs.google.com/spreadsheets/d/19cKIMr-988727kfRnWor5FNAjBDgg2ZSRwbjj4s5iM0/edit#gid=1880420768
+       */
+      if (!targetIn.includes(value as TargetIn)) {
+        if (!value.trim()) return;
+
+        switch (value.trim().toLowerCase()) {
+          case 'expenses':
+            return 'expense';
+          case 'amount':
+          case 'investment':
+          case 'film cost':
+          case 'list':
+          default:
+            throw mandatoryError(value, 'Invalid Target Type');
+        }
+      }
+
+      return value as TargetIn;
+    }
+  }
+
+  function extractConditionTargetId(value: string, cond: ImportedCondition) {
+    if (targetIn.includes(cond.target.in as TargetIn)) {
+      if (!value) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${cond.target.in}"`);
+      return valueToId(value);
+    }
+
     if (cond.conditionName === 'terms') {
       const groups = Object.keys(staticGroups) as GroupScope[];
       const leftOperand = cond.left as any;
       if (!groups.includes(leftOperand)) throw mandatoryError(value, 'Operator', `For "terms" condition, expected value for left operand are : ${groups.map(g => `"${g}"`).join(' ')}`);
-      return getGroupedList(value, leftOperand, separator);
-    } else if (cond.conditionName === 'contract') {
-      return value.split(separator).map(v => v.trim()).filter(v => !!v);
-    } else {
-      return isNumber(value) ? Number(value) : value;
+      cond.target.in = getGroupedList(value, leftOperand, separator);
+      return;
     }
+
+    if (cond.conditionName === 'contract') {
+      cond.target.in = value.split(separator).map(v => v.trim()).filter(v => !!v);
+      return;
+    }
+
+    if (value && !targetIn.includes(cond.target.in as TargetIn)) {
+      cond.target.in = isNumber(value) ? Number(value) : value;
+      return;
+    }
+  }
+
+  function getActionName(value: string): ActionName {
+    switch (value.trim().toLowerCase()) {
+      case 'horizontal':
+      case 'horizontal group':
+        return 'prependHorizontal';
+      case 'vertical':
+      case 'vertical group':
+        return 'prependVertical';
+      default:
+        return 'prepend';
+    }
+  }
+
+  function getConditionName(value: string): ConditionName {
+    /**
+     * Mapping
+     * @see https://docs.google.com/spreadsheets/d/19cKIMr-988727kfRnWor5FNAjBDgg2ZSRwbjj4s5iM0/edit#gid=1880420768
+     */
+    if (!conditionNames.includes(value)) {
+      if (!value.trim()) return;
+
+      switch (value.trim().toLowerCase()) {
+        case 'revenue share':
+          return 'rightRevenu';
+        case 'total right holder revenue':
+          return 'orgRevenu';
+        case 'total right holder calculated revenue':
+          return 'poolShadowRevenu';
+        case 'source total revenue':
+        case 'producer\'s net participation':
+        case 'distributor\'s gross receipts':
+        case 'end of contract':
+        case 'revenue territory':
+        case 'revenue media':
+        case 'quantity sold':
+        default:
+          throw mandatoryError(value, 'Invalid Evaluated Value Type (condition name)');
+      }
+    }
+
+    return value as ConditionName;
   }
 
   return getAdminConfig();
