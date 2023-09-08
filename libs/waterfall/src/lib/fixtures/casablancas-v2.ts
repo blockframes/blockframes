@@ -73,7 +73,7 @@ const sellers: Action[] = [
       {
         type: 'vertical', id: 'rf_corridor_a', children: [
           {
-            type: 'right', id: 'soficinema_corridor_share_a', orgId: 'playtime', percent: 0.15, conditions: and([
+            type: 'right', id: 'soficinema_corridor_share_a', orgId: 'soficinema', percent: 0.15, conditions: and([
               condition('incomeDate', { to: new Date('2017/12/31') })
             ])
           },
@@ -92,7 +92,7 @@ const sellers: Action[] = [
       {
         type: 'vertical', id: 'rf_corridor_b', children: [
           {
-            type: 'right', id: 'soficinema_corridor_share_b', orgId: 'playtime', percent: 0.10, conditions: and([
+            type: 'right', id: 'soficinema_corridor_share_b', orgId: 'soficinema', percent: 0.10, conditions: and([
               condition('incomeDate', { to: new Date('2017/12/31') })
             ])
           },
