@@ -77,7 +77,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
     incomeRight.turnoverRate += basePercent;
     incomeRight.revenuRate += checked ? (right.percent * basePercent) : 0;
     incomeRight.shadowRevenuRate += shadow ? (right.percent * basePercent) : 0;
-    // Update orgs
+    // Update org
     const incomeOrg = initOrg(incomeState, right.orgId);
     incomeOrg.revenuRate += incomeRight.revenuRate;
     if (!incomeOrg.turnoverRate) incomeOrg.turnoverRate = basePercent;
@@ -96,7 +96,11 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
     const groupRate = basePercent * group.percent;
     const incomeGroup = initGroup(incomeState, to);
     incomeGroup.turnoverRate += groupRate;
-    for (const child of state.horizontals[to].children) {
+    // Update org
+    const incomeOrg = initOrg(incomeState, group.blameId);
+    if (!incomeOrg.turnoverRate) incomeOrg.turnoverRate = groupRate;
+    // Run childrens
+    for (const child of group.children) {
       // Get rid of "from" for a better outcome on the graph with the transfers
       const income = { ...payload, to: child, from: undefined };
       taken += runThreshold(state, income, incomeState, groupRate);
@@ -104,7 +108,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
     incomeGroup.revenuRate += taken;
 
     if (groupRate < taken) {
-      const blameId = state.horizontals[to].blameId;
+      const blameId = group.blameId;
       const bonus = initBonus(incomeState, to, blameId);
       bonus.bonusRate += groupRate - taken;
     }

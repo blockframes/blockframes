@@ -55,7 +55,12 @@
       </p>
     </ng-container>
     <ng-container *ngIf="horizontalGroup">
-      <h4>{{ horizontalGroup.id }}</h4>
+      <h4>
+        <span>{{ getRightholderName(horizontalGroup.blameId) }}</span>
+        <button mat-icon-button (click)="orgDetails(horizontalGroup.blameId)">
+          <mat-icon svgIcon="search"></mat-icon>
+        </button>
+      </h4>
       <p>
         <strong>Right Id:</strong> {{ horizontalGroup.id }}<br>
         <strong>Right Revenu:</strong> {{ horizontalGroup.revenu | currency }}<br>

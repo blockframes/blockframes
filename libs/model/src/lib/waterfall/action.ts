@@ -428,6 +428,7 @@ function appendHorizontal(state: TitleState, payload: AppendHorizontal) {
     children: payload.children,
     blameId: payload.blameId,
   });
+  state.orgs[payload.blameId] ||= createOrg({ id: payload.blameId });
 }
 
 interface PrependGroup extends BaseAction {
@@ -450,6 +451,7 @@ function prependHorizontal(state: TitleState, payload: PrependHorizontal) {
     children: payload.children,
     blameId: payload.blameId,
   });
+  state.orgs[payload.blameId] ||= createOrg({ id: payload.blameId });
 }
 
 
