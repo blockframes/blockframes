@@ -30,9 +30,7 @@ export async function buildWaterfall(data: { waterfallId: string, versionId: str
     return block;
   });
 
-  const actions = versionBlocks.map(block => Object.values(block.actions));
-
-  return JSON.stringify({ waterfall: waterfall(data.waterfallId, actions), version });
+  return JSON.stringify({ waterfall: waterfall(data.waterfallId, versionBlocks), version });
 }
 
 export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {

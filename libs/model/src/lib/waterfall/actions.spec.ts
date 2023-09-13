@@ -11,7 +11,7 @@ describe('Test standalone actions', () => {
     const { state } = waterfall('foo-title', actions);
     const { orgs } = state;
 
-    expect(orgs['seller'].revenu).toEqual(5_000);
+    expect(orgs['seller'].revenu.calculated).toEqual(5_000);
   });
 
   it('orgTurnover', () => {
@@ -23,7 +23,7 @@ describe('Test standalone actions', () => {
     const { state } = waterfall('foo-title', actions);
     const { orgs } = state;
 
-    expect(orgs['seller'].turnover).toEqual(10_000);
+    expect(orgs['seller'].turnover.calculated).toEqual(10_000);
   });
 
   describe('poolRevenu', () => {
@@ -100,8 +100,8 @@ describe('Test standalone actions', () => {
     const { state } = waterfall('foo-title', actions);
     const { rights } = state;
 
-    expect(rights['seller-1'].revenu).toEqual(5_000);
-    expect(rights['seller-2'].revenu).toEqual(2_500);
+    expect(rights['seller-1'].revenu.calculated).toEqual(5_000);
+    expect(rights['seller-2'].revenu.calculated).toEqual(2_500);
   });
 
 })

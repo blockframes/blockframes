@@ -111,7 +111,7 @@
             {{ actionId }}
           </ng-template>
           <ng-template colRef="payload.date" label="Date" let-date sort>
-            {{ date | date: 'MM/dd/yyyy' }}
+            {{ date | date: 'dd/MM/yyyy' }}
           </ng-template>
           <ng-template colRef="blockId" label="Block" let-blockId sort>
             {{ getBlockName(blockId) }}
@@ -128,8 +128,10 @@
               <mat-icon svgIcon="file_copy"></mat-icon>
             </button>
           </ng-template>
-          <ng-template colRef="payload.orgId" label="Rightholder" let-orgId>
-            {{ orgId ? getRightholderName(orgId) : '--' }}
+          <ng-template colRef="payload" label="Rightholder" let-payload>
+            <ng-container *ngIf="payload.orgId">{{ getRightholderName(payload.orgId) }}</ng-container>
+            <ng-container *ngIf="payload.blameId">{{ getRightholderName(payload.blameId) }}</ng-container>
+            <ng-container *ngIf="!payload.orgId && !payload.blameId">--</ng-container>
           </ng-template>
           <ng-template colRef="payload.amount" label="Amount" let-amount sort>
             <ng-container *ngIf="amount else noPrice">
@@ -138,10 +140,26 @@
             <ng-template #noPrice>--</ng-template>
           </ng-template>
           <ng-template colRef="payload.from" label="From" let-from sort>
-            {{ from ? from : '--' }}
+            <ng-container *ngIf="from?.right">
+              {{ from.right }} ({{ from.org ? getRightholderName(from.org) : '--' }})
+            </ng-container>
+            <ng-container *ngIf="!from?.right">
+              {{ from }}
+            </ng-container>
+            <ng-container *ngIf="!from">
+              --
+            </ng-container>
           </ng-template>
           <ng-template colRef="payload.to" label="To" let-to sort>
-            {{ to ? to : '--' }}
+            <ng-container *ngIf="to?.right">
+              {{ to.right }} ({{ to.org ? getRightholderName(to.org) : '--' }})
+            </ng-container>
+            <ng-container *ngIf="!to?.right">
+              {{ to }}
+            </ng-container>
+            <ng-container *ngIf="!to">
+              --
+            </ng-container>
           </ng-template>
           <ng-template colRef="payload.percent" label="%" let-percent>
             {{ percent ? percent * 100  : '--' }}
@@ -204,7 +222,7 @@
           {{ id }}
         </ng-template>
         <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
-          {{ signatureDate | date: 'MM/dd/yyyy' }}
+          {{ signatureDate | date: 'dd/MM/yyyy' }}
         </ng-template>
         <ng-template colRef="rootId" label="Parent" let-rootId sort>
           {{ rootId ? rootId : '--' }}
@@ -236,7 +254,7 @@
           {{ id }}
         </ng-template>
         <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
-          {{ signatureDate | date: 'MM/dd/yyyy' }}
+          {{ signatureDate | date: 'dd/MM/yyyy' }}
         </ng-template>
         <ng-template colRef="rootId" label="Parent" let-rootId sort>
           {{ rootId ? rootId : '--' }}
@@ -330,14 +348,16 @@
         <ng-template colRef="name" label="Name" let-name sort>
           {{ name }}
         </ng-template>
-        <ng-template colRef="rightholderId" label="Org" let-rightholderId sort>
-          {{ getRightholderName(rightholderId) }}
+        <ng-template colRef="" label="Org" let-item sort>
+          <ng-container *ngIf="item.rightholderId">{{ getRightholderName(item.rightholderId) }}</ng-container>
+          <ng-container *ngIf="item.blameId">{{ getRightholderName(item.blameId) }}</ng-container>
+          <ng-container *ngIf="!item.rightholderId && !item.blameId">--</ng-container>
         </ng-template>
         <ng-template colRef="groupId" label="Group" let-groupId sort>
           {{ groupId ? groupId : '--' }}
         </ng-template>
         <ng-template colRef="date" label="Date" let-date sort defaultSort>
-          {{ date | date: 'MM/dd/yyyy' }}
+          {{ date | date: 'dd/MM/yyyy' }}
         </ng-template>
         <ng-template colRef="actionName" label="Action Name" let-actionName sort>
           {{ actionName }}
@@ -372,7 +392,7 @@
           {{ getCurrentContract(item) }}
         </ng-template>
         <ng-template colRef="date" label="Date" let-date sort defaultSort>
-          {{ date | date: 'MM/dd/yyyy' }}
+          {{ date | date: 'dd/MM/yyyy' }}
         </ng-template>
         <ng-template colRef="" label="Source" let-item sort>
           {{ getAssociatedSource(item) }}
@@ -406,7 +426,7 @@
           {{ getCurrentContract(item) }}
         </ng-template>
         <ng-template colRef="date" label="Date" let-date sort defaultSort>
-          {{ date | date: 'MM/dd/yyyy' }}
+          {{ date | date: 'dd/MM/yyyy' }}
         </ng-template>
         <ng-template colRef="category" label="Category" let-category sort>
           {{ category }}

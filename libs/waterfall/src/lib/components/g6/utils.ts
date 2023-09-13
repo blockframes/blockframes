@@ -47,8 +47,8 @@ export function toG6(state: TitleState): GraphData {
   // Horizontal Group
   for (const group of Object.values(state.horizontals)) {
     const comboLabel = group.percent !== 1
-      ? `${group.id} (${roundCent(group.percent * 100)}%): ${roundCent(group.revenu)}€`
-      : `${group.id}: ${roundCent(group.revenu)}€`;
+      ? `${group.id} (${roundCent(group.percent * 100)}%): ${roundCent(group.revenu.calculated)}€`
+      : `${group.id}: ${roundCent(group.revenu.calculated)}€`;
     combos.push({
       id: group.id,
       label: comboLabel,
@@ -78,8 +78,8 @@ export function toG6(state: TitleState): GraphData {
   // Vertical Group
   for (const vertical of Object.values(state.verticals)) {
     const comboLabel = vertical.percent
-      ? `${vertical.id} (${roundCent(vertical.percent * 100)}%): ${roundCent(vertical.revenu)}€`
-      : `${vertical.id}: ${roundCent(vertical.revenu)}€`;
+      ? `${vertical.id} (${roundCent(vertical.percent * 100)}%): ${roundCent(vertical.revenu.calculated)}€`
+      : `${vertical.id}: ${roundCent(vertical.revenu.calculated)}€`;
     combos.push({
       id: vertical.id,
       label: comboLabel,

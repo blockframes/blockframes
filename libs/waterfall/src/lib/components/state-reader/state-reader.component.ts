@@ -1,7 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { History } from '@blockframes/model';
+import { History, mainCurrency } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 export interface StateDialogData {
@@ -39,5 +39,6 @@ export class StateReaderComponent {
   templateUrl: 'state-dialog.html',
 })
 export class StateDialogComponent {
+  public currency = mainCurrency;
   constructor(@Inject(MAT_DIALOG_DATA) public data: StateDialogData) { }
 }

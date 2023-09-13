@@ -173,7 +173,7 @@ const incomeConditions: AllIncomeConditions = {
     const { orgId, target } = condition;
     if (!incomeState.orgs[orgId]) return Infinity;  // condition is not affected by income
     const revenuRate = incomeState.orgs[orgId].revenuRate;
-    const current = state.orgs[orgId].revenu;
+    const current = state.orgs[orgId].revenu.calculated;
     const value = toTargetValue(state, target);
     if (current >= value) return Infinity;
     return (value - current) / revenuRate;
@@ -182,7 +182,7 @@ const incomeConditions: AllIncomeConditions = {
     const { orgId, target } = condition;
     if (!incomeState.orgs[orgId]) return Infinity;
     const turnoverRate = incomeState.orgs[orgId].turnoverRate;
-    const current = state.orgs[orgId].turnover;
+    const current = state.orgs[orgId].turnover.calculated;
     const value = toTargetValue(state, target);
     if (current >= value) return Infinity;
     return (value - current) / turnoverRate;
@@ -218,7 +218,7 @@ const incomeConditions: AllIncomeConditions = {
     const { rightId, target } = condition;
     if (!incomeState.rights[rightId]) return Infinity;
     const revenuRate = incomeState.rights[rightId].revenuRate;
-    const current = state.rights[rightId].revenu;
+    const current = state.rights[rightId].revenu.calculated;
     const value = toTargetValue(state, target);
     if (current >= value) return Infinity;
     return (value - current) / revenuRate;
@@ -227,7 +227,7 @@ const incomeConditions: AllIncomeConditions = {
     const { rightId, target } = condition;
     if (!incomeState.rights[rightId]) return Infinity;
     const turnoverRate = incomeState.rights[rightId].turnoverRate;
-    const current = state.rights[rightId].turnover;
+    const current = state.rights[rightId].turnover.calculated;
     const value = toTargetValue(state, target);
     if (current >= value) return Infinity;
     return (value - current) / turnoverRate;
@@ -236,7 +236,7 @@ const incomeConditions: AllIncomeConditions = {
     const { groupId, target } = condition;
     if (!incomeState.groups[groupId]) return Infinity;
     const revenuRate = incomeState.groups[groupId].revenuRate;
-    const current = getNode(state, groupId).revenu;
+    const current = getNode(state, groupId).revenu.calculated;
     const value = toTargetValue(state, target);
     if (current >= value) return Infinity;
     return (value - current) / revenuRate;
@@ -245,7 +245,7 @@ const incomeConditions: AllIncomeConditions = {
     const { groupId, target } = condition;
     if (!incomeState.groups[groupId]) return Infinity;
     const turnoverRate = incomeState.groups[groupId].turnoverRate;
-    const current = getNode(state, groupId).turnover;
+    const current = getNode(state, groupId).turnover.calculated;
     const value = toTargetValue(state, target);
     if (current >= value) return Infinity;
     return (value - current) / turnoverRate;
@@ -253,7 +253,7 @@ const incomeConditions: AllIncomeConditions = {
   interest(incomeState, state, condition) {
     const { orgId, rate, isComposite } = condition;
     const revenuRate = incomeState.orgs[orgId].revenuRate;
-    const current = state.orgs[orgId].revenu;
+    const current = state.orgs[orgId].revenu.calculated;
     const operations = state.orgs[orgId].operations;
     const value = investmentWithInterest(rate, operations, isComposite);
     if (current >= value) return Infinity;

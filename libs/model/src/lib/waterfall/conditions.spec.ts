@@ -14,7 +14,7 @@ describe('Test standalone conditions', () => {
       const { state } = waterfall('foo-title', actions);
       const { orgs } = state;
 
-      expect(orgs['seller'].revenu).toEqual(0);
+      expect(orgs['seller'].revenu.calculated).toEqual(0);
     });
 
     it('ContractAmout with target < amount', () => {
@@ -27,7 +27,7 @@ describe('Test standalone conditions', () => {
       const { state } = waterfall('foo-title', actions);
       const { orgs } = state;
 
-      expect(orgs['seller'].revenu).toEqual(10_000);
+      expect(orgs['seller'].revenu.calculated).toEqual(10_000);
     });
 
     it('ContractAmout with target == amount', () => {
@@ -40,7 +40,7 @@ describe('Test standalone conditions', () => {
       const { state } = waterfall('foo-title', actions);
       const { orgs } = state;
 
-      expect(orgs['seller'].revenu).toEqual(10_000);
+      expect(orgs['seller'].revenu.calculated).toEqual(10_000);
     });
   });
   describe('poolShadowRevenu', () => {

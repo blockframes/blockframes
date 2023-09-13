@@ -10,10 +10,11 @@ import {
   createVertical,
   createContractState,
   Operation,
-  createBonus
+  createBonus,
+  createSourceState,
 } from './state';
 import { getMinThreshold } from './threshold';
-import { assertNode, getNode, updateNode } from './node';
+import { assertNode, getNode, getNodeOrg, updateNode } from './node';
 import { WaterfallContract, WaterfallSource, getAssociatedSource } from './waterfall';
 import { Income } from '../income';
 import { Expense } from '../expense';
@@ -40,6 +41,14 @@ const actions = {
   prependVertical,
   invest,
   income,
+  /**
+   * Add a new payment to the state.
+   * Amount will not go through the tree : direct payment from A to B
+   * 
+   * Used to add statements related data to waterfall, that can be used in conditions.
+   * Payments will increase "actual" revenue & turnover of org/groups/rigts whereas Incomes will increate the "calculated" ones.
+   */
+  payment,
   /** @deprecated not used. Might be removed in future */
   bonus,
   /** @deprecated not used. Might be removed in future */
@@ -337,6 +346,20 @@ export function expensesToActions(contracts: WaterfallContract[], expenses: Expe
   return actions;
 }
 
+// TODO #9493 typing
+export function paymentsToActions(payments: any[]) {
+  const actions: Action[] = [];
+
+  for (const payment of payments) {
+    actions.push(action('payment', {
+      ...payment,
+      amount: convertCurrenciesTo(payment.amount, mainCurrency)[mainCurrency],
+    }));
+  }
+
+  return actions;
+}
+
 /////////////
 // ACTIONS //
 /////////////
@@ -621,13 +644,58 @@ export interface IncomeAction extends BaseAction {
   isCompensation?: boolean;
 }
 
+export interface PaymentAction extends BaseAction {
+  id: string;
+  amount: number;
+  from: {
+    org?: string;
+    right: string;
+  };
+  to: {
+    org: string;
+    right: string;
+  };
+  contractId: string;
+  date: Date;
+}
+
 /** Distribute the income per thresholds */
 function income(state: TitleState, payload: IncomeAction) {
   // The initial right from of the income is usually a right that doesn't exist
   // If this is the case we create it
   if (payload.from) {
     state.rights[payload.from] ||= createRightState({ id: payload.from, orgId: payload.from, percent: 0 });
+    if (!payload.isCompensation) {
+      state.sources[payload.from] ||= createSourceState({ id: payload.from, amount: 0 });
+      state.sources[payload.from].amount += payload.amount;
+    }
   }
+
+  // Income is an actual payment to the first right (or groups) it hits, we increment actual revenu and actual turnover
+  assertNode(state, payload.to);
+  const node = getNode(state, payload.to);
+  const orgState = getNodeOrg(state, payload.to);
+  orgState.revenu.actual += payload.amount;
+  orgState.turnover.actual += payload.amount;
+  node.revenu.actual += payload.amount;
+  node.turnover.actual += payload.amount;
+
+  const payment: PaymentAction = {
+    id: payload.id,
+    amount: payload.amount,
+    from: {
+      right: payload.from
+    },
+    to: {
+      org: orgState.id,
+      right: payload.to
+    },
+    contractId: payload.contractId,
+    date: payload.date
+  };
+
+  state.payments[payment.id] = payment;
+
   state.incomes[payload.id] = payload;
   const incomeId = payload.id;
   let rest = payload.amount;
@@ -647,14 +715,14 @@ function income(state: TitleState, payload: IncomeAction) {
     for (const rightId in rights) {
       if (!state.rights[rightId]) throw new Error(`Right "${rightId}" doesn't exist`);
       const node = getNode(state, rightId);
-      node.revenu += rights[rightId].revenuRate * amount;
-      node.turnover += rights[rightId].turnoverRate * amount;
+      node.revenu.calculated += rights[rightId].revenuRate * amount;
+      node.turnover.calculated += rights[rightId].turnoverRate * amount;
     }
     for (const groupId in groups) {
       assertNode(state, groupId);
       const node = getNode(state, groupId);
-      node.revenu += groups[groupId].revenuRate * amount;
-      node.turnover += groups[groupId].turnoverRate * amount;
+      node.revenu.calculated += groups[groupId].revenuRate * amount;
+      node.turnover.calculated += groups[groupId].turnoverRate * amount;
     }
     for (const pool in pools) {
       if (!state.pools[pool]) throw new Error(`Pool "${pool}" doesn't exist`);
@@ -664,8 +732,8 @@ function income(state: TitleState, payload: IncomeAction) {
     }
     for (const orgId in orgs) {
       if (!state.orgs[orgId]) throw new Error(`Org "${orgId}" doesn't exist`);
-      state.orgs[orgId].revenu += orgs[orgId].revenuRate * amount;
-      state.orgs[orgId].turnover += orgs[orgId].turnoverRate * amount;
+      state.orgs[orgId].revenu.calculated += orgs[orgId].revenuRate * amount;
+      state.orgs[orgId].turnover.calculated += orgs[orgId].turnoverRate * amount;
 
 
       // Operation
@@ -690,4 +758,30 @@ function income(state: TitleState, payload: IncomeAction) {
     }
     rest -= amount;
   }
+}
+
+/**
+ * Removes revenu from "from" and gives it to "to"
+ * @param state 
+ * @param payload 
+ */
+function payment(state: TitleState, payload: PaymentAction) {
+
+  state.orgs[payload.from.org].revenu.actual -= payload.amount;
+  state.orgs[payload.to.org].revenu.actual += payload.amount;
+  state.orgs[payload.to.org].turnover.actual += payload.amount;
+
+  if (payload.from.right) {
+    assertNode(state, payload.from.right);
+    const nodeFrom = getNode(state, payload.from.right);
+    nodeFrom.revenu.actual -= payload.amount;
+  }
+
+  if (payload.to.right) {
+    const nodeTo = getNode(state, payload.to.right);
+    nodeTo.revenu.actual += payload.amount;
+    nodeTo.turnover.actual += payload.amount;
+  }
+
+  state.payments[payload.id] = payload;
 }
