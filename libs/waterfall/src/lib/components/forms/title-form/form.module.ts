@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 // Blockframes
@@ -15,12 +16,12 @@ import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Pages
-import { FormComponent } from './form.component';
+import { TitleFormComponent } from './form.component';
 
 
 @NgModule({
-  declarations: [FormComponent],
-  exports: [FormComponent],
+  declarations: [TitleFormComponent],
+  exports: [TitleFormComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -32,7 +33,8 @@ import { FormComponent } from './form.component';
     MatInputModule,
     MatButtonModule,
     MatDividerModule,
+    MatTooltipModule,
     MatFormFieldModule,
   ],
 })
-export class FormModule { }
+export class TitleFormModule { }

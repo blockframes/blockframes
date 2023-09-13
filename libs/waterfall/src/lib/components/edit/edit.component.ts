@@ -1,22 +1,25 @@
 
 // Angular
-import { ActivatedRoute } from '@angular/router';
 import { MatStepper } from '@angular/material/stepper';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { BehaviorSubject, combineLatest, map, startWith } from 'rxjs';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
 
 // Blockframes
+import { FormList } from '@blockframes/utils/form';
 import { MovieService } from '@blockframes/movie/service';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { OrganizationService } from '@blockframes/organization/service';
-import { RightholderRole, WaterfallRightholder, createAppConfig, createMovieAppConfig } from '@blockframes/model';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { WaterfallFormGuardedComponent } from '@blockframes/waterfall/guard';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
+import { RightholderRole, WaterfallRightholder, createAppConfig, createMovieAppConfig } from '@blockframes/model';
+import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '@blockframes/waterfall/form/right-holder.form';
+import { WaterfallDocumentForm } from '@blockframes/waterfall/form/document.form';
 
 
 @Component({
@@ -30,12 +33,10 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
 
   createMode = true;
 
+  documentForm = new WaterfallDocumentForm({ id: '' });
   movieForm = new MovieForm({ directors: [{ firstName: '', lastName: '' }] });
   waterfallRoleControl = new FormControl<RightholderRole[]>(undefined, [Validators.required]);
-
-  rightholdersForm = new FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>([
-    new FormGroup({ id: new FormControl(this.waterfallService.createId()), name: new FormControl(''), roles: new FormControl([]) }),
-  ]);
+  rightholdersForm = FormList.factory<WaterfallRightholderFormValue, WaterfallRightholderForm>([], rightholder => new WaterfallRightholderForm(rightholder));
 
   movieId = '';
 
@@ -73,6 +74,7 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
   updating$ = new BehaviorSubject(false);
 
   constructor(
+    private router: Router,
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private movieService: MovieService,
@@ -98,13 +100,18 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
 
       this.movieForm.patchValue(movie);
       this.waterfallRoleControl.patchValue(permissions.roles);
-      this.rightholdersForm.patchValue(waterfall.rightholders);
+      this.rightholdersForm.clear({ emitEvent: false });
+      waterfall.rightholders.forEach(({ id, name, roles }) => {
+        this.rightholdersForm.push(new WaterfallRightholderForm({ id, name, roles }));
+      });
     }
     this.loading$.next(false);
   }
 
   skip() {
-    this.stepper?.next();
+    const end = this.stepper.selectedIndex === this.stepper.steps.length - 1;
+    if (end) this.router.navigate(['..'], { relativeTo: this.route });
+    else this.stepper?.next();
   }
 
   // update a new movie along with its waterfall permissions

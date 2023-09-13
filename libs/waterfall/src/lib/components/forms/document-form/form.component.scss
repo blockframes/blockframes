@@ -1,0 +1,43 @@
+:host {
+  margin: 24px;
+  display: flex;
+  flex-direction: column;
+
+  div.group {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 32px;
+    * {
+      flex: 1;
+    }
+  }
+
+  mat-checkbox,
+  mat-slide-toggle {
+    margin-top: 22px;
+  }
+
+  div.toggle {
+    margin-bottom: 22px;
+  }
+
+  div.add-terms {
+    gap: 16px;
+    display: flex;
+    align-items: center;
+
+    hr {
+      flex-grow: 1;
+      color: transparent;
+      background-color: var(--primary);
+    }
+    p.mat-caption {
+      margin: 0;
+      color: var(--primary);
+    }
+  }
+
+  file-uploader {
+    margin-top: 32px;
+  }
+}

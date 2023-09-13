@@ -1,0 +1,105 @@
+<div class="group">
+  <bf-autocomplete
+    required
+    label="Licensor"
+    [options]="licensor$"
+    placeholder="Company Name"
+    [form]="form.get('licensorName')"
+  ></bf-autocomplete>
+  <static-select [control]="form.get('licensorRole')" scope="rightholderRoles" mode="outline" multiple required>
+    <mat-label>Licensor Waterfall Role</mat-label>
+    <mat-error>This field is mandatory</mat-error>
+  </static-select>
+</div>
+
+<bf-autocomplete
+  required
+  label="Licensee"
+  [options]="licensee$"
+  placeholder="Company Name"
+  [form]="form.get('licenseeName')"
+></bf-autocomplete>
+
+
+<div class="group">
+  <mat-form-field fxFlex appearance="outline">
+    <mat-label>Signature Date</mat-label>
+    <time-picker [formControl]="form.get('signatureDate')" allDay></time-picker>
+  </mat-form-field>
+  <mat-slide-toggle color="primary" (change)="toggleStartDate($event)" [checked]="(hideStartDate$ | async)">Start Date is the same as Signature Date</mat-slide-toggle>
+  <ng-container *ngIf="(hideStartDate$ | async) === false">
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>Start Date</mat-label>
+      <time-picker [formControl]="form.get('startDate')" allDay></time-picker>
+    </mat-form-field>
+  </ng-container>
+</div>
+
+<div class="group">
+  <mat-form-field appearance="outline">
+    <mat-icon svgIcon="timer" matPrefix></mat-icon>
+    <mat-label>Duration Number</mat-label>
+    <input matInput type="number" [formControl]="durationControl" />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-icon svgIcon="timer" matPrefix></mat-icon>
+    <mat-label>Duration Period</mat-label>
+    <!-- <input matInput type="number"  [formControl]="form.get('price')" /> -->
+    <mat-select [formControl]="periodControl" placeholder="Months/Years" >
+      <mat-option *ngFor="let period of periods" [value]="period">{{period}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<mat-form-field fxFlex appearance="outline">
+  <mat-label>End Date</mat-label>
+  <time-picker [formControl]="form.get('endDate')" allDay></time-picker>
+</mat-form-field>
+
+
+<mat-form-field appearance="outline">
+  <mat-label>Investment / Minimum Guaranteed</mat-label>
+  <mat-icon svgIcon="EUR" matSuffix></mat-icon>
+  <input matInput type="number" placeholder="€" [formControl]="form.get('price')" required />
+  <mat-error>This field is mandatory</mat-error>
+</mat-form-field>
+
+<div class="toggle">
+  <p class="mat-caption">Right Assigned</p>
+  <mat-button-toggle-group [formControl]="toggleTermsControl">
+    <mat-button-toggle [value]="true">Yes</mat-button-toggle>
+    <mat-button-toggle [value]="false">No</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<ng-container *ngIf="toggleTermsControl.value">
+  <ng-container *ngFor="let term of form.get('terms').controls">
+    <div class="group">
+      <group-multiselect
+        scope="medias"
+        label="Choose Media"
+        displayAll="World"
+        filterPlaceholder="Specify territories to filter"
+        [control]="term.get('medias')"
+      ></group-multiselect>
+      <group-multiselect
+        scope="territories"
+        label="Choose Territories"
+        displayAll="World"
+        filterPlaceholder="Specify territories to filter"
+        [control]="term.get('territories')"
+      ></group-multiselect>
+      <mat-checkbox color="primary" [formControl]="term.get('exclusive')">Exclusive</mat-checkbox>
+    </div>
+  </ng-container>
+
+  <div class="add-terms">
+    <hr/>
+    <p class="mat-caption">Add More Terms</p>
+    <button mat-mini-fab color="primary" (click)="addTerm()">
+      <mat-icon svgIcon="add"></mat-icon>
+    </button>
+  </div>
+</ng-container>
+
+<file-uploader [form]="form.get('file')" [meta]="['waterfall', 'documents', waterfall.id]" accept="pdf"></file-uploader>

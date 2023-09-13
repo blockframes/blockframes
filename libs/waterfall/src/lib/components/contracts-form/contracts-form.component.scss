@@ -12,6 +12,7 @@ section {
 
   article {
     display: flex;
+    gap: 42px;
     
     &.header {
       align-items: center;
@@ -19,6 +20,103 @@ section {
 
       h2, button {
         margin: 0;
+      }
+    }
+
+    ul {
+      width: 50%;
+      min-width: 600px;
+      border-top: solid 1px var(--foreground-divider);
+
+      li {
+        display: flex;
+        padding: 14px 24px;
+        align-items: center;
+        justify-content: space-between;
+        border: solid 1px var(--foreground-divider);
+        border-top: none;
+
+        p {
+          margin: 0;
+        }
+        p.role {
+          font-weight: 600;
+        }
+        p.action {
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+        }
+
+        &:hover, &.selected {
+          cursor: pointer;
+          background-color: var(--dashboard-cta);
+
+          p.action {
+            color: var(--primary);
+  
+            mat-icon {
+              color: var(--primary);
+            }
+          }
+        }
+      }
+    }
+
+    bf-card-modal {
+      width: 50%;
+      box-shadow: -5px 0px 18px 0px rgba(0, 0, 0, 0.35);
+
+      header {
+        gap: 15px;
+        padding: 32px;
+        display: flex;
+        align-items: center;
+        border-bottom: solid 2px var(--foreground-divider);
+
+        h2 {
+          flex-grow: 1;
+          margin: 0;
+        }
+      }
+      div {
+        display: flex;
+        margin-top: 64px;
+        justify-content: center;
+      }
+      div.contract-list {
+        position: relative;
+        gap: 8px;
+        margin: 0 32px;
+        padding: 32px 0 52px 0;
+        align-items: center;
+        justify-content: start;
+        border-bottom: solid 2px var(--foreground-divider);
+
+        p {
+          margin: 0;
+          flex-grow: 1;
+        }
+        p.amendment {
+          position: absolute;
+          bottom: 26px;
+          color: var(--foreground-divider);
+        }
+      }
+
+      div {
+        button.circle {
+          mat-icon {
+            border: solid 2px;
+            border-radius: 100%;
+          }
+        }
+        button.main-dashboard-cta {
+          mat-icon {
+            border: solid 2px var(--primary);
+            border-radius: 100%;
+          }
+        }
       }
     }
   }

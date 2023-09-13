@@ -45,7 +45,7 @@ export interface Mandate extends Contract {
 
 export interface Sale extends Contract {
   type: 'sale';
-  /** Create the anccestors organization when you create the sale */
+  /** Create the ancestors organization when you create the sale */
   ancestors: string[]; // ??? The orgs that have a parent contract with the
   // incomeId: string; // Id of the terms/right on which income should occurred
   /** Free text provided by the buyer, addressed to the seller */
