@@ -1,4 +1,5 @@
 <mat-form-field [appearance]="mode">
+  <mat-icon *ngIf="prefixIcon" matPrefix [svgIcon]="prefixIcon"></mat-icon>
   <mat-label>
     <ng-content select="mat-label"></ng-content>
   </mat-label>

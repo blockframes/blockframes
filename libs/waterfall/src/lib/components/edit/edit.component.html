@@ -19,7 +19,7 @@
       {{index + 1}}
     </ng-template>
 
-    <mat-step>
+    <mat-step [completed]="true">
       <ng-template matStepLabel>Movie Information</ng-template>
 
       <waterfall-title-form
@@ -62,18 +62,20 @@
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Add Contracts</ng-template>
-      <waterfall-contracts-form></waterfall-contracts-form>
-      <section>
-        <ng-container *ngIf="updating$ | async; else editContracts">
-          <logo-spinner></logo-spinner>
-        </ng-container>
-        <ng-template #editContracts>
-          <button mat-flat-button color="primary">
-            <span>Continue</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
-          </button>
-        </ng-template>
-      </section>
+      <ng-template matStepContent>
+        <waterfall-contracts-form [movieId]="movieId" [documentForm]="documentForm" (skip)="skip()"></waterfall-contracts-form>
+        <section>
+          <ng-container *ngIf="updating$ | async; else editContracts">
+            <logo-spinner></logo-spinner>
+          </ng-container>
+          <ng-template #editContracts>
+            <a mat-flat-button color="primary" [routerLink]="['..']">
+              <span>Continue</span>
+              <mat-icon svgIcon="arrow_forward"></mat-icon>
+            </a>
+          </ng-template>
+        </section>
+      </ng-template>
     </mat-step>
     
   </mat-stepper>

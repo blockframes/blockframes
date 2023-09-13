@@ -2,10 +2,11 @@
 import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { RightholderRole } from '@blockframes/model';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 // Blockframes
+import { RightholderRole } from '@blockframes/model';
+import { WaterfallDocumentForm } from './form/document.form';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -13,6 +14,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 
 export interface WaterfallFormGuardedComponent {
   movieForm: MovieForm;
+  documentForm: WaterfallDocumentForm;
   waterfallRoleControl: FormControl<RightholderRole[]>;
   rightholdersForm: FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>
 };
@@ -28,7 +30,8 @@ export class WaterfallFormGuard<T extends WaterfallFormGuardedComponent> impleme
     if (
       component.movieForm.pristine &&
       component.waterfallRoleControl.pristine &&
-      component.rightholdersForm.pristine
+      component.rightholdersForm.pristine &&
+      component.documentForm.pristine
     ) return true;
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: createModalData({

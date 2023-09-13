@@ -8,19 +8,26 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: none;
+    background: var(--active);
     z-index: 10;
+    backdrop-filter: blur(2px);
   };
 
-  section.open {
-    position: fixed;
-    width: 100%;
+  section {
+    padding: 0;
     height: 100%;
-    top: 0;
-    left: 0;
-    margin: 64px;
-    width: calc(100% - 64px * 2);
-    height: calc(100% - 64px * 2);
-    z-index: 20;
+    overflow: auto;
+
+    &.open {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      margin: 64px;
+      width: calc(100% - 64px * 2);
+      height: calc(100% - 64px * 2);
+      z-index: 20;
+    }
   }
 }

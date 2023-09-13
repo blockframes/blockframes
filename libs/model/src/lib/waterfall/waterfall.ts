@@ -166,6 +166,7 @@ export function convertDocumentTo<T>(document: WaterfallDocument): T {
 }
 
 type WaterfallDocumentMeta = WaterfallBudget | WaterfallContract | WaterfallFinancingPlan;
+
 export interface WaterfallDocument<Meta extends WaterfallDocumentMeta = unknown> {
   _meta?: DocumentMeta;
   id: string; // TODO #9389 same id as the actual PDF file stored in waterfall/{waterfallId}/documents
