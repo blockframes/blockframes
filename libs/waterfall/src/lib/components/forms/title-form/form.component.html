@@ -8,7 +8,7 @@
     <mat-error>This field is mandatory</mat-error>
   </mat-form-field>
 
-  <div *ngFor="let director of movieForm.directors.controls; let index = index">
+  <div *ngFor="let director of movieForm.directors.controls; let index = index; let last = last">
     <mat-form-field appearance="outline">
       <mat-label>Director's First Name</mat-label>
       <input matInput type="text" placeholder="Director's First Name" [formControl]="director.controls.firstName" />
@@ -21,17 +21,16 @@
       <mat-error>This field is mandatory</mat-error>
     </mat-form-field>
 
-    <button mat-icon-button color="danger" (click)="removeDirector(index)">
-      <mat-icon svgIcon="delete"></mat-icon>
-    </button>
-  </div>
-
-  <div class="divider">
-    <mat-divider></mat-divider>
-    <p (click)="addDirector()">Add a Director</p>
-    <button mat-mini-fab color="primary" (click)="addDirector()">
-      <mat-icon svgIcon="add"></mat-icon>
-    </button>
+    <ng-container *ngIf="last else notLast">
+      <button mat-mini-fab color="primary" (click)="addDirector()" matTooltip="Add a new director">
+        <mat-icon svgIcon="add"></mat-icon>
+      </button>
+    </ng-container>
+    <ng-template #notLast>
+      <button mat-icon-button color="danger" (click)="removeDirector(index)" matTooltip="Delete director">
+        <mat-icon svgIcon="delete"></mat-icon>
+      </button>
+    </ng-template>
   </div>
 
   <image-uploader

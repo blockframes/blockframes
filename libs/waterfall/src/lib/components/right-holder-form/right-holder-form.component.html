@@ -17,17 +17,17 @@
       <input matInput type="text" placeholder="Company Name" [formControl]="item.controls.name" />
     </mat-form-field>
 
-    <static-select [control]="item.controls.roles" scope="rightholderRoles" multiple> 
+    <static-select [control]="item.controls.roles" scope="rightholderRoles" multiple prefixIcon="supervisor"> 
       <mat-label>Waterfall Role *</mat-label>
     </static-select>
 
     <ng-container *ngIf="!last; else isLast">
-      <button mat-icon-button class="delete" (click)="remove(index)">
+      <button mat-icon-button class="delete" (click)="remove(index)" matTooltip="Delete Right Holder">
         <mat-icon svgIcon="delete"></mat-icon>
       </button>
     </ng-container>
     <ng-template #isLast>
-      <button mat-mini-fab color="primary" (click)="add()">
+      <button mat-mini-fab color="primary" (click)="add()" matTooltip="Add Right Holder">
         <mat-icon svgIcon="add"></mat-icon>
       </button>
     </ng-template>

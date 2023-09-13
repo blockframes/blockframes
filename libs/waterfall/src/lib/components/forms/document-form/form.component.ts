@@ -23,7 +23,7 @@ export class DocumentFormComponent implements OnInit, OnDestroy {
   @Input() waterfall: Waterfall;
   @Input() form: WaterfallDocumentForm;
 
-  showStartDate$ = new BehaviorSubject(false);
+  hideStartDate$ = new BehaviorSubject(true);
 
   toggleTermsControl = new FormControl(true);
   durationControl = new FormControl<number | undefined>(undefined);
@@ -75,16 +75,10 @@ export class DocumentFormComponent implements OnInit, OnDestroy {
   }
 
   toggleStartDate(event: MatSlideToggleChange) {
-    this.showStartDate$.next(event.checked);
+    this.hideStartDate$.next(event.checked);
   }
-
-  // toggleRights(event:  MatButtonToggleChange) {
-  //   this.showTerms$.next(event.value);
-  // }
 
   addTerm() {
     this.form.controls.terms.push(BucketTermForm.factory({}, createBucketTermControl));
   }
-
-
 }

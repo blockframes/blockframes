@@ -36,9 +36,10 @@ export class ContractsFormComponent implements OnInit {
   creating = false;
 
   waterfall: Waterfall;
-  contractForm: WaterfallDocumentForm; // this is set in ngOnInit
 
   @Input() movieId: string;
+  @Input () documentForm = new WaterfallDocumentForm({ id: this.documentService.createId() });
+
   @Output() skip = new EventEmitter(); 
 
   constructor(
@@ -65,18 +66,17 @@ export class ContractsFormComponent implements OnInit {
       });
     });
     this.contracts$.next(newContracts);
-
-    this.contractForm = new WaterfallDocumentForm({ id: this.documentService.createId() });
   }
 
   select(role: RightholderRole) {
     this.selected = role;
-    this.creating = false;
+    this.creating = this.contracts$.getValue()[role].length === 0; // if we select an empty role we automatically switch to create mode
   }
 
   create() {
     this.creating = true;
-    this.contractForm = new WaterfallDocumentForm({ id: this.documentService.createId() });
+    this.documentForm = new WaterfallDocumentForm({ id: this.documentService.createId() });
+    this.documentForm.markAsPristine();
   }
 
   async edit(contract: WaterfallContract) {
@@ -84,7 +84,7 @@ export class ContractsFormComponent implements OnInit {
     const licensee = this.waterfall.rightholders.find(r => r.id === contract.buyerId);
     const licensor = this.waterfall.rightholders.find(r => r.id === contract.sellerId);
     const file = this.waterfall.documents.find(f => f.id === contract.id);
-    this.contractForm = new WaterfallDocumentForm({
+    this.documentForm = new WaterfallDocumentForm({
       id: contract.id,
       licenseeName: licensee?.name,
       licenseeRole: licensee?.roles,
@@ -98,6 +98,7 @@ export class ContractsFormComponent implements OnInit {
       file: file,
     });
     this.creating = true;
+    this.documentForm.markAsPristine();
   }
 
   async save() {
@@ -106,27 +107,27 @@ export class ContractsFormComponent implements OnInit {
     // Seller create/update
     let sellerId: string;
     const { rightholders } = this.waterfall;
-    const existingSeller = rightholders.find(r => r.name === this.contractForm.controls.licensorName.value);
+    const existingSeller = rightholders.find(r => r.name === this.documentForm.controls.licensorName.value);
     if (existingSeller) {
       sellerId = existingSeller.id;
-      existingSeller.roles = this.contractForm.controls.licensorRole.value; // update roles
+      existingSeller.roles = this.documentForm.controls.licensorRole.value; // update roles
     } else {
       sellerId = this.waterfallService.createId();
       rightholders.push({
         id: sellerId,
-        name: this.contractForm.controls.licensorName.value,
-        roles: this.contractForm.controls.licensorRole.value,
+        name: this.documentForm.controls.licensorName.value,
+        roles: this.documentForm.controls.licensorRole.value,
       });
     }
 
     // Buyer create/update
     let buyerId: string;
-    const existingBuyer = rightholders.find(r => r.name === this.contractForm.controls.licenseeName.value);
+    const existingBuyer = rightholders.find(r => r.name === this.documentForm.controls.licenseeName.value);
     if (!existingBuyer) {
       buyerId = this.waterfallService.createId();
       rightholders.push({
         id: buyerId,
-        name: this.contractForm.controls.licenseeName.value,
+        name: this.documentForm.controls.licenseeName.value,
         roles: [this.selected],
       });
     } else {
@@ -137,24 +138,24 @@ export class ContractsFormComponent implements OnInit {
     await this.waterfallService.update({ id: this.movieId, rightholders });
 
     const document = createWaterfallDocument<WaterfallContract>({
-      id: this.contractForm.controls.file.controls.id.value,
+      id: this.documentForm.controls.file.controls.id.value,
       type: 'contract',
       waterfallId: this.movieId,
-      signatureDate: this.contractForm.controls.signatureDate.value,
+      signatureDate: this.documentForm.controls.signatureDate.value,
       meta: createContract({
         type: 'mandate',
         status: 'accepted',
         buyerId, // licensee
         sellerId, // licensor
         duration: {
-          from: this.contractForm.controls.startDate.value,
-          to: this.contractForm.controls.endDate.value,
+          from: this.documentForm.controls.startDate.value,
+          to: this.documentForm.controls.endDate.value,
         },
-        price: this.contractForm.controls.price.value,
+        price: this.documentForm.controls.price.value,
       }),
     });
 
-    const terms = (this.contractForm.controls.terms.value ?? []).map(term => createTerm({
+    const terms = (this.documentForm.controls.terms.value ?? []).map(term => createTerm({
       ...term,
       id: term.id || this.termsService.createId(),
       contractId: document.id,
@@ -168,6 +169,7 @@ export class ContractsFormComponent implements OnInit {
     ]);
 
     this.uploaderService.upload();
+    this.documentForm.markAsPristine();
   }
 }
 

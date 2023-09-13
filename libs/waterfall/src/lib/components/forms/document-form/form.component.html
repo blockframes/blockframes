@@ -26,8 +26,8 @@
     <mat-label>Signature Date</mat-label>
     <time-picker [formControl]="form.get('signatureDate')" allDay></time-picker>
   </mat-form-field>
-  <mat-slide-toggle color="primary" (change)="toggleStartDate($event)">Start Date is not the same as Signature Date</mat-slide-toggle>
-  <ng-container *ngIf="showStartDate$ | async">
+  <mat-slide-toggle color="primary" (change)="toggleStartDate($event)" [checked]="(hideStartDate$ | async)">Start Date is the same as Signature Date</mat-slide-toggle>
+  <ng-container *ngIf="(hideStartDate$ | async) === false">
     <mat-form-field fxFlex appearance="outline">
       <mat-label>Start Date</mat-label>
       <time-picker [formControl]="form.get('startDate')" allDay></time-picker>
@@ -59,6 +59,7 @@
 
 <mat-form-field appearance="outline">
   <mat-label>Investment / Minimum Guaranteed</mat-label>
+  <mat-icon svgIcon="EUR" matSuffix></mat-icon>
   <input matInput type="number" placeholder="€" [formControl]="form.get('price')" required />
   <mat-error>This field is mandatory</mat-error>
 </mat-form-field>

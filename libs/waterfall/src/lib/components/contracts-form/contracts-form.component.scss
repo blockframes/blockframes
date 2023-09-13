@@ -30,28 +30,35 @@ section {
 
       li {
         display: flex;
-        padding-left: 24px;
+        padding: 14px 24px;
         align-items: center;
         justify-content: space-between;
         border: solid 1px var(--foreground-divider);
         border-top: none;
 
+        p {
+          margin: 0;
+        }
+        p.role {
+          font-weight: 600;
+        }
+        p.action {
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+        }
+
         &:hover, &.selected {
           cursor: pointer;
           background-color: var(--dashboard-cta);
 
-          button {
+          p.action {
             color: var(--primary);
   
             mat-icon {
               color: var(--primary);
             }
           }
-        }
-
-        p {
-          margin: 0;
-          font-weight: 600;
         }
       }
     }

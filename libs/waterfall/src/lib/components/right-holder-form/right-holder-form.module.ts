@@ -12,6 +12,7 @@ import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/s
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
@@ -27,6 +28,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatIconModule,
     MatInputModule,
     MatButtonModule,
+    MatTooltipModule,
     MatFormFieldModule,
 
   ],

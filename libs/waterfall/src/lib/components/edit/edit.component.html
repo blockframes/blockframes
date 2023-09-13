@@ -63,7 +63,7 @@
     <mat-step>
       <ng-template matStepLabel>Add Contracts</ng-template>
       <ng-template matStepContent>
-        <waterfall-contracts-form [movieId]="movieId" (skip)="skip()"></waterfall-contracts-form>
+        <waterfall-contracts-form [movieId]="movieId" [documentForm]="documentForm" (skip)="skip()"></waterfall-contracts-form>
         <section>
           <ng-container *ngIf="updating$ | async; else editContracts">
             <logo-spinner></logo-spinner>

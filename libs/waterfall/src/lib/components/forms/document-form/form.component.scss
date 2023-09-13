@@ -28,7 +28,8 @@
 
     hr {
       flex-grow: 1;
-      color: var(--primary);
+      color: transparent;
+      background-color: var(--primary);
     }
     p.mat-caption {
       margin: 0;

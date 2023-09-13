@@ -13,9 +13,13 @@
   <article>
     <ul>
       <li *ngFor="let item of contracts$ | async | keyvalue" (click)="select(item.key)" [ngClass]="{'selected': item.key === selected}">
-        <p>{{item.key | toLabel: 'rightholderRoles'}}</p>
-        <button mat-button>
-          <ng-container *ngIf="item.key !== selected; else isSelected">
+        <p class="role">{{item.key | toLabel: 'rightholderRoles'}}</p>
+        <p class="action">
+          <ng-container *ngIf="item.key === selected && creating; else notCreating">
+            <span>Adding contract...</span>
+          </ng-container>
+
+          <ng-template #notCreating>
             <ng-container *ngIf="item.value.length > 0; else noContracts">
               <span>{{item.value.length}} contract{{item.value.length > 1 ? 's' : ''}}</span>
             </ng-container>
@@ -23,26 +27,9 @@
               <mat-icon svgIcon="add"></mat-icon>
               <span>Add Contract</span>
             </ng-template>
-            
-          </ng-container>
-          <ng-template #isSelected>
-            <span>Adding contract...</span>
           </ng-template>
-        </button>
+        </p>
       </li>
-      <!-- TODO -->
-      <!-- <li (click)="select('other')" [ngClass]="{'selected': 'other' === selected}">
-        <p>Other</p>
-        <button mat-button>
-          <ng-container *ngIf="'other' !== selected; else isSelected">
-            <mat-icon svgIcon="add"></mat-icon>
-            <span>Add Contract</span>
-          </ng-container>
-          <ng-template #isSelected>
-            <span>Adding contract...</span>
-          </ng-template>
-        </button>
-      </li> -->
     </ul>
     <bf-card-modal>
 
@@ -83,7 +70,7 @@
           </div>
         </ng-container>
         <ng-template #creatingContracts>
-          <waterfall-document-form [waterfall]="waterfall" [form]="contractForm"></waterfall-document-form>
+          <waterfall-document-form [waterfall]="waterfall" [form]="documentForm"></waterfall-document-form>
         </ng-template>
       </ng-container>
       <ng-template #notSelected>

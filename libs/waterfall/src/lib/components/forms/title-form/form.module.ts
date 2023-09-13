@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 // Blockframes
@@ -32,6 +33,7 @@ import { TitleFormComponent } from './form.component';
     MatInputModule,
     MatButtonModule,
     MatDividerModule,
+    MatTooltipModule,
     MatFormFieldModule,
   ],
 })
