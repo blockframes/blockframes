@@ -234,7 +234,7 @@
           <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', document.id]" (click)="$event.stopPropagation()">
             <mat-icon svgIcon="launch"></mat-icon>
           </a>
-          <button mat-icon-button (click)="removeDocuments([document])">
+          <button mat-icon-button (click)="removeDocuments([document]); $event.stopPropagation()">
             <mat-icon svgIcon="delete" matTooltip="Delete document"></mat-icon>
           </button>
         </ng-template>
@@ -277,7 +277,7 @@
           <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', contract.id]" (click)="$event.stopPropagation()">
             <mat-icon svgIcon="launch"></mat-icon>
           </a>
-          <button mat-icon-button (click)="removeDocuments([contract])">
+          <button mat-icon-button (click)="removeDocuments([contract]);$event.stopPropagation()">
             <mat-icon svgIcon="delete" matTooltip="Delete contract"></mat-icon>
           </button>
         </ng-template>
