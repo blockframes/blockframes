@@ -54,16 +54,16 @@ export class WaterfallStatementComponent implements OnInit {
     const waterfallId = this.route.snapshot.paramMap.get('waterfallId');
     const statementId = this.route.snapshot.paramMap.get('statementId');
 
-    const [movie, waterfall] = await Promise.all([
+    const [movie, waterfall, statement] = await Promise.all([
       this.movieService.getValue(waterfallId),
       this.waterfallService.getValue(waterfallId),
+      this.statementService.getValue(statementId, { waterfallId })
     ]);
 
     this.movie = movie;
     this.waterfall = waterfall;
 
-    const statements = this.statementService.fixtures(this.waterfall.id);
-    this.statement = statements.find(s => s.id === statementId);
+    this.statement = statement;
 
     this.incomes = await this.incomeService.getValue(this.statement.incomes.map(i => i.incomeId));
     this.expenses = await this.expenseService.getValue(this.statement.expenseIds);

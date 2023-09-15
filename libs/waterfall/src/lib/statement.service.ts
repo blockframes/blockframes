@@ -103,6 +103,7 @@ export class StatementService extends BlockframesSubCollection<Statement> {
       }
     });
 
-    return [statement];
+    const statements = [statement];
+    return this.add(statements, { params: { waterfallId } });
   }
 }
