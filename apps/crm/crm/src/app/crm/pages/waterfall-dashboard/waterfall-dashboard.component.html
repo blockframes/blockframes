@@ -11,7 +11,7 @@
   <section>
     <mat-form-field appearance="fill">
       <mat-label>Blocks</mat-label>
-      <mat-select (selectionChange)="selectBlock($event.value)">
+      <mat-select (selectionChange)="selectBlock($event.value)" [(value)]="currentBlock">
         <mat-option *ngFor="let block of blocks" [value]="block.id">
           {{ block.name }}
         </mat-option>
@@ -27,11 +27,16 @@
     <ng-template colRef="value.id" label="Right Holder" let-id sort>
       {{ getRightholderName(id) }}
     </ng-template>
-    <ng-template colRef="value.revenu" label="Revenue" let-revenu sort>
-      <price-per-currency [price]="getPrice(revenu)"></price-per-currency>
+    <ng-template colRef="value.revenu" label="Calculated Revenue" let-revenu sort>
+      <price-per-currency [price]="getPrice(revenu.calculated)"></price-per-currency>
+    </ng-template>
+    <ng-template colRef="value.revenu" label="Actual Revenue" let-revenu sort>
+      <strong>
+        <price-per-currency [price]="getPrice(revenu.actual)"></price-per-currency>
+      </strong>
     </ng-template>
     <ng-template colRef="value.turnover" label="Turnover" let-turnover sort>
-      <price-per-currency [price]="getPrice(turnover)"></price-per-currency>
+      <price-per-currency [price]="getPrice(turnover.actual)"></price-per-currency>
     </ng-template>
   </bf-table>
 

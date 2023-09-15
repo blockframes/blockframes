@@ -9,7 +9,7 @@ import {
   PricePerCurrency,
   Version,
   Waterfall,
-  mainCurrency
+  mainCurrency,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { BlockService } from '@blockframes/waterfall/block.service';
@@ -29,6 +29,7 @@ export class WaterfallDashboardComponent implements OnInit {
   public history: History[];
 
   public currentState: History;
+  public currentBlock: string;
 
   constructor(
     private movieService: MovieService,
@@ -51,12 +52,12 @@ export class WaterfallDashboardComponent implements OnInit {
 
     this.snackBar.open('Waterfall is loading. Please wait', 'close', { duration: 5000 });
     const data = await this.waterfallService.buildWaterfall({ waterfallId, versionId });
-    console.log(data); // TODO #9493 remove
     this.history = data.waterfall.history;
     this.version = data.version;
     this.blocks = await this.blockService.getValue(this.version.blockIds, { waterfallId });
+    this.currentBlock = this.blocks[this.blocks.length - 1].id;
+    this.selectBlock(this.currentBlock);
 
-    this.cdRef.markForCheck();
     this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
 
     this.cdRef.markForCheck();

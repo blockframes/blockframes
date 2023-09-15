@@ -18,7 +18,7 @@ export function assertNode(state: TitleState, id: string): asserts id {
   if (!nodeExists(state, id)) throw new Error(`Right or group with id "${id}" does not exist.`);
 }
 
-export function getNodeType(state: TitleState, id: string) {
+function getNodeType(state: TitleState, id: string) {
   if (state.sources[id]) return 'source'; // Source will also be referenced in "rights". Used for categorization
   if (state.rights[id]) return 'right';
   if (state.horizontals[id]) return 'horizontal';
