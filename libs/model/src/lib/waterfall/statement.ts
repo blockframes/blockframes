@@ -9,11 +9,11 @@ interface IncomeStatement {
 
 export interface Payment {
   id: string;
-  type: 'external' | 'internal';
+  type: 'external' | 'internal'; // TODO #9493 create type 
   price: number;
   currency: MovieCurrency;
   date: Date;
-  status: 'pending' | 'processed';
+  status: 'pending' | 'processed'; // TODO #9493 create type  (same as Income interface)
   to: string;
 }
 
@@ -37,13 +37,12 @@ interface InternalPayment extends Payment {
 
 export interface Statement {
   _meta?: DocumentMeta;
+  type: 'producer' | 'distributor'; // TODO #9493 create type like "ContractType"
   id: string;
   waterfallId: string;
   rightholderId: string;
   duration: Duration;
   contractId: string; // rightholderId is licensee of this contract
-  incomes: IncomeStatement[];
-  expenseIds: string[];
   payments: {
     external?: ExternalPayment,
     internal: InternalPayment[]
@@ -54,16 +53,23 @@ export interface Statement {
   }
 }
 
-export type DistributorStatement = Statement;
+export interface DistributorStatement extends Statement {
+  type: 'distributor'
+  incomes: IncomeStatement[];
+  expenseIds: string[];
+}
 
-export function createStatement(params: Partial<DistributorStatement> = {}): DistributorStatement {
+export interface ProducerStatement extends Statement {
+  type: 'producer'
+}
+
+function createStatementBase(params: Partial<Statement> = {}): Statement {
   return {
     id: '',
+    type: 'producer',
     waterfallId: '',
     rightholderId: '',
     contractId: '',
-    incomes: [],
-    expenseIds: [],
     payments: {
       internal: []
     },
@@ -73,6 +79,33 @@ export function createStatement(params: Partial<DistributorStatement> = {}): Dis
   };
 }
 
+export function createStatement(params: Partial<Statement>) {
+  if (isDistributorStatement(params)) return createDistributorStatement(params);
+  if (isProducerStatement(params)) return createProducerStatement(params);
+}
+
+export function isDistributorStatement(statement: Partial<Statement>): statement is DistributorStatement {
+  return statement.type === 'distributor';
+}
+
+export function isProducerStatement(statement: Partial<Statement>): statement is ProducerStatement {
+  return statement.type === 'producer';
+}
+
 export function createDistributorStatement(params: Partial<DistributorStatement> = {}): DistributorStatement {
-  return createStatement(params);
+  const statement = createStatementBase(params);
+  return {
+    ...statement,
+    type: 'distributor',
+    incomes: params.incomes || [],
+    expenseIds: params.expenseIds || [],
+  }
+}
+
+export function createProducerStatement(params: Partial<ProducerStatement> = {}): ProducerStatement {
+  const statement = createStatementBase(params);
+  return {
+    ...statement,
+    type: 'producer',
+  }
 }

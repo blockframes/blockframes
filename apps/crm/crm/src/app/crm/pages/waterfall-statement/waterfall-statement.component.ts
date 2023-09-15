@@ -14,7 +14,8 @@ import {
   getAssociatedSource,
   Payment,
   History,
-  mainCurrency
+  mainCurrency,
+  isDistributorStatement
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { RightService } from '@blockframes/waterfall/right.service';
@@ -64,12 +65,13 @@ export class WaterfallStatementComponent implements OnInit {
     this.waterfall = waterfall;
 
     this.statement = statement;
+    if (isDistributorStatement(this.statement)) {
+      this.incomes = await this.incomeService.getValue(this.statement.incomes.map(i => i.incomeId));
+      this.expenses = await this.expenseService.getValue(this.statement.expenseIds);
 
-    this.incomes = await this.incomeService.getValue(this.statement.incomes.map(i => i.incomeId));
-    this.expenses = await this.expenseService.getValue(this.statement.expenseIds);
-
-    const rightIds = Array.from(new Set(this.statement.incomes.map(i => Object.values(i.rights)).flat()));
-    this.rights = await this.rightService.getValue(rightIds, { waterfallId });
+      const rightIds = Array.from(new Set(this.statement.incomes.map(i => Object.values(i.rights)).flat()));
+      this.rights = await this.rightService.getValue(rightIds, { waterfallId });
+    }
 
     this.currentVersion = this.waterfall.versions[0].id;
     await this.setVersion(this.currentVersion);
@@ -108,8 +110,10 @@ export class WaterfallStatementComponent implements OnInit {
   }
 
   public getAssociatedIncomeIds(rightId: string) {
-    const incomeIds = this.statement.incomes.filter(i => Object.values(i.rights).includes(rightId)).map(i => i.incomeId);
-    return incomeIds.join(' , ');
+    if (isDistributorStatement(this.statement)) {
+      const incomeIds = this.statement.incomes.filter(i => Object.values(i.rights).includes(rightId)).map(i => i.incomeId);
+      return incomeIds.join(' , ');
+    }
   }
 
   public getInternalPayment(rightId: string) {

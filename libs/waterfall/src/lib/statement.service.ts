@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
 import { DocumentSnapshot } from '@firebase/firestore';
-import { Statement, createDistributorStatement, createStatement } from '@blockframes/model';
+import {
+  DistributorStatement,
+  ProducerStatement,
+  createDistributorStatement,
+  createProducerStatement,
+  createStatement
+} from '@blockframes/model';
 import { BlockframesSubCollection } from '@blockframes/utils/abstract-service';
 
 @Injectable({ providedIn: 'root' })
-export class StatementService extends BlockframesSubCollection<Statement> {
+export class StatementService extends BlockframesSubCollection<ProducerStatement | DistributorStatement> {
   readonly path = 'waterfall/:waterfallId/statements';
 
-  protected override fromFirestore(snapshot: DocumentSnapshot<Statement>) {
+  protected override fromFirestore(snapshot: DocumentSnapshot<ProducerStatement | DistributorStatement>) {
     if (!snapshot.exists()) return undefined;
     const statement = super.fromFirestore(snapshot);
     return createStatement(statement);
@@ -15,7 +21,7 @@ export class StatementService extends BlockframesSubCollection<Statement> {
 
   fixtures(waterfallId: string) {
     // Test Fixtures:
-    const statement = createDistributorStatement({
+    const statement_1 = createDistributorStatement({
       id: 'statement_1',
       waterfallId,
       rightholderId: 'bummjvVnBZfzI9G1Too2', // playtime
@@ -103,7 +109,7 @@ export class StatementService extends BlockframesSubCollection<Statement> {
       }
     });
 
-    const statements = [statement];
-    return this.add(statements, { params: { waterfallId } });
+    const statements = [statement_1];
+    return this.add<DistributorStatement>(statements, { params: { waterfallId } });
   }
 }

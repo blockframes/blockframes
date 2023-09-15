@@ -23,7 +23,7 @@ import { getContractAndAmendments, getCurrentContract, getDeclaredAmount } from 
 import { convertCurrenciesTo, sortByDate } from '../utils';
 import { MovieCurrency } from '../static';
 import { Right } from './right';
-import { DistributorStatement } from './statement';
+import { Statement } from './statement';
 
 const actions = {
   /**
@@ -347,7 +347,7 @@ export function expensesToActions(contracts: WaterfallContract[], expenses: Expe
   return actions;
 }
 
-export function statementsToActions(statements: DistributorStatement[]) {
+export function statementsToActions(statements: Statement[]) {
   const payments: PaymentAction[] = [];
 
   for (const statement of statements) {
