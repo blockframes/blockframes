@@ -15,7 +15,9 @@ import {
   Payment,
   History,
   mainCurrency,
-  isDistributorStatement
+  isDistributorStatement,
+  isProducerStatement,
+  isFinancierStatement
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { RightService } from '@blockframes/waterfall/right.service';
@@ -71,6 +73,9 @@ export class WaterfallStatementComponent implements OnInit {
 
       const rightIds = Array.from(new Set(this.statement.incomes.map(i => Object.values(i.rights)).flat()));
       this.rights = await this.rightService.getValue(rightIds, { waterfallId });
+    } else if (isProducerStatement(this.statement) || isFinancierStatement(this.statement)) {
+      const rightIds = Array.from(new Set(this.statement.payments.internal.map(i => i.to)));
+      this.rights = await this.rightService.getValue(rightIds, { waterfallId });
     }
 
     this.currentVersion = this.waterfall.versions[0].id;
@@ -78,7 +83,11 @@ export class WaterfallStatementComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  // TODO Créer une méthode de parcours du waterfall pour aller d'un right => la ou ses sources d'income
+  public isDistributorStatement() {
+    return isDistributorStatement(this.statement);
+  }
+
+  // TODO #9493 Créer une méthode de parcours du waterfall pour aller d'un right => la ou ses sources d'income
   // find rights by orgId (and contractId) => pour chaque right, on remonte l'arbre pour trouver le ou les incomes associés
   // pour générer: 
   /**
@@ -92,6 +101,8 @@ export class WaterfallStatementComponent implements OnInit {
     pour dire pourquoi, pour un tel income, j'ai ce montant pour ce droit : montrer historique de ce qui a été pris au dessus par les autres orgs
    */
 
+  // TODO #9493 faire exemple de statement avec des groupes vertical
+
   public toPricePerCurrency(item: Income | Expense | Payment): PricePerCurrency {
     return { [item.currency]: item.price };
   }
@@ -99,6 +110,10 @@ export class WaterfallStatementComponent implements OnInit {
   public getRightholderName(id: string) {
     if (!id) return '--';
     return this.waterfall.rightholders.find(r => r.id === id)?.name || '--';
+  }
+
+  public getRightholderActual(type: 'revenu' | 'turnover') {
+    return { [mainCurrency]: this.currentHistory.orgs[this.statement.rightholderId][type].actual };
   }
 
   public getAssociatedSource(income: Income) {
@@ -113,6 +128,9 @@ export class WaterfallStatementComponent implements OnInit {
     if (isDistributorStatement(this.statement)) {
       const incomeIds = this.statement.incomes.filter(i => Object.values(i.rights).includes(rightId)).map(i => i.incomeId);
       return incomeIds.join(' , ');
+    } else {
+      // TODO #9493
+      return 'TODO';
     }
   }
 
@@ -136,7 +154,7 @@ export class WaterfallStatementComponent implements OnInit {
     const currentCalculatedRevenue = this.currentHistory.rights[rightId].revenu.calculated;
     if (this.previousHistory && !cumulated) {
       const previousCalculatedRevenue = this.previousHistory.rights[rightId].revenu.calculated;
-      return { [mainCurrency]: currentCalculatedRevenue - previousCalculatedRevenue };
+      return { [mainCurrency]: currentCalculatedRevenue - previousCalculatedRevenue || currentCalculatedRevenue };
     } else {
       return { [mainCurrency]: currentCalculatedRevenue };
     }

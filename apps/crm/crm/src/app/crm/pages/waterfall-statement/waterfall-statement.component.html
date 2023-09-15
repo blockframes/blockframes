@@ -24,41 +24,48 @@
       <li><strong>Rightholder :</strong> {{ getRightholderName(statement.rightholderId) }}</li>
       <li><strong>From :</strong> {{  statement.duration.from | date: 'MM/dd/yyyy' }}</li>
       <li><strong>To :</strong> {{  statement.duration.to | date: 'MM/dd/yyyy' }}</li>
+      <li><strong>Turnover :</strong> <price-per-currency [price]="getRightholderActual('turnover')"></price-per-currency></li>
+      <li><strong>Revenue :</strong> <price-per-currency [price]="getRightholderActual('revenu')"></price-per-currency></li>
     </ul>
   </section>
 
-  <h3>Incomes</h3>
-  <bf-table [source]="incomes" clickable useFilter pagination="50">
-    <ng-template colRef="id" label="Id" let-id sort>
-      {{ id }}
-    </ng-template>
-    <ng-template colRef="" label="Source" let-item sort>
-      {{ getAssociatedSource(item) }}
-    </ng-template>
-    <ng-template colRef="" label="Price" let-item sort>
-      <ng-container *ngIf="toPricePerCurrency(item) as amount">
-        <price-per-currency [price]="amount"></price-per-currency>
-      </ng-container>
-    </ng-template>
-  </bf-table>
+  <ng-container *ngIf="isDistributorStatement()">
+    <h3>Incomes</h3>
+    <bf-table [source]="incomes" clickable useFilter pagination="50">
+      <ng-template colRef="id" label="Id" let-id sort>
+        {{ id }}
+      </ng-template>
+      <ng-template colRef="" label="Source" let-item sort>
+        {{ getAssociatedSource(item) }}
+      </ng-template>
+      <ng-template colRef="" label="Price" let-item sort>
+        <ng-container *ngIf="toPricePerCurrency(item) as amount">
+          <price-per-currency [price]="amount"></price-per-currency>
+        </ng-container>
+      </ng-template>
+    </bf-table>
+  
+    <ng-container *ngIf="expenses.length">
+      <h3>Expenses</h3>
+      <bf-table [source]="expenses" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="category" label="Category" let-category sort>
+          {{ category }}
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type }}
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="toPricePerCurrency(item) as amount">
+            <price-per-currency [price]="amount"></price-per-currency>
+          </ng-container>
+        </ng-template>
+      </bf-table>
+    </ng-container>
 
-  <h3>Expenses</h3>
-  <bf-table [source]="expenses" clickable useFilter pagination="50">
-    <ng-template colRef="id" label="Id" let-id sort>
-      {{ id }}
-    </ng-template>
-    <ng-template colRef="category" label="Category" let-category sort>
-      {{ category }}
-    </ng-template>
-    <ng-template colRef="type" label="Type" let-type sort>
-      {{ type }}
-    </ng-template>
-    <ng-template colRef="" label="Price" let-item sort>
-      <ng-container *ngIf="toPricePerCurrency(item) as amount">
-        <price-per-currency [price]="amount"></price-per-currency>
-      </ng-container>
-    </ng-template>
-  </bf-table>
+  </ng-container>
 
   <h3>Rights</h3>
   <bf-table [source]="rights" clickable useFilter pagination="50">
@@ -90,10 +97,11 @@
     </ng-template>
   </bf-table>
 
-  <h3>Payment</h3>
-  <ul>
-    <li><strong>To :</strong> {{ getRightholderName(statement.payments.external.to) }}</li>
-    <li><strong>Amount :</strong><price-per-currency [price]="toPricePerCurrency(statement.payments.external)"></price-per-currency></li>
-  </ul>
-
+  <ng-container *ngIf="statement.payments.external">
+    <h3>Payment</h3>
+    <ul>
+      <li><strong>To :</strong> {{ getRightholderName(statement.payments.external.to) }}</li>
+      <li><strong>Amount :</strong><price-per-currency [price]="toPricePerCurrency(statement.payments.external)"></price-per-currency></li>
+    </ul>
+  </ng-container>
 </ng-container>

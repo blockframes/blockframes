@@ -16,7 +16,7 @@ export interface RightState extends NodeState {
   pools: string[]
 }
 
-interface GroupState extends NodeState {
+export interface GroupState extends NodeState {
   children: string[];
 }
 
@@ -145,10 +145,25 @@ export const createOrg = (org: Partial<OrgState>): OrgState => ({
 });
 
 export interface PoolState {
-  revenu: number; // TODO #9493 AmountState ?
-  turnover: number; // TODO #9493 AmountState ?
+  id: string;
+  revenu: AmountState;
+  turnover: AmountState;
   shadowRevenu: number;
 }
+
+export const createPoolState = (pool: Partial<PoolState>): PoolState => ({
+  id: '',
+  turnover: {
+    calculated: 0,
+    actual: 0
+  },
+  revenu: {
+    calculated: 0,
+    actual: 0
+  },
+  shadowRevenu: 0,
+  ...pool
+});
 
 export interface IncomeState {
   id: string;

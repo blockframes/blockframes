@@ -37,6 +37,12 @@
               </li>
             </ul>
           </ng-container>
+          <ng-container *ngSwitchCase="'from'">
+            <strong>{{ item.key }}:</strong> {{ item.value | json }}
+          </ng-container>
+          <ng-container *ngSwitchCase="'to'">
+            <strong>{{ item.key }}:</strong> {{ item.value | json }}
+          </ng-container>
           <ng-container *ngSwitchDefault>
             <strong>{{ item.key }}:</strong> {{ item.value  }}
           </ng-container>

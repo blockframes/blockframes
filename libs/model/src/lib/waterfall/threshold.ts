@@ -191,7 +191,7 @@ const incomeConditions: AllIncomeConditions = {
     const { pool, target } = condition;
     if (!incomeState.pools[pool]) return Infinity;
     const revenuRate = incomeState.pools[pool].revenuRate;
-    const current = state.pools[pool]?.revenu ?? 0;
+    const current = state.pools[pool]?.revenu.calculated ?? 0;
     const value = toTargetValue(state, target);
     if (current >= value) return Infinity;
     return (value - current) / revenuRate;
@@ -209,7 +209,7 @@ const incomeConditions: AllIncomeConditions = {
     const { pool, target } = condition;
     if (!incomeState.pools[pool]) return Infinity;
     const turnoverRate = incomeState.pools[pool].turnoverRate;
-    const current = state.pools[pool]?.turnover ?? 0;
+    const current = state.pools[pool]?.turnover.calculated ?? 0;
     const value = toTargetValue(state, target);
     if (current >= value) return Infinity;
     return (value - current) / turnoverRate;

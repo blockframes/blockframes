@@ -233,8 +233,8 @@ export function toTargetValue(state: TitleState, target: TargetValue) {
     case 'orgs.expense': return state.orgs[id].expense * percent;
     case 'rights.revenu': return getNode(state, id).revenu.calculated * percent;
     case 'rights.turnover': return getNode(state, id).turnover.calculated * percent;
-    case 'pools.revenu': return state.pools[id].revenu * percent;
-    case 'pools.turnover': return state.pools[id].turnover * percent;
+    case 'pools.revenu': return state.pools[id].revenu.calculated * percent;
+    case 'pools.turnover': return state.pools[id].turnover.calculated * percent;
     case 'investment': return state.investment * percent;
     case 'expense': return (state.expense[id] ?? 0) * percent;
   }
@@ -271,7 +271,7 @@ interface PoolCondition {
 function poolRevenu(ctx: ConditionContext, payload: PoolCondition) {
   const { state } = ctx;
   const { target, operator, pool } = payload;
-  const currentValue = state.pools[pool]?.revenu ?? 0;
+  const currentValue = state.pools[pool]?.revenu.calculated ?? 0;
   const targetValue = toTargetValue(state, target);
   return numericOperator(operator, currentValue, targetValue);
 }
@@ -287,7 +287,7 @@ function poolShadowRevenu(ctx: ConditionContext, payload: PoolCondition) {
 function poolTurnover(ctx: ConditionContext, payload: PoolCondition) {
   const { state } = ctx;
   const { target, operator, pool } = payload;
-  const currentValue = state.pools[pool]?.turnover ?? 0;
+  const currentValue = state.pools[pool]?.turnover.calculated ?? 0;
   const targetValue = toTargetValue(state, target);
   return numericOperator(operator, currentValue, targetValue);
 }

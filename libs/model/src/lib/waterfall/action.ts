@@ -12,15 +12,16 @@ import {
   Operation,
   createBonus,
   createSourceState,
+  createPoolState,
 } from './state';
 import { getMinThreshold } from './threshold';
-import { assertNode, getNode, getNodeOrg, updateNode } from './node';
+import { assertNode, getChildRights, getGroup, getNode, getNodeOrg, isGroupChild, isRight, updateNode } from './node';
 import { WaterfallContract, WaterfallSource, getAssociatedSource } from './waterfall';
 import { Income } from '../income';
 import { Expense } from '../expense';
 import { Term } from '../terms';
 import { getContractAndAmendments, getCurrentContract, getDeclaredAmount } from '../contract';
-import { convertCurrenciesTo, sortByDate } from '../utils';
+import { convertCurrenciesTo, sortByDate, sum } from '../utils';
 import { MovieCurrency } from '../static';
 import { Right } from './right';
 import { Statement } from './statement';
@@ -367,7 +368,7 @@ export function statementsToActions(statements: Statement[]) {
       });
     }
 
-    if (statement.payments.external.status === 'processed') {
+    if (statement.payments.external?.status === 'processed') {
       payments.push({
         id: statement.payments.external.id,
         amount: convertCurrenciesTo({ [statement.payments.external.currency]: statement.payments.external.price }, mainCurrency)[mainCurrency],
@@ -411,7 +412,7 @@ function append(state: TitleState, payload: AppendRight) {
   state.rights[right.id] = right;
   state.orgs[right.orgId] ||= createOrg({ id: right.orgId });
   for (const pool of right.pools) {
-    state.pools[pool] ||= { revenu: 0, turnover: 0, shadowRevenu: 0 };
+    state.pools[pool] ||= createPoolState({ id: pool });
   }
   return right.id;
 }
@@ -426,7 +427,7 @@ function prepend(state: TitleState, payload: PrependRight) {
   state.rights[right.id] = right;
   state.orgs[right.orgId] ||= createOrg({ id: right.orgId });
   for (const pool of right.pools) {
-    state.pools[pool] ||= { revenu: 0, turnover: 0, shadowRevenu: 0 };
+    state.pools[pool] ||= createPoolState({ id: pool });
   }
   return right.id;
 }
@@ -631,7 +632,7 @@ function createGroupChildren(state: TitleState, children: GroupChild[]) {
       state.rights[child.id] = createRightState(child);
       state.orgs[child.orgId] ||= createOrg({ id: child.orgId });
       for (const pool of child.pools || []) {
-        state.pools[pool] ||= { revenu: 0, turnover: 0, shadowRevenu: 0 };
+        state.pools[pool] ||= createPoolState({ id: pool });;
       }
     }
     if (child.type === 'horizontal') {
@@ -675,7 +676,7 @@ export interface PaymentAction extends BaseAction {
   amount: number;
   from: {
     org?: string;
-    right?: string;
+    source?: string;
   };
   to: {
     org?: string;
@@ -701,11 +702,11 @@ function income(state: TitleState, payload: IncomeAction) {
   // we increment actual revenu and actual turnover of this org.
   assertNode(state, payload.to);
   const orgState = getNodeOrg(state, payload.to);
-  const payment: PaymentAction = {
+  const sourcePayment: PaymentAction = {
     id: payload.id,
     amount: payload.amount,
     from: {
-      right: payload.from
+      source: payload.from
     },
     to: {
       org: orgState.id
@@ -713,12 +714,7 @@ function income(state: TitleState, payload: IncomeAction) {
     contractId: payload.contractId,
     date: payload.date
   };
-
-  orgState.revenu.actual += payment.amount;
-  orgState.turnover.actual += payment.amount;
-
-  // Logs the payment
-  state.payments[payment.id] = payment;
+  payment(state, sourcePayment);
 
   state.incomes[payload.id] = payload;
   const incomeId = payload.id;
@@ -750,9 +746,9 @@ function income(state: TitleState, payload: IncomeAction) {
     }
     for (const pool in pools) {
       if (!state.pools[pool]) throw new Error(`Pool "${pool}" doesn't exist`);
-      state.pools[pool].revenu += pools[pool].revenuRate * amount;
+      state.pools[pool].revenu.calculated += pools[pool].revenuRate * amount;
       state.pools[pool].shadowRevenu += pools[pool].shadowRevenuRate * amount;
-      state.pools[pool].turnover += pools[pool].turnoverRate * amount;
+      state.pools[pool].turnover.calculated += pools[pool].turnoverRate * amount;
     }
     for (const orgId in orgs) {
       if (!state.orgs[orgId]) throw new Error(`Org "${orgId}" doesn't exist`);
@@ -796,13 +792,40 @@ function payment(state: TitleState, payload: PaymentAction) {
     state.orgs[payload.from.org].revenu.actual -= payload.amount;
     state.orgs[payload.to.org].revenu.actual += payload.amount;
     state.orgs[payload.to.org].turnover.actual += payload.amount;
-  } else if (payload.from.org && payload.to.right) {// Internal payment for org to its own rights 
+  } else if (payload.from.org && payload.to.right) { // Internal payment for org to its own rights 
     assertNode(state, payload.to.right);
     const orgState = getNodeOrg(state, payload.to.right);
-    if (orgState.id !== payload.from.org) throw new Error(`Internal payments Error. Right "${payload.to.right}" does not belong to org "${payload.from.org}".`);
+    if (orgState.id !== payload.from.org) throw new Error(`Internal payment error. Right "${payload.to.right}" does not belong to org "${payload.from.org}".`);
     const nodeTo = getNode(state, payload.to.right);
-    nodeTo.revenu.actual += payload.amount;
-    nodeTo.turnover.actual += payload.amount;
+    if (!isRight(state, nodeTo)) throw new Error(`Internal payment error. "${payload.to.right}" can only be a right (not a group).`);
+    const actualRevenue = payload.amount;
+
+    const actualTurnover = isGroupChild(state, nodeTo.id) ?
+      payload.amount : // Inside group, childs turnover is same as revenue
+      payload.amount / nodeTo.percent;
+
+    // Rights
+    nodeTo.revenu.actual += actualRevenue;
+    nodeTo.turnover.actual += actualTurnover;
+
+    // Recalculate groups actual revenue & turnover
+    const group = getGroup(state, nodeTo.id);
+    if (group) {
+      const childs = getChildRights(state, group);
+      const childsActualdRevenue = sum(childs, c => c.revenu.actual);
+      group.revenu.actual = childsActualdRevenue;
+      group.turnover.actual = childsActualdRevenue; // For a group, turnover is sum of its childs revenue
+    }
+
+    // Pools
+    const pools = nodeTo.pools.map(poolId => state.pools[poolId]);
+    for (const pool of pools) {
+      pool.revenu.actual += actualRevenue;
+      pool.turnover.actual += actualTurnover;
+    }
+  } else if (payload.from.source && payload.to.org) { // Direct payment from source to org
+    state.orgs[payload.to.org].revenu.actual += payload.amount;
+    state.orgs[payload.to.org].turnover.actual += payload.amount;
   }
 
   // Logs the payment
