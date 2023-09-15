@@ -37,7 +37,7 @@ describe('Test standalone actions', () => {
       const { state } = waterfall('foo-title', actions);
       const { pools } = state;
 
-      expect(pools['seller-1-2'].revenu).toEqual(7_500);
+      expect(pools['seller-1-2'].revenu.calculated).toEqual(7_500);
     });
 
     it('with horizontal group', () => {
@@ -54,7 +54,7 @@ describe('Test standalone actions', () => {
       const { state } = waterfall('foo-title', actions);
       const { pools } = state;
 
-      expect(pools['seller-1-2'].revenu).toEqual(7_500);
+      expect(pools['seller-1-2'].revenu.calculated).toEqual(7_500);
     });
   });
 
@@ -69,7 +69,7 @@ describe('Test standalone actions', () => {
       const { state } = waterfall('foo-title', actions);
       const { pools } = state;
 
-      expect(pools['seller-1-2'].turnover).toEqual(10_000);
+      expect(pools['seller-1-2'].turnover.calculated).toEqual(10_000);
     });
 
     it('with horizontal group', () => {
@@ -86,7 +86,7 @@ describe('Test standalone actions', () => {
       const { state } = waterfall('foo-title', actions);
       const { pools } = state;
 
-      expect(pools['seller-1-2'].turnover).toEqual(10_000);
+      expect(pools['seller-1-2'].turnover.calculated).toEqual(10_000);
     });
   });
 
