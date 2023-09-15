@@ -23,6 +23,7 @@ import { getContractAndAmendments, getCurrentContract, getDeclaredAmount } from 
 import { convertCurrenciesTo, sortByDate } from '../utils';
 import { MovieCurrency } from '../static';
 import { Right } from './right';
+import { DistributorStatement } from './statement';
 
 const actions = {
   /**
@@ -346,18 +347,43 @@ export function expensesToActions(contracts: WaterfallContract[], expenses: Expe
   return actions;
 }
 
-// TODO #9493 typing
-export function paymentsToActions(payments: any[]) {
-  const actions: Action[] = [];
+export function statementsToActions(statements: DistributorStatement[]) {
+  const payments: PaymentAction[] = [];
 
-  for (const payment of payments) {
-    actions.push(action('payment', {
-      ...payment,
-      amount: convertCurrenciesTo(payment.amount, mainCurrency)[mainCurrency],
-    }));
+  for (const statement of statements) {
+    const internalPayments = statement.payments.internal.filter(p => p.status === 'processed');
+    for (const payment of internalPayments) {
+      payments.push({
+        id: payment.id,
+        amount: convertCurrenciesTo({ [payment.currency]: payment.price }, mainCurrency)[mainCurrency],
+        from: {
+          org: statement.rightholderId
+        },
+        to: {
+          right: payment.to
+        },
+        contractId: statement.contractId,
+        date: payment.date
+      });
+    }
+
+    if (statement.payments.external.status === 'processed') {
+      payments.push({
+        id: statement.payments.external.id,
+        amount: convertCurrenciesTo({ [statement.payments.external.currency]: statement.payments.external.price }, mainCurrency)[mainCurrency],
+        from: {
+          org: statement.rightholderId
+        },
+        to: {
+          org: statement.payments.external.to
+        },
+        contractId: statement.contractId,
+        date: statement.payments.external.date
+      });
+    }
   }
 
-  return actions;
+  return payments.map(p => action('payment', p));
 }
 
 /////////////
@@ -649,11 +675,11 @@ export interface PaymentAction extends BaseAction {
   amount: number;
   from: {
     org?: string;
-    right: string;
+    right?: string;
   };
   to: {
-    org: string;
-    right: string;
+    org?: string;
+    right?: string;
   };
   contractId: string;
   date: Date;
@@ -671,15 +697,10 @@ function income(state: TitleState, payload: IncomeAction) {
     }
   }
 
-  // Income is an actual payment to the first right (or groups) it hits, we increment actual revenu and actual turnover
+  // Income is an actual payment to the organization of the first right (or groups) it hits
+  // we increment actual revenu and actual turnover of this org.
   assertNode(state, payload.to);
-  const node = getNode(state, payload.to);
   const orgState = getNodeOrg(state, payload.to);
-  orgState.revenu.actual += payload.amount;
-  orgState.turnover.actual += payload.amount;
-  node.revenu.actual += payload.amount;
-  node.turnover.actual += payload.amount;
-
   const payment: PaymentAction = {
     id: payload.id,
     amount: payload.amount,
@@ -687,13 +708,16 @@ function income(state: TitleState, payload: IncomeAction) {
       right: payload.from
     },
     to: {
-      org: orgState.id,
-      right: payload.to
+      org: orgState.id
     },
     contractId: payload.contractId,
     date: payload.date
   };
 
+  orgState.revenu.actual += payment.amount;
+  orgState.turnover.actual += payment.amount;
+
+  // Logs the payment
   state.payments[payment.id] = payment;
 
   state.incomes[payload.id] = payload;
@@ -767,21 +791,20 @@ function income(state: TitleState, payload: IncomeAction) {
  */
 function payment(state: TitleState, payload: PaymentAction) {
 
-  state.orgs[payload.from.org].revenu.actual -= payload.amount;
-  state.orgs[payload.to.org].revenu.actual += payload.amount;
-  state.orgs[payload.to.org].turnover.actual += payload.amount;
-
-  if (payload.from.right) {
-    assertNode(state, payload.from.right);
-    const nodeFrom = getNode(state, payload.from.right);
-    nodeFrom.revenu.actual -= payload.amount;
-  }
-
-  if (payload.to.right) {
+  if (payload.from.org && payload.to.org) { // External payment from org to org
+    if (payload.amount > state.orgs[payload.from.org].revenu.actual) throw new Error(`Org "${payload.from.org}" have not enough actual revenue to proceed.`);
+    state.orgs[payload.from.org].revenu.actual -= payload.amount;
+    state.orgs[payload.to.org].revenu.actual += payload.amount;
+    state.orgs[payload.to.org].turnover.actual += payload.amount;
+  } else if (payload.from.org && payload.to.right) {// Internal payment for org to its own rights 
+    assertNode(state, payload.to.right);
+    const orgState = getNodeOrg(state, payload.to.right);
+    if (orgState.id !== payload.from.org) throw new Error(`Internal payments Error. Right "${payload.to.right}" does not belong to org "${payload.from.org}".`);
     const nodeTo = getNode(state, payload.to.right);
     nodeTo.revenu.actual += payload.amount;
     nodeTo.turnover.actual += payload.amount;
   }
 
+  // Logs the payment
   state.payments[payload.id] = payload;
 }

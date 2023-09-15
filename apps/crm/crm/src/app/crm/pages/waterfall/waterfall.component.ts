@@ -33,7 +33,9 @@ import {
   incomesToActions,
   expensesToActions,
   groupByDate,
-  ActionName
+  ActionName,
+  statementsToActions,
+  Statement,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
@@ -46,6 +48,7 @@ import { TermService } from '@blockframes/contract/term/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BlockService } from '@blockframes/waterfall/block.service';
 import { RightService } from '@blockframes/waterfall/right.service';
+import { StatementService } from '@blockframes/waterfall/statement.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -66,6 +69,7 @@ export class WaterfallComponent implements OnInit {
   public actions: (Action & { blockId: string })[] = [];
   public rightholders: WaterfallRightholder[] = [];
   public rights: Right[] = [];
+  public statements: Statement[] = [];
   public tree: { state: TitleState; history: History[] };
   private blocks: Block[] = [];
   private terms: Term[] = [];
@@ -80,6 +84,7 @@ export class WaterfallComponent implements OnInit {
     private termService: TermService,
     private blockService: BlockService,
     private rightService: RightService,
+    private statementService: StatementService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -93,14 +98,15 @@ export class WaterfallComponent implements OnInit {
 
   public async loadAll() {
     const waterfallId = this.route.snapshot.paramMap.get('waterfallId');
-    const [movie, waterfall, documents, blocks, rights, incomes, expenses] = await Promise.all([
+    const [movie, waterfall, documents, blocks, rights, incomes, expenses, statements] = await Promise.all([
       this.movieService.getValue(waterfallId),
       this.waterfallService.getValue(waterfallId),
       this.waterfalllDocumentService.getValue({ waterfallId }),
       this.blockService.getValue({ waterfallId }),
       this.rightService.getValue({ waterfallId }),
       this.incomeService.getValue([where('titleId', '==', waterfallId)]),
-      this.expenseService.getValue([where('titleId', '==', waterfallId)])
+      this.expenseService.getValue([where('titleId', '==', waterfallId)]),
+      this.statementService.fixtures(waterfallId)
     ]);
 
     this.movie = movie;
@@ -117,6 +123,7 @@ export class WaterfallComponent implements OnInit {
 
     this.incomes = incomes;
     this.expenses = expenses;
+    this.statements = statements;
 
     this.cdRef.markForCheck();
     this.canInitWaterfall$.next(this.canInitWaterfall());
@@ -299,12 +306,14 @@ export class WaterfallComponent implements OnInit {
     const rightActions = rightsToActions(this.rights);
     const incomeActions = incomesToActions(this.contracts, this.incomes, this.sources);
     const expenseActions = expensesToActions(this.contracts, this.expenses);
+    const paymentActions = statementsToActions(this.statements);
 
     const groupedActions = groupByDate([
       ...contractActions,
       ...rightActions,
       ...expenseActions, // Expenses should be added before incomes
-      ...incomeActions
+      ...incomeActions,
+      ...paymentActions
     ]);
 
     const blocks = await Promise.all(groupedActions.map(group => {
@@ -340,9 +349,11 @@ function getBlockName(date: Date, actions: Action[]) {
   const statementsActions: ActionName[] = ['expense', 'income'];
   const contractsActions: ActionName[] = ['contract', 'updateContract'];
   const rightsActions: ActionName[] = ['append', 'prepend', 'prependHorizontal', 'appendHorizontal', 'appendVertical', 'prependVertical'];
+  const paymentActions: ActionName[] = ['payment'];
 
   if (actionsNames.every(n => statementsActions.includes(n))) return `statements-${dateStr}`;
   if (actionsNames.every(n => contractsActions.includes(n))) return `contracts-${dateStr}`;
   if (actionsNames.every(n => rightsActions.includes(n))) return `rights-${dateStr}`;
+  if (actionsNames.every(n => paymentActions.includes(n))) return `payments-${dateStr}`;
   return `mixed-${dateStr}`;
 }

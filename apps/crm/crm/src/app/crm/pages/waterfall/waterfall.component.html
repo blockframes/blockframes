@@ -447,6 +447,32 @@
       </bf-table>
     </mat-tab>
 
+    <!-- STATEMENTS -->
+    <mat-tab label="Statements">
+      <bf-table [source]="statements" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="" label="Contract Id" let-item sort>
+          {{ getCurrentContract(item) }}
+        </ng-template>
+        <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
+          {{ getRightholderName(rightholderId) }}
+        </ng-template>
+        <ng-template colRef="duration.from" label="From" let-from sort defaultSort>
+          {{ from | date: 'dd/MM/yyyy' }}
+        </ng-template>
+        <ng-template colRef="duration.to" label="To" let-to sort defaultSort>
+          {{ to | date: 'dd/MM/yyyy' }}
+        </ng-template>
+        <ng-template colRef="id" label="Actions" let-statementId sticky>
+          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'statement', statementId]" (click)="$event.stopPropagation()">
+            <mat-icon svgIcon="launch" matTooltip="Go to statement"></mat-icon>
+          </a>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+
     <!-- WORLD MAP -->
     <mat-tab label="World Sales" #worldSales>
       <waterfall-sales-map *ngIf="worldSales.isActive" [waterfallId]="waterfall.id"></waterfall-sales-map>
