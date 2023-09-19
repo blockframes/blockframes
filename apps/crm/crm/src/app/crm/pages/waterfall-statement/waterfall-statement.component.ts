@@ -17,12 +17,14 @@ import {
   mainCurrency,
   isDistributorStatement,
   isProducerStatement,
-  isFinancierStatement
+  isFinancierStatement,
+  sortByDate
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { RightService } from '@blockframes/waterfall/right.service';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'crm-waterfall-statement',
@@ -34,12 +36,26 @@ export class WaterfallStatementComponent implements OnInit {
   public movie: Movie;
   public waterfall: Waterfall;
   public statement: Statement;
+  private statements: Statement[];
   public incomes: Income[];
   public expenses: Expense[];
   public rights: Right[];
   public currentVersion: string;
+
+  public histories: History[];
   public currentHistory: History;
   public previousHistory: History;
+
+  public options = {
+    xAxis: { categories: [] },
+    series: [],
+  }
+
+  public formatter = {
+    percent: {
+      formatter: (value: number) => `${value} €`,
+    }
+  };
 
   constructor(
     private movieService: MovieService,
@@ -78,8 +94,16 @@ export class WaterfallStatementComponent implements OnInit {
       this.rights = await this.rightService.getValue(rightIds, { waterfallId });
     }
 
+    const statements = await this.statementService.getValue([
+      where('contractId', '==', this.statement.contractId),
+      where('rightholderId', '==', this.statement.rightholderId),
+    ], { waterfallId });
+
+    this.statements = sortByDate(statements, 'duration.to');
+
     this.currentVersion = this.waterfall.versions[0].id;
     await this.setVersion(this.currentVersion);
+    this.buildGraph();
     this.cdRef.markForCheck();
   }
 
@@ -87,21 +111,6 @@ export class WaterfallStatementComponent implements OnInit {
     return isDistributorStatement(this.statement);
   }
 
-  // TODO #9493 Créer une méthode de parcours du waterfall pour aller d'un right => la ou ses sources d'income
-  // find rights by orgId (and contractId) => pour chaque right, on remonte l'arbre pour trouver le ou les incomes associés
-  // pour générer: 
-  /**
-   * rights: {
-          1 : 'playtime_com',
-          2 : 'playtime_expenses',
-          3 : 'playtime_mg'
-        }
-      
-    ET 
-    pour dire pourquoi, pour un tel income, j'ai ce montant pour ce droit : montrer historique de ce qui a été pris au dessus par les autres orgs
-   */
-
-  // TODO #9493 faire exemple de statement avec des groupes vertical
 
   public toPricePerCurrency(item: Income | Expense | Payment): PricePerCurrency {
     return { [item.currency]: item.price };
@@ -129,7 +138,6 @@ export class WaterfallStatementComponent implements OnInit {
       const incomeIds = this.statement.incomes.filter(i => Object.values(i.rights).includes(rightId)).map(i => i.incomeId);
       return incomeIds.join(' , ');
     } else {
-      // TODO #9493
       return 'TODO';
     }
   }
@@ -143,10 +151,10 @@ export class WaterfallStatementComponent implements OnInit {
     this.snackBar.open('Waterfall is loading. Please wait', 'close', { duration: 5000 });
     const data = await this.waterfallService.buildWaterfall({ waterfallId: this.waterfall.id, versionId });
 
-    const histories = data.waterfall.history.filter(h => new Date(h.date).getTime() <= this.statement.duration.to.getTime());
+    this.histories = data.waterfall.history.filter(h => new Date(h.date).getTime() <= this.statement.duration.to.getTime());
+    this.currentHistory = this.histories[this.histories.length - 1];
+    if (this.histories.length > 1) this.previousHistory = this.histories[this.histories.length - 2];
 
-    this.currentHistory = histories.pop();
-    this.previousHistory = histories.pop();
     this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
   }
 
@@ -159,6 +167,25 @@ export class WaterfallStatementComponent implements OnInit {
       return { [mainCurrency]: currentCalculatedRevenue };
     }
 
+  }
+
+  public buildGraph() {
+    const histories = this.statements.map(s =>
+      this.histories.find(h => new Date(h.date).getTime() === s.duration.to.getTime())
+    ).filter(h => !!h);
+
+    const categories = histories.map(h => new Date(h.date).toISOString().slice(0, 10));
+    const series = [
+      {
+        name: 'Revenue',
+        data: histories.map(h => h.orgs[this.statement.rightholderId].revenu.actual)
+      },
+      {
+        name: 'Turnover',
+        data: histories.map(h => h.orgs[this.statement.rightholderId].turnover.actual)
+      }
+    ];
+    this.options = { xAxis: { categories }, series };
   }
 
 }

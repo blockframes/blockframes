@@ -42,7 +42,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
           }
         },
         {
-          incomeId: 'tv_1', // TODO #9493 statement should create income from form values
+          incomeId: 'tv_1',
           rights: {
             1: 'playtime_com_tv',
             2: 'playtime_expenses_tv',
@@ -105,7 +105,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
           price: 4707.5,
           currency: 'EUR',
           date: new Date('2016-12-31'),
-          status: 'processed', // TODO #9493 should be pending, until licensor make a bill and ack the paiement, changing status to processed
+          status: 'processed', // TODO #9493 external payments should be pending, until licensor make a bill and ack the paiement, changing status to processed
           to: '4jBJ72Twytd3Hq03zUxQ' // rf
         }
       }
@@ -138,7 +138,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
           price: 500,
           currency: 'EUR',
           date: new Date('2017-05-31'),
-          status: 'processed', // TODO #9493 should be pending, until licensor make a bill and ack the paiement, changing status to processed
+          status: 'processed',
           to: 'L0ulqmhAO7BRCR3eZtpD' // soficinema
         }
       }

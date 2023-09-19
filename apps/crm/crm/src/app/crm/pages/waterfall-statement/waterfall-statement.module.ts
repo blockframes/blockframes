@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 import { WaterfallStatementComponent } from './waterfall-statement.component';
 
@@ -25,6 +26,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule,
+    NgApexchartsModule,
 
     MovieHeaderModule,
     TableModule,

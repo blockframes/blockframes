@@ -27,6 +27,13 @@
       <li><strong>Turnover :</strong> <price-per-currency [price]="getRightholderActual('turnover')"></price-per-currency></li>
       <li><strong>Revenue :</strong> <price-per-currency [price]="getRightholderActual('revenu')"></price-per-currency></li>
     </ul>
+    <apx-chart *ngIf="options.series.length"
+      [chart]="{ type: 'bar' }" 
+      [series]="options.series"
+      [xaxis]="options.xAxis"
+      [dataLabels]="formatter.percent"
+      [tooltip]="{ y: formatter.percent }">
+    </apx-chart>
   </section>
 
   <ng-container *ngIf="isDistributorStatement()">
