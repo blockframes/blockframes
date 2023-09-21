@@ -308,7 +308,7 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
     // On waterfall side, the root contract is updated (updateContract), so we need to specify this one.
     const rootContract = contractAndAmendments.find(c => !c.rootId);
 
-    const source: WaterfallSource = getAssociatedSource(i, sources);
+    const source = getAssociatedSource(i, sources);
 
     const { [mainCurrency]: amount } = convertCurrenciesTo({ [i.currency]: i.price }, mainCurrency);
     actions.push(

@@ -2,11 +2,6 @@ import { DocumentMeta } from '../meta';
 import { MovieCurrency, RightholderRole } from '../static';
 import { Duration, createDuration } from '../terms';
 
-interface IncomeStatement {
-  rights: Record<number, string>; // Ordered rights to apply for a specific income
-  incomeId: string;
-}
-
 export interface Payment {
   id: string;
   type: 'external' | 'internal'; // TODO #9493 create type ?
@@ -24,6 +19,7 @@ export interface Payment {
 interface ExternalPayment extends Payment {
   type: 'external';
   to: string; // rightholderId referenced as licensor in the contract
+  incomeIds: string[]; // Incomes related to this payment
 }
 
 /**
@@ -43,6 +39,7 @@ export interface Statement {
   rightholderId: string;
   duration: Duration;
   contractId: string; // rightholderId is licensee or licensor of this contract
+  incomeIds: string[];
   payments: {
     external?: ExternalPayment,
     internal: InternalPayment[]
@@ -54,17 +51,16 @@ export interface Statement {
 }
 
 export interface DistributorStatement extends Statement {
-  type: 'mainDistributor'
-  incomes: IncomeStatement[];
+  type: 'mainDistributor';
   expenseIds: string[];
 }
 
 export interface ProducerStatement extends Statement {
-  type: 'producer'
+  type: 'producer';
 }
 
 export interface FinancierStatement extends Statement {
-  type: 'financier'
+  type: 'financier';
 }
 
 function createStatementBase(params: Partial<Statement> = {}): Statement {
@@ -74,6 +70,7 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
     waterfallId: '',
     rightholderId: '',
     contractId: '',
+    incomeIds: params.incomeIds || [],
     payments: {
       internal: []
     },
@@ -93,11 +90,11 @@ export function isDistributorStatement(statement: Partial<Statement>): statement
   return statement.type === 'mainDistributor';
 }
 
-export function isProducerStatement(statement: Partial<Statement>): statement is ProducerStatement {
+function isProducerStatement(statement: Partial<Statement>): statement is ProducerStatement {
   return statement.type === 'producer';
 }
 
-export function isFinancierStatement(statement: Partial<Statement>): statement is FinancierStatement {
+function isFinancierStatement(statement: Partial<Statement>): statement is FinancierStatement {
   return statement.type === 'financier';
 }
 
@@ -106,7 +103,6 @@ export function createDistributorStatement(params: Partial<DistributorStatement>
   return {
     ...statement,
     type: 'mainDistributor',
-    incomes: params.incomes || [],
     expenseIds: params.expenseIds || [],
   }
 }
