@@ -26,7 +26,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
     const statement_1 = createDistributorStatement({
       id: 'statement_1',
       waterfallId,
-      rightholderId: 'bummjvVnBZfzI9G1Too2', // playtime
+      rightholderId: 'akTJNIHoFaCcMMnUZzOG', // playtime
       contractId: 'playtime_rf',
       duration: {
         from: new Date('2016-06-01'),
@@ -38,7 +38,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
           rights: {
             1: 'playtime_com_cine',
             2: 'playtime_expenses_cine',
-            3: 'playtime_mg'
+            3: 'playtime_mg_a'
           }
         },
         {
@@ -46,7 +46,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
           rights: {
             1: 'playtime_com_tv',
             2: 'playtime_expenses_tv',
-            3: 'playtime_mg'
+            3: 'playtime_mg_a'
           }
         }
       ],
@@ -96,7 +96,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
             currency: 'EUR',
             date: new Date('2016-12-31'),
             status: 'processed',
-            to: 'playtime_mg'
+            to: 'playtime_mg_a'
           },
         ],
         external: { // TODO #9493 should be generated automatically: sum(incomes) - sum(internal_payments)
@@ -106,7 +106,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
           currency: 'EUR',
           date: new Date('2016-12-31'),
           status: 'processed', // TODO #9493 external payments should be pending, until licensor make a bill and ack the paiement, changing status to processed
-          to: '4jBJ72Twytd3Hq03zUxQ' // rf
+          to: 'kplH9Fyq5RygF0wQ7xlr' // rf
         }
       }
     });
@@ -114,7 +114,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
     const statement_2 = createProducerStatement({
       id: 'statement_2',
       waterfallId,
-      rightholderId: '4jBJ72Twytd3Hq03zUxQ', // rf
+      rightholderId: 'kplH9Fyq5RygF0wQ7xlr', // rf
       contractId: 'rf_soficinema',
       duration: {
         from: new Date('2017-01-01'),
@@ -139,15 +139,15 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
           currency: 'EUR',
           date: new Date('2017-05-31'),
           status: 'processed',
-          to: 'L0ulqmhAO7BRCR3eZtpD' // soficinema
+          to: '6ocSmkz3JcZD9P6GGcYL' // soficinema
         }
       }
     });
 
-    const statement_3 = createFinancierStatement({
+    const statement_3 = createFinancierStatement({ // TODO #9493 this should not be a stament
       id: 'statement_3',
       waterfallId,
-      rightholderId: 'L0ulqmhAO7BRCR3eZtpD', // soficinema
+      rightholderId: '6ocSmkz3JcZD9P6GGcYL', // soficinema
       contractId: 'rf_soficinema',
       duration: {
         from: new Date('2017-01-01'),
@@ -171,7 +171,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
     const statement_4 = createDistributorStatement({
       id: 'statement_4',
       waterfallId,
-      rightholderId: 'bummjvVnBZfzI9G1Too2', // playtime
+      rightholderId: 'akTJNIHoFaCcMMnUZzOG', // playtime
       contractId: 'playtime_rf',
       duration: {
         from: new Date('2018-06-01'),
@@ -183,7 +183,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
           rights: {
             1: 'playtime_com_cine',
             2: 'playtime_expenses_cine',
-            3: 'playtime_mg'
+            3: 'playtime_mg_b'
           }
         },
       ],
@@ -215,7 +215,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
             currency: 'EUR',
             date: new Date('2018-12-31'),
             status: 'processed',
-            to: 'playtime_mg'
+            to: 'playtime_mg_b'
           },
         ],
         external: {
@@ -225,7 +225,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
           currency: 'EUR',
           date: new Date('2018-12-31'),
           status: 'processed',
-          to: '4jBJ72Twytd3Hq03zUxQ' // rf
+          to: 'kplH9Fyq5RygF0wQ7xlr' // rf
         }
       }
     });
@@ -233,7 +233,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
     const statement_5 = createProducerStatement({
       id: 'statement_5',
       waterfallId,
-      rightholderId: '4jBJ72Twytd3Hq03zUxQ', // rf
+      rightholderId: 'kplH9Fyq5RygF0wQ7xlr', // rf
       contractId: 'rf_soficinema',
       duration: {
         from: new Date('2018-06-01'),
@@ -259,7 +259,16 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
             status: 'processed',
             to: 'rf_rest'
           },
-        ]
+        ],
+        external: {
+          id: 'external_payment_1',
+          type: 'external',
+          price: 0,
+          currency: 'EUR',
+          date: new Date('2017-05-31'),
+          status: 'processed',
+          to: '6ocSmkz3JcZD9P6GGcYL' // soficinema
+        }
       }
     });
 

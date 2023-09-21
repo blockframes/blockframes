@@ -695,6 +695,8 @@ function income(state: TitleState, payload: IncomeAction) {
     if (!payload.isCompensation) {
       state.sources[payload.from] ||= createSourceState({ id: payload.from, amount: 0 });
       state.sources[payload.from].amount += payload.amount;
+      state.sources[payload.from].destinationIds = [...new Set([...state.sources[payload.from].destinationIds, payload.to])];
+      state.sources[payload.from].incomeIds = [...new Set([...state.sources[payload.from].incomeIds, payload.id])];
     }
   }
 
@@ -728,9 +730,14 @@ function income(state: TitleState, payload: IncomeAction) {
     for (const transfer in transfers) {
       const id = transfer as `${string}->${string}`;
       state.transfers[id] ||= createTransfer(id);
-      state.transfers[id].amount += transfers[id] * amount;
+      state.transfers[id].amount += transfers[id].amount * amount;
       // history should show the thresholds
-      state.transfers[id].history.push({ incomeId, amount: transfers[id] * amount });
+      state.transfers[id].history.push({
+        incomeId,
+        amount: transfers[id].amount * amount,
+        checked: transfers[id].checked,
+        percent: transfers[id].percent
+      });
     }
     for (const rightId in rights) {
       if (!state.rights[rightId]) throw new Error(`Right "${rightId}" doesn't exist`);

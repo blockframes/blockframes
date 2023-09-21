@@ -449,6 +449,12 @@
 
     <!-- STATEMENTS -->
     <mat-tab label="Statements">
+      <section class="actions">
+        <button mat-stroked-button color="primary" [disabled]="!statements.length" (click)="removeStatements(statements)">
+          <mat-icon svgIcon="delete"></mat-icon>
+          <span>Remove all statements</span>
+        </button>
+      </section>
       <bf-table [source]="statements" clickable useFilter pagination="50">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
@@ -465,10 +471,13 @@
         <ng-template colRef="duration.to" label="To" let-to sort defaultSort>
           {{ to | date: 'dd/MM/yyyy' }}
         </ng-template>
-        <ng-template colRef="id" label="Actions" let-statementId sticky>
-          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'statement', statementId]" (click)="$event.stopPropagation()">
+        <ng-template colRef="" label="Actions" let-statement sticky>
+          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'statement', statement.id]" (click)="$event.stopPropagation()">
             <mat-icon svgIcon="launch" matTooltip="Go to statement"></mat-icon>
           </a>
+          <button mat-icon-button (click)="removeStatements([statement])">
+            <mat-icon svgIcon="delete" matTooltip="Delete statement"></mat-icon>
+          </button>
         </ng-template>
       </bf-table>
     </mat-tab>

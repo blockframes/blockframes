@@ -25,7 +25,11 @@ interface IncomeState {
     shadowRevenuRate: number;
     turnoverRate: number;
   }>;
-  transfers: Record<`${string}->${string}`, number>;
+  transfers: Record<`${string}->${string}`, {
+    amount: number,
+    checked: boolean,
+    percent: number,
+  }>;
   bonuses: Record<string, {
     bonusRate: number;
     groupId: string;
@@ -61,8 +65,9 @@ export function getMinThreshold(state: TitleState, payload: Income) {
 function runThreshold(state: TitleState, payload: Income, incomeState: IncomeState, basePercent: number) {
   const { from, to } = payload;
   if (from) {
-    incomeState.transfers[`${from}->${to}`] ||= 0;
-    incomeState.transfers[`${from}->${to}`] += basePercent;
+    const incomeTransfer = initTransfer(incomeState, from, to);
+    incomeTransfer.amount += basePercent;
+    incomeTransfer.percent = getNode(state, to).percent;
   }
   let taken = 0;
   assertNode(state, to);
@@ -73,6 +78,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
     incomeState.conditions.push(...thresholdCdts);
     // Update right
     const { checked, shadow } = checkCondition({ state, right, income: payload });
+    if (checked && from) initTransfer(incomeState, from, to).checked = true;
     const incomeRight = initRight(incomeState, to);
     incomeRight.turnoverRate += basePercent;
     incomeRight.revenuRate += checked ? (right.percent * basePercent) : 0;
@@ -103,7 +109,16 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
     for (const child of group.children) {
       // Get rid of "from" for a better outcome on the graph with the transfers
       const income = { ...payload, to: child, from: undefined };
-      taken += runThreshold(state, income, incomeState, groupRate);
+      const childTakes = runThreshold(state, income, incomeState, groupRate);
+      taken += childTakes;
+
+      const childIncomeTransfer = initTransfer(incomeState, group.id, child);
+      childIncomeTransfer.amount += groupRate;
+      childIncomeTransfer.percent = state.rights[child].percent;
+      if (childTakes > 0) {
+        childIncomeTransfer.checked = true;
+        initTransfer(incomeState, from, to).checked = true;
+      }
     }
     incomeGroup.revenuRate += taken;
 
@@ -117,12 +132,21 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
     const groupRate = basePercent * group.percent;
     const incomeGroup = initGroup(incomeState, to);
     incomeGroup.turnoverRate += groupRate;
-    for (const child of state.verticals[to].children) {
+
+    for (const child of group.children) {
+      const childIncomeTransfer = initTransfer(incomeState, group.id, child);
+      childIncomeTransfer.amount += groupRate;
+      childIncomeTransfer.percent = state.rights[child].percent;
+    }
+
+    for (const child of group.children) {
       // Get rid of "from" for a better outcome on the graph with the transfers
       const income = { ...payload, to: child, from: undefined };
       const groupTakes = runThreshold(state, income, incomeState, basePercent * group.percent);
       if (groupTakes) {
         taken += groupTakes;
+        initTransfer(incomeState, group.id, child).checked = true;
+        initTransfer(incomeState, from, to).checked = true;
         break;
       }
     }
@@ -158,6 +182,10 @@ function initGroup(incomeState: IncomeState, groupId: string) {
 
 function initBonus(incomeState: IncomeState, groupId: string, orgId: string) {
   return incomeState.bonuses[groupId] ||= { bonusRate: 0, groupId, orgId };
+}
+
+function initTransfer(incomeState: IncomeState, from: string, to: string) {
+  return incomeState.transfers[`${from}->${to}`] ||= { amount: 0, checked: false, percent: 0 };
 }
 
 type AllConditions = typeof allConditions;

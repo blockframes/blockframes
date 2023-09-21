@@ -75,7 +75,7 @@
   </ng-container>
 
   <h3>Rights</h3>
-  <bf-table [source]="rights" clickable useFilter pagination="50">
+  <bf-table [source]="rights" clickable useFilter pagination="50" (rowClick)="showRightDetails($event)">
     <ng-template colRef="id" label="Id" let-id sort>
       {{ id }}
       <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
@@ -88,8 +88,8 @@
     <ng-template colRef="percent" label="%" let-percent>
       {{ percent ? percent  : '--' }}
     </ng-template>
-    <ng-template colRef="id" label="Incomes" let-id>
-      {{ getAssociatedIncomeIds(id) }}
+    <ng-template colRef="id" label="Source(s)" let-id>
+      {{ getAssociatedSources(id) }}
     </ng-template>
     <ng-template colRef="id" label="Declared" let-id>
       <strong>
@@ -103,6 +103,32 @@
       <price-per-currency [price]="getCalculatedAmount(id, true)"></price-per-currency>
     </ng-template>
   </bf-table>
+
+  <article *ngIf="rightDetails.length" class="right-details">
+    <h3>Details</h3>
+    <ng-container *ngFor="let details of rightDetails">
+      <bf-table [source]="details" pagination="50">
+        <ng-template colRef="" label="#" let-index="index">
+          {{ index + 1 }}
+        </ng-template>
+        <ng-template colRef="from" label="From" let-from>
+          {{ from }}
+        </ng-template>
+        <ng-template colRef="to" label="To" let-to>
+          {{ to }}
+        </ng-template>
+        <ng-template colRef="amount" label="Amount" let-amount>
+          {{ amount | currency:currency }}
+        </ng-template>
+        <ng-template colRef="percent" label="%" let-percent>
+          {{ percent }}
+        </ng-template>
+        <ng-template colRef="taken" label="Taken" let-taken>
+          <strong>{{ taken | currency:currency }}</strong>
+        </ng-template>
+      </bf-table>
+    </ng-container>
+  </article>
 
   <ng-container *ngIf="statement.payments.external">
     <h3>Payment</h3>

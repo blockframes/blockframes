@@ -252,6 +252,14 @@ export class WaterfallComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
+  public async removeStatements(statements: Statement[]) {
+    const promises = statements.map(statement => this.statementService.remove(statement.id, { params: { waterfallId: this.waterfall.id } }));
+    await Promise.all(promises);
+    this.statements = await this.statementService.getValue({ waterfallId: this.waterfall.id });
+    this.snackBar.open(`Statement${statements.length > 1 ? 's' : ''} ${statements.length === 1 ? statements[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
+    this.cdRef.markForCheck();
+  }
+
   public async removeSources(sources: WaterfallSource[]) {
     await this.waterfallService.removeSources(this.waterfall.id, sources.map(s => s.id));
     this.waterfall = await this.waterfallService.getValue(this.waterfall.id);

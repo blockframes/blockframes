@@ -1,4 +1,4 @@
-import { GroupState, HorizontalState, NodeState, RightState, TitleState, VerticalState, createOrg } from './state';
+import { GroupState, HorizontalState, NodeState, RightState, SourceState, TitleState, VerticalState, createOrg } from './state';
 
 export function nodeExists(state: TitleState, id: string) {
   return !!getNode(state, id);
@@ -25,11 +25,15 @@ function getNodeType(state: TitleState, id: string) {
   if (state.verticals[id]) return 'vertical';
 }
 
+export function isSource(state: TitleState, node: Partial<NodeState>): node is SourceState {
+  return getNodeType(state, node.id) === 'source';
+}
+
 export function isRight(state: TitleState, node: Partial<NodeState>): node is RightState {
   return getNodeType(state, node.id) === 'right';
 }
 
-function isGroup(state: TitleState, node: Partial<NodeState>): node is GroupState {
+export function isGroup(state: TitleState, node: Partial<NodeState>): node is GroupState {
   return ['horizontal', 'vertical'].includes(getNodeType(state, node.id));
 }
 
@@ -91,4 +95,55 @@ export function getChildRights(state: TitleState, group: GroupState, childs: Nod
   } else {
     return childs;
   }
+}
+
+export function getTopLevelNodes(state: TitleState, ids: string[], topNodes: string[] = []) {
+  const tree = getNodesSubTree(state, ids);
+  for (const id of ids) {
+    const parents = tree.find(n => n.node === id).parents;
+    if (parents.length) getTopLevelNodes(state, parents, topNodes);
+    else topNodes.push(id);
+  }
+
+  return topNodes.map(id => getNode(state, id));
+}
+
+export function getNodesSubTree(state: TitleState, ids: string[], tree: { node: string, parents: string[] }[] = []) {
+  for (const id of ids) {
+
+    if (!isGroupChild(state, id)) {
+      const parentNodes = getParentNodes(state, id);
+
+      if (parentNodes.length) {
+        getNodesSubTree(state, parentNodes.map(n => n.id), tree);
+      }
+
+      const node = getNode(state, id);
+      tree.push({ node: node.id, parents: parentNodes.map(n => n.id) });
+    } else {
+      const group = getGroup(state, id);
+      tree.push({ node: id, parents: [group.id] });
+      const parentNodes = getParentNodes(state, group.id);
+      if (!parentNodes.length) throw new Error(`Group "${group.id}" has no parent nodes.`);
+      getNodesSubTree(state, parentNodes.map(n => n.id), tree);
+
+      tree.push({ node: group.id, parents: parentNodes.map(n => n.id) });
+    }
+  }
+
+  return tree;
+}
+
+/**
+ * Rertuns parent nodes of a given node
+ * @param state 
+ * @param id 
+ * @returns 
+ */
+function getParentNodes(state: TitleState, id: string) {
+  const sources = Object.values(state.sources).filter(s => s.destinationIds.includes(id)).map(s => state.rights[s.id]);
+  const rights = Object.values(state.rights).filter(r => r.previous.includes(id));
+  const horizontals = Object.values(state.horizontals).filter(h => h.previous.includes(id));
+  const verticals = Object.values(state.verticals).filter(v => v.previous.includes(id));
+  return [...sources, ...rights, ...horizontals, ...verticals];
 }

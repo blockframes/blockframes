@@ -198,12 +198,16 @@ export function createContractState(contract: Partial<ContratState> & { id: stri
 export interface SourceState {
   id: string;
   amount: number;
+  destinationIds: string[];
+  incomeIds: string[];
 }
 
-export function createSourceState(source: SourceState): SourceState {
+export function createSourceState(source: Partial<SourceState>): SourceState {
   return {
     id: '',
     amount: 0,
+    destinationIds: [],
+    incomeIds: [],
     ...source,
   }
 }
@@ -219,6 +223,10 @@ export interface TransferState {
     incomeId: string;
     /** The amount transfered */
     amount: number;
+    /** Was the conditions valid for transfer */
+    checked: boolean;
+    /** Percent that "to" taken from "amount" (this allow percentage history if right is updated) */
+    percent: number;
   }[];
 }
 export function createTransfer(id: `${string}->${string}`): TransferState {
