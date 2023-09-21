@@ -2,9 +2,11 @@ import { DocumentMeta } from '../meta';
 import { ActionName } from './action';
 import { ConditionGroup } from './conditions';
 
+export type RightType = 'unkown' | 'commission' | 'expenses' | 'mg' | 'horizontal' | 'vertical';
 export interface Right {
   _meta?: DocumentMeta;
   id: string;
+  type: RightType,
   name: string;
   date: Date;
   contractId?: string;
@@ -22,6 +24,7 @@ export interface Right {
 export function createRight(params: Partial<Right> = {}) {
   const right: Right = {
     id: '',
+    type: 'unkown',
     name: '',
     date: new Date(),
     actionName: 'append',

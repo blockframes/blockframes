@@ -23,7 +23,8 @@ import {
   targetIn,
   WaterfallDocument,
   ActionName,
-  conditionNames
+  conditionNames,
+  RightType
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
@@ -113,6 +114,9 @@ export function getRightConfig(option: RightConfig) {
         if (!data.right.rightholderId && actionName !== 'prependVertical') throw mandatoryError(data.right.rightholderId, 'Rightholder Name');
         if (actionName === 'prependHorizontal') data.right.blameId = data.right.rightholderId;
         if (['prependVertical', 'prependHorizontal'].includes(actionName)) delete data.right.rightholderId;
+
+        // Column is also used to set type of right
+        data.right.type = getRightType(value);
         return actionName;
       },
         /* f */ 'right.nextIds': (value: string) => {
@@ -277,6 +281,27 @@ export function getRightConfig(option: RightConfig) {
         return 'prependVertical';
       default:
         return 'prepend';
+    }
+  }
+
+  function getRightType(value: string): RightType {
+    switch (value.trim().toLowerCase()) {
+      case 'commission':
+        return 'commission';
+      case 'expenses':
+      case 'expenses recoupment':
+        return 'expenses';
+      case 'mg':
+      case 'mg recoupment':
+        return 'mg';
+      case 'horizontal':
+      case 'horizontal group':
+        return 'horizontal';
+      case 'vertical':
+      case 'vertical group':
+        return 'vertical';
+      default:
+        return 'unkown';
     }
   }
 
