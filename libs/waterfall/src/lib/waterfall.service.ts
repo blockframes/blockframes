@@ -20,6 +20,11 @@ import { BlockService } from './block.service';
 
 export const fromOrg = (orgId: string) => [where('orgIds', 'array-contains', orgId)];
 
+export interface WaterfallState {
+  waterfall: { state: TitleState; history: History[], previous?: History };
+  version: Version;
+}
+
 @Injectable({ providedIn: 'root' })
 export class WaterfallService extends BlockframesCollection<Waterfall> {
   readonly path = 'waterfall';
@@ -32,17 +37,32 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     super();
   }
 
-  public async buildWaterfall(data: { waterfallId: string, versionId: string }) {
-    if (this.app === 'crm') return this.buildWaterfallAdmin(data); // Current user is admin, no need to use backend function.
+  public async buildWaterfall(data: { waterfallId: string, versionId: string, date?: Date }) {
+    const waterfall = this.app === 'crm' ? await this.buildWaterfallAdmin(data) : await this.buildWaterfallUser(data);
+
+    if (data.date) { // Stops waterfall at a given date and adds previous state
+      waterfall.waterfall.history = waterfall.waterfall.history.filter(h => new Date(h.date).getTime() <= data.date.getTime());
+      waterfall.waterfall.state = waterfall.waterfall.history[waterfall.waterfall.history.length - 1];
+      if (waterfall.waterfall.history.length > 1) waterfall.waterfall.previous = waterfall.waterfall.history[waterfall.waterfall.history.length - 1];
+    }
+
+    return waterfall;
+  }
+
+  /**
+   * Because of rules, regular users have to use backend function.
+   * @param data 
+   */
+  private async buildWaterfallUser(data: { waterfallId: string, versionId: string }): Promise<WaterfallState> {
     const waterfall = await this.functions.call<{ waterfallId: string, versionId: string }, string>('buildWaterfall', data);
-    return JSON.parse(waterfall, jsonDateReviver) as { waterfall: { state: TitleState; history: History[] }, version: Version }; // Cloud functions cannot return Dates
+    return JSON.parse(waterfall, jsonDateReviver); // Cloud functions cannot return Dates
   }
 
   /**
    * Used only by BlockframesAdmin users that can bypass database rules
    * @param data 
    */
-  private async buildWaterfallAdmin(data: { waterfallId: string, versionId: string }) {
+  private async buildWaterfallAdmin(data: { waterfallId: string, versionId: string }): Promise<WaterfallState> {
     const [waterfall, blocks] = await Promise.all([
       this.getValue(data.waterfallId),
       this.blockService.getValue({ waterfallId: data.waterfallId })

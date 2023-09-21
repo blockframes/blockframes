@@ -11,7 +11,7 @@
   <section>
     <mat-form-field appearance="fill">
       <mat-label>Waternall Version</mat-label>
-      <mat-select (selectionChange)="setVersion($event.value)" [(value)]="currentVersion">
+      <mat-select (selectionChange)="loadWaterfall($event.value)" [(value)]="state.version.id">
         <mat-option *ngFor="let versions of waterfall.versions" [value]="versions.id">
           {{ versions.name }}
         </mat-option>

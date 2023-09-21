@@ -97,15 +97,18 @@ export function getChildRights(state: TitleState, group: GroupState): RightState
   }
 }
 
-export function getTopLevelNodes(state: TitleState, ids: string[], topNodes: string[] = []) {
+export function getSources(state: TitleState, _ids: string | string[], sources: string[] = []) {
+  const ids = Array.isArray(_ids) ? _ids : [_ids];
   const tree = getNodesSubTree(state, ids);
   for (const id of ids) {
     const parents = tree.find(n => n.node === id).parents;
-    if (parents.length) getTopLevelNodes(state, parents, topNodes);
-    else topNodes.push(id);
+    if (parents.length) getSources(state, parents, sources);
+    else sources.push(id);
   }
 
-  return topNodes.map(id => getNode(state, id));
+  if (sources.find(s => !isSource(state, getNode(state, s)))) throw new Error('Invalid source id.');
+
+  return sources.map(id => getNode(state, id));
 }
 
 export function getNodesSubTree(state: TitleState, ids: string[], tree: { node: string, parents: string[] }[] = []) {
