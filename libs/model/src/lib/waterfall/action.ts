@@ -695,8 +695,8 @@ function income(state: TitleState, payload: IncomeAction) {
     if (!payload.isCompensation) {
       state.sources[payload.from] ||= createSourceState({ id: payload.from, amount: 0 });
       state.sources[payload.from].amount += payload.amount;
-      state.sources[payload.from].destinationIds = [...new Set([...state.sources[payload.from].destinationIds, payload.to])];
-      state.sources[payload.from].incomeIds = [...new Set([...state.sources[payload.from].incomeIds, payload.id])];
+      state.sources[payload.from].destinationIds = Array.from(new Set([...state.sources[payload.from].destinationIds, payload.to]));
+      state.sources[payload.from].incomeIds = Array.from(new Set([...state.sources[payload.from].incomeIds, payload.id]));
     }
   }
 
