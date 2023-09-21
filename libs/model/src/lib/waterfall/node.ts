@@ -85,12 +85,12 @@ export function getGroup(state: TitleState, id: string): GroupState {
  * @param state 
  * @param group 
  */
-export function getChildRights(state: TitleState, group: GroupState, childs: NodeState[] = []): NodeState[] {
-  childs = [...childs, ...group.children.map(c => getNode(state, c)).filter(c => isRight(state, c))];
-  const childGroups = group.children.map(c => getNode(state, c)).filter(c => isGroup(state, c));
+export function getChildRights(state: TitleState, group: GroupState): RightState[] {
+  const childs = group.children.map(c => getNode(state, c)).filter(c => isRight(state, c)) as RightState[];
+  const childGroups = group.children.map(c => getNode(state, c)).filter(c => isGroup(state, c)) as GroupState[];
 
   if (childGroups.length) {
-    const subChilds = childGroups.map(g => getChildRights(state, g as GroupState)).flat();
+    const subChilds = childGroups.map(g => getChildRights(state, g)).flat();
     return [...subChilds, ...childs];
   } else {
     return childs;
