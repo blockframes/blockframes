@@ -50,7 +50,8 @@ import {
   screenerTypes,
   territoriesISOA2,
   rightholderRoles,
-  languagesISO3
+  languagesISO3,
+  rightTypes
 } from './static-model';
 
 export type App = typeof app[number];
@@ -154,6 +155,8 @@ export type StakeholderRole = keyof typeof stakeholderRoles;
 export type StakeholderRoleValue = keyof typeof stakeholderRoles[StakeholderRole] & string;
 
 export type RightholderRole = keyof typeof rightholderRoles;
+
+export type RightType = keyof typeof rightTypes;
 
 export type MovieNoteRole = keyof typeof movieNoteRoles;
 

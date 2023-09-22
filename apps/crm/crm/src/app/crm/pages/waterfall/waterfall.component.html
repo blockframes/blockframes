@@ -183,7 +183,7 @@
     <!-- RIGHTHOLDERS -->
     <mat-tab label="Right Holders">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!rightholders.length" (click)="removeRightholders(rightholders)">
+        <button mat-button color="primary" [disabled]="!rightholders.length" (click)="removeRightholders(rightholders)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all rightholders</span>
         </button>
@@ -212,7 +212,7 @@
     <!-- DOCUMENTS -->
     <mat-tab label="All Documents">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!documents.length" (click)="removeDocuments(documents)">
+        <button mat-button color="primary" [disabled]="!documents.length" (click)="removeDocuments(documents)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all documents</span>
         </button>
@@ -244,7 +244,7 @@
     <!-- CONTRACTS -->
     <mat-tab label="1 - Contracts">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!contracts.length" (click)="removeDocuments(contracts)">
+        <button mat-button color="primary" [disabled]="!contracts.length" (click)="removeDocuments(contracts)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all contracts</span>
         </button>
@@ -287,7 +287,7 @@
     <!-- SOURCES -->
     <mat-tab label="2 - Sources">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!sources.length" (click)="removeSources(sources)">
+        <button mat-button color="primary" [disabled]="!sources.length" (click)="removeSources(sources)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all sources</span>
         </button>
@@ -333,7 +333,7 @@
     <!-- RIGHTS -->
     <mat-tab label="3 - Rights">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!rights.length" (click)="removeRights(rights)">
+        <button mat-button color="primary" [disabled]="!rights.length" (click)="removeRights(rights)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all rights</span>
         </button>
@@ -347,6 +347,9 @@
         </ng-template>
         <ng-template colRef="name" label="Name" let-name sort>
           {{ name }}
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type | toLabel: 'rightTypes' }}
         </ng-template>
         <ng-template colRef="" label="Org" let-item sort>
           <ng-container *ngIf="item.rightholderId">{{ getRightholderName(item.rightholderId) }}</ng-container>
@@ -379,7 +382,7 @@
     <!-- INCOMES -->
     <mat-tab label="4 - Incomes">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!incomes.length" (click)="removeIncomes(incomes)">
+        <button mat-button color="primary" [disabled]="!incomes.length" (click)="removeIncomes(incomes)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all incomes</span>
         </button>
@@ -413,7 +416,7 @@
     <!-- EXPENSES -->
     <mat-tab label="5 - Expenses">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!expenses.length" (click)="removeExpenses(expenses)">
+        <button mat-button color="primary" [disabled]="!expenses.length" (click)="removeExpenses(expenses)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all expenses</span>
         </button>
@@ -450,7 +453,7 @@
     <!-- STATEMENTS -->
     <mat-tab label="Statements">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!statements.length" (click)="removeStatements(statements)">
+        <button mat-button color="primary" [disabled]="!statements.length" (click)="removeStatements(statements)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all statements</span>
         </button>

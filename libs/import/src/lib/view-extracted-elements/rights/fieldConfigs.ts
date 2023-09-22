@@ -301,7 +301,7 @@ export function getRightConfig(option: RightConfig) {
       case 'vertical group':
         return 'vertical';
       default:
-        return 'unkown';
+        return 'unknown';
     }
   }
 

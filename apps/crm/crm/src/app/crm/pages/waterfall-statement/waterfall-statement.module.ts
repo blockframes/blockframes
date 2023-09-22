@@ -11,6 +11,7 @@ import { WaterfallStatementComponent } from './waterfall-statement.component';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -31,6 +32,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MovieHeaderModule,
     TableModule,
     PricePerCurrencyModule,
+    ToLabelModule,
 
     MatIconModule,
     MatButtonModule,

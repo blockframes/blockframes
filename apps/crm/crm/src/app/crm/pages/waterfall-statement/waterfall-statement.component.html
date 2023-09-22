@@ -85,6 +85,9 @@
     <ng-template colRef="name" label="Name" let-name sort>
       {{ name }}
     </ng-template>
+    <ng-template colRef="type" label="Type" let-type sort>
+      {{ type | toLabel: 'rightTypes' }}
+    </ng-template>
     <ng-template colRef="percent" label="%" let-percent>
       {{ percent ? percent  : '--' }}
     </ng-template>
