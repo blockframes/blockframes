@@ -25,6 +25,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
     // Test Fixtures:
     const statement_1 = createDistributorStatement({
       id: 'statement_1',
+      status: 'processed',
       waterfallId,
       rightholderId: 'akTJNIHoFaCcMMnUZzOG', // playtime
       contractId: 'playtime_rf',
@@ -97,6 +98,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
 
     const statement_2 = createProducerStatement({
       id: 'statement_2',
+      status: 'processed',
       waterfallId,
       rightholderId: 'kplH9Fyq5RygF0wQ7xlr', // rf
       contractId: 'rf_soficinema',
@@ -132,6 +134,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
 
     const statement_3 = createFinancierStatement({ // TODO #9493 this should not be a stament
       id: 'statement_3',
+      status: 'processed',
       waterfallId,
       rightholderId: '6ocSmkz3JcZD9P6GGcYL', // soficinema
       contractId: 'rf_soficinema',
@@ -157,6 +160,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
 
     const statement_4 = createDistributorStatement({
       id: 'statement_4',
+      status: 'processed',
       waterfallId,
       rightholderId: 'akTJNIHoFaCcMMnUZzOG', // playtime
       contractId: 'playtime_rf',
@@ -211,6 +215,7 @@ export class StatementService extends BlockframesSubCollection<ProducerStatement
 
     const statement_5 = createProducerStatement({
       id: 'statement_5',
+      status: 'processed',
       waterfallId,
       rightholderId: 'kplH9Fyq5RygF0wQ7xlr', // rf
       contractId: 'rf_soficinema',

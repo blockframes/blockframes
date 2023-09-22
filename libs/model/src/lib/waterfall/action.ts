@@ -352,6 +352,7 @@ export function statementsToActions(statements: Statement[]) {
   const payments: PaymentAction[] = [];
 
   for (const statement of statements) {
+    if(statement.status !== 'processed') continue;
     const internalPayments = statement.payments.internal.filter(p => p.status === 'processed');
     for (const payment of internalPayments) {
       payments.push({

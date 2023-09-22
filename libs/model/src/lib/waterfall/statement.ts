@@ -34,6 +34,7 @@ interface InternalPayment extends Payment {
 export interface Statement {
   _meta?: DocumentMeta;
   type: RightholderRole;
+  status: 'draft' | 'pending' | 'processed' | 'rejected'; // TODO #9493 create type
   id: string;
   waterfallId: string;
   rightholderId: string;
@@ -67,6 +68,7 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
   return {
     id: '',
     type: 'producer',
+    status: 'draft',
     waterfallId: '',
     rightholderId: '',
     contractId: '',
