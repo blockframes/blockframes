@@ -46,8 +46,9 @@ export async function formatRight(
   const rights: RightsImportState[] = [];
 
   const fieldsConfig = getRightConfig(option);
+  const rows = sheetTab.rows.filter(r => r.some(c => !!c)); // Remove empty rows
 
-  const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig);
+  const results = await extract<FieldsConfig>(rows, fieldsConfig);
   for (const result of results) {
     const { data, errors } = result;
 
@@ -80,7 +81,7 @@ function formatCondition(cond: ImportedCondition, rightholders: WaterfallRightho
       return {
         name: cond.conditionName,
         payload: {
-          orgId: rightholders.find(r => r.name.toLowerCase() === cond.left.toLowerCase()).id,
+          orgId: rightholders.find(r => r.id === cond.left).id,
           operator: cond.operator as NumberOperator,
           target: formatTarget(cond.target)
         }

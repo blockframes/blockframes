@@ -102,7 +102,7 @@ export function getRightConfig(option: RightConfig) {
       },
         /* c */ 'right.percent': (value: string) => {
         if (!value.trim()) return 100;
-        return Number(value);
+        return Number(value.replace(',', '.'));
       },
         /* d */ 'right.rightholderId': async (value: string, data: FieldsConfig) => {
         if (!value) return '';
@@ -132,8 +132,8 @@ export function getRightConfig(option: RightConfig) {
         /* i */ 'conditionA.conditionName': (value: string) => {
         return getConditionName(value);
       },
-        /* j */ 'conditionA.left': (value: string) => {
-        return valueToId(value);
+        /* j */ 'conditionA.left': (value: string, data: FieldsConfig) => {
+        return extractConditionLeft(value, data.waterfallId, data.conditionA.conditionName);
       },
         /* k */ 'conditionA.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionA);
@@ -150,8 +150,8 @@ export function getRightConfig(option: RightConfig) {
         /* o */ 'conditionB.conditionName': (value: string) => {
         return getConditionName(value);
       },
-        /* p */ 'conditionB.left': (value: string) => {
-        return valueToId(value);
+        /* p */ 'conditionB.left': (value: string, data: FieldsConfig) => {
+        return extractConditionLeft(value, data.waterfallId, data.conditionB.conditionName);
       },
         /* q */ 'conditionB.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionB);
@@ -168,8 +168,8 @@ export function getRightConfig(option: RightConfig) {
         /* u */ 'conditionC.conditionName': (value: string) => {
         return getConditionName(value);
       },
-        /* v */ 'conditionC.left': (value: string) => {
-        return valueToId(value);
+        /* v */ 'conditionC.left': (value: string, data: FieldsConfig) => {
+        return extractConditionLeft(value, data.waterfallId, data.conditionC.conditionName);
       },
         /* w */ 'conditionC.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionC);
@@ -185,7 +185,7 @@ export function getRightConfig(option: RightConfig) {
       },
         /* aa */ 'right.date': async (value: string, data: FieldsConfig, __, rowIndex) => {
         if (!value.trim()) return new Date(1 + (rowIndex * 1000)); // 01/01/1970 + "rowIndex" seconds 
-
+        if (value.split(separator).length > 1) throw mandatoryError(value, 'Contract Id', 'Multiple contract are not allowed');
         // If contract ID is specified instead of a date, we use signature date as right date.
         const contract = await getWaterfallDocument(value.trim(), waterfallDocumentsService, documentCache, data.waterfallId);
         if (contract) {
@@ -194,34 +194,61 @@ export function getRightConfig(option: RightConfig) {
           return contract.signatureDate;
         }
 
-        return getDate(value, 'Right Date');
+        return getDate(value, 'Right Date or Contract ID');
       },
     };
   }
 
+  async function extractConditionLeft(value: string, waterfallId: string, conditionName: ConditionName) {
+    if (!value) return '';
+    switch (conditionName) {
+      case 'orgRevenu':
+      case 'orgTurnover': {
+        return getRightholderId(value.trim(), waterfallId, waterfallService, rightholderCache);
+      }
+      default:
+        return valueToId(value);
+    }
+  }
+
   function extractConditionOperator(value: string, cond: ImportedCondition) {
     if (['terms', 'contract'].includes(cond.conditionName)) {
+      value = getArrayOperator(value);
       if (value && !arrayOperator.includes(value as ArrayOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${arrayOperator.map(o => `"${o}"`).join(' ')}`);
       return value as ArrayOperator;
     } else if (cond.conditionName === 'interest') {
       if (value) throw optionalWarning('Operator should be left empty for "interest" conditions');
       return;
     } else if (cond.conditionName === 'event') {
-      if (value === '≥') value = '>=';
+      value = getNumberOperator(value);
       if (value && (numberOperator.includes(value as NumberOperator) || arrayOperator.includes(value as ArrayOperator))) {
         return numberOperator.includes(value as NumberOperator) ? value as NumberOperator : value as ArrayOperator;
       } else {
         throw mandatoryError(value, 'Operator', `Allowed values are : ${[...numberOperator, ...arrayOperator].map(o => `"${o}"`).join(' ')}`);
       }
     } else {
-      if (value === '≥') value = '>=';
+      value = getNumberOperator(value);
       if (value && !numberOperator.includes(value as NumberOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${numberOperator.map(o => `"${o}"`).join(' ')}`);
       return value as NumberOperator;
     }
   }
 
+  function getNumberOperator(value: string): NumberOperator {
+    if (value === '≥') return '>=';
+    if (value.toLowerCase().trim() === 'greater than or equal to') return '>=';
+    if (value.toLowerCase().trim() === 'less than') return '<';
+    return value as NumberOperator;
+  }
+
+  function getArrayOperator(value: string): ArrayOperator {
+    if (value.toLowerCase().trim() === 'not in (list)') return 'not-in';
+    if (value.toLowerCase().trim() === 'in (list)') return 'in';
+    return value as ArrayOperator;
+  }
+
   function extractConditionTargetIn(value: string): TargetIn {
-    if (!['date', 'number', 'territories', 'medias', 'contract'].includes(value.trim().toLowerCase())) {
+    const helperWords = ['date', 'number', 'amount', 'territories', 'medias', 'contract', 'film cost', 'list'];
+    if (!helperWords.includes(value.trim().toLowerCase())) {
 
       /**
        * Mapping
@@ -233,10 +260,6 @@ export function getRightConfig(option: RightConfig) {
         switch (value.trim().toLowerCase()) {
           case 'expenses':
             return 'expense';
-          case 'amount':
-          case 'investment':
-          case 'film cost':
-          case 'list':
           default:
             throw mandatoryError(value, 'Invalid Target Type');
         }
