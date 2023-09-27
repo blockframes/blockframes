@@ -114,7 +114,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
 
       const childIncomeTransfer = initTransfer(incomeState, group.id, child);
       childIncomeTransfer.amount += groupRate;
-      childIncomeTransfer.percent = state.rights[child].percent;
+      childIncomeTransfer.percent = getNode(state, child).percent;
       if (childTakes > 0) {
         childIncomeTransfer.checked = true;
         initTransfer(incomeState, from, to).checked = true;
@@ -136,7 +136,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
     for (const child of group.children) {
       const childIncomeTransfer = initTransfer(incomeState, group.id, child);
       childIncomeTransfer.amount += groupRate;
-      childIncomeTransfer.percent = state.rights[child].percent;
+      childIncomeTransfer.percent = getNode(state, child).percent;
     }
 
     for (const child of group.children) {
@@ -146,7 +146,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
       if (groupTakes) {
         taken += groupTakes;
         initTransfer(incomeState, group.id, child).checked = true;
-        initTransfer(incomeState, from, to).checked = true;
+        if (from) initTransfer(incomeState, from, to).checked = true;
         break;
       }
     }

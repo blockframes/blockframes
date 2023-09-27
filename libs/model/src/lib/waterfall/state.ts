@@ -215,7 +215,7 @@ export function createSourceState(source: Partial<SourceState>): SourceState {
 export interface TransferState {
   /** from->to */
   id: `${string}->${string}`;
-  from?: string;
+  from: string;
   to: string;
   amount: number;
   history: {
