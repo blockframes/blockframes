@@ -94,7 +94,7 @@ export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot
   }
 
   // If document is a contract, clean income, terms etc..
-  if (isContract(waterfallDocument)) await cleanRelatedContractDocuments(convertDocumentTo<WaterfallContract>(waterfallDocument));
+  if (isContract(waterfallDocument)) await cleanRelatedContractDocuments(convertDocumentTo<WaterfallContract>(waterfallDocument), { filterByTitleId: true });
 
   // Check for amendments and remove them if any
   if (!waterfallDocument.rootId) {
