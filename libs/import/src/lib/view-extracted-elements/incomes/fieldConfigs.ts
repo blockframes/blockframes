@@ -1,6 +1,6 @@
 import { Media, MovieCurrency, Territory, Movie } from '@blockframes/model';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
-import { getDate, getTitleId, mandatoryError, optionalWarning, unknownEntityError } from '../../utils';
+import { getDate, getTitleId, mandatoryError, optionalWarning, unknownEntityError, valueToId } from '../../utils';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { MovieService } from '@blockframes/movie/service';
 
@@ -58,7 +58,7 @@ export function getIncomeConfig(option: IncomeConfig) {
         return value;
       },
         /* c */ 'income.sourceId': (value: string) => {
-        return value;
+        return valueToId(value);
       },
         /* d */ 'income.territories_included': (value: string, data: FieldsConfig) => getGroupedList(value, 'territories', separator, { required: !data.income.sourceId }),
         /* e */ 'income.territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),

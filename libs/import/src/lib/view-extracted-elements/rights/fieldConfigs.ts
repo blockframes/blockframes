@@ -343,6 +343,8 @@ export function getRightConfig(option: RightConfig) {
           return 'orgRevenu';
         case 'total right holder calculated revenue':
           return 'poolShadowRevenu';
+        case 'poolrevenue': 
+          return 'poolRevenu';
         case 'source total revenue':
         case 'producer\'s net participation':
         case 'distributor\'s gross receipts':
