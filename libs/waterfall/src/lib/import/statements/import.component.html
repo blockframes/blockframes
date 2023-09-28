@@ -1,15 +1,15 @@
 
 <section fxLayout="column" fxLayoutAlign="center center">
-  <h1>Import multiple expenses at once</h1>
+  <h1>Import multiple statements at once</h1>
 
   <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="8px">
     <a
       color="primary"
       mat-stroked-button
-      download="import-expenses-template.xlsx"
-      href="/assets/templates/import-expenses-template.xlsx"
+      download="import-statements-template.xlsx"
+      href="/assets/templates/import-statements-template.xlsx"
     >
-      <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our excel expenses template</span>
+      <mat-icon svgIcon="cloud_download"></mat-icon><span>Download our excel statements template</span>
     </a>
   </div>
 </section>
@@ -22,11 +22,11 @@
 <section fxLayout="column" fxLayoutAlign="center center">
 
   <ng-container *ngIf="!sheetTab; else ready">
-    <import-spreadsheet importType="expenses" (importEvent)="imported($event)"></import-spreadsheet>
+    <import-spreadsheet importType="statements" (importEvent)="imported($event)"></import-spreadsheet>
   </ng-container>
   <ng-template #ready>
-    <import-view-extracted-expenses [sheetTab]="sheetTab"></import-view-extracted-expenses>
-    <p>Please make sure everything is correct. Once you submit your expenses they will instantaneously appear on the platform.</p>
+    <import-view-extracted-statements [sheetTab]="sheetTab"></import-view-extracted-statements>
+    <p>Please make sure everything is correct. Once you submit your statements they will instantaneously appear on the platform.</p>
     <button test-id="cancel-import" mat-stroked-button color="warn" (click)="cancel()">
       <mat-icon svgIcon="block"></mat-icon>
       <span>Cancel</span>

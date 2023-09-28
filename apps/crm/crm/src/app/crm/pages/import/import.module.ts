@@ -39,20 +39,16 @@ const routes: Routes = [{
       loadChildren: () => import('./imdb/imdb-import.module').then(m => m.ImdbImportModule),
     },
     {
-      path: 'incomes',
-      loadChildren: () => import('@blockframes/contract/income/import/import.module').then(m => m.IncomeImportModule),
-    },
-    {
-      path: 'expenses',
-      loadChildren: () => import('@blockframes/contract/expense/import/import.module').then(m => m.ExpenseImportModule),
-    },
-    {
       path: 'sources',
       loadChildren: () => import('@blockframes/waterfall/import/sources/import.module').then(m => m.SourceImportModule),
     },
     {
       path: 'rights',
       loadChildren: () => import('@blockframes/waterfall/import/rights/import.module').then(m => m.RightImportModule),
+    },
+    {
+      path: 'statements',
+      loadChildren: () => import('@blockframes/waterfall/import/statements/import.module').then(m => m.StatementImportModule),
     },
   ]
 }];

@@ -76,16 +76,10 @@
               </ng-template>
             </li>
             <li>
-              <a mat-button routerLink="/c/o/dashboard/crm/import/incomes">
-                <mat-icon svgIcon="monetization"></mat-icon><span matLine>4 Incomes</span>
+              <a mat-button routerLink="/c/o/dashboard/crm/import/statements">
+                <mat-icon svgIcon="monetization"></mat-icon><span matLine>4 Statements</span>
               </a>
-              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="incomes.length else notImported"></mat-icon>
-            </li>
-            <li>
-              <a mat-button routerLink="/c/o/dashboard/crm/import/expenses">
-                <mat-icon svgIcon="monetization"></mat-icon><span matLine>5 Expenses</span>
-              </a>
-              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="expenses.length else notImported"></mat-icon>
+              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="incomes.length && expenses.length else notImported"></mat-icon>
             </li>
           </ul>
           <a *ngIf="(canInitWaterfall$ | async) else refresh" (click)="initWaterfall()" class="surface">
@@ -461,6 +455,9 @@
       <bf-table [source]="statements" clickable useFilter pagination="50">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type | toLabel: 'rightholderRoles' }}
         </ng-template>
         <ng-template colRef="status" label="Status" let-status sort>
           {{ status }}

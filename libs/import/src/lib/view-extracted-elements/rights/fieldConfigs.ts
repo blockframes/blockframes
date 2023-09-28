@@ -127,6 +127,7 @@ export function getRightConfig(option: RightConfig) {
         return valueToId(value);
       },
         /* h */ 'right.pools': (value: string) => {
+        // TODO #9502 if current row is a group, apply to each childs of the group
         return value.split(separator).map(valueToId).filter(v => !!v);
       },
         /* i */ 'conditionA.conditionName': (value: string) => {
