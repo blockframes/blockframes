@@ -373,79 +373,8 @@
       </bf-table>
     </mat-tab>
 
-    <!-- INCOMES -->
-    <mat-tab label="4 - Incomes">
-      <section class="actions">
-        <button mat-button color="primary" [disabled]="!incomes.length" (click)="removeIncomes(incomes)">
-          <mat-icon svgIcon="delete"></mat-icon>
-          <span>Remove all incomes</span>
-        </button>
-      </section>
-      <bf-table [source]="incomes" clickable useFilter pagination="50">
-        <ng-template colRef="id" label="Id" let-id sort>
-          {{ id }}
-        </ng-template>
-        <ng-template colRef="" label="Contract Id" let-item sort>
-          {{ getCurrentContract(item) }}
-        </ng-template>
-        <ng-template colRef="date" label="Date" let-date sort defaultSort>
-          {{ date | date: 'dd/MM/yyyy' }}
-        </ng-template>
-        <ng-template colRef="" label="Source" let-item sort>
-          {{ getAssociatedSource(item) }}
-        </ng-template>
-        <ng-template colRef="" label="Price" let-item sort>
-          <ng-container *ngIf="toPricePerCurrency(item) as amount">
-            <price-per-currency [price]="amount"></price-per-currency>
-          </ng-container>
-        </ng-template>
-        <ng-template colRef="" label="Action" let-income sticky>
-          <button mat-icon-button (click)="removeIncomes([income])">
-            <mat-icon svgIcon="delete" matTooltip="Delete income"></mat-icon>
-          </button>
-        </ng-template>
-      </bf-table>
-    </mat-tab>
-
-    <!-- EXPENSES -->
-    <mat-tab label="5 - Expenses">
-      <section class="actions">
-        <button mat-button color="primary" [disabled]="!expenses.length" (click)="removeExpenses(expenses)">
-          <mat-icon svgIcon="delete"></mat-icon>
-          <span>Remove all expenses</span>
-        </button>
-      </section>
-      <bf-table [source]="expenses" clickable useFilter pagination="50">
-        <ng-template colRef="id" label="Id" let-id sort>
-          {{ id }}
-        </ng-template>
-        <ng-template colRef="" label="Contract Id" let-item sort>
-          {{ getCurrentContract(item) }}
-        </ng-template>
-        <ng-template colRef="date" label="Date" let-date sort defaultSort>
-          {{ date | date: 'dd/MM/yyyy' }}
-        </ng-template>
-        <ng-template colRef="category" label="Category" let-category sort>
-          {{ category }}
-        </ng-template>
-        <ng-template colRef="type" label="Type" let-type sort>
-          {{ type }}
-        </ng-template>
-        <ng-template colRef="" label="Price" let-item sort>
-          <ng-container *ngIf="toPricePerCurrency(item) as amount">
-            <price-per-currency [price]="amount"></price-per-currency>
-          </ng-container>
-        </ng-template>
-        <ng-template colRef="" label="Action" let-expense sticky>
-          <button mat-icon-button (click)="removeExpenses([expense])">
-            <mat-icon svgIcon="delete" matTooltip="Delete expense"></mat-icon>
-          </button>
-        </ng-template>
-      </bf-table>
-    </mat-tab>
-
     <!-- STATEMENTS -->
-    <mat-tab label="Statements">
+    <mat-tab label="4 - Statements">
       <section class="actions">
         <button mat-button color="primary" [disabled]="!statements.length" (click)="removeStatements(statements)">
           <mat-icon svgIcon="delete"></mat-icon>
@@ -480,6 +409,77 @@
           </a>
           <button mat-icon-button (click)="removeStatements([statement])">
             <mat-icon svgIcon="delete" matTooltip="Delete statement"></mat-icon>
+          </button>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+
+    <!-- INCOMES -->
+    <mat-tab label="Incomes">
+      <section class="actions">
+        <button mat-button color="primary" [disabled]="!incomes.length" (click)="removeIncomes(incomes)">
+          <mat-icon svgIcon="delete"></mat-icon>
+          <span>Remove all incomes</span>
+        </button>
+      </section>
+      <bf-table [source]="incomes" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="" label="Contract Id" let-item sort>
+          {{ getCurrentContract(item) }}
+        </ng-template>
+        <ng-template colRef="date" label="Date" let-date sort defaultSort>
+          {{ date | date: 'dd/MM/yyyy' }}
+        </ng-template>
+        <ng-template colRef="" label="Source" let-item sort>
+          {{ getAssociatedSource(item) }}
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="toPricePerCurrency(item) as amount">
+            <price-per-currency [price]="amount"></price-per-currency>
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="" label="Action" let-income sticky>
+          <button mat-icon-button (click)="removeIncomes([income])">
+            <mat-icon svgIcon="delete" matTooltip="Delete income"></mat-icon>
+          </button>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+
+    <!-- EXPENSES -->
+    <mat-tab label="Expenses">
+      <section class="actions">
+        <button mat-button color="primary" [disabled]="!expenses.length" (click)="removeExpenses(expenses)">
+          <mat-icon svgIcon="delete"></mat-icon>
+          <span>Remove all expenses</span>
+        </button>
+      </section>
+      <bf-table [source]="expenses" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="" label="Contract Id" let-item sort>
+          {{ getCurrentContract(item) }}
+        </ng-template>
+        <ng-template colRef="date" label="Date" let-date sort defaultSort>
+          {{ date | date: 'dd/MM/yyyy' }}
+        </ng-template>
+        <ng-template colRef="category" label="Category" let-category sort>
+          {{ category }}
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type }}
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="toPricePerCurrency(item) as amount">
+            <price-per-currency [price]="amount"></price-per-currency>
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="" label="Action" let-expense sticky>
+          <button mat-icon-button (click)="removeExpenses([expense])">
+            <mat-icon svgIcon="delete" matTooltip="Delete expense"></mat-icon>
           </button>
         </ng-template>
       </bf-table>

@@ -84,7 +84,8 @@ export function getStatementConfig(option: StatementConfig) {
         return type;
       },
         /* h */ 'incomes[].id': (value: string) => {
-        return value;
+        // TODO #9493 check if id is unique
+        return value.trim();
       },
         /* i */ 'incomes[].sourceId': (value: string) => {
         return valueToId(value);
@@ -103,6 +104,7 @@ export function getStatementConfig(option: StatementConfig) {
         return value;
       },
         /* p */ 'expenses[].id': (value: string) => {
+          // TODO #9493 check if id is unique
         return value.trim();
       },
         /* q */ 'expenses[].price': (value: string) => {

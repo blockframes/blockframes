@@ -99,9 +99,6 @@ export class WaterfallComponent implements OnInit {
   public async loadAll() {
     const waterfallId = this.route.snapshot.paramMap.get('waterfallId');
 
-    // TODO #9493 temp, saves statements fixtures to DB
-    await this.statementService.fixtures(waterfallId);
-
     const [movie, waterfall, documents, blocks, rights, incomes, expenses, statements] = await Promise.all([
       this.movieService.getValue(waterfallId),
       this.waterfallService.getValue(waterfallId),
@@ -154,7 +151,7 @@ export class WaterfallComponent implements OnInit {
     }
   }
 
-  public getCurrentContract(item: Income | Expense) {
+  public getCurrentContract(item: Income | Expense) { // TODO #9493 add Statement type
     const contracts = getContractAndAmendments(item.contractId, this.contracts);
     const current = getCurrentContract(contracts, item.date);
     if (!current) return '--';
