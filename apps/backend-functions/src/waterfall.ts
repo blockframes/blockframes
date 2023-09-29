@@ -56,8 +56,7 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
   const blocksBefore = before.versions ? Array.from(new Set(before.versions.map(v => v.blockIds).flat())) : [];
   const blocksAfter = after.versions ? Array.from(new Set(after.versions.map(v => v.blockIds).flat())) : [];
   const removedBlocks = blocksBefore.filter(b => !blocksAfter.includes(b));
-  return Promise.all(removedBlocks.map(blockId => getDocumentSnap(`waterfall/${after.id}/blocks/${blockId}`).then(b => b.ref.delete())))
-
+  return Promise.all(removedBlocks.map(blockId => getDocumentSnap(`waterfall/${after.id}/blocks/${blockId}`).then(b => b.ref.delete())));
 }
 
 export async function onWaterfallDelete(snap: BlockframesSnapshot<Waterfall>, context: EventContext) {
