@@ -3,11 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { format } from 'date-fns';
 import { combineLatest, Subscription } from 'rxjs';
 import { first, map, shareReplay, startWith, throttleTime } from 'rxjs/operators';
-import { filterContractsByTitle, medias, TerritoryValue, MapAvailsFilter, territoryAvailabilities, decodeDate } from '@blockframes/model';
+import { filterContractsByTitle, medias, TerritoryValue, MapAvailsFilter, territoryAvailabilities, decodeDate, toGroupLabel } from '@blockframes/model';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { CatalogAvailsShellComponent } from '../shell/shell.component';
-import { toGroupLabel } from '@blockframes/utils/pipes/group-label.pipe';
 
 function formatDate(date: Date) {
   return format(date, 'dd/MM/yyy');
