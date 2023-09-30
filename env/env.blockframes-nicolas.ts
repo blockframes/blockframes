@@ -119,3 +119,22 @@ export const jwplayer = {
   playerId: 'LVeBD5vf',
   testVideoId: 'YlSFNnkR'
 }
+
+// Airtable
+// ========
+
+export const baseId = 'approgrPg7O0KaTCn';
+export const tables = {
+  users: 'tblsjHLcyaIIHnBUm',
+  orgs: 'tbl6wo06vay88TEpM',
+  titles: 'tblTYeHf90sWnZq0W',
+  events: 'tblujqmnwiYOAhFQ4',
+  contracts: 'tblPXrrEaiB6czO8r',
+  reports: 'tblrWS0z71v6hJbdu',
+  buckets: 'tblosGNs2HdlJmw6x',
+  offers: 'tblKBfeoX7fQbTCyN',
+  titleAnalytics: 'tblqy3yqEnT33DGO8',
+  orgAnalytics: 'tblL9sW9LldjdASjM',
+  searchAnalytics: 'tblDmH20Eg5p2uSuQ',
+  movieAnalytics: 'tblBcyv716zY7Y3NN'
+};

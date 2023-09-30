@@ -67,6 +67,11 @@ export const getAnalyticsActiveUsers = async (
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
   if (!admin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
 
+  return _getAnalyticsActiveUsers();
+};
+
+export const _getAnalyticsActiveUsers = async () => {
+
   const [rows] = await executeQuery(queryAnalyticsActiveUsers);
 
   if (rows !== undefined && rows.length >= 0) {

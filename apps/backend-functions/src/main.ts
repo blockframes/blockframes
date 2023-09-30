@@ -11,11 +11,18 @@ import {
   onDocumentCreate,
   onDocumentDelete,
   onDocumentUpdate,
-  onDocumentWrite
+  onDocumentWrite,
+  airtableConfig,
 } from './internals/firebase';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
-import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged, onRequestFromOrgToAccessApp } from './orgs';
+import {
+  onOrganizationCreate,
+  onOrganizationDelete,
+  onOrganizationUpdate,
+  accessToAppChanged,
+  onRequestFromOrgToAccessApp,
+} from './orgs';
 import { onMovieUpdate, onMovieCreate, onMovieDelete, createAskingPriceRequest, createScreenerRequest } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate, onPermissionDelete } from './permissions';
@@ -32,6 +39,7 @@ import { onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
+import { updateAirtable as _updateAirtable } from './airtable';
 import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
 import { projectId, storageBucket } from './environments/environment';
 
@@ -280,3 +288,9 @@ export const onNegotiationCreateEvent = onDocumentCreate('contracts/{contractId}
 //--------------------------------
 
 export const downloadVideoToStorage = functions(superHeavyConfig).https.onRequest(downloadVideo);
+
+//--------------------------------
+//        Airtable update       //
+//--------------------------------
+
+export const updateAirtable = functions(airtableConfig).https.onRequest(_updateAirtable);

@@ -1,8 +1,10 @@
 import { createStorageFile, StorageFile } from './media';
 import type { DocumentMeta } from './meta';
-import type { App, Genre, Language, Media, Territory } from './static';
+import { appName, App, Genre, Language, Media, Territory } from './static';
 import type { NotificationTypes } from './notification';
 import type { UserRole } from './permissions';
+import { Organization } from './organisation';
+import { Permissions } from './permissions';
 
 export interface User extends PublicUser {
   firstName: string;
@@ -16,6 +18,15 @@ export interface User extends PublicUser {
   settings?: UserSettings;
   preferences?: Preferences;
   savedSearches?: Partial<Record<App, string>>
+}
+
+export interface CrmUser extends User {
+  firstConnection: Date;
+  lastConnection: Date;
+  pageView: number;
+  sessionCount: number;
+  createdFrom: string;
+  org: Organization;
 }
 
 export interface LegalTerms {
@@ -108,3 +119,27 @@ function fakeIp() {
 }
 
 export const fakeLegalTerms = { date: new Date(), ip: fakeIp() };
+
+export const getMemberRole = (r: CrmUser, permissions: Permissions[]) => {
+  const permission = permissions.find(p => p.id === r.orgId);
+  if (!permission) return;
+  return permission.roles[r.uid];
+};
+
+export function usersToCrmUsers(users: User[], orgs: Organization[], userAnalytics: any[]) {
+  const crmUsers: CrmUser[] = users.map(u => {
+    const userMetaAnalytics = userAnalytics.find(analytic => analytic.user_id === u.uid);
+    const org = orgs.find(o => o.id === u.orgId);
+    const CRMuser = {
+      ...u,
+      firstConnection: userMetaAnalytics && new Date(userMetaAnalytics['first_connexion'].value),
+      lastConnection: userMetaAnalytics && new Date(userMetaAnalytics['last_connexion'].value),
+      pageView: userMetaAnalytics && userMetaAnalytics['page_view'],
+      sessionCount: userMetaAnalytics && userMetaAnalytics['session_count'],
+      createdFrom: u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
+      org,
+    };
+    return CRMuser;
+  });
+  return crmUsers;
+}

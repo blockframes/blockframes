@@ -1,12 +1,26 @@
 import { db } from './internals/firebase';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { triggerNotifications } from './notification';
-import { Movie, Organization, PublicUser, EventMeta, Event, createInternalDocumentMeta, createPublicUser, createNotification } from '@blockframes/model';
 import { getDocument, BlockframesSnapshot } from '@blockframes/firebase-utils';
 import { eventCreatedAdminEmail } from './templates/mail';
 import { getMailSender } from '@blockframes/utils/apps';
 import { sendMail } from './internals/email';
 import { groupIds } from '@blockframes/utils/emails/ids';
+import { airtable } from './internals/airtable';
+import { tables } from '@env';
+import {
+  Movie,
+  Organization,
+  PublicUser,
+  EventMeta,
+  Event,
+  createInternalDocumentMeta,
+  createPublicUser,
+  createNotification,
+  Invitation,
+  eventsToCrmEvents,
+  crmEventsToExport,
+} from '@blockframes/model';
 
 /**
  * Removes invitations and notifications related to an event when event is deleted
@@ -86,4 +100,23 @@ export async function createScreeningRequest(
     _meta: createInternalDocumentMeta({ createdFrom: 'festival' }),
   });
   triggerNotifications([notification]);
+}
+
+export async function updateAirtableEvents({
+  events,
+  orgs,
+  invites,
+}: {
+  events: Event[];
+  orgs: Organization[];
+  invites: Invitation[];
+}) {
+  console.log('===== Updating events =====');
+
+  const crmEvents = eventsToCrmEvents(events, orgs, invites);
+
+  const rows = crmEventsToExport(crmEvents);
+
+  const synchronization = await airtable.synchronize(tables.events, rows, 'event id');
+  console.log(synchronization);
 }

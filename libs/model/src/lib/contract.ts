@@ -1,8 +1,12 @@
-import { Income, TotalIncome } from './income';
+import { isInitial } from '@blockframes/contract/negotiation/utils';
+import { Income, TotalIncome, getTotalIncome } from './income';
 import { DocumentMeta, createDocumentMeta } from './meta';
+import { Movie } from './movie';
 import { Negotiation } from './negociation';
+import { Organization } from './organisation';
 import type { Media, Territory, ContractStatus, ContractType } from './static';
 import { Duration, Term } from './terms';
+import { getSeller } from '@blockframes/contract/contract/utils';
 
 export interface Holdback {
   territories: Territory[];
@@ -117,4 +121,45 @@ export function isMandate(contract: Contract): contract is Mandate {
 
 export function isSale(contract: Contract): contract is Sale {
   return contract.type === 'sale';
+}
+
+export function contractToDetailedContract(
+  contracts: Contract[],
+  orgs: Organization[],
+  titles: Movie[],
+  incomes?: Income[],
+  negotiations?: (Negotiation & { contractId: string })[]
+) {
+  const detailedContracts: DetailedContract[] = contracts.map(c => {
+    const detailedContract: DetailedContract = {
+      ...c,
+      licensor: orgs.find(o => o.id === getSeller(c)).name,
+      licensee: orgs.find(o => o.id === c.buyerId)?.name || 'External',
+      title: titles.find(t => t.id === c.titleId).title.international,
+    };
+    if (!incomes) return detailedContract;
+    detailedContract.incomes = incomes.filter(i => i.contractId === c.id);
+    detailedContract.negotiation = negotiations.find(n => n.contractId === c.id);
+    return detailedContract;
+  });
+  return detailedContracts;
+}
+
+export const getPrice = (sale: DetailedContract) => {
+  if (sale.buyerId) {
+    return `${sale.negotiation?.price || ''} ${sale.negotiation?.currency || ''}`;
+  } else {
+    const totalIncome = getTotalIncome(sale.incomes);
+    const incomes = [];
+    if (totalIncome.EUR) incomes.push(`${totalIncome.EUR} 'EUR'`);
+    if (totalIncome.USD) incomes.push(`${totalIncome.USD} 'USD'`);
+    return incomes.join(' | ');
+  }
+}
+
+export function getNegotiationStatus(negotiation: Negotiation): ContractStatus {
+  const pending = negotiation?.status === 'pending';
+  if (isInitial(negotiation) && pending) return 'pending';
+  if (negotiation?.status === 'pending') return 'negotiating';
+  return negotiation?.status;
 }

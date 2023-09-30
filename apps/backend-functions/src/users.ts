@@ -1,16 +1,35 @@
 import type * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
-import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils/algolia';
-import { getCollection, getDocument, getDocumentSnap, BlockframesChange, BlockframesSnapshot, getAuth } from '@blockframes/firebase-utils';
 import { getMailSender, applicationUrl } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { production } from './environments/environment';
 import { cleanUserMedias } from './media';
 import { groupIds } from '@blockframes/utils/emails/ids';
+import { registerToNewsletters, updateMemberTags } from './mailchimp';
+import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
+import { airtable } from './internals/airtable';
+import { tables } from '@env';
+import { unique } from '@blockframes/utils/helpers';
+import {
+  getCollection,
+  getDocument,
+  getDocumentSnap,
+  BlockframesChange,
+  BlockframesSnapshot,
+  getAuth,
+} from '@blockframes/firebase-utils';
+import {
+  userResetPassword,
+  sendDemoRequestMail,
+  sendContactEmail,
+  accountCreationEmail,
+  userInvite,
+  userVerifyEmail,
+} from './templates/mail';
 import {
   User,
   PublicUser,
@@ -21,9 +40,16 @@ import {
   Organization,
   getUserEmailData,
   OrgEmailData,
+  Permissions,
+  Analytics,
+  filterOwnerEvents,
+  crmUsersToExport,
+  usersToCrmUsers,
+  Movie,
+  titleAnalyticsToExport,
+  orgAnalyticsToExport,
+  searchAnalyticsToExport,
 } from '@blockframes/model';
-import { registerToNewsletters, updateMemberTags } from './mailchimp';
-import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -320,4 +346,101 @@ export const verifyEmail = async (data: { uid: string }, context: CallableContex
   } catch (e) {
     throw new Error(`There was an error while verifying email : ${e.message}`);
   }
+};
+
+export async function updateAirtableUsers({
+  users,
+  orgs,
+  permissions,
+  userAnalytics,
+  titleViewAnalytics,
+  orgAnalytics,
+  titleSearchAnalytics,
+}: {
+  users: User[];
+  orgs: Organization[];
+  permissions: Permissions[];
+  userAnalytics: any[];
+  titleViewAnalytics: Analytics<'title'>[];
+  orgAnalytics: Analytics<'organization'>[];
+  titleSearchAnalytics: Analytics<'titleSearch'>[];
+}) {
+  console.log('===== Updating users =====');
+
+  const crmUsers = usersToCrmUsers(users, orgs, userAnalytics);
+  const allAnalytics = filterOwnerEvents([...titleViewAnalytics, ...orgAnalytics, ...titleSearchAnalytics]);
+
+  const rows = crmUsersToExport(crmUsers, allAnalytics, permissions, 'airtable');
+
+  //const replaceAll = await airtable.replaceAll(tables.users, rows)
+
+  const synchronization = await airtable.synchronize(tables.users, rows, 'userId');
+  console.log(synchronization);
+}
+
+export async function updateAirtableTitleAnalytics({
+  users,
+  orgs,
+  userAnalytics,
+  titleAnalytics,
+  availsSearchAnalytics,
+}: {
+  users: User[];
+  orgs: Organization[];
+  userAnalytics: any[];
+  titleAnalytics: Analytics<'title'>[];
+  availsSearchAnalytics: Analytics<'titleSearch'>[];
+}) {
+  console.log('===== Updating title analytics =====');
+
+  const allAnalytics = filterOwnerEvents([...titleAnalytics, ...availsSearchAnalytics]);
+  const allTitleIds = unique(allAnalytics.map(analytic => analytic.meta.titleId).filter(t => !!t));
+  const allTitlesPromise = allTitleIds.map(titleId => getDocument<Movie>(`movies/${titleId}`));
+  const allTitles = await Promise.all(allTitlesPromise);
+
+  const crmUsers = usersToCrmUsers(users, orgs, userAnalytics);
+
+  const rows = titleAnalyticsToExport(crmUsers, allAnalytics, allTitles, allTitleIds, orgs, 'airtable');
+
+  const synchronization = await airtable.synchronize(tables.titleAnalytics, rows, ['uid', 'titleId']);
+  console.log(synchronization);
+}
+
+export async function updateAirtableOrgAnalytics({
+  orgAnalytics,
+  orgs,
+}: {
+  orgAnalytics: Analytics<'organization'>[];
+  orgs: Organization[];
+}) {
+  console.log('===== Updating org analytics =====');
+
+  const rows = orgAnalyticsToExport(orgAnalytics, orgs);
+
+  const synchronization = await airtable.synchronize(tables.orgAnalytics, rows, ['uid', 'visited org id', 'date']);
+  console.log(synchronization);
+}
+
+export async function updateAirtableSearchAnalytics({
+  users,
+  orgs,
+  userAnalytics,
+  searchAnalytics,
+}: {
+  users: User[];
+  orgs: Organization[];
+  userAnalytics: any[];
+  searchAnalytics: Analytics<'titleSearch'>[];
+}) {
+  console.log('===== Updating search analytics =====');
+
+  const allTitleIds = unique(searchAnalytics.map(analytic => analytic.meta.titleId).filter(t => !!t));
+  const allTitlesPromise = allTitleIds.map(titleId => getDocument<Movie>(`movies/${titleId}`));
+  const allTitles = await Promise.all(allTitlesPromise);
+  const crmUsers = usersToCrmUsers(users, orgs, userAnalytics);
+
+  const rows = searchAnalyticsToExport(searchAnalytics, crmUsers, orgs, allTitles, 'airtable');
+
+  const synchronization = await airtable.synchronize(tables.searchAnalytics, rows, ['uid', 'date']);
+  console.log(synchronization);
 }

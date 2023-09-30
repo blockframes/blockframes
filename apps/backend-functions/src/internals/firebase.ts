@@ -135,3 +135,11 @@ export const superHeavyConfig: RuntimeOptions = {
   timeoutSeconds: 540,
   memory: '4GB',
 };
+
+/**
+ * Runtime options for airtable functions
+ */
+export const airtableConfig: RuntimeOptions = {
+  timeoutSeconds: 540,
+  memory: '1GB',
+};

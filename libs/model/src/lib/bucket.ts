@@ -2,6 +2,7 @@ import type { MovieCurrency } from './static';
 import { createHoldback, Holdback } from './contract';
 import { BucketTerm } from './terms';
 import { createLanguageKey } from './movie';
+import { Organization } from './organisation';
 
 export interface Bucket {
   id: string;
@@ -26,6 +27,10 @@ export interface BucketContract {
   terms: BucketTerm[];
   specificity: string;
   holdbacks: Holdback[];
+}
+
+export interface CrmBucket extends Bucket {
+  org: Organization;
 }
 
 export function createBucketTerm(params: Partial<BucketTerm> = {}): BucketTerm {
@@ -61,3 +66,6 @@ export function createBucket(params: Partial<Bucket> = {}): Bucket {
     contracts: params.contracts?.map(createBucketContract) ?? [],
   };
 }
+
+export const bucketsToCrmBuckets = (buckets: Bucket[], orgs: Organization[]): CrmBucket[] =>
+  buckets.map(b => ({ ...b, org: orgs.find(o => o.id === b.id) }));
