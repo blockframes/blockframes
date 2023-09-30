@@ -134,8 +134,8 @@ export const tables = {
   reports: 'tblrWS0z71v6hJbdu',
   buckets: 'tblosGNs2HdlJmw6x',
   offers: 'tblKBfeoX7fQbTCyN',
-  userAnalytics: 'tblqy3yqEnT33DGO8',
-  viewAnalytics: 'tblL9sW9LldjdASjM',
+  titleAnalytics: 'tblqy3yqEnT33DGO8',
+  orgAnalytics: 'tblL9sW9LldjdASjM',
   searchAnalytics: 'tblDmH20Eg5p2uSuQ',
   movieAnalytics: 'tblBcyv716zY7Y3NN'
 };
