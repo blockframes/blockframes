@@ -6,7 +6,7 @@
   <article>
     <movie-header [movie]="movie" [showBackArrow]="false"></movie-header>
   </article>
-  <h3>Statement - {{ statement.id }}</h3>
+  <h3>{{ statement.type | toLabel: 'rightholderRoles' }} Statement - {{ statement.id }}</h3>
 
   <section>
     <mat-form-field appearance="fill">
@@ -52,6 +52,9 @@
           <price-per-currency [price]="amount"></price-per-currency>
         </ng-container>
       </ng-template>
+      <!-- TODO #9493 add 1 column showing what current rightholder taken for this income (internal payments)-->
+      <!-- TODO #9493 add 1 column showing value of external payment for this income (income - sum(internal payments))-->
+      <!-- TODO #9493 + 2 columns calculated & cumulated of calculated -->
     </bf-table>
   
     <ng-container *ngIf="expenses.length">
@@ -98,7 +101,7 @@
     </ng-template>
     <ng-template colRef="id" label="Declared" let-id>
       <strong>
-        <price-per-currency [price]="getInternalPayment(id)"></price-per-currency>
+        <price-per-currency [price]="getRightPayment(id)"></price-per-currency>
       </strong>
     </ng-template>
     <ng-template colRef="id" label="Calculated" let-id>
@@ -136,10 +139,35 @@
   </article>
 
   <ng-container *ngIf="statement.payments.external">
-    <h3>Payment</h3>
-    <ul>
-      <li><strong>To :</strong> {{ getRightholderName(statement.payments.external.to) }}</li>
-      <li><strong>Amount :</strong><price-per-currency [price]="toPricePerCurrency(statement.payments.external)"></price-per-currency></li>
-    </ul>
+    <h3>Payments</h3>
+    <bf-table [source]="statement.payments.external" pagination="50">
+      <ng-template colRef="date" label="Date" let-date>
+        <ng-container *ngIf="date">
+          {{ date | date: 'MM/dd/yyyy' }}
+        </ng-container>
+        <ng-container *ngIf="!date">--</ng-container>
+      </ng-template>
+      <ng-template colRef="" label="To" let-item>
+        {{ getRightholderName(item.to) }}
+      </ng-template>
+      <ng-template colRef="" label="Amount" let-item>
+        <price-per-currency [price]="toPricePerCurrency(item)"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="status" label="Status" let-status>
+        {{ status }}
+      </ng-template>
+      <ng-template colRef="incomeIds" label="Related to" let-incomeIds>
+        {{ incomeIds | join }}
+      </ng-template>
+      <ng-template *ngIf="isDistributorStatement()" colRef="" label="Actions" let-item sticky>
+        <button mat-icon-button [disabled]="item.status !== 'pending'" (click)="markAsReceived(item)">
+          <mat-icon svgIcon="check" matTooltip="Mark payment as received"></mat-icon>
+        </button>
+      </ng-template>
+    </bf-table>
   </ng-container>
+
+  <button mat-button color="primary" [disabled]="statement.status === 'processed'" (click)="validate()">
+    Validate statement
+  </button>
 </ng-container>

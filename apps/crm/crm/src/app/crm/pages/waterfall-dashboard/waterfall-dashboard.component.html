@@ -23,7 +23,7 @@
     </h3>
   </section>
 
-  <bf-table *ngIf="currentState" [source]="currentState.orgs | keyvalue" clickable useFilter pagination="50">
+  <bf-table *ngIf="currentState" [source]="currentState.orgs | keyvalue" clickable (rowClick)="displayStatementsToCreate($event.value.id)" useFilter pagination="50">
     <ng-template colRef="value.id" label="Right Holder" let-id sort>
       {{ getRightholderName(id) }}
     </ng-template>
@@ -35,9 +35,44 @@
         <price-per-currency [price]="getPrice(revenu.actual)"></price-per-currency>
       </strong>
     </ng-template>
+    <ng-template colRef="value.id" label="Pending revenue" let-id sort>
+      <price-per-currency [price]="getPendingRevenue(id)"></price-per-currency>
+    </ng-template>
+    <ng-template colRef="value.id" label="Statements to create" let-id sort>
+      {{ statementsToCreate(id).length }}
+    </ng-template>
     <ng-template colRef="value.turnover" label="Turnover" let-turnover sort>
       <price-per-currency [price]="getPrice(turnover.actual)"></price-per-currency>
     </ng-template>
   </bf-table>
+
+  <article *ngIf="pendingStatements.length">
+    <h3>Pending statements</h3>
+    <bf-table [source]="pendingStatements" clickable useFilter pagination="50">
+      <ng-template colRef="type" label="Type" let-type sort>
+        {{ type | toLabel: 'rightholderRoles' }}
+      </ng-template>
+      <ng-template colRef="status" label="Status" let-status sort>
+        {{ status }}
+      </ng-template>
+      <ng-template colRef="" label="Contract Id" let-item sort>
+        {{ getCurrentContract(item) }}
+      </ng-template>
+      <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
+        {{ getRightholderName(rightholderId) }}
+      </ng-template>
+      <ng-template colRef="duration.from" label="From" let-from sort defaultSort>
+        {{ from | date: 'dd/MM/yyyy' }}
+      </ng-template>
+      <ng-template colRef="duration.to" label="To" let-to sort defaultSort>
+        {{ to | date: 'dd/MM/yyyy' }}
+      </ng-template>
+      <ng-template colRef="" label="Actions" let-statement sticky>
+        <button mat-icon-button target="_blank" (click)="createStatement(statement);$event.stopPropagation()">
+          <mat-icon svgIcon="add" matTooltip="Go to statement"></mat-icon>
+        </button>
+      </ng-template>
+    </bf-table>
+  </article>
 
 </ng-container>

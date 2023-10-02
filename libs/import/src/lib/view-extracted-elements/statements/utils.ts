@@ -4,7 +4,6 @@ import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getStatementConfig } from './fieldConfigs';
 import { MovieService } from '@blockframes/movie/service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
-import { state } from '@angular/animations';
 
 export interface FormatConfig {
   app: App;
@@ -41,7 +40,7 @@ export async function formatStatement(
 
     const statement = createStatement(data.statement);
 
-    const incomes = data.incomes.map(i => {
+    const incomes = data.incomes.filter(i => i.price && i.currency).map(i => {
       const { territories_included, territories_excluded } = i;
       delete i.territories_included;
       delete i.territories_excluded;
@@ -74,7 +73,7 @@ export async function formatStatement(
       return income;
     });
 
-    const expenses = data.expenses.map(e => {
+    const expenses = data.expenses.filter(e => e.price && e.currency).map(e => {
       if (!e.id) e.id = waterfallService.createId();
       const expense = createExpense({ ...e });
       if (isDistributorStatement(statement)) statement.expenseIds.push(expense.id);

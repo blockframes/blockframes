@@ -122,13 +122,11 @@ export function getStatementConfig(option: StatementConfig) {
     };
   }
 
-  function getCurrency(value: string) {
+  function getCurrency(value: string): MovieCurrency {
     if (value?.trim() === '€') return 'EUR';
     if (value?.trim() === '$') return 'USD';
     if (value?.trim() === '£') return 'GBP';
-    const currency = getKeyIfExists('movieCurrencies', value);
-    if (!currency) throw mandatoryError(value, 'Currency');
-    return currency;
+    return getKeyIfExists('movieCurrencies', value) || 'EUR';
   }
 
   return getAdminConfig();
