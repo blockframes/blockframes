@@ -211,7 +211,7 @@
           <span>Remove all documents</span>
         </button>
       </section>
-      <bf-table [source]="documents" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
+      <bf-table [source]="documents" clickable useFilter pagination="50" (rowClick)="goTo('document', $event.id)">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>
@@ -243,7 +243,7 @@
           <span>Remove all contracts</span>
         </button>
       </section>
-      <bf-table [source]="contracts" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
+      <bf-table [source]="contracts" clickable useFilter pagination="50" (rowClick)="goTo('document', $event.id)">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>
@@ -381,7 +381,7 @@
           <span>Remove all statements</span>
         </button>
       </section>
-      <bf-table [source]="statements" clickable useFilter pagination="50">
+      <bf-table [source]="statements" clickable useFilter pagination="50" (rowClick)="goTo('statement', $event.id)">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>

@@ -167,7 +167,7 @@
     </bf-table>
   </ng-container>
 
-  <button mat-button color="primary" [disabled]="statement.status === 'processed'" (click)="validate()">
+  <button mat-button color="primary" [disabled]="statement.status === 'processed' || statement.status === 'pending'" (click)="validate()">
     Validate statement
   </button>
 </ng-container>

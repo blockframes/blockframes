@@ -45,7 +45,7 @@ import { StatementService } from './statement.service';
 export const fromOrg = (orgId: string) => [where('orgIds', 'array-contains', orgId)];
 
 export interface WaterfallState {
-  waterfall: { state: TitleState; history: History[], previous?: History };
+  waterfall: { state: TitleState; history: History[] };
   version: Version;
 }
 
@@ -90,7 +90,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
   public async buildWaterfall(data: { waterfallId: string, versionId: string, date?: Date }) {
     const waterfall = this.app === 'crm' ? await this.buildWaterfallAdmin(data) : await this.buildWaterfallUser(data);
 
-    if (data.date) { // Stops waterfall at a given date and adds previous state
+    if (data.date) { // Stops waterfall at a given date
       waterfall.waterfall.history = waterfall.waterfall.history.filter(h => {
         const stateDate = new Date(h.date);
         const compareDate = data.date;
@@ -99,7 +99,6 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
         return stateDate.getTime() <= compareDate.getTime();
       });
       waterfall.waterfall.state = waterfall.waterfall.history[waterfall.waterfall.history.length - 1];
-      if (waterfall.waterfall.history.length > 1) waterfall.waterfall.previous = waterfall.waterfall.history[waterfall.waterfall.history.length - 1];
     }
 
     return waterfall;
