@@ -300,14 +300,12 @@ function getBlockName(date: Date, actions: Action[]) {
   const dateStr = `${date.toLocaleDateString()}`;
   const actionsNames = Array.from(new Set(actions.map(a => a.name)));
 
-  const statementsActions: ActionName[] = ['expense', 'income'];
+  const statementsActions: ActionName[] = ['expense', 'income', 'payment'];
   const contractsActions: ActionName[] = ['contract', 'updateContract'];
   const rightsActions: ActionName[] = ['append', 'prepend', 'prependHorizontal', 'appendHorizontal', 'appendVertical', 'prependVertical'];
-  const paymentActions: ActionName[] = ['payment'];
 
   if (actionsNames.every(n => statementsActions.includes(n))) return `statements-${dateStr}`;
   if (actionsNames.every(n => contractsActions.includes(n))) return `contracts-${dateStr}`;
   if (actionsNames.every(n => rightsActions.includes(n))) return `rights-${dateStr}`;
-  if (actionsNames.every(n => paymentActions.includes(n))) return `payments-${dateStr}`;
   return `mixed-${dateStr}`;
 }

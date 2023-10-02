@@ -141,11 +141,11 @@ export function isProducerStatement(statement: Partial<Statement>): statement is
   return statement.type === 'producer';
 }
 
-export function isFinancierStatement(statement: Partial<Statement>): statement is FinancierStatement {
+function isFinancierStatement(statement: Partial<Statement>): statement is FinancierStatement {
   return statement.type === 'financier';
 }
 
-export function createDistributorStatement(params: Partial<DistributorStatement> = {}): DistributorStatement {
+function createDistributorStatement(params: Partial<DistributorStatement> = {}): DistributorStatement {
   const statement = createStatementBase(params);
   return {
     ...statement,

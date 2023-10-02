@@ -200,7 +200,7 @@ export function getRightConfig(option: RightConfig) {
     };
   }
 
-  async function extractConditionLeft(value: string, waterfallId: string, conditionName: ConditionName) {
+  function extractConditionLeft(value: string, waterfallId: string, conditionName: ConditionName) {
     if (!value) return '';
     switch (conditionName) {
       case 'orgRevenu':
