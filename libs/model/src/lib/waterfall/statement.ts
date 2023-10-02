@@ -4,31 +4,63 @@ import { Duration, createDuration } from '../terms';
 
 export interface Payment {
   id: string;
-  type: 'external' | 'internal'; // TODO #9493 create type ?
+  type: 'rightholder' | 'right'; // TODO #9493 create type ?
   price: number;
   currency: MovieCurrency;
-  date: Date;
-  status: 'pending' | 'processed'; // TODO #9493 create type  (same as Income interface)
+  date: Date; // TODO #9493 should be only on external payment, and optional (setted when payment gets processed), inside have same date as statement.duration.to
+  status: 'pending' | 'received' | 'processed'; // TODO #9493 create type  (same as Income interface)
   to: string;
-}
-
-/**
- * "External" payment to the licensor (money that the current righholder did not take for his rights)
- * Once processed, will take money available in Org.revenu.actual and assign it to licensor's Org, incrementing org actual revenu and turnover
- */
-interface ExternalPayment extends Payment {
-  type: 'external';
-  to: string; // rightholderId referenced as licensor in the contract
   incomeIds: string[]; // Incomes related to this payment
 }
 
 /**
- * "Internal" payment (com, expense, MG etc)
- * Once processed, will assign money available in Org.revenu.actual to correct rights, incrementing right actual revenu and turnover
+ * "To Rightholder" payment to the licensor (money that the current righholder did not take for his rights)
+ * Once processed, will take money available in Org.revenu.actual and assign it to licensor's Org, incrementing org actual revenu and turnover
  */
-interface InternalPayment extends Payment {
-  type: 'internal'
+export interface RightholderPayment extends Payment {
+  type: 'rightholder';
+  to: string; // rightholderId referenced as licensor in the contract
+}
+
+/**
+ * "To Right" payment (com, expense, MG etc)
+ * Once processed, will assign money available in Org.revenu.actual to correct rights, incrementing right actual revenu and turnover
+ * If Org that is sending money to right is not the same as the one that is receiving money from rightholder,
+ * org.revenu.actual will be decremented for org sending money and org.revenu.actual and org.turnover.actual incremented for org receiving money
+ */
+export interface RightPayment extends Payment {
+  type: 'right'
   to: string; // rightId
+}
+
+function createPaymentBase(params: Partial<Payment> = {}): Payment {
+  return {
+    id: '',
+    type: 'rightholder',
+    price: 0,
+    currency: 'EUR',
+    date: new Date(),
+    status: 'pending',
+    to: '',
+    incomeIds: params.incomeIds || [],
+    ...params,
+  };
+}
+
+export function createRightholderPayment(params: Partial<RightholderPayment> = {}): RightholderPayment {
+  const payment = createPaymentBase(params);
+  return {
+    ...payment,
+    type: 'rightholder',
+  }
+}
+
+export function createRightPayment(params: Partial<RightPayment> = {}): RightPayment {
+  const payment = createPaymentBase(params);
+  return {
+    ...payment,
+    type: 'right',
+  }
 }
 
 export interface Statement {
@@ -39,25 +71,37 @@ export interface Statement {
   waterfallId: string;
   rightholderId: string;
   duration: Duration;
-  contractId: string; // rightholderId is licensee or licensor of this contract
+  contractId: string; // rightholderId is licensee or licensor of this contract (producer will always be licensor except for author's contracts)
   incomeIds: string[];
   payments: {
-    external?: ExternalPayment,
-    internal: InternalPayment[]
+    internal: RightPayment[],
+    external: Payment[]
   };
-  additional: {
-    quantitySold?: number;
-    salesContractId?: string;
-  }
 }
 
 export interface DistributorStatement extends Statement {
   type: 'mainDistributor';
   expenseIds: string[];
+  payments: {
+    internal: RightPayment[],
+    external: RightholderPayment[]
+  };
+  additional: {
+    quantitySold?: number;
+    salesContractIds?: {
+      incomeId: string;
+      contractId: string;
+    }[];
+  }
 }
 
 export interface ProducerStatement extends Statement {
   type: 'producer';
+  parentPayments: { statementId: string, paymentId: string }[]; // TODO #9493 create type
+  payments: {
+    internal: RightPayment[],
+    external: RightPayment[]
+  };
 }
 
 export interface FinancierStatement extends Statement {
@@ -74,14 +118,15 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
     contractId: '',
     incomeIds: params.incomeIds || [],
     payments: {
-      internal: []
+      internal: params.payments?.internal ? params.payments.internal.map(createRightPayment) : [],
+      external: params.payments?.internal ? params.payments.external.map(createPaymentBase) : [],
     },
-    additional: {},
     ...params,
     duration: createDuration(params?.duration),
   };
 }
 
+// TODO #9493 should be only 2 statements families: producer and distributor
 export function createStatement(params: Partial<Statement>) {
   if (isDistributorStatement(params)) return createDistributorStatement(params);
   if (isProducerStatement(params)) return createProducerStatement(params);
@@ -89,14 +134,14 @@ export function createStatement(params: Partial<Statement>) {
 }
 
 export function isDistributorStatement(statement: Partial<Statement>): statement is DistributorStatement {
-  return statement.type === 'mainDistributor';
+  return statement.type === 'mainDistributor'; // TODO #9493 or localDistributor or salesAgent
 }
 
-function isProducerStatement(statement: Partial<Statement>): statement is ProducerStatement {
+export function isProducerStatement(statement: Partial<Statement>): statement is ProducerStatement {
   return statement.type === 'producer';
 }
 
-function isFinancierStatement(statement: Partial<Statement>): statement is FinancierStatement {
+export function isFinancierStatement(statement: Partial<Statement>): statement is FinancierStatement {
   return statement.type === 'financier';
 }
 
@@ -104,8 +149,13 @@ export function createDistributorStatement(params: Partial<DistributorStatement>
   const statement = createStatementBase(params);
   return {
     ...statement,
+    payments: {
+      internal: statement.payments.internal,
+      external: params.payments?.external ? params.payments.external.map(createRightholderPayment) : [],
+    },
     type: 'mainDistributor',
     expenseIds: params.expenseIds || [],
+    additional: {},
   }
 }
 
@@ -113,11 +163,16 @@ export function createProducerStatement(params: Partial<ProducerStatement> = {})
   const statement = createStatementBase(params);
   return {
     ...statement,
+    parentPayments: params.parentPayments || [],
+    payments: {
+      internal: statement.payments.internal,
+      external: params.payments?.external ? params.payments.external.map(createRightPayment) : [],
+    },
     type: 'producer',
   }
 }
 
-export function createFinancierStatement(params: Partial<FinancierStatement> = {}): FinancierStatement {
+function createFinancierStatement(params: Partial<FinancierStatement> = {}): FinancierStatement {
   const statement = createStatementBase(params);
   return {
     ...statement,

@@ -352,8 +352,8 @@ export function statementsToActions(statements: Statement[]) {
   const payments: PaymentAction[] = [];
 
   for (const statement of statements) {
-    if(statement.status !== 'processed') continue;
-    const internalPayments = statement.payments.internal.filter(p => p.status === 'processed');
+
+    const internalPayments = statement.payments.internal.filter(p => p.status === 'processed' || p.status === 'received');
     for (const payment of internalPayments) {
       payments.push({
         id: payment.id,
@@ -369,18 +369,19 @@ export function statementsToActions(statements: Statement[]) {
       });
     }
 
-    if (statement.payments.external?.status === 'processed') {
+    const externalPayments = statement.payments.external.filter(p => p.status === 'processed' || p.status === 'received');
+    for (const payment of externalPayments) {
       payments.push({
-        id: statement.payments.external.id,
-        amount: convertCurrenciesTo({ [statement.payments.external.currency]: statement.payments.external.price }, mainCurrency)[mainCurrency],
+        id: payment.id,
+        amount: convertCurrenciesTo({ [payment.currency]: payment.price }, mainCurrency)[mainCurrency],
         from: {
           org: statement.rightholderId
         },
         to: {
-          org: statement.payments.external.to
+          [payment.type === 'right' ? 'right' : 'org']: payment.to
         },
         contractId: statement.contractId,
-        date: statement.payments.external.date
+        date: payment.date
       });
     }
   }
@@ -795,15 +796,14 @@ function income(state: TitleState, payload: IncomeAction) {
  */
 function payment(state: TitleState, payload: PaymentAction) {
 
-  if (payload.from.org && payload.to.org) { // External payment from org to org
+  if (payload.from.org && payload.to.org) { // Payment from org to org
     if (payload.amount > state.orgs[payload.from.org].revenu.actual) throw new Error(`Org "${payload.from.org}" have not enough actual revenue to proceed.`);
     state.orgs[payload.from.org].revenu.actual -= payload.amount;
     state.orgs[payload.to.org].revenu.actual += payload.amount;
     state.orgs[payload.to.org].turnover.actual += payload.amount;
-  } else if (payload.from.org && payload.to.right) { // Internal payment for org to its own rights 
+  } else if (payload.from.org && payload.to.right) { // Payment for org to right
     assertNode(state, payload.to.right);
     const orgState = getNodeOrg(state, payload.to.right);
-    if (orgState.id !== payload.from.org) throw new Error(`Internal payment error. Right "${payload.to.right}" does not belong to org "${payload.from.org}".`);
     const nodeTo = getNode(state, payload.to.right);
     if (!isRight(state, nodeTo)) throw new Error(`Internal payment error. "${payload.to.right}" can only be a right (not a group).`);
     const actualRevenue = payload.amount;
@@ -815,6 +815,13 @@ function payment(state: TitleState, payload: PaymentAction) {
     // Rights
     nodeTo.revenu.actual += actualRevenue;
     nodeTo.turnover.actual += actualTurnover;
+
+    // Orgs
+    if (orgState.id !== payload.from.org) {
+      state.orgs[payload.from.org].revenu.actual -= actualRevenue;
+      state.orgs[orgState.id].revenu.actual += actualRevenue;
+      state.orgs[orgState.id].turnover.actual += actualTurnover;
+    }
 
     // Recalculate groups actual revenue & turnover
     const group = getGroup(state, nodeTo.id);
