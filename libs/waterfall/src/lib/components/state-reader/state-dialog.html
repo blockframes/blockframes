@@ -5,16 +5,23 @@
       <li *rxFor="let item of data.state | keyvalue">
         <ng-container [ngSwitch]="item.key">
           <ng-container *ngSwitchCase="'amount'">
-            <strong>{{ item.key }}:</strong> {{ item.value | currency }}
+            <strong>{{ item.key }}:</strong> {{ item.value | currency:currency }}
           </ng-container>
           <ng-container *ngSwitchCase="'revenu'">
-            <strong>{{ item.key }}:</strong> {{ item.value | currency }}
+            <ng-container *ngIf="item.value.calculated !== undefined else singleValue">
+              <strong>Calculated {{ item.key }}:</strong> {{ item.value.calculated | currency:currency }} <br>
+              <strong>Actual {{ item.key }}:</strong> {{ item.value.actual | currency:currency }}
+            </ng-container>
+
           </ng-container>
           <ng-container *ngSwitchCase="'shadowRevenu'">
-            <strong>{{ item.key }}:</strong> {{ item.value | currency }}
+            <strong>{{ item.key }}:</strong> {{ item.value | currency:currency }}
           </ng-container>
           <ng-container *ngSwitchCase="'turnover'">
-            <strong>{{ item.key }}:</strong> {{ item.value | currency }}
+            <ng-container *ngIf="item.value.calculated !== undefined else singleValue">
+              <strong>Calculated {{ item.key }}:</strong> {{ item.value.calculated | currency:currency }} <br>
+              <strong>Actual {{ item.key }}:</strong> {{ item.value.actual | currency:currency }}
+            </ng-container>
           </ng-container>
           <ng-container *ngSwitchCase="'date'">
             <strong>{{ item.key }}:</strong> {{ item.value | date: 'MM/dd/yyyy' }}
@@ -30,10 +37,19 @@
               </li>
             </ul>
           </ng-container>
+          <ng-container *ngSwitchCase="'from'">
+            <strong>{{ item.key }}:</strong> {{ item.value | json }}
+          </ng-container>
+          <ng-container *ngSwitchCase="'to'">
+            <strong>{{ item.key }}:</strong> {{ item.value | json }}
+          </ng-container>
           <ng-container *ngSwitchDefault>
             <strong>{{ item.key }}:</strong> {{ item.value  }}
           </ng-container>
         </ng-container>
+        <ng-template #singleValue>
+          <strong>{{ item.key }}:</strong> {{ item.value | currency:currency }}
+        </ng-template>
       </li>
     </ul>
   </div>

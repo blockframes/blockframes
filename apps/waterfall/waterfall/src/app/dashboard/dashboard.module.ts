@@ -98,20 +98,6 @@ const routes: Routes = [{
       ]
     },
     {
-      path: 'firestore-test',
-      children: [
-        {
-          path: '',
-          redirectTo: 'side-stories-mg',
-          pathMatch: 'full'
-        },
-        {
-          path: ':titleId',
-          loadChildren: () => import('./firestore-test/firestore-test.module').then(m => m.FirestoreTestModule)
-        }
-      ]
-    },
-    {
       path: 'notifications',
       loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule)
     },

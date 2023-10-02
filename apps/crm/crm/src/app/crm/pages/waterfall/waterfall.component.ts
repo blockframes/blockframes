@@ -19,7 +19,6 @@ import {
   WaterfallRightholder,
   WaterfallSource,
   convertDocumentTo,
-  createVersion,
   getAssociatedSource,
   getContractAndAmendments,
   getCurrentContract,
@@ -28,12 +27,7 @@ import {
   mainCurrency,
   Block,
   Right,
-  contractsToActions,
-  rightsToActions,
-  incomesToActions,
-  expensesToActions,
-  groupByDate,
-  ActionName
+  Statement,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
@@ -42,10 +36,9 @@ import { where } from 'firebase/firestore';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { TermService } from '@blockframes/contract/term/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BlockService } from '@blockframes/waterfall/block.service';
 import { RightService } from '@blockframes/waterfall/right.service';
+import { StatementService } from '@blockframes/waterfall/statement.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -66,6 +59,7 @@ export class WaterfallComponent implements OnInit {
   public actions: (Action & { blockId: string })[] = [];
   public rightholders: WaterfallRightholder[] = [];
   public rights: Right[] = [];
+  public statements: Statement[] = [];
   public tree: { state: TitleState; history: History[] };
   private blocks: Block[] = [];
   private terms: Term[] = [];
@@ -74,12 +68,11 @@ export class WaterfallComponent implements OnInit {
   constructor(
     private movieService: MovieService,
     private waterfallService: WaterfallService,
-    private waterfalllDocumentService: WaterfallDocumentsService,
+    private waterfallDocumentService: WaterfallDocumentsService,
     private incomeService: IncomeService,
     private expenseService: ExpenseService,
-    private termService: TermService,
-    private blockService: BlockService,
     private rightService: RightService,
+    private statementService: StatementService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -87,43 +80,32 @@ export class WaterfallComponent implements OnInit {
     private router: Router
   ) { }
 
-  async ngOnInit() {
-    await this.loadAll();
-  }
+  ngOnInit() { return this.loadAll(); }
 
   public async loadAll() {
     const waterfallId = this.route.snapshot.paramMap.get('waterfallId');
-    const [movie, waterfall, documents, blocks, rights, incomes, expenses] = await Promise.all([
-      this.movieService.getValue(waterfallId),
-      this.waterfallService.getValue(waterfallId),
-      this.waterfalllDocumentService.getValue({ waterfallId }),
-      this.blockService.getValue({ waterfallId }),
-      this.rightService.getValue({ waterfallId }),
-      this.incomeService.getValue([where('titleId', '==', waterfallId)]),
-      this.expenseService.getValue([where('titleId', '==', waterfallId)])
-    ]);
 
-    this.movie = movie;
-    this.waterfall = waterfall;
+    const data = await this.waterfallService.loadWaterfalldata(waterfallId);
+    this.movie = await this.movieService.getValue(waterfallId);
+    this.waterfall = data.waterfall;
     this.sources = this.waterfall.sources;
     this.versions = this.waterfall.versions;
     this.rightholders = this.waterfall.rightholders;
-    this.documents = documents;
-    this.blocks = blocks;
-    this.rights = rights;
-
-    this.contracts = this.documents.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c));
-    this.terms = (await Promise.all(this.contracts.map(c => this.termService.getValue([where('contractId', '==', c.id)])))).flat();
-
-    this.incomes = incomes;
-    this.expenses = expenses;
+    this.documents = data.documents;
+    this.blocks = data.blocks;
+    this.rights = data.rights;
+    this.contracts = data.contracts;
+    this.terms = data.terms
+    this.incomes = data.incomes;
+    this.expenses = data.expenses;
+    this.statements = data.statements;
 
     this.cdRef.markForCheck();
     this.canInitWaterfall$.next(this.canInitWaterfall());
   }
 
-  public goToDocument(id: string) {
-    this.router.navigate(['document', id], { relativeTo: this.route });
+  public goTo(type: 'document'| 'statement', id: string) {
+    this.router.navigate([type, id], { relativeTo: this.route });
   }
 
   public getRightholderName(id: string) {
@@ -137,13 +119,13 @@ export class WaterfallComponent implements OnInit {
 
   public getAssociatedSource(income: Income) {
     try {
-      return getAssociatedSource(income, this.waterfall.sources)?.name || '--';
+      return getAssociatedSource(income, this.waterfall.sources).name;
     } catch (error) {
       if (this.snackBar._openedSnackBarRef === null) this.snackBar.open(error, 'close', { duration: 5000 });
     }
   }
 
-  public getCurrentContract(item: Income | Expense) {
+  public getCurrentContract(item: Income | Expense) { // TODO #9493 add Statement type
     const contracts = getContractAndAmendments(item.contractId, this.contracts);
     const current = getCurrentContract(contracts, item.date);
     if (!current) return '--';
@@ -170,47 +152,28 @@ export class WaterfallComponent implements OnInit {
   }
 
   public async removeVersion(id: string) {
-    this.waterfall.versions = this.waterfall.versions.filter(v => v.id !== id);
-    await this.waterfallService.update(this.waterfall);
-    this.waterfall = await this.waterfallService.getValue(this.waterfall.id);
-    this.versions = this.waterfall.versions;
+    await this.waterfallService.removeVersion(this.waterfall.id, id);
     this.actions = [];
     this.tree = undefined;
+    await this.loadAll();
     this.snackBar.open(`Version "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
-    this.cdRef.markForCheck();
   }
 
   public async duplicateVersion(id: string) {
-    const version = this.waterfall.versions.find(v => v.id === id);
-    const blocks = await this.blockService.getValue(version.blockIds, { waterfallId: this.waterfall.id });
-
-    const newVersion = createVersion({
-      ...version,
-      id: `${version.id}-copy`,
-      name: `${version.name} (copy)`,
-      blockIds: [],
-      description: `Copied from ${version.id}`
-    });
-
-    this.snackBar.open(`Creating version "${newVersion.id}" from "${version.id}"... Please wait`, 'close');
-
-    await this.waterfallService.addVersion(this.waterfall, newVersion);
-
-    const blocksIds = await Promise.all(blocks.map(b => this.blockService.create(this.waterfall.id, 'init', Object.values(b.actions))));
-
-    await this.waterfallService.addBlocksToVersion(this.waterfall, newVersion.id, blocksIds);
-
-    this.waterfall = await this.waterfallService.getValue(this.waterfall.id);
-    this.versions = this.waterfall.versions;
-
-    this.snackBar.open(`Version "${newVersion.id}" copied from ${version.id} !`, 'close', { duration: 5000 });
-    this.cdRef.markForCheck();
+    this.snackBar.open(`Creating version  from "${id}"... Please wait`, 'close');
+    try {
+      const newVersion = await this.waterfallService.duplicateVersion(this.waterfall.id, id);
+      await this.loadAll();
+      this.snackBar.open(`Version "${newVersion.id}" copied from ${id} !`, 'close', { duration: 5000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 5000 });
+    }
   }
 
   public async displayActions(id: string) {
     this.snackBar.open(`Loading actions for version "${id}`, 'close', { duration: 5000 });
     const version = this.waterfall.versions.find(v => v.id === id);
-    const blocks = await this.blockService.getValue(version.blockIds, { waterfallId: this.waterfall.id });
+    const blocks = version.blockIds.map(blockId => this.blocks.find(b => b.id === blockId));
 
     this.actions = blocks.map(b => Object.values(b.actions).map(a => ({ ...a, blockId: b.id }))).flat();
     this.tree = undefined;
@@ -225,9 +188,9 @@ export class WaterfallComponent implements OnInit {
   }
 
   public async removeDocuments(documents: (WaterfallDocument | WaterfallContract)[]) {
-    const promises = documents.map(document => this.waterfalllDocumentService.remove(document.id, { params: { waterfallId: this.waterfall.id } }));
+    const promises = documents.map(document => this.waterfallDocumentService.remove(document.id, { params: { waterfallId: this.waterfall.id } }));
     await Promise.all(promises);
-    this.documents = await this.waterfalllDocumentService.getValue({ waterfallId: this.waterfall.id });
+    this.documents = await this.waterfallDocumentService.getValue({ waterfallId: this.waterfall.id });
     this.contracts = this.documents.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c));
     this.snackBar.open(`Document${documents.length > 1 ? 's' : ''} ${documents.length === 1 ? documents[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
     this.cdRef.markForCheck();
@@ -238,6 +201,14 @@ export class WaterfallComponent implements OnInit {
     await Promise.all(promises);
     this.rights = await this.rightService.getValue({ waterfallId: this.waterfall.id });
     this.snackBar.open(`Right${rights.length > 1 ? 's' : ''} ${rights.length === 1 ? rights[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
+    this.cdRef.markForCheck();
+  }
+
+  public async removeStatements(statements: Statement[]) {
+    const promises = statements.map(statement => this.statementService.remove(statement.id, { params: { waterfallId: this.waterfall.id } }));
+    await Promise.all(promises);
+    this.statements = await this.statementService.getValue({ waterfallId: this.waterfall.id });
+    this.snackBar.open(`Statement${statements.length > 1 ? 's' : ''} ${statements.length === 1 ? statements[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
     this.cdRef.markForCheck();
   }
 
@@ -295,27 +266,7 @@ export class WaterfallComponent implements OnInit {
     const versionId = `version_${versionNumber}`;
     this.snackBar.open(`Creating version "${versionId}"... Please wait`, 'close');
 
-    const contractActions = contractsToActions(this.contracts, this.terms);
-    const rightActions = rightsToActions(this.rights);
-    const incomeActions = incomesToActions(this.contracts, this.incomes, this.sources);
-    const expenseActions = expensesToActions(this.contracts, this.expenses);
-
-    const groupedActions = groupByDate([
-      ...contractActions,
-      ...rightActions,
-      ...expenseActions, // Expenses should be added before incomes
-      ...incomeActions
-    ]);
-
-    const blocks = await Promise.all(groupedActions.map(group => {
-      const blockName = getBlockName(group.date, group.actions);
-      return this.blockService.create(this.waterfall.id, blockName, group.actions);
-    }));
-
-    await this.waterfallService.addVersion(this.waterfall, { id: versionId, description: `Version ${versionNumber}` });
-
-    this.waterfall = await this.waterfallService.addBlocksToVersion(this.waterfall, versionId, blocks);
-
+    await this.waterfallService.initWaterfall(this.waterfall.id, { id: versionId, description: `Version ${versionNumber}` });
     await this.loadAll();
 
     this.snackBar.open(`Version "${versionId}" initialized !`, 'close', { duration: 5000 });
@@ -331,18 +282,4 @@ export class WaterfallComponent implements OnInit {
     this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
   }
 
-}
-
-function getBlockName(date: Date, actions: Action[]) {
-  const dateStr = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-  const actionsNames = Array.from(new Set(actions.map(a => a.name)));
-
-  const statementsActions: ActionName[] = ['expense', 'income'];
-  const contractsActions: ActionName[] = ['contract', 'updateContract'];
-  const rightsActions: ActionName[] = ['append', 'prepend', 'prependHorizontal', 'appendHorizontal', 'appendVertical', 'prependVertical'];
-
-  if (actionsNames.every(n => statementsActions.includes(n))) return `statements-${dateStr}`;
-  if (actionsNames.every(n => contractsActions.includes(n))) return `contracts-${dateStr}`;
-  if (actionsNames.every(n => rightsActions.includes(n))) return `rights-${dateStr}`;
-  return `mixed-${dateStr}`;
 }

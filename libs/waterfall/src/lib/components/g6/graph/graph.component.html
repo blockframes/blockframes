@@ -22,45 +22,62 @@
         </button>
       </h4>
       <p>
-        <strong>Right Id:</strong> {{ right.id }}<br>
-        <strong>Right Revenu:</strong> {{ right.revenu | currency }}<br>
-        <strong>Right Turnover:</strong> {{ right.turnover | currency }}<br>
-        <strong>Right Percent:</strong> {{ right.percent | percent: '1.0-2' }}<br>
+        <strong>Type:</strong> Right<br>
+        <strong>Id:</strong> {{ right.id }}<br>
+        <strong>Calculated Revenu:</strong> {{ right.revenu.calculated | currency:currency }}<br>
+        <strong>Calculated Turnover:</strong> {{ right.turnover.calculated | currency:currency }}<br>
+        <strong>Actual Revenu:</strong> {{ right.revenu.actual | currency:currency }}<br>
+        <strong>Actual Turnover:</strong> {{ right.turnover.actual | currency:currency }}<br>
+        <strong>Percent:</strong> {{ right.percent | percent: '1.0-2' }}<br>
       </p>
     </ng-container>
     <ng-container *ngIf="transfer">
       <h4>{{ transfer.from }} -> {{ transfer.to }}</h4>
-      <p>Total: {{ transfer.amount | currency }}</p>
+      <p>Total: {{ transfer.amount | currency:currency }}</p>
       <ul>
-        <li *rxFor="let value of transfer.history">{{ value.amount| currency }}</li>
+        <li *rxFor="let value of transfer.history">{{ value.amount | currency:currency }}</li>
       </ul>
     </ng-container>
     <ng-container *ngIf="org">
       <h4>{{ getRightholderName(org.id) }}</h4>
       <p>
-        <strong>Org Revenu:</strong> {{ org.revenu | currency }}<br>
-        <strong>Org Turnover:</strong> {{ org.turnover | currency }}<br>
-        <strong>Org Investment:</strong> {{ org.investment | currency }}<br>
-        <strong>Org Expense:</strong> {{ org.expense | currency }}<br>
-        <strong>Org Bonus:</strong> {{ org.bonus | currency }}
+        <strong>Type:</strong> Org<br>
+        <strong>Calculated Revenu:</strong> {{ org.revenu.calculated | currency:currency }}<br>
+        <strong>Calculated Turnover:</strong> {{ org.turnover.calculated | currency:currency }}<br>
+        <strong>Actual Revenu:</strong> {{ org.revenu.actual | currency:currency }}<br>
+        <strong>Actual Turnover:</strong> {{ org.turnover.actual | currency:currency }}<br>
+        <strong>Investment:</strong> {{ org.investment | currency:currency }}<br>
+        <strong>Expense:</strong> {{ org.expense | currency:currency }}<br>
+        <strong>Bonus:</strong> {{ org.bonus | currency:currency }}
       </p>
     </ng-container>
     <ng-container *ngIf="verticalGroup">
       <h4>{{ verticalGroup.id }}</h4>
       <p>
-        <strong>Right Id:</strong> {{ verticalGroup.id }}<br>
-        <strong>Right Revenu:</strong> {{ verticalGroup.revenu | currency }}<br>
-        <strong>Right Turnover:</strong> {{ verticalGroup.turnover | currency }}<br>
-        <strong>Right Percent:</strong> {{ verticalGroup.percent | percent: '1.0-2' }}<br>
+        <strong>Type:</strong> Vertical group<br>
+        <strong>Id:</strong> {{ verticalGroup.id }}<br>
+        <strong>Calculated Revenu:</strong> {{ verticalGroup.revenu.calculated | currency:currency }}<br>
+        <strong>Calculated Turnover:</strong> {{ verticalGroup.turnover.calculated | currency:currency }}<br>
+        <strong>Actual Revenu:</strong> {{ verticalGroup.revenu.actual | currency:currency }}<br>
+        <strong>Actual Turnover:</strong> {{ verticalGroup.turnover.actual | currency:currency }}<br>
+        <strong>Percent:</strong> {{ verticalGroup.percent | percent: '1.0-2' }}<br>
       </p>
     </ng-container>
     <ng-container *ngIf="horizontalGroup">
-      <h4>{{ horizontalGroup.id }}</h4>
+      <h4>
+        <span>{{ getRightholderName(horizontalGroup.blameId) }}</span>
+        <button mat-icon-button (click)="orgDetails(horizontalGroup.blameId)">
+          <mat-icon svgIcon="search"></mat-icon>
+        </button>
+      </h4>
       <p>
-        <strong>Right Id:</strong> {{ horizontalGroup.id }}<br>
-        <strong>Right Revenu:</strong> {{ horizontalGroup.revenu | currency }}<br>
-        <strong>Right Turnover:</strong> {{ horizontalGroup.turnover | currency }}<br>
-        <strong>Right Percent:</strong> {{ horizontalGroup.percent | percent: '1.0-2' }}<br>
+        <strong>Type:</strong> Horizontal group<br>
+        <strong>Id:</strong> {{ horizontalGroup.id }}<br>
+        <strong>Calculated Revenu:</strong> {{ horizontalGroup.revenu.calculated | currency:currency }}<br>
+        <strong>Calculated Turnover:</strong> {{ horizontalGroup.turnover.calculated | currency:currency }}<br>
+        <strong>Actual Revenu:</strong> {{ horizontalGroup.revenu.actual | currency:currency }}<br>
+        <strong>Actual Turnover:</strong> {{ horizontalGroup.turnover.actual | currency:currency }}<br>
+        <strong>Percent:</strong> {{ horizontalGroup.percent | percent: '1.0-2' }}<br>
       </p>
     </ng-container>
   </aside>

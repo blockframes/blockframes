@@ -7,37 +7,46 @@ import { Component, Input, ViewChild, AfterViewInit, ChangeDetectionStrategy, Ch
 import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { sortingDataAccessor } from '@blockframes/utils/table';
-import { ExpensesImportState, SpreadsheetImportError } from '../../utils';
-import { createDocumentMeta, createExpense } from '@blockframes/model';
+import { StatementsImportState, SpreadsheetImportError } from '../../utils';
+import {
+  DistributorStatement,
+  ProducerStatement,
+  createDocumentMeta,
+  createStatement,
+  isDistributorStatement,
+  isProducerStatement,
+  createIncome,
+  createExpense
+} from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { StatementService } from '@blockframes/waterfall/statement.service';
+import { IncomeService } from '@blockframes/contract/income/service';
 import { ExpenseService } from '@blockframes/contract/expense/service';
 
-const hasImportErrors = (importState: ExpensesImportState, type: string = 'error'): boolean => {
+const hasImportErrors = (importState: StatementsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 
 @Component({
-  selector: 'import-table-extracted-expenses',
-  templateUrl: './expenses.component.html',
-  styleUrls: ['./expenses.component.scss'],
+  selector: 'import-table-extracted-statements',
+  templateUrl: './statements.component.html',
+  styleUrls: ['./statements.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableExtractedExpensesComponent implements AfterViewInit {
+export class TableExtractedStatementsComponent implements AfterViewInit {
 
-  @Input() rows: MatTableDataSource<ExpensesImportState>;
+  @Input() rows: MatTableDataSource<StatementsImportState>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   public processing = 0;
 
-  public selection = new SelectionModel<ExpensesImportState>(true, []);
+  public selection = new SelectionModel<StatementsImportState>(true, []);
   public displayedColumns: string[] = [
     'id',
     'select',
-    'expense.id',
-    'expense.titleId',
-    'expense.contractId',
-    'expense.price',
-    'expense.currency',
+    'statement.id',
+    'statement.waterfallId',
+    'statement.contractId',
     'errors',
     'warnings',
     'actions',
@@ -46,6 +55,8 @@ export class TableExtractedExpensesComponent implements AfterViewInit {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private statementService: StatementService,
+    private incomeService: IncomeService,
     private expenseService: ExpenseService,
     private cdr: ChangeDetectorRef
   ) { }
@@ -57,27 +68,27 @@ export class TableExtractedExpensesComponent implements AfterViewInit {
     this.rows.sort = this.sort;
   }
 
-  async create(importState: ExpensesImportState) {
+  async create(importState: StatementsImportState) {
     await this.add(importState);
-    this.snackBar.open('Expense added!', 'close', { duration: 9000 });
+    this.snackBar.open('Statement added!', 'close', { duration: 9000 });
   }
 
   async createSelected() {
     try {
       const creations = this.selection.selected.filter(importState => !hasImportErrors(importState));
-      for (const expense of creations) {
-        await this.add(expense, { increment: true });
+      for (const statement of creations) {
+        await this.add(statement, { increment: true });
       }
 
       const text = this.processing === creations.length
-        ? `${creations.length}/${creations.length} expense(s) created!`
-        : `Could not import all expenses (${this.processing} / ${this.selection.selected.length})`;
+        ? `${creations.length}/${creations.length} statement(s) created!`
+        : `Could not import all statements (${this.processing} / ${this.selection.selected.length})`;
       this.snackBar.open(text, 'close', { duration: 3000 });
 
       this.processing = 0;
     } catch (err) {
       console.error(err);
-      this.snackBar.open(`Could not import all expenses (${this.processing} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not import all statements (${this.processing} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.processing = 0;
     }
 
@@ -85,20 +96,38 @@ export class TableExtractedExpensesComponent implements AfterViewInit {
   }
 
   /**
-   * Adds an expense to database and prevents multi-insert by refreshing mat-table
+   * Adds an statement to database and prevents multi-insert by refreshing mat-table
    * @param importState
    */
-  private async add(importState: ExpensesImportState, { increment } = { increment: false }) {
+  private async add(importState: StatementsImportState, { increment } = { increment: false }) {
     importState.importing = true;
     this.cdr.markForCheck();
 
     if (increment) this.processing++;
     this.cdr.markForCheck();
 
-    await this.expenseService.add(createExpense({
-      ...importState.expense,
+    const statement = createStatement({
+      ...importState.statement,
       _meta: createDocumentMeta({ createdAt: new Date() })
-    }));
+    });
+
+    if (isDistributorStatement(statement)) await this.statementService.add<DistributorStatement>(statement, { params: { waterfallId: statement.waterfallId } });
+    if (isProducerStatement(statement)) await this.statementService.add<ProducerStatement>(statement, { params: { waterfallId: statement.waterfallId } });
+    if (isDistributorStatement(statement)) await this.statementService.add<DistributorStatement>(statement, { params: { waterfallId: statement.waterfallId } });
+
+    for (const income of importState.incomes) {
+      await this.incomeService.add(createIncome({
+        ...income,
+        _meta: createDocumentMeta({ createdAt: new Date() })
+      }));
+    }
+
+    for (const expense of importState.expenses) {
+      await this.expenseService.add(createExpense({
+        ...expense,
+        _meta: createDocumentMeta({ createdAt: new Date() })
+      }));
+    }
 
     importState.imported = true;
 
@@ -111,10 +140,10 @@ export class TableExtractedExpensesComponent implements AfterViewInit {
   // POPINS
   ///////////////////
 
-  displayErrors(importState: ExpensesImportState) {
+  displayErrors(importState: StatementsImportState) {
     this.dialog.open(ViewImportErrorsComponent, {
       data: createModalData({
-        title: `Expense id ${importState.expense.id}`,
+        title: `Statement id ${importState.statement.id}`,
         errors: importState.errors
       })
     });
@@ -145,7 +174,7 @@ export class TableExtractedExpensesComponent implements AfterViewInit {
   /**
    * The label for the checkbox on the passed row
    */
-  checkboxLabel(row?: ExpensesImportState): string {
+  checkboxLabel(row?: StatementsImportState): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
@@ -163,8 +192,8 @@ export class TableExtractedExpensesComponent implements AfterViewInit {
    * Specify the fields in which filter is possible.
    * Even for nested objects.
    */
-  public filterPredicate(data: ExpensesImportState, filter: string) {
-    const dataStr = data.expense.id;
+  public filterPredicate(data: StatementsImportState, filter: string) {
+    const dataStr = data.statement.id;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

@@ -1,0 +1,78 @@
+<ng-container *ngIf="movie">
+  <button class="go-back" mat-icon-button routerLink="../..">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+    <span>BACK TO WATERFALL</span>
+  </button>
+  <article>
+    <movie-header [movie]="movie" [showBackArrow]="false"></movie-header>
+  </article>
+  <h3>Dashboard - {{ version.name }}</h3>
+
+  <section>
+    <mat-form-field appearance="fill">
+      <mat-label>Blocks</mat-label>
+      <mat-select (selectionChange)="selectBlock($event.value)" [(value)]="currentBlock">
+        <mat-option *ngFor="let block of blocks" [value]="block.id">
+          {{ block.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <h3 *ngIf="currentState">
+      Total film revenue : <price-per-currency [price]="getTotalIncomes(currentState.incomes)"></price-per-currency>
+    </h3>
+  </section>
+
+  <bf-table *ngIf="currentState" [source]="currentState.orgs | keyvalue" clickable (rowClick)="displayStatementsToCreate($event.value.id)" useFilter pagination="50">
+    <ng-template colRef="value.id" label="Right Holder" let-id sort>
+      {{ getRightholderName(id) }}
+    </ng-template>
+    <ng-template colRef="value.revenu" label="Calculated Revenue" let-revenu sort>
+      <price-per-currency [price]="getPrice(revenu.calculated)"></price-per-currency>
+    </ng-template>
+    <ng-template colRef="value.revenu" label="Actual Revenue" let-revenu sort>
+      <strong>
+        <price-per-currency [price]="getPrice(revenu.actual)"></price-per-currency>
+      </strong>
+    </ng-template>
+    <ng-template colRef="value.id" label="Pending revenue" let-id sort>
+      <price-per-currency [price]="getPendingRevenue(id)"></price-per-currency>
+    </ng-template>
+    <ng-template colRef="value.id" label="Statements to create" let-id sort>
+      {{ statementsToCreate(id).length }}
+    </ng-template>
+    <ng-template colRef="value.turnover" label="Turnover" let-turnover sort>
+      <price-per-currency [price]="getPrice(turnover.actual)"></price-per-currency>
+    </ng-template>
+  </bf-table>
+
+  <article *ngIf="pendingStatements.length">
+    <h3>Pending statements</h3>
+    <bf-table [source]="pendingStatements" clickable useFilter pagination="50">
+      <ng-template colRef="type" label="Type" let-type sort>
+        {{ type | toLabel: 'rightholderRoles' }}
+      </ng-template>
+      <ng-template colRef="status" label="Status" let-status sort>
+        {{ status }}
+      </ng-template>
+      <ng-template colRef="" label="Contract Id" let-item sort>
+        {{ getCurrentContract(item) }}
+      </ng-template>
+      <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
+        {{ getRightholderName(rightholderId) }}
+      </ng-template>
+      <ng-template colRef="duration.from" label="From" let-from sort defaultSort>
+        {{ from | date: 'dd/MM/yyyy' }}
+      </ng-template>
+      <ng-template colRef="duration.to" label="To" let-to sort defaultSort>
+        {{ to | date: 'dd/MM/yyyy' }}
+      </ng-template>
+      <ng-template colRef="" label="Actions" let-statement sticky>
+        <button mat-icon-button target="_blank" (click)="createStatement(statement);$event.stopPropagation()">
+          <mat-icon svgIcon="add" matTooltip="Go to statement"></mat-icon>
+        </button>
+      </ng-template>
+    </bf-table>
+  </article>
+
+</ng-container>

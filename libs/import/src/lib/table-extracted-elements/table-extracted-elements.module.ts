@@ -32,12 +32,11 @@ import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 // Components
 import { TableExtractedContractsComponent } from './contracts/contracts.component';
 import { TableExtractedMoviesComponent } from './movies/movies.component';
-import { TableExtractedIncomesComponent } from './incomes/incomes.component';
 import { TableExtractedOrganizationsComponent } from './organizations/organizations.component';
-import { TableExtractedExpensesComponent } from './expenses/expenses.component';
 import { TableExtractedDocumentsComponent } from './documents/documents.component';
 import { TableExtractedSourcesComponent } from './sources/sources.component';
 import { TableExtractedRightsComponent } from './rights/rights.component';
+import { TableExtractedStatementsComponent } from './statements/statements.component';
 import { ViewImportErrorsComponent } from './view-import-errors/view-import-errors.component';
 
 @NgModule({
@@ -45,11 +44,10 @@ import { ViewImportErrorsComponent } from './view-import-errors/view-import-erro
     TableExtractedMoviesComponent,
     TableExtractedContractsComponent,
     TableExtractedOrganizationsComponent,
-    TableExtractedIncomesComponent,
-    TableExtractedExpensesComponent,
     TableExtractedDocumentsComponent,
     TableExtractedSourcesComponent,
     TableExtractedRightsComponent,
+    TableExtractedStatementsComponent,
     ViewImportErrorsComponent,
   ],
   imports: [
@@ -86,11 +84,10 @@ import { ViewImportErrorsComponent } from './view-import-errors/view-import-erro
     TableExtractedMoviesComponent,
     TableExtractedContractsComponent,
     TableExtractedOrganizationsComponent,
-    TableExtractedIncomesComponent,
-    TableExtractedExpensesComponent,
     TableExtractedDocumentsComponent,
     TableExtractedSourcesComponent,
-    TableExtractedRightsComponent
+    TableExtractedRightsComponent,
+    TableExtractedStatementsComponent
   ],
 })
-export class TableExtractedElementsModule {}
+export class TableExtractedElementsModule { }

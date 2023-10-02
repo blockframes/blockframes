@@ -1,10 +1,10 @@
-import { Action, GroupChild } from './action';
+import { Action, GroupChild, PaymentAction } from './action';
 import { ConditionGroup, or } from './conditions';
 
 export interface NodeState {
   id: string;
-  turnover: number;
-  revenu: number;
+  turnover: AmountState;
+  revenu: AmountState;
   percent: number;
   previous: string[];
 }
@@ -16,7 +16,7 @@ export interface RightState extends NodeState {
   pools: string[]
 }
 
-interface GroupState extends NodeState {
+export interface GroupState extends NodeState {
   children: string[];
 }
 
@@ -38,8 +38,14 @@ interface CreateRight {
 export function createRightState(right: CreateRight): RightState {
   const id = right.id ?? `right_${Math.round(Math.random() * 10000)}`;
   return {
-    revenu: 0,
-    turnover: 0,
+    revenu: {
+      calculated: 0,
+      actual: 0
+    },
+    turnover: {
+      calculated: 0,
+      actual: 0
+    },
     previous: [],
     conditions: or([]),
     pools: [],
@@ -67,8 +73,14 @@ export function createHorizontal(group: CreateHorizontal): HorizontalState {
   return {
     id,
     percent: percent ?? 1,
-    revenu: 0,
-    turnover: 0,
+    revenu: {
+      calculated: 0,
+      actual: 0
+    },
+    turnover: {
+      calculated: 0,
+      actual: 0
+    },
     previous: previous ?? [],
     children: children.map(child => child.id),
     blameId: group.blameId
@@ -77,11 +89,19 @@ export function createHorizontal(group: CreateHorizontal): HorizontalState {
 
 export function createVertical(group: CreateVertical): VerticalState {
   const { id, children, previous, percent } = group;
+  const childOrgs = Array.from(new Set(children.filter(c => c.type === 'right').map((c: any) => c.orgId)));
+  if (childOrgs.length > 1) throw new Error(`Childrens of vertical group "${group.id}" must have the same organizations`);
   return {
     id,
     percent: percent ?? 1,
-    revenu: 0,
-    turnover: 0,
+    revenu: {
+      calculated: 0,
+      actual: 0
+    },
+    turnover: {
+      calculated: 0,
+      actual: 0
+    },
     previous: previous ?? [],
     children: children.map(child => child.id),
   }
@@ -93,10 +113,15 @@ export interface Operation {
   date: Date;
 }
 
+interface AmountState {
+  calculated: number;
+  actual: number;
+}
+
 export interface OrgState {
   id: string;
-  turnover: number;
-  revenu: number;
+  turnover: AmountState;
+  revenu: AmountState;
   investment: number;
   expense: number;
   bonus: number;
@@ -104,22 +129,43 @@ export interface OrgState {
 }
 export const createOrg = (org: Partial<OrgState>): OrgState => ({
   id: `org_${Math.round(Math.random() * 10000)}`,
-  turnover: 0,
-  revenu: 0,
+  turnover: {
+    calculated: 0,
+    actual: 0
+  },
+  revenu: {
+    calculated: 0,
+    actual: 0
+  },
   investment: 0,
   bonus: 0,
   expense: 0,
   operations: [],
   ...org
-})
+});
 
 export interface PoolState {
-  revenu: number;
-  turnover: number;
+  id: string;
+  revenu: AmountState;
+  turnover: AmountState;
   shadowRevenu: number;
 }
 
-interface IncomeState {
+export const createPoolState = (pool: Partial<PoolState>): PoolState => ({
+  id: '',
+  turnover: {
+    calculated: 0,
+    actual: 0
+  },
+  revenu: {
+    calculated: 0,
+    actual: 0
+  },
+  shadowRevenu: 0,
+  ...pool
+});
+
+export interface IncomeState {
   id: string;
   date?: Date;
   from?: string;
@@ -130,6 +176,8 @@ interface IncomeState {
   isCompensation?: boolean;
   contractId?: string;
 }
+
+type PaymentState = PaymentAction;
 
 interface ContratState {
   id: string;
@@ -147,10 +195,27 @@ export function createContractState(contract: Partial<ContratState> & { id: stri
   }
 }
 
+export interface SourceState {
+  id: string;
+  amount: number;
+  destinationIds: string[];
+  incomeIds: string[];
+}
+
+export function createSourceState(source: Partial<SourceState>): SourceState {
+  return {
+    id: '',
+    amount: 0,
+    destinationIds: [],
+    incomeIds: [],
+    ...source,
+  }
+}
+
 export interface TransferState {
   /** from->to */
   id: `${string}->${string}`;
-  from?: string;
+  from: string;
   to: string;
   amount: number;
   history: {
@@ -158,6 +223,10 @@ export interface TransferState {
     incomeId: string;
     /** The amount transfered */
     amount: number;
+    /** Was the conditions valid for transfer */
+    checked: boolean;
+    /** Percent that "to" taken from "amount" (this allow percentage history if right is updated) */
+    percent: number;
   }[];
 }
 export function createTransfer(id: `${string}->${string}`): TransferState {
@@ -224,11 +293,18 @@ export interface TitleState {
   pools: {
     [poolId: string]: PoolState
   },
-  bonuses: Record<`${IncomeState['id']}-${VerticalState['id']}`, BonusState>
+  bonuses: Record<`${IncomeState['id']}-${VerticalState['id']}`, BonusState>,
+  sources: {
+    [sourceId: string]: SourceState
+  },
+  payments: {
+    [id: string]: PaymentState;
+  }
 }
 
 export interface History extends TitleState {
   actions: Action[];
+  name: string;
 }
 
 export const createTitleState = (id: string): TitleState => ({
@@ -247,5 +323,8 @@ export const createTitleState = (id: string): TitleState => ({
   horizontals: {},
   verticals: {},
   pools: {},
-  bonuses: {}
-})
+  bonuses: {},
+  sources: {},
+  payments: {},
+});
+

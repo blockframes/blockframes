@@ -37,6 +37,7 @@ import {
   buildWaterfall as _buildWaterfall,
   onWaterfallDelete,
   onWaterfallDocumentDelete,
+  onWaterfallStatementDelete,
   onWaterfallRightDelete,
   onWaterfallUpdate,
   removeWaterfallFile
@@ -309,6 +310,11 @@ export const onWaterfallDeleteEvent = onDocumentDelete('waterfall/{waterfallID}'
  * Trigger: when a waterfallDocument is deleted
  */
 export const onWaterfallDocumentDeleteEvent = onDocumentDelete('waterfall/{waterfallID}/documents/{documentID}', onWaterfallDocumentDelete);
+
+/**
+ * Trigger: when a waterfallStatement is deleted
+ */
+export const onWaterfallStatementDeleteEvent = onDocumentDelete('waterfall/{waterfallID}/statements/{statementID}', onWaterfallStatementDelete);
 
 /**
  * Trigger: when a waterfallRight is deleted

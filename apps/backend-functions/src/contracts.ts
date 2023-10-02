@@ -25,9 +25,11 @@ export async function onContractDelete(contractSnapshot: BlockframesSnapshot<Con
   return cleanRelatedContractDocuments(contract);
 }
 
-export async function cleanRelatedContractDocuments(contract: Contract) {
+export async function cleanRelatedContractDocuments(contract: Contract, options: { filterByTitleId: boolean } = { filterByTitleId: false }) {
   // Delete terms belonging to contract
-  const termsCollectionRef = db.collection('terms').where('contractId', '==', contract.id);
+  const termsCollectionRef = options.filterByTitleId ?
+    db.collection('terms').where('contractId', '==', contract.id).where('titleId', '==', contract.titleId) :
+    db.collection('terms').where('contractId', '==', contract.id);
   const termsSnap = await termsCollectionRef.get();
   for (const term of termsSnap.docs) {
     await term.ref.delete();
@@ -37,7 +39,9 @@ export async function cleanRelatedContractDocuments(contract: Contract) {
   // We don't want to delete the offer if it still have other contracts
   // We want to delete the offer only when we delete its last contract
   if (contract.offerId) {
-    const offerContractsRef = db.collection('contracts').where('offerId', '==', contract.offerId);
+    const offerContractsRef = options.filterByTitleId ?
+      db.collection('contracts').where('offerId', '==', contract.offerId).where('titleId', '==', contract.titleId) :
+      db.collection('contracts').where('offerId', '==', contract.offerId);
     const offerContractsSnap = await offerContractsRef.get();
     if (offerContractsSnap.empty) {
       await db.doc(`offers/${contract.offerId}`).delete();
@@ -45,14 +49,18 @@ export async function cleanRelatedContractDocuments(contract: Contract) {
   }
 
   // Delete incomes documents, if any
-  const incomesCollectionRef = db.collection('incomes').where('contractId', '==', contract.id);
+  const incomesCollectionRef = options.filterByTitleId ?
+    db.collection('incomes').where('contractId', '==', contract.id).where('titleId', '==', contract.titleId) :
+    db.collection('incomes').where('contractId', '==', contract.id);
   const incomesSnap = await incomesCollectionRef.get();
   for (const income of incomesSnap.docs) {
     await income.ref.delete();
   }
 
   // Delete expenses documents, if any
-  const expensesCollectionRef = db.collection('expenses').where('contractId', '==', contract.id);
+  const expensesCollectionRef = options.filterByTitleId ?
+    db.collection('expenses').where('contractId', '==', contract.id).where('titleId', '==', contract.titleId) :
+    db.collection('expenses').where('contractId', '==', contract.id);
   const expensesSnap = await expensesCollectionRef.get();
   for (const expense of expensesSnap.docs) {
     await expense.ref.delete();

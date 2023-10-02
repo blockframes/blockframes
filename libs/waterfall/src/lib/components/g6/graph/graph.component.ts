@@ -3,7 +3,17 @@ import { FormControl } from '@angular/forms';
 import { map, Observable } from 'rxjs';
 import { ComboConfig, EdgeConfig, GraphData, IG6GraphEvent, NodeConfig } from '@antv/g6';
 import { toG6 } from '../../g6/utils';
-import { OrgState, RightState, TransferState, TitleState, History, WaterfallRightholder, VerticalState, HorizontalState } from '@blockframes/model';
+import { 
+  OrgState,
+  RightState,
+  TransferState,
+  TitleState,
+  History,
+  WaterfallRightholder,
+  VerticalState,
+  HorizontalState,
+  mainCurrency
+} from '@blockframes/model';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 @Component({
@@ -24,6 +34,7 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
   horizontalGroup?: HorizontalState;
   org?: OrgState;
   rightholders: WaterfallRightholder[] = [];
+  currency = mainCurrency;
 
   @Input() tree?: { state: TitleState, history: History[] };
   @Input() hideDetails = false;

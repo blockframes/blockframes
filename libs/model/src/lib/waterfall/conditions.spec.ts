@@ -14,7 +14,7 @@ describe('Test standalone conditions', () => {
       const { state } = waterfall('foo-title', actions);
       const { orgs } = state;
 
-      expect(orgs['seller'].revenu).toEqual(0);
+      expect(orgs['seller'].revenu.calculated).toEqual(0);
     });
 
     it('ContractAmout with target < amount', () => {
@@ -27,7 +27,7 @@ describe('Test standalone conditions', () => {
       const { state } = waterfall('foo-title', actions);
       const { orgs } = state;
 
-      expect(orgs['seller'].revenu).toEqual(10_000);
+      expect(orgs['seller'].revenu.calculated).toEqual(10_000);
     });
 
     it('ContractAmout with target == amount', () => {
@@ -40,7 +40,7 @@ describe('Test standalone conditions', () => {
       const { state } = waterfall('foo-title', actions);
       const { orgs } = state;
 
-      expect(orgs['seller'].revenu).toEqual(10_000);
+      expect(orgs['seller'].revenu.calculated).toEqual(10_000);
     });
   });
   describe('poolShadowRevenu', () => {
@@ -59,8 +59,8 @@ describe('Test standalone conditions', () => {
       const { pools } = state;
 
       expect(pools['pool-a'].shadowRevenu).toEqual(10_001);
-      expect(pools['pool-a'].revenu).toEqual(1);
-      expect(pools['pool-a'].turnover).toEqual(1_000_100);
+      expect(pools['pool-a'].revenu.calculated).toEqual(1);
+      expect(pools['pool-a'].turnover.calculated).toEqual(1_000_100);
     });
 
     it('with other matching conditions', () => {
@@ -79,8 +79,8 @@ describe('Test standalone conditions', () => {
       const { pools } = state;
 
       expect(pools['pool-a'].shadowRevenu).toEqual(10_001);
-      expect(pools['pool-a'].revenu).toEqual(1);
-      expect(pools['pool-a'].turnover).toEqual(1_000_100);
+      expect(pools['pool-a'].revenu.calculated).toEqual(1);
+      expect(pools['pool-a'].turnover.calculated).toEqual(1_000_100);
     });
 
     it('with other non-matching conditions', () => {
@@ -99,8 +99,8 @@ describe('Test standalone conditions', () => {
       const { pools } = state;
 
       expect(pools['pool-a'].shadowRevenu).toEqual(0);
-      expect(pools['pool-a'].revenu).toEqual(0);
-      expect(pools['pool-a'].turnover).toEqual(1_000_100);
+      expect(pools['pool-a'].revenu.calculated).toEqual(0);
+      expect(pools['pool-a'].turnover.calculated).toEqual(1_000_100);
     });
 
     it('with many rights pointing to same pool', () => {
@@ -123,8 +123,8 @@ describe('Test standalone conditions', () => {
       const { pools } = state;
 
       expect(pools['pool-a'].shadowRevenu).toEqual(10_011);
-      expect(pools['pool-a'].revenu).toEqual(11);
-      expect(pools['pool-a'].turnover).toEqual(1_001_100);
+      expect(pools['pool-a'].revenu.calculated).toEqual(11);
+      expect(pools['pool-a'].turnover.calculated).toEqual(1_001_100);
     });
 
   });

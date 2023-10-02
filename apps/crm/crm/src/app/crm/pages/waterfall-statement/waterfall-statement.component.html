@@ -1,0 +1,173 @@
+<ng-container *ngIf="movie">
+  <button class="go-back" mat-icon-button routerLink="../..">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+    <span>BACK TO WATERFALL</span>
+  </button>
+  <article>
+    <movie-header [movie]="movie" [showBackArrow]="false"></movie-header>
+  </article>
+  <h3>{{ statement.type | toLabel: 'rightholderRoles' }} Statement - {{ statement.id }}</h3>
+
+  <section>
+    <mat-form-field appearance="fill">
+      <mat-label>Waternall Version</mat-label>
+      <mat-select (selectionChange)="loadWaterfall($event.value)" [(value)]="state.version.id">
+        <mat-option *ngFor="let versions of waterfall.versions" [value]="versions.id">
+          {{ versions.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </section>
+
+  <section>
+    <ul>
+      <li><strong>Rightholder :</strong> {{ getRightholderName(statement.rightholderId) }}</li>
+      <li><strong>From :</strong> {{ statement.duration.from | date: 'MM/dd/yyyy' }}</li>
+      <li><strong>To :</strong> {{ statement.duration.to | date: 'MM/dd/yyyy' }}</li>
+      <li><strong>Contract :</strong> {{ statement.contractId }}</li>
+      <li><strong>Status: </strong> {{ statement.status }}</li>
+      <li><strong>Turnover :</strong> <price-per-currency [price]="getRightholderActual('turnover')"></price-per-currency></li>
+      <li><strong>Revenue :</strong> <price-per-currency [price]="getRightholderActual('revenu')"></price-per-currency></li>
+    </ul>
+    <apx-chart *ngIf="options.series.length"
+      [chart]="{ type: 'bar' }" 
+      [series]="options.series"
+      [xaxis]="options.xAxis"
+      [dataLabels]="formatter.percent"
+      [tooltip]="{ y: formatter.percent }">
+    </apx-chart>
+  </section>
+
+  <ng-container *ngIf="isDistributorStatement()">
+    <h3>Incomes</h3>
+    <bf-table [source]="incomes" clickable useFilter pagination="50">
+      <ng-template colRef="id" label="Id" let-id sort>
+        {{ id }}
+      </ng-template>
+      <ng-template colRef="" label="Source" let-item sort>
+        {{ getAssociatedSource(item) }}
+      </ng-template>
+      <ng-template colRef="" label="Price" let-item sort>
+        <ng-container *ngIf="toPricePerCurrency(item) as amount">
+          <price-per-currency [price]="amount"></price-per-currency>
+        </ng-container>
+      </ng-template>
+      <!-- TODO #9493 add 1 column showing what current rightholder taken for this income (internal payments)-->
+      <!-- TODO #9493 add 1 column showing value of external payment for this income (income - sum(internal payments))-->
+      <!-- TODO #9493 + 2 columns calculated & cumulated of calculated -->
+    </bf-table>
+  
+    <ng-container *ngIf="expenses.length">
+      <h3>Expenses</h3>
+      <bf-table [source]="expenses" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="category" label="Category" let-category sort>
+          {{ category }}
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type }}
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="toPricePerCurrency(item) as amount">
+            <price-per-currency [price]="amount"></price-per-currency>
+          </ng-container>
+        </ng-template>
+      </bf-table>
+    </ng-container>
+
+  </ng-container>
+
+  <h3>Rights</h3>
+  <bf-table [source]="rights" clickable useFilter pagination="50" (rowClick)="showRightDetails($event)">
+    <ng-template colRef="id" label="Id" let-id sort>
+      {{ id }}
+      <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </button>
+    </ng-template>
+    <ng-template colRef="name" label="Name" let-name sort>
+      {{ name }}
+    </ng-template>
+    <ng-template colRef="type" label="Type" let-type sort>
+      {{ type | toLabel: 'rightTypes' }}
+    </ng-template>
+    <ng-template colRef="percent" label="%" let-percent>
+      {{ percent ? percent  : '--' }}
+    </ng-template>
+    <ng-template colRef="id" label="Source(s)" let-id>
+      {{ getAssociatedSources(id) }}
+    </ng-template>
+    <ng-template colRef="id" label="Declared" let-id>
+      <strong>
+        <price-per-currency [price]="getRightPayment(id)"></price-per-currency>
+      </strong>
+    </ng-template>
+    <ng-template colRef="id" label="Calculated" let-id>
+      <price-per-currency [price]="getCalculatedAmount(id)"></price-per-currency>
+    </ng-template>
+    <ng-template colRef="id" label="Cumulated" let-id>
+      <price-per-currency [price]="getCalculatedAmount(id, true)"></price-per-currency>
+    </ng-template>
+  </bf-table>
+
+  <article *ngIf="rightDetails.length" class="right-details">
+    <h3>Details</h3>
+    <ng-container *ngFor="let details of rightDetails">
+      <bf-table [source]="details" pagination="50">
+        <ng-template colRef="" label="#" let-index="index">
+          {{ index + 1 }}
+        </ng-template>
+        <ng-template colRef="from" label="From" let-from>
+          {{ from }}
+        </ng-template>
+        <ng-template colRef="to" label="To" let-to>
+          {{ to }}
+        </ng-template>
+        <ng-template colRef="amount" label="Amount" let-amount>
+          {{ amount | currency:currency }}
+        </ng-template>
+        <ng-template colRef="percent" label="%" let-percent>
+          {{ percent }}
+        </ng-template>
+        <ng-template colRef="taken" label="Taken" let-taken>
+          <strong>{{ taken | currency:currency }}</strong>
+        </ng-template>
+      </bf-table>
+    </ng-container>
+  </article>
+
+  <ng-container *ngIf="statement.payments.external">
+    <h3>Payments</h3>
+    <bf-table [source]="statement.payments.external" pagination="50">
+      <ng-template colRef="date" label="Date" let-date>
+        <ng-container *ngIf="date">
+          {{ date | date: 'MM/dd/yyyy' }}
+        </ng-container>
+        <ng-container *ngIf="!date">--</ng-container>
+      </ng-template>
+      <ng-template colRef="" label="To" let-item>
+        {{ getRightholderName(item.to) }}
+      </ng-template>
+      <ng-template colRef="" label="Amount" let-item>
+        <price-per-currency [price]="toPricePerCurrency(item)"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="status" label="Status" let-status>
+        {{ status }}
+      </ng-template>
+      <ng-template colRef="incomeIds" label="Related to" let-incomeIds>
+        {{ incomeIds | join }}
+      </ng-template>
+      <ng-template *ngIf="isDistributorStatement()" colRef="" label="Actions" let-item sticky>
+        <button mat-icon-button [disabled]="item.status !== 'pending'" (click)="markAsReceived(item)">
+          <mat-icon svgIcon="check" matTooltip="Mark payment as received"></mat-icon>
+        </button>
+      </ng-template>
+    </bf-table>
+  </ng-container>
+
+  <button mat-button color="primary" [disabled]="statement.status === 'processed' || statement.status === 'pending'" (click)="validate()">
+    Validate statement
+  </button>
+</ng-container>

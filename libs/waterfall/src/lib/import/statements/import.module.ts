@@ -14,16 +14,16 @@ import { ImportSpreadsheetModule } from '@blockframes/import/import-spreadsheet/
 import { ViewExtractedElementsModule } from '@blockframes/import/view-extracted-elements/view-extracted-elements.module';
 
 // Components
-import { ExpenseImportComponent } from './import.component';
+import { StatementImportComponent } from './import.component';
 
 
 const routes = [{
   path: '',
-  component: ExpenseImportComponent,
+  component: StatementImportComponent,
 }];
 
 @NgModule({
-  declarations: [ExpenseImportComponent],
+  declarations: [StatementImportComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -41,4 +41,4 @@ const routes = [{
     RouterModule.forChild(routes)
   ]
 })
-export class ExpenseImportModule { }
+export class StatementImportModule { }

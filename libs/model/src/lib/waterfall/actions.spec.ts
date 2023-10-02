@@ -11,7 +11,7 @@ describe('Test standalone actions', () => {
     const { state } = waterfall('foo-title', actions);
     const { orgs } = state;
 
-    expect(orgs['seller'].revenu).toEqual(5_000);
+    expect(orgs['seller'].revenu.calculated).toEqual(5_000);
   });
 
   it('orgTurnover', () => {
@@ -23,7 +23,7 @@ describe('Test standalone actions', () => {
     const { state } = waterfall('foo-title', actions);
     const { orgs } = state;
 
-    expect(orgs['seller'].turnover).toEqual(10_000);
+    expect(orgs['seller'].turnover.calculated).toEqual(10_000);
   });
 
   describe('poolRevenu', () => {
@@ -37,7 +37,7 @@ describe('Test standalone actions', () => {
       const { state } = waterfall('foo-title', actions);
       const { pools } = state;
 
-      expect(pools['seller-1-2'].revenu).toEqual(7_500);
+      expect(pools['seller-1-2'].revenu.calculated).toEqual(7_500);
     });
 
     it('with horizontal group', () => {
@@ -54,7 +54,7 @@ describe('Test standalone actions', () => {
       const { state } = waterfall('foo-title', actions);
       const { pools } = state;
 
-      expect(pools['seller-1-2'].revenu).toEqual(7_500);
+      expect(pools['seller-1-2'].revenu.calculated).toEqual(7_500);
     });
   });
 
@@ -69,7 +69,7 @@ describe('Test standalone actions', () => {
       const { state } = waterfall('foo-title', actions);
       const { pools } = state;
 
-      expect(pools['seller-1-2'].turnover).toEqual(10_000);
+      expect(pools['seller-1-2'].turnover.calculated).toEqual(10_000);
     });
 
     it('with horizontal group', () => {
@@ -86,7 +86,7 @@ describe('Test standalone actions', () => {
       const { state } = waterfall('foo-title', actions);
       const { pools } = state;
 
-      expect(pools['seller-1-2'].turnover).toEqual(10_000);
+      expect(pools['seller-1-2'].turnover.calculated).toEqual(10_000);
     });
   });
 
@@ -100,8 +100,8 @@ describe('Test standalone actions', () => {
     const { state } = waterfall('foo-title', actions);
     const { rights } = state;
 
-    expect(rights['seller-1'].revenu).toEqual(5_000);
-    expect(rights['seller-2'].revenu).toEqual(2_500);
+    expect(rights['seller-1'].revenu.calculated).toEqual(5_000);
+    expect(rights['seller-2'].revenu.calculated).toEqual(2_500);
   });
 
 })

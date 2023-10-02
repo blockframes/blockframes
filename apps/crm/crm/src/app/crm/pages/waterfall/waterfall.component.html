@@ -40,6 +40,9 @@
             <button mat-icon-button (click)="displayWaterfall(versionId)">
               <mat-icon svgIcon="star" matTooltip="Show waterfall"></mat-icon>
             </button>
+            <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'dashboard', versionId]" (click)="$event.stopPropagation()">
+              <mat-icon svgIcon="launch" matTooltip="Go to dashboard"></mat-icon>
+            </a>
           </ng-template>
         </bf-table>
       </ng-container>
@@ -73,16 +76,10 @@
               </ng-template>
             </li>
             <li>
-              <a mat-button routerLink="/c/o/dashboard/crm/import/incomes">
-                <mat-icon svgIcon="monetization"></mat-icon><span matLine>4 Incomes</span>
+              <a mat-button routerLink="/c/o/dashboard/crm/import/statements">
+                <mat-icon svgIcon="monetization"></mat-icon><span matLine>4 Statements</span>
               </a>
-              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="incomes.length else notImported"></mat-icon>
-            </li>
-            <li>
-              <a mat-button routerLink="/c/o/dashboard/crm/import/expenses">
-                <mat-icon svgIcon="monetization"></mat-icon><span matLine>5 Expenses</span>
-              </a>
-              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="expenses.length else notImported"></mat-icon>
+              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="incomes.length && expenses.length else notImported"></mat-icon>
             </li>
           </ul>
           <a *ngIf="(canInitWaterfall$ | async) else refresh" (click)="initWaterfall()" class="surface">
@@ -108,7 +105,7 @@
             {{ actionId }}
           </ng-template>
           <ng-template colRef="payload.date" label="Date" let-date sort>
-            {{ date | date: 'MM/dd/yyyy' }}
+            {{ date | date: 'dd/MM/yyyy' }}
           </ng-template>
           <ng-template colRef="blockId" label="Block" let-blockId sort>
             {{ getBlockName(blockId) }}
@@ -125,8 +122,10 @@
               <mat-icon svgIcon="file_copy"></mat-icon>
             </button>
           </ng-template>
-          <ng-template colRef="payload.orgId" label="Rightholder" let-orgId>
-            {{ orgId ? getRightholderName(orgId) : '--' }}
+          <ng-template colRef="payload" label="Rightholder" let-payload>
+            <ng-container *ngIf="payload.orgId">{{ getRightholderName(payload.orgId) }}</ng-container>
+            <ng-container *ngIf="payload.blameId">{{ getRightholderName(payload.blameId) }}</ng-container>
+            <ng-container *ngIf="!payload.orgId && !payload.blameId">--</ng-container>
           </ng-template>
           <ng-template colRef="payload.amount" label="Amount" let-amount sort>
             <ng-container *ngIf="amount else noPrice">
@@ -135,10 +134,26 @@
             <ng-template #noPrice>--</ng-template>
           </ng-template>
           <ng-template colRef="payload.from" label="From" let-from sort>
-            {{ from ? from : '--' }}
+            <ng-container *ngIf="from?.right">
+              {{ from.right }} ({{ from.org ? getRightholderName(from.org) : '--' }})
+            </ng-container>
+            <ng-container *ngIf="!from?.right">
+              {{ from }}
+            </ng-container>
+            <ng-container *ngIf="!from">
+              --
+            </ng-container>
           </ng-template>
           <ng-template colRef="payload.to" label="To" let-to sort>
-            {{ to ? to : '--' }}
+            <ng-container *ngIf="to?.right">
+              {{ to.right }} ({{ to.org ? getRightholderName(to.org) : '--' }})
+            </ng-container>
+            <ng-container *ngIf="!to?.right">
+              {{ to }}
+            </ng-container>
+            <ng-container *ngIf="!to">
+              --
+            </ng-container>
           </ng-template>
           <ng-template colRef="payload.percent" label="%" let-percent>
             {{ percent ? percent * 100  : '--' }}
@@ -162,7 +177,7 @@
     <!-- RIGHTHOLDERS -->
     <mat-tab label="Right Holders">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!rightholders.length" (click)="removeRightholders(rightholders)">
+        <button mat-button color="primary" [disabled]="!rightholders.length" (click)="removeRightholders(rightholders)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all rightholders</span>
         </button>
@@ -191,17 +206,17 @@
     <!-- DOCUMENTS -->
     <mat-tab label="All Documents">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!documents.length" (click)="removeDocuments(documents)">
+        <button mat-button color="primary" [disabled]="!documents.length" (click)="removeDocuments(documents)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all documents</span>
         </button>
       </section>
-      <bf-table [source]="documents" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
+      <bf-table [source]="documents" clickable useFilter pagination="50" (rowClick)="goTo('document', $event.id)">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>
         <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
-          {{ signatureDate | date: 'MM/dd/yyyy' }}
+          {{ signatureDate | date: 'dd/MM/yyyy' }}
         </ng-template>
         <ng-template colRef="rootId" label="Parent" let-rootId sort>
           {{ rootId ? rootId : '--' }}
@@ -213,7 +228,7 @@
           <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', document.id]" (click)="$event.stopPropagation()">
             <mat-icon svgIcon="launch"></mat-icon>
           </a>
-          <button mat-icon-button (click)="removeDocuments([document])">
+          <button mat-icon-button (click)="removeDocuments([document]); $event.stopPropagation()">
             <mat-icon svgIcon="delete" matTooltip="Delete document"></mat-icon>
           </button>
         </ng-template>
@@ -223,17 +238,17 @@
     <!-- CONTRACTS -->
     <mat-tab label="1 - Contracts">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!contracts.length" (click)="removeDocuments(contracts)">
+        <button mat-button color="primary" [disabled]="!contracts.length" (click)="removeDocuments(contracts)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all contracts</span>
         </button>
       </section>
-      <bf-table [source]="contracts" clickable useFilter pagination="50" (rowClick)="goToDocument($event.id)">
+      <bf-table [source]="contracts" clickable useFilter pagination="50" (rowClick)="goTo('document', $event.id)">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>
         <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
-          {{ signatureDate | date: 'MM/dd/yyyy' }}
+          {{ signatureDate | date: 'dd/MM/yyyy' }}
         </ng-template>
         <ng-template colRef="rootId" label="Parent" let-rootId sort>
           {{ rootId ? rootId : '--' }}
@@ -256,7 +271,7 @@
           <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', contract.id]" (click)="$event.stopPropagation()">
             <mat-icon svgIcon="launch"></mat-icon>
           </a>
-          <button mat-icon-button (click)="removeDocuments([contract])">
+          <button mat-icon-button (click)="removeDocuments([contract]);$event.stopPropagation()">
             <mat-icon svgIcon="delete" matTooltip="Delete contract"></mat-icon>
           </button>
         </ng-template>
@@ -266,7 +281,7 @@
     <!-- SOURCES -->
     <mat-tab label="2 - Sources">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!sources.length" (click)="removeSources(sources)">
+        <button mat-button color="primary" [disabled]="!sources.length" (click)="removeSources(sources)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all sources</span>
         </button>
@@ -312,7 +327,7 @@
     <!-- RIGHTS -->
     <mat-tab label="3 - Rights">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!rights.length" (click)="removeRights(rights)">
+        <button mat-button color="primary" [disabled]="!rights.length" (click)="removeRights(rights)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all rights</span>
         </button>
@@ -327,14 +342,19 @@
         <ng-template colRef="name" label="Name" let-name sort>
           {{ name }}
         </ng-template>
-        <ng-template colRef="rightholderId" label="Org" let-rightholderId sort>
-          {{ getRightholderName(rightholderId) }}
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type | toLabel: 'rightTypes' }}
+        </ng-template>
+        <ng-template colRef="" label="Org" let-item sort>
+          <ng-container *ngIf="item.rightholderId">{{ getRightholderName(item.rightholderId) }}</ng-container>
+          <ng-container *ngIf="item.blameId">{{ getRightholderName(item.blameId) }}</ng-container>
+          <ng-container *ngIf="!item.rightholderId && !item.blameId">--</ng-container>
         </ng-template>
         <ng-template colRef="groupId" label="Group" let-groupId sort>
           {{ groupId ? groupId : '--' }}
         </ng-template>
         <ng-template colRef="date" label="Date" let-date sort defaultSort>
-          {{ date | date: 'MM/dd/yyyy' }}
+          {{ date | date: 'dd/MM/yyyy' }}
         </ng-template>
         <ng-template colRef="actionName" label="Action Name" let-actionName sort>
           {{ actionName }}
@@ -353,10 +373,51 @@
       </bf-table>
     </mat-tab>
 
-    <!-- INCOMES -->
-    <mat-tab label="4 - Incomes">
+    <!-- STATEMENTS -->
+    <mat-tab label="4 - Statements">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!incomes.length" (click)="removeIncomes(incomes)">
+        <button mat-button color="primary" [disabled]="!statements.length" (click)="removeStatements(statements)">
+          <mat-icon svgIcon="delete"></mat-icon>
+          <span>Remove all statements</span>
+        </button>
+      </section>
+      <bf-table [source]="statements" clickable useFilter pagination="50" (rowClick)="goTo('statement', $event.id)">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type | toLabel: 'rightholderRoles' }}
+        </ng-template>
+        <ng-template colRef="status" label="Status" let-status sort>
+          {{ status }}
+        </ng-template>
+        <ng-template colRef="" label="Contract Id" let-item sort>
+          {{ getCurrentContract(item) }}
+        </ng-template>
+        <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
+          {{ getRightholderName(rightholderId) }}
+        </ng-template>
+        <ng-template colRef="duration.from" label="From" let-from sort defaultSort>
+          {{ from | date: 'dd/MM/yyyy' }}
+        </ng-template>
+        <ng-template colRef="duration.to" label="To" let-to sort defaultSort>
+          {{ to | date: 'dd/MM/yyyy' }}
+        </ng-template>
+        <ng-template colRef="" label="Actions" let-statement sticky>
+          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'statement', statement.id]" (click)="$event.stopPropagation()">
+            <mat-icon svgIcon="launch" matTooltip="Go to statement"></mat-icon>
+          </a>
+          <button mat-icon-button (click)="removeStatements([statement]);$event.stopPropagation()">
+            <mat-icon svgIcon="delete" matTooltip="Delete statement"></mat-icon>
+          </button>
+        </ng-template>
+      </bf-table>
+    </mat-tab>
+
+    <!-- INCOMES -->
+    <mat-tab label="Incomes">
+      <section class="actions">
+        <button mat-button color="primary" [disabled]="!incomes.length" (click)="removeIncomes(incomes)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all incomes</span>
         </button>
@@ -369,7 +430,7 @@
           {{ getCurrentContract(item) }}
         </ng-template>
         <ng-template colRef="date" label="Date" let-date sort defaultSort>
-          {{ date | date: 'MM/dd/yyyy' }}
+          {{ date | date: 'dd/MM/yyyy' }}
         </ng-template>
         <ng-template colRef="" label="Source" let-item sort>
           {{ getAssociatedSource(item) }}
@@ -388,9 +449,9 @@
     </mat-tab>
 
     <!-- EXPENSES -->
-    <mat-tab label="5 - Expenses">
+    <mat-tab label="Expenses">
       <section class="actions">
-        <button mat-stroked-button color="primary" [disabled]="!expenses.length" (click)="removeExpenses(expenses)">
+        <button mat-button color="primary" [disabled]="!expenses.length" (click)="removeExpenses(expenses)">
           <mat-icon svgIcon="delete"></mat-icon>
           <span>Remove all expenses</span>
         </button>
@@ -403,7 +464,7 @@
           {{ getCurrentContract(item) }}
         </ng-template>
         <ng-template colRef="date" label="Date" let-date sort defaultSort>
-          {{ date | date: 'MM/dd/yyyy' }}
+          {{ date | date: 'dd/MM/yyyy' }}
         </ng-template>
         <ng-template colRef="category" label="Category" let-category sort>
           {{ category }}

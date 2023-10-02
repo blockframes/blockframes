@@ -1,4 +1,4 @@
-import { TitleState } from '@blockframes/model';
+import { TitleState, getGroup, getNode, isGroup } from '@blockframes/model';
 import { EdgeConfig, NodeConfig, ComboConfig, GraphData, TreeGraph, Tooltip, GraphOptions } from '@antv/g6';
 import { DagreLayout } from '@antv/layout';
 
@@ -47,8 +47,8 @@ export function toG6(state: TitleState): GraphData {
   // Horizontal Group
   for (const group of Object.values(state.horizontals)) {
     const comboLabel = group.percent !== 1
-      ? `${group.id} (${roundCent(group.percent * 100)}%): ${roundCent(group.revenu)}€`
-      : `${group.id}: ${roundCent(group.revenu)}€`;
+      ? `${group.id} (${roundCent(group.percent * 100)}%): ${roundCent(group.revenu.calculated)}€`
+      : `${group.id}: ${roundCent(group.revenu.calculated)}€`;
     combos.push({
       id: group.id,
       label: comboLabel,
@@ -78,8 +78,8 @@ export function toG6(state: TitleState): GraphData {
   // Vertical Group
   for (const vertical of Object.values(state.verticals)) {
     const comboLabel = vertical.percent
-      ? `${vertical.id} (${roundCent(vertical.percent * 100)}%): ${roundCent(vertical.revenu)}€`
-      : `${vertical.id}: ${roundCent(vertical.revenu)}€`;
+      ? `${vertical.id} (${roundCent(vertical.percent * 100)}%): ${roundCent(vertical.revenu.calculated)}€`
+      : `${vertical.id}: ${roundCent(vertical.revenu.calculated)}€`;
     combos.push({
       id: vertical.id,
       label: comboLabel,
@@ -100,6 +100,7 @@ export function toG6(state: TitleState): GraphData {
         history: []
       })
     }
+    // Fill nodes with no transfers
     for (const previous of vertical.previous) {
       const transferId = `${vertical.id}->${previous}` as const;
       if (!state.transfers[transferId]) {
@@ -152,6 +153,12 @@ export function toG6(state: TitleState): GraphData {
 
   // transfers
   for (const transfer of Object.values(state.transfers)) {
+
+    // Skips transfers from group to childs to make graph more readable
+    const nodeFrom = getNode(state, transfer.from);
+    const toGroup = getGroup(state, transfer.to);
+    if (isGroup(state, nodeFrom) && toGroup?.id === nodeFrom.id) continue;
+
     const edge: EdgeConfig = {
       type: 'cubic-vertical',
       id: transfer.id,

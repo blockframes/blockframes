@@ -3,37 +3,41 @@ import { BehaviorSubject } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { IncomesImportState } from '../../utils';
-import { formatIncome } from './utils';
+import { StatementsImportState } from '../../utils';
+import { formatStatement } from './utils';
 import { MovieService } from '@blockframes/movie/service';
 import { AuthService } from '@blockframes/auth/service';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 @Component({
-  selector: 'import-view-extracted-incomes[sheetTab]',
-  templateUrl: './view-extracted-incomes.component.html',
-  styleUrls: ['./view-extracted-incomes.component.scss'],
+  selector: 'import-view-extracted-statements[sheetTab]',
+  templateUrl: './view-extracted-statements.component.html',
+  styleUrls: ['./view-extracted-statements.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class ViewExtractedIncomesComponent implements OnInit {
+export class ViewExtractedStatementsComponent implements OnInit {
 
   @Input() sheetTab: SheetTab;
 
-  public incomesToCreate$ = new BehaviorSubject<MatTableDataSource<IncomesImportState>>(null);
+  public statementsToCreate$ = new BehaviorSubject<MatTableDataSource<StatementsImportState>>(null);
 
   constructor(
     private dynTitle: DynamicTitleService,
     private movieService: MovieService,
     private authService: AuthService,
+    private waterfallService: WaterfallService,
   ) {
-    this.dynTitle.setPageTitle('Submit your incomes');
+    this.dynTitle.setPageTitle('Submit your statements');
   }
 
   async ngOnInit() {
-    const incomesToCreate = await formatIncome(
+    const statementsToCreate = await formatStatement(
       this.sheetTab,
+      this.waterfallService,
       this.movieService,
       this.authService.profile.orgId,
     );
-    this.incomesToCreate$.next(new MatTableDataSource(incomesToCreate));
+
+    this.statementsToCreate$.next(new MatTableDataSource(statementsToCreate));
   }
 }

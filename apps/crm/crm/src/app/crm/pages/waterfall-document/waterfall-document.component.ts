@@ -39,7 +39,7 @@ export class WaterfallDocumentComponent implements OnInit {
   constructor(
     private movieService: MovieService,
     private waterfallService: WaterfallService,
-    private waterfalllDocumentService: WaterfallDocumentsService,
+    private waterfallDocumentService: WaterfallDocumentsService,
     private termService: TermService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
@@ -52,7 +52,7 @@ export class WaterfallDocumentComponent implements OnInit {
     const [movie, waterfall, document] = await Promise.all([
       this.movieService.getValue(waterfallId),
       this.waterfallService.getValue(waterfallId),
-      this.waterfalllDocumentService.getValue(documentId, { waterfallId })
+      this.waterfallDocumentService.getValue(documentId, { waterfallId })
     ])
     this.movie = movie;
     this.waterfall = waterfall;
@@ -61,9 +61,9 @@ export class WaterfallDocumentComponent implements OnInit {
       this.contract = convertDocumentTo<WaterfallContract>(this.document);
       this.allContracts = [this.contract];
       if (this.contract.rootId) {
-        this.rootContract = await this.waterfalllDocumentService.getContract(this.contract.rootId, waterfallId);
+        this.rootContract = await this.waterfallDocumentService.getContract(this.contract.rootId, waterfallId);
       } else {
-        const childDocuments = await this.waterfalllDocumentService.getValue([where('rootId', '==', this.contract.id)], { waterfallId });
+        const childDocuments = await this.waterfallDocumentService.getValue([where('rootId', '==', this.contract.id)], { waterfallId });
         this.childContracts = childDocuments.map(d => convertDocumentTo<WaterfallContract>(d));
         this.allContracts = [...this.allContracts, ...this.childContracts];
       }

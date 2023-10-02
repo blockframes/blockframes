@@ -873,6 +873,15 @@ export const rightholderRoles = {
   performer: 'Performer',
 } as const
 
+export const rightTypes = {
+  commission: 'Commission',
+  expenses: 'Expenses Recoupment',
+  mg: 'MG Recoupment',
+  horizontal: 'Horizontal Group',
+  vertical: 'Vertical Group',
+  unknown: 'Unknown'
+} as const
+
 export const movieNoteRoles = {
   producer: 'Producer',
   director: 'Director',
@@ -1808,6 +1817,7 @@ export const staticModel = {
   soundFormat,
   stakeholderRoles,
   rightholderRoles,
+  rightTypes,
   movieNoteRoles,
   storeStatus,
   unitBox,

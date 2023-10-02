@@ -71,14 +71,14 @@ const sellers: Action[] = [
     children: [
       { type: 'right', id: 'playtime_us_com_svod', orgId: 'playtime', percent: 0.1 },
       {
-        type: 'vertical', id: 'rf_corridor_a', children: [
-          {
-            type: 'right', id: 'soficinema_corridor_share_a', orgId: 'playtime', percent: 0.15, conditions: and([
-              condition('incomeDate', { to: new Date('2017/12/31') })
-            ])
-          },
-          { type: 'right', id: 'rf_corridor_share_a', orgId: 'realitism', percent: 0.15 }
-        ]
+        type: 'right', id: 'soficinema_corridor_share_a', orgId: 'soficinema', percent: 0.15, conditions: and([
+          condition('incomeDate', { to: new Date('2017/12/31') })
+        ])
+      },
+      {
+        type: 'right', id: 'rf_corridor_share_a', orgId: 'realitism', percent: 0.15, conditions: and([
+          condition('incomeDate', { from: new Date('2017/12/31') })
+        ])
       }
     ]
   }),
@@ -90,14 +90,14 @@ const sellers: Action[] = [
     children: [
       { type: 'right', id: 'playtime_row_com_svod', orgId: 'playtime', percent: 0.15 },
       {
-        type: 'vertical', id: 'rf_corridor_b', children: [
-          {
-            type: 'right', id: 'soficinema_corridor_share_b', orgId: 'playtime', percent: 0.10, conditions: and([
-              condition('incomeDate', { to: new Date('2017/12/31') })
-            ])
-          },
-          { type: 'right', id: 'rf_corridor_share_b', orgId: 'realitism', percent: 0.10 }
-        ]
+        type: 'right', id: 'soficinema_corridor_share_b', orgId: 'soficinema', percent: 0.10, conditions: and([
+          condition('incomeDate', { to: new Date('2017/12/31') })
+        ])
+      },
+      {
+        type: 'right', id: 'rf_corridor_share_b', orgId: 'realitism', percent: 0.10, conditions: and([
+          condition('incomeDate', { from: new Date('2017/12/31') })
+        ])
       }
     ]
   }),

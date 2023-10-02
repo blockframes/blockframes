@@ -78,9 +78,6 @@ export function coversInterest(
   return 0;
 }
 
-
-
-
 /** Get the total invested by an org with it's interest */
 export function investmentWithInterest(
   rate: number,

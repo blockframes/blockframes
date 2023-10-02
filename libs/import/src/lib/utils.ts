@@ -13,6 +13,7 @@ import {
   WaterfallSource,
   Right,
   createWaterfallRightholder,
+  Statement,
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
@@ -23,7 +24,7 @@ import { where } from 'firebase/firestore';
 import { TermService } from '@blockframes/contract/term/service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
-export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts', 'documents', 'incomes', 'expenses', 'sources', 'rights'] as const;
+export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts', 'documents', 'sources', 'rights', 'statements'] as const;
 
 export type SpreadsheetImportType = typeof spreadsheetImportTypes[number];
 
@@ -68,14 +69,6 @@ export interface OrganizationsImportState extends ImportState {
   newOrg: boolean;
 }
 
-export interface IncomesImportState extends ImportState {
-  income: Income;
-}
-
-export interface ExpensesImportState extends ImportState {
-  expense: Expense;
-}
-
 export interface SourcesImportState extends ImportState {
   source: WaterfallSource;
   waterfallId: string;
@@ -87,6 +80,12 @@ export interface RightsImportState extends ImportState {
   rightholders: Record<string, WaterfallRightholder[]>;
 }
 
+export interface StatementsImportState extends ImportState {
+  statement: Statement;
+  incomes: Income[];
+  expenses: Expense[];
+}
+
 /**
  * This hold the excel line number where the data start.
  * It should always match the column names line in the excel files.
@@ -96,11 +95,10 @@ export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
   titles: 14,
   contracts: 10,
   organizations: 10,
-  incomes: 10,
-  expenses: 10,
   documents: 10,
   sources: 10,
   rights: 2,
+  statements: 10,
 };
 
 export const sheetRanges: Record<SpreadsheetImportType, string> = {
@@ -108,10 +106,9 @@ export const sheetRanges: Record<SpreadsheetImportType, string> = {
   contracts: `A${sheetHeaderLine.contracts}:Q300`,
   documents: `A${sheetHeaderLine.documents}:U800`,
   organizations: `A${sheetHeaderLine.organizations}:Z100`,
-  incomes: `A${sheetHeaderLine.incomes}:J100`,
-  expenses: `A${sheetHeaderLine.expenses}:H100`,
   sources: `A${sheetHeaderLine.sources}:G100`,
   rights: `A${sheetHeaderLine.rights}:AZ100`,
+  statements: `A${sheetHeaderLine.statements}:Z100`,
 };
 
 export async function getOrgId(
@@ -472,6 +469,8 @@ export function valueToId(value: string) {
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\])}[{(]/g, '')
+    .replace('-', ' ')
     .split(' ')
     .join('_');
 }
