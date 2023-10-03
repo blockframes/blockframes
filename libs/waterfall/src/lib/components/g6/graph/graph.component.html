@@ -24,6 +24,7 @@
       <p>
         <strong>Type:</strong> Right<br>
         <strong>Id:</strong> {{ right.id }}<br>
+        <strong>Enabled:</strong> {{ right.enabled ? 'yes' : 'no' }} <br>
         <strong>Calculated Revenu:</strong> {{ right.revenu.calculated | currency:currency }}<br>
         <strong>Calculated Turnover:</strong> {{ right.turnover.calculated | currency:currency }}<br>
         <strong>Actual Revenu:</strong> {{ right.revenu.actual | currency:currency }}<br>

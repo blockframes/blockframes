@@ -62,6 +62,7 @@ export const blockingConditions = {
    * If "from" is specified, date will be checked against income date to check if date is after "from"
    * If "to" is specified, date will be checked against income date to check if date is before "to"
    * 
+   * @dev might be removed if "rightEnabled" condition fits all needs
    */
   incomeDate,
   /**
@@ -71,6 +72,7 @@ export const blockingConditions = {
    * If "from" is specified, date will be checked against contract start date to check if contract start date is after "from"
    * If "to" is specified, date will be checked against contract end date to check if contract end date is before "to"
    * 
+   * @dev might be removed if "rightEnabled" condition fits all needs
    */
   contractDate,
   /** @deprecated use contractAmount instead */
@@ -91,6 +93,12 @@ export const blockingConditions = {
    *  - if a contract is made between distributor & seller for an amount greater than 50k
    */
   contractAmount,
+  /**
+   * This condition is implicitly added to every right with a contractId.
+   * It will check if the income date is between contract start and end date.
+   * If not, right is marked as disabled and turnover is not incremented for this right, org and pool.
+   */
+  rightEnabled
 }
 
 export const allConditions = {
@@ -161,9 +169,10 @@ function numericOperator(operator: NumberOperator, current: number, target: numb
 //////////////////////
 
 export function checkCondition(ctx: ConditionContext) {
-  const checked = checkGroupCondition(ctx, ctx.right.conditions);
-  const shadow = checked || checkGroupCondition(ctx, ctx.right.conditions, ['poolShadowRevenu']);
-  return { shadow, checked };
+  const enabled = ctx.right.contractId ? checkGroupCondition(ctx, { operator: 'AND', conditions: [{ name: 'rightEnabled', payload: undefined }] }) : true;
+  const checked = enabled && checkGroupCondition(ctx, ctx.right.conditions);
+  const shadow = checked || (enabled && checkGroupCondition(ctx, ctx.right.conditions, ['poolShadowRevenu']));
+  return { shadow, checked, enabled };
 }
 
 export const isConditionGroup = (condition: Condition | ConditionGroup): condition is ConditionGroup => {
@@ -205,7 +214,13 @@ export interface ConditionGroup {
 export function and(conditions: (Condition | ConditionGroup)[]): ConditionGroup {
   return { operator: 'AND', conditions };
 }
-export function or(conditions: (Condition | ConditionGroup)[]): ConditionGroup {
+
+/**
+ * @deprecated not used. Might be removed in future
+ * @param conditions 
+ * @returns 
+ */
+function or(conditions: (Condition | ConditionGroup)[]): ConditionGroup {
   return { operator: 'OR', conditions };
 }
 
@@ -435,6 +450,17 @@ function contractDate(ctx: ConditionContext, payload: ConditionDuration) {
   throw new Error("Income date condititon should have either from or/and to. But none were provided");
 }
 
+function rightEnabled(ctx: ConditionContext) {
+  const { income, right, state } = ctx;
+  const contractId = right.contractId;
+  const contract = state.contracts[contractId];
+  if (!contract) throw new Error(`Contract "${contractId} specified in "${right.id}" does not exists in state`);
+  const date = income.date;
+  if (!date) throw new Error(`Income "${income.id}" do not have a date.`);
+  if (!contract.start || !contract.end) throw new Error(`Contract "${contractId}" does not specify valid start and end dates`);
+  return (date >= contract.start && date <= contract.end);
+}
+
 ///////////////////
 // INCOME AMOUNT //
 ///////////////////
@@ -449,7 +475,6 @@ function amount(ctx: ConditionContext, payload: ConditionAmount) {
   return numericOperator(operator, income.amount, target);
 }
 
-
 interface ConditionTerms {
   operator: ArrayOperator;
   type: GroupScope;
@@ -463,7 +488,6 @@ function terms(ctx: ConditionContext, payload: ConditionTerms) {
   if (operator === 'not-in') return !hasItem;
   throw new Error('Terms condition should have at least the operators "in" or "not-in"');
 }
-
 
 interface ConditionTermsLength {
   operator: NumberOperator;

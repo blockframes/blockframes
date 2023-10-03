@@ -81,7 +81,7 @@ export interface Statement {
 
 export interface DistributorStatement extends Statement {
   type: 'mainDistributor';
-  expenseIds: string[];
+  expenseIds: string[]; // TODO #9493 producter statement should have expenseIds too if producer is making direct sells
   payments: {
     internal: RightPayment[],
     external: RightholderPayment[]

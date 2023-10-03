@@ -1,5 +1,4 @@
 import {
-  getDate,
   getRightholderId,
   getTitleId,
   getWaterfallDocument,
@@ -24,7 +23,8 @@ import {
   WaterfallDocument,
   ActionName,
   conditionNames,
-  RightType
+  RightType,
+  isContract
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
@@ -93,8 +93,11 @@ export function getRightConfig(option: RightConfig) {
         if (titleId) return titleId;
         throw unknownEntityError<string>(value, 'Waterfall name or ID');
       },
-        /* b */ 'right.name': (value: string, data: FieldsConfig) => {
+        /* b */ 'right.name': (value: string, data: FieldsConfig, _, rowIndex) => {
         if (!value) throw mandatoryError(value, 'Right name');
+
+        // Save right order in Excel file (used for vertical group childs)
+        data.right.order = rowIndex;
 
         // Create right ID from name
         data.right.id = valueToId(value);
@@ -184,18 +187,16 @@ export function getRightConfig(option: RightConfig) {
         /* z */ 'conditionC.target.percent': (value: string) => {
         return Number(value) / 100 || 1;
       },
-        /* aa */ 'right.date': async (value: string, data: FieldsConfig, __, rowIndex) => {
-        if (!value.trim()) return new Date(1 + (rowIndex * 1000)); // 01/01/1970 + "rowIndex" seconds 
+        /* aa */ 'right.contractId': async (value: string, data: FieldsConfig) => {
+        if (!value.trim()) return;
         if (value.split(separator).length > 1) throw mandatoryError(value, 'Contract Id', 'Multiple contract are not allowed');
         // If contract ID is specified instead of a date, we use signature date as right date.
         const contract = await getWaterfallDocument(value.trim(), waterfallDocumentsService, documentCache, data.waterfallId);
-        if (contract) {
-          data.right.contractId = contract.id;
-          if (!contract.signatureDate) throw mandatoryError(value, 'Signature contract date', `Contract id "${contract.id}" is missing signature date.`);
-          return contract.signatureDate;
-        }
-
-        return getDate(value, 'Right Date or Contract ID');
+        if (!contract) throw optionalWarning('Contract Id');
+        if (!isContract(contract)) throw mandatoryError(value, 'Contract Id', `Document "${contract.id}" is not a contract`);
+        if (!contract.meta.duration.from) throw mandatoryError(value, 'Contract start date', `Contract id "${contract.id}" is missing start date.`);
+        if (!contract.meta.duration.to) throw mandatoryError(value, 'Contract end date', `Contract id "${contract.id}" is missing end date.`);
+        return contract.id;
       },
     };
   }
@@ -344,7 +345,7 @@ export function getRightConfig(option: RightConfig) {
           return 'orgRevenu';
         case 'total right holder calculated revenue':
           return 'poolShadowRevenu';
-        case 'poolrevenue': 
+        case 'poolrevenue':
           return 'poolRevenu';
         case 'source total revenue':
         case 'producer\'s net participation':

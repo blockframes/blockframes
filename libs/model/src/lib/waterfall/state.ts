@@ -1,5 +1,5 @@
 import { Action, GroupChild, PaymentAction } from './action';
-import { ConditionGroup, or } from './conditions';
+import { ConditionGroup, and } from './conditions';
 
 export interface NodeState {
   id: string;
@@ -11,7 +11,8 @@ export interface NodeState {
 
 export interface RightState extends NodeState {
   orgId: OrgState['id'];
-  // Todo: add duration
+  contractId?: ContractState['id'];
+  enabled: boolean;
   conditions: ConditionGroup;
   pools: string[]
 }
@@ -29,6 +30,7 @@ export interface HorizontalState extends GroupState {
 interface CreateRight {
   id: RightState['id'];
   orgId: OrgState['id'];
+  contractId?: ContractState['id'];
   percent: number;
   conditions?: ConditionGroup;
   previous?: string[];
@@ -47,8 +49,9 @@ export function createRightState(right: CreateRight): RightState {
       actual: 0
     },
     previous: [],
-    conditions: or([]),
+    conditions: and([]),
     pools: [],
+    enabled: true,
     ...right,
     id,
   }
@@ -179,7 +182,7 @@ export interface IncomeState {
 
 type PaymentState = PaymentAction;
 
-interface ContratState {
+export interface ContractState {
   id: string;
   date?: Date; // Signature date
   amount: number;
@@ -187,7 +190,7 @@ interface ContratState {
   start?: Date;
   end?: Date;
 }
-export function createContractState(contract: Partial<ContratState> & { id: string }) {
+export function createContractState(contract: Partial<ContractState> & { id: string }) {
   return {
     amount: 0,
     paid: 0,
@@ -270,7 +273,7 @@ export interface TitleState {
     [id: string]: IncomeState;
   }
   contracts: {
-    [id: string]: ContratState;
+    [id: string]: ContractState;
   }
   events: {
     [eventId: string]: unknown;
