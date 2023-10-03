@@ -9,6 +9,7 @@ import { WaterfallRightholderComponent } from './waterfall-rightholder.component
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -27,6 +28,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MovieHeaderModule,
     StaticSelectModule,
     TableModule,
+    ToLabelModule,
 
     MatIconModule,
     MatButtonModule,

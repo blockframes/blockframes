@@ -30,14 +30,11 @@
     <ng-template colRef="name" label="Name" let-name sort>
       {{ name }}
     </ng-template>
+    <ng-template colRef="type" label="Type" let-type sort>
+      {{ type | toLabel: 'rightTypes' }}
+    </ng-template>
     <ng-template colRef="groupId" label="Group" let-groupId sort>
       {{ groupId ? groupId : '--' }}
-    </ng-template>
-    <ng-template colRef="date" label="Date" let-date sort defaultSort>
-      {{ date | date: 'MM/dd/yyyy' }}
-    </ng-template>
-    <ng-template colRef="actionName" label="Action Name" let-actionName sort>
-      {{ actionName }}
     </ng-template>
     <ng-template colRef="percent" label="%" let-percent>
       {{ percent ? percent  : '--' }}
