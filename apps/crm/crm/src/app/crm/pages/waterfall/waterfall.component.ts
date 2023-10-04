@@ -104,7 +104,7 @@ export class WaterfallComponent implements OnInit {
     this.canInitWaterfall$.next(this.canInitWaterfall());
   }
 
-  public goTo(type: 'document'| 'statement', id: string) {
+  public goTo(type: 'document' | 'statement', id: string) {
     this.router.navigate([type, id], { relativeTo: this.route });
   }
 
@@ -280,6 +280,15 @@ export class WaterfallComponent implements OnInit {
     this.actions = [];
     this.cdRef.markForCheck();
     this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
+  }
+
+  public getPayloadPair(from: string | { org?: string, income?: string, right?: string }) {
+    if (!from) return '--';
+    if (typeof from === 'string') return from;
+
+    if (from?.org) return this.getRightholderName(from.org);
+    if (from?.income) return from.income;
+    if (from?.right) return from.right;
   }
 
 }

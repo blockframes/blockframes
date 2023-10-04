@@ -134,29 +134,10 @@
             <ng-template #noPrice>--</ng-template>
           </ng-template>
           <ng-template colRef="payload.from" label="From" let-from sort>
-            <ng-container *ngIf="from?.org">
-              {{ getRightholderName(from.org) }}
-            </ng-container>
-            <ng-container *ngIf="!from?.org">
-              {{ from }}
-            </ng-container>
-            <ng-container *ngIf="!from">
-              --
-            </ng-container>
+            {{ getPayloadPair(from) }}
           </ng-template>
           <ng-template colRef="payload.to" label="To" let-to sort>
-            <ng-container *ngIf="to?.right">
-              {{ to.right }}
-            </ng-container>
-            <ng-container *ngIf="to?.org">
-              {{ getRightholderName(to.org) }}
-            </ng-container>
-            <ng-container *ngIf="!to?.right && !to?.org">
-              {{ to }}
-            </ng-container>
-            <ng-container *ngIf="!to">
-              --
-            </ng-container>
+            {{ getPayloadPair(to) }}
           </ng-template>
           <ng-template colRef="payload.percent" label="%" let-percent>
             {{ percent ? percent * 100  : '--' }}

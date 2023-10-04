@@ -27,7 +27,8 @@ import {
   WaterfallContract,
   createRightPayment,
   createRightholderPayment,
-  DistributorStatement
+  DistributorStatement,
+  createIncomePayment
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { StatementService } from '@blockframes/waterfall/statement.service';
@@ -112,6 +113,18 @@ export class WaterfallStatementComponent implements OnInit {
 
     if (isDistributorStatement(this.statement)) {
       this.expenses = data.expenses.filter(e => (this.statement as DistributorStatement).expenseIds.includes(e.id));
+
+      for (const income of this.incomes) {
+        if (this.statement.payments.income.find(p => p.incomeId === income.id)) continue;
+        this.statement.payments.income.push(createIncomePayment({
+          id: this.statementService.createId(),
+          incomeId: income.id,
+          price: income.price,
+          currency: income.currency,
+          date: this.statement.duration.to,
+        }));
+      }
+
     }
 
     if (!this.waterfall.versions[0]?.id) { // Waterfall was never initialized
@@ -282,8 +295,8 @@ export class WaterfallStatementComponent implements OnInit {
   private getPreviousStatement() {
     const statementHistory = this.getStatementsHistory();
     const isCurrentStatementInHistory = statementHistory.find(h => new Date(h.date).getTime() === this.statement.duration.to.getTime());
-    if(!isCurrentStatementInHistory && statementHistory.length) return statementHistory[statementHistory.length - 1];
-    if(statementHistory.length >= 2) return statementHistory[statementHistory.length - 2];
+    if (!isCurrentStatementInHistory && statementHistory.length) return statementHistory[statementHistory.length - 1];
+    if (statementHistory.length >= 2) return statementHistory[statementHistory.length - 2];
   }
 
   public showRightDetails({ id: rightId }: { id: string }) {
@@ -351,11 +364,7 @@ export class WaterfallStatementComponent implements OnInit {
       const paymentExists = this.statement.payments.internal.find(p => p.to === right.id) || this.statement.payments.external.find(p => p.to === right.id);
       if (paymentExists) continue;
 
-      const sources = this.getAssociatedSourceIds(right.id);
-      const incomes = this.incomes.filter(i => {
-        const incomeSource = getAssociatedSource(i, this.waterfall.sources);
-        return sources.includes(incomeSource.id);
-      });
+      const incomeIds = this.getIncomesRelatedToPayment(right.id);
 
       const isInternal = right.rightholderId === this.statement.rightholderId;
       const amount = this.getCalculatedAmount(right.id);
@@ -365,7 +374,7 @@ export class WaterfallStatementComponent implements OnInit {
         price: amount[mainCurrency],
         currency: mainCurrency,
         date: this.statement.duration.to,
-        incomeIds: incomes.map(i => i.id),
+        incomeIds,
       });
 
       this.statement.payments[isInternal ? 'internal' : 'external'].push(payment);
@@ -384,7 +393,7 @@ export class WaterfallStatementComponent implements OnInit {
           price,
           currency: mainCurrency,
           date: this.statement.duration.to,
-          incomeIds: this.statement.incomeIds,
+          incomeIds: this.statement.incomeIds, // TODO #9493 use getIncomesRelatedToPayment() for all rights of this rightholder?
           to: this.contract.sellerId
         });
         this.statement.payments.external.push(payment);
@@ -394,6 +403,18 @@ export class WaterfallStatementComponent implements OnInit {
       // TODO #9493 if paymentSum (outgoing) != incoming payments => create rightholder payment
     }
 
+  }
+
+  private getIncomesRelatedToPayment(rightId: string){
+    const sources = this.getAssociatedSourceIds(rightId);
+    const incomes = this.incomes.filter(i => {
+      const incomeSource = getAssociatedSource(i, this.waterfall.sources);
+      return sources.includes(incomeSource.id);
+    });
+    
+    const transfers = Object.values(this.state.waterfall.state.transfers).filter(t => t.to === rightId);
+    const transferedIncomes = Array.from(new Set(transfers.map(t => t.history.filter(h => h.checked)).flat().map(h => h.incomeId)));
+    return incomes.map(i => i.id).filter(i => transferedIncomes.includes(i));
   }
 
   public async validate() {

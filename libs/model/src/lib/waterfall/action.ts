@@ -25,7 +25,7 @@ import { getContractAndAmendments, getCurrentContract, getDeclaredAmount } from 
 import { convertCurrenciesTo, sortByDate, sum } from '../utils';
 import { MovieCurrency } from '../static';
 import { Right, orderRights } from './right';
-import { Statement } from './statement';
+import { Statement, isDistributorStatement } from './statement';
 
 const actions = {
   /**
@@ -313,6 +313,24 @@ export function statementsToActions(statements: Statement[]) {
   const payments: PaymentAction[] = [];
 
   for (const statement of statements) {
+
+    if (isDistributorStatement(statement)) {
+      const incomePayments = statement.payments.income;
+      for (const payment of incomePayments) {
+        payments.push({
+          id: payment.id,
+          amount: convertCurrenciesTo({ [payment.currency]: payment.price }, mainCurrency)[mainCurrency],
+          from: {
+            income: payment.incomeId
+          },
+          to: {
+            org: statement.rightholderId
+          },
+          contractId: statement.contractId,
+          date: payment.date
+        });
+      }
+    }
 
     const internalPayments = statement.payments.internal.filter(p => p.status === 'processed' || p.status === 'received');
     for (const payment of internalPayments) {
@@ -641,7 +659,7 @@ export interface PaymentAction extends BaseAction {
   amount: number;
   from: {
     org?: string;
-    source?: string;
+    income?: string;
   };
   to: {
     org?: string;
@@ -665,23 +683,6 @@ function income(state: TitleState, payload: IncomeAction) {
     }
   }
 
-  // Income is an actual payment to the organization of the first right (or groups) it hits
-  // we increment actual revenu and actual turnover of this org.
-  assertNode(state, payload.to);
-  const orgState = getNodeOrg(state, payload.to);
-  const sourcePayment: PaymentAction = {
-    id: payload.id,
-    amount: payload.amount,
-    from: {
-      source: payload.from
-    },
-    to: {
-      org: orgState.id
-    },
-    contractId: payload.contractId,
-    date: payload.date
-  };
-  payment(state, sourcePayment);
 
   state.incomes[payload.id] = payload;
   const incomeId = payload.id;
@@ -801,7 +802,7 @@ function payment(state: TitleState, payload: PaymentAction) {
       pool.revenu.actual += actualRevenue;
       pool.turnover.actual += actualTurnover;
     }
-  } else if (payload.from.source && payload.to.org) { // Direct payment from source to org
+  } else if (payload.from.income && payload.to.org) { // Direct payment from income to org
     state.orgs[payload.to.org].revenu.actual += payload.amount;
     state.orgs[payload.to.org].turnover.actual += payload.amount;
   }
