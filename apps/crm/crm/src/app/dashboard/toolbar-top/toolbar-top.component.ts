@@ -1,9 +1,7 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
-
-import { EmulatorsConfig, EMULATORS_CONFIG } from 'libs/utils/src/lib/emulator-front-setup';
-
+import { EmulatorsConfig, EMULATORS_CONFIG } from '@blockframes/utils/emulator-front-setup';
 import { firebaseRegion, firebase } from '@env';
-export const { projectId } = firebase();
+const { projectId } = firebase();
 
 @Component({
   selector: 'crm-toolbar-top',
