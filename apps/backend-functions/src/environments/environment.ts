@@ -31,7 +31,8 @@ export {
   centralOrgId,
   supportEmails,
   jwplayer,
-  mailchimp
+  mailchimp,
+  airtable
 } from '@env';
 
 export const { projectId, storageBucket } = firebase();
@@ -49,3 +50,5 @@ export const twilioApiKeySecret = mockConfigIfNeeded('twilio', 'api', 'key', 'se
 export const twilioApiKeySid = mockConfigIfNeeded('twilio', 'api', 'key', 'sid');
 
 export const mailchimpAPIKey = mockConfigIfNeeded('mailchimp', 'api_key');
+
+export const airtableToken = mockConfigIfNeeded('airtable', 'token');

@@ -1,9 +1,6 @@
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
-
-import { EmulatorsConfig, EMULATORS_CONFIG } from 'libs/utils/src/lib/emulator-front-setup';
-
-import { firebaseRegion, firebase } from '@env';
-export const { projectId } = firebase();
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CallableFunctions } from 'ngfire';
 
 @Component({
   selector: 'crm-toolbar-top',
@@ -12,19 +9,19 @@ export const { projectId } = firebase();
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToolbarTopComponent {
-  constructor(@Inject(EMULATORS_CONFIG) private emulatorsConfig: EmulatorsConfig) {}
+  public updateInProgress = false;
 
-  updateAirtable() {
-    const url = this.emulatorsConfig.functions
-      ? `http://localhost:5001/${projectId}/${firebaseRegion}/updateAirtable`
-      : `https://${firebaseRegion}-${projectId}.cloudfunctions.net/updateAirtable`;
+  constructor(
+    private functions: CallableFunctions,
+    private snackbar: MatSnackBar,
+  ) { }
 
-    console.log('updating Airtable via ', url);
-    fetch(url).then(async res => {
-      const reader = res.body.getReader();
-      const readResult = await reader.read();
-      const response = new TextDecoder().decode(readResult.value);
-      console.log(response);
-    });
+  async updateAirtable() {
+    this.snackbar.open('Updating Airtable. This will take some time...', 'close');
+    this.updateInProgress = true;
+    const response = await this.functions.call<unknown, string>('updateAirtable', {}, { timeout: 540 * 1000 });
+
+    this.snackbar.open(`Update ended with response: "${response}`, 'close', { duration: 5000 });
+    this.updateInProgress = false;
   }
 }

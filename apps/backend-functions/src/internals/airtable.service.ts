@@ -1,22 +1,21 @@
 import Airtable, { FieldSet, Records, Record as AirtableRecord } from 'airtable';
 import { AirtableBase } from 'airtable/lib/airtable_base';
-import { baseId, tables } from '@env';
+import { airtable, airtableToken } from './../environments/environment';
 
-interface airtableUpdate {
+interface AirtableUpdate {
   airtableId: string;
   update: Record<string, any>;
 }
 
-let airtableBase: AirtableBase;
+export class AirtableService {
+  private airtableBase: AirtableBase;
+  private getBase(){
+    if (!this.airtableBase) this.airtableBase = new Airtable({ apiKey: airtableToken }).base(airtable.baseId);
+    return this.airtableBase;
+  }
 
-function getBase() {
-  if (airtableBase) return airtableBase;
-  return new Airtable({ apiKey: process.env.AIRTABLE_TOKEN }).base(baseId);
-}
-
-export const airtable = {
   async create(tableId: string, records: Record<string, any> | Record<string, any>[]) {
-    const base = getBase();
+    const base = this.getBase();
     if (!Array.isArray(records)) records = [records];
     const rows = records.map(r => ({ fields: r }));
     const createAll = [];
@@ -28,18 +27,18 @@ export const airtable = {
     const result = (await Promise.all(createAll)).flat();
     const tableName = getTableName(tableId);
     return `${result.length} rows injected to ${tableName} table.`;
-  },
+  }
 
   async get(tableId: string) {
-    const base = getBase();
+    const base = this.getBase();
     const result = await base(tableId).select().all();
     return result;
-  },
-
+  }
+  
   async delete(tableId: string, recordIds: string | string[]) {
     const tableName = getTableName(tableId);
     if (!recordIds.length) return `0 rows deleted from ${tableName} table.`;
-    const base = getBase();
+    const base = this.getBase();
     if (!Array.isArray(recordIds)) recordIds = [recordIds];
     const deleteAll = [];
     const chunkSize = 10;
@@ -49,22 +48,22 @@ export const airtable = {
     }
     await Promise.all(deleteAll);
     return `${recordIds.length} rows deleted from ${tableName} table.`;
-  },
+  }
 
   async deleteAll(tableId: string) {
-    const base = getBase();
+    const base = this.getBase();
     const records = await base(tableId).select().all();
     const recordIds = records.map(r => r.id);
-    await airtable.delete(tableId, recordIds);
+    await this.delete(tableId, recordIds);
     const tableName = getTableName(tableId);
     return `${records.length} rows deleted from ${tableName} table.`;
-  },
+  }
 
   // Updates an airtable record, only updating the given fields (others stay intact)
-  async update(tableId: string, updates: airtableUpdate[]) {
+  async update(tableId: string, updates: AirtableUpdate[]) {
     const tableName = getTableName(tableId);
     if (!updates.length) return `0 rows updated in ${tableName} table.`;
-    const base = getBase();
+    const base = this.getBase();
     const rows = updates.map(u => ({ id: u.airtableId, fields: u.update }));
     const updateAll = [];
     const chunkSize = 10;
@@ -74,15 +73,15 @@ export const airtable = {
     }
     await Promise.all(updateAll);
     return `${updates.length} rows updated in ${tableName} table.`;
-  },
+  }
 
   // Retrieves airtable data, compares it with firebase, deletes obsolete records, creates news ones and updates records where needed
-  async synchronize(tableId: string, firebaseRecords: Record<string, any>[], uniqueKeysCombination: string | string[]) {
+  async synchronize(tableId: string, firebaseRecords: Record<string, any>[], uniqueKeysCombination: string | string[], options = { verbose: false }) {
     if (!Array.isArray(uniqueKeysCombination)) uniqueKeysCombination = [uniqueKeysCombination];
     const tableName = getTableName(tableId);
 
     // Retrieves data from airtable's table
-    const airtableRecords = await airtable.get(tableId);
+    const airtableRecords = await this.get(tableId);
 
     //* The commented block below serves for testing purpose.
 
@@ -128,38 +127,35 @@ export const airtable = {
 
     //* comment line below for obsolete simultation testing
     const obsoleteRecords = getObsoleteRecords(airtableRecords, firebaseRecords, uniqueKeysCombination);
-    console.log(`Obsolete records to be deleted from ${tableName} table :`, obsoleteRecords);
+    if (options.verbose) console.log(`Obsolete records to be deleted from ${tableName} table :`, obsoleteRecords);
 
     const newRecords = getNewRecords(airtableRecords, firebaseRecords, uniqueKeysCombination);
-    console.log(`New records to be injected in ${tableName} table :`, newRecords);
+    if (options.verbose) console.log(`New records to be injected in ${tableName} table :`, newRecords);
 
     const updates = getUpdates(getRecordChanges(airtableRecords, firebaseRecords, uniqueKeysCombination));
-    console.log(`Records to be updated in ${tableName} table :`, updates);
+    if (options.verbose) console.log(`Records to be updated in ${tableName} table :`, updates);
 
-    const deletion = await airtable.delete(
-      tableId,
-      obsoleteRecords.map(r => r.id)
-    );
-    console.log(deletion);
+    const deletion = await this.delete(tableId, obsoleteRecords.map(r => r.id));
+    if (options.verbose) console.log(deletion);
 
-    const creation = await airtable.create(tableId, newRecords);
-    console.log(creation);
+    const creation = await this.create(tableId, newRecords);
+    if (options.verbose) console.log(creation);
 
-    const update = await airtable.update(tableId, updates);
-    console.log(update);
+    const update = await this.update(tableId, updates);
+    if (options.verbose) console.log(update);
 
     return `Synchronization of ${tableName} table completed.`;
-  },
+  }
 
   // If needed, erases all a table before populating it again
   async replaceAll(tableId: string, records: Record<string, any>[]) {
-    const deletion = await airtable.deleteAll(tableId);
+    const deletion = await this.deleteAll(tableId);
     console.log(deletion);
 
-    const creation = await airtable.create(tableId, records);
+    const creation = await this.create(tableId, records);
     console.log(creation);
-  },
-};
+  }
+}
 
 //* Helpers
 
@@ -243,7 +239,7 @@ function getUpdates(
     airtableRecord: AirtableRecord<FieldSet>;
     updateRecord: Record<string, any>;
   }[]
-): airtableUpdate[] {
+): AirtableUpdate[] {
   const updates = recordChanges.map(c => ({
     airtableId: c.airtableRecord.id, // targets airtable record
     update: getFieldUpdates(c.airtableRecord.fields, c.updateRecord), // contains the fields to be updated
@@ -252,7 +248,7 @@ function getUpdates(
 }
 
 function getTableName(tableId: string) {
-  return Object.keys(tables).find(k => tables[k] === tableId);
+  return Object.keys(airtable.tables).find(k => airtable.tables[k] === tableId);
 }
 
 function equalValues(value1, value2) {

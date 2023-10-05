@@ -3,26 +3,26 @@ import { Organization, getOrgModuleAccess } from './organisation';
 import { CrmUser, PublicUser, User, getMemberRole } from './user';
 import { Permissions } from './permissions';
 import { getAllAppsExcept } from './apps';
-import { Language, appName, modules } from './static';
+import { Language, appName, modules, toGroupLabel } from './static';
 import { format } from 'date-fns';
 import { CrmMovie, Movie, MovieLanguageSpecification } from './movie';
-import { deletedIdentifier, displayName, smartJoin, sum, toGroupLabel, toLabel } from './utils';
+import { deletedIdentifier, displayName, smartJoin, sum, toLabel } from './utils';
 import { CrmEvent } from './event';
-import { DetailedContract, getNegotiationStatus, getPrice } from './contract';
+import { DetailedContract } from './contract';
+import { getNegotiationStatus } from './negociation';
 import { CrmOffer } from './offer';
 import { CrmBucket } from './bucket';
 import { AnonymousCredentials } from './identity';
 import { AvailsFilter } from './avail';
 import { maxBudget } from './algolia';
+import { getTotalIncome } from './income';
 
 type ExportType = 'csv' | 'airtable';
-
-type NullValue = string | null;
 
 interface GetDate {
   date: Date;
   exportType: ExportType;
-  nullValue: NullValue;
+  nullValue: string | null;
   nullCsv?: string; // when null for csv should not be '--'
 }
 
@@ -35,6 +35,18 @@ function getDate({ date, exportType, nullValue, nullCsv }: GetDate) {
 }
 
 const apps = getAllAppsExcept(['crm']);
+
+const getPrice = (sale: DetailedContract) => {
+  if (sale.buyerId) {
+    return `${sale.negotiation?.price || ''} ${sale.negotiation?.currency || ''}`;
+  } else {
+    const totalIncome = getTotalIncome(sale.incomes);
+    const incomes = [];
+    if (totalIncome.EUR) incomes.push(`${totalIncome.EUR} 'EUR'`);
+    if (totalIncome.USD) incomes.push(`${totalIncome.USD} 'USD'`);
+    return incomes.join(' | ');
+  }
+}
 
 //* Export functions
 
@@ -99,7 +111,7 @@ export function crmUsersToExport(
   return rows;
 }
 
-export function OrgsToExport(orgs: Organization[], exportType: ExportType) {
+export function orgsToExport(orgs: Organization[], exportType: ExportType) {
   const nullValue = exportType === 'csv' ? '--' : null;
   const rows = orgs.map(r => {
     const row = {

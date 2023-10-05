@@ -58,10 +58,7 @@ async function executeQuery(query) {
   return bigqueryClient.query(options);
 }
 
-export const getAnalyticsActiveUsers = async (
-  _,
-  context: CallableContext
-) => {
+export const getAnalyticsActiveUsers = async (_, context: CallableContext) => {
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();

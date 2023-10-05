@@ -1,7 +1,4 @@
-import { queryDocument, getDocument, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 import { db } from './internals/firebase';
-import { airtable } from './internals/airtable';
-import { tables } from '@env';
 import { triggerNotifications } from './notification';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
 import {
@@ -13,14 +10,9 @@ import {
   createInternalDocumentMeta,
   createNotification,
   createIncome,
-  createTerm,
-  Movie,
-  Income,
-  contractToDetailedContract,
-  mandatesToExport,
-  salesToExport,
-  Mandate,
+  createTerm
 } from '@blockframes/model';
+import { queryDocument, getDocument, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 
 interface ContractNotificationType {
   sender: 'myOrgAcceptedAContract' | 'myOrgDeclinedAContract', //org who accepted/declined a contract
@@ -179,31 +171,4 @@ export async function onContractUpdate(change: BlockframesChange<Sale>) {
       });
     }
   }
-}
-
-export async function updateAirtableContracts({
-  mandates,
-  sales,
-  orgs,
-  movies,
-  incomes,
-  lastNegotiations,
-}: {
-  mandates: Mandate[];
-  sales: Sale[];
-  orgs: Organization[];
-  movies: Movie[];
-  incomes: Income[];
-  lastNegotiations: (Negotiation & { contractId: string })[];
-}) {
-  console.log('===== Updating contracts =====');
-
-  const detailedMandates = contractToDetailedContract(mandates, orgs, movies);
-
-  const detailedSales = contractToDetailedContract(sales, orgs, movies, incomes, lastNegotiations);
-
-  const rows = mandatesToExport(detailedMandates, 'airtable').concat(salesToExport(detailedSales, 'airtable'));
-
-  const synchronization = await airtable.synchronize(tables.contracts, rows, 'id');
-  console.log(synchronization);
 }

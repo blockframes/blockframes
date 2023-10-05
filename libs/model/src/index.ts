@@ -26,4 +26,4 @@ export * from './lib/emails';
 export * from './lib/avail';
 export * from './lib/pdf';
 export * from './lib/cms';
-export * from './lib/exportUtils';
+export * from './lib/export-utils';

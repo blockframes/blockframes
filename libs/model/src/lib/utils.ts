@@ -1,7 +1,7 @@
 import { addYears, subYears } from 'date-fns';
 import { Person } from './identity';
 import { LanguageRecord } from './movie';
-import { App, GroupScope, Scope, StaticGroup, staticGroups, staticModel } from './static';
+import { App, Scope, staticModel } from './static';
 
 export interface ErrorResultResponse {
   error: string;
@@ -374,26 +374,4 @@ export const deletedIdentifier = {
 export function sortByDate<T>(objects: T[], field: string) {
   const resolve = (path: string, obj: T) => path.split('.').reduce((prev, curr) => prev?.[curr], obj);
   return objects.sort((a, b) => resolve(field, a).getTime() - resolve(field, b).getTime());
-}
-
-export function toGroupLabel(value: string[], scope: GroupScope, all?: string) {
-
-  const groups: StaticGroup[] = staticGroups[scope];
-
-  const allItems = groups.reduce((items, group) => items.concat(group.items), []);
-
-  if (allItems.length === value.length) return [all];
-
-  return groups.map(group => {
-    const items = [];
-    for (const item of group.items) {
-      if (value.includes(item)) items.push(staticModel[scope][item]);
-    }
-    return items.length === group.items.length
-      ? group.label
-      : items;
-  })
-    .sort((a) => typeof a === 'string' ? -1 : 1)
-    .flat()
-    .filter(v => !!v);
 }

@@ -18,7 +18,7 @@ import { AnalyticsService } from '@blockframes/analytics/service';
 import { ModuleGuard } from './routes/module.guard';
 import { format } from 'date-fns';
 
-export const { projectId } = firebase();
+const { projectId } = firebase();
 
 export interface DownloadSettings {
   titleIds: string[],
