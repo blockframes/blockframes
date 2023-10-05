@@ -51,13 +51,6 @@ export class ContractService extends BlockframesCollection<Sale | Mandate> {
     );
   }
 
-  isInitial(negotiation: Partial<Negotiation>) {
-    const initial = negotiation.initial;
-    const createdAt = negotiation?._meta?.createdAt;
-    if (initial && createdAt) return false;
-    return true;
-  }
-
   async addNegotiation(contractId: string, nego: Partial<Negotiation>) {
     const activeOrgId = this.orgService.org.id;
     const write = this.negotiationService.batch();

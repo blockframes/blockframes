@@ -32,7 +32,6 @@ import {
   eventsToCrmEvents,
   crmEventsToExport,
   Sale,
-  contractToDetailedContract,
   mandatesToExport,
   salesToExport,
   offersToCrmOffers,
@@ -41,8 +40,10 @@ import {
   orgAnalyticsToExport,
   searchAnalyticsToExport,
   movieAnalyticsToExport,
+  DetailedContract,
 } from '@blockframes/model';
 import { AirtableService } from './internals/airtable.service';
+import { getSeller } from '@blockframes/contract/contract/utils';
 
 const airtableService = new AirtableService();
 
@@ -385,4 +386,26 @@ async function updateAirtableMovieAnalytics({
 
   const synchronization = await airtableService.synchronize(airtable.tables.movieAnalytics, catalogRows, ['title id', 'uid']);
   console.log(synchronization);
+}
+
+function contractToDetailedContract(
+  contracts: Contract[],
+  orgs: Organization[],
+  titles: Movie[],
+  incomes?: Income[],
+  negotiations?: (Negotiation & { contractId: string })[]
+) {
+  const detailedContracts: DetailedContract[] = contracts.map(c => {
+    const detailedContract: DetailedContract = {
+      ...c,
+      licensor: orgs.find(o => o.id === getSeller(c)).name,
+      licensee: orgs.find(o => o.id === c.buyerId)?.name || 'External',
+      title: titles.find(t => t.id === c.titleId).title.international,
+    };
+    if (!incomes) return detailedContract;
+    detailedContract.incomes = incomes.filter(i => i.contractId === c.id);
+    detailedContract.negotiation = negotiations.find(n => n.contractId === c.id);
+    return detailedContract;
+  });
+  return detailedContracts;
 }

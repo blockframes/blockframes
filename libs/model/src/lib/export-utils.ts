@@ -8,12 +8,14 @@ import { format } from 'date-fns';
 import { CrmMovie, Movie, MovieLanguageSpecification } from './movie';
 import { deletedIdentifier, displayName, smartJoin, sum, toLabel } from './utils';
 import { CrmEvent } from './event';
-import { DetailedContract, getNegotiationStatus, getPrice } from './contract';
+import { DetailedContract } from './contract';
+import { getNegotiationStatus } from './negociation';
 import { CrmOffer } from './offer';
 import { CrmBucket } from './bucket';
 import { AnonymousCredentials } from './identity';
 import { AvailsFilter } from './avail';
 import { maxBudget } from './algolia';
+import { getTotalIncome } from './income';
 
 type ExportType = 'csv' | 'airtable';
 
@@ -33,6 +35,18 @@ function getDate({ date, exportType, nullValue, nullCsv }: GetDate) {
 }
 
 const apps = getAllAppsExcept(['crm']);
+
+const getPrice = (sale: DetailedContract) => {
+  if (sale.buyerId) {
+    return `${sale.negotiation?.price || ''} ${sale.negotiation?.currency || ''}`;
+  } else {
+    const totalIncome = getTotalIncome(sale.incomes);
+    const incomes = [];
+    if (totalIncome.EUR) incomes.push(`${totalIncome.EUR} 'EUR'`);
+    if (totalIncome.USD) incomes.push(`${totalIncome.USD} 'USD'`);
+    return incomes.join(' | ');
+  }
+}
 
 //* Export functions
 

@@ -1,9 +1,9 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { Negotiation, ContractStatus, getNegotiationStatus } from '@blockframes/model';
+import { Negotiation, ContractStatus, getNegotiationStatus, isInitial } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { getReviewer, isInitial } from './utils';
+import { getReviewer } from './utils';
 
 function canNegotiate(negotiation: Negotiation, activeOrgId: string) {
   return negotiation.status === 'pending' && negotiation.createdByOrg !== activeOrgId;
