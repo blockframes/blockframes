@@ -7,7 +7,7 @@
     </button>
   </article>
 
-  <bf-table [source]="rows" clickable pagination="50" useFilter (rowClick)="goToEdit($event)">
+  <bf-table [source]="crmEvents" clickable pagination="50" useFilter (rowClick)="goToEdit($event)">
     <ng-template colRef="id" label="Id" let-id sort>
       <span>{{ id }}</span>
       <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">

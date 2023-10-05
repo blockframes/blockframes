@@ -334,5 +334,6 @@ export const functionsConfigMap: { [key: string]: string } = {
   'mailchimp.api_key': 'MAILCHIMP_API_KEY',
   'gmail.client.id': 'CYPRESS_GMAIL_CLIENT_ID',
   'gmail.client.secret': 'CYPRESS_GMAIL_CLIENT_SECRET',
-  'gmail.refresh.token': 'CYPRESS_GMAIL_REFRESH_TOKEN'
+  'gmail.refresh.token': 'CYPRESS_GMAIL_REFRESH_TOKEN',
+  'airtable.token': 'AIRTABLE_TOKEN'
 };

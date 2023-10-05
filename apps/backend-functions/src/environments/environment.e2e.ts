@@ -19,7 +19,8 @@ export {
   centralOrgId,
   supportEmails,
   jwplayer,
-  mailchimp
+  mailchimp,
+  airtable
 } from '@env';
 
 import { firebase } from '@env';
@@ -39,3 +40,4 @@ export const twilioApiKeySid = functions.config().twilio.api.key.sid;
 
 export const mailchimpAPIKey = functions.config().mailchimp.api_key;
 
+export const airtableToken = functions.config().airtable.token;

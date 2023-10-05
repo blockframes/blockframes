@@ -39,6 +39,8 @@ import type { DocumentMeta } from './meta';
 import { getAllAppsExcept } from './apps';
 import { Organization } from './organisation';
 import { Mandate } from './contract';
+import { toLabel } from './utils';
+import { ScreeningEvent } from './event';
 
 //////////////////
 // MOVIE OBJECT //
@@ -592,4 +594,16 @@ export function wasLastSubmittedOn(movie: Movie): App {
  */
 export function getMoviePublishStatus(a: App): StoreStatus {
   return a === 'festival' ? 'accepted' : 'submitted';
+}
+
+export function moviesToCrmMovies(movies: Movie[], orgs: Organization[], screenings: ScreeningEvent[], mandates: Mandate[]): CrmMovie[] {
+  const CrmMovies: CrmMovie[] = movies.map(m => {
+    const mandate = mandates.filter(mandate => mandate.type === 'mandate').find(mandate => mandate.titleId === m.id);
+    const org = orgs.find((o) => o.id === m.orgIds[0]);
+    const screeningCount = screenings.filter((e) => e.meta?.titleId === m.id).length;
+    const releaseMedias = m.originalRelease.map(r => toLabel(r.media, 'releaseMedias') as ReleaseMediaValue).filter(r => r)
+    const allPrizes = m.prizes.concat(m.customPrizes);
+    return { ...m, releaseMedias: Array.from(new Set(releaseMedias)), org, screeningCount, mandate, allPrizes }
+  })
+  return CrmMovies
 }

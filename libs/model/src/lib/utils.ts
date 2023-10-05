@@ -364,3 +364,14 @@ export const deletedIdentifier = {
   org: '(Deleted Org)',
   title: '(Deleted Title)'
 }
+
+/**
+ * Sorts array of objects
+ * Field can be "foo.date" to access deep attributes
+ * @param objects
+ * @returns
+ */
+export function sortByDate<T>(objects: T[], field: string) {
+  const resolve = (path: string, obj: T) => path.split('.').reduce((prev, curr) => prev?.[curr], obj);
+  return objects.sort((a, b) => resolve(field, a).getTime() - resolve(field, b).getTime());
+}

@@ -1,9 +1,20 @@
 import { db } from './internals/firebase';
 import { EventContext } from 'firebase-functions';
-import { centralOrgId } from '@env';
-import { Contract, Negotiation, Organization, Sale, NotificationTypes, Offer, ContractStatus, createInternalDocumentMeta, createNotification } from '@blockframes/model';
+import { centralOrgId } from './environments/environment';
+import { 
+  Contract,
+  Negotiation,
+  Organization,
+  Sale,
+  NotificationTypes,
+  Offer,
+  ContractStatus,
+  createInternalDocumentMeta,
+  createNotification,
+  isInitial
+} from '@blockframes/model';
 import { triggerNotifications } from './notification';
-import { getReviewer, isInitial } from '@blockframes/contract/negotiation/utils'
+import { getReviewer } from '@blockframes/contract/negotiation/utils'
 import { getDocument, queryDocument, queryDocuments, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 
 // KEEP THE OFFER STATUS IN SYNC WITH IT'S CONTRACTS AND NEGOTIATIONS

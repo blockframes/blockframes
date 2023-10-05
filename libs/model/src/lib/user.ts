@@ -1,8 +1,9 @@
 import { createStorageFile, StorageFile } from './media';
 import type { DocumentMeta } from './meta';
-import type { App, Genre, Language, Media, Territory } from './static';
+import { App, Genre, Language, Media, Territory } from './static';
 import type { NotificationTypes } from './notification';
 import type { UserRole } from './permissions';
+import { Organization } from './organisation';
 
 export interface User extends PublicUser {
   firstName: string;
@@ -16,6 +17,15 @@ export interface User extends PublicUser {
   settings?: UserSettings;
   preferences?: Preferences;
   savedSearches?: Partial<Record<App, string>>
+}
+
+export interface CrmUser extends User {
+  firstConnection: Date;
+  lastConnection: Date;
+  pageView: number;
+  sessionCount: number;
+  createdFrom: string;
+  org: Organization;
 }
 
 export interface LegalTerms {

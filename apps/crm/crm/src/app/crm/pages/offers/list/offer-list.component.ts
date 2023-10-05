@@ -4,13 +4,11 @@ import { OfferService } from '@blockframes/contract/offer/service';
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { orderBy, where } from 'firebase/firestore';
-import { Contract, Movie, Negotiation, Offer, toLabel, sum, Bucket, deletedIdentifier } from '@blockframes/model';
+import { Bucket, CrmOffer, crmOffersToExport, bucketsToCrmBuckets, crmBucketsToExport } from '@blockframes/model';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
-import { format } from 'date-fns';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 
 @Component({
   selector: 'crm-offer-list',
@@ -48,26 +46,14 @@ export class OffersListComponent {
     )
   }
 
-  public exportTable(offers: (
-    { contracts: (Contract & { title: Movie, negotiation?: Negotiation })[] }
-    & Offer)[]
-  ) {
+  public exportTable(crmOffers: CrmOffer[]) {
     try {
       this.exporting = true;
       this.cdr.markForCheck();
 
-      const exportedRows = offers.map(offer => ({
-        reference: offer.id,
-        created: format(offer._meta.createdAt, 'MM/dd/yyyy'),
-        buyerId: offer.buyerId,
-        '# of title': offer.contracts.length,
-        titles: offer.contracts.map(c => c.title?.title?.international).join(', '),
-        'specific terms': offer.specificity ? 'yes' : '--',
-        'total package price': `${sum(offer.contracts.map(c => c.negotiation.price).filter(value => typeof value === 'number'))} ${offer.currency || ''}`,
-        status: toLabel(offer.status, 'offerStatus')
-      }));
+      const rows = crmOffersToExport(crmOffers, 'csv');
 
-      downloadCsvFromJson(exportedRows, 'offer-list');
+      downloadCsvFromJson(rows, 'offer-list');
 
       this.exporting = false;
     } catch (err) {
@@ -84,20 +70,11 @@ export class OffersListComponent {
       this.cdr.markForCheck();
 
       if (buckets.length) {
-        const exportedRows = [];
         const orgs = await this.orgService.load(buckets.map(b => b.id));
-        for (const bucket of buckets) {
-          const org = orgs.find(o => o.id === bucket.id);
-          exportedRows.push({
-            'bucket reference': bucket.id,
-            'org name': org ? org.name : deletedIdentifier.org,
-            '# of title': bucket.contracts.length,
-            specificity: bucket.specificity ?? '--',
-            'total bucket price': `${sum(bucket.contracts.map(c => c.price).filter(value => typeof value === 'number' && !isNaN(value)))} ${bucket.currency || ''}`
-          });
-        }
+        const crmBuckets = bucketsToCrmBuckets(buckets, orgs);
+        const rows = crmBucketsToExport(crmBuckets, 'csv');
 
-        downloadCsvFromJson(exportedRows, 'bucket-list');
+        downloadCsvFromJson(rows, 'bucket-list');
       } else {
         this.snackbar.open('No data to export', 'close', { duration: 5000 });
       }

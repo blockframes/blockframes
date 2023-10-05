@@ -1,9 +1,9 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { Negotiation, ContractStatus } from '@blockframes/model';
+import { Negotiation, ContractStatus, getNegotiationStatus, isInitial } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { getReviewer, isInitial } from './utils';
+import { getReviewer } from './utils';
 
 function canNegotiate(negotiation: Negotiation, activeOrgId: string) {
   return negotiation.status === 'pending' && negotiation.createdByOrg !== activeOrgId;
@@ -41,17 +41,10 @@ export class CanNegotiatePipe implements PipeTransform {
   }
 }
 
-export function negotiationStatus(negotiation: Negotiation): ContractStatus {
-  const pending = negotiation?.status === 'pending';
-  if (isInitial(negotiation) && pending) return 'pending';
-  if (negotiation?.status === 'pending') return 'negotiating';
-  return negotiation?.status;
-}
-
 @Pipe({ name: 'negotiationStatus' })
 export class NegotiationStatusPipe implements PipeTransform {
   transform(negotiation: Negotiation): ContractStatus {
-    return negotiationStatus(negotiation);
+    return getNegotiationStatus(negotiation);
   }
 }
 
