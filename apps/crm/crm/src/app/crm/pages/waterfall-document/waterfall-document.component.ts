@@ -53,7 +53,7 @@ export class WaterfallDocumentComponent implements OnInit {
       this.movieService.getValue(waterfallId),
       this.waterfallService.getValue(waterfallId),
       this.waterfallDocumentService.getValue(documentId, { waterfallId })
-    ])
+    ]);
     this.movie = movie;
     this.waterfall = waterfall;
     this.document = document;
