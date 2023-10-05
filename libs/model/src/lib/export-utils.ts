@@ -3,10 +3,10 @@ import { Organization, getOrgModuleAccess } from './organisation';
 import { CrmUser, PublicUser, User, getMemberRole } from './user';
 import { Permissions } from './permissions';
 import { getAllAppsExcept } from './apps';
-import { Language, appName, modules } from './static';
+import { Language, appName, modules, toGroupLabel } from './static';
 import { format } from 'date-fns';
 import { CrmMovie, Movie, MovieLanguageSpecification } from './movie';
-import { deletedIdentifier, displayName, smartJoin, sum, toGroupLabel, toLabel } from './utils';
+import { deletedIdentifier, displayName, smartJoin, sum, toLabel } from './utils';
 import { CrmEvent } from './event';
 import { DetailedContract, getNegotiationStatus, getPrice } from './contract';
 import { CrmOffer } from './offer';
@@ -17,12 +17,10 @@ import { maxBudget } from './algolia';
 
 type ExportType = 'csv' | 'airtable';
 
-type NullValue = string | null;
-
 interface GetDate {
   date: Date;
   exportType: ExportType;
-  nullValue: NullValue;
+  nullValue: string | null;
   nullCsv?: string; // when null for csv should not be '--'
 }
 
@@ -99,7 +97,7 @@ export function crmUsersToExport(
   return rows;
 }
 
-export function OrgsToExport(orgs: Organization[], exportType: ExportType) {
+export function orgsToExport(orgs: Organization[], exportType: ExportType) {
   const nullValue = exportType === 'csv' ? '--' : null;
   const rows = orgs.map(r => {
     const row = {

@@ -8,11 +8,11 @@ import {
   hotConfig,
   skipInMaintenance,
   superHeavyConfig,
+  noTimeoutConfig,
   onDocumentCreate,
   onDocumentDelete,
   onDocumentUpdate,
-  onDocumentWrite,
-  airtableConfig,
+  onDocumentWrite
 } from './internals/firebase';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
@@ -39,7 +39,7 @@ import { onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
-import { updateAirtable as _updateAirtable } from './airtable';
+import { scheduledAirtable, synchronizeAirtable } from './airtable';
 import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
 import { projectId, storageBucket } from './environments/environment';
 
@@ -293,4 +293,8 @@ export const downloadVideoToStorage = functions(superHeavyConfig).https.onReques
 //        Airtable update       //
 //--------------------------------
 
-export const updateAirtable = functions(airtableConfig).https.onRequest(_updateAirtable);
+
+export const updateAirtable = functions(noTimeoutConfig).https.onCall(skipInMaintenance(logErrors(synchronizeAirtable)));
+
+// every day at 1am
+export const scheduledAirtableUpdate = functions().pubsub.schedule('0 1 * * *').onRun(skipInMaintenance(() => scheduledAirtable));

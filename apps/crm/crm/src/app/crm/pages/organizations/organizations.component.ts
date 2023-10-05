@@ -4,7 +4,7 @@ import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
-import { Organization, getAllAppsExcept, OrgsToExport } from '@blockframes/model';
+import { Organization, getAllAppsExcept, orgsToExport } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { filters } from '@blockframes/ui/list/table/filters';
 
@@ -31,7 +31,7 @@ export class OrganizationsComponent {
   }
 
   public exportTable(orgs: Organization[]) {
-    const rows = OrgsToExport(orgs, 'csv');
+    const rows = orgsToExport(orgs, 'csv');
     downloadCsvFromJson(rows, 'org-list');
   }
 

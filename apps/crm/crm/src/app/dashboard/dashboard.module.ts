@@ -8,6 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatListModule } from '@angular/material/list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Guards
 import { BlockframesAdminGuard } from '@blockframes/admin/guard/blockframes-admin.guard';
@@ -19,7 +21,6 @@ import { GoToAppModule } from '@blockframes/admin/crm/pipes/go-to.pipe';
 // Components
 import { LayoutComponent } from './layout/layout.component';
 import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
-import { MatListModule } from '@angular/material/list';
 
 export const adminRoutes: Routes = [
   { path: '',
@@ -46,9 +47,10 @@ export const adminRoutes: Routes = [
     MatButtonModule,
     MatMenuModule,
     MatToolbarModule,
+    MatSnackBarModule,
     MatListModule,
-    GoToAppModule,
     MatIconModule,
+    GoToAppModule,
     AuthWidgetModule,
     RouterModule.forChild(adminRoutes),
   ]

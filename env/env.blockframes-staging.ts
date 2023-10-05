@@ -154,18 +154,21 @@ export const jwplayer = {
 // Airtable
 // ========
 
-export const baseId = undefined; // replace by value in prod env for local use
-export const tables = {
-  users: 'tblsjHLcyaIIHnBUm',
-  orgs: 'tbl6wo06vay88TEpM',
-  titles: 'tblTYeHf90sWnZq0W',
-  events: 'tblujqmnwiYOAhFQ4',
-  contracts: 'tblPXrrEaiB6czO8r',
-  reports: 'tblrWS0z71v6hJbdu',
-  buckets: 'tblosGNs2HdlJmw6x',
-  offers: 'tblKBfeoX7fQbTCyN',
-  titleAnalytics: 'tblqy3yqEnT33DGO8',
-  orgAnalytics: 'tblL9sW9LldjdASjM',
-  searchAnalytics: 'tblDmH20Eg5p2uSuQ',
-  movieAnalytics: 'tblBcyv716zY7Y3NN'
+export const airtable = {
+  baseId: undefined, // set a value to enable synchronization
+  dailyUpdate: false,
+  tables: {
+    users: 'tblsjHLcyaIIHnBUm',
+    orgs: 'tbl6wo06vay88TEpM',
+    titles: 'tblTYeHf90sWnZq0W',
+    events: 'tblujqmnwiYOAhFQ4',
+    contracts: 'tblPXrrEaiB6czO8r',
+    reports: 'tblrWS0z71v6hJbdu',
+    buckets: 'tblosGNs2HdlJmw6x',
+    offers: 'tblKBfeoX7fQbTCyN',
+    titleAnalytics: 'tblqy3yqEnT33DGO8',
+    orgAnalytics: 'tblL9sW9LldjdASjM',
+    searchAnalytics: 'tblDmH20Eg5p2uSuQ',
+    movieAnalytics: 'tblBcyv716zY7Y3NN'
+  }
 };

@@ -8,19 +8,8 @@ import { getMailSender } from '@blockframes/utils/apps';
 import { getAdminIds, getOrganizationsOfMovie } from './data/internals';
 import { cleanOrgMedias } from './media';
 import { EventContext } from 'firebase-functions';
+import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg, storeSearchableUser } from '@blockframes/firebase-utils/algolia';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { groupIds } from '@blockframes/utils/emails/ids';
-import { BlockframesChange, BlockframesSnapshot, getDocument, queryDocuments } from '@blockframes/firebase-utils';
-import { triggerError } from './internals/sentry';
-import { airtable } from './internals/airtable';
-import { tables } from '@env';
-import {
-  algolia,
-  deleteObject,
-  storeSearchableMovie,
-  storeSearchableOrg,
-  storeSearchableUser,
-} from '@blockframes/firebase-utils/algolia';
 import {
   User,
   Notification,
@@ -37,9 +26,11 @@ import {
   createInternalDocumentMeta,
   createPublicUser,
   createNotification,
-  Movie,
-  OrgsToExport,
+  Movie
 } from '@blockframes/model';
+import { groupIds } from '@blockframes/utils/emails/ids';
+import { BlockframesChange, BlockframesSnapshot, getDocument, queryDocuments } from '@blockframes/firebase-utils';
+import { triggerError } from './internals/sentry';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationTypes, org: Organization, user: PublicUser) {
@@ -331,13 +322,4 @@ export const onRequestFromOrgToAccessApp = async (data: { app: App, module: Modu
     return true;
   }
   return;
-};
-
-export async function updateAirtableOrgs(orgs: Organization[]) {
-  console.log('===== Updating orgs =====');
-
-  const rows = OrgsToExport(orgs, 'airtable');
-
-  const synchronization = await airtable.synchronize(tables.orgs, rows, 'id');
-  console.log(synchronization);
 }

@@ -1,19 +1,7 @@
 import { db } from './internals/firebase';
+import { Movie, Offer, User, createNotification, Bucket } from '@blockframes/model';
 import { triggerNotifications } from './notification';
 import { getDocument, BlockframesSnapshot } from '@blockframes/firebase-utils';
-import { airtable } from './internals/airtable';
-import { tables } from '@env';
-import {
-  Movie,
-  Offer,
-  User,
-  createNotification,
-  Bucket,
-  Contract,
-  Negotiation,
-  offersToCrmOffers,
-  crmOffersToExport,
-} from '@blockframes/model';
 // #7946 this may be reactivated later
 // import { templateIds } from '@blockframes/utils/emails/ids';
 // import { Change } from 'firebase-functions';
@@ -99,24 +87,3 @@ export async function onOfferCreate(snap: BlockframesSnapshot<Offer>): Promise<v
 //     });
 //   }
 // }
-
-export async function updateAirtableOffers({
-  offers,
-  offerContracts,
-  movies,
-  lastNegotiations,
-}: {
-  offers: Offer[];
-  offerContracts: Contract[];
-  movies: Movie[];
-  lastNegotiations: (Negotiation & { contractId: string })[];
-}) {
-  console.log('===== Updating offers =====');
-
-  const crmOffers = offersToCrmOffers(offers, offerContracts, movies, lastNegotiations);
-
-  const rows = crmOffersToExport(crmOffers, 'airtable');
-
-  const synchronization = await airtable.synchronize(tables.offers, rows, 'reference');
-  console.log(synchronization);
-}

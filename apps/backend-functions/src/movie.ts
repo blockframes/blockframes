@@ -9,10 +9,6 @@ import { askingPriceRequested, screenerRequested, sendMovieSubmittedEmail } from
 import { sendMail } from './internals/email';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { BlockframesChange, BlockframesSnapshot, getDocument } from '@blockframes/firebase-utils';
-import { airtable } from './internals/airtable';
-import { tables } from '@env';
-import { unique } from '@blockframes/utils/helpers';
 import {
   Bucket,
   Movie,
@@ -29,16 +25,9 @@ import {
   wasLastAcceptedOn,
   wasLastSubmittedOn,
   getMoviePublishStatus,
-  RequestAskingPriceData,
-  moviesToCrmMovies,
-  crmMoviesToExport,
-  Analytics,
-  User,
-  filterOwnerEvents,
-  movieAnalyticsToExport,
-  Mandate,
-  ScreeningEvent,
+  RequestAskingPriceData
 } from '@blockframes/model';
+import { BlockframesChange, BlockframesSnapshot, getDocument } from '@blockframes/firebase-utils';
 
 const apps: App[] = getAllAppsExcept(['crm']);
 
@@ -375,57 +364,4 @@ async function removeMovieFromWishlists(movie: Movie, batch?: FirebaseFirestore.
   if (updates.length) {
     await Promise.allSettled(updates);
   }
-}
-
-export async function updateAirtableMovies({
-  movies,
-  orgs,
-  screenings,
-  mandates,
-}: {
-  movies: Movie[];
-  orgs: Organization[];
-  screenings: ScreeningEvent[];
-  mandates: Mandate[];
-}) {
-  console.log('===== Updating titles =====');
-
-  const CrmMovies = moviesToCrmMovies(movies, orgs, screenings, mandates);
-
-  const rows = crmMoviesToExport(CrmMovies, 'airtable');
-
-  const synchronization = await airtable.synchronize(tables.titles, rows, 'movie id');
-  console.log(synchronization);
-}
-
-export async function updateAirtableMovieAnalytics({
-  movies,
-  orgs,
-  screenings,
-  mandates,
-  titleAnalytics,
-  availsSearchAnalytics,
-}: {
-  movies: Movie[];
-  orgs: Organization[];
-  screenings: ScreeningEvent[];
-  mandates: Mandate[];
-  titleAnalytics: Analytics<'title'>[];
-  availsSearchAnalytics: Analytics<'titleSearch'>[];
-}) {
-  console.log('===== Updating movie analytics =====');
-
-  const allAnalytics = filterOwnerEvents([...titleAnalytics, ...availsSearchAnalytics]);
-  const crmMovies = moviesToCrmMovies(movies, orgs, screenings, mandates);
-
-  const allUids = unique(allAnalytics.map(analytic => analytic.meta.uid));
-  const allUsersPromise = allUids.map(uid => getDocument<User>(`users/${uid}`));
-  const allUsers = await Promise.all(allUsersPromise);
-
-  const rows = movieAnalyticsToExport(crmMovies, allAnalytics, allUids, allUsers, orgs, 'airtable');
-
-  const catalogRows = rows.filter(r => r['interactions on catalog']);
-
-  const synchronization = await airtable.synchronize(tables.movieAnalytics, catalogRows, ['title id', 'uid']);
-  console.log(synchronization);
 }
