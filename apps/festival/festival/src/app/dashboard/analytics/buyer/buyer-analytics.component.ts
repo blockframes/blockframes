@@ -1,13 +1,11 @@
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AnalyticsService } from '@blockframes/analytics/service';
+import { counter, countedToAnalyticData, MetricCard, toCards, oneAnalyticsPerUser } from '@blockframes/analytics/utils';
 import {
   InvitationWithScreening,
   averageWatchDuration,
   invitationStatus,
-} from '@blockframes/model';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate, counter, countedToAnalyticData, MetricCard, toCards, oneAnalyticsPerUser } from '@blockframes/analytics/utils';
-import {
   AggregatedAnalytic,
   isScreening,
   Invitation,
@@ -15,12 +13,14 @@ import {
   isMovieAccepted,
   AnalyticData,
   Movie,
+  aggregate,
+  App,
+  toLabel
 } from '@blockframes/model';
 import { fromOrgAndAccessible, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { UserService } from '@blockframes/user/service';
-import { App, toLabel } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 import { convertToTimeString, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { joinWith } from 'ngfire';

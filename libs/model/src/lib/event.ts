@@ -1,4 +1,4 @@
-import { AccessibilityTypes, appName, EventTypes } from './static';
+import { AccessibilityTypes, AccessibilityTypesValue, appName, EventTypes } from './static';
 import { CalendarEvent } from 'angular-calendar';
 import { Organization } from './organisation';
 import { Movie } from './movie';
@@ -274,22 +274,21 @@ export const toIcsDate = (date: Date): string => {
   return `${y}${m}${d}T${hh}${mm}00Z`;
 }
 
-export interface CrmEvent extends Omit<Event, "accessibility" | "isSecret"> {
+export interface CrmEvent extends Omit<Event, 'accessibility'> {
   hostedBy: string,
   hostId: string,
   invited: number,
   confirmed: number,
   pending: number,
   attended: number,
-  accessibility: string,
-  isSecret: boolean
+  accessibility: AccessibilityTypesValue,
 }
 
-export function eventsToCrmEvents(events: Event[], orgs: Organization[], invites: Invitation[]) {
-  const CrmEvents: CrmEvent[] = events.map(e => {
+export function eventsToCrmEvents(events: Event[], orgs: Organization[], invites: Invitation[]): CrmEvent[] {
+  return events.map(e => {
     const invitations = invites.filter(inv => inv.eventId === e.id);
     const org = orgs.find(o => o.id === e.ownerOrgId);
-    const row = {
+    return {
       ...e,
       hostedBy: org?.name,
       hostId: org?.id,
@@ -297,10 +296,8 @@ export function eventsToCrmEvents(events: Event[], orgs: Organization[], invites
       confirmed: invitations.filter(i => i.status === 'accepted').length,
       pending: invitations.filter(i => i.status === 'pending').length,
       attended: isScreening(e) ? invitations.filter(i => i.watchInfos?.duration > 0).length : null,
-      accessibility: toLabel(e.accessibility, 'accessibility'),
+      accessibility: toLabel(e.accessibility, 'accessibility') as AccessibilityTypesValue,
       isSecret: e.isSecret,
     }
-    return row
-  })
-  return CrmEvents;
+  });
 }

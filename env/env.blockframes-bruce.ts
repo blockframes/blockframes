@@ -123,20 +123,19 @@ export const jwplayer = {
 // ========
 
 export const airtable = {
-  baseId: 'approgrPg7O0KaTCn',
+  baseId: 'appMnFJkGjzVekGCO',
   dailyUpdate: false,
   tables: {
-    users: 'tblsjHLcyaIIHnBUm',
-    orgs: 'tbl6wo06vay88TEpM',
-    titles: 'tblTYeHf90sWnZq0W',
-    events: 'tblujqmnwiYOAhFQ4',
-    contracts: 'tblPXrrEaiB6czO8r',
-    reports: 'tblrWS0z71v6hJbdu',
-    buckets: 'tblosGNs2HdlJmw6x',
-    offers: 'tblKBfeoX7fQbTCyN',
-    titleAnalytics: 'tblqy3yqEnT33DGO8',
-    orgAnalytics: 'tblL9sW9LldjdASjM',
-    searchAnalytics: 'tblDmH20Eg5p2uSuQ',
-    movieAnalytics: 'tblBcyv716zY7Y3NN'
+    users: 'tblNi63HYmtDbxoUN',
+    orgs: 'tblrvNiBVmj3C3rpd',
+    titles: 'tbleXDZKzcdRR9d0n',
+    events: 'tblPiPESWuJJ4rsQv',
+    contracts: 'tblaWQJ9Aum1GJB8S',
+    buckets: 'tblJr55XsTYgdwj6Y',
+    offers: 'tbl5AEwTnj0LF3pye',
+    titleAnalytics: 'tblLxsQV4zEYxNtOz',
+    orgAnalytics: 'tbl68ReEbxYeHKFjd',
+    searchAnalytics: 'tblYl6kv4sQkwEFuh',
+    movieAnalytics: 'tblWbXNCrikTB8QNe'
   }
 };
