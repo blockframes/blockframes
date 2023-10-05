@@ -1,6 +1,6 @@
 import { Analytics, AnalyticsTypeRecord, aggregate, filterOwnerEvents } from './analytics';
 import { Organization, getOrgModuleAccess } from './organisation';
-import { CrmUser, PublicUser, User, getMemberRole } from './user';
+import { CrmUser, PublicUser, User } from './user';
 import { Permissions } from './permissions';
 import { getAllAppsExcept } from './apps';
 import { Language, appName, modules, toGroupLabel } from './static';
@@ -47,6 +47,12 @@ const getPrice = (sale: DetailedContract) => {
     return incomes.join(' | ');
   }
 }
+
+const getMemberRole = (r: CrmUser, permissions: Permissions[]) => {
+  const permission = permissions.find(p => p.id === r.orgId);
+  if (!permission) return;
+  return permission.roles[r.uid];
+};
 
 //* Export functions
 

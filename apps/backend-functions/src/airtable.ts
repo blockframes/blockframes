@@ -21,7 +21,6 @@ import {
   EventName,
   bucketsToCrmBuckets,
   crmBucketsToExport,
-  usersToCrmUsers,
   filterOwnerEvents,
   crmUsersToExport,
   orgsToExport,
@@ -34,13 +33,15 @@ import {
   Sale,
   mandatesToExport,
   salesToExport,
-  offersToCrmOffers,
   crmOffersToExport,
   titleAnalyticsToExport,
   orgAnalyticsToExport,
   searchAnalyticsToExport,
   movieAnalyticsToExport,
   DetailedContract,
+  CrmOffer,
+  CrmUser,
+  appName,
 } from '@blockframes/model';
 import { AirtableService } from './internals/airtable.service';
 import { getSeller } from '@blockframes/contract/contract/utils';
@@ -408,4 +409,40 @@ function contractToDetailedContract(
     return detailedContract;
   });
   return detailedContracts;
+}
+
+function offersToCrmOffers(
+  offers: Offer[],
+  contracts: Contract[],
+  titles: Movie[],
+  negotiations: (Negotiation & { contractId: string })[]
+): CrmOffer[] {
+  return offers.map(o => {
+    const offerContracts = contracts.filter(c => c.offerId === o.id);
+    const crmOffer: CrmOffer = {
+      ...o,
+      contracts: offerContracts.map(c => ({
+        ...c,
+        title: titles.find(t => t.id === c.titleId),
+        negotiation: negotiations.find(n => n.contractId === c.id),
+      })),
+    };
+    return crmOffer;
+  });
+}
+
+function usersToCrmUsers(users: User[], orgs: Organization[], userAnalytics: any[]) : CrmUser[] {
+  return users.map(u => {
+    const userMetaAnalytics = userAnalytics.find(analytic => analytic.user_id === u.uid);
+    const org = orgs.find(o => o.id === u.orgId);
+    return {
+      ...u,
+      firstConnection: userMetaAnalytics && new Date(userMetaAnalytics['first_connexion'].value),
+      lastConnection: userMetaAnalytics && new Date(userMetaAnalytics['last_connexion'].value),
+      pageView: userMetaAnalytics && userMetaAnalytics['page_view'],
+      sessionCount: userMetaAnalytics && userMetaAnalytics['session_count'],
+      createdFrom: u._meta?.createdFrom ? appName[u._meta?.createdFrom] : '',
+      org,
+    };
+  });
 }
