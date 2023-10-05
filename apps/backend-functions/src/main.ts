@@ -293,8 +293,8 @@ export const downloadVideoToStorage = functions(superHeavyConfig).https.onReques
 //        Airtable update       //
 //--------------------------------
 
-
+// Manual update via CRM
 export const updateAirtable = functions(noTimeoutConfig).https.onCall(skipInMaintenance(logErrors(synchronizeAirtable)));
 
-// every day at 1am
-export const scheduledAirtableUpdate = functions().pubsub.schedule('0 1 * * *').onRun(skipInMaintenance(() => scheduledAirtable));
+// Scheduled update every day at 1am
+export const scheduledAirtableUpdate = functions(noTimeoutConfig).pubsub.schedule('0 1 * * *').onRun(skipInMaintenance(() => scheduledAirtable()));
