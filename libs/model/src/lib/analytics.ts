@@ -6,6 +6,7 @@ import { App, Module } from './static';
 import { createPublicUser, PublicUser, User } from './user';
 import { AnonymousCredentials } from './identity';
 import { AvailsFilter, CalendarAvailsFilter, MapAvailsFilter } from './avail';
+import { sortByDate } from './utils';
 
 const analyticsEvents = [
   // Title type
@@ -188,4 +189,26 @@ export function removeSellerData(orgs: Organization[], analytics: Analytics<'tit
   const buyerUsers = buyerAnalytics.map(({ meta }) => meta.uid);
   const filteredUsers = users.filter(({ uid }) => buyerUsers.includes(uid));
   return { users: filteredUsers, orgs: buyerOrgs, analytics: buyerAnalytics };
+}
+
+export function aggregate(analytics: Analytics[], data: Partial<AggregatedAnalytic> = {}) {
+  const aggregated = createAggregatedAnalytic(data);
+  for (const analytic of analytics) {
+    aggregated[analytic.name]++;
+  }
+
+  aggregated.interactions.global = aggregateInteractions(analytics);
+  aggregated.interactions.festival = aggregateInteractions(analytics.filter(a => a._meta.createdFrom === 'festival'));
+  aggregated.interactions.catalog = aggregateInteractions(analytics.filter(a => a._meta.createdFrom === 'catalog'));
+
+  return aggregated;
+}
+
+function aggregateInteractions(analytics: Analytics[]): AnalyticsInteraction {
+  const sorted = sortByDate(analytics, '_meta.createdAt');
+  return {
+    count: sorted.length,
+    first: sorted[0] ? sorted[0]._meta.createdAt : undefined,
+    last: sorted[sorted.length - 1] ? sorted[sorted.length - 1]._meta.createdAt : undefined,
+  };
 }

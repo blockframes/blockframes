@@ -6,9 +6,8 @@ import { AnalyticsService } from '@blockframes/analytics/service';
 import { AuthService } from '@blockframes/auth/service';
 import { MovieService } from '@blockframes/movie/service';
 import { FormStaticValueArray } from '@blockframes/utils/form';
-import { toGroupLabel } from '@blockframes/utils/pipes';
 import { CallableFunctions } from 'ngfire';
-import { App, RequestAskingPriceData, smartJoin, waterfallMediaGroups } from '@blockframes/model';
+import { App, RequestAskingPriceData, smartJoin, waterfallMediaGroups, toGroupLabel } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({

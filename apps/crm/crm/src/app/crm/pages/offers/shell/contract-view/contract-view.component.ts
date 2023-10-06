@@ -10,8 +10,7 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { OfferShellComponent } from '../shell.component';
 import { NegotiationService } from '@blockframes/contract/negotiation/service';
-import { isInitial } from '@blockframes/contract/negotiation/utils';
-import { Holdback, Negotiation, Sale } from '@blockframes/model';
+import { Holdback, Negotiation, Sale, isInitial } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 

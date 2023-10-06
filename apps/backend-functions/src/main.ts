@@ -8,6 +8,7 @@ import {
   hotConfig,
   skipInMaintenance,
   superHeavyConfig,
+  noTimeoutConfig,
   onDocumentCreate,
   onDocumentDelete,
   onDocumentUpdate,
@@ -15,7 +16,13 @@ import {
 } from './internals/firebase';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
-import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged, onRequestFromOrgToAccessApp } from './orgs';
+import {
+  onOrganizationCreate,
+  onOrganizationDelete,
+  onOrganizationUpdate,
+  accessToAppChanged,
+  onRequestFromOrgToAccessApp,
+} from './orgs';
 import { onMovieUpdate, onMovieCreate, onMovieDelete, createAskingPriceRequest, createScreenerRequest } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate, onPermissionDelete } from './permissions';
@@ -32,6 +39,7 @@ import { onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
+import { scheduledAirtable, synchronizeAirtable } from './airtable';
 import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
 import {
   buildWaterfall as _buildWaterfall,
@@ -325,3 +333,13 @@ export const onWaterfallRightDeleteEvent = onDocumentDelete('waterfall/{waterfal
  * When user wants to remove a file without removing waterfallDocument
  */
 export const deleteWaterfallFile = functions().https.onCall(removeWaterfallFile);
+
+//--------------------------------
+//        Airtable update       //
+//--------------------------------
+
+// Manual update via CRM
+export const updateAirtable = functions(noTimeoutConfig).https.onCall(skipInMaintenance(logErrors(synchronizeAirtable)));
+
+// Scheduled update every day at 1am
+export const scheduledAirtableUpdate = functions(noTimeoutConfig).pubsub.schedule('0 1 * * *').onRun(skipInMaintenance(() => scheduledAirtable()));

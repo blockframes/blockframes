@@ -105,6 +105,9 @@
     <mat-icon svgIcon="mail"></mat-icon><span matLine>Emails</span>
   </a>
   <a mat-menu-item routerLink="/c/o/dashboard/crm/dev-area">
-    <mat-icon class="unicorn" svgIcon="unicorn"></mat-icon><span matLine>Developpers playground</span>
+    <mat-icon svgIcon="unicorn"></mat-icon><span matLine>Developpers playground</span>
   </a>
+  <button mat-menu-item [disabled]="updateInProgress" (click)="updateAirtable()">
+    <mat-icon svgIcon="update"></mat-icon><span matLine>Airtable update</span>
+  </button>
 </mat-menu>

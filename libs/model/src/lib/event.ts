@@ -1,10 +1,12 @@
-import { AccessibilityTypes, appName, EventTypes } from './static';
+import { AccessibilityTypes, AccessibilityTypesValue, appName, EventTypes } from './static';
 import { CalendarEvent } from 'angular-calendar';
 import { Organization } from './organisation';
 import { Movie } from './movie';
 import { User } from './user';
 import { StorageFile } from './media';
 import { AnonymousCredentials, Person } from './identity';
+import { Invitation } from './invitation';
+import { toLabel } from './utils';
 
 // Event types
 export type EventMeta = Meeting | Screening | Slate | unknown;
@@ -270,4 +272,32 @@ export const toIcsDate = (date: Date): string => {
   const hh = `${date.getUTCHours() < 10 ? '0' : ''}${date.getUTCHours()}`;
   const mm = `${date.getUTCMinutes() < 10 ? '0' : ''}${date.getUTCMinutes()}`;
   return `${y}${m}${d}T${hh}${mm}00Z`;
+}
+
+export interface CrmEvent extends Omit<Event, 'accessibility'> {
+  hostedBy: string,
+  hostId: string,
+  invited: number,
+  confirmed: number,
+  pending: number,
+  attended: number,
+  accessibility: AccessibilityTypesValue,
+}
+
+export function eventsToCrmEvents(events: Event[], orgs: Organization[], invites: Invitation[]): CrmEvent[] {
+  return events.map(e => {
+    const invitations = invites.filter(inv => inv.eventId === e.id);
+    const org = orgs.find(o => o.id === e.ownerOrgId);
+    return {
+      ...e,
+      hostedBy: org?.name,
+      hostId: org?.id,
+      invited: invitations.length,
+      confirmed: invitations.filter(i => i.status === 'accepted').length,
+      pending: invitations.filter(i => i.status === 'pending').length,
+      attended: isScreening(e) ? invitations.filter(i => i.watchInfos?.duration > 0).length : null,
+      accessibility: toLabel(e.accessibility, 'accessibility') as AccessibilityTypesValue,
+      isSecret: e.isSecret,
+    }
+  });
 }

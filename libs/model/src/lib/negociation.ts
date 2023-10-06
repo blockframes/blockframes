@@ -1,6 +1,6 @@
 import { BucketContract } from './bucket';
 import { DocumentMeta } from './meta';
-import { MovieCurrency, NegotiationStatus } from './static';
+import { ContractStatus, MovieCurrency, NegotiationStatus } from './static';
 
 // We extends the BucketContract with some information for rules
 export interface Negotiation extends BucketContract {
@@ -18,4 +18,21 @@ export interface Negotiation extends BucketContract {
   status: NegotiationStatus;
   initial: Date;
   currency: MovieCurrency
+}
+
+export function isInitial(negotiation: Partial<Negotiation>) {
+  if (!negotiation?._meta) return true;
+  const initial = negotiation.initial;
+  const createdAt = negotiation._meta?.createdAt;
+  initial?.setSeconds(0, 0);
+  createdAt?.setSeconds(0, 0);
+
+  return initial?.getTime() === createdAt?.getTime();
+}
+
+export function getNegotiationStatus(negotiation: Negotiation): ContractStatus {
+  const pending = negotiation?.status === 'pending';
+  if (isInitial(negotiation) && pending) return 'pending';
+  if (negotiation?.status === 'pending') return 'negotiating';
+  return negotiation?.status;
 }

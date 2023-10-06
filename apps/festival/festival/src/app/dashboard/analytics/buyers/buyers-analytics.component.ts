@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { aggregate, countedToAnalyticData, counter, toCards } from '@blockframes/analytics/utils';
-import { AggregatedAnalytic, App, createUser, deletedIdentifier, removeSellerData } from '@blockframes/model';
+import { countedToAnalyticData, counter, toCards } from '@blockframes/analytics/utils';
+import { AggregatedAnalytic, App, createUser, deletedIdentifier, removeSellerData, aggregate } from '@blockframes/model';
 import { fromOrgAndAccessible, MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { UserService } from '@blockframes/user/service';

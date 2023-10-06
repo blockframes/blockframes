@@ -7,11 +7,9 @@ import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { combineLatest, of, map } from 'rxjs';
 import { getSeller } from '@blockframes/contract/contract/utils';
-import { DetailedContract, Mandate, Sale, getTotalIncome, toLabel, externalOrgIdentifier } from '@blockframes/model';
+import { DetailedContract, Mandate, Sale, mandatesToExport, salesToExport, externalOrgIdentifier } from '@blockframes/model';
 import { orderBy, where } from 'firebase/firestore';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
-import { format } from 'date-fns';
-import { negotiationStatus } from '@blockframes/contract/negotiation/pipe';
 
 const saleQuery = [
   where('type', '==', 'sale'),
@@ -47,7 +45,7 @@ export class ContractsListComponent {
       licensee: (sale: Sale) => sale.buyerId ? this.orgService.valueChanges(sale.buyerId).pipe(map(org => org?.name)) : of(externalOrgIdentifier),
       title: (sale: Sale) => this.titleService.valueChanges(sale.titleId).pipe(map(title => title.title.international)),
       incomes: (sale: Sale) => this.incomeService.valueChanges(incomeQuery(sale.id)), // external sales
-      negotiation: (sale: Sale) => this.contractService.lastNegotiation(sale.id) // internal sales
+      negotiation: (sale: Sale) => this.contractService.adminLastNegotiation(sale.id) // internal sales
     })
   );
 
@@ -72,53 +70,9 @@ export class ContractsListComponent {
       this.exporting = true;
       this.cdr.markForCheck();
 
-      const exportedRows = [];
+      const rows = mandatesToExport(contracts.mandates, 'csv').concat(salesToExport(contracts.sales, 'csv'));
 
-      contracts.mandates.forEach(mandate => {
-        const row = {
-          type: 'mandate',
-          internal: '--',
-          id: mandate.id,
-          date: format(mandate._meta.createdAt, 'MM/dd/yyyy'),
-          licensor: mandate.licensor,
-          licensee: mandate.licensee,
-          title: mandate.title,
-          status: toLabel(mandate.status, 'contractStatus'),
-          price: ''
-        };
-
-        exportedRows.push(row);
-      });
-
-      const getPrice = (sale: DetailedContract) => {
-        if (sale.buyerId) {
-          return `${sale.negotiation?.price || ''} ${sale.negotiation?.currency || ''}`;
-        } else {
-          const totalIncome = getTotalIncome(sale.incomes);
-          const incomes = [];
-          if (totalIncome.EUR) incomes.push(`${totalIncome.EUR} 'EUR'`);
-          if (totalIncome.USD) incomes.push(`${totalIncome.USD} 'USD'`);
-          return incomes.join(' | ');
-        }
-      }
-
-      contracts.sales.forEach(sale => {
-        const row = {
-          type: 'sale',
-          internal: sale.buyerId ? 'yes' : 'no',
-          id: sale.id,
-          date: format(sale._meta.createdAt, 'MM/dd/yyyy'),
-          licensor: sale.licensor,
-          licensee: sale.licensee,
-          title: sale.title,
-          status: toLabel(sale.buyerId ? negotiationStatus(sale.negotiation) : sale.status, 'contractStatus'),
-          price: getPrice(sale)
-        };
-
-        exportedRows.push(row);
-      });
-
-      downloadCsvFromJson(exportedRows, 'contract-list');
+      downloadCsvFromJson(rows, 'contract-list');
 
       this.exporting = false;
     } catch (err) {
