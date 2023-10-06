@@ -108,7 +108,7 @@ export function getSources(state: TitleState, _ids: string | string[], sources: 
   return sources.filter(s => isSource(state, getNode(state, s))).map(id => getNode(state, id));
 }
 
-export function getNodesSubTree(state: TitleState, ids: string[], tree: { node: string, parents: string[] }[] = []) {
+function getNodesSubTree(state: TitleState, ids: string[], tree: { node: string, parents: string[] }[] = []) {
   for (const id of ids) {
 
     if (!isGroupChild(state, id)) {
@@ -135,6 +135,36 @@ export function getNodesSubTree(state: TitleState, ids: string[], tree: { node: 
   }
 
   return tree;
+}
+
+function getAllValidPaths(from: string, to: string, subTree: { node: string, parents: string[] }[] = []) {
+  const paths: string[][] = [];
+  const parents = subTree.find(n => n.node === from).parents;
+  if (parents.includes(to)) {
+    paths.push([from, to]);
+  } else {
+    for (const parent of parents) {
+      const subPaths = getAllValidPaths(parent, to, subTree);
+      paths.push(...subPaths.map(p => [from, ...p]));
+    }
+  }
+  return paths;
+}
+
+export function getPath(from: string, to: string, state: TitleState,) {
+  const subTree = getNodesSubTree(state, [from]);
+  const paths = getAllValidPaths(from, to, subTree);
+  if (paths.length > 1) throw new Error(`Too many paths between ${from} and ${to}`);
+  if (paths.length === 0) throw new Error(`No path between ${from} and ${to}`);
+  return paths[0].reverse();
+}
+
+export function pathExists(from: string, to: string, state: TitleState) {
+  try {
+    return !!getPath(from, to, state);
+  } catch (_) {
+    return false;
+  }
 }
 
 /**

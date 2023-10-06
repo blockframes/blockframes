@@ -15,7 +15,6 @@ import {
   isDistributorStatement,
   sortByDate,
   getSources,
-  getNodesSubTree,
   getNode,
   sum,
   isSource,
@@ -28,33 +27,14 @@ import {
   createRightPayment,
   createRightholderPayment,
   DistributorStatement,
-  createIncomePayment
+  createIncomePayment,
+  getPath,
+  getRightsOf
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { unique } from '@blockframes/utils/helpers';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
-
-function getAllValidPaths(from: string, to: string, subTree: { node: string, parents: string[] }[] = []) {
-  const paths: string[][] = [];
-  const parents = subTree.find(n => n.node === from).parents;
-  if (parents.includes(to)) {
-    paths.push([from, to]);
-  } else {
-    for (const parent of parents) {
-      const subPaths = getAllValidPaths(parent, to, subTree);
-      paths.push(...subPaths.map(p => [from, ...p]));
-    }
-  }
-  return paths;
-}
-
-function getPath(from: string, to: string, subTree: { node: string, parents: string[] }[]) {
-  const paths = getAllValidPaths(from, to, subTree);
-  if (paths.length > 1) throw new Error(`Too many paths between ${from} and ${to}`);
-  if (paths.length === 0) throw new Error(`No path between ${from} and ${to}`);
-  return paths[0].reverse();
-}
 
 interface RightDetails {
   from: string,
@@ -207,7 +187,7 @@ export class WaterfallStatementComponent implements OnInit {
     if (isDistributorStatement(this.statement)) {
       rightholderRights = this.allRights.filter(r => r.rightholderId === this.statement.rightholderId);
     } else if (isProducerStatement(this.statement)) {
-      rightholderRights = this.allRights.filter(r => [this.contract.buyerId, this.contract.sellerId].includes(r.rightholderId));
+      rightholderRights = getRightsOf(this.allRights, this.contract);
     } else {
       // TODO #9493
     }
@@ -311,9 +291,8 @@ export class WaterfallStatementComponent implements OnInit {
       const sourceDetails: RightDetails[] = [];
       // Fetch incomes that are in the statement duration
       const incomeIds = this.state.waterfall.state.sources[sourceId].incomeIds.filter(i => this.statement.incomeIds.includes(i));
-      const subTree = getNodesSubTree(this.state.waterfall.state, [rightId]);
 
-      const path = getPath(rightId, sourceId, subTree);
+      const path = getPath(rightId, sourceId, this.state.waterfall.state);
       path.forEach((item, index) => {
         if (path[index + 1]) {
           const to = getNode(this.state.waterfall.state, path[index + 1]);

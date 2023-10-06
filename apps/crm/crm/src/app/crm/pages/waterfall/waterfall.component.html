@@ -329,6 +329,9 @@
         <ng-template colRef="type" label="Type" let-type sort>
           {{ type | toLabel: 'rightTypes' }}
         </ng-template>
+        <ng-template colRef="contractId" label="Contract" let-contractId sort>
+          {{ contractId ? contractId : '--' }}
+        </ng-template>
         <ng-template colRef="" label="Org" let-item sort>
           <ng-container *ngIf="item.rightholderId">{{ getRightholderName(item.rightholderId) }}</ng-container>
           <ng-container *ngIf="item.blameId">{{ getRightholderName(item.blameId) }}</ng-container>

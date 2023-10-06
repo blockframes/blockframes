@@ -2,6 +2,7 @@ import { DocumentMeta } from '../meta';
 import { RightType } from '../static/types';
 import { ActionName } from './action';
 import { ConditionGroup } from './conditions';
+import { WaterfallContract } from './waterfall';
 
 export interface Right {
   _meta?: DocumentMeta;
@@ -61,4 +62,12 @@ export function orderRights(rights: Right[]): Right[] {
   }
 
   return orderedRights;
+}
+
+export function getRightsOf(allRights: Right[], contract: WaterfallContract, ){
+  // TODO #9493 rights should be filtered by right.contractId to limit displayed rights (a rightholder can have multiple contracts)
+  // Temporary solution to try to limit good rights to fetch for contract
+  const rightsOfContract = allRights.filter(r => r.contractId === contract.id);
+  const rightsWithoutContract = allRights.filter(r => !r.contractId && [contract.buyerId, contract.sellerId].includes(r.rightholderId));
+  return [...rightsOfContract,...rightsWithoutContract];
 }

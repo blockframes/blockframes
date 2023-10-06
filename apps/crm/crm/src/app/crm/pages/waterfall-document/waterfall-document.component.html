@@ -102,6 +102,9 @@
       <ng-template colRef="name" label="Name" let-name sort>
         {{ name }}
       </ng-template>
+      <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
+        {{ getRightholderName(rightholderId) }}
+      </ng-template>
       <ng-template colRef="type" label="Type" let-type sort>
         {{ type | toLabel: 'rightTypes' }}
       </ng-template>
