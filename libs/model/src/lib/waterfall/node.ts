@@ -105,9 +105,7 @@ export function getSources(state: TitleState, _ids: string | string[], sources: 
     else sources.push(id);
   }
 
-  if (sources.find(s => !isSource(state, getNode(state, s)))) throw new Error('Invalid source id.');
-
-  return sources.map(id => getNode(state, id));
+  return sources.filter(s => isSource(state, getNode(state, s))).map(id => getNode(state, id));
 }
 
 export function getNodesSubTree(state: TitleState, ids: string[], tree: { node: string, parents: string[] }[] = []) {
@@ -125,11 +123,19 @@ export function getNodesSubTree(state: TitleState, ids: string[], tree: { node: 
     } else {
       const group = getGroup(state, id);
       tree.push({ node: id, parents: [group.id] });
-      const parentNodes = getParentNodes(state, group.id);
-      if (!parentNodes.length) throw new Error(`Group "${group.id}" has no parent nodes.`);
-      getNodesSubTree(state, parentNodes.map(n => n.id), tree);
-
-      tree.push({ node: group.id, parents: parentNodes.map(n => n.id) });
+      if (!isGroupChild(state, group.id)) {
+        const parentNodes = getParentNodes(state, group.id);
+        if (!parentNodes.length) throw new Error(`Group "${group.id}" has no parent nodes.`);
+        getNodesSubTree(state, parentNodes.map(n => n.id), tree);
+        tree.push({ node: group.id, parents: parentNodes.map(n => n.id) });
+      } else {
+        const parentGroup = getGroup(state, group.id);
+        tree.push({ node: group.id, parents: [parentGroup.id] });
+        const parentNodes = getParentNodes(state, parentGroup.id);
+        if (!parentNodes.length) throw new Error(`Group "${parentGroup.id}" has no parent nodes.`);
+        getNodesSubTree(state, parentNodes.map(n => n.id), tree);
+        tree.push({ node: parentGroup.id, parents: parentNodes.map(n => n.id) });
+      }
     }
   }
 
