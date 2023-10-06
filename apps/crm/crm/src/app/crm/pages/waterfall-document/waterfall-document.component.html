@@ -90,5 +90,24 @@
         Same as contract
       </ng-template>
     </ng-container>
+
+    <h3>Rights</h3>
+    <bf-table [source]="rights" clickable useFilter pagination="50">
+      <ng-template colRef="id" label="Id" let-id sort>
+        {{ id }}
+        <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+          <mat-icon svgIcon="file_copy"></mat-icon>
+        </button>
+      </ng-template>
+      <ng-template colRef="name" label="Name" let-name sort>
+        {{ name }}
+      </ng-template>
+      <ng-template colRef="type" label="Type" let-type sort>
+        {{ type | toLabel: 'rightTypes' }}
+      </ng-template>
+      <ng-template colRef="percent" label="%" let-percent>
+        {{ percent ? percent  : '--' }}
+      </ng-template>
+    </bf-table>
   </ng-container>
 </ng-container>

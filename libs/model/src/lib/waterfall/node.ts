@@ -113,11 +113,7 @@ export function getNodesSubTree(state: TitleState, ids: string[], tree: { node: 
 
     if (!isGroupChild(state, id)) {
       const parentNodes = getParentNodes(state, id);
-
-      if (parentNodes.length) {
-        getNodesSubTree(state, parentNodes.map(n => n.id), tree);
-      }
-
+      if (parentNodes.length) getNodesSubTree(state, parentNodes.map(n => n.id), tree);
       const node = getNode(state, id);
       tree.push({ node: node.id, parents: parentNodes.map(n => n.id) });
     } else {
@@ -125,14 +121,13 @@ export function getNodesSubTree(state: TitleState, ids: string[], tree: { node: 
       tree.push({ node: id, parents: [group.id] });
       if (!isGroupChild(state, group.id)) {
         const parentNodes = getParentNodes(state, group.id);
-        if (!parentNodes.length) throw new Error(`Group "${group.id}" has no parent nodes.`);
-        getNodesSubTree(state, parentNodes.map(n => n.id), tree);
+        if (parentNodes.length) getNodesSubTree(state, parentNodes.map(n => n.id), tree);
         tree.push({ node: group.id, parents: parentNodes.map(n => n.id) });
       } else {
         const parentGroup = getGroup(state, group.id);
         tree.push({ node: group.id, parents: [parentGroup.id] });
         const parentNodes = getParentNodes(state, parentGroup.id);
-        if (!parentNodes.length) throw new Error(`Group "${parentGroup.id}" has no parent nodes.`);
+        if (!parentNodes.length) throw new Error(`Nested group "${parentGroup.id}" has no parent nodes.`);
         getNodesSubTree(state, parentNodes.map(n => n.id), tree);
         tree.push({ node: parentGroup.id, parents: parentNodes.map(n => n.id) });
       }

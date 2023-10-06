@@ -29,7 +29,7 @@ import {
   Block,
   WaterfallDocument
 } from '@blockframes/model';
-import { jsonDateReviver } from '@blockframes/utils/helpers';
+import { jsonDateReviver, unique } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/service';
 import { doc } from 'firebase/firestore';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
@@ -298,7 +298,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
 
 function getBlockName(date: Date, actions: Action[]) {
   const dateStr = `${date.toLocaleDateString()}`;
-  const actionsNames = Array.from(new Set(actions.map(a => a.name)));
+  const actionsNames = unique(actions.map(a => a.name));
 
   const statementsActions: ActionName[] = ['expense', 'income', 'payment'];
   const contractsActions: ActionName[] = ['contract', 'updateContract'];

@@ -31,6 +31,7 @@ import {
   createIncomePayment
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
+import { unique } from '@blockframes/utils/helpers';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
 
@@ -108,6 +109,10 @@ export class WaterfallStatementComponent implements OnInit {
     this.statement = this.statements.find(s => s.id === statementId);
 
     this.contract = data.contracts.find(c => c.id === this.statement.contractId);
+    if(!this.contract) {
+      this.snackBar.open(`Contract "${this.statement.contractId}" not found in waterfall.`, 'close', { duration: 5000 });
+      return;
+    }
     this.incomes = data.incomes.filter(i => this.statement.incomeIds.includes(i.id));
     this.sources = this.incomes.map(i => getAssociatedSource(i, this.waterfall.sources));
 
@@ -140,7 +145,7 @@ export class WaterfallStatementComponent implements OnInit {
 
     await this.buildGraph();
 
-    const rightIds = Array.from(new Set(this.sources.map(s => this.getAssociatedRights(s.id)).flat().map(r => r.id)));
+    const rightIds = unique(this.sources.map(s => this.getAssociatedRights(s.id)).flat().map(r => r.id));
     this.rights = this.allRights.filter(r => rightIds.includes(r.id));
 
     this.generatePayments();
@@ -235,7 +240,7 @@ export class WaterfallStatementComponent implements OnInit {
       if (expenses.length) expenses.forEach(e => orderedRights[i++] = e.id);
       if (mgs.length) mgs.forEach(m => orderedRights[i++] = m.id);
     } else {
-      // TODO #9493
+      // TODO 
     }
 
     return orderedRights;
@@ -413,7 +418,7 @@ export class WaterfallStatementComponent implements OnInit {
     });
     
     const transfers = Object.values(this.state.waterfall.state.transfers).filter(t => t.to === rightId);
-    const transferedIncomes = Array.from(new Set(transfers.map(t => t.history.filter(h => h.checked)).flat().map(h => h.incomeId)));
+    const transferedIncomes = unique(transfers.map(t => t.history.filter(h => h.checked)).flat().map(h => h.incomeId));
     return incomes.map(i => i.id).filter(i => transferedIncomes.includes(i));
   }
 

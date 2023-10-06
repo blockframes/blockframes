@@ -20,6 +20,7 @@ import {
   mainCurrency
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
+import { unique } from '@blockframes/utils/helpers';
 import { BlockService } from '@blockframes/waterfall/block.service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { StatementService } from '@blockframes/waterfall/statement.service';
@@ -126,15 +127,21 @@ export class WaterfallDashboardComponent implements OnInit {
   }
 
   public statementsToCreate(id: string) {
+    const currentStateDate = new Date(this.currentState.date);
     const statements = this.statements.filter(s => s.payments.external.find(p => p.to === id && p.status === 'received'));
+    const excludedContractsIds = unique(statements.map(s => getContractAndAmendments(s.contractId, this.contracts).map(c => c.id)).flat());
 
     // TODO #9493 optimize parentPayments & parentIncomes (link between payments rights/incomes and rights linked to contracts) => need a method isRightParentOf() ?
-    const parentPayments = statements.map(s => s.payments.external.filter(p => p.to === id && p.status === 'received').map(p => ({ statementId: s.id, paymentId: p.id }))).flat(); 
-    const incomeIds = Array.from(new Set(statements.map(s => s.payments.external.filter(p => p.to === id && p.status === 'received').map(p => p.incomeIds).flat()).flat()));
+    const parentPayments = statements.map(s => s.payments.external.filter(p => p.to === id && p.status === 'received').map(p => ({ statementId: s.id, paymentId: p.id }))).flat();
+    const incomeIds = unique(statements.map(s => s.payments.external.filter(p => p.to === id && p.status === 'received').map(p => p.incomeIds).flat()).flat());
 
     if (!statements.length) return [];
 
-    const contracts = this.contracts.filter(c => (c.buyerId === id || c.sellerId === id) && !statements.find(s => s.contractId === c.id));
+    const contractsIds = this.contracts.
+      filter(c => (c.buyerId === id || c.sellerId === id) && !excludedContractsIds.find(id => id === c.id))
+      .map(c => getCurrentContract(getContractAndAmendments(c.id, this.contracts), currentStateDate).id);
+
+    const contracts = unique(contractsIds).map(id => this.contracts.find(c => c.id === id));
 
     const roles = this.waterfall.rightholders.find(r => r.id === id)?.roles;
     if (roles.length === 0 || roles.length > 1) {
@@ -150,10 +157,10 @@ export class WaterfallDashboardComponent implements OnInit {
           rightholderId: id,
           waterfallId: this.waterfall.id,
           parentPayments,
-          incomeIds, 
+          incomeIds,
           duration: createDuration({
-            from: add(new Date(this.currentState.date), { months: 6 }), // TODO #9493 get periodicity from waterfall document
-            to: add(new Date(this.currentState.date), { months: 12 }),
+            from: add(currentStateDate, { months: 6 }), // TODO #9493 get periodicity from waterfall document
+            to: add(currentStateDate, { months: 12 }),
           })
         }));
 

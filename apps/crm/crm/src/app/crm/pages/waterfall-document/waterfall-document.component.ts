@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import {
   Movie,
+  Right,
   Scope,
   Term,
   Waterfall,
@@ -19,6 +20,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { where } from 'firebase/firestore';
 import { TermService } from '@blockframes/contract/term/service';
+import { RightService } from '@blockframes/waterfall/right.service';
 
 @Component({
   selector: 'crm-waterfall-document',
@@ -33,6 +35,7 @@ export class WaterfallDocumentComponent implements OnInit {
   public contract: WaterfallContract;
   public rootContract: WaterfallContract;
   public childContracts: WaterfallContract[];
+  public rights: Right[];
   private allContracts: WaterfallContract[];
   private terms: Term[] = [];
 
@@ -40,6 +43,7 @@ export class WaterfallDocumentComponent implements OnInit {
     private movieService: MovieService,
     private waterfallService: WaterfallService,
     private waterfallDocumentService: WaterfallDocumentsService,
+    private rightService: RightService,
     private termService: TermService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
@@ -49,10 +53,11 @@ export class WaterfallDocumentComponent implements OnInit {
   async ngOnInit() {
     const waterfallId = this.route.snapshot.paramMap.get('waterfallId');
     const documentId = this.route.snapshot.paramMap.get('documentId');
-    const [movie, waterfall, document] = await Promise.all([
+    const [movie, waterfall, document, rights] = await Promise.all([
       this.movieService.getValue(waterfallId),
       this.waterfallService.getValue(waterfallId),
-      this.waterfallDocumentService.getValue(documentId, { waterfallId })
+      this.waterfallDocumentService.getValue(documentId, { waterfallId }),
+      this.rightService.getValue([where('contractId', '==', documentId)], { waterfallId })
     ]);
     this.movie = movie;
     this.waterfall = waterfall;
@@ -60,6 +65,7 @@ export class WaterfallDocumentComponent implements OnInit {
     if (isContract(this.document)) {
       this.contract = convertDocumentTo<WaterfallContract>(this.document);
       this.allContracts = [this.contract];
+      this.rights = rights;
       if (this.contract.rootId) {
         this.rootContract = await this.waterfallDocumentService.getContract(this.contract.rootId, waterfallId);
       } else {

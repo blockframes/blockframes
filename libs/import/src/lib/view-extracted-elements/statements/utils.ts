@@ -4,6 +4,9 @@ import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getStatementConfig } from './fieldConfigs';
 import { MovieService } from '@blockframes/movie/service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { StatementService } from '@blockframes/waterfall/statement.service';
+import { IncomeService } from '@blockframes/contract/income/service';
+import { ExpenseService } from '@blockframes/contract/expense/service';
 
 export interface FormatConfig {
   app: App;
@@ -13,6 +16,9 @@ export async function formatStatement(
   sheetTab: SheetTab,
   waterfallService: WaterfallService,
   titleService: MovieService,
+  statementService: StatementService,
+  incomeService: IncomeService,
+  expenseService: ExpenseService,
   userOrgId: string,
 ) {
   const statements: StatementsImportState[] = [];
@@ -25,6 +31,9 @@ export async function formatStatement(
   const option = {
     waterfallService,
     titleService,
+    statementService,
+    incomeService,
+    expenseService,
     userOrgId,
     caches,
     separator: ';'

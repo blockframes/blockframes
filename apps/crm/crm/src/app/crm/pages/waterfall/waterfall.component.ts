@@ -40,6 +40,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { RightService } from '@blockframes/waterfall/right.service';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { BehaviorSubject } from 'rxjs';
+import { unique } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'crm-waterfall',
@@ -183,7 +184,7 @@ export class WaterfallComponent implements OnInit {
 
   public hasMinimalRights() {
     if (!this.sources.length) return false;
-    const destinationRightIds = Array.from(new Set(this.sources.map(s => s.destinationId)));
+    const destinationRightIds = unique(this.sources.map(s => s.destinationId));
     return destinationRightIds.every(id => this.rights.map(r => r.id).includes(id));
   }
 

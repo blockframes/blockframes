@@ -1,9 +1,22 @@
 import { Expense, Media, Movie, MovieCurrency, Statement, Territory, WaterfallRightholder } from '@blockframes/model';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
-import { getRightholderId, getTitleId, mandatoryError, optionalWarning, unknownEntityError, getDate, wrongValueError, valueToId } from '../../utils';
+import {
+  getRightholderId,
+  getTitleId,
+  mandatoryError,
+  optionalWarning,
+  unknownEntityError,
+  getDate,
+  wrongValueError,
+  valueToId,
+  alreadyExistError
+} from '../../utils';
 import { MovieService } from '@blockframes/movie/service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
+import { IncomeService } from '@blockframes/contract/income/service';
+import { ExpenseService } from '@blockframes/contract/expense/service';
+import { StatementService } from '@blockframes/waterfall/statement.service';
 
 export interface FieldsConfig {
   statement: Statement;
@@ -30,6 +43,9 @@ interface Caches {
 interface StatementConfig {
   waterfallService: WaterfallService,
   titleService: MovieService,
+  statementService: StatementService,
+  incomeService: IncomeService,
+  expenseService: ExpenseService,
   userOrgId: string,
   caches: Caches,
   separator: string,
@@ -39,6 +55,9 @@ export function getStatementConfig(option: StatementConfig) {
   const {
     waterfallService,
     titleService,
+    statementService,
+    incomeService,
+    expenseService,
     userOrgId,
     caches,
     separator
@@ -61,7 +80,11 @@ export function getStatementConfig(option: StatementConfig) {
         if (!value) throw optionalWarning('Contract ID');
         return value;
       },
-        /* c */ 'statement.id': async (value: string) => {
+        /* c */ 'statement.id': async (value: string, data: FieldsConfig) => {
+        if (value) {
+          const exists = await statementService.getValue(value, { waterfallId: data.statement.waterfallId });
+          if (exists) throw alreadyExistError(value, 'Statement ID');
+        }
         return value;
       },
         /* d */ 'statement.rightholderId': async (value: string, data: FieldsConfig) => {
@@ -83,8 +106,11 @@ export function getStatementConfig(option: StatementConfig) {
         if (!type) throw wrongValueError(value, 'Statement type');
         return type;
       },
-        /* h */ 'incomes[].id': (value: string) => {
-        // TODO #9493 check if id is unique
+        /* h */ 'incomes[].id': async (value: string) => {
+        if (value) {
+          const exists = await incomeService.getValue(value);
+          if (exists) throw alreadyExistError(value, 'Income ID');
+        }
         return value.trim();
       },
         /* i */ 'incomes[].sourceId': (value: string) => {
@@ -103,8 +129,11 @@ export function getStatementConfig(option: StatementConfig) {
         /* o */ 'incomes[].salesContractId': (value: string) => {
         return value;
       },
-        /* p */ 'expenses[].id': (value: string) => {
-          // TODO #9493 check if id is unique
+        /* p */ 'expenses[].id': async (value: string) => {
+        if (value) {
+          const exists = await expenseService.getValue(value);
+          if (exists) throw alreadyExistError(value, 'Expense ID');
+        }
         return value.trim();
       },
         /* q */ 'expenses[].price': (value: string) => {

@@ -108,7 +108,7 @@ export const sheetRanges: Record<SpreadsheetImportType, string> = {
   organizations: `A${sheetHeaderLine.organizations}:Z100`,
   sources: `A${sheetHeaderLine.sources}:G100`,
   rights: `A${sheetHeaderLine.rights}:AZ100`,
-  statements: `A${sheetHeaderLine.statements}:Z100`,
+  statements: `A${sheetHeaderLine.statements}:T400`,
 };
 
 export async function getOrgId(
