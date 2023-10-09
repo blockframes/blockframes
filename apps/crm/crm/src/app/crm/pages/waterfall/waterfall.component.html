@@ -134,26 +134,10 @@
             <ng-template #noPrice>--</ng-template>
           </ng-template>
           <ng-template colRef="payload.from" label="From" let-from sort>
-            <ng-container *ngIf="from?.right">
-              {{ from.right }} ({{ from.org ? getRightholderName(from.org) : '--' }})
-            </ng-container>
-            <ng-container *ngIf="!from?.right">
-              {{ from }}
-            </ng-container>
-            <ng-container *ngIf="!from">
-              --
-            </ng-container>
+            {{ getPayloadPair(from) }}
           </ng-template>
           <ng-template colRef="payload.to" label="To" let-to sort>
-            <ng-container *ngIf="to?.right">
-              {{ to.right }} ({{ to.org ? getRightholderName(to.org) : '--' }})
-            </ng-container>
-            <ng-container *ngIf="!to?.right">
-              {{ to }}
-            </ng-container>
-            <ng-container *ngIf="!to">
-              --
-            </ng-container>
+            {{ getPayloadPair(to) }}
           </ng-template>
           <ng-template colRef="payload.percent" label="%" let-percent>
             {{ percent ? percent * 100  : '--' }}
@@ -345,6 +329,9 @@
         <ng-template colRef="type" label="Type" let-type sort>
           {{ type | toLabel: 'rightTypes' }}
         </ng-template>
+        <ng-template colRef="contractId" label="Contract" let-contractId sort>
+          {{ contractId ? contractId : '--' }}
+        </ng-template>
         <ng-template colRef="" label="Org" let-item sort>
           <ng-container *ngIf="item.rightholderId">{{ getRightholderName(item.rightholderId) }}</ng-container>
           <ng-container *ngIf="item.blameId">{{ getRightholderName(item.blameId) }}</ng-container>
@@ -352,12 +339,6 @@
         </ng-template>
         <ng-template colRef="groupId" label="Group" let-groupId sort>
           {{ groupId ? groupId : '--' }}
-        </ng-template>
-        <ng-template colRef="date" label="Date" let-date sort defaultSort>
-          {{ date | date: 'dd/MM/yyyy' }}
-        </ng-template>
-        <ng-template colRef="actionName" label="Action Name" let-actionName sort>
-          {{ actionName }}
         </ng-template>
         <ng-template colRef="percent" label="%" let-percent>
           {{ percent ? percent  : '--' }}

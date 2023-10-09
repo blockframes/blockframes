@@ -3,22 +3,20 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import {
   Movie,
+  Right,
   Scope,
   Term,
   Waterfall,
   WaterfallContract,
   WaterfallDocument,
-  convertDocumentTo,
   getDeclaredAmount,
+  getRightsOf,
   isContract
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
-import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
-import { where } from 'firebase/firestore';
-import { TermService } from '@blockframes/contract/term/service';
 
 @Component({
   selector: 'crm-waterfall-document',
@@ -33,14 +31,13 @@ export class WaterfallDocumentComponent implements OnInit {
   public contract: WaterfallContract;
   public rootContract: WaterfallContract;
   public childContracts: WaterfallContract[];
+  public rights: Right[];
   private allContracts: WaterfallContract[];
   private terms: Term[] = [];
 
   constructor(
     private movieService: MovieService,
     private waterfallService: WaterfallService,
-    private waterfallDocumentService: WaterfallDocumentsService,
-    private termService: TermService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private dialog: MatDialog,
@@ -49,26 +46,22 @@ export class WaterfallDocumentComponent implements OnInit {
   async ngOnInit() {
     const waterfallId = this.route.snapshot.paramMap.get('waterfallId');
     const documentId = this.route.snapshot.paramMap.get('documentId');
-    const [movie, waterfall, document] = await Promise.all([
-      this.movieService.getValue(waterfallId),
-      this.waterfallService.getValue(waterfallId),
-      this.waterfallDocumentService.getValue(documentId, { waterfallId })
-    ])
-    this.movie = movie;
-    this.waterfall = waterfall;
-    this.document = document;
+    const data = await this.waterfallService.loadWaterfalldata(waterfallId);
+    this.movie = await this.movieService.getValue(waterfallId);
+    this.waterfall = data.waterfall;
+    this.document = data.documents.find(d => d.id === documentId);
+
     if (isContract(this.document)) {
-      this.contract = convertDocumentTo<WaterfallContract>(this.document);
+      this.contract = data.contracts.find(c => c.id === this.document.id);
       this.allContracts = [this.contract];
+      this.rights = getRightsOf(data.rights, this.contract);
       if (this.contract.rootId) {
-        this.rootContract = await this.waterfallDocumentService.getContract(this.contract.rootId, waterfallId);
+        this.rootContract = data.contracts.find(c => c.id === this.contract.rootId);
       } else {
-        const childDocuments = await this.waterfallDocumentService.getValue([where('rootId', '==', this.contract.id)], { waterfallId });
-        this.childContracts = childDocuments.map(d => convertDocumentTo<WaterfallContract>(d));
+        this.childContracts = data.contracts.filter(c => c.rootId === this.contract.id);
         this.allContracts = [...this.allContracts, ...this.childContracts];
       }
-
-      this.terms = (await Promise.all(this.allContracts.map(c => this.termService.getValue([where('contractId', '==', c.id)])))).flat();
+      this.terms = data.terms.filter(t => this.allContracts.map(c => c.id).includes(t.contractId));
     }
     this.cdRef.markForCheck();
   }

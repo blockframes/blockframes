@@ -77,23 +77,24 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
     // Update conditions
     incomeState.conditions.push(...thresholdCdts);
     // Update right
-    const { checked, shadow } = checkCondition({ state, right, income: payload });
+    const { checked, shadow, enabled } = checkCondition({ state, right, income: payload });
     if (checked && from) initTransfer(incomeState, from, to).checked = true;
+    right.enabled = enabled;
     const incomeRight = initRight(incomeState, to);
-    incomeRight.turnoverRate += basePercent;
+    incomeRight.turnoverRate += enabled ? basePercent : 0;
     incomeRight.revenuRate += checked ? (right.percent * basePercent) : 0;
     incomeRight.shadowRevenuRate += shadow ? (right.percent * basePercent) : 0;
     // Update org
     const incomeOrg = initOrg(incomeState, right.orgId);
     incomeOrg.revenuRate += incomeRight.revenuRate;
-    if (!incomeOrg.turnoverRate) incomeOrg.turnoverRate = basePercent;
+    if (!incomeOrg.turnoverRate) incomeOrg.turnoverRate = enabled ? basePercent : 0;
     // Update pools
     if (right.pools) {
       for (const pool of right.pools) {
         const incomePool = initPool(incomeState, pool);
         incomePool.revenuRate += incomeRight.revenuRate;
         incomePool.shadowRevenuRate += incomeRight.shadowRevenuRate;
-        if (!incomePool.turnoverRate) incomePool.turnoverRate = basePercent;
+        if (!incomePool.turnoverRate) incomePool.turnoverRate = enabled ? basePercent : 0;
       }
     }
     taken = incomeRight.revenuRate;

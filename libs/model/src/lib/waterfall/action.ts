@@ -13,6 +13,7 @@ import {
   createBonus,
   createSourceState,
   createPoolState,
+  ContractState,
 } from './state';
 import { getMinThreshold } from './threshold';
 import { assertNode, getChildRights, getGroup, getNode, getNodeOrg, isGroupChild, isRight, updateNode } from './node';
@@ -23,8 +24,8 @@ import { Term } from '../terms';
 import { getContractAndAmendments, getCurrentContract, getDeclaredAmount } from '../contract';
 import { convertCurrenciesTo, sortByDate, sum } from '../utils';
 import { MovieCurrency } from '../static';
-import { Right } from './right';
-import { Statement } from './statement';
+import { Right, orderRights } from './right';
+import { Statement, isDistributorStatement } from './statement';
 
 const actions = {
   /**
@@ -140,64 +141,36 @@ export function contractsToActions(contracts: WaterfallContract[], terms: Term[]
 export function rightsToActions(rights: Right[]) {
   const actions: Action[] = [];
 
-  const singleRights = rights.filter(r => !r.groupId);
-  const childRights = rights.filter(r => !!r.groupId).sort((a, b) => a.date.getTime() - b.date.getTime());
+  const singleRights = orderRights(rights.filter(r => !r.groupId));
+  const childRights = rights.filter(r => !!r.groupId).sort((a, b) => a.order - b.order);
 
-  singleRights.forEach(right => {
+  singleRights.forEach((right, index) => {
     const currentChilds = childRights.filter(r => r.groupId === right.id);
     const subChilds = currentChilds.map(c => childRights.filter(r => r.groupId === c.id)).flat();
-    const a = action(right.actionName, formatPayload(right, currentChilds, subChilds)) as Action;
+    const date = new Date(1 + (index * 1000)); // 01/01/1970 + "index" seconds 
+    const a = action(right.actionName, formatPayload(right, date, currentChilds, subChilds)) as Action;
     actions.push(a);
   });
 
   return actions;
 }
 
-function formatPayload(right: Right, childs: Right[] = [], subChilds: Right[] = []) {
+function formatPayload(right: Right, date: Date, childs: Right[] = [], subChilds: Right[] = []) {
   switch (right.actionName) {
-    case 'append': {
-      const payload: ActionList['append']['payload'] = {
-        id: right.id,
-        orgId: right.rightholderId,
-        percent: right.percent / 100,
-        previous: right.previousIds || [],
-        date: right.date,
-        pools: right.pools,
-      };
-
-      if (right.conditions) {
-        payload.conditions = right.conditions;
-      }
-
-      return payload;
-    }
     case 'prepend': {
       const payload: ActionList['prepend']['payload'] = {
         id: right.id,
         orgId: right.rightholderId,
+        contractId: right.contractId,
         percent: right.percent / 100,
         next: right.nextIds || [],
-        date: right.date,
+        date,
         pools: right.pools,
       };
 
       if (right.conditions) {
         payload.conditions = right.conditions;
       }
-
-      return payload;
-    }
-    case 'appendHorizontal': {
-      const payload: ActionList['appendHorizontal']['payload'] = {
-        id: right.id,
-        blameId: right.blameId,
-        percent: right.percent / 100,
-        previous: right.previousIds || [],
-        children: [],
-        date: right.date,
-      };
-
-      payload.children = formatChilds(childs, subChilds);
 
       return payload;
     }
@@ -208,23 +181,10 @@ function formatPayload(right: Right, childs: Right[] = [], subChilds: Right[] = 
         percent: right.percent / 100,
         next: right.nextIds || [],
         children: [],
-        date: right.date,
+        date,
       };
 
       payload.children = formatChilds(childs, subChilds);
-
-      return payload;
-    }
-    case 'appendVertical': {
-      const payload: ActionList['appendVertical']['payload'] = {
-        id: right.id,
-        percent: right.percent / 100,
-        previous: right.previousIds || [],
-        children: [],
-        date: right.date,
-      };
-
-      payload.children = formatChilds(childs);
 
       return payload;
     }
@@ -234,7 +194,7 @@ function formatPayload(right: Right, childs: Right[] = [], subChilds: Right[] = 
         percent: right.percent / 100,
         next: right.nextIds || [],
         children: [],
-        date: right.date,
+        date,
       };
 
       payload.children = formatChilds(childs);
@@ -266,6 +226,7 @@ function formatChilds(childs: Right[], subChilds: Right[] = []) {
         id: child.id,
         percent: child.percent / 100,
         orgId: child.rightholderId,
+        contractId: child.contractId,
         conditions: child.conditions,
         pools: child.pools,
       };
@@ -353,6 +314,24 @@ export function statementsToActions(statements: Statement[]) {
 
   for (const statement of statements) {
 
+    if (isDistributorStatement(statement)) {
+      const incomePayments = statement.payments.income;
+      for (const payment of incomePayments) {
+        payments.push({
+          id: payment.id,
+          amount: convertCurrenciesTo({ [payment.currency]: payment.price }, mainCurrency)[mainCurrency],
+          from: {
+            income: payment.incomeId
+          },
+          to: {
+            org: statement.rightholderId
+          },
+          contractId: statement.contractId,
+          date: payment.date
+        });
+      }
+    }
+
     const internalPayments = statement.payments.internal.filter(p => p.status === 'processed' || p.status === 'received');
     for (const payment of internalPayments) {
       payments.push({
@@ -399,6 +378,7 @@ interface BaseAction {
 export interface RightAction extends BaseAction {
   id: RightState['id'];
   orgId: OrgState['id'];
+  contractId?: ContractState['id'];
   percent: number;
   conditions?: ConditionGroup;
   /** Pools that each income will increase when it arrives on the right */
@@ -456,6 +436,7 @@ interface GroupChildRight extends BaseGroupChild {
   percent: number;
   conditions?: ConditionGroup;
   orgId: OrgState['id'];
+  contractId?: ContractState['id'];
 }
 
 export type GroupChild = GroupChildVertical | GroupChildHorizontal | GroupChildRight;
@@ -678,7 +659,7 @@ export interface PaymentAction extends BaseAction {
   amount: number;
   from: {
     org?: string;
-    source?: string;
+    income?: string;
   };
   to: {
     org?: string;
@@ -702,23 +683,6 @@ function income(state: TitleState, payload: IncomeAction) {
     }
   }
 
-  // Income is an actual payment to the organization of the first right (or groups) it hits
-  // we increment actual revenu and actual turnover of this org.
-  assertNode(state, payload.to);
-  const orgState = getNodeOrg(state, payload.to);
-  const sourcePayment: PaymentAction = {
-    id: payload.id,
-    amount: payload.amount,
-    from: {
-      source: payload.from
-    },
-    to: {
-      org: orgState.id
-    },
-    contractId: payload.contractId,
-    date: payload.date
-  };
-  payment(state, sourcePayment);
 
   state.incomes[payload.id] = payload;
   const incomeId = payload.id;
@@ -838,7 +802,7 @@ function payment(state: TitleState, payload: PaymentAction) {
       pool.revenu.actual += actualRevenue;
       pool.turnover.actual += actualTurnover;
     }
-  } else if (payload.from.source && payload.to.org) { // Direct payment from source to org
+  } else if (payload.from.income && payload.to.org) { // Direct payment from income to org
     state.orgs[payload.to.org].revenu.actual += payload.amount;
     state.orgs[payload.to.org].turnover.actual += payload.amount;
   }

@@ -33,7 +33,7 @@
             <strong>{{ item.key }}:</strong> <br>
             <ul>
               <li *rxFor="let cond of item.value.conditions">
-                <strong>{{ cond.name }}:</strong> <pre>{{ cond.payload | json}}</pre>
+                <strong>{{ cond.name }}:</strong> <pre>{{ cond.payload | json }}</pre>
               </li>
             </ul>
           </ng-container>

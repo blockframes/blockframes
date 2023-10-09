@@ -8,6 +8,9 @@ import { formatStatement } from './utils';
 import { MovieService } from '@blockframes/movie/service';
 import { AuthService } from '@blockframes/auth/service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { StatementService } from '@blockframes/waterfall/statement.service';
+import { IncomeService } from '@blockframes/contract/income/service';
+import { ExpenseService } from '@blockframes/contract/expense/service';
 
 @Component({
   selector: 'import-view-extracted-statements[sheetTab]',
@@ -26,6 +29,9 @@ export class ViewExtractedStatementsComponent implements OnInit {
     private movieService: MovieService,
     private authService: AuthService,
     private waterfallService: WaterfallService,
+    private statementService: StatementService,
+    private incomeService: IncomeService,
+    private expenseService: ExpenseService,
   ) {
     this.dynTitle.setPageTitle('Submit your statements');
   }
@@ -35,6 +41,9 @@ export class ViewExtractedStatementsComponent implements OnInit {
       this.sheetTab,
       this.waterfallService,
       this.movieService,
+      this.statementService,
+      this.incomeService,
+      this.expenseService,
       this.authService.profile.orgId,
     );
 

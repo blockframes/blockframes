@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { WaterfallDocumentComponent } from './waterfall-document.component';
 
@@ -9,7 +10,7 @@ import { MovieHeaderModule } from '@blockframes/movie/components/header/header.m
 import { TermPipeModule } from '@blockframes/contract/term/pipes';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { DetailedGroupModule } from '@blockframes/ui/detail-modal/detailed.module';
-import { ToGroupLabelPipeModule, JoinPipeModule } from '@blockframes/utils/pipes';
+import { ToGroupLabelPipeModule, JoinPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 
 // Material
@@ -20,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
   declarations: [WaterfallDocumentComponent],
   imports: [
     CommonModule,
+    ClipboardModule,
 
     MovieHeaderModule,
     TermPipeModule,
@@ -28,6 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
     ToGroupLabelPipeModule,
     JoinPipeModule,
     PricePerCurrencyModule,
+    ToLabelModule,
 
     MatIconModule,
     MatButtonModule,

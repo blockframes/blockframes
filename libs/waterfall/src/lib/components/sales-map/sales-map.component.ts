@@ -28,6 +28,7 @@ import { differenceInDays, differenceInMonths, differenceInYears } from 'date-fn
 import { IncomeService } from '@blockframes/contract/income/service';
 import { where } from 'firebase/firestore';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { unique } from '@blockframes/utils/helpers';
 
 function getDateDifference(a: Date, b: Date) {
   const yearDiff = differenceInYears(a, b);
@@ -102,7 +103,7 @@ export class SalesMapComponent implements OnInit {
   }
 
   private getTerms(contracts: Contract[]) {
-    const termIds = Array.from(new Set(contracts.map(c => c.termIds).flat()));
+    const termIds = unique(contracts.map(c => c.termIds).flat());
     return this.termsService.getValue(termIds);
   }
 
@@ -167,8 +168,8 @@ export class SalesMapComponent implements OnInit {
           type: contract.type,
           signatureDate: contract.signatureDate,
           duration: contract.duration,
-          medias: Array.from(new Set(contract.terms.map(t => t.medias).flat())),
-          territories: Array.from(new Set(contract.terms.map(t => t.territories).flat())),
+          medias: unique(contract.terms.map(t => t.medias).flat()),
+          territories: unique(contract.terms.map(t => t.territories).flat()),
           declaredAmount: getDeclaredAmount(contract),
           totalIncome: getTotalIncome(incomes),
           rootContract: rootContract.id,

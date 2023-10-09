@@ -4,28 +4,29 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   Block,
   History,
+  Income,
   IncomeState,
   Movie,
   PricePerCurrency,
+  Right,
   Statement,
   Version,
   Waterfall,
   WaterfallContract,
-  convertDocumentTo,
   createDuration,
   createProducerStatement,
+  getAssociatedSource,
   getContractAndAmendments,
   getCurrentContract,
-  isContract,
-  mainCurrency
+  getRightsOf,
+  mainCurrency,
+  pathExists
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
-import { BlockService } from '@blockframes/waterfall/block.service';
-import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
+import { unique } from '@blockframes/utils/helpers';
 import { StatementService } from '@blockframes/waterfall/statement.service';
-import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
 import { add } from 'date-fns';
-import { where } from 'firebase/firestore';
 
 @Component({
   selector: 'crm-waterfall-dashboard',
@@ -42,6 +43,9 @@ export class WaterfallDashboardComponent implements OnInit {
   private statements: Statement[];
   public pendingStatements: Statement[] = [];
   public contracts: WaterfallContract[] = [];
+  private rights: Right[];
+  private incomes: Income[];
+  private state: WaterfallState;
 
   public currentState: History;
   public currentBlock: string;
@@ -49,9 +53,7 @@ export class WaterfallDashboardComponent implements OnInit {
   constructor(
     private movieService: MovieService,
     private waterfallService: WaterfallService,
-    private blockService: BlockService,
     private statementService: StatementService,
-    private waterfallDocumentService: WaterfallDocumentsService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
@@ -61,22 +63,20 @@ export class WaterfallDashboardComponent implements OnInit {
   async ngOnInit() {
     const waterfallId = this.route.snapshot.paramMap.get('waterfallId');
     const versionId = this.route.snapshot.paramMap.get('versionId');
-    const [movie, waterfall, statements, contracts] = await Promise.all([
-      this.movieService.getValue(waterfallId),
-      this.waterfallService.getValue(waterfallId),
-      this.statementService.getValue({ waterfallId }),
-      this.waterfallDocumentService.getValue([where('type', '==', 'contract')], { waterfallId }),
-    ]);
-    this.movie = movie;
-    this.waterfall = waterfall;
-    this.statements = statements;
-    this.contracts = contracts.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c));
+    const data = await this.waterfallService.loadWaterfalldata(waterfallId);
+    this.movie = await this.movieService.getValue(waterfallId);
+
+    this.waterfall = data.waterfall;
+    this.statements = data.statements;
+    this.contracts = data.contracts;
+    this.rights = data.rights;
+    this.incomes = data.incomes;
 
     this.snackBar.open('Waterfall is loading. Please wait', 'close', { duration: 5000 });
-    const data = await this.waterfallService.buildWaterfall({ waterfallId, versionId });
-    this.history = data.waterfall.history;
-    this.version = data.version;
-    this.blocks = await this.blockService.getValue(this.version.blockIds, { waterfallId });
+    this.state = await this.waterfallService.buildWaterfall({ waterfallId, versionId });
+    this.history = this.state.waterfall.history;
+    this.version = this.state.version;
+    this.blocks = this.version.blockIds.map(id => data.blocks.find(b => b.id === id));
     this.currentBlock = this.blocks[this.blocks.length - 1].id;
     this.selectBlock(this.currentBlock);
 
@@ -126,15 +126,25 @@ export class WaterfallDashboardComponent implements OnInit {
   }
 
   public statementsToCreate(id: string) {
+    const currentStateDate = new Date(this.currentState.date);
     const statements = this.statements.filter(s => s.payments.external.find(p => p.to === id && p.status === 'received'));
+    const excludedContractsIds = unique(statements.map(s => getContractAndAmendments(s.contractId, this.contracts).map(c => c.id)).flat());
 
-    // TODO #9493 optimize parentPayments & parentIncomes (link between payments rights/incomes and rights linked to contracts) => need a method isRightParentOf() ?
-    const parentPayments = statements.map(s => s.payments.external.filter(p => p.to === id && p.status === 'received').map(p => ({ statementId: s.id, paymentId: p.id }))).flat(); 
-    const incomeIds = Array.from(new Set(statements.map(s => s.payments.external.filter(p => p.to === id && p.status === 'received').map(p => p.incomeIds).flat()).flat()));
-
+    const parentPayments = statements.map(s => s.payments.external.filter(p => p.to === id && p.status === 'received').map(p => ({ statementId: s.id, paymentId: p.id }))).flat();
+    const incomeIds = unique(statements.map(s => s.payments.external.filter(p => p.to === id && p.status === 'received').map(p => p.incomeIds).flat()).flat());
+    const incomes = this.incomes.filter(i => incomeIds.includes(i.id));
     if (!statements.length) return [];
 
-    const contracts = this.contracts.filter(c => (c.buyerId === id || c.sellerId === id) && !statements.find(s => s.contractId === c.id));
+    const contractsIds = this.contracts.
+      filter(c => (c.buyerId === id || c.sellerId === id) && !excludedContractsIds.find(id => id === c.id))
+      .map(c => getCurrentContract(getContractAndAmendments(c.id, this.contracts), currentStateDate).id);
+
+    const contracts = unique(contractsIds).map(id => this.contracts.find(c => c.id === id));
+    const sources = unique(incomes.map(i => getAssociatedSource(i, this.waterfall.sources)));
+    const filteredContracts = contracts.filter(c => {
+      const rights = getRightsOf(this.rights, c);
+      return rights.some(r => sources.some(s => pathExists(r.id, s.id, this.state.waterfall.state)));
+    });
 
     const roles = this.waterfall.rightholders.find(r => r.id === id)?.roles;
     if (roles.length === 0 || roles.length > 1) {
@@ -145,15 +155,15 @@ export class WaterfallDashboardComponent implements OnInit {
 
     switch (roles[0]) {
       case 'producer':
-        return contracts.map(c => createProducerStatement({
+        return filteredContracts.map(c => createProducerStatement({
           contractId: c.id,
           rightholderId: id,
           waterfallId: this.waterfall.id,
           parentPayments,
-          incomeIds, 
+          incomeIds,
           duration: createDuration({
-            from: add(new Date(this.currentState.date), { months: 6 }), // TODO #9493 get periodicity from waterfall document
-            to: add(new Date(this.currentState.date), { months: 12 }),
+            from: add(currentStateDate, { months: 6 }), // TODO #9493 get periodicity from waterfall document
+            to: add(currentStateDate, { months: 12 }),
           })
         }));
 

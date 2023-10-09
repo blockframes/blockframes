@@ -4,13 +4,21 @@ import { Duration, createDuration } from '../terms';
 
 export interface Payment {
   id: string;
-  type: 'rightholder' | 'right'; // TODO #9493 create type ?
+  type: 'income' | 'rightholder' | 'right'; // TODO #9493 create type ?
   price: number;
   currency: MovieCurrency;
   date: Date; // TODO #9493 should be only on external payment, and optional (setted when payment gets processed), inside have same date as statement.duration.to
   status: 'pending' | 'received' | 'processed'; // TODO #9493 create type  (same as Income interface)
   to: string;
   incomeIds: string[]; // Incomes related to this payment
+}
+
+export interface IncomePayment extends Payment {
+  type: 'income';
+  incomeId: string; // Income related to this payment
+  status: 'processed';
+  to: undefined;
+  incomeIds: undefined;
 }
 
 /**
@@ -29,7 +37,7 @@ export interface RightholderPayment extends Payment {
  * org.revenu.actual will be decremented for org sending money and org.revenu.actual and org.turnover.actual incremented for org receiving money
  */
 export interface RightPayment extends Payment {
-  type: 'right'
+  type: 'right';
   to: string; // rightId
 }
 
@@ -45,6 +53,18 @@ function createPaymentBase(params: Partial<Payment> = {}): Payment {
     incomeIds: params.incomeIds || [],
     ...params,
   };
+}
+
+export function createIncomePayment(params: Partial<IncomePayment> = {}): IncomePayment {
+  const payment = createPaymentBase(params);
+  return {
+    incomeId: '',
+    ...payment,
+    type: 'income',
+    status: 'processed',
+    to: undefined,
+    incomeIds: undefined,
+  }
 }
 
 export function createRightholderPayment(params: Partial<RightholderPayment> = {}): RightholderPayment {
@@ -81,8 +101,9 @@ export interface Statement {
 
 export interface DistributorStatement extends Statement {
   type: 'mainDistributor';
-  expenseIds: string[];
+  expenseIds: string[]; // TODO #9493 producter statement should have expenseIds too if producer is making direct sells
   payments: {
+    income: IncomePayment[],
     internal: RightPayment[],
     external: RightholderPayment[]
   };
@@ -150,6 +171,7 @@ function createDistributorStatement(params: Partial<DistributorStatement> = {}):
   return {
     ...statement,
     payments: {
+      income: params.payments?.income ? params.payments.income.map(createIncomePayment) : [],
       internal: statement.payments.internal,
       external: params.payments?.external ? params.payments.external.map(createRightholderPayment) : [],
     },

@@ -40,6 +40,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { RightService } from '@blockframes/waterfall/right.service';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { BehaviorSubject } from 'rxjs';
+import { unique } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'crm-waterfall',
@@ -104,7 +105,7 @@ export class WaterfallComponent implements OnInit {
     this.canInitWaterfall$.next(this.canInitWaterfall());
   }
 
-  public goTo(type: 'document'| 'statement', id: string) {
+  public goTo(type: 'document' | 'statement', id: string) {
     this.router.navigate([type, id], { relativeTo: this.route });
   }
 
@@ -183,7 +184,7 @@ export class WaterfallComponent implements OnInit {
 
   public hasMinimalRights() {
     if (!this.sources.length) return false;
-    const destinationRightIds = Array.from(new Set(this.sources.map(s => s.destinationId)));
+    const destinationRightIds = unique(this.sources.map(s => s.destinationId));
     return destinationRightIds.every(id => this.rights.map(r => r.id).includes(id));
   }
 
@@ -280,6 +281,15 @@ export class WaterfallComponent implements OnInit {
     this.actions = [];
     this.cdRef.markForCheck();
     this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
+  }
+
+  public getPayloadPair(from: string | { org?: string, income?: string, right?: string }) {
+    if (!from) return '--';
+    if (typeof from === 'string') return from;
+
+    if (from?.org) return this.getRightholderName(from.org);
+    if (from?.income) return from.income;
+    if (from?.right) return from.right;
   }
 
 }
