@@ -104,7 +104,9 @@ export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot
   return true;
 }
 
-export async function onWaterfallStatementDelete(docSnapshot: BlockframesSnapshot<Statement>) {
+export async function onWaterfallStatementDelete(docSnapshot: BlockframesSnapshot<Statement>, context: EventContext) {
+  const { waterfallID } = context.params;
+  const waterfallSnap = await getDocumentSnap(`waterfall/${waterfallID}`);
   const statement = docSnapshot.data();
 
   const batch = db.batch();
@@ -118,7 +120,10 @@ export async function onWaterfallStatementDelete(docSnapshot: BlockframesSnapsho
     expenses.forEach(doc => batch.delete(doc.ref));
   }
 
-  // TODO #9493 also remove statements linked to this one with statement.parentPayments
+  // Remove child statements
+  const childStatements = await waterfallSnap.ref.collection('statements').where('parentPayments', '!=', '').get();
+  const isChildOf = (s): boolean => s.parentPayments?.some(p => p.statementId === statement.id);
+  childStatements.docs.filter(d => isChildOf(d.data())).forEach(doc => batch.delete(doc.ref));
 
   return batch.commit();
 }
