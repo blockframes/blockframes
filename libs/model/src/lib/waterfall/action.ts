@@ -184,6 +184,9 @@ function formatPayload(right: Right, date: Date, childs: Right[] = [], subChilds
         date,
       };
 
+      // Childs ihnerit from parent pools
+      for (const child of childs) child.pools = Array.from(new Set([...child.pools, ...right.pools]));
+
       payload.children = formatChilds(childs, subChilds);
 
       return payload;
@@ -196,6 +199,9 @@ function formatPayload(right: Right, date: Date, childs: Right[] = [], subChilds
         children: [],
         date,
       };
+
+      // Childs ihnerit from parent pools
+      for (const child of childs) child.pools = Array.from(new Set([...child.pools, ...right.pools]));
 
       payload.children = formatChilds(childs);
 
@@ -211,6 +217,9 @@ function formatChilds(childs: Right[], subChilds: Right[] = []) {
   return childs.map(child => {
     const currentSubChilds = subChilds.filter(r => r.groupId === child.id);
     if (currentSubChilds.length) {
+      // Childs ihnerit from parent pools
+      for (const subChild of currentSubChilds) subChild.pools = Array.from(new Set([...subChild.pools, ...child.pools]));
+
       const childRight: GroupChildVertical = {
         type: 'vertical',
         id: child.id,
