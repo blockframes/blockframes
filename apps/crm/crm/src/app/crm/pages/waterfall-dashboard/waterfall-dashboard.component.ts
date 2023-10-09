@@ -102,9 +102,13 @@ export class WaterfallDashboardComponent implements OnInit {
     return { [mainCurrency]: amount };
   }
 
+  public getRightholder(id: string) {
+    return this.waterfall.rightholders.find(r => r.id === id);
+  }
+
   public getRightholderName(id: string) {
     if (!id) return '--';
-    return this.waterfall.rightholders.find(r => r.id === id)?.name || '--';
+    return this.getRightholder(id)?.name || '--';
   }
 
   public getCurrentContract(item: Statement) {
@@ -125,39 +129,50 @@ export class WaterfallDashboardComponent implements OnInit {
     return pending;
   }
 
-  public statementsToCreate(id: string) {
+  public statementsToCreate(rightholderId: string) {
     const currentStateDate = new Date(this.currentState.date);
-    const statements = this.statements.filter(s => s.payments.external.find(p => p.to === id && p.status === 'received'));
-    const excludedContractsIds = unique(statements.map(s => getContractAndAmendments(s.contractId, this.contracts).map(c => c.id)).flat());
 
-    const parentPayments = statements.map(s => s.payments.external.filter(p => p.to === id && p.status === 'received').map(p => ({ statementId: s.id, paymentId: p.id }))).flat();
-    const incomeIds = unique(statements.map(s => s.payments.external.filter(p => p.to === id && p.status === 'received').map(p => p.incomeIds).flat()).flat());
-    const incomes = this.incomes.filter(i => incomeIds.includes(i.id));
+    // Fetch active statements where rightsholder has received payments but not created statements
+    const statements = this.statements
+      .filter(s => s.duration.to.getTime() <= currentStateDate.getTime())
+      .filter(s => s.payments.external.find(p => p.to === rightholderId && p.status === 'received'));
     if (!statements.length) return [];
 
-    const contractsIds = this.contracts.
-      filter(c => (c.buyerId === id || c.sellerId === id) && !excludedContractsIds.find(id => id === c.id))
-      .map(c => getCurrentContract(getContractAndAmendments(c.id, this.contracts), currentStateDate).id);
+    // TODO #9493 handle multiple roles to create statements
+    const roles = this.waterfall.rightholders.find(r => r.id === rightholderId)?.roles;
+    if (roles.length === 0 || roles.length > 1) {
+      this.snackBar.open(`Could not determine statement type for "${this.getRightholderName(rightholderId)}"`, 'close', { duration: 5000 });
+      return [];
+    }
 
+    // Fetch contract ids that are related to the statements (remove amendments or root contracts)
+    const excludedContractsIds = unique(statements.map(s => getContractAndAmendments(s.contractId, this.contracts).map(c => c.id)).flat());
+
+    // Fetch current contracts where the rightholder is involved (buyer or seller) that are not in the excluded list
+    const contractsIds = this.contracts.
+      filter(c => (c.buyerId === rightholderId || c.sellerId === rightholderId) && !excludedContractsIds.find(id => id === c.id))
+      .map(c => getCurrentContract(getContractAndAmendments(c.id, this.contracts), currentStateDate)?.id)
+      .filter(c => !!c); // Remove contracts that are not active at the current state date
     const contracts = unique(contractsIds).map(id => this.contracts.find(c => c.id === id));
+
+    // Fetch incomes and sources related to the statements
+    const incomeIds = unique(statements.map(s => s.payments.external.filter(p => p.to === rightholderId && p.status === 'received').map(p => p.incomeIds).flat()).flat());
+    const incomes = this.incomes.filter(i => incomeIds.includes(i.id));
     const sources = unique(incomes.map(i => getAssociatedSource(i, this.waterfall.sources)));
+
+    // Filter contracts that have at least one right that is related to the sources
     const filteredContracts = contracts.filter(c => {
       const rights = getRightsOf(this.rights, c);
       return rights.some(r => sources.some(s => pathExists(r.id, s.id, this.state.waterfall.state)));
     });
 
-    const roles = this.waterfall.rightholders.find(r => r.id === id)?.roles;
-    if (roles.length === 0 || roles.length > 1) {
-      this.snackBar.open(`Could not determine statement type for "${this.getRightholderName(id)}"`, 'close', { duration: 5000 });
-      // TODO #9493 handle multpile roles to create statements
-      return [];
-    }
+    const parentPayments = statements.map(s => s.payments.external.filter(p => p.to === rightholderId && p.status === 'received').map(p => ({ statementId: s.id, paymentId: p.id }))).flat();
 
     switch (roles[0]) {
       case 'producer':
         return filteredContracts.map(c => createProducerStatement({
           contractId: c.id,
-          rightholderId: id,
+          rightholderId,
           waterfallId: this.waterfall.id,
           parentPayments,
           incomeIds,

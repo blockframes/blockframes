@@ -27,6 +27,9 @@
     <ng-template colRef="value.id" label="Right Holder" let-id sort>
       {{ getRightholderName(id) }}
     </ng-template>
+    <ng-template colRef="value.id" label="Roles" let-id sort>
+      {{ getRightholder(id).roles | toLabel: 'rightholderRoles' }}
+    </ng-template>
     <ng-template colRef="value.revenu" label="Calculated Revenue" let-revenu sort>
       <price-per-currency [price]="getPrice(revenu.calculated)"></price-per-currency>
     </ng-template>
@@ -66,7 +69,7 @@
       </ng-template>
       <ng-template colRef="" label="Actions" let-statement sticky>
         <button mat-icon-button target="_blank" (click)="createStatement(statement);$event.stopPropagation()">
-          <mat-icon svgIcon="add" matTooltip="Go to statement"></mat-icon>
+          <mat-icon svgIcon="add" matTooltip="Create statement"></mat-icon>
         </button>
       </ng-template>
     </bf-table>
