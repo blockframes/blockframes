@@ -67,6 +67,9 @@
       <ng-template colRef="duration.to" label="To" let-to sort defaultSort>
         {{ to | date: 'dd/MM/yyyy' }}
       </ng-template>
+      <ng-template colRef="incomeIds" label="Sources" let-incomeIds sort defaultSort>
+        {{ getIncomesSources(incomeIds) | join:'name' }}
+      </ng-template>
       <ng-template colRef="" label="Actions" let-statement sticky>
         <button mat-icon-button target="_blank" (click)="createStatement(statement);$event.stopPropagation()">
           <mat-icon svgIcon="add" matTooltip="Create statement"></mat-icon>

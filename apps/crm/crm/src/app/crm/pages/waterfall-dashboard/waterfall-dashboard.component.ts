@@ -157,8 +157,7 @@ export class WaterfallDashboardComponent implements OnInit {
 
     // Fetch incomes and sources related to the statements
     const incomeIds = unique(statements.map(s => s.payments.external.filter(p => p.to === rightholderId && p.status === 'received').map(p => p.incomeIds).flat()).flat());
-    const incomes = this.incomes.filter(i => incomeIds.includes(i.id));
-    const sources = unique(incomes.map(i => getAssociatedSource(i, this.waterfall.sources)));
+    const sources = this.getIncomesSources(incomeIds);
 
     // Filter contracts that have at least one right that is related to the sources
     const filteredContracts = contracts.filter(c => {
@@ -175,10 +174,16 @@ export class WaterfallDashboardComponent implements OnInit {
           rightholderId,
           waterfallId: this.waterfall.id,
           parentPayments,
-          incomeIds,
+          incomeIds: incomeIds.filter(id => {
+            // Filter incomes again to keep only incomes that are related to this contract
+            const income = this.incomes.find(i => i.id === id);
+            const source = getAssociatedSource(income, this.waterfall.sources);
+            const rights = getRightsOf(this.rights, c);
+            return rights.some(r => pathExists(r.id, source.id, this.state.waterfall.state));
+          }),
           duration: createDuration({
-            from: add(currentStateDate, { months: 6 }), // TODO #9493 get periodicity from waterfall document
-            to: add(currentStateDate, { months: 12 }),
+            from: add(currentStateDate, { days: 1 }), // TODO #9493 get periodicity from waterfall document
+            to: add(currentStateDate, { days: 1, months: 6 }),
           })
         }));
 
@@ -186,6 +191,11 @@ export class WaterfallDashboardComponent implements OnInit {
         // TODO #9493 handle other roles
         return []
     }
+  }
+
+  public getIncomesSources(incomeIds: string[]) {
+    const incomes = this.incomes.filter(i => incomeIds.includes(i.id));
+    return unique(incomes.map(i => getAssociatedSource(i, this.waterfall.sources)));
   }
 
   public displayStatementsToCreate(id: string) {

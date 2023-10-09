@@ -89,7 +89,7 @@ export class WaterfallStatementComponent implements OnInit {
     this.statement = this.statements.find(s => s.id === statementId);
 
     this.contract = data.contracts.find(c => c.id === this.statement.contractId);
-    if(!this.contract) {
+    if (!this.contract) {
       this.snackBar.open(`Contract "${this.statement.contractId}" not found in waterfall.`, 'close', { duration: 5000 });
       return;
     }
@@ -187,7 +187,7 @@ export class WaterfallStatementComponent implements OnInit {
     if (isDistributorStatement(this.statement)) {
       rightholderRights = this.allRights.filter(r => r.rightholderId === this.statement.rightholderId);
     } else if (isProducerStatement(this.statement)) {
-      rightholderRights = getRightsOf(this.allRights, this.contract);
+      rightholderRights = getRightsOf(this.allRights, this.contract); // TODO #9493 use this for all statements types ?
     } else {
       // TODO #9493
     }
@@ -298,12 +298,15 @@ export class WaterfallStatementComponent implements OnInit {
           const to = getNode(this.state.waterfall.state, path[index + 1]);
           const from = getNode(this.state.waterfall.state, item);
           const transfer = this.state.waterfall.state.transfers[`${from.id}->${to.id}`];
-          const incomes = transfer.history.filter(h => incomeIds.includes(h.incomeId));
-          const amount = sum(incomes.filter(i => i.checked), i => i.amount);
+          let amount = 0;
+          if (transfer) {
+            const incomes = transfer.history.filter(h => incomeIds.includes(h.incomeId));
+            amount = sum(incomes.filter(i => i.checked), i => i.amount);
+          }
 
           let taken = 0;
           if (isGroup(this.state.waterfall.state, to)) {
-            const innerTransfers = to.children.map(c => this.state.waterfall.state.transfers[`${to.id}->${c}`]);
+            const innerTransfers = to.children.map(c => this.state.waterfall.state.transfers[`${to.id}->${c}`]).filter(t => !!t);
             const innerIncomes = innerTransfers.map(t => t.history.filter(h => incomeIds.includes(h.incomeId))).flat();
             taken = sum(innerIncomes.filter(i => i.checked), i => i.amount * i.percent);
           } else {
@@ -361,7 +364,7 @@ export class WaterfallStatementComponent implements OnInit {
         incomeIds,
       });
 
-      this.statement.payments[isInternal ? 'internal' : 'external'].push(payment);
+      if (payment.price > 0) this.statement.payments[isInternal ? 'internal' : 'external'].push(payment);
     }
 
     // Rightholder Payments
@@ -389,13 +392,13 @@ export class WaterfallStatementComponent implements OnInit {
 
   }
 
-  private getIncomesRelatedToPayment(rightId: string){
+  private getIncomesRelatedToPayment(rightId: string) {
     const sources = this.getAssociatedSourceIds(rightId);
     const incomes = this.incomes.filter(i => {
       const incomeSource = getAssociatedSource(i, this.waterfall.sources);
       return sources.includes(incomeSource.id);
     });
-    
+
     const transfers = Object.values(this.state.waterfall.state.transfers).filter(t => t.to === rightId);
     const transferedIncomes = unique(transfers.map(t => t.history.filter(h => h.checked)).flat().map(h => h.incomeId));
     return incomes.map(i => i.id).filter(i => transferedIncomes.includes(i));
@@ -410,8 +413,9 @@ export class WaterfallStatementComponent implements OnInit {
     await this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } });
     this.statement = await this.statementService.getValue(this.statement.id, { waterfallId: this.waterfall.id });
 
+    // TODO #9493 find another way to prevent to create another similar payment in dashboard
     // Update parent payments & statements status
-    if (isProducerStatement(this.statement)) {
+    /*if (isProducerStatement(this.statement)) {
       for (const parent of this.statement.parentPayments) {
         const statement = await this.statementService.getValue(parent.statementId, { waterfallId: this.waterfall.id });
         const payment = statement.payments.external.find(p => p.id === parent.paymentId);
@@ -423,7 +427,7 @@ export class WaterfallStatementComponent implements OnInit {
 
         await this.statementService.update<Statement>(statement, { params: { waterfallId: this.waterfall.id } });
       }
-    }
+    }*/
 
     await this.waterfallService.refreshWaterfall(this.waterfall.id, this.state.version.id);
     await this.loadWaterfall(this.state.version.id);

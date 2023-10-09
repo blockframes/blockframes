@@ -96,8 +96,15 @@ export function getChildRights(state: TitleState, group: GroupState): RightState
   }
 }
 
-export function getSources(state: TitleState, _ids: string | string[], sources: string[] = []) {
-  const ids = Array.isArray(_ids) ? _ids : [_ids];
+/**
+ * Get sources of rights
+ * @param state 
+ * @param _ids 
+ * @param sources 
+ * @returns 
+ */
+export function getSources(state: TitleState, rightIds: string | string[], sources: string[] = []) {
+  const ids = Array.isArray(rightIds) ? rightIds : [rightIds];
   const tree = getNodesSubTree(state, ids);
   for (const id of ids) {
     const parents = tree.find(n => n.node === id).parents;
@@ -110,7 +117,6 @@ export function getSources(state: TitleState, _ids: string | string[], sources: 
 
 function getNodesSubTree(state: TitleState, ids: string[], tree: { node: string, parents: string[] }[] = []) {
   for (const id of ids) {
-
     if (!isGroupChild(state, id)) {
       const parentNodes = getParentNodes(state, id);
       if (parentNodes.length) getNodesSubTree(state, parentNodes.map(n => n.id), tree);
@@ -151,7 +157,7 @@ function getAllValidPaths(from: string, to: string, subTree: { node: string, par
   return paths;
 }
 
-export function getPath(from: string, to: string, state: TitleState,) {
+export function getPath(from: string, to: string, state: TitleState) {
   const subTree = getNodesSubTree(state, [from]);
   const paths = getAllValidPaths(from, to, subTree);
   if (paths.length > 1) throw new Error(`Too many paths between ${from} and ${to}`);

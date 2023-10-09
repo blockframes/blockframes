@@ -157,7 +157,7 @@
         {{ incomeIds | join }}
       </ng-template>
       <ng-template *ngIf="isDistributorStatement()" colRef="" label="Actions" let-item sticky>
-        <button mat-icon-button [disabled]="item.status !== 'pending'" (click)="markAsReceived(item)">
+        <button mat-icon-button [disabled]="item.status !== 'pending' || statement.status === 'draft'" (click)="markAsReceived(item)">
           <mat-icon svgIcon="check" matTooltip="Mark payment as received"></mat-icon>
         </button>
       </ng-template>
