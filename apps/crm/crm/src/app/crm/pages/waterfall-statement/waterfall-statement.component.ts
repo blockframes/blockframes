@@ -335,8 +335,8 @@ export class WaterfallStatementComponent implements OnInit {
     const externalPayment = this.statement.payments.external.find(p => p.id === payment.id);
     externalPayment.status = 'received';
 
-    if (!this.statement.payments.external.find(p => p.status !== 'received')) {
-      this.statement.status = 'pending';
+    if (this.statement.payments.external.every(p => p.status === 'received')) {
+      this.statement.status = 'processed';
     }
 
     await this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } });
@@ -412,7 +412,6 @@ export class WaterfallStatementComponent implements OnInit {
     this.statement.payments.external = this.statement.payments.external.map(p => (p.type === 'right' ? { ...p, status: 'processed' } : p));
     await this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } });
     this.statement = await this.statementService.getValue(this.statement.id, { waterfallId: this.waterfall.id });
-
 
     await this.waterfallService.refreshWaterfall(this.waterfall.id, this.state.version.id);
     await this.loadWaterfall(this.state.version.id);

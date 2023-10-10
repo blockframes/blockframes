@@ -51,9 +51,6 @@
         <price-per-currency [price]="amount"></price-per-currency>
       </ng-container>
     </ng-template>
-    <!-- TODO #9493 add 1 column showing what current rightholder taken for this income (internal payments)-->
-    <!-- TODO #9493 add 1 column showing value of external payment for this income (income - sum(internal payments))-->
-    <!-- TODO #9493 + 2 columns calculated & cumulated of calculated -->
   </bf-table>
 
   <ng-container *ngIf="isDistributorStatement() && expenses.length">
