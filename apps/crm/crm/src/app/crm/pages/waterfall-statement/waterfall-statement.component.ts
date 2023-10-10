@@ -413,21 +413,6 @@ export class WaterfallStatementComponent implements OnInit {
     await this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } });
     this.statement = await this.statementService.getValue(this.statement.id, { waterfallId: this.waterfall.id });
 
-    // TODO #9493 find another way to prevent to create another similar payment in dashboard
-    // Update parent payments & statements status
-    /*if (isProducerStatement(this.statement)) {
-      for (const parent of this.statement.parentPayments) {
-        const statement = await this.statementService.getValue(parent.statementId, { waterfallId: this.waterfall.id });
-        const payment = statement.payments.external.find(p => p.id === parent.paymentId);
-        payment.status = 'processed';
-
-        if (!statement.payments.external.find(p => p.status !== 'processed')) {
-          statement.status = 'processed';
-        }
-
-        await this.statementService.update<Statement>(statement, { params: { waterfallId: this.waterfall.id } });
-      }
-    }*/
 
     await this.waterfallService.refreshWaterfall(this.waterfall.id, this.state.version.id);
     await this.loadWaterfall(this.state.version.id);

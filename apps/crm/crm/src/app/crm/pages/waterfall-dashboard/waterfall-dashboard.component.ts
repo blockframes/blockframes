@@ -28,6 +28,12 @@ import { StatementService } from '@blockframes/waterfall/statement.service';
 import { WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
 import { add } from 'date-fns';
 
+interface RightholderStatements {
+  rightholderId: string,
+  pending: Statement[],
+  existing: Statement[]
+}
+
 @Component({
   selector: 'crm-waterfall-dashboard',
   templateUrl: './waterfall-dashboard.component.html',
@@ -41,7 +47,7 @@ export class WaterfallDashboardComponent implements OnInit {
   public blocks: Block[];
   public history: History[];
   private statements: Statement[];
-  public pendingStatements: Statement[] = [];
+  public rightholderStatements: RightholderStatements;
   public contracts: WaterfallContract[] = [];
   private rights: Right[];
   private incomes: Income[];
@@ -88,7 +94,7 @@ export class WaterfallDashboardComponent implements OnInit {
   public selectBlock(blockId: string) {
     const index = this.version.blockIds.indexOf(blockId);
     this.currentState = this.history[index + 1]; // First history entry is always empty (init)
-    this.pendingStatements = [];
+    this.rightholderStatements = undefined;
     this.cdRef.markForCheck();
   }
 
@@ -132,6 +138,9 @@ export class WaterfallDashboardComponent implements OnInit {
   public statementsToCreate(rightholderId: string) {
     const currentStateDate = new Date(this.currentState.date);
 
+    // Fetch existing statements for this rightholder
+    const existingStatements = this.statements.filter(s => s.rightholderId === rightholderId);
+
     // Fetch active statements where rightsholder has received payments but not created statements
     const statements = this.statements
       .filter(s => s.duration.to.getTime() <= currentStateDate.getTime())
@@ -170,6 +179,7 @@ export class WaterfallDashboardComponent implements OnInit {
     switch (roles[0]) {
       case 'producer':
         return filteredContracts.map(c => createProducerStatement({
+          id: this.statementService.createId(),
           contractId: c.id,
           rightholderId,
           waterfallId: this.waterfall.id,
@@ -185,8 +195,10 @@ export class WaterfallDashboardComponent implements OnInit {
             from: add(currentStateDate, { days: 1 }), // TODO #9493 get periodicity from waterfall document
             to: add(currentStateDate, { days: 1, months: 6 }),
           })
-        }));
-
+        })).filter(s => !existingStatements.find(e =>
+          e.contractId === s.contractId
+          && e.duration.from.getTime() === s.duration.from.getTime()
+        ));
       default:
         // TODO #9493 handle other roles
         return []
@@ -198,14 +210,20 @@ export class WaterfallDashboardComponent implements OnInit {
     return unique(incomes.map(i => getAssociatedSource(i, this.waterfall.sources)));
   }
 
-  public displayStatementsToCreate(id: string) {
-    this.pendingStatements = this.statementsToCreate(id);
+  public displayRightholderStatements(rightholderId: string) {
+    this.rightholderStatements = {
+      rightholderId,
+      pending: this.statementsToCreate(rightholderId),
+      existing: this.statements.filter(s => s.rightholderId === rightholderId)
+    };
     this.cdRef.markForCheck();
   }
 
-  public async createStatement(statement: Statement) {
+  public async createStatement(statement: Statement, redirect = true) {
     const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
-    this.router.navigate(['/c/o/dashboard/crm/waterfall', this.waterfall.id, 'statement', id]);
+    if (redirect) return this.router.navigate(['/c/o/dashboard/crm/waterfall', this.waterfall.id, 'statement', id]);
+    this.statements.push(statement);
+    this.displayRightholderStatements(statement.rightholderId);
   }
 
 }
