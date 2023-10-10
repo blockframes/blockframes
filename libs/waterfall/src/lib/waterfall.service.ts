@@ -188,8 +188,8 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     return this._initWaterfall(waterfallId, version);
   }
 
-  public async refreshWaterfall(waterfallId: string, versionId: string) {
-    if (!this.data[waterfallId]) await this.loadWaterfalldata(waterfallId);
+  public async refreshWaterfall(waterfallId: string, versionId: string, options: { refreshData: boolean } = { refreshData: false }) {
+    if (!this.data[waterfallId] || options.refreshData) await this.loadWaterfalldata(waterfallId);
     const version = this.data[waterfallId].waterfall.versions.find(v => v.id === versionId);
     await this.removeVersion(waterfallId, versionId);
     return this._initWaterfall(waterfallId, { id: version.id, name: version.name, description: version.description });

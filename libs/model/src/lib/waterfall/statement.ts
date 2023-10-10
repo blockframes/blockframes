@@ -7,7 +7,7 @@ export interface Payment {
   type: PaymentType;
   price: number;
   currency: MovieCurrency;
-  date: Date; // TODO #9493 should be only on external payment, and optional (setted when payment gets processed), inside have same date as statement.duration.to
+  date: Date;
   status: PaymentStatus;
   to: string;
   incomeIds: string[]; // Incomes related to this payment
@@ -100,8 +100,8 @@ export interface Statement {
 }
 
 export interface DistributorStatement extends Statement {
-  type: 'mainDistributor';
-  expenseIds: string[]; // TODO #9493 producter statement should have expenseIds too if producer is making direct sells
+  type: 'mainDistributor' | 'localDistributor' | 'salesAgent';
+  expenseIds: string[]; // TODO #9493 producter statement should have expenseIds too if producer is making direct sells or does he make a distributor statement instead ?
   payments: {
     income: IncomePayment[],
     internal: RightPayment[],
@@ -122,16 +122,12 @@ interface ParentPayment {
 }
 
 export interface ProducerStatement extends Statement {
-  type: 'producer';
+  type: 'producer' | 'coProducer';
   parentPayments: ParentPayment[];
   payments: {
     internal: RightPayment[],
     external: RightPayment[]
   };
-}
-
-export interface FinancierStatement extends Statement {
-  type: 'financier';
 }
 
 function createStatementBase(params: Partial<Statement> = {}): Statement {
@@ -152,23 +148,17 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
   };
 }
 
-// TODO #9493 should be only 2 statements families: producer and distributor
 export function createStatement(params: Partial<Statement>) {
   if (isDistributorStatement(params)) return createDistributorStatement(params);
   if (isProducerStatement(params)) return createProducerStatement(params);
-  if (isFinancierStatement(params)) return createFinancierStatement(params);
 }
 
 export function isDistributorStatement(statement: Partial<Statement>): statement is DistributorStatement {
-  return statement.type === 'mainDistributor'; // TODO #9493 or localDistributor or salesAgent
+  return statement.type === 'mainDistributor' || statement.type === 'localDistributor' || statement.type === 'salesAgent';
 }
 
 export function isProducerStatement(statement: Partial<Statement>): statement is ProducerStatement {
-  return statement.type === 'producer';
-}
-
-function isFinancierStatement(statement: Partial<Statement>): statement is FinancierStatement {
-  return statement.type === 'financier';
+  return statement.type === 'producer' || statement.type === 'coProducer';
 }
 
 function createDistributorStatement(params: Partial<DistributorStatement> = {}): DistributorStatement {
@@ -180,7 +170,7 @@ function createDistributorStatement(params: Partial<DistributorStatement> = {}):
       internal: statement.payments.internal,
       external: params.payments?.external ? params.payments.external.map(createRightholderPayment) : [],
     },
-    type: 'mainDistributor',
+    type: params.type || 'mainDistributor',
     expenseIds: params.expenseIds || [],
     additional: {},
   }
@@ -195,14 +185,7 @@ export function createProducerStatement(params: Partial<ProducerStatement> = {})
       internal: statement.payments.internal,
       external: params.payments?.external ? params.payments.external.map(createRightPayment) : [],
     },
-    type: 'producer',
+    type: params.type || 'producer',
   }
 }
 
-function createFinancierStatement(params: Partial<FinancierStatement> = {}): FinancierStatement {
-  const statement = createStatementBase(params);
-  return {
-    ...statement,
-    type: 'financier',
-  }
-}

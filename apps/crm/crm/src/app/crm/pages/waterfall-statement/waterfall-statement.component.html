@@ -11,7 +11,7 @@
   <section>
     <mat-form-field appearance="fill">
       <mat-label>Waternall Version</mat-label>
-      <mat-select (selectionChange)="loadWaterfall($event.value)" [(value)]="state.version.id">
+      <mat-select (selectionChange)="switchToVersion($event.value)" [(value)]="state.version.id">
         <mat-option *ngFor="let versions of waterfall.versions" [value]="versions.id">
           {{ versions.name }}
         </mat-option>
@@ -91,7 +91,7 @@
       {{ percent ? percent  : '--' }}
     </ng-template>
     <ng-template colRef="id" label="Source(s)" let-id>
-      {{ getAssociatedSources(id) }}
+      {{ getAssociatedSources(id) | maxLength:50 }}
     </ng-template>
     <ng-template colRef="id" label="Declared" let-id>
       <strong>

@@ -77,7 +77,9 @@ export class WaterfallStatementComponent implements OnInit {
     private snackBar: MatSnackBar,
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() { return this.switchToVersion(); }
+
+  public async switchToVersion(versionId?: string) {
     const waterfallId = this.route.snapshot.paramMap.get('waterfallId');
     const statementId = this.route.snapshot.paramMap.get('statementId');
 
@@ -112,15 +114,15 @@ export class WaterfallStatementComponent implements OnInit {
 
     }
 
-    if (!this.waterfall.versions[0]?.id) { // Waterfall was never initialized
+    if (!versionId && !this.waterfall.versions[0]?.id) { // Waterfall was never initialized
       await this.waterfallService.initWaterfall(this.waterfall.id, { id: 'version_1', description: 'Version 1' });
     }
 
-    await this.loadWaterfall(this.waterfall.versions[0].id);
+    await this.buildWaterfallState(versionId || this.waterfall.versions[0].id);
 
     if (this.statement.incomeIds.some(i => !this.state.waterfall.state.incomes[i])) { // Some incomes are not in the waterfall
       await this.waterfallService.refreshWaterfall(this.waterfall.id, this.state.version.id);
-      await this.loadWaterfall(this.waterfall.versions[0].id);
+      await this.buildWaterfallState(this.state.version.id);
     }
 
     await this.buildGraph();
@@ -133,7 +135,7 @@ export class WaterfallStatementComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  public async loadWaterfall(versionId: string) {
+  private async buildWaterfallState(versionId: string) {
     this.snackBar.open('Waterfall is loading. Please wait', 'close', { duration: 5000 });
     this.state = await this.waterfallService.buildWaterfall({
       waterfallId: this.waterfall.id,
@@ -251,11 +253,11 @@ export class WaterfallStatementComponent implements OnInit {
     const series = [
       {
         name: 'Revenue',
-        data: history.map(h => h.orgs[this.statement.rightholderId].revenu.actual)
+        data: history.map(h => Math.round(h.orgs[this.statement.rightholderId].revenu.actual))
       },
       {
         name: 'Turnover',
-        data: history.map(h => h.orgs[this.statement.rightholderId].turnover.actual)
+        data: history.map(h => Math.round(h.orgs[this.statement.rightholderId].turnover.actual))
       }
     ];
     this.options = { xAxis: { categories }, series };
@@ -341,6 +343,10 @@ export class WaterfallStatementComponent implements OnInit {
 
     await this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } });
     this.statement = await this.statementService.getValue(this.statement.id, { waterfallId: this.waterfall.id });
+
+    await this.waterfallService.refreshWaterfall(this.waterfall.id, this.state.version.id, { refreshData: true });
+    await this.buildWaterfallState(this.state.version.id);
+    await this.buildGraph();
     this.cdRef.markForCheck();
   }
 
@@ -414,7 +420,7 @@ export class WaterfallStatementComponent implements OnInit {
     this.statement = await this.statementService.getValue(this.statement.id, { waterfallId: this.waterfall.id });
 
     await this.waterfallService.refreshWaterfall(this.waterfall.id, this.state.version.id);
-    await this.loadWaterfall(this.state.version.id);
+    await this.buildWaterfallState(this.state.version.id);
     await this.buildGraph();
     this.cdRef.markForCheck();
   }

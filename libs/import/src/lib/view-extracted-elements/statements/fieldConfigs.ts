@@ -104,6 +104,8 @@ export function getStatementConfig(option: StatementConfig) {
         if (!value) throw mandatoryError(value, 'Statement type');
         const type = getKeyIfExists('rightholderRoles', value);
         if (!type) throw wrongValueError(value, 'Statement type');
+        const allowedStatementTypes = ['mainDistributor', 'localDistributor', 'salesAgent'];
+        if (!allowedStatementTypes.includes(type)) throw wrongValueError(value, `Statement type must me one of the following "${allowedStatementTypes.join(', ')}"`);
         return type;
       },
         /* h */ 'incomes[].id': async (value: string) => {
