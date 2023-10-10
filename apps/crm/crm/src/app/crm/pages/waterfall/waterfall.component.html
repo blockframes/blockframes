@@ -370,7 +370,7 @@
           {{ type | toLabel: 'rightholderRoles' }}
         </ng-template>
         <ng-template colRef="status" label="Status" let-status sort>
-          {{ status }}
+          {{ status | toLabel: 'statementStatus' }}
         </ng-template>
         <ng-template colRef="" label="Contract Id" let-item sort>
           {{ getCurrentContract(item) }}

@@ -1,14 +1,14 @@
 import { DocumentMeta } from '../meta';
-import { MovieCurrency, RightholderRole } from '../static';
+import { MovieCurrency, PaymentStatus, PaymentType, RightholderRole, StatementStatus } from '../static';
 import { Duration, createDuration } from '../terms';
 
 export interface Payment {
   id: string;
-  type: 'income' | 'rightholder' | 'right'; // TODO #9493 create type ?
+  type: PaymentType;
   price: number;
   currency: MovieCurrency;
   date: Date; // TODO #9493 should be only on external payment, and optional (setted when payment gets processed), inside have same date as statement.duration.to
-  status: 'pending' | 'received' | 'processed'; // TODO #9493 create type  (same as Income interface)
+  status: PaymentStatus;
   to: string;
   incomeIds: string[]; // Incomes related to this payment
 }
@@ -86,7 +86,7 @@ export function createRightPayment(params: Partial<RightPayment> = {}): RightPay
 export interface Statement {
   _meta?: DocumentMeta;
   type: RightholderRole;
-  status: 'draft' | 'pending' | 'processed' | 'rejected'; // TODO #9493 create type
+  status: StatementStatus;
   id: string;
   waterfallId: string;
   rightholderId: string;
@@ -116,9 +116,14 @@ export interface DistributorStatement extends Statement {
   }
 }
 
+interface ParentPayment {
+  statementId: string;
+  paymentId: string;
+}
+
 export interface ProducerStatement extends Statement {
   type: 'producer';
-  parentPayments: { statementId: string, paymentId: string }[]; // TODO #9493 create type
+  parentPayments: ParentPayment[];
   payments: {
     internal: RightPayment[],
     external: RightPayment[]

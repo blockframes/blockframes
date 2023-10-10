@@ -25,7 +25,7 @@
       <li><strong>From :</strong> {{ statement.duration.from | date: 'MM/dd/yyyy' }}</li>
       <li><strong>To :</strong> {{ statement.duration.to | date: 'MM/dd/yyyy' }}</li>
       <li><strong>Contract :</strong> {{ statement.contractId }}</li>
-      <li><strong>Status: </strong> {{ statement.status }}</li>
+      <li><strong>Status: </strong> {{ statement.status | toLabel: 'statementStatus' }}</li>
       <li><strong>Turnover :</strong> <price-per-currency [price]="getRightholderActual('turnover')"></price-per-currency></li>
       <li><strong>Revenue :</strong> <price-per-currency [price]="getRightholderActual('revenu')"></price-per-currency></li>
     </ul>
@@ -151,7 +151,7 @@
         <price-per-currency [price]="toPricePerCurrency(item)"></price-per-currency>
       </ng-template>
       <ng-template colRef="status" label="Status" let-status>
-        {{ status }}
+        {{ status | toLabel: 'paymentStatus' }}
       </ng-template>
       <ng-template colRef="incomeIds" label="Related to" let-incomeIds>
         {{ incomeIds | join }}

@@ -88,7 +88,7 @@
         {{ getCurrentContract(item) }}
       </ng-template>
       <ng-template colRef="status" label="Status" let-status sort>
-        {{ status }}
+        {{ status | toLabel: 'statementStatus' }}
       </ng-template>
       <ng-template colRef="duration.from" label="From" let-from sort defaultSort>
         {{ from | date: 'dd/MM/yyyy' }}
