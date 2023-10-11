@@ -17,6 +17,7 @@ export class ToolbarTopComponent {
   ) { }
 
   async updateAirtable() {
+    if(this.updateInProgress) return;
     this.snackbar.open('Updating Airtable. This will take some time...', 'close');
     this.updateInProgress = true;
     const response = await this.functions.call<unknown, string>('updateAirtable', {}, { timeout: 540 * 1000 });

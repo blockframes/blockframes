@@ -28,7 +28,7 @@ export const appName = {
 
 export const appDescription = {
   catalog:
-    'Archipel Content is an ongoing digital marketplace for TV, VOD and ancillary rights. Let’s make content buying simple : One massive library, One negotiation, One contract.',
+    'Archipel Content is an ongoing digital marketplace for TV, VOD and ancillary rights. Let’s make content buying simple!',
   festival:
     'Archipel Market is an ongoing film market platform, one tool for your year-round promotion and acquisitions.',
   financiers:
