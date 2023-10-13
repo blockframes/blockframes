@@ -45,6 +45,8 @@ export class TableExtractedStatementsComponent implements AfterViewInit {
     'id',
     'select',
     'statement.id',
+    'statement.duration.from',
+    'statement.duration.to',
     'statement.waterfallId',
     'statement.type',
     'statement.contractId',

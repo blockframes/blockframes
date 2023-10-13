@@ -78,7 +78,7 @@
         {{ to | date: 'dd/MM/yyyy' }}
       </ng-template>
       <ng-template colRef="incomeIds" label="Sources" let-incomeIds sort defaultSort>
-        {{ getIncomesSources(incomeIds) | join:'name' }}
+        {{ getIncomesSources(incomeIds) | join:'name' | maxLength:75 }}
       </ng-template>
       <ng-template colRef="" label="Actions" let-statement sticky>
         <button mat-icon-button (click)="createStatement(statement, false);">
@@ -110,7 +110,7 @@
         {{ to | date: 'dd/MM/yyyy' }}
       </ng-template>
       <ng-template colRef="incomeIds" label="Sources" let-incomeIds sort defaultSort>
-        {{ getIncomesSources(incomeIds) | join:'name' }}
+        {{ getIncomesSources(incomeIds) | join:'name' | maxLength:75 }}
       </ng-template>
       <ng-template colRef="id" label="Actions" let-statementId sticky>
         <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'statement', statementId]">

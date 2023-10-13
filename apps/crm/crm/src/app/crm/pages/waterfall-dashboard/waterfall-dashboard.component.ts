@@ -214,6 +214,9 @@ export class WaterfallDashboardComponent implements OnInit {
       rightholderId,
       waterfallId: this.waterfall.id,
       incomeIds: incomeIds.filter(id => {
+        // Remove incomes for which a statement already exists for this contract
+        return !existingStatements.some(s => s.contractId === c.id  && s.incomeIds.includes(id));
+      }).filter(id => {
         // Filter incomes again to keep only incomes that are related to this contract
         const income = this.incomes.find(i => i.id === id);
         const source = getAssociatedSource(income, this.waterfall.sources);
@@ -225,7 +228,9 @@ export class WaterfallDashboardComponent implements OnInit {
         from: add(currentStateDate, { days: 1 }),
         to: add(currentStateDate, { days: 1, months: 6 }),
       })
-    })).filter(s => !existingStatements.find(e =>
+    }))
+    .filter(s => s.incomeIds.length)
+    .filter(s => !existingStatements.find(e =>
       e.contractId === s.contractId
       && e.duration.from.getTime() === s.duration.from.getTime()
     ));
