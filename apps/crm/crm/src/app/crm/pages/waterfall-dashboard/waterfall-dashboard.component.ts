@@ -156,9 +156,6 @@ export class WaterfallDashboardComponent implements OnInit {
   public statementsToCreate(rightholderId: string) {
     const currentStateDate = new Date(this.currentState.date);
 
-    // Fetch existing statements for this rightholder
-    const existingStatements = this.statements.filter(s => s.rightholderId === rightholderId && isProducerStatement(s)) as ProducerStatement[];
-
     // Fetch active distributor statements where rightholder has received payments
     const distributorStatements = this.statements
       .filter(s => isDistributorStatement(s) && s.payments.rightholder)
@@ -213,10 +210,11 @@ export class WaterfallDashboardComponent implements OnInit {
       contractId: c.id,
       rightholderId,
       waterfallId: this.waterfall.id,
-      incomeIds: incomeIds.filter(id => {
-        // Remove incomes for which a statement already exists for this contract
-        return !existingStatements.some(s => s.contractId === c.id  && s.incomeIds.includes(id));
-      }).filter(id => {
+      incomeIds: incomeIds.filter(id => !this.statements // Remove incomes for which a statement already exists for this contract
+        .filter(s => !isDirectSalesStatement(s))
+        .filter((s: ProducerStatement | DistributorStatement) => s.contractId === c.id)
+        .some(s => s.incomeIds.includes(id))
+      ).filter(id => {
         // Filter incomes again to keep only incomes that are related to this contract
         const income = this.incomes.find(i => i.id === id);
         const source = getAssociatedSource(income, this.waterfall.sources);
@@ -228,12 +226,7 @@ export class WaterfallDashboardComponent implements OnInit {
         from: add(currentStateDate, { days: 1 }),
         to: add(currentStateDate, { days: 1, months: 6 }),
       })
-    }))
-    .filter(s => s.incomeIds.length)
-    .filter(s => !existingStatements.find(e =>
-      e.contractId === s.contractId
-      && e.duration.from.getTime() === s.duration.from.getTime()
-    ));
+    })).filter(s => s.incomeIds.length);
   }
 
   public getIncomesSources(incomeIds: string[]) {
