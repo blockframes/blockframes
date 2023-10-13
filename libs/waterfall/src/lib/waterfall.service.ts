@@ -188,6 +188,10 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     return this._initWaterfall(waterfallId, version);
   }
 
+  public async refreshAllWaterfallVersion() {
+    // TODO #9520 if rights have a version Id 
+  }
+
   public async refreshWaterfall(waterfallId: string, versionId: string, options: { refreshData: boolean } = { refreshData: false }) {
     if (!this.data[waterfallId] || options.refreshData) await this.loadWaterfalldata(waterfallId);
     const version = this.data[waterfallId].waterfall.versions.find(v => v.id === versionId);

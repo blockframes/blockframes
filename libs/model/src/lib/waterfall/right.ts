@@ -18,6 +18,7 @@ export interface Right {
   conditions?: ConditionGroup;
   blameId?: string;
   pools: string[];
+  versionId?: string; // TODO #9520
 }
 
 export function createRight(params: Partial<Right> = {}) {
