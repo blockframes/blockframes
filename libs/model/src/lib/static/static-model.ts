@@ -1749,6 +1749,15 @@ export const statementStatus = {
   rejected: 'Rejected'
 } as const;
 
+export const statementType = {
+  salesAgent: 'Sales Agent',
+  mainDistributor: 'Main Distributor',
+  localDistributor: 'Local Distributor',
+  producer: 'Producer',
+  coProducer: 'Co-Producer',
+  directSales: 'Direct Sales',
+} as const;
+
 /**
  * https://docs.google.com/spreadsheets/d/1z4FFNABgDyRGgD5AQZf-ebWbA_m-7hlueFMCVUuk2fI/edit#gid=279324582
  */
@@ -1856,7 +1865,8 @@ export const staticModel = {
   movieSearchableElements,
   paymentType,
   paymentStatus,
-  statementStatus
+  statementStatus,
+  statementType
 };
 
 export const emailErrorCode = ['E01-unauthorized', 'E02-general-error', 'E03-missing-api-key', 'E04-no-template-available'] as const;

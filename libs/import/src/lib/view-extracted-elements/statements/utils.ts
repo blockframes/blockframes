@@ -1,5 +1,14 @@
 import { StatementsImportState } from '../../utils';
-import { App, Movie, WaterfallRightholder, createStatement, createIncome, isDistributorStatement, createExpense } from '@blockframes/model';
+import {
+  App,
+  Movie,
+  WaterfallRightholder,
+  createStatement,
+  createIncome,
+  isDistributorStatement,
+  createExpense,
+  isDirectSalesStatement
+} from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getStatementConfig } from './fieldConfigs';
 import { MovieService } from '@blockframes/movie/service';
@@ -49,6 +58,8 @@ export async function formatStatement(
 
     const statement = createStatement(data.statement);
 
+    if (!isDirectSalesStatement(statement)) statement.contractId = data.contractId;
+
     const incomes = data.incomes.filter(i => i.price && i.currency).map(i => {
       const { territories_included, territories_excluded } = i;
       delete i.territories_included;
@@ -75,7 +86,7 @@ export async function formatStatement(
         income.medias = [];
       }
 
-      income.contractId = statement.contractId;
+      income.contractId = isDistributorStatement(statement) ? statement.contractId : undefined;
       income.date = statement.duration.to;
       income.titleId = statement.waterfallId;
 
@@ -85,8 +96,9 @@ export async function formatStatement(
     const expenses = data.expenses.filter(e => e.price && e.currency).map(e => {
       if (!e.id) e.id = waterfallService.createId();
       const expense = createExpense({ ...e });
-      if (isDistributorStatement(statement)) statement.expenseIds.push(expense.id);
-      expense.contractId = statement.contractId;
+      if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) statement.expenseIds.push(expense.id);
+      expense.contractId = isDistributorStatement(statement) ? statement.contractId : undefined;
+      expense.rightholderId = statement.rightholderId;
       expense.date = statement.duration.to;
       expense.titleId = statement.waterfallId;
 

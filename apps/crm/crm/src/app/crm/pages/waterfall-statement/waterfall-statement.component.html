@@ -6,7 +6,7 @@
   <article>
     <movie-header [movie]="movie" [showBackArrow]="false"></movie-header>
   </article>
-  <h3>{{ statement.type | toLabel: 'rightholderRoles' }} Statement - {{ statement.id }}</h3>
+  <h3>{{ statement.type | toLabel: 'statementType' }} Statement - {{ statement.id }}</h3>
 
   <section>
     <mat-form-field appearance="fill">
@@ -24,7 +24,7 @@
       <li><strong>Rightholder :</strong> {{ getRightholderName(statement.rightholderId) }}</li>
       <li><strong>From :</strong> {{ statement.duration.from | date: 'MM/dd/yyyy' }}</li>
       <li><strong>To :</strong> {{ statement.duration.to | date: 'MM/dd/yyyy' }}</li>
-      <li><strong>Contract :</strong> {{ statement.contractId }}</li>
+      <li><strong>Contract :</strong> {{ getContractId() }}</li>
       <li><strong>Status: </strong> {{ statement.status | toLabel: 'statementStatus' }}</li>
       <li><strong>Turnover :</strong> <price-per-currency [price]="getRightholderActual('turnover')"></price-per-currency></li>
       <li><strong>Revenue :</strong> <price-per-currency [price]="getRightholderActual('revenu')"></price-per-currency></li>
@@ -74,7 +74,7 @@
   </ng-container>
 
   <h3>Rights</h3>
-  <bf-table [source]="rights" clickable useFilter pagination="50" (rowClick)="showRightDetails($event)">
+  <bf-table [source]="rights | filterRights: statement" clickable useFilter pagination="50" (rowClick)="showRightDetails($event)">
     <ng-template colRef="id" label="Id" let-id sort>
       {{ id }}
       <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
@@ -102,7 +102,10 @@
       <price-per-currency [price]="getCalculatedAmount(id)"></price-per-currency>
     </ng-template>
     <ng-template colRef="id" label="Cumulated" let-id>
-      <price-per-currency [price]="getCalculatedAmount(id, true)"></price-per-currency>
+      <price-per-currency [price]="getCumulatedAmount(id)"></price-per-currency>
+    </ng-template>
+    <ng-template colRef="id" label="Overall Cumulated" let-id>
+      <price-per-currency [price]="getCumulatedAmount(id, true)"></price-per-currency>
     </ng-template>
   </bf-table>
 
@@ -132,33 +135,21 @@
     </ng-container>
   </article>
 
-  <ng-container *ngIf="statement.payments.external">
-    <h3>Payments</h3>
-    <bf-table [source]="statement.payments.external" pagination="50">
-      <ng-template colRef="date" label="Date" let-date>
-        <ng-container *ngIf="date">
-          {{ date | date: 'MM/dd/yyyy' }}
-        </ng-container>
-        <ng-container *ngIf="!date">--</ng-container>
-      </ng-template>
-      <ng-template colRef="" label="To" let-item>
-        {{ getRightholderName(item.to) }}
-      </ng-template>
-      <ng-template colRef="" label="Amount" let-item>
-        <price-per-currency [price]="toPricePerCurrency(item)"></price-per-currency>
-      </ng-template>
-      <ng-template colRef="status" label="Status" let-status>
-        {{ status | toLabel: 'paymentStatus' }}
-      </ng-template>
-      <ng-template colRef="incomeIds" label="Related to" let-incomeIds>
-        {{ incomeIds | join }}
-      </ng-template>
-      <ng-template *ngIf="isDistributorStatement()" colRef="" label="Actions" let-item sticky>
-        <button mat-icon-button [disabled]="item.status !== 'pending' || statement.status === 'draft'" (click)="markAsReceived(item)">
+  <ng-container *ngIf="getRightholderPayment() as rightholderPayment">
+    <h3>Payment</h3>
+    <ul>
+      <li><strong>Date :</strong> {{ rightholderPayment.date | date: 'MM/dd/yyyy' }}</li>
+      <li><strong>To :</strong> {{ getRightholderName(rightholderPayment.to) }}</li>
+      <li><strong>Amount :</strong> <price-per-currency [price]="toPricePerCurrency(rightholderPayment)"></price-per-currency></li>
+      <li><strong>Status :</strong> {{ rightholderPayment.status | toLabel: 'paymentStatus' }}</li>
+      <li><strong>Related to: </strong> {{ rightholderPayment.incomeIds | join }}</li>
+      <li>
+        <strong>Actions :</strong>
+        <button mat-icon-button [disabled]="rightholderPayment.status !== 'pending' || statement.status === 'draft'" (click)="markAsReceived()">
           <mat-icon svgIcon="check" matTooltip="Mark payment as received"></mat-icon>
         </button>
-      </ng-template>
-    </bf-table>
+      </li>
+    </ul>
   </ng-container>
 
   <button mat-button color="primary" [disabled]="statement.status === 'processed' || statement.status === 'pending'" (click)="validate()">

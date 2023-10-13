@@ -204,7 +204,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     const contractActions = contractsToActions(this.data[waterfallId].contracts, this.data[waterfallId].terms);
     const rightActions = rightsToActions(this.data[waterfallId].rights);
     const incomeActions = incomesToActions(this.data[waterfallId].contracts, this.data[waterfallId].incomes, this.data[waterfallId].waterfall.sources);
-    const expenseActions = expensesToActions(this.data[waterfallId].contracts, this.data[waterfallId].expenses);
+    const expenseActions = expensesToActions(this.data[waterfallId].expenses);
     const paymentActions = statementsToActions(this.data[waterfallId].statements);
 
     const groupedActions = groupByDate([

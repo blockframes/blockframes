@@ -54,7 +54,8 @@ import {
   rightTypes,
   paymentType,
   paymentStatus,
-  statementStatus
+  statementStatus,
+  statementType
 } from './static-model';
 
 export type App = typeof app[number];
@@ -186,3 +187,5 @@ export type PaymentType = keyof typeof paymentType;
 export type PaymentStatus = keyof typeof paymentStatus;
 
 export type StatementStatus = keyof typeof statementStatus;
+
+export type StatementType = keyof typeof statementType;

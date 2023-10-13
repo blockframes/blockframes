@@ -3,22 +3,29 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Block,
+  DirectSalesStatement,
+  DistributorStatement,
   History,
   Income,
   IncomeState,
   Movie,
   PricePerCurrency,
+  ProducerStatement,
   Right,
+  RightholderRole,
   Statement,
   Version,
   Waterfall,
   WaterfallContract,
+  WaterfallRightholder,
   createDuration,
   createProducerStatement,
   getAssociatedSource,
   getContractAndAmendments,
   getCurrentContract,
-  getRightsOf,
+  isDirectSalesStatement,
+  isDistributorStatement,
+  isProducerStatement,
   mainCurrency,
   pathExists
 } from '@blockframes/model';
@@ -30,8 +37,8 @@ import { add } from 'date-fns';
 
 interface RightholderStatements {
   rightholderId: string,
-  pending: Statement[],
-  existing: Statement[]
+  pending: ProducerStatement[],
+  existing: ProducerStatement[]
 }
 
 @Component({
@@ -52,9 +59,9 @@ export class WaterfallDashboardComponent implements OnInit {
   private rights: Right[];
   private incomes: Income[];
   private state: WaterfallState;
-
   public currentState: History;
   public currentBlock: string;
+  public producersOrCoproducers: WaterfallRightholder[] = [];
 
   constructor(
     private movieService: MovieService,
@@ -95,6 +102,11 @@ export class WaterfallDashboardComponent implements OnInit {
     const index = this.version.blockIds.indexOf(blockId);
     this.currentState = this.history[index + 1]; // First history entry is always empty (init)
     this.rightholderStatements = undefined;
+    this.producersOrCoproducers = Object.values(this.currentState.orgs)
+      .map(({ id }) => this.getRightholder(id))
+      .filter(({ roles }) => roles.includes('producer') || roles.includes('coProducer'));
+
+    if (!this.producersOrCoproducers.length) this.snackBar.open('No producers or coproducers found for this waterfall', 'close', { duration: 5000 });
     this.cdRef.markForCheck();
   }
 
@@ -118,14 +130,20 @@ export class WaterfallDashboardComponent implements OnInit {
   }
 
   public getCurrentContract(item: Statement) {
-    const contracts = getContractAndAmendments(item.contractId, this.contracts);
-    const current = getCurrentContract(contracts, item.duration.from);
-    if (!current) return '--';
-    return current.rootId ? `${current.id} (${current.rootId})` : current.id;
+    if (isDistributorStatement(item) || isProducerStatement(item)) {
+      const contracts = getContractAndAmendments(item.contractId, this.contracts);
+      const current = getCurrentContract(contracts, item.duration.from);
+      if (!current) return '--';
+      return current.rootId ? `${current.id} (${current.rootId})` : current.id;
+    }
+    return '--';
   }
 
-  public getPendingRevenue(id: string): PricePerCurrency {
-    const pendingRevenue = this.statements.map(s => s.payments.external.filter(p => p.to === id && p.status === 'pending')).flat();
+  public getPendingRevenue(rightholderId: string): PricePerCurrency {
+    const pendingRevenue = this.statements
+      .filter(s => (isDistributorStatement(s) || isProducerStatement(s)) && s.payments.rightholder)
+      .filter((s: DistributorStatement | ProducerStatement) => s.payments.rightholder.to === rightholderId && s.payments.rightholder.status === 'pending')
+      .map((s: DistributorStatement | ProducerStatement) => s.payments.rightholder);
 
     const pending: PricePerCurrency = {};
     pendingRevenue.forEach(i => {
@@ -139,70 +157,78 @@ export class WaterfallDashboardComponent implements OnInit {
     const currentStateDate = new Date(this.currentState.date);
 
     // Fetch existing statements for this rightholder
-    const existingStatements = this.statements.filter(s => s.rightholderId === rightholderId);
+    const existingStatements = this.statements.filter(s => s.rightholderId === rightholderId && isProducerStatement(s)) as ProducerStatement[];
 
-    // Fetch active statements where rightsholder has received payments but not created statements
-    const statements = this.statements
+    // Fetch active distributor statements where rightholder has received payments
+    const distributorStatements = this.statements
+      .filter(s => isDistributorStatement(s) && s.payments.rightholder)
       .filter(s => s.duration.to.getTime() <= currentStateDate.getTime())
-      .filter(s => s.payments.external.find(p => p.to === rightholderId && p.status === 'received'));
+      .filter((s: DistributorStatement) => s.payments.rightholder.to === rightholderId && s.payments.rightholder.status === 'received') as DistributorStatement[];
+
+    // Fetch active direct sales statements created by the rightholder
+    const directSalesStatements = this.statements
+      .filter(s => isDirectSalesStatement(s))
+      .filter(s => s.duration.to.getTime() <= currentStateDate.getTime())
+      .filter(s => s.rightholderId === rightholderId) as DirectSalesStatement[];
+
+    const statements = [...distributorStatements, ...directSalesStatements];
     if (!statements.length) return [];
 
-    // TODO #9493 handle multiple roles to create statements
-    const roles = this.waterfall.rightholders.find(r => r.id === rightholderId)?.roles;
-    if (roles.length === 0 || roles.length > 1) {
-      this.snackBar.open(`Could not determine statement type for "${this.getRightholderName(rightholderId)}"`, 'close', { duration: 5000 });
-      return [];
-    }
-
     // Fetch contract ids that are related to the statements (remove amendments or root contracts)
-    const excludedContractsIds = unique(statements.map(s => getContractAndAmendments(s.contractId, this.contracts).map(c => c.id)).flat());
+    const excludedContractsIds = unique(distributorStatements.map(s => getContractAndAmendments(s.contractId, this.contracts).map(c => c.id)).flat());
 
     // Fetch current contracts where the rightholder is involved (buyer or seller) that are not in the excluded list
     const contractsIds = this.contracts.
       filter(c => (c.buyerId === rightholderId || c.sellerId === rightholderId) && !excludedContractsIds.find(id => id === c.id))
       .map(c => getCurrentContract(getContractAndAmendments(c.id, this.contracts), currentStateDate)?.id)
-      .filter(c => !!c); // Remove contracts that are not active at the current state date
-    const contracts = unique(contractsIds).map(id => this.contracts.find(c => c.id === id));
+      .filter(c => !!c); // Remove contracts that are not active in the current state date
+
+    const contracts = unique(contractsIds)
+      .map(id => this.contracts.find(c => c.id === id))
+      .filter(c => {
+        // Remove contracts where the other party is a distributor
+        const otherParty = c.sellerId === rightholderId ? c.buyerId : c.sellerId;
+        const rightholder = this.waterfall.rightholders.find(r => r.id === otherParty);
+        const distributorRoles: RightholderRole[] = ['mainDistributor', 'localDistributor', 'salesAgent'];
+        return !rightholder.roles.some(r => distributorRoles.includes(r));
+      });
 
     // Fetch incomes and sources related to the statements
-    const incomeIds = unique(statements.map(s => s.payments.external.filter(p => p.to === rightholderId && p.status === 'received').map(p => p.incomeIds).flat()).flat());
+    const distributorStatementsIncomeIds = distributorStatements.map(s => s.payments.rightholder.incomeIds).flat();
+    const directSalesStatementsIncomeIds = directSalesStatements.map(s => s.incomeIds).flat();
+    const incomeIds = unique([...distributorStatementsIncomeIds, ...directSalesStatementsIncomeIds]);
     const sources = this.getIncomesSources(incomeIds);
 
     // Filter contracts that have at least one right that is related to the sources
     const filteredContracts = contracts.filter(c => {
-      const rights = getRightsOf(this.rights, c);
+      const otherParty = c.sellerId === rightholderId ? c.buyerId : c.sellerId;
+      const rights = this.rights.filter(r => r.rightholderId === otherParty);
       return rights.some(r => sources.some(s => pathExists(r.id, s.id, this.state.waterfall.state)));
     });
 
-    const parentPayments = statements.map(s => s.payments.external.filter(p => p.to === rightholderId && p.status === 'received').map(p => ({ statementId: s.id, paymentId: p.id }))).flat();
-
-    switch (roles[0]) {
-      case 'producer':
-        return filteredContracts.map(c => createProducerStatement({
-          id: this.statementService.createId(),
-          contractId: c.id,
-          rightholderId,
-          waterfallId: this.waterfall.id,
-          parentPayments,
-          incomeIds: incomeIds.filter(id => {
-            // Filter incomes again to keep only incomes that are related to this contract
-            const income = this.incomes.find(i => i.id === id);
-            const source = getAssociatedSource(income, this.waterfall.sources);
-            const rights = getRightsOf(this.rights, c);
-            return rights.some(r => pathExists(r.id, source.id, this.state.waterfall.state));
-          }),
-          duration: createDuration({
-            from: add(currentStateDate, { days: 1 }), // TODO #9493 get periodicity from waterfall document
-            to: add(currentStateDate, { days: 1, months: 6 }),
-          })
-        })).filter(s => !existingStatements.find(e =>
-          e.contractId === s.contractId
-          && e.duration.from.getTime() === s.duration.from.getTime()
-        ));
-      default:
-        // TODO #9493 handle other roles
-        return []
-    }
+    const rightholder = this.waterfall.rightholders.find(r => r.id === rightholderId);
+    return filteredContracts.map(c => createProducerStatement({
+      id: this.statementService.createId(),
+      type: rightholder.roles.includes('producer') ? 'producer' : 'coProducer',
+      contractId: c.id,
+      rightholderId,
+      waterfallId: this.waterfall.id,
+      incomeIds: incomeIds.filter(id => {
+        // Filter incomes again to keep only incomes that are related to this contract
+        const income = this.incomes.find(i => i.id === id);
+        const source = getAssociatedSource(income, this.waterfall.sources);
+        const otherParty = c.sellerId === rightholderId ? c.buyerId : c.sellerId;
+        const rights = this.rights.filter(r => r.rightholderId === otherParty);
+        return rights.some(r => pathExists(r.id, source.id, this.state.waterfall.state));
+      }),
+      duration: createDuration({
+        from: add(currentStateDate, { days: 1 }),
+        to: add(currentStateDate, { days: 1, months: 6 }),
+      })
+    })).filter(s => !existingStatements.find(e =>
+      e.contractId === s.contractId
+      && e.duration.from.getTime() === s.duration.from.getTime()
+    ));
   }
 
   public getIncomesSources(incomeIds: string[]) {
@@ -214,7 +240,7 @@ export class WaterfallDashboardComponent implements OnInit {
     this.rightholderStatements = {
       rightholderId,
       pending: this.statementsToCreate(rightholderId),
-      existing: this.statements.filter(s => s.rightholderId === rightholderId)
+      existing: this.statements.filter(s => s.rightholderId === rightholderId && isProducerStatement(s)) as ProducerStatement[]
     };
     this.cdRef.markForCheck();
   }

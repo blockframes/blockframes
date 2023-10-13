@@ -99,9 +99,8 @@ export function getChildRights(state: TitleState, group: GroupState): RightState
 /**
  * Get sources of rights
  * @param state 
- * @param _ids 
- * @param sources 
- * @returns 
+ * @param rightIds 
+ * @returns source nodes of rights
  */
 export function getSources(state: TitleState, rightIds: string | string[], sources: string[] = []) {
   const ids = Array.isArray(rightIds) ? rightIds : [rightIds];
@@ -115,8 +114,8 @@ export function getSources(state: TitleState, rightIds: string | string[], sourc
   return sources.filter(s => isSource(state, getNode(state, s))).map(id => getNode(state, id));
 }
 
-function getNodesSubTree(state: TitleState, ids: string[], tree: { node: string, parents: string[] }[] = []) {
-  for (const id of ids) {
+function getNodesSubTree(state: TitleState, rightIds: string[], tree: { node: string, parents: string[] }[] = []) {
+  for (const id of rightIds) {
     if (!isGroupChild(state, id)) {
       const parentNodes = getParentNodes(state, id);
       if (parentNodes.length) getNodesSubTree(state, parentNodes.map(n => n.id), tree);

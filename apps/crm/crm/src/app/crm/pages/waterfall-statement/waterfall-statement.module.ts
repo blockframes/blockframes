@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { NgApexchartsModule } from 'ng-apexcharts';
 
-import { WaterfallStatementComponent } from './waterfall-statement.component';
+import { FilterRightsPipe, WaterfallStatementComponent } from './waterfall-statement.component';
 
 // Blockframes
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
@@ -22,7 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [WaterfallStatementComponent],
+  declarations: [WaterfallStatementComponent, FilterRightsPipe],
   imports: [
     CommonModule,
     ClipboardModule,

@@ -21,11 +21,11 @@ import { WaterfallContract, WaterfallSource, getAssociatedSource } from './water
 import { Income } from '../income';
 import { Expense } from '../expense';
 import { Term } from '../terms';
-import { getContractAndAmendments, getCurrentContract, getDeclaredAmount } from '../contract';
+import { getContractAndAmendments, getDeclaredAmount } from '../contract';
 import { convertCurrenciesTo, sortByDate, sum } from '../utils';
 import { MovieCurrency } from '../static';
 import { Right, orderRights } from './right';
-import { Statement, isDistributorStatement } from './statement';
+import { Statement, isDirectSalesStatement, isDistributorStatement, isProducerStatement } from './statement';
 
 const actions = {
   /**
@@ -298,16 +298,14 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
   return actions;
 }
 
-export function expensesToActions(contracts: WaterfallContract[], expenses: Expense[]) {
+export function expensesToActions(expenses: Expense[]) {
   const actions: Action[] = [];
 
   expenses.forEach(e => {
-    const contractAndAmendments = getContractAndAmendments(e.contractId, contracts);
-    const contract = getCurrentContract(contractAndAmendments, e.date);
     const { [mainCurrency]: amount } = convertCurrenciesTo({ [e.currency]: e.price }, mainCurrency);
     actions.push(
       action('expense', {
-        orgId: contract.buyerId,
+        orgId: e.rightholderId,
         amount,
         type: e.type,
         date: e.date
@@ -323,7 +321,8 @@ export function statementsToActions(statements: Statement[]) {
 
   for (const statement of statements) {
 
-    if (isDistributorStatement(statement)) {
+    // Income to Org payments
+    if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
       const incomePayments = statement.payments.income;
       for (const payment of incomePayments) {
         payments.push({
@@ -335,40 +334,46 @@ export function statementsToActions(statements: Statement[]) {
           to: {
             org: statement.rightholderId
           },
-          contractId: statement.contractId,
+          contractId: isDistributorStatement(statement) ? statement.contractId : undefined,
           date: payment.date
         });
       }
     }
 
-    const internalPayments = statement.payments.internal.filter(p => p.status === 'processed' || p.status === 'received');
-    for (const payment of internalPayments) {
+    const rightPayments = statement.payments.right.filter(p => p.status === 'processed' || p.status === 'received') || [];
+    const rightholderPayment = ((isDistributorStatement(statement) || isProducerStatement(statement)) && ['processed', 'received'].includes(statement.payments.rightholder?.status)) ? statement.payments.rightholder : undefined;
+
+    // Org to Org payments
+    if (rightholderPayment) {
+      payments.push({
+        id: rightholderPayment.id,
+        amount: convertCurrenciesTo({ [rightholderPayment.currency]: rightholderPayment.price }, mainCurrency)[mainCurrency],
+        from: {
+          org: statement.rightholderId
+        },
+        to: {
+          org: rightholderPayment.to
+        },
+        contractId: isDistributorStatement(statement) || isProducerStatement(statement) ? statement.contractId : undefined,
+        date: rightholderPayment.date
+      });
+    }
+
+    // Org to Right payments
+    for (const payment of rightPayments) {
+      // Add external right payment only if there is a rightholderPayment associated with status processed or received
+      if (payment.mode === 'external' && !rightholderPayment) continue;
+
       payments.push({
         id: payment.id,
         amount: convertCurrenciesTo({ [payment.currency]: payment.price }, mainCurrency)[mainCurrency],
         from: {
-          org: statement.rightholderId
+          org: payment.mode === 'internal' ? statement.rightholderId : rightholderPayment.to
         },
         to: {
           right: payment.to
         },
-        contractId: statement.contractId,
-        date: payment.date
-      });
-    }
-
-    const externalPayments = statement.payments.external.filter(p => p.status === 'processed' || p.status === 'received');
-    for (const payment of externalPayments) {
-      payments.push({
-        id: payment.id,
-        amount: convertCurrenciesTo({ [payment.currency]: payment.price }, mainCurrency)[mainCurrency],
-        from: {
-          org: statement.rightholderId
-        },
-        to: {
-          [payment.type === 'right' ? 'right' : 'org']: payment.to
-        },
-        contractId: statement.contractId,
+        contractId: isDistributorStatement(statement) || isProducerStatement(statement) ? statement.contractId : undefined,
         date: payment.date
       });
     }
@@ -674,7 +679,7 @@ export interface PaymentAction extends BaseAction {
     org?: string;
     right?: string;
   };
-  contractId: string;
+  contractId?: string;
   date: Date;
 }
 
@@ -770,7 +775,7 @@ function income(state: TitleState, payload: IncomeAction) {
 function payment(state: TitleState, payload: PaymentAction) {
 
   if (payload.from.org && payload.to.org) { // Payment from org to org
-    if (payload.amount > state.orgs[payload.from.org].revenu.actual) throw new Error(`Org "${payload.from.org}" have not enough actual revenue to proceed.`);
+    if (payload.amount > state.orgs[payload.from.org].revenu.actual) throw new Error(`Org "${payload.from.org}" does not have enough actual revenue to proceed.`);
     state.orgs[payload.from.org].revenu.actual -= payload.amount;
     state.orgs[payload.to.org].revenu.actual += payload.amount;
     state.orgs[payload.to.org].turnover.actual += payload.amount;
@@ -790,11 +795,8 @@ function payment(state: TitleState, payload: PaymentAction) {
     nodeTo.turnover.actual += actualTurnover;
 
     // Orgs
-    if (orgState.id !== payload.from.org) {
-      state.orgs[payload.from.org].revenu.actual -= actualRevenue;
-      state.orgs[orgState.id].revenu.actual += actualRevenue;
-      state.orgs[orgState.id].turnover.actual += actualTurnover;
-    }
+    if (orgState.id !== payload.from.org) throw new Error(`Internal payment error. "${payload.to.right}" is not owned by "${payload.from.org}".`);
+    if (actualRevenue > state.orgs[payload.from.org].revenu.actual) throw new Error(`Internal payment error. Org "${payload.from.org}" does not have enough actual revenue to proceed.`);
 
     // Recalculate groups actual revenue & turnover
     const group = getGroup(state, nodeTo.id);

@@ -79,7 +79,7 @@
               <a mat-button routerLink="/c/o/dashboard/crm/import/statements">
                 <mat-icon svgIcon="monetization"></mat-icon><span matLine>4 Statements</span>
               </a>
-              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="incomes.length && expenses.length else notImported"></mat-icon>
+              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="incomes.length else notImported"></mat-icon>
             </li>
           </ul>
           <a *ngIf="(canInitWaterfall$ | async) else refresh" (click)="initWaterfall()" class="surface">
@@ -367,7 +367,7 @@
           {{ id }}
         </ng-template>
         <ng-template colRef="type" label="Type" let-type sort>
-          {{ type | toLabel: 'rightholderRoles' }}
+          {{ type | toLabel: 'statementType' }}
         </ng-template>
         <ng-template colRef="status" label="Status" let-status sort>
           {{ status | toLabel: 'statementStatus' }}
@@ -440,6 +440,9 @@
       <bf-table [source]="expenses" clickable useFilter pagination="50">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
+        </ng-template>
+        <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
+          {{ getRightholderName(rightholderId) }}
         </ng-template>
         <ng-template colRef="" label="Contract Id" let-item sort>
           {{ getCurrentContract({ contractId: item.contractId, date: item.date }) }}

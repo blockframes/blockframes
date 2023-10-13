@@ -10,13 +10,13 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { StatementsImportState, SpreadsheetImportError } from '../../utils';
 import {
   DistributorStatement,
-  ProducerStatement,
   createDocumentMeta,
   createStatement,
   isDistributorStatement,
-  isProducerStatement,
   createIncome,
-  createExpense
+  createExpense,
+  isDirectSalesStatement,
+  DirectSalesStatement
 } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { StatementService } from '@blockframes/waterfall/statement.service';
@@ -46,6 +46,7 @@ export class TableExtractedStatementsComponent implements AfterViewInit {
     'select',
     'statement.id',
     'statement.waterfallId',
+    'statement.type',
     'statement.contractId',
     'errors',
     'warnings',
@@ -112,8 +113,7 @@ export class TableExtractedStatementsComponent implements AfterViewInit {
     });
 
     if (isDistributorStatement(statement)) await this.statementService.add<DistributorStatement>(statement, { params: { waterfallId: statement.waterfallId } });
-    if (isProducerStatement(statement)) await this.statementService.add<ProducerStatement>(statement, { params: { waterfallId: statement.waterfallId } });
-    if (isDistributorStatement(statement)) await this.statementService.add<DistributorStatement>(statement, { params: { waterfallId: statement.waterfallId } });
+    if (isDirectSalesStatement(statement)) await this.statementService.add<DirectSalesStatement>(statement, { params: { waterfallId: statement.waterfallId } });
 
     for (const income of importState.incomes) {
       await this.incomeService.add(createIncome({

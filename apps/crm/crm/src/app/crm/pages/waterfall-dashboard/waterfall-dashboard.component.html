@@ -23,37 +23,50 @@
     </h3>
   </section>
 
-  <bf-table *ngIf="currentState" [source]="currentState.orgs | keyvalue" clickable (rowClick)="displayRightholderStatements($event.value.id)" useFilter pagination="50">
-    <ng-template colRef="value.id" label="Right Holder" let-id sort>
-      {{ getRightholderName(id) }}
-    </ng-template>
-    <ng-template colRef="value.id" label="Roles" let-id sort>
-      {{ getRightholder(id).roles | toLabel: 'rightholderRoles' }}
-    </ng-template>
-    <ng-template colRef="value.revenu" label="Calculated Revenue" let-revenu sort>
-      <price-per-currency [price]="getPrice(revenu.calculated)"></price-per-currency>
-    </ng-template>
-    <ng-template colRef="value.revenu" label="Actual Revenue" let-revenu sort>
-      <strong>
-        <price-per-currency [price]="getPrice(revenu.actual)"></price-per-currency>
-      </strong>
-    </ng-template>
-    <ng-template colRef="value.id" label="Pending revenue" let-id sort>
-      <price-per-currency [price]="getPendingRevenue(id)"></price-per-currency>
-    </ng-template>
-    <ng-template colRef="value.id" label="Statements to create" let-id sort>
-      {{ statementsToCreate(id).length }}
-    </ng-template>
-    <ng-template colRef="value.turnover" label="Turnover" let-turnover sort>
-      <price-per-currency [price]="getPrice(turnover.actual)"></price-per-currency>
-    </ng-template>
-  </bf-table>
+  <ng-container *ngIf="currentState">
+    <h3>Rightholders summary</h3>
+    <bf-table [source]="currentState.orgs | keyvalue" useFilter pagination="50">
+      <ng-template colRef="value.id" label="Right Holder" let-id sort>
+        {{ getRightholderName(id) }}
+      </ng-template>
+      <ng-template colRef="value.id" label="Roles" let-id sort>
+        {{ getRightholder(id).roles | toLabel: 'rightholderRoles' }}
+      </ng-template>
+      <ng-template colRef="value.revenu" label="Calculated Revenue" let-revenu sort>
+        <price-per-currency [price]="getPrice(revenu.calculated)"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="value.revenu" label="Actual Revenue" let-revenu sort>
+        <strong>
+          <price-per-currency [price]="getPrice(revenu.actual)"></price-per-currency>
+        </strong>
+      </ng-template>
+      <ng-template colRef="value.id" label="Pending revenue" let-id sort>
+        <price-per-currency [price]="getPendingRevenue(id)"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="value.turnover" label="Turnover" let-turnover sort>
+        <price-per-currency [price]="getPrice(turnover.actual)"></price-per-currency>
+      </ng-template>
+    </bf-table>
+
+    <h3>Statements to create</h3>
+    <bf-table [source]="producersOrCoproducers" clickable (rowClick)="displayRightholderStatements($event.id)" useFilter pagination="50">
+      <ng-template colRef="name" label="Right Holder" let-name sort>
+        {{ name }}
+      </ng-template>
+      <ng-template colRef="roles" label="Roles" let-roles sort>
+        {{ roles | toLabel: 'rightholderRoles' }}
+      </ng-template>
+      <ng-template colRef="id" label="Statements to create" let-id sort>
+        {{ statementsToCreate(id).length }}
+      </ng-template>
+    </bf-table>
+  </ng-container>
 
   <article *ngIf="rightholderStatements?.pending.length">
     <h3>Pending statements for "{{ getRightholderName(rightholderStatements.rightholderId) }}"</h3>
     <bf-table [source]="rightholderStatements.pending" useFilter pagination="50">
       <ng-template colRef="type" label="Type" let-type sort>
-        {{ type | toLabel: 'rightholderRoles' }}
+        {{ type | toLabel: 'statementType' }}
       </ng-template>
       <ng-template colRef="" label="Contract Id" let-item sort>
         {{ getCurrentContract(item) }}
@@ -82,7 +95,7 @@
     <h3>Existing statements for "{{ getRightholderName(rightholderStatements.rightholderId) }}"</h3>
     <bf-table [source]="rightholderStatements.existing" useFilter pagination="50">
       <ng-template colRef="type" label="Type" let-type sort>
-        {{ type | toLabel: 'rightholderRoles' }}
+        {{ type | toLabel: 'statementType' }}
       </ng-template>
       <ng-template colRef="" label="Contract Id" let-item sort>
         {{ getCurrentContract(item) }}

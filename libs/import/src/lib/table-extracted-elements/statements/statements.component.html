@@ -51,6 +51,11 @@
     <td mat-cell *matCellDef="let element"> {{ element.statement.waterfallId ? element.statement.waterfallId : '--' }} </td>
   </ng-container>
 
+  <ng-container matColumnDef="statement.type">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
+    <td mat-cell *matCellDef="let element"> {{ element.statement.type | toLabel: 'statementType' }} </td>
+  </ng-container>
+
   <ng-container matColumnDef="statement.contractId">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Contract Id </th>
     <td mat-cell *matCellDef="let element"> {{ element.statement.contractId ? element.statement.contractId : '--' }} </td>
