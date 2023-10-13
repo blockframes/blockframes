@@ -7,6 +7,7 @@ export interface Expense {
   date: Date;
   /** The contract linked to this expense */
   contractId: string;
+  rightholderId: string;
   titleId: string; // equals waterfallId
   price: number;
   currency: MovieCurrency;
@@ -18,6 +19,7 @@ export function createExpense(params: Partial<Expense> = {}): Expense {
   return {
     id: '',
     contractId: '',
+    rightholderId: '',
     titleId: '',
     price: 0,
     currency: 'EUR',

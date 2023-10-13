@@ -188,8 +188,12 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     return this._initWaterfall(waterfallId, version);
   }
 
-  public async refreshWaterfall(waterfallId: string, versionId: string) {
-    if (!this.data[waterfallId]) await this.loadWaterfalldata(waterfallId);
+  public async refreshAllWaterfallVersion() {
+    // TODO #9520 if rights have a version Id 
+  }
+
+  public async refreshWaterfall(waterfallId: string, versionId: string, options: { refreshData: boolean } = { refreshData: false }) {
+    if (!this.data[waterfallId] || options.refreshData) await this.loadWaterfalldata(waterfallId);
     const version = this.data[waterfallId].waterfall.versions.find(v => v.id === versionId);
     await this.removeVersion(waterfallId, versionId);
     return this._initWaterfall(waterfallId, { id: version.id, name: version.name, description: version.description });
@@ -204,7 +208,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     const contractActions = contractsToActions(this.data[waterfallId].contracts, this.data[waterfallId].terms);
     const rightActions = rightsToActions(this.data[waterfallId].rights);
     const incomeActions = incomesToActions(this.data[waterfallId].contracts, this.data[waterfallId].incomes, this.data[waterfallId].waterfall.sources);
-    const expenseActions = expensesToActions(this.data[waterfallId].contracts, this.data[waterfallId].expenses);
+    const expenseActions = expensesToActions(this.data[waterfallId].expenses);
     const paymentActions = statementsToActions(this.data[waterfallId].statements);
 
     const groupedActions = groupByDate([

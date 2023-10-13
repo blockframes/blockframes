@@ -1,43 +1,45 @@
 import { DocumentMeta } from '../meta';
-import { MovieCurrency, RightholderRole } from '../static';
+import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus } from '../static';
 import { Duration, createDuration } from '../terms';
 
 export interface Payment {
   id: string;
-  type: 'income' | 'rightholder' | 'right'; // TODO #9493 create type ?
+  type: PaymentType;
   price: number;
   currency: MovieCurrency;
-  date: Date; // TODO #9493 should be only on external payment, and optional (setted when payment gets processed), inside have same date as statement.duration.to
-  status: 'pending' | 'received' | 'processed'; // TODO #9493 create type  (same as Income interface)
-  to: string;
-  incomeIds: string[]; // Incomes related to this payment
+  date: Date;
+  status: PaymentStatus;
+  mode: 'internal' | 'external';
 }
 
+/**
+ * "To Income" payment to the rightholder's org of the statement, will increment org actual revenu and turnover
+ */
 export interface IncomePayment extends Payment {
   type: 'income';
   incomeId: string; // Income related to this payment
   status: 'processed';
-  to: undefined;
-  incomeIds: undefined;
 }
 
 /**
- * "To Rightholder" payment to the licensor (money that the current righholder did not take for his rights)
- * Once processed, will take money available in Org.revenu.actual and assign it to licensor's Org, incrementing org actual revenu and turnover
+ * "To Rightholder" payment to the org of the opposite rightholder of the statement (licensor or licensee)
+ * Once processed, will take money available in Org.revenu.actual and assign it to the other Org, incrementing org actual revenu and turnover
  */
 export interface RightholderPayment extends Payment {
   type: 'rightholder';
-  to: string; // rightholderId referenced as licensor in the contract
+  mode: 'external';
+  incomeIds: string[]; // Incomes related to this payment
+  to: string; // rightholderId : the other party of the contract that is not the rightholder of the statement
 }
 
 /**
  * "To Right" payment (com, expense, MG etc)
  * Once processed, will assign money available in Org.revenu.actual to correct rights, incrementing right actual revenu and turnover
- * If Org that is sending money to right is not the same as the one that is receiving money from rightholder,
- * org.revenu.actual will be decremented for org sending money and org.revenu.actual and org.turnover.actual incremented for org receiving money
  */
 export interface RightPayment extends Payment {
   type: 'right';
+  mode: 'internal' | 'external';
+  incomeIds: string[]; // Incomes related to this payment
   to: string; // rightId
 }
 
@@ -49,8 +51,7 @@ function createPaymentBase(params: Partial<Payment> = {}): Payment {
     currency: 'EUR',
     date: new Date(),
     status: 'pending',
-    to: '',
-    incomeIds: params.incomeIds || [],
+    mode: 'internal',
     ...params,
   };
 }
@@ -62,15 +63,16 @@ export function createIncomePayment(params: Partial<IncomePayment> = {}): Income
     ...payment,
     type: 'income',
     status: 'processed',
-    to: undefined,
-    incomeIds: undefined,
   }
 }
 
 export function createRightholderPayment(params: Partial<RightholderPayment> = {}): RightholderPayment {
   const payment = createPaymentBase(params);
   return {
+    to: '',
     ...payment,
+    incomeIds: params.incomeIds || [],
+    mode: 'external',
     type: 'rightholder',
   }
 }
@@ -78,34 +80,36 @@ export function createRightholderPayment(params: Partial<RightholderPayment> = {
 export function createRightPayment(params: Partial<RightPayment> = {}): RightPayment {
   const payment = createPaymentBase(params);
   return {
+    to: '',
     ...payment,
+    incomeIds: params.incomeIds || [],
     type: 'right',
+    mode: params.mode
   }
 }
 
 export interface Statement {
   _meta?: DocumentMeta;
-  type: RightholderRole;
-  status: 'draft' | 'pending' | 'processed' | 'rejected'; // TODO #9493 create type
+  type: StatementType;
+  status: StatementStatus;
   id: string;
   waterfallId: string;
   rightholderId: string;
   duration: Duration;
-  contractId: string; // rightholderId is licensee or licensor of this contract (producer will always be licensor except for author's contracts)
   incomeIds: string[];
   payments: {
-    internal: RightPayment[],
-    external: Payment[]
+    right: RightPayment[]
   };
 }
 
 export interface DistributorStatement extends Statement {
-  type: 'mainDistributor';
-  expenseIds: string[]; // TODO #9493 producter statement should have expenseIds too if producer is making direct sells
+  type: 'mainDistributor' | 'localDistributor' | 'salesAgent';
+  contractId: string; // rightholderId is licensee or licensor of this contract
+  expenseIds: string[];
   payments: {
-    income: IncomePayment[],
-    internal: RightPayment[],
-    external: RightholderPayment[]
+    income: IncomePayment[];
+    right: RightPayment[]; // Mode internal & external
+    rightholder: RightholderPayment;
   };
   additional: {
     quantitySold?: number;
@@ -117,16 +121,21 @@ export interface DistributorStatement extends Statement {
 }
 
 export interface ProducerStatement extends Statement {
-  type: 'producer';
-  parentPayments: { statementId: string, paymentId: string }[]; // TODO #9493 create type
+  type: 'producer' | 'coProducer';
+  contractId: string; // rightholderId is licensee or licensor of this contract
   payments: {
-    internal: RightPayment[],
-    external: RightPayment[]
+    right: RightPayment[]; // Mode external
+    rightholder: RightholderPayment;
   };
 }
 
-export interface FinancierStatement extends Statement {
-  type: 'financier';
+export interface DirectSalesStatement extends Statement {
+  type: 'directSales';
+  expenseIds: string[];
+  payments: {
+    income: IncomePayment[];
+    right: RightPayment[]; // Mode internal
+  };
 }
 
 function createStatementBase(params: Partial<Statement> = {}): Statement {
@@ -136,46 +145,44 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
     status: 'draft',
     waterfallId: '',
     rightholderId: '',
-    contractId: '',
     incomeIds: params.incomeIds || [],
     payments: {
-      internal: params.payments?.internal ? params.payments.internal.map(createRightPayment) : [],
-      external: params.payments?.internal ? params.payments.external.map(createPaymentBase) : [],
+      right: params.payments?.right ? params.payments.right.map(createRightPayment) : []
     },
     ...params,
     duration: createDuration(params?.duration),
   };
 }
 
-// TODO #9493 should be only 2 statements families: producer and distributor
 export function createStatement(params: Partial<Statement>) {
   if (isDistributorStatement(params)) return createDistributorStatement(params);
   if (isProducerStatement(params)) return createProducerStatement(params);
-  if (isFinancierStatement(params)) return createFinancierStatement(params);
+  if (isDirectSalesStatement(params)) return createDirectSalesStatement(params);
 }
 
 export function isDistributorStatement(statement: Partial<Statement>): statement is DistributorStatement {
-  return statement.type === 'mainDistributor'; // TODO #9493 or localDistributor or salesAgent
+  return statement.type === 'mainDistributor' || statement.type === 'localDistributor' || statement.type === 'salesAgent';
 }
 
 export function isProducerStatement(statement: Partial<Statement>): statement is ProducerStatement {
-  return statement.type === 'producer';
+  return statement.type === 'producer' || statement.type === 'coProducer';
 }
 
-function isFinancierStatement(statement: Partial<Statement>): statement is FinancierStatement {
-  return statement.type === 'financier';
+export function isDirectSalesStatement(statement: Partial<Statement>): statement is DirectSalesStatement {
+  return statement.type === 'directSales';
 }
 
 function createDistributorStatement(params: Partial<DistributorStatement> = {}): DistributorStatement {
   const statement = createStatementBase(params);
   return {
+    contractId: '',
     ...statement,
     payments: {
       income: params.payments?.income ? params.payments.income.map(createIncomePayment) : [],
-      internal: statement.payments.internal,
-      external: params.payments?.external ? params.payments.external.map(createRightholderPayment) : [],
+      right: statement.payments.right,
+      rightholder: params.payments?.rightholder || undefined
     },
-    type: 'mainDistributor',
+    type: params.type || 'mainDistributor',
     expenseIds: params.expenseIds || [],
     additional: {},
   }
@@ -184,20 +191,26 @@ function createDistributorStatement(params: Partial<DistributorStatement> = {}):
 export function createProducerStatement(params: Partial<ProducerStatement> = {}): ProducerStatement {
   const statement = createStatementBase(params);
   return {
+    contractId: '',
     ...statement,
-    parentPayments: params.parentPayments || [],
     payments: {
-      internal: statement.payments.internal,
-      external: params.payments?.external ? params.payments.external.map(createRightPayment) : [],
+      right: statement.payments.right,
+      rightholder: params.payments?.rightholder || undefined
     },
-    type: 'producer',
+    type: params.type || 'producer',
   }
 }
 
-function createFinancierStatement(params: Partial<FinancierStatement> = {}): FinancierStatement {
+export function createDirectSalesStatement(params: Partial<DirectSalesStatement> = {}): DirectSalesStatement {
   const statement = createStatementBase(params);
   return {
     ...statement,
-    type: 'financier',
+    payments: {
+      income: params.payments?.income ? params.payments.income.map(createIncomePayment) : [],
+      right: statement.payments.right
+    },
+    type: 'directSales',
+    expenseIds: params.expenseIds || [],
   }
 }
+

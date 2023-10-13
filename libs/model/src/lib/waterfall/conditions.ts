@@ -158,8 +158,8 @@ function numericOperator(operator: NumberOperator, current: number, target: numb
   switch (operator) {
     case '==': return current === target;
     case '!=': return current !== target;
-    case '>=': return current >= target; // TODO #9493 check <= & <
-    case '<': return current < target; // TODO #9493 check > & >=
+    case '>=': return current >= target;
+    case '<': return current < target;
     default: throw new Error(`Condition should have one of the operators ${numberOperator.map(o => `"${o}"`).join(', ')}, but got ${operator}`);
   }
 }

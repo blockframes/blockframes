@@ -79,7 +79,7 @@
               <a mat-button routerLink="/c/o/dashboard/crm/import/statements">
                 <mat-icon svgIcon="monetization"></mat-icon><span matLine>4 Statements</span>
               </a>
-              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="incomes.length && expenses.length else notImported"></mat-icon>
+              <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="incomes.length else notImported"></mat-icon>
             </li>
           </ul>
           <a *ngIf="(canInitWaterfall$ | async) else refresh" (click)="initWaterfall()" class="surface">
@@ -367,13 +367,13 @@
           {{ id }}
         </ng-template>
         <ng-template colRef="type" label="Type" let-type sort>
-          {{ type | toLabel: 'rightholderRoles' }}
+          {{ type | toLabel: 'statementType' }}
         </ng-template>
         <ng-template colRef="status" label="Status" let-status sort>
-          {{ status }}
+          {{ status | toLabel: 'statementStatus' }}
         </ng-template>
         <ng-template colRef="" label="Contract Id" let-item sort>
-          {{ getCurrentContract(item) }}
+          {{ getCurrentContract({ contractId: item.contractId, date: item.duration.from }) }}
         </ng-template>
         <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
           {{ getRightholderName(rightholderId) }}
@@ -408,7 +408,7 @@
           {{ id }}
         </ng-template>
         <ng-template colRef="" label="Contract Id" let-item sort>
-          {{ getCurrentContract(item) }}
+          {{ getCurrentContract({ contractId: item.contractId, date: item.date }) }}
         </ng-template>
         <ng-template colRef="date" label="Date" let-date sort defaultSort>
           {{ date | date: 'dd/MM/yyyy' }}
@@ -441,8 +441,11 @@
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>
+        <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
+          {{ getRightholderName(rightholderId) }}
+        </ng-template>
         <ng-template colRef="" label="Contract Id" let-item sort>
-          {{ getCurrentContract(item) }}
+          {{ getCurrentContract({ contractId: item.contractId, date: item.date }) }}
         </ng-template>
         <ng-template colRef="date" label="Date" let-date sort defaultSort>
           {{ date | date: 'dd/MM/yyyy' }}

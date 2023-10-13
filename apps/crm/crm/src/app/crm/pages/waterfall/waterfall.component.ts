@@ -126,7 +126,7 @@ export class WaterfallComponent implements OnInit {
     }
   }
 
-  public getCurrentContract(item: Income | Expense) { // TODO #9493 add Statement type
+  public getCurrentContract(item: { contractId: string, date: Date }) {
     const contracts = getContractAndAmendments(item.contractId, this.contracts);
     const current = getCurrentContract(contracts, item.date);
     if (!current) return '--';

@@ -1,5 +1,5 @@
 import { DocumentMeta } from './meta';
-import type { Media, MovieCurrency, Territory } from './static/types';
+import type { Media, MovieCurrency, PaymentStatus, Territory } from './static/types';
 import { PricePerCurrency } from './utils';
 
 export interface Income {
@@ -13,7 +13,7 @@ export interface Income {
   currency: MovieCurrency;
   offerId?: string;
   titleId?: string;
-  status: 'pending' | 'processed';
+  status: PaymentStatus;
   date: Date;
   /** For waterfall purposes, either medias/territories or sourceId should be defined */
   medias: Media[];

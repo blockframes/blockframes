@@ -51,7 +51,11 @@ import {
   territoriesISOA2,
   rightholderRoles,
   languagesISO3,
-  rightTypes
+  rightTypes,
+  paymentType,
+  paymentStatus,
+  statementStatus,
+  statementType
 } from './static-model';
 
 export type App = typeof app[number];
@@ -177,3 +181,11 @@ export type AccessibilityTypesValue = typeof accessibility[AccessibilityTypes];
 export type EmailErrorCode = typeof emailErrorCode[number];
 
 export type RequestStatus = 'available' | 'sending' | 'sent';
+
+export type PaymentType = keyof typeof paymentType;
+
+export type PaymentStatus = keyof typeof paymentStatus;
+
+export type StatementStatus = keyof typeof statementStatus;
+
+export type StatementType = keyof typeof statementType;

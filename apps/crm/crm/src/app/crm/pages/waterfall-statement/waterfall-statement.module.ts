@@ -5,13 +5,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { NgApexchartsModule } from 'ng-apexcharts';
 
-import { WaterfallStatementComponent } from './waterfall-statement.component';
+import { FilterRightsPipe, WaterfallStatementComponent } from './waterfall-statement.component';
 
 // Blockframes
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
-import { JoinPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { JoinPipeModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -22,7 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [WaterfallStatementComponent],
+  declarations: [WaterfallStatementComponent, FilterRightsPipe],
   imports: [
     CommonModule,
     ClipboardModule,
@@ -35,6 +35,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     PricePerCurrencyModule,
     ToLabelModule,
     JoinPipeModule,
+    MaxLengthModule,
 
     MatIconModule,
     MatButtonModule,

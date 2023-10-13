@@ -1730,6 +1730,34 @@ export const accessibility = {
   private: 'Private',
 } as const;
 
+export const paymentType = {
+  income: 'Income',
+  rightholder: 'Rightholder',
+  right: 'Right'
+} as const;
+
+export const paymentStatus = {
+  pending: 'Pending',
+  received: 'Received',
+  processed: 'Processed'
+} as const;
+
+export const statementStatus = {
+  draft: 'Draft',
+  pending: 'Pending',
+  processed: 'Processed',
+  rejected: 'Rejected'
+} as const;
+
+export const statementType = {
+  salesAgent: 'Sales Agent',
+  mainDistributor: 'Main Distributor',
+  localDistributor: 'Local Distributor',
+  producer: 'Producer',
+  coProducer: 'Co-Producer',
+  directSales: 'Direct Sales',
+} as const;
+
 /**
  * https://docs.google.com/spreadsheets/d/1z4FFNABgDyRGgD5AQZf-ebWbA_m-7hlueFMCVUuk2fI/edit#gid=279324582
  */
@@ -1834,7 +1862,11 @@ export const staticModel = {
   offerStatus,
   movieFormFields,
   accessibility,
-  movieSearchableElements
+  movieSearchableElements,
+  paymentType,
+  paymentStatus,
+  statementStatus,
+  statementType
 };
 
 export const emailErrorCode = ['E01-unauthorized', 'E02-general-error', 'E03-missing-api-key', 'E04-no-template-available'] as const;

@@ -10,7 +10,6 @@ import {
   WaterfallContract,
   WaterfallDocument,
   getDeclaredAmount,
-  getRightsOf,
   isContract
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
@@ -54,7 +53,7 @@ export class WaterfallDocumentComponent implements OnInit {
     if (isContract(this.document)) {
       this.contract = data.contracts.find(c => c.id === this.document.id);
       this.allContracts = [this.contract];
-      this.rights = getRightsOf(data.rights, this.contract);
+      this.rights = data.rights.filter(r => r.contractId === this.contract.id);
       if (this.contract.rootId) {
         this.rootContract = data.contracts.find(c => c.id === this.contract.rootId);
       } else {

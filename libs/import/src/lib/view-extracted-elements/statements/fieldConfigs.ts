@@ -1,4 +1,13 @@
-import { Expense, Media, Movie, MovieCurrency, Statement, Territory, WaterfallRightholder } from '@blockframes/model';
+import {
+  Expense,
+  Media,
+  Movie,
+  MovieCurrency,
+  Statement,
+  StatementType,
+  Territory,
+  WaterfallRightholder
+} from '@blockframes/model';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
   getRightholderId,
@@ -20,6 +29,7 @@ import { StatementService } from '@blockframes/waterfall/statement.service';
 
 export interface FieldsConfig {
   statement: Statement;
+  contractId?: string;
   incomes: {
     sourceId: string;
     territories_included: Territory[];
@@ -76,7 +86,7 @@ export function getStatementConfig(option: StatementConfig) {
         if (titleId) return titleId;
         throw unknownEntityError<string>(value, 'Waterfall name or ID');
       },
-        /* b */ 'statement.contractId': (value: string) => {
+        /* b */ 'contractId': (value: string) => {
         if (!value) throw optionalWarning('Contract ID');
         return value;
       },
@@ -102,8 +112,10 @@ export function getStatementConfig(option: StatementConfig) {
       },
         /* g */ 'statement.type': async (value: string) => {
         if (!value) throw mandatoryError(value, 'Statement type');
-        const type = getKeyIfExists('rightholderRoles', value);
+        const type = getKeyIfExists('statementType', value);
         if (!type) throw wrongValueError(value, 'Statement type');
+        const allowedStatementTypes: StatementType[] = ['mainDistributor', 'localDistributor', 'salesAgent', 'directSales'];
+        if (!allowedStatementTypes.includes(type)) throw wrongValueError(value, `Statement type must me one of the following "${allowedStatementTypes.join(', ')}"`);
         return type;
       },
         /* h */ 'incomes[].id': async (value: string) => {

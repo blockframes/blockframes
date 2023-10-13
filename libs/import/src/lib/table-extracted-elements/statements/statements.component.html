@@ -46,9 +46,24 @@
     <td mat-cell *matCellDef="let element"> {{ element.statement.id ? element.statement.id : '--' }} </td>
   </ng-container>
 
+  <ng-container matColumnDef="statement.duration.from">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> From </th>
+    <td mat-cell *matCellDef="let element"> {{ element.statement.duration.from | date: 'dd/MM/yyyy' }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="statement.duration.to">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>To </th>
+    <td mat-cell *matCellDef="let element"> {{ element.statement.duration.to | date: 'dd/MM/yyyy' }} </td>
+  </ng-container>
+
   <ng-container matColumnDef="statement.waterfallId">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Waterfall Id </th>
     <td mat-cell *matCellDef="let element"> {{ element.statement.waterfallId ? element.statement.waterfallId : '--' }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="statement.type">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
+    <td mat-cell *matCellDef="let element"> {{ element.statement.type | toLabel: 'statementType' }} </td>
   </ng-container>
 
   <ng-container matColumnDef="statement.contractId">

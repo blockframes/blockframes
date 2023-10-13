@@ -1,6 +1,17 @@
 import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 import * as admin from 'firebase-admin';
-import { Block, Right, Statement, Waterfall, WaterfallContract, WaterfallDocument, convertDocumentTo, isContract, isDistributorStatement } from '@blockframes/model';
+import {
+  Block,
+  Right,
+  Statement,
+  Waterfall,
+  WaterfallContract,
+  WaterfallDocument,
+  convertDocumentTo,
+  isContract,
+  isDirectSalesStatement,
+  isDistributorStatement
+} from '@blockframes/model';
 import { waterfall } from '@blockframes/waterfall/main';
 import { getDocumentSnap, toDate } from '@blockframes/firebase-utils/firebase-utils';
 import { BlockframesChange, BlockframesSnapshot, removeAllSubcollections } from '@blockframes/firebase-utils';
@@ -109,16 +120,14 @@ export async function onWaterfallStatementDelete(docSnapshot: BlockframesSnapsho
 
   const batch = db.batch();
 
-  // Remove incomes and expenses 
-  const incomes = await Promise.all(statement.incomeIds.map(id => getDocumentSnap(`incomes/${id}`, db)));
-  incomes.forEach(doc => batch.delete(doc.ref));
+  if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
+    // Remove incomes and expenses 
+    const incomes = await Promise.all(statement.incomeIds.map(id => getDocumentSnap(`incomes/${id}`, db)));
+    incomes.forEach(doc => batch.delete(doc.ref));
 
-  if (isDistributorStatement(statement)) {
     const expenses = await Promise.all(statement.expenseIds.map(id => getDocumentSnap(`expenses/${id}`, db)));
     expenses.forEach(doc => batch.delete(doc.ref));
   }
-
-  // TODO #9493 also remove statements linked to this one with statement.parentPayments
 
   return batch.commit();
 }
