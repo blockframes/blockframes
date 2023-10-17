@@ -10,7 +10,7 @@
 
   <section>
     <mat-form-field appearance="fill">
-      <mat-label>Waternall Version</mat-label>
+      <mat-label>Waterfall Version</mat-label>
       <mat-select (selectionChange)="switchToVersion($event.value)" [(value)]="state.version.id">
         <mat-option *ngFor="let versions of waterfall.versions" [value]="versions.id">
           {{ versions.name }}

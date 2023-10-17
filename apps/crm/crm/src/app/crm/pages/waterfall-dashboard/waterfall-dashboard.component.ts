@@ -250,4 +250,7 @@ export class WaterfallDashboardComponent implements OnInit {
     this.displayRightholderStatements(statement.rightholderId);
   }
 
+  public goTo(type: 'statement' | 'rightholder', id: string) {
+    this.router.navigate(['/c/o/dashboard/crm/waterfall', this.waterfall.id, type, id]);
+  }
 }
