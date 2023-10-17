@@ -16,7 +16,7 @@ export class RightHoldersComponent {
     } else if (this.path === '/assets/images/demo-cannes/Creation_Waterfall_2.svg') {
       this.path = '/assets/images/demo-cannes/Creation_Waterfall_3.svg';
     } else if (this.path === '/assets/images/demo-cannes/Creation_Waterfall_3.svg') {
-      this.path = '/assets/images/demo-cannes/Creation Interactive.svg';
+      this.path = '/assets/images/demo-cannes/creation-interactive.svg';
     } else {
       this.path = '/assets/images/demo-cannes/Creation_Waterfall_1.svg';
     }
