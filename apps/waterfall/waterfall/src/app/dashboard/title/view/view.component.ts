@@ -36,12 +36,12 @@ export class TitleViewComponent {
       label: 'Waterfall',
     },
     {
-      path: 'charts',
-      label: 'Charts',
-    },
-    {
       path: 'avails',
       label: 'World Sales',
+    },
+    {
+      path: 'charts',
+      label: 'Right Holders',
     },
   ];
 

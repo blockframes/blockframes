@@ -8,13 +8,13 @@ import { Component } from '@angular/core';
 })
 export class AvailsComponent {
 
-  path = '/assets/images/demo-cannes/world sales.svg';
+  path = '/assets/images/demo-cannes/Avails_first.svg';
 
   switch() {
-    if(this.path === '/assets/images/demo-cannes/world sales.svg') {
-      this.path = '/assets/images/demo-cannes/World_Sales_2.svg';
+    if (this.path === '/assets/images/demo-cannes/Avails_first.svg') {
+      this.path = '/assets/images/demo-cannes/Avails_second.svg';
     } else {
-      this.path = '/assets/images/demo-cannes/world sales.svg';
+      this.path = '/assets/images/demo-cannes/Avails_first.svg';
     }
   }
 }
