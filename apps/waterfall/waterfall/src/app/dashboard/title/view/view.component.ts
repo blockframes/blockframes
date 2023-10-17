@@ -37,7 +37,7 @@ export class TitleViewComponent {
     },
     {
       path: 'charts',
-      label: 'Charts',
+      label: 'Right Holders',
     },
     {
       path: 'avails',
