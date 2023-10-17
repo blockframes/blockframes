@@ -20,17 +20,17 @@ export const actions: Action[] = [
   // Soficinema fr
   action('appendHorizontal', { id: 'soficinema-fr', previous: 'soficinema-2', blameId: 'producer', children: [
     { type: 'right', id: 'soficinema-fr-cine-commercial', orgId: 'soficinema', percent: 0.3, conditions: and([
-      condition('terms', { type: 'medias', operator: 'in', list: ['cine-commercial'] }),
+      condition('terms', { type: 'medias', operator: 'in', list: ['cine-commercial'] as any }),
       condition('terms', { type: 'territories', operator: 'in', list: ['france'] }),
       condition('orgRevenu', { orgId: 'soficinema', operator: '<', target: 115_000 }),
     ]) },
     { type: 'right', id: 'soficinema-fr-cine-non-commercial', orgId: 'soficinema', percent: 0.5, conditions: and([
-      condition('terms', { type: 'medias', operator: 'in',  list: ['cine-non-commercial'] }),
+      condition('terms', { type: 'medias', operator: 'in',  list: ['cine-non-commercial'] as any }),
       condition('terms', { type: 'territories', operator: 'in', list: ['france'] }),
       condition('orgRevenu', { orgId: 'soficinema', operator: '<', target: 115_000 }),
     ])},
     { type: 'right', id: 'soficinema-fr-tv', orgId: 'soficinema', percent: 0.85, conditions: and([
-      condition('terms', { type: 'medias', operator: 'in',  list: ['tv'] }),
+      condition('terms', { type: 'medias', operator: 'in',  list: ['tv'] as any }),
       condition('terms', { type: 'territories', operator: 'in', list: ['france'] }),
       condition('orgRevenu', { orgId: 'soficinema', operator: '<', target: 115_000 }),
     ])},
@@ -42,11 +42,11 @@ export const actions: Action[] = [
   // ])},
   
   action('append', { id: 'soficinema-row-1', orgId: 'soficinema', previous: 'soficinema-2', percent: 0.15, conditions: and([
-    condition('terms', { type: 'territories', operator: 'not-in', list: ['france', 'usa', 'canada'] }),
+    condition('terms', { type: 'territories', operator: 'not-in', list: ['france', 'usa', 'canada'] as any }),
     condition('orgRevenu', { orgId: 'soficinema', operator: '<', target: 115_000 }),
   ])}),
   action('append', { id: 'soficinema-us', orgId: 'soficinema', previous: 'soficinema-2', percent: 0.9, conditions: and([
-    condition('terms', { type: 'territories', operator: 'in', list: ['usa', 'canada'] }),
+    condition('terms', { type: 'territories', operator: 'in', list: ['usa', 'canada'] as any }),
     condition('orgRevenu', { orgId: 'soficinema', operator: '<', target: 115_000 }),
   ])}),
 
@@ -154,29 +154,29 @@ export const actions: Action[] = [
   // INCOME //
   ////////////
   // Netflix
-  action('income', { id: 'income_netflix_0', amount: 118_966, contractId: 'netflix<->playtime', from: 'us_netflix', to: 'us_svod_playtime', territories: ['us'], medias: ['svod'] }),
-  action('income', { id: 'income_netflix_1', amount: 97_335, contractId: 'netflix<->playtime', from: 'row_netflix', to: 'row_svod_playtime', territories: ['row'], medias: ['svod'] }),
+  action('income', { id: 'income_netflix_0', amount: 118_966, contractId: 'netflix<->playtime', from: 'us_netflix', to: 'us_svod_playtime', territories: ['us'] as any, medias: ['svod'] as any }),
+  action('income', { id: 'income_netflix_1', amount: 97_335, contractId: 'netflix<->playtime', from: 'row_netflix', to: 'row_svod_playtime', territories: ['row'] as any, medias: ['svod'] as any }),
 
   // Madman
-  action('income', { id: 'income_madman_0', amount: 26_077, from: 'all_madman', to: 'row_playtime', territories: ['row'], medias: [''] }),
+  action('income', { id: 'income_madman_0', amount: 26_077, from: 'all_madman', to: 'row_playtime', territories: ['row'] as any, medias: [''] as any }),
 
   // Telepool
-  action('income', { id: 'income_telepool_0', amount: 50_000, from: 'all_telepool', to: 'row_playtime', territories: ['row'], medias: [''] }),
+  action('income', { id: 'income_telepool_0', amount: 50_000, from: 'all_telepool', to: 'row_playtime', territories: ['row'] as any, medias: [''] as any }),
   
   // FIRST_RUN
-  action('income', { id: 'income_firstrun_0', amount: 1_200, from: 'all_firstrun', to: 'us_playtime', territories: ['us'], medias: [''] }),
+  action('income', { id: 'income_firstrun_0', amount: 1_200, from: 'all_firstrun', to: 'us_playtime', territories: ['us'] as any, medias: [''] as any }),
   
   // ENCORE_INFLIGHT
-  action('income', { id: 'income_encoreinflight_0', amount: 0, from: 'all_encoreinflight', to: 'row_playtime', territories: ['row'], medias: [''] }),
+  action('income', { id: 'income_encoreinflight_0', amount: 0, from: 'all_encoreinflight', to: 'row_playtime', territories: ['row'] as any, medias: [''] as any }),
   
   // Festival
-  action('income', { id: 'income_festival_0', amount: 1_200, from: 'all_festival', to: 'festival_playtime', territories: ['row'], medias: ['festival'] }),
+  action('income', { id: 'income_festival_0', amount: 1_200, from: 'all_festival', to: 'festival_playtime', territories: ['row'] as any, medias: ['festival'] as any }),
 
   // Orange
-  action('income', { id: 'income_orange_0', amount: 15_000, from: 'all_orange', to: 'france_tv_playtime', territories: ['france'], medias: ['tv'] }),
+  action('income', { id: 'income_orange_0', amount: 15_000, from: 'all_orange', to: 'france_tv_playtime', territories: ['france'], medias: ['tv'] as any }),
 
 
   // Netflix (prochaine période)
-  action('income', { id: 'income_netflix_2', amount: 24_465, contractId: 'netflix<->playtime', from: 'us_netflix', to: 'us_svod_playtime', territories: ['us'], medias: ['svod'] }),
-  action('income', { id: 'income_netflix_3', amount: 20_016, contractId: 'netflix<->playtime', from: 'row_netflix', to: 'row_svod_playtime', territories: ['row'], medias: ['svod'] }),
+  action('income', { id: 'income_netflix_2', amount: 24_465, contractId: 'netflix<->playtime', from: 'us_netflix', to: 'us_svod_playtime', territories: ['us'] as any, medias: ['svod'] as any }),
+  action('income', { id: 'income_netflix_3', amount: 20_016, contractId: 'netflix<->playtime', from: 'row_netflix', to: 'row_svod_playtime', territories: ['row'] as any, medias: ['svod'] as any }),
 ];

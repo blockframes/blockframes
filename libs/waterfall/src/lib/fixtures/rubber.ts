@@ -15,7 +15,7 @@ export const actions: Action[] = [
   action('prepend', { id: 'cnc_support', orgId: 'cnc', next: [], percent: 0}),
 
   action('prepend', { id: 'extract_author', orgId: 'author', next: 'rnpp', percent: 0.01, conditions: and([
-    condition('terms', { type: 'medias', operator: 'in', list: ['extract'] }),
+    condition('terms', { type: 'medias', operator: 'in', list: ['extract'] as any }),
     condition('terms', { type: 'territories', operator: 'in', list: ['france'] }),
   ]) }),
 
@@ -106,11 +106,11 @@ export const actions: Action[] = [
   action('appendHorizontal', { id: 'row_author', blameId: 'realistism', previous: 'rnpp', children: [
     { type: 'right', id: 'row_all_except_tv_author', orgId: 'author', percent: 0.005, conditions: and([
       condition('orgTurnover', { orgId: 'author', operator: '>=', target: 11_000 }),
-      condition('terms', { type: 'medias', operator: 'not-in', list: ['tv'] }),
+      condition('terms', { type: 'medias', operator: 'not-in', list: ['tv'] as any }),
     ])},
     { type: 'right', id: 'row_tv_author', orgId: 'author', percent: 0.01, conditions: and([
       condition('orgTurnover', { orgId: 'author', operator: '>=', target: 11_000 }),
-      condition('terms', { type: 'medias', operator: 'in', list: ['tv'] }),
+      condition('terms', { type: 'medias', operator: 'in', list: ['tv'] as any }),
       condition('terms', { type: 'territories', operator: 'not-in', list: ['france', 'germany'] }),
       // TODO: add not-in sacd dynamic terms -> Update Right
     ])}
@@ -137,22 +137,22 @@ export const actions: Action[] = [
   action('income', { id: 'cnc_support', contractId: 'cnc_support<->rnpp', amount: 31_992, from: 'cnc', to: 'cnc_support', territories: ['france'], medias: [] }),
   
   // Salle FR
-  action('income', { id: 'salle_france', amount: 115_969, from: 'cine_theater', to: 'com_cine_commercial_ufo', territories: ['france'], medias: ['salle']}),
+  action('income', { id: 'salle_france', amount: 115_969, from: 'cine_theater', to: 'com_cine_commercial_ufo', territories: ['france'], medias: ['salle'] as any }),
   
   // video FR
   action('emitEvent', { eventId: 'fr_dvd_sold', value: 4_000 }),
-  action('income', { id: 'dvd_1', amount: 6_650, from: 'fr_sell', to: 'sell_rd', territories: ['france'], medias: ['dvd']}),
+  action('income', { id: 'dvd_1', amount: 6_650, from: 'fr_sell', to: 'sell_rd', territories: ['france'], medias: ['dvd'] as any }),
   action('emitEvent', { eventId: 'fr_dvd_sold', value: 4_344 }),
-  action('income', { id: 'dvd_2', amount: 22_433, from: 'fr_sell', to: 'sell_rd', territories: ['france'], medias: ['dvd']}),
-  action('income', { id: 'collector', amount: 24_125, from: 'fr_collectior', to: 'collector_rd', territories: ['france'], medias: ['dvd']}),
-  action('income', { id: 'rent', amount: 5_290, from: 'fr_rent', to: 'rent_rd', territories: ['france'], medias: ['dvd']}),
-  action('income', { id: 'svod', amount: 2_000, from: 'fr_svod', to: 'svod_rd', territories: ['france'], medias: ['svod']}),
-  action('income', { id: 'vod', amount: 3_948, from: 'fr_vod', to: 'vod_rd', territories: ['france'], medias: ['tvod']}),
+  action('income', { id: 'dvd_2', amount: 22_433, from: 'fr_sell', to: 'sell_rd', territories: ['france'], medias: ['dvd'] as any }),
+  action('income', { id: 'collector', amount: 24_125, from: 'fr_collectior', to: 'collector_rd', territories: ['france'], medias: ['dvd'] as any }),
+  action('income', { id: 'rent', amount: 5_290, from: 'fr_rent', to: 'rent_rd', territories: ['france'], medias: ['dvd'] as any }),
+  action('income', { id: 'svod', amount: 2_000, from: 'fr_svod', to: 'svod_rd', territories: ['france'], medias: ['svod'] as any }),
+  action('income', { id: 'vod', amount: 3_948, from: 'fr_vod', to: 'vod_rd', territories: ['france'], medias: ['tvod'] as any }),
   
   // TV FR
-  action('income', { id: 'tv', amount: 10_000, from: 'fr_tv', to: 'ufo_com', territories: ['france'], medias: ['tv']}),
+  action('income', { id: 'tv', amount: 10_000, from: 'fr_tv', to: 'ufo_com', territories: ['france'], medias: ['tv'] as any }),
   // ROW
-  action('income', { id: 'export', amount: 380_739, from: 'row_all', to: 'com_elledriver', territories: ['row'], medias: ['vod', 'tv', 'salle', 'svod', 'dvd']}),
+  action('income', { id: 'export', amount: 380_739, from: 'row_all', to: 'com_elledriver', territories: ['row'] as any, medias: ['vod', 'tv', 'salle', 'svod', 'dvd'] as any }),
 
   // Update right
 
