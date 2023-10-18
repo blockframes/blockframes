@@ -61,7 +61,7 @@ export class WaterfallStatementComponent implements OnInit {
   public rightDetails: RightDetails[][] = [];
   public currency = mainCurrency;
   public options = { xAxis: { categories: [] }, series: [] };
-  public formatter = { percent: { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` } };
+  public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
   public state: WaterfallState;
 
   private allRights: Right[];
