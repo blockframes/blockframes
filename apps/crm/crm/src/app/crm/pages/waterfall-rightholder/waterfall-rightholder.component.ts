@@ -28,10 +28,10 @@ export class WaterfallRightholderComponent implements OnInit {
   public rightholder: WaterfallRightholder;
   public waterfallRoleControl = new FormControl<RightholderRole[]>(undefined, [Validators.required]);
   public rights: Right[] = [];
-  private statements: Statement[];
   public options = { xAxis: { categories: [] }, series: [] };
   public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
-  public state: WaterfallState;
+  private statements: Statement[];
+  private state: WaterfallState;
 
   constructor(
     private movieService: MovieService,
