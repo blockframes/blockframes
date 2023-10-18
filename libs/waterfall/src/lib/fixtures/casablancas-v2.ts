@@ -129,15 +129,15 @@ const sellers: Action[] = [
       {
         type: 'right', id: 'playtime_row_mg_fr_tv', orgId: 'playtime', percent: 0.15, pools: ['playtime_row_mg', 'amortization'], conditions: and([
           condition('poolRevenu', { pool: 'playtime_row_mg', operator: '<', target: 50_000 }),
-          condition('terms', { type: 'territories', operator: 'in', list: ['fr'] }),
-          condition('terms', { type: 'medias', operator: 'in', list: ['tv'] }),
+          condition('terms', { type: 'territories', operator: 'in', list: ['fr'] as any }),
+          condition('terms', { type: 'medias', operator: 'in', list: ['tv'] as any }),
         ])
       },
       {
         type: 'right', id: 'playtime_row_mg_fr_svod', orgId: 'playtime', percent: 0.5, pools: ['playtime_row_mg', 'amortization'], conditions: and([
           condition('poolRevenu', { pool: 'playtime_row_mg', operator: '<', target: 50_000 }),
-          condition('terms', { type: 'territories', operator: 'in', list: ['fr'] }),
-          condition('terms', { type: 'medias', operator: 'in', list: ['svod'] }),
+          condition('terms', { type: 'territories', operator: 'in', list: ['fr'] as any }),
+          condition('terms', { type: 'medias', operator: 'in', list: ['svod'] as any }),
         ])
       },
       {
@@ -149,13 +149,13 @@ const sellers: Action[] = [
       {
         type: 'right', id: 'playtime_row_mg_us', orgId: 'playtime', percent: 0.1, pools: ['playtime_row_mg', 'amortization'], conditions: and([
           condition('poolRevenu', { pool: 'playtime_row_mg', operator: '<', target: 50_000 }),
-          condition('terms', { type: 'territories', operator: 'in', list: ['us', 'can'] }),
+          condition('terms', { type: 'territories', operator: 'in', list: ['us', 'can'] as any }),
         ])
       },
       {
         type: 'right', id: 'playtime_row_mg_row', orgId: 'playtime', percent: 0.7, pools: ['playtime_row_mg', 'amortization'], conditions: and([
           condition('poolRevenu', { pool: 'playtime_row_mg', operator: '<', target: 50_000 }),
-          condition('terms', { type: 'territories', operator: 'not-in', list: ['us', 'can', 'fr'] }),
+          condition('terms', { type: 'territories', operator: 'not-in', list: ['us', 'can', 'fr'] as any }),
         ])
       },
     ]
@@ -202,28 +202,28 @@ const rnpp: Action[] = [
       {
         type: 'right', id: 'soficinema_rnpp_fr_cine', orgId: 'soficinema', percent: 0.3, conditions: and([
           condition('orgRevenu', { orgId: 'soficinema', operator: '<', target: 115_000 }),
-          condition('terms', { type: 'territories', operator: 'in', list: ['fr'] }),
-          condition('terms', { type: 'medias', operator: 'in', list: ['salles'] }),
+          condition('terms', { type: 'territories', operator: 'in', list: ['fr'] as any }),
+          condition('terms', { type: 'medias', operator: 'in', list: ['salles'] as any }),
         ])
       },
       {
         type: 'right', id: 'soficinema_rnpp_fr_video', orgId: 'soficinema', percent: 0.5, conditions: and([
           condition('orgRevenu', { orgId: 'soficinema', operator: '<', target: 115_000 }),
-          condition('terms', { type: 'territories', operator: 'in', list: ['fr'] }),
-          condition('terms', { type: 'medias', operator: 'in', list: ['dvd', 'vod', 'svod'] }),
+          condition('terms', { type: 'territories', operator: 'in', list: ['fr'] as any }),
+          condition('terms', { type: 'medias', operator: 'in', list: ['dvd', 'vod', 'svod'] as any }),
         ])
       },
       {
         type: 'right', id: 'soficinema_rnpp_fr_tv', orgId: 'soficinema', percent: 0.85, conditions: and([
           condition('orgRevenu', { orgId: 'soficinema', operator: '<', target: 115_000 }),
-          condition('terms', { type: 'territories', operator: 'in', list: ['fr'] }),
-          condition('terms', { type: 'medias', operator: 'in', list: ['tv'] }),
+          condition('terms', { type: 'territories', operator: 'in', list: ['fr'] as any }),
+          condition('terms', { type: 'medias', operator: 'in', list: ['tv'] as any }),
         ])
       },
       {
         type: 'right', id: 'soficinema_rnpp_us', orgId: 'soficinema', percent: 1, conditions: and([
           condition('orgRevenu', { orgId: 'soficinema', operator: '<', target: 115_000 }),
-          condition('terms', { type: 'territories', operator: 'in', list: ['us', 'can'] }),
+          condition('terms', { type: 'territories', operator: 'in', list: ['us', 'can'] as any }),
         ])
       },
       {
@@ -232,13 +232,13 @@ const rnpp: Action[] = [
             type: 'right', id: 'soficinema_rnpp_row_1', orgId: 'soficinema', percent: 1, conditions: and([
               condition('orgRevenu', { orgId: 'soficinema', operator: '<', target: 115_000 }),
               condition('poolRevenu', { pool: 'playtime_row_mg', operator: '<', target: 50_000 }),
-              condition('terms', { type: 'territories', operator: 'not-in', list: ['us', 'can', 'fr'] }),
+              condition('terms', { type: 'territories', operator: 'not-in', list: ['us', 'can', 'fr'] as any }),
             ])
           },
           {
             type: 'right', id: 'soficinema_rnpp_row_2', orgId: 'soficinema', percent: 0.8, conditions: and([
               condition('orgRevenu', { orgId: 'soficinema', operator: '<', target: 115_000 }),
-              condition('terms', { type: 'territories', operator: 'not-in', list: ['us', 'can', 'fr'] }),
+              condition('terms', { type: 'territories', operator: 'not-in', list: ['us', 'can', 'fr'] as any }),
             ])
           }
         ]
@@ -407,11 +407,11 @@ const expensesAndIncomes: Action[] = [
   // 09/03/16	UFO	88_500 €	expense_fr	cine
   action('expense', { orgId: 'ufo', type: 'expense_fr', amount: 88_500, date: new Date('2016/03/09') }),
   // 09/03/16	fr_cine	fr_cine_1	fr_cine	6_919 €
-  action('income', { id: 'fr_cine_1', contractId: 'ufo_fr', date: new Date('2016/03/09'), from: 'fr_cine', to: 'ufo_fr_com_cine', territories: ['fr'], medias: ['salle'], amount: 6_919 }),
+  action('income', { id: 'fr_cine_1', contractId: 'ufo_fr', date: new Date('2016/03/09'), from: 'fr_cine', to: 'ufo_fr_com_cine', territories: ['fr'] as any, medias: ['salle'] as any, amount: 6_919 }),
   // 09/03/16	fr_dvd	fr_dvd_1	fr_dvd	0 €
-  action('income', { id: 'fr_dvd_1', contractId: 'ufo_fr', date: new Date('2016/03/09'), from: 'fr_dvd', to: 'ufo_fr_com_dvd', territories: ['fr'], medias: ['dvd'], amount: 0 }),
+  action('income', { id: 'fr_dvd_1', contractId: 'ufo_fr', date: new Date('2016/03/09'), from: 'fr_dvd', to: 'ufo_fr_com_dvd', territories: ['fr'] as any, medias: ['dvd'] as any, amount: 0 }),
   // 09/03/16	fr_vod	fr_vod_1	fr_vod	0 €
-  action('income', { id: 'fr_vod_1', contractId: 'ufo_fr', date: new Date('2016/03/09'), from: 'fr_vod', to: 'ufo_fr_com_vod', territories: ['fr'], medias: ['vod'], amount: 0 }),
+  action('income', { id: 'fr_vod_1', contractId: 'ufo_fr', date: new Date('2016/03/09'), from: 'fr_vod', to: 'ufo_fr_com_vod', territories: ['fr'] as any, medias: ['vod'] as any, amount: 0 }),
 
   // --------- BLOCK 30/06/16 --------- 
   // 30/06/16	Playtime	10_828 €	expense_row	distrib
@@ -427,7 +427,7 @@ const expensesAndIncomes: Action[] = [
   // 31/12/16	Playtime	17_821 €	expense_row	distrib
   action('expense', { orgId: 'playtime', type: 'expense_row', amount: 17_821, date: new Date('2016/12/31') }),
   // 31/12/16	festivals	festivals_1	festivals	1_200 €
-  action('income', { id: 'festivals_1', contractId: 'festivals', date: new Date('2016/12/31'), from: 'festivals', to: 'playtime_com_festival', territories: ['all'], medias: ['festival'], amount: 1_200 }),
+  action('income', { id: 'festivals_1', contractId: 'festivals', date: new Date('2016/12/31'), from: 'festivals', to: 'playtime_com_festival', territories: ['all'] as any, medias: ['festival'], amount: 1_200 }),
 
   // --------- BLOCK 28/02/17 --------- 
   // 28/02/17	Playtime	270 €	expense_row	cnc
@@ -435,11 +435,11 @@ const expensesAndIncomes: Action[] = [
   // 28/02/17	Playtime	2_554 €	expense_row	distrib
   action('expense', { orgId: 'playtime', type: 'expense_row', amount: 2_554, date: new Date('2017/02/28') }),
   // 28/02/17	madman_au	madman_1	row_all	26_077 €
-  action('income', { id: 'madman_1', contractId: 'madman_au', date: new Date('2017/02/28'), from: 'row_all', to: 'playtime_row_com_all', territories: ['row'], medias: ['all'], amount: 26_077 }),
+  action('income', { id: 'madman_1', contractId: 'madman_au', date: new Date('2017/02/28'), from: 'row_all', to: 'playtime_row_com_all', territories: ['row'] as any, medias: ['all'] as any, amount: 26_077 }),
   // 28/02/17	netflix_row	netflix_row_1	row_svod	11_509 €
-  action('income', { id: 'netflix_row_1', contractId: 'netflix_row', date: new Date('2017/02/28'), from: 'row_svod', to: 'row_svod_com', territories: ['row'], medias: ['svod'], amount: 11_509 }),
+  action('income', { id: 'netflix_row_1', contractId: 'netflix_row', date: new Date('2017/02/28'), from: 'row_svod', to: 'row_svod_com', territories: ['row'] as any, medias: ['svod'] as any, amount: 11_509 }),
   // 28/02/17	netflix_us	netflix_us_1	us_svod	11_509 €
-  action('income', { id: 'netflix_us_1', contractId: 'netflix_us', date: new Date('2017/02/28'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'], medias: ['svod'], amount: 11_509 }),
+  action('income', { id: 'netflix_us_1', contractId: 'netflix_us', date: new Date('2017/02/28'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'] as any, medias: ['svod'] as any, amount: 11_509 }),
 
   // --------- BLOCK 30/04/17 --------- 
   // 30/04/17	Playtime	-4_314 €	expense_row	distrib
@@ -449,17 +449,17 @@ const expensesAndIncomes: Action[] = [
   // 30/04/17	Playtime	7_500 €	expense_us	
   action('expense', { orgId: 'playtime', type: 'expense_us', amount: 7_500, date: new Date('2017/04/30') }),
   // 30/04/17	netflix_row	netflix_row_2	row_svod	10_549 €
-  action('income', { id: 'netflix_row_2', contractId: 'netflix_row', date: new Date('2017/04/30'), from: 'row_svod', to: 'row_svod_com', territories: ['row'], medias: ['svod'], amount: 10_549 }),
+  action('income', { id: 'netflix_row_2', contractId: 'netflix_row', date: new Date('2017/04/30'), from: 'row_svod', to: 'row_svod_com', territories: ['row'] as any, medias: ['svod'] as any, amount: 10_549 }),
   // 30/04/17	netflix_us	netflix_us_2	us_svod	12_893 €
-  action('income', { id: 'netflix_us_2', contractId: 'netflix_us', date: new Date('2017/04/30'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'], medias: ['svod'], amount: 12_893 }),
+  action('income', { id: 'netflix_us_2', contractId: 'netflix_us', date: new Date('2017/04/30'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'] as any, medias: ['svod'] as any, amount: 12_893 }),
 
   // --------- BLOCK 15/06/17 --------- 
   // 15/06/17	fr_cine	fr_cine_2	fr_cine	249 €
-  action('income', { id: 'fr_cine_2', contractId: 'ufo_fr', date: new Date('2017/06/15'), from: 'fr_cine', to: 'ufo_fr_com_cine', territories: ['fr'], medias: ['salle'], amount: 249 }),
+  action('income', { id: 'fr_cine_2', contractId: 'ufo_fr', date: new Date('2017/06/15'), from: 'fr_cine', to: 'ufo_fr_com_cine', territories: ['fr'] as any, medias: ['salle'] as any, amount: 249 }),
   // 15/06/17	fr_dvd	fr_dvd_2	fr_dvd	1_030 €
-  action('income', { id: 'fr_dvd_2', contractId: 'ufo_fr', date: new Date('2017/06/15'), from: 'fr_dvd', to: 'ufo_fr_com_dvd', territories: ['fr'], medias: ['dvd'], amount: 1_030 }),
+  action('income', { id: 'fr_dvd_2', contractId: 'ufo_fr', date: new Date('2017/06/15'), from: 'fr_dvd', to: 'ufo_fr_com_dvd', territories: ['fr'] as any, medias: ['dvd'] as any, amount: 1_030 }),
   // 15/06/17	fr_vod	fr_vod_2	fr_vod	3_117 €
-  action('income', { id: 'fr_vod_2', contractId: 'ufo_fr', date: new Date('2017/06/15'), from: 'fr_vod', to: 'ufo_fr_com_vod', territories: ['fr'], medias: ['vod'], amount: 3_117 }),
+  action('income', { id: 'fr_vod_2', contractId: 'ufo_fr', date: new Date('2017/06/15'), from: 'fr_vod', to: 'ufo_fr_com_vod', territories: ['fr'] as any, medias: ['vod'] as any, amount: 3_117 }),
 
   // --------- BLOCK 31/10/17 --------- 
   // 31/10/17	Playtime	404 €	expense_row	cnc
@@ -467,13 +467,13 @@ const expensesAndIncomes: Action[] = [
   // 31/10/17	Playtime	96 €	expense_row	distrib
   action('expense', { orgId: 'playtime', type: 'expense_row', amount: 96, date: new Date('2017/10/31') }),
   // 31/10/17	netflix_row	netflix_row_3	row_svod	19_189 €
-  action('income', { id: 'netflix_row_3', contractId: 'netflix_row', date: new Date('2017/10/31'), from: 'row_svod', to: 'row_svod_com', territories: ['row'], medias: ['svod'], amount: 19_189 }),
+  action('income', { id: 'netflix_row_3', contractId: 'netflix_row', date: new Date('2017/10/31'), from: 'row_svod', to: 'row_svod_com', territories: ['row'] as any, medias: ['svod'] as any, amount: 19_189 }),
   // 31/10/17	netflix_us	netflix_us_3	us_svod	23_453 €
-  action('income', { id: 'netflix_us_3', contractId: 'netflix_us', date: new Date('2017/10/31'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'], medias: ['svod'], amount: 23_453 }),
+  action('income', { id: 'netflix_us_3', contractId: 'netflix_us', date: new Date('2017/10/31'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'] as any, medias: ['svod'] as any, amount: 23_453 }),
   // 31/10/17	ocs_fr_tv	ocs_1	fr_tv	15_000 €
-  action('income', { id: 'ocs_1', contractId: 'ocs_fr_tv', date: new Date('2017/10/31'), from: 'fr_tv', to: 'playtime_fr_com_tv', territories: ['fr'], medias: ['tv'], amount: 15_000 }),
+  action('income', { id: 'ocs_1', contractId: 'ocs_fr_tv', date: new Date('2017/10/31'), from: 'fr_tv', to: 'playtime_fr_com_tv', territories: ['fr'] as any, medias: ['tv'] as any, amount: 15_000 }),
   // 31/10/17	telepool_ger	telepool_1	row_all	50_000 €
-  action('income', { id: 'telepool_1', contractId: 'telepool_ger', date: new Date('2017/10/31'), from: 'row_all', to: 'playtime_row_com_all', territories: ['row'], medias: ['all'], amount: 50_000 }),
+  action('income', { id: 'telepool_1', contractId: 'telepool_ger', date: new Date('2017/10/31'), from: 'row_all', to: 'playtime_row_com_all', territories: ['row'] as any, medias: ['all'] as any, amount: 50_000 }),
 
   // --------- BLOCK 31/07/18 --------- 
   // 31/7/18	Playtime	257 €	expense_row	cnc
@@ -481,19 +481,19 @@ const expensesAndIncomes: Action[] = [
   // 31/7/18	Playtime	84 €	expense_row	distrib
   action('expense', { orgId: 'playtime', type: 'expense_row', amount: 84, date: new Date('2018/07/31') }),
   // 31/07/18	netflix_row	netflix_row_4	row_svod	28_018 €
-  action('income', { id: 'netflix_row_4', contractId: 'netflix_row', date: new Date('2018/07/31'), from: 'row_svod', to: 'row_svod_com', territories: ['row'], medias: ['svod'], amount: 28_018 }),
+  action('income', { id: 'netflix_row_4', contractId: 'netflix_row', date: new Date('2018/07/31'), from: 'row_svod', to: 'row_svod_com', territories: ['row'] as any, medias: ['svod'] as any, amount: 28_018 }),
 
   // 31/07/18	netflix_us	netflix_us_4	us_svod	34_245 €
-  action('income', { id: 'netflix_us_4', contractId: 'netflix_us', date: new Date('2018/07/31'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'], medias: ['svod'], amount: 34_245 }),
+  action('income', { id: 'netflix_us_4', contractId: 'netflix_us', date: new Date('2018/07/31'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'] as any, medias: ['svod'] as any, amount: 34_245 }),
   // --------- BLOCK 31/10/18 --------- 
   // 31/10/18	Playtime	88 €	expense_row	cnc
   action('expense', { orgId: 'playtime', type: 'expense_row', amount: 88, date: new Date('2018/10/31') }),
   // 31/10/18	Playtime	28 €	expense_row	distrib
   action('expense', { orgId: 'playtime', type: 'expense_row', amount: 28, date: new Date('2018/10/31') }),
   // 31/10/18	netflix_row	netflix_row_5	row_svod	9_636 €
-  action('income', { id: 'netflix_row_5', contractId: 'netflix_row', date: new Date('2018/10/31'), from: 'row_svod', to: 'row_svod_com', territories: ['row'], medias: ['svod'], amount: 9_636 }),
+  action('income', { id: 'netflix_row_5', contractId: 'netflix_row', date: new Date('2018/10/31'), from: 'row_svod', to: 'row_svod_com', territories: ['row'] as any, medias: ['svod'] as any, amount: 9_636 }),
   // 31/10/18	netflix_us	netflix_us_5	us_svod	11_777 €
-  action('income', { id: 'netflix_us_5', contractId: 'netflix_us', date: new Date('2018/10/31'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'], medias: ['svod'], amount: 11_777 }),
+  action('income', { id: 'netflix_us_5', contractId: 'netflix_us', date: new Date('2018/10/31'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'] as any, medias: ['svod'] as any, amount: 11_777 }),
 
   // --------- BLOCK 28/02/19 --------- 
   // 28/02/19	Playtime	89 €	expense_row	cnc
@@ -501,11 +501,11 @@ const expensesAndIncomes: Action[] = [
   // 28/02/19	Playtime	28 €	expense_row	distrib
   action('expense', { orgId: 'playtime', type: 'expense_row', amount: 28, date: new Date('2019/02/28') }),
   // 28/02/19	first_run_us	first_run_1	us_all	112 €
-  action('income', { id: 'first_run_1', contractId: 'first_run_us', date: new Date('2019/02/28'), from: 'us_all', to: 'playtime_us_com_all', territories: ['us'], medias: ['all'], amount: 112 }),
+  action('income', { id: 'first_run_1', contractId: 'first_run_us', date: new Date('2019/02/28'), from: 'us_all', to: 'playtime_us_com_all', territories: ['us'] as any, medias: ['all'] as any, amount: 112 }),
   // 28/02/19	netflix_row	netflix_row_6	row_svod	9_661 €
-  action('income', { id: 'netflix_row_6', contractId: 'netflix_row', date: new Date('2019/02/28'), from: 'row_svod', to: 'row_svod_com', territories: ['row'], medias: ['svod'], amount: 9_661 }),
+  action('income', { id: 'netflix_row_6', contractId: 'netflix_row', date: new Date('2019/02/28'), from: 'row_svod', to: 'row_svod_com', territories: ['row'] as any, medias: ['svod'] as any, amount: 9_661 }),
   // 28/02/19	netflix_us	netflix_us_6	us_svod	11_808 €
-  action('income', { id: 'netflix_us_6', contractId: 'netflix_us', date: new Date('2019/02/28'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'], medias: ['svod'], amount: 11_808 }),
+  action('income', { id: 'netflix_us_6', contractId: 'netflix_us', date: new Date('2019/02/28'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'] as any, medias: ['svod'] as any, amount: 11_808 }),
 
   // --------- BLOCK 31/05/19 --------- 
   // 31/05/19	Playtime	91 €	expense_row	cnc
@@ -513,9 +513,9 @@ const expensesAndIncomes: Action[] = [
   // 31/05/19	Playtime	140 €	expense_row	distrib
   action('expense', { orgId: 'playtime', type: 'expense_row', amount: 140, date: new Date('2019/05/31') }),
   // 31/05/19	netflix_row	netflix_row_7	row_svod	9_925 €
-  action('income', { id: 'netflix_row_7', contractId: 'netflix_row', date: new Date('2019/05/31'), from: 'row_svod', to: 'row_svod_com', territories: ['row'], medias: ['svod'], amount: 9_925 }),
+  action('income', { id: 'netflix_row_7', contractId: 'netflix_row', date: new Date('2019/05/31'), from: 'row_svod', to: 'row_svod_com', territories: ['row'] as any, medias: ['svod'] as any, amount: 9_925 }),
   // 31/05/19	netflix_us	netflix_us_7	us_svod	12_131 €
-  action('income', { id: 'netflix_us_7', contractId: 'netflix_us', date: new Date('2019/05/31'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'], medias: ['svod'], amount: 12_131 }),
+  action('income', { id: 'netflix_us_7', contractId: 'netflix_us', date: new Date('2019/05/31'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'] as any, medias: ['svod'] as any, amount: 12_131 }),
 
   // --------- BLOCK 31/10/19 ---------
   // 31/10/19	Playtime	183 €	expense_row	cnc
@@ -523,10 +523,10 @@ const expensesAndIncomes: Action[] = [
   // 31/10/19	Playtime	56 €	expense_row	distrib
   action('expense', { orgId: 'playtime', type: 'expense_row', amount: 56, date: new Date('2019/10/31') }),
   // 31/10/19	netflix_row	netflix_row_8	row_svod	20_017 €
-  action('income', { id: 'netflix_row_8', contractId: 'netflix_row', date: new Date('2019/10/31'), from: 'row_svod', to: 'row_svod_com', territories: ['row'], medias: ['svod'], amount: 20_017 }),
+  action('income', { id: 'netflix_row_8', contractId: 'netflix_row', date: new Date('2019/10/31'), from: 'row_svod', to: 'row_svod_com', territories: ['row'] as any, medias: ['svod'] as any, amount: 20_017 }),
 
   // 31/10/19	netflix_us	netflix_us_8	us_svod	24_465 €
-  action('income', { id: 'netflix_us_8', contractId: 'netflix_us', date: new Date('2019/10/31'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'], medias: ['svod'], amount: 24_465 }),
+  action('income', { id: 'netflix_us_8', contractId: 'netflix_us', date: new Date('2019/10/31'), from: 'us_svod', to: 'us_svod_com', territories: ['us', 'can'] as any, medias: ['svod'] as any, amount: 24_465 }),
 ];
 
 export const actions: Action[] = [...contracts, ...sellers, ...rnpp, ...residuals, ...expensesAndIncomes];
