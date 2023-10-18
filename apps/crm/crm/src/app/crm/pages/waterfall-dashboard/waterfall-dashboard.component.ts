@@ -94,10 +94,13 @@ export class WaterfallDashboardComponent implements OnInit {
     this.version = this.state.version;
     const blocks = this.version.blockIds.map(id => data.blocks.find(b => b.id === id));
     this.statementBlocks = blocks.filter(b => this.statements.find(s => s.duration.to.getTime() === b.timestamp));
-    this.currentBlock = this.statementBlocks[this.statementBlocks.length - 1].id;
-    this.selectBlock(this.currentBlock);
-
-    this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
+    if (this.statementBlocks.length) {
+      this.currentBlock = this.statementBlocks[this.statementBlocks.length - 1].id;
+      this.selectBlock(this.currentBlock);
+      this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
+    } else {
+      this.snackBar.open('No statements found for this waterfall', 'close', { duration: 5000 });
+    }
 
     this.cdRef.markForCheck();
   }
