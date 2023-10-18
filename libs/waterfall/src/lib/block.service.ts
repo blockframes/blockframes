@@ -20,10 +20,11 @@ export class BlockService extends BlockframesSubCollection<Block> {
     return createBlock(block);
   }
 
-  public async create(waterfallId: string, name: string, actions: Partial<Action>[]) {
+  public create(waterfallId: string, name: string, actions: Partial<Action>[], blockDate: Date) {
     const createdBy = this.authService.uid;
     const block = createBlock({
       _meta: createDocumentMeta({ createdBy }),
+      timestamp: blockDate.getTime(),
       name
     });
     let index = 0;

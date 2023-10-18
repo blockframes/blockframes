@@ -51,7 +51,7 @@ export class WaterfallDashboardComponent implements OnInit {
   public movie: Movie;
   public waterfall: Waterfall;
   public version: Version;
-  public blocks: Block[];
+  public statementBlocks: Block[];
   public history: History[];
   private statements: Statement[];
   public rightholderStatements: RightholderStatements;
@@ -89,8 +89,9 @@ export class WaterfallDashboardComponent implements OnInit {
     this.state = await this.waterfallService.buildWaterfall({ waterfallId, versionId });
     this.history = this.state.waterfall.history;
     this.version = this.state.version;
-    this.blocks = this.version.blockIds.map(id => data.blocks.find(b => b.id === id));
-    this.currentBlock = this.blocks[this.blocks.length - 1].id;
+    const blocks = this.version.blockIds.map(id => data.blocks.find(b => b.id === id));
+    this.statementBlocks = blocks.filter(b => this.statements.find(s => s.duration.to.getTime() === b.timestamp));
+    this.currentBlock = this.statementBlocks[this.statementBlocks.length - 1].id;
     this.selectBlock(this.currentBlock);
 
     this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });

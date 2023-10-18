@@ -221,7 +221,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
 
     const blocks = await Promise.all(groupedActions.map(group => {
       const blockName = getBlockName(group.date, group.actions);
-      return this.blockService.create(waterfallId, blockName, group.actions);
+      return this.blockService.create(waterfallId, blockName, group.actions, group.date);
     }));
 
     await this.addVersion(waterfallId, version);
@@ -262,7 +262,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
 
     await this.addVersion(waterfallId, newVersion);
 
-    const blocksIds = await Promise.all(blocks.map(b => this.blockService.create(waterfallId, b.name, Object.values(b.actions))));
+    const blocksIds = await Promise.all(blocks.map(b => this.blockService.create(waterfallId, b.name, Object.values(b.actions), new Date(b.timestamp))));
     this.data[waterfallId].blocks = await this.blockService.getValue({ waterfallId });
 
     await this.addBlocksToVersion(waterfallId, newVersion.id, blocksIds);

@@ -10,9 +10,9 @@
 
   <section>
     <mat-form-field appearance="fill">
-      <mat-label>Blocks</mat-label>
+      <mat-label>Statements</mat-label>
       <mat-select (selectionChange)="selectBlock($event.value)" [(value)]="currentBlock">
-        <mat-option *ngFor="let block of blocks" [value]="block.id">
+        <mat-option *ngFor="let block of statementBlocks" [value]="block.id">
           {{ block.name }}
         </mat-option>
       </mat-select>
