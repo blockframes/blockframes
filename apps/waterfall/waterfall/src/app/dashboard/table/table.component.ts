@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { actions } from '@blockframes/waterfall/fixtures/rubber';
+import { actions } from '@blockframes/waterfall/fixtures/rubber-group';
 import { buildTable, Cell } from '@blockframes/waterfall/table';
 import { waterfall } from '@blockframes/waterfall/main';
 
