@@ -27,6 +27,7 @@ import {
   isDistributorStatement,
   isProducerStatement,
   mainCurrency,
+  movieCurrencies,
   pathExists
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
@@ -62,6 +63,8 @@ export class WaterfallDashboardComponent implements OnInit {
   public currentState: History;
   public currentBlock: string;
   public producersOrCoproducers: WaterfallRightholder[] = [];
+  public options = { xAxis: { categories: [] }, series: [] };
+  public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
 
   constructor(
     private movieService: MovieService,
@@ -108,7 +111,37 @@ export class WaterfallDashboardComponent implements OnInit {
       .filter(({ roles }) => roles.includes('producer') || roles.includes('coProducer'));
 
     if (!this.producersOrCoproducers.length) this.snackBar.open('No producers or coproducers found for this waterfall', 'close', { duration: 5000 });
+    this.buildGraph(blockId);
     this.cdRef.markForCheck();
+  }
+
+  private buildGraph(blockId: string) {
+    const filteredStatementBlocks = this.statementBlocks.filter(b => this.version.blockIds.indexOf(b.id) <= this.version.blockIds.indexOf(blockId));
+    const data = filteredStatementBlocks.map(block => {
+      const index = this.version.blockIds.indexOf(block.id);
+      const state = this.history[index + 1];
+      const incomes = Object.values(state.incomes).map(incomeState => {
+        const income = this.incomes.find(i => i.id === incomeState.id);
+        return { amount: incomeState.amount, source: getAssociatedSource(income, this.waterfall.sources) };
+      });
+
+      const incomesBySource = this.waterfall.sources.map(source => {
+        const incomesForSource = incomes.filter(i => i.source.id === source.id);
+        const amount = incomesForSource.length ? incomesForSource.map(i => i.amount).reduce((a, b) => a + b) : 0;
+        return { source, amount: Math.round(amount) };
+      });
+
+      return { date: new Date(block.timestamp), incomesBySource };
+    });
+
+    const categories = data.map(h => new Date(h.date).toISOString().slice(0, 10));
+    const sourcesWithIncome = this.waterfall.sources.filter(s => data.some(d => d.incomesBySource.some(i => i.source.id === s.id && i.amount > 0)));
+    const series = sourcesWithIncome.map(source => ({
+      name: source.name,
+      data: data.map(d => d.incomesBySource.find(i => i.source.id === source.id).amount)
+    }));
+
+    this.options = { xAxis: { categories }, series };
   }
 
   public getTotalIncomes(incomeState: Record<string, IncomeState>): PricePerCurrency {

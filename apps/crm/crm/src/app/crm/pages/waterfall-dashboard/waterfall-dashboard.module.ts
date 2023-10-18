@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 import { WaterfallDashboardComponent } from './waterfall-dashboard.component';
 
@@ -25,6 +26,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    NgApexchartsModule,
 
     MovieHeaderModule,
     PricePerCurrencyModule,
