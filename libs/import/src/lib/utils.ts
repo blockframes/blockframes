@@ -471,7 +471,9 @@ export function valueToId(value: string) {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[\])}[{(]/g, '')
     .replace('-', ' ')
+    .replace('.', ' ')
     .split(' ')
+    .filter(v => !!v)
     .join('_');
 }
 

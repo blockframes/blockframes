@@ -224,6 +224,7 @@ export class WaterfallDashboardComponent implements OnInit {
         const otherParty = c.sellerId === rightholderId ? c.buyerId : c.sellerId;
         const rightholder = this.waterfall.rightholders.find(r => r.id === otherParty);
         const distributorRoles: RightholderRole[] = ['mainDistributor', 'localDistributor', 'salesAgent'];
+        // TODO #9519 filter contracts by checking the contract type
         return !rightholder.roles.some(r => distributorRoles.includes(r));
       });
 
@@ -235,8 +236,7 @@ export class WaterfallDashboardComponent implements OnInit {
 
     // Filter contracts that have at least one right that is related to the sources
     const filteredContracts = contracts.filter(c => {
-      const otherParty = c.sellerId === rightholderId ? c.buyerId : c.sellerId;
-      const rights = this.rights.filter(r => r.rightholderId === otherParty);
+      const rights = this.rights.filter(r => r.contractId === c.id);
       return rights.some(r => sources.some(s => pathExists(r.id, s.id, this.state.waterfall.state)));
     });
 
@@ -255,8 +255,7 @@ export class WaterfallDashboardComponent implements OnInit {
         // Filter incomes again to keep only incomes that are related to this contract
         const income = this.incomes.find(i => i.id === id);
         const source = getAssociatedSource(income, this.waterfall.sources);
-        const otherParty = c.sellerId === rightholderId ? c.buyerId : c.sellerId;
-        const rights = this.rights.filter(r => r.rightholderId === otherParty);
+        const rights = this.rights.filter(r => r.contractId === c.id);
         return rights.some(r => pathExists(r.id, source.id, this.state.waterfall.state));
       }),
       duration: createDuration({

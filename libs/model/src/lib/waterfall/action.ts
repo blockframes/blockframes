@@ -773,30 +773,36 @@ function income(state: TitleState, payload: IncomeAction) {
  * @param payload 
  */
 function payment(state: TitleState, payload: PaymentAction) {
+  const assertRevenue = () => {
+    const distributedRevenue = Object.values(state.rights).filter(r => r.orgId === payload.from.org).reduce((acc, r) => acc + r.revenu.actual, 0);
+    const orgRevenue = state.orgs[payload.from.org].revenu.actual;
+    if (parseFloat(payload.amount.toFixed(4)) > parseFloat((orgRevenue - distributedRevenue).toFixed(4))) {
+      throw new Error(`Org "${payload.from.org}" does not have enough actual revenue to proceed.`);
+    }
+  };
 
   if (payload.from.org && payload.to.org) { // Payment from org to org
-    if (payload.amount > state.orgs[payload.from.org].revenu.actual) throw new Error(`Org "${payload.from.org}" does not have enough actual revenue to proceed.`);
+    assertRevenue();
     state.orgs[payload.from.org].revenu.actual -= payload.amount;
     state.orgs[payload.to.org].revenu.actual += payload.amount;
     state.orgs[payload.to.org].turnover.actual += payload.amount;
   } else if (payload.from.org && payload.to.right) { // Payment for org to right
     assertNode(state, payload.to.right);
+    // Orgs
     const orgState = getNodeOrg(state, payload.to.right);
+    if (orgState.id !== payload.from.org) throw new Error(`Internal payment error. "${payload.to.right}" is not owned by "${payload.from.org}".`);
+    assertRevenue();
+
+    // Rights
     const nodeTo = getNode(state, payload.to.right);
     if (!isRight(state, nodeTo)) throw new Error(`Internal payment error. "${payload.to.right}" can only be a right (not a group).`);
-    const actualRevenue = payload.amount;
 
     const actualTurnover = isGroupChild(state, nodeTo.id) ?
       payload.amount : // Inside group, childs turnover is same as revenue
       payload.amount / nodeTo.percent;
 
-    // Rights
-    nodeTo.revenu.actual += actualRevenue;
+    nodeTo.revenu.actual += payload.amount;
     nodeTo.turnover.actual += actualTurnover;
-
-    // Orgs
-    if (orgState.id !== payload.from.org) throw new Error(`Internal payment error. "${payload.to.right}" is not owned by "${payload.from.org}".`);
-    if (actualRevenue > state.orgs[payload.from.org].revenu.actual) throw new Error(`Internal payment error. Org "${payload.from.org}" does not have enough actual revenue to proceed.`);
 
     // Recalculate groups actual revenue & turnover
     const group = getGroup(state, nodeTo.id);
@@ -805,12 +811,21 @@ function payment(state: TitleState, payload: PaymentAction) {
       const childsActualdRevenue = sum(childs, c => c.revenu.actual);
       group.revenu.actual = childsActualdRevenue;
       group.turnover.actual = childsActualdRevenue; // For a group, turnover is sum of its childs revenue
+
+      // For nested groups
+      const parentGroup = getGroup(state, group.id);
+      if (parentGroup) {
+        const parentChilds = getChildRights(state, parentGroup);
+        const parentChildsActualdRevenue = sum(parentChilds, c => c.revenu.actual);
+        parentGroup.revenu.actual = parentChildsActualdRevenue;
+        parentGroup.turnover.actual = parentChildsActualdRevenue; // For a group, turnover is sum of its childs revenue
+      }
     }
 
     // Pools
     const pools = nodeTo.pools.map(poolId => state.pools[poolId]);
     for (const pool of pools) {
-      pool.revenu.actual += actualRevenue;
+      pool.revenu.actual += payload.amount;
       pool.turnover.actual += actualTurnover;
     }
   } else if (payload.from.income && payload.to.org) { // Direct payment from income to org
