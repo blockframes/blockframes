@@ -137,13 +137,13 @@
   <ng-container *ngIf="getRightholderPayment() as rightholderPayment">
     <h3>Payment</h3>
     <ul>
-      <li><strong>Date :</strong> {{ rightholderPayment.date | date: 'MM/dd/yyyy' }}</li>
       <li><strong>To :</strong> {{ getRightholderName(rightholderPayment.to) }}</li>
       <li><strong>Amount :</strong> <price-per-currency [price]="toPricePerCurrency(rightholderPayment)"></price-per-currency></li>
       <li><strong>Status :</strong> {{ rightholderPayment.status | toLabel: 'paymentStatus' }}</li>
       <li><strong>Related to: </strong> {{ rightholderPayment.incomeIds | join }}</li>
+      <li *ngIf="rightholderPayment.date"><strong>Date :</strong> {{ rightholderPayment.date | date: 'MM/dd/yyyy' }}</li>
     </ul>
-    <article *ngIf="statement.status === 'reported'" class="payment-date">
+    <article *ngIf="statement.status === 'reported' && rightholderPayment.status === 'pending'" class="payment-date">
       <strong>Received on :</strong>
       <mat-form-field appearance="fill">
         <input matInput [formControl]="paymentDateControl" [matDatepicker]="datePicker" placeholder="MM/DD/YYYY">

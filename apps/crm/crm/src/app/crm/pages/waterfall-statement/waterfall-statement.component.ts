@@ -36,7 +36,6 @@ import { MovieService } from '@blockframes/movie/service';
 import { unique } from '@blockframes/utils/helpers';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
-import { add } from 'date-fns';
 
 interface RightDetails {
   from: string,
@@ -93,9 +92,6 @@ export class WaterfallStatementComponent implements OnInit {
     this.statements = data.statements;
     this.statement = this.statements.find(s => s.id === statementId);
 
-    // Set default payment date to 15 days after statement end date
-    this.paymentDateControl.setValue(add(this.statement.duration.to, { days: 15 }));
-
     if (isDistributorStatement(this.statement) || isProducerStatement(this.statement)) {
       const statement = this.statement;
       this.contract = data.contracts.find(c => c.id === statement.contractId);
@@ -103,6 +99,9 @@ export class WaterfallStatementComponent implements OnInit {
         this.snackBar.open(`Contract "${statement.contractId}" not found in waterfall.`, 'close', { duration: 5000 });
         return;
       }
+
+      // Set default payment date to statement end date if no payment date is set
+      this.paymentDateControl.setValue(this.statement.payments.rightholder?.date || this.statement.duration.to);
     }
 
     this.incomes = data.incomes.filter(i => this.statement.incomeIds.includes(i.id));
