@@ -11,32 +11,36 @@ export interface Holdback {
   duration: Duration;
 }
 
-export interface Contract {
+export interface BaseContract {
   _meta: DocumentMeta;
   id: string;
-  type: ContractType;
+  type: string;
   status: ContractStatus;
   titleId: string;
   signatureDate?: Date;
   price?: number;
   currency?: MovieCurrency;
   duration?: Duration;
-  /** Parent term on which this contract is created */
-  parentTermId: string;
   /** List of discontinued terms */
   termIds: string[];
-  /** Offer in which the contract is included is any */
-  offerId: string;
   /** The id of the buyer's org, can be undefined if external sale */
   buyerId: string;
-  /** The user id of the buyer, can be undefined if external sale */
-  buyerUserId: string;
   /** Id of the direct seller. AC in the Archipel Content app */
   sellerId: string;
   /** Org ids that have contract parent of this contract */
   stakeholders: string[];
   /** If contract is an amendment, provide root contract Id */
   rootId: string;
+}
+
+export interface Contract extends BaseContract {
+  type: ContractType;
+  /** Parent term on which this contract is created */
+  parentTermId: string;
+  /** Offer in which the contract is included is any */
+  offerId: string;
+  /** The user id of the buyer, can be undefined if external sale */
+  buyerUserId: string;
 }
 
 export interface Mandate extends Contract {
@@ -127,11 +131,11 @@ export function createContract(params: Partial<Contract>) {
   if (isSale(params)) return createSale(params);
 }
 
-export function isMandate(contract: Partial<Contract>): contract is Mandate {
+export function isMandate(contract: Partial<BaseContract>): contract is Mandate {
   return contract.type === 'mandate';
 }
 
-export function isSale(contract: Partial<Contract>): contract is Sale {
+export function isSale(contract: Partial<BaseContract>): contract is Sale {
   return contract.type === 'sale';
 }
 
@@ -141,7 +145,7 @@ export function isSale(contract: Partial<Contract>): contract is Sale {
  * @param contract 
  * @returns 
  */
-export function getDeclaredAmount(contract: FullMandate | FullSale): PricePerCurrency {
+export function getDeclaredAmount(contract: BaseContract & { terms: Term[] }): PricePerCurrency {
   if (contract.price && contract.price > 0) return { [contract.currency]: contract.price };
   const amount: PricePerCurrency = {};
   contract.terms.forEach(t => {
@@ -151,7 +155,7 @@ export function getDeclaredAmount(contract: FullMandate | FullSale): PricePerCur
   return amount;
 }
 
-export function getContractDurationStatus(contract: Contract): 'future' | 'past' | 'ongoing' {
+export function getContractDurationStatus(contract: BaseContract): 'future' | 'past' | 'ongoing' {
   const now = new Date().getTime();
   if (now < contract.duration.from.getTime()) return 'future';
   if (now > contract.duration.to.getTime()) return 'past';
@@ -167,7 +171,7 @@ export function getContractDurationStatus(contract: Contract): 'future' | 'past'
  * @param contracts 
  * @returns 
  */
-export function getLatestContract<T extends Contract>(contracts: T[]) {
+export function getLatestContract<T extends BaseContract>(contracts: T[]) {
   return sortContracts(contracts)[contracts.length - 1];
 }
 
@@ -177,7 +181,7 @@ export function getLatestContract<T extends Contract>(contracts: T[]) {
  * @param contracts 
  * @returns 
  */
-export function getContractAndAmendments<T extends Contract>(contractId: string, contracts: T[]) {
+export function getContractAndAmendments<T extends BaseContract>(contractId: string, contracts: T[]) {
   if (!contractId) return [];
   const contract = contracts.find(c => c.id === contractId);
   if (!contract) return [];
@@ -194,7 +198,7 @@ export function getContractAndAmendments<T extends Contract>(contractId: string,
  * @param date 
  * @returns 
  */
-export function getCurrentContract<T extends Contract>(contracts: T[], date = new Date()) {
+export function getCurrentContract<T extends BaseContract>(contracts: T[], date = new Date()) {
   return sortContracts(contracts).reverse().find(c => c.signatureDate.getTime() <= date.getTime());
 }
 
@@ -203,6 +207,6 @@ export function getCurrentContract<T extends Contract>(contracts: T[], date = ne
  * @param contracts 
  * @returns 
  */
-export function sortContracts<T extends Contract>(contracts: T[]) {
+export function sortContracts<T extends BaseContract>(contracts: T[]) {
   return sortByDate<T>(contracts, 'signatureDate');
 }

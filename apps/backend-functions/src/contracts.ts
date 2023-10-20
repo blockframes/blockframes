@@ -10,7 +10,10 @@ import {
   createInternalDocumentMeta,
   createNotification,
   createIncome,
-  createTerm
+  createTerm,
+  BaseContract,
+  isMandate,
+  isSale
 } from '@blockframes/model';
 import { queryDocument, getDocument, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 
@@ -25,7 +28,7 @@ export async function onContractDelete(contractSnapshot: BlockframesSnapshot<Con
   return cleanRelatedContractDocuments(contract);
 }
 
-export async function cleanRelatedContractDocuments(contract: Contract, options: { filterByTitleId: boolean } = { filterByTitleId: false }) {
+export async function cleanRelatedContractDocuments(contract: BaseContract, options: { filterByTitleId: boolean } = { filterByTitleId: false }) {
   // Delete terms belonging to contract
   const termsCollectionRef = options.filterByTitleId ?
     db.collection('terms').where('contractId', '==', contract.id).where('titleId', '==', contract.titleId) :
@@ -38,7 +41,7 @@ export async function cleanRelatedContractDocuments(contract: Contract, options:
   // An offer can have multiple contracts
   // We don't want to delete the offer if it still have other contracts
   // We want to delete the offer only when we delete its last contract
-  if (contract.offerId) {
+  if ((isMandate(contract) || isSale(contract)) && contract.offerId) {
     const offerContractsRef = options.filterByTitleId ?
       db.collection('contracts').where('offerId', '==', contract.offerId).where('titleId', '==', contract.titleId) :
       db.collection('contracts').where('offerId', '==', contract.offerId);

@@ -249,7 +249,7 @@
           </ng-container>
         </ng-template>
         <ng-template colRef="type" label="Type" let-type sort>
-          {{ type }}
+          {{ type | toLabel: 'rightholderRoles' }}
         </ng-template>
         <ng-template colRef="" label="Action" let-contract sticky>
           <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', contract.id]" (click)="$event.stopPropagation()">

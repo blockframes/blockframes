@@ -97,7 +97,11 @@ export class WaterfallDashboardComponent implements OnInit {
     if (this.statementBlocks.length) {
       this.currentBlock = this.statementBlocks[this.statementBlocks.length - 1].id;
       this.selectBlock(this.currentBlock);
-      this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
+      if (!this.producersOrCoproducers.length) {
+        this.snackBar.open('No producers or coproducers found for this waterfall. Please set rightholders roles.', 'close', { duration: 5000 });
+      } else {
+        this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
+      }
     } else {
       this.snackBar.open('No statements found for this waterfall', 'close', { duration: 5000 });
     }
@@ -113,7 +117,6 @@ export class WaterfallDashboardComponent implements OnInit {
       .map(({ id }) => this.getRightholder(id))
       .filter(({ roles }) => roles.includes('producer') || roles.includes('coProducer'));
 
-    if (!this.producersOrCoproducers.length) this.snackBar.open('No producers or coproducers found for this waterfall', 'close', { duration: 5000 });
     this.buildGraph(blockId);
     this.cdRef.markForCheck();
   }
@@ -203,7 +206,7 @@ export class WaterfallDashboardComponent implements OnInit {
     const directSalesStatements = this.statements
       .filter(s => isDirectSalesStatement(s))
       .filter(s => s.duration.to.getTime() <= currentStateDate.getTime())
-      .filter(s => s.rightholderId === rightholderId) as DirectSalesStatement[];
+      .filter(s => s.rightholderId === rightholderId && s.status === 'reported') as DirectSalesStatement[];
 
     const statements = [...distributorStatements, ...directSalesStatements];
     if (!statements.length) return [];
@@ -220,12 +223,9 @@ export class WaterfallDashboardComponent implements OnInit {
     const contracts = unique(contractsIds)
       .map(id => this.contracts.find(c => c.id === id))
       .filter(c => {
-        // Remove contracts where the other party is a distributor
-        const otherParty = c.sellerId === rightholderId ? c.buyerId : c.sellerId;
-        const rightholder = this.waterfall.rightholders.find(r => r.id === otherParty);
-        const distributorRoles: RightholderRole[] = ['mainDistributor', 'localDistributor', 'salesAgent'];
-        // TODO #9519 filter contracts by checking the contract type
-        return !rightholder.roles.some(r => distributorRoles.includes(r));
+        // Remove Distributor contracts
+        const distributorContractTypes: RightholderRole[] = ['mainDistributor', 'localDistributor', 'salesAgent'];
+        return !distributorContractTypes.includes(c.type);
       });
 
     // Fetch incomes and sources related to the statements

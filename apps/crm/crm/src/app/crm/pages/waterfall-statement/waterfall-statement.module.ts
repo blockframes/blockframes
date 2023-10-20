@@ -20,6 +20,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [WaterfallStatementComponent, FilterRightsPipe],
@@ -43,6 +45,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSelectModule,
     MatFormFieldModule,
     MatTooltipModule,
+    MatInputModule,
+    MatDatepickerModule,
 
     RouterModule.forChild([{ path: '', component: WaterfallStatementComponent }])
   ]

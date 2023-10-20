@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -35,6 +36,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { unique } from '@blockframes/utils/helpers';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
+import { add } from 'date-fns';
 
 interface RightDetails {
   from: string,
@@ -54,8 +56,6 @@ export class WaterfallStatementComponent implements OnInit {
   public movie: Movie;
   public waterfall: Waterfall;
   public statement: Statement;
-  private statements: Statement[];
-  private contract: WaterfallContract;
   public incomes: Income[];
   public sources: WaterfallSource[];
   public expenses: Expense[];
@@ -65,8 +65,11 @@ export class WaterfallStatementComponent implements OnInit {
   public options = { xAxis: { categories: [] }, series: [] };
   public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
   public state: WaterfallState;
+  public paymentDateControl = new UntypedFormControl();
 
   private allRights: Right[];
+  private statements: Statement[];
+  private contract: WaterfallContract;
 
   constructor(
     private movieService: MovieService,
@@ -89,6 +92,9 @@ export class WaterfallStatementComponent implements OnInit {
     this.allRights = data.rights;
     this.statements = data.statements;
     this.statement = this.statements.find(s => s.id === statementId);
+
+    // Set default payment date to 15 days after statement end date
+    this.paymentDateControl.setValue(add(this.statement.duration.to, { days: 15 }));
 
     if (isDistributorStatement(this.statement) || isProducerStatement(this.statement)) {
       const statement = this.statement;
@@ -322,24 +328,6 @@ export class WaterfallStatementComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  public async markAsReceived() {
-    if (!isDistributorStatement(this.statement) && !isProducerStatement(this.statement)) return;
-    const rightholderPayment = this.statement.payments.rightholder;
-    rightholderPayment.status = 'received';
-
-    if (rightholderPayment.status === 'received') {
-      this.statement.status = 'processed';
-    }
-
-    await this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } });
-    this.statement = await this.statementService.getValue(this.statement.id, { waterfallId: this.waterfall.id });
-
-    await this.waterfallService.refreshWaterfall(this.waterfall.id, this.state.version.id, { refreshData: true });
-    await this.buildWaterfallState(this.state.version.id);
-    this.buildGraph();
-    this.cdRef.markForCheck();
-  }
-
   private generatePayments() {
 
     // Right Payments
@@ -354,7 +342,7 @@ export class WaterfallStatementComponent implements OnInit {
         to: right.id,
         price: amount[mainCurrency],
         currency: mainCurrency,
-        date: this.statement.duration.to,
+        date: isInternal ? this.statement.duration.to : undefined,
         incomeIds: this.statement.incomeIds.filter(id => {
           const income = this.incomes.find(i => i.id === id);
           const source = getAssociatedSource(income, this.waterfall.sources);
@@ -377,7 +365,7 @@ export class WaterfallStatementComponent implements OnInit {
         id: this.statementService.createId(),
         price: price,
         currency: mainCurrency,
-        date: this.statement.duration.to,
+        date: undefined,
         incomeIds: this.statement.incomeIds.filter(id => {
           const income = this.incomes.find(i => i.id === id);
           const source = getAssociatedSource(income, this.waterfall.sources);
@@ -402,18 +390,38 @@ export class WaterfallStatementComponent implements OnInit {
       // Total price of external right payments
       return sum(this.statement.payments.right.filter(r => r.mode === 'external'), p => p.price);
     }
-
   }
 
-  public async validate() {
-    this.statement.status = ((isDistributorStatement(this.statement) || isProducerStatement(this.statement)) && this.statement.payments.rightholder) ? 'pending' : 'processed';
+  public async reportStatement() {
+    this.statement.status = 'reported';
 
-    // Validate all "right" payments
-    this.statement.payments.right = this.statement.payments.right.map(p => ({ ...p, status: 'processed' }));
+    // Validate all internal "right" payments
+    this.statement.payments.right = this.statement.payments.right.map(p => ({ ...p, status: p.mode === 'internal' ? 'received' : p.status }));
     await this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } });
     this.statement = await this.statementService.getValue(this.statement.id, { waterfallId: this.waterfall.id });
 
     await this.waterfallService.refreshWaterfall(this.waterfall.id, this.state.version.id);
+    await this.buildWaterfallState(this.state.version.id);
+    this.buildGraph();
+    this.cdRef.markForCheck();
+  }
+
+  public async markPaymentAsReceived(paymentDate: Date) {
+    if (!isDistributorStatement(this.statement) && !isProducerStatement(this.statement)) return;
+    this.statement.payments.rightholder.status = 'received';
+    this.statement.payments.rightholder.date = paymentDate;
+
+    // Validate all external "right" payments and set payment date
+    this.statement.payments.right = this.statement.payments.right.map(p => ({
+      ...p,
+      status: p.mode === 'external' ? 'received' : p.status,
+      date: p.mode === 'external' ? paymentDate : p.date
+    }));
+
+    await this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } });
+    this.statement = await this.statementService.getValue(this.statement.id, { waterfallId: this.waterfall.id });
+
+    await this.waterfallService.refreshWaterfall(this.waterfall.id, this.state.version.id, { refreshData: true });
     await this.buildWaterfallState(this.state.version.id);
     this.buildGraph();
     this.cdRef.markForCheck();

@@ -23,7 +23,7 @@ import { Expense } from '../expense';
 import { Term } from '../terms';
 import { getContractAndAmendments, getDeclaredAmount } from '../contract';
 import { convertCurrenciesTo, sortByDate, sum } from '../utils';
-import { MovieCurrency } from '../static';
+import { MovieCurrency, RightholderRole } from '../static';
 import { Right, orderRights } from './right';
 import { Statement, isDirectSalesStatement, isDistributorStatement, isProducerStatement } from './statement';
 
@@ -134,6 +134,26 @@ export function contractsToActions(contracts: WaterfallContract[], terms: Term[]
     actions.push(c.rootId ? action('updateContract', payload) : action('contract', payload));
 
   });
+
+  return actions;
+}
+
+export function investmentsToActions(contracts: WaterfallContract[], terms: Term[]) {
+  const actions: Action[] = [];
+  const investmentContractTypes: RightholderRole[] = ['salesAgent', 'mainDistributor', 'coProducer', 'financier', 'institution'];
+  const investmentContracts = contracts.filter(c => investmentContractTypes.includes(c.type));
+
+  for (const c of investmentContracts) {
+    if (c.rootId) continue; // Only root contracts are considered as investments
+    const declaredAmount = getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) });
+    const { [mainCurrency]: amount } = convertCurrenciesTo(declaredAmount, mainCurrency);
+    if (amount <= 0) continue;
+    actions.push(action('invest', {
+      amount,
+      orgId: c.buyerId, // Producer is always the licensor on theses types of contracts
+      date: c.signatureDate
+    }));
+  }
 
   return actions;
 }
@@ -319,7 +339,7 @@ export function expensesToActions(expenses: Expense[]) {
 export function statementsToActions(statements: Statement[]) {
   const payments: PaymentAction[] = [];
 
-  for (const statement of statements) {
+  for (const statement of statements.filter(s => s.status === 'reported')) {
 
     // Income to Org payments
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
@@ -340,8 +360,8 @@ export function statementsToActions(statements: Statement[]) {
       }
     }
 
-    const rightPayments = statement.payments.right.filter(p => p.status === 'processed' || p.status === 'received') || [];
-    const rightholderPayment = ((isDistributorStatement(statement) || isProducerStatement(statement)) && ['processed', 'received'].includes(statement.payments.rightholder?.status)) ? statement.payments.rightholder : undefined;
+    const rightPayments = statement.payments.right.filter(p => p.status === 'received') || [];
+    const rightholderPayment = ((isDistributorStatement(statement) || isProducerStatement(statement)) && statement.payments.rightholder.status === 'received') ? statement.payments.rightholder : undefined;
 
     // Org to Org payments
     if (rightholderPayment) {
@@ -361,7 +381,7 @@ export function statementsToActions(statements: Statement[]) {
 
     // Org to Right payments
     for (const payment of rightPayments) {
-      // Add external right payment only if there is a rightholderPayment associated with status processed or received
+      // Add external right payment only if there is a rightholderPayment associated with status received
       if (payment.mode === 'external' && !rightholderPayment) continue;
 
       payments.push({

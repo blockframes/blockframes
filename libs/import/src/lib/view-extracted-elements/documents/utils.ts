@@ -7,7 +7,10 @@ import {
   createTerm,
   createWaterfallDocument,
   WaterfallDocument,
-  WaterfallRightholder
+  WaterfallRightholder,
+  WaterfallDocumentMeta,
+  RightholderRole,
+  isContract
 } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getDocumentConfig } from './fieldConfigs';
@@ -79,11 +82,18 @@ export async function formatDocument(
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig, 11);
   for (const result of results) {
     const { data, errors } = result;
-    const document = createWaterfallDocument({ ...data.document, meta: data.meta as any });
+    const document = createWaterfallDocument({ ...data.document, meta: data.meta as WaterfallDocumentMeta });
 
-    const terms = (data.term ?? []).map(term => toTerm(term, document.waterfallId, document.id, term.id || termService.createId()));
-
-    documents.push({ document, terms, errors, rightholders: rightholderCache });
+    documents.push({ document, terms: getTerms(document, data.term), errors, rightholders: rightholderCache });
   }
   return documents;
+}
+
+function getTerms(document: WaterfallDocument, terms: FieldsConfig['term'][number][] = []) {
+  const contractTypesWithTerms: RightholderRole[] = ['salesAgent', 'mainDistributor', 'localDistributor', 'sale', 'other'];
+  if (isContract(document) && contractTypesWithTerms.includes(document.meta.type)) {
+    return terms.map(term => toTerm(term, document.waterfallId, document.id, term.id));
+  } else {
+    return [];
+  }
 }

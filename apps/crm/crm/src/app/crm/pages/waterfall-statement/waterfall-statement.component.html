@@ -142,16 +142,23 @@
       <li><strong>Amount :</strong> <price-per-currency [price]="toPricePerCurrency(rightholderPayment)"></price-per-currency></li>
       <li><strong>Status :</strong> {{ rightholderPayment.status | toLabel: 'paymentStatus' }}</li>
       <li><strong>Related to: </strong> {{ rightholderPayment.incomeIds | join }}</li>
-      <li>
-        <strong>Actions :</strong>
-        <button mat-icon-button [disabled]="rightholderPayment.status !== 'pending' || statement.status === 'draft'" (click)="markAsReceived()">
-          <mat-icon svgIcon="check" matTooltip="Mark payment as received"></mat-icon>
-        </button>
-      </li>
     </ul>
+    <article *ngIf="statement.status === 'reported'" class="payment-date">
+      <strong>Received on :</strong>
+      <mat-form-field appearance="fill">
+        <input matInput [formControl]="paymentDateControl" [matDatepicker]="datePicker" placeholder="MM/DD/YYYY">
+        <mat-datepicker-toggle matSuffix [for]="datePicker">
+          <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
+      </mat-form-field>
+      <button mat-flat-button color="primary" [disabled]="rightholderPayment.status !== 'pending' || !paymentDateControl.value" (click)="markPaymentAsReceived(paymentDateControl.value)">
+        Mark payment as received
+      </button>
+    </article>
   </ng-container>
 
-  <button mat-button color="primary" [disabled]="statement.status === 'processed' || statement.status === 'pending'" (click)="validate()">
-    Validate statement
+  <button mat-button color="primary" [disabled]="statement.status === 'reported'" (click)="reportStatement()">
+    Report statement
   </button>
 </ng-container>

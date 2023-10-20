@@ -1,4 +1,4 @@
-import { Mandate, Sale, createContract } from '../contract';
+import { BaseContract } from '../contract';
 import { Income } from '../income';
 import { StorageFile } from '../media';
 import { DocumentMeta, createDocumentMeta } from '../meta';
@@ -118,7 +118,7 @@ export function createWaterfallRightholder(params: Partial<WaterfallRightholder>
 export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(params: Partial<WaterfallDocument<Meta>> = {}): WaterfallDocument<Meta> {
 
   const toObject = () => {
-    if (isContract(params)) return createContract({ ...params.meta, status: 'accepted' }) as Meta;
+    if (isContract(params)) return createWaterfallContract({ ...params.meta, status: 'accepted' }) as Meta;
     if (isBudget(params)) return params.meta as Meta;
     if (isFinancingPlan(params)) return params.meta as Meta;
   };
@@ -145,9 +145,34 @@ export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(para
   };
 }
 
+export function createWaterfallContract(params: Partial<WaterfallContract>): WaterfallContract {
+  return {
+    _meta: createDocumentMeta({}),
+    id: '',
+    titleId: '',
+    termIds: [],
+    buyerId: '',
+    sellerId: '',
+    type: 'mainDistributor',
+    status: 'pending',
+    stakeholders: [],
+    rootId: '',
+    ...params
+  }
+}
+
 export const isContract = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallContract> => document?.type === 'contract';
 const isBudget = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallBudget> => document?.type === 'budget';
 const isFinancingPlan = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallFinancingPlan> => document?.type === 'financingPlan';
+
+export function isWaterfallMandate(contract: Partial<WaterfallContract>): contract is WaterfallMandate {
+  const mandateTypes: RightholderRole[] = ['salesAgent', 'mainDistributor', 'localDistributor'];
+  return mandateTypes.includes(contract.type);
+}
+
+export function isWaterfallSale(contract: Partial<WaterfallContract>): contract is WaterfallSale {
+  return contract.type === 'sale';
+}
 
 export function convertDocumentTo<T>(document: WaterfallDocument): T {
   switch (document.type) {
@@ -165,7 +190,7 @@ export function convertDocumentTo<T>(document: WaterfallDocument): T {
   }
 }
 
-type WaterfallDocumentMeta = WaterfallBudget | WaterfallContract | WaterfallFinancingPlan;
+export type WaterfallDocumentMeta = WaterfallBudget | WaterfallContract | WaterfallFinancingPlan;
 
 export interface WaterfallDocument<Meta extends WaterfallDocumentMeta = unknown> {
   _meta?: DocumentMeta;
@@ -186,7 +211,17 @@ interface WaterfallBudget {
   value?: string;
 }
 
-export type WaterfallContract = Mandate | Sale;
+export interface WaterfallContract extends BaseContract {
+  type: RightholderRole;
+};
+
+export interface WaterfallSale extends WaterfallContract {
+  type: 'sale'
+}
+
+export interface WaterfallMandate extends WaterfallContract {
+  type: 'salesAgent' | 'mainDistributor' | 'localDistributor'
+}
 
 interface WaterfallFinancingPlan {
   // TODO #9389 add form data

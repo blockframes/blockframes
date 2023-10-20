@@ -20,12 +20,12 @@ export interface Payment {
 export interface IncomePayment extends Payment {
   type: 'income';
   incomeId: string; // Income related to this payment
-  status: 'processed';
+  status: 'received';
 }
 
 /**
  * "To Rightholder" payment to the org of the opposite rightholder of the statement (licensor or licensee)
- * Once processed, will take money available in Org.revenu.actual and assign it to the other Org, incrementing org actual revenu and turnover
+ * Once received, will take money available in Org.revenu.actual and assign it to the other Org, incrementing org actual revenu and turnover
  */
 export interface RightholderPayment extends Payment {
   type: 'rightholder';
@@ -36,7 +36,7 @@ export interface RightholderPayment extends Payment {
 
 /**
  * "To Right" payment (com, expense, MG etc)
- * Once processed, will assign money available in Org.revenu.actual to correct rights, incrementing right actual revenu and turnover
+ * Once received, will assign money available in Org.revenu.actual to correct rights, incrementing right actual revenu and turnover
  */
 export interface RightPayment extends Payment {
   type: 'right';
@@ -64,7 +64,7 @@ export function createIncomePayment(params: Partial<IncomePayment> = {}): Income
     incomeId: '',
     ...payment,
     type: 'income',
-    status: 'processed',
+    status: 'received',
   }
 }
 
