@@ -23,7 +23,7 @@ import { Expense } from '../expense';
 import { Term } from '../terms';
 import { getContractAndAmendments, getDeclaredAmount } from '../contract';
 import { convertCurrenciesTo, sortByDate, sum } from '../utils';
-import { MovieCurrency, RightholderRole } from '../static';
+import { MovieCurrency, RightholderRole, Media, Territory } from '../static';
 import { Right, orderRights } from './right';
 import { Statement, isDirectSalesStatement, isDistributorStatement, isProducerStatement } from './statement';
 
@@ -683,8 +683,8 @@ export interface IncomeAction extends BaseAction {
   to: string;
   from?: string;
   contractId?: string;
-  territories: string[]; // TODO #9471 should be Territory[]
-  medias: string[]; // TODO #9471 should be Media[]
+  territories: Territory[];
+  medias: Media[];
   isCompensation?: boolean;
 }
 

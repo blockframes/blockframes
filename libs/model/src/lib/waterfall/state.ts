@@ -1,3 +1,4 @@
+import { Media, Territory } from '../static';
 import { Action, GroupChild, PaymentAction } from './action';
 import { ConditionGroup, and } from './conditions';
 
@@ -174,8 +175,8 @@ export interface IncomeState {
   from?: string;
   to: string;
   amount: number;
-  territories: string[]; // TODO #9471 should be Territory[]
-  medias: string[]; // TODO #9471 should be Media[]
+  territories: Territory[];
+  medias: Media[];
   isCompensation?: boolean;
   contractId?: string;
 }

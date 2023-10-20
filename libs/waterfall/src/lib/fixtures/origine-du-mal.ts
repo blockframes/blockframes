@@ -241,49 +241,49 @@ export const actions: Action[] = [
     children: [
       { type: 'right', id: 'jokers_fr_tv_svod_expense', pools: ['jokers_expense_group'], orgId: 'jokers', percent: 0.2, conditions: and([
         condition('poolRevenu', { pool: 'jokers_expense_group', operator: '<', target: { id: 'jokers', in: 'orgs.expense', percent: 1 }}),
-        condition('terms', { type: 'medias', operator: 'in', list: ['tv', 'svod'] })
+        condition('terms', { type: 'medias', operator: 'in', list: ['tv', 'svod'] as any })
       ]) },
       { type: 'right', id: 'jokers_fr_tv_svod_mg', pools: ['jokers_mg_group'], orgId: 'jokers', percent: 0.2, conditions: and([
         condition('poolRevenu', { pool: 'jokers_mg_group', operator: '<', target: 60_000 }),
-        condition('terms', { type: 'medias', operator: 'in', list: ['tv', 'svod'] })
+        condition('terms', { type: 'medias', operator: 'in', list: ['tv', 'svod'] as any })
       ]) },
       { type: 'right', id: 'jokers_fr_cine_video_mg', pools: ['jokers_mg_group'], orgId: 'jokers', percent: 0.85, conditions: and([
         condition('poolRevenu', { pool: 'jokers_mg_group', operator: '<', target: 60_000 }),
-        condition('terms', { type: 'medias', operator: 'in', list: ['cine', 'vod', 'dvd'] })
+        condition('terms', { type: 'medias', operator: 'in', list: ['cine', 'vod', 'dvd'] as any })
       ]) },
       { type: 'vertical', id: 'cineaxe_rnpp_fr_video_cine', children: [
         { type: 'right', id: 'cineaxe_rnpp_fr_video_cine_1', orgId: 'cineaxe', percent: 0.075, conditions: and([
           condition('poolRevenu', { pool: 'jokers_mg_group', operator: '<', target: 60_000 }),
-          condition('terms', { type: 'medias', operator: 'not-in', list: ['tv', 'svod'] })
+          condition('terms', { type: 'medias', operator: 'not-in', list: ['tv', 'svod'] as any })
         ]) },
         { type: 'right', id: 'cineaxe_rnpp_fr_video_cine_2', orgId: 'cineaxe', percent: 0.325, conditions: and([
           condition('orgRevenu', { orgId: 'cineaxe', operator: '<', target: 150_000 }),
-          condition('terms', { type: 'medias', operator: 'not-in', list: ['tv', 'svod'] })
+          condition('terms', { type: 'medias', operator: 'not-in', list: ['tv', 'svod'] as any })
         ]) },
         { type: 'right', id: 'cineaxe_rnpp_fr_video_cine_3', orgId: 'cineaxe', percent: 0.05 }
       ] },
       { type: 'vertical', id: 'cineaxe_rnpp_fr_tv_svod', children: [
         { type: 'right', id: 'cineaxe_rnpp_fr_tv_svod_1', orgId: 'cineaxe', percent: 0.36, conditions: and([
           condition('orgRevenu', { orgId: 'cineaxe', operator: '<', target: 150_000 }),
-          condition('terms', { type: 'medias', operator: 'in', list: ['tv', 'svod'] })
+          condition('terms', { type: 'medias', operator: 'in', list: ['tv', 'svod'] as any })
         ]) },
         { type: 'right', id: 'cineaxe_rnpp_fr_tv_svod_2', orgId: 'cineaxe', percent: 0.05 }
       ] },
       { type: 'vertical', id: 'cinecap_rnpp_fr_video_cine', children: [
         { type: 'right', id: 'cinecap_rnpp_fr_video_cine_1', orgId: 'cinecap', percent: 0.075, conditions: and([
           condition('poolRevenu', { pool: 'jokers_mg_group', operator: '<', target: 60_000 }),
-          condition('terms', { type: 'medias', operator: 'not-in', list: ['tv', 'svod'] })
+          condition('terms', { type: 'medias', operator: 'not-in', list: ['tv', 'svod'] as any })
         ]) },
         { type: 'right', id: 'cinecap_rnpp_fr_video_cine_2', orgId: 'cinecap', percent: 0.325, conditions: and([
           condition('orgRevenu', { orgId: 'cinecap', operator: '<', target: 150_000 }),
-          condition('terms', { type: 'medias', operator: 'not-in', list: ['tv', 'svod'] })
+          condition('terms', { type: 'medias', operator: 'not-in', list: ['tv', 'svod'] as any })
         ]) },
         { type: 'right', id: 'cinecap_rnpp_fr_video_cine_3', orgId: 'cinecap', percent: 0.05 }
       ] },
       { type: 'vertical', id: 'cinecap_rnpp_fr_tv_svod', children: [
         { type: 'right', id: 'cinecap_rnpp_fr_tv_svod_1', orgId: 'cinecap', percent: 0.36, conditions: and([
           condition('orgRevenu', { orgId: 'cinecap', operator: '<', target: 150_000 }),
-          condition('terms', { type: 'medias', operator: 'in', list: ['tv', 'svod'] })
+          condition('terms', { type: 'medias', operator: 'in', list: ['tv', 'svod'] as any })
         ]) },
         { type: 'right', id: 'cinecap_rnpp_fr_tv_svod_2', orgId: 'cinecap', percent: 0.05 }
       ] },

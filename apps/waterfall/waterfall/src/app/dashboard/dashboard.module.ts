@@ -79,7 +79,7 @@ const routes: Routes = [{
       children: [
         {
           path: '',
-          redirectTo: 'terrawilly-demo',
+          redirectTo: 'terrawilly-group',
           pathMatch: 'full'
         },
         {

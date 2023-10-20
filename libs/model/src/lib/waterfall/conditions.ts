@@ -478,7 +478,7 @@ function amount(ctx: ConditionContext, payload: ConditionAmount) {
 interface ConditionTerms {
   operator: ArrayOperator;
   type: GroupScope;
-  list: string[]; // TODO #9471 should be Media[] | Territory[]
+  list: Media[] | Territory[];
 }
 function terms(ctx: ConditionContext, payload: ConditionTerms) {
   const { income } = ctx;
