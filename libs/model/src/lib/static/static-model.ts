@@ -865,12 +865,14 @@ export const rightholderRoles = {
   salesAgent: 'Sales Agent',
   mainDistributor: 'Main Distributor',
   localDistributor: 'Local Distributor',
+  sale: 'Sale',
   author: 'Author',
   producer: 'Producer',
   coProducer: 'Co-Producer',
   financier: 'Financiers',
   institution: 'Institution',
   performer: 'Performer',
+  other: 'Other'
 } as const
 
 export const rightTypes = {
@@ -1739,13 +1741,13 @@ export const paymentType = {
 export const paymentStatus = {
   pending: 'Pending',
   received: 'Received',
-  processed: 'Processed'
+  // processed: 'Processed' TODO enable when we have a way to process payments on app
 } as const;
 
 export const statementStatus = {
   draft: 'Draft',
   pending: 'Pending',
-  processed: 'Processed',
+  reported: 'Reported',
   rejected: 'Rejected'
 } as const;
 

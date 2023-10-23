@@ -27,6 +27,7 @@ import {
   isDistributorStatement,
   isProducerStatement,
   mainCurrency,
+  movieCurrencies,
   pathExists
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
@@ -51,7 +52,7 @@ export class WaterfallDashboardComponent implements OnInit {
   public movie: Movie;
   public waterfall: Waterfall;
   public version: Version;
-  public blocks: Block[];
+  public statementBlocks: Block[];
   public history: History[];
   private statements: Statement[];
   public rightholderStatements: RightholderStatements;
@@ -62,6 +63,8 @@ export class WaterfallDashboardComponent implements OnInit {
   public currentState: History;
   public currentBlock: string;
   public producersOrCoproducers: WaterfallRightholder[] = [];
+  public options = { xAxis: { categories: [] }, series: [] };
+  public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
 
   constructor(
     private movieService: MovieService,
@@ -89,11 +92,19 @@ export class WaterfallDashboardComponent implements OnInit {
     this.state = await this.waterfallService.buildWaterfall({ waterfallId, versionId });
     this.history = this.state.waterfall.history;
     this.version = this.state.version;
-    this.blocks = this.version.blockIds.map(id => data.blocks.find(b => b.id === id));
-    this.currentBlock = this.blocks[this.blocks.length - 1].id;
-    this.selectBlock(this.currentBlock);
-
-    this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
+    const blocks = this.version.blockIds.map(id => data.blocks.find(b => b.id === id));
+    this.statementBlocks = blocks.filter(b => this.statements.find(s => s.duration.to.getTime() === b.timestamp));
+    if (this.statementBlocks.length) {
+      this.currentBlock = this.statementBlocks[this.statementBlocks.length - 1].id;
+      this.selectBlock(this.currentBlock);
+      if (!this.producersOrCoproducers.length) {
+        this.snackBar.open('No producers or coproducers found for this waterfall. Please set rightholders roles.', 'close', { duration: 5000 });
+      } else {
+        this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
+      }
+    } else {
+      this.snackBar.open('No statements found for this waterfall', 'close', { duration: 5000 });
+    }
 
     this.cdRef.markForCheck();
   }
@@ -106,8 +117,37 @@ export class WaterfallDashboardComponent implements OnInit {
       .map(({ id }) => this.getRightholder(id))
       .filter(({ roles }) => roles.includes('producer') || roles.includes('coProducer'));
 
-    if (!this.producersOrCoproducers.length) this.snackBar.open('No producers or coproducers found for this waterfall', 'close', { duration: 5000 });
+    this.buildGraph(blockId);
     this.cdRef.markForCheck();
+  }
+
+  private buildGraph(blockId: string) {
+    const filteredStatementBlocks = this.statementBlocks.filter(b => this.version.blockIds.indexOf(b.id) <= this.version.blockIds.indexOf(blockId));
+    const data = filteredStatementBlocks.map(block => {
+      const index = this.version.blockIds.indexOf(block.id);
+      const state = this.history[index + 1];
+      const incomes = Object.values(state.incomes).map(incomeState => {
+        const income = this.incomes.find(i => i.id === incomeState.id);
+        return { amount: incomeState.amount, source: getAssociatedSource(income, this.waterfall.sources) };
+      });
+
+      const incomesBySource = this.waterfall.sources.map(source => {
+        const incomesForSource = incomes.filter(i => i.source.id === source.id);
+        const amount = incomesForSource.length ? incomesForSource.map(i => i.amount).reduce((a, b) => a + b) : 0;
+        return { source, amount: Math.round(amount) };
+      });
+
+      return { date: new Date(block.timestamp), incomesBySource };
+    });
+
+    const categories = data.map(h => new Date(h.date).toISOString().slice(0, 10));
+    const sourcesWithIncome = this.waterfall.sources.filter(s => data.some(d => d.incomesBySource.some(i => i.source.id === s.id && i.amount > 0)));
+    const series = sourcesWithIncome.map(source => ({
+      name: source.name,
+      data: data.map(d => d.incomesBySource.find(i => i.source.id === source.id).amount)
+    }));
+
+    this.options = { xAxis: { categories }, series };
   }
 
   public getTotalIncomes(incomeState: Record<string, IncomeState>): PricePerCurrency {
@@ -166,7 +206,7 @@ export class WaterfallDashboardComponent implements OnInit {
     const directSalesStatements = this.statements
       .filter(s => isDirectSalesStatement(s))
       .filter(s => s.duration.to.getTime() <= currentStateDate.getTime())
-      .filter(s => s.rightholderId === rightholderId) as DirectSalesStatement[];
+      .filter(s => s.rightholderId === rightholderId && s.status === 'reported') as DirectSalesStatement[];
 
     const statements = [...distributorStatements, ...directSalesStatements];
     if (!statements.length) return [];
@@ -183,11 +223,9 @@ export class WaterfallDashboardComponent implements OnInit {
     const contracts = unique(contractsIds)
       .map(id => this.contracts.find(c => c.id === id))
       .filter(c => {
-        // Remove contracts where the other party is a distributor
-        const otherParty = c.sellerId === rightholderId ? c.buyerId : c.sellerId;
-        const rightholder = this.waterfall.rightholders.find(r => r.id === otherParty);
-        const distributorRoles: RightholderRole[] = ['mainDistributor', 'localDistributor', 'salesAgent'];
-        return !rightholder.roles.some(r => distributorRoles.includes(r));
+        // Remove Distributor contracts
+        const distributorContractTypes: RightholderRole[] = ['mainDistributor', 'localDistributor', 'salesAgent'];
+        return !distributorContractTypes.includes(c.type);
       });
 
     // Fetch incomes and sources related to the statements
@@ -198,8 +236,7 @@ export class WaterfallDashboardComponent implements OnInit {
 
     // Filter contracts that have at least one right that is related to the sources
     const filteredContracts = contracts.filter(c => {
-      const otherParty = c.sellerId === rightholderId ? c.buyerId : c.sellerId;
-      const rights = this.rights.filter(r => r.rightholderId === otherParty);
+      const rights = this.rights.filter(r => r.contractId === c.id);
       return rights.some(r => sources.some(s => pathExists(r.id, s.id, this.state.waterfall.state)));
     });
 
@@ -218,8 +255,7 @@ export class WaterfallDashboardComponent implements OnInit {
         // Filter incomes again to keep only incomes that are related to this contract
         const income = this.incomes.find(i => i.id === id);
         const source = getAssociatedSource(income, this.waterfall.sources);
-        const otherParty = c.sellerId === rightholderId ? c.buyerId : c.sellerId;
-        const rights = this.rights.filter(r => r.rightholderId === otherParty);
+        const rights = this.rights.filter(r => r.contractId === c.id);
         return rights.some(r => pathExists(r.id, source.id, this.state.waterfall.state));
       }),
       duration: createDuration({
@@ -250,4 +286,7 @@ export class WaterfallDashboardComponent implements OnInit {
     this.displayRightholderStatements(statement.rightholderId);
   }
 
+  public goTo(type: 'statement' | 'rightholder', id: string) {
+    this.router.navigate(['/c/o/dashboard/crm/waterfall', this.waterfall.id, type, id]);
+  }
 }

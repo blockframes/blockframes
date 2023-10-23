@@ -27,7 +27,8 @@ import {
   isContract,
   convertDocumentTo,
   Block,
-  WaterfallDocument
+  WaterfallDocument,
+  investmentsToActions,
 } from '@blockframes/model';
 import { jsonDateReviver, unique } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/service';
@@ -206,6 +207,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
    */
   private async _initWaterfall(waterfallId: string, version: Partial<Version>) {
     const contractActions = contractsToActions(this.data[waterfallId].contracts, this.data[waterfallId].terms);
+    const investmentActions = investmentsToActions(this.data[waterfallId].contracts, this.data[waterfallId].terms);
     const rightActions = rightsToActions(this.data[waterfallId].rights);
     const incomeActions = incomesToActions(this.data[waterfallId].contracts, this.data[waterfallId].incomes, this.data[waterfallId].waterfall.sources);
     const expenseActions = expensesToActions(this.data[waterfallId].expenses);
@@ -213,6 +215,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
 
     const groupedActions = groupByDate([
       ...contractActions,
+      ...investmentActions,
       ...rightActions,
       ...expenseActions, // Expenses should be added before incomes
       ...incomeActions,
@@ -221,7 +224,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
 
     const blocks = await Promise.all(groupedActions.map(group => {
       const blockName = getBlockName(group.date, group.actions);
-      return this.blockService.create(waterfallId, blockName, group.actions);
+      return this.blockService.create(waterfallId, blockName, group.actions, group.date);
     }));
 
     await this.addVersion(waterfallId, version);
@@ -262,7 +265,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
 
     await this.addVersion(waterfallId, newVersion);
 
-    const blocksIds = await Promise.all(blocks.map(b => this.blockService.create(waterfallId, b.name, Object.values(b.actions))));
+    const blocksIds = await Promise.all(blocks.map(b => this.blockService.create(waterfallId, b.name, Object.values(b.actions), new Date(b.timestamp))));
     this.data[waterfallId].blocks = await this.blockService.getValue({ waterfallId });
 
     await this.addBlocksToVersion(waterfallId, newVersion.id, blocksIds);
@@ -304,10 +307,12 @@ function getBlockName(date: Date, actions: Action[]) {
   const dateStr = `${date.toLocaleDateString()}`;
   const actionsNames = unique(actions.map(a => a.name));
 
-  const statementsActions: ActionName[] = ['expense', 'income', 'payment'];
-  const contractsActions: ActionName[] = ['contract', 'updateContract'];
+  const paymentActions: ActionName[] = ['payment']; // External payments made after the statement date end
+  const statementsActions: ActionName[] = ['expense', 'income', 'payment']; // Expenses, incomes and internal payments
+  const contractsActions: ActionName[] = ['contract', 'updateContract', 'invest'];
   const rightsActions: ActionName[] = ['append', 'prepend', 'prependHorizontal', 'appendHorizontal', 'appendVertical', 'prependVertical'];
 
+  if (actionsNames.every(n => paymentActions.includes(n))) return `payments-${dateStr}`;
   if (actionsNames.every(n => statementsActions.includes(n))) return `statements-${dateStr}`;
   if (actionsNames.every(n => contractsActions.includes(n))) return `contracts-${dateStr}`;
   if (actionsNames.every(n => rightsActions.includes(n))) return `rights-${dateStr}`;

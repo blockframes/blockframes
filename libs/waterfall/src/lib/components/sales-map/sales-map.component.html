@@ -61,7 +61,7 @@
           <ul>
             <li><span><b>Contract Duration: </b>{{ infos.duration.from | date:'MM/dd/yyyy' }} - {{ infos.duration.to | date:'MM/dd/yyyy' }}</span></li>
             <li><span><b>Signature Date </b>{{ infos.signatureDate | date:'MM/dd/yyyy' }}</span></li>
-            <li><span><b>Rights Type: </b>{{ infos.type | toLabel: 'contractType' }}</span></li>
+            <li><span><b>Rights Type: </b>{{ infos.type | toLabel: 'rightholderRoles' }}</span></li>
             <li><span><b>Territories: </b>{{ infos.territories | toGroupLabel:'territories':'World'| join | maxLength:120 }}</span></li>
             <li><span><b>Medias: </b>{{ infos.medias | toGroupLabel:'medias':'All' | join | maxLength:120 }}</span></li>
             <li>

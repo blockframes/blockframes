@@ -23,7 +23,7 @@ import { Expense } from '../expense';
 import { Term } from '../terms';
 import { getContractAndAmendments, getDeclaredAmount } from '../contract';
 import { convertCurrenciesTo, sortByDate, sum } from '../utils';
-import { Media, MovieCurrency, Territory } from '../static';
+import { MovieCurrency, RightholderRole, Media, Territory } from '../static';
 import { Right, orderRights } from './right';
 import { Statement, isDirectSalesStatement, isDistributorStatement, isProducerStatement } from './statement';
 
@@ -134,6 +134,26 @@ export function contractsToActions(contracts: WaterfallContract[], terms: Term[]
     actions.push(c.rootId ? action('updateContract', payload) : action('contract', payload));
 
   });
+
+  return actions;
+}
+
+export function investmentsToActions(contracts: WaterfallContract[], terms: Term[]) {
+  const actions: Action[] = [];
+  const investmentContractTypes: RightholderRole[] = ['salesAgent', 'mainDistributor', 'coProducer', 'financier', 'institution'];
+  const investmentContracts = contracts.filter(c => investmentContractTypes.includes(c.type));
+
+  for (const c of investmentContracts) {
+    if (c.rootId) continue; // Only root contracts are considered as investments
+    const declaredAmount = getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) });
+    const { [mainCurrency]: amount } = convertCurrenciesTo(declaredAmount, mainCurrency);
+    if (amount <= 0) continue;
+    actions.push(action('invest', {
+      amount,
+      orgId: c.buyerId, // Producer is always the licensor on theses types of contracts
+      date: c.signatureDate
+    }));
+  }
 
   return actions;
 }
@@ -319,7 +339,7 @@ export function expensesToActions(expenses: Expense[]) {
 export function statementsToActions(statements: Statement[]) {
   const payments: PaymentAction[] = [];
 
-  for (const statement of statements) {
+  for (const statement of statements.filter(s => s.status === 'reported')) {
 
     // Income to Org payments
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
@@ -340,8 +360,8 @@ export function statementsToActions(statements: Statement[]) {
       }
     }
 
-    const rightPayments = statement.payments.right.filter(p => p.status === 'processed' || p.status === 'received') || [];
-    const rightholderPayment = ((isDistributorStatement(statement) || isProducerStatement(statement)) && ['processed', 'received'].includes(statement.payments.rightholder?.status)) ? statement.payments.rightholder : undefined;
+    const rightPayments = statement.payments.right.filter(p => p.status === 'received') || [];
+    const rightholderPayment = ((isDistributorStatement(statement) || isProducerStatement(statement)) && statement.payments.rightholder.status === 'received') ? statement.payments.rightholder : undefined;
 
     // Org to Org payments
     if (rightholderPayment) {
@@ -361,7 +381,7 @@ export function statementsToActions(statements: Statement[]) {
 
     // Org to Right payments
     for (const payment of rightPayments) {
-      // Add external right payment only if there is a rightholderPayment associated with status processed or received
+      // Add external right payment only if there is a rightholderPayment associated with status received
       if (payment.mode === 'external' && !rightholderPayment) continue;
 
       payments.push({
@@ -773,30 +793,36 @@ function income(state: TitleState, payload: IncomeAction) {
  * @param payload 
  */
 function payment(state: TitleState, payload: PaymentAction) {
+  const assertRevenue = () => {
+    const distributedRevenue = Object.values(state.rights).filter(r => r.orgId === payload.from.org).reduce((acc, r) => acc + r.revenu.actual, 0);
+    const orgRevenue = state.orgs[payload.from.org].revenu.actual;
+    if (parseFloat(payload.amount.toFixed(4)) > parseFloat((orgRevenue - distributedRevenue).toFixed(4))) {
+      throw new Error(`Org "${payload.from.org}" does not have enough actual revenue to proceed.`);
+    }
+  };
 
   if (payload.from.org && payload.to.org) { // Payment from org to org
-    if (payload.amount > state.orgs[payload.from.org].revenu.actual) throw new Error(`Org "${payload.from.org}" does not have enough actual revenue to proceed.`);
+    assertRevenue();
     state.orgs[payload.from.org].revenu.actual -= payload.amount;
     state.orgs[payload.to.org].revenu.actual += payload.amount;
     state.orgs[payload.to.org].turnover.actual += payload.amount;
   } else if (payload.from.org && payload.to.right) { // Payment for org to right
     assertNode(state, payload.to.right);
+    // Orgs
     const orgState = getNodeOrg(state, payload.to.right);
+    if (orgState.id !== payload.from.org) throw new Error(`Internal payment error. "${payload.to.right}" is not owned by "${payload.from.org}".`);
+    assertRevenue();
+
+    // Rights
     const nodeTo = getNode(state, payload.to.right);
     if (!isRight(state, nodeTo)) throw new Error(`Internal payment error. "${payload.to.right}" can only be a right (not a group).`);
-    const actualRevenue = payload.amount;
 
     const actualTurnover = isGroupChild(state, nodeTo.id) ?
       payload.amount : // Inside group, childs turnover is same as revenue
       payload.amount / nodeTo.percent;
 
-    // Rights
-    nodeTo.revenu.actual += actualRevenue;
+    nodeTo.revenu.actual += payload.amount;
     nodeTo.turnover.actual += actualTurnover;
-
-    // Orgs
-    if (orgState.id !== payload.from.org) throw new Error(`Internal payment error. "${payload.to.right}" is not owned by "${payload.from.org}".`);
-    if (actualRevenue > state.orgs[payload.from.org].revenu.actual) throw new Error(`Internal payment error. Org "${payload.from.org}" does not have enough actual revenue to proceed.`);
 
     // Recalculate groups actual revenue & turnover
     const group = getGroup(state, nodeTo.id);
@@ -805,12 +831,21 @@ function payment(state: TitleState, payload: PaymentAction) {
       const childsActualdRevenue = sum(childs, c => c.revenu.actual);
       group.revenu.actual = childsActualdRevenue;
       group.turnover.actual = childsActualdRevenue; // For a group, turnover is sum of its childs revenue
+
+      // For nested groups
+      const parentGroup = getGroup(state, group.id);
+      if (parentGroup) {
+        const parentChilds = getChildRights(state, parentGroup);
+        const parentChildsActualdRevenue = sum(parentChilds, c => c.revenu.actual);
+        parentGroup.revenu.actual = parentChildsActualdRevenue;
+        parentGroup.turnover.actual = parentChildsActualdRevenue; // For a group, turnover is sum of its childs revenue
+      }
     }
 
     // Pools
     const pools = nodeTo.pools.map(poolId => state.pools[poolId]);
     for (const pool of pools) {
-      pool.revenu.actual += actualRevenue;
+      pool.revenu.actual += payload.amount;
       pool.turnover.actual += actualTurnover;
     }
   } else if (payload.from.income && payload.to.org) { // Direct payment from income to org

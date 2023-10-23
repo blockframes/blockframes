@@ -4,6 +4,7 @@ import { FullMandate, FullSale, Holdback, Mandate, Sale } from './contract';
 import { mediaGroup, territories, territoriesISOA3 } from './static';
 import { Media, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from './static/types';
 import { BucketTerm, Term, Duration } from './terms';
+import { WaterfallMandate, WaterfallSale } from './waterfall';
 
 export interface BaseAvailsFilter {
   medias: Media[],
@@ -22,7 +23,7 @@ interface AvailResult<A extends BaseAvailsFilter> {
   sales: FullSale[];
 }
 
-export function filterContractsByTitle(titleId: string, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[], bucket?: Bucket) {
+export function filterContractsByTitle(titleId: string, mandates: (Mandate | WaterfallMandate)[], mandateTerms: Term[], sales: (Sale | WaterfallSale)[], saleTerms: Term[], bucket?: Bucket) {
 
   // Gather only mandates & mandate terms related to this title
   const termsByMandate: Record<string, Term[]> = {};
@@ -32,10 +33,10 @@ export function filterContractsByTitle(titleId: string, mandates: Mandate[], man
   }
 
   const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
-  const fullMandates = titleMandates.map((m): FullMandate => ({
+  const fullMandates = titleMandates.map(m => ({
     ...m,
     terms: termsByMandate[m.id],
-  }));
+  })) as FullMandate[];
 
   // Gather only sales & sale terms related to this title
   const termsBySale: Record<string, Term[]> = {};
@@ -45,10 +46,10 @@ export function filterContractsByTitle(titleId: string, mandates: Mandate[], man
   }
 
   const titleSales = sales.filter(sale => sale.titleId === titleId);
-  const fullSales = titleSales.map((s): FullSale => ({
+  const fullSales = titleSales.map(s => ({
     ...s,
     terms: termsBySale[s.id],
-  }));
+  })) as FullSale[];
 
   const bucketContracts = bucket?.contracts.filter(s => s.titleId === titleId);
 

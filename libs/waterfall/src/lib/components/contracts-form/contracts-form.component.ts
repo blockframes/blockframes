@@ -12,7 +12,7 @@ import {
   Waterfall,
   WaterfallContract,
   WaterfallDocument,
-  createContract,
+  createWaterfallContract,
   createWaterfallDocument,
   rightholderRoles,
   createTerm
@@ -38,9 +38,9 @@ export class ContractsFormComponent implements OnInit {
   waterfall: Waterfall;
 
   @Input() movieId: string;
-  @Input () documentForm = new WaterfallDocumentForm({ id: this.documentService.createId() });
+  @Input() documentForm = new WaterfallDocumentForm({ id: this.documentService.createId() });
 
-  @Output() skip = new EventEmitter(); 
+  @Output() skip = new EventEmitter();
 
   constructor(
     private waterfallService: WaterfallService,
@@ -142,8 +142,8 @@ export class ContractsFormComponent implements OnInit {
       type: 'contract',
       waterfallId: this.movieId,
       signatureDate: this.documentForm.controls.signatureDate.value,
-      meta: createContract({
-        type: 'mandate',
+      meta: createWaterfallContract({
+        type: this.selected,
         status: 'accepted',
         buyerId, // licensee
         sellerId, // licensor

@@ -105,7 +105,7 @@ export class WaterfallComponent implements OnInit {
     this.canInitWaterfall$.next(this.canInitWaterfall());
   }
 
-  public goTo(type: 'document' | 'statement', id: string) {
+  public goTo(type: 'document' | 'statement' | 'rightholder', id: string) {
     this.router.navigate([type, id], { relativeTo: this.route });
   }
 

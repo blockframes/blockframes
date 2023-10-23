@@ -9,23 +9,31 @@
   <h3>Dashboard - {{ version.name }}</h3>
 
   <section>
-    <mat-form-field appearance="fill">
-      <mat-label>Blocks</mat-label>
-      <mat-select (selectionChange)="selectBlock($event.value)" [(value)]="currentBlock">
-        <mat-option *ngFor="let block of blocks" [value]="block.id">
-          {{ block.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <article>
+      <mat-form-field appearance="fill">
+        <mat-label>Statements</mat-label>
+        <mat-select (selectionChange)="selectBlock($event.value)" [(value)]="currentBlock">
+          <mat-option *ngFor="let block of statementBlocks" [value]="block.id">
+            {{ block.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <h3 *ngIf="currentState">
-      Total film revenue : <price-per-currency [price]="getTotalIncomes(currentState.incomes)"></price-per-currency>
-    </h3>
+      <h3 *ngIf="currentState">
+        Total film revenue : <price-per-currency [price]="getTotalIncomes(currentState.incomes)"></price-per-currency>
+      </h3>
+    </article>
+    <apx-chart *ngIf="options.series.length"
+      [chart]="{ type: 'bar', stacked: true }" 
+      [series]="options.series"
+      [xaxis]="options.xAxis"
+      [tooltip]="{ y: formatter }">
+    </apx-chart>
   </section>
 
   <ng-container *ngIf="currentState">
     <h3>Rightholders summary</h3>
-    <bf-table [source]="currentState.orgs | keyvalue" useFilter pagination="50">
+    <bf-table [source]="currentState.orgs | keyvalue" useFilter clickable (rowClick)="goTo('rightholder', $event.value.id)" pagination="50">
       <ng-template colRef="value.id" label="Right Holder" let-id sort>
         {{ getRightholderName(id) }}
       </ng-template>
@@ -45,6 +53,14 @@
       </ng-template>
       <ng-template colRef="value.turnover" label="Turnover" let-turnover sort>
         <price-per-currency [price]="getPrice(turnover.actual)"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="value" label="Distributed" let-org sort>
+        <price-per-currency [price]="getPrice(org.turnover.actual - org.revenu.actual)"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="value" label="Action" let-rightholder sticky>
+        <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'rightholder', rightholder.id]" (click)="$event.stopPropagation()">
+          <mat-icon svgIcon="launch"></mat-icon>
+        </a>
       </ng-template>
     </bf-table>
 
@@ -93,7 +109,7 @@
 
   <article *ngIf="rightholderStatements?.existing.length">
     <h3>Existing statements for "{{ getRightholderName(rightholderStatements.rightholderId) }}"</h3>
-    <bf-table [source]="rightholderStatements.existing" useFilter pagination="50">
+    <bf-table [source]="rightholderStatements.existing" useFilter clickable (rowClick)="goTo('statement', $event.id)" pagination="50">
       <ng-template colRef="type" label="Type" let-type sort>
         {{ type | toLabel: 'statementType' }}
       </ng-template>

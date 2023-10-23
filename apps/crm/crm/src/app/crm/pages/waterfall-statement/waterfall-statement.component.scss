@@ -27,3 +27,15 @@ article.right-details {
     margin-top: 16px;
   }
 }
+
+article.payment-date {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  width: 300px;
+  margin-bottom: 32px;
+}
+
+button[mat-button] {
+  margin-bottom: 64px;
+}

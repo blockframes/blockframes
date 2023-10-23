@@ -1,12 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import {
   filterContractsByTitle,
-  Contract,
   Term,
-  isSale,
   territoriesSold,
   TerritorySoldMarker,
-  isMandate,
   ContractType,
   Media,
   Territory,
@@ -17,10 +14,12 @@ import {
   getCurrentContract,
   getContractAndAmendments,
   WaterfallContract,
-  Mandate,
-  Sale,
   getContractDurationStatus,
-  Waterfall
+  Waterfall,
+  isWaterfallMandate,
+  WaterfallMandate,
+  WaterfallSale,
+  isWaterfallSale
 } from '@blockframes/model';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { TermService } from '@blockframes/contract/term/service';
@@ -50,9 +49,9 @@ export class SalesMapComponent implements OnInit {
   @Input() waterfallId: string;
 
   private contracts: WaterfallContract[];
-  private mandates: Mandate[];
+  private mandates: WaterfallMandate[];
   private mandateTerms: Term[];
-  private sales: Sale[];
+  private sales: WaterfallSale[];
   private salesTerms: Term[];
   private waterfall: Waterfall;
 
@@ -92,9 +91,9 @@ export class SalesMapComponent implements OnInit {
     this.contracts = await this.waterfallDocumentsService.getContracts(this.waterfallId);
     this.incomesCache = await this.incomeService.getValue([where('titleId', '==', this.waterfallId)]);
 
-    this.mandates = this.contracts.filter(isMandate);
+    this.mandates = this.contracts.filter(isWaterfallMandate);
     this.mandateTerms = await this.getTerms(this.mandates);
-    this.sales = this.contracts.filter(isSale);
+    this.sales = this.contracts.filter(isWaterfallSale);
     this.salesTerms = await this.getTerms(this.sales);
 
     const res = filterContractsByTitle(this.waterfallId, this.mandates, this.mandateTerms, this.sales, this.salesTerms);
@@ -102,7 +101,7 @@ export class SalesMapComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  private getTerms(contracts: Contract[]) {
+  private getTerms(contracts: WaterfallContract[]) {
     const termIds = unique(contracts.map(c => c.termIds).flat());
     return this.termsService.getValue(termIds);
   }

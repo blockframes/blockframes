@@ -15,7 +15,7 @@ import {
   Movie,
   Territory,
   Duration,
-  ContractType,
+  RightholderRole,
   Term,
   MovieCurrency,
   WaterfallDocument,
@@ -35,10 +35,10 @@ export interface FieldsConfig {
     id?: string;
     ownerId: string;
     rootId: string;
-    signatureDate?: Date;
+    signatureDate: Date;
   };
   meta: {
-    type: ContractType;
+    type: RightholderRole;
     sellerId: string;
     buyerId: string;
     price?: number;
@@ -49,7 +49,7 @@ export interface FieldsConfig {
     territories_included: Territory[];
     territories_excluded: Territory[];
     medias: Media[];
-    id?: string;
+    id: string;
     price?: number;
     currency?: MovieCurrency;
   }[];
@@ -138,18 +138,15 @@ export function getDocumentConfig(option: DocumentConfig) {
       },
         /* g */ 'meta.type': (value: string) => {
         if (!value) throw mandatoryError(value, 'Type');
-        const type = getKeyIfExists('contractType', value);
-        return type;
+        return getKeyIfExists('rightholderRoles', value);
       },
-        /* h */ 'meta.sellerId': async (value: string, data: FieldsConfig) => {
+        /* h */ 'meta.sellerId': (value: string, data: FieldsConfig) => {
         if (!value) throw mandatoryError(value, 'Licensor');
-        const rightholderID = await getRightholderId(value, data.document.waterfallId, waterfallService, rightholderCache);
-        return rightholderID;
+        return getRightholderId(value, data.document.waterfallId, waterfallService, rightholderCache);
       },
-        /* i */ 'meta.buyerId': async (value: string, data: FieldsConfig) => {
+        /* i */ 'meta.buyerId': (value: string, data: FieldsConfig) => {
         if (!value) throw mandatoryError(value, 'Licensee');
-        const rightholderID = await getRightholderId(value, data.document.waterfallId, waterfallService, rightholderCache);
-        return rightholderID;
+        return getRightholderId(value, data.document.waterfallId, waterfallService, rightholderCache);
       },
         /* j */ 'meta.price': (value: string) => {
         return Number(value);
@@ -159,8 +156,7 @@ export function getDocumentConfig(option: DocumentConfig) {
         if (value?.trim() === '$') return 'USD';
         if (value?.trim() === '£') return 'GBP';
 
-        const currency = getKeyIfExists('movieCurrencies', value);
-        return currency;
+        return getKeyIfExists('movieCurrencies', value);
       },
         /* l */ 'meta.duration.from': (value: string) => {
         return getDate(value, 'Start of Contract');
@@ -168,9 +164,9 @@ export function getDocumentConfig(option: DocumentConfig) {
         /* m */ 'meta.duration.to': (value: string) => {
         return getDate(value, 'End of Contract');
       },
-        /* n */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator),
+        /* n */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
         /* o */ 'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
-        /* p */ 'term[].medias': (value: string) => getGroupedList(value, 'medias', separator),
+        /* p */ 'term[].medias': (value: string) => getGroupedList(value, 'medias', separator, { required: false }),
         /* q */ 'term[].id': async (value: string) => {
         if (!value) return termService.createId();
         const exist = await getTerm(value, termService, termCache);
@@ -181,8 +177,7 @@ export function getDocumentConfig(option: DocumentConfig) {
         return Number(value);
       },
         /* s */ 'term[].currency': (value: string) => {
-        const currency = getKeyIfExists('movieCurrencies', value);
-        return currency;
+        return getKeyIfExists('movieCurrencies', value);
       },
 
     };

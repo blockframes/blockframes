@@ -1,9 +1,9 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { Contract, WaterfallContract, BucketContract } from '@blockframes/model';
+import { Contract, WaterfallContract, BucketContract, BaseContract } from '@blockframes/model';
 import { of } from 'rxjs';
 import { TermService } from './service';
 
-const isBucketContract = (contract: Contract | BucketContract): contract is BucketContract => {
+const isBucketContract = (contract: BaseContract | BucketContract): contract is BucketContract => {
   return 'terms' in contract;
 }
 

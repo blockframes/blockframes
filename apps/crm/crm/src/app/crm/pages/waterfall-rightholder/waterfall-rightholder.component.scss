@@ -14,9 +14,21 @@ h3 {
 
 section {
   display: flex;
-  align-items: center;
   gap: 16px;
-  static-select {
-    width: 30%
+  justify-content: space-between;
+
+  article {
+    width: 60%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    static-select {
+      width: 30%
+    }
+  }
+
+  apx-chart {
+    width: 30%;
   }
 }
+

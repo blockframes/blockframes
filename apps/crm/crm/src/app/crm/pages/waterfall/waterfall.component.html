@@ -166,7 +166,7 @@
           <span>Remove all rightholders</span>
         </button>
       </section>
-      <bf-table [source]="rightholders" clickable useFilter pagination="50">
+      <bf-table [source]="rightholders" clickable (rowClick)="goTo('rightholder', $event.id)" useFilter pagination="50">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>
@@ -180,7 +180,7 @@
           <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'rightholder', rightholder.id]" (click)="$event.stopPropagation()">
             <mat-icon svgIcon="launch"></mat-icon>
           </a>
-          <button mat-icon-button (click)="removeRightholders([rightholder])">
+          <button mat-icon-button (click)="removeRightholders([rightholder]); $event.stopPropagation()">
             <mat-icon svgIcon="delete" matTooltip="Delete rightholder"></mat-icon>
           </button>
         </ng-template>
@@ -249,7 +249,7 @@
           </ng-container>
         </ng-template>
         <ng-template colRef="type" label="Type" let-type sort>
-          {{ type }}
+          {{ type | toLabel: 'rightholderRoles' }}
         </ng-template>
         <ng-template colRef="" label="Action" let-contract sticky>
           <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'document', contract.id]" (click)="$event.stopPropagation()">

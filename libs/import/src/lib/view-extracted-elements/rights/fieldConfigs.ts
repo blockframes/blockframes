@@ -196,6 +196,8 @@ export function getRightConfig(option: RightConfig) {
         if (!isContract(contract)) throw mandatoryError(value, 'Contract Id', `Document "${contract.id}" is not a contract`);
         if (!contract.meta.duration.from) throw mandatoryError(value, 'Contract start date', `Contract id "${contract.id}" is missing start date.`);
         if (!contract.meta.duration.to) throw mandatoryError(value, 'Contract end date', `Contract id "${contract.id}" is missing end date.`);
+        const groupRightTypes: RightType[] = ['horizontal', 'vertical'];
+        if (groupRightTypes.includes(data.right.type)) throw optionalWarning('Skipped contract id for group right');
         return contract.id;
       },
     };
