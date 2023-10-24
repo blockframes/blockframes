@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 // Blockframes
 import { appUrl } from '@env';
@@ -11,19 +11,10 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
   styleUrls: ['./waterfall.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WaterfallComponent implements OnInit {
+export class WaterfallComponent {
 
-  public crmAppUrl;
+  public crmAppUrl = `${appUrl.crm}/c/o/dashboard/crm/waterfall/${this.shell.waterfall.id}`;
   public state$ = this.shell.state$;
 
-  constructor(
-    private shell: DashboardWaterfallShellComponent,
-  ) { }
-
-  async ngOnInit() {
-    const { id: waterfallId } = await this.shell.movie;
-    this.crmAppUrl = `${appUrl.crm}/c/o/dashboard/crm/waterfall/${waterfallId}`;
-  }
-
-
+  constructor(private shell: DashboardWaterfallShellComponent) { }
 }

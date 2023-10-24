@@ -4,13 +4,13 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 import { Observable, combineLatest, map } from 'rxjs';
 
 @Component({
-  selector: 'waterfall-title-sales',
+  selector: 'crm-waterfall-sales',
   templateUrl: './sales.component.html',
   styleUrls: ['./sales.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SalesComponent {
-
+  
   public data$: Observable<SalesMapData> = combineLatest([
     this.shell.contracts$,
     this.shell.waterfall$,
@@ -21,4 +21,5 @@ export class SalesComponent {
   );
 
   constructor(private shell: DashboardWaterfallShellComponent) { }
+
 }

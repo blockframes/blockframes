@@ -65,13 +65,13 @@ export class WaterfallComponent {
   public displayActions(versionId: string) {
     this.displayActions$.next(true);
     this.displayWaterfall$.next(false);
-    this.shell.versionId$.next(versionId);
+    this.shell.setVersionId(versionId);
   }
 
   public displayWaterfall(versionId: string) {
     this.displayActions$.next(false);
     this.displayWaterfall$.next(true);
-    this.shell.versionId$.next(versionId);
+    this.shell.setVersionId(versionId);
   }
 
   public getPayloadPair(from: string | { org?: string, income?: string, right?: string }) {
