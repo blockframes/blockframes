@@ -24,11 +24,9 @@ import {
   Income,
   Expense,
   Statement,
-  isContract,
-  convertDocumentTo,
   Block,
   WaterfallDocument,
-  investmentsToActions,
+  investmentsToActions
 } from '@blockframes/model';
 import { jsonDateReviver, unique } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/service';
@@ -36,12 +34,6 @@ import { doc } from 'firebase/firestore';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 import { waterfall as _waterfall } from './main';
 import { BlockService } from './block.service';
-import { WaterfallDocumentsService } from './documents.service';
-import { IncomeService } from '@blockframes/contract/income/service';
-import { ExpenseService } from '@blockframes/contract/expense/service';
-import { TermService } from '@blockframes/contract/term/service';
-import { RightService } from './right.service';
-import { StatementService } from './statement.service';
 
 export const fromOrg = (orgId: string) => [where('orgIds', 'array-contains', orgId)];
 
@@ -66,18 +58,10 @@ export interface WaterfallData {
 export class WaterfallService extends BlockframesCollection<Waterfall> {
   readonly path = 'waterfall';
 
-  private data: Record<string, WaterfallData> = {}; // Cached data for a given waterfallId
-
   constructor(
     private functions: CallableFunctions,
     private authService: AuthService,
-    private blockService: BlockService,
-    private waterfallDocumentService: WaterfallDocumentsService,
-    private incomeService: IncomeService,
-    private expenseService: ExpenseService,
-    private termService: TermService,
-    private rightService: RightService,
-    private statementService: StatementService,
+    private blockService: BlockService
   ) {
     super();
   }
@@ -88,8 +72,8 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     return createWaterfall(block);
   }
 
-  public async buildWaterfall(data: { waterfallId: string, versionId: string, date?: Date }) {
-    const waterfall = this.app === 'crm' ? await this.buildWaterfallAdmin(data) : await this.buildWaterfallUser(data);
+  public async buildWaterfall(data: { waterfallId: string, versionId: string, date?: Date, canBypassRules?: boolean }) {
+    const waterfall = data.canBypassRules ? await this.buildWaterfallAdmin(data) : await this.buildWaterfallUser(data);
 
     if (data.date) { // Stops waterfall at a given date
       waterfall.waterfall.history = waterfall.waterfall.history.filter(h => {
@@ -149,55 +133,19 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     return waterfall;
   }
 
-  /**
-   * Loads all necessary data to build a waterfall
-   * @param waterfallId 
-   * @returns 
-   */
-  public async loadWaterfalldata(waterfallId: string) {
-    const [waterfall, documents, rights, incomes, expenses, statements, blocks] = await Promise.all([
-      this.getValue(waterfallId),
-      this.waterfallDocumentService.getValue({ waterfallId }),
-      this.rightService.getValue({ waterfallId }),
-      this.incomeService.getValue([where('titleId', '==', waterfallId)]),
-      this.expenseService.getValue([where('titleId', '==', waterfallId)]),
-      this.statementService.getValue({ waterfallId }),
-      this.blockService.getValue({ waterfallId }),
-    ]);
-
-    this.data[waterfallId] = {
-      waterfall,
-      documents,
-      contracts: documents.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c)),
-      terms: [],
-      rights,
-      incomes,
-      expenses,
-      statements,
-      blocks,
-    }
-
-    const terms = await Promise.all(this.data[waterfallId].contracts.map(c => this.termService.getValue([where('contractId', '==', c.id)])));
-    this.data[waterfallId].terms = terms.flat();
-
-    return this.data[waterfallId];
-  }
-
-  public async initWaterfall(waterfallId: string, version: Partial<Version>) {
-    if (!this.data[waterfallId]) await this.loadWaterfalldata(waterfallId);
-    if (this.data[waterfallId].waterfall.versions.find(v => v.id === version.id)) throw new Error(`Version "${version.id}" already exists for waterfall "${waterfallId}"`);
-    return this._initWaterfall(waterfallId, version);
+  public async initWaterfall(data: WaterfallData, version: Partial<Version>) {
+    if (data.waterfall.versions.find(v => v.id === version.id)) throw new Error(`Version "${version.id}" already exists for waterfall "${data.waterfall.id}"`);
+    return this._initWaterfall(data, version);
   }
 
   public async refreshAllWaterfallVersion() {
     // TODO #9520 if rights have a version Id 
   }
 
-  public async refreshWaterfall(waterfallId: string, versionId: string, options: { refreshData: boolean } = { refreshData: false }) {
-    if (!this.data[waterfallId] || options.refreshData) await this.loadWaterfalldata(waterfallId);
-    const version = this.data[waterfallId].waterfall.versions.find(v => v.id === versionId);
-    await this.removeVersion(waterfallId, versionId);
-    return this._initWaterfall(waterfallId, { id: version.id, name: version.name, description: version.description });
+  public async refreshWaterfall(data: WaterfallData, versionId: string) {
+    const version = data.waterfall.versions.find(v => v.id === versionId);
+    await this.removeVersion(data, versionId);
+    return this._initWaterfall(data, { id: version.id, name: version.name, description: version.description });
   }
 
   /**
@@ -205,13 +153,13 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
    * @param version 
    * @returns 
    */
-  private async _initWaterfall(waterfallId: string, version: Partial<Version>) {
-    const contractActions = contractsToActions(this.data[waterfallId].contracts, this.data[waterfallId].terms);
-    const investmentActions = investmentsToActions(this.data[waterfallId].contracts, this.data[waterfallId].terms);
-    const rightActions = rightsToActions(this.data[waterfallId].rights);
-    const incomeActions = incomesToActions(this.data[waterfallId].contracts, this.data[waterfallId].incomes, this.data[waterfallId].waterfall.sources);
-    const expenseActions = expensesToActions(this.data[waterfallId].expenses);
-    const paymentActions = statementsToActions(this.data[waterfallId].statements);
+  private async _initWaterfall(data: WaterfallData, version: Partial<Version>) {
+    const contractActions = contractsToActions(data.contracts, data.terms);
+    const investmentActions = investmentsToActions(data.contracts, data.terms);
+    const rightActions = rightsToActions(data.rights);
+    const incomeActions = incomesToActions(data.contracts, data.incomes, data.waterfall.sources);
+    const expenseActions = expensesToActions(data.expenses);
+    const paymentActions = statementsToActions(data.statements);
 
     const groupedActions = groupByDate([
       ...contractActions,
@@ -224,37 +172,37 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
 
     const blocks = await Promise.all(groupedActions.map(group => {
       const blockName = getBlockName(group.date, group.actions);
-      return this.blockService.create(waterfallId, blockName, group.actions, group.date);
+      return this.blockService.create(data.waterfall.id, blockName, group.actions, group.date);
     }));
 
-    await this.addVersion(waterfallId, version);
+    await this.addVersion(data.waterfall, version);
 
-    await this.addBlocksToVersion(waterfallId, version.id, blocks);
-    return this.data[waterfallId].waterfall;
+    await this.addBlocksToVersion(data.waterfall, version.id, blocks);
+    return data.waterfall;
   }
 
-  public addVersion(waterfallId: string, params: Partial<Version>) {
+  public addVersion(waterfall: Waterfall, params: Partial<Version>) {
     const version = createVersion(params);
-    this.data[waterfallId].waterfall.versions.push(version);
-    return this.update(this.data[waterfallId].waterfall);
+    waterfall.versions.push(version);
+    return this.update(waterfall);
   }
 
-  public async removeVersion(waterfallId: string, id: string) {
-    const blockIds = this.data[waterfallId].waterfall.versions.find(v => v.id === id).blockIds;
-    this.data[waterfallId].waterfall.versions = this.data[waterfallId].waterfall.versions.filter(v => v.id !== id);
-    this.data[waterfallId].blocks = this.data[waterfallId].blocks.filter(b => !blockIds.includes(b.id));
-    await this.update(this.data[waterfallId].waterfall);
-    return this.blockService.remove(blockIds, { params: { waterfallId } });
+  public async removeVersion(data: WaterfallData, versionId: string) {
+    const blockIds = data.waterfall.versions.find(v => v.id === versionId).blockIds;
+    data.waterfall.versions = data.waterfall.versions.filter(v => v.id !== versionId);
+    data.blocks = data.blocks.filter(b => !blockIds.includes(b.id));
+    await this.update(data.waterfall);
+    return this.blockService.remove(blockIds, { params: { waterfallId: data.waterfall.id } });
   }
 
-  public async duplicateVersion(waterfallId: string, id: string) {
-    const version = this.data[waterfallId].waterfall.versions.find(v => v.id === id);
-    const blockIds = this.data[waterfallId].waterfall.versions.find(v => v.id === id).blockIds;
-    const blocks = blockIds.map(id => this.data[waterfallId].blocks.find(b => b.id === id));
+  public async duplicateVersion(waterfall: Waterfall, blocks: Block[], versionId: string) {
+    const version = waterfall.versions.find(v => v.id === versionId);
+    const blockIds = waterfall.versions.find(v => v.id === versionId).blockIds;
+    const versionBlocks = blockIds.map(id => blocks.find(b => b.id === id));
 
     const newId = `${version.id}-copy`;
-    const existingId = this.data[waterfallId].waterfall.versions.find(v => v.id === newId);
-    if (existingId) throw new Error(`Version "${newId}" already exists for waterfall "${waterfallId}"`);
+    const existingId = waterfall.versions.find(v => v.id === newId);
+    if (existingId) throw new Error(`Version "${newId}" already exists for waterfall "${waterfall.id}"`);
     const newVersion = createVersion({
       ...version,
       id: newId,
@@ -263,21 +211,20 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
       description: `Copied from ${version.id}`
     });
 
-    await this.addVersion(waterfallId, newVersion);
+    await this.addVersion(waterfall, newVersion);
 
-    const blocksIds = await Promise.all(blocks.map(b => this.blockService.create(waterfallId, b.name, Object.values(b.actions), new Date(b.timestamp))));
-    this.data[waterfallId].blocks = await this.blockService.getValue({ waterfallId });
+    const blocksIds = await Promise.all(versionBlocks.map(b => this.blockService.create(waterfall.id, b.name, Object.values(b.actions), new Date(b.timestamp))));
 
-    await this.addBlocksToVersion(waterfallId, newVersion.id, blocksIds);
+    await this.addBlocksToVersion(waterfall, newVersion.id, blocksIds);
     return newVersion;
   }
 
-  public async addBlocksToVersion(waterfallId: string, versionId: string, blockIds: string[]) {
-    const existingVersionIndex = this.data[waterfallId].waterfall.versions.findIndex(v => v.id === versionId);
+  public async addBlocksToVersion(waterfall: Waterfall, versionId: string, blockIds: string[]) {
+    const existingVersionIndex = waterfall.versions.findIndex(v => v.id === versionId);
     existingVersionIndex !== -1 ?
-      blockIds.forEach(id => this.data[waterfallId].waterfall.versions[existingVersionIndex].blockIds.push(id)) :
-      this.data[waterfallId].waterfall.versions.push(createVersion({ id: versionId, blockIds }));
-    return this.update(this.data[waterfallId].waterfall);
+      blockIds.forEach(id => waterfall.versions[existingVersionIndex].blockIds.push(id)) :
+      waterfall.versions.push(createVersion({ id: versionId, blockIds }));
+    return this.update(waterfall);
   }
 
   public async removeOrg(waterfallId: string, orgId: string) {

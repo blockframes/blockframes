@@ -1,0 +1,33 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  margin: 40px;
+}
+
+section {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+
+  apx-chart {
+    width: 30%;
+  }
+}
+
+article.right-details {
+  bf-table {
+    margin-top: 16px;
+  }
+}
+
+article.payment-date {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  width: 300px;
+  margin-bottom: 32px;
+}
+
+button[mat-button] {
+  margin-bottom: 64px;
+}
